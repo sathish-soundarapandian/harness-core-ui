@@ -21,7 +21,7 @@ import {
 import { useStrings } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
-import { CommandType, commandTypeOptions, CommandUnitType } from '../CommandScriptsTypes'
+import { CommandType, commandTypeOptions, CommandUnitType, LocationType } from '../CommandScriptsTypes'
 import { CopyCommandEdit } from './CopyCommandEdit'
 import { ScriptCommandEdit } from './ScriptCommandEdit'
 import css from './CommandEdit.module.scss'
@@ -54,13 +54,19 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
           .trim()
           .required(getString('common.validation.fieldIsRequired', { name: getString('common.scriptType') })),
         source: Yup.object().shape({
-          type: Yup.string()
-            .trim()
-            .required(getString('common.validation.fieldIsRequired', { name: getString('typeLabel') })),
-          spec: Yup.object().shape({
-            script: Yup.string()
-              .trim()
-              .required(getString('common.validation.fieldIsRequired', { name: getString('common.script') }))
+          type: Yup.string().trim().required(getString('common.validation.typeIsRequired')),
+          spec: Yup.object().when('type', {
+            is: LocationType.INLINE,
+            then: Yup.object().shape({
+              script: Yup.string()
+                .trim()
+                .required(getString('common.validation.fieldIsRequired', { name: getString('common.script') }))
+            }),
+            otherwise: Yup.object().shape({
+              file: Yup.string()
+                .trim()
+                .required(getString('common.validation.fieldIsRequired', { name: getString('common.git.filePath') }))
+            })
           })
         }),
         tailFiles: Yup.array().of(

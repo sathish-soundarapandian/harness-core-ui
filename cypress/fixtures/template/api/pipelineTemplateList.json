@@ -1,0 +1,66 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "content": [
+      {
+        "accountId": "OgiB4-xETamKNVAz-wQRjw",
+        "orgIdentifier": "Ng_Pipelines_K8s_Organisations_2",
+        "projectIdentifier": "NGPipeAutoDemoProkZHNArWdXt",
+        "identifier": "testPipelineTemplate",
+        "name": "testPipelineTemplate",
+        "description": "",
+        "tags": {},
+        "yaml": "template:\n  name: testPipelineTemplate\n  identifier: testPipelineTemplate\n  versionLabel: v1.0\n  type: Pipeline\n  projectIdentifier: NGPipeAutoDemoProkZHNArWdXt\n  orgIdentifier: Ng_Pipelines_K8s_Organisations_2\n  tags: {}\n  spec:\n    stages:\n      - stage:\n          name: testStage\n          identifier: testStage\n          description: \"\"\n          type: Deployment\n          spec:\n            serviceConfig:\n              serviceRef: service_1\n              serviceDefinition:\n                spec:\n                  variables: []\n                type: Kubernetes\n            infrastructure:\n              infrastructureDefinition:\n                type: KubernetesDirect\n                spec:\n                  connectorRef: <+input>\n                  namespace: <+input>\n                  releaseName: release-<+INFRA_KEY>\n              allowSimultaneousDeployments: false\n              environmentRef: <+input>\n            execution:\n              steps:\n                - step:\n                    name: Rollout Deployment\n                    identifier: rolloutDeployment\n                    type: K8sRollingDeploy\n                    timeout: 10m\n                    spec:\n                      skipDryRun: false\n              rollbackSteps:\n                - step:\n                    name: Rollback Rollout Deployment\n                    identifier: rollbackRolloutDeployment\n                    type: K8sRollingRollback\n                    timeout: 10m\n                    spec: {}\n          tags: {}\n          failureStrategies:\n            - onFailure:\n                errors:\n                  - AllErrors\n                action:\n                  type: StageRollback\n",
+        "versionLabel": "v1.0",
+        "templateEntityType": "Pipeline",
+        "templateScope": "project",
+        "version": 0,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "lastUpdatedAt": 1661243271130,
+        "createdAt": 1661243271130,
+        "stableTemplate": true
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "unsorted": false,
+        "sorted": true,
+        "empty": false
+      },
+      "pageNumber": 0,
+      "pageSize": 25,
+      "offset": 0,
+      "paged": true,
+      "unpaged": false
+    },
+    "totalPages": 1,
+    "totalElements": 1,
+    "last": true,
+    "sort": {
+      "unsorted": false,
+      "sorted": true,
+      "empty": false
+    },
+    "number": 0,
+    "first": true,
+    "numberOfElements": 1,
+    "size": 25,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "484a0ea3-0199-4088-b57b-a490dfe125ad"
+}

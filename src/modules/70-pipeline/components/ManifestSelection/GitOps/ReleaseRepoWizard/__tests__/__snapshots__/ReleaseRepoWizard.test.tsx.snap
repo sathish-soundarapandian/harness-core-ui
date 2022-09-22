@@ -167,7 +167,7 @@ exports[`Release Repo wizard tests initial render 1`] = `
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
-                        style="margin-bottom: 5px;"
+                        data-test-id="connectorTooltip"
                       >
                         <span
                           class="Tooltip--acenter bp3-label"
@@ -516,7 +516,7 @@ exports[`Release Repo wizard tests initial render when connectorview is true 1`]
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
-                        style="margin-bottom: 5px;"
+                        data-test-id="connectorTooltip"
                       >
                         <span
                           class="Tooltip--acenter bp3-label"
@@ -865,7 +865,7 @@ exports[`Release Repo wizard tests on edit 1`] = `
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
-                        style="margin-bottom: 5px;"
+                        data-test-id="connectorTooltip"
                       >
                         <span
                           class="Tooltip--acenter bp3-label"

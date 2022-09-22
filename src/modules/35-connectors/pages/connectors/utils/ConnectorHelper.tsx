@@ -150,6 +150,22 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.azure'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'connectors.title.customSecretManager'
+    case Connectors.NEW_RELIC:
+      return 'connectors.newRelicLabel'
+    case Connectors.PROMETHEUS:
+      return 'connectors.prometheusLabel'
+    case Connectors.DYNATRACE:
+      return 'connectors.dynatraceLabel'
+    case Connectors.CE_GCP:
+      return 'common.gcp'
+    case Connectors.PAGER_DUTY:
+      return 'common.pagerDuty'
+    case Connectors.CUSTOM_HEALTH:
+      return 'connectors.customLabel'
+    case Connectors.ELK:
+      return 'connectors.elk.elkLabel'
+    case Connectors.AWSSECRETMANAGER:
+      return 'connectors.title.awsSecretManager'
     default:
       return 'connector'
   }

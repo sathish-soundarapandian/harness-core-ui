@@ -22,7 +22,7 @@ import {
 
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { get, defaultTo, set, noop } from 'lodash-es'
+import { get, defaultTo, set } from 'lodash-es'
 import {
   AzureSubscriptionDTO,
   AzureTagDTO,
@@ -150,7 +150,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
         defaultTo(subscriptionsData?.data?.subscriptions, []).reduce(
           (subscriptionValues: SelectOption[], subscription: AzureSubscriptionDTO) => {
             subscriptionValues.push({
-              label: subscription.subscriptionId,
+              label: `${subscription.subscriptionName}:${subscription.subscriptionId}`,
               value: subscription.subscriptionId
             })
             return subscriptionValues
@@ -249,6 +249,15 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
     useEffect(() => {
       setRenderCount(renderCount + 1)
       if (
+        initialValues?.subscriptionId &&
+        getMultiTypeFromValue(initialValues?.subscriptionId) !== MultiTypeInputType.RUNTIME
+      ) {
+        refetchSubscriptions({
+          queryParams
+        })
+        /* istanbul ignore else */
+      }
+      if (
         initialValues?.connectorRef &&
         getMultiTypeFromValue(initialValues?.connectorRef) === MultiTypeInputType.FIXED &&
         initialValues.subscriptionId &&
@@ -296,16 +305,6 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
       <Layout.Vertical spacing="small">
         {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}></div>
-        )}
-        {getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-            <MultiTypeSecretInput
-              name={`${path}.credentialsRef`}
-              type={getMultiTypeSecretInputType(initialValues.serviceType)}
-              label={getString('cd.steps.common.specifyCredentials')}
-              expressions={expressions}
-            />
-          </div>
         )}
         {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
           <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
@@ -467,7 +466,6 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
             <MultiTypeFieldSelector
               name={`${path}.tags`}
               label={'Tags'}
-              defaultValueToReset={['']}
               skipRenderValueInExpressionLabel
               allowedTypes={allowableTypes}
               supportListOfExpressions={true}
@@ -475,9 +473,12 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
               style={{ flexGrow: 1, marginBottom: 0 }}
               expressionRender={() => (
                 <ExpressionInput
-                  name="tags"
+                  name={`${path}.tags`}
                   value={initialValues.tags as any}
-                  onChange={() => noop}
+                  onChange={value => {
+                    set(initialValues, `tags`, value)
+                    onUpdate?.(initialValues)
+                  }}
                   inputProps={{
                     placeholder: '<+expression>'
                   }}
@@ -554,6 +555,16 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                 {getString('tagLabel')}
               </Button>
             </MultiTypeFieldSelector>
+          </div>
+        )}
+        {getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
+            <MultiTypeSecretInput
+              name={`${path}.credentialsRef`}
+              type={getMultiTypeSecretInputType(initialValues.serviceType)}
+              label={getString('cd.steps.common.specifyCredentials')}
+              expressions={expressions}
+            />
           </div>
         )}
       </Layout.Vertical>

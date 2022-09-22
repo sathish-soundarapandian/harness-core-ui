@@ -161,10 +161,10 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   Kustomize: gitStoreTypesWithHarnessStoreType,
   KustomizePatches: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
   ServerlessAwsLambda: gitStoreTypes,
-  EcsTaskDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsServiceDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsScalingPolicyDefinition: gitStoreTypesWithHarnessStoreType,
-  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType
+  EcsTaskDefinition: gitStoreTypes,
+  EcsServiceDefinition: gitStoreTypes,
+  EcsScalingPolicyDefinition: gitStoreTypes,
+  EcsScalableTargetDefinition: gitStoreTypes
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {

@@ -40,7 +40,8 @@ export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
     identifier: '',
     name: '',
     type: StepType.EcsRollingDeploy,
-    timeout: '10m'
+    timeout: '10m',
+    spec: {}
   }
 
   constructor() {

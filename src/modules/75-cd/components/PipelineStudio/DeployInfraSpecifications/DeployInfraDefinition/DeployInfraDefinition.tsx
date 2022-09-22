@@ -76,6 +76,7 @@ import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECS
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
+  getInfraDefinitionMethodTooltipId,
   getInfraGroups,
   getInfrastructureDefaultValue,
   InfrastructureGroup,
@@ -153,7 +154,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   >(getServiceDefinitionType(stage, getStageFromPipeline, isNewServiceEnvEntity, isSvcEnvEnabled, templateServiceData))
 
   const [infraGroups, setInfraGroups] = React.useState<InfrastructureGroup[]>(
-    getInfraGroups(selectedDeploymentType, getString, {}, selectedInfrastructureType)
+    getInfraGroups(selectedDeploymentType, getString)
   )
 
   useEffect(() => {
@@ -227,7 +228,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       infraReset = true
     }
 
-    const initialInfraGroups = getInfraGroups(newDeploymentType, getString, {}, selectedInfrastructureType)
+    const initialInfraGroups = getInfraGroups(newDeploymentType, getString)
 
     const filteredInfraGroups = initialInfraGroups.map(group => ({
       ...group,
@@ -241,7 +242,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
         : deploymentTypeInfraTypeMap[newDeploymentType])
 
     setSelectedInfrastructureType(infrastructureType)
-    setInfraGroups(getInfraGroups(newDeploymentType, getString, {}, infrastructureType))
+    setInfraGroups(getInfraGroups(newDeploymentType, getString))
 
     const initialInfraDefValues = getInfrastructureDefaultValue(stage, infrastructureType)
     setInitialInfrastructureDefinitionValues(initialInfraDefValues)
@@ -553,7 +554,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   credentialsRef: value.credentialsRef,
                   connectorRef: value.connectorRef,
                   region: value.region,
-                  awsInstanceFilter: value.awsInstanceFilter
+                  awsInstanceFilter: value.awsInstanceFilter,
+                  hostConnectionType: value.hostConnectionType
                 },
                 InfraDeploymentType.SshWinRmAws
               )
@@ -579,7 +581,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   subscriptionId: value.subscriptionId,
                   resourceGroup: value.resourceGroup,
                   tags: value.tags,
-                  usePublicDns: value.usePublicDns,
+                  hostConnectionType: value.hostConnectionType,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.SshWinRmAzure
@@ -684,7 +686,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           ) && (
             <Text margin={{ bottom: 'medium' }} className={stageCss.info}>
               <StringWithTooltip
-                tooltipId="pipelineStep.infrastructureDefinitionMethod"
+                tooltipId={getInfraDefinitionMethodTooltipId(selectedDeploymentType)}
                 stringId="cd.pipelineSteps.environmentTab.selectInfrastructureType"
               />
             </Text>

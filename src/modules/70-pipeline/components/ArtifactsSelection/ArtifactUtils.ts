@@ -15,6 +15,7 @@ import {
   ArtifactType,
   GoogleArtifactRegistryInitialValuesType,
   CustomArtifactSource,
+  GithubPackageRegistryInitialValuesType,
   ImagePathTypes,
   JenkinsArtifactType,
   RepositoryPortOrServer,
@@ -278,7 +279,9 @@ export const getJenkinsFormData = (
   return initialValues
 }
 
-const getVersionValues = (specValues: any): GoogleArtifactRegistryInitialValuesType => {
+const getVersionValues = (
+  specValues: any
+): GithubPackageRegistryInitialValuesType & GoogleArtifactRegistryInitialValuesType => {
   const formikInitialValues = {
     versionType: specValues?.version ? TagTypes.Value : TagTypes.Regex,
     spec: {
@@ -290,11 +293,11 @@ const getVersionValues = (specValues: any): GoogleArtifactRegistryInitialValuesT
   return formikInitialValues
 }
 
-export const getGoogleArtifactRegistryFormData = (
-  initialValues: GoogleArtifactRegistryInitialValuesType,
+export const getGithubPackageRegistryFormData = (
+  initialValues: GithubPackageRegistryInitialValuesType | GoogleArtifactRegistryInitialValuesType,
   selectedArtifact: ArtifactType,
   isIdentifierAllowed: boolean
-): GoogleArtifactRegistryInitialValuesType => {
+): GithubPackageRegistryInitialValuesType | GoogleArtifactRegistryInitialValuesType => {
   const specValues = get(initialValues, 'spec', null)
 
   if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
@@ -310,7 +313,7 @@ export const getGoogleArtifactRegistryFormData = (
 }
 
 export const isFieldFixedAndNonEmpty = (field: string): boolean => {
-  return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED && field?.length > 0
+  return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED ? field?.length > 0 : true
 }
 
 export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): any => {
@@ -326,7 +329,7 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
           region: '',
           repositoryName: '',
           package: '',
-          version: ''
+          version: RUNTIME_INPUT_VALUE
         }
       }
     case ENABLED_ARTIFACT_TYPES.Jenkins:
@@ -336,6 +339,19 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
           jobName: '',
           artifactPath: '',
           build: RUNTIME_INPUT_VALUE
+        }
+      }
+    case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+      return {
+        identifier: '',
+        versionType: TagTypes.Value,
+        spec: {
+          connectorRef: '',
+          packageType: '',
+          org: '',
+          packageName: '',
+          version: '',
+          versionRegex: ''
         }
       }
     case ENABLED_ARTIFACT_TYPES.Nexus3Registry:

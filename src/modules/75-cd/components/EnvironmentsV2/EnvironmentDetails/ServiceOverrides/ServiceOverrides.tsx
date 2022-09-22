@@ -284,33 +284,6 @@ export function ServiceOverrides(): React.ReactElement {
                 }
                 details={
                   <Layout.Vertical spacing="medium">
-                    {!!variables.length && (
-                      <Card>
-                        <Text
-                          color={Color.GREY_900}
-                          font={{ weight: 'semi-bold' }}
-                          margin={{ bottom: 'medium' }}
-                          data-tooltip-id="serviceVariableOverrides"
-                        >
-                          {getString('cd.serviceOverrides.variableOverrides')}
-                          <HarnessDocTooltip useStandAlone={true} tooltipId="serviceVariableOverrides" />
-                        </Text>
-                        <ServiceVariablesOverridesList
-                          variableOverrides={variables}
-                          isReadonly={!canEdit}
-                          onServiceVarEdit={() => {
-                            setSelectedTab(ServiceOverrideTab.VARIABLE)
-                            setSelectedService(defaultTo(serviceRef, ''))
-                            setIsEdit(true)
-                            showModal()
-                          }}
-                          onServiceVarDelete={index =>
-                            handleDeleteOverride('variables', variables, index, isSingleOverride, serviceRef)
-                          }
-                        />
-                        <RbacButton {...addOverrideBtnProps} />
-                      </Card>
-                    )}
                     {!!manifests.length && (
                       <Card>
                         <Text
@@ -360,6 +333,33 @@ export function ServiceOverrides(): React.ReactElement {
                           }}
                           handleServiceFileDelete={index =>
                             handleDeleteOverride('configFiles', configFiles, index, isSingleOverride, serviceRef)
+                          }
+                        />
+                        <RbacButton {...addOverrideBtnProps} />
+                      </Card>
+                    )}
+                    {!!variables.length && (
+                      <Card>
+                        <Text
+                          color={Color.GREY_900}
+                          font={{ weight: 'semi-bold' }}
+                          margin={{ bottom: 'medium' }}
+                          data-tooltip-id="serviceVariableOverrides"
+                        >
+                          {getString('cd.serviceOverrides.variableOverrides')}
+                          <HarnessDocTooltip useStandAlone={true} tooltipId="serviceVariableOverrides" />
+                        </Text>
+                        <ServiceVariablesOverridesList
+                          variableOverrides={variables}
+                          isReadonly={!canEdit}
+                          onServiceVarEdit={() => {
+                            setSelectedTab(ServiceOverrideTab.VARIABLE)
+                            setSelectedService(defaultTo(serviceRef, ''))
+                            setIsEdit(true)
+                            showModal()
+                          }}
+                          onServiceVarDelete={index =>
+                            handleDeleteOverride('variables', variables, index, isSingleOverride, serviceRef)
                           }
                         />
                         <RbacButton {...addOverrideBtnProps} />

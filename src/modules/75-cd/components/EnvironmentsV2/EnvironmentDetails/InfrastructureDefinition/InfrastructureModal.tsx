@@ -100,7 +100,7 @@ export default function InfrastructureModal({
       ?.infrastructureDefinition
   }, [selectedInfrastructure])
 
-  const { type, spec, allowSimultaneousDeployments } = defaultTo(
+  const { type, spec, allowSimultaneousDeployments, deploymentType } = defaultTo(
     infrastructureDefinition,
     {}
   ) as InfrastructureDefinitionConfig
@@ -125,7 +125,7 @@ export default function InfrastructureModal({
               },
               serviceConfig: {
                 serviceDefinition: {
-                  type: ''
+                  type: deploymentType
                 }
               }
             }
@@ -149,7 +149,7 @@ export default function InfrastructureModal({
             refetch={refetch}
             infrastructureDefinition={infrastructureDefinition}
             environmentIdentifier={environmentIdentifier}
-            stageDeploymentType={stageDeploymentType}
+            stageDeploymentType={(deploymentType as Partial<ServiceDeploymentType>) || stageDeploymentType}
           />
         </DeployStageErrorProvider>
       </PipelineVariablesContextProvider>
@@ -212,7 +212,7 @@ function BootstrapDeployInfraDefinition({
 
   useEffect(() => {
     if (selectedStageId && stageDeploymentType) {
-      handleDeploymentTypeChange(stageDeploymentType)
+      handleDeploymentTypeChange(stageDeploymentType, false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStageId])
@@ -240,6 +240,9 @@ function BootstrapDeployInfraDefinition({
       const infraDefinition = get(draft, 'stage.spec.infrastructure', {})
       infraDefinition.infrastructureDefinition.spec = infrastructureDefinitionConfig.spec
       infraDefinition.allowSimultaneousDeployments = infrastructureDefinitionConfig.allowSimultaneousDeployments
+
+      const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
+      serviceDefinition.type = infrastructureDefinitionConfig.deploymentType
     })
     updateStage(stageData?.stage as StageElementConfig)
   }
@@ -262,6 +265,7 @@ function BootstrapDeployInfraDefinition({
         if (yamlVisual) {
           updateFormValues(yamlVisual)
         }
+        setIsYamlEditable(false)
       }
       setSelectedView(view)
     },
@@ -322,12 +326,17 @@ function BootstrapDeployInfraDefinition({
   }
 
   const handleDeploymentTypeChange = useCallback(
-    (deploymentType: ServiceDeploymentType): void => {
+    (deploymentType: ServiceDeploymentType, resetInfrastructureDefinition = true): void => {
       // istanbul ignore else
       if (deploymentType !== selectedDeploymentType) {
         const stageData = produce(stage, draft => {
           const serviceDefinition = get(draft, 'stage.spec.serviceConfig.serviceDefinition', {})
           serviceDefinition.type = deploymentType
+
+          if (draft?.stage?.spec?.infrastructure?.infrastructureDefinition && resetInfrastructureDefinition) {
+            delete draft.stage.spec.infrastructure.infrastructureDefinition
+            delete draft.stage.spec.infrastructure.allowSimultaneousDeployments
+          }
         })
         setSelectedDeploymentType(deploymentType)
         updateStage(stageData?.stage as StageElementConfig)
@@ -398,16 +407,14 @@ function BootstrapDeployInfraDefinition({
                   }}
                 </Formik>
               </Card>
-              {!infrastructureDefinition && (
-                <SelectDeploymentType
-                  viewContext="setup"
-                  selectedDeploymentType={selectedDeploymentType}
-                  isReadonly={!!stageDeploymentType}
-                  handleDeploymentTypeChange={handleDeploymentTypeChange}
-                  shouldShowGitops={false}
-                />
-              )}
-              {(selectedDeploymentType || infrastructureDefinition) && <DeployInfraDefinition />}
+              <SelectDeploymentType
+                viewContext="setup"
+                selectedDeploymentType={selectedDeploymentType}
+                isReadonly={!!stageDeploymentType}
+                handleDeploymentTypeChange={handleDeploymentTypeChange}
+                shouldShowGitops={false}
+              />
+              {selectedDeploymentType && <DeployInfraDefinition />}
             </>
           ) : (
             <div className={css.yamlBuilder}>
@@ -419,6 +426,8 @@ function BootstrapDeployInfraDefinition({
                     orgIdentifier,
                     projectIdentifier,
                     environmentRef: environmentIdentifier,
+                    deploymentType: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.serviceConfig
+                      ?.serviceDefinition?.type,
                     type: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
                       ?.infrastructureDefinition?.type,
                     spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
@@ -479,6 +488,8 @@ function BootstrapDeployInfraDefinition({
                     orgIdentifier,
                     projectIdentifier,
                     environmentRef: environmentIdentifier,
+                    deploymentType: (pipeline.stages?.[0].stage?.spec as DeployStageConfig)?.serviceConfig
+                      ?.serviceDefinition?.type,
                     type: (pipeline.stages?.[0].stage?.spec as DeployStageConfig)?.infrastructure
                       ?.infrastructureDefinition?.type,
                     spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure

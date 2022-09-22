@@ -38,7 +38,6 @@ export interface AzureBlueprintData {
   identifier: string
   timeout: string
   spec: {
-    provisionerIdentifier: string
     configuration: {
       connectorRef: string
       scope: string
@@ -53,7 +52,7 @@ export interface AzureBlueprintData {
             repoName?: string
             files?: string
             secretFiles?: string
-            paths?: string
+            folderPath?: string
           }
         }
       }

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, RenderResult, screen } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import pipelineList from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-list.json'
 import executionList from '@pipeline/pages/execution-list/__tests__/mocks/execution-list.json'
@@ -114,6 +114,24 @@ jest.mock('services/template-ng', () => ({
   useGetYamlWithTemplateRefsResolved: jest.fn(() => ({}))
 }))
 
+const renderExecutionPage = (): RenderResult =>
+  render(
+    <TestWrapper
+      path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
+      pathParams={{
+        accountId: 'accountId',
+        orgIdentifier: 'orgIdentifier',
+        projectIdentifier: 'projectIdentifier',
+        pipelineIdentifier: 'pipelineIdentifier',
+        module: 'cf'
+      }}
+      defaultAppStoreValues={defaultAppStoreValues}
+      queryParams={{ listview: true }}
+    >
+      <CFPipelineDeploymentList />
+    </TestWrapper>
+  )
+
 describe('CFPipelineDeploymentList', () => {
   beforeAll(() => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
@@ -123,47 +141,19 @@ describe('CFPipelineDeploymentList', () => {
   })
 
   test('should render pipelines', async () => {
-    render(
-      <TestWrapper
-        path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-        pathParams={{
-          accountId: 'accountId',
-          orgIdentifier: 'orgIdentifier',
-          projectIdentifier: 'projectIdentifier',
-          pipelineIdentifier: 'pipelineIdentifier',
-          module: 'cf'
-        }}
-        defaultAppStoreValues={defaultAppStoreValues}
-      >
-        <CFPipelineDeploymentList />
-      </TestWrapper>
-    )
+    renderExecutionPage()
 
     const pipeline = await screen.findByRole('link', {
-      name: 'PR Harness Env - CD Selective Stage'
+      name: 'PR Harness Env - CD Selective Stage : 3'
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/cf/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/pipeline-studio/?branch=feat%2FCDS-41594-gitops&repoIdentifier=ng-pr-manifests&repoName=ng-pr-manifests&connectorRef=account.PRenvHarnessYamlGithub&storeType=REMOTE'
+      '/account/accountId/cf/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/PO4Dd7pnSiOmyCjHkoNeMQ/pipeline'
     )
   })
 
   test('should be able to show any pipelines executions', async () => {
-    render(
-      <TestWrapper
-        path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-        pathParams={{
-          accountId: 'accountId',
-          orgIdentifier: 'orgIdentifier',
-          projectIdentifier: 'projectIdentifier',
-          pipelineIdentifier: 'pipelineIdentifier',
-          module: 'cf'
-        }}
-        defaultAppStoreValues={defaultAppStoreValues}
-      >
-        <CFPipelineDeploymentList />
-      </TestWrapper>
-    )
+    renderExecutionPage()
     expect(useGetListOfExecutions).toHaveBeenCalled()
     // In pipeline execution history avoid module filter since we show all pipelines in any module and execution history also should be shown for any pipeline
     expect(useGetListOfExecutions).not.toHaveBeenLastCalledWith(

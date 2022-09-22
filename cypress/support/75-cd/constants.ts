@@ -1,7 +1,7 @@
 export const accountIdentifier = 'accountId'
 export const orgIdentifier = 'default'
 export const projectIdentifier = 'project1'
-export const module = 'cd'
+export const module1 = 'cd'
 export const environmentIdentifier = 'testEnvConfig'
 const secretText = 'SecretText'
 
@@ -22,7 +22,7 @@ export const listAllReposByConnector = `/ng/api/scm/list-all-repos-by-connector?
 export const trialConnectorCall = `/ng/api/trial-signup/create-scm-connector?routingId=accountId&accountIdentifier=${accountIdentifier}`
 
 // BROWSER ROUTES
-export const environmentGroupRoute = `#/account/${accountIdentifier}/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment-group`
+export const environmentGroupRoute = `#/account/${accountIdentifier}/${module1}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment-group`
 export const environmentRoute = `#/account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment`
 export const environmentConfigurationRoute = `#/account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment/${environmentIdentifier}/details?sectionId=CONFIGURATION`
 export const projectDashboardRoute = `#/account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/dashboard`

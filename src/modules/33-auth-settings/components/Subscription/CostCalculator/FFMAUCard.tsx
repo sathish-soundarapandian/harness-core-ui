@@ -9,11 +9,27 @@ import React, { useState, useEffect } from 'react'
 import { capitalize, defaultTo } from 'lodash-es'
 import { Card, Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
 import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
+import { useStrings } from 'framework/strings'
 import { Item } from './FFDeveloperCard'
 import SliderBar from './SliderBar'
 import css from './CostCalculator.module.scss'
+
+const MILLION = 1000000
+const THOUSAND = 1000
+const NUMBER_UNITS: { [key: string]: string } = {
+  MILLION: 'M',
+  THOUSAND: 'K'
+}
+const getUnitWithNumbers = (num: number): string => {
+  let unit = ''
+  if (num >= MILLION) {
+    unit = ` ${num / MILLION}${NUMBER_UNITS.MILLION}`
+  } else {
+    unit = ` ${num / THOUSAND}${NUMBER_UNITS.THOUSAND}`
+  }
+  return unit
+}
 
 const Header: React.FC<{ unitPrice: number; paymentFreq: TimeType }> = () => {
   const { getString } = useStrings()
@@ -58,7 +74,7 @@ const MAUSubscriptionInfo: React.FC<MAUSubscriptionInfoProps> = ({
   const { getString } = useStrings()
   const currentPlanDescr = (
     <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'baseline', justifyContent: 'start' }}>
-      <Text font={{ weight: 'bold' }}>{currentSubscribed}k</Text>
+      <Text font={{ weight: 'bold' }}>{getUnitWithNumbers(currentSubscribed)}</Text>
       <Text color={Color.PRIMARY_7} font={{ size: 'xsmall', weight: 'bold' }}>
         {`${capitalize(currentPlan)} ${getString('common.subscriptions.overview.plan')}`}
       </Text>

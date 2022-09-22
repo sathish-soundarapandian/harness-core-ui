@@ -43,9 +43,8 @@
 
 .namesContainer {
   width: 280px;
+  background: var(--white);
   overflow: scroll;
-  white-space: nowrap;
-  max-height: 340px;
 
   .labelNames {
     cursor: pointer;
@@ -55,11 +54,28 @@
     }
   }
 
+  .itemsList {
+    height: 308px;
+    overflow: scroll;
+  }
+
+  .noResults {
+    margin: var(--spacing-4);
+    color: var(--grey-400);
+    overflow: scroll;
+    white-space: nowrap;
+  }
+
+  .search {
+    height: 32px;
+    margin: var(--spacing-small);
+  }
+
   &.spinner {
-    margin-top: var(--margin-small);
     height: 340px;
     display: flex;
     align-items: center;
     flex-direction: column;
+    justify-content: center;
   }
 }

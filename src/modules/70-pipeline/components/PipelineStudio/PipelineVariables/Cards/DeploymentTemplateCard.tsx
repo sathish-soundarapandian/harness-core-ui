@@ -25,6 +25,7 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { VariableType } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableUtils'
 import { useStrings } from 'framework/strings'
 import type { StoreConfigWrapper } from 'services/cd-ng'
+import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
 import VariableAccordionSummary from '../VariableAccordionSummary'
 import type { DeploymentInfra, DeploymentTemplateConfig, PipelineVariablesData } from '../types'
 import css from '../PipelineVariables.module.scss'
@@ -57,13 +58,15 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
 
   const { getString } = useStrings()
 
+  const { connectorsList } = useGetConnectorsListHook()
+
   const infrastructureSpec = deploymentTemplate?.infrastructure as DeploymentInfra
 
   const headerComponent: JSX.Element = (
     <div className={moduleCss.infraVarHeader}>
-      <div className={moduleCss.label}>{getString('name')}</div>
-      <div className={moduleCss.label}>{getString('description')}</div>
-      <div className={moduleCss.label}>{getString('common.configureOptions.defaultValue')}</div>
+      <div>{getString('name')}</div>
+      <div>{getString('description')}</div>
+      <div>{getString('valueLabel')}</div>
     </div>
   )
   const onUpdateInfrastructureVariables = React.useCallback(
@@ -151,7 +154,9 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
                         VariableType.Connector
                       ],
                       isDescriptionEnabled: true,
-                      headerComponent: headerComponent
+                      headerComponent: headerComponent,
+                      allowedConnectorTypes: connectorsList,
+                      addVariableLabel: 'variables.newVariable'
                     }}
                   />
                 ) : /* istanbul ignore next */ null}

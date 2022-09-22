@@ -214,7 +214,7 @@ export default function L1Nav(): React.ReactElement {
       <ul className={css.navList}>
         {RESOURCE_CENTER_ENABLED && (
           <li className={css.navItem}>
-            <ResourceCenter />
+            <ResourceCenter link={false} />
           </li>
         )}
         {NG_DASHBOARDS && (

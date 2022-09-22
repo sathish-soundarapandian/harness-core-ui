@@ -8,7 +8,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ResponseSetupStatus, useProvisionResourcesForCI } from 'services/cd-ng'
-import { useGetDelegateGroupByIdentifier } from 'services/portal'
+import { DelegateGroupDetails, useGetDelegateGroupsNGV2 } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   DELEGATE_INSTALLATION_REFETCH_DELAY,
@@ -35,8 +35,7 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
     data: delegateDetails,
     refetch: fetchDelegateDetails,
     loading: fetchingDelegateDetails
-  } = useGetDelegateGroupByIdentifier({
-    identifier: ProvisionedByHarnessDelegateGroupIdentifier,
+  } = useGetDelegateGroupsNGV2({
     queryParams: { accountId }
   })
 
@@ -52,7 +51,12 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
   })
 
   useEffect(() => {
-    if (!fetchingDelegateDetails && delegateDetails?.resource?.activelyConnected) {
+    if (
+      !fetchingDelegateDetails &&
+      delegateDetails?.resource?.delegateGroupDetails?.find(
+        (item: DelegateGroupDetails) => item?.delegateGroupIdentifier === ProvisionedByHarnessDelegateGroupIdentifier
+      )?.activelyConnected
+    ) {
       setDelegateProvisioningStatus(ProvisioningStatus.SUCCESS)
       setStartPolling(false)
     }

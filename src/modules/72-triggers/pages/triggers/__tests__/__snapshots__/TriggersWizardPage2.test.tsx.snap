@@ -2717,7 +2717,7 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"

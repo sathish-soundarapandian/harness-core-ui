@@ -84,6 +84,10 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
               data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
             >
               {getString('pipelineSteps.configFiles')}
+              <HarnessDocTooltip
+                tooltipId={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
+                useStandAlone={true}
+              />
             </div>
             <ConfigFilesSelection
               isReadonlyServiceMode={isReadonlyServiceMode}

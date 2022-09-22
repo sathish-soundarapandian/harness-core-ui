@@ -30,7 +30,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot test of kubernetes
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>
@@ -398,7 +398,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot with manifest 1`] 
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           connector
         </div>
@@ -765,7 +765,7 @@ exports[`ServerlessAwsLambdaManifestContent snapshot snapshot without manifest 1
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           connector
         </div>

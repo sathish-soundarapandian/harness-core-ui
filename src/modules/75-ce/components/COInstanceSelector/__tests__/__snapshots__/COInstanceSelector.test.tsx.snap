@@ -742,6 +742,7 @@ exports[`GCP instance selection should render GCP instances selection modal with
                 data-icon="execution-warning"
               >
                 <svg
+                  fill="currentColor"
                   height="20"
                   viewBox="0 0 19 15"
                   width="20"

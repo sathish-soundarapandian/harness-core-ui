@@ -14,6 +14,7 @@ export const delegateExecutionId = 'delegate-executionId'
 export const stageNodeId = 'nodeId'
 export const pageHeaderClassName = '.PageHeader--container'
 export const activeTabClassName = '.TabNavigation--active'
+export const serviceName = 'testServiceV2'
 const connectorRef = 'connector'
 const connectorName = 'testConnector'
 const anotherConnectorName = 'testConnector2'
@@ -94,10 +95,15 @@ export const inputSetTemplate = `/pipeline/api/pipelines/${pipelineIdentifier}?r
 export const runPipelineTemplateCall = `/pipeline/api/inputSets/template?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&pipelineIdentifier=${pipelineIdentifier}`
 export const s3bucketData = `/ng/api/buckets/s3/getBucketsV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&connectorRef=${connectorName}`
 export const triggersList = `/pipeline/api/triggers?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&targetIdentifier=${pipelineIdentifier}&searchTerm=`
+export const stagesExecutionList = `pipeline/execute/stagesExecutionList?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&pipelineIdentifier=${pipelineIdentifier}`
 export const getArtifactPaths = `/ng/api/artifacts/jenkins/job/AutomationQA/paths?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}`
-export const getJenkinsBuild = `/ng/api/artifacts/jenkins/job/AutomationQA/builds?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}&artifactPath=sa`
+export const azureSubscriptions = `/ng/api/azure/subscriptions?routingId=${accountId}&connectorRef=${connectorRef}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
+export const azureResourceGroups = `/ng/api/azure/subscriptions/1111-1111-1111-1111-1111/resourceGroups?routingId=${accountId}&connectorRef=${connectorRef}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
+export const stepTemplateSchemaEndpoint = `/template/api/templates/schema/templateSchema?routingId=${accountId}&templateEntityType=Step&entityType=ShellScript&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&accountIdentifier=${accountId}&scope=project`
+
 // Routes
 
+export const updatedPipelineExecutionEndpoint = `/pipeline/api/pipeline/execute/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&moduleType=cd&notifyOnlyUser=false`
 export const executionListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/deployments`
 export const pipelinesExecutionDelegateRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/${delegateExecutionId}/pipeline`
 export const executionHistoryRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/executions`
@@ -365,7 +371,7 @@ export const stepsData = {
 }
 
 export const triggersListData = {
-  Webhook: ['GitHub', 'GitLab', 'BitBucket', 'AWS Code Commit', 'Custom'],
+  Webhook: ['GitHub', 'GitLab', 'BitBucket', 'Azure Repos', 'AWS Code Commit', 'Custom'],
   Artifact: ['GCR', 'ECR', 'Docker Registry', 'Artifactory', 'Amazon S3', 'ACR'],
   Manifest: ['Helm Chart'],
   Scheduled: ['Cron']
@@ -373,3 +379,155 @@ export const triggersListData = {
 
 export const invalidYAMLErrorMsgOnEmptyStageSave =
   'Invalid yaml: $.pipeline.stages[0].stage.spec.execution: is missing but it is required\n$.pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition: is missing but it is required\n$.pipeline.stages[0].stage.tags: is not defined in the schema and the schema does not allow additional properties\n$.pipeline.stages[0].stage.spec.infrastructure.useFromStage: is missing but it is required\n$.pipeline.stages[0].stage.type: is not defined in the schema and the schema does not allow additional properties\n$.pipeline.stages[0].stage.spec: is not defined in the schema and the schema does not allow additional properties\n$.pipeline.stages[0].stage.spec.infrastructure.environmentRef: is missing but it is required\n$.pipeline.stages[0].stage.spec.infrastructure.environment: is missing but it is required\n$.pipeline.stages[0].stage.type: does not have a value in the enumeration [CI, Approval, FeatureFlag]'
+
+export const afterSaveServiceResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: "testServiceV2"\n  identifier: "testServiceV2"\n  tags: {}\n'
+    },
+    createdAt: 1662015990367,
+    lastModifiedAt: 1662015990367
+  },
+  metaData: null,
+  correlationId: '8fd410f5-f323-4405-aa4e-822a90ebb2e6'
+}
+
+export const afterSaveServiceNameResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: "testServiceV2"\n  identifier: "testServiceV2"\n  tags: {}\n'
+    },
+    createdAt: 1662015990367,
+    lastModifiedAt: 1662015990367
+  },
+  metaData: null,
+  correlationId: '800b0d74-d639-4056-b279-8f2990b2aef1'
+}
+export const afterFinalSaveServiceNameResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: testServiceV2\n  identifier: testServiceV2\n  tags: {}\n  serviceDefinition:\n    spec:\n      artifacts:\n        primary:\n          spec:\n            connectorRef: <+input>\n            artifactDirectory: <+input>\n            artifactPath: <+input>\n            repository: <+input>\n            repositoryFormat: generic\n          type: ArtifactoryRegistry\n      configFiles:\n        - configFile:\n            identifier: testConfigFileIdentifier\n            spec:\n              store:\n                type: Harness\n                spec:\n                  files: <+input>\n    type: Ssh\n'
+    },
+    createdAt: 1662360916500,
+    lastModifiedAt: 1662364088534
+  },
+  metaData: null,
+  correlationId: 'acbab7ab-7322-4ded-a1cb-1a0d55ba4059'
+}
+export const afterFinalServiceNameWinrmResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: testServiceV2\n  identifier: testServiceV2\n  tags: {}\n  serviceDefinition:\n    spec:\n      artifacts:\n        primary:\n          spec:\n            connectorRef: <+input>\n            artifactDirectory: <+input>\n            artifactPath: <+input>\n            repository: <+input>\n            repositoryFormat: generic\n          type: ArtifactoryRegistry\n      configFiles:\n        - configFile:\n            identifier: testConfigFileIdentifier\n            spec:\n              store:\n                type: Harness\n                spec:\n                  files: <+input>\n    type: WinRm\n'
+    },
+    createdAt: 1662360916500,
+    lastModifiedAt: 1662364088534
+  },
+  metaData: null,
+  correlationId: 'acbab7ab-7322-4ded-a1cb-1a0d55ba4059'
+}
+
+export const afterSaveServiceHeaderResponse = {
+  status: 'SUCCESS',
+  data: {
+    name: serviceName,
+    identifier: serviceName,
+    description: null,
+    deploymentTypes: [],
+    createdAt: 1662015990367,
+    lastModifiedAt: 1662015990367
+  },
+  metaData: null,
+  correlationId: '980e9edf-fa13-484a-bd7e-f5b1e79aaaa9'
+}
+
+export const finalSaveServiceResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: testServiceV2\n  identifier: testServiceV2\n  tags: {}\n  serviceDefinition:\n    spec:\n      manifests:\n        - manifest:\n            identifier: testManifestName\n            type: K8sManifest\n            spec:\n              store:\n                type: Github\n                spec:\n                  connectorRef: <+input>\n                  gitFetchType: Branch\n                  paths:\n                    - root/bin/\n                  repoName: <+input>\n                  branch: master\n              skipResourceVersioning: false\n    type: Kubernetes\n  gitOpsEnabled: false\n'
+    },
+    createdAt: 1662099973244,
+    lastModifiedAt: 1662100039989
+  },
+  metaData: null,
+  correlationId: 'c1b8dcd8-37d5-490e-8a41-3feb5ccb54d5'
+}
+export const finalSaveServiceNameResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: testServiceV2\n  identifier: testServiceV2\n  tags: {}\n  serviceDefinition:\n    spec:\n      manifests:\n        - manifest:\n            identifier: testManifestName\n            type: K8sManifest\n            spec:\n              store:\n                type: Github\n                spec:\n                  connectorRef: <+input>\n                  gitFetchType: Branch\n                  paths:\n                    - root/bin/\n                  repoName: <+input>\n                  branch: master\n              skipResourceVersioning: false\n      artifacts:\n        primary:\n          spec:\n            connectorRef: <+input>\n            imagePath: <+input>\n            tag: <+input>\n          type: DockerRegistry\n    type: Kubernetes\n  gitOpsEnabled: false\n'
+    },
+    createdAt: 1662099973244,
+    lastModifiedAt: 1662101517118
+  },
+  metaData: null,
+  correlationId: 'c2d087e6-f449-417d-9ca3-fb2d13daab46'
+}
+
+export const afterFinalSaveConnectorsListResponse = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 0,
+    totalItems: 0,
+    pageItemCount: 0,
+    pageSize: 10,
+    content: [],
+    pageIndex: 0,
+    empty: true
+  },
+  metaData: null,
+  correlationId: 'cea537e0-859e-43ee-93fd-224f3259c6c2'
+}

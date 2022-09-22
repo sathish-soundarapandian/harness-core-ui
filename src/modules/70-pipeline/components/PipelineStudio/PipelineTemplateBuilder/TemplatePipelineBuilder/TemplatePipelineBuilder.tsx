@@ -25,7 +25,8 @@ import css from './TemplatePipelineBuilder.module.scss'
 
 export function TemplatePipelineBuilder(): React.ReactElement {
   const {
-    state: { pipeline }
+    isReadonly,
+    state: { pipeline, storeMetadata }
   } = usePipelineContext()
   const [splitPaneSize, setSplitPaneSize] = React.useState(DefaultSplitPaneSize)
   const setSplitPaneSizeDeb = React.useRef(debounce(setSplitPaneSize, 200))
@@ -50,6 +51,8 @@ export function TemplatePipelineBuilder(): React.ReactElement {
             onRemoveTemplate={removeTemplate}
             onOpenTemplateSelector={addOrUpdateTemplate}
             className={css.templateBar}
+            isReadonly={isReadonly}
+            storeMetadata={storeMetadata}
           />
         )}
         <Container className={cx(css.canvasContainer)}>

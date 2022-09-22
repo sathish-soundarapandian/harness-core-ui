@@ -43,6 +43,8 @@ import type { EnvironmentPathProps, EnvironmentQueryParams, ProjectPathProps } f
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import { isOnPrem } from '@common/utils/utils'
+
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
@@ -252,7 +254,8 @@ export default function EnvironmentDetails(): React.ReactElement {
                       {
                         id: EnvironmentDetailsTab.GITOPS,
                         title: getString('cd.gitOpsCluster'),
-                        panel: <GitOpsCluster envRef={identifier} />
+                        panel: <GitOpsCluster envRef={identifier} />,
+                        hidden: isOnPrem()
                       }
                     ]}
                   >

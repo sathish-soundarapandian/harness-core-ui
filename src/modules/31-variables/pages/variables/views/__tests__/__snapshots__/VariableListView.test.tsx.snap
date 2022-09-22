@@ -13,7 +13,7 @@ exports[`VariableListView render component at account level - with no variable d
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 25%;"
+        style="width: 30%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -30,7 +30,7 @@ exports[`VariableListView render component at account level - with no variable d
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 15%;"
+        style="width: 20%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -47,7 +47,7 @@ exports[`VariableListView render component at account level - with no variable d
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 15%;"
+        style="width: 20%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -64,7 +64,7 @@ exports[`VariableListView render component at account level - with no variable d
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 20%;"
+        style="width: 25%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -74,23 +74,6 @@ exports[`VariableListView render component at account level - with no variable d
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
             valueLabel
-          </p>
-        </div>
-      </div>
-      <div
-        class="TableV2--cell"
-        colspan="1"
-        role="columnheader"
-        style="width: 20%;"
-      >
-        <div
-          class="Text--withDocsTooltip"
-          data-tooltip-id="VariableListViewdefaultValue"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            variables.defaultValue
           </p>
         </div>
       </div>
@@ -132,7 +115,7 @@ exports[`VariableListView render component at account level - with no variable d
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 25%;"
+        style="width: 30%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -149,7 +132,7 @@ exports[`VariableListView render component at account level - with no variable d
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 15%;"
+        style="width: 20%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -166,7 +149,7 @@ exports[`VariableListView render component at account level - with no variable d
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 15%;"
+        style="width: 20%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -183,7 +166,7 @@ exports[`VariableListView render component at account level - with no variable d
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 20%;"
+        style="width: 25%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -193,23 +176,6 @@ exports[`VariableListView render component at account level - with no variable d
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
             valueLabel
-          </p>
-        </div>
-      </div>
-      <div
-        class="TableV2--cell"
-        colspan="1"
-        role="columnheader"
-        style="width: 20%;"
-      >
-        <div
-          class="Text--withDocsTooltip"
-          data-tooltip-id="VariableListViewdefaultValue"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            variables.defaultValue
           </p>
         </div>
       </div>
@@ -251,7 +217,7 @@ exports[`VariableListView render component at account level 1`] = `
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 25%;"
+        style="width: 30%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -268,7 +234,7 @@ exports[`VariableListView render component at account level 1`] = `
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 15%;"
+        style="width: 20%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -285,7 +251,7 @@ exports[`VariableListView render component at account level 1`] = `
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 15%;"
+        style="width: 20%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -302,7 +268,7 @@ exports[`VariableListView render component at account level 1`] = `
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 20%;"
+        style="width: 25%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -312,23 +278,6 @@ exports[`VariableListView render component at account level 1`] = `
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
             valueLabel
-          </p>
-        </div>
-      </div>
-      <div
-        class="TableV2--cell"
-        colspan="1"
-        role="columnheader"
-        style="width: 20%;"
-      >
-        <div
-          class="Text--withDocsTooltip"
-          data-tooltip-id="VariableListViewdefaultValue"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            variables.defaultValue
           </p>
         </div>
       </div>
@@ -363,7 +312,7 @@ exports[`VariableListView render component at account level 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 30%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -395,7 +344,7 @@ exports[`VariableListView render component at account level 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 20%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
@@ -406,7 +355,7 @@ exports[`VariableListView render component at account level 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 20%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
@@ -417,7 +366,7 @@ exports[`VariableListView render component at account level 1`] = `
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 20%;"
+            style="width: 25%;"
           >
             <p
               class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text"
@@ -425,15 +374,6 @@ exports[`VariableListView render component at account level 1`] = `
             >
               CUSTOM
             </p>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 20%;"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text"
-            />
           </div>
           <div
             class="TableV2--cell"
@@ -598,7 +538,7 @@ exports[`VariableListView render component with initial page render - paged metr
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 25%;"
+        style="width: 30%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -615,7 +555,7 @@ exports[`VariableListView render component with initial page render - paged metr
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 15%;"
+        style="width: 20%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -632,7 +572,7 @@ exports[`VariableListView render component with initial page render - paged metr
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 15%;"
+        style="width: 20%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -649,7 +589,7 @@ exports[`VariableListView render component with initial page render - paged metr
         class="TableV2--cell"
         colspan="1"
         role="columnheader"
-        style="width: 20%;"
+        style="width: 25%;"
       >
         <div
           class="Text--withDocsTooltip"
@@ -659,23 +599,6 @@ exports[`VariableListView render component with initial page render - paged metr
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
             valueLabel
-          </p>
-        </div>
-      </div>
-      <div
-        class="TableV2--cell"
-        colspan="1"
-        role="columnheader"
-        style="width: 20%;"
-      >
-        <div
-          class="Text--withDocsTooltip"
-          data-tooltip-id="VariableListViewdefaultValue"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            variables.defaultValue
           </p>
         </div>
       </div>
@@ -710,7 +633,7 @@ exports[`VariableListView render component with initial page render - paged metr
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 25%;"
+            style="width: 30%;"
           >
             <div
               class="Layout--horizontal StyledProps--main"
@@ -742,7 +665,7 @@ exports[`VariableListView render component with initial page render - paged metr
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 20%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
@@ -753,7 +676,7 @@ exports[`VariableListView render component with initial page render - paged metr
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 15%;"
+            style="width: 20%;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
@@ -764,24 +687,13 @@ exports[`VariableListView render component with initial page render - paged metr
           <div
             class="TableV2--cell"
             role="cell"
-            style="width: 20%;"
+            style="width: 25%;"
           >
             <p
               class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text"
               style="--text-line-clamp: 1;"
             >
               CUSTOM
-            </p>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 20%;"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text"
-            >
-              
             </p>
           </div>
           <div

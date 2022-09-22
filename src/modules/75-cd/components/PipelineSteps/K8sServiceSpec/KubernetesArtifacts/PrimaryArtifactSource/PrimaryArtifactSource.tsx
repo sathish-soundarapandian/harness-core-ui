@@ -86,7 +86,7 @@ export const PrimaryArtifactSource = (props: KubernetesArtifactsProps): React.Re
               return null
             }
 
-            const artifactPath = `primary.sources.[${index}]`
+            const artifactPath = `primary.sources[${index}]`
             return (
               <ArtifactInputField
                 {...props}

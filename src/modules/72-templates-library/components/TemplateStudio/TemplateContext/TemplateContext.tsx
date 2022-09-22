@@ -241,9 +241,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         versions: versions,
         lastPublishedVersion,
         stableVersion: data.stableVersion,
-        gitDetails: templateWithGitDetails?.gitDetails?.objectId
-          ? templateWithGitDetails.gitDetails
-          : defaultTo(data?.gitDetails, {}),
+        gitDetails: templateWithGitDetails?.gitDetails ?? defaultTo(data?.gitDetails, {}),
         entityValidityDetails: defaultTo(
           templateWithGitDetails?.entityValidityDetails,
           defaultTo(data?.entityValidityDetails, {})
@@ -264,9 +262,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
       versions: versions,
       lastPublishedVersion,
       stableVersion: stableVersion,
-      gitDetails: templateWithGitDetails?.gitDetails?.objectId
-        ? templateWithGitDetails.gitDetails
-        : defaultTo(data?.gitDetails, {}),
+      gitDetails: templateWithGitDetails?.gitDetails ?? defaultTo(data?.gitDetails, {}),
       storeMetadata,
       entityValidityDetails: defaultTo(
         templateWithGitDetails?.entityValidityDetails,
@@ -306,7 +302,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         versions: versions,
         lastPublishedVersion,
         stableVersion: stableVersion,
-        gitDetails: templateWithGitDetails?.gitDetails?.objectId ? templateWithGitDetails.gitDetails : {},
+        gitDetails: templateWithGitDetails?.gitDetails ?? {},
         storeMetadata,
         entityValidityDetails: defaultTo(templateWithGitDetails?.entityValidityDetails, {}),
         templateYaml: templateYamlStr,
@@ -336,15 +332,6 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
     let templateMetadata: TemplateMetadataSummaryResponse[] = []
     if ((!data || forceFetch) && templateIdentifier !== DefaultNewTemplateId) {
       try {
-        const templateInputsErrorNodeSummary = await getTemplateErrorNodeSummary({
-          ...queryParams,
-          templateIdentifier,
-          versionLabel,
-          repoIdentifier: repoName,
-          branch,
-          getDefaultFromOtherRepo: true
-        })
-
         templateMetadata = await getTemplateMetadata(
           {
             ...queryParams,
@@ -368,6 +355,15 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
           templateIdentifier,
           signal
         )
+
+        const templateInputsErrorNodeSummary = await getTemplateErrorNodeSummary({
+          ...queryParams,
+          templateIdentifier,
+          versionLabel,
+          repoIdentifier: templateWithGitDetails.gitDetails?.repoName,
+          branch: templateWithGitDetails.gitDetails?.branch,
+          getDefaultFromOtherRepo: true
+        })
 
         id = getId(
           queryParams.accountIdentifier,

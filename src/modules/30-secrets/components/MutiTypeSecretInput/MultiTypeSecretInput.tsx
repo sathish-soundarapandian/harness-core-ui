@@ -15,9 +15,12 @@ import {
   ButtonProps,
   ExpressionAndRuntimeTypeProps,
   Text,
-  AllowedTypes
+  AllowedTypes,
+  HarnessDocTooltip,
+  FormikTooltipContext,
+  DataTooltipInterface
 } from '@wings-software/uicore'
-import { get, pick } from 'lodash-es'
+import { defaultTo, get, pick } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'
 import useCreateOrSelectSecretModal from '@secrets/modals/CreateOrSelectSecretModal/useCreateOrSelectSecretModal'
@@ -74,6 +77,7 @@ export interface MultiTypeSecretInputProps extends IFormGroupProps {
   isMultiType?: boolean
   small?: boolean
   defaultValue?: string
+  tooltipProps?: DataTooltipInterface
 }
 
 export interface ConnectedMultiTypeSecretInputProps extends MultiTypeSecretInputProps {
@@ -149,12 +153,18 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     formik.setFieldValue(name, val)
   }
 
+  const tooltipContext = React.useContext(FormikTooltipContext)
+  const dataTooltipId = defaultTo(
+    props.tooltipProps?.dataTooltipId,
+    tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : ''
+  )
+
   return (
     <FormGroup
       {...rest}
       className={cx({ [css.smallForm]: small })}
       labelFor={name}
-      label={label}
+      label={label ? <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} /> : label}
       intent={intent}
       helperText={helperText}
     >

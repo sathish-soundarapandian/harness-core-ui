@@ -13,7 +13,6 @@ import { get, set, uniq, uniqBy, isEmpty, isUndefined } from 'lodash-es'
 import type { UseStringsReturn, StringKeys } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
-import type { K8sDirectInfraYaml } from 'services/ci'
 import {
   illegalIdentifiers,
   keyRegexIdentifier,
@@ -29,6 +28,7 @@ import {
   NameSchemaWithoutHook
 } from '@common/utils/Validation'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 
 export enum Types {
   Text,
@@ -427,7 +427,7 @@ export function generateSchemaFields(
   fields: Field[],
   { initialValues, steps, serviceDependencies, getString }: GenerateSchemaDependencies,
   stepViewType: StepViewType,
-  buildInfrastructureType?: K8sDirectInfraYaml['type']
+  buildInfrastructureType?: CIBuildInfrastructureType
 ): SchemaField[] {
   return fields.map(field => {
     const { name, type, label, isRequired, isActive } = field
@@ -529,7 +529,7 @@ export function validate(
   config: Field[],
   dependencies: GenerateSchemaDependencies,
   stepViewType: StepViewType,
-  buildInfrastructureType?: K8sDirectInfraYaml['type']
+  buildInfrastructureType?: CIBuildInfrastructureType
 ): FormikErrors<any> {
   const errors = {}
   if (isEmpty(dependencies.steps)) {

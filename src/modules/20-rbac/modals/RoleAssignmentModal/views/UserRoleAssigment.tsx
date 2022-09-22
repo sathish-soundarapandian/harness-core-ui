@@ -32,8 +32,7 @@ import {
   getScopeBasedDefaultAssignment,
   InvitationStatus,
   isNewRoleAssignment,
-  isAccountBasicRole,
-  isAccountBasicRolePresent
+  isAccountBasicRole
 } from '@rbac/utils/utils'
 import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
@@ -90,7 +89,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
-  const { ACCOUNT_BASIC_ROLE, ACCOUNT_BASIC_ROLE_ONLY } = useFeatureFlags()
+  const { ACCOUNT_BASIC_ROLE } = useFeatureFlags()
   const isCommunity = useGetCommunity()
   const [query, setQuery] = useState<string>()
   const { showSuccess } = useToaster()
@@ -154,13 +153,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
       }
       return acc
     }, []),
-    getScopeBasedDefaultAssignment(
-      scope,
-      getString,
-      isCommunity,
-      isAccountBasicRolePresent(scope, !!ACCOUNT_BASIC_ROLE),
-      !!ACCOUNT_BASIC_ROLE_ONLY
-    )
+    getScopeBasedDefaultAssignment(scope, getString, isCommunity, !!ACCOUNT_BASIC_ROLE)
   )
 
   const handleRoleAssignment = async (values: UserRoleAssignmentValues): Promise<void> => {

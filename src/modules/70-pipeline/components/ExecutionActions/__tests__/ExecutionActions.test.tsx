@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { render, fireEvent, findByText, act, RenderResult, waitFor } from '@testing-library/react'
+import { render, fireEvent, findByText, act, RenderResult, waitFor, screen } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
+import userEvent from '@testing-library/user-event'
 import { useStrings } from 'framework/strings'
-
 import { TestWrapper } from '@common/utils/testUtils'
 import * as useFeaturesLib from '@common/hooks/useFeatures'
 import routes from '@common/RouteDefinitions'
@@ -17,7 +17,6 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { HandleInterruptQueryParams, useHandleInterrupt, useHandleStageInterrupt } from 'services/pipeline-ng'
 import { accountPathProps, executionPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
-
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import ExecutionActions from '../ExecutionActions'
 
@@ -98,11 +97,11 @@ describe('<ExecutionActions /> tests', () => {
 
     expect(result!.container).toMatchSnapshot('container')
 
-    const btn = result!.container.querySelector('[icon="more"]')?.closest('button')
-
-    act(() => {
-      fireEvent.click(btn!)
-    })
+    userEvent.click(
+      screen.getByRole('button', {
+        name: /execution menu actions/i
+      })
+    )
 
     await findByText(document.body, 'editPipeline')
 
@@ -281,14 +280,39 @@ describe('<ExecutionActions /> tests', () => {
         </TestWrapper>
       )
     })
-
-    const moreIcon = result!.container.querySelector('span[icon="more"]')
-    act(() => {
-      fireEvent.click(moreIcon!)
-    })
+    userEvent.click(
+      screen.getByRole('button', {
+        name: /execution menu actions/i
+      })
+    )
     const menuItems = result!.baseElement.querySelectorAll('.bp3-menu-item')
-    const editPipelineMenuItem = Array.from(menuItems).find(item => item.textContent === 'editPipeline')
-    expect(editPipelineMenuItem).toBeUndefined()
+    const viewPipelineMenuItem = Array.from(menuItems).find(item => item.textContent === 'editPipeline')
+    expect(viewPipelineMenuItem).toBeInTheDocument()
+    expect(viewPipelineMenuItem).toHaveAttribute('hidden')
+  })
+
+  test('when showEditButton is true and canEdit is false, View Pipeline button should appear', () => {
+    const { getByText } = render(
+      <TestWrapper path={TEST_PATH} pathParams={pathParams}>
+        <ExecutionActions
+          source="executions"
+          params={pathParams as any}
+          executionStatus="Expired"
+          refetch={jest.fn()}
+          showEditButton={true}
+          canEdit={false}
+        />
+      </TestWrapper>
+    )
+
+    userEvent.click(
+      screen.getByRole('button', {
+        name: /execution menu actions/i
+      })
+    )
+    const viewPipelineBtn = getByText('pipeline.viewPipeline')
+    expect(viewPipelineBtn).toBeInTheDocument()
+    expect(viewPipelineBtn.parentElement?.parentElement).not.toHaveAttribute('hidden')
   })
 
   test('Open in new tab button visible on Execution History', () => {
@@ -322,15 +346,14 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    const moreButton = getByText('more')?.closest('button')
+    userEvent.click(
+      screen.getByRole('button', {
+        name: /execution menu actions/i
+      })
+    )
 
-    act(() => {
-      fireEvent.click(moreButton!)
-    })
-
-    const openInNewTabButton = getByText(result.current.getString('pipeline.openInNewTab')) as HTMLAnchorElement
-    expect(openInNewTabButton).toBeDefined()
-    expect(openInNewTabButton?.href).toContain(executionPipelineViewRoute)
+    const openInNewTabButton = getByText(result.current.getString('pipeline.viewExecution')) as HTMLAnchorElement
+    expect(openInNewTabButton).toHaveAttribute('href', executionPipelineViewRoute)
   })
 
   test('Open in new tab button unavailable on Pipeline View page', () => {
@@ -339,7 +362,7 @@ describe('<ExecutionActions /> tests', () => {
     )
     const { result } = renderHook(() => useStrings(), { wrapper })
 
-    const { getByText, queryByText } = render(
+    const { queryByText } = render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ExecutionActions
           params={pathParams as any}
@@ -351,11 +374,11 @@ describe('<ExecutionActions /> tests', () => {
       </TestWrapper>
     )
 
-    const moreButton = getByText('more')?.closest('button')
-
-    act(() => {
-      fireEvent.click(moreButton!)
-    })
+    userEvent.click(
+      screen.getByRole('button', {
+        name: /execution menu actions/i
+      })
+    )
 
     const openInNewTabButton = queryByText(result.current.getString('pipeline.openInNewTab'))
     expect(openInNewTabButton).not.toBeInTheDocument()

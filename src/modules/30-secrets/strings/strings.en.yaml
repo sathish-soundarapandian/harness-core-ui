@@ -56,7 +56,6 @@ createSSHCredWizard:
   validateRealm: 'Realm is required'
   verifyStepOne: 'Checking for Delegates'
   verifyStepTwo: 'Verifying Connection'
-  verifyRetest: 'RETEST CONNECTION'
 createWinRmCredWizard:
   titleDetails: 'WinRm Details'
   validateDomain: 'Domain is required'

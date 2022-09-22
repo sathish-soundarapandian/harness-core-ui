@@ -22,7 +22,7 @@ import type {
   ExecutionWrapperConfig,
   StageElementConfig
 } from 'services/pipeline-ng'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getStepTypeByDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
 import { CodebaseTypes, isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
 import type { DeployStageConfig, InfraStructureDefinitionYaml } from '@pipeline/utils/DeployStageInterface'
@@ -37,6 +37,8 @@ import '@sto-steps/components/PipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
 import type { StageSelectionData } from '../../utils/runPipelineUtils'
 import { getSelectedStagesFromPipeline } from './CommonUtils/CommonUtils'
+import type { CustomVariablesData } from '../PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
+import type { DeployServiceEntityData } from '../PipelineInputSetForm/StageInputSetForm'
 
 export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
   let responseStep: ExecutionWrapperConfig | undefined = undefined
@@ -341,11 +343,9 @@ export const validateStage = ({
         set(errors, 'variables', errorsResponse?.variables)
       }
     }
-    if (
-      originalStageConfig?.serviceConfig?.serviceDefinition?.type === ServiceDeploymentType.Kubernetes ||
-      originalStageConfig?.serviceConfig?.serviceDefinition?.type === ServiceDeploymentType.ServerlessAwsLambda
-    ) {
-      const step = factory.getStep(originalStageConfig?.serviceConfig?.serviceDefinition?.type)
+
+    if (stageConfig?.serviceConfig?.serviceDefinition?.type) {
+      const step = factory.getStep(getStepTypeByDeploymentType(stageConfig?.serviceConfig?.serviceDefinition?.type))
       const errorsResponse = step?.validateInputSet({
         data: stageConfig?.serviceConfig?.serviceDefinition?.spec,
         template: templateStageConfig?.serviceConfig?.serviceDefinition?.spec,
@@ -357,18 +357,64 @@ export const validateStage = ({
         set(errors, 'spec.serviceConfig.serviceDefinition.spec', errorsResponse)
       }
 
-      if (originalStageConfig?.serviceConfig?.serviceDefinition?.spec?.variables) {
+      if (stageConfig?.serviceConfig?.serviceDefinition?.spec?.variables) {
         const currentStep = factory.getStep(StepType.CustomVariable)
         const stepErrorsResponse = currentStep?.validateInputSet({
           data: stageConfig?.serviceConfig?.serviceDefinition?.spec,
           template: templateStageConfig?.serviceConfig?.serviceDefinition?.spec,
           getString,
           viewType
-        })
+        }) as FormikErrors<CustomVariablesData>
 
-        if (!isEmpty(stepErrorsResponse)) {
-          set(errors, 'spec.serviceConfig.serviceDefinition.spec', stepErrorsResponse)
+        if (!isEmpty(stepErrorsResponse?.variables)) {
+          set(errors, 'spec.serviceConfig.serviceDefinition.spec.variables', stepErrorsResponse.variables)
         }
+      }
+    }
+
+    if (stageConfig?.service?.serviceInputs?.serviceDefinition?.type) {
+      const step = factory.getStep(
+        getStepTypeByDeploymentType(stageConfig?.service?.serviceInputs?.serviceDefinition?.type)
+      )
+      const errorsResponse = step?.validateInputSet({
+        data: stageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
+        template: templateStageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
+        getString,
+        viewType
+      })
+
+      if (!isEmpty(errorsResponse)) {
+        set(errors, 'spec.service.serviceInputs.serviceDefinition.spec', errorsResponse)
+      }
+
+      if (stageConfig?.service?.serviceInputs?.serviceDefinition?.spec?.variables) {
+        const currentStep = factory.getStep(StepType.CustomVariable)
+        const stepErrorsResponse = currentStep?.validateInputSet({
+          data: stageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
+          template: templateStageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
+          getString,
+          viewType
+        }) as FormikErrors<CustomVariablesData>
+
+        if (!isEmpty(stepErrorsResponse?.variables)) {
+          set(errors, 'spec.service.serviceInputs.serviceDefinition.spec.variables', stepErrorsResponse.variables)
+        }
+      }
+    }
+
+    // validate serviceRef
+    // TODO: nested fields of a service (serviceInputs) need to be validated once serviceRef is selected
+    if (getMultiTypeFromValue(templateStageConfig?.service?.serviceRef) === MultiTypeInputType.RUNTIME) {
+      const currentStep = factory.getStep(StepType.DeployServiceEntity)
+      const stepErrorsResponse = currentStep?.validateInputSet({
+        data: stageConfig,
+        template: templateStageConfig,
+        getString,
+        viewType
+      }) as FormikErrors<Required<DeployServiceEntityData>>
+
+      if (!isEmpty(stepErrorsResponse?.service?.serviceRef)) {
+        set(errors, 'spec.service.serviceRef', stepErrorsResponse?.service?.serviceRef)
       }
     }
 

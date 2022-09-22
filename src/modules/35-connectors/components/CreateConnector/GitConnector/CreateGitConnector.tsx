@@ -14,7 +14,7 @@ import {
   CreateConnectorModalProps,
   GIT_TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { useStrings } from 'framework/strings'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { buildGitPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -72,7 +72,7 @@ const CreateGitConnector = (props: CreateConnectorModalProps): JSX.Element => {
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep={true}

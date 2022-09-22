@@ -90,12 +90,15 @@ export type ServerlessInfraTypes =
   | ServerlessAzureInfrastructure
   | ServerlessAwsLambdaInfrastructure
 
+// ignore these ci keys which are map structure, allowing '' value rather than <+input> re-assigned as the value
+const ignoreKeys = ['envVariables', 'settings', 'portBindings', 'buildArgs', 'labels']
+
 export const changeEmptyValuesToRunTimeInput = (inputset: any, propertyKey: string): InputSetDTO => {
   if (inputset) {
     Object.keys(inputset).forEach(key => {
       if (typeof inputset[key] === 'object') {
         changeEmptyValuesToRunTimeInput(inputset[key], key)
-      } else if (inputset[key] === '' && ['tags'].indexOf(propertyKey) === -1) {
+      } else if (inputset[key] === '' && ['tags', ...ignoreKeys].indexOf(propertyKey) === -1) {
         inputset[key] = '<+input>'
       }
     })

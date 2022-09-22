@@ -35,7 +35,7 @@ export interface PackageTypeItem {
 
 export const packageTypeItemsWinrm: PackageTypeItem[] = [
   {
-    label: 'common.application',
+    label: 'pipeline.phasesForm.packageTypesWinrm.application',
     value: PackageTypeItems.APPLICATION
   },
   {

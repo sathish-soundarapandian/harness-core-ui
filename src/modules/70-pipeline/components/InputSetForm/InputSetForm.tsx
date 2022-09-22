@@ -173,7 +173,9 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
       pipelineIdentifier,
       projectIdentifier,
       repoIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     },
     body: {
       stageIdentifiers: []
@@ -262,7 +264,9 @@ export function InputSetForm(props: InputSetFormProps): React.ReactElement {
       projectIdentifier,
       repoIdentifier,
       branch,
-      getTemplatesResolvedPipeline: true
+      getTemplatesResolvedPipeline: true,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     }
   })
 

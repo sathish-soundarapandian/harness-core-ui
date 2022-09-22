@@ -73,6 +73,9 @@ const RecommendationSummaryCard: (props: RecommendationSummaryCardProps) => JSX.
       queryString['filters'] = filters
       queryString['origin'] = pageType
     }
+    if (!pageType) {
+      queryString['perspectiveFilters'] = JSON.stringify(filters.perspectiveFilters)
+    }
     if (recommendationsDetails.length === 1 && recommendationData?.count === 1) {
       const recommendationId = recommendationsDetails[0].id
       const recommendationName = recommendationsDetails[0].resourceName || recommendationId

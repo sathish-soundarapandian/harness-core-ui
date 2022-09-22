@@ -37,7 +37,7 @@ import css from './CostCalculator.module.scss'
 interface CostCalculatorProps {
   module: Module
   setView: (view: SubscribeViews) => void
-  setSubscriptionProps: (props: SubscriptionProps) => void
+  setSubscriptionProps: (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
   subscriptionProps: SubscriptionProps
   className: string
   onPriceSkewsLoad: (skews: { [key: string]: any }[]) => void

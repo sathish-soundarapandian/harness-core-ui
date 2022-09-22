@@ -426,6 +426,48 @@
           "invalidYaml": null
         },
         "governanceMetadata": null
+      },
+      {
+        "connector": {
+          "name": "azureConnector",
+          "identifier": "connector",
+          "description": null,
+          "orgIdentifier": "CVNG",
+          "projectIdentifier": null,
+          "tags": {},
+          "type": "Azure",
+          "spec": {
+            "url": "https://qva35651.azureARM.com/",
+            "apiTokenRef": "org.harness",
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1646186996478,
+        "lastModifiedAt": 1646203306079,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1646623973765,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1646623973765
+        },
+        "activityDetails": {
+          "lastActivityTime": 1646203306167
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
       }
     ],
     "pageIndex": 0,

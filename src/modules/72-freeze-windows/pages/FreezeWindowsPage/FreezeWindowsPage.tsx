@@ -53,7 +53,7 @@ export default function FreezeWindowsPage(): React.ReactElement {
   }, [searchRef.current, setGitFilter]) // updateQueryParams,
 
   const loading = false
-  const hasListContent = true
+  const hasListContent = false
 
   return (
     <>
@@ -61,7 +61,7 @@ export default function FreezeWindowsPage(): React.ReactElement {
         title={
           <div className="ng-tooltip-native">
             <h2 data-tooltip-id="freezeWindowsPageHeading"> {getString('common.freezeWindows')}</h2>
-            <HarnessDocTooltip tooltipId="freezeWindowPageHeading" useStandAlone={true} />
+            <HarnessDocTooltip tooltipId="freezeWindowsPageHeading" useStandAlone={true} />
           </div>
         }
         breadcrumbs={
@@ -116,7 +116,12 @@ export default function FreezeWindowsPage(): React.ReactElement {
         </Layout.Horizontal>
       </Page.SubHeader>
 
-      <Page.Body loading={loading}>
+      <Page.Body
+        loading={loading}
+        // error={(error?.data as Error)?.message || error?.message}
+        className={css.freezeWindowsPageBody}
+        // retryOnError={onRetry}
+      >
         {!loading && hasListContent ? (
           <>
             <ResultsViewHeader />

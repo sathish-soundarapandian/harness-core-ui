@@ -24,6 +24,7 @@ module.exports = {
     '!src/framework/app/App.tsx',
     '!src/framework/strings/languageLoader.ts',
     '!src/framework/AppStore/AppStoreContext.tsx',
+    '!src/microfrontends/index.ts',
     '!src/**/*.d.ts',
     '!src/**/*.test.{ts,tsx}',
     '!src/**/*.stories.{ts,tsx}',

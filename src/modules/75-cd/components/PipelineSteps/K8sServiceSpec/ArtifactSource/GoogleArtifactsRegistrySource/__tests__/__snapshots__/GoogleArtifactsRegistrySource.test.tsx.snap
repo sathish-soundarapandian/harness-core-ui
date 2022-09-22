@@ -139,7 +139,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -627,7 +627,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"

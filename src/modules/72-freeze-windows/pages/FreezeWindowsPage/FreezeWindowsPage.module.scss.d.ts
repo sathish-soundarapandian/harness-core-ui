@@ -10,6 +10,7 @@ declare const styles: {
   readonly dropdownPopover: string
   readonly expandSearch: string
   readonly freeeWindowsPageSubHeader: string
+  readonly freezeWindowsPageBody: string
   readonly gitFilter: string
 }
 export default styles

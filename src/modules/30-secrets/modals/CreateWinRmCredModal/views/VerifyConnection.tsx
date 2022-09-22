@@ -22,100 +22,106 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
 import VerifySecret, { Status } from './VerifySecret'
+import css from './StepDetails.module.scss'
 
 interface VerifyConnectionProps {
   identifier: string
   closeModal?: () => void
+  showFinishBtn?: boolean
 }
 
-const VerifyConnection: React.FC<VerifyConnectionProps> = ({ identifier, closeModal }) => {
+const VerifyConnection: React.FC<VerifyConnectionProps> = ({ identifier, closeModal, showFinishBtn = false }) => {
   const [validationMetadata, setValidationMetadata] = useState<WinRmCredentialsValidationMetadata>()
   const [finishStatus, setFinishStatus] = useState<Status | undefined>()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   return (
     <>
-      <Container width={300}>
-        <Formik<WinRmCredentialsValidationMetadata>
-          onSubmit={formData => {
-            setValidationMetadata({
-              type: 'WinRmCredentials',
-              host: formData.host
-            })
-          }}
-          formName="sshVerifyConnectionForm"
-          initialValues={{
-            type: 'WinRmCredentials',
-            host: ''
-          }}
-          validationSchema={Yup.object().shape({
-            host: Yup.string().trim().required()
-          })}
-        >
-          {() => {
-            return (
-              <FormikForm>
-                <FormInput.Text
-                  name="host"
-                  label={getString('secrets.createSSHCredWizard.labelHostname')}
-                  disabled={!!validationMetadata}
-                />
-                <Text font={{ size: 'xsmall', weight: 'bold' }}>
-                  {getString('secrets.createSSHCredWizard.hostnameInfo').toUpperCase()}
-                </Text>
-                {validationMetadata ? null : (
-                  <Button
-                    type="submit"
-                    text={getString('secrets.createSSHCredWizard.btnVerifyConnection')}
-                    style={{ fontSize: 'smaller' }}
-                    margin={{ top: 'medium' }}
-                    variation={ButtonVariation.SECONDARY}
-                    size={ButtonSize.SMALL}
-                  />
-                )}
-              </FormikForm>
-            )
-          }}
-        </Formik>
-      </Container>
-      {validationMetadata ? (
-        <Container margin={{ top: 'xxlarge' }}>
-          <VerifySecret
-            identifier={identifier as string}
-            validationMetadata={validationMetadata}
-            onFinish={status => {
-              setFinishStatus(status)
+      <Container className={css.formData}>
+        <Container width={300}>
+          <Formik<WinRmCredentialsValidationMetadata>
+            onSubmit={formData => {
+              setValidationMetadata({
+                type: 'WinRmCredentials',
+                host: formData.host
+              })
             }}
-          />
-          {finishStatus && (
-            <>
-              <Button
-                text={getString('secrets.createSSHCredWizard.verifyRetest')}
-                variation={ButtonVariation.SECONDARY}
-                size={ButtonSize.SMALL}
-                margin={{ top: 'medium' }}
-                onClick={() => {
-                  setValidationMetadata(undefined)
-                }}
-              />
-              <Container margin={{ top: 'large' }}>
+            formName="sshVerifyConnectionForm"
+            initialValues={{
+              type: 'WinRmCredentials',
+              host: ''
+            }}
+            validationSchema={Yup.object().shape({
+              host: Yup.string().trim().required()
+            })}
+          >
+            {() => {
+              return (
+                <FormikForm>
+                  <FormInput.Text
+                    name="host"
+                    label={getString('secrets.createSSHCredWizard.labelHostname')}
+                    disabled={!!validationMetadata}
+                  />
+                  <Text font={{ size: 'xsmall', weight: 'bold' }}>
+                    {getString('secrets.createSSHCredWizard.hostnameInfo')}
+                  </Text>
+                  {validationMetadata ? null : (
+                    <Button
+                      type="submit"
+                      text={getString('common.smtp.testConnection')}
+                      style={{ fontSize: 'smaller' }}
+                      margin={{ top: 'medium' }}
+                      variation={ButtonVariation.SECONDARY}
+                      size={ButtonSize.SMALL}
+                    />
+                  )}
+                </FormikForm>
+              )
+            }}
+          </Formik>
+        </Container>
+        {validationMetadata ? (
+          <Container margin={{ top: 'xxlarge' }}>
+            <VerifySecret
+              identifier={identifier as string}
+              validationMetadata={validationMetadata}
+              onFinish={status => {
+                setFinishStatus(status)
+              }}
+            />
+            {finishStatus && (
+              <>
                 <Button
-                  text={getString('finish').toUpperCase()}
+                  text={getString('retry')}
                   variation={ButtonVariation.SECONDARY}
                   size={ButtonSize.SMALL}
+                  margin={{ top: 'medium' }}
                   onClick={() => {
-                    trackEvent(SecretActions.SaveCreateSecret, {
-                      category: Category.SECRET,
-                      finishStatus,
-                      validationMetadata
-                    })
-                    /* istanbul ignore next */
-                    closeModal?.()
+                    setValidationMetadata(undefined)
                   }}
                 />
-              </Container>
-            </>
-          )}
+              </>
+            )}
+          </Container>
+        ) : null}
+      </Container>
+      {showFinishBtn ? (
+        <Container margin={{ top: 'large' }}>
+          <Button
+            text={getString('finish')}
+            variation={ButtonVariation.SECONDARY}
+            size={ButtonSize.SMALL}
+            onClick={() => {
+              trackEvent(SecretActions.SaveCreateSecret, {
+                category: Category.SECRET,
+                finishStatus,
+                validationMetadata
+              })
+              /* istanbul ignore next */
+              closeModal?.()
+            }}
+          />
         </Container>
       ) : null}
     </>

@@ -104,7 +104,7 @@ exports[`ManifestSelection tests can change artifact input type  without crashin
                     class="bp3-form-content"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
@@ -324,7 +324,7 @@ exports[`ManifestSelection tests last step data with proper initial values 1`] =
                     class="bp3-form-content"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <label
                         class="Thumbnail--squareCardContainer"
@@ -608,7 +608,7 @@ exports[`ManifestSelection tests last step data without initial values 1`] = `
                     class="bp3-form-content"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <label
                         class="Thumbnail--squareCardContainer"
@@ -901,7 +901,7 @@ exports[`ManifestSelection tests new connector view works correctly 1`] = `
                         class="bp3-form-content"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                         >
                           <label
                             class="Thumbnail--squareCardContainer"
@@ -1008,7 +1008,7 @@ exports[`ManifestSelection tests new connector view works correctly 1`] = `
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
-                        style="margin-bottom: 5px;"
+                        data-test-id="connectorTooltip"
                       >
                         <span
                           class="Tooltip--acenter bp3-label"
@@ -1346,7 +1346,7 @@ exports[`ManifestSelection tests new connector view works inside select dialog c
                         class="bp3-form-content"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                         >
                           <label
                             class="Thumbnail--squareCardContainer"
@@ -1453,7 +1453,7 @@ exports[`ManifestSelection tests new connector view works inside select dialog c
                     >
                       <div
                         class="StyledProps--font StyledProps--main"
-                        style="margin-bottom: 5px;"
+                        data-test-id="connectorTooltip"
                       >
                         <span
                           class="Tooltip--acenter bp3-label"
@@ -1767,7 +1767,7 @@ exports[`ManifestSelection tests renders correctly with differnet manifest types
                     class="bp3-form-content"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <label
                         class="Thumbnail--squareCardContainer"
@@ -2036,7 +2036,7 @@ exports[`ManifestSelection tests renders without crashing 1`] = `
                     class="bp3-form-content"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"

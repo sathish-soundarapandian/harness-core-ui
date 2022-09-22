@@ -46,6 +46,7 @@ import {
   getInitialValuesInCorrectFormat,
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import type { RunTestsStepProps, RunTestsStepData, RunTestsStepDataUI } from './RunTestsStep'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './RunTestsStepFunctionConfigs'
 import { CIStepOptionalConfig, getOptionalSubLabel } from '../CIStep/CIStepOptionalConfig'
@@ -57,7 +58,6 @@ import {
 } from '../CIStep/StepUtils'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
-import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface FieldRenderProps {
@@ -96,7 +96,10 @@ const ET_COMMANDS =
   'cd /opt\n' +
   'arch=`uname -m`\n' +
   'if [ $arch = "x86_64" ]; then\n' +
-  '  wget -qO- https://get.et.harness.io/releases/latest/nix/harness-et-agent.tar.gz | tar -xz\n' +
+  '  if cat /etc/os-release | grep -iq alpine ; then\n' +
+  '    wget -qO- https://get.et.harness.io/releases/latest/alpine/harness-et-agent.tar.gz | tar -xz\n' +
+  '  else\n' +
+  '    wget -qO- https://get.et.harness.io/releases/latest/nix/harness-et-agent.tar.gz | tar -xz\n' +
   'elif [ $arch = "aarch64" ]; then\n' +
   '  wget -qO- https://get.et.harness.io/releases/latest/arm/harness-et-agent.tar.gz | tar -xz\n' +
   'fi\n' +
@@ -223,7 +226,9 @@ export const RunTestsStepBase = (
   const isQAEnvironment = window.location.origin === qaLocation
   const [mavenSetupQuestionAnswer, setMavenSetupQuestionAnswer] = React.useState('yes')
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
-  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
+  const buildInfrastructureType =
+    (get(currentStage, 'stage.spec.infrastructure.type') as CIBuildInfrastructureType) ||
+    (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
   const { getString } = useStrings()
   const [buildToolOptions, setBuildToolOptions] = React.useState<SelectOption[]>(
     getBuildToolOptions(getString, initialValues?.spec?.language) || []
@@ -438,7 +443,7 @@ export const RunTestsStepBase = (
       )}
       formName="ciRunTests"
       validate={valuesToValidate => {
-        if (buildInfrastructureType === CIBuildInfrastructureType.VM) {
+        if ([CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType)) {
           return validateConnectorRefAndImageDepdendency(
             get(valuesToValidate, 'spec.connectorRef', ''),
             get(valuesToValidate, 'spec.image', ''),
@@ -496,7 +501,7 @@ export const RunTestsStepBase = (
                 description: {}
               }}
             />
-            {buildInfrastructureType !== CIBuildInfrastructureType.VM ? (
+            {![CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType) ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -734,7 +739,9 @@ gradle.projectsEvaluated {
                 summary={getString('pipeline.additionalConfiguration')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {buildInfrastructureType === CIBuildInfrastructureType.VM ? (
+                    {[CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
+                      buildInfrastructureType
+                    ) ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}

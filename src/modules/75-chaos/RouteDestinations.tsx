@@ -19,7 +19,6 @@ import {
   delegateConfigProps,
   delegatePathProps,
   orgPathProps,
-  pipelineModuleParams,
   projectPathProps,
   resourceGroupPathProps,
   rolePathProps,
@@ -294,7 +293,7 @@ export default function ChaosRoutes(): React.ReactElement {
           ...accountPathProps,
           ...projectPathProps,
           ...connectorPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.ConnectorDetailsPage}
       >
@@ -307,7 +306,7 @@ export default function ChaosRoutes(): React.ReactElement {
           ...accountPathProps,
           ...projectPathProps,
           ...secretPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
       >
         <RedirectToSecretDetailHome />
@@ -319,7 +318,7 @@ export default function ChaosRoutes(): React.ReactElement {
           ...accountPathProps,
           ...projectPathProps,
           ...secretPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.SecretDetails}
       >
@@ -334,7 +333,7 @@ export default function ChaosRoutes(): React.ReactElement {
           ...accountPathProps,
           ...projectPathProps,
           ...secretPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.SecretReferences}
       >
@@ -348,7 +347,7 @@ export default function ChaosRoutes(): React.ReactElement {
         path={routes.toDelegateList({
           ...accountPathProps,
           ...projectPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.DelegateListing}
       >
@@ -362,7 +361,7 @@ export default function ChaosRoutes(): React.ReactElement {
         path={routes.toDelegateConfigs({
           ...accountPathProps,
           ...projectPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.DelegateConfigurations}
       >
@@ -377,7 +376,7 @@ export default function ChaosRoutes(): React.ReactElement {
           ...accountPathProps,
           ...projectPathProps,
           ...delegatePathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         pageName={PAGE_NAME.DelegateDetails}
       >
@@ -391,13 +390,13 @@ export default function ChaosRoutes(): React.ReactElement {
             ...accountPathProps,
             ...projectPathProps,
             ...delegateConfigProps,
-            ...pipelineModuleParams
+            ...chaosModuleParams
           }),
           routes.toEditDelegateConfigsDetails({
             ...accountPathProps,
             ...projectPathProps,
             ...delegateConfigProps,
-            ...pipelineModuleParams
+            ...chaosModuleParams
           })
         ]}
         pageName={PAGE_NAME.DelegateProfileDetails}
@@ -412,7 +411,7 @@ export default function ChaosRoutes(): React.ReactElement {
           routes.toDelegateTokens({
             ...accountPathProps,
             ...projectPathProps,
-            ...pipelineModuleParams
+            ...chaosModuleParams
           })
         ]}
         pageName={PAGE_NAME.DelegateTokens}
@@ -427,7 +426,7 @@ export default function ChaosRoutes(): React.ReactElement {
           ...accountPathProps,
           ...projectPathProps,
           ...orgPathProps,
-          ...pipelineModuleParams
+          ...chaosModuleParams
         })}
         exact
         pageName={PAGE_NAME.CreateSecretFromYamlPage}

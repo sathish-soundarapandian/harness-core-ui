@@ -135,7 +135,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -1453,7 +1453,7 @@ exports[`Git Clone Step Step Render initial render 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -2051,7 +2051,7 @@ exports[`Git Clone Step Step Render should render onEdit fixed values properly 1
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -2827,7 +2827,7 @@ exports[`Git Clone Step Step Render should render onEdit runtime input values pr
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"

@@ -10,8 +10,10 @@ import { connect } from 'formik'
 import { AllowedTypes, Layout } from '@wings-software/uicore'
 import cx from 'classnames'
 
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ServiceSpec } from 'services/cd-ng'
+import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -25,6 +27,7 @@ import type { K8SDirectServiceStep } from '../../K8sServiceSpec/K8sServiceSpecIn
 import { KubernetesArtifacts } from '../../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import { KubernetesManifests } from '../../K8sServiceSpec/KubernetesManifests/KubernetesManifests'
 import PrimaryArtifactRef from '../../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
+import { ConfigFiles } from '../../SshServiceSpec/SshConfigFiles/ConfigFiles'
 import css from './GenericServiceSpec.module.scss'
 
 export interface KubernetesInputSetProps {
@@ -92,6 +95,16 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
         <KubernetesManifests
           manifests={allValues?.manifests}
           manifestSourceBaseFactory={manifestSourceBaseFactory}
+          stageIdentifier={stageIdentifier}
+          template={template}
+          {...commonProps}
+        />
+      )}
+
+      {!!template?.configFiles?.length && (
+        <ConfigFiles
+          configFiles={defaultTo(allValues?.configFiles, initialValues?.configFiles)}
+          configFileSourceBaseFactory={configFileSourceBaseFactory}
           stageIdentifier={stageIdentifier}
           template={template}
           {...commonProps}

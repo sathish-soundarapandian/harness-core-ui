@@ -154,6 +154,33 @@ export interface AmazonS3ArtifactProps {
   isMultiArtifactSource?: boolean
 }
 
+export interface GithubPackageRegistryInitialValuesType {
+  identifier?: string
+  versionType?: TagTypes
+  spec: {
+    connectorRef: string
+    packageType: string
+    org: string
+    packageName: string
+    version: string
+    versionRegex: string
+  }
+}
+
+export interface GithubPackageRegistryProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: GithubPackageRegistryInitialValuesType
+  handleSubmit: (data: ArtifactConfig) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
+}
+
 export interface ACRArtifactProps {
   key: string
   name: string

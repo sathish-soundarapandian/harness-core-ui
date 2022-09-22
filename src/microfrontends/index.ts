@@ -33,6 +33,7 @@ import type {
   UseCreateConnectorModalReturn,
   UseCreateConnectorModalProps
 } from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import type { LevelUpBannerProps } from '@common/components/FeatureWarning/LevelUpBanner'
 
 export interface Scope {
   accountId?: string
@@ -50,6 +51,7 @@ export interface CommonComponents {
     ExtendedMonacoDiffEditorProps & React.RefAttributes<MonacoDiffEditor>
   >
   RBACTooltip?: React.FC<RBACTooltipProps>
+  LevelUpBanner?: React.FC<LevelUpBannerProps>
 }
 
 export interface Hooks {

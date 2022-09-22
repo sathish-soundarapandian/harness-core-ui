@@ -76,6 +76,7 @@ remove: Remove
 member: Member
 showMore: Show More
 showLess: Show Less
+showSelected: Show Selected
 hideAll: Hide All
 moreInfo: More Info
 moreOptions: More options
@@ -92,6 +93,8 @@ selectType: Select Type
 timeframe: Timeframe
 selectTimeFrame: Select Timeframe
 lastModified: 'Last Modified'
+servicePrefix: 'Service: {{ name }}'
+serviceInputs: Service inputs
 accountSetting:
   connector:
     loading: 'Loading settings...'
@@ -857,6 +860,7 @@ scope: '{{ $.delegate.Scope }}'
 community: Community
 resourceCenter:
   title: 'RESOURCE CENTER'
+  link: 'contact our support'
   productUpdates:
     title: Product Updates
     whatsnew: 'What’s New'
@@ -949,6 +953,7 @@ freezeWindows: Freeze Windows
 oAuthLabel: OAuth
 import: Import
 importEntityFromGit: Import {{resourceType}} From Git
+environmentOverrides: Environment Overrides
 serviceOverrides: Service Overrides
 invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'
 repositoryFormat: Repository Format

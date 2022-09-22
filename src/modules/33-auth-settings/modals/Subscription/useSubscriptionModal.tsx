@@ -36,6 +36,7 @@ interface UseSubscribeModalReturns {
   openSubscribeModal: ({ _plan, _module, _time }: OpenSubscribeModalProps) => void
   closeSubscribeModal: () => void
 }
+type SetStateMethod = (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
 
 interface OpenSubscribeModalProps {
   _module: Module
@@ -227,7 +228,7 @@ const LeftView = ({
           module={module}
           setView={setView}
           subscriptionProps={subscriptionProps}
-          setSubscriptionProps={setSubscriptionProps}
+          setSubscriptionProps={setSubscriptionProps as SetStateMethod}
           className={css.leftView}
           onPriceSkewsLoad={onPriceSkewsLoad}
         />

@@ -264,7 +264,7 @@ exports[`Test Cloudformation create stack should be able to open and close inlin
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -1691,7 +1691,7 @@ exports[`Test Cloudformation create stack should be able to open optional dropdo
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -3010,7 +3010,7 @@ exports[`Test Cloudformation create stack should be able to open remote param mo
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -4437,7 +4437,7 @@ exports[`Test Cloudformation create stack should be able to submit 1`] = `
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -5109,7 +5109,7 @@ exports[`Test Cloudformation create stack should open and close remote template 
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -5764,7 +5764,7 @@ exports[`Test Cloudformation create stack should render edit view as new step 1`
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -6421,7 +6421,7 @@ exports[`Test Cloudformation create stack should render edit view as new step wi
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -7225,7 +7225,7 @@ exports[`Test Cloudformation create stack should render runtime components 1`] =
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -7973,7 +7973,7 @@ exports[`Test Cloudformation create stack should show api aws statues loading st
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -8678,7 +8678,7 @@ exports[`Test Cloudformation create stack should show api capabilities loading s
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
@@ -9383,7 +9383,7 @@ exports[`Test Cloudformation create stack should show api regions loading state 
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"

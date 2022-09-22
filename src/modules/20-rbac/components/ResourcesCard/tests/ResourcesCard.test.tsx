@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { queryByAttribute, render, RenderResult } from '@testing-library/react'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getResourceTypeHandlerMock } from '@rbac/utils/RbacFactoryMockData'
@@ -18,10 +17,7 @@ jest.mock('@rbac/factories/RbacFactory', () => ({
 }))
 describe('Resource Card', () => {
   let renderObj: RenderResult
-  test('it should render attribute selection option if feature flag is enabled and required methods are provided', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      ATTRIBUTE_TYPE_ACL_ENABLED: true
-    })
+  test('it should render attribute selection option if required methods are provided', () => {
     renderObj = render(
       <TestWrapper pathParams={{ accountId: 'dummy' }}>
         <ResourcesCard
@@ -35,23 +31,5 @@ describe('Resource Card', () => {
 
     const { container } = renderObj
     expect(queryByAttribute('data-testid', container, 'attr-ENVIRONMENT')).not.toBeNull()
-  })
-  test('it should not render attribute selection option if feature flag is disabled', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      ATTRIBUTE_TYPE_ACL_ENABLED: false
-    })
-    renderObj = render(
-      <TestWrapper pathParams={{ accountId: 'dummy' }}>
-        <ResourcesCard
-          resourceType={ResourceType.ENVIRONMENT}
-          resourceValues={{ attributeName: 'test', attributeValues: ['testVal'] }}
-          onResourceSelectionChange={jest.fn()}
-          disableSpecificResourcesSelection={false}
-        />
-      </TestWrapper>
-    )
-
-    const { container } = renderObj
-    expect(queryByAttribute('data-testid', container, 'attr-ENVIRONMENT')).toBeNull()
   })
 })

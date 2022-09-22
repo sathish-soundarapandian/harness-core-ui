@@ -167,16 +167,6 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
       >
         {formik => (
           <>
-            {getMultiTypeFromValue(get(template, 'credentialsRef', '')) === MultiTypeInputType.RUNTIME && (
-              <div className={cx(stepCss.formGroup, stepCss.md)}>
-                <MultiTypeSecretInput
-                  name={'credentialsRef'}
-                  type={getMultiTypeSecretInputType(initialValues.serviceType)}
-                  label={getString('cd.steps.common.specifyCredentials')}
-                  expressions={expressions}
-                />
-              </div>
-            )}
             {getMultiTypeFromValue(get(template, 'connectorRef', '')) === MultiTypeInputType.RUNTIME && (
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <FormMultiTypeConnectorField
@@ -250,6 +240,16 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
                   initialTags={initialValues?.awsInstanceFilter?.tags}
                   errorMessage={get(tagsError, 'data.message', '')}
                   className="tags-select"
+                />
+              </div>
+            )}
+            {getMultiTypeFromValue(get(template, 'credentialsRef', '')) === MultiTypeInputType.RUNTIME && (
+              <div className={cx(stepCss.formGroup, stepCss.md)}>
+                <MultiTypeSecretInput
+                  name={'credentialsRef'}
+                  type={getMultiTypeSecretInputType(initialValues.serviceType)}
+                  label={getString('cd.steps.common.specifyCredentials')}
+                  expressions={expressions}
                 />
               </div>
             )}

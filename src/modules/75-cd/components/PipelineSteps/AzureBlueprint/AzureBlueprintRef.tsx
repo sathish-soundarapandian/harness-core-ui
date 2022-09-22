@@ -28,7 +28,6 @@ import {
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useQueryParams } from '@common/hooks'
-import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -83,32 +82,23 @@ export const AzureBlueprintRef = (
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
-          provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
-            /* istanbul ignore next */
-            if (getMultiTypeFromValue(value as string) === MultiTypeInputType.FIXED) {
-              return IdentifierSchemaWithOutName(getString, {
-                requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
-                regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
-              })
-            }
-            /* istanbul ignore next */
-            return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
-          }),
           configuration: Yup.object().shape({
             connectorRef: Yup.string().required(getString('pipelineSteps.build.create.connectorRequiredError')),
             assignmentName: Yup.string().required(getString('cd.azureBlueprint.assignmentNameError')),
             scope: Yup.string(),
-            template: Yup.object().shape({
-              store: Yup.object({
-                type: Yup.string(),
-                spec: Yup.object().when('type', {
-                  is: value => value !== 'Harness',
-                  then: Yup.object().shape({
-                    connectorRef: Yup.string().required(getString('cd.cloudFormation.errors.templateRequired'))
+            template: Yup.object()
+              .shape({
+                store: Yup.object({
+                  type: Yup.string(),
+                  spec: Yup.object().when('type', {
+                    is: value => value !== 'Harness',
+                    then: Yup.object().shape({
+                      connectorRef: Yup.string().required(getString('cd.cloudFormation.errors.templateRequired'))
+                    })
                   })
                 })
               })
-            })
+              .required()
           })
         })
       })}
@@ -118,7 +108,7 @@ export const AzureBlueprintRef = (
         const { values, setFieldValue, errors } = formik
         const config = values.spec.configuration
         const templateType = config?.template?.store?.type
-        let templatePath = config?.template?.store?.spec?.paths
+        let templatePath = config?.template?.store?.spec?.folderPath
         if (templateType === 'Harness') {
           templatePath = config?.template?.store?.spec?.files || config?.template?.store?.spec?.secretFiles
         }
@@ -160,40 +150,13 @@ export const AzureBlueprintRef = (
               )}
             </div>
             <div className={css.divider} />
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.MultiTextInput
-                name="spec.provisionerIdentifier"
-                label={getString('pipelineSteps.provisionerIdentifier')}
-                multiTextInputProps={{ expressions, allowableTypes }}
-                disabled={readonly}
-              />
-              {
-                /* istanbul ignore next */
-                isValueRuntimeInput(values.spec?.provisionerIdentifier) && (
-                  <ConfigureOptions
-                    value={values.spec?.provisionerIdentifier as string}
-                    type="String"
-                    variableName="spec.provisionerIdentifier"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    /* istanbul ignore next */
-                    onChange={value => {
-                      setFieldValue('spec.provisionerIdentifier', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                  />
-                )
-              }
-            </div>
             <Label className={cx(stepCss.bottomMargin4, stepCss.topMargin4, css.azureBlueprintTitle)}>
               {getString('cd.azureBlueprint.configuration')}
             </Label>
             <div className={cx(stepCss.formGroup, stepCss.lg)}>
               <FormMultiTypeConnectorField
-                label={<Text color={Color.GREY_900}>{getString('pipelineSteps.awsConnectorLabel')}</Text>}
-                type={Connectors.AWS}
+                label={<Text color={Color.GREY_900}>{getString('common.azureConnector')}</Text>}
+                type={Connectors.AZURE}
                 name="spec.configuration.connectorRef"
                 placeholder={getString('select')}
                 accountIdentifier={accountId}
@@ -268,8 +231,8 @@ export const AzureBlueprintRef = (
                       /* istanbul ignore next */
                       getMultiTypeFromValue(templatePath) === MultiTypeInputType.RUNTIME
                         ? `/${templatePath}`
-                        : templatePath?.[0]
-                        ? templatePath?.[0]
+                        : templatePath
+                        ? templatePath
                         : getString('cd.azureBlueprint.specifyTemplateFileSource')
                     }
                   </a>

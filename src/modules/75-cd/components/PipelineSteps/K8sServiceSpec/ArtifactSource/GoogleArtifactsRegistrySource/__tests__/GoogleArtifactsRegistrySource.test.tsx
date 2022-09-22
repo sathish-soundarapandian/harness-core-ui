@@ -11,12 +11,12 @@ import { Formik, FormikForm, MultiTypeInputType } from '@harness/uicore'
 
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { connectorsData } from '@connectors/pages/connectors/__tests__/mockData'
+
 import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { ArtifactSourceBaseFactory } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { K8SDirectServiceStep } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecInterface'
 import { GoogleArtifactRegistrySource } from '../GoogleArtifactRegistrySource'
 import {
-  bucketListData,
   commonFormikInitialValues,
   templateGoogleArtifactRegistry,
   templateGoogleArtifactRegistryWithVersionRegex,
@@ -26,19 +26,33 @@ import {
 } from './mock'
 
 // Mock API and Functions
+const regionData = {
+  status: 'SUCCESS',
+  data: [
+    {
+      name: 'us-east',
+      value: 'us-east'
+    },
+    {
+      name: 'us-east1',
+      value: 'us-east1'
+    }
+  ],
+  metaData: null,
+  correlationId: '441c6388-e3df-44cd-86f8-ccc6f1a4558b'
+}
+
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
-const fetchBuckets = jest.fn().mockReturnValue(bucketListData)
 const fetchBuilds = jest.fn().mockReturnValue(buildData)
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorsData.data.content[0], refetch: fetchConnectors, loading: false }
   }),
-  useGetV2BucketListForS3: jest.fn().mockImplementation(() => {
-    return { data: bucketListData, refetch: fetchBuckets, error: null, loading: false }
-  }),
   useGetBuildDetailsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
     return { data: buildData, refetch: fetchBuilds, error: null, loading: false }
+  }),
+  useGetRegionsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
+    return { data: regionData }
   })
 }))
 

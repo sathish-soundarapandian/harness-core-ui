@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { ResponseListMonitoredServiceWithHealthSources, ResponsePageUserJourneyResponse } from 'services/cv'
+import type { ResponsePageMSDropdownResponse, ResponsePageUserJourneyResponse } from 'services/cv'
 import type { SLOFilterAction, SLOFilterState } from '../../CVSLOsListingPage.types'
 
 export interface SLOFilterItemsData {
   userJourney: ResponsePageUserJourneyResponse | null
-  monitoredServices: ResponseListMonitoredServiceWithHealthSources | null
+  monitoredServices: ResponsePageMSDropdownResponse | null
 }
 
 export interface SLODashbordFiltersProps {

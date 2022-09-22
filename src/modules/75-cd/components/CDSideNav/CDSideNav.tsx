@@ -32,7 +32,7 @@ import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMe
 import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { useGetCommunity } from '@common/utils/utils'
+import { useGetCommunity, isOnPrem } from '@common/utils/utils'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import type { PagePMSPipelineSummaryResponse } from 'services/pipeline-ng'
@@ -221,7 +221,9 @@ export default function CDSideNav(): React.ReactElement {
           <SidebarLink label="Pipelines" to={routes.toPipelines({ ...params, module })} />
           <SidebarLink label="Services" to={routes.toServices({ ...params, module })} />
           <SidebarLink label="Environments" to={routes.toEnvironment({ ...params, module })} />
-          {!isCommunity && <SidebarLink label={getString('cd.gitOps')} to={routes.toGitOps({ ...params, module })} />}
+          {!isCommunity && !isOnPrem() ? (
+            <SidebarLink label={getString('cd.gitOps')} to={routes.toGitOps({ ...params, module })} />
+          ) : null}
           <ProjectSetupMenu module={module} />
         </React.Fragment>
       ) : null}

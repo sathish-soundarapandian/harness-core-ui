@@ -235,7 +235,7 @@ describe('Test Azure Infrastructure Spec behavior', () => {
     fireEvent.change(subscriptionInput!, { target: { label: 's1', value: 'subscription1' } })
     const resourceGroupInput = getByPlaceholderText('cd.steps.azureInfraStep.resourceGroupPlaceholder') as HTMLElement
     fireEvent.change(resourceGroupInput!, { target: { value: 'rg1' } })
-    const tagEl = getByPlaceholderText('- Select -') as HTMLElement
+    const tagEl = container.querySelector('[name="tagslabel1"]') as HTMLElement
     fireEvent.change(tagEl!, { target: { value: 'newKey' } })
     const tagValEl = container.querySelector('[name="tags.key"]') as HTMLElement
     fireEvent.change(tagValEl!, { target: { value: 'newValue' } })

@@ -13,6 +13,7 @@ import { Icon, IconName } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
+import { isOnPrem } from '@common/utils/utils'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useCreateSmtpModal from '@common/components/Smtp/useCreateSmtpModal'
@@ -46,7 +47,10 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     refetch()
   }
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
-  const showGitOpsCard = useMemo(() => history?.location?.pathname.includes('resources'), [history?.location?.pathname])
+  const showGitOpsCard = useMemo(
+    () => history?.location?.pathname.includes('resources') && !isOnPrem(),
+    [history?.location?.pathname]
+  )
   const smtpResource: ResourceOption[] = [
     {
       label: <String stringID="common.smtp.conifg" />,

@@ -138,14 +138,16 @@ describe('Infrastructure Modal Test', () => {
           environmentIdentifier="test_env"
           hideModal={jest.fn()}
           refetch={jest.fn()}
-          selectedInfrastructure={`infrastructureDefinition:\n  name: "K8s Direct"\n  identifier: "K8s_Direct_Id"\n  orgIdentifier: "default"\n  projectIdentifier: "Ashwin_svc_env"\n  environmentRef: "Env_Infra"\n  description: ""\n  tags: {}\n  allowSimultaneousDeployments: false\n  type: "KubernetesDirect"\n  spec:\n    connectorRef: "account.qastresstarget"\n    namespace: "test"\n    releaseName: "release-<+INFRA_KEY>"\n`}
+          selectedInfrastructure={`infrastructureDefinition:\n  name: "K8s Direct"\n  identifier: "K8s_Direct_Id"\n  orgIdentifier: "default"\n  projectIdentifier: "Ashwin_svc_env"\n  environmentRef: "Env_Infra"\n  description: ""\n  tags: {}\n  allowSimultaneousDeployments: false\n  deploymentType: "Kubernetes"\n  type: "KubernetesDirect"\n  spec:\n    connectorRef: "account.qastresstarget"\n    namespace: "test"\n    releaseName: "release-<+INFRA_KEY>"\n`}
         />
       </TestWrapper>
     )
 
-    await waitFor(() => {
-      expect(screen.getByText('K8s_Direct_Id')).toBeInTheDocument()
-    })
+    expect(await screen.findByText('K8s_Direct_Id')).toBeInTheDocument()
+
+    const checkboxes = screen.getAllByRole('checkbox')
+    expect(checkboxes).toHaveLength(2)
+    expect(checkboxes[0]).toBeDisabled()
 
     const buttons = screen.getAllByRole('button')
 

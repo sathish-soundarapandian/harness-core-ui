@@ -9,9 +9,3 @@ export const ArchiveFormatOptions = [
   { label: 'Tar', value: 'Tar' },
   { label: 'Gzip', value: 'Gzip' }
 ]
-
-export enum CIBuildInfrastructureType {
-  KubernetesDirect = 'KubernetesDirect',
-  VM = 'VM',
-  KubernetesHosted = 'KubernetesHosted'
-}

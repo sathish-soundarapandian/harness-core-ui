@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { render, waitFor, queryByText, fireEvent, queryAllByText } from '@testing-library/react'
+import { render, waitFor, queryByText, fireEvent, queryAllByText, getByText } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 import { useStrings } from 'framework/strings'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import * as usePermission from '@rbac/hooks/usePermission'
 import routes from '@common/RouteDefinitions'
 import { pipelinePathProps } from '@common/utils/routeUtils'
@@ -97,7 +97,9 @@ describe('TriggersPage Triggers tests', () => {
       }
       fireEvent.click(deleteButton)
       await waitFor(() => expect(result.current.getString('triggers.confirmDelete')).not.toBeNull())
-      const confirmDeleteButton = document.body.querySelector('[class*="dialog"] [class*="intent-danger"]')
+
+      const confirmationDailog = findDialogContainer()
+      const confirmDeleteButton = getByText(confirmationDailog as HTMLElement, 'delete')
       if (!confirmDeleteButton) {
         throw Error('No error button')
       }

@@ -92,7 +92,7 @@ describe('ECSInfraSpec tests', () => {
     )
 
     // There should be only 2 Add buttons because EcsTaskDefinition and EcsServiceDefinition allows only 1 manifest addition
-    const allPlusAddManifestButtons = await findAllByText(/common.plusAddName/)
+    const allPlusAddManifestButtons = await findAllByText(/common.addName/)
     expect(allPlusAddManifestButtons).toHaveLength(2)
 
     // Check if section is rendered with correct header and list items

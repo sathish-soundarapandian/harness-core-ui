@@ -28,11 +28,16 @@ import type { Error as TemplateError } from 'services/template-ng'
 import noEntityFoundImage from './images/no-entity-found.svg'
 import css from './NoEntityFound.module.scss'
 
+export enum ErrorPlacement {
+  TOP = 'TOP',
+  BOTTOM = 'BOTTOM'
+}
 interface NoEntityFoundProps {
   identifier: string
   entityType: 'pipeline' | 'inputSet' | 'template'
   errorObj?: Error | TemplateError
   gitDetails?: GitRemoteDetailsProps
+  errorPlacement?: ErrorPlacement
 }
 
 const entityTypeLabelMapping = {
@@ -42,7 +47,7 @@ const entityTypeLabelMapping = {
 }
 
 function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
-  const { identifier, entityType, errorObj, gitDetails } = props
+  const { identifier, entityType, errorObj, gitDetails, errorPlacement = ErrorPlacement.TOP } = props
   const { repoIdentifier, branch, versionLabel, connectorRef, storeType, repoName } =
     useQueryParams<TemplateStudioQueryParams>()
 
@@ -128,15 +133,14 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
     [repoIdentifier, branch, identifier, orgIdentifier, projectIdentifier, accountId, module]
   )
 
+  const Error = !isEmpty(errorObj?.responseMessages) && (
+    <ErrorHandler responseMessages={errorObj?.responseMessages as ResponseMessage[]} className={css.errorHandler} />
+  )
+
   return (
     <div className={css.noPipelineFoundContainer}>
       <Layout.Vertical spacing="small" flex={{ justifyContent: 'center', alignItems: 'center' }}>
-        {!isEmpty(errorObj?.responseMessages) && (
-          <ErrorHandler
-            responseMessages={errorObj?.responseMessages as ResponseMessage[]}
-            className={css.errorHandler}
-          />
-        )}
+        {errorPlacement === ErrorPlacement.TOP && Error}
         <img src={noEntityFoundImage} className={css.noPipelineFoundImage} />
         <Text className={css.noPipelineFound} margin={{ top: 'medium', bottom: 'small' }}>
           <String
@@ -163,6 +167,7 @@ function NoEntityFound(props: NoEntityFoundProps): JSX.Element {
             branchSelectClassName={css.branchSelector}
           />
         )}
+        {errorPlacement === ErrorPlacement.BOTTOM && Error}
       </Layout.Vertical>
     </div>
   )

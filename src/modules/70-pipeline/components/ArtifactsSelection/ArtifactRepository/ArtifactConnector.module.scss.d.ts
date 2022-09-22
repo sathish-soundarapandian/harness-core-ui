@@ -35,5 +35,6 @@ declare const styles: {
   readonly tagInputButton: string
   readonly thumbnailSelect: string
   readonly variables: string
+  readonly wrapping: string
 }
 export default styles

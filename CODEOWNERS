@@ -16,9 +16,9 @@ yarn.lock @harness/ui-council
 .storybook/ @harness/ui-council
 scripts/ @harness/ui-council
 certificates/ @harness/ui-council
-configs/modulefederation.config.js @abhinavrastogi-harness @vkbansal @knagurski @tan-nhu
-configs/ @harness/ui-council @abhinavrastogi-harness @vkbansal
-src/microfrontends/ @abhinavrastogi-harness @vkbansal @knagurski @tan-nhu
+configs/modulefederation.config.js @abhinavrastogi-harness @vkbansal-harness @knagurski @tan-nhu
+configs/ @harness/ui-council @abhinavrastogi-harness @vkbansal-harness
+src/microfrontends/ @abhinavrastogi-harness @vkbansal-harness @knagurski @tan-nhu
 src/framework/ @harness/ui-council
 src/framework/featureStore @harness/ui-plg
 src/framework/LicenseStore @harness/ui-plg
@@ -55,7 +55,7 @@ src/modules/70-pipeline/components/HomePageByModule @harness/ui-plg
 src/modules/70-pipeline/components/TrialModalTemplate @harness/ui-plg
 src/modules/70-pipeline/interfaces/STOApp.ts @harness/ui-sto
 src/modules/70-pipeline/pages/execution/ExecutionSecurityView @harness/ui-sto
-src/modules/72-templates-library @harness/ui-pipeline
+src/modules/72-templates-library @harness/ui-templates
 src/modules/72-freeze-windows @harness/ui-pipeline
 src/modules/75-cd @harness/ui-pipeline
 src/modules/75-cd/modals/CDTrial @harness/ui-plg

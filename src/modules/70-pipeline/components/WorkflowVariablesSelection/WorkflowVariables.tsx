@@ -53,8 +53,12 @@ export default function WorkflowVariables({
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const serviceConfig = stage?.stage?.spec?.serviceConfig || {}
   const parentStage = serviceConfig.useFromStage?.stage
-  const { metadataMap } = usePipelineVariables()
+  const { metadataMap, variablesPipeline } = usePipelineVariables()
   const [parentStageData, setParentStageData] = React.useState<StageElementWrapperConfig>()
+  const { stage: varStage } = getStageFromPipeline<DeploymentStageElementConfig>(
+    selectedStageId || '',
+    variablesPipeline
+  )
 
   React.useEffect(() => {
     if (isEmpty(parentStageData) && parentStage) {
@@ -99,10 +103,12 @@ export default function WorkflowVariables({
   }, [isPropagating, stageSpec?.variables, predefinedSetsPath?.variables])
 
   const getYamlPropertiesForVariables = (): Variable[] => {
-    if (isPropagating) {
-      return get(predefinedSetsPath, 'variables', []) as Variable[]
-    }
-    return []
+    let stageVariables: Variable[]
+    const _serviceConfig = get(varStage, 'stage.spec.serviceConfig', {})
+
+    if (isPropagating) stageVariables = get(_serviceConfig, 'stageOverrides.variables', [])
+    else stageVariables = get(_serviceConfig, 'serviceDefinition.spec.variables', [])
+    return stageVariables
   }
 
   return (

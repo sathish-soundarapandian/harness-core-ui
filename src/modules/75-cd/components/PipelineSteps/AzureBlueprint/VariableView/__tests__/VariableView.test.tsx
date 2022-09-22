@@ -34,7 +34,6 @@ describe('Azure Blueprint Variable view ', () => {
       identifier: '',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: '',
         configuration: {
           connectorRef: '',
           assignmentName: '',
@@ -59,7 +58,6 @@ describe('Azure Blueprint Variable view ', () => {
       identifier: 'blueprint',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: 'provID',
         configuration: {
           connectorRef: 'testRef',
           assignmentName: 'name',
@@ -81,12 +79,6 @@ describe('Azure Blueprint Variable view ', () => {
           yamlProperties: {
             fqn: 'pipeline.stages.qaStage.execution.steps.blueprint.timeout',
             localName: 'step.blueprint.timeout'
-          }
-        },
-        'step-provisionerIdentifier': {
-          yamlProperties: {
-            fqn: 'pipeline.stages.qaStage.execution.steps.blueprint.spec.provisionerIdentifier',
-            localName: 'step.blueprint.spec.provisionerIdentifier'
           }
         },
         'step-connectorRef': {
@@ -151,7 +143,6 @@ describe('Azure Blueprint Variable view ', () => {
       identifier: 'azureBlueprint',
       timeout: '10m',
       spec: {
-        provisionerIdentifier: 'azureBlueprint',
         configuration: {
           connectorRef: 'testRef',
           assignmentName: 'testName',

@@ -921,7 +921,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                                     >
                                       <div
                                         class="StyledProps--font StyledProps--main"
-                                        style="margin-bottom: 5px;"
+                                        data-test-id="connectorTooltip"
                                       >
                                         <span
                                           class="Tooltip--acenter bp3-label"
@@ -1708,7 +1708,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                                     >
                                       <div
                                         class="StyledProps--font StyledProps--main"
-                                        style="margin-bottom: 5px;"
+                                        data-test-id="connectorTooltip"
                                       >
                                         <span
                                           class="Tooltip--acenter bp3-label"

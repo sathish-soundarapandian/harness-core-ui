@@ -61,11 +61,30 @@ const buildData = {
   metaData: null,
   correlationId: '441c6388-e3df-44cd-86f8-ccc6f1a4558b'
 }
+
+const regionData = {
+  status: 'SUCCESS',
+  data: [
+    {
+      name: 'us-east',
+      value: 'us-east'
+    },
+    {
+      name: 'us-east1',
+      value: 'us-east1'
+    }
+  ],
+  metaData: null,
+  correlationId: '441c6388-e3df-44cd-86f8-ccc6f1a4558b'
+}
 const fetchBuilds = jest.fn().mockReturnValue(buildData)
 
 jest.mock('services/cd-ng', () => ({
   useGetBuildDetailsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
     return { data: buildData, refetch: fetchBuilds, error: null, loading: false }
+  }),
+  useGetRegionsForGoogleArtifactRegistry: jest.fn().mockImplementation(() => {
+    return { data: regionData }
   })
 }))
 

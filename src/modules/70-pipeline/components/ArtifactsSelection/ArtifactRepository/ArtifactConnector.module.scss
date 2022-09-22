@@ -152,6 +152,18 @@
 }
 .thumbnailSelect {
   cursor: pointer;
+  min-width: 680px;
+
+  .wrapping {
+    display: flex;
+    flex-wrap: wrap;
+
+    label {
+      margin-left: 0px !important;
+      margin-right: var(--layout-spacing);
+      margin-bottom: var(--layout-spacing);
+    }
+  }
 }
 .panel {
   border: 1px solid var(--form-field-border);

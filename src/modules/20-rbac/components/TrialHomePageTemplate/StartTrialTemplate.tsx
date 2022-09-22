@@ -26,6 +26,7 @@ import routes from '@common/RouteDefinitions'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { Editions, ModuleLicenseType, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
 import { useFeatureFlags, useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { getSavedRefererURL } from '@common/utils/utils'
 import { FeatureFlag } from '@common/featureFlags'
 import css from './StartTrialTemplate.module.scss'
 
@@ -136,10 +137,11 @@ export const StartTrialTemplate: React.FC<StartTrialTemplateProps> = ({
     moduleType: module.toUpperCase() as any,
     edition: Editions.ENTERPRISE
   }
-
+  const refererURL = getSavedRefererURL()
   const { mutate: startTrial, loading: startingTrial } = useStartTrialLicense({
     queryParams: {
-      accountIdentifier: accountId
+      accountIdentifier: accountId,
+      ...(refererURL ? { referer: refererURL } : {})
     }
   })
 

@@ -16,22 +16,20 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import type { InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useGetPipeline } from 'services/pipeline-ng'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { spec } from '../../types'
 import {
   checkIfRunTimeInput,
+  getDurationOptions,
   isConfiguredMonitoredServiceRunTime,
   isDefaultMonitoredServiceAndServiceOrEnvRunTime,
   isTemplatisedMonitoredService
 } from '../../utils'
 import type { ContinousVerificationProps } from './types'
-import {
-  baseLineOptions,
-  durationOptions,
-  trafficSplitPercentageOptions,
-  VerificationSensitivityOptions
-} from '../../constants'
+import { baseLineOptions, trafficSplitPercentageOptions, VerificationSensitivityOptions } from '../../constants'
 import RunTimeMonitoredService from './components/RunTimeMonitoredService/RunTimeMonitoredService'
 import {
   getInfraAndServiceData,
@@ -88,6 +86,9 @@ export function ContinousVerificationInputSetStep(
     const { serviceIdentifierData, envIdentifierData } = getInfraAndServiceData(pipeline, formik)
     return { serviceIdentifier: serviceIdentifierData, envIdentifier: envIdentifierData }
   }, [pipeline, formik])
+
+  const extendedDurationFlag = useFeatureFlag(FeatureFlag.ENABLE_VERIFY_STEP_LONG_DURATION)
+  const durationList = getDurationOptions(extendedDurationFlag)
 
   const renderRunTimeMonitoredService = (): JSX.Element => {
     const type = monitoredService?.type ?? MONITORED_SERVICE_TYPE.DEFAULT
@@ -151,7 +152,7 @@ export function ContinousVerificationInputSetStep(
             <FormInput.MultiTypeInput
               label={getString('duration')}
               name={`${prefix}spec.spec.duration`}
-              selectItems={durationOptions}
+              selectItems={durationList}
               useValue
               multiTypeInputProps={{
                 expressions,

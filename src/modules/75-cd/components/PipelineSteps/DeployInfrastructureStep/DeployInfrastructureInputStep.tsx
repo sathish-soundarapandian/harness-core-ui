@@ -26,12 +26,14 @@ import {
   CustomVariablesData
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
+import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
 import DeployClusters from './DeployClusters/DeployClusters'
 import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 import type { CustomStepProps, DeployInfrastructureProps } from './utils'
+import { GenericServiceSpecInputSetMode } from '../Common/GenericServiceSpec/GenericServiceSpecInputSetMode'
 
 import css from './DeployInfrastructureStep.module.scss'
 
@@ -42,13 +44,16 @@ function DeployInfrastructureInputStepInternal({
   customStepProps,
   stepViewType,
   readonly,
-  onUpdate
+  onUpdate,
+  factory
 }: DeployInfrastructureProps & {
   formik?: FormikProps<DeployStageConfig>
   customStepProps: CustomStepProps
+  factory?: AbstractStepFactory
 }): JSX.Element {
   const { getString } = useStrings()
   const { gitOpsEnabled, serviceRef, environmentRef, infrastructureRef, clusterRef } = customStepProps
+  const { serviceOverrideInputs } = inputSetData?.template?.environment || {}
 
   return (
     <>
@@ -139,23 +144,46 @@ function DeployInfrastructureInputStepInternal({
               </div>
             </>
           )}
-          {inputSetData?.template?.environment?.serviceOverrideInputs?.variables && (
+
+          {inputSetData?.template?.environment?.environmentInputs?.overrides && (
             <>
-              {/* This loads the service override runtime inputs when environment is selected at runtime */}
+              <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
+                {getString('common.environmentOverrides')}
+              </Text>
+              <GenericServiceSpecInputSetMode
+                {...customStepProps}
+                serviceIdentifier={customStepProps.serviceRef}
+                initialValues={initialValues?.environment?.environmentInputs?.overrides || {}}
+                allValues={inputSetData?.allValues?.environment?.environmentInputs?.overrides || {}}
+                stepViewType={stepViewType}
+                template={inputSetData?.template?.environment?.environmentInputs?.overrides}
+                path={`environment.environmentInputs.overrides`}
+                readonly={inputSetData?.readonly || readonly}
+                factory={factory}
+                allowableTypes={allowableTypes}
+              />
+            </>
+          )}
+
+          {(serviceOverrideInputs?.variables ||
+            serviceOverrideInputs?.manifest ||
+            serviceOverrideInputs?.configFiles) && (
+            <>
               <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
                 {getString('common.serviceOverrides')}
               </Text>
-              <div className={css.sectionContent}>
-                <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                  <CustomVariableInputSet
-                    allowableTypes={allowableTypes}
-                    initialValues={initialValues.environment?.serviceOverrideInputs as unknown as CustomVariablesData}
-                    template={inputSetData.template.environment.serviceOverrideInputs as unknown as CustomVariablesData}
-                    path={'environment.serviceOverrideInputs'}
-                    className={css.fullWidth}
-                  />
-                </Layout.Horizontal>
-              </div>
+              <GenericServiceSpecInputSetMode
+                {...customStepProps}
+                serviceIdentifier={customStepProps.serviceRef}
+                initialValues={initialValues?.environment?.serviceOverrideInputs || {}}
+                allValues={inputSetData?.allValues?.environment?.serviceOverrideInputs || {}}
+                stepViewType={stepViewType}
+                template={inputSetData?.template?.environment?.serviceOverrideInputs}
+                path={`environment.serviceOverrideInputs`}
+                readonly={inputSetData?.readonly || readonly}
+                factory={factory}
+                allowableTypes={allowableTypes}
+              />
             </>
           )}
 

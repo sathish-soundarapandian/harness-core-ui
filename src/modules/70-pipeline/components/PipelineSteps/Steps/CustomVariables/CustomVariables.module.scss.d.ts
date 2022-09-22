@@ -18,7 +18,6 @@ declare const styles: {
   readonly customVariables: string
   readonly customVariablesInputSets: string
   readonly customVariablesStage: string
-  readonly descriptionRow: string
   readonly fixed: string
   readonly headerRow: string
   readonly hoveredRow: string

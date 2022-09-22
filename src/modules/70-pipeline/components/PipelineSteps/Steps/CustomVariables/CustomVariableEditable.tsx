@@ -20,14 +20,14 @@ import {
 import { Formik, FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
 import cx from 'classnames'
-import { debounce, escape } from 'lodash-es'
+import { debounce, defaultTo, escape, isEmpty } from 'lodash-es'
 
 import { useParams } from 'react-router-dom'
-import { String, useStrings } from 'framework/strings'
+import { String, StringKeys, useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import type { NGVariable } from 'services/cd-ng'
+import type { ConnectorInfoDTO, NGVariable } from 'services/cd-ng'
 import type { YamlProperties } from 'services/pipeline-ng'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -68,6 +68,8 @@ export interface CustomVariableEditableExtraProps {
   allowedVarialblesTypes?: VariableType[]
   isDescriptionEnabled?: boolean
   headerComponent?: JSX.Element
+  allowedConnectorTypes?: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
+  addVariableLabel?: StringKeys
 }
 
 export interface CustomVariableEditableProps extends CustomVariableEditableExtraProps {
@@ -93,7 +95,9 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
     allowableTypes,
     allowedVarialblesTypes,
     isDescriptionEnabled,
-    headerComponent
+    headerComponent,
+    allowedConnectorTypes,
+    addVariableLabel
   } = props
   const uids = React.useRef<string[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -113,7 +117,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
 
   function addNew(): void {
     setSelectedVariable({
-      variable: { name: '', type: 'String', value: '', ...(isDescriptionEnabled && { description: '-' }) },
+      variable: { name: '', type: 'String', value: '', description: '' },
       index: -1
     })
   }
@@ -188,7 +192,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                       size={ButtonSize.SMALL}
                       disabled={readonly}
                     >
-                      <String stringID="common.addVariable" />
+                      <String stringID={defaultTo(addVariableLabel, 'common.addVariable')} />
                     </Button>
                   </div>
                 ) : /* istanbul ignore next */ null}
@@ -259,12 +263,9 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                         </Text>
                       )}
                       {isDescriptionEnabled && (
-                        <FormInput.Text
-                          name={`variables[${index}].description`}
-                          placeholder={getString('common.descriptionPlaceholder')}
-                          disabled={readonly}
-                          className={css.descriptionRow}
-                        />
+                        <Text lineClamp={1} className="descriptionRow">
+                          {isEmpty(variable?.description) ? '-' : variable?.description}
+                        </Text>
                       )}
                       <div
                         className={cx(css.valueRow, {
@@ -287,6 +288,8 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               setRefValue
                               connectorLabelClass="connectorVariableField"
                               enableConfigureOptions={false}
+                              mini={true}
+                              type={allowedConnectorTypes}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput
@@ -302,7 +305,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               label=""
                               disabled={readonly}
                               multiTextInputProps={{
-                                mini: !isDescriptionEnabled,
+                                mini: true,
                                 defaultValueToReset: '',
                                 expressions,
                                 width: 264,

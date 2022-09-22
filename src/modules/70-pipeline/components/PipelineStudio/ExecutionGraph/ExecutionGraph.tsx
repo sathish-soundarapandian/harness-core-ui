@@ -1234,6 +1234,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
               createNodeTitle={getString('addStep')}
               graphActionsLayout={canvasButtonsLayout}
               graphLinkClassname={css.graphLink}
+              optimizeRender={false}
             />
             {hasRollback && (
               <RollbackToggleSwitch

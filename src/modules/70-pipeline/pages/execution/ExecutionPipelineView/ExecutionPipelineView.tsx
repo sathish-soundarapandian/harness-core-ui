@@ -46,7 +46,9 @@ export default function ExecutionPipelineView(): React.ReactElement {
       projectIdentifier,
       repoIdentifier,
       branch,
-      getTemplatesResolvedPipeline: true
+      getTemplatesResolvedPipeline: true,
+      parentEntityConnectorRef: pipelineExecutionSummary?.connectorRef,
+      parentEntityRepoName: pipelineExecutionSummary?.gitDetails?.repoName
     }
   })
   useEffect(() => {

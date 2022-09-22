@@ -69,14 +69,22 @@ export function getStepPaletteModuleInfosFromStage(
   initialCategory?: string,
   stages?: StageElementWrapperConfig[]
 ): StepPalleteModuleInfo[] {
-  let deploymentType = get(stage, 'spec.serviceConfig.serviceDefinition.type', undefined)
+  let deploymentType = get(
+    stage,
+    'spec.serviceConfig.serviceDefinition.type',
+    get(stage, `spec.deploymentType`, undefined)
+  )
   // When stage is propagated from other previous stage
   const propagateFromStageId = get(stage, 'spec.serviceConfig.useFromStage.stage', undefined)
   if (!deploymentType && stages?.length && propagateFromStageId) {
     const propagateFromStage = stages.find(
       currStage => (currStage as DeploymentStageElementConfigWrapper).stage.identifier === propagateFromStageId
     ) as DeploymentStageElementConfigWrapper
-    deploymentType = propagateFromStage?.stage.spec?.serviceConfig?.serviceDefinition?.type
+    deploymentType = get(
+      propagateFromStage?.stage,
+      'spec.serviceConfig.serviceDefinition.type',
+      get(propagateFromStage?.stage, `spec.deploymentType`, undefined)
+    )
   }
 
   let category = initialCategory
@@ -132,7 +140,7 @@ export function getStepPaletteModuleInfosFromStage(
         {
           module: 'cd',
           category: 'Builds',
-          shouldShowCommonSteps: true
+          shouldShowCommonSteps: false
         },
         {
           module: 'cd',
@@ -150,7 +158,7 @@ export function getStepPaletteModuleInfosFromStage(
         {
           module: 'cd',
           category: 'Builds',
-          shouldShowCommonSteps: true
+          shouldShowCommonSteps: false
         },
         {
           module: 'cv',

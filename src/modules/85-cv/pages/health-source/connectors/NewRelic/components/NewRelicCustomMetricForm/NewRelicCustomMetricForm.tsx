@@ -199,7 +199,11 @@ export default function NewRelicCustomMetricForm(props: NewRelicCustomFormInterf
                       : getString('cv.healthSource.connectors.NewRelic.submitQueryNoRecords')
                   }
                   records={[sampleRecord] as Record<string, any>[]}
-                  fetchRecords={!isConnectorRuntimeOrExpression ? fetchNewRelicResponse : noop}
+                  fetchRecords={
+                    shouldFetchApplication(formikValues?.query, isConnectorRuntimeOrExpression)
+                      ? fetchNewRelicResponse
+                      : noop
+                  }
                   loading={loading}
                   error={error}
                   query={query}

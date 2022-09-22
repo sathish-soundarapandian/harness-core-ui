@@ -61,6 +61,12 @@
   text-transform: uppercase;
 }
 
+.contactLink {
+  align-items: flex-end;
+  padding-left: var(--spacing-xsmall) !important;
+  letter-spacing: normal !important;
+}
+
 .communityTooltip {
   width: 250px !important;
 }

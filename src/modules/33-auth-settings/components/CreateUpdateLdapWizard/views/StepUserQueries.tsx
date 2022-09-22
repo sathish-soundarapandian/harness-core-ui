@@ -25,7 +25,6 @@ import {
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   LdapUserSettings,
@@ -35,7 +34,13 @@ import {
 } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CreateUpdateLdapWizardProps, LdapWizardStepProps } from '../CreateUpdateLdapWizard'
-import { QueryFormTitle, QueryStepTitle, QueryTestFailMsgs, QueryTestSuccessMsg } from '../utils'
+import {
+  getErrorMessageFromException,
+  QueryFormTitle,
+  QueryStepTitle,
+  QueryTestFailMsgs,
+  QueryTestSuccessMsg
+} from '../utils'
 import css from '../CreateUpdateLdapWizard.module.scss'
 
 export interface StepUserQueriesProps {
@@ -45,6 +50,7 @@ export interface StepUserQueriesProps {
 
 interface UserQueryPreviewProps {
   index: number
+  displayIndex: number
   customClass?: string
 }
 
@@ -93,6 +99,7 @@ const UserQueryEdit: React.FC<
   emailAttr,
   groupMembershipAttr,
   index,
+  displayIndex,
   customClass,
   onUserQueryCommitEdit,
   onUserQueryDiscardEdit,
@@ -125,9 +132,7 @@ const UserQueryEdit: React.FC<
     } catch (e: any) /* istanbul ignore next */ {
       setUserQueryTestResult(
         <QueryTestFailMsgs
-          errorMessages={defaultTo(e.data?.responseMessages, [
-            { level: 'ERROR', message: e.data?.message || e.message }
-          ])}
+          errorMessages={getErrorMessageFromException(e, getString('authSettings.ldap.queryTestFail'))}
         />
       )
     }
@@ -144,7 +149,7 @@ const UserQueryEdit: React.FC<
       >
         <FormikForm>
           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
-            <QueryFormTitle title={getString('authSettings.ldap.userQueryTitle', { index: index + 1 })} />
+            <QueryFormTitle title={getString('authSettings.ldap.userQueryTitle', { index: displayIndex })} />
             <Container className={css.queryCtaContainer} flex={{ alignItems: 'center' }}>
               <Button
                 text={getString('test')}
@@ -225,6 +230,7 @@ const UserQueryPreview: React.FC<
   emailAttr,
   groupMembershipAttr,
   index,
+  displayIndex,
   customClass,
   onDeleteUserQuery,
   onEnableUserQueryDraftMode
@@ -235,7 +241,7 @@ const UserQueryPreview: React.FC<
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
         <Text font={{ variation: FontVariation.H5 }}>
           <Icon name="chevron-down" color={Color.PRIMARY_6} margin={{ right: 'small' }} />
-          {getString('authSettings.ldap.userQueryTitle', { index: index + 1 })}
+          {getString('authSettings.ldap.userQueryTitle', { index: displayIndex })}
         </Text>
         <Container className={css.queryCtaContainer}>
           <Button
@@ -394,7 +400,7 @@ export const StepUserQueries: React.FC<
       accountId: accountId
     })
   }
-  const UserQueryListPreview = userSettingsList?.map((userSetting, userQueryIdx) => {
+  const UserQueryListPreview = userSettingsList?.map((userSetting, userQueryIdx, userSettingsArr) => {
     if (userSetting.isDraft) {
       return (
         <UserQueryEdit
@@ -405,6 +411,7 @@ export const StepUserQueries: React.FC<
           onUserQueryCommitEdit={onUserQueryCommitEdit}
           onUserQueryDiscardEdit={onUserQueryDiscardEdit}
           onTestUserQuery={onTestUserQuery}
+          displayIndex={userSettingsArr.length - userQueryIdx}
         />
       )
     }
@@ -416,6 +423,7 @@ export const StepUserQueries: React.FC<
         customClass={css.queryPreviewItem}
         onEnableUserQueryDraftMode={onEnableUserQueryDraftMode}
         onDeleteUserQuery={onDeleteUserQuery}
+        displayIndex={userSettingsArr.length - userQueryIdx}
       />
     )
   })

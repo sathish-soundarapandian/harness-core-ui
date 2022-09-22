@@ -31,7 +31,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               pipelineSteps.deploy.inputSet.artifactServer
             </div>
@@ -644,7 +644,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               pipelineSteps.deploy.inputSet.artifactServer
             </div>
@@ -908,7 +908,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 connector
               </div>
@@ -1014,7 +1014,7 @@ exports[`StepWidget tests inputSetMode 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 connector
               </div>

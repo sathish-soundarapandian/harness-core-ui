@@ -19,7 +19,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { CreateAFlagView } from './views/CreateAFlagView'
 import { SetUpYourApplicationView } from './views/SetUpYourApplicationView'
-import { TestYourFlagView } from './views/TestYourFlagView'
+import { ValidateYourFlagView } from './views/ValidatingYourFlagView'
 import css from './OnboardingDetailPage.module.scss'
 
 enum TabId {
@@ -180,7 +180,7 @@ export const OnboardingDetailPage: React.FC = () => {
             panel={
               language &&
               apiKey && (
-                <TestYourFlagView
+                <ValidateYourFlagView
                   flagInfo={flagInfo}
                   language={language}
                   apiKey={apiKey}

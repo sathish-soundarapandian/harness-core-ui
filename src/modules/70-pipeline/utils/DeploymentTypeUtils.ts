@@ -19,7 +19,7 @@ export const deploymentTypeLabel: Record<ServiceDefinition['type'], StringKeys> 
   WinRm: 'pipeline.serviceDeploymentTypes.winrm',
   AzureWebApp: 'pipeline.serviceDeploymentTypes.azureWebApp',
   ECS: 'pipeline.serviceDeploymentTypes.amazonEcs',
-  CustomDeployment: 'pipeline.serviceDeploymentTypes.custom'
+  CustomDeployment: 'pipeline.serviceDeploymentTypes.customDeployment'
 }
 
 export const deploymentTypeIcon: Record<ServiceTypes, IconName> = {

@@ -22,3 +22,8 @@
     margin-right: var(--spacing-medium);
   }
 }
+
+.freezeWindowsPageBody {
+  --page-header-height: 138px;
+  padding: var(--spacing-large) var(--spacing-xlarge) var(--spacing-small) var(--spacing-xlarge) !important;
+}

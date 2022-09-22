@@ -16,7 +16,8 @@ import type {
   ShellScriptSourceWrapper,
   CommandUnitWrapper,
   StepElementConfig,
-  StepSpecType
+  StepSpecType,
+  HarnessFileStoreSource
 } from 'services/cd-ng'
 
 // Copy Command Unit type
@@ -26,7 +27,7 @@ export interface CopyCommandUnit extends CommandUnitWrapper {
 
 // Script Command Unit
 interface CustomShellScriptSourceWrapper extends ShellScriptSourceWrapper {
-  spec: ShellScriptInlineSource
+  spec: ShellScriptInlineSource & HarnessFileStoreSource
 }
 export interface CustomScriptCommandUnitSpec extends ScriptCommandUnitSpec {
   source: CustomShellScriptSourceWrapper
@@ -65,6 +66,11 @@ export interface CommandScriptsFormData extends StepElementConfig {
     metadata?: string
     onDelegate: boolean
   }
+}
+
+export enum LocationType {
+  HARNESS = 'Harness',
+  INLINE = 'Inline'
 }
 
 export const scriptInputType: SelectOption[] = [

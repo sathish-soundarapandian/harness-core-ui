@@ -44,7 +44,14 @@ jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
 jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
   return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
 })
-
+jest.mock('@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook', () => ({
+  useGetConnectorsListHook: jest.fn().mockReturnValue({
+    loading: false,
+    categoriesMap: {},
+    connectorsList: ['K8sCluster'],
+    connectorCatalogueOrder: ['CLOUD_PROVIDER']
+  })
+}))
 const variablesTemplate = { name: '', identifier: '' }
 
 describe('<TemplateVariables /> tests', () => {

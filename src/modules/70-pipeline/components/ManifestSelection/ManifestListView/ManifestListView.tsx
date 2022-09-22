@@ -17,7 +17,7 @@ import type { IconProps } from '@harness/icons'
 import { useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
@@ -151,7 +151,10 @@ function ManifestListView({
 
   const getLastStepInitialData = (): ManifestConfig => {
     const initValues = get(listOfManifests[manifestIndex], 'manifest', null)
-    if (initValues?.type && initValues?.type !== selectedManifest) {
+    if (
+      (initValues?.type && initValues?.type !== selectedManifest) ||
+      get(initValues, 'spec.store.type') !== manifestStore
+    ) {
       return null as unknown as ManifestConfig
     }
     return initValues as ManifestConfig
@@ -328,7 +331,7 @@ function ManifestListView({
     setIsEditMode,
     connectorInfo: undefined
   }
-  const verifyOutOfClusterDelegateProps = {
+  const ConnectorTestConnectionProps = {
     name: getString('connectors.stepThreeName'),
     connectorInfo: undefined,
     isStep: true,
@@ -362,7 +365,7 @@ function ManifestListView({
               {...delegateSelectorStepProps}
               buildPayload={manifestStore === ManifestStoreMap.Http ? buildHelmPayload : buildOCIHelmPayload}
             />
-            <VerifyOutOfClusterDelegate {...verifyOutOfClusterDelegateProps} />
+            <ConnectorTestConnection {...ConnectorTestConnectionProps} />
           </StepWizard>
         )
       case ManifestStoreMap.S3:
@@ -371,7 +374,7 @@ function ManifestListView({
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <StepAWSAuthentication {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildAWSPayload} />
-            <VerifyOutOfClusterDelegate {...verifyOutOfClusterDelegateProps} />
+            <ConnectorTestConnection {...ConnectorTestConnectionProps} />
           </StepWizard>
         )
       case ManifestStoreMap.Gcs:
@@ -380,7 +383,7 @@ function ManifestListView({
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <GcpAuthentication {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildGcpPayload} />
-            <VerifyOutOfClusterDelegate {...verifyOutOfClusterDelegateProps} />
+            <ConnectorTestConnection {...ConnectorTestConnectionProps} />
           </StepWizard>
         )
       default:
@@ -406,7 +409,7 @@ function ManifestListView({
               <StepGitlabAuthentication {...authenticationStepProps} />
             ) : null}
             <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildPayload} />
-            <VerifyOutOfClusterDelegate {...verifyOutOfClusterDelegateProps} />
+            <ConnectorTestConnection {...ConnectorTestConnectionProps} />
           </StepWizard>
         )
     }

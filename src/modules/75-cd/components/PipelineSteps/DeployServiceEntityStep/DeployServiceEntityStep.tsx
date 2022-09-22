@@ -1,6 +1,13 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { CompletionItemKind } from 'vscode-languageserver-types'
-import { get, isEmpty } from 'lodash-es'
+import { get, isEmpty, set } from 'lodash-es'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 
 import type { FormikErrors } from 'formik'
@@ -116,15 +123,15 @@ export class DeployServiceEntityStep extends Step<DeployServiceEntityData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<DeployServiceEntityData>): FormikErrors<DeployServiceEntityData> {
-    const errors = {} as any
+  }: ValidateInputSetProps<DeployServiceEntityData>): FormikErrors<Required<DeployServiceEntityData>> {
+    const errors: FormikErrors<Required<DeployServiceEntityData>> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (
       isEmpty(data?.service?.serviceRef) &&
       isRequired &&
       getMultiTypeFromValue(template?.service?.serviceRef) === MultiTypeInputType.RUNTIME
     ) {
-      errors.serviceRef = getString?.('cd.pipelineSteps.serviceTab.serviceIsRequired')
+      set(errors, 'service.serviceRef', getString?.('cd.pipelineSteps.serviceTab.serviceIsRequired'))
     }
     return errors
   }

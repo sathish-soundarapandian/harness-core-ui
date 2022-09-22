@@ -98,6 +98,36 @@ const routes = {
     }
   ),
 
+  toFreezeWindowStudio: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      accountId: _accountId,
+      windowIdentifier,
+      // templateType,
+      // templateIdentifier,
+      ...rest
+    }: Partial<{ windowIdentifier: string } & ProjectPathProps & ModulePathParams>) => {
+      // TemplateStudioPathProps
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      let path
+      if (queryString.length > 0) {
+        path = `resources/freeze-window-studio/window/${windowIdentifier}/?${queryString}`
+      } else {
+        path = `resources/freeze-window-studio/window/${windowIdentifier}/`
+      }
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+
   toUser: withAccountId(() => '/user'),
   toBilling: withAccountId(() => '/settings/billing'),
   toSubscriptions: withAccountId(({ moduleCard, tab }: SubscriptionQueryParams) => {
@@ -733,11 +763,6 @@ const routes = {
   toDeployments: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
       `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/deployments`
-  ),
-  //TODO: temporary route for dogfooding switch to toDeployments and then delete
-  toExecutions: withAccountId(
-    ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
-      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/execution-list`
   ),
   toGetStartedWithCI: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) =>
@@ -1707,6 +1732,7 @@ const routes = {
   toCommitmentOrchestration: withAccountId(() => `/ce/commitment-orchestration`),
   toCommitmentOrchestrationSetup: withAccountId(() => `/ce/commitment-orchestration/setup`),
   toCECloudIntegration: withAccountId(() => `/ce/cloud-integrations/`),
+  toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
   toSTO: withAccountId(() => `/sto`),
   toSTOHome: withAccountId(() => `/sto/home`),

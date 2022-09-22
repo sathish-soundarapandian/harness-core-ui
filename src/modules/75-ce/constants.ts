@@ -182,11 +182,6 @@ export const notificationChannelsList = [
     label: 'ce.anomalyDetection.notificationAlerts.emailChannelLabel',
     value: 'EMAIL',
     icon: { name: 'email-inline' }
-  },
-  {
-    label: 'ce.anomalyDetection.notificationAlerts.microsoftTeamChannelLabel',
-    value: 'MSTEAMS',
-    icon: { name: 'service-msteams' }
   }
 ]
 

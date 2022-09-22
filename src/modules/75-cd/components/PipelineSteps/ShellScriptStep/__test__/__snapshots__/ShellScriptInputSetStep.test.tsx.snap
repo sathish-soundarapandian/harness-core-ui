@@ -975,7 +975,12 @@ exports[`ShellScriptInputSetStep tests renders input sets 1`] = `
               class="bp3-label"
               for="spec.executionTarget.connectorRef"
             >
-              sshConnector
+              <span
+                class="Tooltip--acenter"
+                data-tooltip-id="stepTestUtilForm_spec.executionTarget.connectorRef"
+              >
+                sshConnector
+              </span>
                
               <span
                 class="bp3-text-muted"

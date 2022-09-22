@@ -91,7 +91,7 @@ describe('<TemplateDetails /> tests', () => {
   test('should show selected version label', async () => {
     const { getByTestId } = render(
       <TestWrapper>
-        <ComponentWrapper {...baseProps} allowStableSelection={true} />
+        <ComponentWrapper {...baseProps} isStandAlone />
       </TestWrapper>
     )
     const dropValue = getByTestId('dropdown-value')
@@ -104,7 +104,7 @@ describe('<TemplateDetails /> tests', () => {
     })
     const { getByTestId } = render(
       <TestWrapper>
-        <ComponentWrapper {...newBaseProps} allowStableSelection={true} />
+        <ComponentWrapper {...newBaseProps} isStandAlone />
       </TestWrapper>
     )
     const dropValue = getByTestId('dropdown-value')
@@ -132,9 +132,8 @@ describe('<TemplateDetails /> tests', () => {
 })
 
 describe('<TemplateDetails /> git experience', () => {
-  beforeAll(() => {
+  afterEach(() => {
     useGetTemplateMock.mockReset()
-    useGetTemplateMock.mockClear()
   })
 
   test('Template GET API sends parent entity context in query params', () => {
@@ -159,6 +158,7 @@ describe('<TemplateDetails /> git experience', () => {
       queryParams: {
         accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
         branch: 'branchTest',
+        getDefaultFromOtherRepo: true,
         orgIdentifier: 'default',
         parentEntityAccountIdentifier: 'accountId',
         parentEntityConnectorRef: 'connectorRefTest',
@@ -174,7 +174,8 @@ describe('<TemplateDetails /> git experience', () => {
 
   test('Template GET API doesnt send parent entity context in query params for inline templates', () => {
     const baseProps: TemplateDetailsProps = {
-      template: defaultTo(mockTemplates?.data?.content?.[0], {})
+      template: defaultTo(mockTemplates?.data?.content?.[0], {}),
+      storeMetadata: undefined
     }
 
     render(
@@ -187,11 +188,9 @@ describe('<TemplateDetails /> git experience', () => {
       lazy: true,
       queryParams: {
         accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
+        getDefaultFromOtherRepo: true,
         orgIdentifier: 'default',
         projectIdentifier: 'Templateproject',
-        parentEntityConnectorRef: undefined,
-        parentEntityRepoName: undefined,
-        branch: undefined,
         versionLabel: 'v4'
       },
       templateIdentifier: 'manjutesttemplate'

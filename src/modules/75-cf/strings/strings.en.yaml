@@ -432,6 +432,12 @@ auditLogs:
   changeDetails: Change details
   events:
     updateClause: A clause was updated for a rule
+    removeClause: A clause was removed
+    addClause: A clause was added
+    addToIncludeList: '{{target}} added to included Targets'
+    removeFromIncludeList: '{{target}} removed from included Targets'
+    addToExcludeList: '{{target}} added to excluded Targets'
+    removeFromExcludeList: '{{target}} removed from excluded Targets'
     reorderRules: Rules reordered
     updateDefaultServe:
       bucketBy: Default serve updated for bucket by '{{bucketBy}}'
@@ -458,7 +464,6 @@ auditLogs:
     removeTargetsToVariationTargetMap: Variation '{{variation}}' removed for targets '{{targets}}'
     clearVariationTargetMapping: Variation target mapping removed
     updateOffVariation: Off variation updated to '{{variation}}'
-    removeClause: A clause was removed
     addService: Service {{name}} added
     removeService: Service {{name}} removed
 noEnvironment:
@@ -599,9 +604,9 @@ onboarding:
   waitForConnect: Waiting for SDK...{{ message }}
   allSet: Congratulations! You’re all set!
   tryTarget: Try out our robust <a href='{{ link }}'>targeting rules for this flag</a> for more granular rollouts.
-  backToStart: Back to Quick Start Guide
-  title: Let’s get you started with your first Feature Flag!
-  subtitle: Take your progressive rollout to the next level with Harness Feature Flags
+  backToStart: Complete
+  title: Feature Flags Quick Start Guide
+  subTitle: Everything you need to know in less than 15 minutes.
   upAndRunning: Get a flag up and running in 3 steps
   tryItOut: '{{ $.getStarted }}'
   createAFlag: Create a Flag
@@ -624,8 +629,15 @@ onboarding:
   secret: SDK Secret
   clientKey: Client SDK Key
   setUpYourCode: Set up your code
-  listenToEvent: We’re listening for the event of your feature flag.
-  toggleLabel: Enable or disable your flag by turning the flag toggle on or off, then verify the event we receive has the same value as your application.
+  listenToEvent: We're listening for the change to your Flag status...<br>Be patient, it may take up to 3-5 minutes
+  validatingYourFlag: Validating your Flag
+  validatingFlagInfo: 'Enable your Flag to verify that the event we received has the same value. Learn more about <a target="_blank" href="https://docs.harness.io/article/7ikyqtmjce-communication-sdks-harness-feature-flags">Events and Evaluation</a>'
+  eventWeReceived: Event we received
+  createdAndValidated: Congrats! You have created and validated your first Flag! <br><br>Now you can define which Targets and Target Groups this Flag should be enabled for, and then see how that affects your application.
+  errorReceivingEvent: We couldn't receive a Flag status from your application, check the <a target="_blank" href="https://docs.harness.io/category/eyzngtupao-sdk-overview"> SDK reference guide</a> to ensure you've set up the SDK correctly, then toggle the Flag to try again.
+  furtherAssistance: '<br>If you are still having issues,'
+  toggleError: We couldn’t receive events, check possible reasons below and toggle the Flag to try again
+  toggleLabel: Enable or disable your Flag by turning the Flag toggle on or off, then verify the event we receive has the same value as your application.
   help:
     heading1: The Importance of Your Flag Id
     text1: Your flag Id is required to reference the flag in your code.

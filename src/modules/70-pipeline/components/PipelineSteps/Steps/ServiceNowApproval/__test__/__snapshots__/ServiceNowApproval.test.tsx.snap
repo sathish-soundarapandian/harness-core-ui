@@ -10,7 +10,7 @@ exports[`ServiceNow Approval tests Basic snapshot - deploymentform mode: service
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -600,7 +600,7 @@ exports[`ServiceNow Approval tests Basic snapshot - inputset mode: input set wit
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -1337,7 +1337,7 @@ exports[`ServiceNow Approval tests Edit stage - readonly: edit stage view readon
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -1963,7 +1963,7 @@ exports[`ServiceNow Approval tests Open a saved serviceNow approval step - edit 
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -2862,7 +2862,7 @@ exports[`ServiceNow Approval tests deploymentform mode - readonly: serviceNow-ap
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"

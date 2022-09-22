@@ -36,6 +36,7 @@ import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
 import { useMutateAsGet } from '@common/hooks'
 import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { Pipeline } from '@pipeline/utils/types'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import css from './TemplatePipelineSpecifications.module.scss'
 
 const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): number =>
@@ -43,7 +44,7 @@ const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): nu
 
 export function TemplatePipelineSpecifications(): JSX.Element {
   const {
-    state: { pipeline, schemaErrors, gitDetails },
+    state: { pipeline, schemaErrors, gitDetails, storeMetadata },
     allowableTypes,
     updatePipeline,
     isReadonly
@@ -79,9 +80,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, pipelineScope),
       pipelineIdentifier: pipeline.identifier,
-      repoIdentifier: gitDetails.repoIdentifier,
-      branch: gitDetails.branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
     },
     body: {
       originalEntityYaml: yamlStringify({ pipeline: formValues })
@@ -103,9 +102,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: templateVersionLabel,
-      repoIdentifier: gitDetails.repoIdentifier,
-      branch: gitDetails.branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
     }
   })
 

@@ -291,9 +291,7 @@ function Phases({ selectedStrategy, serviceDefinitionType, selectedStage }: Phas
                   }))}
                   name="packageType"
                   label={
-                    isWinRm
-                      ? getString('pipeline.artifactsSelection.artifactType')
-                      : getString('pipeline.phasesForm.packageType')
+                    isWinRm ? getString('pipeline.artifactsSelection.artifactType') : getString('pipeline.packageType')
                   }
                 />
                 {selectedStrategy === ExecutionType.CANARY || selectedStrategy === ExecutionType.ROLLING ? (

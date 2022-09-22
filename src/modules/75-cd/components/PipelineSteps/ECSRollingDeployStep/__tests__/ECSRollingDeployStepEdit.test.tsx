@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import {
   act,
@@ -93,11 +100,11 @@ describe('GenericExecutionStepEdit tests', () => {
     expect(timeoutInput.value).toBe('20m')
 
     const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
-      'sameAsAlreadyRunningInstances'
+      'spec.sameAsAlreadyRunningInstances'
     ) as HTMLInputElement
     userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
 
-    const forceNewDeploymentCheckbox = queryByNameAttribute('forceNewDeployment') as HTMLInputElement
+    const forceNewDeploymentCheckbox = queryByNameAttribute('spec.forceNewDeployment') as HTMLInputElement
     userEvent.click(forceNewDeploymentCheckbox)
 
     act(() => {
@@ -108,8 +115,10 @@ describe('GenericExecutionStepEdit tests', () => {
         identifier: 'Test_Name',
         name: 'Test Name',
         timeout: '20m',
-        sameAsAlreadyRunningInstances: true,
-        forceNewDeployment: true,
+        spec: {
+          sameAsAlreadyRunningInstances: true,
+          forceNewDeployment: true
+        },
         type: StepType.EcsRollingDeploy
       })
     )
@@ -119,10 +128,12 @@ describe('GenericExecutionStepEdit tests', () => {
     const initialValues = {
       identifier: 'Existing_Name',
       name: 'Existing Name',
+      type: StepType.EcsRollingDeploy,
       timeout: '10m',
-      sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
-      forceNewDeployment: RUNTIME_INPUT_VALUE,
-      type: StepType.EcsRollingDeploy
+      spec: {
+        sameAsAlreadyRunningInstances: RUNTIME_INPUT_VALUE,
+        forceNewDeployment: RUNTIME_INPUT_VALUE
+      }
     }
 
     const { container } = render(
@@ -151,13 +162,15 @@ describe('GenericExecutionStepEdit tests', () => {
     expect(timeoutInput).toBeInTheDocument()
     expect(timeoutInput.value).toBe('10m')
 
-    const cogSameAsAlreadyRunningInstances = document.getElementById('configureOptions_sameAsAlreadyRunningInstances')
+    const cogSameAsAlreadyRunningInstances = document.getElementById(
+      'configureOptions_spec.sameAsAlreadyRunningInstances'
+    )
     userEvent.click(cogSameAsAlreadyRunningInstances!)
     await waitFor(() => expect(modals.length).toBe(1))
     const sameAsAlreadyRunningInstancesCOGModal = modals[0] as HTMLElement
     await doConfigureOptionsTesting(sameAsAlreadyRunningInstancesCOGModal)
 
-    const cogForceNewDeployment = document.getElementById('configureOptions_forceNewDeployment')
+    const cogForceNewDeployment = document.getElementById('configureOptions_spec.forceNewDeployment')
     userEvent.click(cogForceNewDeployment!)
     await waitFor(() => expect(modals.length).toBe(1))
     const forceNewDeploymentCOGModal = modals[0] as HTMLElement
@@ -171,8 +184,10 @@ describe('GenericExecutionStepEdit tests', () => {
         identifier: 'Existing_Name',
         name: 'Existing Name',
         timeout: '10m',
-        sameAsAlreadyRunningInstances: '<+input>.regex(<+input>.includes(/test/))',
-        forceNewDeployment: '<+input>.regex(<+input>.includes(/test/))',
+        spec: {
+          sameAsAlreadyRunningInstances: '<+input>.regex(<+input>.includes(/test/))',
+          forceNewDeployment: '<+input>.regex(<+input>.includes(/test/))'
+        },
         type: StepType.EcsRollingDeploy
       })
     )

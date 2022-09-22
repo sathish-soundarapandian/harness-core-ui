@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { debounce } from 'lodash-es'
+import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import { Formik, FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
 import {
@@ -61,7 +61,9 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
     tabName = 'OVERVIEW',
     allowableTypes,
     allowedVarialblesTypes,
-    isDescriptionEnabled
+    isDescriptionEnabled,
+    allowedConnectorTypes,
+    addVariableLabel
   } = props
   const uids = React.useRef<string[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -83,7 +85,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
 
   function addNew(): void {
     setSelectedVariable({
-      variable: { name: '', type: 'String', value: '', ...(isDescriptionEnabled && { description: '-' }) },
+      variable: { name: '', type: 'String', value: '', description: '' },
       index: -1
     })
   }
@@ -173,7 +175,9 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                           stringID={labelStringMap[variable.type as VariableType]}
                           data-testid={`variables[${index}].type`}
                         />
-                        {isDescriptionEnabled && <Text lineClamp={1}>{variable?.description}</Text>}
+                        {isDescriptionEnabled && (
+                          <Text lineClamp={1}>{isEmpty(variable?.description) ? '-' : variable?.description}</Text>
+                        )}
 
                         <div className={css.valueColumn} data-type={getMultiTypeFromValue(variable.value as string)}>
                           {(variable.type as any) === VariableType.Connector ? (
@@ -190,6 +194,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                               setRefValue
                               connectorLabelClass="connectorVariableField"
                               enableConfigureOptions={false}
+                              type={allowedConnectorTypes}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput name={`variables[${index}].value`} label="" disabled={readonly} />
@@ -255,7 +260,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
                       onClick={addNew}
-                      text={getString('common.addVariable')}
+                      text={getString(defaultTo(addVariableLabel, 'common.addVariable'))}
                     />
                   )}
                 </div>

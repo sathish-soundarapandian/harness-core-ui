@@ -105,7 +105,7 @@ export default function AddEditEnvironmentModal({
     inputRef.current?.focus()
   }, [])
 
-  const { name, identifier, description, tags, type, variables } = get(
+  const { name, identifier, description, tags, type, variables, overrides } = get(
     data,
     'environment',
     {} as NGEnvironmentInfoConfig
@@ -122,7 +122,8 @@ export default function AddEditEnvironmentModal({
           type: defaultTo(type, ''),
           orgIdentifier: defaultTo(orgIdentifier, ''),
           projectIdentifier: defaultTo(projectIdentifier, ''),
-          variables
+          variables,
+          overrides
         } as NGEnvironmentInfoConfig
       }
       formName="editEnvironment"

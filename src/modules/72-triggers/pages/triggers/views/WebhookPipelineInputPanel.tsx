@@ -225,7 +225,9 @@ function WebhookPipelineInputPanelForm({
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     },
     body: {
       stageIdentifiers: []

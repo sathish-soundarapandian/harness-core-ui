@@ -15,7 +15,6 @@ import {
   Dialog,
   Layout,
   MultiTypeInputType,
-  shouldShowError,
   FormikForm,
   AllowedTypes,
   Toggle,
@@ -24,43 +23,32 @@ import {
   RUNTIME_INPUT_VALUE
 } from '@harness/uicore'
 import { defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { IDialogProps, Intent } from '@blueprintjs/core'
 import produce from 'immer'
-import {
-  ServiceDefinition,
-  ServiceYaml,
-  ServiceYamlV2,
-  useGetServiceList,
-  useGetServicesYamlAndRuntimeInputs
-} from 'services/cd-ng'
+import type { ServiceDefinition, ServiceYaml, ServiceYamlV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-import { useToaster } from '@common/exports'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import RbacButton from '@rbac/components/Button/Button'
 import ServiceEntityEditModal from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import { useMutateAsGet } from '@common/hooks'
-import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
   FormState,
   getValidationSchema,
   getAllFixedServices,
-  ServiceData,
   ServicesWithInputs,
   getAllFixedServicesFromValues
 } from './DeployServiceEntityUtils'
-import { ServiceEntitiesList } from './ServiceEntitiesList'
+import { ServiceEntitiesList } from './ServiceEntitiesList/ServiceEntitiesList'
+import { useGetServicesData } from './useGetServicesData'
 import css from './DeployServiceEntityStep.module.scss'
 
 export interface DeployServiceEntityWidgetProps extends DeployServiceEntityCustomProps {
@@ -102,17 +90,19 @@ function getInitialValues(data: DeployServiceEntityData): FormState {
         serviceInputs: data.services.values.reduce(
           (p, c) => ({ ...p, [defaultTo(c.serviceRef, '')]: c.serviceInputs }),
           {}
-        )
+        ),
+        parallel: !!get(data, 'services.metadata.parallel', true)
       }
     }
 
     return {
       services: data.services.values,
-      serviceInputs: {}
+      serviceInputs: {},
+      parallel: !!get(data, 'services.metadata.parallel', true)
     }
   }
 
-  return {}
+  return { parallel: !!get(data, 'services.metadata.parallel', true) }
 }
 
 export default function DeployServiceEntityWidget({
@@ -127,12 +117,7 @@ export default function DeployServiceEntityWidget({
 }: DeployServiceEntityWidgetProps): React.ReactElement {
   const { getString } = useStrings()
 
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
-  const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
-  const [servicesList, setServicesList] = useState<ServiceYaml[]>([])
-  const [servicesData, setServicesData] = useState<ServiceData[]>([])
   const { subscribeForm, unSubscribeForm } = useStageErrorContext<FormState>()
   const formikRef = React.useRef<FormikProps<FormState> | null>(null)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
@@ -148,33 +133,19 @@ export default function DeployServiceEntityWidget({
   } = useToggleOpen()
   const [allServices, setAllServices] = useState(getAllFixedServices(initialValues))
   const { MULTI_SERVICE_INFRA } = useFeatureFlags()
-
   const {
-    data: servicesListResponse,
-    error,
-    loading: loadingServicesList
-  } = useGetServiceList({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      type: deploymentType as ServiceDefinition['type'],
-      gitOpsEnabled: gitOpsEnabled
-    }
-  })
-
-  const {
-    data: servicesDataResponse,
-    initLoading: loadingServicesData,
-    loading: updatingData,
-    refetch: refetchServicesData
-  } = useMutateAsGet(useGetServicesYamlAndRuntimeInputs, {
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    },
-    body: { serviceIdentifiers: allServices }
+    servicesData,
+    servicesList,
+    loadingServicesData,
+    loadingServicesList,
+    updatingData,
+    refetchServicesData,
+    refetchListData,
+    prependServiceToServiceList
+  } = useGetServicesData({
+    gitOpsEnabled,
+    serviceIdentifiers: allServices,
+    deploymentType: deploymentType as ServiceDefinition['type']
   })
 
   useEffect(() => {
@@ -184,52 +155,25 @@ export default function DeployServiceEntityWidget({
   }, [])
 
   const selectOptions = useMemo(() => {
+    /* istanbul ignore else */
     if (!isNil(servicesList)) {
       return servicesList.map(service => ({ label: service.name, value: service.identifier }))
     }
+
+    return []
   }, [servicesList])
+
   const loading = loadingServicesList || loadingServicesData
 
   useEffect(() => {
     if (!loading) {
-      let _servicesList: ServiceYaml[] = []
-      let _servicesData: ServiceData[] = []
-      if (servicesListResponse?.data?.content?.length) {
-        _servicesList = servicesListResponse.data.content.map(service => ({
-          identifier: defaultTo(service.service?.identifier, ''),
-          name: defaultTo(service.service?.name, ''),
-          description: service.service?.description,
-          tags: service.service?.tags
-        }))
-      }
-
-      if (servicesDataResponse?.data?.serviceV2YamlMetadataList?.length) {
-        _servicesData = servicesDataResponse.data.serviceV2YamlMetadataList.map(row => {
-          const serviceYaml = defaultTo(row.serviceYaml, '{}')
-          const service = yamlParse<Pick<ServiceData, 'service'>>(serviceYaml).service
-          service.yaml = serviceYaml
-          const serviceInputs = yamlParse<Pick<ServiceData, 'serviceInputs'>>(
-            defaultTo(row.inputSetTemplateYaml, '{}')
-          ).serviceInputs
-
-          if (service) {
-            const existsInList = _servicesList.find(svc => svc.identifier === row.serviceIdentifier)
-
-            if (!existsInList) {
-              _servicesList.unshift(service)
-            }
-          }
-
-          return { service, serviceInputs }
-        })
-      }
-
       // update services in formik
-      if (formikRef.current && _servicesData.length > 0) {
+      /* istanbul ignore else */
+      if (formikRef.current && servicesData.length > 0) {
         const { values, setValues } = formikRef.current
 
         if (values.service && !values.serviceInputs?.[values.service]) {
-          const service = _servicesData.find(svc => svc.service.identifier === values.service)
+          const service = servicesData.find(svc => svc.service.identifier === values.service)
 
           setValues({
             ...values,
@@ -239,7 +183,7 @@ export default function DeployServiceEntityWidget({
         } else if (Array.isArray(values.services)) {
           const updatedServices = values.services.reduce<ServicesWithInputs>(
             (p, c) => {
-              const service = _servicesData.find(svc => svc.service.identifier === c.value)
+              const service = servicesData.find(svc => svc.service.identifier === c.value)
 
               if (service) {
                 p.services.push({ label: service.service.name, value: service.service.identifier })
@@ -253,34 +197,23 @@ export default function DeployServiceEntityWidget({
 
               return p
             },
-            { services: [], serviceInputs: {} }
+            { services: [], serviceInputs: {}, parallel: values.parallel }
           )
 
           setValues(updatedServices)
         }
       }
-
-      setServicesList(_servicesList)
-      setServicesData(_servicesData)
     }
-  }, [loading, servicesListResponse?.data?.content, servicesDataResponse?.data?.serviceV2YamlMetadataList])
-
-  useEffect(() => {
-    if (error?.message) {
-      if (shouldShowError(error)) {
-        showError(getRBACErrorMessage(error))
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error])
+  }, [loading, servicesList, servicesData])
 
   function onServiceEntityCreate(newServiceInfo: ServiceYaml): void {
     closeAddNewModal()
 
     // prepend the new service in the list
-    setServicesList(data => [newServiceInfo, ...(data || [])])
+    prependServiceToServiceList(newServiceInfo)
 
     // add the new service to selection
+    /* istanbul ignore else */
     if (formikRef.current) {
       const { values, setValues } = formikRef.current
       if (values.services) {
@@ -303,9 +236,11 @@ export default function DeployServiceEntityWidget({
 
   function onServiceEntityUpdate(): void {
     refetchServicesData()
+    refetchListData()
   }
 
   function updateValuesInFomikAndPropogate(values: FormState): void {
+    /* istanbul ignore else */
     if (formikRef.current) {
       formikRef.current.setTouched({ service: true, services: true })
       formikRef.current.setValues(values)
@@ -313,6 +248,7 @@ export default function DeployServiceEntityWidget({
   }
 
   function handleUpdate(values: FormState): void {
+    /* istanbul ignore else */
     if (!isNil(values.services)) {
       onUpdate?.({
         services: {
@@ -323,7 +259,10 @@ export default function DeployServiceEntityWidget({
                   serviceInputs: get(values.serviceInputs, opt.value)
                 })
               )
-            : values.service
+            : values.services,
+          metadata: {
+            parallel: !!values.parallel
+          }
         }
       })
     } else if (!isNil(values.service)) {
@@ -340,6 +279,7 @@ export default function DeployServiceEntityWidget({
   }
 
   function handleSwitchToMultiSvcConfirmation(confirmed: boolean): void {
+    /* istanbul ignore else */
     if (formikRef.current && confirmed) {
       const singleSvcId = formikRef.current.values.service
       const singleSvc = servicesList.find(svc => svc.identifier === singleSvcId)
@@ -354,6 +294,7 @@ export default function DeployServiceEntityWidget({
   }
 
   function handleSwitchToSingleSvcConfirmation(confirmed: boolean): void {
+    /* istanbul ignore else */
     if (formikRef.current && confirmed) {
       const newValues = produce(formikRef.current.values, draft => {
         draft.service = ''
@@ -366,6 +307,7 @@ export default function DeployServiceEntityWidget({
   }
 
   function removeSvcfromList(toDelete: string): void {
+    /* istanbul ignore else */
     if (formikRef.current) {
       const newValues = produce(formikRef.current.values, draft => {
         if (draft.service) {
@@ -406,7 +348,6 @@ export default function DeployServiceEntityWidget({
         formName="deployServiceStepForm"
         onSubmit={noop}
         validate={handleUpdate}
-        formLoading={updatingData && !loadingServicesData}
         initialValues={getInitialValues(initialValues)}
         validationSchema={getValidationSchema(getString)}
       >
@@ -419,18 +360,17 @@ export default function DeployServiceEntityWidget({
           const isFixed = isMultiSvc
             ? Array.isArray(values.services)
             : getMultiTypeFromValue(values.service) === MultiTypeInputType.FIXED
-          const txtLabelForServices = serviceLabel
-            ? serviceLabel
-            : getString('cd.pipelineSteps.serviceTab.specifyYourServices')
-          const txtLabelForService = serviceLabel
-            ? serviceLabel
-            : getString('cd.pipelineSteps.serviceTab.specifyYourService')
-          const placeHolderForServices = loading
-            ? getString('loading')
-            : getString('cd.pipelineSteps.serviceTab.selectServices')
+          let placeHolderForServices =
+            Array.isArray(values.services) && values.services
+              ? getString('services')
+              : getString('cd.pipelineSteps.serviceTab.selectServices')
           const placeHolderForService = loading
             ? getString('loading')
             : getString('cd.pipelineSteps.serviceTab.selectService')
+
+          if (loading) {
+            placeHolderForServices = getString('loading')
+          }
 
           return (
             <>
@@ -438,27 +378,32 @@ export default function DeployServiceEntityWidget({
                 <Layout.Horizontal
                   className={css.formRow}
                   spacing="medium"
+                  margin={{ bottom: 'medium' }}
                   flex={{ alignItems: 'flex-start', justifyContent: 'space-between' }}
                 >
                   <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                     {isMultiSvc ? (
-                      <FormInput.MultiSelectTypeInput
+                      <FormMultiTypeMultiSelectDropDown
                         tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                        label={txtLabelForServices}
+                        label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourServices'))}
                         name="services"
-                        selectItems={selectOptions || []}
                         disabled={readonly || (isFixed && loading)}
-                        placeholder={placeHolderForServices}
-                        multiSelectTypeInputProps={{
+                        dropdownProps={{
+                          items: selectOptions,
+                          placeholder: placeHolderForServices,
+                          disabled: loading || readonly
+                        }}
+                        multiTypeProps={{
                           width: 300,
                           expressions,
                           allowableTypes
                         }}
+                        enableConfigureOptions
                       />
                     ) : (
                       <FormInput.MultiTypeInput
                         tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                        label={txtLabelForService}
+                        label={defaultTo(serviceLabel, getString('cd.pipelineSteps.serviceTab.specifyYourService'))}
                         name="service"
                         useValue
                         disabled={readonly || (isFixed && loading)}
@@ -466,12 +411,10 @@ export default function DeployServiceEntityWidget({
                         multiTypeInputProps={{
                           width: 300,
                           expressions,
-                          selectProps: {
-                            items: defaultTo(selectOptions, [])
-                          },
+                          selectProps: { items: selectOptions },
                           allowableTypes
                         }}
-                        selectItems={selectOptions || []}
+                        selectItems={selectOptions}
                       />
                     )}
                     {isFixed ? (
@@ -479,7 +422,7 @@ export default function DeployServiceEntityWidget({
                         size={ButtonSize.SMALL}
                         text={getString('cd.pipelineSteps.serviceTab.plusNewService')}
                         variation={ButtonVariation.LINK}
-                        id="add-new-service"
+                        data-testid="add-new-service"
                         disabled={readonly}
                         className={css.serviceActionWrapper}
                         permission={{
@@ -501,20 +444,27 @@ export default function DeployServiceEntityWidget({
                     />
                   ) : null}
                 </Layout.Horizontal>
+                {isMultiSvc ? (
+                  <FormInput.CheckBox
+                    label={getString('cd.pipelineSteps.serviceTab.multiServicesParallelDeployLabel')}
+                    name="parallel"
+                  />
+                ) : null}
+
+                {isFixed ? (
+                  <ServiceEntitiesList
+                    loading={loading || updatingData}
+                    servicesData={servicesData}
+                    gitOpsEnabled={gitOpsEnabled}
+                    readonly={readonly}
+                    onRemoveServiceFormList={removeSvcfromList}
+                    selectedDeploymentType={deploymentType as ServiceDeploymentType}
+                    stageIdentifier={stageIdentifier}
+                    allowableTypes={allowableTypes}
+                    onServiceEntityUpdate={onServiceEntityUpdate}
+                  />
+                ) : null}
               </FormikForm>
-              {isFixed ? (
-                <ServiceEntitiesList
-                  loading={loading}
-                  servicesData={servicesData}
-                  gitOpsEnabled={gitOpsEnabled}
-                  readonly={readonly}
-                  onRemoveServiceFormList={removeSvcfromList}
-                  selectedDeploymentType={deploymentType as ServiceDeploymentType}
-                  stageIdentifier={stageIdentifier}
-                  allowableTypes={allowableTypes}
-                  onServiceEntityUpdate={onServiceEntityUpdate}
-                />
-              ) : null}
             </>
           )
         }}

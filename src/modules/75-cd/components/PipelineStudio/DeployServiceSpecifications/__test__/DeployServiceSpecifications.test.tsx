@@ -296,7 +296,7 @@ describe('Deploy service stage specifications', () => {
     userEvent.click(amazonEcs)
 
     // By checking Add buttons, check if manifest section for each manifest type is rendered
-    const allPlusAddManifestButtons = await findAllByText(/common.plusAddName/)
+    const allPlusAddManifestButtons = await findAllByText(/common.addName/)
     expect(allPlusAddManifestButtons).toHaveLength(4)
     // Check header of each manifest section card
     expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()

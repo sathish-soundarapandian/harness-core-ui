@@ -12,7 +12,7 @@ import type {
   GetTemplateProps,
   GetTemplateResponse
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { Connectors, CreateConnectorModalProps, TESTCONNECTION_STEP_INDEX } from '@connectors/constants'
 import { getConnectorTitleIdByType, getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { buildCustomSMPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -66,7 +66,7 @@ const CreateCustomSMConnector: React.FC<CreateConnectorModalProps> = props => {
         hideModal={props.onClose}
         helpPanelReferenceId="ConnectorDelegatesSetup"
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep

@@ -19,6 +19,7 @@ import {
 import { useStrings } from 'framework/strings'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useToaster } from '@common/exports'
+import type { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
 import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
@@ -49,6 +50,11 @@ declare global {
 
 interface SaveTemplateObj {
   template: NGTemplateInfoConfig
+}
+
+interface LastRemoteObjectId {
+  lastObjectId?: string
+  lastCommitId?: string
 }
 
 interface UseSaveTemplateReturnType {
@@ -116,7 +122,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     latestTemplate: NGTemplateInfoConfig,
     comments?: string,
     updatedGitDetails?: SaveToGitFormInterface,
-    lastObject?: { lastObjectId?: string },
+    lastObject?: LastRemoteObjectId,
     storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
     const response = await updateExistingTemplateVersionPromise({
@@ -129,7 +135,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
         orgIdentifier,
         comments,
         ...(updatedGitDetails ?? {}),
-        ...(lastObject?.lastObjectId ? lastObject : {}),
+        ...(lastObject ?? {}),
         ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {}),
         ...(updatedGitDetails && updatedGitDetails.isNewBranch
           ? { baseBranch: defaultTo(branch, storeMetadata?.branch), branch: updatedGitDetails.branch }
@@ -157,7 +163,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     comments?: string,
     isEdit = false,
     updatedGitDetails?: SaveToGitFormInterface,
-    lastObject?: { lastObjectId?: string },
+    lastObject?: LastRemoteObjectId,
     storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
     if (isEdit) {
@@ -202,6 +208,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     payload?: SaveTemplateObj,
     objectId?: string,
     isEdit = false,
+    lastCommitId = '',
     storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
     let latestTemplate = payload?.template as NGTemplateInfoConfig
@@ -220,7 +227,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
       '',
       isEdit,
       omit(updatedGitDetails, 'name', 'identifier'),
-      templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId } : {},
+      templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId, lastCommitId } : {},
       storeMetadata
     )
     return {
@@ -230,13 +237,20 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
 
   const { openSaveToGitDialog } = useSaveToGitDialog<SaveTemplateObj>({
     onSuccess: (
-      gitData: SaveToGitFormInterface,
+      gitData: GitData,
       payload?: SaveTemplateObj,
       objectId?: string,
       isEdit = false,
       storeMetadata?: StoreMetadata
     ): Promise<UseSaveSuccessResponse> =>
-      saveAndPublishWithGitInfo(gitData, payload, defaultTo(objectId, ''), isEdit, storeMetadata)
+      saveAndPublishWithGitInfo(
+        gitData,
+        payload,
+        defaultTo(objectId, ''),
+        isEdit,
+        gitData?.resolvedConflictCommitId || gitData?.lastCommitId,
+        storeMetadata
+      )
   })
 
   const getUpdatedGitDetails = (

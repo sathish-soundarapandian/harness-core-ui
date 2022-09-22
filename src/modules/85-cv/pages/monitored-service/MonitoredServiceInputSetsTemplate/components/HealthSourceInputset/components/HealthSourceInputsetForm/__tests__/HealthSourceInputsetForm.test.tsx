@@ -8,6 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { Formik } from '@harness/uicore'
+import type { HealthSource } from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
 import HealthSourceInputsetForm from '../HealthSourceInputsetForm'
 
@@ -97,7 +98,7 @@ describe('Validate HealthSourceInputsetForm', () => {
           onSubmit={() => undefined}
           formName="wrapperComponent"
         >
-          <HealthSourceInputsetForm isReadOnlyInputSet={false} healthSources={healthSourcesMock} />
+          <HealthSourceInputsetForm isReadOnlyInputSet={false} healthSources={healthSourcesMock as HealthSource[]} />
         </Formik>
       </TestWrapper>
     )

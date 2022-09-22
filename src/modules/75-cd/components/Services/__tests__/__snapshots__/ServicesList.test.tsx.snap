@@ -29,7 +29,7 @@ exports[`Menu render Should allow deleting 1`] = `
     class="Layout--horizontal StyledProps--main ConfirmationDialog--header StyledProps--padding-left-xsmall"
   >
     <span
-      class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+      class="bp3-icon StyledProps--main StyledProps--margin-right-small StyledProps--intent-danger"
       data-icon="danger-icon"
     >
       <svg

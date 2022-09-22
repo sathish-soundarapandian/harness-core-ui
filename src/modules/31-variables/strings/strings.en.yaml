@@ -7,6 +7,7 @@ noVariableExist: There are no variables in your {{resourceName}}.
 inputValidation: Input Validation
 confirmDeleteTitle: Delete Variable
 editVariable: Edit the Variable
+fixedValue: Fixed Value
 confirmDelete: Are you sure you want to delete the Variable '{{name}}'?
 successDelete: Variable '{{name}}' deleted successfully
 successCreate: Variable '{{name}}' created successfully

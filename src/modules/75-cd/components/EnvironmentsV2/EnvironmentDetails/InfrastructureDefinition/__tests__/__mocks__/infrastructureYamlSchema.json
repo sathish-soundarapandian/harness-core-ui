@@ -263,7 +263,8 @@
             "properties": {
               "connectorRef": { "type": "string", "minLength": 1 },
               "credentialsRef": { "type": "string", "minLength": 1 },
-              "region": { "type": "string", "minLength": 1 }
+              "region": { "type": "string", "minLength": 1 },
+              "hostConnectionType": { "type": "string", "minLength": 1 }
             },
             "additionalProperties": false
           },
@@ -274,7 +275,8 @@
               "awsInstanceFilter": { "$ref": "#/definitions/AwsInstanceFilter" },
               "connectorRef": { "type": "string", "minLength": 1 },
               "credentialsRef": { "type": "string", "minLength": 1 },
-              "region": { "type": "string", "minLength": 1 }
+              "region": { "type": "string", "minLength": 1 },
+              "hostConnectionType": { "type": "string", "minLength": 1 }
             },
             "additionalProperties": false
           }
@@ -297,12 +299,7 @@
                   { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
                 ]
               },
-              "usePublicDns": {
-                "oneOf": [
-                  { "type": "boolean" },
-                  { "type": "string", "pattern": "^<\\+input>(\\.(allowedValues|regex)\\(.+?\\))*$", "minLength": 1 }
-                ]
-              }
+              "hostConnectionType": { "type": "string", "minLength": 1 }
             }
           }
         ],

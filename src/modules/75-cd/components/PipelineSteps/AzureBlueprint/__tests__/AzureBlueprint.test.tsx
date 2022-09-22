@@ -44,7 +44,6 @@ describe('Test Azure Blueprint step', () => {
         identifier: '',
         timeout: '10m',
         spec: {
-          provisionerIdentifier: '',
           configuration: {
             connectorRef: '',
             assignmentName: '',
@@ -66,7 +65,6 @@ describe('Test Azure Blueprint step', () => {
         identifier: 'azure_blueprint',
         timeout: '10m',
         spec: {
-          provisionerIdentifier: 'provId',
           configuration: {
             connectorRef: '',
             assignmentName: 'testName',
@@ -86,9 +84,6 @@ describe('Test Azure Blueprint step', () => {
 
     const timeout = getByPlaceholderText('Enter w/d/h/m/s/ms')
     expect(timeout).toHaveDisplayValue('10m')
-
-    const provisionerIdentifier = getByDisplayValue('provId')
-    expect(provisionerIdentifier).toBeInTheDocument()
   })
 
   test('should open remote template modal', async () => {
@@ -99,7 +94,6 @@ describe('Test Azure Blueprint step', () => {
         identifier: '',
         timeout: '10m',
         spec: {
-          provisionerIdentifier: '',
           configuration: {
             connectorRef: '',
             assignmentName: '',
@@ -137,7 +131,6 @@ describe('Test Azure Blueprint step', () => {
         identifier: 'azure_blueprint',
         timeout: '10m',
         spec: {
-          provisionerIdentifier: 'azure blueprint',
           configuration: {
             connectorRef: '',
             assignmentName: 'test name',
@@ -157,11 +150,6 @@ describe('Test Azure Blueprint step', () => {
     userEvent.type(timeout!, '20m')
     expect(timeout).toHaveDisplayValue('20m')
 
-    const provisionerIdentifier = queryByAttribute('name', container, 'spec.provisionerIdentifier')
-    userEvent.clear(provisionerIdentifier!)
-    userEvent.type(provisionerIdentifier!, 'newID')
-    expect(provisionerIdentifier).toHaveDisplayValue('newID')
-
     const assignmentName = queryByAttribute('name', container, 'spec.configuration.assignmentName')
     userEvent.clear(assignmentName!)
     userEvent.type(assignmentName!, 'new name')
@@ -177,7 +165,6 @@ describe('Test Azure Blueprint step', () => {
         identifier: '',
         timeout: '',
         spec: {
-          provisionerIdentifier: '',
           configuration: {
             connectorRef: '',
             assignmentName: '',
@@ -204,9 +191,6 @@ describe('Test Azure Blueprint step', () => {
     const connectorError = getByText('pipelineSteps.build.create.connectorRequiredError')
     expect(connectorError).toBeInTheDocument()
 
-    const provIDError = getByText('common.validation.provisionerIdentifierIsRequired')
-    expect(provIDError).toBeInTheDocument()
-
     const timeoutError = getByText('validation.timeout10SecMinimum')
     expect(timeoutError).toBeInTheDocument()
 
@@ -228,7 +212,6 @@ describe('Test Azure Blueprint step', () => {
         identifier: 'azure_blueprint',
         timeout: '10m',
         spec: {
-          provisionerIdentifier: 'testProv',
           configuration: {
             connectorRef: RUNTIME_INPUT_VALUE,
             assignmentName: 'testName',
@@ -265,7 +248,6 @@ describe('Test Azure Blueprint step', () => {
         identifier: 'azure_blueprint',
         timeout: '10m',
         spec: {
-          provisionerIdentifier: 'testProv',
           configuration: {
             connectorRef: RUNTIME_INPUT_VALUE,
             assignmentName: 'testName',
@@ -302,7 +284,6 @@ describe('Test Azure Blueprint step', () => {
         identifier: 'azure_blueprint',
         timeout: '10m',
         spec: {
-          provisionerIdentifier: 'testProv',
           configuration: {
             connectorRef: RUNTIME_INPUT_VALUE,
             assignmentName: 'testName',
@@ -339,7 +320,6 @@ describe('Test Azure Blueprint step', () => {
         identifier: 'azure_blueprint',
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          provisionerIdentifier: RUNTIME_INPUT_VALUE,
           configuration: {
             connectorRef: RUNTIME_INPUT_VALUE,
             assignmentName: RUNTIME_INPUT_VALUE,
@@ -369,9 +349,6 @@ describe('Test Azure Blueprint step', () => {
 
     const timeout = queryByAttribute('name', container, 'timeout')
     expect(timeout).toHaveDisplayValue(RUNTIME_INPUT_VALUE)
-
-    const provID = queryByAttribute('name', container, 'spec.provisionerIdentifier')
-    expect(provID).toHaveDisplayValue(RUNTIME_INPUT_VALUE)
   })
 
   test('should render input view', async () => {
@@ -382,7 +359,6 @@ describe('Test Azure Blueprint step', () => {
         identifier: 'azure_blueprint',
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          provisionerIdentifier: RUNTIME_INPUT_VALUE,
           configuration: {
             connectorRef: RUNTIME_INPUT_VALUE,
             assignmentName: RUNTIME_INPUT_VALUE,
@@ -414,7 +390,6 @@ describe('Test Azure Blueprint step', () => {
         identifier: 'azure_blueprint',
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          provisionerIdentifier: RUNTIME_INPUT_VALUE,
           configuration: {
             connectorRef: RUNTIME_INPUT_VALUE,
             assignmentName: RUNTIME_INPUT_VALUE,

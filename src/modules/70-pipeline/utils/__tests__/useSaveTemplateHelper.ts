@@ -73,6 +73,7 @@ export const updateExistingTemplateVersionPromiseArg = {
     filePath: 'test_pipeline.yaml',
     isNewBranch: false,
     lastObjectId: '4471ec3aa40c26377353974c29a6670d998db06f',
+    lastCommitId: '',
     orgIdentifier: undefined,
     projectIdentifier: undefined,
     repoIdentifier: 'gitSyncRepo',

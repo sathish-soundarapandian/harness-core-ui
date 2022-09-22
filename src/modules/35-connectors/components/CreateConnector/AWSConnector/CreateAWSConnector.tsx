@@ -10,7 +10,7 @@ import { StepWizard } from '@wings-software/uicore'
 import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import {
   Connectors,
   CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
@@ -88,7 +88,7 @@ const CreateAWSConnector: React.FC<CreateConnectorModalProps> = props => {
             helpPanelReferenceId="ConnectorDelegatesSetup"
           />
         ) : null}
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.stepThreeName')}
           connectorInfo={props.connectorInfo}
           isStep={true}

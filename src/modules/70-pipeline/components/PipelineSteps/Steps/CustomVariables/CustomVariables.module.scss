@@ -29,7 +29,7 @@
     margin: var(--spacing-medium) 0 var(--spacing-large) 0;
     text-transform: uppercase;
   }
-  .descriptionRow {
+  :global(.descriptionRow) {
     height: 32px !important;
   }
 

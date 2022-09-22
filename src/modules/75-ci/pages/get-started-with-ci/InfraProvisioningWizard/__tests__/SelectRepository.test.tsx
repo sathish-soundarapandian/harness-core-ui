@@ -61,12 +61,12 @@ jest.mock('services/cd-ng', () => ({
 
 const mockGetCallFunction = jest.fn()
 jest.mock('services/portal', () => ({
-  useGetDelegateGroupByIdentifier: jest.fn().mockImplementation(args => {
+  useGetDelegateGroupsNGV2: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return {
       data: {
         resource: {
-          activelyConnected: false
+          delegateGroupDetails: [{ delegateGroupIdentifier: '_harness_kubernetes_delegate', activelyConnected: false }]
         }
       },
       refetch: jest.fn(),

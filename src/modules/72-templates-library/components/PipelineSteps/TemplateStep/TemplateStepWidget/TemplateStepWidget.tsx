@@ -46,7 +46,7 @@ import { getTemplateRuntimeInputsCount } from '@templates-library/utils/template
 import { useQueryParams } from '@common/hooks'
 import { stringify } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { createParentEntityQueryParams } from '@common/utils/gitSyncUtils'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TemplateStepWidget.module.scss'
 
@@ -89,9 +89,7 @@ function TemplateStepWidget(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
-      repoIdentifier,
-      getDefaultFromOtherRepo: true,
-      ...createParentEntityQueryParams(storeMetadata, queryParams, branch)
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
 
@@ -113,9 +111,7 @@ function TemplateStepWidget(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
 

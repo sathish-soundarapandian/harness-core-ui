@@ -31,7 +31,7 @@ exports[`DOCKER renders the primary artifact form if all the attributes are runt
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               pipelineSteps.deploy.inputSet.artifactServer
             </div>
@@ -367,7 +367,7 @@ exports[`DOCKER renders the primary artifact form in readonly mode: primary arti
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               pipelineSteps.deploy.inputSet.artifactServer
             </div>
@@ -948,7 +948,7 @@ exports[`ECR renders the primary artifact form if all the attributes are runtime
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               pipelineSteps.deploy.inputSet.artifactServer
             </div>
@@ -1378,7 +1378,7 @@ exports[`ECR renders the primary artifact form in readonly mode: ecr - primary a
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               pipelineSteps.deploy.inputSet.artifactServer
             </div>
@@ -2047,7 +2047,7 @@ exports[`GCR renders the primary artifact form if all the attributes are runtime
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               pipelineSteps.deploy.inputSet.artifactServer
             </div>
@@ -2477,7 +2477,7 @@ exports[`GCR renders the primary artifact form in readonly mode: ecr - primary a
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               pipelineSteps.deploy.inputSet.artifactServer
             </div>

@@ -114,7 +114,7 @@ const RenderColumnStatus: Renderer<CellProps<SecretResponseWrapper>> = ({ row })
     return (
       <Button
         font="small"
-        text={<String stringID="common.labelTestConnection" />}
+        text={<String stringID="test" />}
         onClick={e => {
           e.stopPropagation()
           if (data.type === 'SSHKey') {

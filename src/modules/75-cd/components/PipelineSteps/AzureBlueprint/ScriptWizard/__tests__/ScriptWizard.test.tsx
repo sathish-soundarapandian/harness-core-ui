@@ -41,7 +41,7 @@ const defaultStore = {
     spec: {
       connectorRef: 'Github2',
       gitFetchType: 'Branch',
-      paths: ['filePath'],
+      folderPath: 'filePath',
       branch: 'branch'
     }
   }
@@ -62,7 +62,6 @@ const propWizard = {
     identifier: 'azure_blueprint',
     timeout: '10m',
     spec: {
-      provisionerIdentifier: '',
       configuration: {
         connectorRef: 'testRef',
         assignmentName: '',
@@ -152,7 +151,6 @@ describe('ScriptWizard & stepOne', () => {
         identifier: 'azure_blueprint',
         timeout: '10m',
         spec: {
-          provisionerIdentifier: 'azureBlueprint',
           configuration: {
             connectorRef: '',
             assignmentName: 'azureBlueprint',
@@ -163,7 +161,7 @@ describe('ScriptWizard & stepOne', () => {
                 spec: {
                   connectorRef: RUNTIME_INPUT_VALUE,
                   gitFetchType: 'Branch',
-                  paths: ['filePath'],
+                  paths: 'filePath',
                   branch: 'branch'
                 }
               }

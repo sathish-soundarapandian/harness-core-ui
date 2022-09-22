@@ -205,7 +205,9 @@ export function PipelineCanvas({
       pipelineIdentifier,
       projectIdentifier,
       repoIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     },
     body: {}
   })
@@ -342,13 +344,13 @@ export function PipelineCanvas({
       pipeline.identifier = ''
       updatePipeline(pipeline)
       return (
-        <PipelineVariablesContextProvider pipeline={pipeline}>
+        <PipelineVariablesContextProvider pipeline={pipeline} storeMetadata={storeMetadata}>
           {getOtherModal(onSubmit, onCloseCreate)}
         </PipelineVariablesContextProvider>
       )
     } else {
       return (
-        <PipelineVariablesContextProvider pipeline={pipeline}>
+        <PipelineVariablesContextProvider pipeline={pipeline} storeMetadata={storeMetadata}>
           <Dialog
             style={{
               width: getDialogWidth(),
@@ -676,6 +678,7 @@ export function PipelineCanvas({
               }}
               stagesExecuted={stagesExecuted}
               storeType={storeType}
+              storeMetadata={storeMetadata}
             />
             <Button
               aria-label="close modal"
@@ -808,7 +811,7 @@ export function PipelineCanvas({
   }
 
   return (
-    <PipelineVariablesContextProvider pipeline={pipeline}>
+    <PipelineVariablesContextProvider pipeline={pipeline} storeMetadata={storeMetadata}>
       <div
         className={cx(Classes.POPOVER_DISMISS, css.content)}
         onClick={e => {

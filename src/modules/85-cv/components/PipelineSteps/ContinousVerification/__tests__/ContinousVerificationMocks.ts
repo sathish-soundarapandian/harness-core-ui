@@ -137,3 +137,18 @@ export const verifyStepInitialValuesWithRunTimeFields = {
     }
   }
 }
+
+export const monitoredServiceYamlData = {
+  type: 'Canary',
+  monitoredService: { type: 'Default', spec: {} },
+  spec: {
+    sensitivity: { label: 'High', value: 'HIGH' },
+    duration: { label: '1 hr 30 min', value: '90m' },
+    deploymentTag: '<+serviceConfig.artifacts.primary.tag>',
+    baseline: '',
+    trafficsplit: ''
+  },
+  monitoredServiceRef: '<+input>',
+  healthSources: [],
+  initialMonitoredService: { type: 'Default', spec: {} }
+}

@@ -822,6 +822,8 @@ export interface ArtifactSource {
     | 'Jenkins'
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
+    | 'GithubPackageRegistry'
+    | 'AzureArtifactsRegistry'
 }
 
 export interface ArtifactSourcesResponseDTO {
@@ -1132,6 +1134,17 @@ export interface AwsVPC {
 export type AzureARMRollbackStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   provisionerIdentifier: string
+}
+
+export type AzureArtifactConfig = ArtifactConfig & {
+  connectorRef: string
+  feed: string
+  packageName: string
+  packageType: 'maven' | 'nuget'
+  project: string
+  scope: 'project' | 'org'
+  version?: string
+  versionRegex?: string
 }
 
 export interface AzureAuthCredentialDTO {
@@ -3104,6 +3117,7 @@ export interface EntityDetail {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5163,6 +5177,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   searchTerm?: string
@@ -5272,6 +5287,7 @@ export interface GitEntityFilterProperties {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -5414,6 +5430,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -5531,6 +5548,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -5756,6 +5774,7 @@ export interface GitSyncEntityDTO {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -5867,6 +5886,7 @@ export interface GitSyncEntityListDTO {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -5995,6 +6015,7 @@ export interface GitSyncErrorDTO {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -6076,6 +6097,32 @@ export interface GithubHttpCredentialsSpecDTO {
 
 export type GithubOauth = GithubHttpCredentialsSpecDTO & {
   tokenRef: string
+}
+
+export interface GithubPackageDTO {
+  packageId?: string
+  packageName?: string
+  packageType?: string
+  packageUrl?: string
+  visibility?: string
+}
+
+export type GithubPackagesArtifactConfig = ArtifactConfig & {
+  connectorRef: string
+  org?: string
+  packageName: string
+  packageType: 'npm' | 'maven' | 'rubygems' | 'nuget' | 'container'
+  version?: string
+  versionRegex?: string
+}
+
+export type GithubPackagesArtifactSummary = ArtifactSummary & {
+  packageName?: string
+  version?: string
+}
+
+export interface GithubPackagesResponseDTO {
+  githubPackageResponse?: GithubPackageDTO[]
 }
 
 export type GithubSCMDTO = SourceCodeManagerDTO & {
@@ -8570,6 +8617,8 @@ export interface PrimaryArtifact {
     | 'Jenkins'
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
+    | 'GithubPackageRegistry'
+    | 'AzureArtifactsRegistry'
 }
 
 export interface Principal {
@@ -8774,6 +8823,12 @@ export interface ReferencedByDTO {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
+}
+
+export interface RegionGar {
+  name?: string
+  value?: string
 }
 
 export type ReleaseRepoManifest = ManifestAttributes & {
@@ -9058,6 +9113,13 @@ export interface ResponseAzureWebAppNamesDTO {
 export interface ResponseBoolean {
   correlationId?: string
   data?: boolean
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseBuildDetails {
+  correlationId?: string
+  data?: BuildDetails
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9421,6 +9483,13 @@ export interface ResponseGitSyncSettingsDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseGithubPackagesResponseDTO {
+  correlationId?: string
+  data?: GithubPackagesResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseGitopsProviderResponse {
   correlationId?: string
   data?: GitopsProviderResponse
@@ -9694,6 +9763,7 @@ export interface ResponseListEntityType {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -9828,6 +9898,13 @@ export interface ResponseListPartialSchemaDTO {
 export interface ResponseListProject {
   correlationId?: string
   data?: Project[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListRegionGar {
+  correlationId?: string
+  data?: RegionGar[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12298,6 +12375,8 @@ export interface SidecarArtifact {
     | 'Jenkins'
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
+    | 'GithubPackageRegistry'
+    | 'AzureArtifactsRegistry'
 }
 
 export interface SidecarArtifactWrapper {
@@ -12707,6 +12786,7 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 export interface TemplateLinkConfig {
   templateInputs?: JsonNode
   templateRef: string
+  templateVariables?: JsonNode
   versionLabel?: string
 }
 
@@ -14090,6 +14170,7 @@ export interface ListActivitiesQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -14193,6 +14274,7 @@ export interface ListActivitiesQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -14400,6 +14482,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -14503,6 +14586,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -17782,6 +17866,50 @@ export const getBuildDetailsForGoogleArtifactRegistryPromise = (
     signal
   )
 
+export type GetRegionsForGoogleArtifactRegistryProps = Omit<
+  GetProps<ResponseListRegionGar, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * Gets google artifact registry regions
+ */
+export const GetRegionsForGoogleArtifactRegistry = (props: GetRegionsForGoogleArtifactRegistryProps) => (
+  <Get<ResponseListRegionGar, Failure | Error, void, void>
+    path={`/artifacts/gar/getRegions`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetRegionsForGoogleArtifactRegistryProps = Omit<
+  UseGetProps<ResponseListRegionGar, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * Gets google artifact registry regions
+ */
+export const useGetRegionsForGoogleArtifactRegistry = (props: UseGetRegionsForGoogleArtifactRegistryProps) =>
+  useGet<ResponseListRegionGar, Failure | Error, void, void>(`/artifacts/gar/getRegions`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Gets google artifact registry regions
+ */
+export const getRegionsForGoogleArtifactRegistryPromise = (
+  props: GetUsingFetchProps<ResponseListRegionGar, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListRegionGar, Failure | Error, void, void>(
+    getConfig('ng/api'),
+    `/artifacts/gar/getRegions`,
+    props,
+    signal
+  )
+
 export interface GetBuildDetailsForGcrQueryParams {
   imagePath: string
   registryHostname: string
@@ -18181,6 +18309,194 @@ export const validateArtifactImageForGcrPromise = (
   getUsingFetch<ResponseBoolean, Failure | Error, ValidateArtifactImageForGcrQueryParams, void>(
     getConfig('ng/api'),
     `/artifacts/gcr/validateArtifactSource`,
+    props,
+    signal
+  )
+
+export interface GetLastSuccessfulVersionQueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  packageName: string
+  packageType: string
+  version?: string
+  versionRegex?: string
+  org?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+}
+
+export type GetLastSuccessfulVersionProps = Omit<
+  GetProps<ResponseBuildDetails, Failure | Error, GetLastSuccessfulVersionQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Last Successful Version for the Package
+ */
+export const GetLastSuccessfulVersion = (props: GetLastSuccessfulVersionProps) => (
+  <Get<ResponseBuildDetails, Failure | Error, GetLastSuccessfulVersionQueryParams, void>
+    path={`/artifacts/githubpackages/lastSuccessfulVersion`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetLastSuccessfulVersionProps = Omit<
+  UseGetProps<ResponseBuildDetails, Failure | Error, GetLastSuccessfulVersionQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Last Successful Version for the Package
+ */
+export const useGetLastSuccessfulVersion = (props: UseGetLastSuccessfulVersionProps) =>
+  useGet<ResponseBuildDetails, Failure | Error, GetLastSuccessfulVersionQueryParams, void>(
+    `/artifacts/githubpackages/lastSuccessfulVersion`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets Last Successful Version for the Package
+ */
+export const getLastSuccessfulVersionPromise = (
+  props: GetUsingFetchProps<ResponseBuildDetails, Failure | Error, GetLastSuccessfulVersionQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseBuildDetails, Failure | Error, GetLastSuccessfulVersionQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/githubpackages/lastSuccessfulVersion`,
+    props,
+    signal
+  )
+
+export interface GetPackagesFromGithubQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  packageType: string
+  org?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+}
+
+export type GetPackagesFromGithubProps = Omit<
+  GetProps<ResponseGithubPackagesResponseDTO, Failure | Error, GetPackagesFromGithubQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Package details for GithubPackages
+ */
+export const GetPackagesFromGithub = (props: GetPackagesFromGithubProps) => (
+  <Get<ResponseGithubPackagesResponseDTO, Failure | Error, GetPackagesFromGithubQueryParams, void>
+    path={`/artifacts/githubpackages/packages`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetPackagesFromGithubProps = Omit<
+  UseGetProps<ResponseGithubPackagesResponseDTO, Failure | Error, GetPackagesFromGithubQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Package details for GithubPackages
+ */
+export const useGetPackagesFromGithub = (props: UseGetPackagesFromGithubProps) =>
+  useGet<ResponseGithubPackagesResponseDTO, Failure | Error, GetPackagesFromGithubQueryParams, void>(
+    `/artifacts/githubpackages/packages`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets Package details for GithubPackages
+ */
+export const getPackagesFromGithubPromise = (
+  props: GetUsingFetchProps<ResponseGithubPackagesResponseDTO, Failure | Error, GetPackagesFromGithubQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseGithubPackagesResponseDTO, Failure | Error, GetPackagesFromGithubQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/githubpackages/packages`,
+    props,
+    signal
+  )
+
+export interface GetVersionsFromPackagesQueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  packageName: string
+  packageType: string
+  versionRegex?: string
+  org?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+}
+
+export type GetVersionsFromPackagesProps = Omit<
+  GetProps<ResponseListBuildDetails, Failure | Error, GetVersionsFromPackagesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Versions from Packages
+ */
+export const GetVersionsFromPackages = (props: GetVersionsFromPackagesProps) => (
+  <Get<ResponseListBuildDetails, Failure | Error, GetVersionsFromPackagesQueryParams, void>
+    path={`/artifacts/githubpackages/versions`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetVersionsFromPackagesProps = Omit<
+  UseGetProps<ResponseListBuildDetails, Failure | Error, GetVersionsFromPackagesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets Versions from Packages
+ */
+export const useGetVersionsFromPackages = (props: UseGetVersionsFromPackagesProps) =>
+  useGet<ResponseListBuildDetails, Failure | Error, GetVersionsFromPackagesQueryParams, void>(
+    `/artifacts/githubpackages/versions`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets Versions from Packages
+ */
+export const getVersionsFromPackagesPromise = (
+  props: GetUsingFetchProps<ResponseListBuildDetails, Failure | Error, GetVersionsFromPackagesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListBuildDetails, Failure | Error, GetVersionsFromPackagesQueryParams, void>(
+    getConfig('ng/api'),
+    `/artifacts/githubpackages/versions`,
     props,
     signal
   )
@@ -25896,6 +26212,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -26059,6 +26376,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   searchTerm?: string
 }
 
@@ -28982,6 +29300,7 @@ export interface GetReferencedByQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   searchTerm?: string
 }
 
@@ -30348,6 +30667,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -30519,6 +30839,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AzureCreateBPResource'
       | 'AzureARMRollback'
       | 'Background'
+      | 'Wait'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -35916,6 +36237,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   yamlGroup?: string
 }
 
@@ -36147,6 +36469,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -47907,6 +48230,7 @@ export interface GetYamlSchemaQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
   subtype?:
     | 'K8sCluster'
     | 'Git'

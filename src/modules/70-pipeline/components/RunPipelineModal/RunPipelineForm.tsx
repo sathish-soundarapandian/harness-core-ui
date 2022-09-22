@@ -21,7 +21,7 @@ import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { useHistory } from 'react-router-dom'
-import { isEmpty, defaultTo, keyBy } from 'lodash-es'
+import { isEmpty, defaultTo, keyBy, omitBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
@@ -73,7 +73,7 @@ import {
   getPipelineWithoutCodebaseInputs
 } from '@pipeline/utils/CIUtils'
 import { useDeepCompareEffect } from '@common/hooks/useDeepCompareEffect'
-import { StoreType } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
@@ -109,6 +109,7 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
   stagesExecuted?: string[]
   executionIdentifier?: string
   source: ExecutionPathProps['source']
+  storeMetadata?: StoreMetadata
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -165,7 +166,7 @@ function RunPipelineFormBasic({
     selectedStages: [getAllStageData(getString)],
     selectedStageItems: [getAllStageItem(getString)]
   })
-  const { setPipeline: updatePipelineInVaribalesContext } = usePipelineVariables()
+  const { setPipeline: updatePipelineInVaribalesContext, setSelectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
 
@@ -206,7 +207,9 @@ function RunPipelineFormBasic({
       projectIdentifier,
       repoIdentifier,
       branch,
-      getTemplatesResolvedPipeline: true
+      getTemplatesResolvedPipeline: true,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     }
   })
 
@@ -253,6 +256,7 @@ function RunPipelineFormBasic({
     rerunInputSetYaml: inputSetYAML,
     branch,
     repoIdentifier,
+    connectorRef,
     executionIdentifier,
     inputSetSelected: selectedInputSets,
     resolvedPipeline,
@@ -268,7 +272,10 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module,
       repoIdentifier,
-      branch
+      branch,
+      notifyOnlyUser: notifyOnlyMe,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     },
     identifier: pipelineIdentifier,
     requestOptions: {
@@ -285,7 +292,9 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module,
       repoIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     },
     identifier: pipelineIdentifier
   })
@@ -298,7 +307,9 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module,
       repoIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     },
     identifier: pipelineIdentifier,
     originalExecutionId: defaultTo(pipelineExecutionId, ''),
@@ -315,7 +326,9 @@ function RunPipelineFormBasic({
       orgIdentifier,
       moduleType: module,
       repoIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     },
     identifier: pipelineIdentifier,
     originalExecutionId: defaultTo(pipelineExecutionId, '')
@@ -328,7 +341,9 @@ function RunPipelineFormBasic({
       projectIdentifier,
       pipelineIdentifier,
       branch,
-      repoIdentifier
+      repoIdentifier,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     }
   })
 
@@ -373,6 +388,7 @@ function RunPipelineFormBasic({
 
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
+    setSelectedInputSetsContext?.(inputSetSelected)
   }, [inputSetSelected])
 
   useEffect(() => {
@@ -440,7 +456,7 @@ function RunPipelineFormBasic({
         />
       </Dialog>
     )
-  }, [])
+  }, [notifyOnlyMe])
 
   const handleRunPipeline = useCallback(
     async (valuesPipeline?: PipelineInfoConfig, forceSkipFlightCheck = false): Promise<PipelineInfoConfig> => {
@@ -540,7 +556,8 @@ function RunPipelineFormBasic({
       accountId,
       skipPreFlightCheck,
       formErrors,
-      selectedStageData
+      selectedStageData,
+      notifyOnlyMe
     ]
   )
 
@@ -796,7 +813,7 @@ function RunPipelineFormBasic({
                     <Layout.Vertical className={css.content} padding="xlarge">
                       <YamlBuilderMemo
                         {...yamlBuilderReadOnlyModeProps}
-                        existingJSON={{ pipeline: values }}
+                        existingJSON={{ pipeline: omitBy(values, (_val, key) => key.startsWith('_')) }}
                         bind={setYamlHandler}
                         schema={{}}
                         invocationMap={factory.getInvocationMap()}
@@ -944,7 +961,7 @@ export function RunPipelineFormWrapper(props: RunPipelineFormWrapperProps): Reac
 export function RunPipelineForm(props: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
   return (
     <NestedAccordionProvider>
-      <PipelineVariablesContextProvider>
+      <PipelineVariablesContextProvider storeMetadata={props.storeMetadata}>
         <RunPipelineFormBasic {...props} />
       </PipelineVariablesContextProvider>
     </NestedAccordionProvider>

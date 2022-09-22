@@ -30,7 +30,7 @@ exports[`K8sManifestSource tests Should match snapshot 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>
@@ -351,7 +351,7 @@ exports[`K8sManifestSource tests Should match snapshot with fromTrigger 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>

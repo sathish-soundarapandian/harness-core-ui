@@ -12,6 +12,7 @@ import { CustomArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpe
 import { DockerArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/DockerArtifactSource/DockerArtifactSource'
 import { ECRArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ECRArtifactSource/ECRArtifactSource'
 import { GCRArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/GCRArtifactSource/GCRArtifactSource'
+import { GithubPackageRegistrySource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/GithubPackageRegistrySource/GithubPackageRegistrySource'
 import { GoogleArtifactRegistrySource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/GoogleArtifactsRegistrySource/GoogleArtifactRegistrySource'
 import { JenkinsArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/JenkinsArtifactSource/JenkinsArtifactSource'
 import { NexusArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/NexusArtifactSource/NexusArtifactSource'
@@ -50,5 +51,6 @@ artifactSourceBaseFactory.registerArtifactSource(new ACRArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new AmazonS3ArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new JenkinsArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new GoogleArtifactRegistrySource())
+artifactSourceBaseFactory.registerArtifactSource(new GithubPackageRegistrySource())
 
 export default artifactSourceBaseFactory

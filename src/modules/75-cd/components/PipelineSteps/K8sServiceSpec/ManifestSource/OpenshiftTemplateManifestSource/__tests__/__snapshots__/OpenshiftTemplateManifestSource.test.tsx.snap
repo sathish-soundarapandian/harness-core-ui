@@ -30,7 +30,7 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>
@@ -257,7 +257,7 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>
@@ -569,7 +569,7 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>
@@ -794,7 +794,7 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               connector
             </div>

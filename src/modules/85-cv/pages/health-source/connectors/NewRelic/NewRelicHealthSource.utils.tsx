@@ -319,10 +319,10 @@ export const shouldRunValidation = ({
 }): boolean =>
   isEdit && hasMetricPacks && validationStatus !== StatusOfValidation.IN_PROGRESS && !isConnectorRuntimeOrExpression
 
-export const shouldFetchApplication = (query?: string, isConnectorRuntimeOrExpression?: boolean) =>
-  query?.trim().length &&
+export const shouldFetchApplication = (query?: string, isConnectorRuntimeOrExpression?: boolean): boolean =>
+  Boolean(query?.trim().length) &&
   !isConnectorRuntimeOrExpression &&
-  getMultiTypeFromValue(query?.trim().length) === MultiTypeInputType.FIXED
+  getMultiTypeFromValue(query?.trim()) === MultiTypeInputType.FIXED
 
 export const persistCustomMetric = ({
   mappedMetrics,

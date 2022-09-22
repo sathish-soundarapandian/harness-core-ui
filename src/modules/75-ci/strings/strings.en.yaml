@@ -120,6 +120,7 @@ buildInfra:
     os: Operating System
     architecture: Achitecture
     isRequiredWhen: '{{field1}} is required in case {{field2}} is provided'
+  cloud: Cloud
 pipelineSteps:
   build:
     infraSpecifications:

@@ -10,7 +10,7 @@ exports[`ServiceNow Update tests Basic snapshot - deploymentform mode: serviceNo
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -458,7 +458,7 @@ exports[`ServiceNow Update tests Basic snapshot - inputset mode: input set with 
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -1268,7 +1268,7 @@ exports[`ServiceNow Update tests Edit Stage - readonly view for Template type: e
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -1930,7 +1930,7 @@ exports[`ServiceNow Update tests Edit stage - readony view: editstage-readonly 1
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -2523,7 +2523,7 @@ exports[`ServiceNow Update tests deploymentform readonly mode: serviceNow-update
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"

@@ -19,8 +19,6 @@ import {
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useQueryParams } from '@common/hooks'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import RepositorySelect from '@common/components/RepositorySelect/RepositorySelect'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
@@ -84,13 +82,8 @@ const getConnectorIdentifierWithScope = (scope: Scope, identifier: string): stri
   return scope === Scope.ORG || scope === Scope.ACCOUNT ? `${scope}.${identifier}` : identifier
 }
 
-const getSupportedProviders = (isAzureRepoSupported: boolean) => {
-  const supportedRepoProviders = [Connectors.GITHUB, Connectors.BITBUCKET]
-
-  if (isAzureRepoSupported) {
-    supportedRepoProviders.push(Connectors.AZURE_REPO)
-  }
-
+const getSupportedProviders = () => {
+  const supportedRepoProviders = [Connectors.GITHUB, Connectors.BITBUCKET, Connectors.AZURE_REPO]
   return supportedRepoProviders
 }
 
@@ -101,7 +94,6 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const isAzureRepoSupported = useFeatureFlag(FeatureFlag.AZURE_REPO_CONNECTOR)
   const [errorResponse, setErrorResponse] = useState<ResponseMessage[]>(errorData ?? [])
   const [filePathTouched, setFilePathTouched] = useState<boolean>()
 
@@ -141,7 +133,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
           <ConnectorReferenceField
             name="connectorRef"
             width={350}
-            type={getSupportedProviders(isAzureRepoSupported)}
+            type={getSupportedProviders()}
             selected={defaultTo(formikProps.values.connectorRef, connectorRef)}
             error={formikProps.submitCount > 0 ? (formikProps?.errors?.connectorRef as string) : undefined}
             label={getString('connectors.title.gitConnector')}

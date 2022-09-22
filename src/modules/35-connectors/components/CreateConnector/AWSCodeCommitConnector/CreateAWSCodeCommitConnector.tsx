@@ -18,7 +18,7 @@ import { useStrings } from 'framework/strings'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { buildAWSCodeCommitPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import AWSCCAuthStep from './AWSCCAuthStep'
 import AWSCCDetailsStep from './AWSCCDetailsStep'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
@@ -62,7 +62,7 @@ export default function CreateAWSCodeCommitConnector(props: CreateConnectorModal
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep

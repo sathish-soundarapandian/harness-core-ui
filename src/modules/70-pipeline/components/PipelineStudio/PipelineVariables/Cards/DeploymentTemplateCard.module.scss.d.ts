@@ -7,11 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly configureOptions: string
-  readonly connectorRef: string
   readonly infraVarHeader: string
-  readonly label: string
-  readonly valueColumn: string
   readonly variablesWithDescription: string
 }
 export default styles

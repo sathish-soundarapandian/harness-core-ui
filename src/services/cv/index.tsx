@@ -11520,6 +11520,63 @@ export const saveSLODataPromise = (
     void
   >('POST', getConfig('cv/api'), `/slo`, props, signal)
 
+export interface GetSLOAssociatedMonitoredServicesQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pageNumber?: number
+  pageSize?: number
+}
+
+export type GetSLOAssociatedMonitoredServicesProps = Omit<
+  GetProps<ResponsePageMSDropdownResponse, unknown, GetSLOAssociatedMonitoredServicesQueryParams, void>,
+  'path'
+>
+
+/**
+ * get all monitored services associated with the slos
+ */
+export const GetSLOAssociatedMonitoredServices = (props: GetSLOAssociatedMonitoredServicesProps) => (
+  <Get<ResponsePageMSDropdownResponse, unknown, GetSLOAssociatedMonitoredServicesQueryParams, void>
+    path={`/slo-dashboard/monitored-services`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSLOAssociatedMonitoredServicesProps = Omit<
+  UseGetProps<ResponsePageMSDropdownResponse, unknown, GetSLOAssociatedMonitoredServicesQueryParams, void>,
+  'path'
+>
+
+/**
+ * get all monitored services associated with the slos
+ */
+export const useGetSLOAssociatedMonitoredServices = (props: UseGetSLOAssociatedMonitoredServicesProps) =>
+  useGet<ResponsePageMSDropdownResponse, unknown, GetSLOAssociatedMonitoredServicesQueryParams, void>(
+    `/slo-dashboard/monitored-services`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get all monitored services associated with the slos
+ */
+export const getSLOAssociatedMonitoredServicesPromise = (
+  props: GetUsingFetchProps<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetSLOAssociatedMonitoredServicesQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageMSDropdownResponse, unknown, GetSLOAssociatedMonitoredServicesQueryParams, void>(
+    getConfig('cv/api'),
+    `/slo-dashboard/monitored-services`,
+    props,
+    signal
+  )
+
 export interface GetServiceLevelObjectivesRiskCountQueryParams {
   accountId: string
   orgIdentifier: string
@@ -11691,6 +11748,64 @@ export const getSLODashboardWidgetsPromise = (
   getUsingFetch<ResponsePageSLODashboardWidget, unknown, GetSLODashboardWidgetsQueryParams, void>(
     getConfig('cv/api'),
     `/slo-dashboard/widgets`,
+    props,
+    signal
+  )
+
+export interface GetSLOHealthListViewQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  userJourneyIdentifiers?: string[]
+  monitoredServiceIdentifier?: string
+  sliTypes?: ('Availability' | 'Latency')[]
+  targetTypes?: ('Rolling' | 'Calender')[]
+  errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
+  pageNumber?: number
+  pageSize?: number
+  filter?: string
+}
+
+export type GetSLOHealthListViewProps = Omit<
+  GetProps<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>,
+  'path'
+>
+
+/**
+ * get slo list view
+ */
+export const GetSLOHealthListView = (props: GetSLOHealthListViewProps) => (
+  <Get<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>
+    path={`/slo-dashboard/widgets/list`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSLOHealthListViewProps = Omit<
+  UseGetProps<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>,
+  'path'
+>
+
+/**
+ * get slo list view
+ */
+export const useGetSLOHealthListView = (props: UseGetSLOHealthListViewProps) =>
+  useGet<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>(`/slo-dashboard/widgets/list`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * get slo list view
+ */
+export const getSLOHealthListViewPromise = (
+  props: GetUsingFetchProps<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewQueryParams, void>(
+    getConfig('cv/api'),
+    `/slo-dashboard/widgets/list`,
     props,
     signal
   )

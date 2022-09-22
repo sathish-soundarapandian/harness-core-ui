@@ -37,6 +37,7 @@ export interface UseInputSetsProps {
   pipelineIdentifier: string
   branch?: string
   repoIdentifier?: string
+  connectorRef?: string
   inputSetSelected?: InputSetValue[]
   rerunInputSetYaml?: string
   selectedStageData: StageSelectionData
@@ -70,6 +71,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     orgIdentifier,
     branch,
     repoIdentifier,
+    connectorRef,
     projectIdentifier,
     pipelineIdentifier,
     selectedStageData,
@@ -97,7 +99,9 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       projectIdentifier,
       pipelineIdentifier,
       branch,
-      repoIdentifier
+      repoIdentifier,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     },
     lazy: executionInputSetTemplateYaml
   })

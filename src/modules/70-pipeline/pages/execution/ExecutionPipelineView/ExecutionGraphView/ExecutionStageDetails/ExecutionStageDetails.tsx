@@ -241,6 +241,7 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
             panZoom={false}
             showEndNode={showEndNode}
             graphLinkClassname={css.graphLink}
+            optimizeRender={false}
           />
         </NodeDimensionProvider>
       )}

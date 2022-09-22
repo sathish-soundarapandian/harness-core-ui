@@ -117,7 +117,7 @@ exports[`Artifact WizardStep tests last step data without initial values 1`] = `
                     class="bp3-form-content"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <label
                         class="Thumbnail--squareCardContainer"
@@ -977,7 +977,7 @@ exports[`Artifact WizardStep tests new connector view works correctly in select 
                   >
                     <div
                       class="StyledProps--font StyledProps--main"
-                      style="margin-bottom: 5px;"
+                      data-test-id="connectorTooltip"
                     >
                       <span
                         class="Tooltip--acenter bp3-label"
@@ -1304,7 +1304,7 @@ exports[`Artifact WizardStep tests renders correctly with connector Data 1`] = `
                     class="bp3-form-content"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
@@ -1522,7 +1522,7 @@ exports[`Artifact WizardStep tests renders correctly with differnet artifact typ
                     class="bp3-form-content"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <label
                         class="Thumbnail--squareCardContainer"
@@ -1856,7 +1856,7 @@ exports[`Artifact WizardStep tests renders without crashing 1`] = `
                     class="bp3-form-content"
                   >
                     <div
-                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main wrapping"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"

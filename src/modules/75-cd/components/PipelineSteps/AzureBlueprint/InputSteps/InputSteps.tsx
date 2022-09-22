@@ -54,25 +54,6 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
       }
       {
         /* istanbul ignore next */
-        isValueRuntimeInput(inputSetData?.template?.spec?.provisionerIdentifier as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TextFieldInputSetView
-              name={`${path}.spec.provisionerIdentifier`}
-              label={getString('pipelineSteps.provisionerIdentifier')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              data-testid={`${path}.spec.provisionerIdentifier`}
-              template={inputSetData?.template}
-              fieldPath={'spec.provisionerIdentifier'}
-            />
-          </div>
-        )
-      }
-      {
-        /* istanbul ignore next */
         isValueRuntimeInput(inputSetData?.template?.spec?.configuration?.connectorRef as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
             <FormMultiTypeConnectorField

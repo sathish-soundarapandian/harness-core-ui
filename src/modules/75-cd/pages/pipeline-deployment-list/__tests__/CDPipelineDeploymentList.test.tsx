@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render, RenderResult, screen } from '@testing-library/react'
 import { noop } from 'lodash-es'
 import pipelineList from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-list.json'
 import executionList from '@pipeline/pages/execution-list/__tests__/mocks/execution-list.json'
@@ -114,6 +114,24 @@ jest.mock('services/template-ng', () => ({
   useGetYamlWithTemplateRefsResolved: jest.fn(() => ({}))
 }))
 
+const renderExecutionPage = (): RenderResult =>
+  render(
+    <TestWrapper
+      path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
+      pathParams={{
+        accountId: 'accountId',
+        orgIdentifier: 'orgIdentifier',
+        projectIdentifier: 'projectIdentifier',
+        pipelineIdentifier: 'pipelineIdentifier',
+        module: 'cd'
+      }}
+      defaultAppStoreValues={defaultAppStoreValues}
+      queryParams={{ listview: true }}
+    >
+      <CDPipelineDeploymentList />
+    </TestWrapper>
+  )
+
 describe('CDPipelineDeploymentList', () => {
   beforeAll(() => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
@@ -123,47 +141,18 @@ describe('CDPipelineDeploymentList', () => {
   })
 
   test('should render pipelines', async () => {
-    render(
-      <TestWrapper
-        path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-        pathParams={{
-          accountId: 'accountId',
-          orgIdentifier: 'orgIdentifier',
-          projectIdentifier: 'projectIdentifier',
-          pipelineIdentifier: 'pipelineIdentifier',
-          module: 'cd'
-        }}
-        defaultAppStoreValues={defaultAppStoreValues}
-      >
-        <CDPipelineDeploymentList />
-      </TestWrapper>
-    )
-
+    renderExecutionPage()
     const pipeline = await screen.findByRole('link', {
-      name: 'Multi-ServiceWithMatrix CD Success'
+      name: 'Multi-ServiceWithMatrix CD Success : 1'
     })
     expect(pipeline).toHaveAttribute(
       'href',
-      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/pipeline-studio/?storeType=INLINE'
+      '/account/accountId/cd/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/NgFnOCXUTNm5D9eNovvILg/pipeline'
     )
   })
 
   test('should be able to show any pipeline`s executions', async () => {
-    render(
-      <TestWrapper
-        path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
-        pathParams={{
-          accountId: 'testAcc',
-          orgIdentifier: 'testOrg',
-          projectIdentifier: 'test',
-          pipelineIdentifier: 'pipeline',
-          module: 'cd'
-        }}
-        defaultAppStoreValues={defaultAppStoreValues}
-      >
-        <CDPipelineDeploymentList />
-      </TestWrapper>
-    )
+    renderExecutionPage()
     expect(useGetListOfExecutions).toHaveBeenCalled()
     // In pipeline execution history avoid module filter since we show all pipelines in any module and execution history also should be shown for any pipeline
     expect(useGetListOfExecutions).not.toHaveBeenLastCalledWith(

@@ -391,7 +391,12 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                   class="bp3-label"
                   for="spec.executionTarget.connectorRef"
                 >
-                  sshConnector
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="scriptOptionalForm_spec.executionTarget.connectorRef"
+                  >
+                    sshConnector
+                  </span>
                    
                   <span
                     class="bp3-text-muted"
@@ -858,7 +863,12 @@ exports[`Test OptionalConfigurations should match snapshot for OptionalConfigura
                       class="bp3-label"
                       for="spec.executionTarget.connectorRef"
                     >
-                      sshConnector
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="scriptOptionalForm_spec.executionTarget.connectorRef"
+                      >
+                        sshConnector
+                      </span>
                        
                       <span
                         class="bp3-text-muted"

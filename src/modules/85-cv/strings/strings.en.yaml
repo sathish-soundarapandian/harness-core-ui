@@ -691,6 +691,12 @@ templates:
 sensitivityValidation: Sensitivity should be high, medium or low
 slos:
   title: SLOs
+  subTitle: Review the status and error budget of all your defined service level objectives
+  completeTitle: Service Level Objectives (SLOs)
+  monitoredService: MONITORED SERVICE
+  status: STATUS
+  target: TARGET
+  burnRate: BURN RATE/DAY
   deleteSLO: Delete SLO
   createSLO: Create SLO
   healthSource: Health source
@@ -724,6 +730,7 @@ slos:
   reviewChanges: Review changes
   sloEditWarningMessage: It may take a few minutes to recalculate the Error Budget. Are you sure you want to proceed?
   noSLOsStateMessage: Service level objectives (SLOs) are used to describe and measure service level performance and reliability for any service/microservice applications.
+  searchSLO: Search by SLO name
   validations:
     nameValidation: SLO name is required
     userJourneyRequired: User journey is required
@@ -781,6 +788,7 @@ SLOPerformanceTrend: SLO Performance Trend
 sloGraphUserHint: To view anomalies, metrics and logs for a specific time window, click the time slot on the timeline. To expand or contract the time window, simply drag the handles.
 sloRecalculationInProgress: SLO recalculation in progress
 errorBudgetRecalculationInProgress: Error Budget recalculation in progress
+sloAnalysisTakingLong: The SLO analysis is taking too long. Please check the execution logs and third party API call logs.
 errorBudgetRemaining: Error Budget Remaining
 errorBudgetRemainingWithMins: Error Budget Remaining (mins)
 minutesRemaining: minutes remaining

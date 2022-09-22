@@ -149,6 +149,12 @@ export const getSidecarInitialValues = (
 
 export const gcrUrlList: SelectOption[] = Object.values(RegistryHostNames).map(item => ({ label: item, value: item }))
 
+export const isArtifactSourceRuntime = (
+  isPrimaryArtifactsRuntime: boolean,
+  isSidecarRuntime: boolean,
+  isSidecar: boolean
+): boolean => (!isSidecar && isPrimaryArtifactsRuntime) || (isSidecar && isSidecarRuntime)
+
 export const getImagePath = (initialImagePath: string, formikImagePathValue: string): string => {
   //initialImagePath is empty in case of new service entity, so we return defaultParam string to make tag as enabled
   if (isEmpty(initialImagePath)) {

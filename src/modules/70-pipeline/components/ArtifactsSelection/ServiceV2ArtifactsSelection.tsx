@@ -39,7 +39,7 @@ import { getIdentifierFromValue, getScopeFromValue } from '@common/components/En
 import { useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import StepDockerAuthentication from '@connectors/components/CreateConnector/DockerConnector/StepAuth/StepDockerAuthentication'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import GcrAuthentication from '@connectors/components/CreateConnector/GcrConnector/StepAuth/GcrAuthentication'
 import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import {
@@ -63,6 +63,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
 import { useCache } from '@common/hooks/useCache'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -130,7 +131,7 @@ export default function ServiceV2ArtifactsSelection({
   const { expressions } = useVariablesExpression()
 
   const stepWizardTitle = getString('connectors.createNewConnector')
-  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, AZURE_WEBAPP_NG_S3_ARTIFACTS } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
@@ -149,6 +150,13 @@ export default function ServiceV2ArtifactsSelection({
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
+    }
+    if (
+      deploymentType === ServiceDeploymentType.AzureWebApp &&
+      AZURE_WEBAPP_NG_S3_ARTIFACTS &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonS3)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AmazonS3)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
@@ -497,7 +505,7 @@ export default function ServiceV2ArtifactsSelection({
     setIsEditMode,
     connectorInfo: undefined
   }
-  const verifyOutofClusterDelegateProps = {
+  const ConnectorTestConnectionProps = {
     name: getString('connectors.stepThreeName'),
     connectorInfo: undefined,
     isStep: true,
@@ -511,9 +519,9 @@ export default function ServiceV2ArtifactsSelection({
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
             <StepDockerAuthentication name={getString('details')} {...authenticationStepProps} />
             <DelegateSelectorStep buildPayload={buildDockerPayload} {...delegateStepProps} />
-            <VerifyOutOfClusterDelegate
+            <ConnectorTestConnection
               type={ArtifactToConnectorMap[selectedArtifact]}
-              {...verifyOutofClusterDelegateProps}
+              {...ConnectorTestConnectionProps}
             />
           </StepWizard>
         )
@@ -523,17 +531,18 @@ export default function ServiceV2ArtifactsSelection({
             <ConnectorDetailsStep type={'Gcr' as unknown as ConnectorInfoDTO['type']} {...connectorDetailStepProps} />
             <GcrAuthentication name={getString('details')} {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateStepProps} buildPayload={buildGcpPayload} />
-            <VerifyOutOfClusterDelegate {...verifyOutofClusterDelegateProps} type={'Gcr'} />
+            <ConnectorTestConnection {...ConnectorTestConnectionProps} type={'Gcr'} />
           </StepWizard>
         )
       case ENABLED_ARTIFACT_TYPES.Ecr:
+      case ENABLED_ARTIFACT_TYPES.AmazonS3:
         return (
           <StepWizard iconProps={{ size: 37 }} title={stepWizardTitle}>
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
             <StepAWSAuthentication name={getString('credentials')} {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateStepProps} buildPayload={buildAWSPayload} />
-            <VerifyOutOfClusterDelegate
-              {...verifyOutofClusterDelegateProps}
+            <ConnectorTestConnection
+              {...ConnectorTestConnectionProps}
               type={ArtifactToConnectorMap[selectedArtifact]}
             />
           </StepWizard>
@@ -544,8 +553,8 @@ export default function ServiceV2ArtifactsSelection({
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
             <StepNexusAuthentication name={getString('details')} {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateStepProps} buildPayload={buildNexusPayload} />
-            <VerifyOutOfClusterDelegate
-              {...verifyOutofClusterDelegateProps}
+            <ConnectorTestConnection
+              {...ConnectorTestConnectionProps}
               type={ArtifactToConnectorMap[selectedArtifact]}
             />
           </StepWizard>
@@ -556,8 +565,8 @@ export default function ServiceV2ArtifactsSelection({
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
             <StepArtifactoryAuthentication name={getString('details')} {...authenticationStepProps} />
             <DelegateSelectorStep {...delegateStepProps} buildPayload={buildArtifactoryPayload} />
-            <VerifyOutOfClusterDelegate
-              {...verifyOutofClusterDelegateProps}
+            <ConnectorTestConnection
+              {...ConnectorTestConnectionProps}
               type={ArtifactToConnectorMap[selectedArtifact]}
             />
           </StepWizard>
@@ -568,9 +577,21 @@ export default function ServiceV2ArtifactsSelection({
             <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
             <AzureAuthentication name={getString('details')} {...authenticationStepProps} />
             <DelegateSelectorStep buildPayload={buildAzurePayload} {...delegateStepProps} />
-            <VerifyOutOfClusterDelegate
+            <ConnectorTestConnection
               type={ArtifactToConnectorMap[selectedArtifact]}
-              {...verifyOutofClusterDelegateProps}
+              {...ConnectorTestConnectionProps}
+            />
+          </StepWizard>
+        )
+      case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+        return (
+          <StepWizard title={stepWizardTitle}>
+            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
+            <GcpAuthentication name={getString('details')} {...authenticationStepProps} />
+            <DelegateSelectorStep buildPayload={buildGcpPayload} {...delegateStepProps} />
+            <ConnectorTestConnection
+              type={ArtifactToConnectorMap[selectedArtifact]}
+              {...ConnectorTestConnectionProps}
             />
           </StepWizard>
         )

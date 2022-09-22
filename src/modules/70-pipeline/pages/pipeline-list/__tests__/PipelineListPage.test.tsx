@@ -115,7 +115,11 @@ describe('CD Pipeline List Page', () => {
       })
     ).toHaveAttribute(
       'href',
-      routes.toPipelineStudio({ ...getModuleParams(), pipelineIdentifier: 'Sonar_Develop', storeType: 'INLINE' } as any)
+      routes.toPipelineStudio({
+        ...getModuleParams(),
+        pipelineIdentifier: 'Sonar_Develop',
+        storeType: 'INLINE'
+      } as any)
     )
 
     expect(
@@ -164,7 +168,9 @@ describe('CD Pipeline List Page', () => {
   test('should be able to run pipeline from menu', async () => {
     renderPipelinesListPage()
     const row = await screen.findAllByRole('row')
-    const moreOptions = within(row[1]).getByRole('button')
+    const moreOptions = within(row[1]).getByRole('button', {
+      name: /pipeline menu actions/i
+    })
     userEvent.click(moreOptions)
     const menuContent = findPopoverContainer() as HTMLElement
     const runPipeline = await within(menuContent).findByText('runPipelineText')
@@ -175,7 +181,9 @@ describe('CD Pipeline List Page', () => {
   test('should be able to view pipeline from menu', async () => {
     renderPipelinesListPage()
     const row = await screen.findAllByRole('row')
-    const moreOptions = within(row[1]).getByRole('button')
+    const moreOptions = within(row[1]).getByRole('button', {
+      name: /pipeline menu actions/i
+    })
     userEvent.click(moreOptions)
     const menuContent = findPopoverContainer() as HTMLElement
     const viewPipeline = await within(menuContent).findByText('pipeline.viewPipeline')
@@ -195,7 +203,9 @@ describe('CD Pipeline List Page', () => {
   test('should be able delete pipeline from the menu', async () => {
     renderPipelinesListPage()
     const row = await screen.findAllByRole('row')
-    const moreOptions = within(row[1]).getByRole('button')
+    const moreOptions = within(row[1]).getByRole('button', {
+      name: /pipeline menu actions/i
+    })
     userEvent.click(moreOptions)
     const menuContent = findPopoverContainer() as HTMLElement
     const deleteBtn = await within(menuContent).findByText('delete')

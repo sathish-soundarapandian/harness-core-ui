@@ -16,7 +16,8 @@ import {
   SelectOption,
   StepProps,
   Text,
-  ButtonVariation
+  ButtonVariation,
+  RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Form, FormikContextType, FormikProps } from 'formik'
@@ -45,7 +46,6 @@ import {
   getConnectorIdValue,
   getFinalArtifactObj,
   helperTextData,
-  isFieldFixed,
   resetTag,
   shouldFetchTags
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -76,10 +76,12 @@ export function ACRArtifact({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
 
+  const loadingItems = [{ label: 'Loading...', value: 'Loading Loading...' }]
+
   const [tagList, setTagList] = React.useState([])
-  const [subscriptions, setSubscriptions] = React.useState<SelectOption[]>([])
-  const [registries, setRegistries] = React.useState<SelectOption[]>([])
-  const [repositories, setRepositories] = React.useState<SelectOption[]>([])
+  const [subscriptions, setSubscriptions] = React.useState<SelectOption[]>(loadingItems)
+  const [registries, setRegistries] = React.useState<SelectOption[]>(loadingItems)
+  const [repositories, setRepositories] = React.useState<SelectOption[]>(loadingItems)
   const [lastQueryData, setLastQueryData] = React.useState<{
     subscriptionId: string
     registry: string
@@ -91,6 +93,8 @@ export function ACRArtifact({
   })
 
   const formikRef = React.useRef<FormikContextType<ACRArtifactType>>()
+
+  const connectorRef = defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
 
   const schemaObject = {
     subscriptionId: Yup.lazy((value): Yup.Schema<unknown> => {
@@ -162,10 +166,6 @@ export function ACRArtifact({
     )
   })
 
-  const getConnectorRefQueryData = (): string => {
-    return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const getValue = (item: { label?: string; value?: string } | string | any): string => {
     /* istanbul ignore next */
@@ -182,7 +182,7 @@ export function ACRArtifact({
       subscriptionId: getValue(lastQueryData?.subscriptionId),
       registry: getValue(lastQueryData?.registry),
       repository: getValue(lastQueryData?.repository),
-      connectorRef: getConnectorRefQueryData(),
+      connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
@@ -209,18 +209,37 @@ export function ACRArtifact({
 
   const {
     data: subscriptionsData,
+    refetch: refetchSubscriptions,
     loading: loadingSubscriptions,
     error: subscriptionsError
   } = useGetAzureSubscriptions({
     queryParams: {
-      connectorRef: getConnectorRefQueryData(),
+      connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
-    }
+    },
+    lazy: true,
+    debounce: 300
   })
 
   useEffect(() => {
+    if (loadingSubscriptions) {
+      setSubscriptions(loadingItems)
+    }
+  }, [loadingSubscriptions])
+
+  useEffect(() => {
+    if (subscriptionsError) {
+      setSubscriptions([])
+    }
+  }, [subscriptionsError])
+
+  useEffect(() => {
+    if (!subscriptionsData) {
+      return
+    }
+
     setSubscriptions(
       defaultTo(subscriptionsData?.data?.subscriptions, []).reduce(
         (subscriptionValues: SelectOption[], subscription: AzureSubscriptionDTO) => {
@@ -248,13 +267,13 @@ export function ACRArtifact({
   }, [subscriptions])
 
   const {
-    data: registiresData,
+    data: registriesData,
     refetch: refetchRegistries,
     loading: loadingRegistries,
     error: registriesError
   } = useGetACRRegistriesBySubscription({
     queryParams: {
-      connectorRef: getConnectorRefQueryData(),
+      connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
@@ -265,30 +284,29 @@ export function ACRArtifact({
   })
 
   useEffect(() => {
-    /* istanbul ignore else */
-    if (initialValues?.spec?.subscriptionId && isFieldFixed(initialValues?.spec?.subscriptionId)) {
-      refetchRegistries({
-        queryParams: {
-          connectorRef: getConnectorRefQueryData(),
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier,
-          subscriptionId: getValue(initialValues.spec.subscriptionId)
-        }
-      })
+    if (loadingRegistries) {
+      setRegistries(loadingItems)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialValues?.spec?.subscriptionId, initialValues?.spec?.registry])
+  }, [loadingRegistries])
 
   useEffect(() => {
+    if (registriesError) {
+      setRegistries([])
+    }
+  }, [registriesError])
+
+  useEffect(() => {
+    if (!registriesData) {
+      return
+    }
     const options =
-      defaultTo(registiresData?.data?.registries, []).map(registry => ({
+      defaultTo(registriesData?.data?.registries, []).map(registry => ({
         label: registry.registry,
         value: registry.registry
       })) || /* istanbul ignore next */ []
 
     setRegistries(options)
-  }, [registiresData])
+  }, [registriesData])
 
   const {
     data: repositoriesData,
@@ -297,7 +315,7 @@ export function ACRArtifact({
     error: repositoriesError
   } = useGetACRRepositories({
     queryParams: {
-      connectorRef: getConnectorRefQueryData(),
+      connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
@@ -309,30 +327,22 @@ export function ACRArtifact({
   })
 
   useEffect(() => {
-    /* istanbul ignore else */
-    if (
-      initialValues?.spec?.subscriptionId &&
-      isFieldFixed(initialValues?.spec?.subscriptionId) &&
-      initialValues?.spec?.registry &&
-      isFieldFixed(initialValues?.spec?.registry)
-    ) {
-      refetchRepositories({
-        queryParams: {
-          connectorRef: getConnectorRefQueryData(),
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier,
-          subscriptionId: getValue(initialValues.spec.subscriptionId)
-        },
-        pathParams: {
-          registry: getValue(initialValues.spec.registry)
-        }
-      })
+    if (loadingRepositories) {
+      setRepositories(loadingItems)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialValues?.spec?.subscriptionId, initialValues?.spec?.registry, initialValues?.spec?.repository])
+  }, [loadingRepositories])
 
   useEffect(() => {
+    if (repositoriesError) {
+      setRepositories([])
+    }
+  }, [repositoriesError])
+
+  useEffect(() => {
+    if (!repositoriesData) {
+      return
+    }
+
     const options =
       defaultTo(repositoriesData?.data?.repositories, []).map(repo => ({
         label: repo.repository,
@@ -485,19 +495,22 @@ export function ACRArtifact({
                     selectItems={subscriptions}
                     multiTypeInputProps={{
                       expressions,
+                      onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                        if (
+                          e?.target?.type !== 'text' ||
+                          (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                        ) {
+                          return
+                        }
+                        if (connectorRef === RUNTIME_INPUT_VALUE) {
+                          return
+                        }
+
+                        refetchSubscriptions()
+                      },
                       onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
                         if (type === MultiTypeInputType.FIXED) {
-                          if (getValue(value)) {
-                            refetchRegistries({
-                              queryParams: {
-                                connectorRef: getConnectorRefQueryData(),
-                                accountIdentifier: accountId,
-                                orgIdentifier,
-                                projectIdentifier,
-                                subscriptionId: getValue(value)
-                              }
-                            })
-                          } else {
+                          if (!getValue(value)) {
                             setRegistries([])
                             setRepositories([])
                           }
@@ -528,12 +541,8 @@ export function ACRArtifact({
                       }
                     }}
                     label={getString('pipeline.ACR.subscription')}
-                    disabled={loadingSubscriptions || isReadonly}
-                    placeholder={
-                      loadingSubscriptions
-                        ? /* istanbul ignore next */ getString('loading')
-                        : getString('pipeline.ACR.subscriptionPlaceholder')
-                    }
+                    disabled={isReadonly}
+                    placeholder={getString('pipeline.ACR.subscriptionPlaceholder')}
                   />
 
                   {getMultiTypeFromValue(getValue(formik.values.subscriptionId)) === MultiTypeInputType.RUNTIME && (
@@ -559,34 +568,44 @@ export function ACRArtifact({
                   <FormInput.MultiTypeInput
                     name="registry"
                     selectItems={registries}
-                    disabled={loadingRegistries || isReadonly}
-                    placeholder={
-                      loadingRegistries
-                        ? /* istanbul ignore next */ getString('loading')
-                        : getString('pipeline.ACR.registryPlaceholder')
-                    }
+                    disabled={isReadonly}
+                    placeholder={getString('pipeline.ACR.registryPlaceholder')}
                     multiTypeInputProps={{
                       expressions,
                       disabled: isReadonly,
+                      onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                        const subscriptionId = getValue(formik?.values?.subscriptionId)
+
+                        if (
+                          connectorRef === RUNTIME_INPUT_VALUE ||
+                          !subscriptionId ||
+                          subscriptionId === RUNTIME_INPUT_VALUE
+                        ) {
+                          return
+                        }
+
+                        if (
+                          e?.target?.type !== 'text' ||
+                          (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                        ) {
+                          return
+                        }
+
+                        refetchRegistries({
+                          queryParams: {
+                            connectorRef,
+                            accountIdentifier: accountId,
+                            orgIdentifier,
+                            projectIdentifier,
+                            subscriptionId
+                          }
+                        })
+                      },
                       onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
                         if (type === MultiTypeInputType.FIXED) {
-                          if (getValue(value)) {
-                            refetchRepositories({
-                              queryParams: {
-                                connectorRef: getConnectorRefQueryData(),
-                                accountIdentifier: accountId,
-                                orgIdentifier,
-                                projectIdentifier,
-                                subscriptionId: getValue(formik.values.subscriptionId)
-                              },
-                              pathParams: {
-                                registry: getValue(value)
-                              }
-                            })
-                          } else {
+                          if (!getValue(value)) {
                             setRepositories([])
                           }
-
                           getMultiTypeFromValue(getValue(formik?.values?.repository)) === MultiTypeInputType.FIXED &&
                             formik.setFieldValue('repository', '')
                         } else {
@@ -633,15 +652,45 @@ export function ACRArtifact({
                   <FormInput.MultiTypeInput
                     name="repository"
                     selectItems={repositories}
-                    disabled={loadingRepositories || isReadonly}
-                    placeholder={
-                      loadingRepositories
-                        ? /* istanbul ignore next */ getString('loading')
-                        : getString('pipeline.ACR.repositoryPlaceholder')
-                    }
+                    disabled={isReadonly}
+                    placeholder={getString('pipeline.ACR.repositoryPlaceholder')}
                     multiTypeInputProps={{
                       expressions,
                       disabled: isReadonly,
+                      onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                        const subscriptionId = getValue(formik?.values?.subscriptionId)
+                        const registry = getValue(formik?.values?.registry)
+
+                        if (
+                          connectorRef === RUNTIME_INPUT_VALUE ||
+                          !subscriptionId ||
+                          subscriptionId === RUNTIME_INPUT_VALUE ||
+                          !registry ||
+                          registry === RUNTIME_INPUT_VALUE
+                        ) {
+                          return
+                        }
+
+                        if (
+                          e?.target?.type !== 'text' ||
+                          (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                        ) {
+                          return
+                        }
+
+                        refetchRepositories({
+                          queryParams: {
+                            connectorRef,
+                            accountIdentifier: accountId,
+                            orgIdentifier,
+                            projectIdentifier,
+                            subscriptionId
+                          },
+                          pathParams: {
+                            registry
+                          }
+                        })
+                      },
                       onChange: /* istanbul ignore next */ value => {
                         resetTagList(formik)
                         formik.setFieldValue('repository', value)

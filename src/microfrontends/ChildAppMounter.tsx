@@ -28,6 +28,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { usePermission } from '@rbac/hooks/usePermission'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
 import ChildAppError from './ChildAppError'
 import type { ChildAppProps, Scope } from './index'
 
@@ -94,7 +95,8 @@ export class ChildAppMounter<T = never> extends React.Component<
             NGBreadcrumbs,
             MonacoEditor,
             YAMLBuilder,
-            MonacoDiffEditor
+            MonacoDiffEditor,
+            LevelUpBanner
           }}
           hooks={{
             useDocumentTitle,

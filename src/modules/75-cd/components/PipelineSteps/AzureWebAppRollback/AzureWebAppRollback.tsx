@@ -37,6 +37,7 @@ export class AzureWebAppRollback extends PipelineStep<AzureWebAppRollbackStepInf
   protected stepName = 'Azure Web App Rollback'
   protected stepDescription: keyof StringsMap = 'cd.azureWebAppRollbackDescription'
   protected stepIconSize = 25
+  protected referenceId = 'AzureWebAppRollback'
 
   protected defaultValues = {
     type: StepType.AzureWebAppsRollback,

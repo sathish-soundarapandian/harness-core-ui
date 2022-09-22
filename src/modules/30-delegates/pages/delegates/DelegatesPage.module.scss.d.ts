@@ -31,6 +31,7 @@ declare const styles: {
   readonly itemActionContainer: string
   readonly listBody: string
   readonly listPage: string
+  readonly marginLeft: string
   readonly overviewCard: string
   readonly paddedContainer: string
   readonly paddingLeft: string
@@ -41,6 +42,7 @@ declare const styles: {
   readonly profileDetailsContainer: string
   readonly search: string
   readonly section1: string
+  readonly statusPadding: string
   readonly statusText: string
   readonly successIcon: string
   readonly tickerContainer: string

@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { K8sDirectInfraYaml } from 'services/ci'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 
 export const transformValuesFieldsConfig = [
   {
@@ -76,7 +76,9 @@ export const transformValuesFieldsConfig = [
   }
 ]
 
-export const getEditViewValidateFieldsConfig = (buildInfrastructureType: K8sDirectInfraYaml['type']) => [
+export const getEditViewValidateFieldsConfig = (
+  buildInfrastructureType: CIBuildInfrastructureType
+): { name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }[] => [
   {
     name: 'identifier',
     type: ValidationFieldTypes.Identifier,

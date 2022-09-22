@@ -48,7 +48,7 @@ parallelSelectedStages: '{{selected}}, +{{total}} Stages'
 parallelStages: '+{{total}} Stages'
 runAPipeline: Run a Pipeline
 regionPlaceholder: Select Region
-repositoryPlaceholder: <repo-name>.azurecr.io/<image>
+repositoryPlaceholder: <container-registry-name>.azurecr.io/<image>
 repositoryUrlPlaceholder: Enter Repository URL
 lastSevenDays: In Last 7 days
 neverRan: This pipeline never ran
@@ -592,6 +592,8 @@ releaseRepo: Release Repo
 addReleaseRepo: + Add Release Repo Manifest
 releaseRepoStore: Release Repo Store
 runtimeInputsSubmittedMsg: Inputs have been submitted successfully
+packageType: Package Type
+packageTypePlaceholder: Select Package Type
 pipelineInputPanel:
   noRuntimeInputs: 'No Runtime Inputs'
   automaticallyExtractedFromText: Automatically extracted from event payload
@@ -781,10 +783,16 @@ infraSpecifications:
   initTimeoutPlaceholder: Enter Init Timeout
   validation:
     requiredExistingStage: Existing stage is a required field
+  selectOs: Select the Operating System
   os: OS
   osTypes:
     windows: Windows
     macos: MacOS
+  selectArchitecture: Select the Architecture
+  architecture: Architecture
+  architectureTypes:
+    amd64: AMD64
+    arm64: ARM64
 imagePathLabel: Image Path
 artifactPathLabel: Artifact Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
@@ -797,6 +805,7 @@ artifactsSelection:
   projectPlaceholder: Enter Project
   repositoryTypePlaceholder: Select Repository Type
   delegateselectionPlaceholder: Add specific selectors or leave empty to target any delegate
+  packageName: Package Name
   repositoryPort: Repository Port
   artifactsArrayPath: Artifacts Array Path
   versionPath: Version Path
@@ -805,6 +814,7 @@ artifactsSelection:
   repositoryPlaceholder: Enter Repository
   artifactType: Artifact Type
   artifactDetails: Artifact Details
+  orgNamePlaceholder: Enter Organization Name
   versionDetails: Version Details
   versionPlaceholder: Enter Version
   versionRegex: Version Regex
@@ -819,6 +829,8 @@ artifactsSelection:
   filePathRegexPlaceholder: Enter File Path Regex
   amazonS3Title: Amazon S3
   googleArtifactRegistryTitle: Google Artifact Registry
+  githubPackageRegistryTitle: Github Package Registry
+  azureArtifactRegistryTitle: Azure Artifact Registry
   existingDocker:
     sidecarId: Sidecar Name
     sidecarIdPlaceholder: Enter Artifact Name
@@ -826,7 +838,9 @@ artifactsSelection:
     enterTagRegex: Enter Tag Regex
   validation:
     noBuild: No build found with given details
+    packageType: Package Type is required
     versionRegex: Version Regex is required
+    packageName: Package Name is required
     imagePath: Image Path is required
     artifactPath: Artifact Path is required
     region: '{{$.validation.regionRequired}}'
@@ -1175,7 +1189,6 @@ serviceDeploymentTypes:
   awsLambda: AWS Lambda
   pcf: TAS
   ssh: Secure Shell
-  custom: Custom Deployment
   deployDifferentLabel: Deploy different service
   serverlessAwsLambda: Serverless Lambda
   serverlessAzureFunctions: Serverless Azure Functions
@@ -1183,6 +1196,7 @@ serviceDeploymentTypes:
   awsSAM: AWS SAM
   azureFunctions: Azure Functions
   azureWebApp: Azure Web Apps
+  customDeployment: Deployment Template
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1278,6 +1292,7 @@ fieldPlaceholders:
 traffic: Traffic
 trafficPercentage: '{{$.pipeline.traffic}} %'
 viewPipeline: View Pipeline
+viewExecution: View Execution
 codeSource: 'Code Source'
 recentExecutions: 'Recent Executions'
 mostRecentDirection: 'Latest one on right side'
@@ -1314,7 +1329,6 @@ triggerInfo: 'Trigger Info'
 phasesForm:
   phases: 'Phases'
   phase: 'Phase'
-  packageType: 'Package Type'
   addPhase: '+ Add Phase'
   useVerification: 'Use Verification'
   errors:
@@ -1329,8 +1343,9 @@ phasesForm:
     rpm: 'Rpm'
     zip: 'Zip'
   packageTypesWinrm:
-    website: 'Website'
-    virtualDir: 'Virtual directory'
+    application: 'IIS Application'
+    website: 'IIS Website'
+    virtualDir: 'IIS Virtual directory'
 draft: 'Draft'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
@@ -1357,3 +1372,5 @@ customDeployment:
   errors:
     fetchScriptRequired: 'Fetch Instances Script is required'
     fetchScriptBodyRequired: 'Fetch Instances Script body is required'
+  validations:
+    nameUnique: Field Name should be unique

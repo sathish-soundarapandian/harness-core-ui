@@ -8,12 +8,15 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly checkbox: string
+  readonly itemsList: string
   readonly labelNames: string
   readonly loadingContainer: string
   readonly namesContainer: string
+  readonly noResults: string
   readonly providerDropDown: string
   readonly providerList: string
   readonly radioValue: string
+  readonly search: string
   readonly searchInput: string
   readonly spinner: string
   readonly valueListContainer: string

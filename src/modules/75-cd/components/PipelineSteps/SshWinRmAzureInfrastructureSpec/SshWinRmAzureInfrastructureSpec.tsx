@@ -81,8 +81,8 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
     subscriptionId: '',
     resourceGroup: '',
     tags: {},
-    usePublicDns: false,
-    allowSimultaneousDeployments: false
+    allowSimultaneousDeployments: false,
+    hostConnectionType: 'Hostname'
   }
 
   protected stepIcon: IconName = 'microsoft-azure'

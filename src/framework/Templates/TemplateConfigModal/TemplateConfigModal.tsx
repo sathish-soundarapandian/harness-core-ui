@@ -340,12 +340,13 @@ const BasicTemplateDetails = (
   }, [formInitialValues])
 
   const gitxValidationSchema = supportingTemplatesGitx ? gitSyncFormSchema(getString) : {}
-  const gitsyncValidationSchema = isGitSyncEnabled
-    ? {
-        repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-        branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
-      }
-    : {}
+  const gitsyncValidationSchema =
+    isGitSyncEnabled && selectedScope === Scope.PROJECT
+      ? {
+          repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+          branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
+        }
+      : {}
 
   return (
     <Container

@@ -52,6 +52,12 @@ export const useRunPipelineModal = (
     source = 'executions'
   } = useParams<PipelineType<ExecutionPathProps>>()
 
+  const storeMetadata = {
+    connectorRef,
+    repoName: repoIdentifier,
+    branch
+  }
+
   const planExecutionId: string | undefined = executionIdentifier ?? executionId
 
   const [inputSetYaml, setInputSetYaml] = useState('')
@@ -136,6 +142,7 @@ export const useRunPipelineModal = (
               }}
               stagesExecuted={stagesExecuted}
               executionIdentifier={planExecutionId}
+              storeMetadata={storeMetadata}
             />
             <Button
               aria-label="close modal"

@@ -199,7 +199,7 @@ exports[`Jira Create fetch projects show error if failed to fetch projects 1`] =
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -631,7 +631,7 @@ exports[`Jira Create tests Basic snapshot - deploymentform mode: jira-create-dep
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -1056,7 +1056,7 @@ exports[`Jira Create tests Basic snapshot - inputset mode: input set with errors
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -1476,7 +1476,7 @@ exports[`Jira Create tests Deploymentform readonly mode: jira-create-deploymentf
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -1981,7 +1981,7 @@ exports[`Jira Create tests Edit Stage - readonly view: edit-stage-readonly 1`] =
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"

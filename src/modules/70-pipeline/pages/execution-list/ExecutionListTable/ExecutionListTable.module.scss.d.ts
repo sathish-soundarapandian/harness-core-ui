@@ -10,7 +10,6 @@ declare const styles: {
   readonly checkbox: string
   readonly ci: string
   readonly execution: string
-  readonly executionStageSummary: string
   readonly icon: string
   readonly iconWrapper: string
   readonly matrixLabel: string
@@ -18,6 +17,7 @@ declare const styles: {
   readonly matrixStageList: string
   readonly menu: string
   readonly selectiveStageExecution: string
+  readonly service: string
   readonly stage: string
   readonly stageInfo: string
   readonly table: string

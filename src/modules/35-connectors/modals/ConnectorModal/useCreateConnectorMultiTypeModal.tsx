@@ -41,7 +41,8 @@ const modalProps: IDialogProps = {
     position: 'relative',
     overflow: 'hidden',
     backgroundColor: '#0278D5',
-    padding: '300px 140px 0'
+    padding: '150px 140px',
+    justifyContent: 'center'
   }
 }
 
@@ -86,7 +87,7 @@ const useCreateConnectorMultiTypeModal = (
         <Text font={{ size: 'normal', weight: 'semi-bold' }} color="white" margin={{ bottom: 'xxlarge' }}>
           Start by selecting your connector type
         </Text>
-        <Layout.Horizontal spacing="medium">
+        <Layout.Horizontal spacing="medium" className={css.cardsWrapper}>
           {props.types.map(type => (
             <div key={type} className={css.card}>
               <Card interactive={true} elevation={0} selected={false} onClick={() => handleSelect(type)}>

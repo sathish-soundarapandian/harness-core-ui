@@ -143,7 +143,7 @@ exports[`ManifestSelection tests click continue btn 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"
@@ -720,7 +720,7 @@ exports[`ManifestSelection tests connector as runtime 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"
@@ -1009,7 +1009,7 @@ exports[`ManifestSelection tests renders Git Store 1`] = `
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"

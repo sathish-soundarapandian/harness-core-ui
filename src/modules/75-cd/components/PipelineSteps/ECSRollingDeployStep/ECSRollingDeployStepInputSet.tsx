@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
@@ -52,14 +59,15 @@ export const ECSRollingDeployStepInputSet: React.FC<ECSRollingDeployStepInputSet
         </div>
       )}
 
-      {getMultiTypeFromValue(inputSetData.template?.sameAsAlreadyRunningInstances) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(inputSetData.template?.spec?.sameAsAlreadyRunningInstances) ===
+        MultiTypeInputType.RUNTIME && (
         <Layout.Horizontal
           flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
           className={cx(stepCss.formGroup, stepCss.sm)}
           margin={{ top: 'small', bottom: 'medium' }}
         >
           <FormMultiTypeCheckboxField
-            name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}sameAsAlreadyRunningInstances`}
+            name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}spec.sameAsAlreadyRunningInstances`}
             label={getString('cd.ecsRollingDeployStep.sameAsAlreadyRunningInstances')}
             multiTypeTextbox={{ expressions, allowableTypes, disabled: inputSetData.readonly }}
             disabled={inputSetData.readonly}
@@ -68,14 +76,14 @@ export const ECSRollingDeployStepInputSet: React.FC<ECSRollingDeployStepInputSet
         </Layout.Horizontal>
       )}
 
-      {getMultiTypeFromValue(inputSetData.template?.forceNewDeployment) === MultiTypeInputType.RUNTIME && (
+      {getMultiTypeFromValue(inputSetData.template?.spec?.forceNewDeployment) === MultiTypeInputType.RUNTIME && (
         <Layout.Horizontal
           flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
           className={cx(stepCss.formGroup, stepCss.sm)}
           margin={{ top: 'small', bottom: 'medium' }}
         >
           <FormMultiTypeCheckboxField
-            name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}forceNewDeployment`}
+            name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}spec.forceNewDeployment`}
             label={getString('cd.ecsRollingDeployStep.forceNewDeployment')}
             multiTypeTextbox={{ expressions, allowableTypes, disabled: inputSetData.readonly }}
             disabled={inputSetData.readonly}

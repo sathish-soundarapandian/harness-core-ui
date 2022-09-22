@@ -121,17 +121,17 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
       }
       {
         /* istanbul ignore next */
-        isValueRuntimeInput(inputSet?.store?.spec?.paths as string) && (
+        isValueRuntimeInput(inputSet?.store?.spec?.folderPath as string) && (
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
             <TextFieldInputSetView
-              name={`${path}.spec.configuration.template.store.spec.paths[0]`}
-              label={getString('common.git.filePath')}
+              name={`${path}.spec.configuration.template.store.spec.folderPath`}
+              label={getString('cd.azureBlueprint.templateFolderPath')}
               disabled={readonly}
               multiTextInputProps={{
                 expressions,
                 allowableTypes
               }}
-              fieldPath={'spec.configuration.template.store.spec.paths'}
+              fieldPath={'spec.configuration.template.store.spec.folderPath'}
               template={inputSetData?.template}
             />
           </div>

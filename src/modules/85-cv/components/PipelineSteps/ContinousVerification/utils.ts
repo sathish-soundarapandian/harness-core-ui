@@ -19,7 +19,8 @@ import {
   trafficSplitPercentageOptions,
   SensitivityTypes,
   defaultMonitoredServiceSpec,
-  monitoredServiceRefPath
+  monitoredServiceRefPath,
+  extendedDurationOptions
 } from './constants'
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import { validateTemplateInputs } from './components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
@@ -203,7 +204,7 @@ export function getSpecFormData(specInfo: spec | undefined): spec {
           setFieldData(validspec, 'sensitivity', VerificationSensitivityOptions)
           break
         case 'duration':
-          setFieldData(validspec, 'duration', durationOptions)
+          setFieldData(validspec, 'duration', [...durationOptions, ...extendedDurationOptions])
           break
         case 'baseline':
           setFieldData(validspec, 'baseline', baseLineOptions)
@@ -274,3 +275,6 @@ export function doesHealthSourceHasQueries(healthSource: any) {
 export function getMetricDefinitionPath(path: string, hasQueries: boolean) {
   return `${path}.${hasQueries ? 'queries' : 'metricDefinitions'}`
 }
+
+export const getDurationOptions = (enableVerifyStepLongDuration?: boolean): SelectOption[] =>
+  enableVerifyStepLongDuration ? [...durationOptions, ...extendedDurationOptions] : durationOptions

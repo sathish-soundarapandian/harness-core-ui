@@ -10,7 +10,10 @@ import { AllowedTypes, FormInput, MultiTypeInputType, SelectOption } from '@wing
 import type { FormikProps } from 'formik'
 import type { UseStringsReturn } from 'framework/strings'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
+import { FeatureFlag } from '@common/featureFlags'
+import { getDurationOptions } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import { getMultiTypeInputProps } from './VerificationJobFields.utils'
 
 interface BaseFieldProps {
@@ -68,17 +71,9 @@ export function VerificationSensitivity(props: BaseFieldProps): JSX.Element {
 }
 
 export function Duration(props: BaseFieldProps): JSX.Element {
-  const selectProps = useMemo(
-    () => ({
-      items: [
-        { label: '5 min', value: '5m' },
-        { label: '10 min', value: '10m' },
-        { label: '15 min', value: '15m' },
-        { label: '30 min', value: '30m' }
-      ]
-    }),
-    []
-  )
+  const extendedDurationFlag = useFeatureFlag(FeatureFlag.ENABLE_VERIFY_STEP_LONG_DURATION)
+  const selectProps = useMemo(() => ({ items: getDurationOptions(extendedDurationFlag) }), [extendedDurationFlag])
+
   const { zIndex, label, name, expressions, formik, isSimpleDropdown, allowableTypes } = props
   const style: CSSProperties = useMemo(() => ({ zIndex: zIndex ?? 8 }), [zIndex]) as CSSProperties
   const { getString } = useStrings()
@@ -99,7 +94,7 @@ export function Duration(props: BaseFieldProps): JSX.Element {
         style={style}
         label={label ? label : getString('duration')}
         items={selectProps.items}
-        value={(formik?.values as ContinousVerificationData).spec?.spec?.duration as SelectOption}
+        value={(formik?.values as ContinousVerificationData)?.spec?.spec?.duration as SelectOption}
         disabled={true}
       />
     )
