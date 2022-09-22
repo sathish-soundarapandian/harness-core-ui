@@ -22,7 +22,7 @@ export enum HealthSourceTypes {
   CustomHealth = 'CustomHealth',
   ErrorTracking = 'ErrorTracking',
   Dynatrace = 'Dynatrace',
-  Elk = 'ELK'
+  Elk = 'ELKLog'
 }
 
 export type CommonNonCustomMetricFieldsType = {

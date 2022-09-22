@@ -17,11 +17,12 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { MapElkToServiceFieldNames } from '@cv/pages/health-source/connectors/ElkHealthSource/components/MapQueriesToHarnessService/constants'
-import { useGetELKLogSampleData, useGetElkSampleData, useGetElkSavedSearches } from 'services/cv'
+import { useGetELKLogSampleData } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { QueryViewer } from '@cv/components/QueryViewer/QueryViewer'
 import Card from '@cv/components/Card/Card'
+import { showError } from '@cf/pages/pipeline-studio/views/StageOverview/__tests__/StageOverviewTestHelper'
 import { ElkMetricNameAndHostIdentifier } from '../../ElkMetricNameAndHostIdentifier'
 import type { MapQueriesToHarnessServiceLayoutProps } from './types'
 import css from './MapQueriesToHarnessServiceLayout.module.scss'
@@ -67,6 +68,9 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
         if (response.data?.length) {
           setElkSampleData(response.data)
         }
+      })
+      .catch(error => {
+        showError(error)
       })
       .finally(() => {
         setLoading(false)

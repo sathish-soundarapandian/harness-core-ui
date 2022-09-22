@@ -6,14 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import {
-  Formik,
-  FormikForm,
-  Utils,
-  useToaster,
-  getMultiTypeFromValue,
-  MultiTypeInputType
-} from '@wings-software/uicore'
+import { Formik, FormikForm, Utils, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
 import { useStrings } from 'framework/strings'
@@ -26,7 +19,6 @@ import css from './ElkQueryBuilder.module.scss'
 
 export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
   const { getString } = useStrings()
-  const { showError } = useToaster()
   const { onSubmit, data: sourceData, onPrevious, isTemplate, expressions } = props
 
   const connectorIdentifier =
@@ -51,10 +43,6 @@ export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       onSubmit={async updatedSource => {
-        if (updatedSource?.isStaleRecord) {
-          showError(`getString('cv.monitoringSources.Elk.staleRecordsWarning')`)
-          return
-        }
         if (updatedSource) {
           mappedMetrics.set(selectedMetric, updatedSource)
         }

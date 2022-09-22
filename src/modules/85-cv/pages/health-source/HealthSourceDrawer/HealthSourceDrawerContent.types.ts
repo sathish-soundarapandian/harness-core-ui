@@ -20,7 +20,8 @@ import type {
   CustomHealthSourceMetricSpec,
   ErrorTrackingHealthSourceSpec,
   DynatraceHealthSourceSpec,
-  CustomHealthSourceLogSpec
+  CustomHealthSourceLogSpec,
+  ELKHealthSourceSpec
 } from 'services/cv'
 import type { DatadogLogsHealthSpec } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/DatadogLogsHealthSource.type'
 import type { GCOLogsHealthSourceSpec } from '../connectors/GCOLogsMonitoringSource/components/MapQueriesToHarnessService/types'
@@ -39,6 +40,7 @@ export interface UpdatedHealthSource extends Omit<HealthSource, 'spec'> {
     | CustomHealthSourceLogSpec
     | ErrorTrackingHealthSourceSpec
     | DynatraceHealthSourceSpec
+    | ELKHealthSourceSpec
 }
 
 export interface RowData extends HealthSource {
