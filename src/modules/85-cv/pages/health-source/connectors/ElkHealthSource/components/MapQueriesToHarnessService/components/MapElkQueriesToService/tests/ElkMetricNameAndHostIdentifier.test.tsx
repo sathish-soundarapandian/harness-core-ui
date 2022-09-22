@@ -8,20 +8,27 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { SplunkMetricNameAndHostIdentifier } from '../ElkMetricNameAndHostIdentifier'
+import { ElkMetricNameAndHostIdentifier } from '../ElkMetricNameAndHostIdentifier'
+import type { MapElkQueriesToServiceProps } from '../types'
 
 describe('Unit tests for MapSplunkQueriesToService', () => {
-  const initialProps = {
+  const initialProps: MapElkQueriesToServiceProps = {
     onChange: jest.fn(),
     sampleRecord: null,
     serviceInstance: 'serviceInstance',
     isQueryExecuted: true,
-    loading: false
+    loading: false,
+    messageIdentifier: '',
+    identifyTimeStamp: '',
+    isConnectorRuntimeOrExpression: true,
+    isTemplate: false,
+    connectorIdentifier: ''
   }
+
   test('Ensure that query name is present', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <SplunkMetricNameAndHostIdentifier {...initialProps} />
+        <ElkMetricNameAndHostIdentifier {...initialProps} />
       </TestWrapper>
     )
     await waitFor(() => expect(getByText('cv.monitoringSources.queryNameLabel')).not.toBeNull())
@@ -30,7 +37,7 @@ describe('Unit tests for MapSplunkQueriesToService', () => {
   test('Ensure that service instance field is present', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <SplunkMetricNameAndHostIdentifier {...initialProps} />
+        <ElkMetricNameAndHostIdentifier {...initialProps} />
       </TestWrapper>
     )
     await waitFor(() => expect(getByText('cv.monitoringSources.gcoLogs.serviceInstance')).not.toBeNull())

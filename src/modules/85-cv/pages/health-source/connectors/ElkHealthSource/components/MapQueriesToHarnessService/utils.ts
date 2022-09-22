@@ -79,9 +79,9 @@ export function validateMappings(
 
 export const getElkMappedMetric = ({
   sourceData,
-  isConnectorRuntimeOrExpression,
-  getString
-}: GetElkMappedMetricInterface): {
+  isConnectorRuntimeOrExpression
+}: //getString
+GetElkMappedMetricInterface): {
   selectedMetric: string
   mappedMetrics: Map<string, MapElkQueryToService>
 } => {

@@ -9,8 +9,8 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { Connectors } from '@connectors/constants'
 import { TestWrapper } from '@common/utils/testUtils'
-import SplunkHealthSource from '../SplunkHealthSource'
-import { data, mockedSplunkSampleData } from './SplunkHealthSource.mock'
+import ElkHealthSource from '../ElkHealthSource'
+import { data, mockedElkIndicesData, mockedElkSampleData } from './ElkHealthSource.mock'
 
 const onNextMock = jest.fn().mockResolvedValue(jest.fn())
 const onPrevious = jest.fn().mockResolvedValue(jest.fn())
@@ -20,7 +20,7 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
   get SetupSourceTabsContext() {
     return React.createContext({
       tabsInfo: [],
-      sourceData: { sourceType: Connectors.SPLUNK },
+      sourceData: { sourceType: Connectors.ELK },
       onNext: onNextMock,
       onPrevious: onPrevious
     })
@@ -28,23 +28,36 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
 }))
 
 jest.mock('services/cv', () => ({
-  useGetSplunkSavedSearches: jest.fn().mockImplementation(() => ({
-    data: [],
+  // useGetElkSavedSearches: jest.fn().mockImplementation(() => ({
+  //   data: [],
+  //   refetch: jest.fn()
+  // })),
+  useGetELKLogSampleData: jest.fn().mockImplementation(() => ({
+    data: mockedElkSampleData,
+    loading: false,
+    error: null,
     refetch: jest.fn()
   })),
-  useGetSplunkSampleData: jest.fn().mockImplementation(() => ({
-    data: mockedSplunkSampleData,
+  useGetELKIndices: jest.fn().mockImplementation(() => ({
+    data: mockedElkIndicesData,
+    loading: false,
+    error: null,
+    refetch: jest.fn()
+  })),
+  useGetTimeFormat: jest.fn().mockImplementation(() => ({
+    data: [],
     loading: false,
     error: null,
     refetch: jest.fn()
   }))
 }))
 
-describe('test splunkHealthsource', () => {
+describe('test ElkHealthsource', () => {
   test('check snapshot', () => {
     const { container } = render(
+      
       <TestWrapper>
-        <SplunkHealthSource data={data} onSubmit={jest.fn()} />
+        <ElkHealthSource data={data} onSubmit={jest.fn()} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
