@@ -68,8 +68,8 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
             color={Color.ORANGE_400}
             className={css.timer}
             durationText="Ellapsed Time"
-            startTime={stepData?.data?.createdAt}
-            endTime={''}
+            startTime={step?.startTs}
+            endTime={step?.endTs}
             showZeroSecondsResult
           />
         </div>
