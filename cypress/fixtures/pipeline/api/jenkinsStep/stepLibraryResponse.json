@@ -1,0 +1,102 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "name": "Library",
+    "stepsData": [],
+    "stepCategories": [
+      {
+        "name": "Continuous Deployment",
+        "stepsData": [],
+        "stepCategories": [
+          {
+            "name": "Utilities",
+            "stepsData": [],
+            "stepCategories": [
+              {
+                "name": "Scripted",
+                "stepsData": [
+                  { "name": "Shell Script", "type": "ShellScript", "disabled": false, "featureRestrictionName": null }
+                ],
+                "stepCategories": []
+              },
+              {
+                "name": "Non-Scripted",
+                "stepsData": [{ "name": "HTTP", "type": "Http", "disabled": false, "featureRestrictionName": null }],
+                "stepCategories": []
+              }
+            ]
+          },
+          {
+            "name": "Approval",
+            "stepsData": [
+              {
+                "name": "Harness Approval",
+                "type": "HarnessApproval",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_HARNESS_UI"
+              },
+              {
+                "name": "Jira Approval",
+                "type": "JiraApproval",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_JIRA"
+              },
+              {
+                "name": "ServiceNow Approval",
+                "type": "ServiceNowApproval",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_SERVICE_NOW"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Jira",
+            "stepsData": [
+              {
+                "name": "Jira Create",
+                "type": "JiraCreate",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_JIRA"
+              },
+              {
+                "name": "Jira Update",
+                "type": "JiraUpdate",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_JIRA"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "FlowControl",
+            "stepsData": [],
+            "stepCategories": [
+              {
+                "name": "Barrier",
+                "stepsData": [
+                  { "name": "Barrier", "type": "Barrier", "disabled": false, "featureRestrictionName": null }
+                ],
+                "stepCategories": []
+              }
+            ]
+          },
+          {
+            "name": "Jenkins",
+            "stepsData": [
+              {
+                "name": "Jenkins Build",
+                "type": "JenkinsBuild",
+                "disabled": false,
+                "featureRestrictionName": "JENKINS_BUILD"
+              }
+            ],
+            "stepCategories": []
+          }
+        ]
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "8431cf14-5269-4e21-a0b6-c3a26fb39920"
+}

@@ -49,3 +49,39 @@ export const DatadogLogMockHealthSource = {
   connectorRef: 'datadogConnector',
   product: { label: DatadogProduct.CLOUD_LOGS, value: DatadogProduct.CLOUD_LOGS }
 }
+
+export const template = {
+  runtimeData: {
+    changeSources: undefined,
+    connectorId: '<+input>',
+    connectorRef: '<+input>',
+    environmentRef: 'Stress',
+    existingMetricDetails: null,
+    healthSourceIdentifier: 'dasdasda',
+    healthSourceList: [],
+    healthSourceName: 'dasdasda',
+    isEdit: false,
+    monitoredServiceRef: { name: 'AppDTempalte', identifier: 'AppDTempalte' },
+    product: { value: 'Datadog Cloud Logs', label: 'Cloud Logs' },
+    serviceRef: '<+input>',
+    sourceType: 'Datadog'
+  },
+  payload: {
+    identifier: 'dasdasda',
+    name: 'dasdasda',
+    spec: {
+      connectorRef: '<+input>',
+      feature: 'Datadog Cloud Logs',
+      queries: [
+        {
+          identifier: 'cv.monitoringSources.datadogLogs.datadogLogsQuery',
+          indexes: '<+input>',
+          name: 'cv.monitoringSources.datadogLogs.datadogLogsQuery',
+          query: '<+input>',
+          serviceInstanceIdentifier: '<+input>'
+        }
+      ]
+    },
+    type: 'DatadogLog'
+  }
+}

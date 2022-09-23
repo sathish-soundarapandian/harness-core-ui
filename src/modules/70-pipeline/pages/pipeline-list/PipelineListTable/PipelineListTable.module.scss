@@ -1,0 +1,115 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.table {
+  margin: var(--spacing-large);
+}
+
+.tableRow {
+  position: relative;
+}
+
+.avatar {
+  width: var(--spacing-xlarge);
+  height: var(--spacing-xlarge);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.trigger {
+  background-color: var(--primary-1);
+  color: var(--primary-7);
+  text-transform: uppercase;
+  font-size: var(--spacing-4);
+  font-weight: 500;
+}
+
+.neverRan {
+  background-color: var(--grey-100);
+}
+
+.timeAgo {
+  margin-top: var(--spacing-xsmall) !important;
+}
+
+.icon {
+  svg {
+    path {
+      fill: var(--primary-7) !important;
+    }
+  }
+}
+
+.storeTypeColumn {
+  display: flex;
+  justify-content: center;
+  background-color: var(--grey-100);
+  padding: var(--spacing-small);
+  border-radius: var(--spacing-3);
+}
+
+.storeTypeColumnContainer {
+  display: flex;
+}
+
+.link {
+  a {
+    text-decoration: none;
+    color: var(--grey-0) !important;
+  }
+}
+
+.recentExecutions {
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.draft {
+  position: absolute;
+  background-color: var(--grey-100);
+  top: -1px;
+  bottom: -1px;
+  left: -8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-left-radius: var(--spacing-2);
+  border-bottom-left-radius: var(--spacing-2);
+
+  p {
+    text-transform: uppercase;
+    writing-mode: vertical-lr;
+    text-orientation: sideways;
+    transform: rotate(180deg);
+  }
+}
+
+.statusLabel {
+  margin-bottom: var(--spacing-small);
+}
+
+.tags {
+  p {
+    color: var(--grey-600) !important;
+    font-size: var(--font-size-small) !important;
+  }
+}
+
+.recentExecutionHeader {
+  position: relative;
+}
+
+.latestExecutionText {
+  position: absolute;
+  text-transform: lowercase;
+  top: -16px;
+  p {
+    white-space: nowrap !important;
+  }
+}

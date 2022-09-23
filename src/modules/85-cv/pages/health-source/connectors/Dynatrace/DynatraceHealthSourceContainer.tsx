@@ -16,27 +16,36 @@ import {
   mapHealthSourceToDynatraceMetricData,
   mapDynatraceMetricDataToHealthSource
 } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.utils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 
 export default function DynatraceHealthSourceContainer(props: DynatraceHealthSourceContainerProps): JSX.Element {
-  const { data: sourceData, onSubmit } = props
+  const { data: sourceData, onSubmit, isTemplate, expressions } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
+
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
 
   const handleSubmit = useCallback(
     async (dynatraceMetric: DynatraceMetricData) => {
-      const dynatracePayload = mapDynatraceMetricDataToHealthSource(dynatraceMetric)
+      const dynatracePayload = mapDynatraceMetricDataToHealthSource(dynatraceMetric, isMetricThresholdEnabled)
       await onSubmit(sourceData, dynatracePayload)
     },
-    [sourceData]
+    [isMetricThresholdEnabled, onSubmit, sourceData]
   )
   const dynatraceMetricData: DynatraceMetricData = useMemo(() => {
-    return mapHealthSourceToDynatraceMetricData(sourceData)
-  }, [sourceData])
+    return mapHealthSourceToDynatraceMetricData(sourceData, isMetricThresholdEnabled)
+  }, [isMetricThresholdEnabled, sourceData])
   return (
     <DynatraceHealthSource
       dynatraceFormData={dynatraceMetricData}
       onSubmit={handleSubmit}
       onPrevious={() => onPrevious(sourceData)}
-      connectorIdentifier={sourceData?.connectorRef || ''}
+      connectorIdentifier={
+        (typeof sourceData?.connectorRef === 'string' ? sourceData?.connectorRef : sourceData?.connectorRef?.value) ||
+        ''
+      }
+      isTemplate={isTemplate}
+      expressions={expressions}
     />
   )
 }

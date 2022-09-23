@@ -10,6 +10,7 @@ declare const styles: {
   readonly container: string
   readonly listHeader: string
   readonly loader: string
+  readonly searchIconStyle: string
   readonly separator: string
   readonly timeRangeSelector: string
 }

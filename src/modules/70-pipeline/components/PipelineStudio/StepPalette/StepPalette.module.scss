@@ -45,6 +45,16 @@
 }
 
 .stepPalette {
+  :global(.bp3-icon) {
+    &[data-icon='custom-approval'] {
+      > svg {
+        path:nth-child(2) {
+          fill: currentColor !important;
+        }
+      }
+    }
+  }
+
   .stepsRenderer {
     height: 100vh;
     overflow: scroll;

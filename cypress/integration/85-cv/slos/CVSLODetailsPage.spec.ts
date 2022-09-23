@@ -13,7 +13,6 @@ import {
   getSLORiskCount,
   getSLORiskCountResponse,
   getUserJourneysCall,
-  listMonitoredServices,
   listMonitoredServicesCallResponse,
   listRiskCountDataEmptyResponse,
   listSLOsCall,
@@ -43,21 +42,25 @@ import {
   getSLODetailResponseSLIRecalculation,
   getExecutionDetailv2,
   mockedExecutionSummary,
-  getMonitoredServiceChangeDetails
+  getMonitoredServiceChangeDetails,
+  getSLODashboardWidgets,
+  listMonitoredServicesForSLOs,
+  listMonitoredServices,
+  listMonitoredServicesCallResponseForSLOs
 } from '../../../support/85-cv/slos/constants'
 
-describe.skip('CVSLODetailsPage', () => {
+describe('CVSLODetailsPage', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => false)
     cy.login('test', 'test')
-    cy.visitChangeIntelligence()
-
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
+    cy.intercept('GET', listMonitoredServicesForSLOs, listMonitoredServicesCallResponseForSLOs)
     cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
     cy.intercept('GET', getChangeEventTimeline, changeEventTimelineResponse)
+    cy.visitChangeIntelligenceForSLOs()
   })
 
   it('should handle the errors and render the details page', () => {
@@ -66,7 +69,7 @@ describe.skip('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, errorResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('be.visible')
 
@@ -80,7 +83,7 @@ describe.skip('CVSLODetailsPage', () => {
 
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
-    cy.contains('span', 'Retry').click()
+    cy.contains('span', 'Retry').click({ force: true })
     cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('not.exist')
   })
 
@@ -90,7 +93,7 @@ describe.skip('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.intercept('GET', getServiceLevelObjective, getServiceLevelObjectiveResponse)
     cy.findByRole('button', { name: /Edit/i }).click()
@@ -129,12 +132,12 @@ describe.skip('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
 
     cy.contains('p', 'SLI Type').next().should('contain.text', 'Latency')
-    cy.contains('p', 'Health Score').next().should('contain.text', 'appd_cvng_prod')
+    cy.contains('p', 'Health Source').next().should('contain.text', 'appd_cvng_prod')
     cy.contains('p', 'Period Type').next().should('contain.text', 'Calendar')
 
     cy.contains('p', 'Error Budget Remaining').next().should('contain.text', '100.00%')
@@ -153,7 +156,7 @@ describe.skip('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.findByRole('button', { name: /1 Hour/i }).click()
     cy.findByRole('button', { name: /1 Hour/i }).should('have.class', 'Button--variation-secondary')
@@ -176,7 +179,7 @@ describe.skip('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
     cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
@@ -187,6 +190,7 @@ describe.skip('CVSLODetailsPage', () => {
     cy.intercept('GET', getSLODetailsForSLO_1, getSLODetailsForSLO_1Response)
     cy.intercept('GET', getSLODetailsForSLO_2, errorResponse)
     cy.intercept('GET', getSLODetailsForSLO_3, getSLODetailsForSLO_1Response)
+
     cy.get('.TableV2--body').children().first().click()
 
     cy.contains('p', 'A maximum of three SLO’s can be compared with the Service Health.').should('be.visible')
@@ -219,7 +223,7 @@ describe.skip('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
     cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
@@ -230,7 +234,7 @@ describe.skip('CVSLODetailsPage', () => {
 
     cy.get('.TableV2--body').children().first().click()
 
-    cy.contains('p', 'No SLO has been created').should('be.visible')
+    cy.contains('p', 'A maximum of three SLO’s can be compared with the Service Health.').should('be.visible')
   })
 
   it('should handle the no data for out of SLO cycle', () => {
@@ -239,7 +243,7 @@ describe.skip('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
     cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
@@ -254,9 +258,6 @@ describe.skip('CVSLODetailsPage', () => {
     cy.get('.TableV2--body').children().first().click()
 
     cy.contains('p', 'A maximum of three SLO’s can be compared with the Service Health.').should('be.visible')
-
-    cy.findAllByText('No data available for the current SLO cycle').should('have.length', 3)
-    cy.findAllByText('No data available for the current SLO cycle').last().scrollIntoView()
   })
 
   it('should handle the SLI recalculation', () => {
@@ -265,7 +266,7 @@ describe.skip('CVSLODetailsPage', () => {
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
     cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
@@ -285,13 +286,13 @@ describe.skip('CVSLODetailsPage', () => {
     cy.findAllByText('SLO recalculation in progress').last().scrollIntoView()
   })
 
-  it.only('check Deployment details', () => {
+  it('check Deployment details', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetailOfCalendarType)
     cy.intercept('GET', getMonitoredServiceChangeEventSummary, monitoredServiceChangeEventSummaryResponse)
     cy.intercept('GET', getChangeEventList, changeEventListResponse)
 
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'SLO-1').click()
+    cy.contains('p', 'SLO-1').click()
 
     cy.contains('p', 'Service Details').should('be.visible')
     cy.get('.bp3-card').contains('p', 'Changes').scrollIntoView().should('be.visible')
@@ -306,6 +307,7 @@ describe.skip('CVSLODetailsPage', () => {
     cy.intercept('GET', getSLODetailsForSLO_3, getSLODetailResponseSLIRecalculation)
 
     cy.get('.TableV2--body').children().first().click()
+
     cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('be.visible')
 
     cy.intercept('GET', getChangeEventDetail, changeEventDetailsResponse)
@@ -318,18 +320,17 @@ describe.skip('CVSLODetailsPage', () => {
     cy.contains('span', '63QIXm3zSMi5bF56L4tulQ').should('be.visible')
     cy.get('[data-icon="main-setup"]').next('p').should('contain.text', 'cvng')
     cy.get('[data-icon="environments"]').next('p').should('contain.text', 'prod')
-    cy.contains('p', 'ABORTED').should('be.visible')
-    cy.contains('p', 'HarnessCDNextGen Deployment ').should('be.visible')
+
+    cy.contains('p', 'Aborted').should('be.visible')
+    cy.contains('p', 'HarnessCDNextGen').should('be.visible')
 
     cy.contains('p', 'source').next('p').should('contain.text', 'HarnessCDNextGen')
-    cy.contains('p', 'artifactType').next('p').should('contain.text', 'DockerRegistry')
-    cy.contains('p', 'artifactTag').next('p').should('contain.text', 'praveen-cv-test')
+    cy.contains('p', 'Artifact Type').next('p').should('contain.text', 'DockerRegistry')
+    cy.contains('p', 'Artifact Tag').next('p').should('contain.text', 'praveen-cv-test')
 
-    cy.get('[icon="user"]').next('p').should('contain.text', 'trigger')
+    cy.contains('p', 'trigger').should('be.visible')
     cy.contains('p', 'SCHEDULER_CRON').should('be.visible')
     cy.get('[data-icon="calendar"]').should('be.visible')
-    cy.contains('p', 'Start: 05/04/2022 09:21 pm').should('be.visible')
-    cy.contains('p', 'Finished: 05/04/2022 09:24 pm').should('be.visible')
-    cy.contains('p', 'Duration: 2m 36s ').should('be.visible')
+    cy.contains('p', '2m 36s').should('be.visible')
   })
 })

@@ -10,7 +10,6 @@ import { defaultTo, get } from 'lodash-es'
 
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { SidecarArtifact, useGetBuildDetailsForNexusArtifactWithYaml } from 'services/cd-ng'
@@ -20,17 +19,22 @@ import { repositoryFormat } from '@pipeline/components/ArtifactsSelection/Artifa
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  getFqnPath,
   getImagePath,
   getYamlData,
-  isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
-import css from '../../K8sServiceSpec.module.scss'
+import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface NexusRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -51,25 +55,41 @@ const Content = (props: NexusRenderContent): JSX.Element => {
     pipelineIdentifier,
     branch,
     stageIdentifier,
+    serviceIdentifier,
     isTagsSelectionDisabled,
     allowableTypes,
     fromTrigger,
     artifact,
     isSidecar,
-    artifactPath
+    artifactPath,
+    stepViewType
   } = props
 
   const { getString } = useStrings()
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const { expressions } = useVariablesExpression()
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', artifactPaths: '', repository: '' })
+
+  const artifactPathValue = getImagePath(
+    artifact?.spec?.artifactPath,
+    get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, '')
+  )
+  const connectorRefValue = getDefaultQueryParam(
+    artifact?.spec?.connectorRef,
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
+  const repositoryValue = getDefaultQueryParam(
+    artifact?.spec?.repository,
+    get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
+  )
+
   const {
     data: nexusTagsData,
     loading: fetchingTags,
-    refetch,
+    refetch: refetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForNexusArtifactWithYaml, {
-    body: yamlStringify(getYamlData(formik?.values)),
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
       headers: {
         'content-type': 'application/json'
@@ -81,35 +101,26 @@ const Content = (props: NexusRenderContent): JSX.Element => {
       orgIdentifier,
       repoIdentifier,
       branch,
-      artifactPath: getImagePath(
-        artifact?.spec?.artifactPath,
-        get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, '')
-      ),
-      connectorRef:
-        getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.connectorRef
-          : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, ''),
-      repository:
-        getMultiTypeFromValue(artifact?.spec?.repository) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.repository
-          : get(initialValues?.artifacts, `${artifactPath}.spec.repository`, ''),
+      artifactPath: getFinalQueryParamValue(artifactPathValue),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      repository: getFinalQueryParamValue(repositoryValue),
       repositoryFormat,
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      fqnPath: isPropagatedStage
-        ? `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.tag`
-        : `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.tag`
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        )
+      )
     },
     lazy: true
   })
-
-  const artifactPathValue = getImagePath(
-    props.artifact?.spec?.artifactPath,
-    get(props.initialValues, `artifacts.${artifactPath}.spec.artifactPath`, '')
-  )
-  const connectorRefValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
-  const repositoryValue =
-    get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '') || artifact?.spec?.repository
 
   const fetchTags = (): void => {
     if (canFetchTags()) {
@@ -118,13 +129,14 @@ const Content = (props: NexusRenderContent): JSX.Element => {
         artifactPaths: artifactPathValue,
         repository: repositoryValue
       })
-      refetch()
+      refetchTags()
     }
   }
   const canFetchTags = (): boolean => {
     return !!(
       (lastQueryData.connectorRef != connectorRefValue ||
         lastQueryData.artifactPaths !== artifactPathValue ||
+        getMultiTypeFromValue(artifact?.spec?.artifactPath) === MultiTypeInputType.EXPRESSION ||
         lastQueryData.repository !== repositoryValue) &&
       shouldFetchTagsSource([connectorRefValue, artifactPathValue, repositoryValue])
     )
@@ -150,8 +162,7 @@ const Content = (props: NexusRenderContent): JSX.Element => {
     return false
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (
@@ -169,7 +180,7 @@ const Content = (props: NexusRenderContent): JSX.Element => {
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
-                allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+                allowableTypes,
                 expressions
               }}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
@@ -220,7 +231,7 @@ const Content = (props: NexusRenderContent): JSX.Element => {
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPath`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               label={getString('pipeline.artifactPathLabel')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactPath`)}
               multiTextInputProps={{
@@ -229,6 +240,8 @@ const Content = (props: NexusRenderContent): JSX.Element => {
               }}
               name={`${path}.artifacts.${artifactPath}.spec.artifactPath`}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
+              fieldPath={`artifacts.${artifactPath}.spec.artifactPath`}
+              template={template}
             />
           )}
 
@@ -284,14 +297,14 @@ export class NexusArtifactSource extends ArtifactSourceBase<ArtifactSourceRender
       artifact?.spec?.artifactPath,
       get(initialValues, `artifacts.${artifactPath}.spec.artifactPath`, '')
     )
-    const isConnectorPresent =
-      getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.connectorRef
-        : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
-    const isRepositoryPresent =
-      getMultiTypeFromValue(artifact?.spec?.repository) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.repository
-        : get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
+    const isConnectorPresent = getDefaultQueryParam(
+      artifact?.spec?.connectorRef,
+      get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
+    )
+    const isRepositoryPresent = getDefaultQueryParam(
+      artifact?.spec?.repository,
+      get(initialValues, `artifacts.${artifactPath}.spec.repository`, '')
+    )
     return !(isArtifactPathPresent && isConnectorPresent && isRepositoryPresent)
   }
   renderContent(props: ArtifactSourceRenderProps): JSX.Element | null {

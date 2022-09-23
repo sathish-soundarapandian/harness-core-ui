@@ -86,12 +86,22 @@ const OVERVIEW_FIELD: Record<
   POD_CAPACITY: {
     key: 'podCapacity',
     name: <String stringID="ce.perspectives.workloadDetails.fieldNames.podCapacity" />
+  },
+  SERVICE_NAME: {
+    key: 'cloudServiceName',
+    name: <String stringID="common.serviceName" />
+  },
+  LAUNCH_TYPE: {
+    key: 'launchType',
+    name: <String stringID="ce.serviceDetails.launchType" />
   }
 }
 
 const WORKLOAD_OVERVIEW_FIELD = [
   [OVERVIEW_FIELD.WORKLOAD_NAME, OVERVIEW_FIELD.NAMESPACE, OVERVIEW_FIELD.WORKLOAD_TYPE, OVERVIEW_FIELD.CLUSTER_NAME]
 ]
+
+const SERVICE_OVERVIEW_FIELD = [[OVERVIEW_FIELD.SERVICE_NAME, OVERVIEW_FIELD.LAUNCH_TYPE, OVERVIEW_FIELD.CLUSTER_NAME]]
 
 const NODE_OVERVIEW_FIELDS = [
   [
@@ -112,5 +122,6 @@ const NODE_OVERVIEW_FIELDS = [
 
 export const OVERVIEW_FIELD_MAPPER = {
   [CCM_PAGE_TYPE.Workload]: WORKLOAD_OVERVIEW_FIELD,
-  [CCM_PAGE_TYPE.Node]: NODE_OVERVIEW_FIELDS
+  [CCM_PAGE_TYPE.Node]: NODE_OVERVIEW_FIELDS,
+  [CCM_PAGE_TYPE.Service]: SERVICE_OVERVIEW_FIELD
 }

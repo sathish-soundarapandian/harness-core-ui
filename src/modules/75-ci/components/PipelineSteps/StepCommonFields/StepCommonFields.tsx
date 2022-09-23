@@ -6,17 +6,17 @@
  */
 
 import React from 'react'
-import { Text, SelectOption, Container, Layout, MultiTypeInputType } from '@wings-software/uicore'
+import { Text, SelectOption, Container, Layout, MultiTypeInputType, AllowedTypes } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { connect } from 'formik'
-import type { K8sDirectInfraYaml } from 'services/ci'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { PullOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { AllMultiTypeInputTypesForStep } from '../CIStep/StepUtils'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -51,8 +51,8 @@ interface StepCommonFieldsProps {
   withoutTimeout?: boolean
   disabled?: boolean
   enableFields?: string[]
-  buildInfrastructureType: K8sDirectInfraYaml['type']
-  allowableTypes?: MultiTypeInputType[]
+  buildInfrastructureType: CIBuildInfrastructureType
+  allowableTypes?: AllowedTypes
 }
 
 const StepCommonFields = ({
@@ -64,7 +64,9 @@ const StepCommonFields = ({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const isVMBuildInfraType = buildInfrastructureType === 'VM'
+  const isVMBuildInfraType = [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
+    buildInfrastructureType
+  )
 
   return (
     <>

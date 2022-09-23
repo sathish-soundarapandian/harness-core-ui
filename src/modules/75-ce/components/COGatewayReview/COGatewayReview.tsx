@@ -10,7 +10,7 @@ import type { CellProps } from 'react-table'
 import cx from 'classnames'
 import { isEmpty as _isEmpty, defaultTo as _defaultTo, isBoolean } from 'lodash-es'
 import { Heading, Container, Layout, Text, Table, Icon, IconName } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import type { GatewayDetails, InstanceDetails } from '@ce/components/COCreateGateway/models'
 import { Utils } from '@ce/common/Utils'
 import type { ContainerSvc, HealthCheck, PortConfig, RDSDatabase, Service } from 'services/lw'
@@ -396,34 +396,57 @@ const COGatewayReview: React.FC<COGatewayReviewProps> = props => {
                   columns={[
                     {
                       accessor: 'protocol',
-                      Header: 'PROTOCOL',
-                      width: '20%',
+                      Header: () => (
+                        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('ce.common.protocol')}</Text>
+                      ),
+                      width: '16%',
                       Cell: TableCell
                     },
                     {
                       accessor: 'path',
-                      Header: 'PATH',
-                      width: '20%',
+                      Header: () => (
+                        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.path')}</Text>
+                      ),
+                      width: '16%',
                       Cell: TableCell
                     },
                     {
                       accessor: 'port',
-                      Header: 'PORT',
-                      width: '20%',
+                      Header: () => (
+                        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.smtp.port')}</Text>
+                      ),
+                      width: '16%',
+                      Cell: TableCell,
+                      disableSortBy: true
+                    },
+                    {
+                      accessor: 'interval',
+                      Header: () => (
+                        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('ce.common.interval')}</Text>
+                      ),
+                      width: '16%',
                       Cell: TableCell,
                       disableSortBy: true
                     },
                     {
                       accessor: 'timeout',
-                      Header: 'TIMEOUT(SECS)',
-                      width: '20%',
+                      Header: () => (
+                        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+                          {getString('ce.co.autoStoppingRule.setupAccess.healthCheckTimeoutLabel')}
+                        </Text>
+                      ),
+                      width: '16%',
                       Cell: TableCell,
                       disableSortBy: true
                     },
                     {
                       accessor: 'status_code_from',
-                      Header: 'STATUS',
-                      width: '20%',
+                      Header: () => (
+                        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+                          {getString('ce.co.autoStoppingRule.setupAccess.healthCheckStatusLabel')}
+                        </Text>
+                      ),
+                      width: '18%',
                       Cell: tableProps => (
                         <Text lineClamp={3} color={Color.BLACK}>
                           {`${tableProps.row.original.status_code_from}-${tableProps.row.original.status_code_to}`}

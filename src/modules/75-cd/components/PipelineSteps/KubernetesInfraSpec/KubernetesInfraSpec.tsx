@@ -24,7 +24,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Icon,
-  Accordion
+  Accordion,
+  AllowedTypes
 } from '@wings-software/uicore'
 
 import { useStrings } from 'framework/strings'
@@ -46,10 +47,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
-import {
-  PipelineContextType,
-  usePipelineContext
-} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -70,7 +68,7 @@ interface KubernetesInfraSpecEditableProps {
   template?: K8SDirectInfrastructureTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: K8SDirectInfrastructure
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
 }
 
 const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = ({
@@ -95,7 +93,6 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
   })
 
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { contextType } = usePipelineContext()
 
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
 
@@ -238,19 +235,17 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                 />
               </Accordion>
 
-              {contextType !== PipelineContextType.Standalone && (
-                <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }} className={css.lastRow}>
-                  <FormInput.CheckBox
-                    className={css.simultaneousDeployment}
-                    name={'allowSimultaneousDeployments'}
-                    label={getString('cd.allowSimultaneousDeployments')}
-                    tooltipProps={{
-                      dataTooltipId: 'k8InfraAllowSimultaneousDeployments'
-                    }}
-                    disabled={readonly}
-                  />
-                </Layout.Horizontal>
-              )}
+              <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }} className={css.lastRow}>
+                <FormInput.CheckBox
+                  className={css.simultaneousDeployment}
+                  name={'allowSimultaneousDeployments'}
+                  label={getString('cd.allowSimultaneousDeployments')}
+                  tooltipProps={{
+                    dataTooltipId: 'k8InfraAllowSimultaneousDeployments'
+                  }}
+                  disabled={readonly}
+                />
+              </Layout.Horizontal>
             </FormikForm>
           )
         }}
@@ -293,12 +288,13 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
             setRefValue
             className={css.connectorMargin}
             multiTypeProps={{ allowableTypes, expressions }}
+            enableConfigureOptions={false}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.namespace) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.namespace`}
             label={getString('common.namespace')}
             disabled={readonly}
@@ -307,12 +303,14 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
               expressions
             }}
             placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
+            template={template}
+            fieldPath={'namespace'}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.releaseName) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.releaseName`}
             label={getString('common.releaseName')}
             disabled={readonly}
@@ -321,6 +319,8 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
               expressions
             }}
             placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
+            template={template}
+            fieldPath={'releaseName'}
           />
         </div>
       )}
@@ -474,7 +474,7 @@ export class KubernetesInfraSpec extends PipelineStep<K8SDirectInfrastructureSte
       readonly = false,
       allowableTypes
     } = props
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <KubernetesInfraSpecInputForm
           {...(customStepProps as KubernetesInfraSpecEditableProps)}

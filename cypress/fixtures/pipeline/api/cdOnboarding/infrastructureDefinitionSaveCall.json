@@ -1,0 +1,21 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "infrastructure": {
+      "accountId": "accountId",
+      "identifier": "sample_infrastructure_1658954821373",
+      "orgIdentifier": "default",
+      "projectIdentifier": "project1",
+      "environmentRef": "sample_environment_1658954821373",
+      "name": "sample_infrastructure",
+      "description": "",
+      "tags": {},
+      "type": "KubernetesDirect",
+      "yaml": "infrastructureDefinition:\n  name: \"sample_infrastructure\"\n  identifier: \"sample_infrastructure_1658954821373\"\n  orgIdentifier: \"default\"\n  projectIdentifier: \"project1\"\n  environmentRef: \"sample_environment_1658954821373\"\n  description: \"\"\n  tags: {}\n  allowSimultaneousDeployments: false\n  type: \"KubernetesDirect\"\n  spec:\n    connectorRef: \"dsf_1658954816450\"\n    namespace: \"dsf\"\n    releaseName: \"release-<+INFRA_KEY>\"\n"
+    },
+    "createdAt": 1658954822626,
+    "lastModifiedAt": 1658954822626
+  },
+  "metaData": null,
+  "correlationId": "ea8d564b-ea24-46da-9c63-409d1aaf6d50"
+}

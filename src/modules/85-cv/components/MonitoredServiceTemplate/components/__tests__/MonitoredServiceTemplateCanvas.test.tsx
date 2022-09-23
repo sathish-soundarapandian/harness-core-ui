@@ -9,13 +9,17 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { Container, Button } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
 import { MonitoredTemplateCanvasWithRef } from '../MonitoredServiceTemplateCanvas'
 import { MonitoredServiceTemplate } from '../MonitoredServiceTemplate'
+import { monitoredServiceDefaultTemplateMock } from './MonitoredServiceTemplateCanvas.mock'
+import { createdInitTemplateValue } from '../MonitoredServiceTemplateCanvas.utils'
+import { DefaultSpec } from '../MonitoredServiceTemplateCanvas.constants'
 
-const stepTemplateContextMock = getTemplateContextMock(TemplateType.MonitoredService)
+const monitoredServiceTemplateContextMock = getTemplateContextMock(TemplateType.MonitoredService)
 
 jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment', () => ({
   useGetHarnessServices: () => ({
@@ -87,10 +91,23 @@ jest.mock('services/cv', () => ({
 }))
 
 describe('Test MonitoredTemplateCanvasWithRef', () => {
-  test('should match snapshot for MonitoredTemplateCanvasWithRef', async () => {
+  test('should match snapshot for MonitoredTemplateCanvasWithRef with data', async () => {
     const { container } = render(
       <TestWrapper>
-        <TemplateContext.Provider value={stepTemplateContextMock}>
+        <TemplateContext.Provider value={monitoredServiceTemplateContextMock}>
+          <MonitoredTemplateCanvasWithRef />
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should match snapshot for default MonitoredTemplateCanvasWithRef', async () => {
+    monitoredServiceTemplateContextMock.state.template = monitoredServiceDefaultTemplateMock
+    monitoredServiceTemplateContextMock.state.originalTemplate = monitoredServiceDefaultTemplateMock
+    const { container } = render(
+      <TestWrapper>
+        <TemplateContext.Provider value={monitoredServiceTemplateContextMock}>
           <MonitoredTemplateCanvasWithRef />
         </TemplateContext.Provider>
       </TestWrapper>
@@ -101,15 +118,30 @@ describe('Test MonitoredTemplateCanvasWithRef', () => {
   test('should validate props for MonitoredServiceTemplate', async () => {
     const monitoredServiceTemplate = new MonitoredServiceTemplate()
     expect(monitoredServiceTemplate).toEqual({
-      color: 'teal700',
-      defaultValues: {
-        identifier: 'Template_name',
-        name: 'Template name',
-        type: 'MonitoredService',
-        versionLabel: ''
+      allowedScopes: [Scope.PROJECT],
+      allowedUsage: ['Use'],
+      isEnabled: true,
+      label: 'Monitored Service',
+      type: 'MonitoredService',
+      icon: 'cv-main',
+      colorMap: {
+        color: '#06B7C3',
+        fill: '#E4F7E1',
+        stroke: '#D4E7D1'
       },
-      name: 'Monitored Service Template',
-      type: 'MonitoredService'
+      isRemoteEnabled: false
     })
+  })
+
+  test('should validate createdInitTemplateValue', () => {
+    expect(createdInitTemplateValue(monitoredServiceDefaultTemplateMock)).toEqual(monitoredServiceDefaultTemplateMock)
+    monitoredServiceDefaultTemplateMock.name = 'MS Template'
+    expect(createdInitTemplateValue(monitoredServiceDefaultTemplateMock)).toEqual({
+      ...monitoredServiceDefaultTemplateMock,
+      spec: { ...DefaultSpec }
+    })
+    monitoredServiceDefaultTemplateMock.name = 'MS Template'
+    monitoredServiceDefaultTemplateMock.spec = { changeSource: [], healthSource: [] }
+    expect(createdInitTemplateValue(monitoredServiceDefaultTemplateMock)).toEqual(monitoredServiceDefaultTemplateMock)
   })
 })

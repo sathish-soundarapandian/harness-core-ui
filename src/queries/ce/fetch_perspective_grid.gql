@@ -121,4 +121,5 @@ query FetchperspectiveGrid(
       }
     }
   }
+  perspectiveTotalCount(filters: $filters, groupBy: $groupBy, isClusterQuery: $isClusterOnly)
 }

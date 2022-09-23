@@ -13,7 +13,6 @@ import { Layout, Text } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
 import { CONFIG_STEP_IDS, CONFIG_TOTAL_STEP_COUNTS, DEFAULT_ACCESS_DETAILS, RESOURCES } from '@ce/constants'
-import { FeatureFlag } from '@common/featureFlags'
 import type { GatewayDetails, InstanceDetails } from '@ce/components/COCreateGateway/models'
 import type { StringsMap } from 'stringTypes'
 import COK8sClusterSelector from '@ce/components/COK8sClusterSelector/COK8sClusterSelector'
@@ -31,7 +30,6 @@ import CORdsSelector from '@ce/components/CORdsSelector/CORdsSelector'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { useGatewayContext } from '@ce/context/GatewayContext'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import COGatewayConfigStep from '../../COGatewayConfigStep'
 import { fromResourceToInstanceDetails, isFFEnabledForResource } from '../../helper'
 import ResourceSelectionModal from '../../ResourceSelectionModal'
@@ -52,7 +50,14 @@ interface ManageResourcesProps {
   setSelectedResource: (resource: RESOURCES) => void
 }
 
-const managedResources = [
+interface ManagedResourecType {
+  label: keyof StringsMap
+  value: RESOURCES
+  providers: string[]
+  ffDependencies?: string[]
+}
+
+const managedResources: ManagedResourecType[] = [
   {
     label: 'ce.co.autoStoppingRule.helpText.step2.description.resourceList.ec2Vms',
     value: RESOURCES.INSTANCES,
@@ -66,8 +71,7 @@ const managedResources = [
   {
     label: 'ce.co.autoStoppingRule.helpText.step2.description.resourceList.gcpVms',
     value: RESOURCES.INSTANCES,
-    providers: ['gcp'],
-    ffDependencies: [FeatureFlag.CE_AS_GCP_VM_SUPPORT]
+    providers: ['gcp']
   },
   {
     label: 'ce.co.autoStoppingRule.helpText.step2.description.resourceList.asg',
@@ -77,18 +81,12 @@ const managedResources = [
   {
     label: 'ce.co.autoStoppingRule.helpText.step2.description.resourceList.ig',
     value: RESOURCES.IG,
-    providers: ['gcp'],
-    ffDependencies: [FeatureFlag.CE_AS_GCP_VM_SUPPORT]
+    providers: ['gcp']
   },
   {
     label: 'ce.co.autoStoppingRule.helpText.step2.description.resourceList.kubernetes',
     value: RESOURCES.KUBERNETES,
-    providers: ['aws', 'azure', 'gcp'],
-    ffDependencies: [
-      FeatureFlag.CE_AS_KUBERNETES_ENABLED,
-      FeatureFlag.CE_AS_KUBERNETES_ENABLED,
-      FeatureFlag.CE_AS_KUBERNETES_ENABLED
-    ]
+    providers: ['aws', 'azure', 'gcp']
   },
   {
     label: 'ce.co.autoStoppingRule.helpText.step2.description.resourceList.ecsService',
@@ -105,7 +103,6 @@ const managedResources = [
 const ManageResources: React.FC<ManageResourcesProps> = props => {
   const { getString } = useStrings()
   const { accountId } = useParams<ProjectPathProps>()
-  const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
   const { trackEvent } = useTelemetry()
 
@@ -224,7 +221,7 @@ const ManageResources: React.FC<ManageResourcesProps> = props => {
 
   const handleErrorDisplay = (e: any, fallbackMsgKey?: string) => {
     if (!Utils.isUserAbortedRequest(e)) {
-      showError(getRBACErrorMessage(e), undefined, fallbackMsgKey)
+      showError(Utils.getASErrorMessage(e), undefined, fallbackMsgKey)
     }
   }
 

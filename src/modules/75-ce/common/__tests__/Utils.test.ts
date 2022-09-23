@@ -71,7 +71,8 @@ describe('Tests for utils methods', () => {
         defaultClusterPerspectiveId: '',
         defaultGcpPerspectiveId: '',
         inventoryDataPresent: false,
-        isSampleClusterPresent: false
+        isSampleClusterPresent: false,
+        showCostOverview: false
       })
       expect(result).toBeTruthy()
     })
@@ -89,7 +90,8 @@ describe('Tests for utils methods', () => {
         defaultClusterPerspectiveId: '',
         defaultGcpPerspectiveId: '',
         inventoryDataPresent: false,
-        isSampleClusterPresent: false
+        isSampleClusterPresent: false,
+        showCostOverview: false
       })
       expect(result).toBeFalsy()
     })

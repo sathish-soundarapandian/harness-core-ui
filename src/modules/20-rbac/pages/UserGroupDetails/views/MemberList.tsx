@@ -33,6 +33,11 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import css from '../UserGroupDetails.module.scss'
 
+interface MemberListProps {
+  ssoLinked?: boolean
+  userGroupInherited?: boolean
+  managed?: boolean
+}
 const RenderColumnUser: Renderer<CellProps<UserInfo>> = ({ row }) => {
   const data = row.original
   return (
@@ -176,10 +181,7 @@ const RenderColumnMenu: Renderer<CellProps<UserInfo>> = ({ row, column }) => {
   )
 }
 
-const MemberList: React.FC<{ ssoLinked?: boolean; userGroupInherited?: boolean }> = ({
-  ssoLinked,
-  userGroupInherited
-}) => {
+const MemberList: React.FC<MemberListProps> = ({ ssoLinked, userGroupInherited, managed }) => {
   const { getString } = useStrings()
   const [page, setPage] = useState<number>(0)
   const { accountId, orgIdentifier, projectIdentifier, userGroupIdentifier } = useParams<
@@ -220,7 +222,7 @@ const MemberList: React.FC<{ ssoLinked?: boolean; userGroupInherited?: boolean }
         id: 'menu',
         accessor: (row: UserInfo) => row.uuid,
         width: '5%',
-        Cell: RenderColumnMenu,
+        Cell: managed ? <></> : RenderColumnMenu,
         refetchMembers: refetch,
         userGroupIdentifier: userGroupIdentifier,
         disableSortBy: true,

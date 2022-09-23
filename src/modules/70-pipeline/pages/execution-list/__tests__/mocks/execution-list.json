@@ -1,0 +1,2528 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "content": [
+      {
+        "pipelineIdentifier": "MultiServiceWithMatrix",
+        "planExecutionId": "NgFnOCXUTNm5D9eNovvILg",
+        "name": "Multi-ServiceWithMatrix CD Success",
+        "status": "Success",
+        "tags": [],
+        "executionTriggerInfo": {
+          "triggerType": "MANUAL",
+          "triggeredBy": {
+            "uuid": "E6eesWsRRx--zjocv6XKRQ",
+            "identifier": "Sahil Hindwani",
+            "extraInfo": {
+              "email": "sahil.hindwani@harness.io"
+            }
+          },
+          "isRerun": false
+        },
+        "governanceMetadata": {
+          "id": "430972",
+          "deny": false,
+          "details": [
+            {
+              "policySetId": "",
+              "deny": false,
+              "policyMetadata": [
+                {
+                  "policyId": "",
+                  "policyName": "Pipeline_ErrorBudgetPolicy",
+                  "severity": "pass",
+                  "denyMessages": [],
+                  "status": "pass",
+                  "identifier": "pipeline_errorbudgetpolicy",
+                  "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+                  "orgId": "",
+                  "projectId": "",
+                  "created": "1644240355222",
+                  "updated": "1646137994486",
+                  "error": ""
+                }
+              ],
+              "policySetName": "Error Budget Policy",
+              "status": "pass",
+              "identifier": "error_budget_policy",
+              "created": "1644240569528",
+              "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+              "orgId": "",
+              "projectId": ""
+            }
+          ],
+          "message": "",
+          "timestamp": "1662383115292",
+          "status": "pass",
+          "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+          "orgId": "default",
+          "projectId": "naidusanity",
+          "entity": "accountIdentifier%3AvpCkHKsDSxK9_KYfjCTMKA%2ForgIdentifier%3Adefault%2FprojectIdentifier%3Anaidusanity%2FpipelineIdentifier%3AMultiServiceWithMatrix",
+          "type": "pipeline",
+          "action": "onrun",
+          "created": "1662383115234"
+        },
+        "moduleInfo": {
+          "cd": {
+            "__recast": "io.harness.cdng.pipeline.executions.beans.CDPipelineModuleInfo",
+            "envGroupIdentifiers": [],
+            "envIdentifiers": ["dummy"],
+            "environmentTypes": ["PreProduction"],
+            "infrastructureIdentifiers": [null],
+            "infrastructureNames": [null],
+            "infrastructureTypes": ["KubernetesDirect"],
+            "serviceDefinitionTypes": ["Kubernetes"],
+            "serviceIdentifiers": ["service3", "service2", "service1"]
+          }
+        },
+        "layoutNodeMap": {
+          "hpUqGwMmSmifHQ7XrqdP5Q": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "s1",
+            "name": "s1",
+            "nodeUuid": "hpUqGwMmSmifHQ7XrqdP5Q",
+            "status": "NotStarted",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {}
+            },
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "hidden": true
+          },
+          "XDG6w9nNSCu5a-vYNjXszw": {
+            "nodeType": "MATRIX",
+            "nodeGroup": "STRATEGY",
+            "nodeIdentifier": "s1",
+            "name": "s1",
+            "nodeUuid": "XDG6w9nNSCu5a-vYNjXszw",
+            "status": "Success",
+            "moduleInfo": {
+              "stepParameters": {
+                "__recast": "io.harness.steps.matrix.StrategyStepParameters",
+                "strategyConfig": {
+                  "__recast": "io.harness.plancreator.strategy.StrategyConfig",
+                  "uuid": "hpUqGwMmSmifHQ7XrqdP5Q",
+                  "matrixConfig": {
+                    "__recast": "io.harness.plancreator.strategy.MatrixConfig",
+                    "uuid": "O2IwEer8SA2RO-xpHYzbGA",
+                    "axes": {
+                      "service": {
+                        "__recast": "io.harness.plancreator.strategy.AxisConfig",
+                        "axisValue": {
+                          "__recast": "parameterField",
+                          "__encodedValue": {
+                            "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                            "expressionValue": null,
+                            "expression": false,
+                            "valueDoc": {
+                              "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                              "value": [
+                                "{\"identifier\":\"service1\",\"tag\":\"latest\"}",
+                                "{\"identifier\":\"service2\",\"tag\":\"stable-alpine\"}",
+                                "{\"identifier\":\"service3\",\"tag\":\"stable-perl\"}"
+                              ]
+                            },
+                            "valueClass": "java.util.List",
+                            "typeString": false,
+                            "skipAutoEvaluation": false,
+                            "jsonResponseField": false,
+                            "responseField": null
+                          }
+                        }
+                      },
+                      "infra": {
+                        "__recast": "io.harness.plancreator.strategy.AxisConfig",
+                        "axisValue": {
+                          "__recast": "parameterField",
+                          "__encodedValue": {
+                            "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                            "expressionValue": null,
+                            "expression": false,
+                            "valueDoc": {
+                              "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                              "value": ["{\"name\":\"dummy\",\"connectorRef\":\"pieplay\"}"]
+                            },
+                            "valueClass": "java.util.List",
+                            "typeString": false,
+                            "skipAutoEvaluation": false,
+                            "jsonResponseField": false,
+                            "responseField": null
+                          }
+                        }
+                      }
+                    },
+                    "expressionAxes": {},
+                    "exclude": {
+                      "__recast": "parameterField",
+                      "__encodedValue": {
+                        "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                        "expressionValue": null,
+                        "expression": false,
+                        "valueDoc": {
+                          "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper"
+                        },
+                        "valueClass": "java.util.List",
+                        "typeString": false,
+                        "skipAutoEvaluation": false,
+                        "jsonResponseField": false,
+                        "responseField": null
+                      }
+                    },
+                    "maxConcurrency": {
+                      "__recast": "parameterField",
+                      "__encodedValue": {
+                        "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                        "expressionValue": null,
+                        "expression": false,
+                        "valueDoc": {
+                          "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper"
+                        },
+                        "valueClass": "java.lang.Integer",
+                        "typeString": false,
+                        "skipAutoEvaluation": false,
+                        "jsonResponseField": false,
+                        "responseField": null
+                      }
+                    }
+                  },
+                  "parallelism": {
+                    "__recast": "parameterField",
+                    "__encodedValue": {
+                      "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                      "expressionValue": null,
+                      "expression": false,
+                      "valueDoc": {
+                        "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper"
+                      },
+                      "valueClass": "java.lang.Integer",
+                      "typeString": false,
+                      "skipAutoEvaluation": false,
+                      "jsonResponseField": false,
+                      "responseField": null
+                    }
+                  }
+                },
+                "childNodeId": "hpUqGwMmSmifHQ7XrqdP5Q",
+                "maxConcurrency": {
+                  "__recast": "parameterField",
+                  "__encodedValue": {
+                    "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                    "expressionValue": null,
+                    "expression": false,
+                    "valueDoc": {
+                      "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper"
+                    },
+                    "valueClass": "java.lang.Integer",
+                    "typeString": false,
+                    "skipAutoEvaluation": false,
+                    "jsonResponseField": false,
+                    "responseField": null
+                  }
+                },
+                "strategyType": "MATRIX"
+              },
+              "maxConcurrency": {
+                "value": 3
+              }
+            },
+            "edgeLayoutList": {
+              "currentNodeChildren": ["JYEJfpHHR-ajG29ZBi-yoA", "g31wgRXNQD209Ge8Gw36RA", "KReTVfYJSTykICnWqMm4jw"],
+              "nextIds": []
+            }
+          },
+          "JYEJfpHHR-ajG29ZBi-yoA": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "s1_0_0",
+            "name": "s1_0_0",
+            "nodeUuid": "hpUqGwMmSmifHQ7XrqdP5Q",
+            "status": "Success",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "service1",
+                  "displayName": "service1",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "library/nginx",
+                      "tag": "latest"
+                    },
+                    "sidecars": []
+                  }
+                },
+                "infraExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                  "identifier": "dummy",
+                  "name": "dummy",
+                  "type": "PreProduction"
+                }
+              }
+            },
+            "startTs": 1662383115533,
+            "endTs": 1662383126174,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": ""
+            },
+            "failureInfoDTO": {
+              "message": "",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "JYEJfpHHR-ajG29ZBi-yoA",
+            "strategyMetadata": {
+              "currentiteration": 0,
+              "totaliterations": 3,
+              "matrixmetadata": {
+                "matrixvalues": {
+                  "service": "{\"identifier\":\"service1\",\"tag\":\"latest\"}",
+                  "infra": "{\"name\":\"dummy\",\"connectorRef\":\"pieplay\"}"
+                },
+                "matrixcombination": [0, 0]
+              }
+            },
+            "executionInputConfigured": false
+          },
+          "g31wgRXNQD209Ge8Gw36RA": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "s1_1_0",
+            "name": "s1_1_0",
+            "nodeUuid": "hpUqGwMmSmifHQ7XrqdP5Q",
+            "status": "Success",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "service2",
+                  "displayName": "service2",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "library/nginx",
+                      "tag": "stable-alpine"
+                    },
+                    "sidecars": []
+                  }
+                },
+                "infraExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                  "identifier": "dummy",
+                  "name": "dummy",
+                  "type": "PreProduction"
+                }
+              }
+            },
+            "startTs": 1662383115536,
+            "endTs": 1662383124155,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": ""
+            },
+            "failureInfoDTO": {
+              "message": "",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "g31wgRXNQD209Ge8Gw36RA",
+            "strategyMetadata": {
+              "currentiteration": 1,
+              "totaliterations": 3,
+              "matrixmetadata": {
+                "matrixvalues": {
+                  "service": "{\"identifier\":\"service2\",\"tag\":\"stable-alpine\"}",
+                  "infra": "{\"name\":\"dummy\",\"connectorRef\":\"pieplay\"}"
+                },
+                "matrixcombination": [1, 0]
+              }
+            },
+            "executionInputConfigured": false
+          },
+          "KReTVfYJSTykICnWqMm4jw": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "s1_2_0",
+            "name": "s1_2_0",
+            "nodeUuid": "hpUqGwMmSmifHQ7XrqdP5Q",
+            "status": "Success",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "service3",
+                  "displayName": "service3",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "library/nginx",
+                      "tag": "stable-perl"
+                    },
+                    "sidecars": []
+                  }
+                },
+                "infraExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                  "identifier": "dummy",
+                  "name": "dummy",
+                  "type": "PreProduction"
+                }
+              }
+            },
+            "startTs": 1662383115540,
+            "endTs": 1662383124222,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": ""
+            },
+            "failureInfoDTO": {
+              "message": "",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "KReTVfYJSTykICnWqMm4jw",
+            "strategyMetadata": {
+              "currentiteration": 2,
+              "totaliterations": 3,
+              "matrixmetadata": {
+                "matrixvalues": {
+                  "service": "{\"identifier\":\"service3\",\"tag\":\"stable-perl\"}",
+                  "infra": "{\"name\":\"dummy\",\"connectorRef\":\"pieplay\"}"
+                },
+                "matrixcombination": [2, 0]
+              }
+            },
+            "executionInputConfigured": false
+          }
+        },
+        "modules": ["cd"],
+        "startingNodeId": "XDG6w9nNSCu5a-vYNjXszw",
+        "startTs": 1662383115292,
+        "endTs": 1662383126315,
+        "createdAt": 1662383115327,
+        "canRetry": true,
+        "showRetryHistory": false,
+        "runSequence": 1,
+        "successfulStagesCount": 1,
+        "runningStagesCount": 0,
+        "failedStagesCount": 0,
+        "totalStagesCount": 1,
+        "storeType": "INLINE",
+        "executionInputConfigured": false,
+        "allowStageExecutions": false,
+        "stagesExecution": false
+      },
+      {
+        "pipelineIdentifier": "MultiServiceWithMatrix",
+        "planExecutionId": "qW8El1KjTwOy_4Ve0lTbIQ",
+        "name": "Multi-ServiceWithMatrix CD Failed",
+        "status": "Failed",
+        "tags": [],
+        "executionTriggerInfo": {
+          "triggerType": "MANUAL",
+          "triggeredBy": {
+            "uuid": "E6eesWsRRx--zjocv6XKRQ",
+            "identifier": "Sahil Hindwani",
+            "extraInfo": {
+              "email": "sahil.hindwani@harness.io"
+            }
+          },
+          "isRerun": false
+        },
+        "executionErrorInfo": {
+          "message": "Invalid request: Connector not found for identifier : [null]"
+        },
+        "governanceMetadata": {
+          "id": "430965",
+          "deny": false,
+          "details": [
+            {
+              "policySetId": "",
+              "deny": false,
+              "policyMetadata": [
+                {
+                  "policyId": "",
+                  "policyName": "Pipeline_ErrorBudgetPolicy",
+                  "severity": "pass",
+                  "denyMessages": [],
+                  "status": "pass",
+                  "identifier": "pipeline_errorbudgetpolicy",
+                  "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+                  "orgId": "",
+                  "projectId": "",
+                  "created": "1644240355222",
+                  "updated": "1646137994486",
+                  "error": ""
+                }
+              ],
+              "policySetName": "Error Budget Policy",
+              "status": "pass",
+              "identifier": "error_budget_policy",
+              "created": "1644240569528",
+              "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+              "orgId": "",
+              "projectId": ""
+            }
+          ],
+          "message": "",
+          "timestamp": "1662383085914",
+          "status": "pass",
+          "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+          "orgId": "default",
+          "projectId": "naidusanity",
+          "entity": "accountIdentifier%3AvpCkHKsDSxK9_KYfjCTMKA%2ForgIdentifier%3Adefault%2FprojectIdentifier%3Anaidusanity%2FpipelineIdentifier%3AMultiServiceWithMatrix",
+          "type": "pipeline",
+          "action": "onrun",
+          "created": "1662383085870"
+        },
+        "moduleInfo": {
+          "cd": {
+            "__recast": "io.harness.cdng.pipeline.executions.beans.CDPipelineModuleInfo",
+            "envGroupIdentifiers": [],
+            "envIdentifiers": [],
+            "environmentTypes": [],
+            "infrastructureIdentifiers": [],
+            "infrastructureNames": [],
+            "infrastructureTypes": [],
+            "serviceDefinitionTypes": ["Kubernetes"],
+            "serviceIdentifiers": ["service1", "service3", "service2"]
+          }
+        },
+        "layoutNodeMap": {
+          "-LYVcWq8T3mwXlPntTxdDg": {
+            "nodeType": "MATRIX",
+            "nodeGroup": "STRATEGY",
+            "nodeIdentifier": "s1",
+            "name": "s1",
+            "nodeUuid": "-LYVcWq8T3mwXlPntTxdDg",
+            "status": "Failed",
+            "moduleInfo": {
+              "stepParameters": {
+                "__recast": "io.harness.steps.matrix.StrategyStepParameters",
+                "strategyConfig": {
+                  "__recast": "io.harness.plancreator.strategy.StrategyConfig",
+                  "uuid": "ZrPDXWpfQhmcTvEGlegDbA",
+                  "matrixConfig": {
+                    "__recast": "io.harness.plancreator.strategy.MatrixConfig",
+                    "uuid": "gsXcvAUyTzCZ12fd1eN6Aw",
+                    "axes": {
+                      "service": {
+                        "__recast": "io.harness.plancreator.strategy.AxisConfig",
+                        "axisValue": {
+                          "__recast": "parameterField",
+                          "__encodedValue": {
+                            "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                            "expressionValue": null,
+                            "expression": false,
+                            "valueDoc": {
+                              "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                              "value": [
+                                "{\"identifier\":\"service1\",\"tag\":\"latest\"}",
+                                "{\"identifier\":\"service2\",\"tag\":\"stable-alpine\"}",
+                                "{\"identifier\":\"service3\",\"tag\":\"stable-perl\"}"
+                              ]
+                            },
+                            "valueClass": "java.util.List",
+                            "typeString": false,
+                            "skipAutoEvaluation": false,
+                            "jsonResponseField": false,
+                            "responseField": null
+                          }
+                        }
+                      },
+                      "infra": {
+                        "__recast": "io.harness.plancreator.strategy.AxisConfig",
+                        "axisValue": {
+                          "__recast": "parameterField",
+                          "__encodedValue": {
+                            "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                            "expressionValue": null,
+                            "expression": false,
+                            "valueDoc": {
+                              "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper",
+                              "value": ["{\"name\":\"dummy\",\"connectorRef\":\"pieplay\"}"]
+                            },
+                            "valueClass": "java.util.List",
+                            "typeString": false,
+                            "skipAutoEvaluation": false,
+                            "jsonResponseField": false,
+                            "responseField": null
+                          }
+                        }
+                      }
+                    },
+                    "expressionAxes": {},
+                    "exclude": {
+                      "__recast": "parameterField",
+                      "__encodedValue": {
+                        "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                        "expressionValue": null,
+                        "expression": false,
+                        "valueDoc": {
+                          "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper"
+                        },
+                        "valueClass": "java.util.List",
+                        "typeString": false,
+                        "skipAutoEvaluation": false,
+                        "jsonResponseField": false,
+                        "responseField": null
+                      }
+                    },
+                    "maxConcurrency": {
+                      "__recast": "parameterField",
+                      "__encodedValue": {
+                        "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                        "expressionValue": null,
+                        "expression": false,
+                        "valueDoc": {
+                          "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper"
+                        },
+                        "valueClass": "java.lang.Integer",
+                        "typeString": false,
+                        "skipAutoEvaluation": false,
+                        "jsonResponseField": false,
+                        "responseField": null
+                      }
+                    }
+                  },
+                  "parallelism": {
+                    "__recast": "parameterField",
+                    "__encodedValue": {
+                      "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                      "expressionValue": null,
+                      "expression": false,
+                      "valueDoc": {
+                        "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper"
+                      },
+                      "valueClass": "java.lang.Integer",
+                      "typeString": false,
+                      "skipAutoEvaluation": false,
+                      "jsonResponseField": false,
+                      "responseField": null
+                    }
+                  }
+                },
+                "childNodeId": "ZrPDXWpfQhmcTvEGlegDbA",
+                "maxConcurrency": {
+                  "__recast": "parameterField",
+                  "__encodedValue": {
+                    "__recast": "io.harness.pms.yaml.ParameterDocumentField",
+                    "expressionValue": null,
+                    "expression": false,
+                    "valueDoc": {
+                      "__recast": "io.harness.pms.yaml.ParameterFieldValueWrapper"
+                    },
+                    "valueClass": "java.lang.Integer",
+                    "typeString": false,
+                    "skipAutoEvaluation": false,
+                    "jsonResponseField": false,
+                    "responseField": null
+                  }
+                },
+                "strategyType": "MATRIX"
+              },
+              "maxConcurrency": {
+                "value": 3
+              }
+            },
+            "edgeLayoutList": {
+              "currentNodeChildren": ["YyG-tzxHT3CcNd6ampVzjg", "XSsg3wTVTDS_lKL801uNgA", "qXbzYwd8T2ixsx-F4WC8jA"],
+              "nextIds": []
+            }
+          },
+          "ZrPDXWpfQhmcTvEGlegDbA": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "s1",
+            "name": "s1",
+            "nodeUuid": "ZrPDXWpfQhmcTvEGlegDbA",
+            "status": "NotStarted",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {}
+            },
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "hidden": true
+          },
+          "YyG-tzxHT3CcNd6ampVzjg": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "s1_0_0",
+            "name": "s1_0_0",
+            "nodeUuid": "ZrPDXWpfQhmcTvEGlegDbA",
+            "status": "Failed",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "service1",
+                  "displayName": "service1",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "library/nginx",
+                      "tag": "latest"
+                    },
+                    "sidecars": []
+                  }
+                }
+              }
+            },
+            "startTs": 1662383086173,
+            "endTs": 1662383090298,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": "Invalid request: Connector not found for identifier : [null]"
+            },
+            "failureInfoDTO": {
+              "message": "Invalid request: Connector not found for identifier : [null]",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "YyG-tzxHT3CcNd6ampVzjg",
+            "strategyMetadata": {
+              "currentiteration": 0,
+              "totaliterations": 3,
+              "matrixmetadata": {
+                "matrixvalues": {
+                  "service": "{\"identifier\":\"service1\",\"tag\":\"latest\"}",
+                  "infra": "{\"name\":\"dummy\",\"connectorRef\":\"pieplay\"}"
+                },
+                "matrixcombination": [0, 0]
+              }
+            },
+            "executionInputConfigured": false
+          },
+          "XSsg3wTVTDS_lKL801uNgA": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "s1_1_0",
+            "name": "s1_1_0",
+            "nodeUuid": "ZrPDXWpfQhmcTvEGlegDbA",
+            "status": "Failed",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "service2",
+                  "displayName": "service2",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "library/nginx",
+                      "tag": "stable-alpine"
+                    },
+                    "sidecars": []
+                  }
+                }
+              }
+            },
+            "startTs": 1662383086176,
+            "endTs": 1662383092316,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": "Invalid request: Connector not found for identifier : [null]"
+            },
+            "failureInfoDTO": {
+              "message": "Invalid request: Connector not found for identifier : [null]",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "XSsg3wTVTDS_lKL801uNgA",
+            "strategyMetadata": {
+              "currentiteration": 1,
+              "totaliterations": 3,
+              "matrixmetadata": {
+                "matrixvalues": {
+                  "service": "{\"identifier\":\"service2\",\"tag\":\"stable-alpine\"}",
+                  "infra": "{\"name\":\"dummy\",\"connectorRef\":\"pieplay\"}"
+                },
+                "matrixcombination": [1, 0]
+              }
+            },
+            "executionInputConfigured": false
+          },
+          "qXbzYwd8T2ixsx-F4WC8jA": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "s1_2_0",
+            "name": "s1_2_0",
+            "nodeUuid": "ZrPDXWpfQhmcTvEGlegDbA",
+            "status": "Failed",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "service3",
+                  "displayName": "service3",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "library/nginx",
+                      "tag": "stable-perl"
+                    },
+                    "sidecars": []
+                  }
+                }
+              }
+            },
+            "startTs": 1662383086180,
+            "endTs": 1662383092278,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": "Invalid request: Connector not found for identifier : [null]"
+            },
+            "failureInfoDTO": {
+              "message": "Invalid request: Connector not found for identifier : [null]",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "qXbzYwd8T2ixsx-F4WC8jA",
+            "strategyMetadata": {
+              "currentiteration": 2,
+              "totaliterations": 3,
+              "matrixmetadata": {
+                "matrixvalues": {
+                  "service": "{\"identifier\":\"service3\",\"tag\":\"stable-perl\"}",
+                  "infra": "{\"name\":\"dummy\",\"connectorRef\":\"pieplay\"}"
+                },
+                "matrixcombination": [2, 0]
+              }
+            },
+            "executionInputConfigured": false
+          }
+        },
+        "modules": ["cd"],
+        "startingNodeId": "-LYVcWq8T3mwXlPntTxdDg",
+        "startTs": 1662383085914,
+        "endTs": 1662383092484,
+        "createdAt": 1662383085959,
+        "canRetry": true,
+        "showRetryHistory": false,
+        "runSequence": 2,
+        "successfulStagesCount": 0,
+        "runningStagesCount": 0,
+        "failedStagesCount": 1,
+        "totalStagesCount": 1,
+        "storeType": "INLINE",
+        "executionInputConfigured": false,
+        "allowStageExecutions": false,
+        "stagesExecution": false
+      },
+      {
+        "pipelineIdentifier": "PR_Harness_Env",
+        "planExecutionId": "PO4Dd7pnSiOmyCjHkoNeMQ",
+        "name": "PR Harness Env - CD Selective Stage",
+        "status": "Failed",
+        "tags": [],
+        "executionTriggerInfo": {
+          "triggerType": "MANUAL",
+          "triggeredBy": {
+            "uuid": "XEGoW7AxRI23CRZfbrc2gw",
+            "identifier": "henry.leong@harness.io",
+            "extraInfo": {
+              "email": "henry.leong@harness.io"
+            }
+          },
+          "isRerun": false
+        },
+        "executionErrorInfo": {
+          "message": "Invalid Kubernetes YAML Spec. Failed to load spec for resource kind: Deployment, name: gitops-service \nCannot create property=spec for JavaBean=class V1Deployment  \n in 'reader', line 7, column 3:."
+        },
+        "governanceMetadata": {
+          "id": "446290",
+          "deny": false,
+          "details": [
+            {
+              "policySetId": "",
+              "deny": false,
+              "policyMetadata": [
+                {
+                  "policyId": "",
+                  "policyName": "Pipeline_ErrorBudgetPolicy",
+                  "severity": "pass",
+                  "denyMessages": [],
+                  "status": "pass",
+                  "identifier": "pipeline_errorbudgetpolicy",
+                  "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+                  "orgId": "",
+                  "projectId": "",
+                  "created": "1644240355222",
+                  "updated": "1646137994486",
+                  "error": ""
+                }
+              ],
+              "policySetName": "Error Budget Policy",
+              "status": "pass",
+              "identifier": "error_budget_policy",
+              "created": "1644240569528",
+              "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+              "orgId": "",
+              "projectId": ""
+            }
+          ],
+          "message": "",
+          "timestamp": "1662587311763",
+          "status": "pass",
+          "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+          "orgId": "default",
+          "projectId": "PREQA_NG_Pipelines",
+          "entity": "accountIdentifier%3AvpCkHKsDSxK9_KYfjCTMKA%2ForgIdentifier%3Adefault%2FprojectIdentifier%3APREQA_NG_Pipelines%2FpipelineIdentifier%3APR_Harness_Env",
+          "type": "pipeline",
+          "action": "onrun",
+          "created": "1662587311663"
+        },
+        "moduleInfo": {
+          "cd": {
+            "__recast": "io.harness.cdng.pipeline.executions.beans.CDPipelineModuleInfo",
+            "envGroupIdentifiers": [],
+            "envIdentifiers": ["prenv"],
+            "environmentTypes": ["PreProduction"],
+            "infrastructureIdentifiers": [null],
+            "infrastructureNames": [null],
+            "infrastructureTypes": ["KubernetesDirect"],
+            "serviceDefinitionTypes": ["Kubernetes"],
+            "serviceIdentifiers": ["logservicesvc", "accessControlsvc"]
+          }
+        },
+        "layoutNodeMap": {
+          "Z7F7SDk1ToSbeWc_eH37OQ": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "accessControl",
+            "name": "accessControl",
+            "nodeUuid": "Z7F7SDk1ToSbeWc_eH37OQ",
+            "status": "IgnoreFailed",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "accessControlsvc",
+                  "displayName": "accessControl-svc",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.cdng.artifact.GcrArtifactSummary",
+                      "imagePath": "platform-205701/harness/feature-accesscontrol-service-openjdk-8u242",
+                      "tag": "900023-000"
+                    },
+                    "sidecars": []
+                  }
+                },
+                "infraExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                  "identifier": "prenv",
+                  "name": "pr-env",
+                  "type": "PreProduction"
+                }
+              }
+            },
+            "startTs": 1662587316239,
+            "endTs": 1662587662184,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "barrierFound": true,
+            "failureInfo": {
+              "message": ""
+            },
+            "failureInfoDTO": {
+              "message": "",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "J2Egf96HSESCZbKUCOWpaw",
+            "executionInputConfigured": false
+          },
+          "kOzId7tyTsi-7lmIBtftxw": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "gitops",
+            "name": "gitops",
+            "nodeUuid": "kOzId7tyTsi-7lmIBtftxw",
+            "status": "Failed",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "logservicesvc",
+                  "displayName": "log-service-svc",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.cdng.artifact.GcrArtifactSummary",
+                      "imagePath": "gitops-play-338013/harness/gitops-server",
+                      "tag": "main-2022-09-07-da593c2"
+                    },
+                    "sidecars": []
+                  }
+                },
+                "infraExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                  "identifier": "prenv",
+                  "name": "pr-env",
+                  "type": "PreProduction"
+                }
+              }
+            },
+            "startTs": 1662587316240,
+            "endTs": 1662587351438,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": "Invalid Kubernetes YAML Spec. Failed to load spec for resource kind: Deployment, name: gitops-service \nCannot create property=spec for JavaBean=class V1Deployment  \n in 'reader', line 7, column 3:."
+            },
+            "failureInfoDTO": {
+              "message": "Invalid Kubernetes YAML Spec. Failed to load spec for resource kind: Deployment, name: gitops-service \nCannot create property=spec for JavaBean=class V1Deployment  \n in 'reader', line 7, column 3:.",
+              "failureTypeList": [],
+              "responseMessages": [
+                {
+                  "code": "HINT",
+                  "level": "INFO",
+                  "message": "Please check if the rendered manifest is valid and does not contain invalid/missing values.",
+                  "exception": null,
+                  "failureTypes": []
+                },
+                {
+                  "code": "EXPLANATION",
+                  "level": "INFO",
+                  "message": "Failed to load resource spec as a Kubernetes object.",
+                  "exception": null,
+                  "failureTypes": []
+                },
+                {
+                  "code": "KUBERNETES_YAML_ERROR",
+                  "level": "ERROR",
+                  "message": "Invalid Kubernetes YAML Spec. Failed to load spec for resource kind: Deployment, name: gitops-service \nCannot create property=spec for JavaBean=class V1Deployment  \n in 'reader', line 7, column 3:.",
+                  "exception": null,
+                  "failureTypes": []
+                }
+              ]
+            },
+            "nodeExecutionId": "OIokqWwASLatWRT_EnLuRA",
+            "executionInputConfigured": false
+          },
+          "K8txXdZ9RZeIo9rM6TjMYwparallel": {
+            "nodeType": "parallel",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "parallelK8txXdZ9RZeIo9rM6TjMYwparallel",
+            "name": "",
+            "nodeUuid": "K8txXdZ9RZeIo9rM6TjMYwparallel",
+            "status": "NotStarted",
+            "edgeLayoutList": {
+              "currentNodeChildren": ["Z7F7SDk1ToSbeWc_eH37OQ", "kOzId7tyTsi-7lmIBtftxw"],
+              "nextIds": []
+            }
+          }
+        },
+        "modules": ["cd"],
+        "startingNodeId": "K8txXdZ9RZeIo9rM6TjMYwparallel",
+        "startTs": 1662587311764,
+        "endTs": 1662587662321,
+        "createdAt": 1662587316052,
+        "canRetry": true,
+        "showRetryHistory": false,
+        "runSequence": 3,
+        "successfulStagesCount": 0,
+        "runningStagesCount": 0,
+        "failedStagesCount": 1,
+        "totalStagesCount": 2,
+        "gitDetails": {
+          "objectId": null,
+          "branch": "feat/CDS-41594-gitops",
+          "repoIdentifier": "ng-pr-manifests",
+          "rootFolder": null,
+          "filePath": ".harness/PR_Harness_Env.yaml",
+          "repoName": "ng-pr-manifests",
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null
+        },
+        "storeType": "REMOTE",
+        "connectorRef": "account.PRenvHarnessYamlGithub",
+        "executionInputConfigured": false,
+        "stagesExecuted": ["accessControl", "gitops"],
+        "stagesExecutedNames": {
+          "accessControl": "accessControl",
+          "gitops": "gitops"
+        },
+        "allowStageExecutions": true,
+        "stagesExecution": true
+      },
+      {
+        "pipelineIdentifier": "MultipleStage",
+        "planExecutionId": "U8o-JcvwTEuGb227RUXOvA",
+        "name": "MultipleStage CD Running",
+        "status": "Running",
+        "tags": [],
+        "executionTriggerInfo": {
+          "triggerType": "SCHEDULER_CRON",
+          "triggeredBy": {
+            "uuid": "systemUser",
+            "identifier": "daily_twice",
+            "extraInfo": {
+              "execution_trigger_tag_needed_for_abort": "wFHXHD0RRQWoO8tIZT5YVw:SRM:SRM_Sanity:MultipleStage",
+              "triggerRef": "wFHXHD0RRQWoO8tIZT5YVw/SRM/SRM_Sanity/daily_twice",
+              "eventCorrelationId": "Cron_WL6zYladQ0-EZYF6vktGIw"
+            }
+          },
+          "isRerun": false
+        },
+        "governanceMetadata": {
+          "id": "0",
+          "deny": false,
+          "details": [],
+          "message": "",
+          "timestamp": "1662508804072",
+          "status": "pass",
+          "accountId": "wFHXHD0RRQWoO8tIZT5YVw",
+          "orgId": "SRM",
+          "projectId": "SRM_Sanity",
+          "entity": "accountIdentifier%3AwFHXHD0RRQWoO8tIZT5YVw%2ForgIdentifier%3ASRM%2FprojectIdentifier%3ASRM_Sanity%2FpipelineIdentifier%3AMultipleStage",
+          "type": "pipeline",
+          "action": "onrun",
+          "created": "1662508804013"
+        },
+        "moduleInfo": {
+          "cd": {
+            "__recast": "io.harness.cdng.pipeline.executions.beans.CDPipelineModuleInfo",
+            "envGroupIdentifiers": [],
+            "envIdentifiers": ["prod"],
+            "environmentTypes": ["Production"],
+            "infrastructureIdentifiers": [null],
+            "infrastructureNames": [null],
+            "infrastructureTypes": ["KubernetesDirect"],
+            "serviceDefinitionTypes": ["Kubernetes"],
+            "serviceIdentifiers": ["prometheus", "gcpmetric", "gcplogs", "appd", "datadogmetric", "datadoglogs"]
+          }
+        },
+        "layoutNodeMap": {
+          "b__B4E0kS6WFQLCt-iAFVw": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "prometheus",
+            "name": "prometheus",
+            "nodeUuid": "b__B4E0kS6WFQLCt-iAFVw",
+            "status": "Success",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "prometheus",
+                  "displayName": "prometheus",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "harness/todolist",
+                      "tag": "praveen-cv-test"
+                    },
+                    "sidecars": []
+                  }
+                },
+                "infraExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                  "identifier": "prod",
+                  "name": "prod",
+                  "type": "Production"
+                }
+              }
+            },
+            "startTs": 1662508804605,
+            "endTs": 1662509650548,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": ""
+            },
+            "failureInfoDTO": {
+              "message": "",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "Sj6bcuBXSiWFZkzM4dHGIQ",
+            "executionInputConfigured": false
+          },
+          "UEk5HN31RXqW3Hp1UGysgw": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "appd",
+            "name": "appd",
+            "nodeUuid": "UEk5HN31RXqW3Hp1UGysgw",
+            "status": "Success",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "appd",
+                  "displayName": "appd",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "harness/todolist",
+                      "tag": "praveen-cv-test"
+                    },
+                    "sidecars": []
+                  }
+                },
+                "infraExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                  "identifier": "prod",
+                  "name": "prod",
+                  "type": "Production"
+                }
+              }
+            },
+            "startTs": 1662508804517,
+            "endTs": 1662509638491,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": ""
+            },
+            "failureInfoDTO": {
+              "message": "",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "BW-pEEM2Tk6ewPrhmd38iw",
+            "executionInputConfigured": false
+          },
+          "nKdG82KOSAemmnQtuR2CUg": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "datadogmetric",
+            "name": "datadog-metric",
+            "nodeUuid": "nKdG82KOSAemmnQtuR2CUg",
+            "status": "Success",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "datadogmetric",
+                  "displayName": "datadog-metric",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "harness/todolist",
+                      "tag": "praveen-cv-test"
+                    },
+                    "sidecars": []
+                  }
+                },
+                "infraExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                  "identifier": "prod",
+                  "name": "prod",
+                  "type": "Production"
+                }
+              }
+            },
+            "startTs": 1662508804527,
+            "endTs": 1662509648579,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": ""
+            },
+            "failureInfoDTO": {
+              "message": "",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "3sV6bLkwSxOmuk8QFx6oqQ",
+            "executionInputConfigured": false
+          },
+          "G4pShZOjQJuFRyKkJqKwig": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "newrelic",
+            "name": "newrelic",
+            "nodeUuid": "G4pShZOjQJuFRyKkJqKwig",
+            "status": "Running",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {}
+            },
+            "startTs": 1662508804587,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "nodeExecutionId": "ncb28PkTSB-p-i1s34h12g",
+            "executionInputConfigured": false
+          },
+          "lfbNdbmVQW6dKkwXBVFvIAparallel": {
+            "nodeType": "parallel",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "parallellfbNdbmVQW6dKkwXBVFvIAparallel",
+            "name": "",
+            "nodeUuid": "lfbNdbmVQW6dKkwXBVFvIAparallel",
+            "status": "NotStarted",
+            "edgeLayoutList": {
+              "currentNodeChildren": [
+                "UEk5HN31RXqW3Hp1UGysgw",
+                "EiK6S2wzRuqXWA5m9Y46Fw",
+                "nKdG82KOSAemmnQtuR2CUg",
+                "G4pShZOjQJuFRyKkJqKwig",
+                "b__B4E0kS6WFQLCt-iAFVw",
+                "7ZmzII9bTGG-rfX5FHC9tA",
+                "kImSjtSBQ2-OGDF9h9DlaA"
+              ],
+              "nextIds": []
+            }
+          },
+          "kImSjtSBQ2-OGDF9h9DlaA": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "gcplogs",
+            "name": "gcp-logs",
+            "nodeUuid": "kImSjtSBQ2-OGDF9h9DlaA",
+            "status": "IgnoreFailed",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "gcplogs",
+                  "displayName": "gcp-logs",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "harness/todolist",
+                      "tag": "praveen-cv-test"
+                    },
+                    "sidecars": []
+                  }
+                },
+                "infraExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                  "identifier": "prod",
+                  "name": "prod",
+                  "type": "Production"
+                }
+              }
+            },
+            "startTs": 1662508804526,
+            "endTs": 1662509721202,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": ""
+            },
+            "failureInfoDTO": {
+              "message": "",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "2FTqAnppSBeODgfdrSxAgQ",
+            "executionInputConfigured": false
+          },
+          "EiK6S2wzRuqXWA5m9Y46Fw": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "gcpmetric",
+            "name": "gcp-metric",
+            "nodeUuid": "EiK6S2wzRuqXWA5m9Y46Fw",
+            "status": "Running",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "gcpmetric",
+                  "displayName": "gcp-metric",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "harness/todolist",
+                      "tag": "praveen-cv-test"
+                    },
+                    "sidecars": []
+                  }
+                },
+                "infraExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                  "identifier": "prod",
+                  "name": "prod",
+                  "type": "Production"
+                }
+              }
+            },
+            "startTs": 1662508804517,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "nodeExecutionId": "XDRAjIC6RPS9x9ASVmF46Q",
+            "executionInputConfigured": false
+          },
+          "7ZmzII9bTGG-rfX5FHC9tA": {
+            "nodeType": "Deployment",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "datadoglog",
+            "name": "datadog-log",
+            "nodeUuid": "7ZmzII9bTGG-rfX5FHC9tA",
+            "status": "Success",
+            "module": "cd",
+            "moduleInfo": {
+              "cd": {
+                "__recast": "io.harness.cdng.pipeline.executions.beans.CDStageModuleInfo",
+                "serviceInfo": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary",
+                  "identifier": "datadoglogs",
+                  "displayName": "datadog-logs",
+                  "deploymentType": "Kubernetes",
+                  "gitOpsEnabled": false,
+                  "artifacts": {
+                    "__recast": "io.harness.cdng.pipeline.executions.beans.ServiceExecutionSummary$ArtifactsSummary",
+                    "primary": {
+                      "__recast": "io.harness.ngpipeline.pipeline.executions.beans.DockerArtifactSummary",
+                      "imagePath": "harness/todolist",
+                      "tag": "praveen-cv-test"
+                    },
+                    "sidecars": []
+                  }
+                },
+                "infraExecutionSummary": {
+                  "__recast": "io.harness.cdng.pipeline.executions.beans.InfraExecutionSummary",
+                  "identifier": "prod",
+                  "name": "prod",
+                  "type": "Production"
+                }
+              }
+            },
+            "startTs": 1662508804527,
+            "endTs": 1662509721200,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": ""
+            },
+            "failureInfoDTO": {
+              "message": "",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "yGiqvz5jTLuqKozAkY0LpQ",
+            "executionInputConfigured": false
+          }
+        },
+        "modules": ["cd"],
+        "startingNodeId": "lfbNdbmVQW6dKkwXBVFvIAparallel",
+        "startTs": 1662508804072,
+        "createdAt": 1662508804264,
+        "canRetry": true,
+        "showRetryHistory": false,
+        "runSequence": 4,
+        "successfulStagesCount": 4,
+        "runningStagesCount": 2,
+        "failedStagesCount": 0,
+        "totalStagesCount": 7,
+        "executionInputConfigured": false,
+        "allowStageExecutions": false,
+        "stagesExecution": false
+      },
+      {
+        "pipelineIdentifier": "PROD_SMOKE_TESTS",
+        "planExecutionId": "0X1dj5YTS7eVCJhJxsfO2A",
+        "name": "PROD_SMOKE_TESTS CI Trigger",
+        "status": "Running",
+        "tags": [],
+        "executionTriggerInfo": {
+          "triggerType": "SCHEDULER_CRON",
+          "triggeredBy": {
+            "uuid": "systemUser",
+            "identifier": "PROD_Smoke_test",
+            "extraInfo": {
+              "execution_trigger_tag_needed_for_abort": "vpCkHKsDSxK9_KYfjCTMKA:QE_Team:Quality_Assurence:PROD_SMOKE_TESTS",
+              "triggerRef": "vpCkHKsDSxK9_KYfjCTMKA/QE_Team/Quality_Assurence/PROD_Smoke_test",
+              "eventCorrelationId": "Cron_fG7qGrPkQa-1a5oj5FjwPQ"
+            }
+          },
+          "isRerun": false
+        },
+        "governanceMetadata": {
+          "id": "447473",
+          "deny": false,
+          "details": [
+            {
+              "policySetId": "",
+              "deny": false,
+              "policyMetadata": [
+                {
+                  "policyId": "",
+                  "policyName": "Pipeline_ErrorBudgetPolicy",
+                  "severity": "pass",
+                  "denyMessages": [],
+                  "status": "pass",
+                  "identifier": "pipeline_errorbudgetpolicy",
+                  "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+                  "orgId": "",
+                  "projectId": "",
+                  "created": "1644240355222",
+                  "updated": "1646137994486",
+                  "error": ""
+                }
+              ],
+              "policySetName": "Error Budget Policy",
+              "status": "pass",
+              "identifier": "error_budget_policy",
+              "created": "1644240569528",
+              "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+              "orgId": "",
+              "projectId": ""
+            }
+          ],
+          "message": "",
+          "timestamp": "1662615008639",
+          "status": "pass",
+          "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+          "orgId": "QE_Team",
+          "projectId": "Quality_Assurence",
+          "entity": "accountIdentifier%3AvpCkHKsDSxK9_KYfjCTMKA%2ForgIdentifier%3AQE_Team%2FprojectIdentifier%3AQuality_Assurence%2FpipelineIdentifier%3APROD_SMOKE_TESTS",
+          "type": "pipeline",
+          "action": "onrun",
+          "created": "1662615008613"
+        },
+        "moduleInfo": {
+          "ci": {
+            "__recast": "io.harness.ci.plan.creator.execution.CIPipelineModuleInfo",
+            "branch": "prod-smoke",
+            "ciExecutionInfoDTO": {
+              "__recast": "io.harness.ci.pipeline.executions.beans.CIWebhookInfoDTO",
+              "event": "branch",
+              "branch": {
+                "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildBranchHook",
+                "commits": [
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "02045e09d7ed1bce41974691b0be326a69ce10c6",
+                    "link": "https://github.com/wings-software/Automation/commit/02045e09d7ed1bce41974691b0be326a69ce10c6",
+                    "message": "updated on prem url",
+                    "ownerName": "Manjunatha Etagi",
+                    "ownerId": "manjunatha-etagi",
+                    "ownerEmail": "manjunatha.etagi@harness.io",
+                    "timeStamp": 1656346974000
+                  }
+                ]
+              }
+            },
+            "imageDetailsList": [
+              {
+                "__recast": "io.harness.ci.pipeline.executions.beans.CIImageDetails",
+                "imageName": "harness/drone-git",
+                "imageTag": "1.2.4-rootless"
+              },
+              {
+                "__recast": "io.harness.ci.pipeline.executions.beans.CIImageDetails",
+                "imageName": "us.gcr.io/platform-205701/test-executor",
+                "imageTag": "latest"
+              }
+            ],
+            "infraDetailsList": [
+              {
+                "__recast": "io.harness.ci.pipeline.executions.beans.CIInfraDetails",
+                "infraType": "KubernetesDirect",
+                "infraOSType": "Linux",
+                "infraHostType": "Self Hosted"
+              }
+            ],
+            "isPrivateRepo": false,
+            "repoName": "Automation",
+            "scmDetailsList": [
+              {
+                "__recast": "io.harness.ci.pipeline.executions.beans.CIScmDetails",
+                "scmUrl": "https://github.com/wings-software",
+                "scmProvider": "Github",
+                "scmAuthType": "Http",
+                "scmHostType": "SaaS"
+              }
+            ],
+            "tiBuildDetailsList": [],
+            "buildType": "branch"
+          }
+        },
+        "layoutNodeMap": {
+          "9ZlpKPCfSUq2g9H8aIf9Vw": {
+            "nodeType": "CI",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "GitClone",
+            "name": "GitClone",
+            "nodeUuid": "9ZlpKPCfSUq2g9H8aIf9Vw",
+            "status": "Running",
+            "module": "ci",
+            "moduleInfo": {
+              "ci": {
+                "__recast": "io.harness.ci.plan.creator.execution.CIStageModuleInfo"
+              }
+            },
+            "startTs": 1662615008946,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "nodeExecutionId": "zNJ94m0_Quq8of664g1vPg",
+            "executionInputConfigured": false
+          }
+        },
+        "modules": ["ci"],
+        "startingNodeId": "9ZlpKPCfSUq2g9H8aIf9Vw",
+        "startTs": 1662615008639,
+        "createdAt": 1662615008685,
+        "canRetry": true,
+        "showRetryHistory": false,
+        "runSequence": 5,
+        "successfulStagesCount": 0,
+        "runningStagesCount": 1,
+        "failedStagesCount": 0,
+        "totalStagesCount": 1,
+        "executionInputConfigured": false,
+        "allowStageExecutions": false,
+        "stagesExecution": false
+      },
+      {
+        "pipelineIdentifier": "Sonar_PR",
+        "planExecutionId": "fP7dMHs9SP6375wqLc9bkA",
+        "name": "Sonar PR CI webhook PR",
+        "status": "Success",
+        "tags": [
+          {
+            "key": "PR Check",
+            "value": ""
+          }
+        ],
+        "executionTriggerInfo": {
+          "triggerType": "WEBHOOK",
+          "triggeredBy": {
+            "uuid": "systemUser",
+            "identifier": "udayvunnam",
+            "extraInfo": {
+              "execution_trigger_tag_needed_for_abort": "vpCkHKsDSxK9_KYfjCTMKA:default:NextGenUI:Sonar_PR:PR:https://github.com/harness/harness-core-ui:11105:allowedvalues-uday:develop",
+              "triggerRef": "vpCkHKsDSxK9_KYfjCTMKA/default/NextGenUI/PR_Check",
+              "eventCorrelationId": "631960c649d4f97f44b22f22",
+              "gitUser": "udayvunnam"
+            }
+          },
+          "isRerun": false
+        },
+        "governanceMetadata": {
+          "id": "447039",
+          "deny": false,
+          "details": [
+            {
+              "policySetId": "",
+              "deny": false,
+              "policyMetadata": [
+                {
+                  "policyId": "",
+                  "policyName": "Pipeline_ErrorBudgetPolicy",
+                  "severity": "pass",
+                  "denyMessages": [],
+                  "status": "pass",
+                  "identifier": "pipeline_errorbudgetpolicy",
+                  "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+                  "orgId": "",
+                  "projectId": "",
+                  "created": "1644240355222",
+                  "updated": "1646137994486",
+                  "error": ""
+                }
+              ],
+              "policySetName": "Error Budget Policy",
+              "status": "pass",
+              "identifier": "error_budget_policy",
+              "created": "1644240569528",
+              "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+              "orgId": "",
+              "projectId": ""
+            }
+          ],
+          "message": "",
+          "timestamp": "1662607576731",
+          "status": "pass",
+          "accountId": "vpCkHKsDSxK9_KYfjCTMKA",
+          "orgId": "default",
+          "projectId": "NextGenUI",
+          "entity": "accountIdentifier%3AvpCkHKsDSxK9_KYfjCTMKA%2ForgIdentifier%3Adefault%2FprojectIdentifier%3ANextGenUI%2FpipelineIdentifier%3ASonar_PR",
+          "type": "pipeline",
+          "action": "onrun",
+          "created": "1662607576704"
+        },
+        "moduleInfo": {
+          "ci": {
+            "__recast": "io.harness.ci.plan.creator.execution.CIPipelineModuleInfo",
+            "branch": "develop",
+            "ciExecutionInfoDTO": {
+              "__recast": "io.harness.ci.pipeline.executions.beans.CIWebhookInfoDTO",
+              "event": "pullRequest",
+              "author": {
+                "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildAuthor",
+                "id": "udayvunnam",
+                "name": "",
+                "email": "",
+                "avatar": "https://avatars.githubusercontent.com/u/20707504?v=4"
+              },
+              "pullRequest": {
+                "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildPRHook",
+                "id": 11105,
+                "link": "https://github.com/harness/harness-core-ui/pull/11105",
+                "title": "feat: [PIE-5275]: allowed values update in JiraCreate and serverless Lambda Rollback",
+                "sourceBranch": "allowedvalues-uday",
+                "targetBranch": "develop",
+                "state": "open",
+                "commits": [
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "a38e7f9c0665180510fdba04cba61d7be1c120ed",
+                    "link": "https://github.com/harness/harness-core-ui/commit/a38e7f9c0665180510fdba04cba61d7be1c120ed",
+                    "message": "feat: allowed values update in JiraCreate and serverlessLambdaRollback",
+                    "ownerName": "Uday Vunnam",
+                    "ownerId": "udayvunnam",
+                    "ownerEmail": "uday.vunnam@harness.io",
+                    "timeStamp": 1662607271000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "f4bb7689114f88f0ffb578b2ebe4c5d7f97bbe9f",
+                    "link": "https://github.com/harness/harness-core-ui/commit/f4bb7689114f88f0ffb578b2ebe4c5d7f97bbe9f",
+                    "message": "fix: Merge branch 'develop' of github.com:harness/harness-core-ui into allowedValues_support",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662565032000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "28bb6f0b681b53885dfa3d3635cddebb6211c6ec",
+                    "link": "https://github.com/harness/harness-core-ui/commit/28bb6f0b681b53885dfa3d3635cddebb6211c6ec",
+                    "message": "feat: [PIE-5210]: Changes for commandScriptStep (#11070)",
+                    "ownerName": "Sagar-Rajput7",
+                    "ownerId": "Sagar-Rajput7",
+                    "ownerEmail": "sagar.rajput@harness.io",
+                    "timeStamp": 1662549178000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "142c1498489be5d498b600ba87c8595ed4c1ada2",
+                    "link": "https://github.com/harness/harness-core-ui/commit/142c1498489be5d498b600ba87c8595ed4c1ada2",
+                    "message": "fix:  allowed values for customApproval (#11031)",
+                    "ownerName": "Pratyush Garg",
+                    "ownerId": "PratyushGar",
+                    "ownerEmail": "100121280+PratyushGar@users.noreply.github.com",
+                    "timeStamp": 1662543284000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "f50a8bfab6245831f24690605ed5917a2673f3c4",
+                    "link": "https://github.com/harness/harness-core-ui/commit/f50a8bfab6245831f24690605ed5917a2673f3c4",
+                    "message": "feat: implement allowed values for K8sScaleStep, AzureArmRollback, TerraformRollback (#11061)",
+                    "ownerName": "Tamarius",
+                    "ownerId": "Tamaraius",
+                    "ownerEmail": "96610348+Tamaraius@users.noreply.github.com",
+                    "timeStamp": 1662543099000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "43186d29def617d37eaf8b8a37af15b3909a8fb8",
+                    "link": "https://github.com/harness/harness-core-ui/commit/43186d29def617d37eaf8b8a37af15b3909a8fb8",
+                    "message": "feat: [PIE-5210]:  allowed values support for azure swap slot helm rollback k8sBGswap (#11062)\n\n* feat: allowed values support for azure swap slot helm rollback k8sBGswap\r\n\r\n* feat: fix jest",
+                    "ownerName": "vikrant-harness",
+                    "ownerId": "vikrant-harness",
+                    "ownerEmail": "106532291+vikrant-harness@users.noreply.github.com",
+                    "timeStamp": 1662477786000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "bcdc1ae65cac31680c007ed853263ca8ad314f08",
+                    "link": "https://github.com/harness/harness-core-ui/commit/bcdc1ae65cac31680c007ed853263ca8ad314f08",
+                    "message": "feat: [PIE-5210]: allowed values for CF Create Stack Step (#11064)",
+                    "ownerName": "Fardeen Kamal",
+                    "ownerId": "Eric761",
+                    "ownerEmail": "fardeen.kamal@harness.io",
+                    "timeStamp": 1662477335000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "e610b9e1aa29b31c03abfa212caaeee7d752518c",
+                    "link": "https://github.com/harness/harness-core-ui/commit/e610b9e1aa29b31c03abfa212caaeee7d752518c",
+                    "message": "feat: [PIE-5210]: allowed values for jenkins step (#11055)",
+                    "ownerName": "Fardeen Kamal",
+                    "ownerId": "Eric761",
+                    "ownerEmail": "fardeen.kamal@harness.io",
+                    "timeStamp": 1662471658000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "cb6b2ab8dec3b2713685bc7a7eec3d1c58de4b06",
+                    "link": "https://github.com/harness/harness-core-ui/commit/cb6b2ab8dec3b2713685bc7a7eec3d1c58de4b06",
+                    "message": "feat: [CDS-42792]: add test cases for fields configured with allowed values in ShellScript step (#11051)\n\n* chore: add test cases to validate allowed values Runtime view for Timeout, host and workingDirectory fileds\r\n* fix: rename variable to fix ESLint\r\n* fix: remove duplicated test cases\r\n* fix: snapshots",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662467087000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "895b850b61c1ca7e86c93a8d4c3061217e21d7da",
+                    "link": "https://github.com/harness/harness-core-ui/commit/895b850b61c1ca7e86c93a8d4c3061217e21d7da",
+                    "message": "feat: [PIE-5210] policy step tc",
+                    "ownerName": "ishantmehtaharness",
+                    "ownerId": "ishantmehtaharness",
+                    "ownerEmail": "ishant@harness.io",
+                    "timeStamp": 1662463613000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "30083f86f35be93f6e7a334cecefa09dbf14d24e",
+                    "link": "https://github.com/harness/harness-core-ui/commit/30083f86f35be93f6e7a334cecefa09dbf14d24e",
+                    "message": "feat: [CDS-42725]: allowed values support for service now update and cfdelete stack (#11040)\n\n* feat: [CDS-42725]: allowed values support\r\n\r\n* feat: [CDS-42725]: allowed values support\r\n\r\n* feat: [CDS-42725]: allowed values support\r\n\r\n* feat: [CDS-42725]: allowed values support\r\n\r\n* feat: [CDS-42725]: allowed values support\r\n\r\n* feat: [CDS-42725]: allowed values support\r\n\r\n* feat: [CDS-42725]: allowed values support",
+                    "ownerName": "dhruv upadhyay",
+                    "ownerId": "dhruvUpadhyay07",
+                    "ownerEmail": "dhruv.upadhyay@harness.io",
+                    "timeStamp": 1662460721000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "b28b4341ab57eeee4ecab44fd843ac29d666026b",
+                    "link": "https://github.com/harness/harness-core-ui/commit/b28b4341ab57eeee4ecab44fd843ac29d666026b",
+                    "message": "feat: [PIE-5210]: Changes for PolicyStep",
+                    "ownerName": "pankajsingh-harness",
+                    "ownerId": "pankajsingh-harness",
+                    "ownerEmail": "pankaj.singh@harness.io",
+                    "timeStamp": 1662458918000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "97f6cd8308fdd8d0855b3609e9d052a9243da290",
+                    "link": "https://github.com/harness/harness-core-ui/commit/97f6cd8308fdd8d0855b3609e9d052a9243da290",
+                    "message": "feat: [PIE-5210] Barrier step",
+                    "ownerName": "ishantmehtaharness",
+                    "ownerId": "ishantmehtaharness",
+                    "ownerEmail": "ishant@harness.io",
+                    "timeStamp": 1662455027000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "53c7ec91c38efb6847d15b02df7fc42a702dc91e",
+                    "link": "https://github.com/harness/harness-core-ui/commit/53c7ec91c38efb6847d15b02df7fc42a702dc91e",
+                    "message": "feat: [PIE-5210]: fix eslint",
+                    "ownerName": "ishantmehtaharness",
+                    "ownerId": "ishantmehtaharness",
+                    "ownerEmail": "ishant@harness.io",
+                    "timeStamp": 1662453465000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "e5e07d9bd97d7776bf0314bdd6c0b5650601b884",
+                    "link": "https://github.com/harness/harness-core-ui/commit/e5e07d9bd97d7776bf0314bdd6c0b5650601b884",
+                    "message": "feat: [CDS-42792]: add allowed values support to ShellScript step's fields (#11041)\n\n* feat: support allowed values in ShellScript step for Timeout other text fields\r\n\r\n* fix: eslint issue",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662452527000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "c5729ad80cf2806b84ec4b219dc3354c35604e3b",
+                    "link": "https://github.com/harness/harness-core-ui/commit/c5729ad80cf2806b84ec4b219dc3354c35604e3b",
+                    "message": "fix: [PIE-5210]: Changes for AzureTrafficShift, HelmDeploy, K8sCanaryDeployStep (#11042)",
+                    "ownerName": "Yogesh Chaudhary",
+                    "ownerId": "yc147",
+                    "ownerEmail": "81607640+yc147@users.noreply.github.com",
+                    "timeStamp": 1662449799000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "a03ba2d5622762280ead5d120d136ece94fa87a6",
+                    "link": "https://github.com/harness/harness-core-ui/commit/a03ba2d5622762280ead5d120d136ece94fa87a6",
+                    "message": "fix: [PIE-5210]: Allowed values support for K8sDelete and TeraformPlan step",
+                    "ownerName": "Kapil Kumawat",
+                    "ownerId": "kapilkumawat86",
+                    "ownerEmail": "kapil.kumawat@harness.io",
+                    "timeStamp": 1662449354000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "d995358d1c316bed4db0e2aebea223951b16023e",
+                    "link": "https://github.com/harness/harness-core-ui/commit/d995358d1c316bed4db0e2aebea223951b16023e",
+                    "message": "fix: [PIE-5210]: Allowed values support for create PR step (#11033)",
+                    "ownerName": "Samarth Sharma",
+                    "ownerId": "samarth-sharma31",
+                    "ownerEmail": "96409598+samarth-sharma31@users.noreply.github.com",
+                    "timeStamp": 1662449194000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "ffc6f28ac0bacc01d33c56c58cb27ba853f42f69",
+                    "link": "https://github.com/harness/harness-core-ui/commit/ffc6f28ac0bacc01d33c56c58cb27ba853f42f69",
+                    "message": "fix: [PIE-5210]: allowed values support for http step's timeout and url field (#11032)",
+                    "ownerName": "Samarth Sharma",
+                    "ownerId": "samarth-sharma31",
+                    "ownerEmail": "96409598+samarth-sharma31@users.noreply.github.com",
+                    "timeStamp": 1662449183000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "7043c45e9d31817f3ac0195a40ae572a70429f75",
+                    "link": "https://github.com/harness/harness-core-ui/commit/7043c45e9d31817f3ac0195a40ae572a70429f75",
+                    "message": "feat: [PIE-5210]: Allowed values for azureblueprint (#11034)\n\n* feat: [PIE-5210]: Allowed values for azureblueprint\r\n\r\n* feat: [PIE-5210]: template paths allowedvalues in azureblueprint",
+                    "ownerName": "Sonali Goyal",
+                    "ownerId": "sonaligoyal-harness",
+                    "ownerEmail": "sonali.goyal@harness.io",
+                    "timeStamp": 1662449136000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "e6c70681f22f46b154cebc04f978ca0089dfa4e8",
+                    "link": "https://github.com/harness/harness-core-ui/commit/e6c70681f22f46b154cebc04f978ca0089dfa4e8",
+                    "message": "feat: [PIE-5210]: allowed values for K8sRollingRollback and AzureWebAppInput step (#11014)",
+                    "ownerName": "Sonali Goyal",
+                    "ownerId": "sonaligoyal-harness",
+                    "ownerEmail": "sonali.goyal@harness.io",
+                    "timeStamp": 1662449078000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "c36262eb7642196e89bf6642dfd253a79fbe9219",
+                    "link": "https://github.com/harness/harness-core-ui/commit/c36262eb7642196e89bf6642dfd253a79fbe9219",
+                    "message": "fix: allowed values for azure slot deployment and k8s blue green (#11030)",
+                    "ownerName": "vikrant-harness",
+                    "ownerId": "vikrant-harness",
+                    "ownerEmail": "106532291+vikrant-harness@users.noreply.github.com",
+                    "timeStamp": 1662449003000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "df8dd89ef7a55e6b28dc8cee641d629ae947568b",
+                    "link": "https://github.com/harness/harness-core-ui/commit/df8dd89ef7a55e6b28dc8cee641d629ae947568b",
+                    "message": "feat: [PIE-5210]: Changes for KubernetesInfraSpec",
+                    "ownerName": "pankajsingh-harness",
+                    "ownerId": "pankajsingh-harness",
+                    "ownerEmail": "pankaj.singh@harness.io",
+                    "timeStamp": 1662444314000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "f3c38a6d077438adbb710967ea533f85ba366a6e",
+                    "link": "https://github.com/harness/harness-core-ui/commit/f3c38a6d077438adbb710967ea533f85ba366a6e",
+                    "message": "fix: Merge branch 'develop' of github.com:harness/harness-core-ui into allowedValues_support",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662439765000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "06bc192090da9612a9142836a9efdab7e3ce04db",
+                    "link": "https://github.com/harness/harness-core-ui/commit/06bc192090da9612a9142836a9efdab7e3ce04db",
+                    "message": "feat: [PIE-5210]: Changes for HarnessApproval",
+                    "ownerName": "pankajsingh-harness",
+                    "ownerId": "pankajsingh-harness",
+                    "ownerEmail": "pankaj.singh@harness.io",
+                    "timeStamp": 1662387740000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "3d74968a236c2646f7b634aecf0977febd940843",
+                    "link": "https://github.com/harness/harness-core-ui/commit/3d74968a236c2646f7b634aecf0977febd940843",
+                    "message": "feat: [PIE-5210]: allowed values for k8s apply step (#11019)",
+                    "ownerName": "AshwinBhatkal-Harness",
+                    "ownerId": "AshwinBhatkal-Harness",
+                    "ownerEmail": "96711906+AshwinBhatkal-Harness@users.noreply.github.com",
+                    "timeStamp": 1662375343000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "ea9bace9b795dea0a4818e7ae6cc0ea8d1718bf9",
+                    "link": "https://github.com/harness/harness-core-ui/commit/ea9bace9b795dea0a4818e7ae6cc0ea8d1718bf9",
+                    "message": "feat: [PIE-5216]: Add allowed values support to JiraApproval, GcpInfrastructureSpec and ServerlessLambdaDeployStep (#11018)\n\n* feat: [PIE-5216]: Add classname prop, allowed values support for timeout field\r\n\r\n* feat: [PIE-5216]: Add allowed values support for issue key field\r\n\r\n* feat: [PIE-5216]: allowed values support for GcpInfrastructureSpec\r\n\r\n* feat: [PIE-5216]: Add allowed values changes for ServerlessLambdaDeploy step\r\n\r\n* feat: [PIE-5216]: pass placeholder prop\r\n\r\n* remove duplicate prop",
+                    "ownerName": "Ramesh Reddy",
+                    "ownerId": "rameshx",
+                    "ownerEmail": "ramesh.reddy@harness.io",
+                    "timeStamp": 1662374651000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "7c3c901e47e40b8bd999aef34c25c17c0354b891",
+                    "link": "https://github.com/harness/harness-core-ui/commit/7c3c901e47e40b8bd999aef34c25c17c0354b891",
+                    "message": "feat: [PIE-5119]: fix eslint",
+                    "ownerName": "ishantmehtaharness",
+                    "ownerId": "ishantmehtaharness",
+                    "ownerEmail": "ishant@harness.io",
+                    "timeStamp": 1662372541000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "d5736d88f5ec27077bff8fbcd0905b020173fdfa",
+                    "link": "https://github.com/harness/harness-core-ui/commit/d5736d88f5ec27077bff8fbcd0905b020173fdfa",
+                    "message": "feat: [PIE-5210]: allowed values for queue step (#11013)\n\n* feat: [PIE-5210]: allowed values for queue step\r\n\r\n* fix: placeholder for text field",
+                    "ownerName": "AshwinBhatkal-Harness",
+                    "ownerId": "AshwinBhatkal-Harness",
+                    "ownerEmail": "96711906+AshwinBhatkal-Harness@users.noreply.github.com",
+                    "timeStamp": 1662371830000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "18a4f2ebc8612f7b79ff96595ec74281b7e0a707",
+                    "link": "https://github.com/harness/harness-core-ui/commit/18a4f2ebc8612f7b79ff96595ec74281b7e0a707",
+                    "message": "feat: [PIE-5210]: Changes for TF Delete step",
+                    "ownerName": "ishantmehtaharness",
+                    "ownerId": "ishantmehtaharness",
+                    "ownerEmail": "ishant@harness.io",
+                    "timeStamp": 1662371086000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "118e0fc878d7b2c571ac4c793e8674a41b0cc5a3",
+                    "link": "https://github.com/harness/harness-core-ui/commit/118e0fc878d7b2c571ac4c793e8674a41b0cc5a3",
+                    "message": "feat: [PIE-5210]: Changes for K8sCanaryDeleteStep",
+                    "ownerName": "ishantmehtaharness",
+                    "ownerId": "ishantmehtaharness",
+                    "ownerEmail": "ishant@harness.io",
+                    "timeStamp": 1662366833000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "b67705917ef9cf1eaa6274971e835ae55ada8b8c",
+                    "link": "https://github.com/harness/harness-core-ui/commit/b67705917ef9cf1eaa6274971e835ae55ada8b8c",
+                    "message": "feat: [PIE-5210]: add support of onInputChange to allowed values - make controlled component",
+                    "ownerName": "ishantmehtaharness",
+                    "ownerId": "ishantmehtaharness",
+                    "ownerEmail": "ishant@harness.io",
+                    "timeStamp": 1662305367000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "3408a024d789b1532261a4f95ab89abb9cdd13bf",
+                    "link": "https://github.com/harness/harness-core-ui/commit/3408a024d789b1532261a4f95ab89abb9cdd13bf",
+                    "message": "fix: merge issue resolved",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662201414000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "6de8d4e617385f31d4c205b1ad08759e46f5d5ab",
+                    "link": "https://github.com/harness/harness-core-ui/commit/6de8d4e617385f31d4c205b1ad08759e46f5d5ab",
+                    "message": "fix: Merge branch 'allowedValues_support' of github.com:harness/harness-core-ui into allowedValues_support",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662199862000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "b7e3061b3015dbb0a1a293699ec1ea716d36014f",
+                    "link": "https://github.com/harness/harness-core-ui/commit/b7e3061b3015dbb0a1a293699ec1ea716d36014f",
+                    "message": "fix: Merge branch 'develop' of github.com:harness/harness-core-ui into allowedValues_support",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662199833000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "25535ab251c4ac073cef854dfa0b281755c1a530",
+                    "link": "https://github.com/harness/harness-core-ui/commit/25535ab251c4ac073cef854dfa0b281755c1a530",
+                    "message": "fix: Merge branch 'develop' of https://github.com/harness/harness-core-ui into allowedValues_support",
+                    "ownerName": "ishantmehtaharness",
+                    "ownerId": "ishantmehtaharness",
+                    "ownerEmail": "ishant@harness.io",
+                    "timeStamp": 1662110042000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "bead29fdca712f3df21a25d2943b050a3ac755fb",
+                    "link": "https://github.com/harness/harness-core-ui/commit/bead29fdca712f3df21a25d2943b050a3ac755fb",
+                    "message": "refactor: [CDS-42583]: use new component MultiSelectInputSetView (#10936)\n\n* chore: use new component MultiSelectInputSetView in ssh aws infra input set view\r\n* fix: test cases by passing className prop to child component",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662033489000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "3fd82002998fc672ca30a8fb2631a63f32b800bd",
+                    "link": "https://github.com/harness/harness-core-ui/commit/3fd82002998fc672ca30a8fb2631a63f32b800bd",
+                    "message": "fix: existing code label and useValue fixed",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662024323000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "1b70b16802f435e0c900195c9b635f2f1520d722",
+                    "link": "https://github.com/harness/harness-core-ui/commit/1b70b16802f435e0c900195c9b635f2f1520d722",
+                    "message": "fix: Merge branch 'allowedValues_support' of github.com:harness/harness-core-ui into allowedValues_support",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662024121000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "af647c24cde313ea89aa01ae6d4f5f554c09f5b6",
+                    "link": "https://github.com/harness/harness-core-ui/commit/af647c24cde313ea89aa01ae6d4f5f554c09f5b6",
+                    "message": "fix: Merge branch 'develop' of github.com:harness/harness-core-ui into allowedValues_support",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662024074000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "ad579638329d02f75d8f77af2c8fbb1a007526c8",
+                    "link": "https://github.com/harness/harness-core-ui/commit/ad579638329d02f75d8f77af2c8fbb1a007526c8",
+                    "message": "feat: update user group input in Harness Approval step to support allowed values",
+                    "ownerName": "Ramesh Reddy",
+                    "ownerId": "rameshx",
+                    "ownerEmail": "ramesh.reddy@harness.io",
+                    "timeStamp": 1662010450000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "6efcc2e0ed77ae6f271954cfe9f4d1cb643aa438",
+                    "link": "https://github.com/harness/harness-core-ui/commit/6efcc2e0ed77ae6f271954cfe9f4d1cb643aa438",
+                    "message": "fix: rename props in TextFieldInputSetView so that no prop changes required while consuming component",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662009288000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "e02e40d5c500701611f59f12754a506bc22e76af",
+                    "link": "https://github.com/harness/harness-core-ui/commit/e02e40d5c500701611f59f12754a506bc22e76af",
+                    "message": "fix: rename fieldLabel, fieldPlaceholder and fieldName to standard ones so that no prop changes are required while consuming components",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1662008209000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "d1bc9ed97fabce2c352d9db6e068e3b70fbefc9f",
+                    "link": "https://github.com/harness/harness-core-ui/commit/d1bc9ed97fabce2c352d9db6e068e3b70fbefc9f",
+                    "message": "feat: add support for Allowed Values in HTTP step",
+                    "ownerName": "ishantmehtaharness",
+                    "ownerId": "ishantmehtaharness",
+                    "ownerEmail": "ishant@harness.io",
+                    "timeStamp": 1661937317000
+                  },
+                  {
+                    "__recast": "io.harness.ci.pipeline.executions.beans.CIBuildCommit",
+                    "id": "7f1b162a7d4b26a7277996feeb27b7de396889e1",
+                    "link": "https://github.com/harness/harness-core-ui/commit/7f1b162a7d4b26a7277996feeb27b7de396889e1",
+                    "message": "fix: support select component in configure options and runtime view when allowed values are configured",
+                    "ownerName": "Chetan Vekariya",
+                    "ownerId": "chetanvekariya-harness",
+                    "ownerEmail": "chetan.vekariya@harness.io",
+                    "timeStamp": 1661928708000
+                  }
+                ]
+              }
+            },
+            "imageDetailsList": [
+              {
+                "__recast": "io.harness.ci.pipeline.executions.beans.CIImageDetails",
+                "imageName": "harness/drone-git",
+                "imageTag": "1.2.3-rootless"
+              },
+              {
+                "__recast": "io.harness.ci.pipeline.executions.beans.CIImageDetails",
+                "imageName": "sonarsource/sonar-scanner-cli",
+                "imageTag": ""
+              }
+            ],
+            "infraDetailsList": [
+              {
+                "__recast": "io.harness.ci.pipeline.executions.beans.CIInfraDetails",
+                "infraType": "KubernetesDirect",
+                "infraOSType": "Linux",
+                "infraHostType": "Self Hosted"
+              }
+            ],
+            "isPrivateRepo": false,
+            "prNumber": "11105",
+            "repoName": "harness-core-ui",
+            "scmDetailsList": [
+              {
+                "__recast": "io.harness.ci.pipeline.executions.beans.CIScmDetails",
+                "scmUrl": "https://github.com/harness/harness-core-ui.git",
+                "scmProvider": "Github",
+                "scmAuthType": "Http",
+                "scmHostType": "SaaS"
+              }
+            ],
+            "tiBuildDetailsList": [],
+            "triggerRepoName": "harness-core-ui",
+            "buildType": "PR"
+          }
+        },
+        "layoutNodeMap": {
+          "ZEuML1_UTVO2fLF9aFPCqg": {
+            "nodeType": "CI",
+            "nodeGroup": "STAGE",
+            "nodeIdentifier": "Sonar",
+            "name": "Sonar",
+            "nodeUuid": "ZEuML1_UTVO2fLF9aFPCqg",
+            "status": "Success",
+            "module": "ci",
+            "moduleInfo": {
+              "ci": {
+                "__recast": "io.harness.ci.plan.creator.execution.CIStageModuleInfo"
+              }
+            },
+            "startTs": 1662607576924,
+            "endTs": 1662607804865,
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            },
+            "nodeRunInfo": {
+              "whenCondition": "<+OnPipelineSuccess>",
+              "evaluatedCondition": true,
+              "expressions": [
+                {
+                  "expression": "OnPipelineSuccess",
+                  "expressionValue": "true",
+                  "count": 1
+                }
+              ]
+            },
+            "failureInfo": {
+              "message": ""
+            },
+            "failureInfoDTO": {
+              "message": "",
+              "failureTypeList": [],
+              "responseMessages": []
+            },
+            "nodeExecutionId": "cKRxaKo9RUaLITQR52_8fQ",
+            "executionInputConfigured": false
+          }
+        },
+        "modules": ["ci"],
+        "startingNodeId": "ZEuML1_UTVO2fLF9aFPCqg",
+        "startTs": 1662607576731,
+        "endTs": 1662607804949,
+        "createdAt": 1662607576765,
+        "canRetry": true,
+        "showRetryHistory": false,
+        "runSequence": 6,
+        "successfulStagesCount": 1,
+        "runningStagesCount": 0,
+        "failedStagesCount": 0,
+        "totalStagesCount": 1,
+        "executionInputConfigured": false,
+        "allowStageExecutions": false,
+        "stagesExecution": false
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "sorted": true,
+        "unsorted": false,
+        "empty": false
+      },
+      "pageNumber": 0,
+      "pageSize": 20,
+      "offset": 0,
+      "paged": true,
+      "unpaged": false
+    },
+    "last": true,
+    "totalPages": 1,
+    "totalElements": 6,
+    "first": true,
+    "number": 0,
+    "sort": {
+      "sorted": true,
+      "unsorted": false,
+      "empty": false
+    },
+    "numberOfElements": 6,
+    "size": 20,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "0966b802-1e13-4d7c-b677-c9969a3c4500"
+}

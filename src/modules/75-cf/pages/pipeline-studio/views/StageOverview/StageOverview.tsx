@@ -15,8 +15,8 @@ import { NameIdDescription } from '@common/components/NameIdDescriptionTags/Name
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import type { StageElementConfig } from 'services/cd-ng'
+import { getNameAndIdentifierSchema } from '@cf/utils/stageValidationSchema'
 
 export default function StageOverview(_props: React.PropsWithChildren<unknown>): JSX.Element {
   const {
@@ -24,6 +24,7 @@ export default function StageOverview(_props: React.PropsWithChildren<unknown>):
       pipeline: { stages = [] },
       selectionState: { selectedStageId }
     },
+    contextType,
     isReadonly,
     updateStage,
     getStageFromPipeline
@@ -45,28 +46,19 @@ export default function StageOverview(_props: React.PropsWithChildren<unknown>):
       <Heading color={Color.BLACK} level={3} style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px' }}>
         {getString('stageOverview')}
       </Heading>
-      <Container id="stageOverview">
+      <Container data-testid="stageOverview" id="stageOverview">
         <Formik
           enableReinitialize
           initialValues={{
-            identifier: cloneOriginalData?.stage!.identifier,
-            name: cloneOriginalData?.stage!.name,
-            description: cloneOriginalData?.stage!.description,
-            tags: cloneOriginalData?.stage!.tags || {}
+            identifier: cloneOriginalData?.stage?.identifier,
+            name: cloneOriginalData?.stage?.name,
+            description: cloneOriginalData?.stage?.description,
+            tags: cloneOriginalData?.stage?.tags || {}
           }}
-          validationSchema={{
-            name: Yup.string().trim().required(getString('approvalStage.stageNameRequired')),
-            identifier: Yup.string().when('name', {
-              is: val => val?.length,
-              then: Yup.string()
-                .required(getString('validation.identifierRequired'))
-                .matches(regexIdentifier, getString('validation.validIdRegex'))
-                .notOneOf(illegalIdentifiers)
-            })
-          }}
+          validationSchema={Yup.object().shape(getNameAndIdentifierSchema(getString, contextType))}
           validate={values => {
             const errors: { name?: string } = {}
-            if (isDuplicateStageId(values.identifier!, stages)) {
+            if (values.identifier && isDuplicateStageId(values.identifier, stages)) {
               errors.name = getString('validation.identifierDuplicate')
             }
             if (cloneOriginalData) {
@@ -93,6 +85,7 @@ export default function StageOverview(_props: React.PropsWithChildren<unknown>):
           {formikProps => (
             <FormikForm>
               <Container
+                data-testid="stageOverviewPanel"
                 margin={{ top: 'large' }}
                 padding="large"
                 style={{

@@ -16,7 +16,8 @@ import {
   Text,
   StepProps,
   Accordion,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { Form } from 'formik'
@@ -38,7 +39,7 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import templateCss from './OSTemplateWithGit.module.scss'
@@ -46,7 +47,7 @@ import templateCss from './OSTemplateWithGit.module.scss'
 interface OpenshiftTemplateWithGITPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -80,7 +81,7 @@ function OpenShiftTemplateWithGit({
         : prevStepData?.url
       : null
 
-  const getInitialValues = React.useCallback((): OpenShiftTemplateGITDataType => {
+  const getInitialValues = (): OpenShiftTemplateGITDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -109,7 +110,7 @@ function OpenShiftTemplateWithGit({
       skipResourceVersioning: false,
       repoName: getRepositoryName(prevStepData, initialValues)
     }
-  }, [])
+  }
 
   const submitFormData = (formData: OpenShiftTemplateGITDataType & { store?: string; connectorRef?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
@@ -314,7 +315,12 @@ function OpenShiftTemplateWithGit({
                   )}
                 </div>
               </Layout.Horizontal>
-              <div className={templateCss.halfWidth}>
+              <div
+                className={cx({
+                  [templateCss.runtimeInput]:
+                    getMultiTypeFromValue(formik.values?.paramsPaths) === MultiTypeInputType.RUNTIME
+                })}
+              >
                 <DragnDropPaths
                   formik={formik}
                   expressions={expressions}
@@ -322,7 +328,21 @@ function OpenShiftTemplateWithGit({
                   fieldPath="paramsPaths"
                   pathLabel={getString('pipeline.manifestType.paramsYamlPath')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                  dragDropFieldWidth={filePathWidth}
                 />
+                {getMultiTypeFromValue(formik.values.paramsPaths) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={formik.values.paramsPaths}
+                    type={getString('string')}
+                    variableName={'paramsPaths'}
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    onChange={val => formik?.setFieldValue('paramsPaths', val)}
+                    isReadonly={isReadonly}
+                  />
+                )}
               </div>
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}

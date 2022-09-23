@@ -219,7 +219,7 @@ exports[`smtp details render smtp details 1`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-size-small"
           >
-            pipelineSteps.hostLabel
+            common.hostLabel
           </p>
           <div
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
@@ -284,7 +284,7 @@ exports[`smtp details render smtp details 1`] = `
                 <span
                   class="bp3-control-indicator"
                 />
-                common.smtp.startTSL
+                common.smtp.startTLS
               </label>
             </span>
           </div>

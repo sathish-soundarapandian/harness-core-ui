@@ -179,26 +179,12 @@ describe('ConfigureNotifications', () => {
         fieldId: 'to',
         type: InputTypes.TEXTAREA,
         value: 'test@harness.io'
-      },
-      {
-        container,
-        fieldId: 'subject',
-        type: InputTypes.TEXTAREA,
-        value: 'test subject'
-      },
-      {
-        container,
-        fieldId: 'body',
-        type: InputTypes.TEXTAREA,
-        value: 'test body'
       }
     ])
 
     fireEvent.click(getByText('notifications.buttonSend'))
     await waitFor(() =>
       expect(handleTest).toHaveBeenCalledWith({
-        body: 'test body',
-        subject: 'test subject',
         to: 'test@harness.io'
       })
     )

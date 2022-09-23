@@ -11,25 +11,25 @@ import { PipelineStages, PipelineStagesProps } from '@pipeline/components/Pipeli
 import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
 import { StageType } from '@pipeline/utils/stageHelpers'
 
-export const getCIPipelineStages: (
-  args: Omit<PipelineStagesProps, 'children'>,
-  getString: UseStringsReturn['getString'],
-  isCIEnabled?: boolean,
-  isCDEnabled?: boolean,
-  isCFEnabled?: boolean,
-  isSTOEnabled?: boolean,
-  isApprovalStageEnabled?: boolean,
-  isCustomStageEnabled?: boolean
-) => React.ReactElement<PipelineStagesProps> = (
+interface GetCIPipelineStagesArgs {
+  args: Omit<PipelineStagesProps, 'children'>
+  getString: UseStringsReturn['getString']
+  isCIEnabled?: boolean
+  isCDEnabled?: boolean
+  isCFEnabled?: boolean
+  isSTOEnabled?: boolean
+  isApprovalStageEnabled?: boolean
+}
+
+export const getCIPipelineStages: (args: GetCIPipelineStagesArgs) => React.ReactElement<PipelineStagesProps> = ({
   args,
   getString,
   isCIEnabled = false,
   isCDEnabled = false,
   isCFEnabled = false,
   isSTOEnabled = false,
-  isApprovalStageEnabled = false,
-  isCustomStageEnabled = false
-) => {
+  isApprovalStageEnabled = false
+}) => {
   return (
     <PipelineStages {...args}>
       {stagesCollection.getStage(StageType.BUILD, isCIEnabled, getString)}
@@ -38,7 +38,7 @@ export const getCIPipelineStages: (
       {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}
       {stagesCollection.getStage(StageType.SECURITY, isSTOEnabled, getString)}
       {stagesCollection.getStage(StageType.PIPELINE, false, getString)}
-      {stagesCollection.getStage(StageType.CUSTOM, isCustomStageEnabled, getString)}
+      {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
       {stagesCollection.getStage(StageType.Template, false, getString)}
     </PipelineStages>
   )

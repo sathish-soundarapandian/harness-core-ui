@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import { getPipelineStagesMap } from '@pipeline/utils/executionUtils'
 import ExecutionContext from '@pipeline/context/ExecutionContext'
@@ -15,7 +15,8 @@ import ExecutionLogView from '../ExecutionLogView'
 import mock from '../../ExecutionGraphView/__tests__/mock.json'
 
 jest.mock('@pipeline/components/PipelineSteps/PipelineStepFactory', () => ({
-  getStepIcon: jest.fn()
+  getStepIcon: jest.fn(),
+  registerStep: jest.fn()
 }))
 
 const contextValue: ExecutionContextParams = {
@@ -26,6 +27,7 @@ const contextValue: ExecutionContextParams = {
     mock.data.pipelineExecutionSummary.startingNodeId
   ),
   selectedStageId: 'google_1',
+  selectedStageExecutionId: '',
   selectedStepId: '',
   queryParams: {},
   loading: false,
@@ -34,7 +36,8 @@ const contextValue: ExecutionContextParams = {
   setLogsToken: jest.fn(),
   addNewNodeToMap: jest.fn(),
   setSelectedStepId: jest.fn(),
-  setSelectedStageId: jest.fn()
+  setSelectedStageId: jest.fn(),
+  setSelectedStageExecutionId: jest.fn()
 }
 
 const fetchMock = jest.spyOn(global, 'fetch' as any)
@@ -45,8 +48,8 @@ fetchMock.mockResolvedValue({
 })
 
 describe('<ExecutionLogView /> tests', () => {
-  test('snapshot test', () => {
-    const { container } = render(
+  test('snapshot test', async () => {
+    const { container, findByText } = render(
       <TestWrapper>
         <ExecutionContext.Provider value={contextValue}>
           <ExecutionLogView />
@@ -54,6 +57,9 @@ describe('<ExecutionLogView /> tests', () => {
         </ExecutionContext.Provider>
       </TestWrapper>
     )
+
+    await waitFor(() => findByText('RolloutSecond'))
+
     expect(container).toMatchSnapshot()
   })
 

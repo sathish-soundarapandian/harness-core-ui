@@ -42,7 +42,9 @@ rules:
   no-document-body-snapshot: 2
   aliased-module-imports: 2
   strings-restrict-modules: 2
+  no-only-tests: 'warn'
   duplicate-data-tooltip-id: 'warn'
+  no-direct-runtime-comparision: 2
   jest-no-mock:
     - 2
     - module:
@@ -104,6 +106,8 @@ rules:
         - '!microfrontends/ChildAppMounter'
       paths:
         - lodash
+        - name: 'js-yaml'
+          message: 'Please use methods from @common/utils/YamlHelperMethods instead of using js-yaml'
         - name: yaml
           importNames:
             - stringify

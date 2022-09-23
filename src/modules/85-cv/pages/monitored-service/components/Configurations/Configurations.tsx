@@ -8,7 +8,7 @@
 import React, { useEffect, useMemo, useState, useCallback, useRef } from 'react'
 import { Container, Tab, Tabs, PageError, Views } from '@wings-software/uicore'
 import { useHistory, useParams, matchPath } from 'react-router-dom'
-import { defaultTo, isEqual, omit } from 'lodash-es'
+import { clone, defaultTo, isEmpty, isEqual, omit } from 'lodash-es'
 import { parse } from 'yaml'
 import type { FormikProps } from 'formik'
 import { useQueryParams } from '@common/hooks'
@@ -28,10 +28,12 @@ import {
 } from 'services/cv'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { PageSpinner, useToaster, NavigationCheck } from '@common/components'
+import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import { SLODetailsPageTabIds } from '@cv/pages/slos/CVSLODetailsPage/CVSLODetailsPage.types'
 import Service, { ServiceWithRef } from './components/Service/Service'
@@ -58,8 +60,9 @@ export default function Configurations(
   const { showWarning, showError, showSuccess } = useToaster()
   const history = useHistory()
   const { isTemplate } = useMonitoredServiceContext()
-  const { orgIdentifier, projectIdentifier, accountId, identifier } = useParams<
-    ProjectPathProps & { identifier: string }
+  const { expressions } = useVariablesExpression()
+  const { orgIdentifier, projectIdentifier, accountId, identifier, templateIdentifier } = useParams<
+    ProjectPathProps & { identifier: string; templateIdentifier?: string }
   >()
   const { view, redirectToSLO, sloIdentifier, monitoredServiceIdentifier } = useQueryParams<{
     view?: Views.GRID
@@ -140,6 +143,22 @@ export default function Configurations(
     }
   }, [overrideBlockNavigation, redirectToSLO])
 
+  const [hasTemplateChangeSourceSet, sethasTemplateChangeSourceSet] = useState(false)
+  useEffect(() => {
+    const cloneTemplateValue = clone(templateValue)
+    if (
+      isTemplate &&
+      !hasTemplateChangeSourceSet &&
+      cloneTemplateValue?.name &&
+      cloneTemplateValue?.spec?.sources &&
+      isEmpty(cloneTemplateValue?.spec?.sources?.changeSources)
+    ) {
+      cloneTemplateValue.spec.sources['changeSources'] = defaultMonitoredService?.sources?.changeSources
+      updateTemplate?.(cloneTemplateValue?.spec as MonitoredServiceForm)
+      sethasTemplateChangeSourceSet(true)
+    }
+  }, [templateValue?.name, defaultMonitoredService])
+
   useEffect(() => {
     if (yamlMonitoredService && yamlMonitoredService?.resource) {
       // This only executed on creating new Monitored Service
@@ -150,6 +169,7 @@ export default function Configurations(
         changeSource['category'] = ChangeSourceCategoryName.DEPLOYMENT as ChangeSourceDTO['category']
         changeSource['spec'] = {}
       })
+
       setDefaultMonitoredService(prevService => {
         if (!prevService) {
           return monitoredService
@@ -169,7 +189,7 @@ export default function Configurations(
   useEffect(() => {
     if (identifier) {
       fetchMonitoredService()
-    } else {
+    } else if ((isTemplate && templateIdentifier === DefaultNewTemplateId) || (!isTemplate && !identifier)) {
       fetchMonitoredServiceYAML()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -178,11 +198,10 @@ export default function Configurations(
   const initialValues: MonitoredServiceForm = useMemo(
     () =>
       getInitFormData(
-        dataMonitoredServiceById?.data?.monitoredService,
         defaultMonitoredService,
-        !!identifier,
+        isTemplate ? templateIdentifier !== DefaultNewTemplateId : !!identifier,
         isTemplate,
-        templateValue
+        isTemplate ? templateValue : dataMonitoredServiceById?.data?.monitoredService
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
@@ -310,7 +329,7 @@ export default function Configurations(
 
   if (identifier && errorFetchMonitoredService) {
     return <PageError message={getErrorMessage(errorFetchMonitoredService)} onClick={() => fetchMonitoredService()} />
-  } else if (!identifier && errorFetchMonitoredService) {
+  } else if (!identifier && errorFetchMonitoredServiceYAML) {
     return (
       <PageError
         message={getErrorMessage(errorFetchMonitoredServiceYAML)}
@@ -356,6 +375,7 @@ export default function Configurations(
               setDBData={setDBData}
               onDiscard={onDiscard}
               isTemplate={isTemplate}
+              expressions={expressions}
               updateTemplate={updateTemplate}
               onChangeMonitoredServiceType={updatedDTO => {
                 setDefaultMonitoredService(omit(updatedDTO, ['isEdit']) as MonitoredServiceDTO)
@@ -372,20 +392,22 @@ export default function Configurations(
             />
           }
         />
-        <Tab
-          id={getString('pipelines-studio.dependenciesGroupTitle')}
-          title={getString('pipelines-studio.dependenciesGroupTitle')}
-          panel={
-            <Dependency
-              value={initialValues}
-              dependencyTabformRef={dependencyTabformRef}
-              onSuccess={async payload => onSuccess(payload, getString('pipelines-studio.dependenciesGroupTitle'))}
-              cachedInitialValues={cachedInitialValues}
-              setDBData={setDBData}
-              onDiscard={onDiscard}
-            />
-          }
-        />
+        {!isTemplate && (
+          <Tab
+            id={getString('pipelines-studio.dependenciesGroupTitle')}
+            title={getString('pipelines-studio.dependenciesGroupTitle')}
+            panel={
+              <Dependency
+                value={initialValues}
+                dependencyTabformRef={dependencyTabformRef}
+                onSuccess={async payload => onSuccess(payload, getString('pipelines-studio.dependenciesGroupTitle'))}
+                cachedInitialValues={cachedInitialValues}
+                setDBData={setDBData}
+                onDiscard={onDiscard}
+              />
+            }
+          />
+        )}
       </Tabs>
       {!isTemplate && (
         <NavigationCheck

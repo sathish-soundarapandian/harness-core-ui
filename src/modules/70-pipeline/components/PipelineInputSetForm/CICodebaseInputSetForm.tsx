@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useRef, Dispatch, SetStateAction, useMemo } from 'react'
+import React, { useState, useEffect, useRef, Dispatch, SetStateAction, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { get, isEmpty, isUndefined, set } from 'lodash-es'
+import { debounce, get, isEmpty, isUndefined, set, omit } from 'lodash-es'
 import {
   FormInput,
   MultiTypeInputType,
@@ -18,25 +18,50 @@ import {
   Icon,
   TextInput,
   RUNTIME_INPUT_VALUE,
-  SelectOption
+  SelectOption,
+  AllowedTypesWithRunTime,
+  MultiSelectOption,
+  getMultiTypeFromValue
 } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
 import { StringKeys, useStrings, UseStringsReturn } from 'framework/strings'
-import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import {
+  getIdentifierFromValue,
+  getScopeFromDTO,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { getReference, isMultiTypeRuntime } from '@common/utils/utils'
 import { Connectors } from '@connectors/constants'
+import { getCompleteConnectorUrl, GitAuthenticationProtocol } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConnectorInfoDTO, PipelineInfoConfig, useGetConnector } from 'services/cd-ng'
+import {
+  ConnectorInfoDTO,
+  getListOfBranchesByRefConnectorV2Promise,
+  ResponseGitBranchesResponseDTO,
+  useGetConnector
+} from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { ConnectorRefWidthKeys, getPrCloneStrategyOptions, sslVerifyOptions } from '@pipeline/utils/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
-import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { CodebaseTypes, getConnectorRefWidth, isRuntimeInput } from '@pipeline/utils/CIUtils'
+import {
+  CodebaseTypes,
+  getCodebaseRepoNameFromConnector,
+  getConnectorRefWidth,
+  GIT_EXTENSION,
+  isCodebaseFieldsRuntimeInputs,
+  isRuntimeInput
+} from '@pipeline/utils/CIUtils'
+import type { StageSelectionData } from '@pipeline/utils/runPipelineUtils'
+import { getSelectedStagesFromPipeline } from '../PipelineStudio/CommonUtils/CommonUtils'
 import { StepViewType } from '../AbstractSteps/Step'
 import css from './CICodebaseInputSetForm.module.scss'
+import pipelineInputSetCss from './PipelineInputSetForm.module.scss'
 export interface CICodebaseInputSetFormProps {
   path: string
   readonly?: boolean
@@ -45,17 +70,23 @@ export interface CICodebaseInputSetFormProps {
   originalPipeline: PipelineInfoConfig
   viewType: StepViewType
   viewTypeMetadata?: Record<string, boolean>
+  selectedStageData?: StageSelectionData | undefined
 }
 
-type CodeBaseType = 'branch' | 'tag' | 'PR'
+type AcceptableValue = boolean | string | number | SelectOption | string[] | MultiSelectOption[]
+
+const TriggerTypes = {
+  SCHEDULED: 'Scheduled'
+}
 
 export enum ConnectionType {
   Repo = 'Repo',
   Account = 'Account',
-  Region = 'Region' // awscodecommit
+  Region = 'Region', // awscodecommit
+  Project = 'Project' // Azure Repos
 }
 
-const inputNames = {
+export const buildTypeInputNames: Record<string, string> = {
   branch: 'branch',
   tag: 'tag',
   PR: 'number'
@@ -74,7 +105,7 @@ const placeholderValues = {
 }
 
 export interface ConnectorRefInterface {
-  record?: { spec?: { type?: string; url?: string; connectionType?: string } }
+  record?: ConnectorInfoDTO
 }
 
 const renderLabel = ({
@@ -103,26 +134,43 @@ export const handleCIConnectorRefOnChange = ({
   connectorRefType,
   setConnectionType,
   setConnectorUrl,
+  setConnectorType,
   setFieldValue,
   setIsConnectorExpression,
-  codeBaseInputFieldFormName
+  setGitAuthProtocol,
+  codeBaseInputFieldFormName,
+  viewType,
+  onConnectorChange
 }: {
   value: ConnectorRefInterface | undefined
   connectorRefType: MultiTypeInputType
   setConnectionType: Dispatch<SetStateAction<string>>
   setConnectorUrl: Dispatch<SetStateAction<string>>
+  setConnectorType?: Dispatch<SetStateAction<string>> // only used for Add CI Stage to render getCompleteConnectorUrl
   setFieldValue: (field: string, value: unknown) => void
+  setGitAuthProtocol?: React.Dispatch<React.SetStateAction<GitAuthenticationProtocol>>
   setIsConnectorExpression?: Dispatch<SetStateAction<boolean>> // used in inputset form
   codeBaseInputFieldFormName?: { [key: string]: string } // only used when setting nested values in input set
+  viewType?: StepViewType
+  onConnectorChange?: (value?: ConnectorInfoDTO) => void
 }): void => {
   const newConnectorRef = value as ConnectorRefInterface
+  onConnectorChange?.(value?.record)
+  setGitAuthProtocol?.(get(value, 'record.spec.authentication.type'))
+  if (viewType === StepViewType.DeploymentForm) {
+    setFieldValue(codeBaseInputFieldFormName?.branch || 'branch', '')
+  }
   if (connectorRefType === MultiTypeInputType.FIXED) {
     const connectionType = newConnectorRef?.record?.spec?.type
     if (connectionType === ConnectionType.Account) {
       setConnectionType(ConnectionType.Account)
       setConnectorUrl(newConnectorRef.record?.spec?.url || '')
       setFieldValue(codeBaseInputFieldFormName?.repoName || 'repoName', '')
-    } else if (connectionType === ConnectionType.Repo || connectionType === ConnectionType.Region) {
+      setConnectorType?.(newConnectorRef.record?.spec?.type || '')
+    } else if (
+      connectionType &&
+      [ConnectionType.Repo, ConnectionType.Region, ConnectionType.Project].includes(connectionType as ConnectionType)
+    ) {
       setConnectionType(connectionType)
       setConnectorUrl(newConnectorRef.record?.spec?.url || '')
       //  clear repoName from yaml so it is not required
@@ -144,10 +192,35 @@ export const handleCIConnectorRefOnChange = ({
 
     setFieldValue(
       codeBaseInputFieldFormName?.repoName || 'repoName',
-      connectorRefType === MultiTypeInputType.RUNTIME ? RUNTIME_INPUT_VALUE : ''
+      isMultiTypeRuntime(connectorRefType) ? RUNTIME_INPUT_VALUE : ''
     )
   }
 }
+export const getBuildTypeLabels = (getString: UseStringsReturn['getString']) => ({
+  branch: getString('gitBranch'),
+  tag: getString('gitTag'),
+  PR: getString('pipeline.gitPullRequest')
+})
+
+export const getBuildTypeInputLabels = (getString: UseStringsReturn['getString']) => ({
+  branch: getString('common.branchName'),
+  tag: getString('common.tagName'),
+  PR: getString('pipeline.ciCodebase.pullRequestNumber')
+})
+
+export const getCodebaseInputFieldName = (formattedPath: string) => ({
+  branch: `${formattedPath}properties.ci.codebase.build.spec.branch`,
+  tag: `${formattedPath}properties.ci.codebase.build.spec.tag`,
+  PR: `${formattedPath}properties.ci.codebase.build.spec.number`,
+  connectorRef: `${formattedPath}properties.ci.codebase.connectorRef`,
+  repoName: `${formattedPath}properties.ci.codebase.repoName`,
+  depth: `${formattedPath}properties.ci.codebase.depth`,
+  sslVerify: `${formattedPath}properties.ci.codebase.sslVerify`,
+  prCloneStrategy: `${formattedPath}properties.ci.codebase.prCloneStrategy`,
+  memoryLimit: `${formattedPath}properties.ci.codebase.resources.limits.memory`,
+  cpuLimit: `${formattedPath}properties.ci.codebase.resources.limits.cpu`
+})
+
 const getViewType = ({
   viewType,
   viewTypeMetadata
@@ -173,7 +246,8 @@ function CICodebaseInputSetFormInternal({
   template,
   originalPipeline,
   viewType,
-  viewTypeMetadata
+  viewTypeMetadata,
+  selectedStageData
 }: CICodebaseInputSetFormProps): JSX.Element {
   const { triggerIdentifier, accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
   const [isInputTouched, setIsInputTouched] = useState(false)
@@ -195,6 +269,7 @@ function CICodebaseInputSetFormInternal({
   const isMemoryLimitRuntimeInput = (template?.properties || templateInputsProperties)?.ci?.codebase?.resources?.limits
     ?.memory
   const isDeploymentForm = viewType === StepViewType.DeploymentForm
+  const isNotScheduledTrigger = formik?.values?.triggerType !== TriggerTypes.SCHEDULED
   const showSetContainerResources = isCpuLimitRuntimeInput || isMemoryLimitRuntimeInput
   const [isConnectorExpression, setIsConnectorExpression] = useState<boolean>(false)
   const containerWidth = viewTypeMetadata?.isTemplateDetailDrawer ? '100%' : '50%' // drawer view is much smaller 50% would cut out
@@ -212,40 +287,23 @@ function CICodebaseInputSetFormInternal({
   const buildSpecPath = `${formattedPath}properties.ci.codebase.build.spec`
   const codeBaseTypePath = `${formattedPath}properties.ci.codebase.build.type`
   const prCloneStrategyOptions = getPrCloneStrategyOptions(getString)
-  const [codeBaseType, setCodeBaseType] = useState<CodeBaseType | undefined>(get(formik?.values, codeBaseTypePath))
+  const [codeBaseType, setCodeBaseType] = useState<CodebaseTypes | undefined>(get(formik?.values, codeBaseTypePath))
+  const [gitAuthProtocol, setGitAuthProtocol] = useState<GitAuthenticationProtocol>(GitAuthenticationProtocol.HTTPS)
+  const { module } = useParams<Partial<PipelineType<PipelinePathProps>>>()
+  const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
+  const [isFetchingBranches, setIsFetchingBranches] = useState<boolean>(false)
+  const [isDefaultBranchSet, setIsDefaultBranchSet] = useState<boolean>(false)
+  const isTemplatePipeline = !!template?.template
+  const finalTemplate = isTemplatePipeline ? (template?.template?.templateInputs as PipelineInfoConfig) : template
 
-  const radioLabels = {
-    branch: getString('gitBranch'),
-    tag: getString('gitTag'),
-    PR: getString('pipeline.gitPullRequest')
-  }
+  const radioLabels = getBuildTypeLabels(getString)
   const codebaseTypeError = get(formik?.errors, codeBaseTypePath)
 
-  const inputLabels = {
-    branch: getString('common.branchName'),
-    tag: getString('common.tagName'),
-    PR: getString('pipeline.ciCodebase.pullRequestNumber')
-  }
-
-  const codeBaseInputFieldFormName = {
-    branch: `${formattedPath}properties.ci.codebase.build.spec.branch`,
-    tag: `${formattedPath}properties.ci.codebase.build.spec.tag`,
-    PR: `${formattedPath}properties.ci.codebase.build.spec.number`,
-    connectorRef: `${formattedPath}properties.ci.codebase.connectorRef`,
-    repoName: `${formattedPath}properties.ci.codebase.repoName`,
-    depth: `${formattedPath}properties.ci.codebase.depth`,
-    sslVerify: `${formattedPath}properties.ci.codebase.sslVerify`,
-    prCloneStrategy: `${formattedPath}properties.ci.codebase.prCloneStrategy`,
-    memoryLimit: `${formattedPath}properties.ci.codebase.resources.limits.memory`,
-    cpuLimit: `${formattedPath}properties.ci.codebase.resources.limits.cpu`
-  }
+  const inputLabels = getBuildTypeInputLabels(getString)
+  const codeBaseInputFieldFormName = getCodebaseInputFieldName(formattedPath)
 
   const showBuildAsDisabledTextField = useMemo(() => {
-    return (
-      (viewTypeMetadata?.isTemplateBuilder &&
-        get(formik?.values, codeBaseInputFieldFormName.connectorRef) === RUNTIME_INPUT_VALUE) ||
-      viewTypeMetadata?.isTemplateDetailDrawer
-    ) // should disable when template is applied to pipeline
+    return viewTypeMetadata?.isTemplateBuilder || viewTypeMetadata?.isTemplateDetailDrawer // should disable when template is applied to pipeline
   }, [viewTypeMetadata, formik?.values])
 
   useEffect(() => {
@@ -257,8 +315,105 @@ function CICodebaseInputSetFormInternal({
   useEffect(() => {
     if (get(formik?.values, buildPath) === RUNTIME_INPUT_VALUE) {
       setCodeBaseType(undefined)
+    } else if (viewType === StepViewType.DeploymentForm && !get(formik?.values, buildPath)) {
+      setCodeBaseType(CodebaseTypes.BRANCH)
     }
-  }, [get(formik?.values, buildPath)])
+  }, [get(formik?.values, buildPath), viewType])
+
+  const debouncedFetchBranchesForRepo = React.useCallback(
+    debounce((repoName?: AcceptableValue) => {
+      formik.setFieldValue(codeBaseInputFieldFormName.repoName, repoName)
+      if (viewType === StepViewType.DeploymentForm && codeBaseType === CodebaseTypes.BRANCH) {
+        formik?.setFieldValue(codeBaseInputFieldFormName.branch, '')
+        setIsDefaultBranchSet(false)
+        if (repoName) {
+          fetchBranchesForRepo(repoName as string)
+        }
+      }
+    }, 1000),
+    [viewType, codeBaseType, codebaseConnector]
+  )
+
+  // Cleanup debounce
+  useEffect(() => {
+    return () => {
+      debouncedFetchBranchesForRepo.flush()
+    }
+  }, [])
+
+  const shouldAllowRepoFetch = useMemo((): boolean => {
+    return (
+      viewType === StepViewType.DeploymentForm &&
+      codeBaseType === CodebaseTypes.BRANCH &&
+      !get(formik?.values, codeBaseInputFieldFormName.branch) &&
+      !isDefaultBranchSet &&
+      !isUndefined(codebaseConnector)
+    )
+  }, [
+    viewType,
+    codeBaseType,
+    get(formik?.values, codeBaseInputFieldFormName.branch),
+    isDefaultBranchSet,
+    codebaseConnector
+  ])
+
+  const fetchBranchesForRepo = useCallback(
+    (repoName: string) => {
+      if (shouldAllowRepoFetch) {
+        // Default branch needs to be set only if not specified by the user already for "branch" type build, only on Run Pipeline form
+        if (!get(codebaseConnector, 'spec.apiAccess')) {
+          return
+        }
+        const connectorReference =
+          get(originalPipeline, 'properties.ci.codebase.connectorRef', '') === RUNTIME_INPUT_VALUE
+            ? codebaseConnector && getReference(getScopeFromDTO(codebaseConnector), codebaseConnector.identifier)
+            : get(originalPipeline, 'properties.ci.codebase.connectorRef', '')
+
+        if (repoName) {
+          try {
+            setIsFetchingBranches(true)
+            getListOfBranchesByRefConnectorV2Promise({
+              queryParams: {
+                connectorRef: connectorReference,
+                accountIdentifier: accountId,
+                orgIdentifier,
+                projectIdentifier,
+                repoName: encodeURI(repoName.endsWith(GIT_EXTENSION) ? repoName.replace(/\.[^/.]+$/, '') : repoName),
+                size: 1
+              }
+            })
+              .then((result: ResponseGitBranchesResponseDTO) => {
+                setIsFetchingBranches(false)
+                formik.setFieldValue(codeBaseInputFieldFormName.branch, result.data?.defaultBranch?.name || '')
+                if (result.data?.defaultBranch?.name) {
+                  setIsDefaultBranchSet(true)
+                }
+              })
+              .catch(_e => {
+                setIsFetchingBranches(false)
+              })
+          } catch (e) {
+            setIsFetchingBranches(false)
+          }
+        }
+      }
+    },
+    [shouldAllowRepoFetch, originalPipeline]
+  )
+
+  useEffect(() => {
+    if (codebaseConnector) {
+      const codebaseConnectorConnectionType = get(codebaseConnector, 'spec.type')
+      if (codebaseConnectorConnectionType === ConnectionType.Repo) {
+        fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector, getString))
+      } else if (
+        codebaseConnectorConnectionType === ConnectionType.Account &&
+        get(originalPipeline, 'properties.ci.codebase.repoName', '') !== RUNTIME_INPUT_VALUE
+      ) {
+        fetchBranchesForRepo(get(originalPipeline, 'properties.ci.codebase.repoName', ''))
+      }
+    }
+  }, [codebaseConnector, originalPipeline])
 
   const codeBaseInputDefaultValue = {
     depth: 50,
@@ -296,6 +451,7 @@ function CICodebaseInputSetFormInternal({
 
   useEffect(() => {
     if (!loadingConnectorDetails && !isUndefined(connectorDetails)) {
+      setCodebaseConnector(connectorDetails?.data?.connector)
       setConnectorType(get(connectorDetails, 'data.connector.type', '') as ConnectorInfoDTO['type'])
     }
 
@@ -307,8 +463,9 @@ function CICodebaseInputSetFormInternal({
       )
       setConnectorUrl(connectorDetails?.data?.connector.spec.url)
       if (
-        connectorDetails?.data?.connector?.spec?.type === ConnectionType.Repo ||
-        connectorDetails?.data?.connector?.spec?.type === ConnectionType.Region
+        [ConnectionType.Project, ConnectionType.Repo, ConnectionType.Region].includes(
+          connectorDetails?.data?.connector?.spec?.type
+        )
       ) {
         formik.setFieldValue(codeBaseInputFieldFormName.repoName, undefined)
       }
@@ -316,7 +473,7 @@ function CICodebaseInputSetFormInternal({
   }, [loadingConnectorDetails, connectorDetails])
 
   useEffect(() => {
-    const type = get(formik?.values, codeBaseTypePath) as CodeBaseType
+    const type = get(formik?.values, codeBaseTypePath) as CodebaseTypes
     if (type) {
       setCodeBaseType(type)
     }
@@ -337,10 +494,43 @@ function CICodebaseInputSetFormInternal({
     }
   }, [formik?.values])
 
+  let filteredStages: StageElementWrapperConfig[] | undefined = originalPipeline?.stages
+  if (selectedStageData && !selectedStageData.allStagesSelected) {
+    filteredStages = getSelectedStagesFromPipeline(originalPipeline, selectedStageData)
+  }
+
+  const isCloneCodebaseEnabledAtLeastAtOneStage = filteredStages?.some(
+    stage =>
+      Object.is(get(stage, 'stage.spec.cloneCodebase'), true) ||
+      stage?.parallel?.some(parallelStage => Object.is(get(parallelStage, 'stage.spec.cloneCodebase'), true))
+  )
+
+  const codebaseHasRuntimeInputs = isCodebaseFieldsRuntimeInputs(template)
+
+  const pipelineHasCodebaseSection = useMemo((): boolean => {
+    return (
+      (isCloneCodebaseEnabledAtLeastAtOneStage || codebaseHasRuntimeInputs) &&
+      getMultiTypeFromValue(finalTemplate?.properties?.ci?.codebase?.build as unknown as string) ===
+        MultiTypeInputType.RUNTIME
+    )
+  }, [isCloneCodebaseEnabledAtLeastAtOneStage, codebaseHasRuntimeInputs, finalTemplate])
+
+  useEffect(() => {
+    const existingValues = { ...formik?.values }
+    if (!pipelineHasCodebaseSection && get(existingValues, 'properties.ci')) {
+      let updatedValues = omit(existingValues, 'properties.ci')
+      if (isEmpty(get(updatedValues, 'properties'))) {
+        updatedValues = omit(updatedValues, 'properties')
+      }
+      formik?.setValues(updatedValues)
+    }
+  }, [pipelineHasCodebaseSection, formik?.values])
+
   useEffect(() => {
     if (
-      (viewType === StepViewType.InputSet && formik?.values?.pipeline?.identifier) ||
-      (viewType === StepViewType.DeploymentForm && formik?.values?.identifier)
+      pipelineHasCodebaseSection &&
+      ((viewType === StepViewType.InputSet && formik?.values?.pipeline?.identifier) ||
+        (viewType === StepViewType.DeploymentForm && formik?.values?.identifier))
     ) {
       const newInitialValues = { ...formik.values }
       // TriggerForm does not instantiate each runtime input with empty string yet but we want default values there
@@ -366,35 +556,40 @@ function CICodebaseInputSetFormInternal({
       }
       formik?.setValues(newInitialValues)
     }
-  }, [formik?.values?.pipeline?.identifier, formik?.values?.identifier])
+  }, [pipelineHasCodebaseSection, formik?.values?.pipeline?.identifier, formik?.values?.identifier])
 
   useEffect(() => {
     // OnEdit Case, persists saved ciCodebase build spec
-    if (codeBaseType) {
+    if (pipelineHasCodebaseSection && codeBaseType) {
       savedValues.current = Object.assign(savedValues.current, {
         [codeBaseType]: get(
           formik?.values,
-          `${formattedPath}properties.ci.codebase.build.spec.${inputNames[codeBaseType]}`,
+          `${formattedPath}properties.ci.codebase.build.spec.${buildTypeInputNames[codeBaseType]}`,
           ''
         )
       })
-      formik?.setFieldValue(buildSpecPath, { [inputNames[codeBaseType]]: savedValues.current[codeBaseType] })
+      const existingValues = { ...formik?.values }
+      let updatedValues = set(existingValues, codeBaseTypePath, codeBaseType)
+      updatedValues = set(existingValues, buildSpecPath, {
+        [buildTypeInputNames[codeBaseType]]: savedValues.current[codeBaseType]
+      })
+      formik?.setValues(updatedValues)
     }
-  }, [codeBaseType])
+  }, [pipelineHasCodebaseSection, codeBaseType])
 
-  const handleTypeChange = (newType: CodeBaseType): void => {
+  const handleTypeChange = (newType: CodebaseTypes): void => {
     formik?.setFieldValue(`${formattedPath}properties.ci.codebase.build`, '')
     formik?.setFieldValue(codeBaseTypePath, newType)
-
-    if (!isInputTouched && triggerIdentifier) {
-      formik?.setFieldValue(buildSpecPath, { [inputNames[newType]]: defaultValues[newType] })
+    if (!isInputTouched && triggerIdentifier && isNotScheduledTrigger) {
+      formik?.setFieldValue(buildSpecPath, { [buildTypeInputNames[newType]]: defaultValues[newType] })
     } else {
-      formik?.setFieldValue(buildSpecPath, { [inputNames[newType]]: savedValues.current[newType] })
+      formik?.setFieldValue(buildSpecPath, { [buildTypeInputNames[newType]]: savedValues.current[newType] })
     }
   }
-  const renderCodeBaseTypeInput = (type: CodeBaseType): JSX.Element => {
+  const renderCodeBaseTypeInput = (type: CodebaseTypes): JSX.Element => {
+    const shouldDisableBranchTextInput = type === CodebaseTypes.BRANCH && isFetchingBranches
     return (
-      <Container>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }} spacing="medium">
         <FormInput.MultiTextInput
           label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{inputLabels[type]}</Text>}
           name={codeBaseInputFieldFormName[type]}
@@ -402,351 +597,410 @@ function CICodebaseInputSetFormInternal({
             expressions,
             allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
           }}
-          placeholder={triggerIdentifier ? placeholderValues[type] : ''}
-          disabled={readonly}
+          placeholder={triggerIdentifier && isNotScheduledTrigger ? placeholderValues[type] : ''}
+          disabled={readonly || shouldDisableBranchTextInput}
           onChange={() => setIsInputTouched(true)}
+          className={shouldDisableBranchTextInput ? css.width90 : css.width100}
         />
-      </Container>
+        {shouldDisableBranchTextInput ? <Icon name="steps-spinner" size={20} padding={{ top: 'xsmall' }} /> : null}
+      </Layout.Horizontal>
     )
   }
 
-  const AllowableTypesForCodebaseProperties = useMemo(() => {
+  const AllowableTypesForCodebaseProperties = useMemo((): AllowedTypesWithRunTime[] => {
     return viewTypeMetadata?.isTemplateBuilder || viewTypeMetadata?.isTemplateDetailDrawer
       ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED]
       : [MultiTypeInputType.FIXED]
   }, [viewTypeMetadata?.isTemplateBuilder])
 
-  return (
-    <Layout.Vertical spacing="small">
-      {loadingConnectorDetails ? (
-        <Container flex={{ justifyContent: 'center' }}>
-          <Icon name="steps-spinner" size={25} />
-        </Container>
-      ) : (
-        <>
-          {isConnectorRuntimeInput && (
-            <Container width={containerWidth}>
-              <FormMultiTypeConnectorField
-                name={codeBaseInputFieldFormName.connectorRef}
-                width={connectorWidth}
-                error={formik?.errors?.connectorRef}
-                type={[
-                  Connectors.GIT,
-                  Connectors.GITHUB,
-                  Connectors.GITLAB,
-                  Connectors.BITBUCKET,
-                  Connectors.AWS_CODECOMMIT
-                ]}
-                label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('connector')}</Text>}
-                placeholder={loadingConnectorDetails ? getString('loading') : getString('connectors.selectConnector')}
-                accountIdentifier={accountId}
-                projectIdentifier={projectIdentifier}
-                orgIdentifier={orgIdentifier}
-                gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-                setRefValue={true}
-                multiTypeProps={{
-                  expressions,
-                  disabled: readonly,
-                  allowableTypes: AllowableTypesForCodebaseProperties
-                }}
-                onChange={(value, _valueType, connectorRefType) =>
-                  handleCIConnectorRefOnChange({
-                    value: value as ConnectorRefInterface,
-                    connectorRefType,
-                    setConnectionType,
-                    setConnectorUrl,
-                    setFieldValue: formik?.setFieldValue as (field: string, value: any) => void,
-                    codeBaseInputFieldFormName,
-                    setIsConnectorExpression
-                  })
-                }
-              />
-            </Container>
+  const disableBuildRadioBtnSelection = useMemo(() => {
+    return readonly || (codeBaseType === CodebaseTypes.BRANCH && isFetchingBranches)
+  }, [readonly, codeBaseType, isFetchingBranches])
+
+  return pipelineHasCodebaseSection ? (
+    <>
+      <Layout.Horizontal spacing="small" padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}>
+        <Text
+          data-name="ci-codebase-title"
+          color={Color.BLACK_100}
+          font={{ weight: 'semi-bold' }}
+          tooltipProps={{
+            dataTooltipId: (() => {
+              switch (module) {
+                case 'ci':
+                  return 'ciCodebase'
+                default:
+                  return 'codebase'
+              }
+            })()
+          }}
+        >
+          {getString(
+            (() => {
+              switch (module) {
+                case 'ci':
+                  return 'ciCodebase'
+                default:
+                  return 'codebase'
+              }
+            })()
           )}
-          {isRepoNameRuntimeInput &&
-            (!isRuntimeInput(formik?.values.connectorRef) && connectionType === ConnectionType.Repo ? (
-              <Container width={containerWidth}>
-                <Text
-                  font={{ variation: FontVariation.FORM_LABEL }}
-                  margin={{ bottom: 'xsmall' }}
-                  tooltipProps={{ dataTooltipId: 'rightBarForm_repoName' }}
-                >
-                  {getString('common.repositoryName')}
-                </Text>
-                <TextInput
-                  name={codeBaseInputFieldFormName.repoName}
-                  value={connectorUrl}
-                  style={{ flexGrow: 1 }}
-                  disabled
-                />
-              </Container>
-            ) : (
-              <>
-                <Container width={containerWidth}>
-                  <MultiTypeTextField
-                    label={
-                      <Text
-                        className={css.inpLabel}
-                        font={{ variation: FontVariation.FORM_LABEL }}
-                        tooltipProps={{ dataTooltipId: 'rightBarForm_repoName' }}
-                      >
-                        {getString('common.repositoryName')}
-                      </Text>
-                    }
-                    name={codeBaseInputFieldFormName.repoName}
-                    multiTextInputProps={{
-                      multiTextInputProps: {
-                        expressions,
-                        allowableTypes: AllowableTypesForCodebaseProperties
-                      },
-                      disabled: readonly
-                    }}
-                  />
-                </Container>
-                {!isRuntimeInput(formik?.values.connectorRef) &&
-                !isRuntimeInput(formik?.values.repoName) &&
-                connectorUrl?.length > 0 ? (
-                  <div className={css.predefinedValue}>
-                    <Text lineClamp={1} width={connectorWidth ? connectorWidth : '460px'}>
-                      {(connectorUrl[connectorUrl.length - 1] === '/' ? connectorUrl : connectorUrl + '/') +
-                        get(formik?.values, codeBaseInputFieldFormName.repoName, '')}
-                    </Text>
-                  </div>
-                ) : null}
-              </>
-            ))}
-          {(!isConnectorRuntimeInput ||
-            (isConnectorRuntimeInput && get(formik?.values, codeBaseInputFieldFormName.connectorRef))) && (
-            <>
-              <Text
-                font={{ variation: FontVariation.FORM_LABEL }}
-                tooltipProps={{ dataTooltipId: 'ciCodebaseBuildType' }}
-              >
-                {getString('filters.executions.buildType')}
-              </Text>
-              {showBuildAsDisabledTextField ? (
-                <Container
-                  width={viewTypeMetadata?.isTemplateBuilder ? '361px' : containerWidth}
-                  className={css.bottomMargin3}
-                >
-                  <FormInput.MultiTextInput
-                    name={buildPath}
-                    label=""
-                    // value="<+input>"
-                    multiTextInputProps={{
-                      expressions,
-                      allowableTypes: [MultiTypeInputType.FIXED]
-                    }}
-                    disabled={true}
-                    style={{ marginBottom: 0, flexGrow: 1 }}
-                  />
+        </Text>
+      </Layout.Horizontal>
+      <div className={pipelineInputSetCss.topAccordion}>
+        <div className={pipelineInputSetCss.accordionSummary}>
+          <div className={pipelineInputSetCss.nestedAccordions}>
+            <Layout.Vertical spacing="small">
+              {loadingConnectorDetails ? (
+                <Container flex={{ justifyContent: 'center' }}>
+                  <Icon name="steps-spinner" size={25} />
                 </Container>
               ) : (
-                <Layout.Horizontal
-                  flex={{ justifyContent: 'start' }}
-                  padding={{ top: 'small', left: 'xsmall', bottom: 'xsmall' }}
-                  margin={{ left: 'large' }}
-                >
-                  <Radio
-                    label={radioLabels['branch']}
-                    width={110}
-                    onClick={() => handleTypeChange('branch')}
-                    checked={codeBaseType === CodebaseTypes.branch}
-                    disabled={readonly}
-                    font={{ variation: FontVariation.FORM_LABEL }}
-                    key="branch-radio-option"
-                  />
-                  <Radio
-                    label={radioLabels['tag']}
-                    width={90}
-                    margin={{ left: 'huge' }}
-                    onClick={() => handleTypeChange('tag')}
-                    checked={codeBaseType === CodebaseTypes.tag}
-                    disabled={readonly}
-                    font={{ variation: FontVariation.FORM_LABEL }}
-                    key="tag-radio-option"
-                  />
-                  {connectorType !== 'Codecommit' ? (
-                    <Radio
-                      label={radioLabels['PR']}
-                      width={110}
-                      margin={{ left: 'huge' }}
-                      onClick={() => handleTypeChange('PR')}
-                      checked={codeBaseType === CodebaseTypes.PR}
-                      disabled={readonly}
-                      font={{ variation: FontVariation.FORM_LABEL }}
-                      key="pr-radio-option"
-                    />
-                  ) : null}
-                </Layout.Horizontal>
-              )}
-              {codebaseTypeError && (formik.submitCount > 0 || viewTypeMetadata?.isTrigger) && (
-                <Text color={Color.RED_600}>{codebaseTypeError}</Text>
-              )}
-              <Container width={containerWidth}>
-                {codeBaseType === CodebaseTypes.branch ? renderCodeBaseTypeInput('branch') : null}
-                {codeBaseType === CodebaseTypes.tag ? renderCodeBaseTypeInput('tag') : null}
-                {codeBaseType === CodebaseTypes.PR ? renderCodeBaseTypeInput('PR') : null}
-              </Container>
-            </>
-          )}
-          {(isDepthRuntimeInput ||
-            isSslVerifyRuntimeInput ||
-            isPrCloneStrategyRuntimeInput ||
-            showSetContainerResources) && (
-            <Text
-              color={Color.GREY_600}
-              font={{ size: 'small', weight: 'semi-bold' }}
-              tooltipProps={{ dataTooltipId: 'advanced' }}
-            >
-              {getString('advancedTitle')}
-            </Text>
-          )}
-          {isDepthRuntimeInput && (
-            <Container width={containerWidth} className={css.bottomMargin3}>
-              <MultiTypeTextField
-                label={
-                  <Layout.Horizontal className={css.inpLabel} style={{ display: 'flex', alignItems: 'baseline' }}>
-                    <Text font={{ variation: FontVariation.FORM_LABEL }} tooltipProps={{ dataTooltipId: 'depth' }}>
-                      {getString('pipeline.depth')}
+                <>
+                  {isConnectorRuntimeInput && (
+                    <Container width={containerWidth}>
+                      <FormMultiTypeConnectorField
+                        name={codeBaseInputFieldFormName.connectorRef}
+                        width={connectorWidth}
+                        error={formik?.errors?.connectorRef}
+                        type={[
+                          Connectors.GIT,
+                          Connectors.GITHUB,
+                          Connectors.GITLAB,
+                          Connectors.BITBUCKET,
+                          Connectors.AWS_CODECOMMIT,
+                          Connectors.AZURE_REPO
+                        ]}
+                        label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('connector')}</Text>}
+                        placeholder={
+                          loadingConnectorDetails ? getString('loading') : getString('connectors.selectConnector')
+                        }
+                        accountIdentifier={accountId}
+                        projectIdentifier={projectIdentifier}
+                        orgIdentifier={orgIdentifier}
+                        gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                        setRefValue={true}
+                        multiTypeProps={{
+                          expressions,
+                          disabled: readonly,
+                          allowableTypes: AllowableTypesForCodebaseProperties
+                        }}
+                        onChange={(value, _valueType, connectorRefType) =>
+                          handleCIConnectorRefOnChange({
+                            value: value as ConnectorRefInterface,
+                            connectorRefType,
+                            setConnectionType,
+                            setConnectorUrl,
+                            setFieldValue: formik?.setFieldValue as (field: string, value: any) => void,
+                            codeBaseInputFieldFormName,
+                            setGitAuthProtocol,
+                            setIsConnectorExpression
+                          })
+                        }
+                      />
+                    </Container>
+                  )}
+                  {isRepoNameRuntimeInput &&
+                    (!isRuntimeInput(formik?.values.connectorRef) && connectionType === ConnectionType.Repo ? (
+                      <Container width={containerWidth}>
+                        <Text
+                          font={{ variation: FontVariation.FORM_LABEL }}
+                          margin={{ bottom: 'xsmall' }}
+                          tooltipProps={{ dataTooltipId: 'rightBarForm_repoName' }}
+                        >
+                          {getString('common.repositoryName')}
+                        </Text>
+                        <TextInput
+                          name={codeBaseInputFieldFormName.repoName}
+                          value={connectorUrl}
+                          style={{ flexGrow: 1 }}
+                          disabled
+                        />
+                      </Container>
+                    ) : (
+                      <>
+                        <Container width={containerWidth}>
+                          <MultiTypeTextField
+                            label={
+                              <Text
+                                className={css.inpLabel}
+                                font={{ variation: FontVariation.FORM_LABEL }}
+                                tooltipProps={{ dataTooltipId: 'rightBarForm_repoName' }}
+                              >
+                                {getString('common.repositoryName')}
+                              </Text>
+                            }
+                            name={codeBaseInputFieldFormName.repoName}
+                            multiTextInputProps={{
+                              multiTextInputProps: {
+                                expressions,
+                                allowableTypes: AllowableTypesForCodebaseProperties
+                              },
+                              disabled: readonly || isFetchingBranches,
+                              onChange: debouncedFetchBranchesForRepo
+                            }}
+                          />
+                        </Container>
+                        {!isRuntimeInput(formik?.values.connectorRef) &&
+                          !isRuntimeInput(formik?.values.repoName) &&
+                          connectorUrl?.length > 0 && (
+                            <div className={css.predefinedValue}>
+                              <Text lineClamp={1}>
+                                {getCompleteConnectorUrl({
+                                  partialUrl: connectorUrl,
+                                  repoName: get(formik?.values, codeBaseInputFieldFormName.repoName, ''),
+                                  connectorType,
+                                  gitAuthProtocol
+                                })}
+                              </Text>
+                            </div>
+                          )}
+                      </>
+                    ))}
+                  {(!isConnectorRuntimeInput ||
+                    (isConnectorRuntimeInput && get(formik?.values, codeBaseInputFieldFormName.connectorRef))) && (
+                    <>
+                      <Text
+                        font={{ variation: FontVariation.FORM_LABEL }}
+                        tooltipProps={{ dataTooltipId: 'ciCodebaseBuildType' }}
+                      >
+                        {getString('filters.executions.buildType')}
+                      </Text>
+                      {showBuildAsDisabledTextField ? (
+                        <Container
+                          width={viewTypeMetadata?.isTemplateBuilder ? '361px' : containerWidth}
+                          className={css.bottomMargin3}
+                        >
+                          <FormInput.MultiTextInput
+                            name={buildPath}
+                            label=""
+                            // value="<+input>"
+                            multiTextInputProps={{
+                              expressions,
+                              allowableTypes: [MultiTypeInputType.FIXED]
+                            }}
+                            disabled={true}
+                            style={{ marginBottom: 0, flexGrow: 1 }}
+                          />
+                        </Container>
+                      ) : (
+                        <Layout.Horizontal
+                          flex={{ justifyContent: 'start' }}
+                          padding={{ top: 'small', left: 'xsmall', bottom: 'xsmall' }}
+                          margin={{ left: 'large' }}
+                        >
+                          <Radio
+                            label={radioLabels['branch']}
+                            width={110}
+                            onClick={() => handleTypeChange(CodebaseTypes.BRANCH)}
+                            checked={codeBaseType === CodebaseTypes.BRANCH}
+                            disabled={disableBuildRadioBtnSelection}
+                            font={{ variation: FontVariation.FORM_LABEL }}
+                            key="branch-radio-option"
+                          />
+                          <Radio
+                            label={radioLabels['tag']}
+                            width={90}
+                            margin={{ left: 'huge' }}
+                            onClick={() => handleTypeChange(CodebaseTypes.TAG)}
+                            checked={codeBaseType === CodebaseTypes.TAG}
+                            disabled={disableBuildRadioBtnSelection}
+                            font={{ variation: FontVariation.FORM_LABEL }}
+                            key="tag-radio-option"
+                          />
+                          {connectorType !== 'Codecommit' && (
+                            <Radio
+                              label={radioLabels['PR']}
+                              width={110}
+                              margin={{ left: 'huge' }}
+                              onClick={() => handleTypeChange(CodebaseTypes.PR)}
+                              checked={codeBaseType === CodebaseTypes.PR}
+                              disabled={disableBuildRadioBtnSelection}
+                              font={{ variation: FontVariation.FORM_LABEL }}
+                              key="pr-radio-option"
+                            />
+                          )}
+                        </Layout.Horizontal>
+                      )}
+                      {codebaseTypeError && (formik.submitCount > 0 || viewTypeMetadata?.isTrigger) && (
+                        <Text color={Color.RED_600}>{codebaseTypeError}</Text>
+                      )}
+                      <Container width={containerWidth}>
+                        {codeBaseType === CodebaseTypes.BRANCH && renderCodeBaseTypeInput(CodebaseTypes.BRANCH)}
+                        {codeBaseType === CodebaseTypes.TAG && renderCodeBaseTypeInput(CodebaseTypes.TAG)}
+                        {codeBaseType === CodebaseTypes.PR && renderCodeBaseTypeInput(CodebaseTypes.PR)}
+                      </Container>
+                    </>
+                  )}
+                  {(isDepthRuntimeInput ||
+                    isSslVerifyRuntimeInput ||
+                    isPrCloneStrategyRuntimeInput ||
+                    showSetContainerResources) && (
+                    <Text
+                      color={Color.GREY_600}
+                      font={{ size: 'small', weight: 'semi-bold' }}
+                      tooltipProps={{ dataTooltipId: 'advanced' }}
+                    >
+                      {getString('advancedTitle')}
                     </Text>
-                    &nbsp;
-                  </Layout.Horizontal>
-                }
-                name={codeBaseInputFieldFormName.depth}
-                multiTextInputProps={{
-                  multiTextInputProps: {
-                    expressions,
-                    allowableTypes: AllowableTypesForCodebaseProperties,
-                    textProps: { type: 'number' }
-                  },
-                  disabled: readonly
-                }}
-              />
-            </Container>
-          )}
-          {isSslVerifyRuntimeInput && (
-            <Container width={containerWidth} className={css.bottomMargin3}>
-              <MultiTypeSelectField
-                name={codeBaseInputFieldFormName.sslVerify}
-                label={renderLabel({
-                  getString,
-                  tooltip: 'sslVerify',
-                  keyString: 'pipeline.sslVerify'
-                })}
-                multiTypeInputProps={{
-                  selectItems: sslVerifyOptions as unknown as SelectOption[],
-                  placeholder: getString('select'),
-                  multiTypeInputProps: {
-                    expressions,
-                    selectProps: {
-                      addClearBtn: true,
-                      items: sslVerifyOptions as unknown as SelectOption[]
-                    },
-                    allowableTypes: AllowableTypesForCodebaseProperties
-                  },
-                  disabled: readonly
-                }}
-                useValue
-                disabled={readonly}
-              />
-            </Container>
-          )}
-          {isPrCloneStrategyRuntimeInput && (
-            <Container width={containerWidth} className={css.bottomMargin3}>
-              <MultiTypeSelectField
-                name={codeBaseInputFieldFormName.prCloneStrategy}
-                label={renderLabel({
-                  getString,
-                  tooltip: 'prCloneStrategy',
-                  keyString: 'pipeline.ciCodebase.prCloneStrategy'
-                })}
-                multiTypeInputProps={{
-                  selectItems: prCloneStrategyOptions,
-                  placeholder: getString('select'),
-                  multiTypeInputProps: {
-                    expressions,
-                    selectProps: { addClearBtn: true, items: prCloneStrategyOptions },
-                    allowableTypes: AllowableTypesForCodebaseProperties
-                  },
-                  disabled: readonly
-                }}
-                useValue
-                disabled={readonly}
-              />
-            </Container>
-          )}
-          {showSetContainerResources && (
-            <Layout.Vertical width={containerWidth} className={css.bottomMargin3} spacing="medium">
-              <Text
-                color={Color.GREY_600}
-                font={{ size: 'small', weight: 'semi-bold' }}
-                tooltipProps={{ dataTooltipId: 'setContainerResources' }}
-              >
-                {getString('pipelineSteps.setContainerResources')}
-              </Text>
-              <Layout.Horizontal spacing="small">
-                {isMemoryLimitRuntimeInput && (
-                  <MultiTypeTextField
-                    name={codeBaseInputFieldFormName.memoryLimit}
-                    label={
-                      <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
-                        <Text
-                          className={css.inpLabel}
-                          color={Color.GREY_600}
-                          font={{ size: 'small', weight: 'semi-bold' }}
-                          tooltipProps={{ dataTooltipId: 'limitMemory' }}
-                        >
-                          {getString('pipelineSteps.limitMemoryLabel')}
-                        </Text>
-                        &nbsp;
-                      </Layout.Horizontal>
-                    }
-                    multiTextInputProps={{
-                      multiTextInputProps: {
-                        expressions,
-                        allowableTypes: AllowableTypesForCodebaseProperties
-                      },
-                      disabled: readonly
-                    }}
-                    configureOptionsProps={{ variableName: 'spec.limit.memory' }}
-                    style={{ flexGrow: 1, flexBasis: '50%' }}
-                  />
-                )}
+                  )}
+                  {isDepthRuntimeInput && (
+                    <Container width={containerWidth} className={css.bottomMargin3}>
+                      <MultiTypeTextField
+                        label={
+                          <Layout.Horizontal
+                            className={css.inpLabel}
+                            style={{ display: 'flex', alignItems: 'baseline' }}
+                          >
+                            <Text
+                              font={{ variation: FontVariation.FORM_LABEL }}
+                              tooltipProps={{ dataTooltipId: 'depth' }}
+                            >
+                              {getString('pipeline.depth')}
+                            </Text>
+                            &nbsp;
+                          </Layout.Horizontal>
+                        }
+                        name={codeBaseInputFieldFormName.depth}
+                        multiTextInputProps={{
+                          multiTextInputProps: {
+                            expressions,
+                            allowableTypes: AllowableTypesForCodebaseProperties,
+                            textProps: { type: 'number' }
+                          },
+                          disabled: readonly
+                        }}
+                      />
+                    </Container>
+                  )}
+                  {isSslVerifyRuntimeInput && (
+                    <Container width={containerWidth} className={css.bottomMargin3}>
+                      <MultiTypeSelectField
+                        name={codeBaseInputFieldFormName.sslVerify}
+                        label={renderLabel({
+                          getString,
+                          tooltip: 'sslVerify',
+                          keyString: 'pipeline.sslVerify'
+                        })}
+                        multiTypeInputProps={{
+                          selectItems: sslVerifyOptions as unknown as SelectOption[],
+                          placeholder: getString('select'),
+                          multiTypeInputProps: {
+                            expressions,
+                            selectProps: {
+                              addClearBtn: true,
+                              items: sslVerifyOptions as unknown as SelectOption[]
+                            },
+                            allowableTypes: AllowableTypesForCodebaseProperties
+                          },
+                          disabled: readonly
+                        }}
+                        useValue
+                        disabled={readonly}
+                      />
+                    </Container>
+                  )}
+                  {isPrCloneStrategyRuntimeInput && (
+                    <Container width={containerWidth} className={css.bottomMargin3}>
+                      <MultiTypeSelectField
+                        name={codeBaseInputFieldFormName.prCloneStrategy}
+                        label={renderLabel({
+                          getString,
+                          tooltip: 'prCloneStrategy',
+                          keyString: 'pipeline.ciCodebase.prCloneStrategy'
+                        })}
+                        multiTypeInputProps={{
+                          selectItems: prCloneStrategyOptions,
+                          placeholder: getString('select'),
+                          multiTypeInputProps: {
+                            expressions,
+                            selectProps: { addClearBtn: true, items: prCloneStrategyOptions },
+                            allowableTypes: AllowableTypesForCodebaseProperties
+                          },
+                          disabled: readonly
+                        }}
+                        useValue
+                        disabled={readonly}
+                      />
+                    </Container>
+                  )}
+                  {showSetContainerResources && (
+                    <Layout.Vertical width={containerWidth} className={css.bottomMargin3} spacing="medium">
+                      <Text
+                        color={Color.GREY_600}
+                        font={{ size: 'small', weight: 'semi-bold' }}
+                        tooltipProps={{ dataTooltipId: 'setContainerResources' }}
+                      >
+                        {getString('pipelineSteps.setContainerResources')}
+                      </Text>
+                      <Layout.Horizontal spacing="small">
+                        {isMemoryLimitRuntimeInput && (
+                          <MultiTypeTextField
+                            name={codeBaseInputFieldFormName.memoryLimit}
+                            label={
+                              <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
+                                <Text
+                                  className={css.inpLabel}
+                                  color={Color.GREY_600}
+                                  font={{ size: 'small', weight: 'semi-bold' }}
+                                  tooltipProps={{ dataTooltipId: 'limitMemory' }}
+                                >
+                                  {getString('pipelineSteps.limitMemoryLabel')}
+                                </Text>
+                                &nbsp;
+                              </Layout.Horizontal>
+                            }
+                            multiTextInputProps={{
+                              multiTextInputProps: {
+                                expressions,
+                                allowableTypes: AllowableTypesForCodebaseProperties
+                              },
+                              disabled: readonly
+                            }}
+                            configureOptionsProps={{ variableName: 'spec.limit.memory' }}
+                            style={{ flexGrow: 1, flexBasis: '50%' }}
+                          />
+                        )}
 
-                {isCpuLimitRuntimeInput && (
-                  <MultiTypeTextField
-                    name={codeBaseInputFieldFormName.cpuLimit}
-                    label={
-                      <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
-                        <Text
-                          className={css.inpLabel}
-                          color={Color.GREY_600}
-                          font={{ size: 'small', weight: 'semi-bold' }}
-                          tooltipProps={{ dataTooltipId: 'limitCPULabel' }}
-                        >
-                          {getString('pipelineSteps.limitCPULabel')}
-                        </Text>
-                        &nbsp;
+                        {isCpuLimitRuntimeInput && (
+                          <MultiTypeTextField
+                            name={codeBaseInputFieldFormName.cpuLimit}
+                            label={
+                              <Layout.Horizontal style={{ display: 'flex', alignItems: 'baseline' }}>
+                                <Text
+                                  className={css.inpLabel}
+                                  color={Color.GREY_600}
+                                  font={{ size: 'small', weight: 'semi-bold' }}
+                                  tooltipProps={{ dataTooltipId: 'limitCPULabel' }}
+                                >
+                                  {getString('pipelineSteps.limitCPULabel')}
+                                </Text>
+                                &nbsp;
+                              </Layout.Horizontal>
+                            }
+                            multiTextInputProps={{
+                              multiTextInputProps: {
+                                expressions,
+                                allowableTypes: AllowableTypesForCodebaseProperties
+                              },
+                              disabled: readonly
+                            }}
+                            configureOptionsProps={{ variableName: 'spec.limit.cpu' }}
+                            style={{ flexGrow: 1, flexBasis: '50%' }}
+                          />
+                        )}
                       </Layout.Horizontal>
-                    }
-                    multiTextInputProps={{
-                      multiTextInputProps: {
-                        expressions,
-                        allowableTypes: AllowableTypesForCodebaseProperties
-                      },
-                      disabled: readonly
-                    }}
-                    configureOptionsProps={{ variableName: 'spec.limit.cpu' }}
-                    style={{ flexGrow: 1, flexBasis: '50%' }}
-                  />
-                )}
-              </Layout.Horizontal>
+                    </Layout.Vertical>
+                  )}
+                </>
+              )}
             </Layout.Vertical>
-          )}
-        </>
-      )}
-    </Layout.Vertical>
+          </div>
+        </div>
+      </div>
+    </>
+  ) : (
+    <></>
   )
 }
 

@@ -1,0 +1,236 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Queue Step View Test snapshot test - empty resourceConstraints 1`] = `
+<div>
+  <div
+    class="tabs"
+  >
+    <div
+      class="bp3-tabs Tabs--main Tabs--horizontal"
+    >
+      <div
+        class="bp3-tab-list"
+        role="tablist"
+      >
+        <div
+          class="bp3-tab-indicator-wrapper"
+          style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+        >
+          <div
+            class="bp3-tab-indicator"
+          />
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_QUEUED_EXECUTIONS"
+          aria-disabled="false"
+          aria-expanded="true"
+          aria-selected="true"
+          class="bp3-tab"
+          data-tab-id="QUEUED_EXECUTIONS"
+          id="bp3-tab-title_step-details_QUEUED_EXECUTIONS"
+          role="tab"
+          tabindex="0"
+        >
+          pipeline.queueStep.queuedExecutions
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_STEP_DETAILS"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="STEP_DETAILS"
+          id="bp3-tab-title_step-details_STEP_DETAILS"
+          role="tab"
+          tabindex="0"
+        >
+          details
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_INPUT"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="INPUT"
+          id="bp3-tab-title_step-details_INPUT"
+          role="tab"
+          tabindex="0"
+        >
+          common.input
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_OUTPUT"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="OUTPUT"
+          id="bp3-tab-title_step-details_OUTPUT"
+          role="tab"
+          tabindex="0"
+        >
+          outputLabel
+        </div>
+      </div>
+      <div
+        aria-hidden="false"
+        aria-labelledby="bp3-tab-title_step-details_QUEUED_EXECUTIONS"
+        class="bp3-tab-panel"
+        id="bp3-tab-panel_step-details_QUEUED_EXECUTIONS"
+        role="tabpanel"
+      >
+        <div
+          class="detailsTab"
+        >
+          <div
+            class="header"
+          >
+            <span
+              class="headerLabel"
+            >
+              pipeline.queueStep.queuedByResourceKey
+            </span>
+             
+          </div>
+          <section
+            class="contentSection"
+          >
+            <div
+              class="noDataContainer"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey300"
+                data-icon="queue-step"
+                style="margin-bottom: 20px;"
+              >
+                <svg
+                  fill="none"
+                  height="64"
+                  viewBox="0 0 32 32"
+                  width="64"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect
+                    height="6.976"
+                    rx="0.5"
+                    stroke="currentColor"
+                    stroke-dasharray="5 3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    width="13.787"
+                    x="5.506"
+                    y="22.54"
+                  />
+                  <rect
+                    height="6.897"
+                    rx="0.5"
+                    stroke="currentColor"
+                    stroke-dasharray="5 3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    width="13.787"
+                    x="5.506"
+                    y="12.515"
+                  />
+                  <rect
+                    height="6.897"
+                    rx="0.5"
+                    stroke="currentColor"
+                    width="13.787"
+                    x="5.506"
+                    y="2.516"
+                  />
+                  <path
+                    d="M26.506 26.358l-1.927 2.537m0 0l-1.933-2.537m1.933 2.537V2.603"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <span>
+                pipeline.queueStep.noQueuedExecutions
+              </span>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Queue Step View Test test - have resourceConstraints: 2 resource constraints 1`] = `
+<div
+  class="detailsTab"
+>
+  <div
+    class="header"
+  >
+    <span
+      class="headerLabel"
+    >
+      pipeline.queueStep.queuedByResourceKey
+    </span>
+     
+  </div>
+  <section
+    class="contentSection"
+  >
+    <div
+      class="totalCount"
+    >
+      pipeline.totalCount
+    </div>
+    <div
+      class="queuedExecutionsList"
+    >
+      <div
+        class="queuedExecutionsListItem"
+      >
+        <div
+          class="listItemName"
+        >
+          <a
+            href="/account/undefined/undefined/orgs/ORG_1/projects/PROJ_1/pipelines/undefined/executions/PLAN_EXECUTION_1/pipeline"
+          >
+            ishant pipeline
+          </a>
+        </div>
+        <div
+          class="listItemTime"
+        >
+          19/07/2022, 7:08:18 pm
+        </div>
+        <div
+          class="listItemState"
+        >
+          Pipeline.executionstatus.running
+        </div>
+      </div>
+      <div
+        class="queuedExecutionsListItem"
+      >
+        <div
+          class="listItemName"
+        >
+          <a
+            href="/account/undefined/undefined/orgs/ORG_2/projects/PROJ_12/pipelines/undefined/executions/PLAN_EXECUTION_2/pipeline"
+          >
+            ishant pipeline_2
+          </a>
+        </div>
+        <div
+          class="listItemTime"
+        >
+          19/07/2022, 7:08:31 pm
+        </div>
+        <div
+          class="listItemState"
+        />
+      </div>
+    </div>
+  </section>
+</div>
+`;

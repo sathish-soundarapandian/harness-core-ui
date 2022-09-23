@@ -6,8 +6,21 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { Card, Page, PageBody, Text, Layout, Popover, Container, Icon } from '@wings-software/uicore'
+import { useHistory, useParams } from 'react-router-dom'
+import {
+  Card,
+  Page,
+  PageBody,
+  Text,
+  Layout,
+  Popover,
+  Container,
+  Icon,
+  FlexExpander,
+  Button,
+  ButtonVariation,
+  ButtonSize
+} from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Position, Menu, MenuItem } from '@blueprintjs/core'
 import { defaultTo, isEmpty } from 'lodash-es'
@@ -18,6 +31,7 @@ import { ViewTimeRange } from '@ce/components/RecommendationDetails/constants'
 import { ResourceType, useFetchRecommendationQuery, RecommendationOverviewStats } from 'services/ce/services'
 import { GET_DATE_RANGE } from '@ce/utils/momentUtils'
 import routes from '@common/RouteDefinitions'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import ECSRecommendationDetails, {
   EcsRecommendationDtoWithCurrentResources
@@ -29,12 +43,16 @@ import css from './ECSRecommendationDetailsPage.module.scss'
 
 const ECSRecommendationDetailsPage: React.FC = () => {
   const { getString } = useStrings()
+  const history = useHistory()
 
   const { recommendation, accountId, recommendationName } = useParams<{
     recommendation: string
     recommendationName: string
     accountId: string
   }>()
+
+  useDocumentTitle([getString('ce.recommendation.sideNavText'), recommendationName], true)
+
   const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeValue>('timeRange', {
     value: TimeRangeType.LAST_7,
     label: TimeRange.LAST_7
@@ -61,6 +79,18 @@ const ECSRecommendationDetailsPage: React.FC = () => {
   const isRecomDetailsEmpty =
     isEmpty(recommendationDetails) ||
     Object.values(recommendationDetails).every(val => val === 'ECSRecommendationDTO' || val === null)
+
+  const goToServiceDetails = (): void => {
+    history.push(
+      routes.toCERecommendationServiceDetails({
+        accountId,
+        recommendation,
+        recommendationName,
+        clusterName: defaultTo(recommendationDetails.clusterName, ''),
+        serviceName: defaultTo(recommendationDetails.serviceName, '')
+      })
+    )
+  }
 
   return (
     <>
@@ -128,6 +158,7 @@ const ECSRecommendationDetailsPage: React.FC = () => {
                 <ECSRecommendationMetadata
                   clusterName={defaultTo(recommendationDetails.clusterName, '')}
                   serviceName={defaultTo(recommendationDetails.serviceName, '')}
+                  goToServiceDetails={goToServiceDetails}
                 />
                 <Text font={{ variation: FontVariation.H5 }} margin={{ top: 'xxlarge', bottom: 'medium' }}>
                   {getString('ce.recommendation.detailsPage.tuneRecommendations')}
@@ -148,16 +179,27 @@ export default ECSRecommendationDetailsPage
 interface ECSRecommendationMetadataProps {
   clusterName: string
   serviceName: string
+  goToServiceDetails: () => void
 }
 
-const ECSRecommendationMetadata: React.FC<ECSRecommendationMetadataProps> = ({ clusterName, serviceName }) => {
+const ECSRecommendationMetadata: React.FC<ECSRecommendationMetadataProps> = ({
+  clusterName,
+  serviceName,
+  goToServiceDetails
+}) => {
   const { getString } = useStrings()
 
   return (
     <Container>
-      <Text font={{ variation: FontVariation.H5 }} margin={{ bottom: 'medium' }}>
-        {getString('ce.recommendation.detailsPage.ecsServiceDetails')}
-      </Text>
+      <Layout.Horizontal>
+        <Text font={{ variation: FontVariation.H5 }} margin={{ bottom: 'medium' }}>
+          {getString('ce.recommendation.detailsPage.ecsServiceDetails')}
+        </Text>
+        <FlexExpander />
+        <Button variation={ButtonVariation.SECONDARY} size={ButtonSize.SMALL} onClick={goToServiceDetails}>
+          {getString('ce.recommendation.detailsPage.viewMoreDetailsText')}
+        </Button>
+      </Layout.Horizontal>
       <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500}>
         {getString('common.cluster')}
       </Text>

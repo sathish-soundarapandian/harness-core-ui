@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`copy button copy 1`] = `
+<div>
+  <span
+    class="bp3-popover-wrapper"
+  >
+    <span
+      class="bp3-popover-target bp3-popover-open"
+    >
+      <button
+        class="bp3-button bp3-disabled bp3-loading bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+        disabled=""
+        tabindex="-1"
+        type="button"
+      >
+        <div
+          class="bp3-spinner bp3-button-spinner"
+        >
+          <div
+            class="bp3-spinner-animation"
+          >
+            <svg
+              height="20"
+              stroke-width="16.00"
+              viewBox="-3.00 -3.00 106.00 106.00"
+              width="20"
+            >
+              <path
+                class="bp3-spinner-track"
+                d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+              />
+              <path
+                class="bp3-spinner-head"
+                d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                pathLength="280"
+                stroke-dasharray="280 280"
+                stroke-dashoffset="210"
+              />
+            </svg>
+          </div>
+        </div>
+        <span
+          class="bp3-icon bp3-icon-duplicate StyledProps--main"
+          icon="duplicate"
+        >
+          <svg
+            data-icon="duplicate"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              duplicate
+            </desc>
+            <path
+              d="M15 0H5c-.55 0-1 .45-1 1v2h2V2h8v7h-1v2h2c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-4 4H1c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-1 10H2V6h8v8z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+      </button>
+    </span>
+  </span>
+</div>
+`;

@@ -16,7 +16,8 @@ import {
   MultiTypeInputType,
   Formik,
   ButtonVariation,
-  Icon
+  Icon,
+  AllowedTypes
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Form, FieldArray, FieldArrayRenderProps } from 'formik'
@@ -29,6 +30,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 
 import type { KustomizePatchDataType, ManifestTypes } from '../../ManifestInterface'
 
@@ -50,7 +52,7 @@ interface KustomizePathPropTypes {
   name?: string
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -100,8 +102,8 @@ const renderBranch = (
   label: string,
   placeholder: string,
   expressions?: any,
-  allowableTypes?: MultiTypeInputType[]
-) => {
+  allowableTypes?: AllowedTypes
+): React.ReactElement => {
   return (
     <div
       className={cx(helmcss.halfWidth, {
@@ -137,8 +139,8 @@ const renderCommitId = (
   label: string,
   placeholder: string,
   expressions?: any,
-  allowableTypes?: MultiTypeInputType[]
-) => {
+  allowableTypes?: AllowedTypes
+): React.ReactElement => {
   return (
     <div
       className={cx(helmcss.halfWidth, {
@@ -181,8 +183,8 @@ const renderPathArr = ({
   manifestPathPlaceholder: string
   pathPlaceholder: string
   expressions: any
-  allowableTypes: MultiTypeInputType[]
-}) => {
+  allowableTypes: AllowedTypes
+}): React.ReactElement => {
   return (
     <>
       <Icon name="drag-handle-vertical" className={css.drag} />
@@ -194,7 +196,9 @@ const renderPathArr = ({
         style={{ width: 275 }}
         multiTextInputProps={{
           expressions,
-          allowableTypes: allowableTypes.filter(allowedType => allowedType !== MultiTypeInputType.RUNTIME)
+          allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+            allowedType => !isMultiTypeRuntime(allowedType)
+          ) as AllowedTypes
         }}
       />
     </>
@@ -272,7 +276,7 @@ function KustomizePatchDetails({
     handleSubmit(manifestObj)
   }
 
-  const getInitialValues = React.useCallback((): KustomizePatchDataType => {
+  const getInitialValues = (): KustomizePatchDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -297,7 +301,7 @@ function KustomizePatchDetails({
       gitFetchType: 'Branch',
       paths: [{ path: '', id: uuid('', nameSpace()) }]
     }
-  }, [])
+  }
   const defaultValueToReset = [{ path: '', uuid: uuid('', nameSpace()) }]
 
   return (
@@ -444,10 +448,11 @@ function KustomizePatchDetails({
                                 expressions,
                                 allowableTypes
                               })}
+
+                              {formik.values?.paths?.length > 1 && (
+                                <Button minimal icon="main-trash" onClick={() => arrayHelpers.remove(index)} />
+                              )}
                             </Layout.Horizontal>
-                            {formik.values?.paths?.length > 1 && (
-                              <Button minimal icon="main-trash" onClick={() => arrayHelpers.remove(index)} />
-                            )}
                           </Layout.Horizontal>
                         ))}
                         <span>

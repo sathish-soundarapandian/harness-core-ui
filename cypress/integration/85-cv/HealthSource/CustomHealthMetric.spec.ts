@@ -1,4 +1,6 @@
 import {
+  validations,
+  countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse
 } from '../../../support/85-cv/monitoredService/constants'
@@ -13,7 +15,7 @@ import { Connectors } from '../../../utils/connctors-utils'
 
 function populateGroupName(groupName: string) {
   cy.contains('span', 'Submit').click({ force: true })
-  cy.contains('span', 'Group Name is required').should('be.visible')
+  cy.contains('span', validations.groupName).should('be.visible')
 
   cy.get('input[name="groupName"]').click()
   cy.contains('p', '+ Add New').click({ force: true })
@@ -66,15 +68,12 @@ describe('Configure Datadog health source', () => {
     })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
-    cy.intercept(
-      'GET',
-      '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1',
-      { allServicesCount: 1, servicesAtRiskCount: 0 }
-    )
+    cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
     cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
   })
 
-  it.skip('Add new Custom HealthSource ', () => {
+  it('Add new Custom HealthSource ', () => {
     cy.intercept('GET', baseURLCall, baseURLResponse).as('BaseURLCall')
     cy.intercept('POST', fetchRecordsCall, fetchRecordsRespose).as('FetchRecordsCall')
 

@@ -10,8 +10,9 @@ import { merge } from 'lodash-es'
 import { Tabs, Tab } from '@wings-software/uicore'
 
 import { useStrings } from 'framework/strings'
-import { isExecutionWaitingForIntervention } from '@pipeline/utils/statusHelpers'
+import { isExecutionWaitingForInput, isExecutionWaitingForIntervention } from '@pipeline/utils/statusHelpers'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
+import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
 import { StepDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/StepDetailsTab/StepDetailsTab'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
@@ -26,15 +27,19 @@ enum StepDetailTab {
   STEP_DETAILS = 'STEP_DETAILS',
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
-  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION'
+  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION',
+  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS'
 }
 
 export function DefaultView(props: StepDetailProps): React.ReactElement {
-  const { step, stageType = StageType.DEPLOY } = props
+  const { step, stageType = StageType.DEPLOY, isStageExecutionInputConfigured } = props
   const { getString } = useStrings()
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.STEP_DETAILS)
   const manuallySelected = React.useRef(false)
-  const shouldShowInputOutput = ((step?.stepType ?? '') as string) !== 'liteEngineTask'
+  const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
+  const shouldShowExecutionInputs = !!step.executionInputConfigured
+  const shouldShowInputOutput =
+    ((step?.stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
   const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
     st => st !== Strategy.ManualIntervention
@@ -42,9 +47,22 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
 
   React.useEffect(() => {
     if (!manuallySelected.current) {
-      setActiveTab(isManualInterruption ? StepDetailTab.MANUAL_INTERVENTION : StepDetailTab.STEP_DETAILS)
+      let tab = StepDetailTab.STEP_DETAILS
+
+      if (shouldShowExecutionInputs && (isWaitingOnExecInputs || isStageExecutionInputConfigured)) {
+        tab = StepDetailTab.STEP_EXECUTION_INPUTS
+      } else if (isManualInterruption) {
+        tab = StepDetailTab.MANUAL_INTERVENTION
+      }
+      setActiveTab(tab)
     }
-  }, [step.identifier, isManualInterruption])
+  }, [
+    step.identifier,
+    isManualInterruption,
+    shouldShowExecutionInputs,
+    isWaitingOnExecInputs,
+    isStageExecutionInputConfigured
+  ])
 
   return (
     <div className={css.tabs}>
@@ -57,11 +75,15 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
         }}
         renderAllTabPanels={false}
       >
-        <Tab id={StepDetailTab.STEP_DETAILS} title={getString('details')} panel={<StepDetailsTab step={step} />} />
+        {isStageExecutionInputConfigured ? null : (
+          <Tab id={StepDetailTab.STEP_DETAILS} title={getString('details')} panel={<StepDetailsTab step={step} />} />
+        )}
+
         {shouldShowInputOutput && (
           <Tab
             id={StepDetailTab.INPUT}
             title={getString('common.input')}
+            disabled={isWaitingOnExecInputs}
             panel={<InputOutputTab baseFqn={step.baseFqn} mode="input" data={step.stepParameters} />}
           />
         )}
@@ -69,6 +91,7 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
           <Tab
             id={StepDetailTab.OUTPUT}
             title={getString('outputLabel')}
+            disabled={isWaitingOnExecInputs}
             panel={
               <InputOutputTab
                 baseFqn={step.baseFqn}
@@ -78,6 +101,13 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
             }
           />
         )}
+        {shouldShowExecutionInputs ? (
+          <Tab
+            id={StepDetailTab.STEP_EXECUTION_INPUTS}
+            title={getString('pipeline.runtimeInputs')}
+            panel={<ExecutionInputs step={step} />}
+          />
+        ) : null}
         {isManualInterruption ? (
           <Tab
             id={StepDetailTab.MANUAL_INTERVENTION}

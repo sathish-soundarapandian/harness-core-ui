@@ -10,6 +10,7 @@
 declare const __DEV__: boolean
 declare const Bugsnag: any
 declare const __BUGSNAG_RELEASE_VERSION__: string
+declare const DEV_FF: Record<string, boolean>
 declare module '*.png' {
   const value: string
   export default value
@@ -70,15 +71,22 @@ declare interface Window {
   helpPanelAccessToken: string
   helpPanelSpace: string
   helpPanelEnvironment: 'QA' | 'master'
+  stripeApiKey: string
 }
 
 declare interface WindowEventMap {
   PROMISE_API_RESPONSE: CustomEvent
+  USE_CACHE_UPDATED: CustomEvent
 }
 
 declare interface Document {
   msHidden: string
   webkitHidden: string
+  // these types are present in later versions on TS
+  fonts: {
+    check(opt: string): boolean
+    ready: Promise<void>
+  }
 }
 
 declare const monaco: any
@@ -108,9 +116,22 @@ declare module 'sto/App' {
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
+declare module 'stoV2/App' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'ccmui/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
 
 declare module 'sto/PipelineSecurityView' {
   import type { PipelineSecurityViewProps } from '@pipeline/interfaces/STOApp'
+  const ChildApp: React.ComponentType<PipelineSecurityViewProps>
+  export default ChildApp
+}
+declare module 'stoV2/PipelineSecurityView' {
   const ChildApp: React.ComponentType<PipelineSecurityViewProps>
   export default ChildApp
 }

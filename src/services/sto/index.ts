@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom'
 import { useGet } from 'restful-react'
 import type { GetState } from 'restful-react/dist/Get'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { getConfig } from 'services/config'
 
 export interface ErrorResponse {
   message: string
@@ -27,17 +28,21 @@ export interface IssueCounts {
   unassigned: number
 }
 
-export function useIssueCounts(pipelineId: string, executionId: string): GetState<IssueCounts, ErrorResponse> {
+export function useIssueCounts(
+  pipelineId: string,
+  executionIds: string
+): GetState<Record<string, IssueCounts>, ErrorResponse> {
   const { projectIdentifier: projectId, orgIdentifier: orgId, accountId } = useParams<PipelinePathProps>()
 
-  return useGet<IssueCounts, ErrorResponse>({
-    path: '/sto/api/v1/issue-counts',
+  return useGet<Record<string, IssueCounts>, ErrorResponse>({
+    base: getConfig('sto/api'),
+    path: 'v2/frontend/issue-counts',
     queryParams: {
       accountId,
       orgId,
       projectId,
       pipelineId,
-      executionId
+      executionIds
     }
   })
 }

@@ -36,12 +36,14 @@ export interface GCOMetricSetupSource {
   healthSourceIdentifier: string
   healthSourceName: string
   product: SelectOption
-  connectorRef?: string
+  connectorRef?: string | { value: string }
 }
 
 export interface GCOMetricsHealthSourceProps {
   data: any
   onSubmit: (formdata: GCOMetricSetupSource, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export interface ValidationChartProps {
@@ -52,4 +54,5 @@ export interface ValidationChartProps {
   sampleData?: Highcharts.Options
   setAsTooManyMetrics?: (_: boolean) => void
   isQueryExecuted?: boolean
+  noDataMessage?: string
 }

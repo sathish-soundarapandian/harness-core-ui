@@ -8,11 +8,12 @@
 import React from 'react'
 import { isEmpty } from 'lodash-es'
 import cx from 'classnames'
-import { FormInput, FormikForm } from '@harness/uicore'
+import { FormikForm } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isRuntime } from '../CloudFormationHelper'
 import type { RollbackStackData, RollbackStackProps } from '../CloudFormationInterfaces.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -30,7 +31,7 @@ export function RollbackStackInputStepRef<T extends RollbackStackData = Rollback
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormMultiTypeDurationField
+            <TimeoutFieldInputSetView
               label={getString('pipelineSteps.timeoutLabel')}
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
@@ -40,6 +41,8 @@ export function RollbackStackInputStepRef<T extends RollbackStackData = Rollback
                 expressions,
                 disabled: readonly
               }}
+              template={inputSetData?.template}
+              fieldPath={'timeout'}
             />
           </div>
         )
@@ -48,7 +51,7 @@ export function RollbackStackInputStepRef<T extends RollbackStackData = Rollback
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.provisionerIdentifier as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               name={`${path}.spec.configuration.provisionerIdentifier`}
               label={getString('pipelineSteps.provisionerIdentifier')}
               disabled={readonly}
@@ -56,6 +59,8 @@ export function RollbackStackInputStepRef<T extends RollbackStackData = Rollback
                 expressions,
                 allowableTypes
               }}
+              template={inputSetData?.template}
+              fieldPath={'spec.configuration.provisionerIdentifier'}
             />
           </div>
         )

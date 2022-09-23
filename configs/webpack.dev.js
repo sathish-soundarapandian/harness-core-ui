@@ -28,9 +28,26 @@ const certificateExists = fs.existsSync(path.join(CONTEXT, 'certificates/localho
 // Set env variable HARNESS_ENABLE_NG_AUTH_UI=false to disable it.
 const HARNESS_ENABLE_NG_AUTH_UI = process.env.HARNESS_ENABLE_NG_AUTH_UI !== 'false'
 const DISABLE_TYPECHECK = process.env.DISABLE_TYPECHECK === 'true'
+const HELP_PANEL_ACCESS_TOKEN = process.env.HELP_PANEL_ACCESS_TOKEN
+const HELP_PANEL_SPACE = process.env.HELP_PANEL_SPACE
+const HELP_PANEL_ENVIRONMENT = process.env.HELP_PANEL_ENVIRONMENT
+const DEV_FF = Object.keys(process.env)
+  .filter(f => f.startsWith('FF_'))
+  .reduce((obj, key) => ({ ...obj, [key.replace(/^FF_/, '')]: process.env[key] === 'true' }), {})
 
 console.log('\nDev server env vars')
-console.table({ HARNESS_ENABLE_NG_AUTH_UI, DISABLE_TYPECHECK })
+console.table(
+  Object.assign(
+    {
+      HARNESS_ENABLE_NG_AUTH_UI,
+      DISABLE_TYPECHECK,
+      HELP_PANEL_ACCESS_TOKEN,
+      HELP_PANEL_SPACE,
+      HELP_PANEL_ENVIRONMENT
+    },
+    DEV_FF
+  )
+)
 
 // certificates are required in non CI environments only
 if (!isCI && !certificateExists) {
@@ -93,7 +110,8 @@ const config = {
   plugins: [
     new webpack.DefinePlugin({
       __DEV__: true,
-      HARNESS_ENABLE_NG_AUTH_UI
+      HARNESS_ENABLE_NG_AUTH_UI,
+      DEV_FF: JSON.stringify(DEV_FF)
     }),
     new HTMLWebpackPlugin({
       template: 'src/index.html',
@@ -101,7 +119,10 @@ const config = {
       minify: false,
       templateParameters: {
         __DEV__: true,
-        __NON_CDN_BASE_PATH__: '/'
+        __NON_CDN_BASE_PATH__: '/',
+        HELP_PANEL_ACCESS_TOKEN_DEV: HELP_PANEL_ACCESS_TOKEN,
+        HELP_PANEL_SPACE_DEV: HELP_PANEL_SPACE,
+        HELP_PANEL_ENVIRONMENT_DEV: HELP_PANEL_ENVIRONMENT
       }
     }),
     new MiniCssExtractPlugin({

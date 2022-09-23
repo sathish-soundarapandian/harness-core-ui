@@ -5,18 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, merge } from 'lodash-es'
-import type { ArtifactConfig, ConnectorConfigDTO } from 'services/cd-ng'
+import type { ArtifactConfig, ConnectorConfigDTO, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
 import { ENABLED_ARTIFACT_TYPES } from './ArtifactHelper'
 import {
   ArtifactTagHelperText,
   ArtifactType,
+  GoogleArtifactRegistryInitialValuesType,
+  CustomArtifactSource,
+  GithubPackageRegistryInitialValuesType,
   ImagePathTypes,
+  JenkinsArtifactType,
   RepositoryPortOrServer,
   TagTypes
 } from './ArtifactInterface'
+
+export const shellScriptType: SelectOption[] = [
+  { label: 'Bash', value: 'Bash' },
+  { label: 'PowerShell', value: 'PowerShell' }
+]
 
 export enum RegistryHostNames {
   GCR_URL = 'gcr.io',
@@ -52,6 +61,14 @@ export const helperTextData = (
   connectorIdValue: string
 ): ArtifactTagHelperText => {
   switch (selectedArtifact) {
+    case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+      return {
+        package: formik.values?.spec?.package,
+        project: formik.values?.spec?.project,
+        region: formik.values?.spec?.region,
+        repositoryName: formik.values?.spec?.repositoryName,
+        connectorRef: connectorIdValue
+      }
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       return {
         imagePath: formik.values?.imagePath,
@@ -117,7 +134,7 @@ export const shouldFetchTags = (
 
 export const getFinalArtifactObj = (
   formData: ImagePathTypes & { connectorId?: string },
-  isSideCar: boolean
+  isIdentifierAllowed: boolean
 ): ArtifactConfig => {
   const tagData =
     formData?.tagType === TagTypes.Value
@@ -131,7 +148,7 @@ export const getFinalArtifactObj = (
       ...tagData
     }
   }
-  if (isSideCar) {
+  if (isIdentifierAllowed) {
     merge(artifactObj, { identifier: formData?.identifier })
   }
   return artifactObj
@@ -156,7 +173,7 @@ const getServerlessArtifactFromObj = (formData: ImagePathTypes & { connectorId?:
 
 export const getFinalArtifactFormObj = (
   formData: ImagePathTypes & { connectorId?: string },
-  isSideCar: boolean,
+  isIdentifierAllowed: boolean,
   isServerlessDeploymentTypeSelected = false
 ): ArtifactConfig => {
   let artifactObj: ArtifactConfig = {}
@@ -178,7 +195,7 @@ export const getFinalArtifactFormObj = (
     }
   }
 
-  if (isSideCar) {
+  if (isIdentifierAllowed) {
     merge(artifactObj, { identifier: formData?.identifier })
   }
   return artifactObj
@@ -213,7 +230,7 @@ const getTagValues = (specValues: any, isServerlessDeploymentTypeSelected = fals
 export const getArtifactFormData = (
   initialValues: ImagePathTypes,
   selectedArtifact: ArtifactType,
-  isSideCar: boolean,
+  isIdentifierAllowed: boolean,
   isServerlessDeploymentTypeSelected = false
 ): ImagePathTypes => {
   const specValues = get(initialValues, 'spec', null)
@@ -221,17 +238,122 @@ export const getArtifactFormData = (
   if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
     return defaultArtifactInitialValues(selectedArtifact)
   }
-
   const values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
 
-  if (isSideCar && initialValues?.identifier) {
+  if (isIdentifierAllowed && initialValues?.identifier) {
     merge(values, { identifier: initialValues?.identifier })
   }
   return values
 }
 
+export const getCustomArtifactFormData = (
+  initialValues: CustomArtifactSource,
+  selectedArtifact: ArtifactType,
+  isIdentifierAllowed: boolean
+): CustomArtifactSource => {
+  const specValues = get(initialValues, 'spec', null)
+  if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
+    return defaultArtifactInitialValues(selectedArtifact)
+  }
+
+  if (isIdentifierAllowed && initialValues?.identifier) {
+    merge(initialValues, { identifier: initialValues?.identifier })
+  }
+  return initialValues
+}
+
+export const getJenkinsFormData = (
+  initialValues: JenkinsArtifactType,
+  selectedArtifact: ArtifactType,
+  isIdentifierAllowed: boolean
+): JenkinsArtifactType => {
+  const specValues = get(initialValues, 'spec', null)
+
+  if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
+    return defaultArtifactInitialValues(selectedArtifact)
+  }
+
+  if (isIdentifierAllowed && initialValues?.identifier) {
+    merge(initialValues, { identifier: initialValues?.identifier })
+  }
+  return initialValues
+}
+
+const getVersionValues = (
+  specValues: any
+): GithubPackageRegistryInitialValuesType & GoogleArtifactRegistryInitialValuesType => {
+  const formikInitialValues = {
+    versionType: specValues?.version ? TagTypes.Value : TagTypes.Regex,
+    spec: {
+      ...specValues,
+      version: specValues?.version,
+      versionRegex: specValues?.versionRegex
+    }
+  }
+  return formikInitialValues
+}
+
+export const getGithubPackageRegistryFormData = (
+  initialValues: GithubPackageRegistryInitialValuesType | GoogleArtifactRegistryInitialValuesType,
+  selectedArtifact: ArtifactType,
+  isIdentifierAllowed: boolean
+): GithubPackageRegistryInitialValuesType | GoogleArtifactRegistryInitialValuesType => {
+  const specValues = get(initialValues, 'spec', null)
+
+  if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
+    return defaultArtifactInitialValues(selectedArtifact)
+  }
+
+  const values = getVersionValues(specValues)
+
+  if (isIdentifierAllowed && initialValues?.identifier) {
+    merge(values, { identifier: initialValues?.identifier })
+  }
+  return values
+}
+
+export const isFieldFixedAndNonEmpty = (field: string): boolean => {
+  return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED ? field?.length > 0 : true
+}
+
 export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): any => {
   switch (selectedArtifact) {
+    case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+      return {
+        identifier: '',
+        versionType: TagTypes.Value,
+        spec: {
+          connectorRef: '',
+          repositoryType: 'docker',
+          project: '',
+          region: '',
+          repositoryName: '',
+          package: '',
+          version: RUNTIME_INPUT_VALUE
+        }
+      }
+    case ENABLED_ARTIFACT_TYPES.Jenkins:
+      return {
+        identifier: '',
+        spec: {
+          jobName: '',
+          artifactPath: '',
+          build: RUNTIME_INPUT_VALUE
+        }
+      }
+    case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+      return {
+        identifier: '',
+        versionType: TagTypes.Value,
+        spec: {
+          connectorRef: '',
+          packageType: '',
+          org: '',
+          packageName: '',
+          version: '',
+          versionRegex: ''
+        }
+      }
     case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
       return {
         identifier: '',
@@ -243,13 +365,49 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:
       return {
         identifier: '',
-        version: RUNTIME_INPUT_VALUE
+        spec: {
+          version: '',
+          timeout: '',
+          delegateSelectors: [],
+          inputs: [],
+          scripts: {
+            fetchAllArtifacts: {
+              artifactsArrayPath: '',
+              attributes: [],
+              versionPath: '',
+              spec: {
+                shell: shellScriptType[0].label,
+                source: {
+                  spec: {
+                    script: ''
+                  },
+                  type: 'Inline'
+                }
+              }
+            }
+          }
+        }
       }
+    case ENABLED_ARTIFACT_TYPES.AmazonS3:
+      return {
+        identifier: '',
+        bucketName: '',
+        tagType: TagTypes.Value,
+        filePath: ''
+      }
+    case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
+      return {
+        repositoryFormat: 'generic',
+        identifier: '',
+        tag: RUNTIME_INPUT_VALUE,
+        tagType: TagTypes.Value,
+        tagRegex: RUNTIME_INPUT_VALUE
+      }
+
     case ENABLED_ARTIFACT_TYPES.Acr:
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
     case ENABLED_ARTIFACT_TYPES.Gcr:
     case ENABLED_ARTIFACT_TYPES.Ecr:
-    case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
     default:
       return {
         identifier: '',
@@ -280,4 +438,15 @@ export const showConnectorStep = (selectedArtifact: ArtifactType): boolean => {
 
 export const isFieldFixed = (field: string): boolean => {
   return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED
+}
+export const getArtifactLocation = (artifact: PrimaryArtifact | SidecarArtifact): string => {
+  if (artifact.type === 'AmazonS3') {
+    return artifact.spec?.filePath ?? artifact.spec?.filePathRegex
+  }
+  return (
+    artifact.spec?.imagePath ??
+    artifact.spec?.artifactPath ??
+    artifact.spec?.artifactPathFilter ??
+    artifact.spec?.repository
+  )
 }

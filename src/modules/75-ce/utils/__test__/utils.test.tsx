@@ -21,6 +21,8 @@ import { clusterInfoUtil, DEFAULT_GROUP_BY } from '../perspectiveUtils'
 import { generateGroupBy, getCloudProviderFromFields, getFiltersFromEnityMap } from '../anomaliesUtils'
 import { addBufferToValue, calculateNodes, isResourceConsistent } from '../recommendationUtils'
 import { flattenPerspectiveGridData } from '../downloadPerspectiveGridAsCsv'
+import { getResourceIcon, getServiceIcons } from '../iconsUtils'
+import { getPermissionErrorMsg } from '../rbacUtils'
 
 describe('test cases for recommendation utils', () => {
   test('test cases for CPU value formatter', () => {
@@ -341,5 +343,36 @@ describe('Test Cases for flattenPerspectiveGridData Utils', () => {
       key1: 'val1',
       nestedKey3: 'val3'
     })
+  })
+})
+
+describe('Test Cases for Icon Utils', () => {
+  test('Test resource icons', () => {
+    expect(getResourceIcon(CloudProvider.CLUSTER)).toBe('service-kubernetes')
+    expect(getResourceIcon(CloudProvider.AWS)).toBe('service-aws')
+    expect(getResourceIcon(CloudProvider.AZURE)).toBe('service-azure')
+    expect(getResourceIcon(CloudProvider.GCP)).toBe('gcp')
+    expect(getResourceIcon('')).toBe('harness')
+  })
+
+  test('Test service icons for dashboard', () => {
+    expect(getServiceIcons('RDS')).toBe('aws-rds')
+    expect(getServiceIcons('GCP INSTANCE')).toBe('gcp-engine')
+    expect(getServiceIcons('GCP DISK')).toBe('gcp-engine')
+    expect(getServiceIcons('AZURE VM')).toBe('azure-vm')
+    expect(getServiceIcons('AWS EC2')).toBe('aws-ectwo-service')
+    expect(getServiceIcons('AWS EBS')).toBe('aws-ectwo-service')
+    expect(getServiceIcons('')).toBe('default-dashboard')
+  })
+})
+
+describe('Test Cases for RBAC error Utils', () => {
+  test('Test error messages', () => {
+    expect(
+      getPermissionErrorMsg(
+        'Exception while fetching data (/perspectives) : Missing permission ccm_perspective_view on ccm_perspective'
+      )
+    ).toBe('Missing permission ccm_perspective_view on ccm_perspective')
+    expect(getPermissionErrorMsg('Missing permission')).toBe('Missing permission')
   })
 })

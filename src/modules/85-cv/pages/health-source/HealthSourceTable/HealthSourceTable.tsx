@@ -19,9 +19,9 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 import ContextMenuActions from '@cv/components/ContextMenuActions/ContextMenuActions'
 import HealthSources from '@cv/components/PipelineSteps/ContinousVerification/components/HealthSources/HealthSources'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import type { RowData } from '../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { getIconBySourceType, getTypeByFeature } from './HealthSourceTable.utils'
-import CardWithOuterTitle from '../common/CardWithOuterTitle/CardWithOuterTitle'
 import css from './HealthSourceTable.module.scss'
 
 export default function HealthSourceTable({

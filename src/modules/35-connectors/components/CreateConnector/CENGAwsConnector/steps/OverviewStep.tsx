@@ -17,12 +17,13 @@ import {
   ModalErrorHandlerBinding,
   StepProps,
   Icon,
-  Text
+  Text,
+  Radio
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
-import { omit, pick } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { defaultTo, get, omit, pick } from 'lodash-es'
+import { useParams, Link } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorInfoDTO,
@@ -30,9 +31,10 @@ import {
   useGetConnectorListV2,
   GetConnectorListV2QueryParams,
   Failure,
-  CEAwsConnector,
-  AwsCurAttributes
+  AwsCurAttributes,
+  ConnectorResponse
 } from 'services/cd-ng'
+import routes from '@common/RouteDefinitions'
 import { Description, Tags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
@@ -40,7 +42,9 @@ import { Connectors } from '@connectors/constants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
+import type { CEAwsConnector } from 'services/ce'
 import css from '../CreateCeAwsConnector.module.scss'
+
 interface OverviewDetails {
   name: string
   awsAccountId: string
@@ -79,9 +83,13 @@ const OverviewStep: React.FC<OverviewProps> = props => {
   const [awsAccountID, setAwsAccountID] = useState<string>('')
   const [isUniqueConnnector, setIsUniqueConnnector] = useState<boolean>(true)
   const [existingConnectorName, setExistingConnectorName] = useState<string>('')
+  const [existingConnectorId, setExistingConnectorId] = useState<string>('')
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [featureText, setFeatureText] = useState<string>('')
+  const [isGovCloudAccount, setIsGovCloudAccount] = useState(
+    defaultTo(get(prevStepData, 'spec.isAWSGovCloudAccount'), false)
+  )
 
   const defaultQueryParams: GetConnectorListV2QueryParams = {
     pageIndex: 0,
@@ -103,8 +111,9 @@ const OverviewStep: React.FC<OverviewProps> = props => {
     setIsLoading(true)
     const newspec: CEAwsConnector = {
       crossAccountAccess: { crossAccountRoleArn: '' },
-      ...connectorInfo?.spec,
-      ...prevStepData?.spec,
+      isAWSGovCloudAccount: isGovCloudAccount,
+      ...get(connectorInfo, 'spec'),
+      ...get(prevStepData, 'spec'),
       ...pick(formData, ['awsAccountId'])
     }
     const payload: CEAwsConnectorDTO = {
@@ -115,8 +124,9 @@ const OverviewStep: React.FC<OverviewProps> = props => {
       isEditMode: isEditMode
     }
     let includesBilling
-    if (connectorInfo?.spec?.featuresEnabled) {
-      includesBilling = connectorInfo?.spec?.featuresEnabled.includes('BILLING')
+    const connectorEnabledFeatures = get(connectorInfo, 'spec.featuresEnabled')
+    if (connectorEnabledFeatures) {
+      includesBilling = connectorEnabledFeatures.includes('BILLING')
     }
     try {
       const uniqueConnectorFilterParams: ConnectorFilterProperties = { ...filterParams }
@@ -131,19 +141,20 @@ const OverviewStep: React.FC<OverviewProps> = props => {
       const response = await fetchConnectors(uniqueConnectorFilterParams)
 
       if (response.status == 'SUCCESS') {
-        if (response?.data?.pageItemCount == 0 || isEditMode) {
+        /* istanbul ignore else */
+        if (get(response, 'data.pageItemCount') == 0 || isEditMode) {
           //No Connectors on AwsAccountId
 
           const curResponse = await fetchConnectors(curReportExistFilterParams)
           if (curResponse.status == 'SUCCESS') {
-            if (curResponse?.data?.pageItemCount == 0 || includesBilling) {
+            if (get(curResponse, 'data.pageItemCount') == 0 || includesBilling) {
               nextStep?.(payload)
             } else {
               const existingCurReports: ExistingCURDetails[] =
-                curResponse.data?.content?.map(ele => ({
-                  awsAccountId: ele.connector?.spec.awsAccountId,
-                  s3BucketName: ele.connector?.spec?.curAttributes.s3BucketName,
-                  reportName: ele.connector?.spec?.curAttributes.reportName
+                get(curResponse, 'data.content', []).map((ele: ConnectorResponse) => ({
+                  awsAccountId: get(ele, 'connector.spec.awsAccountId'),
+                  s3BucketName: get(ele, 'connector.spec.curAttributes.s3BucketName'),
+                  reportName: get(ele, 'connector.spec.curAttributes.reportName')
                 })) || []
               payload.existingCurReports = existingCurReports
               nextStep?.(payload)
@@ -155,6 +166,7 @@ const OverviewStep: React.FC<OverviewProps> = props => {
           setAwsAccountID(formData?.awsAccountId)
           setIsUniqueConnnector(false)
           setExistingConnectorName(response?.data?.content?.[0]?.connector?.name || '')
+          setExistingConnectorId(response?.data?.content?.[0]?.connector?.identifier || '')
           const featuresEnabled = response?.data?.content?.[0]?.connector?.spec?.featuresEnabled || []
           let newFeatureText = featuresEnabled.join(' and ')
           if (featuresEnabled.length > 2) {
@@ -164,10 +176,12 @@ const OverviewStep: React.FC<OverviewProps> = props => {
           setFeatureText(newFeatureText)
         }
       } else {
+        /* istanbul ignore next */
         throw response as Failure
       }
       setIsLoading(false)
     } catch (error) {
+      /* istanbul ignore next */
       modalErrorHandler?.showDanger('Error')
     }
   }
@@ -176,7 +190,7 @@ const OverviewStep: React.FC<OverviewProps> = props => {
     return {
       ...pick(connectorInfo, ['name', 'identifier', 'description', 'tags']),
       ...pick(prevStepData, ['name', 'identifier', 'description', 'tags']),
-      awsAccountId: prevStepData?.spec?.awsAccountId || connectorInfo?.spec?.awsAccountId || ''
+      awsAccountId: get(prevStepData, 'spec.awsAccountId') || get(connectorInfo, 'spec.awsAccountId') || ''
     }
   }
 
@@ -192,6 +206,7 @@ const OverviewStep: React.FC<OverviewProps> = props => {
         font={{ variation: FontVariation.H3 }}
         tooltipProps={{ dataTooltipId: 'awsConnectorOverview' }}
         margin={{ bottom: 'large' }}
+        data-cy="aws-overview"
       >
         {getString('connectors.ceAws.overview.heading')}
       </Text>
@@ -255,13 +270,31 @@ const OverviewStep: React.FC<OverviewProps> = props => {
                       <Icon name="lightbulb" style={{ paddingRight: 5 }}></Icon>
                       {getString('connectors.ceAws.overview.trySuggestion')}
                       <div>
-                        {getString('connectors.ceAws.overview.editConnector')} <a>{existingConnectorName}</a>{' '}
+                        {getString('connectors.ceAws.overview.editConnector')}{' '}
+                        <Link to={routes.toConnectorDetails({ accountId, connectorId: existingConnectorId })}>
+                          {existingConnectorName}
+                        </Link>{' '}
                         {getString('connectors.ceAws.overview.ifReq')}
                       </div>
                     </div>
                   </Layout.Vertical>
                 </div>
               )}
+              <Container className={css.govCloudContainer}>
+                <Text className={css.govCloudLabel}>{getString('connectors.ceAws.overview.govCloudHeader')}</Text>
+                <Layout.Horizontal spacing={'huge'} margin={{ top: 'medium' }}>
+                  <Radio
+                    label={getString('no')}
+                    checked={!isGovCloudAccount}
+                    onChange={() => setIsGovCloudAccount(false)}
+                  />
+                  <Radio
+                    label={getString('yes')}
+                    checked={isGovCloudAccount}
+                    onChange={() => setIsGovCloudAccount(true)}
+                  />
+                </Layout.Horizontal>
+              </Container>
               <Layout.Horizontal spacing="medium" className={css.buttonPanel}>
                 <Button
                   type="submit"

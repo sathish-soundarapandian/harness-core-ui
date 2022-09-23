@@ -7,24 +7,40 @@
 
 import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Tabs, Tab, Button, ButtonVariation, Layout, PageSpinner, useToaster } from '@harness/uicore'
-import { cloneDeep, omit } from 'lodash-es'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import {
+  Container,
+  Tabs,
+  Tab,
+  Button,
+  ButtonVariation,
+  Layout,
+  PageSpinner,
+  useToaster,
+  VisualYamlSelectedView as SelectedView
+} from '@harness/uicore'
+import { cloneDeep, defaultTo, get, isEmpty, omit, set } from 'lodash-es'
+import produce from 'immer'
+import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGServiceConfig, useCreateServiceV2, useUpdateServiceV2 } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { useServiceContext } from '@cd/context/ServiceContext'
+import { useCache } from '@common/hooks/useCache'
+import { sanitize } from '@common/utils/JSONUtils'
 import ServiceConfiguration from './ServiceConfiguration/ServiceConfiguration'
-import { ServiceTabs } from '../utils/ServiceUtils'
+import { ServiceTabs, setNameIDDescription, ServicePipelineConfig } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServiceStudio/ServiceStudio.module.scss'
 
 interface ServiceStudioDetailsProps {
   serviceData: NGServiceConfig
   summaryPanel?: JSX.Element
   refercedByPanel?: JSX.Element
+  invokeServiceHeaderRefetch?: () => void
 }
 function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElement | null {
   const { getString } = useStrings()
@@ -32,17 +48,20 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
   const { tab } = useQueryParams<{ tab: string }>()
   const { updateQueryParams } = useUpdateQueryParams()
   const {
-    state: { isUpdated, pipelineView, isLoading },
+    state: { pipeline, isUpdated, pipelineView, isLoading },
+    view,
     updatePipelineView,
     fetchPipeline,
     isReadonly
   } = usePipelineContext()
 
-  const { isServiceEntityModalView, isServiceCreateModalView, onServiceCreate, onCloseModal } = useServiceContext()
+  const { isServiceEntityModalView, isServiceCreateModalView, onServiceCreate, onCloseModal, serviceCacheKey } =
+    useServiceContext()
   const [selectedTabId, setSelectedTabId] = useState(tab ?? ServiceTabs.SUMMARY)
   const { showSuccess, showError, clear } = useToaster()
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { setCache } = useCache()
 
-  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
   const handleTabChange = useCallback(
     (nextTab: ServiceTabs): void => {
       setSelectedTabId(nextTab)
@@ -74,25 +93,49 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
 
   const saveAndPublishService = async (): Promise<void> => {
     clear()
+
+    let updatedService
+    if (view === SelectedView.YAML) {
+      const stage = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
+
+      updatedService = produce(props.serviceData, draft => {
+        if (draft) {
+          setNameIDDescription(draft.service as PipelineInfoConfig, pipeline as ServicePipelineConfig)
+          set(draft, 'service.serviceDefinition', stage)
+        }
+      })
+    }
+    const finalServiceData = view === SelectedView.VISUAL ? props.serviceData : updatedService
     const body = {
-      ...omit(cloneDeep(props.serviceData.service), 'serviceDefinition', 'gitOpsEnabled'),
+      ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
       projectIdentifier,
       orgIdentifier,
-      yaml: yamlStringify({ ...props.serviceData })
+      yaml: yamlStringify(sanitize({ ...finalServiceData }, { removeEmptyObject: false }))
     }
 
     try {
       const response = isServiceCreateModalView ? await createService(body) : await updateService(body)
       if (response.status === 'SUCCESS') {
         if (isServiceEntityModalView) {
-          isServiceCreateModalView
-            ? onServiceCreate?.({
-                identifier: props.serviceData.service?.identifier as string,
-                name: props.serviceData.service?.name as string
-              })
-            : onCloseModal?.()
+          const serviceResponse = response.data?.service
+
+          if (!isServiceCreateModalView) {
+            if (!isEmpty(serviceResponse?.yaml) && !isEmpty(serviceCacheKey)) {
+              const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceResponse?.yaml, ''))
+              const serviceInfo = parsedYaml.service?.serviceDefinition
+              setCache(serviceCacheKey, serviceInfo)
+            }
+          }
+          onServiceCreate?.({
+            identifier: serviceResponse?.identifier as string,
+            name: serviceResponse?.name as string
+          })
         } else {
-          showSuccess(getString('common.serviceCreated'))
+          showSuccess(
+            isServiceEntityModalView && isServiceCreateModalView
+              ? getString('common.serviceCreated')
+              : getString('common.serviceUpdated')
+          )
           fetchPipeline({ forceFetch: true, forceUpdate: true })
         }
       } else {
@@ -101,6 +144,9 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     } catch (e: any) {
       showError(e?.data?.message || e?.message || getString('commonError'))
     }
+
+    // this is for refetching serviceHeader API for updating "last updated" time after "saveAndPublishService" action
+    props.invokeServiceHeaderRefetch?.()
   }
 
   if (isLoading) {
@@ -112,12 +158,16 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     )
   }
 
-  if (NG_SVC_ENV_REDESIGN) {
+  if (isSvcEnvEntityEnabled) {
     if (isServiceEntityModalView) {
       return (
         <>
           <ServiceConfiguration serviceData={props.serviceData} />
-          <Layout.Horizontal className={css.btnContainer} spacing="medium" margin={{ top: 'medium', bottom: 'medium' }}>
+          <Layout.Horizontal
+            className={css.stickyBtnContainer}
+            spacing="medium"
+            margin={{ top: 'medium', bottom: 'medium' }}
+          >
             <Button
               variation={ButtonVariation.PRIMARY}
               disabled={!isUpdated}
@@ -142,7 +192,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
             panel={<ServiceConfiguration serviceData={props.serviceData} />}
           />
 
-          <Tab id={ServiceTabs.REFERENCED_BY} title={getString('refrencedBy')} panel={props.refercedByPanel} />
+          <Tab id={ServiceTabs.REFERENCED_BY} title={getString('referencedBy')} panel={props.refercedByPanel} />
           {/* <Tab id={ServiceTabs.ActivityLog} title={getString('activityLog')} panel={<></>} /> */}
         </Tabs>
         {selectedTabId === ServiceTabs.Configuration && (
@@ -175,7 +225,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     <Container padding={{ left: 'xlarge', right: 'xlarge' }} className={css.tabsContainer}>
       <Tabs id="serviceDetailsTab" selectedTabId={selectedTabId} onChange={handleTabChange}>
         <Tab id={ServiceTabs.SUMMARY} title={getString('summary')} panel={props.summaryPanel} />
-        <Tab id={ServiceTabs.REFERENCED_BY} title={getString('refrencedBy')} panel={props.refercedByPanel} />
+        <Tab id={ServiceTabs.REFERENCED_BY} title={getString('referencedBy')} panel={props.refercedByPanel} />
       </Tabs>
     </Container>
   )

@@ -255,6 +255,8 @@ export const TrialLicenseBanner: React.FC = () => {
     if (module) {
       handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, updatedLicenseInfo)
     }
+    // added to fix https://harness.atlassian.net/browse/BG-328
+    return () => setExtendingTrial(false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 

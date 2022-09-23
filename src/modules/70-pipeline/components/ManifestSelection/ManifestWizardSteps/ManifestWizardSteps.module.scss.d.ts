@@ -26,6 +26,7 @@ declare const styles: {
   readonly halfWidth: string
   readonly headerContainer: string
   readonly helmToolTip: string
+  readonly kustomizeYamlFolderPath: string
   readonly manifestForm: string
   readonly manifestIcon: string
   readonly manifestStore: string

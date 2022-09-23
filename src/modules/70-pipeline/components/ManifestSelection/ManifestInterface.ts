@@ -5,17 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import type { AllowedTypes, SelectOption } from '@wings-software/uicore'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type {
   ManifestConfig,
+  ConnectorConfigDTO,
   ManifestConfigWrapper,
   PageConnectorResponse,
-  PipelineInfoConfig,
-  StageElementConfig,
   ServiceDefinition
 } from 'services/cd-ng'
-import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
 export type ManifestTypes =
   | 'K8sManifest'
@@ -26,29 +25,62 @@ export type ManifestTypes =
   | 'OpenshiftParam'
   | 'KustomizePatches'
   | 'ServerlessAwsLambda'
+  | 'EcsTaskDefinition'
+  | 'EcsServiceDefinition'
+  | 'EcsScalableTargetDefinition'
+  | 'EcsScalingPolicyDefinition'
 
 export type PrimaryManifestType = 'K8sManifest' | 'HelmChart' | 'OpenshiftTemplate' | 'Kustomize'
 
-export type ManifestStores = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Http' | 'S3' | 'Gcs' | 'InheritFromManifest'
+export type ManifestStores =
+  | 'Git'
+  | 'Github'
+  | 'GitLab'
+  | 'Bitbucket'
+  | 'Http'
+  | 'OciHelmChart'
+  | 'S3'
+  | 'Gcs'
+  | 'InheritFromManifest'
+  | 'Inline'
+  | 'Harness'
+  | 'CustomRemote'
+
+export type ManifestStoreTypeWithoutConnector = 'InheritFromManifest' | 'Harness' | 'Inline' | 'CustomRemote'
+
+export type HelmOCIVersionOptions = 'V380'
 export type HelmVersionOptions = 'V2' | 'V3'
+export type ManifestStoreWithoutConnector = Exclude<ManifestStores, ManifestStoreTypeWithoutConnector>
+
 export interface ManifestSelectionProps {
   isPropagating?: boolean
   deploymentType: ServiceDefinition['type']
+  isReadonlyServiceMode: boolean
   readonly: boolean
+  updateManifestList?: (manifestObj: ManifestConfigWrapper, manifestIndex: number) => void
+  initialManifestList?: ManifestConfigWrapper[]
+  allowOnlyOneManifest?: boolean
+  addManifestBtnText?: string
+  preSelectedManifestType?: ManifestTypes
+  availableManifestTypes: ManifestTypes[]
+  deleteManifest?: (index: number) => void
 }
 
 export interface ManifestListViewProps {
   pipeline: PipelineInfoConfig
-  updateStage: (stage: StageElementConfig) => Promise<void>
-  stage: StageElementWrapper | undefined
-  isPropagating?: boolean
   connectors: PageConnectorResponse | undefined
-  refetchConnectors: () => void
-  listOfManifests: Array<any>
+  listOfManifests: ManifestConfigWrapper[]
   isReadonly: boolean
   deploymentType: ServiceDefinition['type']
-  allowableTypes: MultiTypeInputType[]
-  allowOnlyOne?: boolean
+  allowableTypes: AllowedTypes
+  updateManifestList: (obj: ManifestConfigWrapper, idx: number) => void
+  removeManifestConfig: (idx: number) => void
+  attachPathYaml: (formData: ConnectorConfigDTO, manifestId: string, manifestType: PrimaryManifestType) => void
+  removeValuesYaml: (index: number, manifestId: string, manifestType: PrimaryManifestType) => void
+  allowOnlyOneManifest?: boolean
+  addManifestBtnText?: string
+  preSelectedManifestType?: ManifestTypes
+  availableManifestTypes: ManifestTypes[]
 }
 
 export interface ManifestStepInitData {
@@ -56,7 +88,7 @@ export interface ManifestStepInitData {
   store: ManifestStores | string
   selectedManifest: ManifestTypes | null
 }
-export interface K8sValuesManifestDataType {
+export interface CommonManifestDataType {
   identifier: string
   branch: string | undefined
   commitId: string | undefined
@@ -70,7 +102,7 @@ export interface ManifestLastStepProps {
   key: string
   name: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepName: string
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
@@ -100,6 +132,17 @@ export interface HelmWithHTTPDataType {
   identifier: string
   helmVersion: HelmVersionOptions
   skipResourceVersioning: boolean
+  chartName: string
+  chartVersion: string
+  valuesPaths?: any
+  commandFlags: Array<CommandFlags>
+}
+
+export interface HelmWithOCIDataType {
+  identifier: string
+  helmVersion: HelmOCIVersionOptions
+  skipResourceVersioning: boolean
+  basePath: string
   chartName: string
   chartVersion: string
   valuesPaths?: any
@@ -139,6 +182,8 @@ export interface KustomizeWithGITDataType {
   folderPath: string
   pluginPath: string
   patchesPaths?: any
+  optimizedKustomizeManifestCollection?: boolean
+  kustomizeYamlFolderPath?: string
 }
 export interface OpenShiftParamDataType {
   identifier: string
@@ -148,7 +193,7 @@ export interface OpenShiftParamDataType {
   gitFetchType?: 'Branch' | 'Commit'
   paths: string[] | any
 }
-export interface ServerlessManifestDataType extends K8sValuesManifestDataType {
+export interface ServerlessManifestDataType extends CommonManifestDataType {
   identifier: string
   branch: string | undefined
   commitId: string | undefined
@@ -160,4 +205,44 @@ export interface ServerlessManifestDataType extends K8sValuesManifestDataType {
 export interface InheritFromManifestDataType {
   identifier: string
   paths: any
+}
+export interface InlineDataType {
+  identifier: string
+  content: string
+}
+export interface HarnessFileStoreDataType {
+  identifier: string
+  files: string[]
+  valuesPaths: string[]
+  paramsPaths: string[]
+  skipResourceVersioning?: boolean
+}
+export interface HarnessFileStoreFormData {
+  identifier: string
+  files: string | string[]
+  skipResourceVersioning: boolean
+  valuesPaths?: string | string[]
+  paramsPaths?: string | string[]
+}
+export interface HelmHarnessFileStoreFormData extends HarnessFileStoreFormData {
+  helmVersion: HelmVersionOptions
+  commandFlags: Array<CommandFlags>
+}
+export interface KustomizeWithHarnessStorePropTypeDataType extends HarnessFileStoreFormData {
+  overlayConfiguration?:
+    | string
+    | {
+        kustomizeYamlFolderPath: string
+      }
+  pluginPath?: string
+  patchesPaths?: string[] | string
+}
+export interface CustomManifestManifestDataType {
+  identifier: string
+  extractionScript: string
+  filePath: string
+  delegateSelectors: Array<string> | string
+  valuesPaths?: Array<{ path: string }> | string
+  paramsPaths?: Array<{ path: string }> | string
+  skipResourceVersioning?: boolean
 }

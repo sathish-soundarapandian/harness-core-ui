@@ -115,7 +115,7 @@ export const FetchPlansDocument = gql`
       ffPlans {
         ...Plans
       }
-      chIntelPlans {
+      srmPlans {
         ...Plans
       }
       ciFeatureCaption {
@@ -148,10 +148,10 @@ export const FetchPlansDocument = gql`
       ciSaasFeatureGroup {
         ...FeatureGroup
       }
-      chIntelFeatureCaption {
+      srmFeatureCaption {
         ...FeatureCaption
       }
-      chIntelFeatureGroup {
+      srmFeatureGroup {
         ...FeatureGroup
       }
       cdFaq {
@@ -422,7 +422,7 @@ export type FetchPlansQuery = {
         link: string | null
       } | null> | null
     } | null> | null
-    chIntelPlans: Array<{
+    srmPlans: Array<{
       __typename?: 'ComponentPricingPagePlansZone'
       id: string
       title: string | null
@@ -586,7 +586,7 @@ export type FetchPlansQuery = {
         enterpriseText: string | null
       } | null> | null
     } | null> | null
-    chIntelFeatureCaption: Array<{
+    srmFeatureCaption: Array<{
       __typename?: 'ComponentPricingPageFeatureCaption'
       id: string
       title: string | null
@@ -594,7 +594,7 @@ export type FetchPlansQuery = {
       btnLink: string | null
       primaryButton: boolean | null
     } | null> | null
-    chIntelFeatureGroup: Array<{
+    srmFeatureGroup: Array<{
       __typename?: 'ComponentPricingPageFeatureGroup'
       id: string
       title: string | null
@@ -4770,9 +4770,9 @@ export type Pricing = {
   cdFeatureCaption: Maybe<Array<Maybe<ComponentPricingPageFeatureCaption>>>
   cdFeatureGroup: Maybe<Array<Maybe<ComponentPricingPageFeatureGroup>>>
   cdPlans: Maybe<Array<Maybe<ComponentPricingPagePlansZone>>>
-  chIntelFeatureCaption: Maybe<Array<Maybe<ComponentPricingPageFeatureCaption>>>
-  chIntelFeatureGroup: Maybe<Array<Maybe<ComponentPricingPageFeatureGroup>>>
-  chIntelPlans: Maybe<Array<Maybe<ComponentPricingPagePlansZone>>>
+  srmFeatureCaption: Maybe<Array<Maybe<ComponentPricingPageFeatureCaption>>>
+  srmFeatureGroup: Maybe<Array<Maybe<ComponentPricingPageFeatureGroup>>>
+  srmPlans: Maybe<Array<Maybe<ComponentPricingPagePlansZone>>>
   ciFaq: Maybe<Array<Maybe<ComponentPricingPageFaq>>>
   ciFeatureCaption: Maybe<Array<Maybe<ComponentPricingPageFeatureCaption>>>
   ciFeatureGroup: Maybe<Array<Maybe<ComponentPricingPageFeatureGroup>>>
@@ -4805,9 +4805,9 @@ export type PricingInput = {
   cdFeatureCaption: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureCaptionInput>>>
   cdFeatureGroup: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureGroupInput>>>
   cdPlans: InputMaybe<Array<InputMaybe<ComponentPricingPagePlansZoneInput>>>
-  chIntelFeatureCaption: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureCaptionInput>>>
-  chIntelFeatureGroup: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureGroupInput>>>
-  chIntelPlans: InputMaybe<Array<InputMaybe<ComponentPricingPagePlansZoneInput>>>
+  srmFeatureCaption: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureCaptionInput>>>
+  srmFeatureGroup: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureGroupInput>>>
+  srmPlans: InputMaybe<Array<InputMaybe<ComponentPricingPagePlansZoneInput>>>
   ciFaq: InputMaybe<Array<InputMaybe<ComponentPricingPageFaqInput>>>
   ciFeatureCaption: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureCaptionInput>>>
   ciFeatureGroup: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureGroupInput>>>
@@ -7644,9 +7644,9 @@ export type EditPricingInput = {
   cdFeatureCaption: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureCaptionInput>>>
   cdFeatureGroup: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureGroupInput>>>
   cdPlans: InputMaybe<Array<InputMaybe<EditComponentPricingPagePlansZoneInput>>>
-  chIntelFeatureCaption: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureCaptionInput>>>
-  chIntelFeatureGroup: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureGroupInput>>>
-  chIntelPlans: InputMaybe<Array<InputMaybe<EditComponentPricingPagePlansZoneInput>>>
+  srmFeatureCaption: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureCaptionInput>>>
+  srmFeatureGroup: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureGroupInput>>>
+  srmPlans: InputMaybe<Array<InputMaybe<EditComponentPricingPagePlansZoneInput>>>
   ciFaq: InputMaybe<Array<InputMaybe<EditComponentPricingPageFaqInput>>>
   ciFeatureCaption: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureCaptionInput>>>
   ciFeatureGroup: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureGroupInput>>>

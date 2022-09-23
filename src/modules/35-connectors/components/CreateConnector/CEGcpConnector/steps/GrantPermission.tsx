@@ -24,18 +24,18 @@ import { useCreateConnector, useUpdateConnector, Failure } from 'services/cd-ng'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { CE_GCP_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
+import { FeatureFlag } from '@common/featureFlags'
 import type { CEGcpConnectorDTO } from './OverviewStep'
 import css from '../CreateCeGcpConnector.module.scss'
 
 const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
   const { getString } = useStrings()
-  const { CE_AS_GCP_VM_SUPPORT } = useFeatureFlags()
 
   useStepLoadTelemetry(CE_GCP_CONNECTOR_CREATION_EVENTS.LOAD_GRANT_PERMISSIONS)
 
@@ -53,10 +53,8 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
     queryParams: { accountIdentifier: accountId }
   })
 
-  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
-    errorOutOnGovernanceWarning: false,
-    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
-  })
+  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   const {
     data,
     loading: loadingServiceAccount,
@@ -96,8 +94,11 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
         if (response.status !== 'SUCCESS') {
           throw response as Failure
         }
-        const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
-        if (canGoToNextStep) {
+        if (opaFlagEnabled && response.data?.governanceMetadata) {
+          conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
+            nextStep?.({ ...prevStepData, serviceAccount })
+          })
+        } else {
           nextStep?.({ ...prevStepData, serviceAccount })
         }
       }
@@ -111,8 +112,39 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
     previousStep?.({ ...(prevStepData as CEGcpConnectorDTO), serviceAccount })
   }
 
-  const renderOptimizationSteps = () => {
-    return CE_AS_GCP_VM_SUPPORT && props.prevStepData?.spec.featuresEnabled?.includes('OPTIMIZATION') ? (
+  const renderAdditionalSteps = () => {
+    const optimizationEnabled = props.prevStepData?.spec.featuresEnabled?.includes('OPTIMIZATION')
+    const inventoryEnabled = props.prevStepData?.spec.featuresEnabled?.includes('VISIBILITY')
+    return optimizationEnabled && inventoryEnabled ? (
+      <>
+        <li>
+          <div>
+            {getString('enable')}{' '}
+            <a
+              href="https://console.cloud.google.com/apis/library/compute.googleapis.com"
+              rel="noreferrer"
+              target="_blank"
+            >
+              {getString('connectors.ceGcp.grantPermission.inventory.computeEngine')}
+            </a>{' '}
+            {getString('connectors.ceGcp.grantPermission.inventory.step1')}
+          </div>
+        </li>
+        <li>
+          <div>{getString('connectors.ceGcp.grantPermission.optimization.step1')}</div>
+        </li>
+        <li>
+          <div>{getString('connectors.ceGcp.grantPermission.optimization.step2', { serviceAccount })}</div>
+        </li>
+        <li>
+          <div>
+            {getString('connectors.ceGcp.grantPermission.optimization.step3', {
+              otherRole: inventoryEnabled ? getString('connectors.ceGcp.grantPermission.inventory.step2') : ''
+            })}
+          </div>
+        </li>
+      </>
+    ) : optimizationEnabled && !inventoryEnabled ? (
       <>
         <li>
           <div>{getString('connectors.ceGcp.grantPermission.optimization.step1')}</div>
@@ -122,6 +154,25 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
         </li>
         <li>
           <div>{getString('connectors.ceGcp.grantPermission.optimization.step3')}</div>
+        </li>
+      </>
+    ) : !optimizationEnabled && inventoryEnabled ? (
+      <>
+        <li>
+          <div>
+            {getString('enable')}{' '}
+            <a
+              href="https://console.cloud.google.com/apis/library/compute.googleapis.com"
+              rel="noreferrer"
+              target="_blank"
+            >
+              {getString('connectors.ceGcp.grantPermission.inventory.computeEngine')}
+            </a>{' '}
+            {getString('connectors.ceGcp.grantPermission.inventory.step1')}
+          </div>
+        </li>
+        <li>
+          <div>{getString('connectors.ceGcp.grantPermission.inventory.completePermissionStep')}</div>
         </li>
       </>
     ) : null
@@ -177,7 +228,7 @@ const GrantPermission: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
         <li>
           <div>{getString('connectors.ceGcp.grantPermission.step6')}</div>
         </li>
-        {renderOptimizationSteps()}
+        {renderAdditionalSteps()}
         <li>
           <div>{getString('connectors.ceGcp.grantPermission.step7')}</div>
         </li>

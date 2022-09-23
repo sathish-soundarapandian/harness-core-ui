@@ -16,7 +16,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view for inputse
         >
           <div
             class="StyledProps--font StyledProps--main"
-            style="margin-bottom: 5px;"
+            data-test-id="connectorTooltip"
           >
             <span
               class="Tooltip--acenter bp3-label"
@@ -393,7 +393,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with empty 
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -801,7 +801,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with runtim
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -1217,7 +1217,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view with values
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"

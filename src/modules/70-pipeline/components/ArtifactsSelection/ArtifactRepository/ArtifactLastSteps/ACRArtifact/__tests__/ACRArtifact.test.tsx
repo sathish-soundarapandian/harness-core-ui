@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { act, fireEvent, render, waitFor } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ArtifactType, TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -17,7 +17,11 @@ import { ACRArtifact } from '../ACRArtifact'
 const props = {
   name: 'Artifact details',
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   context: ModalViewFor.SIDECAR,
   handleSubmit: jest.fn(),
   artifactIdentifiers: [],

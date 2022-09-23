@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 
@@ -24,7 +24,7 @@ export default function BaseContinousVerification(props: {
   formik: FormikProps<ContinousVerificationData>
   isNewStep?: boolean
   stepViewType?: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const {
     formik: { values: formValues, setFieldValue },

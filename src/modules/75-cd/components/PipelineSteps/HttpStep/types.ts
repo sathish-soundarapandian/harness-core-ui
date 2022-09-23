@@ -6,7 +6,7 @@
  */
 
 import type { SelectOption } from '@wings-software/uicore'
-import type { HttpStepInfo, StepElementConfig, HttpHeaderConfig, StringNGVariable } from 'services/cd-ng'
+import type { HttpStepInfo, StepElementConfig, HttpHeaderConfig, StringNGVariable } from 'services/pipeline-ng'
 
 export interface HttpStepHeaderConfig extends HttpHeaderConfig {
   id: string

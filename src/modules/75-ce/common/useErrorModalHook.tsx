@@ -8,10 +8,12 @@
 import React, { useState } from 'react'
 import { Button, Container, Text } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
+import { isEmpty } from 'lodash-es'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import type { ServiceError } from 'services/lw'
 import { useStrings } from 'framework/strings'
+import type { ServiceWarning } from '@ce/types'
 import css from './useErrorModalHook.module.scss'
 
 const modalProps: IDialogProps = {
@@ -28,16 +30,18 @@ const modalProps: IDialogProps = {
 }
 
 interface UserErrorModalReturn {
-  openErrorModal: (_error: ServiceError[]) => void
+  openErrorModal: (_error: ServiceError[], _warning?: ServiceWarning[]) => void
   hideErrorModal?: () => void
 }
 
 interface UseErrorModalHookProps {
   errorSummary?: string
+  warningSummary?: string
 }
 
 const useErrorModalHook = (props: UseErrorModalHookProps): UserErrorModalReturn => {
-  const [error, setError] = useState<ServiceError[]>()
+  const [errors, setErrors] = useState<ServiceError[]>()
+  const [warnings, setWarnings] = useState<ServiceError[]>()
 
   const { getString } = useStrings()
 
@@ -46,23 +50,42 @@ const useErrorModalHook = (props: UseErrorModalHookProps): UserErrorModalReturn 
       <Dialog {...modalProps}>
         <Container height={'100%'} padding="xxlarge">
           <Text font={{ size: 'medium' }} color={Color.BLACK}>
-            {getString('errorDetails')}
+            {getString('details')}
           </Text>
-          <Container padding={{ top: 'large' }}>
-            <Text
-              icon={'error'}
-              iconProps={{ color: Color.RED_500 }}
-              color={Color.GREY_900}
-              lineClamp={1}
-              font={{ size: 'small', weight: 'semi-bold' }}
-              margin={{ top: 'small', bottom: 'small' }}
-            >
-              {props?.errorSummary}
-            </Text>
-            <div className={css.errorMsg}>
-              <pre>{JSON.stringify({ errors: error }, null, ' ')}</pre>
-            </div>
-          </Container>
+          {!isEmpty(errors) && (
+            <Container padding={{ top: 'large' }}>
+              <Text
+                icon={'error'}
+                iconProps={{ color: Color.RED_500, size: 14 }}
+                color={Color.GREY_900}
+                lineClamp={1}
+                font={{ variation: FontVariation.SMALL_SEMI }}
+                margin={{ top: 'small', bottom: 'small' }}
+              >
+                {props?.errorSummary}
+              </Text>
+              <div className={css.errorMsg}>
+                <pre>{JSON.stringify({ errors }, null, ' ')}</pre>
+              </div>
+            </Container>
+          )}
+          {!isEmpty(warnings) && (
+            <Container padding={{ top: 'large' }}>
+              <Text
+                icon={'warning-sign'}
+                iconProps={{ color: Color.YELLOW_500, size: 14 }}
+                color={Color.GREY_900}
+                lineClamp={1}
+                font={{ variation: FontVariation.SMALL_SEMI }}
+                margin={{ top: 'small', bottom: 'small' }}
+              >
+                {props?.warningSummary}
+              </Text>
+              <div className={css.warningMsg}>
+                <pre>{JSON.stringify({ warnings }, null, ' ')}</pre>
+              </div>
+            </Container>
+          )}
         </Container>
         <Button
           minimal
@@ -76,12 +99,15 @@ const useErrorModalHook = (props: UseErrorModalHookProps): UserErrorModalReturn 
         />
       </Dialog>
     ),
-    [error]
+    [errors, warnings]
   )
 
   return {
-    openErrorModal: (_error: any) => {
-      setError(_error)
+    openErrorModal: (_error: ServiceError[], _warning?: ServiceWarning[]) => {
+      setErrors(_error)
+      if (!isEmpty(_warning)) {
+        setWarnings(_warning)
+      }
       showModal()
     },
     hideErrorModal: hideModal

@@ -16,6 +16,7 @@ declare const styles: {
   readonly configInfo: string
   readonly customDomainContainer: string
   readonly dnsLinkContainer: string
+  readonly drawerContainer: string
   readonly fixedDrawer: string
   readonly flexRow: string
   readonly formFieldRow: string
@@ -29,6 +30,7 @@ declare const styles: {
   readonly loadBalancerSelector: string
   readonly mapDomainHelperText: string
   readonly othersHelpTextContainer: string
+  readonly overlappingDomainsInfo: string
   readonly page: string
   readonly publicAccessibleCheckboxContainer: string
   readonly radioBtn: string

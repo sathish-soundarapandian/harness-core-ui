@@ -6,28 +6,29 @@
  */
 
 import React from 'react'
-import { matchPath, useParams, useHistory } from 'react-router-dom'
+import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import { defaultTo, isEmpty, merge } from 'lodash-es'
 import {
   Container,
   Layout,
-  VisualYamlSelectedView as SelectedView,
   useConfirmationDialog,
-  useToaster
+  useToaster,
+  VisualYamlSelectedView as SelectedView
 } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
-import { v4 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import { NavigationCheck, Page } from '@common/exports'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { TemplateStudioSubHeader } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/TemplateStudioSubHeader'
+import {
+  TemplateStudioSubHeaderHandle,
+  TemplateStudioSubHeaderWithRef
+} from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/TemplateStudioSubHeader'
 import { PageSpinner } from '@common/components'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { TemplateStudioHeader } from '@templates-library/components/TemplateStudio/TemplateStudioHeader/TemplateStudioHeader'
 import type { GitQueryParams, ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-import { DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import TemplateYamlView from '@templates-library/components/TemplateStudio/TemplateYamlView/TemplateYamlView'
@@ -42,8 +43,8 @@ import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { TemplateVariablesContextProvider } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import { RightBar } from '@templates-library/components/TemplateStudio/RightBar/RightBar'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
-import { TemplateSelectorContextProvider } from '@templates-library/components/TemplateSelectorContext/TemplateSelectorContext'
-import { TemplateSelectorDrawer } from '@templates-library/components/TemplateSelectorDrawer/TemplateSelectorDrawer'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
@@ -62,12 +63,12 @@ export type TemplateFormRef<T = unknown> =
 export function TemplateStudio(): React.ReactElement {
   const { state, view, updateTemplateView, updateTemplate, deleteTemplateCache, isReadonly, fetchTemplate, setView } =
     React.useContext(TemplateContext)
-  const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, module, templateType } = useParams<
-    TemplateStudioPathProps & ModulePathParams
-  >()
+  const params = useParams<TemplateStudioPathProps & ModulePathParams>()
+  const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, module, templateType } = params
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const {
     template,
+    originalTemplate,
     templateView,
     isLoading,
     isUpdated,
@@ -75,9 +76,12 @@ export function TemplateStudio(): React.ReactElement {
     isBETemplateUpdated,
     isInitialized,
     gitDetails,
+    storeMetadata,
     entityValidityDetails,
-    templateInputsErrorNodeSummary
+    templateInputsErrorNodeSummary,
+    templateYamlError
   } = state
+
   const { isYamlEditable } = templateView
   const { getString } = useStrings()
   const [blockNavigation, setBlockNavigation] = React.useState(false)
@@ -87,7 +91,9 @@ export function TemplateStudio(): React.ReactElement {
   const { showError } = useToaster()
   const history = useHistory()
   const templateFormikRef = React.useRef<TemplateFormikRef | null>(null)
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const templateStudioSubHeaderHandleRef = React.useRef<TemplateStudioSubHeaderHandle | null>(null)
 
   useDocumentTitle([parse(defaultTo(template?.name, getString('common.templates')))])
 
@@ -158,9 +164,9 @@ export function TemplateStudio(): React.ReactElement {
     }
     setView(newView)
     updateTemplateView({
+      ...templateView,
       isDrawerOpened: false,
-      isYamlEditable: false,
-      drawerData: { type: DrawerTypes.AddStep }
+      isYamlEditable: false
     })
     return true
   }
@@ -183,42 +189,45 @@ export function TemplateStudio(): React.ReactElement {
   }, [isBETemplateUpdated, discardBEUpdateDialog, openConfirmBEUpdateError, blockNavigation, openUnsavedChangesDialog])
 
   const onGitBranchChange = React.useMemo(
-    () => (selectedFilter: GitFilterScope) => {
+    () => (selectedFilter: GitFilterScope, defaultSelected?: boolean) => {
       setSelectedBranch(selectedFilter.branch as string)
-      if (isUpdated && branch !== selectedFilter.branch) {
-        setBlockNavigation(true)
-      } else if (branch !== selectedFilter.branch) {
-        deleteTemplateCache({
-          repoIdentifier: defaultTo(selectedFilter.repo, ''),
-          branch: defaultTo(selectedFilter.branch, '')
-        }).then(() => {
-          history.push(
-            routes.toTemplateStudio({
-              projectIdentifier,
-              orgIdentifier,
-              templateIdentifier: defaultTo(templateIdentifier, '-1'),
-              accountId,
-              module,
-              templateType: template.type,
-              versionLabel: template.versionLabel,
-              branch: selectedFilter.branch,
-              repoIdentifier: selectedFilter.repo
-            })
-          )
-        })
+      if (!defaultSelected) {
+        if (isUpdated && branch !== selectedFilter.branch) {
+          setBlockNavigation(true)
+        } else if (branch !== selectedFilter.branch) {
+          deleteTemplateCache({
+            repoIdentifier: defaultTo(selectedFilter.repo, ''),
+            branch: defaultTo(selectedFilter.branch, '')
+          }).then(() => {
+            history.push(
+              routes.toTemplateStudio({
+                projectIdentifier,
+                orgIdentifier,
+                templateIdentifier: defaultTo(templateIdentifier, '-1'),
+                accountId,
+                module,
+                templateType: template.type,
+                versionLabel: template.versionLabel,
+                branch: selectedFilter.branch,
+                repoIdentifier: selectedFilter.repo
+              })
+            )
+          })
+        }
       }
     },
     [
-      branch,
-      isUpdated,
-      templateIdentifier,
-      projectIdentifier,
-      orgIdentifier,
       accountId,
-      module,
+      branch,
       deleteTemplateCache,
       history,
-      template
+      isUpdated,
+      module,
+      orgIdentifier,
+      projectIdentifier,
+      template.type,
+      template.versionLabel,
+      templateIdentifier
     ]
   )
 
@@ -244,88 +253,115 @@ export function TemplateStudio(): React.ReactElement {
       : merge(pathParams, { ...accountPathProps })
   }, [projectIdentifier, orgIdentifier])
 
-  const [key, setKey] = React.useState<string>(uuid())
+  const updateEntity = React.useCallback(
+    async (entityYaml: string) => {
+      await templateStudioSubHeaderHandleRef.current?.updateTemplate(entityYaml)
+    },
+    [templateStudioSubHeaderHandleRef.current]
+  )
 
-  React.useEffect(() => {
-    if (!isLoading) {
-      setKey(uuid())
-    }
-  }, [isLoading])
+  const ErrorPanel = (): JSX.Element => (
+    <Container style={{ maxWidth: '570px', alignSelf: 'center' }} padding={'huge'}>
+      <NoEntityFound
+        identifier={templateIdentifier}
+        entityType={'template'}
+        errorObj={templateYamlError}
+        gitDetails={{
+          connectorRef: storeMetadata?.connectorRef,
+          repoName: storeMetadata?.repoName,
+          branch: storeMetadata?.branch,
+          onBranchChange: onGitBranchChange
+        }}
+      />
+    </Container>
+  )
+
+  const renderView =
+    view === SelectedView.VISUAL ? (
+      /* istanbul ignore next */
+      templateFactory.getTemplate(templateType)?.renderTemplateCanvas(templateFormikRef)
+    ) : (
+      <TemplateYamlView />
+    )
+
+  const studioCanvasUI = templateYamlError ? (
+    <ErrorPanel />
+  ) : (
+    <>
+      {templateInputsErrorNodeSummary && (
+        <OutOfSyncErrorStrip
+          errorNodeSummary={templateInputsErrorNodeSummary}
+          entity={TemplateErrorEntity.TEMPLATE}
+          originalYaml={yamlStringify({ template: originalTemplate })}
+          isReadOnly={isReadonly}
+          onRefreshEntity={() => {
+            fetchTemplate({ forceFetch: true, forceUpdate: true })
+          }}
+          updateRootEntity={updateEntity}
+        />
+      )}
+      <Container className={css.canvasContainer}>{renderView}</Container>
+    </>
+  )
 
   return (
-    <TemplateSelectorContextProvider>
-      <TemplateVariablesContextProvider template={template}>
-        <NavigationCheck
-          when={template?.identifier !== ''}
-          shouldBlockNavigation={nextLocation => {
-            const matchDefault = matchPath(nextLocation.pathname, {
-              path: routes.toTemplateStudio(getPathParams()),
-              exact: true
-            })
-            return (
-              !matchDefault?.isExact &&
-              isUpdated &&
-              !isReadonly &&
-              !(templateIdentifier === DefaultNewTemplateId && isEmpty(template?.name))
-            )
-          }}
-          textProps={{
-            contentText: getString(navigationContentText),
-            titleText: getString(navigationTitleText)
-          }}
-          navigate={newPath => {
-            const isTemplate = matchPath(newPath, {
-              path: routes.toTemplateStudio(getPathParams()),
-              exact: true
-            })
-            !isTemplate?.isExact && deleteTemplateCache()
-            history.push(newPath)
-          }}
-        />
-        <Page.Header
-          className={css.rightMargin}
-          size={'small'}
-          title={<TemplateStudioHeader templateType={templateType as TemplateType} />}
-        />
-        <Page.Body key={key} className={css.rightMargin}>
-          {isLoading && <PageSpinner />}
+    <TemplateVariablesContextProvider template={template} storeMetadata={storeMetadata}>
+      <NavigationCheck
+        when={template?.identifier !== ''}
+        shouldBlockNavigation={nextLocation => {
+          const matchDefault = matchPath(nextLocation.pathname, {
+            path: routes.toTemplateStudio(getPathParams()),
+            exact: true
+          })
+          return (
+            !matchDefault?.isExact &&
+            isUpdated &&
+            !isReadonly &&
+            !(templateIdentifier === DefaultNewTemplateId && isEmpty(template?.name))
+          )
+        }}
+        textProps={{
+          contentText: getString(navigationContentText),
+          titleText: getString(navigationTitleText)
+        }}
+        navigate={newPath => {
+          const isTemplate = matchPath(newPath, {
+            path: routes.toTemplateStudio(getPathParams()),
+            exact: true
+          })
+          !isTemplate?.isExact && deleteTemplateCache()
+          history.push(newPath)
+        }}
+      />
+      <Page.Header
+        className={css.rightMargin}
+        size={'small'}
+        title={<TemplateStudioHeader templateType={templateType as TemplateType} />}
+      />
+      <Page.Body className={css.rightMargin}>
+        {isLoading ? (
+          <PageSpinner />
+        ) : (
           <Layout.Vertical height={'100%'}>
-            {!isLoading && isEmpty(template) && !isGitSyncEnabled && <GenericErrorHandler />}
-            {!isLoading && isEmpty(template) && isGitSyncEnabled && (
+            {isEmpty(template) && !isGitSyncEnabled && <GenericErrorHandler />}
+            {isEmpty(template) && isGitSyncEnabled && (
               <NoEntityFound identifier={templateIdentifier} entityType="template" />
             )}
             {isInitialized && !isEmpty(template) && (
               <>
-                <TemplateStudioSubHeader
+                <TemplateStudioSubHeaderWithRef
+                  ref={templateStudioSubHeaderHandleRef}
                   onViewChange={onViewChange}
                   getErrors={getErrors}
                   onGitBranchChange={onGitBranchChange}
                 />
-                {templateInputsErrorNodeSummary && (
-                  <OutOfSyncErrorStrip
-                    templateInputsErrorNodeSummary={templateInputsErrorNodeSummary}
-                    entity={'Template'}
-                    isReadOnly={isReadonly}
-                    onRefreshEntity={() => {
-                      fetchTemplate({ forceFetch: true, forceUpdate: true })
-                    }}
-                  />
-                )}
-                <Container className={css.canvasContainer}>
-                  {view === SelectedView.VISUAL ? (
-                    /* istanbul ignore next */
-                    templateFactory.getTemplate(templateType)?.renderTemplateCanvas({ formikRef: templateFormikRef })
-                  ) : (
-                    <TemplateYamlView />
-                  )}
-                </Container>
+                {studioCanvasUI}
               </>
             )}
             {templateType !== TemplateType.Pipeline && <RightBar />}
           </Layout.Vertical>
-        </Page.Body>
-      </TemplateVariablesContextProvider>
-      <TemplateSelectorDrawer />
-    </TemplateSelectorContextProvider>
+        )}
+      </Page.Body>
+    </TemplateVariablesContextProvider>
   )
 }

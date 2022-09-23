@@ -6,8 +6,17 @@
  */
 
 import type { StoreType } from '@common/constants/GitSyncTypes'
-import type { StringNGVariable, NumberNGVariable, SecretNGVariable, PipelineInfoConfig } from 'services/cd-ng'
-import type { NodeRunInfo, EntityGitDetails, EntityValidityDetails, InputSetResponse } from 'services/pipeline-ng'
+import type {
+  NodeRunInfo,
+  EntityGitDetails,
+  EntityValidityDetails,
+  InputSetResponse,
+  PipelineInfoConfig,
+  StringNGVariable,
+  NumberNGVariable,
+  SecretNGVariable,
+  StepElementConfig
+} from 'services/pipeline-ng'
 
 export type AllNGVariables = StringNGVariable | NumberNGVariable | SecretNGVariable
 
@@ -16,6 +25,7 @@ export interface ExecutionPageQueryParams {
   stage?: string
   step?: string
   retryStep?: string
+  stageExecId?: string // strategy nodes require stageExecId + stageID
 }
 
 export interface ExpressionBlock {
@@ -61,4 +71,15 @@ export interface SaveInputSetDTO {
 
 export interface Pipeline {
   pipeline: PipelineInfoConfig
+}
+
+export interface InputSet {
+  inputSet: InputSetDTO
+}
+
+export type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
+
+export interface ECSRollingDeployStepInitialValues extends StepElementConfig {
+  sameAsAlreadyRunningInstances?: boolean | string
+  forceNewDeployment?: boolean | string
 }

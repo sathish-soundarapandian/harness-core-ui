@@ -21,7 +21,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="jiraApproval_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -199,7 +199,7 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -772,7 +772,7 @@ exports[`Jira Approval tests Basic snapshot - deploymentform mode: jira-approval
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -962,7 +962,7 @@ exports[`Jira Approval tests Basic snapshot - input variable view: jira-approval
       <span
         class="nameSection"
       >
-        name
+        identifier
       </span>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
@@ -971,25 +971,6 @@ exports[`Jira Approval tests Basic snapshot - input variable view: jira-approval
         <span
           class=""
         />
-      </p>
-    </div>
-    <div
-      class="variableListRow variable-list-row"
-    >
-      <span
-        class="nameSection"
-      >
-        timeout
-      </span>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
-        style="--text-line-clamp: 1;"
-      >
-        <span
-          class=""
-        >
-          1d
-        </span>
       </p>
     </div>
     <div
@@ -1101,7 +1082,7 @@ exports[`Jira Approval tests Basic snapshot - inputset mode: input set with erro
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -1368,7 +1349,7 @@ exports[`Jira Approval tests Edit stage - readonly: edit stage view readonly 1`]
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="jiraApproval_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -1541,7 +1522,7 @@ exports[`Jira Approval tests Edit stage - readonly: edit stage view readonly 1`]
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -2085,7 +2066,7 @@ exports[`Jira Approval tests deploymentform mode - readonly: jira-approval-deplo
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"

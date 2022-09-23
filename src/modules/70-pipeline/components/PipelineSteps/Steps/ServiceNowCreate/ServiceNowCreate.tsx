@@ -16,7 +16,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import type { StringsMap } from 'stringTypes'
 import { PipelineStep } from '../../PipelineStep'
 import { StepType } from '../../PipelineStepInterface'
-import { flatObject } from '../Common/ApprovalCommons'
+import { getSanitizedflatObjectForVariablesView } from '../Common/ApprovalCommons'
 import type { ServiceNowCreateData, ServiceNowCreateVariableListModeProps } from './types'
 import { FieldType, ServiceNowStaticFields } from './types'
 import { processFormData, processInitialValues } from './helper'
@@ -32,6 +32,7 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
     this._hasDelegateSelectionVisible = true
   }
 
+  protected referenceId = 'serviceNowCreateStep'
   protected isHarnessSpecific = true
   protected type = StepType.ServiceNowCreate
   protected stepName = 'ServiceNow Create'
@@ -183,7 +184,7 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <ServiceNowCreateDeploymentModeWithFormik
           stepViewType={stepViewType}
@@ -197,7 +198,7 @@ export class ServiceNowCreate extends PipelineStep<ServiceNowCreateData> {
       const customStepPropsTyped = customStepProps as ServiceNowCreateVariableListModeProps
       return (
         <VariablesListTable
-          data={flatObject(customStepPropsTyped.variablesData)}
+          data={getSanitizedflatObjectForVariablesView(customStepPropsTyped.variablesData)}
           originalData={initialValues as Record<string, any>}
           metadataMap={customStepPropsTyped.metadataMap}
           className={pipelineVariablesCss.variablePaddingL3}

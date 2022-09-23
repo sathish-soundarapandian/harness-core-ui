@@ -13,11 +13,11 @@ import { Icon, IconName } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import type { OrgPathProps } from '@common/interfaces/RouteInterfaces'
+import { isOnPrem } from '@common/utils/utils'
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useCreateSmtpModal from '@common/components/Smtp/useCreateSmtpModal'
 import { useGetSmtpConfig } from 'services/cd-ng'
-import { isPR, isLocalHost } from '@common/utils/utils'
 import css from './ResourceCardList.module.scss'
 
 export interface ResourceOption {
@@ -38,16 +38,17 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { NG_TEMPLATES, NG_VARIABLES } = useFeatureFlags()
+  const { NG_FILE_STORE, NG_SETTINGS } = useFeatureFlags()
+  const DEPLOYMENT_FREEZE = false
+
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
   const refetchSmtpData = (): void => {
     refetch()
   }
   const { openCreateSmtpModal } = useCreateSmtpModal({ onCloseModal: refetchSmtpData })
-  // showGitOpsCard defaults to false for now while the feature is being developed
   const showGitOpsCard = useMemo(
-    () => history?.location?.pathname.includes('resources') && (isPR() || isLocalHost()),
+    () => history?.location?.pathname.includes('resources') && !isOnPrem(),
     [history?.location?.pathname]
   )
   const smtpResource: ResourceOption[] = [
@@ -94,6 +95,25 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       selectable: true
     } as ResourceOption
   ]
+  const defaultSettingsCard: ResourceOption[] = [
+    {
+      label: <String stringID="common.defaultSettings" />,
+      icon: 'nav-settings',
+      route: routes.toDefaultSettings({ accountId, orgIdentifier }),
+      selectable: true
+    } as ResourceOption
+  ]
+
+  const deploymentFreezeCard: ResourceOption[] = [
+    {
+      label: <String stringID="common.freezeWindows" />,
+      icon: 'nav-settings',
+      colorClass: css.freezeWindows,
+      route: routes.toFreezeWindows({ accountId, orgIdentifier }),
+      selectable: true
+    } as ResourceOption
+  ]
+
   const options: ResourceOption[] = items || [
     {
       label: <String stringID="connectorsLabel" />,
@@ -113,28 +133,33 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       colorClass: css.secrets,
       route: routes.toSecrets({ accountId, orgIdentifier })
     },
+    ...(NG_FILE_STORE
+      ? [
+          {
+            label: <String stringID="resourcePage.fileStore" />,
+            colorClass: css.filestore,
+            icon: 'filestore',
+            route: routes.toFileStore({ accountId, orgIdentifier })
+          } as ResourceOption
+        ]
+      : []),
     ...(!orgIdentifier ? smtpResource : []),
-    ...(NG_TEMPLATES
-      ? [
-          {
-            label: <String stringID="common.templates" />,
-            icon: 'templates-icon',
-            colorClass: css.templates,
-            route: routes.toTemplates({ accountId, orgIdentifier })
-          } as ResourceOption
-        ]
-      : []),
-    ...(NG_VARIABLES
-      ? [
-          {
-            label: <String stringID="common.variables" />,
-            icon: 'variable',
-            colorClass: css.variables,
-            route: routes.toVariables({ accountId, orgIdentifier })
-          } as ResourceOption
-        ]
-      : []),
-    ...(showGitOpsCard ? gitOpsCard : [])
+    {
+      label: <String stringID="common.templates" />,
+      icon: 'templates-icon',
+      colorClass: css.templates,
+      route: routes.toTemplates({ accountId, orgIdentifier })
+    } as ResourceOption,
+
+    {
+      label: <String stringID="common.variables" />,
+      icon: 'runtime-input',
+      colorClass: css.variables,
+      route: routes.toVariables({ accountId, orgIdentifier })
+    } as ResourceOption,
+    ...(showGitOpsCard ? gitOpsCard : []),
+    ...(NG_SETTINGS ? defaultSettingsCard : []),
+    ...(DEPLOYMENT_FREEZE && !orgIdentifier ? deploymentFreezeCard : [])
   ]
 
   const gitOpsEntities = [
@@ -209,9 +234,9 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
                   }
                 }}
               >
-                <Layout.Vertical flex spacing="small">
+                <Layout.Vertical flex spacing="large" style={{ textAlign: 'center' }}>
                   <Icon name={gitOpsEntity.icon} size={70} />
-                  <Text color={Color.BLACK} font={{ weight: 'semi-bold' }}>
+                  <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} lineClamp={2} width={85}>
                     {gitOpsEntity.label}
                   </Text>
                   {gitOpsEntity.subLabel}

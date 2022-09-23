@@ -6,8 +6,7 @@
  */
 
 import React from 'react'
-import { Color } from '@harness/design-system'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -19,7 +18,6 @@ import type {
   MultiTypeSelectOption,
   MultiTypeMapType,
   MultiTypeMapUIType,
-  MultiTypeConnectorRef,
   Resources,
   MultiTypeListUIType
 } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
@@ -30,7 +28,6 @@ import { ZeroNorthStepVariables, ZeroNorthStepVariablesProps } from './ZeroNorth
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './ZeroNorthStepFunctionConfigs'
 
 export interface ZeroNorthStepSpec {
-  connectorRef: string
   privileged?: boolean
   settings?: MultiTypeMapType
   imagePullPolicy?: MultiTypeSelectOption
@@ -47,9 +44,7 @@ export interface ZeroNorthStepData {
   spec: ZeroNorthStepSpec
 }
 
-export interface ZeroNorthStepSpecUI
-  extends Omit<ZeroNorthStepSpec, 'connectorRef' | 'reports' | 'settings' | 'pull' | 'resources'> {
-  connectorRef: MultiTypeConnectorRef
+export interface ZeroNorthStepSpecUI extends Omit<ZeroNorthStepSpec, 'reports' | 'settings' | 'pull' | 'resources'> {
   reportPaths?: MultiTypeListUIType
   settings?: MultiTypeMapUIType
   // Right now we do not support Image Pull Policy but will do in the future
@@ -73,7 +68,8 @@ export interface ZeroNorthStepProps {
   stepViewType: StepViewType
   onUpdate?: (data: ZeroNorthStepData) => void
   onChange?: (data: ZeroNorthStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
+  formik?: any
 }
 
 export class ZeroNorthStep extends PipelineStep<ZeroNorthStepData> {
@@ -84,8 +80,7 @@ export class ZeroNorthStep extends PipelineStep<ZeroNorthStepData> {
 
   protected type = StepType.ZeroNorth
   protected stepName = 'Configure Security Scan Step'
-  protected stepIcon: IconName = 'shield-gears'
-  protected stepIconColor = Color.GREY_600
+  protected stepIcon: IconName = 'sto-color-filled'
   protected stepDescription: keyof StringsMap = 'stoSteps.stepDescription.ZeroNorth'
 
   protected stepPaletteVisible = false
@@ -94,7 +89,6 @@ export class ZeroNorthStep extends PipelineStep<ZeroNorthStepData> {
     identifier: '',
     type: StepType.ZeroNorth as string,
     spec: {
-      connectorRef: 'account.harnessImage',
       privileged: true,
       settings: {
         policy_type: 'orchestratedScan',
@@ -116,9 +110,8 @@ export class ZeroNorthStep extends PipelineStep<ZeroNorthStepData> {
     getString,
     viewType
   }: ValidateInputSetProps<ZeroNorthStepData>): FormikErrors<ZeroNorthStepData> {
-    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getString) {
-      return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(isRequired), { getString }, viewType)
+      return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(), { getString }, viewType)
     }
 
     return {}

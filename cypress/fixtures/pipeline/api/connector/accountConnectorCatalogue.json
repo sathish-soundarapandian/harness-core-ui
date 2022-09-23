@@ -1,0 +1,36 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "catalogue": [
+      { "category": "CLOUD_PROVIDER", "connectors": ["Azure", "Gcp", "K8sCluster", "Aws"] },
+      {
+        "category": "SECRET_MANAGER",
+        "connectors": ["GcpKms", "Local", "Vault", "AzureKeyVault", "AwsKms", "AwsSecretManager"]
+      },
+      { "category": "CLOUD_COST", "connectors": ["GcpCloudCost", "CEAws", "CEAzure", "CEK8sCluster"] },
+      {
+        "category": "ARTIFACTORY",
+        "connectors": ["DockerRegistry", "OciHelmRepo", "Nexus", "Jenkins", "HttpHelmRepo", "Artifactory"]
+      },
+      { "category": "CODE_REPO", "connectors": ["Github", "Bitbucket", "Git", "Gitlab", "Codecommit"] },
+      {
+        "category": "MONITORING",
+        "connectors": [
+          "NewRelic",
+          "Datadog",
+          "Prometheus",
+          "ErrorTracking",
+          "Splunk",
+          "Dynatrace",
+          "AppDynamics",
+          "SumoLogic",
+          "PagerDuty",
+          "CustomHealth"
+        ]
+      },
+      { "category": "TICKETING", "connectors": ["Jira", "ServiceNow"] }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "7d664aba-50f2-4749-a7d3-b2fed42c0b49"
+}

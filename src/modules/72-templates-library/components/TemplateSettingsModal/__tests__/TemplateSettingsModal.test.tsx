@@ -11,6 +11,8 @@ import { act, render, waitFor } from '@testing-library/react'
 import { fireEvent } from '@testing-library/dom'
 import { mockTemplates, mockTemplatesSuccessResponse } from '@templates-library/TemplatesTestHelper'
 import { TestWrapper } from '@common/utils/testUtils'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import { TemplateSettingsModal } from '../TemplateSettingsModal'
 
 jest.mock('@common/hooks', () => ({
@@ -39,6 +41,9 @@ const baseProps = {
 }
 
 describe('<TemplateSettingsModal /> tests', () => {
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+  })
   test('should match snapshot', async () => {
     const { container } = render(
       <TestWrapper>

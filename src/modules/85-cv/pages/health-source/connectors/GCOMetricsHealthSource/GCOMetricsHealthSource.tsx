@@ -17,7 +17,9 @@ import {
   Utils,
   FormError,
   PageError,
-  NoDataCard
+  NoDataCard,
+  getMultiTypeFromValue,
+  MultiTypeInputType
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
@@ -53,7 +55,9 @@ import {
   transformGCOMetricHealthSourceToGCOMetricSetupSource,
   getPlaceholderForIdentifier,
   mapstackdriverDashboardDetailToMetricWidget,
-  onSelectNavItem
+  onSelectNavItem,
+  getNoDataMessage,
+  getIsQueryExecuted
 } from './GCOMetricsHealthSource.utils'
 import DrawerFooter from '../../common/DrawerFooter/DrawerFooter'
 import type { GCOMetricInfo, GCOMetricsHealthSourceProps, ValidationChartProps } from './GCOMetricsHealthSource.type'
@@ -65,7 +69,16 @@ import css from './GCOMetricsHealthSource.module.scss'
 const GroupByClause = 'groupByFields'
 
 function ValidationChart(props: ValidationChartProps): JSX.Element {
-  const { loading, error, queryValue, onRetry, sampleData, setAsTooManyMetrics, isQueryExecuted = false } = props
+  const {
+    loading,
+    error,
+    queryValue,
+    onRetry,
+    sampleData,
+    setAsTooManyMetrics,
+    isQueryExecuted = false,
+    noDataMessage
+  } = props
   const { getString } = useStrings()
   const isTooManyMetrics = Boolean(
     sampleData?.series?.length && sampleData.series.length > 1 && queryValue?.includes(GroupByClause)
@@ -89,10 +102,7 @@ function ValidationChart(props: ValidationChartProps): JSX.Element {
   if (!isQueryExecuted) {
     return (
       <Container className={cx(css.chartContainer, css.noDataContainer)}>
-        <NoDataCard
-          icon="timeline-line-chart"
-          message={getString('cv.monitoringSources.gcoLogs.submitQueryToSeeRecords')}
-        />
+        <NoDataCard icon="timeline-line-chart" message={noDataMessage} />
       </Container>
     )
   }
@@ -141,7 +151,7 @@ function ValidationChart(props: ValidationChartProps): JSX.Element {
 }
 
 export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.Element {
-  const { data, onSubmit } = props
+  const { data, onSubmit, isTemplate, expressions } = props
 
   const { onPrevious, sourceData } = useContext(SetupSourceTabsContext)
 
@@ -160,13 +170,15 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const [error, setError] = useState<string | undefined>()
   const [loading, setLoading] = useState(false)
+  const connectorIdentifier = typeof data?.connectorRef === 'string' ? data?.connectorRef : data?.connectorRef?.value
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
   const queryParams = useMemo(
     () => ({
       orgIdentifier,
       projectIdentifier,
       accountId,
       tracingId: Utils.randomId(),
-      connectorIdentifier: data.connectorRef as string
+      connectorIdentifier: connectorIdentifier
     }),
     [data?.connectorRef, projectIdentifier, orgIdentifier, accountId]
   )
@@ -227,6 +239,11 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
 
   const formInitialValues: GCOMetricInfo = updatedData.get(selectedMetric || '') || {}
 
+  const handleOnManualMetricDelete = (metricIdToBeDeleted: string): void => {
+    updatedData.delete(metricIdToBeDeleted)
+    setUpdatedData(new Map(updatedData))
+  }
+
   return (
     <Formik<GCOMetricInfo>
       enableReinitialize={true}
@@ -237,6 +254,8 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
         const newMap = new Map(updatedData)
         if (selectedMetric) {
           newMap.set(selectedMetric, { ...values })
+        } else {
+          return {}
         }
 
         return validate(values, newMap, getString)
@@ -300,7 +319,9 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                           }
                         }}
                       />
-                      <FormError name="metricTags" errorMessage={formikProps.errors['metricTags']} />
+                      {formikProps.errors['metricTags'] && (
+                        <FormError name="metricTags" errorMessage={formikProps.errors['metricTags']} />
+                      )}
                       <NameId
                         nameLabel={getString('cv.monitoringSources.metricNameLabel')}
                         identifierProps={{
@@ -310,22 +331,26 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                         }}
                       />
                     </Container>
-
                     <Container className={css.validationContainer}>
-                      <QueryContent
-                        handleFetchRecords={async () => {
-                          if (!shouldShowChart) {
-                            setShouldShowChart(true)
-                          }
-                          onQueryChange(formikProps.values.query)
-                        }}
-                        onClickExpand={setIsQueryExpanded}
-                        isDialogOpen={isQueryExpanded}
-                        query={formikProps.values.query}
-                        loading={loading}
-                        textAreaName={FieldNames.QUERY}
-                      />
-
+                      <Container width={'500px'}>
+                        <QueryContent
+                          handleFetchRecords={() => {
+                            if (!shouldShowChart) {
+                              setShouldShowChart(true)
+                            }
+                            onQueryChange(formikProps.values.query)
+                          }}
+                          key={getMultiTypeFromValue(formikProps.values.query)}
+                          onClickExpand={setIsQueryExpanded}
+                          isDialogOpen={isQueryExpanded}
+                          query={formikProps.values.query}
+                          loading={loading}
+                          textAreaName={FieldNames.QUERY}
+                          isTemplate={isTemplate}
+                          expressions={expressions}
+                          isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+                        />
+                      </Container>
                       <ValidationChart
                         loading={loading}
                         error={error}
@@ -338,13 +363,13 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                             formikProps.setFieldError('tooManyMetrics', '')
                           }
                         }}
-                        isQueryExecuted={shouldShowChart}
+                        noDataMessage={getNoDataMessage(getString, formikProps?.values?.query)}
+                        isQueryExecuted={getIsQueryExecuted(shouldShowChart, formikProps?.values?.query)}
                         onRetry={async () => {
                           if (!formikProps.values.query?.length) return
                           onQueryChange(formikProps.values.query)
                         }}
                       />
-
                       {isQueryExpanded && (
                         <Drawer
                           {...DrawerOptions}
@@ -369,17 +394,24 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                         </Drawer>
                       )}
                     </Container>
-                    <SelectHealthSourceServices
-                      values={{
-                        sli,
-                        healthScore,
-                        riskCategory,
-                        continuousVerification
-                      }}
-                      metricPackResponse={metricPackResponse}
-                      hideServiceIdentifier
-                    />
-                    {formikProps.values.continuousVerification && (
+                    <Container width={'500px'}>
+                      <SelectHealthSourceServices
+                        values={{
+                          sli,
+                          healthScore,
+                          riskCategory,
+                          continuousVerification,
+                          serviceInstanceMetricPath: formikProps.values?.serviceInstanceField
+                        }}
+                        hideServiceIdentifier
+                        metricPackResponse={metricPackResponse}
+                        isTemplate={isTemplate}
+                        expressions={expressions}
+                        customServiceInstanceName={FieldNames.SERVICE_INSTANCE_FIELD}
+                        isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+                      />
+                    </Container>
+                    {!isTemplate && formikProps.values.continuousVerification && (
                       <FormInput.Text
                         name={FieldNames.SERVICE_INSTANCE_FIELD}
                         label={getString('cv.monitoringSources.serviceInstanceIdentifier')}
@@ -436,9 +468,12 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                 dashboardWidgetMapper={mapstackdriverDashboardDetailToMetricWidget}
                 dashboardDetailsRequest={stackDriverDashBoardRequest}
                 addManualQueryTitle={'cv.monitoringSources.gco.manualInputQueryModal.modalTitle'}
-                connectorIdentifier={data.connectorRef as string}
+                connectorIdentifier={connectorIdentifier}
                 manuallyInputQueries={getManuallyCreatedQueries(updatedData)}
                 showSpinnerOnLoad={!selectedMetric}
+                onDeleteManualMetric={metricIdToBeDeleted =>
+                  metricIdToBeDeleted && handleOnManualMetricDelete(metricIdToBeDeleted)
+                }
                 onSelectMetric={(id, metricName, query, widget, dashboardId, dashboardTitle) => {
                   onSelectNavItem({
                     id,

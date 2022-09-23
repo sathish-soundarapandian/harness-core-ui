@@ -58,7 +58,7 @@
   height: fit-content;
   cursor: default;
   position: relative;
-  margin-bottom: 55px;
+  margin-bottom: 80px;
 
   &.marginBottom {
     margin-bottom: 20px;
@@ -66,6 +66,16 @@
 
   &.draggable {
     cursor: move;
+  }
+
+  :global(.bp3-icon) {
+    &[data-icon='custom-approval'] {
+      > svg {
+        path:nth-child(2) {
+          fill: var(--grey-900) !important;
+        }
+      }
+    }
   }
 
   .defaultCard {
@@ -86,6 +96,14 @@
       border-color: var(--diagram-selected) !important;
       background: var(--pipeline-selected-node) !important;
       border-width: 2px;
+
+      span[data-icon='slot-deployment'] {
+        svg > path {
+          fill: var(--white);
+          stroke: var(--white);
+        }
+      }
+
       &.failed {
         background: var(--execution-pipeline-color-red) !important;
         border: solid 2px var(--execution-pipeline-color-red) !important;
@@ -145,6 +163,12 @@
     position: absolute;
     top: 5px;
     left: 5px;
+  }
+
+  .loopingStrategy {
+    position: absolute;
+    top: 0;
+    right: 5px;
   }
 
   .conditional {

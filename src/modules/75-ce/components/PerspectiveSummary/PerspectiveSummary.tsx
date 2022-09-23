@@ -28,7 +28,8 @@ import {
   Maybe,
   useFetchPerspectiveBudgetQuery,
   BudgetSummary,
-  K8sRecommendationFilterDtoInput
+  K8sRecommendationFilterDtoInput,
+  QlceViewFilterWrapperInput
 } from 'services/ce/services'
 import useBudgetModal from '@ce/components/PerspectiveReportsAndBudget/PerspectiveCreateBudget'
 import formatCost from '@ce/utils/formatCost'
@@ -36,9 +37,13 @@ import { useGetLastMonthCost, useGetForecastCost } from 'services/ce'
 
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import { getViewFilterForId } from '@ce/utils/perspectiveUtils'
 import { PAGE_NAMES } from '@ce/TrackingEventsConstants'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { usePermission } from '@rbac/hooks/usePermission'
+import RbacButton from '@rbac/components/Button/Button'
 import RecommendationSummaryCard from './RecommendationSummaryCard'
+import { getToolTip } from '../PerspectiveViews/PerspectiveMenuItems'
 import css from './PerspectiveSummary.module.scss'
 
 const StatsTrendRenderer: React.FC<{ val: number }> = ({ val }) => {
@@ -105,7 +110,7 @@ const CostCard: (val: CostCardProps) => JSX.Element = ({
       <Container className={css.mainCard}>
         {!isEmpty ? (
           <>
-            <Text color={Color.GREY_500} font="small">
+            <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL_BOLD }}>
               {statsLabel}
             </Text>
             <Layout.Horizontal
@@ -135,9 +140,10 @@ const CostCard: (val: CostCardProps) => JSX.Element = ({
 const BAR_WIDTH = 298
 interface BudgetCardProps {
   budgetData: BudgetSummary
+  canEdit: boolean
 }
 
-const BudgetCard: (props: BudgetCardProps) => JSX.Element | null = ({ budgetData }) => {
+const BudgetCard: (props: BudgetCardProps) => JSX.Element | null = ({ budgetData, canEdit }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { actualCost, budgetAmount } = budgetData
@@ -183,6 +189,8 @@ const BudgetCard: (props: BudgetCardProps) => JSX.Element | null = ({ budgetData
           margin="none"
           font={FontVariation.SMALL}
           variation={ButtonVariation.LINK}
+          disabled={!canEdit}
+          tooltip={getToolTip(canEdit, PermissionIdentifier.EDIT_CCM_BUDGET, ResourceType.CCM_BUDGETS)}
         >
           {getString('ce.perspectives.budgets.viewText')}
         </Link>
@@ -237,10 +245,18 @@ const BudgetCardsCarousel: () => JSX.Element | null = () => {
     accountId: string
     perspectiveName: string
   }>()
-
   const [activeSlide, setActiveSlide] = useState<number>(1)
-
   const { getString } = useStrings()
+
+  const [canEdit] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CCM_BUDGETS
+      },
+      permissions: [PermissionIdentifier.EDIT_CCM_BUDGET]
+    },
+    []
+  )
 
   const [{ data, fetching: budgetFetching }, refetchBudget] = useFetchPerspectiveBudgetQuery({
     variables: {
@@ -281,7 +297,7 @@ const BudgetCardsCarousel: () => JSX.Element | null = () => {
     return (
       <Card className={css.cardContainer} elevation={1} interactive={false}>
         <Container className={cx(css.budgetCard)}>
-          <Text color="grey800" font="small">
+          <Text color="grey800" font={{ variation: FontVariation.SMALL_BOLD }}>
             {getString('ce.perspectives.budgets.title')}
           </Text>
           <Text
@@ -294,10 +310,10 @@ const BudgetCardsCarousel: () => JSX.Element | null = () => {
           >
             {'$---'}
           </Text>
-          <Text
+          <RbacButton
+            text={getString('ce.perspectives.budgets.addBudget')}
+            variation={ButtonVariation.LINK}
             className={css.addBudgetText}
-            color="primary7"
-            font="small"
             onClick={() => {
               openModal({
                 isEdit: false,
@@ -310,9 +326,13 @@ const BudgetCardsCarousel: () => JSX.Element | null = () => {
                 source: PAGE_NAMES.PERSPECTIVE_DETAILS_PAGE
               })
             }}
-          >
-            {getString('ce.perspectives.budgets.addBudget')}
-          </Text>
+            permission={{
+              permission: PermissionIdentifier.EDIT_CCM_BUDGET,
+              resource: {
+                resourceType: ResourceType.CCM_BUDGETS
+              }
+            }}
+          />
         </Container>
       </Card>
     )
@@ -358,7 +378,7 @@ const BudgetCardsCarousel: () => JSX.Element | null = () => {
         }
       >
         {budgetData.map(bData => (
-          <BudgetCard key={bData?.id} budgetData={bData as BudgetSummary} />
+          <BudgetCard key={bData?.id} budgetData={bData as BudgetSummary} canEdit={canEdit} />
         ))}
       </Carousel>
     </Card>
@@ -372,6 +392,7 @@ interface PerspectiveSummaryProps {
   errors?: any[] | null
   isDefaultPerspective: boolean
   hasClusterAsSource: boolean
+  filters: QlceViewFilterWrapperInput[]
 }
 
 const PerspectiveSummary: React.FC<PerspectiveSummaryProps> = ({
@@ -379,12 +400,9 @@ const PerspectiveSummary: React.FC<PerspectiveSummaryProps> = ({
   data,
   forecastedCostData,
   isDefaultPerspective,
-  hasClusterAsSource
+  hasClusterAsSource,
+  filters
 }) => {
-  const { perspectiveId } = useParams<{
-    perspectiveId: string
-  }>()
-
   let showForecastedCostCard = true
   if (!fetching && !forecastedCostData?.cost?.statsValue) {
     showForecastedCostCard = false
@@ -393,9 +411,9 @@ const PerspectiveSummary: React.FC<PerspectiveSummaryProps> = ({
   const recommendationFilters = useMemo(
     () =>
       ({
-        perspectiveFilters: [getViewFilterForId(perspectiveId)]
+        perspectiveFilters: filters
       } as K8sRecommendationFilterDtoInput),
-    [perspectiveId]
+    [filters]
   )
 
   return (

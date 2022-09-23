@@ -8,11 +8,12 @@
 import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
-import type { JiraFieldNG } from 'services/cd-ng'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import type { JiraFieldNG, JiraUserData } from 'services/cd-ng'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import type { JiraCreateData, JiraCreateFieldType, JiraFieldNGWithValue } from './types'
 
-export const resetForm = (formik: FormikProps<JiraCreateData>, parent: string) => {
+export const resetForm = (formik: FormikProps<JiraCreateData>, parent: string): void => {
   if (parent === 'connectorRef') {
     formik.setFieldValue('spec.projectKey', '')
     formik.setFieldValue('spec.issueType', '')
@@ -21,9 +22,11 @@ export const resetForm = (formik: FormikProps<JiraCreateData>, parent: string) =
   if (parent === 'projectKey') {
     formik.setFieldValue('spec.issueType', '')
     formik.setFieldValue('spec.fields', [])
+    formik.setFieldValue('spec.selectedRequiredFields', [])
   }
   if (parent === 'issueType') {
     formik.setFieldValue('spec.fields', [])
+    formik.setFieldValue('spec.selectedRequiredFields', [])
   }
 }
 
@@ -181,4 +184,15 @@ export const updateMap = (alreadySelectedFields: JiraFieldNG[]): Record<string, 
     })
   }
   return map
+}
+
+export const isRuntimeOrExpressionType = (fieldType: MultiTypeInputType): boolean => {
+  return fieldType === MultiTypeInputType.EXPRESSION || isMultiTypeRuntime(fieldType)
+}
+
+export const getUserValuesOptions = (userOptions: JiraUserData[]): MultiSelectOption[] => {
+  return userOptions.map(userOption => ({
+    label: userOption.emailAddress || '',
+    value: userOption.emailAddress || ''
+  }))
 }

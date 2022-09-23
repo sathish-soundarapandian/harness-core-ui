@@ -7,7 +7,7 @@
 
 import type { ChangeSourceDTO } from 'services/cv'
 import type { RowData } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
-import { deleteHealthSource, getIconBySourceType } from '../HealthSourceTable.utils'
+import { deleteHealthSource, getIconBySourceType, getTypeByFeature } from '../HealthSourceTable.utils'
 import {
   selectedRow,
   changeSource,
@@ -39,5 +39,13 @@ describe('Validate Healthsource table Utils', () => {
     expect(getIconBySourceType('STACKDRIVER_LOG')).toEqual('service-stackdriver')
     expect(getIconBySourceType('DYNATRACE')).toEqual('service-dynatrace')
     expect(getIconBySourceType('Dynatrace')).toEqual('service-dynatrace')
+    expect(getIconBySourceType('SplunkMetric')).toEqual('service-splunk')
+    expect(getIconBySourceType('Splunk')).toEqual('service-splunk')
+  })
+
+  test('Ensure correct type is returned by getTypeByFeature', async () => {
+    expect(getTypeByFeature('SplunkMetric', a => a)).toEqual('pipeline.verification.analysisTab.metrics')
+    expect(getTypeByFeature('Splunk', a => a)).toEqual('pipeline.verification.analysisTab.logs')
+    expect(getTypeByFeature('abc', a => a)).toEqual('common.repo_provider.customLabel')
   })
 })

@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useContext, useMemo, useState } from 'react'
+import { Virtuoso } from 'react-virtuoso'
 import { useParams } from 'react-router-dom'
 import { Card, Container, ExpandingSearchInput, Layout, Text, PageError, NoDataCard } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
@@ -13,11 +14,13 @@ import { useGetDeploymentsByServiceId, GetDeploymentsByServiceIdQueryParams } fr
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
 import { CardVariant } from '@pipeline/utils/constants'
+import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import { executionStatusInfoToExecutionSummary } from '@cd/pages/dashboard/CDDashboardPage'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
+import { DashboardSelected } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
 import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
-import pipelineIllustration from '@pipeline/pages/pipelines/images/deploypipeline-illustration.svg'
+import pipelineIllustration from '@pipeline/pages/pipeline-list/images/cd-pipeline-illustration.svg'
 import css from '@cd/components/ServiceDetails/PipelineExecutions/PipelineExecutions.module.scss'
 
 export const PipelineExecutions: React.FC = () => {
@@ -25,13 +28,15 @@ export const PipelineExecutions: React.FC = () => {
   const { timeRange } = useContext(DeploymentsTimeRangeContext)
 
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
+  const [startTime, endTime] = getFormattedTimeRange(timeRange)
+
   const queryParams: GetDeploymentsByServiceIdQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
     serviceId,
-    startTime: timeRange?.range[0]?.getTime() || 0,
-    endTime: timeRange?.range[1]?.getTime() || 0
+    startTime,
+    endTime
   }
   const { loading, data, error, refetch } = useGetDeploymentsByServiceId({ queryParams })
   const [searchTerm, setSearchTerm] = useState('')
@@ -74,15 +79,22 @@ export const PipelineExecutions: React.FC = () => {
       )
     }
     return (
-      <>
-        {filteredDeployments.map(d => (
-          <ExecutionCard
-            variant={CardVariant.Minimal}
-            key={d.pipelineIdentifier}
-            pipelineExecution={executionStatusInfoToExecutionSummary(d)}
-          />
-        ))}
-      </>
+      <Virtuoso
+        overscan={10}
+        style={{ height: 600 }}
+        totalCount={filteredDeployments.length}
+        className={css.overide}
+        itemContent={index => {
+          const deployment = filteredDeployments[index]
+          return (
+            <ExecutionCard
+              variant={CardVariant.Minimal}
+              key={deployment?.planExecutionId}
+              pipelineExecution={executionStatusInfoToExecutionSummary(deployment, DashboardSelected.SERVICEDETAIL)}
+            />
+          )
+        }}
+      />
     )
   }
 
@@ -91,9 +103,14 @@ export const PipelineExecutions: React.FC = () => {
       <Layout.Vertical height="100%">
         <Layout.Horizontal padding={{ top: 'medium' }} flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
           <Text font={{ weight: 'bold' }} color={Color.GREY_600}>
-            {`${getString('cd.serviceDashboard.totalPipelines')}: ${deployments.length}`}
+            {`${getString('cd.serviceDashboard.totalDeployments')}: ${deployments.length}`}
           </Text>
-          <ExpandingSearchInput flip width={200} placeholder={getString('search')} throttle={200} onChange={onSearch} />
+          <ExpandingSearchInput
+            placeholder={getString('search')}
+            throttle={200}
+            onChange={onSearch}
+            className={css.searchIconStyle}
+          />
         </Layout.Horizontal>
         <Container className={css.executionCardContainer}>{getComponent()}</Container>
       </Layout.Vertical>

@@ -6,27 +6,16 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import {
-  Card,
-  Text,
-  Layout,
-  Container,
-  Icon,
-  Button,
-  ButtonVariation,
-  TableV2,
-  IconName,
-  getErrorInfoFromErrorObject
-} from '@wings-software/uicore'
+import { Card, Text, Layout, Container, Icon, Button, ButtonVariation, TableV2, IconName } from '@wings-software/uicore'
 import { useHistory, useParams, Link } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
 import qs from 'qs'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, get, omit } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import { ResourceType, useFetchCcmMetaDataQuery, CcmMetaData, Maybe } from 'services/ce/services'
 import routes from '@common/RouteDefinitions'
-import { Page, useToaster } from '@common/exports'
+import { Page } from '@common/exports'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import formatCost from '@ce/utils/formatCost'
 import { getViewFilterForId, GROUP_BY_CLUSTER_NAME } from '@ce/utils/perspectiveUtils'
@@ -36,11 +25,14 @@ import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { CCM_PAGE_TYPE, CloudProvider } from '@ce/types'
-import { calculateSavingsPercentage, getProviderIcon } from '@ce/utils/recommendationUtils'
+import { calculateSavingsPercentage, getProviderIcon, resourceTypeToRoute } from '@ce/utils/recommendationUtils'
 import { generateFilters } from '@ce/utils/anomaliesUtils'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
+import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import {
   CCMRecommendationFilterProperties,
+  FilterDTO,
   QLCEViewFilterWrapper,
   RecommendationItemDTO,
   RecommendationOverviewStats,
@@ -53,20 +45,14 @@ import greenLeafImg from '@ce/common/images/green-leaf.svg'
 import grayLeafImg from '@ce/common/images/gray-leaf.svg'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { removeNullAndEmpty } from '@common/components/Filter/utils/FilterUtils'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { StringsMap } from 'stringTypes'
+import HandleError from '@ce/components/PermissionError/PermissionError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import PermissionError from '@ce/images/permission-error.svg'
 import RecommendationSavingsCard from '../../components/RecommendationSavingsCard/RecommendationSavingsCard'
 import RecommendationFilters from '../../components/RecommendationFilters'
 import css from './RecommendationList.module.scss'
-
-type RouteFn = (
-  params: {
-    recommendation: string
-    recommendationName: string
-  } & {
-    accountId: string
-  }
-) => string
 
 interface RecommendationListProps {
   data: RecommendationItemDTO[]
@@ -80,7 +66,7 @@ interface RecommendationListProps {
     gotoPage: (pageNumber: number) => void
   }
   onAddClusterSuccess: () => void
-  filters: CCMRecommendationFilterProperties
+  filters?: CCMRecommendationFilterProperties
 }
 
 const RecommendationsList: React.FC<RecommendationListProps> = ({
@@ -96,13 +82,6 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
   const { accountId } = useParams<{ accountId: string }>()
 
   const { getString } = useStrings()
-  const resourceTypeToRoute: Record<ResourceType, RouteFn> = useMemo(() => {
-    return {
-      [ResourceType.Workload]: routes.toCERecommendationDetails,
-      [ResourceType.NodePool]: routes.toCENodeRecommendationDetails,
-      [ResourceType.EcsService]: routes.toCEECSRecommendationDetails
-    }
-  }, [])
 
   const resourceTypeMap: Record<ResourceType, string> = useMemo(
     () => ({
@@ -113,8 +92,6 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
     []
   )
 
-  const areFiltersApplied = removeNullAndEmpty(omit(filters, 'filterType'))
-
   if (fetching) {
     return (
       <Card elevation={1} className={css.errorContainer}>
@@ -124,10 +101,6 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
   }
 
   if (ccmData && !ccmData.k8sClusterConnectorPresent) {
-    trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_PAGE_LOADED, {
-      clustersNotConfigured: 'no',
-      count: 0
-    })
     return (
       <Card elevation={1} className={css.errorContainer}>
         <OverviewAddCluster
@@ -139,10 +112,6 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
   }
 
   if (ccmData && ccmData.k8sClusterConnectorPresent && !ccmData.clusterDataPresent) {
-    trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_PAGE_LOADED, {
-      clustersNotConfigured: 'yes',
-      count: 0
-    })
     return (
       <Card elevation={1} className={css.errorContainer}>
         <img src={EmptyView} />
@@ -150,11 +119,6 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
       </Card>
     )
   }
-
-  trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_PAGE_LOADED, {
-    clustersNotConfigured: 'yes',
-    count: data.length
-  })
 
   const NameCell: Renderer<CellProps<RecommendationItemDTO>> = cell => {
     const originalRowData = cell.row.original
@@ -169,20 +133,18 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
     }
 
     const iconName = iconMapping[resourceType]
-    const perspectiveKey = 'defaultClusterPerspectiveId'
-    const cloudProvider = 'CLUSTER'
+    const cloudProvider = CloudProvider.CLUSTER
+    const defaultPerspectiveId = (defaultTo(ccmData, {}) as CcmMetaData)['defaultClusterPerspectiveId'] as string
 
     const clusterLink = useMemo(
       () => ({
         pathname: routes.toPerspectiveDetails({
           accountId: accountId,
-          perspectiveId: (defaultTo(ccmData, {}) as CcmMetaData)[perspectiveKey] as string,
-          perspectiveName: (defaultTo(ccmData, {}) as CcmMetaData)[perspectiveKey] as string
+          perspectiveId: defaultPerspectiveId,
+          perspectiveName: defaultPerspectiveId
         }),
         search: `?${qs.stringify({
-          filters: JSON.stringify(
-            generateFilters({ clusterName } as Record<string, string>, cloudProvider as CloudProvider)
-          ),
+          filters: JSON.stringify(generateFilters({ clusterName } as Record<string, string>, cloudProvider)),
           groupBy: JSON.stringify(GROUP_BY_CLUSTER_NAME)
         })}`
       }),
@@ -193,32 +155,41 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
       () => ({
         pathname: routes.toPerspectiveDetails({
           accountId: accountId,
-          perspectiveId: (defaultTo(ccmData, {}) as CcmMetaData)[perspectiveKey] as string,
-          perspectiveName: (defaultTo(ccmData, {}) as CcmMetaData)[perspectiveKey] as string
+          perspectiveId: defaultPerspectiveId,
+          perspectiveName: defaultPerspectiveId
         }),
         search: `?${qs.stringify({
-          filters: JSON.stringify(
-            generateFilters({ clusterName, namespace } as Record<string, string>, cloudProvider as CloudProvider)
-          ),
+          filters: JSON.stringify(generateFilters({ clusterName, namespace } as Record<string, string>, cloudProvider)),
           groupBy: JSON.stringify(GROUP_BY_CLUSTER_NAME)
         })}`
       }),
       []
     )
 
-    const resourceDetailsLink = useMemo(
-      () => ({
-        pathname: routes.toCEPerspectiveWorkloadDetails({
-          accountId,
-          clusterName: defaultTo(clusterName, ''),
-          namespace: defaultTo(namespace, ''),
-          perspectiveId: (defaultTo(ccmData, {}) as CcmMetaData)[perspectiveKey] as string,
-          perspectiveName: (defaultTo(ccmData, {}) as CcmMetaData)[perspectiveKey] as string,
-          workloadName: cell.value
-        })
-      }),
-      []
-    )
+    const resourceDetailsLink = useMemo(() => {
+      if (resourceType === ResourceType.Workload) {
+        return {
+          pathname: routes.toCERecommendationWorkloadDetails({
+            accountId,
+            clusterName: defaultTo(clusterName, ''),
+            namespace: defaultTo(namespace, ''),
+            recommendation: originalRowData.id,
+            recommendationName: originalRowData.resourceName || '',
+            workloadName: cell.value
+          })
+        }
+      } else {
+        return {
+          pathname: routes.toCERecommendationServiceDetails({
+            accountId,
+            clusterName: defaultTo(clusterName, ''),
+            recommendation: originalRowData.id,
+            recommendationName: originalRowData.resourceName || '',
+            serviceName: cell.value
+          })
+        }
+      }
+    }, [])
 
     const resourceTypeStringKey: Record<ResourceType, keyof StringsMap> = {
       [ResourceType.EcsService]: 'ce.recommendation.listPage.service',
@@ -256,7 +227,7 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
             <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL_BOLD }}>
               {`${getString(resourceTypeStringKey[resourceType])}: `}
             </Text>
-            {resourceType === ResourceType.Workload ? (
+            {resourceType !== ResourceType.NodePool ? (
               <Link to={resourceDetailsLink} onClick={e => e.stopPropagation()}>
                 <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
                   {cell.value}
@@ -355,7 +326,7 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
             <img src={EmptyView} />
             <Text className={css.errorText}>
               {getString(
-                areFiltersApplied ? 'ce.pageErrorMsg.noFilteredRecommendations' : 'ce.pageErrorMsg.noRecommendations'
+                isEmpty(filters) ? 'ce.pageErrorMsg.noRecommendations' : 'ce.pageErrorMsg.noFilteredRecommendations'
               )}
             </Text>
           </Container>
@@ -368,30 +339,34 @@ const RecommendationsList: React.FC<RecommendationListProps> = ({
 const RecommendationListPage: React.FC = () => {
   const [page, setPage] = useQueryParamsState('page', 0)
 
-  const { showError } = useToaster()
-
-  const { trackPage } = useTelemetry()
+  const { trackPage, trackEvent } = useTelemetry()
   const history = useHistory()
   const { accountId } = useParams<{ accountId: string }>()
   const {
     perspectiveId,
     perspectiveName,
     origin,
-    filters: filterQuery = {}
+    filters: filterQuery = {},
+    perspectiveFilters = ''
   } = useQueryParams<{
     perspectiveId: string
     perspectiveName: string
     filters: Record<string, any>
     origin: string
+    perspectiveFilters: string
   }>()
 
-  const [selectedFilterProperties, setSelectedFilterProperties] =
-    useQueryParamsState<CCMRecommendationFilterProperties>('filters', {})
+  const [selectedFilter, setSelectedFilter] = useQueryParamsState<Partial<FilterDTO>>('filters', {
+    identifier: getIdentifierFromName(UNSAVED_FILTER),
+    filterProperties: {}
+  })
   const [recommendationStats, setRecommendationStats] = useState<RecommendationOverviewStats>()
   const [recommendationCount, setRecommendationCount] = useState<number>()
   const [recommendationList, setRecommendationList] = useState<RecommendationItemDTO[]>([])
-
-  const perspectiveFilters = (perspectiveId ? [getViewFilterForId(perspectiveId)] : []) as QLCEViewFilterWrapper[]
+  const { getRBACErrorMessage } = useRBACError()
+  const perspectiveFiltersParams = perspectiveFilters
+    ? JSON.parse(perspectiveFilters)
+    : ((perspectiveId ? [getViewFilterForId(perspectiveId)] : []) as QLCEViewFilterWrapper[])
 
   useEffect(() => {
     trackPage(PAGE_NAMES.RECOMMENDATIONS_PAGE, {})
@@ -399,6 +374,15 @@ const RecommendationListPage: React.FC = () => {
 
   const [ccmMetaResult, refetchCCMMetaData] = useFetchCcmMetaDataQuery()
   const { data: ccmData, fetching: fetchingCCMMetaData } = ccmMetaResult
+
+  useDeepCompareEffect(() => {
+    if (ccmData?.ccmMetaData && recommendationList.length) {
+      trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATION_PAGE_LOADED, {
+        clustersNotConfigured: ccmData?.ccmMetaData.k8sClusterConnectorPresent ? 'yes' : 'no',
+        count: recommendationList.length
+      })
+    }
+  }, [ccmData, recommendationList])
 
   const { loading: statsLoading, mutate: fetchRecommendationStats } = useRecommendationStats({
     queryParams: {
@@ -411,14 +395,19 @@ const RecommendationListPage: React.FC = () => {
       accountIdentifier: accountId
     }
   })
-
-  const { loading: listLoading, mutate: fetchRecommendationList } = useListRecommendations({
+  const {
+    loading: listLoading,
+    mutate: fetchRecommendationList,
+    error: recommendationListError
+  } = useListRecommendations({
     queryParams: {
       accountIdentifier: accountId
     }
   })
 
   const { getString } = useStrings()
+
+  useDocumentTitle(getString('ce.recommendation.sideNavText'), true)
 
   const totalMonthlyCost = defaultTo(recommendationStats?.totalMonthlyCost, 0)
   const totalSavings = defaultTo(recommendationStats?.totalMonthlySaving, 0)
@@ -468,29 +457,32 @@ const RecommendationListPage: React.FC = () => {
     try {
       const [stats, count] = await Promise.all([
         fetchRecommendationStats({
-          ...selectedFilterProperties,
+          minSaving: 1,
+          ...selectedFilter.filterProperties,
           filterType: 'CCMRecommendation',
-          perspectiveFilters
+          perspectiveFilters: perspectiveFiltersParams
         }),
         fetchRecommendationCount({
-          ...selectedFilterProperties,
+          minSaving: 1,
+          ...selectedFilter.filterProperties,
           filterType: 'CCMRecommendation',
-          perspectiveFilters
+          perspectiveFilters: perspectiveFiltersParams
         })
       ])
 
       setRecommendationStats(stats.data)
       setRecommendationCount(count.data)
     } catch (error: any) {
-      showError(getErrorInfoFromErrorObject(error))
+      // showError(getErrorInfoFromErrorObject(error))
     }
   }
 
   const getRecommendationList = async () => {
     const response = await fetchRecommendationList({
-      ...selectedFilterProperties,
+      minSaving: 1,
+      ...selectedFilter.filterProperties,
       filterType: 'CCMRecommendation',
-      perspectiveFilters,
+      perspectiveFilters: perspectiveFiltersParams,
       offset: page * 10,
       limit: 10
     })
@@ -500,11 +492,11 @@ const RecommendationListPage: React.FC = () => {
 
   useDeepCompareEffect(() => {
     getRecommendationData()
-  }, [selectedFilterProperties])
+  }, [selectedFilter.filterProperties])
 
   useDeepCompareEffect(() => {
     getRecommendationList()
-  }, [selectedFilterProperties, page])
+  }, [selectedFilter.filterProperties, page])
 
   const isPageLoading = listLoading || countLoading || statsLoading
 
@@ -537,34 +529,43 @@ const RecommendationListPage: React.FC = () => {
       <Card style={{ width: '100%' }}>
         <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
           <RecommendationFilters
-            applyFilters={(properties: CCMRecommendationFilterProperties) => {
+            applyFilters={(filter: Partial<FilterDTO>) => {
               setPage(0)
-              setSelectedFilterProperties(properties)
+              setSelectedFilter({ identifier: filter.identifier, filterProperties: filter.filterProperties })
             }}
+            appliedFilter={selectedFilter}
           />
         </Layout.Horizontal>
       </Card>
       <Page.Body loading={isPageLoading || fetchingCCMMetaData}>
-        <Container className={css.listContainer}>
-          <Layout.Vertical spacing="large">
-            <RecommendationCards
-              isEmptyView={isEmptyView}
-              recommendationCount={defaultTo(recommendationCount, 0)}
-              totalMonthlyCost={totalMonthlyCost}
-              totalSavings={totalSavings}
-            />
-            <RecommendationsList
-              onAddClusterSuccess={() => {
-                refetchCCMMetaData()
-              }}
-              ccmData={ccmData?.ccmMetaData}
-              pagination={pagination}
-              fetching={listLoading || fetchingCCMMetaData}
-              data={recommendationList}
-              filters={selectedFilterProperties}
-            />
-          </Layout.Vertical>
-        </Container>
+        {recommendationListError ? (
+          <HandleError
+            errorMsg={getRBACErrorMessage(recommendationListError as RBACError)}
+            imgSrc={PermissionError}
+            wrapperClassname={css.permissionErrorWrapper}
+          />
+        ) : (
+          <Container className={css.listContainer}>
+            <Layout.Vertical spacing="large">
+              <RecommendationCards
+                isEmptyView={isEmptyView}
+                recommendationCount={defaultTo(recommendationCount, 0)}
+                totalMonthlyCost={totalMonthlyCost}
+                totalSavings={totalSavings}
+              />
+              <RecommendationsList
+                onAddClusterSuccess={() => {
+                  refetchCCMMetaData()
+                }}
+                ccmData={ccmData?.ccmMetaData}
+                pagination={pagination}
+                fetching={listLoading || fetchingCCMMetaData}
+                data={recommendationList}
+                filters={selectedFilter.filterProperties}
+              />
+            </Layout.Vertical>
+          </Container>
+        )}
       </Page.Body>
     </>
   )

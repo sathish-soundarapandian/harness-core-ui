@@ -237,6 +237,17 @@ describe('Restore Cache S3 Step', () => {
                   localName: 'step.restoreCacheS3.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.restoreCacheS3.identifier',
+                      localName: 'step.restoreCacheS3.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-timeout': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.restoreCacheS3.timeout',
@@ -313,6 +324,7 @@ describe('Restore Cache S3 Step', () => {
             },
             variablesData: {
               type: StepType.RestoreCacheS3,
+              __uuid: 'step-identifier',
               identifier: 'restoreCacheS3',
               name: 'step-name',
               timeout: 'step-timeout',

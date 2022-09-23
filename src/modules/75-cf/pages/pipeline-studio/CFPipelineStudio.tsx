@@ -26,7 +26,6 @@ import { useQueryParams } from '@common/hooks'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { FeatureFlag } from '@common/featureFlags'
-import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
 import css from './CFPipelineStudio.module.scss'
 
 const CIPipelineStudio: React.FC = (): JSX.Element => {
@@ -39,7 +38,6 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
   } = useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const { getTemplate } = useTemplateSelector()
   const history = useHistory()
   const handleRunPipeline = (): void => {
     history.push(
@@ -61,27 +59,33 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
   const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED)
   const isCFEnabled = useFeatureFlag(FeatureFlag.CFNG_ENABLED)
   const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED)
-  const isCustomStageEnabled = useFeatureFlag(FeatureFlag.NG_CUSTOM_STAGE)
   const { licenseInformation } = useLicenseStore()
   return (
     <PipelineProvider
       stagesMap={stagesCollection.getAllStagesAttributes(getString)}
-      queryParams={{ accountIdentifier, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
+      queryParams={{
+        accountIdentifier,
+        orgIdentifier,
+        projectIdentifier,
+        repoIdentifier,
+        branch,
+        repoName,
+        connectorRef,
+        storeType
+      }}
       pipelineIdentifier={pipelineIdentifier}
       renderPipelineStage={args =>
-        getCFPipelineStages(
+        getCFPipelineStages({
           args,
           getString,
-          licenseInformation['CI'] && isCIEnabled,
-          licenseInformation['CD'] && isCDEnabled,
-          licenseInformation['CF'] && isCFEnabled,
-          true,
-          isCustomStageEnabled
-        )
+          isCIEnabled: licenseInformation['CI'] && isCIEnabled,
+          isCDEnabled: licenseInformation['CD'] && isCDEnabled,
+          isCFEnabled: licenseInformation['CF'] && isCFEnabled,
+          isApprovalStageEnabled: true
+        })
       }
       stepsFactory={factory}
       runPipeline={handleRunPipeline}
-      getTemplate={getTemplate}
     >
       <PipelineStudio
         className={css.container}
@@ -94,23 +98,22 @@ const CIPipelineStudio: React.FC = (): JSX.Element => {
   )
 }
 
-export const getCFPipelineStages: (
-  args: Omit<PipelineStagesProps, 'children'>,
-  getString: UseStringsReturn['getString'],
-  isCIEnabled?: boolean,
-  isCDEnabled?: boolean,
-  isCFEnabled?: boolean,
-  isApprovalStageEnabled?: boolean,
-  isCustomStageEnabled?: boolean
-) => React.ReactElement<PipelineStagesProps> = (
+interface GetCFPipelineStagesArgs {
+  args: Omit<PipelineStagesProps, 'children'>
+  getString: UseStringsReturn['getString']
+  isCIEnabled?: boolean
+  isCDEnabled?: boolean
+  isCFEnabled?: boolean
+  isSTOEnabled?: boolean
+  isApprovalStageEnabled?: boolean
+}
+
+export const getCFPipelineStages: (args: GetCFPipelineStagesArgs) => React.ReactElement<PipelineStagesProps> = ({
   args,
   getString,
-  _isCIEnabled = false,
-  _isCDEnabled = false,
   isCFEnabled = false,
-  isApprovalStageEnabled = true,
-  isCustomStageEnabled = false
-) => {
+  isApprovalStageEnabled = true
+}) => {
   return (
     <PipelineStages {...args}>
       {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}
@@ -118,7 +121,7 @@ export const getCFPipelineStages: (
       {stagesCollection.getStage(StageType.BUILD, isCIEnabled, getString)}
       {stagesCollection.getStage(StageType.PIPELINE, false, getString)} */}
       {stagesCollection.getStage(StageType.APPROVAL, isApprovalStageEnabled, getString)}
-      {stagesCollection.getStage(StageType.CUSTOM, isCustomStageEnabled, getString)}
+      {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
       {stagesCollection.getStage(StageType.Template, false, getString)}
     </PipelineStages>
   )

@@ -11,6 +11,7 @@ declare const styles: {
   readonly cloudProviderListContainer: string
   readonly connectorsSection: string
   readonly createConnectorDialog: string
+  readonly excludeSideNavOverlay: string
   readonly featureSlide: string
   readonly featuresCarousel: string
   readonly imgContainer: string

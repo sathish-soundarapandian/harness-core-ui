@@ -10,10 +10,10 @@ import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { FormMultiTypeUserGroupInput } from '@common/components/UserGroupsInput/FormMultitypeUserGroupInput'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { HarnessApprovalDeploymentModeProps } from './types'
 import css from './HarnessApproval.module.scss'
@@ -35,8 +35,8 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
   return (
     <React.Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <FormMultiTypeDurationField
-          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+        <TimeoutFieldInputSetView
+          name={`${prefix}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
           multiTypeDurationProps={{
@@ -46,6 +46,8 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
           disabled={isApprovalStepFieldDisabled(readonly)}
+          fieldPath={'timeout'}
+          template={template}
         />
       ) : null}
 
@@ -73,6 +75,10 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
             label={getString('common.userGroups')}
             disabled={isApprovalStepFieldDisabled(readonly)}
             tooltipProps={{ dataTooltipId: 'harnessApprovalRuntime_userGroups' }}
+            templateProps={{
+              isTemplatizedView: true,
+              templateValue: template.spec.approvers.userGroups
+            }}
           />
         </div>
       ) : null}

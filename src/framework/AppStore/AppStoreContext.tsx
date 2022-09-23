@@ -26,7 +26,7 @@ import {
 } from 'services/cd-ng'
 import { useGetFeatureFlags } from 'services/portal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { FeatureFlag } from '@common/featureFlags'
+import { FeatureFlag } from '@common/featureFlags'
 import { useTelemetryInstance } from '@common/hooks/useTelemetryInstance'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import routes from '@common/RouteDefinitions'
@@ -43,7 +43,10 @@ export interface AppStoreContextProps {
   readonly selectedProject?: Project
   readonly selectedOrg?: Organization
   readonly isGitSyncEnabled?: boolean
-  readonly isGitSimplificationEnabled?: boolean
+  readonly isGitSimplificationEnabled?: boolean // DB state for a roject
+  readonly supportingGitSimplification?: boolean // Computed value based on multiple flags
+  readonly gitSyncEnabledOnlyForFF?: boolean
+  readonly supportingTemplatesGitx?: boolean
   readonly connectivityMode?: GitEnabledDTO['connectivityMode'] //'MANAGER' | 'DELEGATE'
   readonly currentUserInfo: UserInfo
   /** feature flags */
@@ -115,6 +118,9 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
     currentUserInfo: { uuid: '' },
     isGitSyncEnabled: false,
     isGitSimplificationEnabled: undefined,
+    supportingGitSimplification: true,
+    gitSyncEnabledOnlyForFF: false,
+    supportingTemplatesGitx: false,
     connectivityMode: undefined
   })
 
@@ -180,6 +186,10 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         })
       )
 
+      if (__DEV__ && DEV_FF) {
+        Object.assign(featureFlagsMap, DEV_FF)
+      }
+
       setState(prevState => ({
         ...prevState,
         featureFlags: featureFlagsMap as FeatureFlagMap
@@ -199,16 +209,13 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         // logging to bugsnag if it happens
         window.bugsnagClient?.notify?.(new Error(`Inconsistent git sync state for account ${accountId}`))
       }
-      setState(prevState => ({
-        ...prevState,
-        isGitSimplificationEnabled: state.featureFlags.NG_GIT_EXPERIENCE || state.isGitSimplificationEnabled
-      }))
     }
-  }, [state.featureFlags, state.isGitSimplificationEnabled])
+  }, [state.featureFlags, state.isGitSimplificationEnabled, state.isGitSyncEnabled])
 
-  // update gitSyncEnabled when selectedProject changes
+  // Update gitSyncEnabled when selectedProject changes
   useEffect(() => {
     // For gitSync, using path params instead of project/org from PreferenceFramework
+    // Need to check oldGitSync is enabled or not irrespective of USE_OLD_GIT_SYNC FF
     if (projectIdentifierFromPath) {
       isGitSyncEnabledPromise({
         queryParams: {
@@ -217,11 +224,19 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
           projectIdentifier: projectIdentifierFromPath
         }
       }).then((response: GitEnabledDTO) => {
+        const gitXEnabled = !!response?.gitSimplificationEnabled
+        const oldGitSyncEnabled = !!response?.gitSyncEnabled
+        const gitSyncEnabledOnlyForFF = !!response?.gitSyncEnabledOnlyForFF
+        const supportingGitSimplification =
+          ((gitXEnabled || !state.featureFlags['USE_OLD_GIT_SYNC']) && !oldGitSyncEnabled) || gitSyncEnabledOnlyForFF
         setState(prevState => ({
           ...prevState,
-          isGitSyncEnabled: !!response?.gitSyncEnabled,
+          isGitSyncEnabled: oldGitSyncEnabled,
           connectivityMode: response?.connectivityMode,
-          isGitSimplificationEnabled: !!response?.gitSimplificationEnabled
+          isGitSimplificationEnabled: gitXEnabled,
+          supportingGitSimplification,
+          gitSyncEnabledOnlyForFF: gitSyncEnabledOnlyForFF,
+          supportingTemplatesGitx: supportingGitSimplification && state.featureFlags['NG_TEMPLATE_GITX']
         }))
       })
     } else {
@@ -229,11 +244,21 @@ export function AppStoreProvider(props: React.PropsWithChildren<unknown>): React
         ...prevState,
         isGitSyncEnabled: false,
         connectivityMode: undefined,
-        isGitSimplificationEnabled: false
+        isGitSimplificationEnabled: false,
+        supportingGitSimplification: true,
+        supportingTemplatesGitx: state.featureFlags['NG_TEMPLATE_GITX'],
+        gitSyncEnabledOnlyForFF: false
       }))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.selectedProject, projectIdentifierFromPath, orgIdentifierFromPath, state.isGitSyncEnabled])
+  }, [
+    state.selectedProject,
+    projectIdentifierFromPath,
+    orgIdentifierFromPath,
+    state.isGitSyncEnabled,
+    state.featureFlags[FeatureFlag.USE_OLD_GIT_SYNC],
+    state.featureFlags[FeatureFlag.NG_TEMPLATE_GITX]
+  ])
 
   // set selectedOrg when orgDetails are fetched
   useEffect(() => {

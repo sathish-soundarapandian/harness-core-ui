@@ -18,7 +18,11 @@ import {
 } from '@wings-software/uicore'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import {
+  ALLOWED_VALUES_TYPE,
+  ConfigureOptions,
+  ConfigureOptionsProps
+} from '@common/components/ConfigureOptions/ConfigureOptions'
 
 // TODO: Need to import from uikit but right now it is not being exported from there
 // Also, we need to make field label to be a type of string | ReactElement because sometimes we need to pass an element
@@ -87,6 +91,7 @@ export function MultiTypeText(props: MultiTypeTextProps): React.ReactElement {
             style={{ marginLeft: 'var(--spacing-medium)', marginBottom: 12 }}
             {...configureOptionsProps}
             isReadonly={multiTextInputProps?.disabled}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
           />
         )}
       </div>

@@ -83,7 +83,7 @@ describe('Secret Details', () => {
     expect(container).toMatchSnapshot()
   })
   test('Test Connection', async () => {
-    const testConnection = getAllByText('secrets.createSSHCredWizard.btnVerifyConnection')[0]
+    const testConnection = getAllByText('common.smtp.testConnection')[0]
     await act(async () => {
       fireEvent.click(testConnection)
     })
@@ -98,7 +98,7 @@ describe('Secret Details', () => {
       fireEvent.click(testConnection)
     })
     expect(container).toMatchSnapshot()
-    const retestConnection = getAllByText('secrets.createSSHCredWizard.verifyRetest')[0]
+    const retestConnection = getAllByText('retry')[0]
 
     await act(async () => {
       fireEvent.click(retestConnection)

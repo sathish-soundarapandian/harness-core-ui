@@ -10,7 +10,7 @@ import { StepWizard } from '@wings-software/uicore'
 import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import {
   Connectors,
   CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
@@ -20,7 +20,9 @@ import {
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import { buildAWSPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import StepAWSAuthentication from './StepAuth/StepAWSAuthentication'
+import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 
 const CreateAWSConnector: React.FC<CreateConnectorModalProps> = props => {
   const { getString } = useStrings()
@@ -31,7 +33,9 @@ const CreateAWSConnector: React.FC<CreateConnectorModalProps> = props => {
     'gitDetails',
     'accountId',
     'orgIdentifier',
-    'projectIdentifier'
+    'projectIdentifier',
+    'connectivityMode',
+    'setConnectivityMode'
   ])
 
   return (
@@ -56,19 +60,35 @@ const CreateAWSConnector: React.FC<CreateConnectorModalProps> = props => {
           {...commonProps}
           onConnectorCreated={props.onSuccess}
           connectorInfo={props.connectorInfo}
+          helpPanelReferenceId="AwsConnectorCredentials"
         />
-        <DelegateSelectorStep
-          name={getString('delegate.DelegateselectionLabel')}
+        <ConnectivityModeStep
+          name={getString('connectors.selectConnectivityMode')}
+          type={Connectors.AWS}
+          gitDetails={props.gitDetails}
+          connectorInfo={props.connectorInfo}
           isEditMode={props.isEditMode}
           setIsEditMode={props.setIsEditMode}
           buildPayload={buildAWSPayload}
+          connectivityMode={props.connectivityMode}
+          setConnectivityMode={props.setConnectivityMode}
           hideModal={props.onClose}
           onConnectorCreated={props.onSuccess}
-          connectorInfo={props.connectorInfo}
-          gitDetails={props.gitDetails}
-          helpPanelReferenceId="ConnectorDelegatesSetup"
         />
-        <VerifyOutOfClusterDelegate
+        {props.connectivityMode === ConnectivityModeType.Delegate ? (
+          <DelegateSelectorStep
+            name={getString('delegate.DelegateselectionLabel')}
+            isEditMode={props.isEditMode}
+            setIsEditMode={props.setIsEditMode}
+            buildPayload={buildAWSPayload}
+            hideModal={props.onClose}
+            onConnectorCreated={props.onSuccess}
+            connectorInfo={props.connectorInfo}
+            gitDetails={props.gitDetails}
+            helpPanelReferenceId="ConnectorDelegatesSetup"
+          />
+        ) : null}
+        <ConnectorTestConnection
           name={getString('connectors.stepThreeName')}
           connectorInfo={props.connectorInfo}
           isStep={true}

@@ -37,9 +37,9 @@ import {
   getConnectorPromise,
   getTestConnectionResultPromise,
   getTestGitRepoConnectionResultPromise,
-  PipelineInfoConfig,
   useGetConnector
 } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
@@ -365,7 +365,7 @@ export function RightBar(): JSX.Element {
         text={getString('common.variables')}
         data-testid="input-variable"
       />
-      {!pipeline.template && (
+      {!pipeline?.template && (
         <Button
           className={cx(css.iconButton, {
             [css.selected]: type === DrawerTypes.PipelineNotifications
@@ -390,7 +390,7 @@ export function RightBar(): JSX.Element {
         />
       )}
 
-      {!pipeline.template && (
+      {!pipeline?.template && (
         <Button
           className={cx(css.iconButton, {
             [css.selected]: type === DrawerTypes.FlowControl
@@ -437,7 +437,7 @@ export function RightBar(): JSX.Element {
         />
       )}
 
-      {!pipeline.template && !isYaml && (
+      {!pipeline?.template && !isYaml && (
         <Button
           className={css.iconButton}
           text={getString('codebase')}
@@ -460,7 +460,7 @@ export function RightBar(): JSX.Element {
         />
       )}
 
-      {!pipeline.template && (
+      {!pipeline?.template && (
         <Button
           className={cx(css.iconButton, {
             [css.selected]: type === DrawerTypes.AdvancedOptions
@@ -570,6 +570,7 @@ export function RightBar(): JSX.Element {
                       connectionType,
                       setConnectionType,
                       setConnectorUrl,
+                      connector: connector?.data?.connector,
                       getString,
                       errors,
                       loading,
@@ -581,7 +582,12 @@ export function RightBar(): JSX.Element {
                       expressions,
                       isReadonly,
                       setCodebaseRuntimeInputs,
-                      codebaseRuntimeInputs
+                      codebaseRuntimeInputs,
+                      allowableTypes: [
+                        MultiTypeInputType.FIXED,
+                        MultiTypeInputType.EXPRESSION,
+                        MultiTypeInputType.RUNTIME
+                      ]
                     })}
                     <Accordion>
                       <Accordion.Panel

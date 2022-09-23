@@ -99,7 +99,8 @@ export const getGroupAndMetric = (
   return Array.from(mappedMetrics?.values()).map(item => {
     return {
       groupName: item.groupName || defaultGroupedMetric(getString),
-      metricName: item.metricName
+      metricName: item.metricName,
+      continuousVerification: item.continuousVerification
     }
   })
 }
@@ -112,7 +113,8 @@ export const getGroupedCreatedMetrics = (
     return {
       index,
       groupName: item.groupName || defaultGroupedMetric(getString),
-      metricName: item.metricName
+      metricName: item.metricName,
+      continuousVerification: item.continuousVerification
     }
   })
   return groupBy(filteredList.reverse(), function (item) {

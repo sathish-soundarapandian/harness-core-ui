@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import type { K8sDirectInfraYaml } from 'services/ci'
 
 export const transformValuesFieldsConfig = [
   {
@@ -113,9 +113,9 @@ export const transformValuesFieldsConfig = [
 ]
 
 export const getEditViewValidateFieldsConfig = (
-  buildInfrastructureType: K8sDirectInfraYaml['type'],
+  buildInfrastructureType: CIBuildInfrastructureType,
   isLanguageCsharp: boolean
-) => [
+): { name: string; type: ValidationFieldTypes; label?: string; isRequired?: boolean }[] => [
   {
     name: 'identifier',
     type: ValidationFieldTypes.Identifier,
@@ -183,7 +183,15 @@ export const getEditViewValidateFieldsConfig = (
   },
   {
     name: 'spec.reportPaths',
-    type: ValidationFieldTypes.List
+    type: ValidationFieldTypes.List,
+    label: 'ci.runTestsStep.testReportPaths',
+    isRequired: true
+  },
+  {
+    name: 'spec.reports.spec.paths',
+    type: ValidationFieldTypes.List,
+    label: 'ci.runTestsStep.testReportPaths',
+    isRequired: true // only for input set
   },
   {
     name: 'spec.envVariables',
@@ -265,7 +273,9 @@ export function getInputSetViewValidateFieldsConfig(
     },
     {
       name: 'spec.reports.spec.paths',
-      type: ValidationFieldTypes.List
+      type: ValidationFieldTypes.List,
+      label: 'ci.runTestsStep.testReportPaths',
+      isRequired
     },
     {
       name: 'spec.envVariables',

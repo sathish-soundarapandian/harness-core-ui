@@ -27,6 +27,33 @@ export const mockedMonitoredServiceData = {
   correlationId: '6ad5972a-c382-46dc-a0d4-263ba5806db8'
 }
 
+export const mockedMonitoredServiceDataWithNullData = {
+  status: 'SUCCESS',
+  data: [
+    {
+      identifier: 'Service_101_QA',
+      name: 'Service_101_QA',
+      healthSources: [
+        { name: 'Test AppD 102', identifier: 'Test_AppD' },
+        { name: 'dasdasdas', identifier: 'dasdasdas' },
+        { name: 'Promethus', identifier: 'dasdsadsa' }
+      ]
+    },
+    {
+      identifier: 'Service_102_QA',
+      name: 'Service_102_QA',
+      healthSources: [{ name: 'Test AppD', identifier: 'Test_AppD' }]
+    },
+    {
+      identifier: 'Service_102_QA',
+      name: null,
+      healthSources: [{ name: 'Test AppD', identifier: 'Test_AppD' }]
+    }
+  ],
+  metaData: {},
+  correlationId: '6ad5972a-c382-46dc-a0d4-263ba5806db8'
+}
+
 export const mockedMonitoredService = {
   orgIdentifier: 'CVNG',
   projectIdentifier: 'chidemo',

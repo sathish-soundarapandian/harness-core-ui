@@ -8,10 +8,10 @@
 import React from 'react'
 import { render, act, fireEvent, waitFor, queryByText, queryAllByText } from '@testing-library/react'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
-import { AuthenticationMechanisms } from '@auth-settings/constants/utils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { mockResponse, authSettings } from '@auth-settings/pages/Configuration/__test__/mock'
+import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import PublicOAuthProviders from '../PublicOAuthProviders'
 
 const refetchAuthSettings = jest.fn()

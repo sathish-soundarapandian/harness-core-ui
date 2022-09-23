@@ -1,0 +1,967 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "CCM Commitment Orchestration API documentation",
+    "version": "1.0.0",
+    "title": "CCM Commitment Orchestration APIs"
+  },
+  "basePath": "/lw/co/api",
+  "tags": [
+    {
+      "name": "co",
+      "description": "APIs related to Commitment Orchestration"
+    }
+  ],
+  "schemes": ["https"],
+  "paths": {
+    "/accounts/{accountId}/v1/summary": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accountId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SummaryRequest"
+            }
+          }
+        ],
+        "tags": ["coSummary"],
+        "summary": "Gets summarized data for all the accounts within the specified period",
+        "description": "Gets summarized data for all the accounts within the specified period",
+        "operationId": "fetchCOSummary",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/SummaryResponse"
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/v1/setup": {
+      "post": {
+        "summary": "Setup Commitment Orchestration",
+        "description": "Setup Commitment Orchestration",
+        "operationId": "SaveSetupCO",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accountId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SetupPOSTRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SetupPOSTResponse"
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Setup GET",
+        "operationId": "GetSetupCO",
+        "deprecated": false,
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accountId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": { "$ref": "#/definitions/GetSetupResponse" }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/v1/detail/compute_coverage": {
+      "post": {
+        "summary": "Get compute coverage",
+        "operationId": "FetchComputeCoverage",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accountId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SummaryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ComputeCoverageResponse"
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/v1/detail/commitment_utilisation": {
+      "post": {
+        "summary": "Commitment Utilisation",
+        "operationId": "GetCommitmentUtilisation",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accountId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SummaryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CommitmentUtilisationResponse"
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/v1/detail/savings": {
+      "post": {
+        "summary": "Get Savings details",
+        "operationId": "FetchSavings",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accountId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SummaryRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ComputeCoverageResponse"
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/v1/filters": {
+      "post": {
+        "summary": "Filters for commitment orchestrator visibility",
+        "operationId": "FetchFilters",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accountId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/FiltersRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/FiltersResponse"
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}/v1/setup/instance_types": {
+      "post": {
+        "summary": "Get all Instance Types for Setup",
+        "operationId": "FetchSetupInstanceTypes",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accountId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "start_date",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/SetupInstanceTypesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/SetupInstanceTypesResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "SummaryRequest": {
+      "type": "object",
+      "properties": {
+        "group_by": {
+          "type": "string"
+        },
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "account_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "instance_families": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "SummaryResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "null"
+        },
+        "response": {
+          "$ref": "#/definitions/SummaryResponseData"
+        }
+      }
+    },
+    "SummaryResponseData": {
+      "type": "object",
+      "properties": {
+        "compute_spend": {
+          "type": "number"
+        },
+        "ondemand_spend": {
+          "type": "number"
+        },
+        "savings_plans_spend": {
+          "type": "number"
+        },
+        "reservations_spend": {
+          "type": "number"
+        },
+        "coverage_percentage": {
+          "type": "object",
+          "properties": {
+            "savings_plan": {
+              "type": "number"
+            },
+            "reserved_instances": {
+              "type": "number"
+            },
+            "ondemand": {
+              "type": "number"
+            }
+          }
+        },
+        "utilization_percentage": {
+          "type": "object",
+          "properties": {
+            "savings_plan": {
+              "type": "number"
+            },
+            "reserved_instances": {
+              "type": "number"
+            }
+          }
+        },
+        "savings": {
+          "type": "object",
+          "properties": {
+            "total": {
+              "type": "number"
+            },
+            "percentage": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "FiltersRequest": {
+      "title": "FiltersRequest",
+      "example": {
+        "group_by": "Instance Family"
+      },
+      "type": "object",
+      "properties": {
+        "group_by": {
+          "type": "string"
+        }
+      }
+    },
+    "FiltersResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "$ref": "#/definitions/FiltersData"
+        }
+      }
+    },
+    "FiltersData": {
+      "type": "object",
+      "properties": {
+        "region": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "instance_family": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "account_id": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "SetupInstanceTypesResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SetupInstanceType"
+          }
+        }
+      }
+    },
+    "SetupInstanceType": {
+      "type": "object",
+      "properties": {
+        "instance_type": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "compute_spend": {
+          "type": "number"
+        },
+        "coverage_percentage": {
+          "type": "number"
+        },
+        "machine_type": {
+          "type": "string"
+        }
+      }
+    },
+    "SetupPOSTRequest": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "config": {
+          "$ref": "#/definitions/Config1"
+        }
+      },
+      "required": ["enabled", "config"]
+    },
+    "Config1": {
+      "title": "Config1",
+      "example": {
+        "exclusion_list": [
+          {
+            "instance_type": "t2.micro",
+            "region": "us-east-1"
+          }
+        ],
+        "savings_plans_config": {
+          "coverage": 5250,
+          "term": 1,
+          "payments_strategy": "no upfront"
+        },
+        "reserved_instances_config": {
+          "coverage": 8500,
+          "term": 1,
+          "payments_strategy": "no upfront"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "exclusion_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExclusionList"
+          }
+        },
+        "savings_plans_config": {
+          "$ref": "#/definitions/SavingsPlansConfig"
+        },
+        "reserved_instances_config": {
+          "$ref": "#/definitions/ReservedInstancesConfig"
+        }
+      },
+      "required": ["exclusion_list", "savings_plans_config", "reserved_instances_config"]
+    },
+    "ExclusionList": {
+      "title": "ExclusionList",
+      "example": {
+        "instance_type": "t2.micro",
+        "region": "us-east-1"
+      },
+      "type": "object",
+      "properties": {
+        "instance_type": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        }
+      },
+      "required": ["instance_type", "region"]
+    },
+    "SavingsPlansConfig": {
+      "title": "SavingsPlansConfig",
+      "example": {
+        "coverage": 5250,
+        "term": 1,
+        "payments_strategy": "no upfront"
+      },
+      "type": "object",
+      "properties": {
+        "coverage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "term": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "payments_strategy": {
+          "type": "string"
+        }
+      },
+      "required": ["coverage", "term", "payments_strategy"]
+    },
+    "ReservedInstancesConfig": {
+      "title": "ReservedInstancesConfig",
+      "example": {
+        "coverage": 8500,
+        "term": 1,
+        "payments_strategy": "no upfront"
+      },
+      "type": "object",
+      "properties": {
+        "coverage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "term": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "payments_strategy": {
+          "type": "string"
+        }
+      },
+      "required": ["coverage", "term", "payments_strategy"]
+    },
+    "SetupInstanceTypesRequest": {
+      "title": "SetupInstanceTypesRequest",
+      "example": {
+        "regions": ["us-east-1"],
+        "instance_types": ["t2.micro"]
+      },
+      "type": "object",
+      "properties": {
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "instance_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["regions", "instance_types"]
+    },
+    "SetupPOSTResponse": {
+      "type": "object",
+      "properties": {
+        "response": { "type": "null" }
+      }
+    },
+    "GetSetupResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "object",
+          "$ref": "#/definitions/SetupPOSTRequest"
+        }
+      }
+    },
+    "CommitmentUtilisationResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "object",
+          "$ref": "#/definitions/CommitmentUtillisationGroupByCommitmentType"
+        }
+      }
+    },
+    "CommitmentUtillisationGroupByCommitmentType": {
+      "type": "object",
+      "properties": {
+        "Reserved Instances": {
+          "$ref": "#/definitions/CommitmentUtilisationRIResponse"
+        },
+        "Savings Plans": {
+          "$ref": "#/definitions/ComputeCoverageSavingsPlansResponse"
+        }
+      }
+    },
+    "CommitmentUtilisationRIResponse": {
+      "type": "object",
+      "properties": {
+        "table": {
+          "$ref": "#/definitions/CommitmentUtilisationTableResponse"
+        },
+        "chart": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommitmentUtilisationChartResponse"
+          }
+        }
+      }
+    },
+    "CommitmentUtilisationChartResponse": {
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "utilization_percentage": { "type": "number" }
+      }
+    },
+    "CommitmentUtilisationTableResponse": {
+      "type": "object",
+      "properties": {
+        "compute_spend": { "type": "number" },
+        "utilization": { "type": "number" },
+        "percentage": { "type": "number" }
+      }
+    },
+    "SavingsResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "object",
+          "$ref": "#/definitions/SavingsVisualisationData"
+        }
+      }
+    },
+    "SavingsVisualisationData": {
+      "type": "object",
+      "patternProperties": {
+        "*": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "$ref": "#/definitions/SavingsVisualisationTableData"
+            },
+            "chart": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SavingsVisualisationChartData"
+              }
+            }
+          }
+        }
+      }
+    },
+    "SavingsVisualisationTableData": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "number"
+        }
+      }
+    },
+    "SavingsVisualisationChartData": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string"
+        },
+        "savings": {
+          "type": "number"
+        }
+      }
+    },
+    "ComputeCoverageResponse": {
+      "type": "object",
+      "properties": {
+        "response": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/ComputeCoverageGroupByCommitmentType"
+            },
+            {
+              "$ref": "#/definitions/ComputeCoverageGroupByInstanceFamily"
+            },
+            {
+              "$ref": "#/definitions/ComputeCoverageGroupByRegions"
+            }
+          ]
+        }
+      }
+    },
+    "ComputeCoverageGroupByRegions": {
+      "type": "object",
+      "patternProperties": {
+        "*": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "$ref": "#/definitions/ComputeCoverageRegionsTableResponse"
+            },
+            "chart": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ComputeCoverageChartResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ComputeCoverageRegionsTableResponse": {
+      "type": "object",
+      "properties": {
+        "reservation_cost": { "type": "number" },
+        "total_cost": { "type": "number" },
+        "on_demand_cost": { "type": "number" },
+        "total_hours": { "type": "number" },
+        "on_demand_hours": { "type": "number" },
+        "savings_plan_hours": { "type": "number" },
+        "ri_coverage_hours": { "type": "number" },
+        "coverage": { "type": "number" }
+      }
+    },
+    "ComputeCoverageGroupByInstanceFamily": {
+      "type": "object",
+      "patternProperties": {
+        "*": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "$ref": "#/definitions/ComputeCoverageInstanceFamilyTableResponse"
+            },
+            "chart": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ComputeCoverageChartResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "ComputeCoverageInstanceFamilyTableResponse": {
+      "type": "object",
+      "properties": {
+        "reservation_cost": { "type": "number" },
+        "total_cost": { "type": "number" },
+        "on_demand_cost": { "type": "number" },
+        "total_hours": { "type": "number" },
+        "on_demand_hours": { "type": "number" },
+        "savings_plan_hours": { "type": "number" },
+        "ri_coverage_hours": { "type": "number" },
+        "coverage": { "type": "number" }
+      }
+    },
+    "ComputeCoverageGroupByCommitmentType": {
+      "type": "object",
+      "properties": {
+        "OnDemand Instances": {
+          "$ref": "#/definitions/ComputeCoverageOnDemandResponse"
+        },
+        "Reserved Instances": {
+          "$ref": "#/definitions/ComputeCoverageRIResponse"
+        },
+        "Savings Plans": {
+          "$ref": "#/definitions/ComputeCoverageSavingsPlansResponse"
+        }
+      }
+    },
+    "ComputeCoverageOnDemandResponse": {
+      "type": "object",
+      "properties": {
+        "table": {
+          "$ref": "#/definitions/ComputeCoverageOnDemandTableResponse"
+        },
+        "chart": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComputeCoverageChartResponse"
+          }
+        }
+      }
+    },
+    "ComputeCoverageChartResponse": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string"
+        },
+        "coverage_cost": {
+          "type": "number"
+        }
+      }
+    },
+    "ComputeCoverageOnDemandTableResponse": {
+      "type": "object",
+      "properties": {
+        "total_cost": { "type": "number" },
+        "on_demand_cost": { "type": "number" },
+        "total_hours": { "type": "number" },
+        "on_demand_hours": { "type": "number" }
+      }
+    },
+    "ComputeCoverageRIResponse": {
+      "type": "object",
+      "properties": {
+        "table": {
+          "$ref": "#/definitions/ComputeCoverageRITableResponse"
+        },
+        "chart": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComputeCoverageChartResponse"
+          }
+        }
+      }
+    },
+    "ComputeCoverageRITableResponse": {
+      "type": "object",
+      "properties": {
+        "total_cost": { "type": "number" },
+        "total_hours": { "type": "number" },
+        "ri_coverage_hours": { "type": "number" }
+      }
+    },
+    "ComputeCoverageSavingsPlansResponse": {
+      "type": "object",
+      "properties": {
+        "table": {
+          "$ref": "#/definitions/ComputeCoverageSavingsPlansTableResponse"
+        },
+        "chart": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComputeCoverageChartResponse"
+          }
+        }
+      }
+    },
+    "ComputeCoverageSavingsPlansTableResponse": {
+      "type": "object",
+      "properties": {
+        "total_cost": { "type": "number" },
+        "total_hours": { "type": "number" }
+      }
+    }
+  }
+}

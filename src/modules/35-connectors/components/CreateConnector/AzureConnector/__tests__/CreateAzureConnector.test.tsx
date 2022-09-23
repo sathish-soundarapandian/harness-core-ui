@@ -10,15 +10,22 @@ import { noop } from 'lodash-es'
 import { render, fireEvent } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
+import routes from '@common/RouteDefinitions'
 import {
   mockResponse,
   mockSecret,
   mockConnectorSecretKey,
   mockConnectorSecretFile,
   mockConnectorSystemManagedIdentity,
-  mockConnectorUserManagedIdentity
+  mockConnectorUserManagedIdentity,
+  hostedMock,
+  delegateMock
 } from './mocks'
 import CreateAzureConnector from '../CreateAzureConnector'
+
+const testPath = routes.toConnectors({ accountId: ':accountId' })
+const testPathParams = { accountId: 'dummy' }
 
 const commonProps = {
   accountId: 'dummy',
@@ -39,6 +46,7 @@ jest.mock('services/cd-ng', () => ({
   useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
   getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
   useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
@@ -49,9 +57,13 @@ jest.mock('services/portal', () => ({
 }))
 
 describe('Create new azure connector', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('Should match snapshot', async () => {
     const { container, getByTestId, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateAzureConnector {...commonProps} isEditMode={false} connectorInfo={undefined} />
       </TestWrapper>
     )
@@ -102,7 +114,7 @@ describe('Create new azure connector', () => {
 describe('Edit azure connector', () => {
   test('Should render correctly with text secret type', async () => {
     const { container, getByText, getByTestId } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateAzureConnector
           {...commonProps}
           isEditMode={true}
@@ -135,7 +147,7 @@ describe('Edit azure connector', () => {
 
   test('Should render correctly with secret type certificate', async () => {
     const { container, getByText, getByTestId } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateAzureConnector
           {...commonProps}
           isEditMode={true}
@@ -167,7 +179,7 @@ describe('Edit azure connector', () => {
 
   test('Should render correctly with user assigned managed identity', async () => {
     const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateAzureConnector
           {...commonProps}
           isEditMode={true}
@@ -200,7 +212,7 @@ describe('Edit azure connector', () => {
 
   test('Should render correctly with system assigned managed identity', async () => {
     const { container, getByText } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateAzureConnector
           {...commonProps}
           isEditMode={true}
@@ -225,5 +237,107 @@ describe('Edit azure connector', () => {
     expect(container.querySelector('input[value="InheritFromDelegate"]')!).toBeInTheDocument()
     expect(container.querySelector('input[value="ManualConfig"]')!).not.toBeInTheDocument()
     expect(container.querySelector('input[name="clientId"]')!).not.toBeInTheDocument()
+  })
+
+  test('Should render form for edit for delegate', async () => {
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateAzureConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={delegateMock.data.connector as any}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
+        />
+      </TestWrapper>
+    )
+    // editing connector name
+    const updatedName = 'dummy name'
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="name"]')!, {
+        target: { value: 'dummy name' }
+      })
+    })
+    expect(container).toMatchSnapshot()
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+    // step 2
+    expect(container).toMatchSnapshot()
+
+    //connectivity mode step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    // delegate selector step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+    const delegateSelector = container.querySelector('[data-name="DelegateSelectors"]')
+    expect(delegateSelector).toBeTruthy()
+
+    // test connection
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    expect(updateConnector).toBeCalledTimes(1)
+
+    expect(updateConnector).toBeCalledWith(
+      {
+        connector: {
+          ...delegateMock.data.connector,
+          name: updatedName
+        }
+      },
+      { queryParams: {} }
+    )
+  })
+
+  test('Should render form for edit for hosted', async () => {
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateAzureConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={hostedMock.data.connector as any}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Manager}
+        />
+      </TestWrapper>
+    )
+    // editing connector name
+    const updatedName = 'dummy name'
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="name"]')!, {
+        target: { value: 'dummy name' }
+      })
+    })
+    expect(container).toMatchSnapshot()
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+    // step 2
+    expect(container).toMatchSnapshot()
+
+    //connectivity mode step
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    expect(updateConnector).toBeCalledWith(
+      {
+        connector: {
+          ...hostedMock.data.connector,
+          name: updatedName
+        }
+      },
+      { queryParams: {} }
+    )
   })
 })

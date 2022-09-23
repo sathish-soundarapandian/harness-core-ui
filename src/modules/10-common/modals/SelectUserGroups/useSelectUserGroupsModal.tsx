@@ -20,6 +20,7 @@ export interface UseSelectUserGroupsModalProps {
   secretsListMockData?: UserGroupDTO[]
   onlyCurrentScope?: boolean
   disablePreSelectedItems?: boolean
+  identifierFilter?: string[]
 }
 
 export interface UseSelectUserGroupsModalReturn {

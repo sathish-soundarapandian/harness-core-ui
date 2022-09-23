@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { StepWizard, Icon, MultiTypeInputType } from '@wings-software/uicore'
+import { StepWizard, Icon, AllowedTypes } from '@wings-software/uicore'
 import type { IconProps } from '@harness/icons'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import { ArtifactoryRepoType } from '../ArtifactRepository/ArtifactoryRepoType'
@@ -25,6 +25,7 @@ interface ArtifactWizardProps {
   artifactInitialValue: InitialArtifactDataType
   types: Array<ArtifactType>
   lastSteps: JSX.Element
+  getOptionalConfigurationSteps?: JSX.Element | null
   newConnectorSteps?: any
   expressions: string[]
   labels: ConnectorRefLabelType
@@ -33,7 +34,7 @@ interface ArtifactWizardProps {
   newConnectorView: boolean
   iconsProps: IconProps | undefined
   isReadonly: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   showConnectorStep: boolean
 }
 
@@ -44,6 +45,7 @@ function ArtifactWizard({
   allowableTypes,
   selectedArtifact,
   changeArtifactType,
+  getOptionalConfigurationSteps,
   handleViewChange,
   artifactInitialValue,
   newConnectorView,
@@ -56,7 +58,7 @@ function ArtifactWizard({
   const { getString } = useStrings()
 
   const onStepChange = (arg: StepChangeData<any>): void => {
-    if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
+    if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 3) {
       handleViewChange(false)
     }
   }
@@ -76,6 +78,7 @@ function ArtifactWizard({
     }
     return undefined
   }
+
   return (
     <StepWizard className={css.existingDocker} subtitle={renderSubtitle()} onStepChange={onStepChange}>
       <ArtifactoryRepoType
@@ -101,6 +104,7 @@ function ArtifactWizard({
 
       {newConnectorView ? newConnectorSteps : null}
       {lastSteps}
+      {getOptionalConfigurationSteps}
     </StepWizard>
   )
 }

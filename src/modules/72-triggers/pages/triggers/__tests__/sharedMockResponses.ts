@@ -318,6 +318,21 @@ export const GetTemplateStageVariablesFromPipelineResponse: UseGetReturnData<Res
   }
 }
 
+export const GetTemplateStageVariablesFromPipelineResponse2: UseGetReturnData<ResponseInputSetTemplateResponse> = {
+  loading: false,
+  refetch: jest.fn(),
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      inputSetTemplateYaml:
+        'pipeline:\n  identifier: "tolerations1"\n  properties:\n    ci:\n      codebase:\n        build: "<+input>"\n  stages:\n  - stage:\n      identifier: "stage1"\n      type: "CI"\n      spec:\n        infrastructure:\n          type: "KubernetesDirect"\n          spec:\n            namespace: "<+input>"\n        execution:\n          steps:\n          - step:\n              identifier: "s"\n              type: "Run"\n              spec:\n                image: "<+input>"\n'
+    },
+    metaData: null as unknown as undefined,
+    correlationId: '4e057505-dbd4-4de7-9a9d-43a0364e5825'
+  }
+}
+
 export const GetTemplateFromPipelineResponseEmpty: UseGetReturnData<ResponseInputSetTemplateResponse> = {
   loading: false,
   refetch: jest.fn(),
@@ -517,6 +532,40 @@ export const GetInputSetsResponse: UseGetReturnData<ResponsePageInputSetSummaryR
   }
 }
 
+export const GetInputSetsResponse2: UseGetReturnData<ResponsePageInputSetSummaryResponse> = {
+  loading: false,
+  refetch: jest.fn(),
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      totalPages: 1,
+      totalItems: 1,
+      pageItemCount: 1,
+      pageSize: 100,
+      content: [
+        {
+          identifier: 'inputset1',
+          name: 'inputset1',
+          pipelineIdentifier: 'tolerations1',
+          inputSetType: 'INPUT_SET',
+          tags: {},
+          createdAt: 1654886025540,
+          lastUpdatedAt: 1654886025540,
+          isOutdated: false,
+          entityValidityDetails: {
+            valid: true
+          },
+          storeType: 'INLINE'
+        }
+      ],
+      pageIndex: 0,
+      empty: false
+    },
+    correlationId: 'dbc7238c-380f-4fe0-b160-a29510cfe0c8'
+  }
+}
+
 export const GetManifestInputSetsResponse: UseGetReturnData<ResponsePageInputSetSummaryResponse> = {
   loading: false,
   refetch: jest.fn(),
@@ -678,6 +727,25 @@ export const GetTriggerListForTargetResponse: UseGetReturnData<ResponsePageNGTri
               detailedMessage: null as unknown as undefined
             },
             webhookAutoRegistrationStatus: null as unknown as undefined
+          },
+          buildDetails: {
+            buildType: 'io.harness.ngtriggers.beans.source.artifact.HelmManifestSpec'
+          },
+          tags: {},
+          executions: [0, 0, 0, 0, 0, 0, 0],
+          yaml: 'trigger:\n    name: H1\n    identifier: H1\n    enabled: true\n    tags: {}\n    orgIdentifier: default\n    projectIdentifier: trigger\n    pipelineIdentifier: pipeline\n    source:\n        type: Manifest\n        spec:\n            stageIdentifier: stage1\n            manifestRef: m1\n            type: HelmChart\n            spec:\n                store:\n                    type: Http\n                    spec:\n                        connectorRef: test\n                chartName: c1\n                chartVersion: <+trigger.manifest.version>\n                helmVersion: V2\n                skipResourceVersioning: false\n                eventConditions: []\n    inputYaml: |\n        pipeline:\n            identifier: pipeline\n            stages:\n                - stage:\n                      identifier: stage1\n                      type: Deployment\n                      spec:\n                          serviceConfig:\n                              serviceDefinition:\n                                  type: Kubernetes\n                                  spec:\n                                      manifests:\n                                          - identifier: m1\n                                            type: HelmChart\n                                            spec:\n                                                store:\n                                                    type: Http\n                                                    spec:\n                                                        connectorRef: test\n                                                chartName: c1\n                                                chartVersion: <+trigger.manifest.version>\n                                                helmVersion: V2\n                                                skipResourceVersioning: false\n',
+          webhookUrl: '',
+          enabled: true
+        },
+        {
+          name: 'webhookAutoRegistrationFailed',
+          identifier: 'webhookautoregistrationfailed',
+          type: 'Webhook',
+          triggerStatus: {
+            webhookAutoRegistrationStatus: {
+              registrationResult: 'FAILED',
+              detailedMessage: 'Failed to register webhook with error: error'
+            }
           },
           buildDetails: {
             buildType: 'io.harness.ngtriggers.beans.source.artifact.HelmManifestSpec'

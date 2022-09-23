@@ -93,7 +93,7 @@ exports[`StageAdvancedInputSetForm tests viewType DeploymentForm initial render 
                       data-name="DelegateSelectors"
                     >
                       <div
-                        class="bp3-popover-wrapper delegateInput delegatePopover bp3-fill"
+                        class="bp3-popover-wrapper delegatePopover bp3-fill"
                       >
                         <div
                           class="bp3-popover-target"
@@ -102,7 +102,7 @@ exports[`StageAdvancedInputSetForm tests viewType DeploymentForm initial render 
                             class=""
                           >
                             <div
-                              class="bp3-input bp3-tag-input bp3-fill bp3-multi-select"
+                              class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
                             >
                               <div
                                 class="bp3-tag-input-values"
@@ -168,6 +168,44 @@ exports[`StageAdvancedInputSetForm tests viewType DeploymentForm initial render 
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="nestedAccordions formGroup md"
+        >
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--margin-bottom-medium"
+          >
+            <div
+              class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+            >
+              <div
+                class="StyledProps--font StyledProps--main"
+                style="width: 100%;"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+                  >
+                    <input
+                      data-testid="skip-instances-check"
+                      name="stages[1].stage.skipInstances"
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      pipeline.skipInstances.title
+                    </p>
+                  </label>
                 </div>
               </div>
             </div>

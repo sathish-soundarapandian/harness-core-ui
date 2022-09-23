@@ -154,6 +154,7 @@ type CCMMetaData {
   inventoryDataPresent: Boolean!
   isSampleClusterPresent: Boolean!
   k8sClusterConnectorPresent: Boolean!
+  showCostOverview: Boolean!
 }
 
 type ClusterData {
@@ -402,6 +403,7 @@ type QLCEView {
   createdBy: String
   dataSources: [ViewFieldIdentifier]
   folderId: String
+  folderName: String
   groupBy: QLCEViewField
   id: String
   lastUpdatedAt: Long
@@ -484,6 +486,7 @@ type Query {
   perspectiveForecastCost(
     aggregateFunction: [QLCEViewAggregationInput]
     filters: [QLCEViewFilterWrapperInput]
+    groupBy: [QLCEViewGroupByInput]
     isClusterQuery: Boolean
   ): PerspectiveTrendStats
   "Table for perspective"
@@ -520,10 +523,11 @@ type Query {
   perspectiveTrendStats(
     aggregateFunction: [QLCEViewAggregationInput]
     filters: [QLCEViewFilterWrapperInput]
+    groupBy: [QLCEViewGroupByInput]
     isClusterQuery: Boolean
   ): PerspectiveTrendStats
   "Fetch perspectives for account"
-  perspectives(folderId: String): PerspectiveData
+  perspectives(folderId: String, sortCriteria: QLCEViewSortCriteriaInput): PerspectiveData
   "recommendation details/drillDown"
   recommendationDetails(
     "defaults to Now()"
@@ -541,6 +545,8 @@ type Query {
   recommendationsV2(
     filter: K8sRecommendationFilterDTOInput = { limit: 10, minSaving: 0.0, offset: 0 }
   ): RecommendationsDTO
+  "Labels for workloads"
+  workloadLabels(filters: [QLCEViewFilterWrapperInput], workloads: [String]): Map_String_Map_String_StringScalar
 }
 
 type RecommendClusterRequest {
@@ -563,11 +569,6 @@ type RecommendClusterRequest {
 type RecommendNodePoolClusterRequest {
   recommendClusterRequest: RecommendClusterRequest
   totalResourceUsage: TotalResourceUsage
-}
-
-type ViewPreferences {
-  includeOthers: Boolean
-  includeUnallocatedCost: Boolean
 }
 
 type RecommendationItemDTO {
@@ -668,6 +669,11 @@ type TotalResourceUsage {
   summemory: Float!
 }
 
+type ViewPreferences {
+  includeOthers: Boolean
+  includeUnallocatedCost: Boolean
+}
+
 type VirtualMachine {
   allocatableCpusPerVm: Float
   allocatableMemPerVm: Float
@@ -758,11 +764,13 @@ enum QLCEViewFilterOperator {
   NOT_IN
   NOT_NULL
   NULL
+  SEARCH
 }
 
 enum QLCEViewSortType {
   CLUSTER_COST
   COST
+  NAME
   TIME
 }
 
@@ -825,7 +833,6 @@ enum ViewTimeRangeType {
 enum ViewType {
   CUSTOMER
   DEFAULT
-  DEFAULT_AZURE
   SAMPLE
 }
 
@@ -896,6 +903,12 @@ input NodePoolIdInput {
   nodepoolname: String!
 }
 
+input QLCEInExpressionFilterInput {
+  fields: [QLCEViewFieldInputInput]!
+  nullValueField: String
+  values: [[String]]!
+}
+
 input QLCEViewAggregationInput {
   columnName: String!
   operationType: QLCEViewAggregateOperation!
@@ -916,6 +929,7 @@ input QLCEViewFilterInput {
 
 input QLCEViewFilterWrapperInput {
   idFilter: QLCEViewFilterInput
+  inExpressionFilter: QLCEInExpressionFilterInput
   ruleFilter: QLCEViewRuleInput
   timeFilter: QLCEViewTimeFilterInput
   viewMetadataFilter: QLCEViewMetadataFilterInput

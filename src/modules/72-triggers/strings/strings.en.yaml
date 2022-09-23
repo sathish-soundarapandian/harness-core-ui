@@ -43,12 +43,14 @@ triggerCouldNotBeSavedContent: Do you want to continue?
 triggerCouldNotBeSavedGenericError: Failed to save Trigger.
 updateTriggerDetails: 'Your trigger has been overwritten because you have updated your pipeline. You may go to Pipeline Input and update your trigger.'
 retryTriggerSave: The inputset you selected was not found in the default branch in your repository. You can continue to save your Trigger with an error.
+error:
+  webhookRegistrationFailed: Webhook Registration Failed
 validation:
   triggerName: 'Trigger Name is required.'
   identifier: '{{$.validation.identifierRequired}}'
   event: 'Event is required.'
-  connector: 'Connector is required.'
-  repoName: 'Repository Name is required for Connector with Account URL Type.'
+  connector: '{{$.connectors.validation.connectorIsRequired}}'
+  repoName: 'Repository Name is required for connector with Account/Project URL type'
   actions: 'Actions is required.'
   operator: 'Operator is required with Matches Value.'
   matchesValue: 'Matches Value is required with Operator.'
@@ -68,7 +70,6 @@ tooltip:
   defaultGitSyncBranchOnly: Triggers can be added to a Pipeline in the default branch only
 triggerConfigurationPanel:
   title: 'Trigger Configuration: On New Webhook'
-  triggerName: 'Trigger Name'
   listenOnNewWebhook: 'Listen on New Webhook'
   payloadType: 'Payload Type'
   event: 'Event'
@@ -78,6 +79,7 @@ triggerConfigurationPanel:
   autoAbortPR: 'If a PR is updated, Harness will automatically cancel active builds for the same PR if invoked by the same Trigger.'
   autoAbortIssueComment: 'If a PR is updated with a new comment, Harness will automatically cancel active builds for the same PR.'
   eventPlaceholder: Select Event
+  pollingFrequency: Polling Frequency
 conditionsPanel:
   subtitle: 'Specify the conditions for running the Pipeline. For example, when an artifact tag, label, filename, or build matches a certain value or pattern.'
   subtitleManifest: '{{$.triggers.conditionsPanel.subtitle}}'

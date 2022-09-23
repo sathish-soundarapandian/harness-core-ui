@@ -35,21 +35,29 @@ import {
   useGetConnector,
   useGetSecretV2,
   ResponseSecretResponseWrapper,
-  ListSecretsV2QueryParams
+  ListSecretsV2QueryParams,
+  JsonNode
 } from 'services/cd-ng'
 import type { SecretTextSpecDTO, SecretFileSpecDTO } from 'services/cd-ng'
 import { useToaster } from '@common/exports'
-import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import { IdentifierSchema, NameSchema, VariableSchemaWithoutHook } from '@common/utils/Validation'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type { InputSetSchema } from '@secrets/components/ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
 import VaultFormFields from './views/VaultFormFields'
 import LocalFormFields from './views/LocalFormFields'
+import CustomFormFields from './views/CustomFormFields/CustomFormFields'
 
-export type SecretFormData = Omit<SecretDTOV2, 'spec'> & SecretTextSpecDTO & SecretFileSpecDTO
+export type SecretFormData = Omit<SecretDTOV2, 'spec'> & SecretTextSpecDTO & SecretFileSpecDTO & TemplateInputInterface
+interface TemplateInputInterface {
+  templateInputs?: JsonNode
+}
 
 export interface SecretIdentifiers {
   identifier: string
@@ -69,16 +77,22 @@ interface CreateUpdateSecretProps {
 
 const LocalFormFieldsSMList = ['Local', 'GcpKms', 'AwsKms']
 const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
-  const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const { onSuccess, connectorTypeContext, privateSecret } = props
   const propsSecret = props.secret
   const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { OPA_SECRET_GOVERNANCE } = useFeatureFlags()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const secretTypeFromProps = props.type
   const [type, setType] = useState<SecretResponseWrapper['secret']['type']>(secretTypeFromProps || 'SecretText')
   const [secret, setSecret] = useState<SecretDTOV2>()
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
+    considerWarningAsError: false,
+    errorHeaderMsg: 'secrets.policyEvaluations.failedToSave',
+    warningHeaderMsg: 'secrets.policyEvaluations.warning'
+  })
 
   const {
     loading: loadingSecret,
@@ -183,6 +197,9 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           ...pick(secretResponse?.data.secret, ['orgIdentifier', 'projectIdentifier'])
         }
       })
+      if ((secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.valueType === 'CustomSecretManagerValues') {
+        setTemplateInputSets(JSON.parse((secretResponse?.data?.secret?.spec as SecretTextSpecDTO)?.value as string))
+      }
     }
   }, [secretResponse])
 
@@ -215,7 +232,8 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
         orgIdentifier: editFlag ? propsSecret?.orgIdentifier : orgIdentifier,
         projectIdentifier: editFlag ? propsSecret?.projectIdentifier : projectIdentifier,
         spec: {
-          ...pick(data, ['secretManagerIdentifier', 'value', 'valueType'])
+          value: data.templateInputs ? JSON.stringify(data.templateInputs) : data.value,
+          ...pick(data, ['secretManagerIdentifier', 'valueType'])
         } as SecretTextSpecDTO
       }
     }
@@ -224,15 +242,20 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const { trackEvent } = useTelemetry()
 
   const handleSubmit = async (data: SecretFormData): Promise<void> => {
+    let response
+    let successMessage: string
     try {
       if (editing) {
         if (type === 'SecretText') {
-          await updateSecretText(createSecretTextData(data, editing))
+          response = await updateSecretText(createSecretTextData(data, editing))
         }
         if (type === 'SecretFile') {
-          await updateSecretFile(createFormData(data, editing) as any)
+          response = await updateSecretFile(createFormData(data, editing) as any)
         }
-        showSuccess(`Secret '${data.name}' updated successfully`)
+        successMessage = getString('secrets.secret.successMessage', {
+          name: data.name,
+          action: 'updated'
+        })
       } else {
         trackEvent(SecretActions.SaveCreateSecret, {
           category: Category.SECRET,
@@ -240,15 +263,24 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           data
         })
         if (type === 'SecretText') {
-          await createSecretText(createSecretTextData(data))
+          response = await createSecretText(createSecretTextData(data))
         }
         if (type === 'SecretFile') {
-          await createSecretFile(createFormData(data) as any)
+          response = await createSecretFile(createFormData(data) as any)
         }
-        showSuccess(`Secret '${data.name}' created successfully`)
+        successMessage = getString('secrets.secret.successMessage', {
+          name: data.name,
+          action: 'created'
+        })
       }
 
-      onSuccess?.(data)
+      conditionallyOpenGovernanceErrorModal(
+        OPA_SECRET_GOVERNANCE ? response?.data?.governanceMetadata : undefined,
+        () => {
+          showSuccess(successMessage)
+          onSuccess?.(data)
+        }
+      )
     } catch (error) {
       modalErrorHandler?.showDanger(getRBACErrorMessage(error))
     }
@@ -278,6 +310,25 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
 
   const [selectedSecretManager, setSelectedSecretManager] = useState<ConnectorInfoDTO | undefined>()
   const [readOnlySecretManager, setReadOnlySecretManager] = useState<boolean>()
+  const [templateInputSets, setTemplateInputSets] = React.useState<JsonNode>()
+
+  const initializeTemplateInputs = (secretManager: ConnectorInfoDTO | undefined) => {
+    if (secretManager?.type === 'CustomSecretManager') {
+      const inputs: [] = secretManager.spec.template?.templateInputs?.environmentVariables
+      if (inputs) {
+        const filteredInputs = {
+          environmentVariables: inputs
+            .map((item: InputSetSchema) => {
+              if (!item.useAsDefault) {
+                return { ...pick(item, ['name', 'type']), value: '' }
+              }
+            })
+            .filter(value => value)
+        }
+        setTemplateInputSets(filteredInputs)
+      }
+    }
+  }
 
   // update selectedSecretManager and readOnly flag in state when we get new data
   useEffect(() => {
@@ -302,11 +353,17 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
           description: '',
           identifier: '',
           tags: {},
-          valueType: readOnlySecretManager ? 'Reference' : 'Inline',
+          valueType:
+            selectedSecretManager?.type === 'CustomSecretManager'
+              ? 'CustomSecretManagerValues'
+              : readOnlySecretManager
+              ? 'Reference'
+              : 'Inline',
           type,
           secretManagerIdentifier: selectedSecretManager?.identifier || defaultSecretManagerId || '',
           orgIdentifier,
           projectIdentifier,
+          templateInputs: templateInputSets,
           ...pick(secret, ['name', 'identifier', 'description', 'tags']),
           ...pick(secret?.spec, ['valueType', 'secretManagerIdentifier']),
           ...(editing &&
@@ -315,15 +372,21 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
             pick(secret?.spec, ['value']))
         }}
         formName="createUpdateSecretForm"
-        enableReinitialize={true}
+        enableReinitialize
         validationSchema={Yup.object().shape({
           name: NameSchema(),
           identifier: IdentifierSchema(),
           value:
-            editing || type === 'SecretFile'
+            editing || type === 'SecretFile' || selectedSecretManager?.type === 'CustomSecretManager'
               ? Yup.string().trim()
               : Yup.string().trim().required(getString('common.validation.valueIsRequired')),
-          secretManagerIdentifier: Yup.string().required(getString('secrets.secret.validationKms'))
+          secretManagerIdentifier: Yup.string().required(getString('secrets.secret.validationKms')),
+          templateInputs:
+            selectedSecretManager?.type === 'CustomSecretManager'
+              ? Yup.object().shape({
+                  environmentVariables: VariableSchemaWithoutHook(getString)
+                })
+              : Yup.object()
         })}
         validate={formData => {
           props.onChange?.({
@@ -355,7 +418,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                       ? (secretManagerData?.spec as VaultConnectorDTO)?.readOnly
                       : false
                   setReadOnlySecretManager(readOnlyTemp)
-                  formikProps.setFieldValue('valueType', readOnlyTemp ? 'Reference' : 'Inline')
+                  formikProps.setFieldValue(
+                    'valueType',
+                    secretManagerData?.type === 'CustomSecretManager'
+                      ? 'CustomSecretManagerValues'
+                      : readOnlyTemp
+                      ? 'Reference'
+                      : 'Inline'
+                  )
+
+                  initializeTemplateInputs(secretManagerData)
                   setSelectedSecretManager(secretManagerData)
                 }}
               />
@@ -377,7 +449,16 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                 isIdentifierEditable={!editing}
                 inputGroupProps={{ disabled: loadingSecret }}
               />
+
               {!typeOfSelectedSecretManager ? <Text>{getString('secrets.secret.messageSelectSM')}</Text> : null}
+              {typeOfSelectedSecretManager === 'CustomSecretManager' ? (
+                <CustomFormFields
+                  formikProps={formikProps}
+                  type={type}
+                  templateInputSets={templateInputSets as JsonNode}
+                  modalErrorHandler={modalErrorHandler}
+                />
+              ) : null}
               {LocalFormFieldsSMList.findIndex(val => val === typeOfSelectedSecretManager) !== -1 ? (
                 <LocalFormFields disableAutocomplete formik={formikProps} type={type} editing={editing} />
               ) : null}
@@ -389,7 +470,7 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
               <Button
                 intent="primary"
                 type="submit"
-                text={loading ? getString('secrets.secret.saving') : getString('save')}
+                text={loading ? getString('common.saving') : getString('save')}
                 margin={{ top: 'large' }}
                 disabled={loading || !typeOfSelectedSecretManager}
                 variation={ButtonVariation.PRIMARY}

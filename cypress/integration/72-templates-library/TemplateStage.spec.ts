@@ -6,69 +6,71 @@
  */
 
 describe('Template Stage Selection', () => {
+  const gitSyncEnabledCall =
+    '/ng/api/git-sync/git-sync-enabled?accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
+  const templatesListCall =
+    '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true'
+  const pipelineVariablesCall =
+    '/pipeline/api/pipelines/variables?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
+  const templateDetailsCall =
+    '/template/api/templates/Cypress_Template_Example_1?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&versionLabel=Version1&getDefaultFromOtherRepo=true'
+  const templateInputsCall =
+    '/template/api/templates/templateInputs/Cypress_Template_Example_1?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&versionLabel=Version1&getDefaultFromOtherRepo=true'
 
-    const gitSyncEnabledCall =
-        '/ng/api/git-sync/git-sync-enabled?accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
-    const templatesListCall =
-        '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true'
-    const pipelineVariablesCall =
-        '/pipeline/api/pipelines/variables?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
-    const templateDetailsCall =
-        '/template/api/templates/Cypress_Template_Example_1?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&versionLabel=Version1&getDefaultFromOtherRepo=true'
+  describe('Tests template stage configuration', () => {
+    beforeEach(() => {
+      cy.on('uncaught:exception', () => {
+        // returning false here prevents Cypress from
+        // failing the test
+        return false
+      })
+      cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
+      cy.intercept('POST', templatesListCall, { fixture: 'template/api/templatesList' })
+      cy.login('test', 'test')
 
-    describe('Tests template stage configuration', () => {
-        beforeEach(() => {
-            cy.on('uncaught:exception', () => {
-                // returning false here prevents Cypress from
-                // failing the test
-                return false
-            })
-            cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
-            cy.intercept('POST', templatesListCall, { fixture: 'template/api/templatesList' })
-            cy.login('test', 'test')
+      cy.visitCreatePipeline()
 
-            cy.visitCreatePipeline()
+      cy.fillName('testPipeline_Cypress')
 
-            cy.fillName('testPipeline_Cypress')
+      cy.clickSubmit()
 
-            cy.clickSubmit()
+      cy.get('[icon="plus"]').click()
 
-            cy.get('[icon="plus"]').click()
-
-            cy.get('[data-icon="template-library"]').click()
-        })
-
-        it('test template stage selection and configuration', () => {
-            cy.intercept('POST', pipelineVariablesCall, { fixture: 'template/api/pipelines.variables' })
-            cy.intercept('GET', templateDetailsCall, { fixture: 'template/api/templateDetails' })
-            cy.wait(1000)
-
-            cy.contains('p', 'Cypress Template Example 1').should('be.visible')
-            cy.contains('p', 'Cypress_Template_Example_1').should('be.visible')
-            cy.contains('p', 'Cypress Template Example 1').click()
-
-            cy.wait(1000)
-            cy.contains('span', 'Use Template').click()
-
-            cy.fillField('name', 'cypress stage')
-            cy.clickSubmit()
-
-            cy.contains('span', 'Stage Name').should('be.visible')
-
-            cy.get('input[name="name"]').should('have.value', 'cypress stage')
-
-            cy.get('[data-icon="more"]').click()
-
-            cy.contains('p', 'Change Template').should('be.visible')
-            cy.contains('p', 'Remove Template').should('be.visible')
-            cy.contains('p', 'Open Template in new tab').should('be.visible')
-            cy.contains('p', 'Preview Template YAML').should('be.visible')
-
-            cy.contains('p', 'Preview Template YAML').click()
-
-            cy.contains('h4', 'template.yaml').should('be.visible')
-            cy.contains('span', 'Cypress Template Example 1').should('be.visible')
-            cy.contains('span', 'Cypress_Template_Example_1').should('be.visible')
-        })
+      cy.get('[data-icon="template-library"]').click()
     })
+
+    it('test template stage selection and configuration', () => {
+      cy.intercept('POST', pipelineVariablesCall, { fixture: 'template/api/pipelines.variables' })
+      cy.intercept('GET', templateDetailsCall, { fixture: 'template/api/templateDetails' })
+      cy.intercept('GET', templateInputsCall, { fixture: 'template/api/templateInputs' })
+      cy.wait(1000)
+
+      cy.contains('p', 'Cypress Template Example 1').should('be.visible')
+      cy.contains('p', 'Cypress_Template_Example_1').should('be.visible')
+      cy.contains('p', 'Cypress Template Example 1').click()
+
+      cy.wait(1000)
+      cy.contains('span', 'Use Template').click()
+
+      cy.fillField('name', 'cypress stage')
+      cy.clickSubmit()
+
+      cy.contains('span', 'Stage Name').should('be.visible')
+
+      cy.get('input[name="name"]').should('have.value', 'cypress stage')
+
+      cy.get('[data-icon="more"]').click()
+
+      cy.contains('p', 'Change Template').should('be.visible')
+      cy.contains('p', 'Remove Template').should('be.visible')
+      cy.contains('p', 'Open Template in new tab').should('be.visible')
+      cy.contains('p', 'Preview Template YAML').should('be.visible')
+
+      cy.contains('p', 'Preview Template YAML').click()
+
+      cy.contains('h4', 'template.yaml').should('be.visible')
+      cy.contains('span', 'Cypress Template Example 1').should('be.visible')
+      cy.contains('span', 'Cypress_Template_Example_1').should('be.visible')
+    })
+  })
 })

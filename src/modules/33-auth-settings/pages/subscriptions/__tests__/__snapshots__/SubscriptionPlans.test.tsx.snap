@@ -197,11 +197,6 @@ exports[`Subscription Plans should expand feature comparison when click on arrow
                           </p>
                         </span>
                       </span>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-black"
-                      >
-                        common.perMonth
-                      </p>
                     </div>
                   </div>
                   <p
@@ -339,11 +334,6 @@ exports[`Subscription Plans should expand feature comparison when click on arrow
                           </p>
                         </span>
                       </span>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-black"
-                      >
-                        common.perMonth
-                      </p>
                     </div>
                   </div>
                   <p
@@ -1273,11 +1263,6 @@ exports[`Subscription Plans should render the plans for CD 1`] = `
                           </p>
                         </span>
                       </span>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-black"
-                      >
-                        common.perMonth
-                      </p>
                     </div>
                   </div>
                   <p
@@ -2125,11 +2110,6 @@ exports[`Subscription Plans should render the plans for CI 1`] = `
                           </p>
                         </span>
                       </span>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-black"
-                      >
-                        common.perMonth
-                      </p>
                     </div>
                   </div>
                   <p
@@ -2305,11 +2285,6 @@ exports[`Subscription Plans should render the plans for CI 1`] = `
                           </p>
                         </span>
                       </span>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-black"
-                      >
-                        common.perMonth
-                      </p>
                     </div>
                   </div>
                   <p
@@ -2690,11 +2665,6 @@ exports[`Subscription Plans should render the plans for FF 1`] = `
                           </p>
                         </span>
                       </span>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-black"
-                      >
-                        common.perMonth
-                      </p>
                     </div>
                   </div>
                   <div
@@ -2857,11 +2827,6 @@ exports[`Subscription Plans should render the plans for FF 1`] = `
                           </p>
                         </span>
                       </span>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-black"
-                      >
-                        common.perMonth
-                      </p>
                     </div>
                   </div>
                   <div

@@ -1,0 +1,20 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "service": {
+      "accountId": "zEaak-FLS425IEO7OLzMUg",
+      "identifier": "testService",
+      "orgIdentifier": "default",
+      "projectIdentifier": "bhavyatest",
+      "name": "testService",
+      "description": null,
+      "deleted": false,
+      "tags": {},
+      "yaml": "service:\n  name: \"testService\"\n  identifier: \"testService\"\n  tags: {}\n"
+    },
+    "createdAt": 1658943086632,
+    "lastModifiedAt": 1658943086632
+  },
+  "metaData": null,
+  "correlationId": "68eb6bb2-190f-4640-9eae-fa6f8aad22f9"
+}

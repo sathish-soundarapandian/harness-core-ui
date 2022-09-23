@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act, getByText } from '@testing-library/react'
-import type { QlceViewFilterOperator } from 'services/ce/services'
+import { render, fireEvent, getByText, waitFor } from '@testing-library/react'
+import { QlceViewFilterOperator } from 'services/ce/services'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import ValuesSelectors from '../views/ValuesSelector'
 
@@ -21,7 +21,7 @@ const mockData = {
     name: 'Cluster Name'
   },
   isDisabled: false,
-  operator: 'IN' as QlceViewFilterOperator,
+  operator: QlceViewFilterOperator.In,
   valueList: [
     'gke',
     'ce-dev-new',
@@ -62,39 +62,67 @@ const mockData = {
   searchText: '',
   fetching: false,
   selectedVal: ['gke'],
-  onValueChange: jest.fn()
+  onValueChange: jest.fn(),
+  onInputChange: jest.fn()
 }
 
-const mockDataLoading = {
-  ...mockData,
-  fetching: true
-}
-describe('test cases for filter values selector', () => {
-  test('should be able to render ValuesSelector / open popover', async () => {
+describe('Test Cases for Perspective Builder Values Selector', () => {
+  test('Should be able to render Values Selector Component', async () => {
     const { container } = render(
       <TestWrapper>
-        <ValuesSelectors onInputChange={jest.fn()} {...mockData} />
+        <ValuesSelectors {...mockData} />
       </TestWrapper>
     )
-    expect(container.querySelector('[class*="bp3-input-ghost"]')).not.toBeNull()
 
-    const ctn = container.querySelector('input')
-    act(() => {
-      fireEvent.click(ctn!)
-    })
+    expect(container.querySelector('[class*="bp3-input-ghost"]')).toBeInTheDocument()
+    expect(getByText(container, 'gke')).toBeDefined()
 
-    const popover = findPopoverContainer()
+    const tagInput = container.querySelector('input') as HTMLElement
+    fireEvent.click(tagInput)
 
-    expect(getByText(popover!, 'ce.perspectives.createPerspective.filters.selectAll')).toBeDefined()
+    const popover = findPopoverContainer() as HTMLElement
+    expect(getByText(popover, 'ce.perspectives.createPerspective.filters.selectAll')).toBeDefined()
   })
 
-  test('should be able to show spinner when loading', async () => {
+  test('Should be able to add new Value', async () => {
     const { container } = render(
       <TestWrapper>
-        <ValuesSelectors onInputChange={jest.fn()} {...mockDataLoading} />
+        <ValuesSelectors {...mockData} />
       </TestWrapper>
     )
 
-    expect(container.querySelector('[data-icon="spinner"]')).toBeDefined()
+    const input = container.querySelector('[class*="bp3-input-ghost"]') as HTMLElement
+
+    fireEvent.change(input, { target: { value: 'mock_val' } })
+    fireEvent.keyDown(input, { key: 'Enter', code: 13 })
+
+    waitFor(() => {
+      expect(getByText(container, 'mock_val')).toBeInTheDocument()
+      expect(mockData.onValueChange).toHaveBeenCalledWith(['gke', 'mock_val'])
+    })
+  })
+
+  test('Should be able to remove Value Tag', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <ValuesSelectors {...mockData} />
+      </TestWrapper>
+    )
+
+    fireEvent.click(container.querySelector('.bp3-tag-remove')!)
+    waitFor(() => expect(mockData.onValueChange).toHaveBeenCalledWith([]))
+  })
+
+  test('Should be able to render Text Input for LIKE Operator', async () => {
+    const { container } = render(
+      <TestWrapper>
+        <ValuesSelectors {...mockData} operator={QlceViewFilterOperator.Like} />
+      </TestWrapper>
+    )
+
+    const textInput = container.querySelector('.bp3-input')
+    fireEvent.change(textInput!, { target: { value: 'mock_value' } })
+
+    waitFor(() => expect(mockData.onValueChange).toHaveBeenCalledWith(['mock_value']))
   })
 })

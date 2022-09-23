@@ -29,7 +29,7 @@ import css from '@rbac/components/RBACTooltip/RBACTooltip.module.scss'
 export type RBACError =
   | ErrorHandlerProps
   | GetDataError<FailureCDNG | FailurePipeline | AccessControlCheckError | ErrorCDNG | ErrorPipeline>
-interface RbacErrorReturn {
+export interface RbacErrorReturn {
   getRBACErrorMessage: (error: RBACError) => React.ReactElement | string
 }
 
@@ -40,7 +40,7 @@ const useRBACError = (): RbacErrorReturn => {
 
   const getProjectScopeSuffix = (resourceScope: ResourceScope): string => {
     /* istanbul ignore else */
-    if (selectedProject && [resourceScope.projectIdentifier, projectIdentifier].includes(selectedProject.identifier)) {
+    if (selectedProject && resourceScope.projectIdentifier === selectedProject.identifier) {
       return selectedProject.name
     } else {
       return resourceScope.projectIdentifier || projectIdentifier

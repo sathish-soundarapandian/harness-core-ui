@@ -19,7 +19,7 @@ import type { MapQueriesToHarnessServiceLayoutProps } from './types'
 import css from './MapQueriesToHarnessServiceLayout.module.scss'
 
 export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarnessServiceLayoutProps): JSX.Element {
-  const { formikProps, connectorIdentifier, onChange } = props
+  const { formikProps, connectorIdentifier, onChange, isTemplate, expressions, isConnectorRuntimeOrExpression } = props
   const [records, setRecords] = useState<Record<string, any>[]>([])
   const [isQueryExecuted, setIsQueryExecuted] = useState(false)
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
@@ -75,6 +75,9 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
                 isQueryExecuted={isQueryExecuted}
                 onChange={onChange}
                 loading={loading}
+                isTemplate={isTemplate}
+                expressions={expressions}
+                isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
               />
             }
           />
@@ -89,6 +92,9 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
           error={error}
           query={query}
           dataTooltipId={'gcoLogsQuery'}
+          isTemplate={isTemplate}
+          expressions={expressions}
+          isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
         />
       </Layout.Horizontal>
     </Card>

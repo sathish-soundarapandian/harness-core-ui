@@ -26,7 +26,31 @@ export const usernamePassword: ConnectorInfoDTO = {
       }
     },
     type: 'Account',
-    validationRepo: 'test'
+    validationRepo: 'test',
+    executeOnDelegate: true
+  }
+}
+
+export const hostedMock: ConnectorInfoDTO = {
+  name: 'GitlabWorking',
+  identifier: 'asasas',
+  description: 'connector description',
+  orgIdentifier: undefined,
+  projectIdentifier: undefined,
+  tags: {},
+  type: 'Gitlab',
+  spec: {
+    url: 'https://gitlab.com/dev',
+    authentication: {
+      type: 'Http',
+      spec: {
+        type: 'UsernamePassword',
+        spec: { username: 'dev', usernameRef: undefined, passwordRef: 'account.gitlabPassword' }
+      }
+    },
+    type: 'Account',
+    validationRepo: 'test',
+    executeOnDelegate: false
   }
 }
 
@@ -67,7 +91,8 @@ export const sshAuthWithAPIAccessToken: ConnectorInfoDTO = {
     authentication: { type: 'Ssh', spec: { sshKeyRef: 'account.gitlabPassword' } },
     apiAccess: { type: 'Token', spec: { tokenRef: 'account.gitlabPassword' } },
     type: 'Account',
-    validationRepo: 'test'
+    validationRepo: 'test',
+    executeOnDelegate: true
   }
 }
 

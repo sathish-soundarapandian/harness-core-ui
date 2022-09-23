@@ -142,7 +142,7 @@ exports[`Harness Approval tests Basic snapshot - deploymentform mode readonly: h
               class="bp3-form-content"
             >
               <div
-                class="Layout--vertical StyledProps--main"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
               >
                 <div
                   class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
@@ -393,7 +393,7 @@ exports[`Harness Approval tests Basic snapshot - deploymentform mode: harness-ap
               class="bp3-form-content"
             >
               <div
-                class="Layout--vertical StyledProps--main"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
               >
                 <div
                   class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
@@ -513,7 +513,7 @@ exports[`Harness Approval tests Basic snapshot - input variable view: harness-ap
       <span
         class="nameSection"
       >
-        name
+        identifier
       </span>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
@@ -522,25 +522,6 @@ exports[`Harness Approval tests Basic snapshot - input variable view: harness-ap
         <span
           class=""
         />
-      </p>
-    </div>
-    <div
-      class="variableListRow variable-list-row"
-    >
-      <span
-        class="nameSection"
-      >
-        timeout
-      </span>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
-        style="--text-line-clamp: 1;"
-      >
-        <span
-          class=""
-        >
-          1d
-        </span>
       </p>
     </div>
     <div
@@ -843,7 +824,7 @@ exports[`Harness Approval tests Basic snapshot - inputset mode: input set with e
               class="bp3-form-content"
             >
               <div
-                class="Layout--vertical StyledProps--main"
+                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
               >
                 <div
                   class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
@@ -1043,7 +1024,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="harnessApproval_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -1379,7 +1360,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
                   class="bp3-form-content"
                 >
                   <div
-                    class="Layout--vertical StyledProps--main"
+                    class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
                   >
                     <div
                       class="StyledProps--font StyledProps--main bp3-input bp3-disabled userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
@@ -1554,7 +1535,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="harnessApproval_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -2528,7 +2509,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="harnessApproval_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -3473,7 +3454,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="harnessApproval_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -3849,7 +3830,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
                   class="bp3-form-content"
                 >
                   <div
-                    class="Layout--vertical StyledProps--main"
+                    class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
                   >
                     <div
                       class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"

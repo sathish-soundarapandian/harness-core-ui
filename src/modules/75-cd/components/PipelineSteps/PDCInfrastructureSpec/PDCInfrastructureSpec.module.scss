@@ -44,7 +44,8 @@
 }
 
 .simultaneousDeployment {
-  display: inline-flex !important;
+  padding-top: var(--spacing) !important;
+  border-top: 1px solid var(--grey-200);
 }
 
 .clusterInputWrapper {
@@ -56,6 +57,7 @@
 }
 
 .hostsTextArea {
+  width: 433px;
   textarea {
     min-height: var(--spacing-14) !important;
   }
@@ -77,6 +79,20 @@
   width: 200px !important;
 }
 
-.hostSpecificContainer {
-  align-items: center;
+.hostsControls {
+  border-bottom: 1px solid var(--grey-200);
+  padding-bottom: var(--spacing-small) !important;
+  justify-content: flex-start !important;
+}
+
+.credRefWidth {
+  width: 433px !important;
+}
+
+.connectorRuntime {
+  padding-bottom: var(--spacing-2);
+}
+
+.runtimeWidth {
+  width: 400px;
 }

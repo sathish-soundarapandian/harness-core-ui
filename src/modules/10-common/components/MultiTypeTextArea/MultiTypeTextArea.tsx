@@ -27,6 +27,7 @@ import { useStrings } from 'framework/strings'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { errorCheck } from '@common/utils/formikHelpers'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 
 import css from './MultiTypeTextArea.module.scss'
 
@@ -82,7 +83,7 @@ export const MultiTypeTextArea: React.FC<MultiTypeTextAreaProps> = props => {
       {enableConfigureOptions ? (
         <div style={{ display: 'flex', alignItems: 'center' }}>
           {expressionAndRuntimeTypeComponent}
-          {multiType === MultiTypeInputType.RUNTIME && (
+          {isMultiTypeRuntime(multiType) && (
             <ConfigureOptions
               value={value as string}
               type={getString('string')}

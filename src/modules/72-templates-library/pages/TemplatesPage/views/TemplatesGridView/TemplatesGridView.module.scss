@@ -5,8 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.gridLayout {
-  flex-grow: 1;
-  width: min(100%, 1155px);
-  margin: 0 auto !important;
+.mainContainer {
+  flex: 1;
+  .gridLayout {
+    flex-grow: 1;
+    width: min(100%, 1155px);
+    margin: 0 auto !important;
+  }
 }

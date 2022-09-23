@@ -1,0 +1,58 @@
+# Copyright 2021 Harness Inc. All rights reserved.
+# Use of this source code is governed by the PolyForm Shield 1.0.0 license
+# that can be found in the licenses directory at the root of this repository, also available at
+# https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+
+query FetchServiceSummary($filters: [QLCEViewFilterWrapperInput], $isClusterQuery: Boolean) {
+  perspectiveTrendStats(
+    filters: $filters
+    isClusterQuery: $isClusterQuery
+    aggregateFunction: [
+      { operationType: SUM, columnName: "billingamount" }
+      { operationType: SUM, columnName: "actualidlecost" }
+      { operationType: SUM, columnName: "unallocatedcost" }
+      { operationType: MAX, columnName: "startTime" }
+      { operationType: MIN, columnName: "startTime" }
+    ]
+  ) {
+    cost {
+      statsLabel
+      statsTrend
+      statsValue
+      statsDescription
+    }
+    idleCost {
+      statsLabel
+      statsTrend
+      statsValue
+      statsDescription
+    }
+    utilizedCost {
+      statsLabel
+      statsTrend
+      statsValue
+      statsDescription
+    }
+  }
+  perspectiveGrid(
+    filters: $filters
+    isClusterQuery: $isClusterQuery
+    aggregateFunction: [{ operationType: SUM, columnName: "cost" }]
+    sortCriteria: []
+    groupBy: { entityGroupBy: { fieldId: "instanceId", fieldName: "ECS Task Id", identifier: CLUSTER } }
+    limit: 100
+    offset: 0
+  ) {
+    data {
+      clusterData {
+        name
+        id
+        taskId
+        clusterName
+        clusterId
+        launchType
+        cloudServiceName
+      }
+    }
+  }
+}

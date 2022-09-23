@@ -23,7 +23,9 @@ import {
   getReferredEntityLabelByType,
   getConnectorDisplayName,
   getIconByType,
-  isSMConnector
+  isSMConnector,
+  getCompleteConnectorUrl,
+  GitAuthenticationProtocol
 } from '../ConnectorUtils'
 
 jest.mock('services/cd-ng', () => ({
@@ -69,7 +71,8 @@ describe('Connector Utils', () => {
             type: 'ManualConfig',
             spec: { accessKey: 'accesskey', accessKeyRef: undefined, secretKeyRef: 'account.mysecretappd' },
             crossAccountAccess: null
-          }
+          },
+          executeOnDelegate: true
         }
       }
     })
@@ -98,7 +101,8 @@ describe('Connector Utils', () => {
             auth: {
               type: 'UsernamePassword',
               spec: { username: 'dummyusername', usernameRef: undefined, passwordRef: 'account.jkdhkjdhk' }
-            }
+            },
+            executeOnDelegate: true
           }
         }
       })
@@ -877,6 +881,7 @@ describe('Connector Utils', () => {
         awsRegion: undefined,
         namespace: undefined,
         secretId: undefined,
+        k8sAuthEndpoint: '',
         serviceAccountTokenPath: '',
         useAwsIam: undefined,
         useK8sAuth: undefined,
@@ -941,8 +946,182 @@ describe('Connector Utils', () => {
             secretEngineName: 'harness',
             secretEngineVersion: '2',
             vaultK8sAuthRole: undefined,
+            k8sAuthEndpoint: undefined,
             serviceAccountTokenPath: undefined,
             useK8sAuth: false
+          }
+        }
+      })
+    }),
+    test('test setupVaultFormData', () => {
+      expect(
+        setupVaultFormData(
+          {
+            name: 'Vault 2',
+            identifier: 'Vault_2',
+            description: '',
+            tags: {},
+            type: 'Vault',
+            spec: {
+              basePath: '/harness',
+              vaultUrl: 'https://vaultqa.harness.io',
+              renewalIntervalMinutes: 10,
+              secretEngineManuallyConfigured: false,
+              secretEngineName: 'harness',
+              secretId: null,
+              secretEngineVersion: 2,
+              delegateSelectors: [],
+              default: false,
+              accessType: 'K8s_AUTH',
+              useK8sAuth: true,
+              k8sAuthEndpoint: 'dummy/k8s/login',
+              serviceAccountTokenPath: 'dummy/serviceaccount/token/path',
+              vaultK8sAuthRole: 'dummyRole',
+              readOnly: false
+            }
+          },
+          'accountId'
+        )
+      ).resolves.toEqual({
+        vaultUrl: 'https://vaultqa.harness.io',
+        basePath: '/harness',
+        readOnly: false,
+        default: false,
+        authToken: undefined,
+        accessType: 'K8s_AUTH',
+        appRoleId: '',
+        sinkPath: '',
+        renewalIntervalMinutes: 10,
+        awsRegion: undefined,
+        namespace: undefined,
+        secretId: undefined,
+        k8sAuthEndpoint: 'dummy/k8s/login',
+        serviceAccountTokenPath: 'dummy/serviceaccount/token/path',
+        useAwsIam: undefined,
+        useK8sAuth: true,
+        vaultAwsIamRole: undefined,
+        vaultK8sAuthRole: 'dummyRole',
+        xvaultAwsIamServerId: undefined
+      })
+    }),
+    test('test buildVaultPayload', () => {
+      expect(
+        buildVaultPayload({
+          name: 'Vault 2',
+          identifier: 'Vault_2',
+          description: '',
+          orgIdentifier: null,
+          projectIdentifier: null,
+          tags: {},
+          type: 'Vault',
+          vaultUrl: 'https://vaultqa.harness.io',
+          basePath: '/harness',
+          readOnly: false,
+          default: false,
+          accessType: 'K8s_AUTH',
+          appRoleId: '',
+          useK8sAuth: true,
+          k8sAuthEndpoint: 'dummy/k8s/login',
+          serviceAccountTokenPath: 'dummy/serviceaccount/token/path',
+          vaultK8sAuthRole: 'dummyRole',
+          renewalIntervalMinutes: 10,
+          delegateSelectors: [],
+          secretEngine: 'harness@@@2',
+          engineType: 'fetch',
+          secretEngineName: 'harness',
+          secretEngineVersion: 2
+        })
+      ).toEqual({
+        connector: {
+          name: 'Vault 2',
+          description: '',
+          projectIdentifier: null,
+          identifier: 'Vault_2',
+          orgIdentifier: null,
+          tags: {},
+          type: 'Vault',
+          spec: {
+            basePath: '/harness',
+            vaultUrl: 'https://vaultqa.harness.io',
+            readOnly: false,
+            default: false,
+            delegateSelectors: [],
+            xvaultAwsIamServerId: undefined,
+            useAwsIam: false,
+            renewalIntervalMinutes: 10,
+            authToken: undefined,
+            appRoleId: undefined,
+            secretId: undefined,
+            useVaultAgent: false,
+            sinkPath: undefined,
+            secretEngineManuallyConfigured: false,
+            secretEngineName: 'harness',
+            secretEngineVersion: '2',
+            vaultK8sAuthRole: 'dummyRole',
+            k8sAuthEndpoint: 'dummy/k8s/login',
+            serviceAccountTokenPath: 'dummy/serviceaccount/token/path',
+            useK8sAuth: true
+          }
+        }
+      })
+    }),
+    test('test buildVaultPayload_withNullAsK8sAuthEndpoint', () => {
+      expect(
+        buildVaultPayload({
+          name: 'Vault 3',
+          identifier: 'Vault_3',
+          description: '',
+          orgIdentifier: null,
+          projectIdentifier: null,
+          tags: {},
+          type: 'Vault',
+          vaultUrl: 'https://vaultqa.harness.io',
+          basePath: '/harness',
+          readOnly: false,
+          default: false,
+          accessType: 'K8s_AUTH',
+          appRoleId: '',
+          useK8sAuth: true,
+          k8sAuthEndpoint: null,
+          serviceAccountTokenPath: 'dummy/serviceaccount/token/path',
+          vaultK8sAuthRole: 'dummyRole',
+          renewalIntervalMinutes: 10,
+          delegateSelectors: [],
+          secretEngine: 'harness@@@2',
+          engineType: 'fetch',
+          secretEngineName: 'harness',
+          secretEngineVersion: 2
+        })
+      ).toEqual({
+        connector: {
+          name: 'Vault 3',
+          description: '',
+          projectIdentifier: null,
+          identifier: 'Vault_3',
+          orgIdentifier: null,
+          tags: {},
+          type: 'Vault',
+          spec: {
+            basePath: '/harness',
+            vaultUrl: 'https://vaultqa.harness.io',
+            readOnly: false,
+            default: false,
+            delegateSelectors: [],
+            xvaultAwsIamServerId: undefined,
+            useAwsIam: false,
+            renewalIntervalMinutes: 10,
+            authToken: undefined,
+            appRoleId: undefined,
+            secretId: undefined,
+            useVaultAgent: false,
+            sinkPath: undefined,
+            secretEngineManuallyConfigured: false,
+            secretEngineName: 'harness',
+            secretEngineVersion: '2',
+            vaultK8sAuthRole: 'dummyRole',
+            k8sAuthEndpoint: null,
+            serviceAccountTokenPath: 'dummy/serviceaccount/token/path',
+            useK8sAuth: true
           }
         }
       })
@@ -1030,4 +1209,47 @@ describe('Connector Utils', () => {
       expect(isSMConnector('AwsSecretManager')).toBeTruthy()
       expect(isSMConnector()).toBeUndefined()
     })
+
+  test('Test getCompleteConnectorUrl method', () => {
+    expect(
+      getCompleteConnectorUrl({
+        partialUrl: '',
+        repoName: 'test-repo',
+        connectorType: Connectors.AZURE_REPO,
+        gitAuthProtocol: GitAuthenticationProtocol.HTTPS
+      })
+    ).toBe('')
+    expect(
+      getCompleteConnectorUrl({
+        partialUrl: 'https://github.com/harness',
+        repoName: '',
+        connectorType: Connectors.GITHUB,
+        gitAuthProtocol: GitAuthenticationProtocol.HTTPS
+      })
+    ).toBe('')
+    expect(
+      getCompleteConnectorUrl({
+        partialUrl: 'https://github.com/harness',
+        repoName: 'test-repo',
+        connectorType: Connectors.GITHUB,
+        gitAuthProtocol: GitAuthenticationProtocol.HTTPS
+      })
+    ).toBe('https://github.com/harness/test-repo')
+    expect(
+      getCompleteConnectorUrl({
+        partialUrl: 'https://dev.azure.com/harness',
+        repoName: 'test-repo',
+        connectorType: Connectors.AZURE_REPO,
+        gitAuthProtocol: GitAuthenticationProtocol.HTTPS
+      })
+    ).toBe('https://dev.azure.com/harness/_git/test-repo')
+    expect(
+      getCompleteConnectorUrl({
+        partialUrl: 'ssh://dev.azure.com/harness',
+        repoName: 'test-repo',
+        connectorType: Connectors.AZURE_REPO,
+        gitAuthProtocol: GitAuthenticationProtocol.SSH
+      })
+    ).toBe('ssh://dev.azure.com/harness/test-repo')
+  })
 })

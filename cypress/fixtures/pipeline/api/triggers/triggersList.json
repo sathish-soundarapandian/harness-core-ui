@@ -1,0 +1,47 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 3,
+    "pageItemCount": 3,
+    "pageSize": 25,
+    "content": [
+      {
+        "name": "amazonS3Trigger",
+        "identifier": "amazonS3Trigger",
+        "type": "Artifact",
+        "triggerStatus": {
+          "pollingSubscriptionStatus": { "statusResult": "FAILED", "detailedMessage": null },
+          "validationStatus": { "statusResult": "SUCCESS", "detailedMessage": null },
+          "webhookAutoRegistrationStatus": null
+        },
+        "buildDetails": { "buildType": "AmazonS3" },
+        "tags": {},
+        "executions": [0, 0, 0, 0, 0, 0, 0],
+        "yaml": "trigger:\n    name: amazonS3Trigger\n    identifier: amazonS3Trigger\n    enabled: true\n    tags: {}\n    orgIdentifier: default\n    projectIdentifier: s3\n    pipelineIdentifier: testPipeline_Cypress\n    source:\n        type: Artifact\n        spec:\n            stageIdentifier: s1\n            type: AmazonS3\n            spec:\n                bucketName: tdp-tdp1-vzx7j8k9faso\n                filePathRegex: testRegex\n                eventConditions: []\n            artifactRef: primary\n    inputYaml: |\n        pipeline:\n            identifier: testPipeline_Cypress\n            stages:\n                - stage:\n                      identifier: s1\n                      type: Deployment\n                      spec:\n                          serviceConfig:\n                              serviceDefinition:\n                                  type: ServerlessAwsLambda\n                                  spec:\n                                      artifacts:\n                                          primary:\n                                              type: AmazonS3\n                                              spec:\n                                                  bucketName: tdp-tdp1-vzx7j8k9faso\n                                                  filePathRegex: testRegex\n",
+        "webhookUrl": "",
+        "enabled": true
+      },
+      {
+        "name": "jenkinsTrigger",
+        "identifier": "jenkinsTrigger",
+        "type": "Artifact",
+        "triggerStatus": {
+          "pollingSubscriptionStatus": { "statusResult": "FAILED", "detailedMessage": null },
+          "validationStatus": { "statusResult": "SUCCESS", "detailedMessage": null },
+          "webhookAutoRegistrationStatus": null
+        },
+        "buildDetails": { "buildType": "Jenkins" },
+        "tags": {},
+        "executions": [0, 0, 0, 0, 0, 0, 0],
+        "yaml": "trigger:\n    name: jenkinsTrigger\n    identifier: jenkinsTrigger\n    enabled: true\n    tags: {}\n    orgIdentifier: default\n    projectIdentifier: defaultproject\n    pipelineIdentifier: testPipeline_Cypress\n    source:\n        type: Artifact\n        spec:\n            stageIdentifier: jenkinsTrigger\n            type: Jenkins\n            spec:\n                build: <+trigger.artifact.build>\n                eventConditions: []\n            artifactRef: primary\n    inputYaml: |\n        pipeline:\n            identifier: testPipeline_Cypress\n            stages:\n                - stage:\n                      identifier: jenkinsTrigger\n                      type: Deployment\n                      spec:\n                          serviceConfig:\n                              serviceDefinition:\n                                  type: ServerlessAwsLambda\n                                  spec:\n                                      artifacts:\n                                          primary:\n                                              type: Jenkins\n                                              spec:\n                                                  build: <+trigger.artifact.build>\n",
+        "webhookUrl": "",
+        "enabled": true
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "bf29788c-5aee-476b-b3be-89071f4ffab9"
+}

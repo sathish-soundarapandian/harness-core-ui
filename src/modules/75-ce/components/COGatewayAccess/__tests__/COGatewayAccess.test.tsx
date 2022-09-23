@@ -223,7 +223,7 @@ describe('Testing COGatewayAccess', () => {
     })
     expect(osDropdown.value).toBe('Mac (amd64)')
 
-    const downloadBtn = await findByText(container, 'Download CLI')
+    const downloadBtn = await findByText(container, 'ce.co.autoStoppingRule.setupAccess.helpText.ssh.setup.download')
     act(() => {
       fireEvent.click(downloadBtn)
     })

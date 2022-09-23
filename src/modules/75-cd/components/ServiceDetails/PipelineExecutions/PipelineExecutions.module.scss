@@ -16,11 +16,27 @@
     width: 100%;
     height: 100%;
     .dataCard {
+      margin-top: var(--spacing-10);
       height: 100%;
     }
     .pipelineExecutionsEmptyStateImage {
       width: 150px;
       height: 100px;
+    }
+  }
+}
+
+.searchIconStyle {
+  & > input:focus {
+    width: 200px !important;
+  }
+}
+
+.overide {
+  :global {
+    .bp3-card {
+      margin-top: var(--spacing-medium);
+      margin-bottom: var(--spacing-medium);
     }
   }
 }

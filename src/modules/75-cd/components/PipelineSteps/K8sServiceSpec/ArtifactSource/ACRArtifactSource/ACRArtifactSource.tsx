@@ -18,14 +18,13 @@ import {
   Text
 } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
 import {
   SidecarArtifact,
   useGetBuildDetailsForAcrArtifactWithYaml,
-  useGetAzureSubscriptions,
-  useGetACRRegistriesBySubscription,
-  useGetACRRepositories
+  useGetAzureSubscriptionsForAcrArtifact,
+  useGetACRRegistriesForService,
+  useGetACRRepositoriesForService
 } from 'services/cd-ng'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
@@ -35,17 +34,22 @@ import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
+  getConnectorRefFqnPath,
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  getFqnPath,
   getYamlData,
-  isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
-import css from '../../K8sServiceSpec.module.scss'
+import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface ACRRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -67,12 +71,14 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     pipelineIdentifier,
     branch,
     stageIdentifier,
+    serviceIdentifier,
     isTagsSelectionDisabled,
     allowableTypes,
     fromTrigger,
     artifact,
     isSidecar,
-    artifactPath
+    artifactPath,
+    stepViewType
   } = props
 
   const { getString } = useStrings()
@@ -94,13 +100,39 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     repository: ''
   })
 
+  const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
+  const connectorRefFqnPath = getConnectorRefFqnPath(
+    path as string,
+    !!isPropagatedStage,
+    stageIdentifier,
+    defaultTo(artifactPath, ''),
+    'connectorRef'
+  )
+
+  const connectorRefValue = getDefaultQueryParam(
+    artifact?.spec?.connectorRef,
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
+  const subscriptionIdValue = getDefaultQueryParam(
+    artifact?.spec?.subscriptionId,
+    get(initialValues?.artifacts, `${artifactPath}.spec.subscriptionId`, '')
+  )
+  const registryValue = getDefaultQueryParam(
+    artifact?.spec?.registry,
+    get(initialValues?.artifacts, `${artifactPath}.spec.registry`, '')
+  )
+  const repositoryValue = getDefaultQueryParam(
+    artifact?.spec?.repository,
+    get(initialValues?.artifacts, `${artifactPath}.spec.repository`, '')
+  )
+
   const {
     data: acrTagsData,
     loading: fetchingTags,
     refetch: fetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForAcrArtifactWithYaml, {
-    body: yamlStringify(getYamlData(formik?.values)),
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
       headers: {
         'content-type': 'application/json'
@@ -112,26 +144,23 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       orgIdentifier,
       repoIdentifier,
       branch,
-      connectorRef:
-        getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.connectorRef
-          : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, ''),
-      subscriptionId:
-        getMultiTypeFromValue(artifact?.spec?.subscriptionId) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.subscriptionId
-          : get(initialValues, `artifacts.${artifactPath}.spec.subscriptionId`, ''),
-      registry:
-        getMultiTypeFromValue(artifact?.spec?.registry) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.registry
-          : get(initialValues, `artifacts.${artifactPath}.spec.registry`, ''),
-      repository:
-        getMultiTypeFromValue(artifact?.spec?.repository) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.repository
-          : get(initialValues, `artifacts.${artifactPath}.spec.repository`, ''),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      subscriptionId: getFinalQueryParamValue(subscriptionIdValue),
+      registry: getFinalQueryParamValue(registryValue),
+      repository: getFinalQueryParamValue(repositoryValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      fqnPath: /* istanbul ignore next */ isPropagatedStage
-        ? `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.tag`
-        : `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.tag`
+      serviceId,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        )
+      )
     },
     lazy: true
   })
@@ -141,12 +170,14 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     refetch: refetchSubscriptions,
     loading: loadingSubscriptions,
     error: subscriptionsError
-  } = useGetAzureSubscriptions({
+  } = useGetAzureSubscriptionsForAcrArtifact({
     queryParams: {
       connectorRef: artifact?.spec?.connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      serviceId,
+      fqnPath: connectorRefFqnPath
     },
     lazy: true,
     debounce: 300
@@ -159,7 +190,9 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           connectorRef: artifact?.spec?.connectorRef,
           accountIdentifier: accountId,
           orgIdentifier,
-          projectIdentifier
+          projectIdentifier,
+          serviceId,
+          fqnPath: connectorRefFqnPath
         }
       })
     }
@@ -180,13 +213,15 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     refetch: refetchRegistries,
     loading: loadingRegistries,
     error: registriesError
-  } = useGetACRRegistriesBySubscription({
+  } = useGetACRRegistriesForService({
     queryParams: {
       connectorRef: artifact?.spec?.connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      subscriptionId: artifact?.spec?.subscriptionId
+      subscriptionId: artifact?.spec?.subscriptionId,
+      serviceId,
+      fqnPath: connectorRefFqnPath
     },
     lazy: true,
     debounce: 300
@@ -203,7 +238,9 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          subscriptionId: artifact?.spec?.subscriptionId
+          subscriptionId: artifact?.spec?.subscriptionId,
+          serviceId,
+          fqnPath: connectorRefFqnPath
         }
       })
     }
@@ -224,15 +261,17 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     refetch: refetchRepositories,
     loading: loadingRepositories,
     error: repositoriesError
-  } = useGetACRRepositories({
+  } = useGetACRRepositoriesForService({
     queryParams: {
       connectorRef: artifact?.spec?.connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      subscriptionId: artifact?.spec?.subscriptionId
+      subscriptionId: artifact?.spec?.subscriptionId,
+      registry: artifact?.spec?.registry,
+      serviceId,
+      fqnPath: connectorRefFqnPath
     },
-    registry: artifact?.spec?.registry,
     lazy: true,
     debounce: 300
   })
@@ -249,10 +288,10 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          subscriptionId: artifact?.spec?.subscriptionId
-        },
-        pathParams: {
-          registry: artifact?.spec?.registry
+          subscriptionId: artifact?.spec?.subscriptionId,
+          registry: artifact?.spec?.registry,
+          serviceId,
+          fqnPath: connectorRefFqnPath
         }
       })
     }
@@ -267,14 +306,6 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       })) || /* istanbul ignore next */ []
     setRepositories(options)
   }, [repositoriesData])
-
-  const connectorRefValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
-  const subscriptionIdValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.subscriptionId`, '') || artifact?.spec?.subscriptionId
-  const registryValue = get(initialValues, `artifacts.${artifactPath}.spec.registry`, '') || artifact?.spec?.registry
-  const repositoryValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.repository`, '') || artifact?.spec?.repository
 
   const fetchTagsEnabled = (): void => {
     if (canFetchTags()) {
@@ -324,8 +355,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     return typeof item === 'string' ? (item as string) : item?.value
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (
@@ -356,7 +386,9 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                         connectorRef: record?.identifier,
                         accountIdentifier: accountId,
                         orgIdentifier,
-                        projectIdentifier
+                        projectIdentifier,
+                        serviceId,
+                        fqnPath: connectorRefFqnPath
                       }
                     })
                   } else {
@@ -397,7 +429,9 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                         accountIdentifier: accountId,
                         orgIdentifier,
                         projectIdentifier,
-                        subscriptionId: getValue(value)
+                        subscriptionId: getValue(value),
+                        serviceId,
+                        fqnPath: connectorRefFqnPath
                       }
                     })
                   } else {
@@ -457,9 +491,9 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                         accountIdentifier: accountId,
                         orgIdentifier,
                         projectIdentifier,
-                        subscriptionId
-                      },
-                      pathParams: {
+                        subscriptionId,
+                        serviceId,
+                        fqnPath: connectorRefFqnPath,
                         registry: getValue(value)
                       }
                     })
@@ -573,22 +607,22 @@ export class ACRArtifactSource extends ArtifactSourceBase<ArtifactSourceRenderPr
   isTagsSelectionDisabled(props: ArtifactSourceRenderProps): boolean {
     const { initialValues, artifactPath, artifact } = props
 
-    const isConnectorPresent =
-      getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.connectorRef
-        : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
-    const isSubscriptionPresent =
-      getMultiTypeFromValue(artifact?.spec?.subscriptionId) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.subscriptionId
-        : get(initialValues, `artifacts.${artifactPath}.spec.subscriptionId`, '')
-    const isRegistryPresent =
-      getMultiTypeFromValue(artifact?.spec?.registry) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.registry
-        : get(initialValues, `artifacts.${artifactPath}.spec.registry`, '')
-    const isRepositoryPresent =
-      getMultiTypeFromValue(artifact?.spec?.repository) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.repository
-        : get(initialValues, `artifacts.${artifactPath}.spec.repository`, '')
+    const isConnectorPresent = getDefaultQueryParam(
+      artifact?.spec?.connectorRef,
+      get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
+    )
+    const isSubscriptionPresent = getDefaultQueryParam(
+      artifact?.spec?.subscriptionId,
+      get(initialValues, `artifacts.${artifactPath}.spec.subscriptionId`, '')
+    )
+    const isRegistryPresent = getDefaultQueryParam(
+      artifact?.spec?.registry,
+      get(initialValues, `artifacts.${artifactPath}.spec.registry`, '')
+    )
+    const isRepositoryPresent = getDefaultQueryParam(
+      artifact?.spec?.repository,
+      get(initialValues, `artifacts.${artifactPath}.spec.repository`, '')
+    )
 
     return !(isConnectorPresent && isSubscriptionPresent && isRegistryPresent && isRepositoryPresent)
   }

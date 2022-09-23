@@ -14,6 +14,8 @@ import { NewTemplatePopover } from '@templates-library/pages/TemplatesPage/views
 import routes from '@common/RouteDefinitions'
 import { pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
 import * as useFeaturesMock from '@common/hooks/useFeatures'
+import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 
 const PATH = routes.toTemplates({ ...projectPathProps, ...pipelineModuleParams })
 const PATH_PARAMS = {
@@ -24,7 +26,12 @@ const PATH_PARAMS = {
 }
 
 describe('<NewTemplatePopover> tests', () => {
-  beforeEach(() => jest.restoreAllMocks())
+  beforeEach(() => {
+    jest.restoreAllMocks()
+  })
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+  })
 
   test('should match snapshot', () => {
     const { container } = render(
@@ -72,7 +79,7 @@ describe('<NewTemplatePopover> tests', () => {
     const popover = findPopoverContainer() as HTMLElement
     await waitFor(() => popover)
 
-    fireEvent.click(getByText(popover, 'step'))
+    fireEvent.click(getByText(popover, 'Step'))
     expect(getByTestId('location')).toMatchInlineSnapshot(`
       <div
         data-testid="location"

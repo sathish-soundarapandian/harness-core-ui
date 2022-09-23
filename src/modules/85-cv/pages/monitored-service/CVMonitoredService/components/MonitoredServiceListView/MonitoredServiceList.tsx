@@ -30,7 +30,8 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
   serviceCountData,
   serviceCountLoading,
   serviceCountErrorMessage,
-  refetchServiceCountData
+  refetchServiceCountData,
+  search
 }) => {
   const history = useHistory()
   const { getString } = useStrings()
@@ -52,6 +53,7 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
       offset: page,
       pageSize: 10,
       ...pathParams,
+      filter: search,
       environmentIdentifier,
       servicesAtRiskFilter: selectedFilter === FilterTypes.RISK
     }

@@ -20,8 +20,8 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PrincipalType } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { setPageNumber } from '@common/utils/utils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import UserGroupEmptyState from './user-group-empty-state.png'
 import css from './UserGroups.module.scss'
@@ -39,7 +39,6 @@ const UserGroupsPage: React.FC = () => {
   })
   const { getString } = useStrings()
   useDocumentTitle(getString('common.userGroups'))
-  const { INHERITED_USER_GROUP } = useFeatureFlags()
   const [page, setPage] = useState(0)
   const [searchTerm, setsearchTerm] = useState<string>('')
   const { data, loading, error, refetch } = useGetUserGroupAggregateList({
@@ -92,9 +91,11 @@ const UserGroupsPage: React.FC = () => {
   const CombinedBtnLarge: React.FC<UserGroupBtnProp> = () => (
     <Layout.Horizontal spacing="small">
       <UserGroupBtn size={ButtonSize.LARGE} />
-      {INHERITED_USER_GROUP && <AssignRolesBtn size={ButtonSize.LARGE} />}
+      <AssignRolesBtn size={ButtonSize.LARGE} />
     </Layout.Horizontal>
   )
+
+  const { getRBACErrorMessage } = useRBACError()
 
   return (
     <>
@@ -103,7 +104,7 @@ const UserGroupsPage: React.FC = () => {
           title={
             <Layout.Horizontal spacing="small" flex={{ justifyContent: 'start' }}>
               <UserGroupBtn />
-              {INHERITED_USER_GROUP && <AssignRolesBtn />}
+              <AssignRolesBtn />
             </Layout.Horizontal>
           }
           toolbar={
@@ -124,7 +125,7 @@ const UserGroupsPage: React.FC = () => {
 
       <Page.Body
         loading={loading}
-        error={(error?.data as Error)?.message || error?.message}
+        error={error ? getRBACErrorMessage(error) : ''}
         retryOnError={() => refetch()}
         noData={{
           when: () => !data?.data?.content?.length,

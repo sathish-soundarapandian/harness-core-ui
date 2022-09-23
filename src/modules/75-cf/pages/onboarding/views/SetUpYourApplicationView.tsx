@@ -16,6 +16,7 @@ import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { SetUpAppInfoView } from './SetUpAppInfoView'
 import { SelectEnvironmentView } from './SelectEnvironmentView'
 import { SetUpYourCodeView } from './SetUpYourCodeView'
+import css from './SetUpYourApplicationView.module.scss'
 
 export interface SetUpYourApplicationViewProps {
   flagInfo: FeatureFlagRequestRequestBody
@@ -41,40 +42,21 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
   }, [])
   return (
     <Container height="100%">
-      <Container padding="xlarge" width="calc(100% - 400px)" height="calc(100vh - 140px)" style={{ overflow: 'auto' }}>
-        <Text
-          inline
-          color={Color.BLACK}
-          padding={{ top: 'xsmall', bottom: 'xsmall', left: 'small', right: 'small' }}
-          style={{
-            background: '#F3F3FA',
-            borderRadius: '4px'
-          }}
-        >
+      <Container className={css.container} width="calc(100% - 400px)" height="calc(100vh - 140px)">
+        <Text inline color={Color.BLACK} className={css.successLabel}>
           <String
             stringID="cf.onboarding.successLabel"
             vars={{ name: flagInfo.name, identifier: flagInfo.identifier }}
             useRichText
           />
         </Text>
-        <Heading
-          level={2}
-          style={{
-            fontWeight: 600,
-            fontSize: '20px',
-            lineHeight: '28px',
-            color: '#22222A'
-          }}
-          padding={{ top: 'xlarge', bottom: 'xlarge' }}
-        >
+        <Heading level={2} className={css.setUpLabel}>
           {getString('cf.onboarding.setupLabel')}
         </Heading>
         <Container>
           <Layout.Vertical spacing="xsmall">
-            <Text style={{ fontWeight: 600, fontSize: '16px', color: '#22222A' }}>
-              {getString('cf.onboarding.selectLanguage')}
-            </Text>
-            <Container padding="large" style={{ background: '#FAFBFC' }}>
+            <Text className={css.selectLanguage}>{getString('cf.onboarding.selectLanguage')}</Text>
+            <Container className={css.languageSelectionContainer}>
               <LanguageSelection
                 selected={language}
                 onSelect={entry => {
@@ -95,10 +77,8 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
         {language && (
           <Container margin={{ top: 'large' }}>
             <Layout.Vertical spacing="xsmall">
-              <Text style={{ fontWeight: 600, fontSize: '16px', color: '#22222A' }}>
-                {getString('cf.onboarding.selectEnvironment')}
-              </Text>
-              <Container padding="large" style={{ background: '#FAFBFC' }}>
+              <Text className={css.selectEnvironment}>{getString('cf.onboarding.selectEnvironment')}</Text>
+              <Container className={css.environmentContainer}>
                 <SelectEnvironmentView
                   apiKey={apiKey}
                   setApiKey={key => {
@@ -118,10 +98,8 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
         {language && apiKey && (
           <Container margin={{ top: 'large' }}>
             <Layout.Vertical spacing="xsmall">
-              <Text style={{ fontWeight: 600, fontSize: '16px', color: '#22222A' }}>
-                {getString('cf.onboarding.setUpYourCode')}
-              </Text>
-              <Container padding="large" style={{ paddingTop: 0 }}>
+              <Text className={css.setUpYourCode}>{getString('cf.onboarding.setUpYourCode')}</Text>
+              <Container className={css.setUpYourCodeContainer}>
                 <SetUpYourCodeView apiKey={apiKey} language={language} />
               </Container>
             </Layout.Vertical>

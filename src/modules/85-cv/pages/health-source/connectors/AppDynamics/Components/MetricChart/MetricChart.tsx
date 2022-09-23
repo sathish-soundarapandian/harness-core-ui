@@ -5,56 +5,50 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
+import { debounce } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Container } from '@wings-software/uicore'
 import type { GetDataError } from 'restful-react'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetAppdynamicsMetricDataByPath } from 'services/cv'
+import { useGetAppdynamicsMetricDataByPathV2 } from 'services/cv'
 import MetricLineChart from '@cv/pages/health-source/common/MetricLineChart/MetricLineChart'
 
 export default function MetricChart({
   connectorIdentifier,
   appName,
-  baseFolder,
-  tier,
-  metricPath,
-  fullPath
+  completeMetricPath
 }: {
   connectorIdentifier: string
   appName: string
-  baseFolder: string
-  tier: string
-  metricPath: string
-  fullPath?: string
+  completeMetricPath: string
 }): JSX.Element {
-  const { data, refetch, loading, error } = useGetAppdynamicsMetricDataByPath({ lazy: true })
+  const {
+    data: v2Data,
+    refetch: v2Refetch,
+    loading: v2Loading,
+    error: v2Error
+  } = useGetAppdynamicsMetricDataByPathV2({ lazy: true })
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
-  useEffect(() => {
-    const pathToArray = fullPath?.split('|').map(item => item.trim())
-    const indexOfTierInPath = pathToArray?.indexOf(tier?.trim())
-    refetch({
-      queryParams: {
-        accountId,
-        orgIdentifier,
-        projectIdentifier,
-        connectorIdentifier,
-        appName,
-        tier,
-        baseFolder:
-          fullPath?.length && indexOfTierInPath
-            ? (pathToArray?.slice(0, indexOfTierInPath).join(' | ') as string)
-            : baseFolder,
-        metricPath:
-          fullPath?.length && indexOfTierInPath
-            ? (pathToArray?.slice(indexOfTierInPath + 1).join(' | ') as string)
-            : metricPath
-      }
-    })
-  }, [metricPath, fullPath])
+  const debounceRefetch = useCallback(debounce(v2Refetch, 500), [])
 
-  const dataPoints = data?.data?.dataPoints
+  useEffect(() => {
+    if (completeMetricPath) {
+      debounceRefetch({
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          connectorIdentifier,
+          appName,
+          completeMetricPath
+        }
+      })
+    }
+  }, [appName, completeMetricPath, connectorIdentifier])
+
+  const dataPoints = v2Data?.data?.dataPoints
   const options: any[] = []
   dataPoints?.forEach((point: any) => {
     options.push([point?.timestamp * 1000, point?.value])
@@ -62,7 +56,7 @@ export default function MetricChart({
 
   return (
     <Container>
-      <MetricLineChart options={options} loading={loading} error={error as GetDataError<Error>} />
+      <MetricLineChart options={options} loading={v2Loading} error={v2Error as GetDataError<Error>} />
     </Container>
   )
 }

@@ -221,12 +221,19 @@
     align-items: center;
     cursor: pointer;
     font-size: var(--font-size-small);
+    position: relative;
+
     .nameIdContainer {
       margin-left: 12px !important;
     }
 
     &:hover {
       background: var(--primary-1);
+    }
+
+    .invalidEntity {
+      display: flex;
+      align-items: center;
     }
   }
 }

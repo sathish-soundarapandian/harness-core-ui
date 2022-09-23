@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { isEmpty, lowerCase } from 'lodash-es'
@@ -26,7 +26,8 @@ import css from '../PipelineVariables.module.scss'
 
 const StepsMap: Record<string, StepType> = {
   KubernetesDirect: StepType.KubernetesDirect,
-  ServerlessAwsLambda: StepType.ServerlessAwsInfra
+  ServerlessAwsLambda: StepType.ServerlessAwsInfra,
+  ECS: StepType.EcsInfra
 }
 
 export interface InfrastructureCardProps {
@@ -38,7 +39,7 @@ export interface InfrastructureCardProps {
   onUpdateInfrastructureProvisioner(data: ExecutionElementConfig): void
   path?: string
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory
 }
 
@@ -128,7 +129,6 @@ export function InfrastructureCardPanel(props: InfrastructureCardProps): React.R
         </VariableAccordionSummary>
       }
       panelClassName={css.panel}
-      summaryClassName={css.accordianSummaryL1}
       details={<InfrastructureCard {...props} />}
       collapseProps={{
         keepChildrenMounted: true

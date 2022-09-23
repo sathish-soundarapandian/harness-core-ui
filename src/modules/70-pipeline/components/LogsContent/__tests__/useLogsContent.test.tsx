@@ -6,24 +6,24 @@
  */
 
 import { renderHook, act } from '@testing-library/react-hooks'
+import { EventSourcePolyfill } from 'event-source-polyfill'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import { logBlobPromise } from 'services/logs'
 import { useLogsContent } from '../useLogsContent'
 
-const startStream = jest.fn()
-const closeStream = jest.fn()
+jest.mock('event-source-polyfill', () => ({
+  EventSourcePolyfill: jest.fn().mockImplementation({
+    close: jest.fn()
+  } as any)
+}))
+
 jest.mock('services/logs', () => ({
   useGetToken: jest.fn(() => ({ data: 'logs_token' })),
   logBlobPromise: jest.fn(() => Promise.resolve({}))
 }))
 
-jest.mock('../useLogsStream.ts', () => ({ useLogsStream: jest.fn(() => ({ startStream, closeStream })) }))
-
 describe('useLogsContent tests', () => {
-  beforeEach(() => {
-    startStream.mockReset()
-  })
   test('fetches blob data', () => {
     ;(logBlobPromise as jest.Mock).mockImplementation(() => Promise.resolve('{}'))
     const { result } = renderHook(useLogsContent, { wrapper: TestWrapper })
@@ -57,27 +57,23 @@ describe('useLogsContent tests', () => {
     const { result } = renderHook(useLogsContent, { wrapper: TestWrapper })
 
     act(() => {
-      act(() => {
-        result.current.actions.createSections({
-          node: {
-            status: 'Running',
-            executableResponses: [
-              {
-                task: { logKeys: ['logKey1'] } as any
-              }
-            ]
-          },
-          getSectionName: (i: number) => `Section ${i}`,
-          selectedStage: '',
-          selectedStep: ''
-        })
+      result.current.actions.createSections({
+        node: {
+          status: 'Running',
+          executableResponses: [
+            {
+              task: { logKeys: ['logKey1'] } as any
+            }
+          ]
+        },
+        getSectionName: (i: number) => `Section ${i}`,
+        selectedStage: '',
+        selectedStep: ''
       })
     })
 
-    expect(startStream).toHaveBeenCalledWith({
-      queryParams: { accountId: undefined, key: 'logKey1' },
-      headers: { Authorization: '', 'X-Harness-Token': 'logs_token' },
-      key: 'logKey1'
+    expect(EventSourcePolyfill).toHaveBeenCalledWith('/log-service/stream?accountID=undefined&key=logKey1', {
+      headers: { Authorization: '', 'X-Harness-Token': 'logs_token' }
     })
   })
 })

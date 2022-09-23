@@ -12,7 +12,11 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
       <div
         class="artifactList listHeader"
       >
-        <span />
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          common.ID
+        </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
@@ -31,7 +35,7 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
         <span />
       </div>
       <div
-        class="Layout--vertical StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <section>
           <section
@@ -203,7 +207,7 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
             <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1; width: 200px;"
               >
                 <span
                   class="noWrap"
@@ -306,7 +310,9 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
             </div>
           </section>
         </section>
-        <section>
+        <section
+          class="sidecarList"
+        >
           <section
             class="artifactList rowItem"
           >
@@ -390,18 +396,12 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
                 </svg>
               </span>
             </div>
-            <div
-              class="locationField"
-            >
+            <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1;"
               >
-                <span
-                  class="noWrap"
-                >
-                  &lt;+input&gt;
-                </span>
+                &lt;+input&gt;
               </p>
             </div>
             <span>
@@ -473,21 +473,6 @@ exports[`ArtifactsSelection tests artifact list renders with proper payload 1`] 
           </section>
         </section>
       </div>
-    </div>
-    <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
-        >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
     </div>
   </div>
 </div>
@@ -505,7 +490,11 @@ exports[`ArtifactsSelection tests delete artifact list works correctly 1`] = `
       <div
         class="artifactList listHeader"
       >
-        <span />
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          common.ID
+        </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
@@ -524,7 +513,7 @@ exports[`ArtifactsSelection tests delete artifact list works correctly 1`] = `
         <span />
       </div>
       <div
-        class="Layout--vertical StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <section>
           <section
@@ -654,7 +643,7 @@ exports[`ArtifactsSelection tests delete artifact list works correctly 1`] = `
             <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1; width: 200px;"
               >
                 <span
                   class="noWrap"
@@ -756,21 +745,6 @@ exports[`ArtifactsSelection tests delete artifact list works correctly 1`] = `
           </section>
         </section>
       </div>
-    </div>
-    <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
-        >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
     </div>
   </div>
 </div>
@@ -788,7 +762,11 @@ exports[`ArtifactsSelection tests edit artifact list works correctly 1`] = `
       <div
         class="artifactList listHeader"
       >
-        <span />
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          common.ID
+        </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
@@ -807,7 +785,7 @@ exports[`ArtifactsSelection tests edit artifact list works correctly 1`] = `
         <span />
       </div>
       <div
-        class="Layout--vertical StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <section>
           <section
@@ -937,7 +915,7 @@ exports[`ArtifactsSelection tests edit artifact list works correctly 1`] = `
             <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1; width: 200px;"
               >
                 <span
                   class="noWrap"
@@ -1040,21 +1018,6 @@ exports[`ArtifactsSelection tests edit artifact list works correctly 1`] = `
         </section>
       </div>
     </div>
-    <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
-        >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
-    </div>
   </div>
 </div>
 `;
@@ -1071,7 +1034,11 @@ exports[`ArtifactsSelection tests renders Artifact Listview with connectors Data
       <div
         class="artifactList listHeader"
       >
-        <span />
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          common.ID
+        </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
@@ -1090,7 +1057,7 @@ exports[`ArtifactsSelection tests renders Artifact Listview with connectors Data
         <span />
       </div>
       <div
-        class="Layout--vertical StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <section>
           <section
@@ -1220,7 +1187,7 @@ exports[`ArtifactsSelection tests renders Artifact Listview with connectors Data
             <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1; width: 200px;"
               >
                 <span
                   class="noWrap"
@@ -1294,21 +1261,6 @@ exports[`ArtifactsSelection tests renders Artifact Listview with connectors Data
           </section>
         </section>
       </div>
-    </div>
-    <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
-        >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
     </div>
   </div>
 </div>
@@ -1326,7 +1278,11 @@ exports[`ArtifactsSelection tests renders Artifact Listview without crashing 1`]
       <div
         class="artifactList listHeader"
       >
-        <span />
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          common.ID
+        </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
@@ -1345,7 +1301,7 @@ exports[`ArtifactsSelection tests renders Artifact Listview without crashing 1`]
         <span />
       </div>
       <div
-        class="Layout--vertical StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <section>
           <section
@@ -1422,7 +1378,7 @@ exports[`ArtifactsSelection tests renders Artifact Listview without crashing 1`]
             <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1; width: 200px;"
               >
                 <span
                   class="noWrap"
@@ -1497,21 +1453,6 @@ exports[`ArtifactsSelection tests renders Artifact Listview without crashing 1`]
         </section>
       </div>
     </div>
-    <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
-        >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
-    </div>
   </div>
 </div>
 `;
@@ -1528,7 +1469,11 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
       <div
         class="artifactList listHeader"
       >
-        <span />
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          common.ID
+        </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
@@ -1547,7 +1492,7 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
         <span />
       </div>
       <div
-        class="Layout--vertical StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <section>
           <section
@@ -1584,7 +1529,7 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
             <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1; width: 200px;"
               >
                 <span
                   class="noWrap"
@@ -1659,7 +1604,9 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
             </div>
           </section>
         </section>
-        <section>
+        <section
+          class="sidecarList"
+        >
           <section
             class="artifactList rowItem"
           >
@@ -1796,18 +1743,12 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
                 </svg>
               </span>
             </div>
-            <div
-              class="locationField"
-            >
+            <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1;"
               >
-                <span
-                  class="noWrap"
-                >
-                  library/nginx
-                </span>
+                library/nginx
               </p>
             </div>
             <span>
@@ -1960,18 +1901,12 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
                 </svg>
               </span>
             </div>
-            <div
-              class="locationField"
-            >
+            <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1;"
               >
-                <span
-                  class="noWrap"
-                >
-                  library/nginx
-                </span>
+                library/nginx
               </p>
             </div>
             <span>
@@ -2042,22 +1977,37 @@ exports[`ArtifactsSelection tests renders add Artifact option without crashing 1
             </span>
           </section>
         </section>
-      </div>
-    </div>
-    <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
+          id="add-artifact"
+          type="button"
         >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
+          <span
+            class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+            icon="plus"
+          >
+            <svg
+              data-icon="plus"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                plus
+              </desc>
+              <path
+                d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-button-text"
+          >
+            pipeline.artifactsSelection.addSidecar
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -2075,7 +2025,11 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
       <div
         class="artifactList listHeader"
       >
-        <span />
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          common.ID
+        </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
@@ -2094,7 +2048,7 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
         <span />
       </div>
       <div
-        class="Layout--vertical StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <section>
           <section
@@ -2131,7 +2085,7 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
             <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1; width: 200px;"
               >
                 <span
                   class="noWrap"
@@ -2206,7 +2160,9 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
             </div>
           </section>
         </section>
-        <section>
+        <section
+          class="sidecarList"
+        >
           <section
             class="artifactList rowItem"
           >
@@ -2343,18 +2299,12 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
                 </svg>
               </span>
             </div>
-            <div
-              class="locationField"
-            >
+            <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1;"
               >
-                <span
-                  class="noWrap"
-                >
-                  library/nginx
-                </span>
+                library/nginx
               </p>
             </div>
             <span>
@@ -2507,18 +2457,12 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
                 </svg>
               </span>
             </div>
-            <div
-              class="locationField"
-            >
+            <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1;"
               >
-                <span
-                  class="noWrap"
-                >
-                  library/nginx
-                </span>
+                library/nginx
               </p>
             </div>
             <span>
@@ -2589,22 +2533,37 @@ exports[`ArtifactsSelection tests renders artifact when overrideSetIdentifier an
             </span>
           </section>
         </section>
-      </div>
-    </div>
-    <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
+          id="add-artifact"
+          type="button"
         >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
+          <span
+            class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+            icon="plus"
+          >
+            <svg
+              data-icon="plus"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                plus
+              </desc>
+              <path
+                d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-button-text"
+          >
+            pipeline.artifactsSelection.addSidecar
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -2622,7 +2581,11 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
       <div
         class="artifactList listHeader"
       >
-        <span />
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+        >
+          common.ID
+        </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
@@ -2641,7 +2604,7 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
         <span />
       </div>
       <div
-        class="Layout--vertical StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <section>
           <section
@@ -2678,7 +2641,7 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
             <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey500"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1; width: 200px;"
               >
                 <span
                   class="noWrap"
@@ -2753,7 +2716,9 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
             </div>
           </section>
         </section>
-        <section>
+        <section
+          class="sidecarList"
+        >
           <section
             class="artifactList rowItem"
           >
@@ -2890,18 +2855,12 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
                 </svg>
               </span>
             </div>
-            <div
-              class="locationField"
-            >
+            <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1;"
               >
-                <span
-                  class="noWrap"
-                >
-                  library/nginx
-                </span>
+                library/nginx
               </p>
             </div>
             <span>
@@ -3054,18 +3013,12 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
                 </svg>
               </span>
             </div>
-            <div
-              class="locationField"
-            >
+            <div>
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main"
-                style="--text-line-clamp: 1; width: 340px;"
+                style="--text-line-clamp: 1;"
               >
-                <span
-                  class="noWrap"
-                >
-                  library/nginx
-                </span>
+                library/nginx
               </p>
             </div>
             <span>
@@ -3136,22 +3089,37 @@ exports[`ArtifactsSelection tests renders without crashing 1`] = `
             </span>
           </section>
         </section>
-      </div>
-    </div>
-    <div
-      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
-        id="add-artifact"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main addArtifact Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
+          id="add-artifact"
+          type="button"
         >
-          pipelineSteps.serviceTab.artifactList.addSidecar
-        </span>
-      </button>
+          <span
+            class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+            icon="plus"
+          >
+            <svg
+              data-icon="plus"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                plus
+              </desc>
+              <path
+                d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-button-text"
+          >
+            pipeline.artifactsSelection.addSidecar
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </div>

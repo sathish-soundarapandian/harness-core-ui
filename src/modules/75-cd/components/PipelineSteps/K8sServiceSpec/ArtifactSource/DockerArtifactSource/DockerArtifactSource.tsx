@@ -10,26 +10,29 @@ import { defaultTo, get } from 'lodash-es'
 
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { SidecarArtifact, useGetBuildDetailsForDockerWithYaml } from 'services/cd-ng'
-
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  getFqnPath,
   getImagePath,
   getYamlData,
-  isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
-import css from '../../K8sServiceSpec.module.scss'
+import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface DockerRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -41,6 +44,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     template,
     formik,
     path,
+    stepViewType,
     initialValues,
     accountId,
     projectIdentifier,
@@ -50,6 +54,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     pipelineIdentifier,
     branch,
     stageIdentifier,
+    serviceIdentifier,
     isTagsSelectionDisabled,
     allowableTypes,
     fromTrigger,
@@ -62,46 +67,53 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '' })
+
+  const imagePathValue = getImagePath(
+    artifact?.spec?.imagePath,
+    get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
+  )
+  const connectorRefValue = getDefaultQueryParam(
+    artifact?.spec?.connectorRef,
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
+
   const {
     data: dockerdata,
     loading: fetchingTags,
     refetch: fetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForDockerWithYaml, {
-    body: yamlStringify(getYamlData(formik?.values)),
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
       headers: {
         'content-type': 'application/json'
       }
     },
+
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
       repoIdentifier,
       branch,
-      imagePath: getImagePath(
-        artifact?.spec?.imagePath,
-        get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
-      ),
-      connectorRef:
-        getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.connectorRef
-          : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, ''),
+      imagePath: getFinalQueryParamValue(imagePathValue),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      fqnPath: isPropagatedStage
-        ? `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.tag`
-        : `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.tag`
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        )
+      )
     },
     lazy: true
   })
-
-  const imagePathValue = getImagePath(
-    artifact?.spec?.imagePath,
-    get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
-  )
-  const connectorRefValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
 
   const fetchTagsEnabled = (): void => {
     if (canFetchTags()) {
@@ -112,8 +124,11 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
 
   const canFetchTags = (): boolean => {
     return (
-      !!(lastQueryData.connectorRef != connectorRefValue || lastQueryData.imagePath !== imagePathValue) &&
-      shouldFetchTagsSource([connectorRefValue, imagePathValue])
+      !!(
+        lastQueryData.connectorRef != connectorRefValue ||
+        lastQueryData.imagePath !== imagePathValue ||
+        getMultiTypeFromValue(artifact?.spec?.imagePath) === MultiTypeInputType.EXPRESSION
+      ) && shouldFetchTagsSource([connectorRefValue, imagePathValue])
     )
   }
 
@@ -136,8 +151,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     }
     return false
   }
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (
@@ -170,7 +184,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               label={getString('pipeline.imagePathLabel')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
               multiTextInputProps={{
@@ -179,6 +193,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
               }}
               name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
               onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
+              fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
+              template={template}
             />
           )}
 
@@ -236,10 +252,11 @@ export class DockerArtifactSource extends ArtifactSourceBase<ArtifactSourceRende
       artifact?.spec?.imagePath,
       get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
     )
-    const isConnectorPresent =
-      getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.connectorRef
-        : get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
+    const isConnectorPresent = getDefaultQueryParam(
+      artifact?.spec?.connectorRef,
+      get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
+    )
+
     return !(isImagePathPresent && isConnectorPresent)
   }
 

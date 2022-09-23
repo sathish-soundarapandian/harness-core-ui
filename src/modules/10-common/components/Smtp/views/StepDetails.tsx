@@ -113,10 +113,10 @@ const StepSmtpDetails: React.FC<StepProps<NgSmtpDTO> & SmtpSharedObj & CreateSmt
             <Container className={css.smtpMdlContainer}>
               <FormikForm>
                 <FormInput.Text name="name" label={getString('name')}></FormInput.Text>
-                <FormInput.Text name="host" label={getString('pipelineSteps.hostLabel')}></FormInput.Text>
+                <FormInput.Text name="host" label={getString('common.hostLabel')}></FormInput.Text>
                 <FormInput.Text name="port" label={getString('common.smtp.port')}></FormInput.Text>
                 <FormInput.CheckBox name="useSSL" label={getString('common.smtp.enableSSL')}></FormInput.CheckBox>
-                <FormInput.CheckBox name="startTLS" label={getString('common.smtp.startTSL')}></FormInput.CheckBox>
+                <FormInput.CheckBox name="startTLS" label={getString('common.smtp.startTLS')}></FormInput.CheckBox>
                 <FormInput.Text name="fromAddress" label={getString('common.smtp.fromAddress')}></FormInput.Text>
                 <Layout.Horizontal className={css.buttonPanel}>
                   <Button

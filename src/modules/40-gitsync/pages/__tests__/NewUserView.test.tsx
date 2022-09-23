@@ -69,7 +69,7 @@ describe('GitSync Page', () => {
         path="/account/:accountId/ci/orgs/:orgIdentifier/projects/:projectIdentifier/admin/git-sync"
         pathParams={{ accountId: 'dummyAccount', orgIdentifier: 'default', projectIdentifier: 'dummyProject' }}
         defaultAppStoreValues={{
-          isGitSimplificationEnabled: true
+          supportingGitSimplification: true
         }}
       >
         <NewUserView />

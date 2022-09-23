@@ -27,6 +27,15 @@
   }
 
   .tagRender {
+    & > :global(.bp3-button-text) {
+      color: var(--orange-600) !important;
+      font-size: var(--font-size-small) !important;
+    }
+
+    margin-right: var(--spacing-5);
+    line-height: 15px;
+    padding: 0 !important;
+
     &::before {
       content: '';
       width: 10px;

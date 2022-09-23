@@ -6,14 +6,13 @@
  */
 
 import React from 'react'
-import { Text, Layout } from '@wings-software/uicore'
+import { Text, Layout, Icon } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { useGetSelectionLogsV2 } from 'services/portal'
 import { String, useStrings } from 'framework/strings'
 import type { DelegateTaskData } from '@common/components/DelegateSelectionLogs/DelegateSelectionLogs'
 import { PageSpinner } from '..'
 import DelegateSelectionLogsTable from './DelegateSelectionLogsTable'
-
 export interface DelegateSelectionLogsTaskProps {
   task: DelegateTaskData
 }
@@ -25,7 +24,11 @@ export function DelegateSelectionLogsTask({ task }: DelegateSelectionLogsTaskPro
 
   const { getString } = useStrings()
 
-  const { data, loading } = useGetSelectionLogsV2({ queryParams: { accountId, taskId: task.taskId } })
+  const {
+    data,
+    loading,
+    refetch: refetchSelectionLogs
+  } = useGetSelectionLogsV2({ queryParams: { accountId, taskId: task.taskId } })
 
   const renderDelegateForTaskText = (): JSX.Element => {
     return (
@@ -57,6 +60,19 @@ export function DelegateSelectionLogsTask({ task }: DelegateSelectionLogsTaskPro
               <Text font={{ weight: 'bold' }} style={{ whiteSpace: 'pre' }}>{`${getString('taskId')} `}</Text>
               <Text>{task.taskId}</Text>
             </Layout.Horizontal>
+          </Layout.Horizontal>
+          <Layout.Horizontal style={{ alignItems: 'center' }} spacing="small">
+            <Text>
+              <String stringID="common.refreshDelegateLogs" useRichText />
+            </Text>
+            <Icon
+              name="main-refresh"
+              size={14}
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                refetchSelectionLogs({ queryParams: { accountId, taskId: task.taskId } })
+              }}
+            />
           </Layout.Horizontal>
 
           <DelegateSelectionLogsTable selectionLogs={data.resource.delegateSelectionLogs} />

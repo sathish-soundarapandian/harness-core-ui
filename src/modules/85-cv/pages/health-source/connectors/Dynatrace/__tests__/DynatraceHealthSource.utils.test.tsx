@@ -26,9 +26,9 @@ import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDr
 describe('Validate DynatraceHealthSource Utils', () => {
   test('validate mapping health source data to Dynatrace mapping', () => {
     // with list of metrics
-    expect(DynatraceHealthSourceUtils.mapHealthSourceToDynatraceMetricData(DynatraceMockHealthSourceData)).toEqual(
-      MockDynatraceMetricData
-    )
+    expect(
+      DynatraceHealthSourceUtils.mapHealthSourceToDynatraceMetricData(DynatraceMockHealthSourceData, false)
+    ).toEqual(MockDynatraceMetricData)
     const propsWithoutMetrics = {
       ...DynatraceMockHealthSourceData,
       healthSourceList: [
@@ -49,13 +49,13 @@ describe('Validate DynatraceHealthSource Utils', () => {
       selectedService: { label: '', value: '' }
     }
     // without metrics and without service name and id
-    expect(DynatraceHealthSourceUtils.mapHealthSourceToDynatraceMetricData(propsWithoutMetrics)).toEqual(
+    expect(DynatraceHealthSourceUtils.mapHealthSourceToDynatraceMetricData(propsWithoutMetrics, false)).toEqual(
       metricDataWithoutCustomMetrics
     )
   })
 
   test('validate mapping Dynatrace data to health source', () => {
-    expect(DynatraceHealthSourceUtils.mapDynatraceMetricDataToHealthSource(MockDynatraceMetricData)).toEqual(
+    expect(DynatraceHealthSourceUtils.mapDynatraceMetricDataToHealthSource(MockDynatraceMetricData, false)).toEqual(
       DynatraceUpdatedHealthSourceMock
     )
     const metricDataWithoutCustomMetrics = { ...MockDynatraceMetricData, customMetrics: new Map() }
@@ -63,9 +63,9 @@ describe('Validate DynatraceHealthSource Utils', () => {
       ...DynatraceUpdatedHealthSourceMock,
       spec: { ...DynatraceUpdatedHealthSourceMock.spec, metricDefinitions: [] }
     }
-    expect(DynatraceHealthSourceUtils.mapDynatraceMetricDataToHealthSource(metricDataWithoutCustomMetrics)).toEqual(
-      metricHealthSourceWithoutMetricDefinitions
-    )
+    expect(
+      DynatraceHealthSourceUtils.mapDynatraceMetricDataToHealthSource(metricDataWithoutCustomMetrics, false)
+    ).toEqual(metricHealthSourceWithoutMetricDefinitions)
   })
 
   test('validate mapping services to select options', () => {
@@ -97,7 +97,14 @@ describe('Validate DynatraceHealthSource Utils', () => {
       selectedService: { label: '', value: '' }
     }
     expect(
-      DynatraceHealthSourceUtils.validateMapping(dataWithNoMetricPackSelected, ['a', 'b'], 0, val => val, new Map())
+      DynatraceHealthSourceUtils.validateMapping(
+        dataWithNoMetricPackSelected,
+        ['a', 'b'],
+        0,
+        val => val,
+        new Map(),
+        false
+      )
     ).toEqual(expectedErrors)
 
     // no errors when there is no metric packs, but custom metric is added
@@ -112,7 +119,7 @@ describe('Validate DynatraceHealthSource Utils', () => {
       metricSelector: 'builtin:service.mock'
     }
     expect(
-      DynatraceHealthSourceUtils.validateMapping(dataWithCustomMetrics, ['a', 'b'], 0, val => val, new Map())
+      DynatraceHealthSourceUtils.validateMapping(dataWithCustomMetrics, ['a', 'b'], 0, val => val, new Map(), false)
     ).toEqual(customMetricsErrorWithoutMetricPacks)
   })
 
@@ -134,7 +141,7 @@ describe('Validate DynatraceHealthSource Utils', () => {
       sli: false
     }
     expect(
-      DynatraceHealthSourceUtils.validateMapping(dataWithNoMetricPackSelected, [], 0, val => val, new Map())
+      DynatraceHealthSourceUtils.validateMapping(dataWithNoMetricPackSelected, [], 0, val => val, new Map(), false)
     ).toEqual(expectedErrors)
   })
 
@@ -144,11 +151,7 @@ describe('Validate DynatraceHealthSource Utils', () => {
     mockErrors['mockErrorField'] = 'cv.healthSource.connectors.Dynatrace.validations.selectedService'
     jest.spyOn(DynatraceHealthSourceUtils, 'validateMapping').mockReturnValue(mockErrors)
 
-    const setTouchedMock = jest.fn()
-    const validateFormMock = jest.fn()
     const mockFormikProps: any = {
-      validateForm: validateFormMock,
-      setTouched: setTouchedMock,
       initialValues: {
         ...MockDatadogMetricInfo
       },
@@ -161,15 +164,10 @@ describe('Validate DynatraceHealthSource Utils', () => {
       mockFormikProps,
       MAPPED_METRICS_LIST_MOCK,
       'mapped_metric_1',
-      0,
-      ['mapped_metric_1', 'mapped_metric_2'],
-      val => val,
       submitDataMock
     )
-    expect(setTouchedMock).toHaveBeenCalledTimes(1)
-    expect(validateFormMock).toHaveBeenCalledTimes(1)
-    // errors exist and submitData should not be called
-    expect(submitDataMock).toHaveBeenCalledTimes(0)
+
+    expect(submitDataMock).toHaveBeenCalledTimes(1)
 
     const noErrorsMock: any = {}
     // return no errors
@@ -184,9 +182,6 @@ describe('Validate DynatraceHealthSource Utils', () => {
       mockFormikPropsWithShowCustom,
       MAPPED_METRICS_LIST_MOCK,
       'mapped_metric_1',
-      0,
-      ['mapped_metric_1', 'mapped_metric_2'],
-      val => val,
       submitDataMock
     )
     expect(submitDataMock).toHaveBeenCalledWith({
@@ -199,9 +194,6 @@ describe('Validate DynatraceHealthSource Utils', () => {
       mockFormikProps,
       MAPPED_METRICS_LIST_MOCK,
       'mapped_metric_1',
-      0,
-      ['mapped_metric_1', 'mapped_metric_2'],
-      val => val,
       submitDataMock
     )
     expect(submitDataMock).toHaveBeenCalledWith({
@@ -269,7 +261,7 @@ describe('Validate DynatraceHealthSource Utils', () => {
       ...MockDynatraceMetricData,
       aggregator: 'avg',
       serviceInstanceIdentifierTag: 'host',
-      identifier: 'mapped_metric_1',
+      identifier: 'mockMetricName',
       isCustomCreatedMetric: false,
       continuousVerification: true,
       metric: 'system.cpu.user',
@@ -296,7 +288,9 @@ describe('Validate DynatraceHealthSource Utils', () => {
       query: 'avg:system.cpu.user{version}.rollup(avg, 60)',
       sli: false,
       showCustomMetric: false,
-      metricName: 'mapped_metric_1'
+      metricName: 'mapped_metric_1',
+      failFastThresholds: [],
+      ignoreThresholds: []
     })
 
     const selectedMetric = MAPPED_METRICS_LIST_MOCK.get('mapped_metric_2')

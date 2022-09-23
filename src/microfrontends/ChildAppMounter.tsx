@@ -10,6 +10,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom'
 
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useLogout } from 'framework/utils/SessionUtils'
 import { PermissionsContext } from 'framework/rbac/PermissionsContext'
 import { LicenseStoreContext } from 'framework/LicenseStore/LicenseStoreContext'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
@@ -17,11 +18,17 @@ import { PageSpinner } from '@common/components'
 import RbacButton from '@rbac/components/Button/Button'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { usePermission } from '@rbac/hooks/usePermission'
+import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
+import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
 import ChildAppError from './ChildAppError'
 import type { ChildAppProps, Scope } from './index'
 
@@ -84,13 +91,20 @@ export class ChildAppMounter<T = never> extends React.Component<
           components={{
             RbacButton,
             RbacMenuItem,
+            RBACTooltip,
             NGBreadcrumbs,
             MonacoEditor,
             YAMLBuilder,
-            MonacoDiffEditor
+            MonacoDiffEditor,
+            LevelUpBanner
           }}
           hooks={{
-            useDocumentTitle
+            useDocumentTitle,
+            useTelemetry,
+            useLogout,
+            useRBACError,
+            usePermission,
+            useCreateConnectorModal
           }}
         >
           {children}

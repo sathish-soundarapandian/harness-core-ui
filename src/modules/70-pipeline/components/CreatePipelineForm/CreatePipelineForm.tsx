@@ -12,10 +12,9 @@ import * as Yup from 'yup'
 import { omit } from 'lodash-es'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { NameIdDescriptionTags } from '@common/components'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, EntityGitDetails } from 'services/pipeline-ng'
 import { DEFAULT_COLOR } from '@common/constants/Utils'
 import { useStrings } from 'framework/strings'
-import type { EntityGitDetails } from 'services/pipeline-ng'
 import GitContextForm from '@common/components/GitContextForm/GitContextForm'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useTelemetry } from '@common/hooks/useTelemetry'
@@ -31,7 +30,8 @@ interface CreatePipelineFormProps {
 
 export function CreatePipelineForm(props: CreatePipelineFormProps): React.ReactElement {
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { handleSubmit, closeModal, learnMoreUrl } = props
   const { trackEvent } = useTelemetry()
   return (

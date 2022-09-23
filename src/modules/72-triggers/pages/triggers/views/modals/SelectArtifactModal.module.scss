@@ -6,16 +6,10 @@
  */
 
 .selectArtifactModal {
-  min-width: 1000px;
-  padding-top: 36px !important;
-  h4 {
-    font-size: 20px !important;
-  }
-  [class*='bp3-dialog-header'] {
-    margin-bottom: 0 !important;
+  [data-name='manifest'] {
+    width: 440px !important;
   }
   [data-name='primary'],
-  [data-name='manifest'],
   [data-name='sidecar'] {
     width: 100% !important;
   }
@@ -29,21 +23,4 @@
       }
     }
   }
-}
-
-.footer {
-  z-index: 1;
-  align-items: center;
-  padding-top: var(--spacing-medium) !important;
-  p:hover {
-    cursor: pointer;
-    color: var(--grey-700);
-  }
-  .cancel {
-    margin-left: var(--spacing-xxxlarge) !important;
-  }
-}
-
-.runtimeInputs {
-  min-width: 500px;
 }

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -26,7 +26,7 @@ export interface TemplateInputSetStepProps {
   initialValues: TemplateStepNode
   onUpdate?: (data: TemplateStepNode) => void
   onChange?: (data: TemplateStepNode) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   readonly?: boolean
   template?: TemplateStepNode

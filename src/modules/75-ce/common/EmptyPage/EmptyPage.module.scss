@@ -6,9 +6,10 @@
  */
 
 .empty {
+  --page-header-height: 303px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: calc(100vh - 303px);
+  height: calc(var(--page-min-height) - var(--page-header-height));
 }

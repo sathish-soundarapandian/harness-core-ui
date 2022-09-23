@@ -12,9 +12,11 @@ import type {
   ConnectorConfigDTO,
   ConnectorInfoDTO,
   ConnectorRequestBody,
+  JsonNode,
   VaultMetadataRequestSpecDTO
 } from 'services/cd-ng'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 
 export interface KubFormData {
   name?: string
@@ -89,6 +91,7 @@ export interface ConnectorDetailsProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 export interface AwsSecretManagerConfigFormData {
@@ -117,6 +120,7 @@ export interface VaultConfigFormData {
   renewalIntervalMinutes: number
   vaultK8sAuthRole?: string
   serviceAccountTokenPath?: string
+  k8sAuthEndpoint?: string
 }
 
 export interface SetupEngineFormData {
@@ -145,4 +149,17 @@ export interface AzureFormInterface {
   secretFile?: SecretReferenceInterface | void
   clientId?: string
   managedIdentity?: string
+}
+export interface ExecutionTarget {
+  connectorRef?: string
+  host?: string
+  workingDirectory?: string
+}
+
+export interface CustomSMFormInterface {
+  template: (TemplateSummaryResponse & { templateRef: string }) | undefined
+  templateInputs: JsonNode
+  onDelegate: boolean
+  executionTarget: ExecutionTarget
+  templateJson: JsonNode
 }

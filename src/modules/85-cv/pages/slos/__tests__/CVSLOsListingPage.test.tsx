@@ -12,7 +12,7 @@ import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvServices from 'services/cv'
 import CVSLOsListingPage from '../CVSLOsListingPage'
-import type { CVSLOsListingPageProps, SLOCardHeaderProps } from '../CVSLOsListingPage.types'
+import type { CVSLOsListingPageProps } from '../CVSLOsListingPage.types'
 import {
   testWrapperProps,
   pathParams,
@@ -21,19 +21,6 @@ import {
   dashboardWidgetsContent,
   userJourneyResponse
 } from './CVSLOsListingPage.mock'
-
-jest.mock('@cv/pages/slos/SLOCard/SLOCardHeader.tsx', () => ({
-  __esModule: true,
-  default: function SLOCardHeader({ onDelete }: SLOCardHeaderProps) {
-    return (
-      <span data-testid="slo-card-header">
-        <button onClick={() => onDelete(dashboardWidgetsContent.sloIdentifier, dashboardWidgetsContent.title)}>
-          Delete
-        </button>
-      </span>
-    )
-  }
-}))
 
 jest.mock('@cv/pages/slos/SLOCard/SLOCardContent.tsx', () => ({
   __esModule: true,
@@ -67,14 +54,14 @@ describe('CVSLOsListingPage', () => {
       refetch: jest.fn()
     } as any)
 
-    useGetSLODashboardWidgets = jest.spyOn(cvServices, 'useGetSLODashboardWidgets').mockReturnValue({
+    useGetSLODashboardWidgets = jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
       data: {},
       loading: false,
       error: null,
       refetch: refetchDashboardWidgets
     } as any)
 
-    jest.spyOn(cvServices, 'useGetAllMonitoredServicesWithTimeSeriesHealthSources').mockReturnValue({
+    jest.spyOn(cvServices, 'useGetSLOAssociatedMonitoredServices').mockReturnValue({
       data: [],
       loading: false,
       error: null,
@@ -109,19 +96,15 @@ describe('CVSLOsListingPage', () => {
   test('Without monitoredServiceIdentifier it should render the page headers', () => {
     render(<ComponentWrapper />)
 
-    expect(screen.queryByText('cv.slos.title')).toBeInTheDocument()
+    expect(screen.queryByText('cv.slos.completeTitle')).toBeInTheDocument()
     expect(screen.getByText('cv.slos.createSLO')).toBeInTheDocument()
     expect(document.title).toBe('cv.srmTitle | cv.slos.title | harness')
   })
 
   test('With monitoredServiceIdentifier it should not render with the page headers', () => {
-    render(
-      <ComponentWrapper
-        monitoredService={{ identifier: 'monitored_service_identifier', name: 'monitored_service_identifier' }}
-      />
-    )
+    render(<ComponentWrapper />)
 
-    expect(screen.queryByText('cv.slos.title')).not.toBeInTheDocument()
+    expect(screen.queryByText('cv.slos.completeTitle')).toBeInTheDocument()
     expect(screen.getByText('cv.slos.createSLO')).toBeInTheDocument()
   })
 
@@ -134,20 +117,11 @@ describe('CVSLOsListingPage', () => {
   })
 
   test('it should have monitored service identifier query param when adding new SLO from MS details page', () => {
-    render(
-      <ComponentWrapper
-        monitoredService={{ identifier: 'monitored_service_identifier', name: 'monitored_service_identifier' }}
-      />
-    )
+    render(<ComponentWrapper />)
 
     userEvent.click(screen.getByText('cv.slos.createSLO'))
 
-    expect(
-      screen.getByText(
-        routes.toCVCreateSLOs({ ...pathParams, module: 'cv' }) +
-          '?monitoredServiceIdentifier=monitored_service_identifier'
-      )
-    ).toBeInTheDocument()
+    expect(screen.getByText(routes.toCVCreateSLOs({ ...pathParams, module: 'cv' }))).toBeInTheDocument()
   })
 
   test('it should show the loader while fetching the user journeys', () => {
@@ -162,14 +136,19 @@ describe('CVSLOsListingPage', () => {
   test('it should show the loader while fetching the dashboard widgets', () => {
     useGetSLODashboardWidgets.mockReturnValue({ data: {}, loading: true, error: null, refetch: jest.fn() })
 
-    render(<ComponentWrapper />)
+    const { container } = render(<ComponentWrapper />)
 
     expect(screen.getByText('Loading, please wait...')).toBeInTheDocument()
-    expect(screen.queryByTestId('slo-card-container')).not.toBeInTheDocument()
+    expect(container.querySelector('.TableV2--body [role="row"]')).not.toBeInTheDocument()
   })
 
   test('it should show the loader while deleting a widget', () => {
-    useGetAllJourneys.mockReturnValue({ data: userJourneyResponse, loading: false, error: null, refetch: jest.fn() })
+    useGetAllJourneys.mockReturnValue({
+      data: userJourneyResponse,
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    })
     useDeleteSLOData.mockReturnValue({ mutate: jest.fn(), loading: true, error: null })
     useGetSLODashboardWidgets.mockReturnValue({
       data: dashboardWidgetsResponse,
@@ -178,10 +157,10 @@ describe('CVSLOsListingPage', () => {
       refetch: jest.fn()
     })
 
-    render(<ComponentWrapper />)
+    const { container } = render(<ComponentWrapper />)
 
     expect(screen.getByText('Loading, please wait...')).toBeInTheDocument()
-    expect(screen.getAllByTestId('slo-card-container')).toHaveLength(1)
+    expect(container.querySelectorAll('.TableV2--body [role="row"]').length).toEqual(1)
   })
 
   test('page retry should trigger both dashboard widget and user journey APIs when both returned error response', () => {
@@ -255,11 +234,11 @@ describe('CVSLOsListingPage', () => {
   })
 
   test('it should render page body no data state only if dashboard widgets and selected user journey are empty', () => {
-    render(<ComponentWrapper />)
+    const { container } = render(<ComponentWrapper />)
 
     expect(screen.getByText('cv.slos.noMatchingData')).toBeInTheDocument()
     expect(screen.queryByText('First Journey')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('slo-card-container')).not.toBeInTheDocument()
+    expect(container.querySelector('.TableV2--body [role="row"]')).not.toBeInTheDocument()
   })
 
   test('it should only render dashboard widgets when user journeys are empty', () => {
@@ -273,11 +252,21 @@ describe('CVSLOsListingPage', () => {
     render(<ComponentWrapper />)
 
     expect(screen.queryByText('First Journey')).not.toBeInTheDocument()
-    expect(screen.getByTestId('slo-card-container')).toBeInTheDocument()
+  })
+
+  test('it should render page body no data state only if dashboard widgets and selected user journey are empty', () => {
+    render(<ComponentWrapper />)
+
+    expect(screen.getByText('cv.slos.noMatchingData')).toBeInTheDocument()
   })
 
   test('Risk filter select and deselect', async () => {
-    useGetAllJourneys.mockReturnValue({ data: userJourneyResponse, loading: false, error: null, refetch: jest.fn() })
+    useGetAllJourneys.mockReturnValue({
+      data: userJourneyResponse,
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    })
     useGetSLODashboardWidgets.mockReturnValue({
       data: dashboardWidgetsResponse,
       loading: false,
@@ -289,21 +278,15 @@ describe('CVSLOsListingPage', () => {
 
     expect(container).toMatchSnapshot()
 
-    expect(screen.getAllByTestId('slo-card-container')).toHaveLength(1)
-    expect(screen.getAllByTestId('slo-card-header')).toHaveLength(1)
-    expect(screen.getAllByTestId('slo-card-content')).toHaveLength(1)
-
-    expect(container.querySelector('div[data-tooltip-id="Healthy_tooltip"]')?.parentElement).not.toHaveClass(
+    expect(container.querySelector('div[data-test-id="Healthy_tooltip"]')?.parentElement).not.toHaveClass(
       'Card--selected'
     )
 
     userEvent.click(screen.getByText('Healthy'))
-    expect(container.querySelector('div[data-tooltip-id="Healthy_tooltip"]')?.parentElement).toHaveClass(
-      'Card--selected'
-    )
+    expect(container.querySelector('div[data-test-id="Healthy_tooltip"]')?.parentElement).toHaveClass('Card--selected')
 
     userEvent.click(screen.getByText('Healthy'))
-    expect(container.querySelector('div[data-tooltip-id="Healthy_tooltip"]')?.parentElement).not.toHaveClass(
+    expect(container.querySelector('div[data-test-id="Healthy_tooltip"]')?.parentElement).not.toHaveClass(
       'Card--selected'
     )
   })
@@ -312,7 +295,12 @@ describe('CVSLOsListingPage', () => {
     const deleteMutate = jest.fn()
     const refetch = jest.fn()
 
-    useGetAllJourneys.mockReturnValue({ data: userJourneyResponse, loading: false, error: null, refetch: jest.fn() })
+    useGetAllJourneys.mockReturnValue({
+      data: userJourneyResponse,
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    })
     useDeleteSLOData.mockReturnValue({ mutate: deleteMutate, loading: false, error: null })
     useGetSLODashboardWidgets.mockReturnValue({
       data: dashboardWidgetsResponse,
@@ -321,16 +309,25 @@ describe('CVSLOsListingPage', () => {
       refetch: refetch
     })
 
-    render(<ComponentWrapper />)
+    const { container, getByText, getByTestId, queryByText } = render(<ComponentWrapper />)
 
-    expect(screen.getByTestId('slo-card-container')).toBeInTheDocument()
+    // Cancelling deletion of widget
+    await waitFor(() => userEvent.click(container.querySelector('[data-icon="main-trash"]') as HTMLElement))
+    await waitFor(() => userEvent.click(getByText('cancel')))
+    await waitFor(() => expect(queryByText('cv.slos.sloDeleted')).not.toBeInTheDocument())
 
-    userEvent.click(screen.getByText('Delete'))
-
+    // Deleting the widget
+    await waitFor(() => userEvent.click(container.querySelector('[data-icon="main-trash"]') as HTMLElement))
+    await waitFor(() => userEvent.click(getByText('delete')))
     expect(deleteMutate).toHaveBeenCalledWith(dashboardWidgetsContent.sloIdentifier)
-
     await waitFor(() => expect(refetch).toHaveBeenCalled())
-    await waitFor(() => expect(screen.getByText('cv.slos.sloDeleted')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('cv.slos.sloDeleted')).toBeInTheDocument())
+
+    // Editing the SLO Widget
+    await waitFor(() => userEvent.click(container.querySelector('[data-icon="Edit"]') as HTMLElement))
+    expect(getByTestId('location').innerHTML).toContain(
+      '/account/account_id/cv/orgs/org_identifier/projects/project_identifier/slos/slo_identifier?tab=Configurations'
+    )
   })
 
   describe('Filters', () => {

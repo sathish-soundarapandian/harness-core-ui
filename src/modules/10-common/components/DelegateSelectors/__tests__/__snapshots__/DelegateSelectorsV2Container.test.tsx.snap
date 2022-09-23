@@ -1,0 +1,205 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test DelegateSelectorsContainerV2 snapshot test 1`] = `
+<div>
+  <div
+    class="wrapper"
+    data-name="DelegateSelectors"
+  >
+    <div
+      class="bp3-popover-wrapper delegatePopover bp3-fill"
+    >
+      <div
+        class="bp3-popover-target"
+      >
+        <div
+          class=""
+        >
+          <div
+            class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
+          >
+            <div
+              class="bp3-tag-input-values"
+            >
+              <span
+                class="bp3-tag bp3-intent-primary bp3-minimal"
+                data-tag-index="0"
+              >
+                <span
+                  class="bp3-text-overflow-ellipsis bp3-fill"
+                >
+                  delegate-selector
+                </span>
+                <button
+                  class="bp3-tag-remove"
+                  type="button"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-small-cross"
+                    icon="small-cross"
+                  >
+                    <svg
+                      data-icon="small-cross"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      width="16"
+                    >
+                      <desc>
+                        small-cross
+                      </desc>
+                      <path
+                        d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </span>
+              <span
+                class="bp3-tag bp3-intent-danger bp3-minimal"
+                data-tag-index="1"
+              >
+                <span
+                  class="bp3-text-overflow-ellipsis bp3-fill"
+                >
+                  delegate-selector3
+                </span>
+                <button
+                  class="bp3-tag-remove"
+                  type="button"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-small-cross"
+                    icon="small-cross"
+                  >
+                    <svg
+                      data-icon="small-cross"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      width="16"
+                    >
+                      <desc>
+                        small-cross
+                      </desc>
+                      <path
+                        d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </span>
+              <input
+                class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`test DelegateSelectorsContainerV2 test cleanup function 1`] = `
+<div>
+  <div
+    class="wrapper"
+    data-name="DelegateSelectors"
+  >
+    <div
+      class="bp3-popover-wrapper delegatePopover bp3-fill"
+    >
+      <div
+        class="bp3-popover-target"
+      >
+        <div
+          class=""
+        >
+          <div
+            class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
+          >
+            <div
+              class="bp3-tag-input-values"
+            >
+              <span
+                class="bp3-tag bp3-intent-primary bp3-minimal"
+                data-tag-index="0"
+              >
+                <span
+                  class="bp3-text-overflow-ellipsis bp3-fill"
+                >
+                  delegate-selector
+                </span>
+                <button
+                  class="bp3-tag-remove"
+                  type="button"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-small-cross"
+                    icon="small-cross"
+                  >
+                    <svg
+                      data-icon="small-cross"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      width="16"
+                    >
+                      <desc>
+                        small-cross
+                      </desc>
+                      <path
+                        d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </span>
+              <span
+                class="bp3-tag bp3-intent-danger bp3-minimal"
+                data-tag-index="1"
+              >
+                <span
+                  class="bp3-text-overflow-ellipsis bp3-fill"
+                >
+                  delegate-selector3
+                </span>
+                <button
+                  class="bp3-tag-remove"
+                  type="button"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-small-cross"
+                    icon="small-cross"
+                  >
+                    <svg
+                      data-icon="small-cross"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      width="16"
+                    >
+                      <desc>
+                        small-cross
+                      </desc>
+                      <path
+                        d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </span>
+              <input
+                class="bp3-input-ghost bp3-multi-select-tag-input-input"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

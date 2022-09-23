@@ -20,6 +20,7 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import LDAPProvider from './LDAPProvider/LDAPProvider'
 import css from './Configuration.module.scss'
 
 export interface PermissionRequest {
@@ -96,6 +97,13 @@ const Configuration: React.FC = () => {
               setUpdating={setUpdating}
             />
             <SAMLProvider
+              authSettings={data.resource}
+              refetchAuthSettings={refetchAuthSettings}
+              permissionRequest={permissionRequest}
+              canEdit={canEdit}
+              setUpdating={setUpdating}
+            />
+            <LDAPProvider
               authSettings={data.resource}
               refetchAuthSettings={refetchAuthSettings}
               permissionRequest={permissionRequest}

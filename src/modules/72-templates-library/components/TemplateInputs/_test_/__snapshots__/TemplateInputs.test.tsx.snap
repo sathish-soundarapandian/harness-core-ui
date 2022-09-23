@@ -40,96 +40,29 @@ exports[`<TemplateInputs /> tests snapshot test 1`] = `
               class="StyledProps--font StyledProps--main inputsCard StyledProps--background-white StyledProps--padding-large StyledProps--margin-bottom-xxlarge"
             >
               <div
-                class="bp3-form-group bp3-disabled deploymentViewMedium"
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
               >
-                <label
-                  class="bp3-label"
-                  for="timeout"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="templateInputs_timeout"
-                  >
-                    pipelineSteps.timeoutLabel
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
+                <div>
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                    style="flex-grow: 1;"
+                    class="bp3-form-group bp3-disabled deploymentViewMedium"
                   >
-                    <div
-                      class="TextInput--main MultiTypeInput--input"
-                    >
-                      <div
-                        class="bp3-input-group bp3-disabled"
-                      >
-                        <input
-                          class="bp3-input"
-                          disabled=""
-                          name="timeout"
-                          placeholder="<+input>"
-                          type="text"
-                          value="<+input>"
-                        />
-                      </div>
-                    </div>
-                    <button
-                      class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
-                      disabled=""
+                    <label
+                      class="bp3-label"
+                      for="data.timeout"
                     >
                       <span
-                        class="bp3-icon StyledProps--main"
-                        data-icon="runtime-input"
+                        class="Tooltip--acenter"
+                        data-tooltip-id="templateInputs_data.timeout"
                       >
-                        <svg
-                          height="12"
-                          viewBox="0 0 10 7.97"
-                          width="12"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
-                            fill="current-color"
-                          />
-                        </svg>
+                        pipelineSteps.timeoutLabel
                       </span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="bp3-form-group bp3-disabled approvalMessage deploymentViewMedium"
-              >
-                <label
-                  class="bp3-label"
-                  for="spec.approvalMessage"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="templateInputs_spec.approvalMessage"
-                  >
-                    pipeline.approvalStep.message
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="StyledProps--font StyledProps--main"
-                  >
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
                     <div
-                      style="display: flex; align-items: center;"
+                      class="bp3-form-content"
                     >
                       <div
                         class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
@@ -144,7 +77,7 @@ exports[`<TemplateInputs /> tests snapshot test 1`] = `
                             <input
                               class="bp3-input"
                               disabled=""
-                              name="spec.approvalMessage"
+                              name="data.timeout"
                               placeholder="<+input>"
                               type="text"
                               value="<+input>"
@@ -173,82 +106,61 @@ exports[`<TemplateInputs /> tests snapshot test 1`] = `
                           </span>
                         </button>
                       </div>
-                      <span
-                        class="bp3-popover-wrapper bp3-dark"
-                      >
-                        <span
-                          class="bp3-popover-target"
-                        >
-                          <button
-                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
-                            id="configureOptions_spec.approvalMessage"
-                            style="margin-bottom: 12px;"
-                            tabindex="0"
-                            type="button"
-                          >
-                            <span
-                              class="bp3-icon bp3-icon-cog StyledProps--main"
-                              icon="cog"
-                            >
-                              <svg
-                                data-icon="cog"
-                                height="16"
-                                viewBox="0 0 16 16"
-                                width="16"
-                              >
-                                <desc>
-                                  cog
-                                </desc>
-                                <path
-                                  d="M15.19 6.39h-1.85c-.11-.37-.27-.71-.45-1.04l1.36-1.36c.31-.31.31-.82 0-1.13l-1.13-1.13a.803.803 0 00-1.13 0l-1.36 1.36c-.33-.17-.67-.33-1.04-.44V.79c0-.44-.36-.8-.8-.8h-1.6c-.44 0-.8.36-.8.8v1.86c-.39.12-.75.28-1.1.47l-1.3-1.3c-.3-.3-.79-.3-1.09 0L1.82 2.91c-.3.3-.3.79 0 1.09l1.3 1.3c-.2.34-.36.7-.48 1.09H.79c-.44 0-.8.36-.8.8v1.6c0 .44.36.8.8.8h1.85c.11.37.27.71.45 1.04l-1.36 1.36c-.31.31-.31.82 0 1.13l1.13 1.13c.31.31.82.31 1.13 0l1.36-1.36c.33.18.67.33 1.04.44v1.86c0 .44.36.8.8.8h1.6c.44 0 .8-.36.8-.8v-1.86c.39-.12.75-.28 1.1-.47l1.3 1.3c.3.3.79.3 1.09 0l1.09-1.09c.3-.3.3-.79 0-1.09l-1.3-1.3c.19-.35.36-.71.48-1.1h1.85c.44 0 .8-.36.8-.8v-1.6a.816.816 0 00-.81-.79zm-7.2 4.6c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
-                          </button>
-                        </span>
-                      </span>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div
-                class="deploymentViewMedium"
-              >
-                <div
-                  class="bp3-form-group formGroup"
-                  style="flex-grow: 1; margin-bottom: 0px;"
-                >
-                  <label
-                    class="bp3-label"
-                    for="spec.approvers.userGroups"
+                  <div
+                    class="bp3-form-group bp3-disabled approvalMessage deploymentViewMedium"
                   >
-                    <div
-                      class="formLabel"
+                    <label
+                      class="bp3-label"
+                      for="data.spec.approvalMessage"
                     >
                       <span
                         class="Tooltip--acenter"
-                        data-tooltip-id="templateInputs_spec.approvers.userGroups"
+                        data-tooltip-id="templateInputs_data.spec.approvalMessage"
                       >
-                        common.userGroups
+                        pipeline.approvalStep.message
                       </span>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
                       <div
-                        class="bp3-popover-wrapper typeSelectorWrapper"
+                        class="StyledProps--font StyledProps--main"
                       >
                         <div
-                          class="bp3-popover-target typeSelector"
+                          style="display: flex; align-items: center;"
                         >
-                          <button
-                            class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                            disabled=""
-                            tabindex="-1"
-                            type="button"
+                          <div
+                            class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                            style="flex-grow: 1;"
                           >
-                            <span
-                              class="bp3-button-text"
+                            <div
+                              class="TextInput--main MultiTypeInput--input"
+                            >
+                              <div
+                                class="bp3-input-group bp3-disabled"
+                              >
+                                <input
+                                  class="bp3-input"
+                                  disabled=""
+                                  name="data.spec.approvalMessage"
+                                  placeholder="<+input>"
+                                  type="text"
+                                  value="<+input>"
+                                />
+                              </div>
+                            </div>
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                              disabled=""
                             >
                               <span
-                                class="bp3-icon StyledProps--main icon runtime"
+                                class="bp3-icon StyledProps--main"
                                 data-icon="runtime-input"
                               >
                                 <svg
@@ -263,111 +175,205 @@ exports[`<TemplateInputs /> tests snapshot test 1`] = `
                                   />
                                 </svg>
                               </span>
+                            </button>
+                          </div>
+                          <span
+                            class="bp3-popover-wrapper bp3-dark"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <button
+                                class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
+                                id="configureOptions_data.spec.approvalMessage"
+                                style="margin-bottom: 12px;"
+                                tabindex="0"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-icon bp3-icon-cog StyledProps--main"
+                                  icon="cog"
+                                >
+                                  <svg
+                                    data-icon="cog"
+                                    height="16"
+                                    viewBox="0 0 16 16"
+                                    width="16"
+                                  >
+                                    <desc>
+                                      cog
+                                    </desc>
+                                    <path
+                                      d="M15.19 6.39h-1.85c-.11-.37-.27-.71-.45-1.04l1.36-1.36c.31-.31.31-.82 0-1.13l-1.13-1.13a.803.803 0 00-1.13 0l-1.36 1.36c-.33-.17-.67-.33-1.04-.44V.79c0-.44-.36-.8-.8-.8h-1.6c-.44 0-.8.36-.8.8v1.86c-.39.12-.75.28-1.1.47l-1.3-1.3c-.3-.3-.79-.3-1.09 0L1.82 2.91c-.3.3-.3.79 0 1.09l1.3 1.3c-.2.34-.36.7-.48 1.09H.79c-.44 0-.8.36-.8.8v1.6c0 .44.36.8.8.8h1.85c.11.37.27.71.45 1.04l-1.36 1.36c-.31.31-.31.82 0 1.13l1.13 1.13c.31.31.82.31 1.13 0l1.36-1.36c.33.18.67.33 1.04.44v1.86c0 .44.36.8.8.8h1.6c.44 0 .8-.36.8-.8v-1.86c.39-.12.75-.28 1.1-.47l1.3 1.3c.3.3.79.3 1.09 0l1.09-1.09c.3-.3.3-.79 0-1.09l-1.3-1.3c.19-.35.36-.71.48-1.1h1.85c.44 0 .8-.36.8-.8v-1.6a.816.816 0 00-.81-.79zm-7.2 4.6c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
+                                      fill-rule="evenodd"
+                                    />
+                                  </svg>
+                                </span>
+                              </button>
                             </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
-                  <div
-                    class="bp3-form-content"
-                  >
-                    <div
-                      class="bp3-form-group bp3-disabled runtimeDisabled"
-                    >
-                      
-                      <div
-                        class="bp3-form-content"
-                      >
-                        <div
-                          class="bp3-input-group bp3-disabled"
-                        >
-                          <input
-                            autocomplete="off"
-                            class="bp3-input"
-                            disabled=""
-                            name="spec.approvers.userGroups"
-                            type="text"
-                            value="<+input>"
-                          />
+                          </span>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div
-                class="bp3-form-group deploymentViewMedium"
-              >
-                <label
-                  class="bp3-label"
-                  for="spec.approvers.minimumCount"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="templateInputs_spec.approvers.minimumCount"
-                  >
-                    pipeline.approvalStep.minimumCount
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                    class="deploymentViewMedium"
                   >
                     <div
-                      class="TextInput--main MultiTypeInput--input"
+                      class="bp3-form-group formGroup"
+                      style="flex-grow: 1; margin-bottom: 0px;"
                     >
-                      <div
-                        class="bp3-input-group bp3-disabled"
+                      <label
+                        class="bp3-label"
+                        for="data.spec.approvers.userGroups"
                       >
-                        <input
-                          class="bp3-input"
-                          disabled=""
-                          name="spec.approvers.minimumCount"
-                          placeholder="<+input>"
-                          type="text"
-                          value="<+input>"
-                        />
-                      </div>
-                    </div>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                        <div
+                          class="formLabel"
                         >
                           <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="runtime-input"
+                            class="Tooltip--acenter"
+                            data-tooltip-id="templateInputs_data.spec.approvers.userGroups"
                           >
-                            <svg
-                              height="12"
-                              viewBox="0 0 10 7.97"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
-                                fill="current-color"
-                              />
-                            </svg>
+                            common.userGroups
                           </span>
-                        </button>
+                          <div
+                            class="bp3-popover-wrapper typeSelectorWrapper"
+                          >
+                            <div
+                              class="bp3-popover-target typeSelector"
+                            >
+                              <button
+                                class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                                disabled=""
+                                tabindex="-1"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  <span
+                                    class="bp3-icon StyledProps--main icon runtime"
+                                    data-icon="runtime-input"
+                                  >
+                                    <svg
+                                      height="12"
+                                      viewBox="0 0 10 7.97"
+                                      width="12"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      <path
+                                        d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                                        fill="current-color"
+                                      />
+                                    </svg>
+                                  </span>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                         
+                        <span
+                          class="bp3-text-muted"
+                        />
+                      </label>
+                      <div
+                        class="bp3-form-content"
+                      >
+                        <div
+                          class="bp3-form-group bp3-disabled runtimeDisabled"
+                        >
+                          
+                          <div
+                            class="bp3-form-content"
+                          >
+                            <div
+                              class="bp3-input-group bp3-disabled"
+                            >
+                              <input
+                                autocomplete="off"
+                                class="bp3-input"
+                                disabled=""
+                                name="data.spec.approvers.userGroups"
+                                type="text"
+                                value="<+input>"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="bp3-form-group deploymentViewMedium"
+                  >
+                    <label
+                      class="bp3-label"
+                      for="data.spec.approvers.minimumCount"
+                    >
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="templateInputs_data.spec.approvers.minimumCount"
+                      >
+                        pipeline.approvalStep.minimumCount
                       </span>
-                    </span>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                      >
+                        <div
+                          class="TextInput--main MultiTypeInput--input"
+                        >
+                          <div
+                            class="bp3-input-group bp3-disabled"
+                          >
+                            <input
+                              class="bp3-input"
+                              disabled=""
+                              name="data.spec.approvers.minimumCount"
+                              placeholder="<+input>"
+                              type="text"
+                              value="<+input>"
+                            />
+                          </div>
+                        </div>
+                        <span
+                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="runtime-input"
+                              >
+                                <svg
+                                  height="12"
+                                  viewBox="0 0 10 7.97"
+                                  width="12"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                                    fill="current-color"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -4,7 +4,6 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import type { HealthSource } from 'services/cv'
@@ -45,7 +44,11 @@ export const validateDuplicateIdentifier = (values: DefineHealthSourceFormInterf
   }
 }
 
-export const getFeatureOption = (type: string, getString: UseStringsReturn['getString']): SelectOption[] => {
+export const getFeatureOption = (
+  type: string,
+  getString: UseStringsReturn['getString'],
+  isSplunkMetricEnabled = false
+): SelectOption[] => {
   switch (type) {
     case Connectors.APP_DYNAMICS:
       return [
@@ -104,13 +107,22 @@ export const getFeatureOption = (type: string, getString: UseStringsReturn['getS
           label: getString('connectors.newRelic.products.fullStackObservability')
         }
       ]
-    case Connectors.SPLUNK:
+    case Connectors.SPLUNK: {
+      const optionalFeature = []
+      if (isSplunkMetricEnabled) {
+        optionalFeature.push({
+          value: SplunkProduct.SPLUNK_METRICS,
+          label: getString('cv.monitoringSources.gco.product.metrics')
+        })
+      }
       return [
         {
           value: SplunkProduct.SPLUNK_LOGS,
           label: getString('cv.monitoringSources.gco.product.logs')
-        }
+        },
+        ...optionalFeature
       ]
+    }
     case Connectors.CUSTOM_HEALTH:
       return [
         {
@@ -144,6 +156,8 @@ export function getProductBasedOnType(
       return getFeatureOption(Connectors.CUSTOM_HEALTH, getString)[1]
     case 'CustomHealthMetric':
       return getFeatureOption(Connectors.CUSTOM_HEALTH, getString)[0]
+    case Connectors.PROMETHEUS:
+      return getFeatureOption(Connectors.PROMETHEUS, getString)[0]
     default:
       return { ...currProduct } as SelectOption
   }
@@ -153,7 +167,8 @@ export const getInitialValues = (sourceData: any, getString: UseStringsReturn['g
   const currentHealthSource = sourceData?.healthSourceList?.find(
     (el: any) => el?.identifier === sourceData?.healthSourceIdentifier
   )
-  const selectedFeature = currentHealthSource?.spec?.feature
+  // TODO: remove check for prometheus when BE changes are done
+  const selectedFeature = currentHealthSource?.type === Connectors.PROMETHEUS ? '' : currentHealthSource?.spec?.feature
   const initialValues = {
     [ConnectorRefFieldName]: '',
     ...sourceData,

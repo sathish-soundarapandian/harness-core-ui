@@ -11,12 +11,14 @@ import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicor
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import { Connectors } from '@connectors/constants'
+import type { ACRStepProps } from '../ACRStep/ACRStep'
 import type { ECRStepProps } from '../ECRStep/ECRStep'
 import type { GCRStepProps } from '../GCRStep/GCRStep'
 import type { DockerHubStepProps } from '../DockerHubStep/DockerHubStep'
 import { CIStepOptionalConfig } from './CIStepOptionalConfig'
 
-interface ArtifactStepCommonProps extends Omit<ECRStepProps | GCRStepProps | DockerHubStepProps, 'initialValues'> {
+interface ArtifactStepCommonProps
+  extends Omit<ACRStepProps | ECRStepProps | GCRStepProps | DockerHubStepProps, 'initialValues'> {
   artifactConnectorType: ConnectorInfoDTO['type']
 }
 
@@ -63,7 +65,7 @@ export const ArtifactStepCommon: React.FC<ArtifactStepCommonProps> = ({
         ...(getMultiTypeFromValue(
           get(
             template?.spec,
-            [Connectors.AWS, Connectors.GCP].includes(artifactConnectorType) ? 'remoteCacheImage' : ''
+            [Connectors.AWS, Connectors.GCP, Connectors.AZURE].includes(artifactConnectorType) ? 'remoteCacheImage' : ''
           )
         ) === MultiTypeInputType.RUNTIME && {
           'spec.remoteCacheImage': {}

@@ -35,6 +35,10 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+
+export const AUTHORIZATION_ERROR_CODE = 403
 
 const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<ResponseJsonNode> }> = props => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
@@ -43,8 +47,14 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
   useDocumentTitle(getString('createSecretYAML.createSecret'))
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const history = useHistory()
+  const { OPA_SECRET_GOVERNANCE } = useFeatureFlags()
   const { showSuccess, showError } = useToaster()
   const [snippetFetchResponse, setSnippetFetchResponse] = React.useState<SnippetFetchResponse>()
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
+    considerWarningAsError: false,
+    errorHeaderMsg: 'secrets.policyEvaluations.failedToSave',
+    warningHeaderMsg: 'secrets.policyEvaluations.warning'
+  })
   const { mutate: createSecret } = usePostSecretViaYaml({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
     requestOptions: { headers: { 'content-type': 'application/yaml' } }
@@ -73,7 +83,7 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
   }
   const handleCreate = async (): Promise<void> => {
     const yamlData = yamlHandler?.getLatestYaml()
-    let jsonData
+    let jsonData: any
     try {
       jsonData = parse(yamlData || '')?.secret
     } catch (err) {
@@ -82,19 +92,28 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
 
     if (yamlData && jsonData) {
       try {
-        await createSecret(yamlData as any)
-        showSuccess(getString('createSecretYAML.secretCreated'))
-        history.push(
-          routes.toSecretDetails({
-            secretId: jsonData['identifier'],
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            module
-          })
+        const response = await createSecret(yamlData as any)
+        conditionallyOpenGovernanceErrorModal(
+          OPA_SECRET_GOVERNANCE ? response.data?.governanceMetadata : undefined,
+          () => {
+            showSuccess(getString('createSecretYAML.secretCreated'))
+            history.push(
+              routes.toSecretDetails({
+                secretId: jsonData['identifier'],
+                accountId,
+                orgIdentifier,
+                projectIdentifier,
+                module
+              })
+            )
+          }
         )
       } catch (err) {
-        showError(getRBACErrorMessage(err))
+        if (err.status === AUTHORIZATION_ERROR_CODE) {
+          showError(getRBACErrorMessage(err))
+        } else {
+          showError(err.data.details)
+        }
       }
     } else {
       showError(getString('createSecretYAML.invalidSecret'))

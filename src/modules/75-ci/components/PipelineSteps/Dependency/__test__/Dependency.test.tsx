@@ -397,6 +397,17 @@ describe('Dependency', () => {
                   localName: 'step.dependency.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.dependency.identifier',
+                      localName: 'step.dependency.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-description': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.dependency.description',
@@ -461,6 +472,7 @@ describe('Dependency', () => {
             },
             variablesData: {
               type: StepType.Dependency,
+              __uuid: 'step-identifier',
               identifier: 'dependency',
               name: 'step-name',
               description: 'step-description',

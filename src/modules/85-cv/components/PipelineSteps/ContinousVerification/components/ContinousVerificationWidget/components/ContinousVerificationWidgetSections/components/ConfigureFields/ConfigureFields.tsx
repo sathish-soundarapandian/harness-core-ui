@@ -6,20 +6,19 @@
  */
 
 import React, { useEffect } from 'react'
-import { FormInput, MultiTypeInputType } from '@wings-software/uicore'
+import { FormInput, AllowedTypes } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
-import Card from '@cv/components/Card/Card'
 import { defaultDeploymentTag, VerificationTypes } from './constants'
 import { BaselineSelect, Duration, VerificationSensitivity } from '../VerificationJobFields/VerificationJobFields'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function ConfigureFields(props: {
   formik: FormikProps<ContinousVerificationData>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const {
     formik: { values: formValues, setFieldValue },
@@ -115,17 +114,15 @@ export default function ConfigureFields(props: {
   }, [])
 
   return (
-    <Card>
-      <>
-        {renderConfigOptions()}
-        <div className={cx(stepCss.formGroup)}>
-          <FormInput.MultiTextInput
-            label={getString('connectors.cdng.artifactTag')}
-            name="spec.spec.deploymentTag"
-            multiTextInputProps={{ expressions, allowableTypes }}
-          />
-        </div>
-      </>
-    </Card>
+    <>
+      {renderConfigOptions()}
+      <div className={cx(stepCss.formGroup)}>
+        <FormInput.MultiTextInput
+          label={getString('connectors.cdng.artifactTag')}
+          name="spec.spec.deploymentTag"
+          multiTextInputProps={{ expressions, allowableTypes }}
+        />
+      </div>
+    </>
   )
 }

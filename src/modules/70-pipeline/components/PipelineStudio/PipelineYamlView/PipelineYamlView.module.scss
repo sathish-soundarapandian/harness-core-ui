@@ -16,5 +16,14 @@
     display: flex;
     column-gap: var(--spacing-large);
     align-items: center;
+    & > .editModeCheckbox {
+      margin-bottom: 0 !important;
+      margin-top: 0 !important;
+      margin-right: var(--spacing-13) !important;
+    }
   }
+}
+.editModeCheckbox {
+  margin-bottom: var(--spacing-large) !important;
+  margin-top: calc(var(--spacing-small) * -1) !important;
 }

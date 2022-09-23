@@ -21,7 +21,9 @@ import {
   AWS,
   Nexus,
   Artifactory,
-  AwsCodeCommit
+  AwsCodeCommit,
+  PDC,
+  GithubRepo
 } from '../../../__tests__/mockData'
 
 describe('Saved Connector Details', () => {
@@ -149,6 +151,30 @@ describe('Saved Connector Details', () => {
 
     await waitFor(() => queryByText(container, 'awscodecommit'))
     expect(getByText('aws-code-commit')).toBeDefined()
+    expect(container).toMatchSnapshot()
+  })
+
+  test('render for PDC schema', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <SavedConnectorDetails connector={PDC.data.connector as ConnectorInfoDTO} />
+      </TestWrapper>
+    )
+
+    await waitFor(() => queryByText(container, 'PDCX'))
+    expect(getByText('PDC')).toBeDefined()
+    expect(container).toMatchSnapshot()
+  })
+
+  test('render for Github Repo schema', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <SavedConnectorDetails connector={GithubRepo.connector as ConnectorInfoDTO} />
+      </TestWrapper>
+    )
+
+    await waitFor(() => queryByText(container, 'github-identifier'))
+    expect(getByText('github')).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 

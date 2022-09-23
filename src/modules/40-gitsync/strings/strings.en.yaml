@@ -56,7 +56,7 @@ newGitExperienceMessage: The new Git Experience has been enabled on this Project
 gitSyncForm:
   yamlPathLabel: YAML Path
   yamlPathRequired: YAML path is required
-  yamlPathInvalid: YAML path should begin with .harness/ and have a valid file/folder name and yaml extension
+  yamlPathInvalid: YAML path should have a valid file/folder name and yaml extension
   enterYamlPath: Enter YAML path
   useExistingYaml: Use Existing YAML
   createNewYaml: Create New YAML

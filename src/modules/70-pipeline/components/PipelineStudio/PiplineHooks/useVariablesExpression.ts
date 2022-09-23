@@ -61,6 +61,25 @@ function pickExtraExpressionsFromMetadataMap(
   )
 }
 
+interface Params {
+  metadataMap: Record<string, VariableResponseMapValue>
+  localStageKeys: string[]
+}
+
+interface AllExpressionsObj {
+  expressionsList: string[]
+  outputExpressions: string[]
+  extraExpressions: string[]
+  extraOutputExpressions: string[]
+}
+
+const getAllExpressionsFromMetadataMap = ({ metadataMap, localStageKeys }: Params): AllExpressionsObj => ({
+  expressionsList: pickExpressionsFromMetadataMap(metadataMap, localStageKeys, 'yamlProperties'),
+  outputExpressions: pickExpressionsFromMetadataMap(metadataMap, localStageKeys, 'yamlOutputProperties'),
+  extraExpressions: pickExtraExpressionsFromMetadataMap(metadataMap, localStageKeys, 'properties'),
+  extraOutputExpressions: pickExtraExpressionsFromMetadataMap(metadataMap, localStageKeys, 'outputproperties')
+})
+
 /**
  * Hook to integrate and get expression for local stage and other stage
  */
@@ -69,6 +88,7 @@ export function useVariablesExpression(): { expressions: string[] } {
   const {
     originalTemplate,
     variablesTemplate,
+    serviceExpressionPropertiesList: templateServiceExpressionPropertiesList,
     metadataMap: templateMetadataMap,
     initLoading: templateInitLoading
   } = useTemplateVariables()
@@ -101,37 +121,37 @@ export function useVariablesExpression(): { expressions: string[] } {
 
   useEffect(() => {
     if (!initLoading && !isEmpty(metadataMap)) {
-      const expression = pickExpressionsFromMetadataMap(metadataMap, localStageKeys, 'yamlProperties')
-      const outputExpression = pickExpressionsFromMetadataMap(metadataMap, localStageKeys, 'yamlOutputProperties')
-      const extraExpressions = pickExtraExpressionsFromMetadataMap(metadataMap, localStageKeys, 'properties')
-      const extraOutputExpressions = pickExtraExpressionsFromMetadataMap(
-        metadataMap,
-        localStageKeys,
-        'outputproperties'
-      )
-
+      const { expressionsList, outputExpressions, extraExpressions, extraOutputExpressions } =
+        getAllExpressionsFromMetadataMap({ metadataMap, localStageKeys })
       const otherExpressions = serviceExpressionPropertiesList.map(row => row.expression).filter(p => p) as string[]
+
       setExpressions([
         ...otherExpressions,
-        ...expression,
+        ...expressionsList,
         ...extraExpressions,
-        ...outputExpression,
+        ...outputExpressions,
         ...extraOutputExpressions
       ])
     }
   }, [initLoading, metadataMap, localStageKeys, serviceExpressionPropertiesList])
 
   useEffect(() => {
-    if (!templateInitLoading && !isEmpty(templateMetadataMap)) {
-      const expression = pickExpressionsFromMetadataMap(templateMetadataMap, localStageKeys, 'yamlProperties')
-      const outputExpression = pickExpressionsFromMetadataMap(
-        templateMetadataMap,
-        localStageKeys,
-        'yamlOutputProperties'
-      )
-      setExpressions([...expression, ...outputExpression])
+    if (!templateInitLoading) {
+      const { expressionsList, outputExpressions, extraExpressions, extraOutputExpressions } =
+        getAllExpressionsFromMetadataMap({ metadataMap: templateMetadataMap, localStageKeys })
+      const otherExpressions = templateServiceExpressionPropertiesList
+        .map(row => row.expression)
+        .filter(p => p) as string[]
+
+      setExpressions([
+        ...otherExpressions,
+        ...expressionsList,
+        ...outputExpressions,
+        ...extraExpressions,
+        ...extraOutputExpressions
+      ])
     }
-  }, [templateInitLoading, templateMetadataMap, localStageKeys])
+  }, [templateInitLoading, templateMetadataMap, localStageKeys, templateServiceExpressionPropertiesList])
 
   return { expressions }
 }

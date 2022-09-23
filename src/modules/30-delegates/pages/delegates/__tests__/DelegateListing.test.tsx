@@ -101,6 +101,90 @@ describe('Feature flag enabled', () => {
   })
 })
 
+describe('search delegate', () => {
+  test('render search delegates', async () => {
+    const { container } = render(
+      <TestWrapper path="/account/:accountId/resources/delegates" pathParams={{ accountId: 'multipleDelegates' }}>
+        <DelegatesListing />
+      </TestWrapper>
+    )
+
+    await waitFor(() => {
+      expect(container.innerHTML).toContain('delegate-1')
+    })
+
+    await waitFor(async () => {
+      const searchBox = container.querySelector('.bp3-input')
+      act(() => {
+        fireEvent.change(searchBox!, { target: { value: 'Group1' } })
+      })
+      expect(container.innerHTML).toContain('Group1')
+    })
+  })
+})
+
+describe('verify troubleshootlink', () => {
+  test('open troubleshootlink', async () => {
+    const { container } = render(
+      <TestWrapper path="/account/:accountId/resources/delegates" pathParams={{ accountId: 'multipleDelegates' }}>
+        <DelegatesListing />
+      </TestWrapper>
+    )
+
+    await waitFor(() => {
+      expect(container.innerHTML).toContain('delegate-1')
+    })
+
+    act(async () => {
+      await fireEvent.click(container.querySelector('.troubleshootLink')!)
+    })
+
+    const dialog = document.body.querySelector('.bp3-portal')!
+    expect(dialog).toBeTruthy()
+  })
+})
+
+describe('Filter delegate', () => {
+  test('Open filter drawer and apply filter', async () => {
+    const { container } = render(
+      <TestWrapper path="/account/:accountId/resources/delegates" pathParams={{ accountId: 'multipleDelegates' }}>
+        <DelegatesListing />
+      </TestWrapper>
+    )
+
+    await waitFor(() => {
+      expect(container.innerHTML).toContain('delegate-1')
+    })
+
+    const filterBtn = container.querySelector('#ngfilterbtn')!
+
+    act(async () => {
+      await fireEvent.click(filterBtn!)
+    })
+
+    await waitFor(() => {
+      expect(document.body.innerHTML).toContain('bp3-portal')
+    })
+
+    const portal = document.getElementsByClassName('bp3-portal')[0]
+    expect(portal).toBeTruthy()
+
+    const delegateNameInput = portal.querySelector('input[name="delegateName"]')
+    act(async () => {
+      await fireEvent.change(delegateNameInput!, { target: { value: 'Group1' } })
+    })
+
+    const applyBtn = portal.querySelector('button')
+    act(async () => {
+      await fireEvent.click(applyBtn!)
+    })
+
+    await waitFor(() => {
+      expect(document.body.innerHTML).toContain('Group1')
+    })
+  })
+})
+
 describe('Delegates Listing With Groups', () => {
   test('render data', () => {
     const { container } = render(

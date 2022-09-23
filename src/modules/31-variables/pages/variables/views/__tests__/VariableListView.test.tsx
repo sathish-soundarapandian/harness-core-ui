@@ -14,7 +14,6 @@ import VariableListView from '../VariableListView'
 import {
   VariableSuccessResponseWithData,
   VariableSuccessResponseWithDataFor2Pages,
-  VariableSuccessResponseWithDataWithDefaultValue,
   VariableSuccessResponseWithDataWithNoPagedInfo
 } from '../../__tests__/mock/variableResponse'
 
@@ -97,19 +96,5 @@ describe('VariableListView', () => {
     )
 
     expect(container).toMatchSnapshot()
-  })
-
-  test('render component at account level - with no variable data', async () => {
-    const { getByText } = render(
-      <TestWrapper path={routes.toVariables({ ...accountPathProps })} pathParams={{ accountId: 'dummy' }}>
-        <VariableListView
-          openCreateUpdateVariableModal={jest.fn()}
-          variables={VariableSuccessResponseWithDataWithDefaultValue.data as any}
-          gotoPage={jest.fn()}
-        />
-      </TestWrapper>
-    )
-    await waitFor(() => getByText('CUSTOM_VARIABLE'))
-    expect(getByText('default'))
   })
 })

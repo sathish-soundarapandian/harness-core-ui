@@ -28,7 +28,8 @@ export function InputWithDynamicModalForJson(props: InputWithDynamicModalForJson
     recordsModalHeader,
     showExactJsonPath,
     fieldValue,
-    dataTooltipId
+    dataTooltipId,
+    isMultiType
   } = props
   const { getString } = useStrings()
 
@@ -91,26 +92,32 @@ export function InputWithDynamicModalForJson(props: InputWithDynamicModalForJson
     [sampleRecord]
   )
 
+  const content = (
+    <Button
+      minimal
+      className={css.container}
+      withoutCurrentColor={true}
+      rightIcon="plus"
+      iconProps={{ size: 14 }}
+      disabled={isDisabled}
+      onClick={handleOnClickAddField}
+    >
+      {fieldValue ? fieldValue : recordsModalHeader}
+    </Button>
+  )
+
   return (
     <FormInput.CustomRender
       name={inputName}
       render={() => {
-        return (
+        return isMultiType ? (
+          content
+        ) : (
           <Layout.Vertical spacing={'small'} style={{ marginBottom: 'var(--spacing-medium)' }}>
             <Text style={{ fontSize: 13, fontWeight: 'normal' }} tooltipProps={{ dataTooltipId }}>
               {inputLabel}
             </Text>
-            <Button
-              minimal
-              className={css.container}
-              withoutCurrentColor={true}
-              rightIcon="plus"
-              iconProps={{ size: 14 }}
-              disabled={isDisabled}
-              onClick={handleOnClickAddField}
-            >
-              {fieldValue ? fieldValue : recordsModalHeader}
-            </Button>
+            {content}
           </Layout.Vertical>
         )
       }}

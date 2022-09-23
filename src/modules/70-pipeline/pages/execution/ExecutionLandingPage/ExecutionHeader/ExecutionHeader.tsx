@@ -35,15 +35,13 @@ import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetai
 import css from './ExecutionHeader.module.scss'
 
 export function ExecutionHeader(): React.ReactElement {
-  const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module } =
+  const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
-  const { refetch, pipelineExecutionDetail, selectedStageId, selectedStepId, allNodeMap, isPipelineInvalid } =
-    useExecutionContext()
-  const { isGitSimplificationEnabled } = useAppStore()
+  const { refetch, pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
+  const { supportingGitSimplification } = useAppStore()
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
   const history = useHistory()
-
   const [canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -61,7 +59,9 @@ export function ExecutionHeader(): React.ReactElement {
   )
 
   useDocumentTitle([
-    `${pipelineExecutionSummary.name || getString('pipelines')} ${getString(
+    `${pipelineExecutionSummary?.status ? pipelineExecutionSummary?.status + ' | ' : ''} ${
+      pipelineExecutionSummary.name || getString('pipelines')
+    } ${getString(
       module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI',
       pipelineExecutionSummary
     )}`
@@ -71,27 +71,36 @@ export function ExecutionHeader(): React.ReactElement {
     <header className={css.header}>
       <div className={css.headerTopRow}>
         <NGBreadcrumbs
-          links={[
-            {
-              url: routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module }),
-              label: getString('pipelines')
-            },
-            {
-              url: routes.toPipelineDeploymentList({
-                orgIdentifier,
-                projectIdentifier,
-                pipelineIdentifier,
-                accountId,
-                module,
-                repoIdentifier: pipelineExecutionSummary?.gitDetails?.repoIdentifier,
-                connectorRef: pipelineExecutionSummary?.connectorRef,
-                repoName: pipelineExecutionSummary?.gitDetails?.repoName,
-                branch: pipelineExecutionSummary?.gitDetails?.branch,
-                storeType: pipelineExecutionSummary?.storeType as StoreType
-              }),
-              label: pipelineExecutionSummary.name || getString('common.pipeline')
-            }
-          ]}
+          links={
+            source === 'deployments'
+              ? [
+                  {
+                    url: routes.toDeployments({ orgIdentifier, projectIdentifier, accountId, module }),
+                    label: module === 'ci' ? getString('buildsText') : getString('deploymentsText')
+                  }
+                ]
+              : [
+                  {
+                    url: routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module }),
+                    label: getString('pipelines')
+                  },
+                  {
+                    url: routes.toPipelineDeploymentList({
+                      orgIdentifier,
+                      projectIdentifier,
+                      pipelineIdentifier,
+                      accountId,
+                      module,
+                      repoIdentifier: pipelineExecutionSummary?.gitDetails?.repoIdentifier,
+                      connectorRef: pipelineExecutionSummary?.connectorRef,
+                      repoName: pipelineExecutionSummary?.gitDetails?.repoName,
+                      branch: pipelineExecutionSummary?.gitDetails?.branch,
+                      storeType: pipelineExecutionSummary?.storeType as StoreType
+                    }),
+                    label: pipelineExecutionSummary.name || getString('common.pipeline')
+                  }
+                ]
+          }
         />
         <div className={css.actionsBar}>
           {pipelineExecutionSummary.status ? (
@@ -133,9 +142,6 @@ export function ExecutionHeader(): React.ReactElement {
             icon="main-view"
             onClick={ev => {
               ev.stopPropagation()
-              const allNodes = Object.values(allNodeMap)
-              const matchedStepNode = allNodes?.find(eachNode => eachNode.uuid === selectedStepId)
-              const matchedStageNode = allNodes?.find(eachNode => eachNode.setupId === selectedStageId)
               history.push(
                 routes.toPipelineStudio({
                   orgIdentifier,
@@ -147,9 +153,7 @@ export function ExecutionHeader(): React.ReactElement {
                   connectorRef: pipelineExecutionSummary?.connectorRef,
                   repoName: pipelineExecutionSummary?.gitDetails?.repoName,
                   branch: pipelineExecutionSummary?.gitDetails?.branch,
-                  storeType: pipelineExecutionSummary?.storeType as StoreType,
-                  stageId: matchedStageNode?.identifier,
-                  stepId: matchedStepNode?.identifier
+                  storeType: pipelineExecutionSummary?.storeType as StoreType
                 })
               )
             }}
@@ -158,6 +162,7 @@ export function ExecutionHeader(): React.ReactElement {
           <ExecutionActions
             executionStatus={pipelineExecutionSummary.status as ExecutionStatus}
             refetch={refetch}
+            source={source}
             params={{
               orgIdentifier,
               pipelineIdentifier,
@@ -174,7 +179,7 @@ export function ExecutionHeader(): React.ReactElement {
             }}
             isPipelineInvalid={isPipelineInvalid}
             canEdit={canEdit}
-            showEditButton={false}
+            showEditButton={true}
             canExecute={canExecute}
             canRetry={pipelineExecutionSummary.canRetry}
             modules={pipelineExecutionSummary.modules}
@@ -200,12 +205,13 @@ export function ExecutionHeader(): React.ReactElement {
           />
         ) : null}
         {pipelineExecutionSummary.gitDetails ? (
-          isGitSimplificationEnabled && pipelineExecutionSummary?.storeType === StoreType.REMOTE ? (
+          supportingGitSimplification && pipelineExecutionSummary?.storeType === StoreType.REMOTE ? (
             <div className={css.gitRemoteDetailsWrapper}>
               <GitRemoteDetails
                 repoName={pipelineExecutionSummary.gitDetails.repoName}
                 branch={pipelineExecutionSummary.gitDetails.branch}
                 filePath={pipelineExecutionSummary.gitDetails.filePath}
+                fileUrl={pipelineExecutionSummary.gitDetails.fileUrl}
                 flags={{ readOnly: true }}
               />
             </div>

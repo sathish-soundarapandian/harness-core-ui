@@ -139,8 +139,10 @@ describe('Validate Dynatrace Custom Metrics', () => {
   })
 
   test('Ensure that correct metricPacks are passed to SelectHealthSourceServices component', async () => {
-    const metricPacksMock = { data: { data: ['mock_1', 'mock_2'] }, refetch: jest.fn() } as any
-    jest.spyOn(cvService, 'useGetMetricPacks').mockReturnValue(metricPacksMock)
+    const metricPacksMock = { metaData: {}, resource: [], responseMessages: [] }
+    jest
+      .spyOn(cvService, 'useGetMetricPacks')
+      .mockReturnValue(metricPacksMock as unknown as ReturnType<typeof cvService.useGetMetricPacks>)
     const { container } = render(<WrapperComponent {...DYNATRACE_CUSTOM_METRICS_PROPS_MOCK} />)
     const riskProfileContainer = container.querySelector('[data-testid="riskProfile-summary"]')
     if (riskProfileContainer) {

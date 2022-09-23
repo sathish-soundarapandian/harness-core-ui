@@ -6,19 +6,19 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, FormikForm, AllowedTypes } from '@wings-software/uicore'
 import { isEmpty, get, isArray } from 'lodash-es'
 import cx from 'classnames'
-
 import { FieldArray } from 'formik'
-import { useStrings } from 'framework/strings'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { useStrings } from 'framework/strings'
+import { ShellScriptMonacoField, ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { scriptInputType, scriptOutputType, ShellScriptData, ShellScriptFormData } from './shellScriptTypes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScript.module.scss'
@@ -27,7 +27,7 @@ export interface ShellScriptInputSetStepProps {
   initialValues: ShellScriptFormData
   onUpdate?: (data: ShellScriptFormData) => void
   onChange?: (data: ShellScriptFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   readonly?: boolean
   template?: ShellScriptData
@@ -45,7 +45,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
     <FormikForm>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             multiTypeDurationProps={{
               enableConfigureOptions: false,
               allowableTypes,
@@ -55,6 +55,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${prefix}timeout`}
             disabled={readonly}
+            fieldPath={'timeout'}
+            template={template}
           />
         </div>
       )}
@@ -63,7 +65,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
           <MultiTypeFieldSelector
             name={`${prefix}spec.source.spec.script`}
-            label={getString('script')}
+            label={getString('common.script')}
             defaultValueToReset=""
             disabled={readonly}
             allowedTypes={allowableTypes}
@@ -199,7 +201,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
       ) : null}
       {getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             placeholder={getString('cd.specifyTargetHost')}
             label={getString('targetHost')}
             multiTextInputProps={{
@@ -209,6 +211,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
             }}
             disabled={readonly}
             name={`${prefix}spec.executionTarget.host`}
+            fieldPath={`spec.executionTarget.host`}
+            template={template}
           />
         </div>
       ) : null}
@@ -228,7 +232,7 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
 
       {getMultiTypeFromValue(template?.spec?.executionTarget?.workingDirectory) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             disabled={readonly}
             placeholder={getString('cd.enterWorkDirectory')}
             label={getString('workingDirectory')}
@@ -238,6 +242,8 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
               allowableTypes
             }}
             name={`${prefix}spec.executionTarget.workingDirectory`}
+            fieldPath={`spec.executionTarget.workingDirectory`}
+            template={template}
           />
         </div>
       ) : null}

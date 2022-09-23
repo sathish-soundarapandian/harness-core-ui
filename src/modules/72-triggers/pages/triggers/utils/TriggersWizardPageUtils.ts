@@ -7,20 +7,29 @@
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
-import type { PipelineInfoConfig, ConnectorResponse, ManifestConfigWrapper, NGVariable } from 'services/cd-ng'
+import { parse } from 'yaml'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { NGTriggerSourceV2 } from 'services/pipeline-ng'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import type { NGTriggerSourceV2, PipelineInfoConfig, NGVariable, NGTriggerConfigV2 } from 'services/pipeline-ng'
 import { connectorUrlType } from '@connectors/constants'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import { ManifestStoreMap, ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
-import { getStageDeploymentType, isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  getRepositoryFormat,
+  getStageDeploymentType,
+  isAzureWebAppGenericDeploymentType,
+  isServerlessDeploymentType
+} from '@pipeline/utils/stageHelpers'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { StringsMap } from 'framework/strings/StringsContext'
+import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import { isCronValid } from '../views/subviews/ScheduleUtils'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
 import type {
@@ -29,13 +38,13 @@ import type {
   artifactTableItem,
   ManifestInterface,
   TriggerConfigDTO,
-  TriggerTypeSourceInterface,
   FlatOnEditValuesInterface
 } from '../interface/TriggersWizardInterface'
 export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
 export const AwsCodeCommit = 'AwsCodeCommit'
 export const PRIMARY_ARTIFACT = 'primary'
+export const AZURE_REPO = 'AZURE_REPO'
 
 export const eventTypes = {
   PUSH: 'Push',
@@ -43,7 +52,9 @@ export const eventTypes = {
   TAG: 'Tag',
   PULL_REQUEST: 'PullRequest',
   MERGE_REQUEST: 'MergeRequest',
-  ISSUE_COMMENT: 'IssueComment'
+  ISSUE_COMMENT: 'IssueComment',
+  PR_COMMENT: 'PRComment',
+  MR_COMMENT: 'MRComment'
 }
 
 export const getArtifactId = (isManifest?: boolean, selectedArtifactId?: string) => {
@@ -121,59 +132,6 @@ export const clearRuntimeInputValue = (template: PipelineInfoConfig): PipelineIn
   )
 }
 
-export const getQueryParamsOnNew = (searchStr: string): TriggerTypeSourceInterface => {
-  const triggerTypeParam = 'triggerType='
-  const triggerType = searchStr.replace(`?${triggerTypeParam}`, '')
-
-  if (triggerType.includes(TriggerTypes.WEBHOOK)) {
-    const sourceRepoParam = '&sourceRepo='
-    const sourceRepo = searchStr.substring(
-      searchStr.lastIndexOf(sourceRepoParam) + sourceRepoParam.length
-    ) as unknown as string
-    return {
-      triggerType: searchStr.substring(
-        searchStr.lastIndexOf(triggerTypeParam) + triggerTypeParam.length,
-        searchStr.lastIndexOf(sourceRepoParam)
-      ) as unknown as NGTriggerSourceV2['type'],
-      sourceRepo
-    }
-  } else if (triggerType.includes(TriggerTypes.ARTIFACT)) {
-    const artifactTypeParam = '&artifactType='
-    const artifactType = searchStr.substring(
-      searchStr.lastIndexOf(artifactTypeParam) + artifactTypeParam.length
-    ) as unknown as string
-    return {
-      triggerType: searchStr.substring(
-        searchStr.lastIndexOf(triggerTypeParam) + triggerTypeParam.length,
-        searchStr.lastIndexOf(artifactTypeParam)
-      ) as unknown as NGTriggerSourceV2['type'],
-      artifactType
-    }
-  } else if (triggerType.includes(TriggerTypes.MANIFEST)) {
-    const manifestTypeParam = '&manifestType='
-    const manifestType = searchStr.substring(
-      searchStr.lastIndexOf(manifestTypeParam) + manifestTypeParam.length
-    ) as unknown as string
-    return {
-      triggerType: searchStr.substring(
-        searchStr.lastIndexOf(triggerTypeParam) + triggerTypeParam.length,
-        searchStr.lastIndexOf(manifestTypeParam)
-      ) as unknown as NGTriggerSourceV2['type'],
-      manifestType
-    }
-  } else if (triggerType.includes(TriggerTypes.SCHEDULE)) {
-    // if modified for other schedule types, need to account for gitsync appended url params*
-    return {
-      triggerType: TriggerTypes.SCHEDULE as unknown as NGTriggerSourceV2['type']
-    }
-  } else {
-    //  unfound page
-    return {
-      triggerType: triggerType as unknown as NGTriggerSourceV2['type']
-    }
-  }
-}
-
 export const isUndefinedOrEmptyString = (str: string | undefined): boolean => isUndefined(str) || str?.trim() === ''
 
 const isRowUnfilled = (payloadCondition: AddConditionInterface): boolean => {
@@ -192,16 +150,21 @@ const isIdentifierIllegal = (identifier: string): boolean =>
   regexIdentifier.test(identifier) && illegalIdentifiers.includes(identifier)
 
 const checkValidTriggerConfiguration = ({
-  formikValues
+  formikValues,
+  formikErrors
 }: {
   formikValues: { [key: string]: any }
   formikErrors: { [key: string]: any }
 }): boolean => {
   const sourceRepo = formikValues['sourceRepo']
   const identifier = formikValues['identifier']
-  const connectorURLType = formikValues.connectorRef?.connector?.spec?.type
+  const connectorType = formikValues.connectorRef?.connector?.spec?.type
 
   if (isIdentifierIllegal(identifier)) {
+    return false
+  }
+
+  if (formikErrors.pollInterval) {
     return false
   }
 
@@ -209,7 +172,10 @@ const checkValidTriggerConfiguration = ({
     if (!formikValues['connectorRef'] || !formikValues['event'] || !formikValues['actions']) return false
     // onEdit case, waiting for api response
     else if (formikValues['connectorRef']?.value && !formikValues['connectorRef'].connector) return true
-    else if (!connectorURLType || !!(connectorURLType === connectorUrlType.ACCOUNT && !formikValues.repoName))
+    else if (
+      !connectorType ||
+      !!([connectorUrlType.ACCOUNT, connectorUrlType.PROJECT].includes(connectorType) && !formikValues.repoName)
+    )
       return false
   }
   return true
@@ -369,7 +335,8 @@ export const getWizardMap = ({
 // requiredFields and checkValidPanel in getPanels() above to render warning icons related to this schema
 export const getValidationSchema = (
   triggerType: NGTriggerSourceV2['type'],
-  getString: (key: StringKeys, params?: any) => string
+  getString: (key: StringKeys, params?: any) => string,
+  isGitWebhookPollingEnabled?: boolean
 ): ObjectSchema<Record<string, any> | undefined> => {
   if (triggerType === TriggerTypes.WEBHOOK) {
     return object().shape({
@@ -382,6 +349,17 @@ export const getValidationSchema = (
           return this.parent.sourceRepo === CUSTOM || event
         }
       ),
+      ...(isGitWebhookPollingEnabled && {
+        pollInterval: getDurationValidationSchema({
+          minimum: '2m',
+          maximum: '60m',
+          explicitAllowedValues: ['0']
+        }).required(
+          getString('common.validation.fieldIsRequired', {
+            name: getString('triggers.triggerConfigurationPanel.pollingFrequency')
+          })
+        )
+      }),
       connectorRef: object().test(
         getString('triggers.validation.connector'),
         getString('triggers.validation.connector'),
@@ -396,12 +374,13 @@ export const getValidationSchema = (
           getString('triggers.validation.repoName'),
           getString('triggers.validation.repoName'),
           function (repoName) {
-            const connectorURLType = this.parent.connectorRef?.connector?.spec?.type
+            const connectorType = this.parent.connectorRef?.connector?.spec?.type
             return (
-              !connectorURLType ||
-              (connectorURLType === connectorUrlType.ACCOUNT && repoName?.trim()) ||
-              (connectorURLType === connectorUrlType.REGION && repoName?.trim()) ||
-              connectorURLType === connectorUrlType.REPO
+              !connectorType ||
+              (connectorType === connectorUrlType.ACCOUNT && repoName?.trim()) ||
+              (connectorType === connectorUrlType.REGION && repoName?.trim()) ||
+              (connectorType === connectorUrlType.PROJECT && repoName?.trim()) ||
+              connectorType === connectorUrlType.REPO
             )
           }
         ),
@@ -645,6 +624,13 @@ export const ciCodebaseBuildPullRequest = {
   type: 'PR',
   spec: {
     number: '<+trigger.prNumber>'
+  }
+}
+
+export const ciCodebaseBuildIssueComment = {
+  type: 'tag',
+  spec: {
+    tag: '<+trigger.tag>'
   }
 }
 
@@ -1123,6 +1109,9 @@ const getChartVersionAttribute = ({ artifact }: { artifact: ManifestConfigWrappe
 const getTag = ({ artifact }: { artifact: ManifestConfigWrapper }): string | undefined =>
   get(artifact, 'sidecar.spec.tag')
 
+const getStoreTypeAttribute = ({ artifact }: { artifact: ManifestConfigWrapper }): string | undefined =>
+  get(artifact, 'manifest.spec.store.type')
+
 export const getDetailsFromPipeline = ({
   manifests,
   manifestIdentifier,
@@ -1145,6 +1134,9 @@ export const getDetailsFromPipeline = ({
         type: matchedManifest?.manifest?.spec?.store?.type
       })
       details.chartVersion = getChartVersionAttribute({
+        artifact: matchedManifest
+      })
+      details.storeType = getStoreTypeAttribute({
         artifact: matchedManifest
       })
     }
@@ -1183,6 +1175,76 @@ export const getArtifactDetailsFromPipeline = ({
     }
   }
   return details
+}
+
+const checkForTypeArtifactOrManifest = (
+  artifactOrManifestArray: any[],
+  isManifest: boolean,
+  artifactType: string,
+  manifestType: string
+): boolean => {
+  let isTypeFound = false
+  artifactOrManifestArray.forEach(artifactOrManifest => {
+    if (isManifest) {
+      artifactOrManifest?.some((manifest: { manifest: { type: string } }) => manifest.manifest.type === manifestType)
+        ? (isTypeFound = true)
+        : null
+    } else {
+      if (artifactOrManifest.primary?.type === artifactType) {
+        isTypeFound = true
+      }
+      artifactOrManifest.sidecars?.some(
+        (sideCar: { sidecar: { type: string } }) => sideCar.sidecar.type === artifactType
+      )
+        ? (isTypeFound = true)
+        : null
+    }
+  })
+  return isTypeFound
+}
+export const getCorrectErrorString = (
+  resolvedPipeline: any,
+  isManifest: boolean,
+  artifactOrManifestString: string,
+  artifactOrManifestText: string,
+  artifactType: string,
+  manifestType: string,
+  getString: any
+): string => {
+  const artifactOrManifestArray = resolvedPipeline ? getArtifactsObjectFromPipeline(resolvedPipeline, isManifest) : []
+  if (!artifactOrManifestArray.length) {
+    return getString('pipeline.artifactTriggerConfigPanel.noSelectableArtifactsFound', {
+      artifact: artifactOrManifestText
+    })
+  }
+  if (checkForTypeArtifactOrManifest(artifactOrManifestArray, isManifest, artifactType, manifestType)) {
+    return getString('pipeline.artifactTriggerConfigPanel.noSelectableRuntimeArtifactsFound', {
+      artifactOrManifest: artifactOrManifestString,
+      artifact: artifactOrManifestText
+    })
+  } else {
+    const type = isManifest ? manifestType : artifactType
+    return getString('pipeline.artifactTriggerConfigPanel.noSelectableArtifactsFound', {
+      artifact: `${type} ${artifactOrManifestText}`
+    })
+  }
+}
+
+export const getArtifactsObjectFromPipeline = (pipelineObj: any, isManifest: boolean): any => {
+  const artifactOrManifestObj: any[] = []
+  const artifactPath = `stage.spec.serviceConfig.serviceDefinition.spec.artifacts`
+  const manifestPath = `stage.spec.serviceConfig.serviceDefinition.spec.manifests`
+  pipelineObj.stages.forEach((index: any) => {
+    const artifactDetail = get(index, isManifest ? manifestPath : artifactPath)
+    if (isManifest) {
+      if (!isEmpty(artifactDetail)) artifactOrManifestObj.push(artifactDetail)
+    } else {
+      if (!isEmpty(artifactDetail)) {
+        if ('primary' in artifactDetail || artifactDetail.sidecars?.length) artifactOrManifestObj.push(artifactDetail)
+      }
+    }
+  })
+  return artifactOrManifestObj
 }
 
 export const getConnectorNameFromPipeline = ({
@@ -1279,6 +1341,15 @@ const getManifestTableItem = ({
           getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput')
       )
     } else {
+      if (manifest.type === 'Jenkins') {
+        return (
+          getRuntimeInputLabel({ str: manifest?.spec?.build, getString }) !==
+          getString?.('pipeline.artifactTriggerConfigPanel.runtimeInput')
+        )
+      }
+      if (manifest.type === 'AmazonS3') {
+        return !manifest?.spec?.filePathRegex
+      }
       if (isServerlessDeploymentTypeSelected) {
         return (
           !manifest?.spec?.artifactPath ||
@@ -1378,6 +1449,23 @@ const isServerlessDeploymentStage = (stageId: string, pipeline: PipelineInfoConf
   return isServerlessDeploymentType(selectedDeploymentType)
 }
 
+const isAzureWebAppGenericDeploymentStage = (stageId: string, pipeline: PipelineInfoConfig): boolean => {
+  const currentStage = getStageFromPipeline(stageId, pipeline)
+    .stage as StageElementWrapper<DeploymentStageElementConfig>
+  const selectedDeploymentType = getStageDeploymentType(
+    pipeline,
+    currentStage,
+    !!currentStage?.stage?.spec?.serviceConfig?.useFromStage?.stage
+  )
+
+  const repo = getRepositoryFormat(
+    pipeline,
+    currentStage,
+    !!currentStage?.stage?.spec?.serviceConfig?.useFromStage?.stage
+  )
+  return isAzureWebAppGenericDeploymentType(selectedDeploymentType, repo)
+}
+
 // data is already filtered w/ correct manifest
 export const getArtifactTableDataFromData = ({
   data,
@@ -1440,13 +1528,15 @@ export const getArtifactTableDataFromData = ({
       const stageOverridesManifests = getPipelineOverrideManifests(pipeline.stages, dataStageId)
       const { manifests = [] } = stageObject?.stage?.spec?.serviceConfig?.serviceDefinition?.spec || {}
       manifests.forEach((manifestObj: any) => {
-        const { location, chartVersion } = getDetailsFromPipeline({
+        const { location, chartVersion, storeType } = getDetailsFromPipeline({
           manifests: pipelineManifests,
           manifestIdentifier: manifestObj.manifest.identifier,
           manifestType: manifestObj.manifest.type,
           stageOverridesManifests
         })
-
+        if (storeType && storeType === ManifestStoreMap.OciHelmChart) {
+          return null
+        }
         const artifactRepository = getConnectorNameFromPipeline({
           manifests: pipelineManifests,
           manifestIdentifier: manifestObj.manifest.identifier,
@@ -1478,7 +1568,11 @@ export const getArtifactTableDataFromData = ({
     // To decide whether stage is serverless or not serverless below function is called
     // If stage is serverless, there is not such field as "tag" instead simialr field name called "artifactPath" is present
     // Similarly, there is not such field as "tagRefex" instead simialr field name called "artifactPathFilter" is present
+    // Same applies to generic azure web app
     const isServerlessDeploymentTypeSelected = isServerlessDeploymentStage(stageId, pipeline)
+    const isAzureWebAppGenericTypeSelected = isAzureWebAppGenericDeploymentStage(stageId, pipeline)
+
+    const isGenericArtifactory = isServerlessDeploymentTypeSelected || isAzureWebAppGenericTypeSelected
     // End of code which figures out deployment type of the stage and decides if it is serverless / non-serverless deployment type
 
     if (appliedArtifact?.sidecar) {
@@ -1512,7 +1606,7 @@ export const getArtifactTableDataFromData = ({
         pipelineArtifacts?.primary?.type === appliedArtifact?.type ? pipelineArtifacts?.primary : null
       let location = primaryArtifact?.spec?.imagePath
       let tag = primaryArtifact?.spec?.tag
-      if (isServerlessDeploymentTypeSelected) {
+      if (isGenericArtifactory) {
         location = primaryArtifact?.spec?.artifactDirectory
         tag = primaryArtifact?.spec?.artifactPath
       }
@@ -1534,7 +1628,7 @@ export const getArtifactTableDataFromData = ({
         stageOverrideArtifacts?.primary?.type === appliedArtifact?.type ? stageOverrideArtifacts?.primary : null
       let location = primaryArtifact?.spec?.imagePath
       let tag = stageOverrideArtifacts?.primary?.tag
-      if (isServerlessDeploymentTypeSelected) {
+      if (isGenericArtifactory) {
         location = primaryArtifact?.spec?.artifactDirectory
         tag = primaryArtifact?.spec?.artifactPath
       }
@@ -1568,6 +1662,9 @@ export const getArtifactTableDataFromData = ({
       // If stage is serverless, there is not such field as "tag" instead simialr field name called "artifactPath" is present
       // Similarly, there is not such field as "tagRefex" instead simialr field name called "artifactPathFilter" is present
       const isServerlessDeploymentTypeSelected = isServerlessDeploymentStage(dataStageId, pipeline)
+      const isAzureWebAppGenericTypeSelected = isAzureWebAppGenericDeploymentStage(dataStageId, pipeline)
+
+      const isGenericArtifactory = isServerlessDeploymentTypeSelected || isAzureWebAppGenericTypeSelected
       // End of code which figures out deployment type of the stage and decides if it is serverless / non-serverless deployment type
 
       if (primaryArtifact) {
@@ -1575,7 +1672,7 @@ export const getArtifactTableDataFromData = ({
         let location = primaryArtifact?.spec?.imagePath
         let tag = primaryArtifact?.spec?.tag
         const artifactRepository = primaryArtifact?.spec?.connectorRef
-        if (isServerlessDeploymentTypeSelected) {
+        if (isGenericArtifactory) {
           location = primaryArtifact?.spec?.artifactDirectory
           tag = primaryArtifact?.spec?.artifactPath
         }
@@ -1590,7 +1687,7 @@ export const getArtifactTableDataFromData = ({
             getString,
             isStageOverrideManifest: false,
             isManifest,
-            isServerlessDeploymentTypeSelected
+            isServerlessDeploymentTypeSelected: isGenericArtifactory
           })
         )
       }
@@ -1599,7 +1696,7 @@ export const getArtifactTableDataFromData = ({
         let location = stageOverridePrimaryArtifact?.spec?.imagePath
         let tag = stageOverridePrimaryArtifact?.spec?.tag
         const artifactRepository = stageOverridePrimaryArtifact?.spec?.connectorRef
-        if (isServerlessDeploymentTypeSelected) {
+        if (isGenericArtifactory) {
           location = stageOverridePrimaryArtifact?.spec?.artifactDirectory
           tag = stageOverridePrimaryArtifact?.spec?.artifactPath
         }
@@ -1613,7 +1710,7 @@ export const getArtifactTableDataFromData = ({
             getString,
             isStageOverrideManifest: false,
             isManifest,
-            isServerlessDeploymentTypeSelected
+            isServerlessDeploymentTypeSelected: isGenericArtifactory
           })
         )
       }
@@ -1843,13 +1940,17 @@ export const getOrderedPipelineVariableValues = ({
   originalPipelineVariables?: NGVariable[]
   currentPipelineVariables: NGVariable[]
 }): NGVariable[] => {
+  const runtimeVariables = originalPipelineVariables?.filter(
+    pipelineVariable => getMultiTypeFromValue(get(pipelineVariable, 'value')) === MultiTypeInputType.RUNTIME
+  )
+
   if (
-    originalPipelineVariables &&
+    runtimeVariables &&
     currentPipelineVariables.some(
-      (variable: NGVariable, index: number) => variable.name !== originalPipelineVariables[index].name
+      (variable: NGVariable, index: number) => variable.name !== runtimeVariables[index].name
     )
   ) {
-    return originalPipelineVariables.map(
+    return runtimeVariables.map(
       variable =>
         currentPipelineVariables.find(currentVariable => currentVariable.name === variable.name) ||
         Object.assign(variable, { value: '' })
@@ -1858,7 +1959,7 @@ export const getOrderedPipelineVariableValues = ({
   return currentPipelineVariables
 }
 
-export const clearUndefinedArtifactId = (newPipelineObj = {}): any => {
+const clearUndefinedArtifactId = (newPipelineObj = {}): any => {
   // temporary fix, undefined artifact id gets injected somewhere and needs to be removed for submission
   const clearedNewPipeline: any = cloneDeep(newPipelineObj)
   const clearedNewPipelineObj = clearedNewPipeline.template
@@ -1927,17 +2028,301 @@ export function getTriggerInputSetsBranchQueryParameter({
   branch?: string
 }): string {
   return gitAwareForTriggerEnabled
-    ? pipelineBranchName === DEFAULT_TRIGGER_BRANCH
+    ? [
+        ciCodebaseBuildIssueComment.spec.tag,
+        ciCodebaseBuildPullRequest.spec.number,
+        ciCodebaseBuild.spec.branch
+      ].includes(pipelineBranchName)
       ? branch
       : pipelineBranchName
     : branch
 }
 
-export const UPDATING_INVALID_TRIGGER_IN_GIT =
-  'Invalid request: Failed while updating Trigger: Please check the requested file path / branch / Github repo name if they exist or not.'
-
-export const SAVING_INVALID_TRIGGER_IN_GIT =
-  'Invalid request: Failed while Saving Trigger: Please check the requested file path / branch / Github repo name if they exist or not.'
-
 export const getErrorMessage = (error: any): string =>
   get(error, 'data.error', get(error, 'data.message', error?.message))
+
+export enum TriggerGitEvent {
+  PULL_REQUEST = 'PullRequest',
+  ISSUE_COMMENT = 'IssueComment',
+  PUSH = 'Push',
+  MR_COMMENT = 'MRComment',
+  PR_COMMENT = 'PRComment'
+}
+
+export const TriggerGitEventTypes: Readonly<string[]> = [
+  TriggerGitEvent.PULL_REQUEST,
+  TriggerGitEvent.ISSUE_COMMENT,
+  TriggerGitEvent.PUSH,
+  TriggerGitEvent.MR_COMMENT,
+  TriggerGitEvent.PR_COMMENT
+]
+
+export const isHarnessExpression = (str = ''): boolean => str.startsWith('<+') && str.endsWith('>')
+
+export const replaceRunTimeVariables = ({
+  manifestType,
+  artifactType,
+  selectedArtifact
+}: {
+  artifactType: string
+  selectedArtifact: any
+  manifestType?: string
+}) => {
+  if (manifestType) {
+    if (selectedArtifact?.spec?.chartVersion) {
+      // hardcode manifest chart version to default
+      selectedArtifact.spec.chartVersion = replaceTriggerDefaultBuild({
+        chartVersion: selectedArtifact?.spec?.chartVersion
+      })
+    } else if (!isEmpty(selectedArtifact) && selectedArtifact?.spec?.chartVersion === '') {
+      selectedArtifact.spec.chartVersion = TriggerDefaultFieldList.chartVersion
+    }
+  } else if (artifactType && selectedArtifact?.spec?.tag) {
+    selectedArtifact.spec.tag = TriggerDefaultFieldList.build
+  }
+}
+
+const replaceStageManifests = ({ filteredStage, selectedArtifact }: { filteredStage: any; selectedArtifact: any }) => {
+  const stageArtifacts = filteredStage?.stage?.template
+    ? filteredStage?.stage?.template?.templateInputs?.spec?.serviceConfig?.serviceDefinition?.spec?.manifests
+    : filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.manifests
+  const stageArtifactIdx = stageArtifacts?.findIndex(
+    (item: any) => item.manifest?.identifier === selectedArtifact?.identifier
+  )
+
+  if (stageArtifactIdx >= 0) {
+    stageArtifacts[stageArtifactIdx].manifest = selectedArtifact
+  }
+}
+
+const replaceStageArtifacts = ({ filteredStage, selectedArtifact }: { filteredStage: any; selectedArtifact: any }) => {
+  const stageArtifacts = filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts
+  const stageArtifactIdx =
+    filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts?.sidecars?.findIndex(
+      (item: any) => item.sidecar?.identifier === selectedArtifact?.identifier
+    )
+
+  if (stageArtifactIdx >= 0) {
+    stageArtifacts['sidecars'][stageArtifactIdx].sidecar = selectedArtifact
+  }
+}
+
+const replaceEventConditions = ({
+  values,
+  persistIncomplete,
+  triggerYaml
+}: {
+  values: any
+  persistIncomplete: boolean
+  triggerYaml: any
+}) => {
+  const { versionOperator, versionValue, buildOperator, buildValue, eventConditions = [] } = values
+  if (
+    ((versionOperator && versionValue?.trim()) || (persistIncomplete && (versionOperator || versionValue?.trim()))) &&
+    !eventConditions.some((eventCondition: AddConditionInterface) => eventCondition.key === EventConditionTypes.VERSION)
+  ) {
+    eventConditions.unshift({
+      key: EventConditionTypes.VERSION,
+      operator: versionOperator || '',
+      value: versionValue || ''
+    })
+  } else if (
+    ((buildOperator && buildValue?.trim()) || (persistIncomplete && (buildOperator || buildValue?.trim()))) &&
+    !eventConditions.some((eventCondition: AddConditionInterface) => eventCondition.key === EventConditionTypes.BUILD)
+  ) {
+    eventConditions.unshift({
+      key: EventConditionTypes.BUILD,
+      operator: buildOperator || '',
+      value: buildValue || ''
+    })
+  }
+
+  if (triggerYaml.source?.spec) {
+    const sourceSpecSpec = { ...triggerYaml.source?.spec.spec }
+    sourceSpecSpec.eventConditions = persistIncomplete
+      ? eventConditions
+      : eventConditions.filter((eventCondition: AddConditionInterface) => isRowFilled(eventCondition))
+    triggerYaml.source.spec.spec = sourceSpecSpec
+  }
+}
+
+// @see https://github.com/lodash/lodash/issues/2240#issuecomment-995160298
+export const flattenKeys = (obj: any = {}, initialPathPrefix = 'pipeline'): Record<string, any> => {
+  if (!obj || typeof obj !== 'object') {
+    return [{ [initialPathPrefix]: obj }]
+  }
+
+  const prefix = initialPathPrefix ? (Array.isArray(object) ? initialPathPrefix : `${initialPathPrefix}.`) : ''
+
+  return Object.keys(obj)
+    .flatMap(key => flattenKeys(obj[key], Array.isArray(obj) ? `${prefix}[${key}]` : `${prefix}${key}`))
+    .reduce((acc, path) => ({ ...acc, ...path }), {})
+}
+
+export const getDefaultPipelineReferenceBranch = (triggerType = '', event = ''): string => {
+  if (triggerType === TriggerTypes.WEBHOOK) {
+    switch (event) {
+      case TriggerGitEvent.ISSUE_COMMENT:
+      case TriggerGitEvent.PULL_REQUEST:
+      default:
+        return ciCodebaseBuild.spec.branch
+    }
+  }
+
+  return ''
+}
+
+export const getArtifactManifestTriggerYaml = ({
+  values: val,
+  manifestType,
+  orgIdentifier,
+  enabledStatus,
+  projectIdentifier,
+  pipelineIdentifier,
+  persistIncomplete = false,
+  gitAwareForTriggerEnabled: _gitAwareForTriggerEnabled
+}: {
+  values: any
+  orgIdentifier: string
+  enabledStatus: boolean
+  projectIdentifier: string
+  pipelineIdentifier: string
+  manifestType?: string
+  persistIncomplete?: boolean
+  gitAwareForTriggerEnabled: boolean | undefined
+}): TriggerConfigDTO => {
+  const {
+    name,
+    identifier,
+    description,
+    tags,
+    pipeline: pipelineRuntimeInput,
+    triggerType: formikValueTriggerType,
+    event,
+    selectedArtifact,
+    stageId,
+    manifestType: onEditManifestType,
+    artifactType,
+    pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
+    inputSetRefs
+  } = val
+
+  replaceRunTimeVariables({ manifestType, artifactType, selectedArtifact })
+  let newPipeline = cloneDeep(pipelineRuntimeInput)
+  const newPipelineObj = newPipeline.template ? newPipeline.template.templateInputs : newPipeline
+  const filteredStage = newPipelineObj.stages?.find((item: any) => item.stage?.identifier === stageId)
+  if (manifestType) {
+    replaceStageManifests({ filteredStage, selectedArtifact })
+  } else if (artifactType) {
+    replaceStageArtifacts({ filteredStage, selectedArtifact })
+  }
+
+  // Manually clear null or undefined artifact identifier
+  newPipeline = clearUndefinedArtifactId(newPipeline)
+
+  // actions will be required thru validation
+  const stringifyPipelineRuntimeInput = yamlStringify({
+    pipeline: clearNullUndefined(newPipeline)
+  })
+
+  const filteredStagesforStore = val?.resolvedPipeline?.stages
+
+  //if manifest chosen is from stage
+  const filteredManifestforStore = filteredStagesforStore?.map((st: any) =>
+    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+    )
+  )
+
+  const storeManifest = filteredManifestforStore?.find((mani: undefined) => mani != undefined)
+  let storeVal = storeManifest?.manifest?.spec?.store
+
+  //if manifest chosen is of parallel stage then to show store value in trigger yaml
+  const filteredParallelManifestforStore = filteredStagesforStore?.map((st: { parallel: any[] }) =>
+    st?.parallel
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      ?.map(st =>
+        get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+          (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+        )
+      )
+      ?.map(i => i?.manifest?.spec?.store)
+  )
+
+  //further finding storeVal in parallel stage
+  for (let i = 0; i < filteredParallelManifestforStore.length; i++) {
+    if (filteredParallelManifestforStore[i] !== undefined) {
+      for (let j = 0; j < filteredParallelManifestforStore[i].length; j++) {
+        if (filteredParallelManifestforStore[i][j] != undefined) {
+          storeVal = filteredParallelManifestforStore[i][j]
+        }
+      }
+    }
+  }
+
+  // clears any runtime inputs and set values in source->spec->spec
+  let artifactSourceSpec = clearRuntimeInputValue(
+    cloneDeep(
+      parse(
+        JSON.stringify({
+          spec: { ...selectedArtifact?.spec, store: storeVal }
+        }) || ''
+      )
+    )
+  )
+
+  //if connectorRef present in store is runtime then we need to fetch values from stringifyPipelineRuntimeInput
+  const filteredStageforRuntimeStore = parse(stringifyPipelineRuntimeInput)?.pipeline?.stages?.map((st: any) =>
+    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+    )
+  )
+  const runtimeStoreManifest = filteredStageforRuntimeStore?.find((mani: undefined) => mani != undefined)
+  const newStoreVal = runtimeStoreManifest?.manifest?.spec?.store
+  if (storeVal?.spec?.connectorRef === '<+input>') {
+    artifactSourceSpec = cloneDeep(
+      parse(
+        JSON.stringify({
+          spec: { ...selectedArtifact?.spec, store: newStoreVal }
+        }) || ''
+      )
+    )
+  }
+
+  const triggerYaml: NGTriggerConfigV2 = {
+    name,
+    identifier,
+    enabled: enabledStatus,
+    description,
+    tags,
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    source: {
+      type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
+      spec: {
+        stageIdentifier: stageId,
+        manifestRef: selectedArtifact?.identifier,
+        type: onEditManifestType ? onEditManifestType : artifactType,
+        ...artifactSourceSpec
+      }
+    },
+    inputYaml: stringifyPipelineRuntimeInput,
+    pipelineBranchName: _gitAwareForTriggerEnabled ? pipelineBranchName : null,
+    inputSetRefs: _gitAwareForTriggerEnabled ? inputSetRefs : null
+  }
+  if (artifactType) {
+    if (triggerYaml?.source?.spec && Object.getOwnPropertyDescriptor(triggerYaml?.source?.spec, 'manifestRef')) {
+      delete triggerYaml.source.spec.manifestRef
+    }
+    if (triggerYaml?.source?.spec) {
+      triggerYaml.source.spec.artifactRef = selectedArtifact?.identifier
+        ? selectedArtifact?.identifier
+        : PRIMARY_ARTIFACT
+    }
+  }
+
+  replaceEventConditions({ values: val, persistIncomplete, triggerYaml })
+
+  return clearNullUndefined(triggerYaml)
+}

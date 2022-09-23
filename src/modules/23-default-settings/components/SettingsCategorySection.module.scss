@@ -1,0 +1,59 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.summarySetting {
+  justify-content: space-between !important;
+  padding: var(--spacing-6) var(--spacing-6);
+}
+.summarySettingBackGround {
+  background-color: var(--primary-1);
+}
+.detailSettings {
+  padding: 14px var(--spacing-0) 14px 47px !important;
+}
+.panelClassName {
+  padding: var(--spacing-0) !important;
+}
+.emptyCheckBoxSpace {
+  width: 113px;
+}
+.settingOverrideRestore {
+  width: 30%;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+.settingRestore {
+  justify-self: flex-start;
+}
+.summaryCard {
+  width: 80%;
+  padding: var(--spacing-0) !important;
+}
+.defaultSettingRenderer {
+  width: 80%;
+  margin: var(--spacing-0);
+}
+.typeRenderer {
+  display: flex !important;
+  align-items: center !important;
+  width: 30% !important;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+
+.subCategoryLabel {
+  border-left: 0.5px solid var(--grey-300);
+  height: 100%;
+  padding-left: var(--spacing-5) !important;
+}
+.groupHeaderContainer {
+  padding-top: 10px !important;
+  padding-bottom: var(--spacing-3) !important;
+}
+.settingLabelContainer {
+  width: 30%;
+}

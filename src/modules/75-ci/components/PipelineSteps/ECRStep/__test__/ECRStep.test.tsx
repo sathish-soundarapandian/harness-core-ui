@@ -367,6 +367,17 @@ describe('ECR Step', () => {
                   localName: 'step.ecr.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.ecr.identifier',
+                      localName: 'step.ecr.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-timeout': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.ecr.timeout',
@@ -467,6 +478,7 @@ describe('ECR Step', () => {
             },
             variablesData: {
               type: StepType.ECR,
+              __uuid: 'step-identifier',
               identifier: 'ecr',
               name: 'step-name',
               timeout: 'step-timeout',

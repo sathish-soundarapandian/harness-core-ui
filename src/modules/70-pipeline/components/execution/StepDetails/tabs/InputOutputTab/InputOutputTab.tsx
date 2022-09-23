@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { isPlainObject, toPairs, startCase, isEmpty, isNil } from 'lodash-es'
+import { isPlainObject, toPairs, startCase, isEmpty, isNil, toString } from 'lodash-es'
 import { Collapse as BPCollapse, Icon } from '@blueprintjs/core'
 import cx from 'classnames'
 
@@ -14,7 +14,7 @@ import { useStrings } from 'framework/strings'
 import { CopyText } from '@common/components/CopyText/CopyText'
 import { toVariableStr } from '@common/utils/StringUtils'
 
-import { breakOnLinks } from '@common/components/LinkifyText/LinkifyText'
+import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import css from './InputOutputTab.module.scss'
 
 const blackListKeys = ['step', 'parallel']
@@ -37,18 +37,6 @@ function Collapse(props: React.PropsWithChildren<{ title: string }>): React.Reac
   )
 }
 
-export function linkyText(txt: string): React.ReactNode {
-  const textItems = breakOnLinks(txt)
-  if (textItems.length === 1 && textItems[0].type === 'URL') {
-    return (
-      <a href={textItems[0].content} target="_blank" rel="noreferrer">
-        {textItems[0].content}
-      </a>
-    )
-  } else {
-    return txt.toString()
-  }
-}
 export interface InputOutputTabRowProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Record<string, any>
@@ -117,7 +105,7 @@ export function InputOutputTabRow(props: InputOutputTabRowProps): React.ReactEle
             </div>
             <div className={css.value}>
               <CopyText textToCopy={value.toString()} className={css.valueText}>
-                {linkyText(value)}
+                <LinkifyText content={toString(value)} />
               </CopyText>
             </div>
           </div>

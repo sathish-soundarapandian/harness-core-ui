@@ -21,7 +21,7 @@ exports[`Plugin Step Edit View edit mode works 1`] = `
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="pluginStep_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -204,7 +204,7 @@ exports[`Plugin Step Edit View edit mode works 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -487,7 +487,7 @@ exports[`Plugin Step Edit View renders runtime inputs 1`] = `
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="pluginStep_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -715,7 +715,7 @@ exports[`Plugin Step Edit View renders runtime inputs 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -1001,7 +1001,7 @@ exports[`Plugin Step Edit View should render properly 1`] = `
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="pluginStep_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -1180,7 +1180,7 @@ exports[`Plugin Step Edit View should render properly 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -1523,7 +1523,7 @@ exports[`Plugin Step InputSet View should render all fields 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -1772,7 +1772,7 @@ exports[`Plugin Step InputSet View should render all fields 1`] = `
           >
             <div
               class="bp3-form-group"
-              data-id="spec.settings[0].key-4"
+              data-id="spec.settings-4"
               style="flex-grow: 1; margin-bottom: 0px;"
             >
               <label
@@ -1850,122 +1850,196 @@ exports[`Plugin Step InputSet View should render all fields 1`] = `
               <div
                 class="bp3-form-content"
               >
-                <div
-                  class="group withoutAligning"
+                <button
+                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+                  data-testid="add-spec.settings"
+                  style="padding: 0px;"
+                  type="button"
                 >
-                  <div>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
-                    >
-                      keyLabel
-                    </p>
+                  <span
+                    class="bp3-button-text"
+                  >
+                    plusAdd
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
+        >
+          <div
+            class="group withoutSpacing"
+          >
+            <div
+              class="bp3-form-group"
+              data-id="spec.entrypoint[0].value-5"
+              style="flex-grow: 1; margin-bottom: 0px;"
+            >
+              <label
+                class="bp3-label"
+                for="spec.entrypoint"
+              >
+                <div
+                  class="formLabel"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="stepTestUtilForm_spec.entrypoint"
+                  >
                     <div
-                      class="TextInput--main"
+                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
                     >
-                      <div
-                        class="bp3-input-group"
+                      <p
+                        class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey800 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                        style="display: flex; align-items: center;"
                       >
-                        <input
-                          class="bp3-input"
-                          data-testid="key-spec.settings-[0]"
-                          name="spec.settings[0].key"
-                          type="text"
-                          value=""
-                        />
+                        entryPointLabel
+                      </p>
+                       
+                      <div
+                        class="Text--withDocsTooltip"
+                        data-tooltip-id="dependencyEntryPoint"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                          style="text-transform: capitalize;"
+                        >
+                          common.optionalLabel
+                        </p>
                       </div>
                     </div>
-                  </div>
-                  <div>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-variation-form-label"
-                    >
-                      valueLabel
-                    </p>
+                  </span>
+                  <div
+                    class="bp3-popover-wrapper typeSelectorWrapper"
+                  >
                     <div
-                      class="group withoutAligning withoutSpacing"
+                      class="bp3-popover-target typeSelector"
                     >
-                      <div
-                        class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                        data-testid="value-spec.settings-[0]"
-                        style="flex-shrink: 1;"
-                      >
-                        <div
-                          class="bp3-input-group MultiTypeInput--input"
-                        >
-                          <input
-                            class="bp3-input"
-                            name="spec.settings[0].value"
-                            type="text"
-                            value=""
-                          />
-                        </div>
-                        <span
-                          class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target"
-                          >
-                            <button
-                              class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                            >
-                              <span
-                                class="bp3-icon StyledProps--main"
-                                data-icon="fixed-input"
-                              >
-                                <svg
-                                  height="12"
-                                  viewBox="0 0 9 9"
-                                  width="12"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                    fill="currentColor"
-                                  />
-                                </svg>
-                              </span>
-                            </button>
-                          </span>
-                        </span>
-                      </div>
                       <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                        data-testid="remove-spec.settings-[0]"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
                         type="button"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="main-trash"
+                          class="bp3-button-text"
                         >
-                          <svg
-                            height="20"
-                            viewBox="0 0 16 20"
-                            width="20"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <span
+                            class="bp3-icon StyledProps--main icon fixed"
+                            data-icon="fixed-input"
                           >
-                            <path
-                              clip-rule="evenodd"
-                              d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                            />
-                            <path
-                              clip-rule="evenodd"
-                              d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                              opacity="0.3"
-                            />
-                          </svg>
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
                         </span>
                       </button>
                     </div>
                   </div>
                 </div>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="group"
+                >
+                  <div
+                    style="flex-grow: 1;"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                      data-testid="value-spec.entrypoint-[0]"
+                      placeholder=""
+                    >
+                      <div
+                        class="bp3-input-group MultiTypeInput--input"
+                      >
+                        <input
+                          class="bp3-input"
+                          name="spec.entrypoint[0].value"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                      <span
+                        class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <button
+                            class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          >
+                            <span
+                              class="bp3-icon StyledProps--main"
+                              data-icon="fixed-input"
+                            >
+                              <svg
+                                height="12"
+                                viewBox="0 0 9 9"
+                                width="12"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                    data-testid="remove-spec.entrypoint-[0]"
+                    style="padding: 0px;"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="main-trash"
+                    >
+                      <svg
+                        height="20"
+                        viewBox="0 0 16 20"
+                        width="20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                          opacity="0.3"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
                 <button
                   class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
-                  data-testid="add-spec.settings"
-                  style="padding: 0px;"
+                  data-testid="add-spec.entrypoint"
                   type="button"
                 >
                   <span
@@ -2027,7 +2101,7 @@ exports[`Plugin Step InputSet View should render all fields 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="spec.resources.limits.memory-5"
+                    data-id="spec.resources.limits.memory-6"
                     style="margin-bottom: 0px; flex-grow: 1;"
                   >
                     
@@ -2114,7 +2188,7 @@ exports[`Plugin Step InputSet View should render all fields 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="spec.resources.limits.cpu-6"
+                    data-id="spec.resources.limits.cpu-7"
                     style="margin-bottom: 0px; flex-grow: 1;"
                   >
                     
@@ -2176,7 +2250,7 @@ exports[`Plugin Step InputSet View should render all fields 1`] = `
         >
           <div
             class="bp3-form-group removeBpLabelMargin"
-            data-id="timeout-7"
+            data-id="timeout-8"
           >
             <label
               class="bp3-label"
@@ -2333,6 +2407,25 @@ exports[`Plugin Step InputVariable View should render properly 1`] = `
   <div
     class="variablesListTable"
   >
+    <div
+      class="variableListRow variable-list-row"
+    >
+      <span
+        class="nameSection"
+      >
+        identifier
+      </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        style="--text-line-clamp: 1;"
+      >
+        <span
+          class=""
+        >
+          Test_A
+        </span>
+      </p>
+    </div>
     <div
       class="variableListRow variable-list-row"
     >

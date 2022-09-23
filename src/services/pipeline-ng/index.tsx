@@ -25,6 +25,41 @@ export type AcrSpec = ArtifactTypeSpec & {
   tag?: string
 }
 
+export type AddRuleYaml = PatchInstruction & {
+  identifier: string
+  spec: AddRuleYamlSpec
+  type: 'AddRule'
+}
+
+export interface AddRuleYamlSpec {
+  clauses?: Clause[]
+  distribution?: DistributionYamlSpec
+  priority?: number
+  serve?: Serve
+}
+
+export type AddSegmentToVariationTargetMapYaml = PatchInstruction & {
+  identifier: string
+  spec: AddSegmentToVariationTargetMapYamlSpec
+  type: 'AddSegmentToVariationTargetMap'
+}
+
+export interface AddSegmentToVariationTargetMapYamlSpec {
+  segments: string[]
+  variation: string
+}
+
+export type AddTargetsToVariationTargetMapYaml = PatchInstruction & {
+  identifier: string
+  spec: AddTargetsToVariationTargetMapYamlSpec
+  type: 'AddTargetsToVariationTargetMap'
+}
+
+export interface AddTargetsToVariationTargetMapYamlSpec {
+  targets: string[]
+  variation: string
+}
+
 export interface AdviserIssuer {
   adviseType:
     | 'UNKNOWN'
@@ -34,7 +69,16 @@ export interface AdviserIssuer {
     | 'END_PLAN'
     | 'MARK_SUCCESS'
     | 'IGNORE_FAILURE'
+    | 'PROCEED_WITH_DEFAULT'
     | 'UNRECOGNIZED'
+}
+
+export type AmazonS3RegistrySpec = ArtifactTypeSpec & {
+  bucketName?: string
+  connectorRef?: string
+  eventConditions?: TriggerEventDataCondition[]
+  filePathRegex?: string
+  region?: string
 }
 
 export interface ApprovalInstanceDetailsDTO {
@@ -48,8 +92,12 @@ export interface ApprovalInstanceResponse {
   errorMessage?: string
   id?: string
   lastModifiedAt?: number
-  status: 'WAITING' | 'APPROVED' | 'REJECTED' | 'FAILED' | 'EXPIRED'
-  type: 'HarnessApproval' | 'JiraApproval' | 'ServiceNowApproval'
+  status: 'WAITING' | 'APPROVED' | 'REJECTED' | 'FAILED' | 'ABORTED' | 'EXPIRED'
+  type: 'HarnessApproval' | 'JiraApproval' | 'CustomApproval' | 'ServiceNowApproval'
+}
+
+export type ApprovalStageConfig = StageInfoConfig & {
+  execution: ExecutionElementConfig
 }
 
 export interface ApproverInput {
@@ -57,9 +105,20 @@ export interface ApproverInput {
   value: string
 }
 
+export interface ApproverInputInfo {
+  defaultValue?: string
+  name?: string
+}
+
 export interface ApproverInputInfoDTO {
   defaultValue?: string
   name?: string
+}
+
+export interface Approvers {
+  disallowPipelineExecutor: boolean
+  minimumCount: number
+  userGroups: string[]
 }
 
 export interface ApproversDTO {
@@ -72,7 +131,7 @@ export type ArtifactTriggerConfig = NGTriggerSpecV2 & {
   artifactRef?: string
   spec?: ArtifactTypeSpec
   stageIdentifier?: string
-  type?: 'Gcr' | 'Ecr' | 'DockerRegistry' | 'Nexus3Registry' | 'ArtifactoryRegistry' | 'Acr'
+  type?: 'Gcr' | 'Ecr' | 'DockerRegistry' | 'Nexus3Registry' | 'ArtifactoryRegistry' | 'Acr' | 'AmazonS3' | 'Jenkins'
 }
 
 export interface ArtifactTypeSpec {
@@ -108,10 +167,11 @@ export type AuditFilterProperties = FilterProperties & {
     | 'UNSUCCESSFUL_LOGIN'
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
+    | 'ERROR_BUDGET_RESET'
   )[]
   endTime?: number
   environments?: Environment[]
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE')[]
+  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS')[]
   principals?: Principal[]
   resources?: ResourceDTO[]
   scopes?: ResourceScopeDTO[]
@@ -135,6 +195,44 @@ export type AwsCodeCommitSpec = WebhookTriggerSpecV2 & {
   type?: 'Push'
 }
 
+export interface AzureRepoEventSpec {
+  [key: string]: any
+}
+
+export type AzureRepoIssueCommentSpec = AzureRepoEventSpec & {
+  actions?: ('Create' | 'Edit' | 'Delete')[]
+  autoAbortPreviousExecutions?: boolean
+  connectorRef?: string
+  headerConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  payloadConditions?: TriggerEventDataCondition[]
+  repoName?: string
+}
+
+export type AzureRepoPRSpec = AzureRepoEventSpec & {
+  actions?: ('Create' | 'Update' | 'Merge')[]
+  autoAbortPreviousExecutions?: boolean
+  connectorRef?: string
+  headerConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  payloadConditions?: TriggerEventDataCondition[]
+  repoName?: string
+}
+
+export type AzureRepoPushSpec = AzureRepoEventSpec & {
+  autoAbortPreviousExecutions?: boolean
+  connectorRef?: string
+  headerConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  payloadConditions?: TriggerEventDataCondition[]
+  repoName?: string
+}
+
+export type AzureRepoSpec = WebhookTriggerSpecV2 & {
+  spec?: AzureRepoEventSpec
+  type?: 'PullRequest' | 'Push' | 'IssueComment'
+}
+
 export interface BarrierExecutionInfo {
   identifier?: string
   name?: string
@@ -150,14 +248,33 @@ export interface BarrierInfo {
   timeoutIn?: number
 }
 
+export interface BarrierInfoConfig {
+  identifier: string
+  name: string
+}
+
 export interface BarrierSetupInfo {
   identifier?: string
   name?: string
   stages?: StageDetail[]
 }
 
+export type BarrierStepInfo = StepSpecType & {
+  barrierRef: string
+}
+
 export interface BitbucketEventSpec {
   [key: string]: any
+}
+
+export type BitbucketPRCommentSpec = BitbucketEventSpec & {
+  actions?: ('Create' | 'Edit' | 'Delete')[]
+  autoAbortPreviousExecutions?: boolean
+  connectorRef?: string
+  headerConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  payloadConditions?: TriggerEventDataCondition[]
+  repoName?: string
 }
 
 export type BitbucketPRSpec = BitbucketEventSpec & {
@@ -181,11 +298,24 @@ export type BitbucketPushSpec = BitbucketEventSpec & {
 
 export type BitbucketSpec = WebhookTriggerSpecV2 & {
   spec?: BitbucketEventSpec
-  type?: 'PullRequest' | 'Push'
+  type?: 'PullRequest' | 'Push' | 'PRComment'
+}
+
+export type BranchBuildSpec = BuildSpec & {
+  branch: string
+}
+
+export interface Build {
+  spec: BuildSpec
+  type: 'branch' | 'tag' | 'PR'
 }
 
 export interface BuildDetails {
   buildType?: string
+}
+
+export interface BuildSpec {
+  [key: string]: any
 }
 
 export interface BuildStore {
@@ -197,13 +327,31 @@ export interface BuildStoreTypeSpec {
   [key: string]: any
 }
 
+export interface CIProperties {
+  codebase?: CodeBase
+}
+
 export interface CcmConnectorFilter {
   awsAccountId?: string
   azureSubscriptionId?: string
   azureTenantId?: string
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
   gcpProjectId?: string
-  k8sConnectorRef?: string
+  k8sConnectorRef?: string[]
+}
+
+export interface Clause {
+  attribute: string
+  id: string
+  negate: boolean
+  op: string
+  values: string[]
+}
+
+export interface ClauseYamlSpec {
+  attribute?: string
+  op: string
+  values: string[]
 }
 
 export interface CloneConfig {
@@ -217,6 +365,22 @@ export interface ClonePipelineProperties {
   cloneConfig?: CloneConfig
   destinationConfig?: DestinationPipelineConfig
   sourceConfig?: SourceIdentifierConfig
+}
+
+export interface CodeBase {
+  build: Build
+  connectorRef: string
+  depth?: number
+  prCloneStrategy?: 'MergeCommit' | 'SourceBranch'
+  repoName?: string
+  resources?: ContainerResource
+  sslVerify?: boolean
+}
+
+export interface Condition {
+  key: string
+  operator: 'equals' | 'not equals' | 'in' | 'not in'
+  value?: string
 }
 
 export interface ConditionDTO {
@@ -248,6 +412,7 @@ export type ConnectorFilterProperties = FilterProperties & {
   )[]
   ccmConnectorFilter?: CcmConnectorFilter
   connectivityStatuses?: ('SUCCESS' | 'FAILURE' | 'PARTIAL' | 'UNKNOWN')[]
+  connectorConnectivityModes?: ('DELEGATE' | 'MANAGER')[]
   connectorIdentifiers?: string[]
   connectorNames?: string[]
   description?: string
@@ -291,6 +456,9 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'Pdc'
     | 'AzureRepo'
     | 'Jenkins'
+    | 'OciHelmRepo'
+    | 'CustomSecretManager'
+    | 'ELK'
   )[]
 }
 
@@ -300,8 +468,21 @@ export interface ConnectorWrapperResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'IN_PROGRESS' | 'UNKNOWN'
 }
 
+export interface ContainerResource {
+  limits: Limits
+}
+
+export interface CriteriaSpec {
+  [key: string]: any
+}
+
 export interface CriteriaSpecDTO {
   [key: string]: any
+}
+
+export interface CriteriaSpecWrapper {
+  spec: CriteriaSpec
+  type: 'Jexl' | 'KeyValues'
 }
 
 export interface CriteriaSpecWrapperDTO {
@@ -311,6 +492,26 @@ export interface CriteriaSpecWrapperDTO {
 
 export type CronTriggerSpec = ScheduledTriggerSpec & {
   expression?: string
+}
+
+export type CustomApprovalStepInfo = StepSpecType & {
+  approvalCriteria: CriteriaSpecWrapper
+  delegateSelectors?: string[]
+  environmentVariables?: NGVariable[]
+  outputVariables?: NGVariable[]
+  rejectionCriteria?: CriteriaSpecWrapper
+  retryInterval: string
+  scriptTimeout: string
+  shell: 'Bash' | 'PowerShell'
+  source: ShellScriptSourceWrapper
+}
+
+export type CustomPolicyStepSpec = PolicySpec & {
+  payload: string
+}
+
+export type CustomStageConfig = StageInfoConfig & {
+  execution: ExecutionElementConfig
 }
 
 export type CustomTriggerSpec = WebhookTriggerSpecV2 & {
@@ -345,6 +546,17 @@ export interface DestinationPipelineConfig {
   }
 }
 
+export interface Distribution {
+  bucketBy: string
+  variations: WeightedVariation[]
+}
+
+export interface DistributionYamlSpec {
+  bucketBy: string
+  clauses?: ClauseYamlSpec[]
+  variations?: VariationYamlSpec[]
+}
+
 export type DockerRegistrySpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
@@ -365,6 +577,15 @@ export interface EdgeLayoutList {
   nextIds?: string[]
 }
 
+export type EmailStepInfo = StepSpecType & {
+  body?: string
+  cc?: string
+  delegateSelectors?: string[]
+  metadata?: string
+  subject: string
+  to: string
+}
+
 export interface EmbeddedUser {
   email?: string
   externalUserId?: string
@@ -376,9 +597,11 @@ export interface EntityGitDetails {
   branch?: string
   commitId?: string
   filePath?: string
+  fileUrl?: string
   objectId?: string
   repoIdentifier?: string
   repoName?: string
+  repoUrl?: string
   rootFolder?: string
 }
 
@@ -420,6 +643,7 @@ export interface Error {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -436,6 +660,7 @@ export interface Error {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -546,7 +771,6 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -571,6 +795,7 @@ export interface Error {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -583,6 +808,7 @@ export interface Error {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -638,6 +864,7 @@ export interface Error {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -710,14 +937,375 @@ export interface Error {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
   metadata?: ErrorMetadataDTO
   responseMessages?: ResponseMessage[]
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ErrorMetadata {
+  errorCode?:
+    | 'DEFAULT_ERROR_CODE'
+    | 'INVALID_ARGUMENT'
+    | 'INVALID_EMAIL'
+    | 'DOMAIN_NOT_ALLOWED_TO_REGISTER'
+    | 'COMMNITY_EDITION_NOT_FOUND'
+    | 'DEPLOY_MODE_IS_NOT_ON_PREM'
+    | 'USER_ALREADY_REGISTERED'
+    | 'USER_INVITATION_DOES_NOT_EXIST'
+    | 'USER_DOES_NOT_EXIST'
+    | 'USER_INVITE_OPERATION_FAILED'
+    | 'USER_DISABLED'
+    | 'ACCOUNT_DOES_NOT_EXIST'
+    | 'INACTIVE_ACCOUNT'
+    | 'ACCOUNT_MIGRATED'
+    | 'USER_DOMAIN_NOT_ALLOWED'
+    | 'MAX_FAILED_ATTEMPT_COUNT_EXCEEDED'
+    | 'RESOURCE_NOT_FOUND'
+    | 'INVALID_FORMAT'
+    | 'ROLE_DOES_NOT_EXIST'
+    | 'EMAIL_NOT_VERIFIED'
+    | 'EMAIL_VERIFICATION_TOKEN_NOT_FOUND'
+    | 'INVALID_TOKEN'
+    | 'REVOKED_TOKEN'
+    | 'INVALID_CAPTCHA_TOKEN'
+    | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
+    | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
+    | 'TOKEN_ALREADY_REFRESHED_ONCE'
+    | 'ACCESS_DENIED'
+    | 'NG_ACCESS_DENIED'
+    | 'INVALID_CREDENTIAL'
+    | 'INVALID_CREDENTIALS_THIRD_PARTY'
+    | 'INVALID_KEY'
+    | 'INVALID_CONNECTOR_TYPE'
+    | 'INVALID_KEYPATH'
+    | 'INVALID_VARIABLE'
+    | 'UNKNOWN_HOST'
+    | 'UNREACHABLE_HOST'
+    | 'INVALID_PORT'
+    | 'SSH_SESSION_TIMEOUT'
+    | 'SOCKET_CONNECTION_ERROR'
+    | 'CONNECTION_ERROR'
+    | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
+    | 'CONNECTION_TIMEOUT'
+    | 'SSH_CONNECTION_ERROR'
+    | 'USER_GROUP_ERROR'
+    | 'INVALID_EXECUTION_ID'
+    | 'ERROR_IN_GETTING_CHANNEL_STREAMS'
+    | 'UNEXPECTED'
+    | 'UNKNOWN_ERROR'
+    | 'UNKNOWN_EXECUTOR_TYPE_ERROR'
+    | 'DUPLICATE_STATE_NAMES'
+    | 'TRANSITION_NOT_LINKED'
+    | 'TRANSITION_TO_INCORRECT_STATE'
+    | 'TRANSITION_TYPE_NULL'
+    | 'STATES_WITH_DUP_TRANSITIONS'
+    | 'BARRIERS_NOT_RUNNING_CONCURRENTLY'
+    | 'NON_FORK_STATES'
+    | 'NON_REPEAT_STATES'
+    | 'INITIAL_STATE_NOT_DEFINED'
+    | 'FILE_INTEGRITY_CHECK_FAILED'
+    | 'INVALID_URL'
+    | 'FILE_DOWNLOAD_FAILED'
+    | 'PLATFORM_SOFTWARE_DELETE_ERROR'
+    | 'INVALID_CSV_FILE'
+    | 'INVALID_REQUEST'
+    | 'SCHEMA_VALIDATION_FAILED'
+    | 'FILTER_CREATION_ERROR'
+    | 'INVALID_YAML_ERROR'
+    | 'PLAN_CREATION_ERROR'
+    | 'INVALID_INFRA_STATE'
+    | 'PIPELINE_ALREADY_TRIGGERED'
+    | 'NON_EXISTING_PIPELINE'
+    | 'DUPLICATE_COMMAND_NAMES'
+    | 'INVALID_PIPELINE'
+    | 'COMMAND_DOES_NOT_EXIST'
+    | 'DUPLICATE_ARTIFACTSTREAM_NAMES'
+    | 'DUPLICATE_HOST_NAMES'
+    | 'STATE_NOT_FOR_TYPE'
+    | 'STATE_MACHINE_ISSUE'
+    | 'STATE_DISCONTINUE_FAILED'
+    | 'STATE_PAUSE_FAILED'
+    | 'PAUSE_ALL_ALREADY'
+    | 'RESUME_ALL_ALREADY'
+    | 'ROLLBACK_ALREADY'
+    | 'ABORT_ALL_ALREADY'
+    | 'EXPIRE_ALL_ALREADY'
+    | 'RETRY_FAILED'
+    | 'UNKNOWN_ARTIFACT_TYPE'
+    | 'UNKNOWN_STAGE_ELEMENT_WRAPPER_TYPE'
+    | 'INIT_TIMEOUT'
+    | 'LICENSE_EXPIRED'
+    | 'NOT_LICENSED'
+    | 'REQUEST_TIMEOUT'
+    | 'WORKFLOW_ALREADY_TRIGGERED'
+    | 'JENKINS_ERROR'
+    | 'INVALID_ARTIFACT_SOURCE'
+    | 'INVALID_ARTIFACT_SERVER'
+    | 'INVALID_CLOUD_PROVIDER'
+    | 'UPDATE_NOT_ALLOWED'
+    | 'DELETE_NOT_ALLOWED'
+    | 'APPDYNAMICS_CONFIGURATION_ERROR'
+    | 'APM_CONFIGURATION_ERROR'
+    | 'SPLUNK_CONFIGURATION_ERROR'
+    | 'ELK_CONFIGURATION_ERROR'
+    | 'LOGZ_CONFIGURATION_ERROR'
+    | 'SUMO_CONFIGURATION_ERROR'
+    | 'INSTANA_CONFIGURATION_ERROR'
+    | 'APPDYNAMICS_ERROR'
+    | 'STACKDRIVER_ERROR'
+    | 'STACKDRIVER_CONFIGURATION_ERROR'
+    | 'NEWRELIC_CONFIGURATION_ERROR'
+    | 'NEWRELIC_ERROR'
+    | 'DYNA_TRACE_CONFIGURATION_ERROR'
+    | 'DYNA_TRACE_ERROR'
+    | 'CLOUDWATCH_ERROR'
+    | 'CLOUDWATCH_CONFIGURATION_ERROR'
+    | 'PROMETHEUS_CONFIGURATION_ERROR'
+    | 'DATA_DOG_CONFIGURATION_ERROR'
+    | 'SERVICE_GUARD_CONFIGURATION_ERROR'
+    | 'ENCRYPTION_NOT_CONFIGURED'
+    | 'UNAVAILABLE_DELEGATES'
+    | 'WORKFLOW_EXECUTION_IN_PROGRESS'
+    | 'PIPELINE_EXECUTION_IN_PROGRESS'
+    | 'AWS_ACCESS_DENIED'
+    | 'AWS_CLUSTER_NOT_FOUND'
+    | 'AWS_SERVICE_NOT_FOUND'
+    | 'IMAGE_NOT_FOUND'
+    | 'ILLEGAL_ARGUMENT'
+    | 'IMAGE_TAG_NOT_FOUND'
+    | 'DELEGATE_NOT_AVAILABLE'
+    | 'INVALID_YAML_PAYLOAD'
+    | 'AUTHENTICATION_ERROR'
+    | 'AUTHORIZATION_ERROR'
+    | 'UNRECOGNIZED_YAML_FIELDS'
+    | 'COULD_NOT_MAP_BEFORE_YAML'
+    | 'MISSING_BEFORE_YAML'
+    | 'MISSING_YAML'
+    | 'NON_EMPTY_DELETIONS'
+    | 'GENERAL_YAML_ERROR'
+    | 'GENERAL_YAML_INFO'
+    | 'YAML_GIT_SYNC_ERROR'
+    | 'GIT_CONNECTION_ERROR'
+    | 'GIT_ERROR'
+    | 'ARTIFACT_SERVER_ERROR'
+    | 'ENCRYPT_DECRYPT_ERROR'
+    | 'SECRET_MANAGEMENT_ERROR'
+    | 'SECRET_NOT_FOUND'
+    | 'KMS_OPERATION_ERROR'
+    | 'GCP_KMS_OPERATION_ERROR'
+    | 'VAULT_OPERATION_ERROR'
+    | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
+    | 'AZURE_KEY_VAULT_OPERATION_ERROR'
+    | 'UNSUPPORTED_OPERATION_EXCEPTION'
+    | 'FEATURE_UNAVAILABLE'
+    | 'GENERAL_ERROR'
+    | 'BASELINE_CONFIGURATION_ERROR'
+    | 'SAML_IDP_CONFIGURATION_NOT_AVAILABLE'
+    | 'INVALID_AUTHENTICATION_MECHANISM'
+    | 'INVALID_SAML_CONFIGURATION'
+    | 'INVALID_OAUTH_CONFIGURATION'
+    | 'INVALID_LDAP_CONFIGURATION'
+    | 'USER_GROUP_SYNC_FAILURE'
+    | 'USER_GROUP_ALREADY_EXIST'
+    | 'INVALID_TWO_FACTOR_AUTHENTICATION_CONFIGURATION'
+    | 'EXPLANATION'
+    | 'HINT'
+    | 'NOT_WHITELISTED_IP'
+    | 'INVALID_TOTP_TOKEN'
+    | 'EMAIL_FAILED'
+    | 'SSL_HANDSHAKE_FAILED'
+    | 'NO_APPS_ASSIGNED'
+    | 'INVALID_INFRA_CONFIGURATION'
+    | 'TEMPLATES_LINKED'
+    | 'USER_HAS_NO_PERMISSIONS'
+    | 'USER_NOT_AUTHORIZED'
+    | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
+    | 'INVALID_USAGE_RESTRICTION'
+    | 'USAGE_RESTRICTION_ERROR'
+    | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
+    | 'DELEGATE_TASK_RETRY'
+    | 'KUBERNETES_API_TASK_EXCEPTION'
+    | 'KUBERNETES_TASK_EXCEPTION'
+    | 'KUBERNETES_YAML_ERROR'
+    | 'SAVE_FILE_INTO_GCP_STORAGE_FAILED'
+    | 'READ_FILE_FROM_GCP_STORAGE_FAILED'
+    | 'FILE_NOT_FOUND_ERROR'
+    | 'USAGE_LIMITS_EXCEEDED'
+    | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
+    | 'JIRA_ERROR'
+    | 'EXPRESSION_EVALUATION_FAILED'
+    | 'KUBERNETES_VALUES_ERROR'
+    | 'KUBERNETES_CLUSTER_ERROR'
+    | 'INCORRECT_SIGN_IN_MECHANISM'
+    | 'OAUTH_LOGIN_FAILED'
+    | 'INVALID_TERRAFORM_TARGETS_REQUEST'
+    | 'TERRAFORM_EXECUTION_ERROR'
+    | 'FILE_READ_FAILED'
+    | 'FILE_SIZE_EXCEEDS_LIMIT'
+    | 'CLUSTER_NOT_FOUND'
+    | 'MARKETPLACE_TOKEN_NOT_FOUND'
+    | 'INVALID_MARKETPLACE_TOKEN'
+    | 'INVALID_TICKETING_SERVER'
+    | 'SERVICENOW_ERROR'
+    | 'PASSWORD_EXPIRED'
+    | 'USER_LOCKED'
+    | 'PASSWORD_STRENGTH_CHECK_FAILED'
+    | 'ACCOUNT_DISABLED'
+    | 'INVALID_ACCOUNT_PERMISSION'
+    | 'PAGERDUTY_ERROR'
+    | 'HEALTH_ERROR'
+    | 'SAML_TEST_SUCCESS_MECHANISM_NOT_ENABLED'
+    | 'DOMAIN_WHITELIST_FILTER_CHECK_FAILED'
+    | 'INVALID_DASHBOARD_UPDATE_REQUEST'
+    | 'DUPLICATE_FIELD'
+    | 'INVALID_AZURE_VAULT_CONFIGURATION'
+    | 'USER_NOT_AUTHORIZED_DUE_TO_USAGE_RESTRICTIONS'
+    | 'INVALID_ROLLBACK'
+    | 'DATA_COLLECTION_ERROR'
+    | 'SUMO_DATA_COLLECTION_ERROR'
+    | 'DEPLOYMENT_GOVERNANCE_ERROR'
+    | 'BATCH_PROCESSING_ERROR'
+    | 'GRAPHQL_ERROR'
+    | 'FILE_CREATE_ERROR'
+    | 'ILLEGAL_STATE'
+    | 'GIT_DIFF_COMMIT_NOT_IN_ORDER'
+    | 'FAILED_TO_ACQUIRE_PERSISTENT_LOCK'
+    | 'FAILED_TO_ACQUIRE_NON_PERSISTENT_LOCK'
+    | 'POD_NOT_FOUND_ERROR'
+    | 'COMMAND_EXECUTION_ERROR'
+    | 'REGISTRY_EXCEPTION'
+    | 'ENGINE_INTERRUPT_PROCESSING_EXCEPTION'
+    | 'ENGINE_IO_EXCEPTION'
+    | 'ENGINE_OUTCOME_EXCEPTION'
+    | 'ENGINE_SWEEPING_OUTPUT_EXCEPTION'
+    | 'CACHE_NOT_FOUND_EXCEPTION'
+    | 'ENGINE_ENTITY_UPDATE_EXCEPTION'
+    | 'SHELL_EXECUTION_EXCEPTION'
+    | 'TEMPLATE_NOT_FOUND'
+    | 'AZURE_SERVICE_EXCEPTION'
+    | 'AZURE_CLIENT_EXCEPTION'
+    | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
+    | 'TIMEOUT_ENGINE_EXCEPTION'
+    | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
+    | 'NO_INSTALLED_DELEGATES'
+    | 'DUPLICATE_DELEGATE_EXCEPTION'
+    | 'GCP_MARKETPLACE_EXCEPTION'
+    | 'MISSING_DEFAULT_GOOGLE_CREDENTIALS'
+    | 'INCORRECT_DEFAULT_GOOGLE_CREDENTIALS'
+    | 'OPTIMISTIC_LOCKING_EXCEPTION'
+    | 'NG_PIPELINE_EXECUTION_EXCEPTION'
+    | 'NG_PIPELINE_CREATE_EXCEPTION'
+    | 'RESOURCE_NOT_FOUND_EXCEPTION'
+    | 'PMS_INITIALIZE_SDK_EXCEPTION'
+    | 'UNEXPECTED_SNIPPET_EXCEPTION'
+    | 'UNEXPECTED_SCHEMA_EXCEPTION'
+    | 'CONNECTOR_VALIDATION_EXCEPTION'
+    | 'TIMESCALE_NOT_AVAILABLE'
+    | 'MIGRATION_EXCEPTION'
+    | 'REQUEST_PROCESSING_INTERRUPTED'
+    | 'SECRET_MANAGER_ID_NOT_FOUND'
+    | 'GCP_SECRET_MANAGER_OPERATION_ERROR'
+    | 'GCP_SECRET_OPERATION_ERROR'
+    | 'GIT_OPERATION_ERROR'
+    | 'TASK_FAILURE_ERROR'
+    | 'INSTANCE_STATS_PROCESS_ERROR'
+    | 'INSTANCE_STATS_MIGRATION_ERROR'
+    | 'DEPLOYMENT_MIGRATION_ERROR'
+    | 'CG_LICENSE_USAGE_ERROR'
+    | 'INSTANCE_STATS_AGGREGATION_ERROR'
+    | 'UNRESOLVED_EXPRESSIONS_ERROR'
+    | 'KRYO_HANDLER_NOT_FOUND_ERROR'
+    | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'UNEXPECTED_TYPE_ERROR'
+    | 'EXCEPTION_HANDLER_NOT_FOUND'
+    | 'CONNECTOR_NOT_FOUND_EXCEPTION'
+    | 'GCP_SERVER_ERROR'
+    | 'HTTP_RESPONSE_EXCEPTION'
+    | 'SCM_NOT_FOUND_ERROR'
+    | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
+    | 'SCM_UNPROCESSABLE_ENTITY'
+    | 'PROCESS_EXECUTION_EXCEPTION'
+    | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
+    | 'SCM_INTERNAL_SERVER_ERROR'
+    | 'DATA'
+    | 'CONTEXT'
+    | 'PR_CREATION_ERROR'
+    | 'URL_NOT_REACHABLE'
+    | 'URL_NOT_PROVIDED'
+    | 'ENGINE_EXPRESSION_EVALUATION_ERROR'
+    | 'ENGINE_FUNCTOR_ERROR'
+    | 'JIRA_CLIENT_ERROR'
+    | 'SCM_NOT_MODIFIED'
+    | 'APPROVAL_STEP_NG_ERROR'
+    | 'BUCKET_SERVER_ERROR'
+    | 'GIT_SYNC_ERROR'
+    | 'TEMPLATE_EXCEPTION'
+    | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'INVALID_INPUT_SET'
+    | 'INVALID_OVERLAY_INPUT_SET'
+    | 'RESOURCE_ALREADY_EXISTS'
+    | 'INVALID_JSON_PAYLOAD'
+    | 'POLICY_EVALUATION_FAILURE'
+    | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+  errorMessage?: string
 }
 
 export interface ErrorMetadataDTO {
@@ -728,10 +1316,27 @@ export interface ErrorNodeSummary {
   childrenErrorNodes?: ErrorNodeSummary[]
   nodeInfo?: NodeInfo
   templateInfo?: TemplateInfo
+  templateResponse?: TemplateResponse
+}
+
+export interface ExcludeConfig {
+  exclude?: {
+    [key: string]: string
+  }
 }
 
 export interface ExecutableResponse {
   [key: string]: any
+}
+
+export interface ExecutionDataResponse {
+  executionId?: string
+  executionYaml?: string
+}
+
+export interface ExecutionElementConfig {
+  rollbackSteps?: ExecutionWrapperConfig[]
+  steps: ExecutionWrapperConfig[]
 }
 
 export interface ExecutionErrorInfo {
@@ -779,20 +1384,27 @@ export interface ExecutionInfo {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   uuid?: string
 }
 
 export interface ExecutionInputDTO {
+  fieldYaml?: string
   inputInstanceId?: string
   inputTemplate?: string
   nodeExecutionId?: string
+  userInput?: string
 }
 
 export interface ExecutionInputStatus {
   inputInstanceId?: string
   nodeExecutionId?: string
   status?: 'Failed' | 'Success'
+}
+
+export interface ExecutionInputVariablesResponse {
+  pipelineYaml?: string
+  variableMergeServiceResponse?: VariableMergeServiceResponse
 }
 
 export interface ExecutionMetadata {
@@ -804,6 +1416,7 @@ export interface ExecutionNode {
   delegateInfoList?: DelegateInfo[]
   endTs?: number
   executableResponses?: ExecutableResponse[]
+  executionInputConfigured?: boolean
   failureInfo?: FailureInfoDTO
   identifier?: string
   interruptHistories?: InterruptEffectDTO[]
@@ -847,7 +1460,7 @@ export interface ExecutionNode {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   stepDetails?: {
     [key: string]: {
       [key: string]: { [key: string]: any }
@@ -857,6 +1470,7 @@ export interface ExecutionNode {
     [key: string]: { [key: string]: any }
   }
   stepType?: string
+  strategyMetadata?: StrategyMetadata
   unitProgresses?: UnitProgress[]
   uuid?: string
 }
@@ -866,8 +1480,26 @@ export interface ExecutionNodeAdjacencyList {
   nextIds?: string[]
 }
 
+export interface ExecutionTarget {
+  connectorRef?: string
+  host?: string
+  workingDirectory?: string
+}
+
 export interface ExecutionTriggerInfo {
   [key: string]: any
+}
+
+export interface ExecutionWrapperConfig {
+  parallel?: ParallelStepElementConfig
+  step?: StepElementConfig
+  stepGroup?: StepGroupElementConfig
+}
+
+export interface ExecutorInfoDTO {
+  email?: string
+  triggerType?: 'NOOP' | 'MANUAL' | 'WEBHOOK' | 'WEBHOOK_CUSTOM' | 'SCHEDULER_CRON' | 'UNRECOGNIZED'
+  username?: string
 }
 
 export interface Failure {
@@ -898,6 +1530,7 @@ export interface Failure {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -914,6 +1547,7 @@ export interface Failure {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -1024,7 +1658,6 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1049,6 +1682,7 @@ export interface Failure {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -1061,6 +1695,7 @@ export interface Failure {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -1116,6 +1751,7 @@ export interface Failure {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -1188,8 +1824,25 @@ export interface Failure {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1207,17 +1860,32 @@ export interface FailureInfoDTO {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   message?: string
   responseMessages?: ResponseMessage[]
 }
 
 export interface FailureStrategyActionConfig {
-  type: 'Ignore' | 'Retry' | 'MarkAsSuccess' | 'Abort' | 'StageRollback' | 'StepGroupRollback' | 'ManualIntervention'
+  type:
+    | 'Ignore'
+    | 'Retry'
+    | 'MarkAsSuccess'
+    | 'Abort'
+    | 'StageRollback'
+    | 'StepGroupRollback'
+    | 'ManualIntervention'
+    | 'ProceedWithDefaultValue'
 }
 
 export interface FailureStrategyConfig {
   onFailure: OnFailureConfig
+}
+
+export type FeatureFlagStageConfig = StageInfoConfig & {}
+
+export type FilterCreatorErrorResponse = ErrorMetadataDTO & {
+  errorMetadataList?: ErrorMetadata[]
 }
 
 export interface FilterDTO {
@@ -1247,6 +1915,16 @@ export interface FilterProperties {
   tags?: {
     [key: string]: string
   }
+}
+
+export type FlagConfigurationStepInfo = StepSpecType & {
+  environment: string
+  feature: string
+  instructions: PatchInstruction[]
+}
+
+export interface FlowControlConfig {
+  barriers?: BarrierInfoConfig[]
 }
 
 export type GcrSpec = ArtifactTypeSpec & {
@@ -1305,6 +1983,16 @@ export interface GitlabEventSpec {
   [key: string]: any
 }
 
+export type GitlabMRCommentSpec = GitlabEventSpec & {
+  actions?: 'Create'[]
+  autoAbortPreviousExecutions?: boolean
+  connectorRef?: string
+  headerConditions?: TriggerEventDataCondition[]
+  jexlCondition?: string
+  payloadConditions?: TriggerEventDataCondition[]
+  repoName?: string
+}
+
 export type GitlabPRSpec = GitlabEventSpec & {
   actions?: ('Open' | 'Close' | 'Reopen' | 'Merge' | 'Update' | 'Sync')[]
   autoAbortPreviousExecutions?: boolean
@@ -1326,7 +2014,7 @@ export type GitlabPushSpec = GitlabEventSpec & {
 
 export type GitlabSpec = WebhookTriggerSpecV2 & {
   spec?: GitlabEventSpec
-  type?: 'MergeRequest' | 'Push'
+  type?: 'MergeRequest' | 'Push' | 'MRComment'
 }
 
 export interface GovernanceMetadata {
@@ -1337,8 +2025,10 @@ export interface GraphLayoutNode {
   barrierFound?: boolean
   edgeLayoutList?: EdgeLayoutList
   endTs?: number
+  executionInputConfigured?: boolean
   failureInfo?: ExecutionErrorInfo
   failureInfoDTO?: FailureInfoDTO
+  hidden?: boolean
   module?: string
   moduleInfo?: {
     [key: string]: {
@@ -1346,6 +2036,7 @@ export interface GraphLayoutNode {
     }
   }
   name?: string
+  nodeExecutionId?: string
   nodeGroup?: string
   nodeIdentifier?: string
   nodeRunInfo?: NodeRunInfo
@@ -1380,12 +2071,13 @@ export interface GraphLayoutNode {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   stepDetails?: {
     [key: string]: {
       [key: string]: { [key: string]: any }
     }
   }
+  strategyMetadata?: StrategyMetadata
 }
 
 export interface HarnessApprovalActivity {
@@ -1415,6 +2107,27 @@ export type HarnessApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   includePipelineExecutionHistory?: boolean
 }
 
+export type HarnessApprovalStepInfo = StepSpecType & {
+  approvalMessage?: string
+  approverInputs?: ApproverInputInfo[]
+  approvers: Approvers
+  includePipelineExecutionHistory: boolean
+}
+
+export type HarnessFileStoreSource = ShellScriptBaseSource & {
+  file?: string
+}
+
+export interface HarnessForConfig {
+  end?: number
+  items?: string[]
+  maxConcurrency?: number
+  partitionSize?: number
+  start?: number
+  times?: number
+  unit?: 'Percentage' | 'Count'
+}
+
 export type HelmManifestSpec = ManifestTypeSpec & {
   chartName?: string
   chartVersion?: string
@@ -1424,6 +2137,21 @@ export type HelmManifestSpec = ManifestTypeSpec & {
 
 export type HttpBuildStoreTypeSpec = BuildStoreTypeSpec & {
   connectorRef?: string
+}
+
+export interface HttpHeaderConfig {
+  key?: string
+  value?: string
+}
+
+export type HttpStepInfo = StepSpecType & {
+  assertion?: string
+  delegateSelectors?: string[]
+  headers?: HttpHeaderConfig[]
+  method: string
+  outputVariables?: NGVariable[]
+  requestBody?: string
+  url: string
 }
 
 export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
@@ -1440,12 +2168,21 @@ export interface InputSetErrorResponse {
   errors?: InputSetError[]
 }
 
-export interface InputSetErrorWrapper {
+export type InputSetErrorWrapper = ErrorMetadataDTO & {
   errorPipelineYaml?: string
-  type?: string
+  invalidInputSetReferences?: string[]
   uuidToErrorResponseMap?: {
     [key: string]: InputSetErrorResponse
   }
+}
+
+export interface InputSetImportRequestDTO {
+  inputSetDescription?: string
+  inputSetName?: string
+}
+
+export interface InputSetImportResponseDTO {
+  identifier?: string
 }
 
 export interface InputSetResponse {
@@ -1517,6 +2254,20 @@ export interface InputSetTemplateWithReplacedExpressionsResponse {
   replacedExpressions?: string[]
 }
 
+export interface InputSetValidator {
+  parameters?: string
+  validatorType?: 'ALLOWED_VALUES' | 'REGEX'
+}
+
+export interface InputSetYamlDiff {
+  gitDetails?: EntityGitDetails
+  inputSetEmpty?: boolean
+  invalidReferences?: string[]
+  newYAML?: string
+  noUpdatePossible?: boolean
+  oldYAML?: string
+}
+
 export interface InterruptConfig {
   issuedBy: IssuedBy
   retryInterruptConfig?: RetryInterruptConfig
@@ -1543,9 +2294,12 @@ export interface InterruptEffectDTO {
     | 'MARK_EXPIRED'
     | 'CUSTOM_FAILURE'
     | 'EXPIRE_ALL'
+    | 'PROCEED_WITH_DEFAULT'
     | 'UNRECOGNIZED'
   tookEffectAt: number
 }
+
+export type InvalidFieldsDTO = ErrorMetadataDTO & {}
 
 export interface IssuedBy {
   adviserIssuer?: AdviserIssuer
@@ -1555,8 +2309,15 @@ export interface IssuedBy {
   triggerIssuer?: TriggerIssuer
 }
 
-export type JexlCriteriaSpec = CriteriaSpecDTO & {
-  expression?: string
+export type JenkinsRegistrySpec = ArtifactTypeSpec & {
+  artifactPath?: string
+  connectorRef?: string
+  eventConditions?: TriggerEventDataCondition[]
+  jobName?: string
+}
+
+export type JexlCriteriaSpec = CriteriaSpec & {
+  expression: string
 }
 
 export type JiraApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
@@ -1566,13 +2327,48 @@ export type JiraApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   rejectionCriteria: CriteriaSpecWrapperDTO
 }
 
+export type JiraApprovalStepInfo = StepSpecType & {
+  approvalCriteria: CriteriaSpecWrapper
+  connectorRef: string
+  delegateSelectors?: string[]
+  issueKey: string
+  issueType?: string
+  rejectionCriteria?: CriteriaSpecWrapper
+}
+
+export type JiraCreateStepInfo = StepSpecType & {
+  connectorRef: string
+  delegateSelectors?: string[]
+  fields?: JiraField[]
+  issueType: string
+  projectKey: string
+}
+
+export interface JiraField {
+  name?: string
+  value: string
+}
+
 export interface JiraIssueKeyNG {
   key: string
   url: string
 }
 
+export type JiraUpdateStepInfo = StepSpecType & {
+  connectorRef: string
+  delegateSelectors?: string[]
+  fields?: JiraField[]
+  issueKey: string
+  transitionTo?: TransitionTo
+}
+
 export interface JsonNode {
   [key: string]: any
+}
+
+export type KeyValuesCriteriaSpec = CriteriaSpec & {
+  conditions: Condition[]
+  matchAnyCondition?: boolean
 }
 
 export interface LandingDashboardRequestPMS {
@@ -1585,6 +2381,11 @@ export interface LastTriggerExecutionDetails {
   lastExecutionTime?: number
   message?: string
   planExecutionId?: string
+}
+
+export interface Limits {
+  cpu?: string
+  memory?: string
 }
 
 export type ManifestTriggerConfig = NGTriggerSpecV2 & {
@@ -1619,6 +2420,15 @@ export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
   type: 'MarkAsSuccess'
 }
 
+export type MatrixConfig = MatrixConfigInterface & {
+  exclude?: ParameterFieldListExcludeConfig
+  maxConcurrency?: number
+}
+
+export interface MatrixConfigInterface {
+  [key: string]: any
+}
+
 export interface MeanMedianInfo {
   duration?: number
   rate?: number
@@ -1639,6 +2449,17 @@ export interface MergeInputSetResponse {
 
 export interface MergeInputSetTemplateRequest {
   runtimeInputYaml?: string
+}
+
+export interface NGProcessWebhookResponse {
+  apiUrl?: string
+  eventCorrelationId?: string
+  uiSetupUrl?: string
+  uiUrl?: string
+}
+
+export interface NGProperties {
+  ci?: CIProperties
 }
 
 export interface NGTag {
@@ -1702,12 +2523,21 @@ export interface NGTriggerResponse {
 }
 
 export interface NGTriggerSourceV2 {
+  pollInterval?: string
   spec?: NGTriggerSpecV2
   type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled'
 }
 
 export interface NGTriggerSpecV2 {
   [key: string]: any
+}
+
+export interface NGVariable {
+  description?: string
+  metadata?: string
+  name?: string
+  required?: boolean
+  type?: 'String' | 'Number' | 'Secret'
 }
 
 export type NexusRegistrySpec = ArtifactTypeSpec & {
@@ -1748,6 +2578,13 @@ export interface NotificationRules {
   pipelineEvents?: PipelineEvent[]
 }
 
+export type NumberNGVariable = NGVariable & {
+  default?: number
+  name?: string
+  type?: 'Number'
+  value: number
+}
+
 export interface OnFailureConfig {
   action: FailureStrategyActionConfig
   errors: (
@@ -1760,6 +2597,7 @@ export interface OnFailureConfig {
     | 'Verification'
     | 'DelegateProvisioning'
     | 'PolicyEvaluationFailure'
+    | 'ExecutionInputTimeoutError'
   )[]
 }
 
@@ -1774,6 +2612,12 @@ export interface OnTimeoutConfig {
 export interface OrgProjectIdentifier {
   orgIdentifier?: string
   projectIdentifier?: string
+}
+
+export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
+  invalidReferences?: {
+    [key: string]: string
+  }
 }
 
 export interface OverlayInputSetResponse {
@@ -1823,16 +2667,22 @@ export interface PMSPipelineSummaryResponse {
   }
   gitDetails?: EntityGitDetails
   identifier?: string
+  isDraft?: boolean
   lastUpdatedAt?: number
   modules?: string[]
   name?: string
   numOfStages?: number
+  recentExecutionsInfo?: RecentExecutionInfoDTO[]
   stageNames?: string[]
   storeType?: 'INLINE' | 'REMOTE'
   tags?: {
     [key: string]: string
   }
   version?: number
+}
+
+export type PRBuildSpec = BuildSpec & {
+  number: string
 }
 
 export interface Page {
@@ -1916,7 +2766,67 @@ export interface Pageable {
   unpaged?: boolean
 }
 
+export type ParallelStageElementConfig = StageElementWrapperConfig[]
+
+export type ParallelStepElementConfig = ExecutionWrapperConfig[]
+
+export interface ParameterField {
+  defaultValue?: { [key: string]: any }
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: { [key: string]: any }
+}
+
+export interface ParameterFieldListExcludeConfig {
+  defaultValue?: ExcludeConfig[]
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: ExcludeConfig[]
+}
+
+export interface ParameterFieldString {
+  defaultValue?: string
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: string
+}
+
+export interface PatchInstruction {
+  type?:
+    | 'SetFeatureFlagState'
+    | 'SetOnVariation'
+    | 'SetOffVariation'
+    | 'SetDefaultVariations'
+    | 'AddRule'
+    | 'UpdateRule'
+    | 'AddTargetsToVariationTargetMap'
+    | 'RemoveTargetsToVariationTargetMap'
+    | 'AddSegmentToVariationTargetMap'
+    | 'RemoveSegmentsToVariationTargetMap'
+}
+
+export interface PipelineConfig {
+  pipeline?: PipelineInfoConfig
+}
+
 export interface PipelineCountInfo {
+  aborted?: number
+  expired?: number
   failure?: number
   success?: number
   total?: number
@@ -1975,7 +2885,7 @@ export type PipelineExecutionFilterProperties = FilterProperties & {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   )[]
   timeRange?: TimeRange
 }
@@ -1992,6 +2902,7 @@ export interface PipelineExecutionSummary {
   createdAt?: number
   endTs?: number
   executionErrorInfo?: ExecutionErrorInfo
+  executionInputConfigured?: boolean
   executionTriggerInfo?: ExecutionTriggerInfo
   failedStagesCount?: number
   failureInfo?: FailureInfoDTO
@@ -2046,7 +2957,7 @@ export interface PipelineExecutionSummary {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   storeType?: 'INLINE' | 'REMOTE'
   successfulStagesCount?: number
   tags?: NGTag[]
@@ -2077,6 +2988,26 @@ export interface PipelineHealthInfo {
 export interface PipelineImportRequest {
   pipelineDescription?: string
   pipelineName?: string
+}
+
+export interface PipelineInfoConfig {
+  allowStageExecutions?: boolean
+  delegateSelectors?: string[]
+  description?: string
+  flowControl?: FlowControlConfig
+  identifier: string
+  name: string
+  notificationRules?: NotificationRules[]
+  orgIdentifier?: string
+  projectIdentifier?: string
+  properties?: NGProperties
+  stages?: StageElementWrapperConfig[]
+  tags?: {
+    [key: string]: string
+  }
+  template?: TemplateLinkConfig
+  timeout?: string
+  variables?: NGVariable[]
 }
 
 export interface PipelineInputResponse {
@@ -2163,6 +3094,7 @@ export interface PmsAbstractStepNode {
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
+  strategy?: StrategyConfig
   timeout?: string
   when?: StepWhenCondition
 }
@@ -2189,6 +3121,17 @@ export type PmsPagerDutyChannel = PmsNotificationChannel & {
 export type PmsSlackChannel = PmsNotificationChannel & {
   userGroups?: string[]
   webhookUrl?: string
+}
+
+export interface PolicySpec {
+  type?: string
+}
+
+export type PolicyStepInfo = StepSpecType & {
+  metadata?: string
+  policySets: string[]
+  policySpec?: PolicySpec
+  type?: string
 }
 
 export interface PollingSubscriptionStatus {
@@ -2228,9 +3171,81 @@ export interface Principal {
   type: 'USER' | 'SYSTEM' | 'API_KEY' | 'SERVICE_ACCOUNT'
 }
 
-export interface ResourceConstraintDetail {
-  pipelineIdentifier?: string
+export type ProceedWithDefaultValuesFailureActionConfig = FailureStrategyActionConfig & {
+  type: 'ProceedWithDefaultValue'
+}
+
+export type QueueStepInfo = StepSpecType & {
+  key: string
+  scope: 'Pipeline' | 'Stage'
+}
+
+export interface RecentExecutionInfoDTO {
+  endTs?: number
+  executorInfo?: ExecutorInfoDTO
   planExecutionId?: string
+  runSequence?: number
+  startTs?: number
+  status?:
+    | 'Running'
+    | 'AsyncWaiting'
+    | 'TaskWaiting'
+    | 'TimedWaiting'
+    | 'Failed'
+    | 'Errored'
+    | 'IgnoreFailed'
+    | 'NotStarted'
+    | 'Expired'
+    | 'Aborted'
+    | 'Discontinuing'
+    | 'Queued'
+    | 'Paused'
+    | 'ResourceWaiting'
+    | 'InterventionWaiting'
+    | 'ApprovalWaiting'
+    | 'Success'
+    | 'Suspended'
+    | 'Skipped'
+    | 'Pausing'
+    | 'ApprovalRejected'
+    | 'InputWaiting'
+    | 'NOT_STARTED'
+    | 'INTERVENTION_WAITING'
+    | 'APPROVAL_WAITING'
+    | 'APPROVAL_REJECTED'
+    | 'WAITING'
+}
+
+export type RemoveSegmentToVariationTargetMapYaml = PatchInstruction & {
+  identifier: string
+  spec: RemoveSegmentToVariationTargetMapYamlSpec
+  type: 'RemoveSegmentToVariationTargetMap'
+}
+
+export interface RemoveSegmentToVariationTargetMapYamlSpec {
+  segments: string[]
+  variation: string
+}
+
+export type RemoveTargetsToVariationTargetMapYaml = PatchInstruction & {
+  identifier: string
+  spec: RemoveTargetsToVariationTargetMapYamlSpec
+  type: 'RemoveTargetsToVariationTargetMap'
+}
+
+export interface RemoveTargetsToVariationTargetMapYamlSpec {
+  targets: string[]
+  variation: string
+}
+
+export interface ResourceConstraintDetail {
+  accountId?: string
+  orgIdentifier?: string
+  pipelineIdentifier?: string
+  pipelineName?: string
+  planExecutionId?: string
+  projectIdentifier?: string
+  startTs?: number
   state?: 'BLOCKED' | 'ACTIVE' | 'FINISHED' | 'REJECTED'
 }
 
@@ -2238,6 +3253,14 @@ export interface ResourceConstraintExecutionInfo {
   capacity?: number
   name?: string
   resourceConstraints?: ResourceConstraintDetail[]
+}
+
+export type ResourceConstraintStepInfo = StepSpecType & {
+  acquireMode: 'ENSURE' | 'ACCUMULATE'
+  holdingScope: 'PLAN' | 'PIPELINE' | 'STAGE' | 'STEP_GROUP'
+  name: string
+  permits: number
+  resourceUnit: ParameterFieldString
 }
 
 export interface ResourceDTO {
@@ -2273,7 +3296,23 @@ export interface ResourceDTO {
     | 'VARIABLE'
     | 'CHAOS_HUB'
     | 'MONITORED_SERVICE'
-    | 'CHAOS_AGENT'
+    | 'CHAOS_DELEGATE'
+    | 'CHAOS_SCENARIO'
+    | 'STO_TARGET'
+    | 'STO_EXEMPTION'
+    | 'CHAOS_GITOPS'
+    | 'SERVICE_LEVEL_OBJECTIVE'
+    | 'PERSPECTIVE'
+    | 'PERSPECTIVE_BUDGET'
+    | 'PERSPECTIVE_REPORT'
+    | 'COST_CATEGORY'
+    | 'SMTP'
+    | 'PERSPECTIVE_FOLDER'
+    | 'AUTOSTOPPING_RULE'
+    | 'AUTOSTOPPING_LB'
+    | 'AUTOSTOPPING_STARTSTOP'
+    | 'SETTING'
+    | 'NG_LOGIN_SETTINGS'
 }
 
 export interface ResourceScopeDTO {
@@ -2327,6 +3366,13 @@ export interface ResponseDashboardPipelineHealthInfo {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseExecutionDataResponse {
+  correlationId?: string
+  data?: ExecutionDataResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseExecutionInputDTO {
   correlationId?: string
   data?: ExecutionInputDTO
@@ -2337,6 +3383,13 @@ export interface ResponseExecutionInputDTO {
 export interface ResponseExecutionInputStatus {
   correlationId?: string
   data?: ExecutionInputStatus
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseExecutionInputVariablesResponse {
+  correlationId?: string
+  data?: ExecutionInputVariablesResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2358,6 +3411,13 @@ export interface ResponseFilterDTO {
 export interface ResponseHarnessApprovalInstanceAuthorization {
   correlationId?: string
   data?: HarnessApprovalInstanceAuthorization
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInputSetImportResponseDTO {
+  correlationId?: string
+  data?: InputSetImportResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2386,6 +3446,13 @@ export interface ResponseInputSetTemplateResponse {
 export interface ResponseInputSetTemplateWithReplacedExpressionsResponse {
   correlationId?: string
   data?: InputSetTemplateWithReplacedExpressionsResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInputSetYamlDiff {
+  correlationId?: string
+  data?: InputSetYamlDiff
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2420,7 +3487,7 @@ export interface ResponseListBitbucketPRAction {
 
 export interface ResponseListBitbucketTriggerEvent {
   correlationId?: string
-  data?: ('PullRequest' | 'Push')[]
+  data?: ('PullRequest' | 'Push' | 'PRComment')[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2455,7 +3522,7 @@ export interface ResponseListGitlabPRAction {
 
 export interface ResponseListGitlabTriggerEvent {
   correlationId?: string
-  data?: ('MergeRequest' | 'Push')[]
+  data?: ('MergeRequest' | 'Push' | 'MRComment')[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2488,10 +3555,14 @@ export interface ResponseListWebhookAction {
     | 'reopen'
     | 'merge'
     | 'update'
+    | 'mr comment create'
     | 'pull request created'
     | 'pull request updated'
     | 'pull request merged'
     | 'pull request declined'
+    | 'pr comment created'
+    | 'pr comment edited'
+    | 'pr comment deleted'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -2499,7 +3570,7 @@ export interface ResponseListWebhookAction {
 
 export interface ResponseListWebhookTriggerType {
   correlationId?: string
-  data?: ('Github' | 'Gitlab' | 'Bitbucket' | 'Custom' | 'AwsCodeCommit')[]
+  data?: ('AzureRepo' | 'Github' | 'Gitlab' | 'Bitbucket' | 'Custom' | 'AwsCodeCommit')[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2522,6 +3593,8 @@ export interface ResponseMapWebhookSourceRepoListWebhookEvent {
       | 'Pull Request'
       | 'Push'
       | 'Issue Comment'
+      | 'MR Comment'
+      | 'PR Comment'
       | 'Delete'
       | 'Merge Request'
       | 'Repository'
@@ -2568,6 +3641,7 @@ export interface ResponseMessage {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -2584,6 +3658,7 @@ export interface ResponseMessage {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -2694,7 +3769,6 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -2719,6 +3793,7 @@ export interface ResponseMessage {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -2731,6 +3806,7 @@ export interface ResponseMessage {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -2786,6 +3862,7 @@ export interface ResponseMessage {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -2858,8 +3935,25 @@ export interface ResponseMessage {
     | 'INVALID_AZURE_AKS_REQUEST'
     | 'AWS_IAM_ERROR'
     | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
     | 'SCM_INTERNAL_SERVER_ERROR_V2'
     | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2871,9 +3965,17 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
+}
+
+export interface ResponseNGProcessWebhookResponse {
+  correlationId?: string
+  data?: NGProcessWebhookResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
 export interface ResponseNGTriggerDetailsResponse {
@@ -2949,6 +4051,13 @@ export interface ResponsePagePMSPipelineSummaryResponse {
 export interface ResponsePagePipelineExecutionSummary {
   correlationId?: string
   data?: PagePipelineExecutionSummary
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePipelineConfig {
+  correlationId?: string
+  data?: PipelineConfig
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -3100,6 +4209,13 @@ export interface ResponseWebhookEventProcessingDetails {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseWebhookExecutionDetails {
+  correlationId?: string
+  data?: WebhookExecutionDetails
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseYamlDiffResponseDTO {
   correlationId?: string
   data?: YamlDiffResponseDTO
@@ -3199,7 +4315,7 @@ export interface RetryStageInfo {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
 }
 
 export interface RunStageRequestDTO {
@@ -3240,6 +4356,18 @@ export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
 }
 
+export type SecretNGVariable = NGVariable & {
+  default?: string
+  name?: string
+  type?: 'Secret'
+  value: string
+}
+
+export interface Serve {
+  distribution?: Distribution
+  variation?: string
+}
+
 export interface ServiceExpressionProperties {
   expression?: string
   serviceName?: string
@@ -3247,15 +4375,120 @@ export interface ServiceExpressionProperties {
 
 export type ServiceNowApprovalInstanceDetails = ApprovalInstanceDetailsDTO & {
   approvalCriteria: CriteriaSpecWrapperDTO
+  changeWindowSpec?: ServiceNowChangeWindowSpec
   connectorRef?: string
-  rejectionCriteria: CriteriaSpecWrapperDTO
+  rejectionCriteria?: CriteriaSpecWrapperDTO
   ticket: ServiceNowTicketKeyNG
+}
+
+export type ServiceNowApprovalStepInfo = StepSpecType & {
+  approvalCriteria: CriteriaSpecWrapper
+  changeWindow?: ServiceNowChangeWindowSpec
+  connectorRef: string
+  delegateSelectors?: string[]
+  rejectionCriteria?: CriteriaSpecWrapper
+  ticketNumber: string
+  ticketType: string
+}
+
+export interface ServiceNowChangeWindowSpec {
+  endField: string
+  startField: string
+}
+
+export type ServiceNowCreateStepInfo = StepSpecType & {
+  connectorRef: string
+  delegateSelectors?: string[]
+  fields?: ServiceNowField[]
+  templateName?: string
+  ticketType: string
+  useServiceNowTemplate: boolean
+}
+
+export interface ServiceNowField {
+  name?: string
+  value: string
 }
 
 export interface ServiceNowTicketKeyNG {
   key: string
   ticketType: string
   url: string
+}
+
+export type ServiceNowUpdateStepInfo = StepSpecType & {
+  connectorRef: string
+  delegateSelectors?: string[]
+  fields?: ServiceNowField[]
+  templateName?: string
+  ticketNumber: string
+  ticketType: string
+  useServiceNowTemplate: boolean
+}
+
+export type SetDefaultVariationsYaml = PatchInstruction & {
+  identifier: string
+  spec: SetDefaultVariationsYamlSpec
+  type: 'SetDefaultVariations'
+}
+
+export interface SetDefaultVariationsYamlSpec {
+  off: string
+  on: string
+}
+
+export type SetFeatureFlagStateYaml = PatchInstruction & {
+  identifier: string
+  spec: SetFeatureFlagStateYamlSpec
+  type: 'SetFeatureFlagState'
+}
+
+export interface SetFeatureFlagStateYamlSpec {
+  state: string
+}
+
+export type SetOffVariationYaml = PatchInstruction & {
+  identifier: string
+  spec: SetOffVariationYamlSpec
+  type: 'SetOffVariation'
+}
+
+export interface SetOffVariationYamlSpec {
+  variation: string
+}
+
+export type SetOnVariationYaml = PatchInstruction & {
+  identifier: string
+  spec: SetOnVariationYamlSpec
+  type: 'SetOnVariation'
+}
+
+export interface SetOnVariationYamlSpec {
+  variation: string
+}
+
+export interface ShellScriptBaseSource {
+  type?: string
+}
+
+export type ShellScriptInlineSource = ShellScriptBaseSource & {
+  script?: string
+}
+
+export interface ShellScriptSourceWrapper {
+  spec: ShellScriptBaseSource
+  type: string
+}
+
+export type ShellScriptStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  environmentVariables?: NGVariable[]
+  executionTarget?: ExecutionTarget
+  metadata?: string
+  onDelegate: boolean
+  outputVariables?: NGVariable[]
+  shell: 'Bash' | 'PowerShell'
+  source: ShellScriptSourceWrapper
 }
 
 export interface SkipInfo {
@@ -3289,6 +4522,29 @@ export interface StageDetail {
   name?: string
 }
 
+export interface StageElementConfig {
+  delegateSelectors?: string[]
+  description?: string
+  failureStrategies?: FailureStrategyConfig[]
+  identifier: string
+  name: string
+  skipInstances?: boolean
+  spec?: StageInfoConfig
+  strategy?: StrategyConfig
+  tags?: {
+    [key: string]: string
+  }
+  template?: TemplateLinkConfig
+  type?: string
+  variables?: NGVariable[]
+  when?: StageWhenCondition
+}
+
+export interface StageElementWrapperConfig {
+  parallel?: ParallelStageElementConfig
+  stage?: StageElementConfig
+}
+
 export interface StageExecutionResponse {
   message?: string
   stageIdentifier?: string
@@ -3297,8 +4553,17 @@ export interface StageExecutionResponse {
   toBeBlocked?: boolean
 }
 
+export interface StageInfoConfig {
+  execution?: ExecutionElementConfig
+}
+
 export type StageRollbackFailureActionConfig = FailureStrategyActionConfig & {
   type: 'StageRollback'
+}
+
+export interface StageWhenCondition {
+  condition?: string
+  pipelineStatus: 'Success' | 'Failure' | 'All'
 }
 
 export interface StepCategory {
@@ -3323,6 +4588,7 @@ export interface StepData {
     | 'MULTIPLE_ORGANIZATIONS'
     | 'MULTIPLE_PROJECTS'
     | 'INTEGRATED_APPROVALS_WITH_HARNESS_UI'
+    | 'INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT'
     | 'INTEGRATED_APPROVALS_WITH_JIRA'
     | 'SECRET_MANAGERS'
     | 'DEPLOYMENTS'
@@ -3341,6 +4607,7 @@ export interface StepData {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_APPLY'
@@ -3358,11 +4625,46 @@ export interface StepData {
     | 'CREATE_STACK'
     | 'DELETE_STACK'
     | 'ROLLBACK_STACK'
+    | 'COMMAND'
+    | 'AZURE_SLOT_DEPLOYMENT'
+    | 'AZURE_TRAFFIC_SHIFT'
+    | 'AZURE_SWAP_SLOT'
+    | 'AZURE_WEBAPP_ROLLBACK'
+    | 'JENKINS_BUILD'
+    | 'AZURE_CREATE_ARM_RESOURCE'
+    | 'AZURE_CREATE_BP_RESOURCE'
+    | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
+    | 'JENKINS_ARTIFACT'
+    | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_DELEGATES'
   name?: string
   type?: string
+}
+
+export interface StepElementConfig {
+  description?: string
+  failureStrategies?: FailureStrategyConfig[]
+  identifier: string
+  name: string
+  spec?: StepSpecType
+  strategy?: StrategyConfig
+  timeout?: string
+  type: string
+  when?: StepWhenCondition
+}
+
+export interface StepGroupElementConfig {
+  delegateSelectors?: string[]
+  failureStrategies?: FailureStrategyConfig[]
+  identifier: string
+  name: string
+  steps: ExecutionWrapperConfig[]
+  strategy?: StrategyConfig
+  when?: StepWhenCondition
 }
 
 export type StepGroupFailureActionConfig = FailureStrategyActionConfig & {
@@ -3380,9 +4682,30 @@ export interface StepPalleteModuleInfo {
   shouldShowCommonSteps?: boolean
 }
 
+export interface StepSpecType {
+  [key: string]: any
+}
+
 export interface StepWhenCondition {
   condition?: string
   stageStatus: 'Success' | 'Failure' | 'All'
+}
+
+export interface StrategyConfig {
+  matrix?: MatrixConfigInterface
+  parallelism?: number
+  repeat?: HarnessForConfig
+}
+
+export interface StrategyMetadata {
+  [key: string]: any
+}
+
+export type StringNGVariable = NGVariable & {
+  default?: string
+  name?: string
+  type?: 'String'
+  value: string
 }
 
 export interface SuccessHealthInfo {
@@ -3390,16 +4713,20 @@ export interface SuccessHealthInfo {
   rate?: number
 }
 
+export type TagBuildSpec = BuildSpec & {
+  tag: string
+}
+
 export type TemplateFilterProperties = FilterProperties & {
   childTypes?: string[]
   description?: string
-  templateEntityTypes?: ('Step' | 'Stage' | 'Pipeline' | 'MonitoredService')[]
+  templateEntityTypes?: ('Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager')[]
   templateIdentifiers?: string[]
   templateNames?: string[]
 }
 
 export interface TemplateInfo {
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService'
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
   templateIdentifier?: string
   versionLabel?: string
 }
@@ -3421,6 +4748,30 @@ export interface TemplateLinkConfig {
   templateInputs?: JsonNode
   templateRef: string
   versionLabel?: string
+}
+
+export interface TemplateResponse {
+  accountId: string
+  childType?: string
+  connectorRef?: string
+  description?: string
+  entityValidityDetails?: EntityValidityDetails
+  gitDetails?: EntityGitDetails
+  identifier: string
+  lastUpdatedAt?: number
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  stableTemplate?: boolean
+  storeType?: 'INLINE' | 'REMOTE'
+  tags?: {
+    [key: string]: string
+  }
+  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateScope?: 'account' | 'org' | 'project' | 'unknown'
+  version?: number
+  versionLabel?: string
+  yaml?: string
 }
 
 export interface TemplateStageNode {
@@ -3464,6 +4815,11 @@ export interface TotalHealthInfo {
   rate?: number
 }
 
+export interface TransitionTo {
+  status: string
+  transitionName?: string
+}
+
 export interface TriggerEventDataCondition {
   key?: string
   operator?: 'In' | 'Equals' | 'NotEquals' | 'NotIn' | 'Regex' | 'EndsWith' | 'StartsWith' | 'Contains'
@@ -3479,10 +4835,24 @@ export interface TriggerStatus {
   pollingSubscriptionStatus?: PollingSubscriptionStatus
   validationStatus?: ValidationStatus
   webhookAutoRegistrationStatus?: WebhookAutoRegistrationStatus
+  webhookInfo?: WebhookInfo
 }
 
 export interface UnitProgress {
   [key: string]: any
+}
+
+export type UpdateRuleYaml = PatchInstruction & {
+  identifier: string
+  spec: UpdateRuleYamlSpec
+  type: 'UpdateRule'
+}
+
+export interface UpdateRuleYamlSpec {
+  bucketBy: string
+  ruleID: string
+  serve?: Serve
+  variations?: VariationYamlSpec[]
 }
 
 export interface UserOpaEvaluationContext {
@@ -3490,7 +4860,7 @@ export interface UserOpaEvaluationContext {
   name?: string
 }
 
-export interface ValidateTemplateInputsResponseDTO {
+export type ValidateTemplateInputsResponseDTO = ErrorMetadataDTO & {
   errorNodeSummary?: ErrorNodeSummary
   validYaml?: boolean
 }
@@ -3520,6 +4890,11 @@ export interface VariableResponseMapValue {
   yamlProperties?: YamlProperties
 }
 
+export interface VariationYamlSpec {
+  variation: string
+  weight: number
+}
+
 export interface WebhookAutoRegistrationStatus {
   detailedMessage?: string
   registrationResult?: 'SUCCESS' | 'FAILED' | 'ERROR' | 'TIMEOUT' | 'UNAVAILABLE'
@@ -3547,13 +4922,27 @@ export interface WebhookEventProcessingDetails {
   triggerIdentifier?: string
 }
 
+export interface WebhookExecutionDetails {
+  executionDetails?: { [key: string]: any }
+  webhookProcessingDetails?: WebhookEventProcessingDetails
+}
+
+export interface WebhookInfo {
+  webhookId?: string
+}
+
 export type WebhookTriggerConfigV2 = NGTriggerSpecV2 & {
   spec?: WebhookTriggerSpecV2
-  type?: 'Github' | 'Gitlab' | 'Bitbucket' | 'Custom' | 'AwsCodeCommit'
+  type?: 'AzureRepo' | 'Github' | 'Gitlab' | 'Bitbucket' | 'Custom' | 'AwsCodeCommit'
 }
 
 export interface WebhookTriggerSpecV2 {
   [key: string]: any
+}
+
+export interface WeightedVariation {
+  variation: string
+  weight: number
 }
 
 export interface YamlDiffResponseDTO {
@@ -3577,6 +4966,7 @@ export interface YamlSchemaErrorDTO {
   fqn?: string
   hintMessage?: string
   message?: string
+  messageWithFQN?: string
   stageInfo?: NodeErrorInfo
   stepInfo?: NodeErrorInfo
 }
@@ -3620,7 +5010,7 @@ export interface ExecutionSummaryInfo {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   lastExecutionTs?: number
   numOfErrors?: number[]
 }
@@ -3654,12 +5044,10 @@ export type NGTriggerConfigV2RequestBody = NGTriggerConfigV2
 
 export type RunStageRequestDTORequestBody = RunStageRequestDTO
 
-export type CreateOverlayInputSetForPipelineBodyRequestBody = string
-
 export type WebhookEndpointBodyRequestBody = string
 
 export interface GetInitialStageYamlSnippetQueryParams {
-  approvalType: 'HarnessApproval' | 'JiraApproval' | 'ServiceNowApproval'
+  approvalType: 'HarnessApproval' | 'JiraApproval' | 'CustomApproval' | 'ServiceNowApproval'
   routingId?: string
 }
 
@@ -3762,6 +5150,10 @@ export const getApprovalInstancePromise = (
     signal
   )
 
+export interface AddHarnessApprovalActivityQueryParams {
+  accountIdentifier?: string
+}
+
 export interface AddHarnessApprovalActivityPathParams {
   approvalInstanceId: string
 }
@@ -3770,7 +5162,7 @@ export type AddHarnessApprovalActivityProps = Omit<
   MutateProps<
     ResponseApprovalInstanceResponse,
     Failure | Error,
-    void,
+    AddHarnessApprovalActivityQueryParams,
     HarnessApprovalActivityRequest,
     AddHarnessApprovalActivityPathParams
   >,
@@ -3779,13 +5171,13 @@ export type AddHarnessApprovalActivityProps = Omit<
   AddHarnessApprovalActivityPathParams
 
 /**
- * Add a new Harness Approval activity
+ * Approve or Reject a Pipeline Execution
  */
 export const AddHarnessApprovalActivity = ({ approvalInstanceId, ...props }: AddHarnessApprovalActivityProps) => (
   <Mutate<
     ResponseApprovalInstanceResponse,
     Failure | Error,
-    void,
+    AddHarnessApprovalActivityQueryParams,
     HarnessApprovalActivityRequest,
     AddHarnessApprovalActivityPathParams
   >
@@ -3800,7 +5192,7 @@ export type UseAddHarnessApprovalActivityProps = Omit<
   UseMutateProps<
     ResponseApprovalInstanceResponse,
     Failure | Error,
-    void,
+    AddHarnessApprovalActivityQueryParams,
     HarnessApprovalActivityRequest,
     AddHarnessApprovalActivityPathParams
   >,
@@ -3809,13 +5201,13 @@ export type UseAddHarnessApprovalActivityProps = Omit<
   AddHarnessApprovalActivityPathParams
 
 /**
- * Add a new Harness Approval activity
+ * Approve or Reject a Pipeline Execution
  */
 export const useAddHarnessApprovalActivity = ({ approvalInstanceId, ...props }: UseAddHarnessApprovalActivityProps) =>
   useMutate<
     ResponseApprovalInstanceResponse,
     Failure | Error,
-    void,
+    AddHarnessApprovalActivityQueryParams,
     HarnessApprovalActivityRequest,
     AddHarnessApprovalActivityPathParams
   >(
@@ -3826,7 +5218,7 @@ export const useAddHarnessApprovalActivity = ({ approvalInstanceId, ...props }: 
   )
 
 /**
- * Add a new Harness Approval activity
+ * Approve or Reject a Pipeline Execution
  */
 export const addHarnessApprovalActivityPromise = (
   {
@@ -3835,7 +5227,7 @@ export const addHarnessApprovalActivityPromise = (
   }: MutateUsingFetchProps<
     ResponseApprovalInstanceResponse,
     Failure | Error,
-    void,
+    AddHarnessApprovalActivityQueryParams,
     HarnessApprovalActivityRequest,
     AddHarnessApprovalActivityPathParams
   > & { approvalInstanceId: string },
@@ -3844,7 +5236,7 @@ export const addHarnessApprovalActivityPromise = (
   mutateUsingFetch<
     ResponseApprovalInstanceResponse,
     Failure | Error,
-    void,
+    AddHarnessApprovalActivityQueryParams,
     HarnessApprovalActivityRequest,
     AddHarnessApprovalActivityPathParams
   >('POST', getConfig('pipeline/api'), `/approvals/${approvalInstanceId}/harness/activity`, props, signal)
@@ -4542,6 +5934,11 @@ export interface GetInputSetsListForPipelineQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetInputSetsListForPipelineProps = Omit<
@@ -4617,7 +6014,7 @@ export type CreateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -4631,7 +6028,7 @@ export const CreateInputSetForPipeline = (props: CreateInputSetForPipelineProps)
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >
     verb="POST"
@@ -4646,7 +6043,7 @@ export type UseCreateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -4660,7 +6057,7 @@ export const useCreateInputSetForPipeline = (props: UseCreateInputSetForPipeline
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >('POST', `/inputSets`, { base: getConfig('pipeline/api'), ...props })
 
@@ -4672,7 +6069,7 @@ export const createInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -4681,9 +6078,107 @@ export const createInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     CreateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/inputSets`, props, signal)
+
+export interface ImportInputSetQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier: string
+  connectorRef?: string
+  repoName?: string
+  branch?: string
+  filePath?: string
+  isForceImport?: boolean
+}
+
+export interface ImportInputSetPathParams {
+  inputSetIdentifier: string
+}
+
+export type ImportInputSetProps = Omit<
+  MutateProps<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  >,
+  'path' | 'verb'
+> &
+  ImportInputSetPathParams
+
+/**
+ * Get Input Set YAML from Git Repository
+ */
+export const ImportInputSet = ({ inputSetIdentifier, ...props }: ImportInputSetProps) => (
+  <Mutate<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  >
+    verb="POST"
+    path={`/inputSets/import/${inputSetIdentifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseImportInputSetProps = Omit<
+  UseMutateProps<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  >,
+  'path' | 'verb'
+> &
+  ImportInputSetPathParams
+
+/**
+ * Get Input Set YAML from Git Repository
+ */
+export const useImportInputSet = ({ inputSetIdentifier, ...props }: UseImportInputSetProps) =>
+  useMutate<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  >('POST', (paramsInPath: ImportInputSetPathParams) => `/inputSets/import/${paramsInPath.inputSetIdentifier}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { inputSetIdentifier },
+    ...props
+  })
+
+/**
+ * Get Input Set YAML from Git Repository
+ */
+export const importInputSetPromise = (
+  {
+    inputSetIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  > & { inputSetIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseInputSetImportResponseDTO,
+    Failure | Error,
+    ImportInputSetQueryParams,
+    InputSetImportRequestDTO,
+    ImportInputSetPathParams
+  >('POST', getConfig('pipeline/api'), `/inputSets/import/${inputSetIdentifier}`, props, signal)
 
 export interface GetMergeInputSetFromPipelineTemplateWithListInputQueryParams {
   accountIdentifier: string
@@ -4695,6 +6190,11 @@ export interface GetMergeInputSetFromPipelineTemplateWithListInputQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetMergeInputSetFromPipelineTemplateWithListInputProps = Omit<
@@ -4784,6 +6284,11 @@ export interface GetMergeInputSetFromPipelineTemplateQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetMergeInputSetFromPipelineTemplateProps = Omit<
@@ -4881,7 +6386,7 @@ export type CreateOverlayInputSetForPipelineProps = Omit<
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -4895,7 +6400,7 @@ export const CreateOverlayInputSetForPipeline = (props: CreateOverlayInputSetFor
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >
     verb="POST"
@@ -4910,7 +6415,7 @@ export type UseCreateOverlayInputSetForPipelineProps = Omit<
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -4924,7 +6429,7 @@ export const useCreateOverlayInputSetForPipeline = (props: UseCreateOverlayInput
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >('POST', `/inputSets/overlay`, { base: getConfig('pipeline/api'), ...props })
 
@@ -4936,7 +6441,7 @@ export const createOverlayInputSetForPipelinePromise = (
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -4945,7 +6450,7 @@ export const createOverlayInputSetForPipelinePromise = (
     ResponseOverlayInputSetResponse,
     Failure | Error,
     CreateOverlayInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/inputSets/overlay`, props, signal)
 
@@ -4957,6 +6462,11 @@ export interface GetOverlayInputSetForPipelineQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export interface GetOverlayInputSetForPipelinePathParams {
@@ -5159,6 +6669,11 @@ export interface GetTemplateFromPipelineQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetTemplateFromPipelineProps = Omit<
@@ -5302,6 +6817,11 @@ export interface GetInputSetForPipelineQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export interface GetInputSetForPipelinePathParams {
@@ -5407,7 +6927,7 @@ export type UpdateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >,
   'path' | 'verb'
@@ -5422,7 +6942,7 @@ export const UpdateInputSetForPipeline = ({ inputSetIdentifier, ...props }: Upda
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >
     verb="PUT"
@@ -5437,7 +6957,7 @@ export type UseUpdateInputSetForPipelineProps = Omit<
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >,
   'path' | 'verb'
@@ -5452,7 +6972,7 @@ export const useUpdateInputSetForPipeline = ({ inputSetIdentifier, ...props }: U
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >('PUT', (paramsInPath: UpdateInputSetForPipelinePathParams) => `/inputSets/${paramsInPath.inputSetIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -5471,7 +6991,7 @@ export const updateInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   > & { inputSetIdentifier: string },
   signal?: RequestInit['signal']
@@ -5480,7 +7000,7 @@ export const updateInputSetForPipelinePromise = (
     ResponseInputSetResponse,
     Failure | Error,
     UpdateInputSetForPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     UpdateInputSetForPipelinePathParams
   >('PUT', getConfig('pipeline/api'), `/inputSets/${inputSetIdentifier}`, props, signal)
 
@@ -5513,7 +7033,7 @@ export type SanitiseInputSetProps = Omit<
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   >,
   'path' | 'verb'
@@ -5528,7 +7048,7 @@ export const SanitiseInputSet = ({ inputSetIdentifier, ...props }: SanitiseInput
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   >
     verb="POST"
@@ -5543,7 +7063,7 @@ export type UseSanitiseInputSetProps = Omit<
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   >,
   'path' | 'verb'
@@ -5558,7 +7078,7 @@ export const useSanitiseInputSet = ({ inputSetIdentifier, ...props }: UseSanitis
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   >('POST', (paramsInPath: SanitiseInputSetPathParams) => `/inputSets/${paramsInPath.inputSetIdentifier}/sanitise`, {
     base: getConfig('pipeline/api'),
@@ -5577,7 +7097,7 @@ export const sanitiseInputSetPromise = (
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   > & { inputSetIdentifier: string },
   signal?: RequestInit['signal']
@@ -5586,9 +7106,87 @@ export const sanitiseInputSetPromise = (
     ResponseInputSetSanitiseResponse,
     Failure | Error,
     SanitiseInputSetQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     SanitiseInputSetPathParams
   >('POST', getConfig('pipeline/api'), `/inputSets/${inputSetIdentifier}/sanitise`, props, signal)
+
+export interface YamlDiffForInputSetQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier: string
+  pipelineBranch?: string
+  pipelineRepoID?: string
+  branch?: string
+  repoIdentifier?: string
+  rootFolder?: string
+  filePath?: string
+  commitMsg?: string
+  lastObjectId?: string
+  resolvedConflictCommitId?: string
+  baseBranch?: string
+  connectorRef?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  lastCommitId?: string
+}
+
+export interface YamlDiffForInputSetPathParams {
+  inputSetIdentifier: string
+}
+
+export type YamlDiffForInputSetProps = Omit<
+  GetProps<ResponseInputSetYamlDiff, Failure | Error, YamlDiffForInputSetQueryParams, YamlDiffForInputSetPathParams>,
+  'path'
+> &
+  YamlDiffForInputSetPathParams
+
+/**
+ * Get sanitised YAML for an InputSet
+ */
+export const YamlDiffForInputSet = ({ inputSetIdentifier, ...props }: YamlDiffForInputSetProps) => (
+  <Get<ResponseInputSetYamlDiff, Failure | Error, YamlDiffForInputSetQueryParams, YamlDiffForInputSetPathParams>
+    path={`/inputSets/${inputSetIdentifier}/yaml-diff`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseYamlDiffForInputSetProps = Omit<
+  UseGetProps<ResponseInputSetYamlDiff, Failure | Error, YamlDiffForInputSetQueryParams, YamlDiffForInputSetPathParams>,
+  'path'
+> &
+  YamlDiffForInputSetPathParams
+
+/**
+ * Get sanitised YAML for an InputSet
+ */
+export const useYamlDiffForInputSet = ({ inputSetIdentifier, ...props }: UseYamlDiffForInputSetProps) =>
+  useGet<ResponseInputSetYamlDiff, Failure | Error, YamlDiffForInputSetQueryParams, YamlDiffForInputSetPathParams>(
+    (paramsInPath: YamlDiffForInputSetPathParams) => `/inputSets/${paramsInPath.inputSetIdentifier}/yaml-diff`,
+    { base: getConfig('pipeline/api'), pathParams: { inputSetIdentifier }, ...props }
+  )
+
+/**
+ * Get sanitised YAML for an InputSet
+ */
+export const yamlDiffForInputSetPromise = (
+  {
+    inputSetIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseInputSetYamlDiff,
+    Failure | Error,
+    YamlDiffForInputSetQueryParams,
+    YamlDiffForInputSetPathParams
+  > & { inputSetIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseInputSetYamlDiff,
+    Failure | Error,
+    YamlDiffForInputSetQueryParams,
+    YamlDiffForInputSetPathParams
+  >(getConfig('pipeline/api'), `/inputSets/${inputSetIdentifier}/yaml-diff`, props, signal)
 
 export interface GetPipelinesCountQueryParams {
   accountIdentifier: string
@@ -6288,6 +7886,11 @@ export interface StartPreflightCheckQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type StartPreflightCheckProps = Omit<
@@ -6345,6 +7948,11 @@ export interface RePostPipelineExecuteWithInputSetYamlV2QueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   useFQNIfError?: boolean
 }
 
@@ -6453,6 +8061,11 @@ export interface RePostPipelineExecuteWithInputSetYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   useFQNIfError?: boolean
 }
 
@@ -6561,6 +8174,11 @@ export interface RePostPipelineExecuteWithInputSetListQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   useFQNIfError?: boolean
 }
 
@@ -6675,6 +8293,11 @@ export interface RerunStagesWithRuntimeInputYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   useFQNIfError?: boolean
 }
 
@@ -6938,6 +8561,11 @@ export interface GetStagesExecutionListQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetStagesExecutionListProps = Omit<
@@ -6997,7 +8625,13 @@ export interface PostPipelineExecuteWithInputSetYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   useFQNIfError?: boolean
+  notifyOnlyUser?: boolean
 }
 
 export interface PostPipelineExecuteWithInputSetYamlPathParams {
@@ -7100,6 +8734,11 @@ export interface PostPipelineExecuteWithInputSetListQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   useFQNIfError?: boolean
 }
 
@@ -7204,6 +8843,11 @@ export interface RunStagesWithRuntimeInputYamlQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   useFQNIfError?: boolean
 }
 
@@ -7301,6 +8945,11 @@ export interface PostPipelineExecuteWithInputSetYamlv2QueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   useFQNIfError?: boolean
 }
 
@@ -7405,6 +9054,11 @@ export interface GetRetryStagesQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export interface GetRetryStagesPathParams {
@@ -7469,12 +9123,17 @@ export interface CreateVariablesForPipelineExecutionQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   planExecutionId: string
 }
 
 export type CreateVariablesForPipelineExecutionProps = Omit<
   MutateProps<
-    ResponseVariableMergeServiceResponse,
+    ResponseExecutionInputVariablesResponse,
     Failure | Error,
     CreateVariablesForPipelineExecutionQueryParams,
     void,
@@ -7488,7 +9147,7 @@ export type CreateVariablesForPipelineExecutionProps = Omit<
  */
 export const CreateVariablesForPipelineExecution = (props: CreateVariablesForPipelineExecutionProps) => (
   <Mutate<
-    ResponseVariableMergeServiceResponse,
+    ResponseExecutionInputVariablesResponse,
     Failure | Error,
     CreateVariablesForPipelineExecutionQueryParams,
     void,
@@ -7503,7 +9162,7 @@ export const CreateVariablesForPipelineExecution = (props: CreateVariablesForPip
 
 export type UseCreateVariablesForPipelineExecutionProps = Omit<
   UseMutateProps<
-    ResponseVariableMergeServiceResponse,
+    ResponseExecutionInputVariablesResponse,
     Failure | Error,
     CreateVariablesForPipelineExecutionQueryParams,
     void,
@@ -7517,7 +9176,7 @@ export type UseCreateVariablesForPipelineExecutionProps = Omit<
  */
 export const useCreateVariablesForPipelineExecution = (props: UseCreateVariablesForPipelineExecutionProps) =>
   useMutate<
-    ResponseVariableMergeServiceResponse,
+    ResponseExecutionInputVariablesResponse,
     Failure | Error,
     CreateVariablesForPipelineExecutionQueryParams,
     void,
@@ -7529,7 +9188,7 @@ export const useCreateVariablesForPipelineExecution = (props: UseCreateVariables
  */
 export const createVariablesForPipelineExecutionPromise = (
   props: MutateUsingFetchProps<
-    ResponseVariableMergeServiceResponse,
+    ResponseExecutionInputVariablesResponse,
     Failure | Error,
     CreateVariablesForPipelineExecutionQueryParams,
     void,
@@ -7538,7 +9197,7 @@ export const createVariablesForPipelineExecutionPromise = (
   signal?: RequestInit['signal']
 ) =>
   mutateUsingFetch<
-    ResponseVariableMergeServiceResponse,
+    ResponseExecutionInputVariablesResponse,
     Failure | Error,
     CreateVariablesForPipelineExecutionQueryParams,
     void,
@@ -7644,7 +9303,7 @@ export type SubmitExecutionInputProps = Omit<
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    string,
     SubmitExecutionInputPathParams
   >,
   'path' | 'verb'
@@ -7659,7 +9318,7 @@ export const SubmitExecutionInput = ({ nodeExecutionId, ...props }: SubmitExecut
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    string,
     SubmitExecutionInputPathParams
   >
     verb="POST"
@@ -7674,7 +9333,7 @@ export type UseSubmitExecutionInputProps = Omit<
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    string,
     SubmitExecutionInputPathParams
   >,
   'path' | 'verb'
@@ -7689,7 +9348,7 @@ export const useSubmitExecutionInput = ({ nodeExecutionId, ...props }: UseSubmit
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    string,
     SubmitExecutionInputPathParams
   >(
     'POST',
@@ -7708,7 +9367,7 @@ export const submitExecutionInputPromise = (
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    string,
     SubmitExecutionInputPathParams
   > & { nodeExecutionId: string },
   signal?: RequestInit['signal']
@@ -7717,7 +9376,7 @@ export const submitExecutionInputPromise = (
     ResponseExecutionInputStatus,
     Failure | Error,
     SubmitExecutionInputQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    string,
     SubmitExecutionInputPathParams
   >('POST', getConfig('pipeline/api'), `/pipeline/execution-input/${nodeExecutionId}`, props, signal)
 
@@ -7728,6 +9387,7 @@ export interface CreatePipelineQueryParams {
   identifier?: string
   name?: string
   description?: string
+  skipValidation?: boolean
   branch?: string
   repoIdentifier?: string
   rootFolder?: string
@@ -7741,13 +9401,7 @@ export interface CreatePipelineQueryParams {
 }
 
 export type CreatePipelineProps = Omit<
-  MutateProps<
-    ResponseString,
-    Failure | Error,
-    CreatePipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
-    void
-  >,
+  MutateProps<ResponseString, Failure | Error, CreatePipelineQueryParams, WebhookEndpointBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -7755,13 +9409,7 @@ export type CreatePipelineProps = Omit<
  * Create a Pipeline
  */
 export const CreatePipeline = (props: CreatePipelineProps) => (
-  <Mutate<
-    ResponseString,
-    Failure | Error,
-    CreatePipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
-    void
-  >
+  <Mutate<ResponseString, Failure | Error, CreatePipelineQueryParams, WebhookEndpointBodyRequestBody, void>
     verb="POST"
     path={`/pipelines`}
     base={getConfig('pipeline/api')}
@@ -7770,13 +9418,7 @@ export const CreatePipeline = (props: CreatePipelineProps) => (
 )
 
 export type UseCreatePipelineProps = Omit<
-  UseMutateProps<
-    ResponseString,
-    Failure | Error,
-    CreatePipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
-    void
-  >,
+  UseMutateProps<ResponseString, Failure | Error, CreatePipelineQueryParams, WebhookEndpointBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -7784,13 +9426,11 @@ export type UseCreatePipelineProps = Omit<
  * Create a Pipeline
  */
 export const useCreatePipeline = (props: UseCreatePipelineProps) =>
-  useMutate<
-    ResponseString,
-    Failure | Error,
-    CreatePipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
-    void
-  >('POST', `/pipelines`, { base: getConfig('pipeline/api'), ...props })
+  useMutate<ResponseString, Failure | Error, CreatePipelineQueryParams, WebhookEndpointBodyRequestBody, void>(
+    'POST',
+    `/pipelines`,
+    { base: getConfig('pipeline/api'), ...props }
+  )
 
 /**
  * Create a Pipeline
@@ -7800,18 +9440,18 @@ export const createPipelinePromise = (
     ResponseString,
     Failure | Error,
     CreatePipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<
-    ResponseString,
-    Failure | Error,
-    CreatePipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
-    void
-  >('POST', getConfig('pipeline/api'), `/pipelines`, props, signal)
+  mutateUsingFetch<ResponseString, Failure | Error, CreatePipelineQueryParams, WebhookEndpointBodyRequestBody, void>(
+    'POST',
+    getConfig('pipeline/api'),
+    `/pipelines`,
+    props,
+    signal
+  )
 
 export interface ClonePipelineQueryParams {
   accountIdentifier: string
@@ -8047,12 +9687,17 @@ export interface GetListOfExecutionsQueryParams {
     | 'INTERVENTION_WAITING'
     | 'APPROVAL_WAITING'
     | 'APPROVAL_REJECTED'
-    | 'Waiting'
+    | 'WAITING'
   )[]
   myDeployments?: boolean
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetListOfExecutionsProps = Omit<
@@ -8127,6 +9772,7 @@ export interface GetExecutionDetailV2QueryParams {
   orgIdentifier: string
   projectIdentifier: string
   stageNodeId?: string
+  stageNodeExecutionId?: string
   renderFullBottomGraph?: boolean
 }
 
@@ -8214,6 +9860,7 @@ export interface GetExecutionDetailQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   stageNodeId?: string
+  stageNodeExecutionId?: string
 }
 
 export interface GetExecutionDetailPathParams {
@@ -8421,6 +10068,68 @@ export const getInputsetYamlV2Promise = (
     GetInputsetYamlV2PathParams
   >(getConfig('pipeline/api'), `/pipelines/execution/${planExecutionId}/inputsetV2`, props, signal)
 
+export interface GetExecutionDataQueryParams {
+  accountIdentifier: string
+}
+
+export interface GetExecutionDataPathParams {
+  planExecutionId: string
+}
+
+export type GetExecutionDataProps = Omit<
+  GetProps<ResponseExecutionDataResponse, Failure | Error, GetExecutionDataQueryParams, GetExecutionDataPathParams>,
+  'path'
+> &
+  GetExecutionDataPathParams
+
+/**
+ * Get metadata of an execution
+ */
+export const GetExecutionData = ({ planExecutionId, ...props }: GetExecutionDataProps) => (
+  <Get<ResponseExecutionDataResponse, Failure | Error, GetExecutionDataQueryParams, GetExecutionDataPathParams>
+    path={`/pipelines/execution/${planExecutionId}/metadata`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetExecutionDataProps = Omit<
+  UseGetProps<ResponseExecutionDataResponse, Failure | Error, GetExecutionDataQueryParams, GetExecutionDataPathParams>,
+  'path'
+> &
+  GetExecutionDataPathParams
+
+/**
+ * Get metadata of an execution
+ */
+export const useGetExecutionData = ({ planExecutionId, ...props }: UseGetExecutionDataProps) =>
+  useGet<ResponseExecutionDataResponse, Failure | Error, GetExecutionDataQueryParams, GetExecutionDataPathParams>(
+    (paramsInPath: GetExecutionDataPathParams) => `/pipelines/execution/${paramsInPath.planExecutionId}/metadata`,
+    { base: getConfig('pipeline/api'), pathParams: { planExecutionId }, ...props }
+  )
+
+/**
+ * Get metadata of an execution
+ */
+export const getExecutionDataPromise = (
+  {
+    planExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseExecutionDataResponse,
+    Failure | Error,
+    GetExecutionDataQueryParams,
+    GetExecutionDataPathParams
+  > & { planExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseExecutionDataResponse,
+    Failure | Error,
+    GetExecutionDataQueryParams,
+    GetExecutionDataPathParams
+  >(getConfig('pipeline/api'), `/pipelines/execution/${planExecutionId}/metadata`, props, signal)
+
 export interface GetExpandedPipelineJSONQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -8428,6 +10137,11 @@ export interface GetExpandedPipelineJSONQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export interface GetExpandedPipelineJSONPathParams {
@@ -8616,6 +10330,7 @@ export interface ImportPipelineQueryParams {
   repoName?: string
   branch?: string
   filePath?: string
+  isForceImport?: boolean
 }
 
 export interface ImportPipelinePathParams {
@@ -8623,8 +10338,14 @@ export interface ImportPipelinePathParams {
 }
 
 export type ImportPipelineProps = Omit<
-  GetProps<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>,
-  'path'
+  MutateProps<
+    ResponsePipelineSaveResponse,
+    Failure | Error,
+    ImportPipelineQueryParams,
+    PipelineImportRequest,
+    ImportPipelinePathParams
+  >,
+  'path' | 'verb'
 > &
   ImportPipelinePathParams
 
@@ -8632,7 +10353,14 @@ export type ImportPipelineProps = Omit<
  * Get Pipeline YAML from Git Repository
  */
 export const ImportPipeline = ({ pipelineIdentifier, ...props }: ImportPipelineProps) => (
-  <Get<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>
+  <Mutate<
+    ResponsePipelineSaveResponse,
+    Failure | Error,
+    ImportPipelineQueryParams,
+    PipelineImportRequest,
+    ImportPipelinePathParams
+  >
+    verb="POST"
     path={`/pipelines/import/${pipelineIdentifier}`}
     base={getConfig('pipeline/api')}
     {...props}
@@ -8640,8 +10368,14 @@ export const ImportPipeline = ({ pipelineIdentifier, ...props }: ImportPipelineP
 )
 
 export type UseImportPipelineProps = Omit<
-  UseGetProps<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>,
-  'path'
+  UseMutateProps<
+    ResponsePipelineSaveResponse,
+    Failure | Error,
+    ImportPipelineQueryParams,
+    PipelineImportRequest,
+    ImportPipelinePathParams
+  >,
+  'path' | 'verb'
 > &
   ImportPipelinePathParams
 
@@ -8649,10 +10383,17 @@ export type UseImportPipelineProps = Omit<
  * Get Pipeline YAML from Git Repository
  */
 export const useImportPipeline = ({ pipelineIdentifier, ...props }: UseImportPipelineProps) =>
-  useGet<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>(
-    (paramsInPath: ImportPipelinePathParams) => `/pipelines/import/${paramsInPath.pipelineIdentifier}`,
-    { base: getConfig('pipeline/api'), pathParams: { pipelineIdentifier }, ...props }
-  )
+  useMutate<
+    ResponsePipelineSaveResponse,
+    Failure | Error,
+    ImportPipelineQueryParams,
+    PipelineImportRequest,
+    ImportPipelinePathParams
+  >('POST', (paramsInPath: ImportPipelinePathParams) => `/pipelines/import/${paramsInPath.pipelineIdentifier}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { pipelineIdentifier },
+    ...props
+  })
 
 /**
  * Get Pipeline YAML from Git Repository
@@ -8661,20 +10402,22 @@ export const importPipelinePromise = (
   {
     pipelineIdentifier,
     ...props
-  }: GetUsingFetchProps<
-    ResponsePMSPipelineResponseDTO,
+  }: MutateUsingFetchProps<
+    ResponsePipelineSaveResponse,
     Failure | Error,
     ImportPipelineQueryParams,
+    PipelineImportRequest,
     ImportPipelinePathParams
   > & { pipelineIdentifier: string },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponsePMSPipelineResponseDTO, Failure | Error, ImportPipelineQueryParams, ImportPipelinePathParams>(
-    getConfig('pipeline/api'),
-    `/pipelines/import/${pipelineIdentifier}`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponsePipelineSaveResponse,
+    Failure | Error,
+    ImportPipelineQueryParams,
+    PipelineImportRequest,
+    ImportPipelinePathParams
+  >('POST', getConfig('pipeline/api'), `/pipelines/import/${pipelineIdentifier}`, props, signal)
 
 export interface GetPipelineListQueryParams {
   accountIdentifier: string
@@ -8689,6 +10432,11 @@ export interface GetPipelineListQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   getDistinctFromBranches?: boolean
 }
 
@@ -8926,6 +10674,11 @@ export interface GetTemplateResolvedPipelineQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export interface GetTemplateResolvedPipelinePathParams {
@@ -9014,6 +10767,11 @@ export interface GetPipelineSummaryQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export interface GetPipelineSummaryPathParams {
@@ -9097,6 +10855,7 @@ export interface CreatePipelineV2QueryParams {
   identifier?: string
   name?: string
   description?: string
+  skipValidation?: boolean
   branch?: string
   repoIdentifier?: string
   rootFolder?: string
@@ -9114,7 +10873,7 @@ export type CreatePipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9128,7 +10887,7 @@ export const CreatePipelineV2 = (props: CreatePipelineV2Props) => (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >
     verb="POST"
@@ -9143,7 +10902,7 @@ export type UseCreatePipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9157,7 +10916,7 @@ export const useCreatePipelineV2 = (props: UseCreatePipelineV2Props) =>
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >('POST', `/pipelines/v2`, { base: getConfig('pipeline/api'), ...props })
 
@@ -9169,7 +10928,7 @@ export const createPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9178,7 +10937,7 @@ export const createPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     CreatePipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/v2`, props, signal)
 
@@ -9246,6 +11005,11 @@ export interface CreateVariablesV2QueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type CreateVariablesV2Props = Omit<
@@ -9307,6 +11071,7 @@ export interface PutPipelineV2QueryParams {
   projectIdentifier: string
   name?: string
   description?: string
+  skipValidation?: boolean
   branch?: string
   repoIdentifier?: string
   rootFolder?: string
@@ -9329,7 +11094,7 @@ export type PutPipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   >,
   'path' | 'verb'
@@ -9344,7 +11109,7 @@ export const PutPipelineV2 = ({ pipelineIdentifier, ...props }: PutPipelineV2Pro
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   >
     verb="PUT"
@@ -9359,7 +11124,7 @@ export type UsePutPipelineV2Props = Omit<
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   >,
   'path' | 'verb'
@@ -9374,7 +11139,7 @@ export const usePutPipelineV2 = ({ pipelineIdentifier, ...props }: UsePutPipelin
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   >('PUT', (paramsInPath: PutPipelineV2PathParams) => `/pipelines/v2/${paramsInPath.pipelineIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -9393,7 +11158,7 @@ export const putPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   > & { pipelineIdentifier: string },
   signal?: RequestInit['signal']
@@ -9402,7 +11167,7 @@ export const putPipelineV2Promise = (
     ResponsePipelineSaveResponse,
     Failure | Error,
     PutPipelineV2QueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelineV2PathParams
   >('PUT', getConfig('pipeline/api'), `/pipelines/v2/${pipelineIdentifier}`, props, signal)
 
@@ -9467,13 +11232,7 @@ export interface ValidatePipelineByYAMLQueryParams {
 }
 
 export type ValidatePipelineByYAMLProps = Omit<
-  MutateProps<
-    ResponseString,
-    Failure | Error,
-    ValidatePipelineByYAMLQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
-    void
-  >,
+  MutateProps<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, WebhookEndpointBodyRequestBody, void>,
   'path' | 'verb'
 >
 
@@ -9481,13 +11240,7 @@ export type ValidatePipelineByYAMLProps = Omit<
  * Validate a Pipeline YAML
  */
 export const ValidatePipelineByYAML = (props: ValidatePipelineByYAMLProps) => (
-  <Mutate<
-    ResponseString,
-    Failure | Error,
-    ValidatePipelineByYAMLQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
-    void
-  >
+  <Mutate<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, WebhookEndpointBodyRequestBody, void>
     verb="POST"
     path={`/pipelines/validate-yaml-with-schema`}
     base={getConfig('pipeline/api')}
@@ -9500,7 +11253,7 @@ export type UseValidatePipelineByYAMLProps = Omit<
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9510,13 +11263,11 @@ export type UseValidatePipelineByYAMLProps = Omit<
  * Validate a Pipeline YAML
  */
 export const useValidatePipelineByYAML = (props: UseValidatePipelineByYAMLProps) =>
-  useMutate<
-    ResponseString,
-    Failure | Error,
-    ValidatePipelineByYAMLQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
-    void
-  >('POST', `/pipelines/validate-yaml-with-schema`, { base: getConfig('pipeline/api'), ...props })
+  useMutate<ResponseString, Failure | Error, ValidatePipelineByYAMLQueryParams, WebhookEndpointBodyRequestBody, void>(
+    'POST',
+    `/pipelines/validate-yaml-with-schema`,
+    { base: getConfig('pipeline/api'), ...props }
+  )
 
 /**
  * Validate a Pipeline YAML
@@ -9526,7 +11277,7 @@ export const validatePipelineByYAMLPromise = (
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9535,7 +11286,7 @@ export const validatePipelineByYAMLPromise = (
     ResponseString,
     Failure | Error,
     ValidatePipelineByYAMLQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/validate-yaml-with-schema`, props, signal)
 
@@ -9546,6 +11297,11 @@ export interface CreateVariablesQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type CreateVariablesProps = Omit<
@@ -9666,6 +11422,11 @@ export interface GetPipelineQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
   getTemplatesResolvedPipeline?: boolean
 }
 
@@ -9733,6 +11494,7 @@ export interface PutPipelineQueryParams {
   projectIdentifier: string
   name?: string
   description?: string
+  skipValidation?: boolean
   branch?: string
   repoIdentifier?: string
   rootFolder?: string
@@ -9755,7 +11517,7 @@ export type PutPipelineProps = Omit<
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   >,
   'path' | 'verb'
@@ -9770,7 +11532,7 @@ export const PutPipeline = ({ pipelineIdentifier, ...props }: PutPipelineProps) 
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   >
     verb="PUT"
@@ -9785,7 +11547,7 @@ export type UsePutPipelineProps = Omit<
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   >,
   'path' | 'verb'
@@ -9800,7 +11562,7 @@ export const usePutPipeline = ({ pipelineIdentifier, ...props }: UsePutPipelineP
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   >('PUT', (paramsInPath: PutPipelinePathParams) => `/pipelines/${paramsInPath.pipelineIdentifier}`, {
     base: getConfig('pipeline/api'),
@@ -9819,7 +11581,7 @@ export const putPipelinePromise = (
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   > & { pipelineIdentifier: string },
   signal?: RequestInit['signal']
@@ -9828,7 +11590,7 @@ export const putPipelinePromise = (
     ResponseString,
     Failure | Error,
     PutPipelineQueryParams,
-    CreateOverlayInputSetForPipelineBodyRequestBody,
+    WebhookEndpointBodyRequestBody,
     PutPipelinePathParams
   >('PUT', getConfig('pipeline/api'), `/pipelines/${pipelineIdentifier}`, props, signal)
 
@@ -9840,6 +11602,11 @@ export interface RefreshAndUpdateTemplateInputsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type RefreshAndUpdateTemplateInputsProps = Omit<
@@ -9897,6 +11664,11 @@ export interface RefreshAllQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type RefreshAllProps = Omit<
@@ -9954,6 +11726,11 @@ export interface GetYamlDiffQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type GetYamlDiffProps = Omit<
@@ -10008,6 +11785,11 @@ export interface ValidateTemplateInputsQueryParams {
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
 }
 
 export type ValidateTemplateInputsProps = Omit<
@@ -10646,7 +12428,7 @@ export const updateTriggerStatusPromise = (
   >('PUT', getConfig('pipeline/api'), `/triggers/${triggerIdentifier}/status`, props, signal)
 
 export interface GetActionsListQueryParams {
-  sourceRepo: 'GITHUB' | 'GITLAB' | 'BITBUCKET' | 'AWS_CODECOMMIT' | 'CUSTOM'
+  sourceRepo: 'AZURE_REPO' | 'GITHUB' | 'GITLAB' | 'BITBUCKET' | 'AWS_CODECOMMIT' | 'CUSTOM'
   event: string
 }
 
@@ -10848,6 +12630,87 @@ export const customWebhookEndpointPromise = (
     WebhookEndpointBodyRequestBody,
     void
   >('POST', getConfig('pipeline/api'), `/webhook/custom`, props, signal)
+
+export interface CustomWebhookEndpointV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pipelineIdentifier?: string
+  triggerIdentifier?: string
+}
+
+export type CustomWebhookEndpointV2Props = Omit<
+  MutateProps<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV2QueryParams,
+    WebhookEndpointBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * accept custom webhook event V2
+ */
+export const CustomWebhookEndpointV2 = (props: CustomWebhookEndpointV2Props) => (
+  <Mutate<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV2QueryParams,
+    WebhookEndpointBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/webhook/custom/v2`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseCustomWebhookEndpointV2Props = Omit<
+  UseMutateProps<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV2QueryParams,
+    WebhookEndpointBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * accept custom webhook event V2
+ */
+export const useCustomWebhookEndpointV2 = (props: UseCustomWebhookEndpointV2Props) =>
+  useMutate<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV2QueryParams,
+    WebhookEndpointBodyRequestBody,
+    void
+  >('POST', `/webhook/custom/v2`, { base: getConfig('pipeline/api'), ...props })
+
+/**
+ * accept custom webhook event V2
+ */
+export const customWebhookEndpointV2Promise = (
+  props: MutateUsingFetchProps<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV2QueryParams,
+    WebhookEndpointBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseNGProcessWebhookResponse,
+    Failure | Error,
+    CustomWebhookEndpointV2QueryParams,
+    WebhookEndpointBodyRequestBody,
+    void
+  >('POST', getConfig('pipeline/api'), `/webhook/custom/v2`, props, signal)
 
 export type GetGitTriggerEventDetailsProps = Omit<
   GetProps<ResponseMapStringMapStringListString, Failure | Error, void, void>,
@@ -11210,6 +13073,89 @@ export const webhookEndpointPromise = (
     signal
   )
 
+export interface TriggerExecutionDetailsQueryParams {
+  accountIdentifier: string
+}
+
+export interface TriggerExecutionDetailsPathParams {
+  eventId: string
+}
+
+export type TriggerExecutionDetailsProps = Omit<
+  GetProps<
+    ResponseWebhookExecutionDetails,
+    Failure | Error,
+    TriggerExecutionDetailsQueryParams,
+    TriggerExecutionDetailsPathParams
+  >,
+  'path'
+> &
+  TriggerExecutionDetailsPathParams
+
+/**
+ * fetch webhook event details with execution summary
+ */
+export const TriggerExecutionDetails = ({ eventId, ...props }: TriggerExecutionDetailsProps) => (
+  <Get<
+    ResponseWebhookExecutionDetails,
+    Failure | Error,
+    TriggerExecutionDetailsQueryParams,
+    TriggerExecutionDetailsPathParams
+  >
+    path={`/webhook/triggerExecutionDetails/${eventId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseTriggerExecutionDetailsProps = Omit<
+  UseGetProps<
+    ResponseWebhookExecutionDetails,
+    Failure | Error,
+    TriggerExecutionDetailsQueryParams,
+    TriggerExecutionDetailsPathParams
+  >,
+  'path'
+> &
+  TriggerExecutionDetailsPathParams
+
+/**
+ * fetch webhook event details with execution summary
+ */
+export const useTriggerExecutionDetails = ({ eventId, ...props }: UseTriggerExecutionDetailsProps) =>
+  useGet<
+    ResponseWebhookExecutionDetails,
+    Failure | Error,
+    TriggerExecutionDetailsQueryParams,
+    TriggerExecutionDetailsPathParams
+  >((paramsInPath: TriggerExecutionDetailsPathParams) => `/webhook/triggerExecutionDetails/${paramsInPath.eventId}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { eventId },
+    ...props
+  })
+
+/**
+ * fetch webhook event details with execution summary
+ */
+export const triggerExecutionDetailsPromise = (
+  {
+    eventId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseWebhookExecutionDetails,
+    Failure | Error,
+    TriggerExecutionDetailsQueryParams,
+    TriggerExecutionDetailsPathParams
+  > & { eventId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseWebhookExecutionDetails,
+    Failure | Error,
+    TriggerExecutionDetailsQueryParams,
+    TriggerExecutionDetailsPathParams
+  >(getConfig('pipeline/api'), `/webhook/triggerExecutionDetails/${eventId}`, props, signal)
+
 export interface TriggerProcessingDetailsQueryParams {
   accountIdentifier: string
   eventId: string
@@ -11310,15 +13256,20 @@ export const getWebhookTriggerTypesPromise = (
 
 export interface GetSchemaYamlQueryParams {
   entityType:
+    | 'CreatePR'
+    | 'GITOPS_MERGE_PR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
     | 'Http'
+    | 'Email'
     | 'JiraCreate'
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -11358,6 +13309,7 @@ export interface GetSchemaYamlQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -11366,7 +13318,7 @@ export interface GetSchemaYamlQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -11375,6 +13327,7 @@ export interface GetSchemaYamlQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -11388,6 +13341,22 @@ export interface GetSchemaYamlQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
+    | 'AzureCreateARMResource'
+    | 'BuildAndPushACR'
+    | 'AzureCreateBPResource'
+    | 'AzureARMRollback'
+    | 'Background'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -11439,21 +13408,70 @@ export const getSchemaYamlPromise = (
     signal
   )
 
+export type DummyApiForSwaggerSchemaCheckProps = Omit<
+  GetProps<ResponsePipelineConfig, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * dummy api for checking pms schema
+ */
+export const DummyApiForSwaggerSchemaCheck = (props: DummyApiForSwaggerSchemaCheckProps) => (
+  <Get<ResponsePipelineConfig, Failure | Error, void, void>
+    path={`/yaml-schema/dummyApiForSwaggerSchemaCheck`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseDummyApiForSwaggerSchemaCheckProps = Omit<
+  UseGetProps<ResponsePipelineConfig, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * dummy api for checking pms schema
+ */
+export const useDummyApiForSwaggerSchemaCheck = (props: UseDummyApiForSwaggerSchemaCheckProps) =>
+  useGet<ResponsePipelineConfig, Failure | Error, void, void>(`/yaml-schema/dummyApiForSwaggerSchemaCheck`, {
+    base: getConfig('pipeline/api'),
+    ...props
+  })
+
+/**
+ * dummy api for checking pms schema
+ */
+export const dummyApiForSwaggerSchemaCheckPromise = (
+  props: GetUsingFetchProps<ResponsePipelineConfig, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePipelineConfig, Failure | Error, void, void>(
+    getConfig('pipeline/api'),
+    `/yaml-schema/dummyApiForSwaggerSchemaCheck`,
+    props,
+    signal
+  )
+
 export interface GetStepYamlSchemaQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
   yamlGroup?: string
   entityType?:
+    | 'CreatePR'
+    | 'GITOPS_MERGE_PR'
     | 'Projects'
     | 'Pipelines'
     | 'PipelineSteps'
     | 'Http'
+    | 'Email'
     | 'JiraCreate'
     | 'JiraUpdate'
     | 'JiraApproval'
     | 'HarnessApproval'
+    | 'CustomApproval'
     | 'Barrier'
+    | 'Queue'
     | 'FlagConfiguration'
     | 'ShellScript'
     | 'K8sCanaryDeploy'
@@ -11493,6 +13511,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ApprovalStage'
     | 'FeatureFlagStage'
     | 'Template'
+    | 'TemplateStage'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -11501,7 +13520,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
     | 'GovernancePolicies'
-    | 'Policy'
+    | 'POLICY_STEP'
     | 'Run'
     | 'RunTests'
     | 'Plugin'
@@ -11510,6 +13529,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
     | 'S3Upload'
@@ -11523,6 +13543,22 @@ export interface GetStepYamlSchemaQueryParams {
     | 'CustomStage'
     | 'RollbackStack'
     | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
+    | 'AzureCreateARMResource'
+    | 'BuildAndPushACR'
+    | 'AzureCreateBPResource'
+    | 'AzureARMRollback'
+    | 'Background'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

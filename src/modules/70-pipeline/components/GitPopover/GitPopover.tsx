@@ -14,7 +14,6 @@ import { Color } from '@harness/design-system'
 import { getRepoDetailsByIndentifier } from '@common/utils/gitSyncUtils'
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { getEntityUrl, getRepoEntityObject } from '@gitsync/common/gitSyncUtils'
 import type { GitSyncEntityDTO } from 'services/cd-ng'
@@ -33,11 +32,10 @@ export function RenderGitPopover(props: GitPopoverProps): React.ReactElement | n
   const { getString } = useStrings()
   const { data, iconProps, popoverProps, customUI } = props
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()
-  const { isGitSyncEnabled } = useAppStore()
 
   const repoLabel = useMemo(() => {
-    return isGitSyncEnabled ? data?.repoIdentifier : data?.repoName
-  }, [data?.repoIdentifier, data?.repoName, isGitSyncEnabled])
+    return defaultTo(data?.repoIdentifier, data?.repoName)
+  }, [data?.repoIdentifier, data?.repoName])
 
   const repo = getRepoDetailsByIndentifier(repoLabel, gitSyncRepos)
   const repoEntity: GitSyncEntityDTO = getRepoEntityObject(repo, data)
@@ -60,7 +58,7 @@ export function RenderGitPopover(props: GitPopoverProps): React.ReactElement | n
     },
     {
       heading: getString('pipelineSteps.deploy.inputSet.branch'),
-      content: data.branch || '',
+      content: data?.branch || '',
       iconName: 'git-new-branch'
     }
   ]

@@ -16,6 +16,7 @@ import CVProgressBar from './components/CVProgressBar/CVProgressBar'
 import { PrimaryAndCanaryNodes } from '../ExecutionVerificationSummary/components/PrimaryandCanaryNodes/PrimaryAndCanaryNodes'
 import VerificationStatusCard from './components/VerificationStatusCard/VerificationStatusCard'
 import type { DeploymentNodeAnalysisResult } from './components/DeploymentNodes/DeploymentNodes.constants'
+import { DurationView } from './components/DurationView/DurationView'
 import css from './DeploymentProgressAndNodes.module.scss'
 
 export interface DeploymentProgressAndNodesProps {
@@ -99,9 +100,7 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
             >
               {getString('pipeline.startedOn')}: {moment(deploymentSummary.startTime).format('MMM D, YYYY h:mm A')}
             </Text>
-            <Text font={{ size: 'small' }} data-name={getString('duration')}>
-              {getString('duration')} {moment.duration(deploymentSummary.durationMs, 'ms').humanize()}
-            </Text>
+            <DurationView durationMs={deploymentSummary?.durationMs} />
           </Container>
           {deploymentSummary && !isConsoleView && <VerificationStatusCard status={deploymentSummary.status} />}
         </Container>

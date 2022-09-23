@@ -12,57 +12,59 @@ import {
   Text,
   Layout,
   Formik,
-  getMultiTypeFromValue,
-  PageError
+  PageError,
+  AllowedTypesWithRunTime
 } from '@wings-software/uicore'
 import { parse } from 'yaml'
 import { Color } from '@harness/design-system'
 import { defaultTo, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import cx from 'classnames'
-import {
-  TemplateSummaryResponse,
-  useGetTemplateInputSetYaml,
-  useGetYamlWithTemplateRefsResolved
-} from 'services/template-ng'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { TemplateSummaryResponse, useGetTemplateInputSetYaml } from 'services/template-ng'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
-import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { PageSpinner, useToaster } from '@common/components'
-import type {
-  StageElementConfig,
-  StepElementConfig,
-  StageElementWrapperConfig,
-  PipelineInfoConfig
-} from 'services/cd-ng'
+import {
+  SecretManagerTemplateInputSet,
+  ScriptVariablesRuntimeInput
+} from '@secrets/components/ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
+import type { StageElementConfig, StepElementConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
+import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+import { DeploymentConfigRuntimeInputs } from '@pipeline/components/DeploymentConfigRuntimeInputs/DeploymentConfigRuntimeInputs'
 import { PipelineInputSetFormInternal, StageForm } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
+import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import { getTemplateRuntimeInputsCount, TemplateType } from '@templates-library/utils/templatesUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
-import { useMutateAsGet } from '@common/hooks'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import css from './TemplateInputs.module.scss'
 
 export interface TemplateInputsProps {
   template: TemplateSummaryResponse | NGTemplateInfoConfigWithGitDetails
+  storeMetadata?: StoreMetadata
 }
 
-export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
-  const { template } = props
-  const [inputSetTemplate, setInputSetTemplate] = React.useState<StepElementConfig | StageElementConfig | null>()
+export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeMetadata = {} }) => {
+  const templateSpec =
+    parse((template as TemplateSummaryResponse).yaml || '')?.template?.spec ||
+    (template as NGTemplateInfoConfigWithGitDetails).spec
+  const [inputSetTemplate, setInputSetTemplate] = React.useState<
+    StepElementConfig | StageElementConfig | PipelineInfoConfig | DeploymentConfig
+  >()
+  const params = useParams<ProjectPathProps>()
   const [count, setCount] = React.useState<number>(0)
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+  const allowableTypes = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.EXPRESSION,
+    MultiTypeInputType.RUNTIME
+  ] as AllowedTypesWithRunTime[]
   const templateEntityType =
     (template as TemplateSummaryResponse).templateEntityType || (template as NGTemplateInfoConfigWithGitDetails).type
   const repo =
@@ -83,9 +85,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
       orgIdentifier: template.orgIdentifier,
       projectIdentifier: template.projectIdentifier,
       versionLabel: defaultTo(template.versionLabel, ''),
-      repoIdentifier: repo,
-      branch: branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, params, repo, branch)
     }
   })
 
@@ -95,54 +95,9 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
       setCount(getTemplateRuntimeInputsCount(templateInput))
       setInputSetTemplate(templateInput)
     } catch (error) {
-      showError(getRBACErrorMessage(error), undefined, 'template.parse.inputSet.error')
+      showError(getRBACErrorMessage(error as RBACError), undefined, 'template.parse.inputSet.error')
     }
   }, [templateInputYaml?.data])
-
-  const initialValues = React.useMemo(() => {
-    switch (templateEntityType) {
-      case TemplateType.Step:
-        return inputSetTemplate as StepElementConfig
-      case TemplateType.Stage:
-        return { stage: inputSetTemplate } as StageElementWrapperConfig
-      case TemplateType.Pipeline:
-        return inputSetTemplate as PipelineInfoConfig
-      default:
-        return {}
-    }
-  }, [templateEntityType, inputSetTemplate])
-
-  const originalTemplate = (template as TemplateSummaryResponse).yaml
-    ? parse(defaultTo((template as TemplateSummaryResponse).yaml, '')).template
-    : (template as NGTemplateInfoConfigWithGitDetails)
-
-  const {
-    data: resolvedTemplateResponse,
-    loading: loadingResolvedTemplate,
-    error: errorResolvedTemplate,
-    refetch: refetchResolvedTemplate
-  } = useMutateAsGet(useGetYamlWithTemplateRefsResolved, {
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier: template.orgIdentifier,
-      projectIdentifier: template.projectIdentifier,
-      repoIdentifier: repo,
-      branch: branch,
-      getDefaultFromOtherRepo: true
-    },
-    body: {
-      originalEntityYaml: yamlStringify(originalTemplate)
-    }
-  })
-
-  const originalValues = React.useMemo(() => {
-    const templateSpec = parse(resolvedTemplateResponse?.data?.mergedPipelineYaml || '')?.spec
-    if (templateEntityType === TemplateType.Stage) {
-      return { stage: templateSpec }
-    } else {
-      return templateSpec
-    }
-  }, [templateEntityType, resolvedTemplateResponse?.data?.mergedPipelineYaml])
 
   return (
     <Container
@@ -151,122 +106,117 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = props => {
       className={css.container}
     >
       <Layout.Vertical>
-        {(loading || loadingResolvedTemplate) && <PageSpinner />}
-        {!loading && !loadingResolvedTemplate && (inputSetError || errorResolvedTemplate) && (
-          <>
-            {inputSetError && (
-              <Container height={300}>
-                <PageError
-                  message={defaultTo((inputSetError.data as Error)?.message, inputSetError.message)}
-                  onClick={() => refetch()}
-                />
-              </Container>
-            )}
-            {errorResolvedTemplate && (
-              <Container height={300}>
-                <PageError
-                  message={defaultTo((errorResolvedTemplate.data as Error)?.message, errorResolvedTemplate.message)}
-                  onClick={() => refetchResolvedTemplate()}
-                />
-              </Container>
-            )}
-          </>
-        )}
-        {!loading && !loadingResolvedTemplate && !inputSetError && !errorResolvedTemplate && !inputSetTemplate && (
+        {loading && <PageSpinner />}
+        {!loading && inputSetError && (
           <Container height={300}>
+            <PageError
+              message={defaultTo((inputSetError.data as Error)?.message, inputSetError.message)}
+              onClick={() => refetch()}
+            />
+          </Container>
+        )}
+        {!loading && !inputSetError && !inputSetTemplate && (
+          <Container flex height={300}>
             <NoResultsView minimal={true} text={getString('templatesLibrary.noInputsRequired')} />
           </Container>
         )}
-        {!loading &&
-          !loadingResolvedTemplate &&
-          !inputSetError &&
-          !errorResolvedTemplate &&
-          inputSetTemplate &&
-          originalValues && (
-            <Container className={css.inputsContainer}>
-              <Layout.Vertical spacing={'xlarge'}>
-                <Container>
-                  <Layout.Horizontal flex={{ alignItems: 'center' }} spacing={'xxxlarge'}>
-                    <Text font={{ size: 'normal', weight: 'bold' }} color={Color.GREY_800}>
-                      {getTemplateNameWithLabel(template)}
-                    </Text>
-                    <Text className={css.inputsCount} font={{ size: 'small' }}>
-                      {getString('templatesLibrary.inputsCount', { count })}
-                    </Text>
-                  </Layout.Horizontal>
-                </Container>
-                <Formik<StepElementConfig | StageElementWrapperConfig | PipelineInfoConfig>
-                  onSubmit={noop}
-                  initialValues={initialValues}
-                  formName="templateInputs"
-                  enableReinitialize={true}
-                >
-                  {formikProps => {
-                    return (
-                      <>
-                        {templateEntityType === TemplateType.Pipeline && (
-                          <PipelineInputSetFormInternal
-                            originalPipeline={originalValues as PipelineInfoConfig}
-                            template={formikProps.values as PipelineInfoConfig}
-                            readonly={true}
+        {!loading && !inputSetError && inputSetTemplate && (
+          <Container className={css.inputsContainer}>
+            <Layout.Vertical spacing={'xlarge'}>
+              <Container>
+                <Layout.Horizontal flex={{ alignItems: 'center' }} spacing={'xxxlarge'}>
+                  <Text font={{ size: 'normal', weight: 'bold' }} color={Color.GREY_800}>
+                    {getTemplateNameWithLabel(template)}
+                  </Text>
+                  <Text className={css.inputsCount} font={{ size: 'small' }}>
+                    {getString('templatesLibrary.inputsCount', { count })}
+                  </Text>
+                </Layout.Horizontal>
+              </Container>
+              <Formik<{
+                data: StepElementConfig | StageElementConfig | PipelineInfoConfig | SecretManagerTemplateInputSet
+              }>
+                onSubmit={noop}
+                initialValues={{ data: templateSpec }}
+                formName="templateInputs"
+                enableReinitialize={true}
+              >
+                {formikProps => {
+                  return (
+                    <>
+                      {templateEntityType === TemplateType.Pipeline && (
+                        <PipelineInputSetFormInternal
+                          template={inputSetTemplate as PipelineInfoConfig}
+                          originalPipeline={formikProps.values.data as PipelineInfoConfig}
+                          path={'data'}
+                          viewType={StepViewType.InputSet}
+                          readonly={true}
+                          allowableTypes={allowableTypes}
+                          viewTypeMetadata={{ isTemplateDetailDrawer: true }}
+                        />
+                      )}
+                      {templateEntityType === TemplateType.Stage && (
+                        <StageForm
+                          template={{ stage: inputSetTemplate as StageElementConfig }}
+                          allValues={{ stage: formikProps.values.data as StageElementConfig }}
+                          path={'data'}
+                          viewType={StepViewType.InputSet}
+                          readonly={true}
+                          allowableTypes={allowableTypes}
+                          hideTitle={true}
+                          stageClassName={css.stageCard}
+                        />
+                      )}
+                      {templateEntityType === TemplateType.Step && (
+                        <Container
+                          className={css.inputsCard}
+                          background={Color.WHITE}
+                          padding={'large'}
+                          margin={{ bottom: 'xxlarge' }}
+                        >
+                          <StepForm
+                            template={{ step: inputSetTemplate as StepElementConfig }}
+                            allValues={{ step: formikProps.values.data as StepElementConfig }}
+                            path={'data'}
                             viewType={StepViewType.InputSet}
-                            allowableTypes={allowableTypes}
-                            viewTypeMetadata={{ isTemplateDetailDrawer: true }}
-                          />
-                        )}
-                        {templateEntityType === TemplateType.Stage && (
-                          <StageForm
-                            template={formikProps.values as StageElementWrapperConfig}
-                            allValues={originalValues as StageElementWrapperConfig}
-                            path={'stage'}
                             readonly={true}
-                            viewType={StepViewType.InputSet}
                             allowableTypes={allowableTypes}
                             hideTitle={true}
-                            stageClassName={css.stageCard}
+                            onUpdate={noop}
                           />
-                        )}
-                        {templateEntityType === TemplateType.Step && (
-                          <Container
-                            className={css.inputsCard}
-                            background={Color.WHITE}
-                            padding={'large'}
-                            margin={{ bottom: 'xxlarge' }}
-                          >
-                            <StepWidget<Partial<StepElementConfig>>
-                              factory={factory}
-                              initialValues={formikProps.values as StepElementConfig}
-                              template={originalValues as StepElementConfig}
-                              readonly={true}
-                              type={(formikProps.values as StepElementConfig)?.type as StepType}
-                              stepViewType={StepViewType.InputSet}
-                              allowableTypes={allowableTypes}
-                            />
-                            {getMultiTypeFromValue(
-                              (formikProps.values as StepElementConfig).spec?.delegateSelectors
-                            ) === MultiTypeInputType.RUNTIME && (
-                              <div className={cx(stepCss.formGroup, stepCss.sm)}>
-                                <MultiTypeDelegateSelector
-                                  inputProps={{
-                                    projectIdentifier: template.projectIdentifier,
-                                    orgIdentifier: template.orgIdentifier
-                                  }}
-                                  allowableTypes={allowableTypes}
-                                  label={getString('delegate.DelegateSelector')}
-                                  name={'spec.delegateSelectors'}
-                                  disabled={true}
-                                />
-                              </div>
-                            )}
-                          </Container>
-                        )}
-                      </>
-                    )
-                  }}
-                </Formik>
-              </Layout.Vertical>
-            </Container>
-          )}
+                        </Container>
+                      )}
+                      {templateEntityType === TemplateType.SecretManager && (
+                        <ScriptVariablesRuntimeInput
+                          template={inputSetTemplate as SecretManagerTemplateInputSet['templateInputs']}
+                          allowableTypes={[]}
+                          readonly
+                          enabledExecutionDetails
+                          path={'data'}
+                        />
+                      )}
+                      {templateEntityType === TemplateType.CustomDeployment && (
+                        <Container
+                          className={css.inputsCard}
+                          background={Color.WHITE}
+                          padding={'large'}
+                          margin={{ bottom: 'xxlarge' }}
+                        >
+                          <DeploymentConfigRuntimeInputs
+                            template={inputSetTemplate as DeploymentConfig}
+                            allowableTypes={allowableTypes}
+                            readonly
+                            path={'data'}
+                          />
+                        </Container>
+                      )}
+                    </>
+                  )
+                }}
+              </Formik>
+            </Layout.Vertical>
+          </Container>
+        )}
       </Layout.Vertical>
     </Container>
   )

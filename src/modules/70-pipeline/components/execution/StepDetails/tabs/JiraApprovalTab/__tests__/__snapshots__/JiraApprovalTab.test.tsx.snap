@@ -32,7 +32,7 @@ exports[`<JiraApprovalTab/> tests isWaiting test 1`] = `
     </div>
   </div>
   <div
-    class="jiraApproval"
+    class="jiraApproval applyTopPadding"
   >
     <div
       class="collapse jiraCriteria"
@@ -87,7 +87,7 @@ exports[`<JiraApprovalTab/> tests isWaiting test 1`] = `
               class="collapseContainer"
             >
               <div>
-                pipeline.jiraApprovalStep.execution.allConditionsMsg
+                pipeline.commonApprovalStep.execution.allConditionsMsg
               </div>
               <ul
                 class="conditions"
@@ -214,6 +214,42 @@ exports[`<JiraApprovalTab/> tests not isWaiting test - rejected 1`] = `
     </div>
   </div>
   <div
+    class="StyledProps--font StyledProps--main stepDetailsContainer StyledProps--padding-top-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.duration
+          </th>
+          <td>
+            <div>
+              MOCK DURATION
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div
     class="jiraApproval"
   >
     <div
@@ -269,7 +305,7 @@ exports[`<JiraApprovalTab/> tests not isWaiting test - rejected 1`] = `
               class="collapseContainer"
             >
               <div>
-                pipeline.jiraApprovalStep.execution.allConditionsMsg
+                pipeline.commonApprovalStep.execution.allConditionsMsg
               </div>
               <ul
                 class="conditions"
@@ -396,6 +432,42 @@ exports[`<JiraApprovalTab/> tests not isWaiting test 1`] = `
     </div>
   </div>
   <div
+    class="StyledProps--font StyledProps--main stepDetailsContainer StyledProps--padding-top-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.duration
+          </th>
+          <td>
+            <div>
+              MOCK DURATION
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div
     class="jiraApproval"
   >
     <div
@@ -451,7 +523,7 @@ exports[`<JiraApprovalTab/> tests not isWaiting test 1`] = `
               class="collapseContainer"
             >
               <div>
-                pipeline.jiraApprovalStep.execution.allConditionsMsg
+                pipeline.commonApprovalStep.execution.allConditionsMsg
               </div>
               <ul
                 class="conditions"

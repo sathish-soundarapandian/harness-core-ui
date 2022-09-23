@@ -12,26 +12,29 @@ import { useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
 import { useStrings } from 'framework/strings'
 
-import {
-  CCMRecommendationFilterProperties,
-  FilterDTO,
-  FilterStatsDTO,
-  useGetFilterList,
-  useRecommendationFilterValues
-} from 'services/ce'
+import { FilterDTO, FilterStatsDTO, useGetFilterList, useRecommendationFilterValues } from 'services/ce'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
-import { flattenObject, removeNullAndEmpty } from '@common/components/Filter/utils/FilterUtils'
+import { flattenObject, removeNullAndEmpty, UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import RecommendationFilterDrawer from './FilterDrawer/FilterDrawer'
 
-interface RecommendationFiltersProps {
-  applyFilters: (filterProperties: CCMRecommendationFilterProperties) => void
+export interface RecommendationFiltersProps {
+  applyFilters: (filter: Partial<FilterDTO>) => void
+  appliedFilter: Partial<FilterDTO>
 }
 
-const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ applyFilters }) => {
+const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ applyFilters, appliedFilter }) => {
   const { accountId } = useParams<{ accountId: string }>()
   const { getString } = useStrings()
+  const unsavedFilter = {
+    name: UNSAVED_FILTER,
+    identifier: getIdentifierFromName(UNSAVED_FILTER)
+  }
 
-  const [selectedFilter, setSelectedFilter] = useState<FilterDTO | undefined>()
+  const [selectedFilter, setSelectedFilter] = useState<FilterDTO | undefined>({
+    ...unsavedFilter,
+    ...(appliedFilter as FilterDTO)
+  })
 
   const [fetchedFilterValues, setFetchedFilterValues] = useState<FilterStatsDTO[]>([])
 
@@ -72,10 +75,11 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ applyFilt
       filter = savedFilters.find(item => item.identifier === identifier)
     }
     setSelectedFilter(filter)
-    applyFilters?.(filter?.filterProperties || {})
+    applyFilters?.({ identifier, filterProperties: filter?.filterProperties })
   }
 
-  const onClearAll = (): void => applyFilters({})
+  const onClearAll = (): void =>
+    applyFilters({ identifier: getIdentifierFromName(UNSAVED_FILTER), filterProperties: {} })
 
   const [openDrawer, closeDrawer] = useModalHook(() => {
     return (
@@ -89,7 +93,7 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ applyFilt
         applyFilter={(filter: FilterDTO) => {
           closeDrawer()
           setSelectedFilter(filter)
-          applyFilters?.(filter.filterProperties)
+          applyFilters?.({ identifier: filter?.identifier, filterProperties: filter?.filterProperties })
         }}
         fetchedFilterValues={fetchedFilterValues}
         onClearAll={onClearAll}
@@ -102,7 +106,7 @@ const RecommendationFilters: React.FC<RecommendationFiltersProps> = ({ applyFilt
       new Map<string, string>([
         ['names', getString('ce.recommendation.listPage.filters.name')],
         ['namespaces', getString('ce.recommendation.listPage.filters.namespace')],
-        ['clusterNames', getString('ce.recommendation.listPage.filters.clusterName')],
+        ['clusterNames', getString('common.clusterName')],
         ['resourceTypes', getString('common.resourceTypeLabel')],
         ['minCost', getString('ce.recommendation.listPage.filters.potentialSpend')],
         ['minSaving', getString('ce.recommendation.listPage.filters.savings')]

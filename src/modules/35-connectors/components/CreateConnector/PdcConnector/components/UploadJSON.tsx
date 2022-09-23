@@ -5,8 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useRef, DragEvent } from 'react'
+import React, { useState, useRef, DragEvent, useCallback } from 'react'
+import type { FormikProps } from 'formik'
 import { Icon, Text } from '@harness/uicore'
+import { Button, ButtonVariation, FormInput } from '@wings-software/uicore'
+import { debounce } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import type { uploadHostItem } from '../StepDetails/PdcDetails'
@@ -15,9 +18,14 @@ import css from './UploadJSON.module.scss'
 
 interface UploadJSONInterface {
   setJsonValue: (value: uploadHostItem[]) => void
+  formikProps?: FormikProps<{
+    hostsJson: string
+    hosts: string | string[]
+  }>
+  previousHosts?: uploadHostItem[] | string
 }
 
-const UploadJSON = ({ setJsonValue }: UploadJSONInterface) => {
+const UploadJSON = ({ setJsonValue, formikProps, previousHosts }: UploadJSONInterface) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const inputRef = useRef() as React.MutableRefObject<HTMLInputElement>
@@ -30,10 +38,12 @@ const UploadJSON = ({ setJsonValue }: UploadJSONInterface) => {
       const fr = new FileReader()
       fr.onload = () => {
         try {
-          setJsonValue(JSON.parse(fr.result as string))
+          const jsonValue = JSON.parse(fr.result as string)
+          setJsonValue(jsonValue)
           setFileName(file.name)
+          prettyPrintJsonContent(jsonValue)
         } catch (e) {
-          showError(e.message)
+          showError(getString('connectors.pdc.errorParsingJsonFile'))
         }
       }
       fr.readAsText(file)
@@ -47,34 +57,25 @@ const UploadJSON = ({ setJsonValue }: UploadJSONInterface) => {
     e.stopPropagation()
   }
 
+  const prettyPrintJsonContent = (jsonValue: string) => {
+    const prettyJsonValue = JSON.stringify(jsonValue, undefined, 4)
+    formikProps?.setFieldValue('hostsJson', prettyJsonValue)
+  }
+
+  const handleJsonAreaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    try {
+      const target = event.target as HTMLTextAreaElement
+      const jsonValue = JSON.parse(target.value)
+      setJsonValue(jsonValue)
+    } catch (e) {
+      showError(e.message)
+    }
+  }
+
+  const debouncedOnChange = useCallback(debounce(handleJsonAreaChange, 1000), [])
+
   return (
-    <div
-      className={`${css.uploadComponent} ${dropHighlight ? css.highlightedDrop : ''}`}
-      onClick={() => inputRef.current.click()}
-      onDragEnter={e => {
-        preventDefaults(e)
-        setDropHighlight(true)
-      }}
-      onDragOver={e => {
-        preventDefaults(e)
-        setDropHighlight(true)
-      }}
-      onDragLeave={e => {
-        preventDefaults(e)
-        setDropHighlight(false)
-      }}
-      onDrop={event => {
-        try {
-          preventDefaults(event)
-          setDropHighlight(false)
-          for (let i = 0; i < event.dataTransfer.files.length; i++) {
-            handleFileUpload(event.dataTransfer.files[i])
-          }
-        } catch (e) {
-          showError(e)
-        }
-      }}
-    >
+    <>
       <input
         type="file"
         id="bulk"
@@ -83,16 +84,68 @@ const UploadJSON = ({ setJsonValue }: UploadJSONInterface) => {
         ref={inputRef}
         onChange={event => handleFileUpload((event.target as any).files[0])}
       />
-      <Icon name="upload-box" size={24} className={css.uploadIcon} />
-      {fileName ? (
-        <Text>{fileName}</Text>
-      ) : (
+      {!fileName && !previousHosts && (
+        <div
+          className={`${css.uploadComponent} ${dropHighlight ? css.highlightedDrop : ''}`}
+          onClick={() => inputRef.current.click()}
+          onDragEnter={e => {
+            preventDefaults(e)
+            setDropHighlight(true)
+          }}
+          onDragOver={e => {
+            preventDefaults(e)
+            setDropHighlight(true)
+          }}
+          onDragLeave={e => {
+            preventDefaults(e)
+            setDropHighlight(false)
+          }}
+          onDrop={event => {
+            try {
+              preventDefaults(event)
+              setDropHighlight(false)
+              for (let i = 0; i < event.dataTransfer.files.length; i++) {
+                handleFileUpload(event.dataTransfer.files[i])
+              }
+            } catch (e) {
+              showError(e)
+            }
+          }}
+        >
+          <Icon name="upload-box" size={24} className={css.uploadIcon} />
+          {fileName ? (
+            <Text>{fileName}</Text>
+          ) : (
+            <>
+              <Text key="uploadText1">{getString('connectors.pdc.hostsUpload1')}</Text>
+              <Text key="uploadText2">{getString('connectors.pdc.hostsUpload2')}</Text>
+            </>
+          )}
+        </div>
+      )}
+      {(fileName || previousHosts) && (
         <>
-          <Text key="uploadText1">{getString('connectors.pdc.hostsUpload1')}</Text>
-          <Text key="uploadText2">{getString('connectors.pdc.hostsUpload2')}</Text>
+          <Button
+            variation={ButtonVariation.SECONDARY}
+            icon="syncing"
+            onClick={() => inputRef.current.click()}
+            title={getString('filestore.view.replaceFile')}
+            text={getString('filestore.view.replaceFile')}
+            margin={{ left: 'small' }}
+            style={{
+              position: 'absolute',
+              left: '600px',
+              top: '105px'
+            }}
+          />
+          <FormInput.TextArea
+            name="hostsJson"
+            onChange={debouncedOnChange}
+            label={getString('connectors.pdc.hostsJson')}
+          />
         </>
       )}
-    </div>
+    </>
   )
 }
 

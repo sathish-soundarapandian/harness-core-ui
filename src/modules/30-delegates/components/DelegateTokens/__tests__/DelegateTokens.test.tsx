@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, waitFor, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type { DelegateTokenDetails } from 'services/portal'
+import type { DelegateTokenDetails } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import DelegateTokens from '../DelegateTokens'
 
@@ -29,10 +29,6 @@ const createToken = jest.fn().mockResolvedValue({
   resource: mockTokens[0]
 })
 
-jest.mock('services/portal', () => ({
-  useGetDelegatesByToken: jest.fn().mockImplementation(() => ({}))
-}))
-
 jest.mock('services/cd-ng', () => ({
   useCreateDelegateToken: jest.fn().mockImplementation(() => ({
     mutate: createToken
@@ -42,6 +38,12 @@ jest.mock('services/cd-ng', () => ({
       resource: mockTokens
     },
     refetch: jest.fn()
+  })),
+  useGetDelegateGroupsUsingToken: jest.fn().mockImplementation(() => ({
+    data: {
+      resource: []
+    },
+    loading: false
   })),
   revokeDelegateTokenPromise: jest.fn().mockImplementation(() => undefined)
 }))

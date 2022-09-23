@@ -21,7 +21,7 @@ exports[`DockerHub Step Edit View should render properly for AWS VMs build infra
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="dockerHubStep_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -126,7 +126,7 @@ exports[`DockerHub Step Edit View should render properly for AWS VMs build infra
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"

@@ -21,8 +21,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { useMutateAsGet } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 interface AddStepTemplateReturnType {
   addTemplate: (event: ExecutionGraphAddStepEvent) => Promise<void>
@@ -35,18 +34,19 @@ interface AddStepTemplate {
 export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateReturnType {
   const { executionRef } = props
   const { accountId } = useParams<ProjectPathProps>()
-  const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
   const pipelineContext = usePipelineContext()
   const {
     state: {
       pipelineView,
-      selectionState: { selectedStageId = '' }
+      selectionState: { selectedStageId = '' },
+      gitDetails,
+      storeMetadata
     },
     updateStage,
     getStageFromPipeline,
-    updatePipelineView,
-    getTemplate
+    updatePipelineView
   } = pipelineContext
+  const { getTemplate } = useTemplateSelector()
   const { stage: selectedStage } = getStageFromPipeline(selectedStageId)
   const [allChildTypes, setAllChildTypes] = React.useState<string[]>([])
 
@@ -81,7 +81,12 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
 
   const addTemplate = async (event: ExecutionGraphAddStepEvent) => {
     try {
-      const { template, isCopied } = await getTemplate({ templateType: 'Step', allChildTypes })
+      const { template, isCopied } = await getTemplate({
+        templateType: 'Step',
+        allChildTypes,
+        gitDetails,
+        storeMetadata
+      })
       const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
       if (pipelineStage && !pipelineStage.stage?.spec) {
@@ -100,8 +105,7 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
         pipelineStage?.stage?.spec?.execution as any,
         newStepData,
         event.isParallel,
-        event.isRollback,
-        newPipelineStudioEnabled
+        event.isRollback
       )
       if (pipelineStage?.stage) {
         await updateStage(pipelineStage?.stage)

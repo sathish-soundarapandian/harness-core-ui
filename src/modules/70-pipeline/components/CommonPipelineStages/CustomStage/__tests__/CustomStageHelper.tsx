@@ -25,6 +25,7 @@ class StepFactory extends AbstractStepFactory {
 class StepOne extends Step<Record<string, any>> {
   protected type = StepType.HarnessApproval
   protected stepName = 'stepOne'
+  protected referenceId = 'stepOne'
   protected stepIcon: IconName = 'cross'
   validateInputSet(): Record<string, any> {
     return {}
@@ -38,6 +39,7 @@ class StepOne extends Step<Record<string, any>> {
 class StepTwo extends Step<Record<string, any>> {
   protected type = StepType.CustomVariable
   protected stepName = 'stepTwo'
+  protected referenceId = 'stepTwo'
   protected stepIcon: IconName = 'cross'
   validateInputSet(): Record<string, any> {
     return {}
@@ -154,6 +156,8 @@ export const pipelineContextMock = {
 
 export const getPropsForMinimalStage = (): PipelineStagesProps<CustomStageMinimalModeProps> => ({
   minimal: true,
+  gitDetails: {},
+  storeMetadata: {},
   stageProps: {
     data: {
       stage: {
@@ -187,6 +191,7 @@ export const getDummyPipelineContextValue = (): PipelineContextInterface => {
     updatePipeline: jest.fn(),
     updatePipelineView: jest.fn(),
     updateStage: jest.fn().mockResolvedValue({}),
+    setSelectedSectionId: jest.fn(),
     setSelectedTabId: jest.fn(),
     getStagePathFromPipeline: jest.fn(),
     getStageFromPipeline: jest.fn(() => {

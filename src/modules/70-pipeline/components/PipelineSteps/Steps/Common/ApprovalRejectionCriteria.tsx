@@ -8,10 +8,12 @@
 import React, { useEffect, useState } from 'react'
 import { FieldArray } from 'formik'
 import { get, isEmpty } from 'lodash-es'
+import { Color } from '@harness/design-system'
 import {
   Button,
   FormInput,
   HarnessDocTooltip,
+  Icon,
   Layout,
   MultiTypeInputType,
   Radio,
@@ -25,14 +27,13 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import {
   ApprovalRejectionCriteriaCondition,
   ApprovalRejectionCriteriaProps,
-  ConditionsInterface,
-  ApprovalRejectionCriteriaType
+  ApprovalRejectionCriteriaType,
+  ConditionsInterface
 } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { isApprovalStepFieldDisabled } from './ApprovalCommons'
 import {
-  filterOutMultiOperators,
   handleOperatorChange,
   operatorValues,
   removeDuplicateFieldKeys,
@@ -103,9 +104,11 @@ export function Conditions({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const name = `spec.${mode}.spec.conditions`
+  const approvalRejectionCriteriaError = get(formik?.errors, name)
   if (isFetchingFields) {
     return <div className={css.fetching}>{getString('pipeline.approvalCriteria.fetchingFields')}</div>
   }
+
   return (
     <div className={css.conditionalContent}>
       <Layout.Horizontal className={css.alignConditions} spacing="xxxlarge">
@@ -146,20 +149,20 @@ export function Conditions({
                     {isEmpty(fieldList) ? (
                       <FormInput.Text
                         disabled={isApprovalStepFieldDisabled(readonly)}
-                        name={`spec.${mode}.spec.conditions[${i}].key`}
+                        name={`${name}[${i}].key`}
                         placeholder={getString('pipeline.keyPlaceholder')}
                       />
                     ) : (
                       <FormInput.Select
                         items={allowedFieldKeys}
-                        name={`spec.${mode}.spec.conditions[${i}].key`}
+                        name={`${name}[${i}].key`}
                         placeholder={getString('pipeline.keyPlaceholder')}
                         disabled={isApprovalStepFieldDisabled(readonly)}
                       />
                     )}
                     <FormInput.Select
-                      items={allowedValuesForFields[condition.key] ? operatorValues : filterOutMultiOperators()}
-                      name={`spec.${mode}.spec.conditions[${i}].operator`}
+                      items={operatorValues}
+                      name={`${name}[${i}].operator`}
                       placeholder={getString('pipeline.operatorPlaceholder')}
                       disabled={isApprovalStepFieldDisabled(readonly)}
                       onChange={(selectedOperator: SelectOption) => {
@@ -178,7 +181,7 @@ export function Conditions({
                     ) : (
                       <FormInput.MultiTextInput
                         label=""
-                        name={`spec.${mode}.spec.conditions[${i}].value`}
+                        name={`${name}[${i}].value`}
                         placeholder={getString('common.valuePlaceholder')}
                         disabled={isApprovalStepFieldDisabled(readonly)}
                         multiTextInputProps={{
@@ -203,7 +206,9 @@ export function Conditions({
                   intent="primary"
                   data-testid="add-conditions"
                   disabled={isApprovalStepFieldDisabled(readonly)}
-                  onClick={() => push({ key: 'Status', operator: 'equals', value: [] })}
+                  onClick={() =>
+                    push({ key: stepType === StepType.JiraApproval ? 'Status' : '', operator: 'equals', value: '' })
+                  }
                 >
                   {getString('add')}
                 </Button>
@@ -212,10 +217,13 @@ export function Conditions({
           }}
         />
       </div>
-      {errorCheck(name, formik) ? (
-        <Text className={css.formikError} intent="danger">
-          {get(formik?.errors, name)}
-        </Text>
+      {errorCheck(name, formik) && typeof approvalRejectionCriteriaError === 'string' ? (
+        <Layout.Horizontal spacing="xsmall" margin={{ top: 'small' }}>
+          <Icon name="circle-cross" color={Color.RED_600} size={12} style={{ marginTop: 'var(--spacing-tiny)' }} />
+          <Text className={css.formikError} intent="danger">
+            {approvalRejectionCriteriaError}
+          </Text>
+        </Layout.Horizontal>
       ) : null}
     </div>
   )

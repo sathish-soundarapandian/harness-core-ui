@@ -1,0 +1,13 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "yamlPipeline": "pipeline:\n    name: Repo1\n    identifier: Repo1_1658954822540\n    projectIdentifier: project1\n    orgIdentifier: default\n    tags: {}\n    stages:\n        - stage:\n              name: OnboardingSampleStage\n              identifier: OnboardingSampleStage\n              description: \"\"\n              type: Deployment\n              spec:\n                  deploymentType: Kubernetes\n                  service:\n                      serviceRef: sample_service_1658954608737\n                  environment:\n                      environmentRef: sample_environment_1658954821373\n                      deployToAll: false\n                      infrastructureDefinitions:\n                          - identifier: sample_infrastructure_1658954821373\n                  execution:\n                      steps:\n                          - step:\n                                type: ShellScript\n                                name: Echo Welcome Message\n                                identifier: shell_ID\n                                spec:\n                                    shell: Bash\n                                    onDelegate: true\n                                    source:\n                                        type: Inline\n                                        spec:\n                                            script: 'echo \"Welcome to Harness CD\" '\n                                    environmentVariables: []\n                                    outputVariables: []\n                                    executionTarget: {}\n                          - step:\n                                type: K8sRollingRollback\n                                name: Rolling Rollback\n                                identifier: Rolling_Rollback\n                                spec:\n                                    skipDryRun: false\n                                timeout: 10m\n              tags: {}\n              failureStrategies:\n                  - onFailure:\n                        errors:\n                            - AllErrors\n                        action:\n                            type: StageRollback\n",
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "modules": ["cd", "pms"]
+  },
+  "metaData": null,
+  "correlationId": "ce1d82fc-6997-4ec1-82de-4e40bf83b437"
+}

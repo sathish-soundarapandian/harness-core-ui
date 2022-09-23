@@ -12,10 +12,8 @@ import { useParams } from 'react-router-dom'
 import { NodeRunInfo, useGetBarrierInfo, useGetResourceConstraintsExecutionInfo } from 'services/pipeline-ng'
 import type { CDStageModuleInfo } from 'services/cd-ng'
 import { PageSpinner } from '@common/components'
-import { processExecutionData } from '@pipeline/utils/executionUtils'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { useExecutionLayoutContext } from '@pipeline/components/ExecutionLayout/ExecutionLayoutContext'
-import ExecutionStageDiagram from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagram'
 import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { isExecutionPaused, isExecutionRunning } from '@pipeline/utils/statusHelpers'
@@ -40,8 +38,8 @@ import CreateNodeStep from '@pipeline/components/PipelineDiagram/Nodes/CreateNod
 import EndNodeStep from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStep'
 import StartNodeStep from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStep'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { MatrixStepNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixStepNode/MatrixStepNode'
+import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
 import BarrierStepTooltip from './components/BarrierStepTooltip/BarrierStepTooltip'
 import ResourceConstraintTooltip from './components/ResourceConstraints/ResourceConstraints'
 import VerifyStepTooltip from './components/VerifyStepTooltip/VerifyStepTooltip'
@@ -55,6 +53,7 @@ diagram.registerNode(NodeType.CreateNode, CreateNodeStep as unknown as React.FC<
 diagram.registerNode(NodeType.EndNode, EndNodeStep)
 diagram.registerNode(NodeType.StartNode, StartNodeStep)
 diagram.registerNode('STEP_GROUP', DiagramNodes[NodeType.StepGroupNode])
+diagram.registerNode([NodeType.MatrixNode, NodeType.LoopNode, NodeType.PARALLELISM], MatrixStepNode)
 diagram.registerNode('Approval', DiamondNodeWidget)
 diagram.registerNode('JiraApproval', DiamondNodeWidget)
 diagram.registerNode('HarnessApproval', DiamondNodeWidget)
@@ -76,8 +75,6 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
     selectedStageId,
     selectedStepId,
     allNodeMap,
-    setStepsGraphCanvasState,
-    stepsGraphCanvasState,
     isDataLoadedForSelectedStage
   } = useExecutionContext()
   const { setStepDetailsVisibility } = useExecutionLayoutContext()
@@ -87,7 +84,6 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
     DynamicPopoverHandlerBinding<unknown> | undefined
   >()
 
-  const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
   const { executionIdentifier, accountId } = useParams<ExecutionPathProps>()
   const stage = pipelineStagesMap.get(selectedStageId)
   const {
@@ -106,9 +102,7 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
   })
   const data: any = {
     //ExecutionPipeline<ExecutionNode> = {
-    items: newPipelineStudioEnabled
-      ? processExecutionDataV1(pipelineExecutionDetail?.executionGraph)
-      : processExecutionData(pipelineExecutionDetail?.executionGraph),
+    items: processExecutionDataV1(pipelineExecutionDetail?.executionGraph),
     identifier: `${executionIdentifier}-${pipelineExecutionDetail?.executionGraph?.rootNodeId}`,
     status: stage?.status as any,
     allNodes: Object.keys(allNodeMap)
@@ -153,28 +147,6 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
     setStepDetailsVisibility(!!selectedStepId)
   }, [selectedStepId, setStepDetailsVisibility])
 
-  const onMouseEnter = (event: any): void => {
-    const currentStage = event.stage || event.group
-    const isFinished = currentStage?.data?.endTs
-    const hasStarted = currentStage?.data?.startTs
-    const status = currentStage?.data?.status
-    dynamicPopoverHandler?.show(
-      event.stageTarget,
-      {
-        event,
-        data: { ...currentStage, ...stage }
-      },
-      { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' }
-    )
-    if (!isFinished && hasStarted) {
-      if (currentStage?.data?.stepType === StepType.Barrier && status !== 'Success') {
-        setBarrierSetupId(currentStage?.data?.setupId)
-      }
-      if (currentStage?.data?.stepType === StepType.ResourceConstraint) {
-        setResourceUnit(currentStage?.data?.stepParameters?.spec?.resourceUnit)
-      }
-    }
-  }
   const onMouseLeave = (): void => {
     dynamicPopoverHandler?.hide()
     setBarrierSetupId(undefined)
@@ -190,7 +162,12 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
       event.target,
       {
         event,
-        data: stageData
+        data: {
+          data: stageData,
+          module: stage?.module,
+          moduleInfo: stage?.moduleInfo,
+          when: stageData?.when || stageData?.data?.when
+        }
       },
       { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' }
     )
@@ -254,50 +231,19 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
   processExecutionDataV1(pipelineExecutionDetail?.executionGraph)
   return (
     <div className={cx(css.main, css.stepGroup)} data-layout={props.layout}>
-      {!isEmpty(selectedStageId) && data.items?.length > 0 && newPipelineStudioEnabled ? (
-        <CDPipelineStudioNew
-          readonly
-          loaderComponent={DiagramLoader}
-          data={data.items}
-          selectedNodeId={selectedStepId}
-          panZoom={false}
-          showEndNode={showEndNode}
-          graphLinkClassname={css.graphLink}
-        />
-      ) : (
-        <ExecutionStageDiagram
-          selectedIdentifier={selectedStepId}
-          itemClickHandler={e => props.onStepSelect(e.stage.identifier)}
-          data={data}
-          showEndNode={showEndNode}
-          disableCollapseButton={isExecutionRunning(stage?.status)}
-          isWhiteBackground
-          nodeStyle={{
-            width: 64,
-            height: 64
-          }}
-          loading={loading}
-          gridStyle={{
-            startX: 50,
-            startY: 150
-          }}
-          graphConfiguration={{
-            NODE_HAS_BORDER: false
-          }}
-          itemMouseEnter={onMouseEnter}
-          itemMouseLeave={() => {
-            dynamicPopoverHandler?.hide()
-            setBarrierSetupId(undefined)
-          }}
-          mouseEnterStepGroupTitle={onMouseEnter}
-          mouseLeaveStepGroupTitle={() => {
-            dynamicPopoverHandler?.hide()
-          }}
-          canvasBtnsClass={css.canvasBtns}
-          isStepView={true}
-          setGraphCanvasState={state => setStepsGraphCanvasState?.(state)}
-          graphCanvasState={stepsGraphCanvasState}
-        />
+      {!isEmpty(selectedStageId) && data.items?.length > 0 && (
+        <NodeDimensionProvider>
+          <CDPipelineStudioNew
+            readonly
+            loaderComponent={DiagramLoader}
+            data={data.items}
+            selectedNodeId={selectedStepId}
+            panZoom={false}
+            showEndNode={showEndNode}
+            graphLinkClassname={css.graphLink}
+            optimizeRender={false}
+          />
+        </NodeDimensionProvider>
       )}
       {loading && !isDataLoadedForSelectedStage && pipelineExecutionDetail && <PageSpinner fixed={false} />}
       <DynamicPopover
@@ -306,6 +252,7 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
         render={renderPopover}
         bind={setDynamicPopoverHandler as any}
         closeOnMouseOut
+        usePortal
       />
     </div>
   )

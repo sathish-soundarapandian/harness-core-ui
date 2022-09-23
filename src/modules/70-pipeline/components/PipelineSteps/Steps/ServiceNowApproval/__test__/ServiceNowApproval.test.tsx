@@ -6,10 +6,12 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, queryByAttribute, waitFor } from '@testing-library/react'
+import { render, act, fireEvent, queryByAttribute, waitFor, screen, getByText } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import { findPopoverContainer } from '@common/utils/testUtils'
 import { TestStepWidget, factory } from '../../__tests__/StepTestUtil'
 import { ServiceNowApproval } from '../ServiceNowApproval'
 import { getDefaultCriterias } from '../helper'
@@ -41,7 +43,7 @@ describe('ServiceNow Approval tests', () => {
 
   test('Basic snapshot - inputset mode', async () => {
     const props = getServiceNowApprovalDeploymentModeProps()
-    const { container, getByText, queryByText } = render(
+    const { container, queryByText } = render(
       <TestStepWidget
         template={props.inputSetData?.template}
         initialValues={props.initialValues}
@@ -50,7 +52,7 @@ describe('ServiceNow Approval tests', () => {
         inputSetData={props.inputSetData}
       />
     )
-    fireEvent.click(getByText('Submit'))
+    fireEvent.click(screen.getByText('Submit'))
     await waitFor(() => queryByText('Errors'))
     expect(container).toMatchSnapshot('input set with errors')
   })
@@ -118,7 +120,7 @@ describe('ServiceNow Approval tests', () => {
   test('Basic functions - edit stage view validations', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
     const props = getServiceNowApprovalEditModeProps()
-    const { container, queryByText, getByText } = render(
+    const { container, queryByText } = render(
       <TestStepWidget
         initialValues={props.initialValues}
         type={StepType.ServiceNowApproval}
@@ -136,7 +138,7 @@ describe('ServiceNow Approval tests', () => {
     fireEvent.change(queryByNameAttribute('name')!, { target: { value: 'serviceNow approval step' } })
 
     act(() => {
-      fireEvent.click(getByText('pipelineSteps.timeoutLabel'))
+      fireEvent.click(screen.getByText('pipelineSteps.timeoutLabel'))
     })
     fireEvent.change(queryByNameAttribute('timeout')!, { target: { value: '' } })
 
@@ -150,12 +152,12 @@ describe('ServiceNow Approval tests', () => {
       expect(queryByText('pipeline.approvalCriteria.validations.approvalCriteriaCondition')).toBeTruthy()
     })
 
-    fireEvent.click(getByText('add'))
+    fireEvent.click(screen.getByText('add'))
     await waitFor(() =>
       expect(queryByText('pipeline.approvalCriteria.validations.approvalCriteriaCondition')).toBeNull()
     )
 
-    fireEvent.click(getByText('common.jexlExpression'))
+    fireEvent.click(screen.getByText('common.jexlExpression'))
     await waitFor(() => expect(queryByText('pipeline.approvalCriteria.validations.expression')).toBeTruthy())
   })
 
@@ -178,7 +180,7 @@ describe('ServiceNow Approval tests', () => {
   test('Open a saved serviceNow approval step - edit stage view', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()
     const props = getServiceNowApprovalEditModePropsWithValues()
-    const { container, getByText, queryByDisplayValue } = render(
+    const { container, queryByDisplayValue } = render(
       <TestStepWidget
         initialValues={props.initialValues}
         type={StepType.ServiceNowApproval}
@@ -195,11 +197,24 @@ describe('ServiceNow Approval tests', () => {
     expect(queryByDisplayValue('itd1')).toBeTruthy()
 
     expect(queryByDisplayValue('somevalue for f1')).toBeTruthy()
-
-    fireEvent.click(getByText('common.optionalConfig'))
+    userEvent.click(screen.getByText('common.optionalConfig'))
     expect(queryByDisplayValue("<+state> == 'Blocked'")).toBeTruthy()
 
+    // Approval change window
+    const windowStart = await screen.findByPlaceholderText('select pipeline.serviceNowApprovalStep.windowStart')
+    userEvent.click(windowStart)
+    const startPopOver = findPopoverContainer()!
+    userEvent.click(getByText(startPopOver, 'updated'))
+    await waitFor(() => expect(startPopOver).not.toBeInTheDocument()) // wait for the popover to close, we have a transition delay for popover
+
     await act(() => ref.current?.submitForm()!)
+    expect(screen.getByText('pipeline.serviceNowApprovalStep.validations.windowEnd')).toBeInTheDocument()
+
+    const windowEnd = screen.getByPlaceholderText('select pipeline.serviceNowApprovalStep.windowEnd')
+    userEvent.click(windowEnd)
+    userEvent.click(getByText(findPopoverContainer()!, 'Due Date'))
+    await act(() => ref.current?.submitForm()!)
+
     expect(props.onUpdate).toBeCalledWith({
       identifier: 'serviceNow_approval_step',
       timeout: '10m',
@@ -231,6 +246,10 @@ describe('ServiceNow Approval tests', () => {
           spec: {
             expression: "<+state> == 'Blocked'"
           }
+        },
+        changeWindow: {
+          startField: 'sys_updated_on',
+          endField: 'due_date'
         }
       },
       name: 'serviceNow approval step'

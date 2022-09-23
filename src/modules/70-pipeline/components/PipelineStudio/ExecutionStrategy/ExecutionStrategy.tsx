@@ -6,8 +6,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react'
-import YAML from 'yaml'
-import { Classes, Switch } from '@blueprintjs/core'
+import { Switch } from '@blueprintjs/core'
 import {
   Text,
   Icon,
@@ -19,24 +18,29 @@ import {
   Container,
   PageError
 } from '@wings-software/uicore'
-import { defaultTo, get, isEmpty, set, startCase } from 'lodash-es'
-import { Color } from '@harness/design-system'
+import { defaultTo, isEmpty, set, startCase } from 'lodash-es'
+import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import produce from 'immer'
 import {
   DeploymentStageConfig,
   GetExecutionStrategyYamlQueryParams,
-  StageElementConfig,
-  StageElementWrapperConfig,
   useGetExecutionStrategyList,
   useGetExecutionStrategyYaml
 } from 'services/cd-ng'
+import type { StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PageSpinner } from '@common/components'
-import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { getSelectedDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  getServiceDefinitionType,
+  ServiceDeploymentType,
+  isSshOrWinrmDeploymentType
+} from '@pipeline/utils/stageHelpers'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import Default from './resources/BlankCanvas.png'
@@ -46,9 +50,20 @@ import HelmDeploymentBasic from './resources/Helm-Deployment-basic.mp4'
 import BlueGreenVideo from './resources/Blue-Green-deployment.mp4'
 import CanaryVideo from './resources/Canary-deployment.mp4'
 import Rolling from './resources/Rolling-Update-deployment.png'
+import AddContinuousVerification from './resources/addContinuousVerification.svg'
 import BlueGreen from './resources/Blue-Green-deployment.png'
 import Canary from './resources/Canary-deployment.png'
+import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
+import { cvLearnMoreHref } from './ExecutionStrategy.constant'
+import Phases from './Phases'
 import css from './ExecutionStrategy.module.scss'
+
+export enum ExecutionType {
+  BASIC = 'Basic',
+  CANARY = 'Canary',
+  ROLLING = 'Rolling',
+  DEFAULT = 'Default'
+}
 
 export interface ExecutionStrategyProps {
   selectedStage: StageElementWrapperConfig
@@ -95,37 +110,61 @@ function ExecutionStrategyRef(
 ): JSX.Element {
   const { selectedStage } = props
   const {
-    state: { pipelineView },
+    state: { pipelineView, templateServiceData },
     updateStage,
     updatePipelineView,
     getStageFromPipeline
   } = usePipelineContext()
   const { getString } = useStrings()
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+
   const [strategiesByDeploymentType, setStrategies] = useState([])
   const [isSubmitDisabled, disableSubmit] = useState(false)
   const [isVerifyEnabled, setIsVerifyEnabled] = useState(false)
   const [showPlayButton, setShowPlayButton] = useState<boolean>(false)
   const logger = loggerFor(ModuleName.CD)
+
   const serviceDefinitionType = useCallback((): GetExecutionStrategyYamlQueryParams['serviceDefinitionType'] => {
-    const isPropagating = get(selectedStage, 'stage.spec.serviceConfig.useFromStage', null)
-    return getSelectedDeploymentType(
-      selectedStage as StageElementWrapper<DeploymentStageElementConfig>,
+    return getServiceDefinitionType(
+      selectedStage,
       getStageFromPipeline,
-      isPropagating
+      isNewServiceEnvEntity,
+      isSvcEnvEntityEnabled,
+      templateServiceData
     )
-  }, [getStageFromPipeline, selectedStage])
+  }, [getStageFromPipeline, isSvcEnvEntityEnabled, selectedStage, templateServiceData])
 
-  const [selectedStrategy, setSelectedStrategy] = useState<StrategyType>(
-    serviceDefinitionType() === ServiceDeploymentType.ServerlessAwsLambda ? 'Basic' : 'Rolling'
-  )
+  const [selectedStrategy, setSelectedStrategy] = useState<StrategyType>(ExecutionType.ROLLING)
+  useEffect(() => {
+    switch (serviceDefinitionType()) {
+      case ServiceDeploymentType.ServerlessAwsLambda:
+        setSelectedStrategy(ExecutionType.BASIC)
+        break
+      case ServiceDeploymentType.AzureWebApp:
+        setSelectedStrategy(ExecutionType.CANARY)
+        break
+    }
+  }, [])
 
-  const infoByType: { [key: string]: string } = {
+  const azureWebAppDeploymentDescriptions = {
+    BlueGreen: getString('pipeline.azureWebApp.strategy.blueGreen'),
+    Canary: getString('pipeline.azureWebApp.strategy.canary'),
+    Basic: getString('pipeline.azureWebApp.strategy.basic'),
+    Default: getString('pipeline.executionStrategy.strategies.default.description')
+  }
+
+  const defaultDeploymentDescriptions = {
     BlueGreen: getString('pipeline.executionStrategy.strategies.blueGreen.description'),
     Rolling: getString('pipeline.executionStrategy.strategies.rolling.description'),
     Canary: getString('pipeline.executionStrategy.strategies.canary.description'),
     Default: getString('pipeline.executionStrategy.strategies.default.description'),
     Basic: getString('pipeline.executionStrategy.strategies.basic.description')
   }
+
+  const infoByType: { [key: string]: string } =
+    serviceDefinitionType() === ServiceDeploymentType.AzureWebApp
+      ? azureWebAppDeploymentDescriptions
+      : defaultDeploymentDescriptions
 
   const learnMoreLinkByType: { [key: string]: string } = {
     BlueGreen: getString('pipeline.executionStrategy.strategies.blueGreen.learnMoreLink'),
@@ -171,7 +210,12 @@ function ExecutionStrategyRef(
     }
   }, [strategies?.data, serviceDefinitionType])
 
+  const isDefaultStrategySelected = (selectedType?: string): boolean => {
+    return selectedType === getString('pipeline.executionStrategy.strategies.default.actualName')
+  }
+
   const {
+    loading: loadingStrategiesYaml,
     data: yamlSnippet,
     error,
     refetch: refetchStrategyYaml
@@ -179,18 +223,13 @@ function ExecutionStrategyRef(
     queryParams: {
       serviceDefinitionType: serviceDefinitionType(),
       strategyType: selectedStrategy !== 'BlankCanvas' ? selectedStrategy : 'Rolling',
-      ...(isVerifyEnabled && { includeVerify: true })
+      ...(isVerifyEnabled && !isDefaultStrategySelected(selectedStrategy) && { includeVerify: true })
     },
-    lazy: true
+    lazy: true,
+    debounce: 500
   })
 
   const getServiceDefintionType = serviceDefinitionType()
-  useEffect(() => {
-    if (getServiceDefintionType) {
-      refetchStrategyYaml?.()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getServiceDefintionType, selectedStrategy, isVerifyEnabled])
 
   useEffect(() => {
     if (error) {
@@ -202,19 +241,26 @@ function ExecutionStrategyRef(
 
   useEffect(() => {
     if (yamlSnippet?.data) {
-      updateStage(
-        produce(selectedStage, draft => {
-          const jsonFromYaml = YAML.parse(defaultTo(yamlSnippet?.data, '{}')) as StageElementConfig
-          set(draft, 'stage.failureStrategies', jsonFromYaml.failureStrategies)
-          set(draft, 'stage.spec.execution', defaultTo((jsonFromYaml.spec as DeploymentStageConfig)?.execution, {}))
-        }).stage as StageElementConfig
-      )
-    }
-    if (selectedStrategy === getString('pipeline.executionStrategy.strategies.default.actualName')) {
-      setIsVerifyEnabled(false)
-    }
-  }, [yamlSnippet?.data, selectedStrategy])
+      const newStage = produce(selectedStage, draft => {
+        const jsonFromYaml = parse(defaultTo(yamlSnippet?.data, '')) as StageElementConfig
+        if (draft.stage && draft.stage.spec) {
+          draft.stage.failureStrategies = jsonFromYaml?.failureStrategies
+          ;(draft.stage.spec as DeploymentStageConfig).execution = (jsonFromYaml?.spec as DeploymentStageConfig)
+            ?.execution ?? { steps: [], rollbackSteps: [] }
+        }
+      }).stage
 
+      if (isDefaultStrategySelected(selectedStrategy)) {
+        setIsVerifyEnabled(false)
+      }
+
+      if (newStage) {
+        updateStage(newStage).then(() => {
+          updatePipelineViewState()
+        })
+      }
+    }
+  }, [yamlSnippet?.data])
   const updatePipelineViewState = (): void => {
     updatePipelineView({
       ...pipelineView,
@@ -226,7 +272,7 @@ function ExecutionStrategyRef(
   const cancelSelection = (): void => {
     updateStage(
       produce(selectedStage, draft => {
-        const jsonFromYaml = YAML.parse(defaultTo(yamlSnippet?.data, '{}')) as StageElementConfig
+        const jsonFromYaml = parse(defaultTo(yamlSnippet?.data, '{}')) as StageElementConfig
         set(draft, 'stage.failureStrategies', jsonFromYaml.failureStrategies)
         set(draft, 'stage.spec.execution', { steps: [], rollbackSteps: [] })
       }).stage as StageElementConfig
@@ -254,7 +300,7 @@ function ExecutionStrategyRef(
   }
   return (
     <>
-      {loading && (
+      {(loading || loadingStrategiesYaml) && (
         <Container data-test="executionStrategyListLoader">
           <PageSpinner />
         </Container>
@@ -295,6 +341,15 @@ function ExecutionStrategyRef(
                   </Card>
                 ))}
               </section>
+              <Container className={css.phaseContainer}>
+                {isSshOrWinrmDeploymentType(serviceDefinitionType()) && selectedStrategy !== ExecutionType.DEFAULT ? (
+                  <Phases
+                    selectedStrategy={selectedStrategy}
+                    serviceDefinitionType={serviceDefinitionType}
+                    selectedStage={selectedStage}
+                  />
+                ) : null}
+              </Container>
             </section>
           </Layout.Vertical>
 
@@ -364,46 +419,61 @@ function ExecutionStrategyRef(
                   {selectedStrategy !== 'Default' && (
                     <>
                       <Steps strategy={selectedStrategy} />
-                      <section className={css.enableVerificationSection}>
-                        <Switch
-                          checked={isVerifyEnabled}
-                          onChange={() => setIsVerifyEnabled(prevIsVerifyEnabled => !prevIsVerifyEnabled)}
-                          className={cx(Classes.SMALL, css.toggleVerify)}
-                          data-testid="enable-verification-options-switch"
-                        />
-                        <Text className={css.enableVerification}>
-                          {getString('pipeline.enableVerificationOptions')}
-                        </Text>
-                      </section>
+
+                      {!isSshOrWinrmDeploymentType(serviceDefinitionType()) ? (
+                        <Layout.Horizontal margin={{ top: 'medium', bottom: 'large' }}>
+                          <Container className={css.enableVerificationDetail}>
+                            <Text font={{ variation: FontVariation.H4 }}>
+                              {getString('pipeline.enableVerificationTitle')}
+                            </Text>
+                            <Text className={css.info} margin={{ top: 'medium' }} color={Color.BLACK}>
+                              {getString('pipeline.enableVerificationHelpText')}{' '}
+                              <a href={cvLearnMoreHref} rel="noreferrer" target="_blank">
+                                {getString('pipeline.createPipeline.learnMore')}
+                              </a>
+                            </Text>
+                            <Switch
+                              checked={isVerifyEnabled}
+                              onChange={() => setIsVerifyEnabled(prevIsVerifyEnabled => !prevIsVerifyEnabled)}
+                              data-testid="enable-verification-options-switch"
+                              className={css.cvEnableSwitch}
+                              labelElement={
+                                <Text font={{ variation: FontVariation.BODY1 }} style={{ fontWeight: 500 }}>
+                                  {getString('pipeline.enableVerificationOptions')}
+                                </Text>
+                              }
+                            />
+                          </Container>
+                          <Container>
+                            <img
+                              className={css.enableVerificationImage}
+                              src={AddContinuousVerification}
+                              data-testid="blank-canvas-image"
+                            />
+                          </Container>
+                        </Layout.Horizontal>
+                      ) : null}
                     </>
                   )}
                 </section>
               </section>
             </Container>
-            <Container className={css.strategyDetailsFooter}>
-              <Button
-                variation={ButtonVariation.PRIMARY}
-                text={getString('pipeline.executionStrategy.useStrategy')}
-                onClick={() => {
-                  const newStage = produce(selectedStage, draft => {
-                    const jsonFromYaml = YAML.parse(defaultTo(yamlSnippet?.data, '')) as StageElementConfig
-                    if (draft.stage && draft.stage.spec) {
-                      draft.stage.failureStrategies = jsonFromYaml?.failureStrategies
-                      ;(draft.stage.spec as DeploymentStageConfig).execution = (
-                        jsonFromYaml?.spec as DeploymentStageConfig
-                      )?.execution ?? { steps: [], rollbackSteps: [] }
-                    }
-                  }).stage
 
-                  if (newStage) {
-                    updateStage(newStage).then(() => {
-                      updatePipelineViewState()
-                    })
-                  }
-                }}
-                disabled={isSubmitDisabled}
-              />
-            </Container>
+            {selectedStrategy === ExecutionType.DEFAULT || !isSshOrWinrmDeploymentType(serviceDefinitionType()) ? (
+              <Container className={css.strategyDetailsFooter}>
+                <Button
+                  data-testid="execution-use-strategy"
+                  variation={ButtonVariation.PRIMARY}
+                  text={getString('pipeline.executionStrategy.useStrategy')}
+                  onClick={() => {
+                    if (getServiceDefintionType) {
+                      refetchStrategyYaml?.()
+                    }
+                  }}
+                  disabled={isSubmitDisabled}
+                />
+              </Container>
+            ) : null}
           </Layout.Vertical>
         </Layout.Horizontal>
       )}

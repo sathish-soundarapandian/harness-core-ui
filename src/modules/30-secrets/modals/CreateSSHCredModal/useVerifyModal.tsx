@@ -31,7 +31,7 @@ export const useVerifyModal = (): UseVerifyModalReturn => {
         <Text margin={{ bottom: 'xlarge' }} font={{ size: 'medium' }} color={Color.BLACK}>
           {getString('secrets.createSSHCredWizard.btnVerifyConnection')}
         </Text>
-        <VerifyConnection identifier={data?.identifier as string} closeModal={hideModal} />
+        <VerifyConnection identifier={data?.identifier as string} closeModal={hideModal} showFinishBtn={true} />
         <Button minimal icon="cross" iconProps={{ size: 18 }} onClick={hideModal} className={css.crossIcon} />
       </Dialog>
     ),

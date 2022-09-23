@@ -162,7 +162,9 @@ describe('Unit tests for CloudMetricsHealthSource', () => {
         values: {
           sli: true,
           healthScore: false,
-          continuousVerification: false
+          continuousVerification: false,
+          ignoreThresholds: [],
+          failFastThresholds: []
         }
       }
     }

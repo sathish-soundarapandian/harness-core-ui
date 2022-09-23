@@ -16,7 +16,7 @@ describe('Unit tests for MetricChart', () => {
   test('Ensure data is rendered', async () => {
     const refetchFn = jest.fn()
     jest
-      .spyOn(cvservice, 'useGetAppdynamicsMetricDataByPath')
+      .spyOn(cvservice, 'useGetAppdynamicsMetricDataByPathV2')
       .mockReturnValue({ data: [{ timestamp: 32234, value: 3 }], refetch: refetchFn as any } as UseGetReturn<
         any,
         any,
@@ -25,7 +25,7 @@ describe('Unit tests for MetricChart', () => {
       >)
     render(
       <TestWrapper>
-        <MetricChart connectorIdentifier="123123" tier="1231" metricPath="werwer" appName="sdddf" baseFolder="adsf" />
+        <MetricChart connectorIdentifier="123123" appName="sdddf" completeMetricPath={'testPath'} />
       </TestWrapper>
     )
 

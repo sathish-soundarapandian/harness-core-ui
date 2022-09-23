@@ -20,9 +20,11 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   Text,
-  PageSpinner
+  PageSpinner,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
+import { ALLOWED_VALUES_TYPE, VALIDATORS, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import {
@@ -45,7 +47,6 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { ServiceNowDynamicFieldsSelector } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowDynamicFieldsSelector'
 import { ServiceNowFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowFieldsRenderer'
@@ -65,6 +66,7 @@ import {
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { processFormData } from '@pipeline/components/PipelineSteps/Steps/ServiceNowUpdate/helper'
 import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowTemplateFieldRenderer'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { ServiceNowUpdateStepModeProps, ServiceNowUpdateData, ServiceNowUpdateFormContentInterface } from './types'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
@@ -240,7 +242,7 @@ function FormContent({
         enforceFocus={false}
         isOpen
         onClose={hideDynamicFieldsModal}
-        title={getString('pipeline.jiraCreateStep.addFields')}
+        title={getString('pipeline.serviceNowCreateStep.addFields')}
       >
         <ServiceNowDynamicFieldsSelector
           connectorRef={connectorRefFixedValue || ''}
@@ -327,6 +329,8 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('timeout', value)}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+            allowedValuesValidator={VALIDATORS[ALLOWED_VALUES_TYPE.TIME]({ minimum: '10s' })}
           />
         )}
       </div>
@@ -566,7 +570,9 @@ function FormContent({
                                 placeholder={getString('common.valuePlaceholder')}
                                 disabled={isApprovalStepFieldDisabled(readonly)}
                                 multiTextInputProps={{
-                                  allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                    item => !isMultiTypeRuntime(item)
+                                  ) as AllowedTypes,
                                   expressions
                                 }}
                               />
@@ -630,7 +636,10 @@ function FormContent({
                     />
                   )}
                 </div>
-                <ServiceNowTemplateFieldsRenderer templateFields={formik.values.spec.templateFields} />
+                <ServiceNowTemplateFieldsRenderer
+                  templateFields={formik.values.spec.templateFields}
+                  templateName={formik.values.spec.templateName}
+                />
               </>
             )}
           </div>

@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Text, Layout, Card, Avatar, Icon, ButtonVariation, PageError } from '@wings-software/uicore'
+import React, { useState } from 'react'
+import { Text, Layout, Avatar, Icon, PageError, Button } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { useGetAggregatedUser } from 'services/cd-ng'
@@ -15,23 +16,17 @@ import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { PageSpinner } from '@common/components'
-import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import type { PipelineType, ProjectPathProps, UserPathProps } from '@common/interfaces/RouteInterfaces'
-import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PrincipalType } from '@rbac/utils/utils'
-import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
-import { isCommunityPlan } from '@common/utils/utils'
-import UserGroupTable from './views/UserGroupTable'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import ScopeFilter, { UserDetailsViews } from './views/ScopeFilter'
 import css from './UserDetails.module.scss'
 
 const UserDetails: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module, userIdentifier } =
     useParams<PipelineType<ProjectPathProps & UserPathProps>>()
-  const isCommunity = isCommunityPlan()
-
+  const [view, setView] = useState<UserDetailsViews>(UserDetailsViews.MEMBERSHIPS)
   const { data, loading, error, refetch } = useGetAggregatedUser({
     userId: userIdentifier,
     queryParams: {
@@ -41,9 +36,7 @@ const UserDetails: React.FC = () => {
     }
   })
 
-  const { openRoleAssignmentModal } = useRoleAssignmentModal({
-    onSuccess: refetch
-  })
+  const { getRBACErrorMessage } = useRBACError()
 
   const user = data?.data?.user
 
@@ -53,7 +46,7 @@ const UserDetails: React.FC = () => {
     return <PageSpinner />
   }
   if (error) {
-    return <PageError message={error.message} onClick={() => refetch()} />
+    return <PageError message={getRBACErrorMessage(error)} onClick={() => refetch()} />
   }
   if (!data?.data || !user) {
     return <></>
@@ -104,37 +97,26 @@ const UserDetails: React.FC = () => {
           </Layout.Horizontal>
         }
       />
-      <Page.Body className={css.body}>
-        <Layout.Vertical width="100%" padding="large">
-          {!isCommunity && (
-            <Layout.Vertical spacing="medium" padding={{ bottom: 'large' }}>
-              <Text color={Color.BLACK} font={{ size: 'medium', weight: 'semi-bold' }}>
-                {getString('rbac.roleBinding')}
-              </Text>
-              <Card className={css.card}>
-                <RoleBindingsList data={data?.data?.roleAssignmentMetadata} showNoData={true} />
-              </Card>
-              <Layout.Horizontal
-                flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-                padding={{ top: 'medium' }}
-              >
-                <ManagePrincipalButton
-                  data-testid={'addRole-UserGroup'}
-                  text={getString('common.plusNumber', { number: getString('common.role') })}
-                  variation={ButtonVariation.LINK}
-                  onClick={event => {
-                    event.stopPropagation()
-                    openRoleAssignmentModal(PrincipalType.USER, user, data?.data?.roleAssignmentMetadata)
-                  }}
-                  resourceIdentifier={user.uuid}
-                  resourceType={ResourceType.USER}
-                />
-              </Layout.Horizontal>
-            </Layout.Vertical>
-          )}
-          <UserGroupTable user={data.data} />
-        </Layout.Vertical>
-      </Page.Body>
+      <Layout.Horizontal
+        flex={{ alignItems: 'flex-end', justifyContent: 'flex-start' }}
+        spacing="small"
+        className={css.tabs}
+      >
+        <Button
+          text={getString('rbac.userDetails.groupMemberships')}
+          minimal
+          className={cx(css.tabButton, { [css.selectedTabs]: view == UserDetailsViews.MEMBERSHIPS })}
+          onClick={() => setView(UserDetailsViews.MEMBERSHIPS)}
+        />
+        <Button
+          text={getString('rbac.roleBindings')}
+          minimal
+          className={cx({ [css.selectedTabs]: view === UserDetailsViews.ROLE_BINDING }, css.tabButton)}
+          onClick={() => setView(UserDetailsViews.ROLE_BINDING)}
+        />
+      </Layout.Horizontal>
+
+      <ScopeFilter view={view} userData={data.data} />
     </>
   )
 }

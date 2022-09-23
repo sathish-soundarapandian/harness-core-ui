@@ -51,7 +51,7 @@ const RecommendationFilterForm: React.FC<RecommendationFilterFormProps> = ({ fet
       </Text>
       <FormInput.MultiSelect name="namespaces" key="namespaces" items={getItemsFromFilterValues('namespace')} />
       <Text className={css.label} font={{ variation: FontVariation.BODY2 }}>
-        {getString('ce.recommendation.listPage.filters.clusterName')}
+        {getString('common.clusterName')}
       </Text>
       <FormInput.MultiSelect name="clusterNames" key="clusterNames" items={getItemsFromFilterValues('clusterName')} />
       <Text className={css.label} font={{ variation: FontVariation.BODY2 }}>

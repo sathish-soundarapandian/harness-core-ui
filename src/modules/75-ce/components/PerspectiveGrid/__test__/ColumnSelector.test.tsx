@@ -8,13 +8,15 @@
 import React from 'react'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { DEFAULT_GROUP_BY } from '@ce/utils/perspectiveUtils'
 import ColumnSelector from '../ColumnSelector'
 import { DEFAULT_COLS } from '../Columns'
 
 const mock = {
   columns: DEFAULT_COLS,
   selectedColumns: DEFAULT_COLS,
-  onChange: jest.fn().mockImplementationOnce(() => ({}))
+  onChange: jest.fn().mockImplementationOnce(() => ({})),
+  groupBy: DEFAULT_GROUP_BY
 }
 
 describe('test cases for ColumnSelector component', () => {

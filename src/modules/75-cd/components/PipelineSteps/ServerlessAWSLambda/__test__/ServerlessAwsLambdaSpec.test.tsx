@@ -8,57 +8,53 @@
 import React from 'react'
 import { act, fireEvent, getByText, render, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import type { ServerlessAwsLambdaInfrastructure } from 'services/cd-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
+import { awsConnectorListResponse } from '@connectors/components/ConnectorReferenceField/__tests__/mocks'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { ServerlessAwsLambdaSpec } from '../ServerlessAwsLambdaSpec'
-import {
-  getConnectorResponse,
-  getConnectorsResponseMultiple
-} from '../../ServerlessInfraSpec/mocks/ConnectorResponse.mock'
+import { getConnectorResponse } from '../../ServerlessInfraSpec/mocks/ConnectorResponse.mock'
 
 const ConnectorResponse = getConnectorResponse('ServerlessAwsLambda')
-const MultipleConnectorsResponse = getConnectorsResponseMultiple('Aws')
-
-// jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
-  getConnectorListV2Promise: jest.fn(() => Promise.resolve(MultipleConnectorsResponse.data))
+  getConnectorListV2Promise: jest.fn(() => Promise.resolve(awsConnectorListResponse))
 }))
 
-const getRuntimeInputsValues = () => ({
+const getRuntimeInputsValues = (): ServerlessAwsLambdaInfrastructure => ({
   connectorRef: RUNTIME_INPUT_VALUE,
   region: RUNTIME_INPUT_VALUE,
   stage: RUNTIME_INPUT_VALUE
 })
 
-const getConnectorRuntimeInputValue = () => ({
+const getConnectorRuntimeInputValue = (): ServerlessAwsLambdaInfrastructure => ({
   connectorRef: RUNTIME_INPUT_VALUE,
   region: 'region',
   stage: 'stage'
 })
 
-const getRegionRuntimeInputValue = () => ({
+const getRegionRuntimeInputValue = (): ServerlessAwsLambdaInfrastructure => ({
   connectorRef: 'connectorRef',
   region: RUNTIME_INPUT_VALUE,
   stage: 'stage'
 })
 
-const getStageRuntimeInputValue = () => ({
+const getStageRuntimeInputValue = (): ServerlessAwsLambdaInfrastructure => ({
   connectorRef: 'connectorRef',
   region: 'region',
   stage: RUNTIME_INPUT_VALUE
 })
 
-const getInitialValues = () => ({
+const getInitialValues = (): ServerlessAwsLambdaInfrastructure => ({
   connectorRef: 'connectorRef',
   stage: 'stage',
   region: 'region'
 })
 
-const getEmptyInitialValues = () => ({
+const getEmptyInitialValues = (): ServerlessAwsLambdaInfrastructure => ({
   connectorRef: '',
   stage: '',
   region: ''
@@ -344,7 +340,7 @@ describe('Test ServerlessAwsLambdaSpec autocomplete', () => {
 
     list = await step.getConnectorsListForYaml(connectorRefPath, getYaml(), getParams())
     expect(list).toHaveLength(2)
-    expect(list[0].insertText).toBe('Aws')
+    expect(list[0].insertText).toBe('Aws_Connector_1')
 
     list = await step.getConnectorsListForYaml('invalid path', getYaml(), getParams())
     expect(list).toHaveLength(0)

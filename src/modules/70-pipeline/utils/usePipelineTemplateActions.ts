@@ -6,13 +6,14 @@
  */
 
 import { defaultTo } from 'lodash-es'
-import { parse } from 'yaml'
 import produce from 'immer'
 import { useCallback } from 'react'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import { parse } from '@common/utils/YamlHelperMethods'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { TemplateSummaryResponse } from 'services/template-ng'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 interface TemplateActionsReturnType {
   addOrUpdateTemplate: (selectedTemplate?: TemplateSummaryResponse) => Promise<void>
@@ -21,26 +22,39 @@ interface TemplateActionsReturnType {
 
 export function usePipelineTemplateActions(): TemplateActionsReturnType {
   const {
-    state: { pipeline },
-    updatePipeline,
-    getTemplate
+    state: { pipeline, gitDetails, storeMetadata },
+    updatePipeline
   } = usePipelineContext()
+  const { getTemplate } = useTemplateSelector()
+
+  const copyPipelineMetaData = useCallback(
+    (processNode: PipelineInfoConfig) => {
+      processNode.description = pipeline.description
+      processNode.tags = pipeline.tags
+      processNode.projectIdentifier = pipeline.projectIdentifier
+      processNode.orgIdentifier = pipeline.orgIdentifier
+    },
+    [pipeline]
+  )
 
   const addOrUpdateTemplate = useCallback(
     async (selectedTemplate?: TemplateSummaryResponse) => {
       const { template, isCopied } = await getTemplate({
         templateType: 'Pipeline',
-        selectedTemplate
+        selectedTemplate,
+        gitDetails,
+        storeMetadata
       })
       const processNode = isCopied
-        ? produce(defaultTo(parse(template?.yaml || '')?.template.spec, {}) as PipelineInfoConfig, draft => {
+        ? produce(defaultTo(parse<any>(template?.yaml || '')?.template.spec, {}) as PipelineInfoConfig, draft => {
             draft.name = defaultTo(pipeline?.name, '')
             draft.identifier = defaultTo(pipeline?.identifier, '')
           })
         : createTemplate(pipeline, template)
+      copyPipelineMetaData(processNode)
       await updatePipeline(processNode)
     },
-    [pipeline.template, getTemplate, updatePipeline]
+    [getTemplate, gitDetails, storeMetadata, pipeline, copyPipelineMetaData, updatePipeline]
   )
 
   const removeTemplate = useCallback(async () => {
@@ -49,6 +63,7 @@ export function usePipelineTemplateActions(): TemplateActionsReturnType {
       draft.name = defaultTo(node?.name, '')
       draft.identifier = defaultTo(node?.identifier, '')
     })
+    copyPipelineMetaData(processNode)
     await updatePipeline(processNode)
   }, [pipeline, updatePipeline])
 

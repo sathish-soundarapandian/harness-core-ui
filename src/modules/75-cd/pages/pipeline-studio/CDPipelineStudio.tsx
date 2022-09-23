@@ -23,12 +23,11 @@ import { PipelineProvider } from '@pipeline/components/PipelineStudio/PipelineCo
 import { PipelineStudio } from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { getCDTrialDialog } from '@cd/modals/CDTrial/useCDTrialModal'
 import { TrialType } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { FeatureFlag } from '@common/featureFlags'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
-import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
 import css from './CDPipelineStudio.module.scss'
 
 const CDPipelineStudio: React.FC = (): JSX.Element => {
@@ -75,14 +74,21 @@ const CDPipelineStudio: React.FC = (): JSX.Element => {
   const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED)
   const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED)
   const isSTOEnabled = useFeatureFlag(FeatureFlag.SECURITY_STAGE)
-  const isCustomStageEnabled = useFeatureFlag(FeatureFlag.NG_CUSTOM_STAGE)
   const { getString } = useStrings()
-  const { getTemplate } = useTemplateSelector()
 
   return (
     <PipelineProvider
       stagesMap={stagesCollection.getAllStagesAttributes(getString)}
-      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
+      queryParams={{
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        repoIdentifier,
+        branch,
+        repoName,
+        connectorRef,
+        storeType
+      }}
       pipelineIdentifier={pipelineIdentifier}
       renderPipelineStage={args =>
         getCDPipelineStages({
@@ -92,13 +98,11 @@ const CDPipelineStudio: React.FC = (): JSX.Element => {
           isCDEnabled: licenseInformation['CD'] && isCDEnabled,
           isCFEnabled: licenseInformation['CF'] && isCFEnabled,
           isSTOEnabled,
-          isApprovalStageEnabled: true,
-          isCustomStageEnabled
+          isApprovalStageEnabled: true
         })
       }
       stepsFactory={factory}
       runPipeline={handleRunPipeline}
-      getTemplate={getTemplate}
     >
       <PipelineStudio
         className={css.container}

@@ -14,7 +14,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
         data-status="success"
       >
         <span
-          class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+          class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
           icon="tick-circle"
         >
           <svg
@@ -55,7 +55,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
         data-status="success"
       >
         <span
-          class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+          class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
           icon="tick-circle"
         >
           <svg
@@ -102,7 +102,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="success"
           >
             <span
-              class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+              class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
               icon="tick-circle"
             >
               <svg
@@ -143,7 +143,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="running"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon running icon"
               data-icon="spinner"
             >
               <svg
@@ -186,7 +186,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="failed"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon failed icon"
               data-icon="circle-cross"
             >
               <svg
@@ -225,7 +225,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="expired"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon expired icon"
               data-icon="expired"
             >
               <svg
@@ -264,7 +264,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="aborted"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon aborted icon"
               data-icon="banned"
             >
               <svg
@@ -303,7 +303,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="suspended"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon suspended icon"
               data-icon="banned"
             >
               <svg
@@ -342,7 +342,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="queued"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon queued icon"
               data-icon="queued"
             >
               <svg
@@ -379,7 +379,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="notstarted"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon notstarted icon"
               data-icon="pending"
             >
               <svg
@@ -416,7 +416,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="paused"
           >
             <span
-              class="bp3-icon bp3-icon-pause StyledProps--main icon"
+              class="bp3-icon bp3-icon-pause StyledProps--main statusIcon paused icon"
               icon="pause"
             >
               <svg
@@ -456,24 +456,6 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             class="step"
             data-status="waiting"
           >
-            <span
-              class="bp3-icon StyledProps--main icon"
-              data-icon="waiting"
-            >
-              <svg
-                height="16"
-                viewBox="0 0 13 13"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12.289.78a.7.7 0 00-.697.697v.984l-.547-.547A6.392 6.392 0 006.478 0a6.467 6.467 0 00-4.58 1.9A6.503 6.503 0 00.011 6.877c.028.37.329.656.684.656h.041a.69.69 0 00.643-.738 5.126 5.126 0 011.49-3.91 5.083 5.083 0 017.205 0l.547.547h-.984c-.383 0-.684.3-.684.683a.7.7 0 00.697.698h2.653A.7.7 0 0013 4.115V1.463a.71.71 0 00-.711-.684z"
-                />
-                <path
-                  d="M8.762 6.412l-1.627-.451V3.568a.7.7 0 00-.698-.697.7.7 0 00-.697.697v2.913a.69.69 0 00.506.67l2.133.601c.068.014.123.027.191.027.301 0 .574-.205.67-.505a.685.685 0 00-.478-.862zM4.851 11.377a4.858 4.858 0 01-.943-.424.61.61 0 00-.848.232.61.61 0 00.233.848c.369.219.765.396 1.176.52a.497.497 0 00.19.027c.26 0 .507-.164.589-.424a.63.63 0 00-.397-.78zM1.857 8.79a.617.617 0 00-.834-.274.617.617 0 00-.273.834c.191.383.424.752.683 1.08.123.15.301.232.492.232a.573.573 0 00.383-.136.628.628 0 00.11-.875 4.666 4.666 0 01-.56-.862zM10.348 9.899a5.968 5.968 0 01-.766.71.621.621 0 00.37 1.121.6.6 0 00.368-.122c.233-.178.451-.37.67-.588.096-.096.192-.192.274-.287a.612.612 0 00-.055-.875.584.584 0 00-.861.04zM7.818 11.456c-.328.096-.683.15-1.025.165a.634.634 0 00-.588.656c.014.328.3.588.615.588h.041a6.667 6.667 0 001.272-.205.627.627 0 00.437-.766.624.624 0 00-.752-.438z"
-                />
-              </svg>
-            </span>
             <p
               class="StyledProps--font Text--lineclamp StyledProps--main name"
               style="--text-line-clamp: 1;"
@@ -497,7 +479,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="skipped"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon skipped icon"
               data-icon="skipped"
             >
               <svg
@@ -536,7 +518,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
         data-status="success"
       >
         <span
-          class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+          class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
           icon="tick-circle"
         >
           <svg
@@ -583,7 +565,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="success"
           >
             <span
-              class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+              class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
               icon="tick-circle"
             >
               <svg
@@ -624,7 +606,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                 data-status="success"
               >
                 <span
-                  class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+                  class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
                   icon="tick-circle"
                 >
                   <svg
@@ -665,7 +647,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                 data-status="success"
               >
                 <span
-                  class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+                  class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
                   icon="tick-circle"
                 >
                   <svg
@@ -708,7 +690,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="failed"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon failed icon"
               data-icon="circle-cross"
             >
               <svg
@@ -747,7 +729,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                 data-status="success"
               >
                 <span
-                  class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+                  class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
                   icon="tick-circle"
                 >
                   <svg
@@ -788,7 +770,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                 data-status="failed"
               >
                 <span
-                  class="bp3-icon StyledProps--main icon"
+                  class="bp3-icon StyledProps--main statusIcon failed icon"
                   data-icon="circle-cross"
                 >
                   <svg
@@ -829,7 +811,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="running"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon running icon"
               data-icon="spinner"
             >
               <svg
@@ -872,7 +854,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                 data-status="success"
               >
                 <span
-                  class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+                  class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
                   icon="tick-circle"
                 >
                   <svg
@@ -913,7 +895,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                 data-status="running"
               >
                 <span
-                  class="bp3-icon StyledProps--main icon"
+                  class="bp3-icon StyledProps--main statusIcon running icon"
                   data-icon="spinner"
                 >
                   <svg
@@ -956,7 +938,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                 data-status="success"
               >
                 <span
-                  class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+                  class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
                   icon="tick-circle"
                 >
                   <svg
@@ -1006,7 +988,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                     data-status="success"
                   >
                     <span
-                      class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+                      class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
                       icon="tick-circle"
                     >
                       <svg
@@ -1053,7 +1035,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
         data-status="running"
       >
         <span
-          class="bp3-icon StyledProps--main icon"
+          class="bp3-icon StyledProps--main statusIcon running icon"
           data-icon="spinner"
         >
           <svg
@@ -1099,7 +1081,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
             data-status="running"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon running icon"
               data-icon="spinner"
             >
               <svg
@@ -1151,7 +1133,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                 data-status="success"
               >
                 <span
-                  class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+                  class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
                   icon="tick-circle"
                 >
                   <svg
@@ -1192,7 +1174,7 @@ exports[`<StepsTree /> tests snapshot test 1`] = `
                 data-status="notstarted"
               >
                 <span
-                  class="bp3-icon StyledProps--main icon"
+                  class="bp3-icon StyledProps--main statusIcon notstarted icon"
                   data-icon="pending"
                 >
                   <svg
@@ -1242,7 +1224,7 @@ exports[`<StepsTree /> tests works for retry steps 1`] = `
         data-status="success"
       >
         <span
-          class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+          class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
           icon="tick-circle"
         >
           <svg
@@ -1279,7 +1261,7 @@ exports[`<StepsTree /> tests works for retry steps 1`] = `
             data-status="failed"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon failed icon"
               data-icon="circle-cross"
             >
               <svg
@@ -1318,7 +1300,7 @@ exports[`<StepsTree /> tests works for retry steps 1`] = `
             data-status="failed"
           >
             <span
-              class="bp3-icon StyledProps--main icon"
+              class="bp3-icon StyledProps--main statusIcon failed icon"
               data-icon="circle-cross"
             >
               <svg
@@ -1357,7 +1339,7 @@ exports[`<StepsTree /> tests works for retry steps 1`] = `
             data-status="success"
           >
             <span
-              class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+              class="bp3-icon bp3-icon-tick-circle StyledProps--main statusIcon success icon"
               icon="tick-circle"
             >
               <svg

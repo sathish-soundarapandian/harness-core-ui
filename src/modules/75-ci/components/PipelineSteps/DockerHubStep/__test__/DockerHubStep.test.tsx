@@ -348,6 +348,17 @@ describe('DockerHub Step', () => {
                   localName: 'step.dockerHub.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.dockerHub.identifier',
+                      localName: 'step.dockerHub.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-timeout': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.dockerHub.timeout',
@@ -436,6 +447,7 @@ describe('DockerHub Step', () => {
             },
             variablesData: {
               type: StepType.DockerHub,
+              __uuid: 'step-identifier',
               identifier: 'dockerHub',
               name: 'step-name',
               timeout: 'step-timeout',

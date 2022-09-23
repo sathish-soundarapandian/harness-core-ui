@@ -137,7 +137,7 @@ export class ServerlessGCPSpec extends PipelineStep<ServerlessGCPInfrastructureS
 
   renderStep(props: StepProps<ServerlessGCPInfrastructure>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, customStepProps, readonly, allowableTypes } = props
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <ServerlessInputForm
           {...(customStepProps as ServerlessSpecEditableProps)}

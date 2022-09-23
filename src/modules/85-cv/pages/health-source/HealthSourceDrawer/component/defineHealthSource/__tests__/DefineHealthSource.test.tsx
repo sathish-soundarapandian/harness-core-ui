@@ -51,7 +51,7 @@ jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
 }))
 
 describe('DefineHealthSource', () => {
-  test.only('should have proper validation', async () => {
+  test('should have proper validation', async () => {
     const { getByText } = render(
       <TestWrapper {...createModeProps}>
         <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>

@@ -4,8 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
-export const userGroupMockData = {
+export const userGroupAggregateListMock = {
   status: 'SUCCESS',
   data: {
     totalPages: 1,
@@ -234,4 +233,39 @@ export const userGroupMockData = {
   },
   metaData: null,
   correlationId: 'cb280f92-ff60-438e-a8a9-74a330cc0c36'
+}
+
+export const batchUserGroupListMock = {
+  status: 'SUCCESS',
+  data: [
+    {
+      accountIdentifier: 'px7xd_BFRCi-pfWPYXVjvx',
+      identifier: 'foo_group',
+      name: 'foo group',
+      users: ['eBMi1iKRRm-WEdbKcizShw'],
+      notificationConfigs: [
+        {
+          type: 'EMAIL',
+          groupEmail: 'yuvraj.singhal@harness.io'
+        }
+      ],
+      externallyManaged: false,
+      description: '',
+      tags: {},
+      ssoLinked: false
+    },
+    {
+      accountIdentifier: 'px7xd_BFRCi-pfWPYXVjvx',
+      identifier: 'TestUGWithDot',
+      name: 'TestUGWith.Dot',
+      users: ['86iXtyZnROuN4RoLxbrepg'],
+      notificationConfigs: [],
+      externallyManaged: false,
+      description: '',
+      tags: {},
+      ssoLinked: false
+    }
+  ],
+  metaData: null,
+  correlationId: 'cf75d0b4-320e-4468-a266-69a4eb939199'
 }

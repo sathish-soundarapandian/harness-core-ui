@@ -67,7 +67,7 @@ describe('Context Menu test', () => {
     }),
     test('Go to CV ', async () => {
       fireEvent.click(getByText('projectsOrgs.gotoCV'))
-      expect(getByTestId('location').innerHTML.endsWith(routes.toCVMonitoringServices(routeParams))).toBeTruthy()
+      expect(getByTestId('location').innerHTML.endsWith(routes.toCVSLOs(routeParams))).toBeTruthy()
     }),
     test('Go to CD ', async () => {
       fireEvent.click(getByText('projectsOrgs.gotoCD'))
@@ -77,7 +77,9 @@ describe('Context Menu test', () => {
     }),
     test('Go to CE ', async () => {
       fireEvent.click(getByText('projectsOrgs.gotoCloudCosts'))
-      expect(getByTestId('location').innerHTML.endsWith(routes.toCECORules(routeParams))).toBeTruthy()
+      expect(
+        getByTestId('location').innerHTML.endsWith(routes.toCECORules({ ...routeParams, params: '' }))
+      ).toBeTruthy()
     }),
     test('Go to CI ', async () => {
       fireEvent.click(getByText('projectsOrgs.gotoCI'))

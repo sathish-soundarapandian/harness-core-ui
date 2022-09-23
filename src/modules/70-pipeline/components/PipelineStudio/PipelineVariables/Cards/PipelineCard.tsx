@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { Card, MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
+import { Card, AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation, Color } from '@harness/design-system'
 import { isEmpty, lowerCase } from 'lodash-es'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -29,16 +29,26 @@ import css from '../PipelineVariables.module.scss'
 
 export interface PipelineCardProps {
   variablePipeline: PipelineInfoConfig
+  originalPipeline: PipelineInfoConfig
   pipeline: PipelineInfoConfig
   stepsFactory: AbstractStepFactory
   metadataMap: PipelineVariablesData['metadataMap']
   updatePipeline(pipeline: PipelineInfoConfig): void
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function PipelineCard(props: PipelineCardProps): React.ReactElement {
-  const { variablePipeline, pipeline, metadataMap, stepsFactory, updatePipeline, readonly, allowableTypes } = props
+  const {
+    variablePipeline,
+    originalPipeline,
+    pipeline,
+    metadataMap,
+    stepsFactory,
+    updatePipeline,
+    readonly,
+    allowableTypes
+  } = props
   const { getString } = useStrings()
 
   return (
@@ -74,11 +84,10 @@ export default function PipelineCard(props: PipelineCardProps): React.ReactEleme
             </Text>
           </VariableAccordionSummary>
         }
-        summaryClassName={css.variableBorderBottom}
         details={
           <StepWidget<CustomVariablesData, CustomVariableEditableExtraProps>
             factory={stepsFactory}
-            initialValues={{ variables: (pipeline.variables || []) as AllNGVariables[], canAddVariable: true }}
+            initialValues={{ variables: (originalPipeline.variables || []) as AllNGVariables[], canAddVariable: true }}
             type={StepType.CustomVariable}
             stepViewType={StepViewType.InputVariable}
             readonly={readonly}
@@ -93,6 +102,7 @@ export default function PipelineCard(props: PipelineCardProps): React.ReactEleme
               className: cx(css.customVariables, css.customVarPadL1, css.addVariableL1),
               // heading: <b>{getString('customVariables.title')}</b>,
               path: 'pipeline.variables',
+              hideExecutionTimeField: true,
               yamlProperties: (variablePipeline.variables as AllNGVariables[])?.map(
                 variable => metadataMap[variable.value || '']?.yamlProperties || {}
               )

@@ -6,7 +6,7 @@
  */
 
 import React, { Dispatch, SetStateAction } from 'react'
-import { Container, DropDown, Layout, SelectOption, Text } from '@wings-software/uicore'
+import { DropDown, Layout, SelectOption, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { Sort, SortFields } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { useStrings } from 'framework/strings'
@@ -56,21 +56,19 @@ export default function ResultsViewHeader(props: ResultsViewHeaderProps): React.
   )
 
   return (
-    <Container>
-      <Layout.Horizontal spacing="large" padding={{ top: 'large', bottom: 'large' }} flex={{ alignItems: 'center' }}>
-        <Text color={Color.GREY_800} iconProps={{ size: 14 }}>
-          {getString('total')}: {templateData.totalElements}
-        </Text>
-        <DropDown
-          items={sortOptions}
-          value={selectedSort.value.toString()}
-          filterable={false}
-          width={180}
-          icon={'main-sort'}
-          iconProps={{ size: 16, color: Color.GREY_400 }}
-          onChange={onDropDownChange}
-        />
-      </Layout.Horizontal>
-    </Container>
+    <Layout.Horizontal spacing="large" margin={{ bottom: 'large' }} flex={{ alignItems: 'center' }}>
+      <Text color={Color.GREY_800} iconProps={{ size: 14 }}>
+        {getString('total')}: {templateData.totalElements}
+      </Text>
+      <DropDown
+        items={sortOptions}
+        value={selectedSort.value.toString()}
+        filterable={false}
+        width={180}
+        icon={'main-sort'}
+        iconProps={{ size: 16, color: Color.GREY_400 }}
+        onChange={onDropDownChange}
+      />
+    </Layout.Horizontal>
   )
 }

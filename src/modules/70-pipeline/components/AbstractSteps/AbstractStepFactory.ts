@@ -16,6 +16,7 @@ export interface StepData {
   icon: IconName
   type: string
   visible?: boolean
+  referenceId?: string
 }
 
 export abstract class AbstractStepFactory {
@@ -46,7 +47,8 @@ export abstract class AbstractStepFactory {
       name: step.getStepName(),
       icon: step.getIconName(),
       type: step.getType(),
-      visible: step.getStepPaletteVisibility()
+      visible: step.getStepPaletteVisibility(),
+      referenceId: step.getReferenceId()
     })
     const stepMap = step.getInvocationMap()
     if (stepMap) {
@@ -82,10 +84,17 @@ export abstract class AbstractStepFactory {
     return this.stepBank.get(type)?.getDescription()
   }
 
+  getStepAdditionalInfo(type: string): keyof StringsMap | undefined {
+    return this.stepBank.get(type)?.getAdditionalInfo()
+  }
+
   getStepName(type: string): string | undefined {
     return this.stepBank.get(type)?.getStepName()
   }
 
+  getStepReferenceId(type: string): string | undefined {
+    return this.stepBank.get(type)?.getReferenceId()
+  }
   getStepIcon(type: string): IconName {
     return this.stepBank.get(type)?.getIconName() || 'disable'
   }

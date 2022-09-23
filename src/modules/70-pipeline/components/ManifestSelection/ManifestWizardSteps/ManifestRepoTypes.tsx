@@ -24,6 +24,7 @@ import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { manifestTypeIcons, manifestTypeLabels } from '../Manifesthelper'
 import type { ManifestStepInitData, ManifestTypes } from '../ManifestInterface'
 import css from './ManifestWizardSteps.module.scss'
+import style from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
 
 interface ManifestPropType {
   changeManifestType: (selected: ManifestTypes | null) => void
@@ -58,7 +59,7 @@ export function ManifestRepoTypes({
         icon: manifestTypeIcons[manifest] as IconName,
         value: manifest
       })),
-    [manifestTypes]
+    [getString, manifestTypes]
   )
 
   return (
@@ -90,10 +91,11 @@ export function ManifestRepoTypes({
             >
               <Layout.Horizontal spacing="large">
                 <ThumbnailSelect
-                  className={css.thumbnailSelect}
+                  className={style.thumbnailSelect}
                   name={'manifestType'}
                   items={supportedManifestTypes}
                   onChange={handleOptionSelection}
+                  layoutProps={{ className: style.wrapping }}
                 />
               </Layout.Horizontal>
               <Layout.Horizontal>

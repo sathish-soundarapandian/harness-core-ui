@@ -17,6 +17,7 @@ import List from '@common/components/List/List'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
+import ManifestCommonRuntimeFields from '../ManifestSourceRuntimeFields/ManifestCommonRuntimeFields'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
@@ -39,6 +40,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     )
   }
 
+  const hasKustomizeYamlFolderPath = !!manifest?.spec?.overlayConfiguration?.kustomizeYamlFolderPath
+
   return (
     <Layout.Vertical
       data-name="manifest"
@@ -46,6 +49,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       className={cx(css.inputWidth, css.layoutVerticalSpacing)}
     >
       <ManifestGitStoreRuntimeFields {...props} />
+      <ManifestCommonRuntimeFields {...props} />
       {isFieldRuntime(`${manifestPath}.spec.store.spec.folderPath`, template) && (
         <div className={css.verticalSpacingInput}>
           <FormInput.MultiTextInput
@@ -55,7 +59,11 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               expressions,
               allowableTypes
             }}
-            label={getString('pipeline.manifestType.kustomizeFolderPath')}
+            label={
+              hasKustomizeYamlFolderPath
+                ? getString('pipeline.manifestType.kustomizeBasePath')
+                : getString('pipeline.manifestType.kustomizeFolderPath')
+            }
           />
         </div>
       )}
@@ -72,6 +80,19 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           />
         </div>
       )}
+      {isFieldRuntime(`${manifestPath}.spec.overlayConfiguration`, template) && (
+        <div className={css.verticalSpacingInput}>
+          <FormInput.MultiTextInput
+            disabled={isFieldDisabled(`${manifestPath}.spec.overlayConfiguration`)}
+            name={`${path}.${manifestPath}.spec.overlayConfiguration`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
+          />
+        </div>
+      )}
       {isFieldRuntime(`${manifestPath}.spec.patchesPaths`, template) && (
         <div className={css.verticalSpacingInput}>
           <List
@@ -83,6 +104,19 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             style={{ marginBottom: 'var(--spacing-small)' }}
             expressions={expressions}
             isNameOfArrayType
+          />
+        </div>
+      )}
+      {isFieldRuntime(`${manifestPath}.spec.overlayConfiguration.kustomizeYamlFolderPath`, template) && (
+        <div className={css.verticalSpacingInput}>
+          <FormInput.MultiTextInput
+            disabled={isFieldDisabled(`${manifestPath}.spec.overlayConfiguration.kustomizeYamlFolderPath`)}
+            name={`${path}.${manifestPath}.spec.overlayConfiguration.kustomizeYamlFolderPath`}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
           />
         </div>
       )}

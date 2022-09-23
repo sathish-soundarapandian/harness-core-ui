@@ -19,7 +19,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { CreateAFlagView } from './views/CreateAFlagView'
 import { SetUpYourApplicationView } from './views/SetUpYourApplicationView'
-import { TestYourFlagView } from './views/TestYourFlagView'
+import { ValidateYourFlagView } from './views/ValidatingYourFlagView'
 import css from './OnboardingDetailPage.module.scss'
 
 enum TabId {
@@ -104,16 +104,7 @@ export const OnboardingDetailPage: React.FC = () => {
   const { trackEvent } = useTelemetry()
   return (
     <Container height="100%" background={Color.WHITE} className={css.container}>
-      <Layout.Horizontal
-        spacing="xsmall"
-        flex
-        padding="large"
-        height={40}
-        style={{
-          background: '#F8FBFE',
-          border: '1px solid #E7E7E7'
-        }}
-      >
+      <Layout.Horizontal className={css.containerLayout} spacing="xsmall" flex height={40}>
         <Link to={routes.toCFOnboarding({ accountId: accountIdentifier, orgIdentifier, projectIdentifier })}>
           {getString('cf.shared.getStarted')}
         </Link>
@@ -137,7 +128,7 @@ export const OnboardingDetailPage: React.FC = () => {
             }
             title={
               <Text icon={flagCreated ? 'tick-circle' : undefined} iconProps={{ color: Color.GREEN_500, size: 14 }}>
-                {getString('cf.onboarding.createAFlag')}
+                {getString('cf.onboarding.oneCreateAFlag')}
               </Text>
             }
           />
@@ -189,7 +180,7 @@ export const OnboardingDetailPage: React.FC = () => {
             panel={
               language &&
               apiKey && (
-                <TestYourFlagView
+                <ValidateYourFlagView
                   flagInfo={flagInfo}
                   language={language}
                   apiKey={apiKey}

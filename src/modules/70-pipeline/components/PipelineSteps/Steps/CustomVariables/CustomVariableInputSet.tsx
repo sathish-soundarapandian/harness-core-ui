@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, FormInput, MultiTypeInputType, getMultiTypeFromValue, SelectOption } from '@harness/uicore'
+import { Text, FormInput, MultiTypeInputType, getMultiTypeFromValue, SelectOption, AllowedTypes } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { defaultTo, get } from 'lodash-es'
@@ -16,6 +16,7 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import type { InputSetData } from '@pipeline/components/AbstractSteps/Step'
+import { parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
@@ -24,7 +25,6 @@ export interface CustomVariablesData {
   isPropagating?: boolean
   canAddVariable?: boolean
 }
-export const RegExAllowedInputExpression = /^<\+input>\.(?:allowedValues\((.*?)\))?$/
 export interface CustomVariableInputSetExtraProps {
   variableNamePrefix?: string
   domId?: string
@@ -32,6 +32,7 @@ export interface CustomVariableInputSetExtraProps {
   path?: string
   allValues?: CustomVariablesData
   executionIdentifier?: string
+  isDescriptionEnabled?: boolean
 }
 
 export interface CustomVariableInputSetProps extends CustomVariableInputSetExtraProps {
@@ -39,7 +40,8 @@ export interface CustomVariableInputSetProps extends CustomVariableInputSetExtra
   onUpdate?: (data: CustomVariablesData) => void
   stepViewType?: StepViewType
   inputSetData?: InputSetData<CustomVariablesData>
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
+  className?: string
 }
 
 export interface ConectedCustomVariableInputSetProps extends CustomVariableInputSetProps {
@@ -56,7 +58,8 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
     domId,
     inputSetData,
     formik,
-    allowableTypes
+    allowableTypes,
+    className
   } = props
   const basePath = path?.length ? `${path}.variables` : 'variables'
   const { expressions } = useVariablesExpression()
@@ -64,7 +67,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
   const formikVariables = get(formik?.values, basePath, [])
 
   return (
-    <div className={cx(css.customVariablesInputSets, 'customVariables')} id={domId}>
+    <div className={cx(css.customVariablesInputSets, 'customVariables', className)} id={domId}>
       {stepViewType === StepViewType.StageVariable && initialValues.variables.length > 0 && (
         <section className={css.subHeader}>
           <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('name')}</Text>
@@ -81,18 +84,12 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
         if (getMultiTypeFromValue(value as string) !== MultiTypeInputType.RUNTIME) {
           return
         }
-        const isAllowedValues = RegExAllowedInputExpression.test(value as string)
-        const items: SelectOption[] = []
-        if (isAllowedValues) {
-          const match = (value as string).match(RegExAllowedInputExpression)
-          if (match && match?.length > 1) {
-            if (variable.type === 'Number') {
-              items.push(...match[1].split(',').map(item => ({ label: item, value: parseFloat(item) })))
-            } else if (variable.type === 'String') {
-              items.push(...match[1].split(',').map(item => ({ label: item, value: item })))
-            }
-          }
-        }
+        const parsedInput = parseInput(value as string)
+        const items: SelectOption[] = defaultTo(parsedInput?.allowedValues?.values, []).map(item => ({
+          label: item,
+          value: variable.type === 'Number' ? parseFloat(item) : item
+        }))
+
         return (
           <div key={`${variable.name}${index}`} className={css.variableListTable}>
             <Text>{`${variableNamePrefix}${variable.name}`}</Text>
@@ -108,7 +105,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                 />
               ) : (
                 <>
-                  {isAllowedValues ? (
+                  {parsedInput?.allowedValues?.values ? (
                     <FormInput.MultiTypeInput
                       className="variableInput"
                       name={`${basePath}[${index}].value`}

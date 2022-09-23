@@ -10,7 +10,7 @@
         "timeUnit": "days",
         "timeScope": "monthly",
         "actualCostAlerts": [80.0],
-        "forecastCostAlerts": [],
+        "forecastCostAlerts": null,
         "forecastCost": 8,
         "__typename": "BudgetSummary"
       },
@@ -22,15 +22,15 @@
         "timeLeft": 20,
         "timeUnit": "days",
         "timeScope": "monthly",
-        "actualCostAlerts": [50.0, 80.0],
-        "forecastCostAlerts": [],
+        "actualCostAlerts": null,
+        "forecastCostAlerts": [50.0, 80.0],
         "forecastCost": 60000,
         "__typename": "BudgetSummary"
       },
       {
         "id": "budget-3",
         "name": "sv azure 1",
-        "budgetAmount": 10000.0,
+        "budgetAmount": 0,
         "actualCost": 866.68,
         "timeLeft": 20,
         "timeUnit": "days",

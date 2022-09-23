@@ -25,7 +25,7 @@ import type { StringKeys } from 'framework/strings'
 import { HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { accessTypeOptionsMap } from '@connectors/components/CreateConnector/HashiCorpVault/views/VaultConnectorFormFields'
-import { getLabelForAuthType } from '../../utils/ConnectorHelper'
+import { getLabelForAuthType, GitAuthTypes } from '../../utils/ConnectorHelper'
 import { AzureSecretKeyType, DelegateTypes } from '../../utils/ConnectorUtils'
 import css from './SavedConnectorDetails.module.scss'
 
@@ -66,6 +66,8 @@ const getLabelByType = (type: string): string => {
       return 'connectors.name_labels.Kubernetes'
     case Connectors.HttpHelmRepo:
       return 'connectors.name_labels.HttpHelmRepo'
+    case Connectors.OciHelmRepo:
+      return 'connectors.name_labels.OCIHelm'
     case Connectors.GIT:
       return 'connectors.name_labels.Git'
     case Connectors.GITHUB:
@@ -98,6 +100,8 @@ const getLabelByType = (type: string): string => {
       return 'connectors.title.serviceNow'
     case Connectors.GCP_KMS:
       return 'connectors.name_labels.gcpKms'
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return 'connectors.title.customSecretManager'
     case Connectors.VAULT:
     case Connectors.LOCAL:
       return 'connectors.name_labels.SecretManager'
@@ -239,10 +243,14 @@ const getGithubSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowI
       label: 'password',
       value: connector?.spec?.authentication?.spec?.spec?.passwordRef
     },
-    {
-      label: 'personalAccessToken',
-      value: connector?.spec?.authentication?.spec?.spec?.tokenRef || connector?.spec?.apiAccess?.spec?.tokenRef
-    },
+    ...(connector?.spec?.authentication?.spec?.type !== GitAuthTypes.OAUTH
+      ? [
+          {
+            label: 'personalAccessToken',
+            value: connector?.spec?.authentication?.spec?.spec?.tokenRef || connector?.spec?.apiAccess?.spec?.tokenRef
+          }
+        ]
+      : []),
     {
       label: 'SSH_KEY',
       value: connector?.spec?.authentication?.spec?.sshKeyRef
@@ -316,6 +324,35 @@ const getJenkinsSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRow
   ]
 }
 
+const getCustomSMSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.customSM.templateRef',
+      value: connector?.spec?.template?.templateRef
+    },
+    {
+      label: 'connectors.customSM.templateVersion',
+      value: connector?.spec?.template?.versionLabel
+    },
+    {
+      label: 'connectors.customSM.executeOnDelegate',
+      value: connector?.spec?.onDelegate
+    },
+    {
+      label: 'common.hostLabel',
+      value: connector?.spec?.host
+    },
+    {
+      label: 'connectors.customSM.sshKey',
+      value: connector?.spec?.connectorRef
+    },
+    {
+      label: 'workingDirectory',
+      value: connector?.spec?.workingDirectory
+    }
+  ]
+}
+
 const getJiraSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
@@ -338,6 +375,27 @@ const getHelmHttpSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRo
   return [
     {
       label: 'connectors.httpHelm.httpHelmRepoUrl',
+      value: connector?.spec?.helmRepoUrl
+    },
+    {
+      label: 'credType',
+      value: getLabelForAuthType(connector?.spec?.auth?.type)
+    },
+    {
+      label: 'username',
+      value: connector?.spec?.auth?.spec?.username || connector?.spec?.auth?.spec?.usernameRef
+    },
+    {
+      label: 'password',
+      value: connector?.spec?.auth?.spec?.passwordRef
+    }
+  ]
+}
+//todoOci
+const getOCIHelmSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.ociHelm.ociHelmUrl',
       value: connector?.spec?.helmRepoUrl
     },
     {
@@ -397,6 +455,10 @@ const getVaultSchema = (
     {
       label: 'connectors.hashiCorpVault.readOnly',
       value: data.readOnly
+    },
+    {
+      label: 'connectors.hashiCorpVault.k8sAuthEndpoint',
+      value: data.k8sAuthEndpoint
     },
     {
       label: 'connectors.hashiCorpVault.serviceAccountTokenPath',
@@ -768,6 +830,8 @@ const getSchemaByType = (
       return getDockerSchema(connector)
     case Connectors.HttpHelmRepo:
       return getHelmHttpSchema(connector)
+    case Connectors.OciHelmRepo:
+      return getOCIHelmSchema(connector)
     case Connectors.GCP:
       return getGCPSchema(connector)
     case Connectors.PDC:
@@ -801,6 +865,8 @@ const getSchemaByType = (
       return getAzureSchema(connector)
     case Connectors.JENKINS:
       return getJenkinsSchema(connector)
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return getCustomSMSchema(connector)
     default:
       return []
   }
@@ -935,6 +1001,18 @@ export const RenderDetailsSection: React.FC<RenderDetailsSectionProps> = props =
   )
 }
 
+const getPDCConnectorHosts = (connector: ConnectorInfoDTO) => {
+  const hosts = connector.spec?.hosts.map((host: any) => host.hostname)
+  return Array.isArray(hosts)
+    ? [
+        {
+          label: 'connectors.pdc.hosts',
+          value: hosts.join(', ')
+        }
+      ]
+    : []
+}
+
 const SavedConnectorDetails: React.FC<SavedConnectorDetailsProps> = props => {
   const { getString } = useStrings()
   const connectorDetailsSchema = getSchema(props)
@@ -944,10 +1022,20 @@ const SavedConnectorDetails: React.FC<SavedConnectorDetailsProps> = props => {
   return (
     <Layout.Horizontal className={css.detailsSectionContainer} spacing="xlarge">
       <RenderDetailsSection title={getString('overview')} data={connectorDetailsSchema} />
-      <RenderDetailsSection
-        title={getString('credentials')}
-        data={[...credenatialsDetailsSchema, ...commonCredentialsDetailsSchema]}
-      />
+
+      {props.connector?.type !== Connectors.PDC && (
+        <RenderDetailsSection
+          title={getString('credentials')}
+          data={[...credenatialsDetailsSchema, ...commonCredentialsDetailsSchema]}
+        />
+      )}
+
+      {props.connector?.type === Connectors.PDC && (
+        <RenderDetailsSection
+          title={getString('connectors.pdc.hosts')}
+          data={[...getPDCConnectorHosts(props.connector)]}
+        />
+      )}
     </Layout.Horizontal>
   )
 }

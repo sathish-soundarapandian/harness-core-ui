@@ -1,0 +1,66 @@
+# Copyright 2021 Harness Inc. All rights reserved.
+# Use of this source code is governed by the PolyForm Shield 1.0.0 license
+# that can be found in the licenses directory at the root of this repository, also available at
+# https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+
+query FetchServiceGrid($filters: [QLCEViewFilterWrapperInput], $isClusterQuery: Boolean) {
+  perspectiveGrid(
+    filters: $filters
+    isClusterQuery: $isClusterQuery
+    aggregateFunction: [
+      { operationType: SUM, columnName: "networkcost" }
+      { operationType: SUM, columnName: "storageActualIdleCost" }
+      { operationType: SUM, columnName: "cost" }
+      { operationType: SUM, columnName: "memoryBillingAmount" }
+      { operationType: SUM, columnName: "cpuBillingAmount" }
+      { operationType: SUM, columnName: "storageCost" }
+      { operationType: SUM, columnName: "unallocatedcost" }
+      { operationType: SUM, columnName: "storageUnallocatedCost" }
+      { operationType: SUM, columnName: "memoryUnallocatedCost" }
+      { operationType: SUM, columnName: "cpuUnallocatedCost" }
+      { operationType: SUM, columnName: "actualidlecost" }
+      { operationType: SUM, columnName: "memoryActualIdleCost" }
+      { operationType: SUM, columnName: "cpuActualIdleCost" }
+      { operationType: SUM, columnName: "systemcost" }
+      { operationType: MAX, columnName: "storageUtilizationValue" }
+      { operationType: MAX, columnName: "storageRequest" }
+    ]
+    sortCriteria: [{ sortType: COST, sortOrder: DESCENDING }]
+    groupBy: { entityGroupBy: { fieldId: "instanceId", fieldName: "ECS Task Id", identifier: CLUSTER } }
+    limit: 100
+    offset: 0
+  ) {
+    data {
+      id
+      name
+      cost
+      costTrend
+      clusterData {
+        name
+        id
+        taskId
+        clusterName
+        clusterId
+        launchType
+        totalCost
+        idleCost
+        systemCost
+        networkCost
+        unallocatedCost
+        memoryBillingAmount
+        cpuBillingAmount
+        storageUnallocatedCost
+        memoryUnallocatedCost
+        cpuUnallocatedCost
+        cpuActualIdleCost
+        memoryIdleCost
+        cpuIdleCost
+        storageCost
+        storageActualIdleCost
+        storageUtilizationValue
+        storageRequest
+        cloudServiceName
+      }
+    }
+  }
+}

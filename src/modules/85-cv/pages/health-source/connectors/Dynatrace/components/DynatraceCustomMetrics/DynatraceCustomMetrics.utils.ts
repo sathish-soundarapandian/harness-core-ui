@@ -4,7 +4,9 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import type { SelectOption } from '@wings-software/uicore'
+import { isEmpty } from 'lodash-es'
+import type { Options } from 'highcharts'
+import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
 import type { DynatraceMetricInfo } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.types'
 import type {
   CreatedMetricsWithSelectedIndex,
@@ -124,4 +126,27 @@ export const editQueryConfirmationDialogProps = (getString: (key: StringKeys) =>
       }
     }
   }
+}
+
+/**
+ * It returns true if the chart should be shown, the metric selector is set, and the metric selector is
+ * set to a fixed value
+ * @param {boolean} shouldShowChart - boolean - It's used to determine if the chart should be shown or not.
+ * @param {DynatraceMetricInfo} metricValues - DynatraceMetricInfo
+ * @returns A boolean
+ */
+export const getIsQueryExecuted = (
+  shouldShowChart: boolean,
+  metricValues: DynatraceMetricInfo,
+  clearChartData: React.Dispatch<React.SetStateAction<Options | undefined>>,
+  chartData?: Options
+): boolean => {
+  const isQueryExecuted =
+    shouldShowChart &&
+    Boolean(metricValues?.metricSelector) &&
+    getMultiTypeFromValue(metricValues?.metricSelector) === MultiTypeInputType.FIXED
+  if (!isEmpty(chartData) && !isQueryExecuted) {
+    clearChartData(undefined)
+  }
+  return isQueryExecuted
 }

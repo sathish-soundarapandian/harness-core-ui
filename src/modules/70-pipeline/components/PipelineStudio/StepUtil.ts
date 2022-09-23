@@ -6,33 +6,26 @@
  */
 
 import { FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
-import isEmpty from 'lodash-es/isEmpty'
-import has from 'lodash-es/has'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { isEmpty, has, set, isBoolean, get } from 'lodash-es'
 import * as Yup from 'yup'
-import set from 'lodash-es/set'
-import reduce from 'lodash-es/reduce'
-import isObject from 'lodash-es/isObject'
-import memoize from 'lodash-es/memoize'
-import isBoolean from 'lodash-es/isBoolean'
-import get from 'lodash-es/get'
 import type { K8sDirectInfraYaml } from 'services/ci'
-import type {
-  StageElementConfig,
-  ExecutionWrapperConfig,
-  PipelineInfoConfig,
-  DeploymentStageConfig,
-  Infrastructure,
-  StageElementWrapperConfig,
-  StepElementConfig
-} from 'services/cd-ng'
+import type { DeploymentStageConfig, Infrastructure } from 'services/cd-ng'
 
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import type { TemplateStepNode } from 'services/pipeline-ng'
-import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type {
+  TemplateStepNode,
+  StageElementWrapperConfig,
+  StepElementConfig,
+  PipelineInfoConfig,
+  ExecutionWrapperConfig,
+  StageElementConfig
+} from 'services/pipeline-ng'
+import { getStepTypeByDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
 import { CodebaseTypes, isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
+import type { DeployStageConfig, InfraStructureDefinitionYaml } from '@pipeline/utils/DeployStageInterface'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 // eslint-disable-next-line no-restricted-imports
@@ -42,12 +35,10 @@ import '@ci/components/PipelineSteps'
 // eslint-disable-next-line no-restricted-imports
 import '@sto-steps/components/PipelineSteps'
 import { StepViewType } from '../AbstractSteps/Step'
-
-export const clearRuntimeInput = (template: PipelineInfoConfig): PipelineInfoConfig => {
-  return JSON.parse(
-    JSON.stringify(template || {}).replace(/"<\+input>.?(?:allowedValues\((.*?)\)|regex\((.*?)\))?"/g, '""')
-  )
-}
+import type { StageSelectionData } from '../../utils/runPipelineUtils'
+import { getSelectedStagesFromPipeline } from './CommonUtils/CommonUtils'
+import type { CustomVariablesData } from '../PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
+import type { DeployServiceEntityData } from '../PipelineInputSetForm/StageInputSetForm'
 
 export function getStepFromStage(stepId: string, steps?: ExecutionWrapperConfig[]): ExecutionWrapperConfig | undefined {
   let responseStep: ExecutionWrapperConfig | undefined = undefined
@@ -245,6 +236,46 @@ export const validateStage = ({
       }
     }
 
+    if (stage.type === 'Deployment' && (templateStageConfig as DeployStageConfig)?.environment) {
+      const step = factory.getStep(StepType.DeployInfrastructure)
+      const errorsResponse = step?.validateInputSet({
+        data: stageConfig,
+        template: templateStageConfig as DeployStageConfig,
+        getString,
+        viewType
+      })
+
+      if (!isEmpty(errorsResponse)) {
+        set(errors, 'spec.environment', errorsResponse)
+      }
+
+      const infrastructureDefinitions = (stageConfig as DeployStageConfig).environment?.infrastructureDefinitions
+      if (
+        infrastructureDefinitions &&
+        ((templateStageConfig as DeployStageConfig).environment?.infrastructureDefinitions as unknown as string) !==
+          RUNTIME_INPUT_VALUE
+      ) {
+        infrastructureDefinitions.forEach((infrastructureDefinition: InfraStructureDefinitionYaml, index: number) => {
+          const infrastructureStep = factory.getStep(infrastructureDefinition.inputs?.type as unknown as string)
+          const infrastructureErrorsResponse = infrastructureStep?.validateInputSet({
+            data: infrastructureDefinition.inputs?.spec,
+            template: (templateStageConfig as DeployStageConfig).environment?.infrastructureDefinitions?.[index].inputs
+              ?.spec,
+            getString,
+            viewType
+          })
+
+          if (!isEmpty(infrastructureErrorsResponse)) {
+            set(
+              errors,
+              `spec.environment.infrastructureDefinitions[${index}].inputs.spec`,
+              infrastructureErrorsResponse
+            )
+          }
+        })
+      }
+    }
+
     if (stage.type === 'Deployment' && templateStageConfig?.infrastructure?.environmentRef) {
       const step = factory.getStep(StepType.DeployEnvironment)
       const errorsResponse = step?.validateInputSet({
@@ -312,11 +343,9 @@ export const validateStage = ({
         set(errors, 'variables', errorsResponse?.variables)
       }
     }
-    if (
-      originalStageConfig?.serviceConfig?.serviceDefinition?.type === ServiceDeploymentType.Kubernetes ||
-      originalStageConfig?.serviceConfig?.serviceDefinition?.type === ServiceDeploymentType.ServerlessAwsLambda
-    ) {
-      const step = factory.getStep(originalStageConfig?.serviceConfig?.serviceDefinition?.type)
+
+    if (stageConfig?.serviceConfig?.serviceDefinition?.type) {
+      const step = factory.getStep(getStepTypeByDeploymentType(stageConfig?.serviceConfig?.serviceDefinition?.type))
       const errorsResponse = step?.validateInputSet({
         data: stageConfig?.serviceConfig?.serviceDefinition?.spec,
         template: templateStageConfig?.serviceConfig?.serviceDefinition?.spec,
@@ -328,18 +357,64 @@ export const validateStage = ({
         set(errors, 'spec.serviceConfig.serviceDefinition.spec', errorsResponse)
       }
 
-      if (originalStageConfig?.serviceConfig?.serviceDefinition?.spec?.variables) {
+      if (stageConfig?.serviceConfig?.serviceDefinition?.spec?.variables) {
         const currentStep = factory.getStep(StepType.CustomVariable)
         const stepErrorsResponse = currentStep?.validateInputSet({
           data: stageConfig?.serviceConfig?.serviceDefinition?.spec,
           template: templateStageConfig?.serviceConfig?.serviceDefinition?.spec,
           getString,
           viewType
-        })
+        }) as FormikErrors<CustomVariablesData>
 
-        if (!isEmpty(stepErrorsResponse)) {
-          set(errors, 'spec.serviceConfig.serviceDefinition.spec', stepErrorsResponse)
+        if (!isEmpty(stepErrorsResponse?.variables)) {
+          set(errors, 'spec.serviceConfig.serviceDefinition.spec.variables', stepErrorsResponse.variables)
         }
+      }
+    }
+
+    if (stageConfig?.service?.serviceInputs?.serviceDefinition?.type) {
+      const step = factory.getStep(
+        getStepTypeByDeploymentType(stageConfig?.service?.serviceInputs?.serviceDefinition?.type)
+      )
+      const errorsResponse = step?.validateInputSet({
+        data: stageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
+        template: templateStageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
+        getString,
+        viewType
+      })
+
+      if (!isEmpty(errorsResponse)) {
+        set(errors, 'spec.service.serviceInputs.serviceDefinition.spec', errorsResponse)
+      }
+
+      if (stageConfig?.service?.serviceInputs?.serviceDefinition?.spec?.variables) {
+        const currentStep = factory.getStep(StepType.CustomVariable)
+        const stepErrorsResponse = currentStep?.validateInputSet({
+          data: stageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
+          template: templateStageConfig?.service?.serviceInputs?.serviceDefinition?.spec,
+          getString,
+          viewType
+        }) as FormikErrors<CustomVariablesData>
+
+        if (!isEmpty(stepErrorsResponse?.variables)) {
+          set(errors, 'spec.service.serviceInputs.serviceDefinition.spec.variables', stepErrorsResponse.variables)
+        }
+      }
+    }
+
+    // validate serviceRef
+    // TODO: nested fields of a service (serviceInputs) need to be validated once serviceRef is selected
+    if (getMultiTypeFromValue(templateStageConfig?.service?.serviceRef) === MultiTypeInputType.RUNTIME) {
+      const currentStep = factory.getStep(StepType.DeployServiceEntity)
+      const stepErrorsResponse = currentStep?.validateInputSet({
+        data: stageConfig,
+        template: templateStageConfig,
+        getString,
+        viewType
+      }) as FormikErrors<Required<DeployServiceEntityData>>
+
+      if (!isEmpty(stepErrorsResponse?.service?.serviceRef)) {
+        set(errors, 'spec.service.serviceRef', stepErrorsResponse?.service?.serviceRef)
       }
     }
 
@@ -381,6 +456,7 @@ interface ValidatePipelineProps {
   getString?: UseStringsReturn['getString']
   path?: string
   viewTypeMetadata?: { [key: string]: boolean }
+  selectedStageData?: StageSelectionData
 }
 
 /**
@@ -392,13 +468,24 @@ export const validateCICodebase = ({
   originalPipeline,
   resolvedPipeline, // used when originalPipeline is a template and we need to check clone codebase
   getString,
-  viewTypeMetadata
+  viewTypeMetadata,
+  selectedStageData
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   const errors = {}
   const requiresConnectorRuntimeInputValue =
     template?.properties?.ci?.codebase?.connectorRef && !pipeline?.properties?.ci?.codebase?.connectorRef
 
-  const pipelineHasCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
+  let pipelineHasCloneCodebase = isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline || originalPipeline)
+  if (selectedStageData && !selectedStageData.allStagesSelected) {
+    pipelineHasCloneCodebase = getSelectedStagesFromPipeline(
+      resolvedPipeline || originalPipeline,
+      selectedStageData
+    )?.some(
+      stage =>
+        get(stage, 'stage.spec.cloneCodebase') ||
+        stage?.parallel?.some(parallelStage => get(parallelStage, 'stage.spec.cloneCodebase'))
+    )
+  }
   const shouldValidateCICodebase =
     pipelineHasCloneCodebase &&
     (!requiresConnectorRuntimeInputValue ||
@@ -438,7 +525,7 @@ export const validateCICodebase = ({
     }
 
     if (
-      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.branch &&
+      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.BRANCH &&
       isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.branch) &&
       !isInputSetForm
     ) {
@@ -450,23 +537,34 @@ export const validateCICodebase = ({
     }
 
     if (
-      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.tag &&
+      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.TAG &&
       isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.tag) &&
       !isInputSetForm
     ) {
       set(errors, 'properties.ci.codebase.build.spec.tag', getString?.('fieldRequired', { field: getString('gitTag') }))
     }
 
-    if (
-      pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.PR &&
-      isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.number) &&
-      !isInputSetForm
-    ) {
-      set(
-        errors,
-        'properties.ci.codebase.build.spec.number',
-        getString?.('fieldRequired', { field: getString?.('pipeline.gitPullRequestNumber') })
-      )
+    if (pipeline?.properties?.ci?.codebase?.build?.type === CodebaseTypes.PR && !isInputSetForm) {
+      if (
+        getMultiTypeFromValue(pipeline?.properties?.ci?.codebase?.build?.spec?.number) !==
+          MultiTypeInputType.EXPRESSION &&
+        (isNaN(pipeline?.properties?.ci?.codebase?.build?.spec?.number) ||
+          !Number.isInteger(parseFloat(pipeline?.properties?.ci?.codebase?.build?.spec?.number)) ||
+          parseFloat(pipeline?.properties?.ci?.codebase?.build?.spec?.number) < 1)
+      ) {
+        set(
+          errors,
+          'properties.ci.codebase.build.spec.number',
+          getString?.('pipeline.ciCodebase.validation.pullRequestNumber')
+        )
+      }
+      if (isEmpty(pipeline?.properties?.ci?.codebase?.build?.spec?.number)) {
+        set(
+          errors,
+          'properties.ci.codebase.build.spec.number',
+          getString?.('fieldRequired', { field: getString?.('pipeline.gitPullRequestNumber') })
+        )
+      }
     }
   }
 
@@ -568,7 +666,8 @@ export const validatePipeline = ({
   viewType,
   getString,
   path,
-  viewTypeMetadata
+  viewTypeMetadata,
+  selectedStageData
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   if (template?.template) {
     const errors = validatePipeline({
@@ -594,7 +693,8 @@ export const validatePipeline = ({
       viewType,
       getString,
       path,
-      viewTypeMetadata
+      viewTypeMetadata,
+      selectedStageData
     })
 
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
@@ -667,41 +767,6 @@ export const validatePipeline = ({
   }
 }
 
-const getErrorsFlatten = memoize((errors: any): string[] => {
-  return reduce(
-    errors,
-    (result: string[], value: any) => {
-      if (typeof value === 'string') {
-        result.push(value)
-      } else if (isObject(value)) {
-        return result.concat(getErrorsFlatten(value as any))
-      }
-
-      return result
-    },
-    []
-  )
-})
-
-export const getErrorsList = memoize((errors: any): { errorStrings: string[]; errorCount: number } => {
-  const errorList = getErrorsFlatten(errors)
-  const errorCountMap: { [key: string]: number } = {}
-  errorList.forEach(error => {
-    if (errorCountMap[error]) {
-      errorCountMap[error]++
-    } else {
-      errorCountMap[error] = 1
-    }
-  })
-  const mapEntries = Object.entries(errorCountMap)
-  const errorStrings = mapEntries.map(([key, count]) => `${key}  (${count})`)
-  let errorCount = 0
-  mapEntries.forEach(([_unused, count]) => {
-    errorCount += count
-  })
-  return { errorStrings, errorCount }
-})
-
 export const validateCICodebaseConfiguration = ({ pipeline, getString }: Partial<ValidatePipelineProps>): string => {
   const shouldValidateCICodebase = isCloneCodebaseEnabledAtLeastOneStage(pipeline)
   if (
@@ -714,4 +779,10 @@ export const validateCICodebaseConfiguration = ({ pipeline, getString }: Partial
     return getString?.('pipeline.runPipeline.ciCodebaseConfig')
   }
   return ''
+}
+export const getTemplatePath = (path: string, parentPath: string): string => {
+  if (!isEmpty(parentPath)) {
+    return path.replace(`${parentPath}.`, '')
+  }
+  return path
 }

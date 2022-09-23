@@ -15,6 +15,7 @@ declare const styles: {
   readonly detailsTab: string
   readonly editable: string
   readonly footer: string
+  readonly gatewayDetailsContainer: string
   readonly greenSymbol: string
   readonly nameTypeIcon: string
   readonly symbol: string

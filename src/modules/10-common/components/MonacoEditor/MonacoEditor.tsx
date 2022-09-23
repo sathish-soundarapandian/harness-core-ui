@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { MutableRefObject } from 'react'
+import React, { MutableRefObject, useRef } from 'react'
 import ReactMonacoEditor from 'react-monaco-editor'
 import type { MonacoEditorProps } from 'react-monaco-editor'
 //@ts-ignore
@@ -20,10 +20,12 @@ export type ReactMonacoEditorRef =
 
 export interface ExtendedMonacoEditorProps extends MonacoEditorProps {
   name?: string
+  setLineCount?: (line: number) => void
   'data-testid'?: string
 }
 
 const MonacoEditor = (props: ExtendedMonacoEditorProps, ref: ReactMonacoEditorRef) => {
+  const customHTMLRef = useRef<any>(null)
   React.useEffect(() => {
     const remeasureFonts = () => {
       //@ts-ignore
@@ -39,6 +41,12 @@ const MonacoEditor = (props: ExtendedMonacoEditorProps, ref: ReactMonacoEditorRe
       ;(document as any).fonts?.ready?.then?.(remeasureFonts)
     }
   }, [])
+
+  function handleHTMLEditorDidMount(editor: any, monaco: any) {
+    props.setLineCount && props.setLineCount(editor.getModel().getLineCount())
+    customHTMLRef.current = editor
+    props.editorDidMount?.(editor, monaco)
+  }
 
   const editorWillMount = () => {
     monaco?.editor?.defineTheme('disable-theme', {
@@ -75,8 +83,21 @@ const MonacoEditor = (props: ExtendedMonacoEditorProps, ref: ReactMonacoEditorRe
   }
 
   const theme = props.options?.readOnly ? 'disable-theme' : 'vs'
-
-  return <ReactMonacoEditor {...props} ref={ref} theme={theme} editorWillMount={editorWillMount} />
+  return (
+    <ReactMonacoEditor
+      {...props}
+      ref={ref}
+      editorDidMount={handleHTMLEditorDidMount}
+      onChange={(value, e) => {
+        props.onChange && props.onChange(value, e)
+        if (customHTMLRef?.current?.getModel) {
+          props.setLineCount && props.setLineCount(customHTMLRef.current.getModel().getLineCount())
+        }
+      }}
+      theme={theme}
+      editorWillMount={editorWillMount}
+    />
+  )
 }
 
 export default React.forwardRef(MonacoEditor)

@@ -59,7 +59,7 @@ const K8sPrerequisites = () => {
               <Text inline className={css.preReqContent} icon="arrow-right" iconProps={{ size: 8 }}>
                 {getString('delegate.kubernetes.prerequisites_worload', {
                   ...size,
-                  ram: (Number(size.ram) / 1000).toFixed(1)
+                  ram: (Number(size.ram) / 1024).toFixed(1)
                 })}
               </Text>
             </Layout.Horizontal>

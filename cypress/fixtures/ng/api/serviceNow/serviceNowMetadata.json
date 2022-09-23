@@ -1,0 +1,16 @@
+{
+  "correlationId": "",
+  "status": "SUCCESS",
+  "metaData": null,
+  "data": [
+    {
+      "key": "f1",
+      "name": "f1",
+      "allowedValues": [],
+      "schema": {
+        "type": "string",
+        "typeStr": ""
+      }
+    }
+  ]
+}

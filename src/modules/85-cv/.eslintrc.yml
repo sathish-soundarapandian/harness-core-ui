@@ -11,11 +11,12 @@ rules:
         - '@gitops/*'
       paths:
         - lodash
+        - name: js-yaml
+          message: Please use methods from @common/utils/YamlHelperMethods instead of using js-yaml
         - name: yaml
           importNames:
             - stringify
-          message: Please use yamlStringify from @common/utils/YamlHelperMethods instead
-            of this
+          message: Please use yamlStringify from @common/utils/YamlHelperMethods instead of this
         - name: react-router
           message: import from "react-router-dom" instead
         - name: microfrontends

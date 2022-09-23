@@ -17,12 +17,13 @@ declare const styles: {
   readonly crossButton: string
   readonly editForm: string
   readonly listHeader: string
-  readonly locationField: string
   readonly modal: string
   readonly noWrap: string
   readonly paddingVertical: string
+  readonly primaryArtifactRef: string
   readonly rowItem: string
   readonly sideCarBtn: string
+  readonly sidecarList: string
   readonly type: string
 }
 export default styles

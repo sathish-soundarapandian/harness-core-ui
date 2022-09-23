@@ -19,4 +19,5 @@ export interface NotificationRuleRowProps {
     nextFieldValue?: SelectOption | MultiSelectOption[] | string
   ) => void
   handleDeleteNotificationRule: (id: string) => void
+  index: number
 }

@@ -16,17 +16,17 @@ exports[`Chaos Sidenav Render render the chaos sidenav 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Overview
+        overview
       </p>
     </a>
     <a
       class="link"
-      href="/account/dummyAccID/chaos/orgs/dummyOrgID/projects/dummyProjID/workflows"
+      href="/account/dummyAccID/chaos/orgs/dummyOrgID/projects/dummyProjID/scenarios"
     >
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        Workflows
+        chaos.navLabels.chaosScenarios
       </p>
     </a>
     <a
@@ -36,17 +36,17 @@ exports[`Chaos Sidenav Render render the chaos sidenav 1`] = `
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        ChaosHubs
+        chaos.navLabels.chaosHubs
       </p>
     </a>
     <a
       class="link"
-      href="/account/dummyAccID/chaos/orgs/dummyOrgID/projects/dummyProjID/agents"
+      href="/account/dummyAccID/chaos/orgs/dummyOrgID/projects/dummyProjID/chaos-delegates"
     >
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        ChaosAgents
+        chaos.navLabels.chaosDelegates
       </p>
     </a>
     <div>

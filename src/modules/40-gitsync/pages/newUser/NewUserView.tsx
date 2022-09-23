@@ -17,15 +17,17 @@ import useCreateGitSyncModal from '@gitsync/modals/useCreateGitSyncModal'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { ModuleName } from 'framework/types/ModuleName'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import css from './NewUserView.module.scss'
 
 const NewUserView: React.FC = () => {
-  const { updateAppStore, selectedProject, selectedOrg, isGitSimplificationEnabled } = useAppStore()
+  const { updateAppStore, selectedProject, selectedOrg, supportingGitSimplification } = useAppStore()
   const { refreshStore } = useGitSyncStore()
-  const { projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
+  const { projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const gitSimplificationSupported = supportingGitSimplification && module !== ModuleName.CF.toLowerCase()
 
   const { openGitSyncModal } = useCreateGitSyncModal({
     onSuccess: () => {
@@ -37,7 +39,7 @@ const NewUserView: React.FC = () => {
   const { getString } = useStrings()
   return (
     <>
-      {isGitSimplificationEnabled && (
+      {gitSimplificationSupported && (
         <Callout intent="primary" className={css.callout}>
           {getString('gitsync.newGitExperienceMessage')}
         </Callout>
@@ -56,7 +58,7 @@ const NewUserView: React.FC = () => {
           margin="large"
           font={{ size: 'medium' }}
           className={css.gitEnableBtn}
-          disabled={isGitSimplificationEnabled}
+          disabled={gitSimplificationSupported}
           text={getString('enableGitExperience')}
           onClick={() => openGitSyncModal(true, false, undefined)}
           permission={{

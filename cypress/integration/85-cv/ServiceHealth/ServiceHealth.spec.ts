@@ -1,4 +1,4 @@
-import { monitoredServiceListCall } from '../../../support/85-cv/monitoredService/constants'
+import { countOfServiceAPI, monitoredServiceListCall } from '../../../support/85-cv/monitoredService/constants'
 import {
   heatlhScore,
   heatlhScoreTimeLine,
@@ -20,11 +20,7 @@ describe('Load service health dashboard', () => {
     })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListData)
-    cy.intercept(
-      'GET',
-      '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1',
-      { allServicesCount: 1, servicesAtRiskCount: 0 }
-    )
+    cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
     cy.visitChangeIntelligence()
   })
   it.skip('Load dashboard', () => {

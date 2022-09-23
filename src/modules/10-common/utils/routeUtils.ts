@@ -34,7 +34,8 @@ import type {
   ServicePathProps,
   TemplateStudioPathProps,
   EnvironmentGroupPathProps,
-  VariablesPathProps
+  VariablesPathProps,
+  SCMPathProps
 } from '@common/interfaces/RouteInterfaces'
 
 export const accountPathProps: AccountPathProps = {
@@ -74,7 +75,8 @@ export const triggerPathProps: TriggerPathProps = {
 
 export const executionPathProps: ExecutionPathProps = {
   ...pipelinePathProps,
-  executionIdentifier: ':executionIdentifier'
+  executionIdentifier: ':executionIdentifier',
+  source: ':source(deployments|executions|builds)'
 }
 
 export const connectorPathProps: ConnectorPathProps = {
@@ -158,6 +160,15 @@ export const targetPathProps: TargetPathProps = {
 
 export const servicePathProps: ServicePathProps = {
   serviceId: ':serviceId'
+}
+
+export const scmPathProps: Required<SCMPathProps> = {
+  ...projectPathProps,
+  repoName: ':repoName',
+  branchName: ':branchName',
+  filePath: ':filePath',
+  pullRequestId: ':pullRequestId',
+  commitId: ':commitId'
 }
 
 export function withAccountId<T>(fn: (args: T) => string) {

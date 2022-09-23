@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 
@@ -15,10 +15,10 @@ import { useStrings } from 'framework/strings'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import type { KubernetesArtifactsProps } from '../../K8sServiceSpecInterface'
-import { isRuntimeMode } from '../../K8sServiceSpecHelper'
 import { fromPipelineInputTriggerTab, getPrimaryInitialValues } from '../../ArtifactSource/artifactSourceUtils'
-import css from '../../K8sServiceSpec.module.scss'
+import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 export const KubernetesPrimaryArtifacts = (props: KubernetesArtifactsProps): React.ReactElement | null => {
   const { getString } = useStrings()
@@ -27,15 +27,18 @@ export const KubernetesPrimaryArtifacts = (props: KubernetesArtifactsProps): Rea
   >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
-  const runtimeMode = isRuntimeMode(props.stepViewType)
+  const runtimeMode = isTemplatizedView(props.stepViewType)
   const isArtifactsRuntime = runtimeMode && !!get(props.template, 'artifacts', false)
   const isPrimaryArtifactsRuntime = runtimeMode && !!get(props.template, 'artifacts.primary', false)
   const isSidecarRuntime = runtimeMode && !!get(props.template, 'artifacts.sidecars', false)
   const artifactSource = props.type && artifactSourceBaseFactory.getArtifactSource(props.type)
   const artifact =
     props.fromTrigger && props.artifact
-      ? { ...props.artifact, spec: { ...props.artifacts?.primary?.spec, ...props.artifact?.spec } }
-      : props.artifacts?.primary
+      ? {
+          ...props.artifact,
+          spec: { ...defaultTo(props.artifacts, props.template.artifacts)?.primary?.spec, ...props.artifact?.spec }
+        }
+      : defaultTo(props.artifacts, props.template.artifacts)?.primary
   const artifactPath = 'primary'
 
   useEffect(() => {

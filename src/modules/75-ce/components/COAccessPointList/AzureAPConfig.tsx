@@ -89,7 +89,7 @@ const AzureAPConfig: React.FC<AzureAPConfigProps> = props => {
       }
     } catch (e) {
       setLbCreationInProgress(false)
-      showError(e.data?.errors?.join('\n') || e.data?.message || e.message, undefined, 'ce.savelb.error')
+      showError(Utils.getASErrorMessage(e) || e.data?.message || e.message, undefined, 'ce.savelb.error')
     }
   }
 

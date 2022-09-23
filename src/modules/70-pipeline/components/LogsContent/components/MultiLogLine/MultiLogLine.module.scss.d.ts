@@ -10,6 +10,7 @@ declare const styles: {
   readonly level: string
   readonly lineNumber: string
   readonly logLine: string
+  readonly out: string
   readonly time: string
 }
 export default styles

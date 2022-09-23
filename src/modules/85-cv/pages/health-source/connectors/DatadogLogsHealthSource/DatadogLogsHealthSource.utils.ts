@@ -5,14 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type {
   DatadogLogsHealthSpec,
   DatadogLogsInfo,
+  DatadogLogsQueryDefinition,
   DatadogLogsSetupSource,
   SelectedAndMappedMetrics,
   UpdateSelectedMetricsMap
 } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/DatadogLogsHealthSource.type'
-import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
+import type {
+  SourceDataInterface,
+  UpdatedHealthSource
+} from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { DatadogProduct } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.utils'
 import type { UseStringsReturn } from 'framework/strings'
@@ -20,12 +25,24 @@ import { MapDatadogLogsFieldNames } from '@cv/pages/health-source/connectors/Dat
 
 export function initializeSelectedMetricsMap(
   defaultSelectedMetricName: string,
-  logsDefinitions?: Map<string, DatadogLogsInfo>
+  logsDefinitions?: Map<string, DatadogLogsInfo>,
+  isConnectorRuntimeOrExpression = false
 ): SelectedAndMappedMetrics {
   return {
     selectedMetric: Array.from(logsDefinitions?.keys() || [])?.[0] || defaultSelectedMetricName,
     mappedMetrics:
-      logsDefinitions || new Map([[defaultSelectedMetricName, { metricName: defaultSelectedMetricName, query: '' }]])
+      logsDefinitions ||
+      new Map([
+        [
+          defaultSelectedMetricName,
+          {
+            metricName: defaultSelectedMetricName,
+            query: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : '',
+            indexes: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : [],
+            serviceInstanceIdentifierTag: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : ''
+          }
+        ]
+      ])
   }
 }
 
@@ -33,7 +50,8 @@ export function updateSelectedMetricsMap({
   updatedMetric,
   oldMetric,
   mappedMetrics,
-  formikProps
+  formikProps,
+  isConnectorRuntimeOrExpression = false
 }: UpdateSelectedMetricsMap): SelectedAndMappedMetrics {
   const updatedMap = new Map(mappedMetrics)
 
@@ -44,7 +62,12 @@ export function updateSelectedMetricsMap({
 
   // if newly created metric create form object
   if (!updatedMap.has(updatedMetric)) {
-    updatedMap.set(updatedMetric, { metricName: updatedMetric, query: '' })
+    updatedMap.set(updatedMetric, {
+      metricName: updatedMetric,
+      query: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : '',
+      indexes: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : [],
+      serviceInstanceIdentifierTag: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : ''
+    })
   }
 
   // update map with current form data
@@ -54,8 +77,11 @@ export function updateSelectedMetricsMap({
   return { selectedMetric: updatedMetric, mappedMetrics: updatedMap }
 }
 
-export function transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData: any): DatadogLogsSetupSource {
-  const existingHealthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
+export function transformDatadogHealthSourceToDatadogLogsSetupSource(
+  sourceData: SourceDataInterface & DatadogLogsSetupSource,
+  isTemplate?: boolean
+): DatadogLogsSetupSource {
+  const existingHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
   )
 
@@ -65,7 +91,8 @@ export function transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData:
       healthSourceIdentifier: sourceData.healthSourceIdentifier,
       logsDefinitions: new Map<string, DatadogLogsInfo>(),
       healthSourceName: sourceData.healthSourceName,
-      connectorRef: sourceData.connectorRef,
+      connectorRef:
+        typeof sourceData.connectorRef === 'string' ? sourceData.connectorRef : sourceData.connectorRef?.value,
       product: { label: DatadogProduct.CLOUD_LOGS, value: DatadogProduct.CLOUD_LOGS }
     }
   }
@@ -84,16 +111,38 @@ export function transformDatadogHealthSourceToDatadogLogsSetupSource(sourceData:
       setupSource.logsDefinitions.set(logQueryDefinition.name, {
         metricName: logQueryDefinition.name,
         query: logQueryDefinition.query || '',
-        serviceInstanceIdentifierTag: logQueryDefinition.serviceInstanceIdentifier,
+        serviceInstanceIdentifierTag: getServiceInstanceTag(logQueryDefinition, isTemplate),
         indexes:
-          logQueryDefinition.indexes?.map(logIndex => {
-            return { value: logIndex, label: logIndex }
-          }) || []
+          getMultiTypeFromValue(logQueryDefinition?.indexes) !== MultiTypeInputType.FIXED
+            ? (logQueryDefinition?.indexes as unknown as SelectOption[])
+            : Array.isArray(logQueryDefinition.indexes)
+            ? logQueryDefinition.indexes?.map(logIndex => {
+                return { value: logIndex, label: logIndex }
+              }) || []
+            : []
       })
     }
   }
 
   return setupSource
+}
+
+const getServiceInstanceTag = (
+  logQueryDefinition: DatadogLogsQueryDefinition,
+  isTemplate?: boolean
+): string | SelectOption | undefined => {
+  const { serviceInstanceIdentifier } = logQueryDefinition
+  if (!isTemplate) {
+    return serviceInstanceIdentifier
+  } else if (isTemplate && typeof serviceInstanceIdentifier === 'string') {
+    if (getMultiTypeFromValue(serviceInstanceIdentifier) === MultiTypeInputType.FIXED) {
+      return {
+        label: serviceInstanceIdentifier,
+        value: serviceInstanceIdentifier
+      }
+    }
+  }
+  return serviceInstanceIdentifier
 }
 
 export function transformDatadogLogsSetupSourceToHealthSource(
@@ -104,7 +153,8 @@ export function transformDatadogLogsSetupSourceToHealthSource(
     identifier: setupSource.healthSourceIdentifier,
     name: setupSource.healthSourceName,
     spec: {
-      connectorRef: setupSource?.connectorRef,
+      connectorRef:
+        typeof setupSource?.connectorRef === 'string' ? setupSource?.connectorRef : setupSource?.connectorRef?.value,
       feature: DatadogProduct.CLOUD_LOGS,
       queries: []
     }
@@ -121,8 +171,13 @@ export function transformDatadogLogsSetupSourceToHealthSource(
     logsHealthSpec.queries.push({
       query,
       name: metricName,
-      serviceInstanceIdentifier: serviceInstanceIdentifierTag,
-      indexes: indexes?.map(logIndexOption => logIndexOption.value as string) || []
+      identifier: metricName.split(' ').join('_'),
+      serviceInstanceIdentifier:
+        typeof serviceInstanceIdentifierTag === 'string'
+          ? serviceInstanceIdentifierTag
+          : (serviceInstanceIdentifierTag?.value as string),
+      indexes:
+        typeof indexes === 'string' ? indexes : indexes?.map(logIndexOption => logIndexOption.value as string) || []
     })
   }
   return dsConfig

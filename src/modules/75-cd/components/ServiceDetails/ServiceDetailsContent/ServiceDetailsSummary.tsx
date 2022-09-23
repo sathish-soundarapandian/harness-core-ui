@@ -9,8 +9,8 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { Card, Container, Layout } from '@wings-software/uicore'
-import { Page } from '@common/exports'
 import { ActiveServiceInstances } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances'
+import { ActiveServiceInstancesV2 } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancesV2'
 import {
   startOfDay,
   TimeRangeSelector,
@@ -23,7 +23,9 @@ import type { ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { InstanceCountHistory } from '@cd/components/ServiceDetails/InstanceCountHistory/InstanceCountHistory'
 import { PipelineExecutions } from '@cd/components/ServiceDetails/PipelineExecutions/PipelineExecutions'
 import { useLocalStorage } from '@common/hooks/useLocalStorage'
-import { validTimeFormat } from '@common/factories/LandingDashboardContext'
+import { convertStringToDateTimeRange } from '@cd/pages/dashboard/dashboardUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import css from '@cd/components/ServiceDetails/ServiceDetailsContent/ServicesDetailsContent.module.scss'
 
 const ServiceDetailsSummary: React.FC = () => {
@@ -39,21 +41,23 @@ const ServiceDetailsSummary: React.FC = () => {
     window.sessionStorage
   )
 
-  const timeServiceDetail = validTimeFormat(serviceTimeRange)
-  serviceTimeRange.range[0] = timeServiceDetail.range[0]
-  serviceTimeRange.range[1] = timeServiceDetail.range[1]
+  const timeServiceDetail = convertStringToDateTimeRange(serviceTimeRange)
   return (
-    <Page.Body>
+    <div>
       <Container flex className={css.timeRangeContainer}>
-        <TimeRangeSelector timeRange={serviceTimeRange?.range} setTimeRange={setServiceTimeRange} />
+        <TimeRangeSelector timeRange={timeServiceDetail?.range} setTimeRange={setServiceTimeRange} />
       </Container>
       <Layout.Horizontal margin={{ top: 'large', bottom: 'large' }}>
         <DeploymentsTimeRangeContext.Provider
-          value={{ timeRange: serviceTimeRange, setTimeRange: setServiceTimeRange }}
+          value={{ timeRange: timeServiceDetail, setTimeRange: setServiceTimeRange }}
         >
           <Layout.Vertical margin={{ right: 'xlarge' }}>
             <Layout.Horizontal margin={{ bottom: 'medium' }}>
-              <ActiveServiceInstances />
+              {useFeatureFlag(FeatureFlag.SERVICE_DASHBOARD_V2) ? (
+                <ActiveServiceInstancesV2 />
+              ) : (
+                <ActiveServiceInstances />
+              )}
             </Layout.Horizontal>
             <InstanceCountHistory />
           </Layout.Vertical>
@@ -65,7 +69,7 @@ const ServiceDetailsSummary: React.FC = () => {
           </Layout.Vertical>
         </DeploymentsTimeRangeContext.Provider>
       </Layout.Horizontal>
-    </Page.Body>
+    </div>
   )
 }
 

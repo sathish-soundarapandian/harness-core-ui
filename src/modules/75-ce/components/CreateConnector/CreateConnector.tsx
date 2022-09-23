@@ -10,6 +10,7 @@ import { Dialog, IconName, IDialogProps } from '@blueprintjs/core'
 import { Button, CardSelect, Carousel, Container, Heading, Icon, Layout, Text } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
+import { useStrings } from 'framework/strings'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import { Connectors } from '@connectors/constants'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
@@ -19,6 +20,8 @@ import { CE_CONNECTOR_CLICK } from '@connectors/trackingConstants'
 import AutoStoppingImage from './images/autoStopping.svg'
 import BudgetsImage from './images/budgets-anomalies.svg'
 import PerspectiveImage from './images/Perspectives.svg'
+import bgImage from './images/perspectiveBg.png'
+import NoData from '../OverviewPage/OverviewNoData'
 import css from './CreateConnector.module.scss'
 
 // interface useCreateConnectorProps {}
@@ -36,33 +39,42 @@ const modalProps: IDialogProps = {
 interface CloudProviderListProps {
   onChange?: (selectedProvider: string) => void
   selected?: string
+  iconSize?: number
+  kubernetesFirst?: boolean
 }
 
-interface UseCreateConnectorProps {
+export interface UseCreateConnectorProps {
   portalClassName?: string
   onSuccess?: () => void
   onClose?: () => void
 }
 
-const CloudProviderList: React.FC<CloudProviderListProps> = ({ onChange, selected }) => {
-  const providers = [
-    {
-      icon: 'service-aws',
-      title: 'AWS'
-    },
-    {
-      icon: 'gcp',
-      title: 'GCP'
-    },
-    {
-      icon: 'service-azure',
-      title: 'Azure'
-    },
-    {
-      icon: 'service-kubernetes',
-      title: 'Kubernetes'
+export const CloudProviderList: React.FC<CloudProviderListProps> = ({
+  onChange,
+  selected,
+  iconSize = 26,
+  kubernetesFirst
+}) => {
+  const { getString } = useStrings()
+
+  const providers = useMemo(() => {
+    const list = [
+      { icon: 'service-aws', title: getString('common.aws') },
+      { icon: 'gcp', title: getString('common.gcp') },
+      { icon: 'service-azure', title: getString('common.azure') }
+    ]
+
+    const kubernetes = { icon: 'service-kubernetes', title: getString('kubernetesText') }
+
+    if (kubernetesFirst) {
+      list.unshift(kubernetes)
+    } else {
+      list.push(kubernetes)
     }
-  ]
+
+    return list
+  }, [kubernetesFirst, getString])
+
   return (
     <div className={css.cloudProviderListContainer}>
       <CardSelect
@@ -70,7 +82,7 @@ const CloudProviderList: React.FC<CloudProviderListProps> = ({ onChange, selecte
         cornerSelected={true}
         renderItem={item => (
           <div>
-            <Icon name={item.icon as IconName} size={26} />
+            <Icon name={item.icon as IconName} size={iconSize} />
           </div>
         )}
         onChange={value => onChange?.(value.title)}
@@ -82,6 +94,43 @@ const CloudProviderList: React.FC<CloudProviderListProps> = ({ onChange, selecte
           <Text key={provider.title}>{provider.title}</Text>
         ))}
       </div>
+    </div>
+  )
+}
+
+interface NoConnectorDataProps {
+  showConnectorModal?: boolean
+}
+
+export const NoConnectorDataHandling: (props: NoConnectorDataProps) => JSX.Element = ({ showConnectorModal }) => {
+  const { openModal, closeModal } = useCreateConnectorMinimal({
+    portalClassName: css.excludeSideNavOverlay,
+    onSuccess: () => {
+      closeModal()
+    }
+  })
+
+  const [showNoDataOverlay, setShowNoDataOverlay] = useState(!showConnectorModal)
+
+  useEffect(() => {
+    showConnectorModal && openModal()
+  }, [])
+
+  const handleConnectorClick = (): void => {
+    setShowNoDataOverlay(false)
+    openModal()
+  }
+
+  return (
+    <div
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        height: 'var(--page-min-height)',
+        width: '100%'
+      }}
+    >
+      {showNoDataOverlay && <NoData onConnectorCreateClick={handleConnectorClick} />}
     </div>
   )
 }

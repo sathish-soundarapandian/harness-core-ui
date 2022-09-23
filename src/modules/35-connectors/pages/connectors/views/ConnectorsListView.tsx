@@ -26,6 +26,7 @@ import ReactTimeago from 'react-timeago'
 import classNames from 'classnames'
 import { pick } from 'lodash-es'
 import defaultTo from 'lodash-es/defaultTo'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import {
   ConnectorResponse,
@@ -188,8 +189,10 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
   const data = row.original
   const gitDetails = data?.gitDetails ?? {}
   const isHarnessManaged = data.harnessManaged
-  const { isGitSyncEnabled: gitSyncAppStoreEnabled } = useAppStore()
-  const isGitSyncEnabled = gitSyncAppStoreEnabled && !isSMConnector(row.original.connector?.type)
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled =
+    isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF && !isSMConnector(row.original.connector?.type)
+
   const [menuOpen, setMenuOpen] = useState(false)
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -322,7 +325,8 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
     if (!isEntityInvalid) {
       ;(column as any).openConnectorModal(true, row?.original?.connector?.type as ConnectorInfoDTO['type'], {
         connectorInfo: row.original.connector,
-        gitDetails: row.original?.gitDetails
+        gitDetails: row.original?.gitDetails,
+        status: row.original?.status
       })
     } else {
       const url = routes.toConnectorDetails({ ...params, connectorId: data.connector?.identifier })
@@ -370,7 +374,8 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
   const params = useParams<PipelineType<ProjectPathProps>>()
   const history = useHistory()
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const listData: ConnectorResponse[] = useMemo(() => data?.content || [], [data?.content])
   const columns: CustomColumn[] = useMemo(
     () => [
@@ -435,23 +440,26 @@ const ConnectorsListView: React.FC<ConnectorListViewProps> = props => {
   }
 
   return (
-    <TableV2<ConnectorResponse>
-      className={css.table}
-      columns={columns}
-      data={listData}
-      name="ConnectorsListView"
-      onRowClick={connector => {
-        const url = routes.toConnectorDetails({ ...params, connectorId: connector.connector?.identifier })
-        history.push(connectorDetailsUrlWithGit(url, connector.gitDetails))
-      }}
-      pagination={{
-        itemCount: data?.totalItems || 0,
-        pageSize: data?.pageSize || 10,
-        pageCount: data?.totalPages || -1,
-        pageIndex: data?.pageIndex || 0,
-        gotoPage
-      }}
-    />
+    <>
+      <HelpPanel referenceId="connectors" type={HelpPanelType.FLOATING_CONTAINER} />
+      <TableV2<ConnectorResponse>
+        className={css.table}
+        columns={columns}
+        data={listData}
+        name="ConnectorsListView"
+        onRowClick={connector => {
+          const url = routes.toConnectorDetails({ ...params, connectorId: connector.connector?.identifier })
+          history.push(connectorDetailsUrlWithGit(url, connector.gitDetails))
+        }}
+        pagination={{
+          itemCount: data?.totalItems || 0,
+          pageSize: data?.pageSize || 10,
+          pageCount: data?.totalPages || -1,
+          pageIndex: data?.pageIndex || 0,
+          gotoPage
+        }}
+      />
+    </>
   )
 }
 

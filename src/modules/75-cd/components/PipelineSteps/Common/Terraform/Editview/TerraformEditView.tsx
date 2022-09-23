@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyrig as MultiInputht 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -20,7 +20,8 @@ import {
   Text,
   StepWizard,
   ButtonVariation,
-  Icon
+  Icon,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
@@ -40,7 +41,7 @@ import {
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import MultiTypeMap from '@common/components/MultiTypeMap/MultiTypeMap'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
@@ -52,7 +53,7 @@ import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
@@ -61,7 +62,7 @@ import StepArtifactoryAuthentication from '@connectors/components/CreateConnecto
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { TFMonaco } from './TFMonacoEditor'
 
 import TfVarFileList from './TFVarFileList'
@@ -91,7 +92,6 @@ export default function TerraformEditView(
   const { stepType, isNewStep = true } = props
   const { initialValues, onUpdate, onChange, allowableTypes, stepViewType, readonly = false } = props
   const { getString } = useStrings()
-  const { TF_MODULE_SOURCE_INHERIT_SSH } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -258,7 +258,7 @@ export default function TerraformEditView(
           buildPayload={buildPayload}
           connectorInfo={undefined}
         />
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.stepThreeName')}
           connectorInfo={undefined}
           isStep={true}
@@ -340,6 +340,7 @@ export default function TerraformEditView(
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
@@ -376,6 +377,7 @@ export default function TerraformEditView(
                       setFieldValue('spec.provisionerIdentifier', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                   />
                 )}
               </div>
@@ -455,9 +457,10 @@ export default function TerraformEditView(
                                   showDefaultField={false}
                                   showAdvanced={true}
                                   onChange={value => {
-                                    formik.setFieldValue('values.spec.configuration.spec.workspace', value)
+                                    formik.setFieldValue('spec.configuration.spec.workspace', value)
                                   }}
                                   isReadonly={readonly}
+                                  allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                                 />
                               )}
                             </div>
@@ -525,7 +528,9 @@ export default function TerraformEditView(
                             <MultiTypeList
                               multiTextInputProps={{
                                 expressions,
-                                allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                                allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                  item => !isMultiTypeRuntime(item)
+                                ) as AllowedTypes
                               }}
                               name="spec.configuration.spec.targets"
                               placeholder={getString('cd.enterTragets')}
@@ -545,7 +550,9 @@ export default function TerraformEditView(
                             <MultiTypeMap
                               valueMultiTextInputProps={{
                                 expressions,
-                                allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                                allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                  item => !isMultiTypeRuntime(item)
+                                ) as AllowedTypes
                               }}
                               name="spec.configuration.spec.environmentVariables"
                               multiTypeFieldSelectorProps={{
@@ -614,12 +621,10 @@ export default function TerraformEditView(
                                   ...data.spec?.configuration?.spec?.configFiles
                                 }
 
-                                if (TF_MODULE_SOURCE_INHERIT_SSH) {
-                                  configObject.moduleSource =
-                                    data?.type === 'TerraformPlan'
-                                      ? data.spec?.configuration?.configFiles?.moduleSource
-                                      : data.spec?.configuration?.spec?.configFiles?.moduleSource
-                                }
+                                configObject.moduleSource =
+                                  data?.type === 'TerraformPlan'
+                                    ? data.spec?.configuration?.configFiles?.moduleSource
+                                    : data.spec?.configuration?.spec?.configFiles?.moduleSource
 
                                 if (prevStepData.identifier && prevStepData.identifier !== data?.identifier) {
                                   configObject.store.spec.connectorRef = prevStepData?.identifier

@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import type { MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
@@ -35,7 +35,7 @@ export interface RollbackStackProps<T = RollbackStackData> {
   initialValues: T
   onUpdate?: (data: T) => void
   onChange?: (data: T) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   configTypes?: SelectOption[]
   isNewStep?: boolean
@@ -117,7 +117,7 @@ export interface CFDeleteStackStepInfo extends StepElementConfig {
 }
 
 export interface CloudFormationDeleteStackProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isNewStep: boolean | undefined
   readonly: boolean | undefined
   initialValues: any
@@ -130,7 +130,7 @@ export interface DeleteStackProps<T = DeleteStackData> {
   initialValues: T
   onUpdate?: (data: T) => void
   onChange?: (data: T) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   configTypes?: SelectOption[]
   isNewStep?: boolean
@@ -157,7 +157,7 @@ export interface CreateStackProps<T = CreateStackData> {
   initialValues: T
   onUpdate?: (data: T) => void
   onChange?: (data: T) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   configTypes?: SelectOption[]
   isNewStep?: boolean
@@ -189,8 +189,22 @@ export interface Parameter {
 }
 
 export interface Tags {
+  type: string
   spec: {
     content: string
+    store?: {
+      type?: string
+      spec: {
+        connectorRef?: string
+        paths?: string | string[]
+        urls?: string | string[]
+        repoName?: string
+        branch?: string
+        commitId?: string
+        gitFetchType?: string
+        region?: string
+      }
+    }
   }
 }
 
@@ -249,7 +263,7 @@ export interface CloudFormationProps {
   stepViewType?: StepViewType
   onUpdate?: (data: CloudFormationData) => void
   onChange?: (data: CloudFormationData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export interface CreateStackStepInfo {
@@ -261,7 +275,7 @@ export interface CreateStackStepInfo {
 }
 
 export interface CloudFormationCreateStackProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isNewStep: boolean | undefined
   readonly: boolean | undefined
   initialValues: any
@@ -278,4 +292,10 @@ export interface CreateStackVariableStepProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData?: CreateStackData
   stepType?: string
+}
+
+export enum TemplateTypes {
+  Remote = 'Remote',
+  S3URL = 'S3URL',
+  Inline = 'Inline'
 }

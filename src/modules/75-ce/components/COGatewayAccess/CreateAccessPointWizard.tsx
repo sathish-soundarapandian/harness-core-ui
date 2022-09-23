@@ -25,6 +25,7 @@ import { Radio, RadioGroup } from '@blueprintjs/core'
 import { AccessPoint, useAllHostedZones, useCreateAccessPoint, useGetAccessPoint } from 'services/lw'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
+import { Utils } from '@ce/common/Utils'
 import CreateTunnelStep from './CreateAccessPointTunnel'
 
 interface Props extends StepProps<any> {
@@ -160,11 +161,7 @@ const MapToProvider: React.FC<StepProps<MapToProviderProps> & Props> = props => 
         setaccessPointStatusInProgress(false)
       }
     } catch (e) {
-      showError(
-        e.data?.errors?.join('\n') || e.data?.metadata?.error || e.data?.message || e.message,
-        undefined,
-        'ce.create.ap.failure.error'
-      )
+      showError(Utils.getASErrorMessage(e) || e.data?.message || e.message, undefined, 'ce.create.ap.failure.error')
       setaccessPointStatusInProgress(false)
     }
   }

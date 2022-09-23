@@ -1,0 +1,8 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "inputSetTemplateYaml": "infrastructureDefinitions:\n- identifier: \"infra1\"\n  inputs:\n    identifier: \"infra1\"\n    type: \"KubernetesDirect\"\n    spec:\n      namespace: \"<+input>\"\n"
+  },
+  "metaData": null,
+  "correlationId": "8cd859e9-12e3-45a6-9d5c-b6645aa74605"
+}

@@ -1,0 +1,146 @@
+/**
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ **/
+.settingsListCtr {
+  background-color: var(--white) !important;
+  border: 1px solid var(--grey-200);
+  max-height: 398px;
+  max-width: 800px;
+  overflow-y: auto;
+}
+
+.connectionSettingsFormCtr {
+  padding-bottom: var(--spacing-xxlarge) !important;
+}
+
+.groupSettingsList,
+.userSettingsList {
+  margin: 0;
+  padding: var(--spacing-4) 0 var(--spacing-4) var(--spacing-9);
+
+  li:not(:last-child) {
+    margin-bottom: var(--spacing-medium);
+  }
+}
+
+.settingsForm {
+  padding: var(--spacing-4) 0 var(--spacing-4) var(--spacing-7) !important;
+  flex-grow: 1 !important;
+}
+
+.queryPreviewItem {
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--grey-200);
+  }
+}
+
+.queryDraftItem {
+  background-color: var(--primary-1) !important;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--grey-200);
+  }
+}
+
+.queryCtaContainer {
+  margin-left: auto !important;
+}
+
+.queryFormField {
+  margin-bottom: var(--spacing-medium);
+}
+
+.wizardContainer {
+  min-height: 640px;
+  min-width: 1175px;
+
+  input {
+    max-width: 450px;
+  }
+}
+
+.stepContainer {
+  height: 100%;
+  position: relative;
+
+  &.verticalStretch {
+    > div {
+      height: 100%;
+    }
+  }
+}
+
+.stepQueryContainer {
+  .stepCtaContainer {
+    position: relative;
+  }
+}
+
+.addQueryDescription {
+  text-align: center;
+}
+
+.stepCtaContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.addQueryCtr {
+  border: 1px solid var(--grey-200);
+  flex-grow: 1;
+}
+
+.queryCtr {
+  flex-grow: 1;
+  margin-bottom: var(--spacing-8) !important;
+}
+
+.separator {
+  display: flex;
+  width: 100%;
+  opacity: 0.4;
+  margin-bottom: var(--spacing-medium);
+}
+
+.layoutIconMessage {
+  width: 100% !important;
+  margin: var(--spacing-medium) 0 !important;
+}
+
+.connectionFieldSet {
+  flex-basis: 45% !important;
+}
+
+.connectionWiderFieldSet {
+  flex-basis: 55% !important;
+}
+
+.hangingFieldSet {
+  margin-top: var(--spacing-7) !important;
+}
+
+.align-center {
+  align-items: center !important;
+}
+
+.fluidLabel {
+  flex-grow: 1;
+}
+
+.queryTestResultWrapper {
+  align-self: flex-start;
+  flex-basis: 300px !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+}
+
+.horizontalSeparator {
+  border-right: 1px solid var(--grey-300);
+  height: auto;
+  margin: 0;
+  align-self: stretch;
+}

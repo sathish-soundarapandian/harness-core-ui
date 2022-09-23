@@ -23,3 +23,9 @@
 .notAllowed {
   cursor: not-allowed !important;
 }
+
+.division {
+  border-color: var(--grey-200);
+  margin: var(--spacing-6) 0;
+  opacity: 0.3;
+}

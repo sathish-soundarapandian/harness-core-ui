@@ -10,6 +10,32 @@
   flex-direction: column;
 }
 
+.helpPanelGridVisible {
+  display: flex;
+  height: 0px;
+  width: 88%;
+}
+.helpPanelGridHidden {
+  display: flex;
+  height: 100%;
+}
+.helpPanelStyleOpen {
+  width: 500px;
+  :global {
+    .HelpPanelContent--centerContainer {
+      width: 450px;
+    }
+  }
+}
+.helpPanelStyleClose {
+  width: 0px;
+}
+.floatingButton {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+}
+
 .step-command {
   flex: 1 1 auto;
   overflow: auto;
@@ -22,7 +48,7 @@
 
   .step-tabs {
     height: 100%;
-
+    width: 100%;
     :global(.bp3-tab-list) {
       border-bottom: 1px solid var(--grey-300);
       background-color: var(--white);

@@ -40,7 +40,6 @@ proceedToEdit: Proceed to Edit
 filter: Filter
 allMetrics: All Metrics
 selectNamespace: Select Namespace
-selectWorkload: Select Workload
 riskTimeline: Risk Timeline
 perHeatMapCell: per heat map cell
 allServices: All Services
@@ -52,8 +51,7 @@ lastSuccessfulRun: Last Successful Job Run
 jobNamePlaceholder: Enter a Job Name
 identifierPlaceholder: Enter an Identifier
 throughput: Throughput
-responseTime: Response Time
-serviceHealthTrend: Service Health Trend
+serviceHealthTrend: Service Health Score and SLO Performance Trend
 query: Query
 selectQuery: Select Query (Optional)
 addNew: + Add New
@@ -194,6 +192,7 @@ monitoringSources:
   queryName: Query Name
   riskProfile: Risk Profile
   riskCategoryLabel: Risk Category
+  riskCategoryTemplateNote: Provide in format 'Category / MetricType'
   baselineDeviation: Deviation Compared to Baseline
   higherCounts: Higher value is higher risk
   lowerCounts: Lower value is higher risk
@@ -210,7 +209,32 @@ monitoringSources:
   addQuery: Add Query
   totalMappedQueries: '{{total}} {{query}} mapped'
   appD:
+    advancedOptional: Advanced (Optional)
+    ignoreThresholds: Ignore Thresholds
+    failFastThresholds: Fail-Fast Thresholds
+    ignoreThresholdHint: You can select the type of events that you want to set the thresholds for Continuous Verification only, and all metrics that match any of the following rules will not be flagged as anomalous regardless of the analysis.
+    failFastThresholdHint: You can select the type of events that you want to set the thresholds for Continuous Verification only, and all metrics that match any of the following rules will be marked as anomalous, causing the Workflow state to fail.
+    metricType: Metric Type
+    groupTransaction: Group/Transaction
+    greaterThan: Greater than
+    lesserThan: Lesser than
+    customMetric: Custom Metric
+    addThreshold: Add Threshold
+    register: Register
+    verificationService: Verification service
+    averageWaitTime: Average Wait Time
+    callsPerMinute: Calls per Minute
+    failImmediately: Fail Immediately
+    failAfterMultipleOccurrences: Fail after multiple occurrences
+    failAfterConsecutiveOccurrences: Fail after consecutive occurrences
+    absoluteValue: Absolute Value
+    percentageDeviation: Percentage Deviation
     appdPathTitle: AppDynamics Path
+    applicationName: Application Name
+    tierName: Tier Name
+    completeMetricPath: Complete Metric Path
+    serviceInstanceMetricPath: Service Instance Label Path
+    serviceInstanceFieldName: Service Instance Field Name
     appdChartTitle: Chart & Record
     appdPathDetail: Select base path for AppD Metric
     appdMetricDetail: Select metric path for AppD Metric
@@ -245,7 +269,7 @@ monitoringSources:
     validations:
       selectApp: Please select application and its environment
       selectTier: Please select tier and its service
-      selectMetricPack: Plese select metric packs
+      selectMetricPack: Please select atleast one metric pack
     connectToMonitoringSource: Connect to your AppDynamics Monitoring Source
     firstTimeSetupText: 'First time? You can setup a new Connector to AppDynamics. It takes 2 minutes.'
     createConnectorText: '+ New AppDynamics Connector'
@@ -307,6 +331,7 @@ monitoringSources:
       mappedMetrics: '{{metricCount}} metric(s) mapped to {{serviceCount}} service(s)'
       gcoMetrics: Google Cloud Operation metrics
   datadog:
+    noQueryAdded: 'Please add query manually or pick from dashboard'
     noMetricsWidgets: 'No metrics'
     manualInputQueryModal:
       modalTitle: 'Add your Datadog query'
@@ -371,9 +396,11 @@ monitoringSources:
       recordCount: Current query yields too many records. Please change query to yield one record.
   splunk:
     splunkLogsQuery: SPLUNK Logs Query
+    splunkMetric: Splunk Metrics
     savedSearchQuery: Select saved query
     submitQueryToSeeRecords: Submit query to see records from Splunk
     staleRecordsWarning: Records not upated with latest query. Please fetch records
+    defaultSplunkMetricName: Splunk Metric
   gcoLogs:
     query: QUERY
     gcoLogsServiceInstance: Add service instance
@@ -384,6 +411,7 @@ monitoringSources:
     selectPathForMessageIdentifier: Select path for message identifier
     newGCOLogsServiceInstance: New Service Instance
     newGCOLogsMessageIdentifier: New Message Identifier
+    messageIdentifierTitle: Message Identifier
     fetchRecords: Fetch records
     newGCOLogsMessage: New GCO Logs Message
     records: Records
@@ -407,7 +435,7 @@ activitySources:
     select: 'Select your Change Source'
     selectApplication: 'Select Applications'
     selectEnvironment: 'Select Environments'
-    selectService: 'Select Services'
+    selectService: '{{ $.common.selectServices }}'
     iconLabel: 'Harness FirstGen'
     harnessApps: 'HARNESS FIRSTGEN APPLICATION'
     application:
@@ -438,7 +466,8 @@ cvTrialHomePage:
     startBtn:
       description: Start 14 day CV Enterprise trial
 monitoredServices:
-  title: Monitored Services
+  title: '{{ $.common.monitoredServices }}'
+  heading: Monitored Service
   filterlabel: 'Environment:'
   youHaveNoMonitoredServices: You have no monitored services
   nameValidation: Monitored Service Name is required
@@ -472,7 +501,9 @@ monitoredServices:
   failedToFetchSummaryData: Failed to fetch summary data
   changeMonitoredServiceType: Change Monitored Service Type
   changeMonitoredServiceTypeMessage: Changing monitored service type will reset change sources
+  searchMonitoredServices: Search Monitored Services
   sloErrorBudget: SLO / Error Budget
+  searchMonitoresService: 'Search monitored services'
   serviceHealth:
     last4Hrs: Last 4 hours
     last24Hrs: Last 24 hours
@@ -498,7 +529,6 @@ monitoredServices:
     serviceHealth: Service Health
     configurations: Configurations
   table:
-    serviceName: Service Name
     lastestHealthTrend: Health trend (Last 24h)
     serviceHealthScore: service Health Score
     healthMonitoring: Health Monitoring
@@ -516,7 +546,7 @@ notifications:
   newNotificationRule: New Notification Rule
   notificationName: Notification Name
   deleteNotification: Delete notfication {{ name }}
-  configureAlertConditions: Configure the alert conditions for which you want to be notified.
+  configureAlertConditions: Configure the conditions for which you want to be notified
   serviceHealth: Changes and Service Health
   serviceHealthDescription: Focuses on changes to a service's code, configuration, behaviour, deployment and infrastructure.
   sloDescription: Focuses on SLO target and error budget changes on a given SLO.
@@ -524,6 +554,8 @@ notifications:
   changeType: Change Type
   healthScoreBelow: Health score is below
   thresholdBelow: Threshold is below
+  validations:
+    conditionIsRequired: Condition is required
 changeSource:
   alertText: Alert
   incident: Incident
@@ -627,14 +659,16 @@ healthSource:
       trierLabel: Find an AppDynamics tier
       tierPlaceholder: Type an tier name
       metricPackLabel: Select Metric Packs to be monitored
+      serviceInstance: Specify a service instance label path
       validation:
         application: Please select applications
         tier: Please select tier
         basePath: Please select base path
         metricPath: Please select metric path
         metricPathWithoutLeafNode: Please select metric in metric path
-        fullPath: Please provide full metric path
+        fullPath: Please provide complete metric path
         missingTierInFullPath: Path should have Tier as well
+        inCorrectMetricPath: Please provide correct complete metric path
         missingServiceInstanceMetricPath: Service instance metric path is missing
       metricPathType:
         text: Specify a complete metric path
@@ -650,16 +684,27 @@ healthSource:
       defaultMetricName: Dynatrace metric
       submitQueryLabel: Submit query to see Dynatrace metrics
       keyRequestRequiredLabel: Only services with marked Key Requests are shown
-
+  splunkMetric:
+    queryTextareaPlaceholder: 'Please write a splunk query that outputs table for time, value. Use span of 1m. Example: source="access_log" status < 400 | bucket _time span=1m | stats p99(response_time) as value by _time | rename _time as time | fields time value'
+templates:
+  healthSourceDetails: Health Source Details
+sensitivityValidation: Sensitivity should be high, medium or low
 slos:
   title: SLOs
+  subTitle: Review the status and error budget of all your defined service level objectives
+  completeTitle: Service Level Objectives (SLOs)
+  monitoredService: MONITORED SERVICE
+  status: STATUS
+  target: TARGET
+  burnRate: BURN RATE/DAY
   deleteSLO: Delete SLO
   createSLO: Create SLO
   healthSource: Health source
   sloCreated: SLO created successfully
   sloUpdated: SLO updated successfully
   noData: You don’t have any SLO created yet
-  noMatchingData: No matching data
+  noDataMS: There are no SLOs available for this service
+  noMatchingData: No matching data for the applied filters.
   monitoredServiceText: A Monitored Service is automatically created by Harness by concatenating the names of the Service and Environment.
   createMonitoredService: Create a Monitored Service
   confirmDeleteSLO: 'Are you sure you want to delete SLO: {{ name }}?'
@@ -684,7 +729,8 @@ slos:
   sloDefinition: Define SLO identification
   reviewChanges: Review changes
   sloEditWarningMessage: It may take a few minutes to recalculate the Error Budget. Are you sure you want to proceed?
-  noSLOsStateMessage: A service level objective (SLO) is the sum of a collection of performance metrics (Service Level Indicator or SLI) such as uptime, response time, and error rate that are used to measure the services performance. At least one SLO is required to monitor a service
+  noSLOsStateMessage: Service level objectives (SLOs) are used to describe and measure service level performance and reliability for any service/microservice applications.
+  searchSLO: Search by SLO name
   validations:
     nameValidation: SLO name is required
     userJourneyRequired: User journey is required
@@ -713,11 +759,11 @@ slos:
       selectMetric2: Select metric 2
   contextualHelp:
     sli:
-      intro: To evaluate the performance of the monitored service, a collection of performance metrics such as duration, error rate, and so on will be applied.
-      healthSource: A Health Source is a combination of a Harness Service and associated Environment that monitors changes in health trends of the service using logs or metrics collected from an Application Performance Management or logging tool.
+      intro: Metrics such as response time, error rate etc. are used to evaluate the performance of the monitored service.
+      healthSource: A Health Source is a combination of a Harness Service and associated Environment that monitors changes in health trends of the service using logs or metrics collected from an Application Performance Management(APM) or logging provider.
       whatIsSli: What is an SLI?
-      sliDefinition: An SLI (service level indicator), which measures the performance of the service. Also, an SLI measures compliance with an SLO (service level objective).
-      sliDefinition2: So, if your SLA (Service Level Agreement) specifies that your systems will be available 99.9% of the time, your SLO is likely 99.95% uptime and your SLI is the actual measurement of your uptime.
+      sliDefinition: An SLI (service level indicator) measures the performance of a service and compliance with an SLO (service level objective).
+      sliDefinition2: So, if your SLA (Service Level Agreement) specifies that your systems will be available 99.9% of the time, your SLO should be set higher than 99.9%
       availabilityDescription: Measures how available your service was to users or valid requests served successfully.
       latencyDescription: Measures how fast your service responded to users or how many valid request served faster than a defined thresholds.
       thresholdDescription: The number of valid requests is compared to the length of time.
@@ -742,6 +788,7 @@ SLOPerformanceTrend: SLO Performance Trend
 sloGraphUserHint: To view anomalies, metrics and logs for a specific time window, click the time slot on the timeline. To expand or contract the time window, simply drag the handles.
 sloRecalculationInProgress: SLO recalculation in progress
 errorBudgetRecalculationInProgress: Error Budget recalculation in progress
+sloAnalysisTakingLong: The SLO analysis is taking too long. Please check the execution logs and third party API call logs.
 errorBudgetRemaining: Error Budget Remaining
 errorBudgetRemainingWithMins: Error Budget Remaining (mins)
 minutesRemaining: minutes remaining
@@ -777,7 +824,7 @@ saturday: Saturday
 sunday: Sunday
 good: Good
 bad: Bad
-ignore: Ignore
+ignore: '{{ $.common.ignore }}'
 errorBudget: Error Budget
 mins: mins
 minValueN: 'Min value {{n}}'
@@ -866,11 +913,11 @@ logs:
   eventPriorityUpdate: This event was marked with priority
   notARisk: Not a Risk
   reportedBy: Reported by
-  radarChartInfo: The 360° on the circular chart represents the attribute. Use the slider below to narrow down the clusters view on the radar chart. You can click on a cluster to explore more details.
+  radarChartInfo: Each point in the graph above represents a log message. The region inside innermost circle represents logs from baseline/control nodes. The region between outermost circle and second circle is used for unknown logs seen in canary nodes while  the region between second circle and innermost circle is used for logs with unexpected frequency. The points that are related (logs observed in both canary and baseline nodes) will be shown on the same radii.The circle is divided into several sectors with each sector having several log messages. Use the slider to narrow down to the specific sector.
 externalAPICalls: External API Calls
 somethingWentWrongWhileParsingTheData: Something went wrong while parsing the data
 fetchingDataFrom: Fetching data from
-serviceDetails: Service Details
+serviceDetails: '{{ $.common.serviceDetails }}'
 theTrendIsDeterminedForTheSelectedPeriodOverPeriod: The trend % is determined for the selected period over period.
 zoom: Zoom
 selectTimeRange: Select time range
@@ -878,3 +925,11 @@ aMaximumOfThreeSLOCanBeComparedWithTheServiceHealth: A maximum of three SLO’s 
 pleaseSelectSLOToGetTheData: Please select a SLO to get the data.
 noSLOHasBeenCreated: No SLO has been created
 noDataAvailableForTheCurrentSLOCycle: No data available for the current SLO cycle
+metricThresholds:
+  validations:
+    countValue: Enter 2 or more
+    duplicateThreshold: Duplicate threshold
+    percentageValidation: Enter value below 100
+  deletePromptTitle: Confirm delete Metric thresholds
+  metricPacksDeletePromptContent: Unchecking the metric pack will also remove the corresponding metric thresholds settings. This action cannot be undone.
+  customMetricsDeletePromptContent: Deleting the custom metric will also remove the corresponding metric thresholds settings. This action cannot be undone.

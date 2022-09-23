@@ -19,11 +19,14 @@ import {
   Text,
   useToaster,
   MultiSelectOption,
-  PageSpinner
+  PageSpinner,
+  AllowedTypes
 } from '@harness/uicore'
 import { Form, FieldArray } from 'formik'
 import { Classes, Dialog } from '@blueprintjs/core'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useStrings } from 'framework/strings'
 import { useCFParametersForAws } from 'services/cd-ng'
 import css from '../CloudFormation.module.scss'
@@ -34,6 +37,7 @@ interface GitDetails {
   filePath?: string
   isBranch: boolean
   branch?: string
+  repoName?: string
 }
 
 interface ParameterOverride {
@@ -51,6 +55,8 @@ interface InlineParameterFileProps {
   region: string
   body: string
   git?: GitDetails
+  readonly?: boolean
+  allowableTypes?: AllowedTypes
 }
 
 enum RequestTypes {
@@ -68,10 +74,14 @@ export const InlineParameterFile = ({
   type,
   region,
   body,
-  git
+  git,
+  readonly,
+  allowableTypes
 }: InlineParameterFileProps): JSX.Element => {
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
+  const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [remoteParams, setRemoteParams] = useState<MultiSelectOption[]>()
   const queryParams = useMemo(() => {
@@ -98,8 +108,8 @@ export const InlineParameterFile = ({
         if (result?.data) {
           setRemoteParams(map(result?.data, param => ({ label: param.paramKey!, value: param.paramKey! })))
         }
-      } catch (err) {
-        showError(err?.message)
+      } catch (err: any) {
+        showError(getRBACErrorMessage(err))
       }
     }
   }
@@ -188,11 +198,11 @@ export const InlineParameterFile = ({
                             }
                             data-testid="test"
                           />
-                          <FormInput.Text
-                            data-testid={`parameterOverrides[${index}].value`}
+                          <FormInput.MultiTextInput
                             name={`parameterOverrides[${index}].value`}
-                            label=""
-                            placeholder="Value"
+                            label={''}
+                            multiTextInputProps={{ expressions, allowableTypes }}
+                            disabled={readonly}
                           />
                           <Button
                             minimal

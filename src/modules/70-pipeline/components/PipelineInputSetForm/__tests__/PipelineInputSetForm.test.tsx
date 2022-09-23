@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import { Formik, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { Formik, RUNTIME_INPUT_VALUE, MultiTypeInputType } from '@harness/uicore'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import connector from '@connectors/pages/connectors/__tests__/mocks/get-connector-mock.json'
@@ -18,7 +18,7 @@ import * as cdngServices from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, triggerPathProps } from '@common/utils/routeUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
-import { clearRuntimeInput } from '@pipeline/components/PipelineStudio/StepUtil'
+import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { PipelineInputSetForm, PipelineInputSetFormProps } from '../PipelineInputSetForm'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -38,11 +38,12 @@ const getCommonProps = ({
   path
 }: {
   path?: string
-}): { path?: string; readonly?: boolean; viewType: StepViewType; maybeContainerClass?: string } => ({
+}): Pick<PipelineInputSetFormProps, 'path' | 'readonly' | 'viewType' | 'maybeContainerClass' | 'allowableTypes'> => ({
   path: path ?? '/dummypath',
   readonly: false,
   viewType: StepViewType.InputSet,
-  maybeContainerClass: ''
+  maybeContainerClass: '',
+  allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
 })
 
 const getPropsForVariables = (): PipelineInputSetFormProps => ({
@@ -110,6 +111,8 @@ const getPropsForCIStage = ({
     stages: [
       {
         stage: {
+          name: 'Build',
+          identifier: 'Build',
           type: 'CI',
           spec: {
             // eslint-disable-next-line
@@ -140,6 +143,11 @@ const getPropsForCIStage = ({
     },
     stages: [],
     delegateSelectors: ['random']
+  },
+  selectedStageData: {
+    selectedStages: [{ stageIdentifier: 'Build', stageName: 'Build', message: 'test', stagesRequired: [] }],
+    selectedStageItems: [{ label: 'Build', value: 'Build' }],
+    allStagesSelected: false
   },
   ...getCommonProps({ path })
 })

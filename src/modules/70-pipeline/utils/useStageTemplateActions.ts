@@ -6,13 +6,14 @@
  */
 
 import { defaultTo } from 'lodash-es'
-import { parse } from 'yaml'
 import produce from 'immer'
 import { useCallback } from 'react'
 import type { StageElementConfig } from 'services/cd-ng'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { createTemplate, getStageType } from '@pipeline/utils/templateUtils'
 import type { TemplateSummaryResponse } from 'services/template-ng'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
 interface TemplateActionsReturnType {
   addOrUpdateTemplate: (selectedTemplate?: TemplateSummaryResponse) => Promise<void>
@@ -23,25 +24,29 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
   const {
     state: {
       selectionState: { selectedStageId = '' },
-      templateTypes
+      templateTypes,
+      gitDetails,
+      storeMetadata
     },
     updateStage,
-    getStageFromPipeline,
-    getTemplate
+    getStageFromPipeline
   } = usePipelineContext()
   const { stage } = getStageFromPipeline(selectedStageId)
+  const { getTemplate } = useTemplateSelector()
 
   const addOrUpdateTemplate = useCallback(
     async (selectedTemplate?: TemplateSummaryResponse) => {
       try {
         const { template, isCopied } = await getTemplate({
           templateType: 'Stage',
-          selectedChildType: getStageType(stage?.stage, templateTypes),
-          selectedTemplate
+          allChildTypes: [getStageType(stage?.stage, templateTypes)],
+          selectedTemplate,
+          gitDetails,
+          storeMetadata
         })
         const node = stage?.stage
         const processNode = isCopied
-          ? produce(defaultTo(parse(template?.yaml || '')?.template.spec, {}) as StageElementConfig, draft => {
+          ? produce(defaultTo(parse<any>(template?.yaml || '')?.template.spec, {}) as StageElementConfig, draft => {
               draft.name = defaultTo(node?.name, '')
               draft.identifier = defaultTo(node?.identifier, '')
             })
@@ -51,7 +56,7 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
         // Do nothing.. user cancelled template selection
       }
     },
-    [stage?.stage, templateTypes, getTemplate, updateStage]
+    [getTemplate, stage?.stage, templateTypes, gitDetails, storeMetadata, updateStage]
   )
 
   const removeTemplate = useCallback(async () => {

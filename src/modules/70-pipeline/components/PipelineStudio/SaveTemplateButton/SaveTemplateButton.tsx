@@ -12,23 +12,37 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
-import type { PipelineInfoConfig, StageElementConfig } from 'services/cd-ng'
+import type { EntityGitDetails, PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
 import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import css from './SaveTemplateButton.module.scss'
 
-type TemplateData = StepOrStepGroupOrTemplateStepData | StageElementConfig | PipelineInfoConfig
+export type TemplateData = StepOrStepGroupOrTemplateStepData | StageElementConfig | PipelineInfoConfig
 
 export interface SaveTemplateButtonProps {
   data: TemplateData | (() => Promise<TemplateData>)
   type: 'Step' | 'Stage' | 'Pipeline'
+  gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
   buttonProps?: ButtonProps
 }
 
-export function SaveTemplateButton({ data, buttonProps, type }: SaveTemplateButtonProps): JSX.Element {
+export function SaveTemplateButton({
+  data,
+  type,
+  gitDetails,
+  storeMetadata,
+  buttonProps
+}: SaveTemplateButtonProps): JSX.Element {
   const { getString } = useStrings()
-  const { save } = useSaveAsTemplate({ data, type, fireSuccessEvent: true })
+  const { save } = useSaveAsTemplate({
+    data,
+    type,
+    gitDetails,
+    storeMetadata
+  })
 
   return (
     <RbacButton

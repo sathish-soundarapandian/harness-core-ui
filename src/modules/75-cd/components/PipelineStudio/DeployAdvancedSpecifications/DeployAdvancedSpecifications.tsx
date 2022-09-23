@@ -8,7 +8,9 @@
 import React from 'react'
 import { Card, Container, HarnessDocTooltip, Layout } from '@wings-software/uicore'
 import { produce } from 'immer'
-import { set, isEmpty, unset } from 'lodash-es'
+import { set, isEmpty, unset, get } from 'lodash-es'
+import cx from 'classnames'
+import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import { StepActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -16,11 +18,17 @@ import { FailureStrategyWithRef } from '@pipeline/components/PipelineStudio/Fail
 import { DelegateSelectorWithRef } from '@pipeline/components/PipelineStudio/DelegateSelector/DelegateSelector'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
 import ConditionalExecution from '@pipeline/components/PipelineStudio/ConditionalExecution/ConditionalExecution'
+import MultiTypeSkipInstances from '@pipeline/components/PipelineStudio/SkipInstances/MultiTypeSkipInstances'
+
 import { useStrings } from 'framework/strings'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isSSHWinRMDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { DeploymentStageConfig } from 'services/cd-ng'
+
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export interface AdvancedSpecifications {
@@ -31,14 +39,24 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
 
   const {
     state: {
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId = '' }
     },
     isReadonly,
     getStageFromPipeline,
     updateStage
   } = usePipelineContext()
-  const { stage } = getStageFromPipeline(selectedStageId || /* istanbul ignore next */ '')
+  const { stage } = getStageFromPipeline(selectedStageId)
 
+  const getSshOrWinRmType = React.useCallback(() => {
+    const { deploymentType } = stage?.stage?.spec as DeploymentStageConfig
+    if (deploymentType) {
+      return isSSHWinRMDeploymentType(deploymentType as string)
+    }
+    const type = get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', '')
+    return isSSHWinRMDeploymentType(type)
+  }, [stage])
+
+  const { SSH_NG } = useFeatureFlags()
   const formikRef = React.useRef<StepFormikRef | null>(null)
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
   const { submitFormsForTab } = React.useContext(StageErrorContext)
@@ -54,7 +72,7 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
   return (
     <div className={stageCss.deployStage}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={stageCss.contentSection} ref={scrollRef}>
+      <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
         <div className={stageCss.tabHeading}>
           <span data-tooltip-id="delegateSelectorDeployStage">
             {getString('pipeline.delegate.DelegateSelectorOptional')}
@@ -69,9 +87,7 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
                 ref={formikRef}
                 onUpdate={delegateSelectors => {
                   const valuePassed = delegateSelectors.delegateSelectors
-                  const { stage: pipelineStage } = getStageFromPipeline(
-                    selectedStageId || /* istanbul ignore next */ ''
-                  )
+                  const { stage: pipelineStage } = getStageFromPipeline(selectedStageId)
                   /* istanbul ignore else */
                   if (pipelineStage && pipelineStage.stage) {
                     const stageData = produce(pipelineStage, draft => {
@@ -91,7 +107,6 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
             </div>
           </Layout.Horizontal>
         </Card>
-        <Container margin={{ top: 'xxlarge' }}>{children}</Container>
 
         <div className={stageCss.tabHeading}>
           <span data-tooltip-id="conditionalExecutionDeployStage">
@@ -107,9 +122,7 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
                 isReadonly={isReadonly}
                 selectedStage={stage}
                 onUpdate={when => {
-                  const { stage: pipelineStage } = getStageFromPipeline(
-                    selectedStageId || /* istanbul ignore next */ ''
-                  )
+                  const { stage: pipelineStage } = getStageFromPipeline(selectedStageId)
                   /* istanbul ignore else */
                   if (pipelineStage && pipelineStage.stage) {
                     const stageData = produce(pipelineStage, draft => {
@@ -123,6 +136,33 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
             </Layout.Horizontal>
           </Card>
         )}
+
+        <div className={stageCss.tabHeading}>
+          <span data-tooltip-id="loopingStrategyDeployStage">
+            {getString('pipeline.loopingStrategy.title')}
+            <HarnessDocTooltip tooltipId="loopingStrategyDeployStage" useStandAlone={true} />
+          </span>
+        </div>
+        <Card className={stageCss.sectionCard} id="loopingStrategy">
+          <LoopingStrategy
+            strategy={stage?.stage?.strategy}
+            isReadonly={isReadonly}
+            onUpdateStrategy={strategy => {
+              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId)
+              if (pipelineStage && pipelineStage.stage) {
+                const stageData = produce(pipelineStage, draft => {
+                  if (isEmpty(strategy)) {
+                    unset(draft, 'stage.strategy')
+                  } else {
+                    set(draft, 'stage.strategy', strategy)
+                  }
+                })
+                if (stageData.stage) updateStage(stageData.stage)
+              }
+            }}
+          />
+        </Card>
+
         <div className={stageCss.tabHeading}>
           <span data-tooltip-id="failureStrategyDeployStage">
             {getString('pipeline.failureStrategies.title')}
@@ -137,9 +177,7 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
                 isReadonly={isReadonly}
                 ref={formikRef}
                 onUpdate={({ failureStrategies }) => {
-                  const { stage: pipelineStage } = getStageFromPipeline(
-                    selectedStageId || /* istanbul ignore next */ ''
-                  )
+                  const { stage: pipelineStage } = getStageFromPipeline(selectedStageId)
                   /* istanbul ignore else */
                   if (pipelineStage && pipelineStage.stage) {
                     const stageData = produce(pipelineStage, draft => {
@@ -166,6 +204,11 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
             </div>
           </Layout.Horizontal>
         </Card>
+        {SSH_NG && getSshOrWinRmType() ? (
+          <div data-testid="skip-instances" className={stageCss.tabHeading}>
+            <MultiTypeSkipInstances value={stage?.stage?.skipInstances} />
+          </div>
+        ) : null}
         <Container margin={{ top: 'xxlarge' }}>{children}</Container>
       </div>
     </div>

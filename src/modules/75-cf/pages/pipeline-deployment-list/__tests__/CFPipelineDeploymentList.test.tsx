@@ -6,41 +6,49 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor, act, getByText } from '@testing-library/react'
+import { render, RenderResult, screen } from '@testing-library/react'
+import { noop } from 'lodash-es'
+import pipelineList from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-list.json'
+import executionList from '@pipeline/pages/execution-list/__tests__/mocks/execution-list.json'
+import filters from '@pipeline/pages/execution-list/__tests__/mocks/filters.json'
+import routes from '@common/RouteDefinitions'
+import { TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
-import { CurrentLocation, TestWrapper } from '@common/utils/testUtils'
-import routes from '@common/RouteDefinitions'
-import data from '@pipeline/pages/pipeline-deployment-list/__tests__/execution-list.json'
-import services from '@pipeline/pages/pipelines/__tests__/mocks/services.json'
-import deploymentTypes from '@pipeline/pages/pipelines/__tests__/mocks/deploymentTypes.json'
-import environments from '@pipeline/pages/pipelines/__tests__/mocks/environments.json'
-import filters from '@pipeline/pages/pipeline-deployment-list/__tests__/filters.json'
-import pipelines from '@pipeline/components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import { getMockFor_useGetPipeline } from '@pipeline/components/RunPipelineModal/__tests__/mocks'
-import CIPipelineDeploymentList from '../CFPipelineDeploymentList'
-
-jest.mock('@common/components/YAMLBuilder/YamlBuilder', () => ({ children }: { children: JSX.Element }) => (
-  <div>{children}</div>
-))
-jest.mock('@common/utils/YamlUtils', () => ({}))
-
+import deploymentTypes from '@pipeline/pages/pipeline-list/__tests__/mocks/deploymentTypes.json'
+import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.json'
+import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
+import { PipelineResponse as PipelineDetailsMockResponse } from '@pipeline/pages/pipeline-details/__tests__/PipelineDetailsMocks'
+import { useGetListOfExecutions } from 'services/pipeline-ng'
+import CFPipelineDeploymentList from '../CFPipelineDeploymentList'
 const mockGetCallFunction = jest.fn()
 
+window.IntersectionObserver = jest.fn().mockImplementation(() => ({
+  observe: () => null,
+  unobserve: () => null
+}))
+
+jest.mock('@common/components/YAMLBuilder/YamlBuilder')
+jest.mock('@common/utils/YamlUtils', () => ({}))
+
+jest.mock('@pipeline/components/Dashboards/PipelineSummaryCards/PipelineSummaryCards', () => () => <div />)
+jest.mock('@pipeline/components/Dashboards/BuildExecutionsChart/PipelineBuildExecutionsChart', () => () => <div />)
+
 jest.mock('services/pipeline-ng', () => ({
-  useGetPipelineSummary: getMockFor_useGetPipeline,
+  useGetExecutionData: jest.fn().mockReturnValue({}),
   useGetListOfExecutions: jest.fn(() => ({
-    mutate: jest.fn(() => Promise.resolve(data)),
+    mutate: jest.fn(() => Promise.resolve(executionList)),
     loading: false,
     cancel: jest.fn()
   })),
-  useGetTemplateFromPipeline: jest.fn(() => ({ data: {} })),
-  useGetPipeline: jest.fn(() => ({ data: {} })),
   useGetPipelineList: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
-    return { mutate: jest.fn(() => Promise.resolve(pipelines)), cancel: jest.fn(), loading: false }
+    return { mutate: jest.fn(() => Promise.resolve(pipelineList)), cancel: jest.fn(), loading: false }
   }),
+  useGetTemplateFromPipeline: jest.fn(() => ({ data: {} })),
+  useGetPipeline: jest.fn(() => ({ data: {} })),
+  useGetPipelineSummary: jest.fn(() => PipelineDetailsMockResponse),
   useCreateInputSetForPipeline: jest.fn(() => ({ data: {} })),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => ({ data: {} })),
   useHandleInterrupt: jest.fn(() => ({})),
@@ -64,16 +72,29 @@ jest.mock('services/pipeline-ng', () => ({
     loading: false,
     cancel: jest.fn()
   })),
-  useGetInputsetYaml: jest.fn(() => ({ data: null, loading: false }))
+  useGetInputsetYaml: jest.fn(() => ({ data: null })),
+  useGetStagesExecutionList: jest.fn(() => ({})),
+  useRunStagesWithRuntimeInputYaml: jest.fn(() => ({ data: null })),
+  useRePostPipelineExecuteWithInputSetYaml: jest.fn(() => ({ data: null })),
+  useRerunStagesWithRuntimeInputYaml: jest.fn(() => ({ data: null })),
+  useGetInputSetsListForPipeline: jest.fn(() => ({ data: null, refetch: jest.fn() })),
+  useCreateVariablesV2: jest.fn(() => ({})),
+  useValidateTemplateInputs: jest.fn(() => ({ data: null }))
 }))
 
-const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
+const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 
 jest.mock('services/cd-ng', () => ({
+  useGetServiceDefinitionTypes: jest
+    .fn()
+    .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),
   useGetServiceListForProject: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: services, refetch: jest.fn() })),
+  useGetEnvironmentListForProject: jest
+    .fn()
+    .mockImplementation(() => ({ loading: false, data: environments, refetch: jest.fn() })),
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: getListGitSync }
   }),
@@ -83,86 +104,60 @@ jest.mock('services/cd-ng', () => ({
   useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
   }),
-  useGetServiceDefinitionTypes: jest
-    .fn()
-    .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),
-  useGetEnvironmentListForProject: jest
-    .fn()
-    .mockImplementation(() => ({ loading: false, data: environments, refetch: jest.fn() }))
+  useCreatePR: jest.fn(() => noop),
+  useCreatePRV2: jest.fn(() => noop),
+  useGetFileContent: jest.fn(() => noop),
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
 }))
 
-function ComponentWrapper(): React.ReactElement {
-  return (
-    <React.Fragment>
-      <CIPipelineDeploymentList />
-      <CurrentLocation />
-    </React.Fragment>
+jest.mock('services/template-ng', () => ({
+  useGetYamlWithTemplateRefsResolved: jest.fn(() => ({}))
+}))
+
+const renderExecutionPage = (): RenderResult =>
+  render(
+    <TestWrapper
+      path={routes.toPipelineDeploymentList({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })}
+      pathParams={{
+        accountId: 'accountId',
+        orgIdentifier: 'orgIdentifier',
+        projectIdentifier: 'projectIdentifier',
+        pipelineIdentifier: 'pipelineIdentifier',
+        module: 'cf'
+      }}
+      defaultAppStoreValues={defaultAppStoreValues}
+      queryParams={{ listview: true }}
+    >
+      <CFPipelineDeploymentList />
+    </TestWrapper>
   )
-}
 
-const TEST_PATH = routes.toPipelineDeploymentList({
-  ...accountPathProps,
-  ...pipelinePathProps,
-  ...pipelineModuleParams
-})
-
-describe('<CIPipelineDeploymentList /> tests', () => {
+describe('CFPipelineDeploymentList', () => {
   beforeAll(() => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
   })
   afterAll(() => {
     jest.spyOn(global.Date, 'now').mockReset()
   })
-  test('snapshot test', async () => {
-    const { container, findByText } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={{
-          accountId: 'testAcc',
-          orgIdentifier: 'testOrg',
-          projectIdentifier: 'test',
-          pipelineIdentifier: 'testPip',
-          module: 'ci'
-        }}
-        defaultAppStoreValues={defaultAppStoreValues}
-      >
-        <CIPipelineDeploymentList />
-      </TestWrapper>
+
+  test('should render pipelines', async () => {
+    renderExecutionPage()
+
+    const pipeline = await screen.findByRole('link', {
+      name: 'PR Harness Env - CD Selective Stage : 3'
+    })
+    expect(pipeline).toHaveAttribute(
+      'href',
+      '/account/accountId/cf/orgs/orgIdentifier/projects/projectIdentifier/pipelines/pipelineIdentifier/executions/PO4Dd7pnSiOmyCjHkoNeMQ/pipeline'
     )
-
-    await waitFor(() => findByText('http_pipeline', { selector: '.pipelineName' }))
-
-    expect(container).toMatchSnapshot()
   })
 
-  test('call run pipeline', async () => {
-    const { container, getByTestId } = render(
-      <TestWrapper
-        path={TEST_PATH}
-        pathParams={{
-          accountId: 'testAcc',
-          orgIdentifier: 'testOrg',
-          projectIdentifier: 'test',
-          pipelineIdentifier: 'testPip',
-          module: 'ci'
-        }}
-        defaultAppStoreValues={defaultAppStoreValues}
-      >
-        <ComponentWrapper />
-      </TestWrapper>
+  test('should be able to show any pipelines executions', async () => {
+    renderExecutionPage()
+    expect(useGetListOfExecutions).toHaveBeenCalled()
+    // In pipeline execution history avoid module filter since we show all pipelines in any module and execution history also should be shown for any pipeline
+    expect(useGetListOfExecutions).not.toHaveBeenLastCalledWith(
+      expect.objectContaining({ queryParams: expect.objectContaining({ module: 'cf' }) })
     )
-
-    const runButton = getByText(container, 'pipeline.runAPipeline')
-    act(() => {
-      fireEvent.click(runButton)
-    })
-
-    expect(getByTestId('location')).toMatchInlineSnapshot(`
-      <div
-        data-testid="location"
-      >
-        /account/testAcc/ci/orgs/testOrg/projects/test/pipelines/testPip/pipeline-studio/?runPipeline=true
-      </div>
-    `)
   })
 })

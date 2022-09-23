@@ -95,3 +95,32 @@ export const metricPack = {
   ],
   responseMessages: []
 }
+
+export const queryParam = {
+  appId: '',
+  appName: '',
+  accountId: '',
+  connectorIdentifier: 'connectorIdentifier',
+  orgIdentifier: '',
+  projectIdentifier: '',
+  requestGuid: 'guid'
+}
+
+export const appdMetricData = {
+  metricPackName: 'Performance',
+  overallStatus: 'SUCCESS',
+  values: [{ apiResponseStatus: 'SUCCESS', metricName: 'Calls per Minute', value: 0 }]
+}
+
+export const mockValidationResult = [
+  {
+    metricPackName: 'Performance',
+    overallStatus: 'SUCCESS',
+    values: [
+      { apiResponseStatus: 'SUCCESS', metricName: 'Calls per Minute', value: 0 },
+      { apiResponseStatus: 'SUCCESS', metricName: 'Apdex', value: 1 },
+      { apiResponseStatus: 'NO_DATA', metricName: 'Errors per Minute', value: null },
+      { apiResponseStatus: 'NO_DATA', metricName: 'Average Response Time (ms)', value: null }
+    ]
+  }
+]

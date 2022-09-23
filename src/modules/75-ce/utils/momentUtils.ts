@@ -43,6 +43,7 @@ export const getStaticSchedulePeriodTime = (str: string) => moment(str).valueOf(
 export const getStaticSchedulePeriodString = (timeEpoch: number) =>
   getTimePeriodString(timeEpoch, STATIC_SCHEDULE_PERIOD_FORMAT)
 export const getMinDate = (dates: Array<Date | number>) => moment.min(dates.map(d => moment(d))).valueOf()
+export const getDiffInDays = (from: string, to: string) => moment(to).diff(moment(from), 'days')
 
 export const DATE_RANGE_SHORTCUTS: Record<string, moment.Moment[]> = {
   LAST_7_DAYS: [todayInUTC().subtract(6, 'days').startOf('day'), todayInUTC().endOf('day')],
@@ -86,6 +87,18 @@ export enum DATE_RANGE_SHORTCUTS_NAME {
 }
 
 export const getUserTimeZone = () => Intl.DateTimeFormat().resolvedOptions().timeZone
+
+export const getGenericTimeZoneName = () => {
+  return new Date()
+    .toLocaleDateString('en-US', {
+      day: '2-digit',
+      timeZoneName: 'long'
+    })
+    .slice(4)
+    .split(' ')
+    .map(term => term[0])
+    .join('')
+}
 
 export const DEFAULT_TIME_RANGE: TimeRangeFilterType = {
   to: DATE_RANGE_SHORTCUTS.LAST_7_DAYS[1].format(CE_DATE_FORMAT_INTERNAL),

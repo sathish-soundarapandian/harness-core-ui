@@ -10,14 +10,19 @@ import { useParams } from 'react-router-dom'
 import { Card, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import {
+  AzureWebAppInstanceInfoDTO,
+  EcsInstanceInfoDTO,
   GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams,
+  GitOpsInstanceInfoDTO,
   InstanceDetailsDTO,
   NativeHelmInstanceInfoDTO,
+  ServiceDefinition,
   useGetActiveInstancesByServiceIdEnvIdAndBuildIds
 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { useStrings } from 'framework/strings'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import css from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances.module.scss'
 
 export type InstanceData = Record<string, Record<string, InstanceDetailsDTO[]>>
@@ -105,26 +110,105 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
 
   const instanceData = data?.data?.instancesByBuildIdList?.[0]?.instances[instanceNum] || {}
 
+  function instanceInfoData(deploymentType: string | undefined): any {
+    switch (deploymentType) {
+      case ServiceDeploymentType.AzureWebApp:
+        return [
+          {
+            label: getString('cd.serviceDashboard.webApp'),
+            value: (instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).appName || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.host'),
+            value: (instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).hostName || ''
+          },
+          {
+            label: getString('common.state'),
+            value: (instanceData.instanceInfoDTO as AzureWebAppInstanceInfoDTO).instanceState || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.artifact'),
+            value: instanceData.artifactName || ''
+          }
+        ]
+      case ServiceDeploymentType.ECS:
+        return [
+          {
+            label: getString('cd.serviceName'),
+            value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.serviceName || ''
+          },
+          {
+            label: getString('pipeline.artifactTriggerConfigPanel.artifact'),
+            value: instanceData.artifactName || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.taskDefinitionArn'),
+            value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskDefinitionArn || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.taskArn'),
+            value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskArn || ''
+          }
+        ]
+      default:
+        return [
+          {
+            label:
+              instanceData.instanceInfoDTO?.type === ServiceDeploymentType.ServerlessAwsLambda
+                ? getString('cd.serviceDashboard.function')
+                : getString('cd.serviceDashboard.pod'),
+            value: instanceData.podName || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.artifact'),
+            value: instanceData.artifactName || ''
+          }
+        ]
+    }
+  }
+
+  const getInfrastructureSectionValues = (deploymentType: ServiceDefinition['type']) => {
+    switch (deploymentType) {
+      case ServiceDeploymentType.ECS:
+        return [
+          {
+            label: getString('cd.serviceDashboard.awsRegion'),
+            value: instanceData.infrastructureDetails?.region
+          },
+          {
+            label: getString('common.clusterName'),
+            value: instanceData.infrastructureDetails?.cluster
+          }
+        ]
+      default:
+        return Object.keys(instanceData.infrastructureDetails || {}).map(infrastructureDetailsKey => ({
+          label: infrastructureDetailsKey,
+          value: instanceData.infrastructureDetails?.[infrastructureDetailsKey]
+        }))
+    }
+  }
+
+  const infrastructureSectionValues = getInfrastructureSectionValues(
+    instanceData.instanceInfoDTO?.type as ServiceDefinition['type']
+  )
+
+  const clusterIdentifier = (instanceData.instanceInfoDTO as GitOpsInstanceInfoDTO)?.clusterIdentifier
+
+  if (clusterIdentifier) {
+    infrastructureSectionValues.push({
+      label: getString('common.cluster').toLowerCase(),
+      value: clusterIdentifier
+    })
+  }
+
   const sectionData: SectionProps[] = [
     {
       header: getString('cd.serviceDashboard.instanceDetails'),
-      values: [
-        {
-          label: getString('cd.serviceDashboard.pod'),
-          value: instanceData.podName || ''
-        },
-        {
-          label: getString('cd.serviceDashboard.artifact'),
-          value: instanceData.artifactName || ''
-        }
-      ]
+      values: instanceInfoData(instanceData.instanceInfoDTO?.type)
     },
     {
       header: getString('infrastructureText'),
-      values: Object.keys(instanceData.infrastructureDetails || {}).map(infrastructureDetailsKey => ({
-        label: infrastructureDetailsKey,
-        value: instanceData.infrastructureDetails?.[infrastructureDetailsKey]
-      }))
+      values: infrastructureSectionValues
     },
     {
       header: getString('deploymentText'),

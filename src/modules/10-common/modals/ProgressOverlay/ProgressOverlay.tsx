@@ -90,7 +90,7 @@ export const ProgressOverlay: React.FC<ProgressOverlay> = ({
 
   const getOverallSummary = (): JSX.Element => {
     // error can be proper formatted BE error or any unhandled failure
-    const responseMessages = (firstStage?.error as Error)?.responseMessages
+    let responseMessages = (firstStage?.error as Error)?.responseMessages
     if (opnInProgress) {
       return (
         <Layout.Vertical spacing="small" flex>
@@ -112,7 +112,10 @@ export const ProgressOverlay: React.FC<ProgressOverlay> = ({
         </Layout.Vertical>
       )
     } else if (!opnInProgress && firstStage.status === 'SUCCESS' && secondStage && secondStage.status !== 'SUCCESS') {
-      return (
+      responseMessages = (secondStage?.error as Error)?.responseMessages
+      return responseMessages?.length ? (
+        <ErrorHandler responseMessages={responseMessages} />
+      ) : (
         <Layout.Vertical spacing="small" flex>
           <Icon name="circle-cross" size={40} color={Color.RED_450} />
           <Text font="medium" color={Color.BLACK} style={{ fontWeight: 'bold' }} className={css.finalLabel}>

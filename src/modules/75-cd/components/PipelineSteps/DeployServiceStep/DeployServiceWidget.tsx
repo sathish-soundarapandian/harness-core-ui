@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   ButtonSize,
   ButtonVariation,
@@ -16,7 +16,8 @@ import {
   Layout,
   MultiTypeInputType,
   SelectOption,
-  shouldShowError
+  shouldShowError,
+  FormikForm
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
@@ -24,8 +25,7 @@ import { defaultTo, isEmpty, isNil, noop, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { FormikProps, FormikValues } from 'formik'
 import type { IDialogProps } from '@blueprintjs/core'
-import produce from 'immer'
-import { ServiceRequestDTO, ServiceResponseDTO, ServiceYaml, useGetServiceList, useGetServiceV2 } from 'services/cd-ng'
+import { ServiceRequestDTO, ServiceYaml, useGetServiceList } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useToaster } from '@common/exports'
@@ -37,7 +37,6 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getServiceRefSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import RbacButton from '@rbac/components/Button/Button'
-import ServiceEntityEditModal from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
 import type { DeployServiceData, DeployServiceProps, DeployServiceState } from './DeployServiceInterface'
 import { flexStart, isEditService } from './DeployServiceUtils'
 import { NewEditServiceModal } from './NewEditServiceModal'
@@ -51,6 +50,7 @@ function DeployServiceWidget({
   serviceLabel
 }: DeployServiceProps): React.ReactElement {
   const { getString } = useStrings()
+
   const { accountId, projectIdentifier, orgIdentifier } = useParams<
     PipelineType<{
       orgIdentifier: string
@@ -59,14 +59,6 @@ function DeployServiceWidget({
       accountId: string
     }>
   >()
-  const queryParams = useMemo(
-    () => ({
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    }),
-    [accountId, orgIdentifier, projectIdentifier]
-  )
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
@@ -79,28 +71,17 @@ function DeployServiceWidget({
 
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
-  const isNewServiceEntity = (): boolean => {
-    return !!initialValues.isNewServiceEntity
-  }
+
   const {
     data: serviceResponse,
     error,
     loading
   } = useGetServiceList({
     queryParams: {
-      ...queryParams,
-      type: isNewServiceEntity() ? initialValues.deploymentType : undefined
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
     }
-  })
-
-  const {
-    data: selectedServiceResponse,
-    refetch: refetchServiceData,
-    loading: serviceDataLoading
-  } = useGetServiceV2({
-    serviceIdentifier: '',
-    queryParams,
-    lazy: true
   })
 
   useEffect(() => {
@@ -166,11 +147,12 @@ function DeployServiceWidget({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (error?.message) {
-    if (shouldShowError(error)) {
+  useEffect(() => {
+    if (error?.message && shouldShowError(error)) {
       showError(getRBACErrorMessage(error))
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error?.message])
 
   const updateServicesList = (value: ServiceRequestDTO): void => {
     formikRef.current?.setValues({ serviceRef: value.identifier, ...(state.isService && { service: {} }) })
@@ -192,18 +174,6 @@ function DeployServiceWidget({
     }
   }
 
-  const onServiceEntityCreate = (newServiceInfo: ServiceYaml): void => {
-    hideModal()
-    formikRef.current?.setValues({ serviceRef: newServiceInfo.identifier, ...(state.isService && { service: {} }) })
-    const newServiceData = produce(services, draft => {
-      draft?.unshift({
-        identifier: newServiceInfo.identifier,
-        name: newServiceInfo.name
-      })
-    })
-    setService(newServiceData)
-  }
-
   const onServiceChange = (
     fieldValue: SelectOption,
     formikValue: any,
@@ -216,14 +186,6 @@ function DeployServiceWidget({
   }
 
   const editService = (values: FormikValues): void => {
-    if (initialValues.isNewServiceEntity) {
-      refetchServiceData({
-        pathParams: {
-          serviceIdentifier: values.serviceRef
-        },
-        queryParams
-      })
-    }
     if (values.service?.identifier) {
       setState({
         isEdit: true,
@@ -246,16 +208,8 @@ function DeployServiceWidget({
     autoFocus: true,
     canEscapeKeyClose: false,
     canOutsideClickClose: false,
-    enforceFocus: false,
-    className: isNewServiceEntity() ? css.editServiceDialog : '',
-    style: isNewServiceEntity() ? { width: 1114 } : {}
+    enforceFocus: false
   }
-  const serviceEntityProps = state.isEdit
-    ? {
-        serviceResponse: selectedServiceResponse?.data?.service as ServiceResponseDTO,
-        isLoading: serviceDataLoading
-      }
-    : {}
   const [showModal, hideModal] = useModalHook(
     () => (
       <Dialog
@@ -263,34 +217,25 @@ function DeployServiceWidget({
         title={state.isEdit ? getString('editService') : getString('newService')}
         {...DIALOG_PROPS}
       >
-        {isNewServiceEntity() ? (
-          <ServiceEntityEditModal
-            {...serviceEntityProps}
-            onCloseModal={hideModal}
-            onServiceCreate={onServiceEntityCreate}
-            isServiceCreateModalView={!state.isEdit}
-          />
-        ) : (
-          <NewEditServiceModal
-            data={{
-              name: defaultTo(state.data?.name, ''),
-              identifier: defaultTo(state.data?.identifier, ''),
-              orgIdentifier,
-              projectIdentifier,
-              ...state.data
-            }}
-            isEdit={state.isEdit}
-            isService={state.isService}
-            onCreateOrUpdate={value => {
-              updateServicesList(value)
-              onClose.call(null)
-            }}
-            closeModal={onClose}
-          />
-        )}
+        <NewEditServiceModal
+          data={{
+            name: defaultTo(state.data?.name, ''),
+            identifier: defaultTo(state.data?.identifier, ''),
+            orgIdentifier,
+            projectIdentifier,
+            ...state.data
+          }}
+          isEdit={state.isEdit}
+          isService={state.isService}
+          onCreateOrUpdate={value => {
+            updateServicesList(value)
+            onClose.call(null)
+          }}
+          closeModal={onClose}
+        />
       </Dialog>
     ),
-    [state, selectedServiceResponse]
+    [state]
   )
 
   const onClose = React.useCallback(() => {
@@ -323,74 +268,79 @@ function DeployServiceWidget({
           formikRef.current = formik as FormikProps<unknown> | null
           const { values, setFieldValue } = formik
           return (
-            <Layout.Horizontal
-              className={css.formRow}
-              spacing="medium"
-              flex={{ alignItems: flexStart, justifyContent: flexStart }}
-            >
-              <FormInput.MultiTypeInput
-                tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-                label={serviceLabel ? serviceLabel : getString('cd.pipelineSteps.serviceTab.specifyYourService')}
-                name="serviceRef"
-                useValue
-                disabled={readonly || (type === MultiTypeInputType.FIXED && loading)}
-                placeholder={loading ? getString('loading') : getString('cd.pipelineSteps.serviceTab.selectService')}
-                multiTypeInputProps={{
-                  onTypeChange: setType,
-                  width: 300,
-                  expressions,
-                  onChange: val => onServiceChange(val as SelectOption, values, setFieldValue),
-                  selectProps: {
-                    disabled: loading,
-                    addClearBtn: true && !readonly,
-                    items: selectOptions || []
-                  },
-                  allowableTypes
-                }}
-                selectItems={selectOptions || []}
-              />
-              {isEditService(values) && !loading ? (
-                <RbacButton
-                  size={ButtonSize.SMALL}
-                  text={getString('editService')}
-                  variation={ButtonVariation.LINK}
-                  id="edit-service"
-                  disabled={readonly}
-                  permission={{
-                    permission: PermissionIdentifier.EDIT_SERVICE,
-                    resource: {
-                      resourceType: ResourceType.SERVICE,
-                      resourceIdentifier: services ? (services[0]?.identifier as string) : ''
+            <FormikForm>
+              <Layout.Horizontal
+                className={css.formRow}
+                spacing="medium"
+                flex={{ alignItems: flexStart, justifyContent: flexStart }}
+              >
+                <FormInput.MultiTypeInput
+                  tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+                  label={serviceLabel ? serviceLabel : getString('cd.pipelineSteps.serviceTab.specifyYourService')}
+                  name="serviceRef"
+                  useValue
+                  disabled={readonly || (type === MultiTypeInputType.FIXED && loading)}
+                  placeholder={loading ? getString('loading') : getString('cd.pipelineSteps.serviceTab.selectService')}
+                  multiTypeInputProps={{
+                    onTypeChange: setType,
+                    width: 300,
+                    expressions,
+                    onChange: val => onServiceChange(val as SelectOption, values, setFieldValue),
+                    selectProps: {
+                      addClearBtn: !readonly,
+                      items: defaultTo(selectOptions, [])
                     },
-                    options: {
-                      skipCondition: ({ resourceIdentifier }) => !resourceIdentifier
-                    }
+                    allowableTypes
                   }}
-                  onClick={() => editService(values)}
+                  selectItems={selectOptions || []}
                 />
-              ) : (
-                <RbacButton
-                  size={ButtonSize.SMALL}
-                  text={getString('cd.pipelineSteps.serviceTab.plusNewService')}
-                  variation={ButtonVariation.LINK}
-                  id="add-new-service"
-                  disabled={readonly}
-                  permission={{
-                    permission: PermissionIdentifier.EDIT_SERVICE,
-                    resource: {
-                      resourceType: ResourceType.SERVICE
-                    }
-                  }}
-                  onClick={() => {
-                    setState({
-                      isEdit: false,
-                      isService: false
-                    })
-                    showModal()
-                  }}
-                />
-              )}
-            </Layout.Horizontal>
+                {type === MultiTypeInputType.FIXED && (
+                  <div className={css.serviceActionWrapper}>
+                    {isEditService(values) && !loading ? (
+                      <RbacButton
+                        size={ButtonSize.SMALL}
+                        text={getString('editService')}
+                        variation={ButtonVariation.LINK}
+                        id="edit-service"
+                        disabled={readonly}
+                        permission={{
+                          permission: PermissionIdentifier.EDIT_SERVICE,
+                          resource: {
+                            resourceType: ResourceType.SERVICE,
+                            resourceIdentifier: services ? (services[0]?.identifier as string) : ''
+                          },
+                          options: {
+                            skipCondition: ({ resourceIdentifier }) => !resourceIdentifier
+                          }
+                        }}
+                        onClick={() => editService(values)}
+                      />
+                    ) : (
+                      <RbacButton
+                        size={ButtonSize.SMALL}
+                        text={getString('cd.pipelineSteps.serviceTab.plusNewService')}
+                        variation={ButtonVariation.LINK}
+                        id="add-new-service"
+                        disabled={readonly}
+                        permission={{
+                          permission: PermissionIdentifier.EDIT_SERVICE,
+                          resource: {
+                            resourceType: ResourceType.SERVICE
+                          }
+                        }}
+                        onClick={() => {
+                          setState({
+                            isEdit: false,
+                            isService: false
+                          })
+                          showModal()
+                        }}
+                      />
+                    )}
+                  </div>
+                )}
+              </Layout.Horizontal>
+            </FormikForm>
           )
         }}
       </Formik>

@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Container, Link, Text, Utils } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
+import { Container, Icon, Layout, Link, Text, Utils } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, ITreeNode, PopoverInteractionKind, Tree } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
@@ -92,7 +93,13 @@ function deselectMetric(navContent: ITreeNode[], nodePath?: number[]): void {
   }
 }
 
-function generateTreeNode(type: string, data: any, id: string, isExpanded = false): ITreeNode<NodeDataType> {
+function generateTreeNode(
+  type: string,
+  data: any,
+  id: string,
+  isExpanded = false,
+  setDeleteMetric?: (id?: string) => void
+): ITreeNode<NodeDataType> {
   switch (type) {
     case NodeType.DASHBOARD:
       return {
@@ -155,7 +162,7 @@ function generateTreeNode(type: string, data: any, id: string, isExpanded = fals
       return {
         id,
         hasCaret: false,
-        label: <TreeNodeLabel width={LabelWidth.SECOND_LEVEL} label={id} />,
+        label: <TreeNodeLabel width={LabelWidth.SECOND_LEVEL} label={id} onDelete={setDeleteMetric} />,
         childNodes: [],
         nodeData: {
           type: NodeType.MANUAL_INPUT_METRIC
@@ -166,7 +173,8 @@ function generateTreeNode(type: string, data: any, id: string, isExpanded = fals
 
 function transformDashboardsToTreeNodes(
   dashboardWidgetItems: MetricDashboardItem[],
-  manuallyInputQueries: string[]
+  manuallyInputQueries: string[],
+  setDeleteMetric?: (id?: string) => void
 ): ITreeNode<NodeDataType>[] {
   const treeNodes: ITreeNode<NodeDataType>[] = []
 
@@ -182,7 +190,9 @@ function transformDashboardsToTreeNodes(
   // insert all manual metrics into manually input queries node
   for (const metric of manuallyInputQueries || []) {
     if (metric) {
-      treeNodes[0]?.childNodes?.push(generateTreeNode(NodeType.MANUAL_INPUT_METRIC, undefined, metric))
+      treeNodes[0]?.childNodes?.push(
+        generateTreeNode(NodeType.MANUAL_INPUT_METRIC, undefined, metric, false, setDeleteMetric)
+      )
     }
   }
 
@@ -249,17 +259,20 @@ function transformWidgetsToTreeNodes(
 }
 
 function TreeNodeLabel(props: TreeNodeLabelProps): JSX.Element {
-  const { width, label } = props
+  const { width, label, onDelete } = props
   return (
-    <Text
-      color={Color.BLACK}
-      width={width}
-      lineClamp={1}
-      className={css.textOverflow}
-      tooltipProps={{ interactionKind: PopoverInteractionKind.HOVER_TARGET_ONLY }}
-    >
-      {label}
-    </Text>
+    <Layout.Horizontal>
+      <Text
+        color={Color.BLACK}
+        width={width}
+        lineClamp={1}
+        className={css.textOverflow}
+        tooltipProps={{ interactionKind: PopoverInteractionKind.HOVER_TARGET_ONLY }}
+      >
+        {label}
+      </Text>
+      {onDelete && <Icon name="cross" onClick={() => onDelete(label as string)} />}
+    </Layout.Horizontal>
   )
 }
 
@@ -273,7 +286,8 @@ export default function MetricDashboardWidgetNav<T>(props: MetricDashboardWidget
     manuallyInputQueries = [],
     dashboardWidgetMapper,
     dashboardDetailsRequest,
-    addManualQueryTitle
+    addManualQueryTitle,
+    onDeleteManualMetric
   } = props
 
   const { projectIdentifier, accountId, orgIdentifier } = useParams<ProjectPathProps>()
@@ -287,8 +301,9 @@ export default function MetricDashboardWidgetNav<T>(props: MetricDashboardWidget
   const { getString } = useStrings()
   const { showError } = useToaster()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [deleteMetric, setDeleteMetric] = useState<string>()
   const [navContent, setNavContent] = useState<ITreeNode<NodeDataType>[]>(
-    transformDashboardsToTreeNodes(dashboards, manuallyInputQueries)
+    transformDashboardsToTreeNodes(dashboards, manuallyInputQueries, setDeleteMetric)
   )
   const { error, loading, data: dashboardWidgetsData, refetch: fetchDetails } = dashboardDetailsRequest
 
@@ -374,6 +389,32 @@ export default function MetricDashboardWidgetNav<T>(props: MetricDashboardWidget
       )
     }
   }, [])
+
+  const deleteManualMetric = (id: string): void => {
+    if (navContent?.[0]?.nodeData?.type === NodeType.MANUAL_INPUT_QUERY && navContent?.[0]?.childNodes?.length) {
+      const nodeList = navContent[0].childNodes?.map(node => node?.id)
+      const activeNode = navContent[0].childNodes?.find(node => node?.isSelected)
+      navContent[0].childNodes = navContent[0].childNodes?.filter(node => node?.id !== id)
+      if (defaultTo(nodeList?.length, 0) > 1 && activeNode?.id === id && navContent[0].childNodes?.[0]) {
+        navContent[0].childNodes[0].isSelected = true
+        onSelectMetric(
+          navContent[0].childNodes[0].id as string,
+          navContent[0].childNodes[0].id as string,
+          MANUAL_INPUT_QUERY
+        )
+      }
+      setNavContent([...navContent])
+      setSelectedMetricPath([0, 0])
+    }
+  }
+
+  useEffect(() => {
+    if (deleteMetric) {
+      deleteManualMetric(deleteMetric)
+      onDeleteManualMetric?.(deleteMetric)
+      setDeleteMetric('')
+    }
+  }, [deleteMetric])
 
   return (
     <Container width={300} className={cx(css.main, className)}>
@@ -461,7 +502,13 @@ export default function MetricDashboardWidgetNav<T>(props: MetricDashboardWidget
               navContent.forEach(dashboard => (dashboard.isExpanded = false))
             }
             if (navContent[0]?.nodeData?.type === NodeType.MANUAL_INPUT_QUERY) {
-              const newMetric = generateTreeNode(NodeType.MANUAL_INPUT_METRIC, undefined, values.metricName)
+              const newMetric = generateTreeNode(
+                NodeType.MANUAL_INPUT_METRIC,
+                undefined,
+                values.metricName,
+                false,
+                setDeleteMetric
+              )
               newMetric.isSelected = true
               navContent[0].childNodes?.unshift(newMetric)
               navContent[0].isExpanded = true

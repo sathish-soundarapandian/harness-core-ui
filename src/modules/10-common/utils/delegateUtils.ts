@@ -28,6 +28,9 @@ export const delegateTypeToIcon = (delegateType: string): IconName => {
     case 'shell_script':
       icon = 'run-step'
       break
+    case 'helm_delegate':
+      icon = 'service-helm'
+      break
   }
 
   return icon

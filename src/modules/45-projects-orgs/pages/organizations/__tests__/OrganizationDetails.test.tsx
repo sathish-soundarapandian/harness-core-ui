@@ -154,10 +154,6 @@ describe('Organization Details', () => {
   })
 
   test('Audit trail should be visible', async () => {
-    mockImport('@common/hooks/useFeatureFlag', {
-      useFeatureFlags: () => ({ AUDIT_TRAIL_WEB_INTERFACE: true })
-    })
-
     renderComponent()
 
     expect(screen.getByText('common.auditTrail')).toBeTruthy()

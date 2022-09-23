@@ -6,11 +6,12 @@
  */
 
 import React from 'react'
-import { Formik, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { Formik } from '@wings-software/uicore'
 
 import * as Yup from 'yup'
-import type { FormikProps } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 
+import { isEmpty } from 'lodash-es'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
@@ -19,7 +20,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import type { ContinousVerificationData } from '../../types'
 import type { ContinousVerificationWidgetProps } from './types'
 import { ContinousVerificationWidgetSections } from './components/ContinousVerificationWidgetSections/ContinousVerificationWidgetSections'
-import { MONITORED_SERVICE_EXPRESSION } from './components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.constants'
+import { getMonitoredServiceRefFromType, validateMonitoredService } from './ContinousVerificationWidget.utils'
 
 /**
  * Spec
@@ -30,8 +31,42 @@ export function ContinousVerificationWidget(
   { initialValues, onUpdate, isNewStep, stepViewType, onChange, allowableTypes }: ContinousVerificationWidgetProps,
   formikRef: StepFormikFowardRef
 ): JSX.Element {
-  const values = { ...initialValues, spec: { ...initialValues.spec } }
+  const values = {
+    ...initialValues,
+    spec: {
+      ...initialValues.spec,
+      ...(initialValues?.spec?.monitoredService && { initialMonitoredService: initialValues?.spec?.monitoredService })
+    }
+  }
   const { getString } = useStrings()
+
+  const validateForm = (formData: ContinousVerificationData): FormikErrors<ContinousVerificationData> => {
+    let errors: FormikErrors<ContinousVerificationData> = {}
+    const {
+      healthSources = [],
+      monitoredService: { type },
+      monitoredService,
+      initialMonitoredService
+    } = formData?.spec || {}
+
+    const monitoredServiceRef = getMonitoredServiceRefFromType(monitoredService, type, formData)
+    const { monitoredServiceTemplateRef = '', templateInputs = {} as unknown } = monitoredService?.spec || {}
+    const { templateInputs: initialTemplateInputs = {} } = initialMonitoredService?.spec || {}
+    const templateInputsToValidate = (!isEmpty(initialTemplateInputs) ? initialTemplateInputs : templateInputs) as any
+    errors = validateMonitoredService(
+      type,
+      stepViewType,
+      monitoredServiceRef,
+      errors,
+      healthSources,
+      getString,
+      monitoredServiceTemplateRef,
+      templateInputsToValidate,
+      templateInputs
+    )
+    return errors
+  }
+
   const defaultCVSchema = Yup.object().shape({
     ...getNameAndIdentifierSchema(getString, stepViewType),
     timeout: Yup.string().when(['spec.spec.duration.value'], {
@@ -42,23 +77,9 @@ export function ContinousVerificationWidget(
     }),
     spec: Yup.object().shape({
       type: Yup.string().required(getString('connectors.cdng.validations.verificationTypeRequired')),
-      monitoredServiceRef: Yup.string().required(getString('connectors.cdng.validations.monitoringServiceRequired')),
-      healthSources: Yup.string().when(['monitoredServiceRef'], (monitoredServiceRef: string) => {
-        if (monitoredServiceRef !== RUNTIME_INPUT_VALUE && monitoredServiceRef !== MONITORED_SERVICE_EXPRESSION) {
-          return Yup.array().min(1, getString('connectors.cdng.validations.healthSourceRequired'))
-        }
-      }),
       spec: Yup.object().shape({
-        duration: Yup.mixed().test(
-          'duration',
-          getString('connectors.cdng.validations.durationRequired'),
-          value => value !== ''
-        ),
-        sensitivity: Yup.mixed().test(
-          'sensitivity',
-          getString('connectors.cdng.validations.sensitivityRequired'),
-          value => value !== ''
-        ),
+        duration: Yup.string().required(getString('connectors.cdng.validations.durationRequired')),
+        sensitivity: Yup.string().required(getString('connectors.cdng.validations.sensitivityRequired')),
         deploymentTag: Yup.string().required(getString('connectors.cdng.validations.deploymentTagRequired'))
       })
     })
@@ -70,7 +91,13 @@ export function ContinousVerificationWidget(
         onUpdate?.(submit)
       }}
       validate={data => {
-        onChange?.(data)
+        const errors = validateForm(data)
+        if (!isEmpty(errors)) {
+          onChange?.(data)
+          return errors
+        } else {
+          onChange?.(data)
+        }
       }}
       formName="cvData"
       initialValues={values}

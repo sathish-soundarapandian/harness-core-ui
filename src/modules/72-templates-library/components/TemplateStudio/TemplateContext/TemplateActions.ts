@@ -10,17 +10,18 @@ import type { Failure } from 'services/cd-ng'
 import type {
   EntityGitDetails,
   EntityValidityDetails,
+  Error as TemplateError,
   ErrorNodeSummary,
   NGTemplateInfoConfig
 } from 'services/template-ng'
 import type { TemplateViewData } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateReducer'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export enum TemplateActions {
   DBInitialize = 'DBInitialize',
   Initialize = 'Initialize',
   Fetching = 'Fetching',
-  Loading = 'Loading',
   UpdateTemplateView = 'UpdateTemplateView',
   UpdateTemplate = 'UpdateTemplate',
   SetYamlHandler = 'SetYamlHandler',
@@ -29,13 +30,11 @@ export enum TemplateActions {
 }
 
 export enum DrawerTypes {
-  AddStep = 'AddCommand',
   TemplateVariables = 'TemplateVariables',
   TemplateInputs = 'TemplateInputs'
 }
 
 export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
-  [DrawerTypes.AddStep]: 700,
   [DrawerTypes.TemplateVariables]: 876,
   [DrawerTypes.TemplateInputs]: 876
 }
@@ -53,10 +52,12 @@ export interface ActionResponse {
   versions?: string[]
   isLoading?: boolean
   gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
   entityValidityDetails?: EntityValidityDetails
   templateYaml?: string
   templateError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
+  templateYamlError?: TemplateError
 }
 
 export interface ActionReturnType {
@@ -66,7 +67,6 @@ export interface ActionReturnType {
 
 const dbInitialized = (): ActionReturnType => ({ type: TemplateActions.DBInitialize })
 const initialized = (): ActionReturnType => ({ type: TemplateActions.Initialize })
-const loading = (response: ActionResponse): ActionReturnType => ({ type: TemplateActions.Loading, response })
 const updateTemplateView = (response: ActionResponse): ActionReturnType => ({
   type: TemplateActions.UpdateTemplateView,
   response
@@ -83,7 +83,6 @@ const error = (response: ActionResponse): ActionReturnType => ({ type: TemplateA
 export const TemplateContextActions = {
   dbInitialized,
   initialized,
-  loading,
   updating,
   fetching,
   updateTemplateView,

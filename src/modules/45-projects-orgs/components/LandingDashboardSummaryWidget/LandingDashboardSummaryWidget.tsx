@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   Container,
@@ -20,7 +20,7 @@ import {
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
-import { useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
+import { TimeRangeToDays, useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
 import { useStrings, String } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -123,6 +123,8 @@ const renderModuleSummary = (
           responseData?.[dataKey]?.response as TopProjectsDashboardInfoCountWithSuccessFailureDetails[],
           accountId
         )}
+        columnWidth={[200, 640]}
+        barLength={540}
       ></StackedSummaryTable>
     ) : (
       <DashboardNoDataWidget
@@ -156,7 +158,7 @@ const getModuleData = (moduleType: ModuleName): ModuleDataType => {
     case ModuleName.CD:
       return {
         iconName: 'cd-main',
-        titleId: 'deploymentsText',
+        titleId: 'executionsText',
         dataKey: 'cdtopProjectsInfo'
       }
     case ModuleName.CI:
@@ -187,6 +189,7 @@ interface LandingDashboardSummaryWidgetProps {
 const LandingDashboardSummaryWidget: React.FC<LandingDashboardSummaryWidgetProps> = props => {
   const { selectedTimeRange } = useLandingDashboardContext()
   const { accountId } = useParams<ProjectPathProps>()
+  const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
   const { getString } = useStrings()
 
   const {
@@ -197,8 +200,8 @@ const LandingDashboardSummaryWidget: React.FC<LandingDashboardSummaryWidgetProps
   } = useGetTopProjects({
     queryParams: {
       accountIdentifier: accountId,
-      startTime: selectedTimeRange.range[0]?.getTime() || 0,
-      endTime: selectedTimeRange.range[1]?.getTime() || 0
+      startTime: range[0],
+      endTime: range[1]
     },
     lazy: true
   })
@@ -207,8 +210,8 @@ const LandingDashboardSummaryWidget: React.FC<LandingDashboardSummaryWidgetProps
     refetch({
       queryParams: {
         accountIdentifier: accountId,
-        startTime: selectedTimeRange.range[0]?.getTime() || 0,
-        endTime: selectedTimeRange.range[1]?.getTime() || 0
+        startTime: Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000,
+        endTime: Date.now()
       }
     })
   }, [selectedTimeRange, refetch, accountId])
@@ -242,17 +245,6 @@ const LandingDashboardSummaryWidget: React.FC<LandingDashboardSummaryWidgetProps
                   iconName,
                   refetch
                 )}
-
-                {/* This is temporary handling till support for CI, CF modules are added */}
-                <Layout.Vertical flex={{ justifyContent: 'center' }}>
-                  <Icon name="ci-main" size={40} margin="small" />
-                  <Text>{getString('common.comingSoon')}</Text>
-                </Layout.Vertical>
-
-                <Layout.Vertical flex={{ justifyContent: 'center' }}>
-                  <Icon name="cf-main" size={40} margin="small" />
-                  <Text>{getString('common.comingSoon')}</Text>
-                </Layout.Vertical>
               </Layout.Horizontal>
             ) : (
               <DashboardAPIErrorWidget

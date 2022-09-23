@@ -6,12 +6,15 @@
  */
 
 import { set } from 'lodash-es'
-import type { PipelineInfoConfig, ServiceDefinition } from 'services/cd-ng'
+import type { ServiceDefinition } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
+
+export type ServicePipelineConfig = PipelineInfoConfig & { gitOpsEnabled?: boolean }
 
 export enum ServiceTabs {
   SUMMARY = 'summaryTab',
   Configuration = 'configuration',
-  REFERENCED_BY = 'refrencedByTab',
+  REFERENCED_BY = 'referencedByTab',
   ActivityLog = 'activityLog'
 }
 
@@ -40,18 +43,12 @@ const DefaultService = {
 
 export const initialServiceState = {
   service: { ...DefaultService }
-  // isLoading: false,
-  // isBETemplateUpdated: false,
-  // isDBInitialized: false,
-  // isUpdated: false,
-  // isInitialized: false,
-  // gitDetails: {},
-  // entityValidityDetails: {}
 }
 
-export const setNameIDDescription = (draftData: PipelineInfoConfig, updatedData: PipelineInfoConfig): void => {
+export const setNameIDDescription = (draftData: PipelineInfoConfig, updatedData: ServicePipelineConfig): void => {
   set(draftData, 'identifier', updatedData.identifier)
   set(draftData, 'name', updatedData.name)
   set(draftData, 'description', updatedData.description)
   set(draftData, 'tags', updatedData.tags)
+  set(draftData, 'gitOpsEnabled', updatedData.gitOpsEnabled)
 }

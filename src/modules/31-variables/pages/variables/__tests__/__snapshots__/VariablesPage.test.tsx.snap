@@ -161,7 +161,7 @@ exports[`Variables Page render page at account level 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 25%;"
+          style="width: 30%;"
         >
           <div
             class="Text--withDocsTooltip"
@@ -178,7 +178,7 @@ exports[`Variables Page render page at account level 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 20%;"
         >
           <div
             class="Text--withDocsTooltip"
@@ -195,7 +195,7 @@ exports[`Variables Page render page at account level 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 20%;"
         >
           <div
             class="Text--withDocsTooltip"
@@ -212,7 +212,7 @@ exports[`Variables Page render page at account level 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 20%;"
+          style="width: 25%;"
         >
           <div
             class="Text--withDocsTooltip"
@@ -222,23 +222,6 @@ exports[`Variables Page render page at account level 1`] = `
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
             >
               valueLabel
-            </p>
-          </div>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 20%;"
-        >
-          <div
-            class="Text--withDocsTooltip"
-            data-tooltip-id="VariableListViewdefaultValue"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-            >
-              variables.defaultValue
             </p>
           </div>
         </div>
@@ -268,120 +251,124 @@ exports[`Variables Page render page at account level 1`] = `
           role="row"
         >
           <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 25%;"
+            class="TableV2--cells"
           >
             <div
-              class="Layout--horizontal StyledProps--main"
+              class="TableV2--cell"
+              role="cell"
+              style="width: 30%;"
             >
               <div
-                class="Layout--vertical StyledProps--main"
+                class="Layout--horizontal StyledProps--main"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main"
-                  style="width: 230px;"
+                  class="Layout--vertical StyledProps--main"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <div
+                    class="Layout--horizontal StyledProps--main"
+                    style="width: 230px;"
                   >
-                    CUSTOM_VARIABLE
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
+                      style="--text-line-clamp: 1;"
+                    >
+                      CUSTOM_VARIABLE
+                    </p>
+                    
+                  </div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
+                    style="--text-line-clamp: 1; width: 230px;"
+                  >
+                    common.ID: CUSTOM_VARIABLE
                   </p>
-                  
                 </div>
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-small"
-                  style="--text-line-clamp: 1; width: 230px;"
-                >
-                  common.ID: CUSTOM_VARIABLE
-                </p>
               </div>
             </div>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
-            >
-              String
-            </p>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 15%;"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
-            >
-              FIXED
-            </p>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 20%;"
-          >
-            <p
-              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text"
-              style="--text-line-clamp: 1;"
-            >
-              CUSTOM
-            </p>
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 20%;"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text"
-            />
-          </div>
-          <div
-            class="TableV2--cell"
-            role="cell"
-            style="width: 5%;"
-          >
             <div
-              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end"
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
             >
-              <span
-                class="bp3-popover-wrapper"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
+              >
+                String
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
+              >
+                FIXED
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 25%;"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text"
+                style="--text-line-clamp: 1;"
+              >
+                CUSTOM
+              </p>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 5%;"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end"
               >
                 <span
-                  class="bp3-popover-target"
+                  class="bp3-popover-wrapper"
                 >
-                  <button
-                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
-                    type="button"
+                  <span
+                    class="bp3-popover-target"
                   >
-                    <span
-                      class="bp3-icon StyledProps--main"
-                      data-icon="Options"
+                    <button
+                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                      type="button"
                     >
-                      <svg
-                        fill="none"
-                        height="16"
-                        viewBox="0 0 4 16"
-                        width="16"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="Options"
                       >
-                        <path
-                          clip-rule="evenodd"
-                          d="M2 12.5a1 1 0 100 2 1 1 0 000-2zm-2 1a2 2 0 114 0 2 2 0 01-4 0zm2-12a1 1 0 100 2 1 1 0 000-2zm-2 1a2 2 0 114 0 2 2 0 01-4 0zM2 7a1 1 0 100 2 1 1 0 000-2zM0 8a2 2 0 114 0 2 2 0 01-4 0z"
+                        <svg
                           fill="currentColor"
-                          fill-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </button>
+                          height="16"
+                          viewBox="0 0 4 16"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle
+                            cx="2"
+                            cy="2"
+                            r="1.5"
+                          />
+                          <circle
+                            cx="2"
+                            cy="8"
+                            r="1.5"
+                          />
+                          <circle
+                            cx="2"
+                            cy="14"
+                            r="1.5"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </span>
                 </span>
-              </span>
+              </div>
             </div>
           </div>
         </div>
@@ -545,7 +532,7 @@ exports[`Variables Page render page at project level - click new variable button
               >
                 <div
                   class="Text--withDocsTooltip"
-                  data-tooltip-id="variable-form_identifier"
+                  data-tooltip-id="universalInputNameWithId"
                 >
                   <p
                     class="StyledProps--font StyledProps--main"
@@ -745,85 +732,41 @@ exports[`Variables Page render page at project level - click new variable button
             </div>
           </div>
           <div
-            class="bp3-form-group"
-            data-id="valueType-2"
+            class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
           >
-            <label
-              class="bp3-label"
-              for="valueType"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="variable-form_valueType"
-              >
-                common.configureOptions.validation
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
+              data-id="fixedValue-2"
             >
-              <div
-                class="StyledProps--main"
+              <label
+                class="bp3-label"
+                for="fixedValue"
               >
-                
-                <div
-                  class="RadioButtonGroup--inline"
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="variable-form_fixedValue"
                 >
-                  <label
-                    class="RadioButton--radio StyledProps--main"
-                  >
-                    <input
-                      checked=""
-                      class="RadioButton--input"
-                      name="valueType"
-                      type="radio"
-                      value="FIXED"
-                    />
-                    <span
-                      class="RadioButton--radioIcon"
-                    />
-                    inputTypes.FIXED
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="bp3-form-group"
-            data-id="fixedValue-3"
-          >
-            <label
-              class="bp3-label"
-              for="fixedValue"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="variable-form_fixedValue"
-              >
-                Fixed Value
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
-              <div
-                class="bp3-input-group"
-              >
-                <input
-                  autocomplete="off"
-                  class="bp3-input"
-                  name="fixedValue"
-                  type="text"
-                  value=""
+                  variables.fixedValue
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
                 />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="fixedValue"
+                    type="text"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import {
   Button,
   FlexExpander,
@@ -18,7 +18,7 @@ import {
   useConfirmationDialog,
   useToaster
 } from '@wings-software/uicore'
-import { Classes, Menu, MenuItem, Position, Intent } from '@blueprintjs/core'
+import { Classes, Menu, Position, Intent } from '@blueprintjs/core'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams, useHistory } from 'react-router-dom'
@@ -34,7 +34,15 @@ import useBudgetModal from '@ce/components/PerspectiveReportsAndBudget/Perspecti
 import EmptyView from '@ce/images/empty-state.svg'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import HandleError from '@ce/components/PermissionError/PermissionError'
+import PermissionError from '@ce/images/permission-error.svg'
+import { getPermissionErrorMsg } from '@ce/utils/rbacUtils'
 import css from './Budgets.module.scss'
 
 interface BudgetMenuProps {
@@ -92,21 +100,32 @@ const BudgetMenu: (props: BudgetMenuProps) => JSX.Element = ({ onEdit, handleDel
         }}
       />
       <Menu>
-        <MenuItem
-          text="Edit"
+        <RbacMenuItem
+          text={getString('edit')}
           onClick={(e: any) => {
             e.stopPropagation()
             setIsOpen(false)
             onEdit()
           }}
+          permission={{
+            permission: PermissionIdentifier.EDIT_CCM_BUDGET,
+            resource: {
+              resourceType: ResourceType.CCM_BUDGETS
+            }
+          }}
         />
-        <MenuItem
-          text="Delete"
+        <RbacMenuItem
+          text={getString('delete')}
           onClick={(e: any) => {
             e.stopPropagation()
             setIsOpen(false)
             openDialog()
-            // onDelete()
+          }}
+          permission={{
+            permission: PermissionIdentifier.DELETE_CCM_BUDGET,
+            resource: {
+              resourceType: ResourceType.CCM_BUDGETS
+            }
           }}
         />
       </Menu>
@@ -309,14 +328,20 @@ const Budgets: () => JSX.Element = () => {
     }
   }, [data])
 
-  const filteredBudgetData = budgetData.filter(budget => {
-    if (!budget || !budget.name) {
-      return false
-    }
-    return budget.name?.toLocaleLowerCase().indexOf(searchParam.toLowerCase()) < 0 ? false : true
-  })
+  const filteredBudgetData = useMemo(
+    () =>
+      budgetData.filter(budget => {
+        if (!budget || !budget.name) {
+          return false
+        }
+        return budget.name?.toLocaleLowerCase().indexOf(searchParam.toLowerCase()) < 0 ? false : true
+      }),
+    [budgetData, searchParam]
+  )
 
   const HeaderComponent = <Page.Header title={getString('ce.budgets.listPage.title')} breadcrumbs={<NGBreadcrumbs />} />
+
+  useDocumentTitle(getString('ce.budgets.sideNavText'), true)
 
   const openNewBudgetModal = () => {
     trackEvent(USER_JOURNEY_EVENTS.CREATE_NEW_BUDGET, { pageName: PAGE_NAMES.BUDGET_LANDING_PAGE, isEditMode: false })
@@ -340,14 +365,19 @@ const Budgets: () => JSX.Element = () => {
       }}
       background="white"
     >
-      <Button
+      <RbacButton
         intent="primary"
         text={getString('ce.budgets.listPage.newBudget')}
-        iconProps={{
-          size: 10
+        icon="plus"
+        iconProps={{ size: 10 }}
+        margin={{ top: 'large' }}
+        permission={{
+          permission: PermissionIdentifier.EDIT_CCM_BUDGET,
+          resource: {
+            resourceType: ResourceType.CCM_BUDGETS
+          }
         }}
         onClick={openNewBudgetModal}
-        icon="plus"
       />
       <FlexExpander />
       <ExpandingSearchInput
@@ -360,7 +390,7 @@ const Budgets: () => JSX.Element = () => {
     </Layout.Horizontal>
   )
 
-  if (!fetching && !filteredBudgetData.length && !error) {
+  if (!fetching && !budgetData.length && !error) {
     return (
       <>
         {HeaderComponent}
@@ -383,17 +413,19 @@ const Budgets: () => JSX.Element = () => {
               {getString('ce.pageErrorMsg.noBudgetMsg')}
             </Text>
             <Text font="small">{getString('ce.pageErrorMsg.noBudgetInfo')}</Text>
-            <Button
-              margin={{
-                top: 'large'
-              }}
+            <RbacButton
               intent="primary"
               text={getString('ce.budgets.listPage.newBudget')}
-              iconProps={{
-                size: 10
+              icon="plus"
+              iconProps={{ size: 10 }}
+              margin={{ top: 'large' }}
+              permission={{
+                permission: PermissionIdentifier.EDIT_CCM_BUDGET,
+                resource: {
+                  resourceType: ResourceType.CCM_BUDGETS
+                }
               }}
               onClick={openNewBudgetModal}
-              icon="plus"
             />
           </Container>
         </Page.Body>
@@ -406,23 +438,28 @@ const Budgets: () => JSX.Element = () => {
       {HeaderComponent}
       <Page.Body>
         {loading || fetching ? <PageSpinner /> : null}
-        {ToolBarComponent}
-
-        <Layout.Horizontal padding="large">
-          <Text font={{ variation: FontVariation.H5 }}>
-            {getString('ce.budgets.listPage.budgetCount', {
-              count: filteredBudgetData?.length
-            })}
-          </Text>
-        </Layout.Horizontal>
-        <Container padding="large">
-          <BudgetsList
-            navigateToBudgetDetailsPage={navigateToBudgetDetailsPage}
-            handleDeleteBudget={handleDeleteBudget}
-            handleEditBudget={handleEditBudget}
-            budgetData={filteredBudgetData}
-          />
-        </Container>
+        {error ? (
+          <HandleError errorMsg={getPermissionErrorMsg(error.message)} imgSrc={PermissionError} />
+        ) : (
+          <>
+            {ToolBarComponent}
+            <Layout.Horizontal padding="large">
+              <Text font={{ variation: FontVariation.H5 }}>
+                {getString('ce.budgets.listPage.budgetCount', {
+                  count: filteredBudgetData?.length
+                })}
+              </Text>
+            </Layout.Horizontal>
+            <Container padding="large">
+              <BudgetsList
+                navigateToBudgetDetailsPage={navigateToBudgetDetailsPage}
+                handleDeleteBudget={handleDeleteBudget}
+                handleEditBudget={handleEditBudget}
+                budgetData={filteredBudgetData}
+              />
+            </Container>
+          </>
+        )}
       </Page.Body>
     </>
   )

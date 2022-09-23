@@ -15,9 +15,10 @@ import { Classes, Menu } from '@blueprintjs/core'
 import { Link, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import type { DashboardModel } from 'services/custom-dashboards'
-import { DashboardType } from '@dashboards/types/DashboardTypes'
+import { DashboardType } from '@dashboards/types/DashboardTypes.types'
 import DashboardTags from '@dashboards/components/DashboardTags/DashboardTags'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import type { PermissionRequest } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 
@@ -71,6 +72,14 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
     folderId: folderId === 'shared' ? 'shared' : dashboard?.resourceIdentifier
   })
 
+  const permissionObj: PermissionRequest = {
+    permission: PermissionIdentifier.EDIT_DASHBOARD,
+    resource: {
+      resourceType: ResourceType.DASHBOARDS,
+      resourceIdentifier: dashboard?.resourceIdentifier
+    }
+  }
+
   return (
     <Link to={cardPath}>
       <Card interactive className={cx(moduleTagCss.card)}>
@@ -79,28 +88,13 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
             menuContent={
               <Menu>
                 {dashboard?.type === DashboardType.ACCOUNT && (
-                  <RbacMenuItem
-                    icon="edit"
-                    text={getString('edit')}
-                    onClick={onEditClick}
-                    permission={{
-                      permission: PermissionIdentifier.EDIT_DASHBOARD,
-                      resource: {
-                        resourceType: ResourceType.DASHBOARDS
-                      }
-                    }}
-                  />
+                  <RbacMenuItem icon="edit" text={getString('edit')} onClick={onEditClick} permission={permissionObj} />
                 )}
                 <RbacMenuItem
                   icon="duplicate"
                   text={getString('projectCard.clone')}
                   onClick={onCloneClick}
-                  permission={{
-                    permission: PermissionIdentifier.EDIT_DASHBOARD,
-                    resource: {
-                      resourceType: ResourceType.DASHBOARDS
-                    }
-                  }}
+                  permission={permissionObj}
                 />
                 {dashboard?.type === DashboardType.ACCOUNT && (
                   <>
@@ -109,12 +103,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                       icon="trash"
                       text={getString('delete')}
                       onClick={onDeleteClick}
-                      permission={{
-                        permission: PermissionIdentifier.EDIT_DASHBOARD,
-                        resource: {
-                          resourceType: ResourceType.DASHBOARDS
-                        }
-                      }}
+                      permission={permissionObj}
                     />
                   </>
                 )}
@@ -137,13 +126,6 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
                   font={{ variation: FontVariation.CARD_TITLE }}
                 >
                   {dashboard?.view_count}
-                </Text>
-                <Text
-                  icon="star-empty"
-                  iconProps={{ padding: { right: 'small' } }}
-                  font={{ variation: FontVariation.CARD_TITLE }}
-                >
-                  {dashboard?.favorite_count}
                 </Text>
               </Layout.Horizontal>
             )}

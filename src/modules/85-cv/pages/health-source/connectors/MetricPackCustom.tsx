@@ -5,13 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
+import { useFormikContext } from 'formik'
 import { Container, FormInput, Icon, PageError } from '@wings-software/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useStrings } from 'framework/strings'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { useGetMetricPacks, GetMetricPacksQueryParams, MetricPackDTO } from 'services/cv'
+import { useGetMetricPacks, GetMetricPacksQueryParams, MetricPackDTO, TimeSeriesMetricPackDTO } from 'services/cv'
+import CheckboxWithPrompt from '../common/CheckboxWithPrompt/CheckboxWithPrompt'
+import { isGivenMetricPackContainsThresholds } from '../common/MetricThresholds/MetricThresholds.utils'
+import type { MetricThresholdType, ThresholdsPropertyNames } from '../common/MetricThresholds/MetricThresholds.types'
 import css from './MonitoredServiceConnector.module.scss'
 
 export default function MetricPackCustom({
@@ -20,16 +25,23 @@ export default function MetricPackCustom({
   metricPackValue,
   onChange,
   setMetricDataValue,
-  setSelectedMetricPacks
+  setSelectedMetricPacks,
+  isMetricThresholdEnabled
 }: {
   connector: GetMetricPacksQueryParams['dataSourceType']
   metricPackValue: MetricPackDTO[] | undefined
   metricDataValue: { [key: string]: boolean }
-  onChange: (data: { [key: string]: boolean }) => void
+  onChange: (identifier: string, updatedValue: boolean) => void
   setMetricDataValue: (value: { [key: string]: boolean }) => void
-  setSelectedMetricPacks: React.Dispatch<React.SetStateAction<MetricPackDTO[]>>
+  setSelectedMetricPacks: React.Dispatch<React.SetStateAction<TimeSeriesMetricPackDTO[]>>
+  isMetricThresholdEnabled?: boolean
 }): JSX.Element {
+  const { getString } = useStrings()
+
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+
+  const { setFieldValue, values: formValues } = useFormikContext()
+
   const {
     data: metricPacks,
     refetch: refetchMetricPacks,
@@ -44,16 +56,36 @@ export default function MetricPackCustom({
     }
   })
 
+  const handleMetricPackChange = useCallback(
+    (updatedValue: boolean, identifier?: string) => {
+      if (identifier) {
+        setFieldValue(`metricData.${identifier}`, updatedValue)
+        onChange(identifier, updatedValue)
+      }
+    },
+    [onChange, setFieldValue]
+  )
+
+  const getShowPromptOnUnCheck = (metricPackIdentifier: string): boolean => {
+    return Boolean(
+      isMetricThresholdEnabled &&
+        isGivenMetricPackContainsThresholds(
+          formValues as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+          metricPackIdentifier
+        )
+    )
+  }
+
   useEffect(() => {
     if (metricPacks) {
       const metricData: { [key: string]: boolean } = {}
-      const metricList: MetricPackDTO[] = (metricPackValue ? metricPackValue : metricPacks?.resource) || []
+      const metricList: MetricPackDTO[] = (metricPackValue?.length ? metricPackValue : metricPacks?.resource) || []
       metricList.forEach((i: MetricPackDTO) => (metricData[i.identifier as string] = true))
       if (!isEmpty(metricData)) {
         setMetricDataValue(metricData)
       }
       if (metricPacks?.resource) {
-        setSelectedMetricPacks(metricPacks?.resource)
+        setSelectedMetricPacks(metricPacks?.resource as TimeSeriesMetricPackDTO[])
       }
     }
   }, [metricPacks])
@@ -67,19 +99,22 @@ export default function MetricPackCustom({
         ) : (
           <>
             <Container className={css.metricPack}>
-              {metricPacks?.resource?.map((metricPack: MetricPackDTO) => {
+              {metricPacks?.resource?.map(({ identifier }: MetricPackDTO) => {
+                if (!identifier) {
+                  return null
+                }
+
                 return (
-                  <FormInput.CheckBox
-                    name={`metricData.${metricPack.identifier}`}
-                    key={metricPack.identifier}
-                    label={metricPack.identifier || ''}
-                    onChange={async val => {
-                      const metricValue: { [key: string]: boolean } = {
-                        ...metricDataValue,
-                        [metricPack.identifier as string]: val.currentTarget.checked
-                      }
-                      onChange(metricValue)
-                    }}
+                  <CheckboxWithPrompt
+                    checkboxName={identifier}
+                    checkboxLabel={identifier}
+                    checked={metricDataValue[identifier]}
+                    key={identifier}
+                    checkBoxKey={identifier}
+                    contentText={getString('cv.metricThresholds.metricPacksDeletePromptContent')}
+                    popupTitleText={getString('common.warning')}
+                    onChange={handleMetricPackChange}
+                    showPromptOnUnCheck={getShowPromptOnUnCheck(identifier)}
                   />
                 )
               })}

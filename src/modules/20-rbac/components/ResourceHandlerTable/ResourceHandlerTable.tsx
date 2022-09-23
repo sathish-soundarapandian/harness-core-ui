@@ -17,6 +17,7 @@ interface ResourceHandlerTableProps<T extends ResourceHandlerTableData> {
   selectedData?: string[]
   pagination?: PaginationProps
   onSelectChange: (items: string[]) => void
+  hideHeaders?: boolean
 }
 
 export interface ResourceHandlerTableData {
@@ -26,7 +27,7 @@ export interface ResourceHandlerTableData {
 const ResourceHandlerTable = <T extends ResourceHandlerTableData>(
   props: ResourceHandlerTableProps<T>
 ): React.ReactElement => {
-  const { data, pagination, columns, onSelectChange, selectedData = [] } = props
+  const { data, pagination, columns, onSelectChange, selectedData = [], hideHeaders = false } = props
 
   const handleSelectChange = (isSelect: boolean, identifier: string): void => {
     if (isSelect) onSelectChange([...selectedData, identifier])
@@ -68,6 +69,7 @@ const ResourceHandlerTable = <T extends ResourceHandlerTableData>(
       columns={resourceHandlerTableColumns}
       data={data}
       pagination={pagination}
+      hideHeaders={hideHeaders}
       onRowClick={row => {
         handleSelectChange(!selectedData.includes(row.identifier), row.identifier)
       }}

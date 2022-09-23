@@ -18,6 +18,8 @@ export const strategiesYamlSnippets2 = `/ng/api/pipelines/configuration/strategi
 export const strategiesYamlSnippets3 = `/ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=accountId&serviceDefinitionType=Kubernetes&strategyType=Rolling`
 export const pipelineSteps = `/pipeline/api/pipelines/v2/steps?routingId=${accountId}&accountId=${accountId}`
 export const monitoresServices = `/cv/api/monitored-service/service-environment?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&environmentIdentifier=*&serviceIdentifier=*`
+export const createMonitoredService = `/cv/api/monitored-service/create-default?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&environmentIdentifier=testEnv&serviceIdentifier=testService`
+export const updateMonitoredService = `/cv/api/monitored-service/testEnv_testService?routingId=${accountId}&accountId=${accountId}`
 export const servicesCall = `/ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}`
 export const servicesCallV2 = `/ng/api/servicesV2/list/access?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}`
 export const stagesExecutionList = `/pipeline/api/pipeline/execute/stagesExecutionList?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&pipelineIdentifier=${pipelineIdentifier}`
@@ -525,6 +527,39 @@ export const monitoresServicesResponse = {
   },
   metaData: null,
   correlationId: 'd986946a-3521-4648-a787-53150e21aed7'
+}
+
+export const emptyMonitoresServicesResponse = {
+  status: 'SUCCESS',
+  data: null,
+  metaData: null,
+  correlationId: 'e0d5d43a-21f7-41a3-bb59-6e953bcee461'
+}
+
+export const createMonitoredServiceResponse = {
+  metaData: {},
+  resource: {
+    createdAt: 1661770505538,
+    lastModifiedAt: 1661770505538,
+    monitoredService: {
+      orgIdentifier: 'CVNG',
+      projectIdentifier: 'Signoff',
+      identifier: 'testEnv_testService',
+      name: 'testEnv_testService',
+      type: 'Application',
+      description: 'Default Monitored Service',
+      serviceRef: 'testService',
+      environmentRef: 'testEnv',
+      environmentRefList: ['testEnv'],
+      tags: {},
+      sources: { healthSources: [], changeSources: [] },
+      dependencies: [],
+      notificationRuleRefs: [],
+      template: null,
+      enabled: false
+    }
+  },
+  responseMessages: []
 }
 
 export const monitoresServicesResponseWithNoHealthSource = {
@@ -1272,4 +1307,405 @@ export const inputSetsTemplateServiceRunTimeInputResponse = {
   },
   metaData: null,
   correlationId: '9691f646-56a0-467e-bdc4-a66c6df6a59d'
+}
+
+export const configurableMonitoredServicesResponse = {
+  status: 'SUCCESS',
+  data: [
+    {
+      identifier: 'hgfhgfghfhgf_ddscsdcdsc',
+      name: 'hgfhgfghfhgf',
+      healthSources: [{ name: 'appd', identifier: 'appd' }]
+    },
+    {
+      identifier: 'orders_prod',
+      name: 'orders_prod',
+      healthSources: [
+        { name: 'template_appdcustom_dev', identifier: 'template_appdcustom_dev' },
+        { name: 'et', identifier: 'et' },
+        { name: 'template_java_stacktraces_dev', identifier: 'template_java_stacktraces_dev' }
+      ]
+    }
+  ],
+  metaData: null,
+  correlationId: '18ed89a1-6457-4f05-92ff-8252601861ba'
+}
+
+export const monitoredServiceResponse = {
+  status: 'SUCCESS',
+  data: {
+    createdAt: 1643115344068,
+    lastModifiedAt: 1649221457431,
+    monitoredService: {
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      identifier: 'orders_prod',
+      name: 'orders_prod',
+      type: 'Application',
+      description: '',
+      serviceRef: 'orders',
+      environmentRef: 'prod',
+      environmentRefList: ['prod'],
+      tags: {},
+      sources: {
+        healthSources: [
+          {
+            name: 'template_java_stacktraces_dev',
+            identifier: 'template_java_stacktraces_dev',
+            type: 'Splunk',
+            spec: {
+              connectorRef: 'splunk',
+              feature: 'Splunk Cloud Logs',
+              queries: [{ name: 'SPLUNK Logs Query', query: '*', serviceInstanceIdentifier: 'host' }]
+            }
+          },
+          {
+            name: 'et',
+            identifier: 'et',
+            type: 'ErrorTracking',
+            spec: { connectorRef: 'error_t', feature: 'ERROR_TRACKING' }
+          },
+          {
+            name: 'template_appdcustom_dev',
+            identifier: 'template_appdcustom_dev',
+            type: 'AppDynamics',
+            spec: {
+              connectorRef: 'account.appdtest',
+              feature: 'Application Monitoring',
+              applicationName: 'cv-app',
+              tierName: 'docker-tier',
+              metricPacks: [{ identifier: 'Performance', metricThresholds: null }],
+              metricDefinitions: []
+            }
+          }
+        ],
+        changeSources: [
+          {
+            name: 'Harness CD Next Gen',
+            identifier: 'harness_cd_next_gen',
+            type: 'HarnessCDNextGen',
+            enabled: true,
+            spec: {},
+            category: 'Deployment'
+          }
+        ]
+      },
+      dependencies: [],
+      notificationRuleRefs: [],
+      template: null,
+      enabled: false
+    }
+  },
+  metaData: null,
+  correlationId: 'd9e488b4-0411-41ce-9a8e-bb909a1884c6'
+}
+
+export const templatesAPIResponse = {
+  status: 'SUCCESS',
+  data: {
+    content: [
+      {
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'project1',
+        identifier: 'Verify_step_mon_template',
+        name: 'Verify step mon template',
+        description: '',
+        tags: {},
+        yaml: 'template:\n    name: Verify step mon template\n    identifier: Verify_step_mon_template\n    versionLabel: "1.0"\n    type: MonitoredService\n    projectIdentifier: chidemo\n    orgIdentifier: CVNG\n    tags: {}\n    spec:\n        serviceRef: <+input>\n        environmentRef: <+input>\n        type: Application\n        sources:\n            healthSources:\n                - name: Appd\n                  identifier: Appd\n                  type: AppDynamics\n                  spec:\n                      applicationName: <+input>\n                      tierName: <+input>\n                      metricData:\n                          Errors: true\n                          Performance: true\n                      metricDefinitions:\n                          - identifier: appdMetric\n                            metricName: appdMetric\n                            baseFolder: ""\n                            metricPath: ""\n                            completeMetricPath: <+input>\n                            groupName: group-1\n                            sli:\n                                enabled: true\n                            analysis:\n                                riskProfile:\n                                    category: Errors\n                                    metricType: ERROR\n                                    thresholdTypes:\n                                        - ACT_WHEN_HIGHER\n                                liveMonitoring:\n                                    enabled: true\n                                deploymentVerification:\n                                    enabled: true\n                                    serviceInstanceMetricPath: <+input>\n                      feature: Application Monitoring\n                      connectorRef: <+input>\n                      metricPacks:\n                          - identifier: Errors\n                          - identifier: Performance\n        name: <+monitoredService.serviceRef> <+monitoredService.environmentRef>\n        identifier: <+monitoredService.serviceRef>_<+monitoredService.environmentRef>\n        variables:\n            - name: connectorVariable\n              type: String\n              value: <+input>\n',
+        versionLabel: '1.0',
+        templateEntityType: 'MonitoredService',
+        childType: 'Application',
+        templateScope: 'project',
+        version: 3,
+        gitDetails: {
+          objectId: null,
+          branch: null,
+          repoIdentifier: null,
+          rootFolder: null,
+          filePath: null,
+          repoName: null,
+          commitId: null,
+          fileUrl: null
+        },
+        entityValidityDetails: { valid: true, invalidYaml: null },
+        lastUpdatedAt: 1655874265454,
+        createdAt: 1655798290591,
+        stableTemplate: true
+      }
+    ],
+    pageable: {
+      sort: { sorted: true, unsorted: false, empty: false },
+      pageSize: 20,
+      pageNumber: 0,
+      offset: 0,
+      unpaged: false,
+      paged: true
+    },
+    totalPages: 1,
+    totalElements: 1,
+    last: true,
+    sort: { sorted: true, unsorted: false, empty: false },
+    number: 0,
+    first: true,
+    numberOfElements: 1,
+    size: 20,
+    empty: false
+  },
+  metaData: null,
+  correlationId: '0c7feae3-92c2-4159-86aa-e804ef33c295'
+}
+
+export const allTemplatesResponse = {
+  status: 'SUCCESS',
+  data: {
+    content: [
+      {
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'project1',
+        identifier: 'Verify_step_mon_template',
+        name: 'Verify step mon template',
+        description: '',
+        tags: {},
+        yaml: 'template:\n    name: Verify step mon template\n    identifier: Verify_step_mon_template\n    versionLabel: "1.0"\n    type: MonitoredService\n    projectIdentifier: chidemo\n    orgIdentifier: CVNG\n    tags: {}\n    spec:\n        serviceRef: <+input>\n        environmentRef: <+input>\n        type: Application\n        sources:\n            healthSources:\n                - name: Appd\n                  identifier: Appd\n                  type: AppDynamics\n                  spec:\n                      applicationName: <+input>\n                      tierName: <+input>\n                      metricData:\n                          Errors: true\n                          Performance: true\n                      metricDefinitions:\n                          - identifier: appdMetric\n                            metricName: appdMetric\n                            baseFolder: ""\n                            metricPath: ""\n                            completeMetricPath: <+input>\n                            groupName: group-1\n                            sli:\n                                enabled: true\n                            analysis:\n                                riskProfile:\n                                    category: Errors\n                                    metricType: ERROR\n                                    thresholdTypes:\n                                        - ACT_WHEN_HIGHER\n                                liveMonitoring:\n                                    enabled: true\n                                deploymentVerification:\n                                    enabled: true\n                                    serviceInstanceMetricPath: <+input>\n                      feature: Application Monitoring\n                      connectorRef: <+input>\n                      metricPacks:\n                          - identifier: Errors\n                          - identifier: Performance\n        name: <+monitoredService.serviceRef> <+monitoredService.environmentRef>\n        identifier: <+monitoredService.serviceRef>_<+monitoredService.environmentRef>\n        variables:\n            - name: connectorVariable\n              type: String\n              value: <+input>\n',
+        versionLabel: '1.0',
+        templateEntityType: 'MonitoredService',
+        childType: 'Application',
+        templateScope: 'project',
+        version: 3,
+        gitDetails: {
+          objectId: null,
+          branch: null,
+          repoIdentifier: null,
+          rootFolder: null,
+          filePath: null,
+          repoName: null,
+          commitId: null,
+          fileUrl: null
+        },
+        entityValidityDetails: { valid: true, invalidYaml: null },
+        lastUpdatedAt: 1655874265454,
+        createdAt: 1655798290591,
+        stableTemplate: true
+      }
+    ],
+    pageable: {
+      sort: { sorted: true, unsorted: false, empty: false },
+      pageSize: 25,
+      pageNumber: 0,
+      offset: 0,
+      unpaged: false,
+      paged: true
+    },
+    totalPages: 1,
+    last: true,
+    totalElements: 1,
+    sort: { sorted: true, unsorted: false, empty: false },
+    number: 0,
+    first: true,
+    numberOfElements: 1,
+    size: 25,
+    empty: false
+  },
+  metaData: null,
+  correlationId: 'c0c1c67b-44e7-4410-a822-530e029a6ba6'
+}
+
+export const templateInputsResponse = {
+  status: 'SUCCESS',
+  data: 'identifier: "Verify_step_mon_template"\ntype: "Application"\nserviceRef: "<+input>"\nenvironmentRef: "<+input>"\nsources:\n  healthSources:\n  - identifier: "appd"\n    type: "AppDynamics"\n    spec:\n      applicationName: "<+input>"\n      tierName: "<+input>"\n      connectorRef: "<+input>"\n',
+  metaData: null,
+  correlationId: 'ad14eff4-dc40-464b-8dcf-fd10de02c838'
+}
+
+export const applyTemplatesResponseData = {
+  status: 'SUCCESS',
+  data: {
+    mergedPipelineYaml:
+      'name: "Verify step mon template"\nidentifier: "Verify_step_mon_template"\nversionLabel: "1.0"\ntype: "MonitoredService"\nprojectIdentifier: "chidemo"\norgIdentifier: "CVNG"\ntags: {}\nspec:\n  serviceRef: "<+input>"\n  environmentRef: "<+input>"\n  type: "Application"\n  sources:\n    healthSources:\n    - name: "Appd"\n      identifier: "Appd"\n      type: "AppDynamics"\n      spec:\n        applicationName: "<+input>"\n        tierName: "<+input>"\n        metricData:\n          Errors: true\n          Performance: true\n        metricDefinitions:\n        - identifier: "appdMetric"\n          metricName: "appdMetric"\n          baseFolder: ""\n          metricPath: ""\n          completeMetricPath: "<+input>"\n          groupName: "group-1"\n          sli:\n            enabled: true\n          analysis:\n            riskProfile:\n              category: "Errors"\n              metricType: "ERROR"\n              thresholdTypes:\n              - "ACT_WHEN_HIGHER"\n            liveMonitoring:\n              enabled: true\n            deploymentVerification:\n              enabled: true\n              serviceInstanceMetricPath: "<+input>"\n        feature: "Application Monitoring"\n        connectorRef: "<+input>"\n        metricPacks:\n        - identifier: "Errors"\n        - identifier: "Performance"\n  name: "<+monitoredService.serviceRef> <+monitoredService.environmentRef>"\n  identifier: "<+monitoredService.serviceRef>_<+monitoredService.environmentRef>"\n  variables:\n  - name: "connectorVariable"\n    type: "String"\n    value: "<+input>"\n',
+    templateReferenceSummaries: []
+  },
+  metaData: null,
+  correlationId: '180d3d87-c93e-49fb-8ac7-37ed20d36213'
+}
+
+export const specificTemplatesResponse = {
+  status: 'SUCCESS',
+  data: {
+    accountId: 'accountId',
+    orgIdentifier: 'default',
+    projectIdentifier: 'project1',
+    identifier: 'Verify_step_mon_template',
+    name: 'Verify step mon template',
+    description: '',
+    tags: {},
+    yaml: 'template:\n    name: Verify step mon template\n    identifier: Verify_step_mon_template\n    versionLabel: "1.0"\n    type: MonitoredService\n    projectIdentifier: Template_Testing\n    orgIdentifier: SRM\n    tags: {}\n    spec:\n        serviceRef: <+input>\n        environmentRef: <+input>\n        type: Application\n        sources:\n            changeSources:\n                - name: Harness CD Next Gen\n                  identifier: harness_cd_next_gen\n                  type: HarnessCDNextGen\n                  enabled: true\n                  category: Deployment\n                  spec: {}\n            healthSources:\n                - name: appd\n                  identifier: appd\n                  type: AppDynamics\n                  spec:\n                      applicationName: <+input>\n                      tierName: <+input>\n                      metricData:\n                          Errors: true\n                          Performance: true\n                      metricDefinitions: []\n                      feature: Application Monitoring\n                      connectorRef: <+input>\n                      metricPacks:\n                          - identifier: Errors\n                          - identifier: Performance\n        name: <+monitoredService.serviceRef> <+monitoredService.environmentRef>\n        identifier: <+monitoredService.serviceRef>_<+monitoredService.environmentRef>\n',
+    versionLabel: '1.0',
+    templateEntityType: 'MonitoredService',
+    childType: 'Application',
+    templateScope: 'project',
+    version: 1,
+    gitDetails: {
+      objectId: null,
+      branch: null,
+      repoIdentifier: null,
+      rootFolder: null,
+      filePath: null,
+      repoName: null,
+      commitId: null,
+      fileUrl: null,
+      repoUrl: null
+    },
+    entityValidityDetails: { valid: true, invalidYaml: null },
+    lastUpdatedAt: 1657789960909,
+    storeType: 'INLINE',
+    stableTemplate: true
+  },
+  metaData: null,
+  correlationId: 'be48a466-dfb9-48bf-889c-30e7ddce7029'
+}
+
+export const variablesResponse = {
+  status: 'SUCCESS',
+  data: {
+    yaml: '---\nstep:\n  type: "Verify"\n  timeout: "iiZJhFyhS9OpSavMLsP0ug"\n  spec:\n    monitoredServiceRef: "RE6nybPLR4WoBWA_ZO7ang"\n    type: ""\n    healthSources: []\n    monitoredService:\n      type: "Default"\n      spec:\n        __uuid: "q72n7aZFS0y-7N_M87as1w"\n      __uuid: "F7IaHOfFTbCKYsS1StetuQ"\n    spec:\n      sensitivity: "NJmU_GETQY6lBCgCPxiryQ"\n      duration: "-W24V6CDQNqLHf_40S0sNA"\n      baseline: "VpyaQQvFSQO2ZW2GfvgH7A"\n      trafficsplit: "SCHE4jg_TwmNw7P1kdB1YQ"\n      deploymentTag: "J-Mdb4Z9SBKXvmPWuRs8TQ"\n      __uuid: "j1Be3P5GQAqMm0dqmuKN5w"\n    __uuid: "eDcqY2sZS7yNKJu97mlmpw"\n  failureStrategies:\n  - onFailure:\n      errors: "ez6Kpwf-TKOQDsQttKC6CA"\n      action:\n        type: "ManualIntervention"\n        spec:\n          timeout: "8xGt1kayTNyi5LzP_z53HQ"\n          onTimeout:\n            action:\n              type: "StageRollback"\n              __uuid: "tWjP1witQ7CiNdwme7w7qA"\n            __uuid: "zUJ-2P3WQCm1TXpenGbjxQ"\n          __uuid: "A4gGwHtXSSaAn8wgZcU9xQ"\n        __uuid: "zwrPqiYJSs6A-LS5TeZ7zA"\n      __uuid: "DBM3SDzRQr6lWj-rtphCnA"\n    __uuid: "gq-D3NwQRDqXC8GlcS4ESQ"\n  - onFailure:\n      errors: "xyFRlwqnQQydQ6nFNJWIAw"\n      action:\n        type: "ManualIntervention"\n        spec:\n          timeout: "c7FqrXWeTKOw7FOdsLU-Wg"\n          onTimeout:\n            action:\n              type: "Ignore"\n              __uuid: "EKzQwsS1TpSj9FwQmoD4Jw"\n            __uuid: "wBQXYYU7TCO1OYO6nZnZzg"\n          __uuid: "f1ePZewPR2ijLhe_TKmcYw"\n        __uuid: "IM9ZmMvcT462lo1CQEk-Sw"\n      __uuid: "1SbZ_-OgTIWlfVPS_tX1gQ"\n    __uuid: "q26n83zXTTO54zPcmpKeew"\n  identifier: "templateInputs"\n  name: "Zl1rFYchTGujdFBDtgzG4w"\n  __uuid: "cX3uSmYdR-KXT_CcH4qYXg"\n__uuid: "i2X_BxfOQjK7ImY6VPUMeA"\n',
+    metadataMap: {
+      'cX3uSmYdR-KXT_CcH4qYXg': {
+        yamlProperties: {
+          fqn: '',
+          localName: 'step',
+          variableName: '',
+          aliasFQN: '',
+          visible: false
+        },
+        yamlOutputProperties: {
+          fqn: '',
+          localName: ''
+        },
+        yamlExtraProperties: { properties: [], outputproperties: [] }
+      },
+      'J-Mdb4Z9SBKXvmPWuRs8TQ': {
+        yamlProperties: {
+          fqn: 'spec.spec.deploymentTag',
+          localName: 'spec.spec.deploymentTag',
+          variableName: '',
+          aliasFQN: '',
+          visible: false
+        },
+        yamlOutputProperties: {
+          fqn: '',
+          localName: ''
+        },
+        yamlExtraProperties: { properties: [], outputproperties: [] }
+      },
+      SCHE4jg_TwmNw7P1kdB1YQ: {
+        yamlProperties: {
+          fqn: 'spec.spec.trafficsplit',
+          localName: 'spec.spec.trafficsplit',
+          variableName: '',
+          aliasFQN: '',
+          visible: false
+        },
+        yamlOutputProperties: {
+          fqn: '',
+          localName: ''
+        },
+        yamlExtraProperties: { properties: [], outputproperties: [] }
+      },
+      RE6nybPLR4WoBWA_ZO7ang: {
+        yamlProperties: {
+          fqn: 'spec.monitoredServiceRef',
+          localName: 'spec.monitoredServiceRef',
+          variableName: '',
+          aliasFQN: '',
+          visible: false
+        },
+        yamlOutputProperties: {
+          fqn: '',
+          localName: ''
+        },
+        yamlExtraProperties: { properties: [], outputproperties: [] }
+      },
+      VpyaQQvFSQO2ZW2GfvgH7A: {
+        yamlProperties: {
+          fqn: 'spec.spec.baseline',
+          localName: 'spec.spec.baseline',
+          variableName: '',
+          aliasFQN: '',
+          visible: false
+        },
+        yamlOutputProperties: {
+          fqn: '',
+          localName: ''
+        },
+        yamlExtraProperties: { properties: [], outputproperties: [] }
+      },
+      '-W24V6CDQNqLHf_40S0sNA': {
+        yamlProperties: {
+          fqn: 'spec.spec.duration',
+          localName: 'spec.spec.duration',
+          variableName: '',
+          aliasFQN: '',
+          visible: false
+        },
+        yamlOutputProperties: {
+          fqn: '',
+          localName: ''
+        },
+        yamlExtraProperties: { properties: [], outputproperties: [] }
+      },
+      iiZJhFyhS9OpSavMLsP0ug: {
+        yamlProperties: {
+          fqn: 'timeout',
+          localName: 'timeout',
+          variableName: '',
+          aliasFQN: '',
+          visible: false
+        },
+        yamlOutputProperties: {
+          fqn: '',
+          localName: ''
+        },
+        yamlExtraProperties: { properties: [], outputproperties: [] }
+      },
+      Zl1rFYchTGujdFBDtgzG4w: {
+        yamlProperties: {
+          fqn: 'name',
+          localName: 'name',
+          variableName: '',
+          aliasFQN: '',
+          visible: false
+        },
+        yamlOutputProperties: {
+          fqn: '',
+          localName: ''
+        },
+        yamlExtraProperties: { properties: [], outputproperties: [] }
+      },
+      NJmU_GETQY6lBCgCPxiryQ: {
+        yamlProperties: {
+          fqn: 'spec.spec.sensitivity',
+          localName: 'spec.spec.sensitivity',
+          variableName: '',
+          aliasFQN: '',
+          visible: false
+        },
+        yamlOutputProperties: {
+          fqn: '',
+          localName: ''
+        },
+        yamlExtraProperties: { properties: [], outputproperties: [] }
+      }
+    },
+    errorResponses: [],
+    serviceExpressionPropertiesList: [
+      { serviceName: 'trigger', expression: 'trigger.targetBranch' },
+      { serviceName: 'trigger', expression: 'trigger.sourceBranch' },
+      { serviceName: 'trigger', expression: 'trigger.prNumber' },
+      { serviceName: 'trigger', expression: 'trigger.prTitle' }
+    ]
+  },
+  metaData: null,
+  correlationId: '0a187e1c-7422-4b16-bbfd-8063098a0690'
 }

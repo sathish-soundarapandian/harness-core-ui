@@ -5,11 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { SelectOption } from '@harness/uicore'
+import type { PipelineInfrastructure } from 'services/cd-ng'
+
 export enum StepType {
+  StageRuntimeInput = 'StageRuntimeInput', // UI level step, only used in execution view
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
+  Command = 'Command',
+  CustomApproval = 'CustomApproval',
   Barrier = 'Barrier',
-  Lock = 'Lock',
+  Queue = 'Queue',
   K8sRollingRollback = 'K8sRollingRollback',
   K8sBlueGreenDeploy = 'K8sBlueGreenDeploy',
   K8sCanaryDeploy = 'K8sCanaryDeploy',
@@ -19,8 +25,10 @@ export enum StepType {
   K8sCanaryDelete = 'K8sCanaryDelete',
   K8sDelete = 'K8sDelete',
   StepGroup = 'StepGroup',
+  DeployServiceEntity = 'DeployServiceEntity',
   DeployService = 'DeployService',
   DeployEnvironment = 'DeployEnvironment',
+  DeployInfrastructure = 'DeployInfrastructure',
   KubernetesDirect = 'KubernetesDirect',
   K8sServiceSpec = 'K8sServiceSpec',
   K8sRollingDeploy = 'K8sRollingDeploy',
@@ -30,9 +38,12 @@ export enum StepType {
   ServerlessAzure = 'ServerlessAzure',
   Dependency = 'Service',
   Plugin = 'Plugin',
+  GitClone = 'GitClone',
   Run = 'Run',
   GCR = 'BuildAndPushGCR',
+  ACR = 'BuildAndPushACR',
   PDC = 'Pdc',
+  SshWinRmAws = 'SshWinRmAws',
   ECR = 'BuildAndPushECR',
   SaveCacheGCS = 'SaveCacheGCS',
   RestoreCacheGCS = 'RestoreCacheGCS',
@@ -65,10 +76,42 @@ export enum StepType {
   Policy = 'Policy',
   ZeroNorth = 'Security',
   KubernetesAzure = 'KubernetesAzure',
+  SshWinRmAzure = 'SshWinRmAzure',
+  AzureWebApp = 'AzureWebApp',
+  AzureWebAppServiceSpec = 'AzureWebAppServiceSpec',
   ServerlessAwsLambdaDeploy = 'ServerlessAwsLambdaDeploy',
   ServerlessAwsLambdaRollback = 'ServerlessAwsLambdaRollback',
   ServerlessAwsInfra = 'ServerlessAwsInfra',
   CloudFormationRollbackStack = 'RollbackStack',
   CloudFormationDeleteStack = 'DeleteStack',
-  CloudFormationCreateStack = 'CreateStack'
+  CloudFormationCreateStack = 'CreateStack',
+  SshServiceSpec = 'SshServiceSpec',
+  WinRmServiceSpec = 'WinRmServiceSpec',
+  CreatePR = 'CreatePR',
+  MergePR = 'MergePR',
+  AzureWebAppsRollback = 'AzureWebAppRollback',
+  AzureSlotDeployment = 'AzureSlotDeployment',
+  JenkinsBuild = 'JenkinsBuild',
+  AzureTrafficShift = 'AzureTrafficShift',
+  AzureSwapSlot = 'AzureSwapSlot',
+  EcsInfra = 'EcsInfra',
+  EcsService = 'EcsService',
+  EcsRollingDeploy = 'EcsRollingDeploy',
+  EcsRollingRollback = 'EcsRollingRollback',
+  EcsCanaryDeploy = 'EcsCanaryDeploy',
+  EcsCanaryDelete = 'EcsCanaryDelete',
+  AzureArmRollback = 'AzureARMRollback',
+  Background = 'Background',
+  AzureBlueprint = 'AzureCreateBPResource',
+  EcsBlueGreenCreateService = 'EcsBlueGreenCreateService',
+  EcsBlueGreenSwapTargetGroups = 'EcsBlueGreenSwapTargetGroups',
+  EcsBlueGreenRollback = 'EcsBlueGreenRollback',
+  CreateAzureARMResource = 'AzureCreateARMResource'
+}
+
+export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
+  environmentOrEnvGroupRef?: SelectOption
+  environmentGroup?: any
+  environmentRef2?: SelectOption
+  infrastructureRef?: SelectOption
 }

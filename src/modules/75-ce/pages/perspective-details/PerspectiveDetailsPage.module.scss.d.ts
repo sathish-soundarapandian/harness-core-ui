@@ -13,6 +13,12 @@ declare const styles: {
   readonly emptyIllustrationContainer: string
   readonly headerContent: string
   readonly headerContentSection: string
+  readonly labelCtn: string
+  readonly pageCtn: string
+  readonly popoverTarget: string
+  readonly preferenceMenu: string
+  readonly preferencesContainer: string
+  readonly preferencesPopover: string
   readonly subscriptionLimitCtn: string
 }
 export default styles

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes } from '@wings-software/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ContinousVerificationData } from '../../types'
 
@@ -16,7 +16,7 @@ export interface ContinousVerificationProps {
   readonly?: boolean
   template?: ContinousVerificationData
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export interface serviceAndEnvData {

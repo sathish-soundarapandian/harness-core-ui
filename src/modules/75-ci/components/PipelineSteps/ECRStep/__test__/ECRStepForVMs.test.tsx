@@ -10,12 +10,20 @@ import { render, act, Matcher, fireEvent } from '@testing-library/react'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+
 import { ECRStep } from '../ECRStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('../../CIStep/StepUtils', () => ({
-  useGetPropagatedStageById: jest.fn(() => ({ stage: { spec: { infrastructure: { type: 'VM' } } } }))
+  useGetPropagatedStageById: jest.fn(() => ({ stage: { spec: { infrastructure: { type: 'VM' } } } })),
+  renderOptionalWrapper: ({ label, optional }: { label: JSX.Element; optional?: boolean }) => {
+    if (optional) {
+      return `${label} (optional)`
+    } else {
+      return label
+    }
+  }
 }))
 
 describe('ECR Step', () => {

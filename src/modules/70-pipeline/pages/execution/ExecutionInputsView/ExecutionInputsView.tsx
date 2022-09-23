@@ -24,10 +24,11 @@ interface ExecutionInputsViewInterface {
 }
 
 export default function ExecutionInputsView(props: ExecutionInputsViewInterface): React.ReactElement {
-  const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, module, executionIdentifier } =
+  const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, module, executionIdentifier, source } =
     useParams<PipelineType<ExecutionPathProps>>()
 
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const { pipelineExecutionDetail } = useExecutionContext()
 
@@ -45,6 +46,12 @@ export default function ExecutionInputsView(props: ExecutionInputsViewInterface)
       }
     }
   })
+
+  const storeMetadata = {
+    connectorRef: pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef,
+    branch: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch,
+    repoName: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName
+  }
 
   const [inputSetYaml, setInputSetYaml] = useState('')
   const [inputSetTemplateYaml, setInputSetTemplateYaml] = useState('')
@@ -70,6 +77,7 @@ export default function ExecutionInputsView(props: ExecutionInputsViewInterface)
         projectIdentifier={projectIdentifier}
         accountId={accountId}
         module={module}
+        source={source}
         inputSetYAML={inputSetYaml || ''}
         executionView
         branch={pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch}
@@ -82,6 +90,7 @@ export default function ExecutionInputsView(props: ExecutionInputsViewInterface)
         mockData={props.mockData}
         executionInputSetTemplateYaml={inputSetTemplateYaml}
         storeType={pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType}
+        storeMetadata={storeMetadata}
       />
     </div>
   )

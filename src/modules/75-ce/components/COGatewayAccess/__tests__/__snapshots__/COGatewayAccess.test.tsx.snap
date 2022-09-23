@@ -337,28 +337,60 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                                         <thead>
                                           <tr>
                                             <th>
-                                              PROTOCOL
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.protocol
+                                              </p>
                                             </th>
                                             <th>
-                                              PORT
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                common.smtp.port
+                                              </p>
                                             </th>
                                             <th>
-                                              ACTION
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                action
+                                              </p>
                                             </th>
                                             <th>
-                                              TARGET PROTOCOL
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.targetProtocol
+                                              </p>
                                             </th>
                                             <th>
-                                              TARGET PORT
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.targetPort
+                                              </p>
                                             </th>
                                             <th>
-                                              REDIRECT URL
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.redirectUrl
+                                              </p>
                                             </th>
                                             <th>
-                                              SERVER NAME
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.serverName
+                                              </p>
                                             </th>
                                             <th>
-                                              PATH MATCH
+                                              <p
+                                                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                                              >
+                                                ce.common.pathMatch
+                                              </p>
                                             </th>
                                             <th />
                                           </tr>
@@ -419,8 +451,9 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                                                 >
                                                   <input
                                                     class="bp3-input"
+                                                    min="0"
                                                     style="margin-bottom: 0px;"
-                                                    type="text"
+                                                    type="number"
                                                     value="80"
                                                   />
                                                 </div>
@@ -525,8 +558,9 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                                                 >
                                                   <input
                                                     class="bp3-input"
+                                                    min="0"
                                                     style="margin-bottom: 0px;"
-                                                    type="text"
+                                                    type="number"
                                                     value="80"
                                                   />
                                                 </div>
@@ -673,8 +707,9 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                                                 >
                                                   <input
                                                     class="bp3-input"
+                                                    min="0"
                                                     style="margin-bottom: 0px;"
-                                                    type="text"
+                                                    type="number"
                                                     value="443"
                                                   />
                                                 </div>
@@ -779,8 +814,9 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                                                 >
                                                   <input
                                                     class="bp3-input"
+                                                    min="0"
                                                     style="margin-bottom: 0px;"
-                                                    type="text"
+                                                    type="number"
                                                     value="443"
                                                   />
                                                 </div>
@@ -1113,10 +1149,10 @@ exports[`Testing COGatewayAccess SSH checkbox checks succesfully and download os
                   ce.co.sshSetup
                   <span>
                     <a
-                      href=" https://ngdocs.harness.io/article/7025n9ml7z-create-autostopping-rules-aws#setup_access_using_ssh_rdp"
+                      href=" https://docs.harness.io/article/7025n9ml7z-create-autostopping-rules-aws#setup_access_using_ssh_rdp"
                       target="_blank"
                     >
-                      Read More
+                      ce.co.autoStoppingRule.helpText.readMore
                     </a>
                   </span>
                 </p>
@@ -1172,7 +1208,7 @@ exports[`Testing COGatewayAccess SSH checkbox checks succesfully and download os
                     </div>
                   </div>
                   <button
-                    class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main downloadBtn Button--with-current-color Button--iconOnly"
+                    class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main downloadBtn Button--with-current-color Button--iconOnly Button--variation Button--variation-secondary"
                     disabled=""
                     tabindex="-1"
                     type="button"
@@ -1180,7 +1216,7 @@ exports[`Testing COGatewayAccess SSH checkbox checks succesfully and download os
                     <span
                       class="bp3-button-text"
                     >
-                      Download CLI
+                      ce.co.autoStoppingRule.setupAccess.helpText.ssh.setup.download
                     </span>
                   </button>
                 </div>

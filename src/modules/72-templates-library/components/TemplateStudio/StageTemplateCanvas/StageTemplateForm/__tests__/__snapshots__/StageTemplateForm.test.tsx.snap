@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<StageTemplateFormWithRef /> tests should call renderPipelineStage with correct arguments 1`] = `
+exports[`<StageTemplateForm /> tests should call renderPipelineStage with correct arguments 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--background-form"

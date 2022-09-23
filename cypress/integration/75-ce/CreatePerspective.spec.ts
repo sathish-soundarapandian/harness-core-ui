@@ -1,6 +1,6 @@
 import { aliasQuery } from '../../utils/graphql-utils'
 
-describe('CCM Budget Creation flow', () => {
+describe('CCM Perspective Creation flow', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -10,7 +10,7 @@ describe('CCM Budget Creation flow', () => {
     cy.login('test', 'test')
   })
 
-  it.skip('should be able to create perspective', () => {
+  it('should be able to create perspective', () => {
     cy.intercept('POST', '/ccm/api/graphql?accountIdentifier=accountId&routingId=accountId', req => {
       const { body } = req
       if (body.operationName === 'FetchCcmMetaData') {
@@ -53,6 +53,13 @@ describe('CCM Budget Creation flow', () => {
       }
     ).as('getPerspective')
 
+    cy.intercept('GET', 'ccm/api/perspectiveFolders?routingId=accountId&accountIdentifier=accountId', req => {
+      req.reply({
+        statusCode: 200,
+        fixture: 'ccm/api/FetchFolders'
+      })
+    }).as('getFolders')
+
     cy.intercept(
       'GET',
       'ccm/api/budgets/perspectiveBudgets?routingId=accountId&accountIdentifier=accountId&perspectiveId=sampleUUID',
@@ -71,10 +78,12 @@ describe('CCM Budget Creation flow', () => {
       })
     }).as('getReports')
 
+    cy.visitPageAssertion('[class^=MainNav-module_main]')
     cy.contains('p', 'Cloud Costs').click()
     cy.wait('@gqlFetchCcmMetaDataQuery')
 
     cy.contains('p', 'Perspectives').click()
+    cy.wait('@getFolders')
 
     cy.contains('span', 'New Perspective').click()
     cy.wait('@getPerspective')
@@ -96,11 +105,20 @@ describe('CCM Budget Creation flow', () => {
 
     cy.contains('span', 'Next').click()
 
-    cy.contains('p', 'Report Schedules(0)').should('exist')
-    cy.contains('p', 'Budget(0)').should('exist')
+    cy.contains('p', 'Reports (0)').should('exist')
+    cy.contains('p', 'Budgets (0)').should('exist')
 
+    cy.get('span[icon="chevron-down"]').each($btn => {
+      cy.wrap($btn).click()
+    })
     cy.contains('span', '+ create new Report schedule').should('exist')
     cy.contains('span', '+ create new Budget').should('exist')
+    cy.contains('span', '+ create new Anomaly Alert').should('exist')
+
+    cy.contains('span', 'Next').click()
+
+    cy.contains('p', 'Preferences').should('exist')
+    cy.get('input[type=checkbox]').should('not.be.checked')
 
     cy.contains('span', 'Save Perspective').click()
   })

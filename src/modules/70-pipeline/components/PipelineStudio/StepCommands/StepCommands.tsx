@@ -12,9 +12,8 @@ import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { isEmpty, noop, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import { HelpPanel, HelpPanelType, FloatingButton } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { StepWidgetWithFormikRef } from '@pipeline/components/AbstractSteps/StepWidget'
 import { AdvancedStepsWithRef } from '@pipeline/components/PipelineSteps/AdvancedSteps/AdvancedSteps'
 import type { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
@@ -70,12 +69,15 @@ export function StepCommands(
     stepViewType,
     className = '',
     viewType,
-    allowableTypes
+    allowableTypes,
+    gitDetails,
+    storeMetadata,
+    isSaveAsTemplateEnabled = true
   } = props
   const { getString } = useStrings()
-  const templatesEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const [activeTab, setActiveTab] = React.useState(StepCommandTabs.StepConfiguration)
   const stepRef = React.useRef<FormikProps<unknown> | null>(null)
+  const referenceId = stepsFactory.getStepReferenceId(((step as StepElementConfig).type as StepType) || '')
   const advancedConfRef = React.useRef<FormikProps<unknown> | null>(null)
   const isTemplateStep = !!(step as TemplateStepNode)?.template
   const { module } = useParams<ModulePathParams>()
@@ -222,48 +224,68 @@ export function StepCommands(
             templateLinkConfig={(step as TemplateStepNode).template}
             onOpenTemplateSelector={onUseTemplate}
             onRemoveTemplate={onRemoveTemplate}
+            isReadonly={isReadonly}
+            storeMetadata={storeMetadata}
           />
           <Container>{getStepWidgetWithFormikRef()}</Container>
         </Layout.Vertical>
       ) : (
-        <div className={cx(css.stepTabs, { stepTabsAdvanced: activeTab === StepCommandTabs.Advanced })}>
-          <Tabs id="step-commands" selectedTabId={activeTab} onChange={handleTabChange}>
-            <Tab
-              id={StepCommandTabs.StepConfiguration}
-              title={isStepGroup ? getString('stepGroupConfiguration') : getString('stepConfiguration')}
-              panel={getStepWidgetWithFormikRef()}
-            />
-            <Tab
-              id={StepCommandTabs.Advanced}
-              title={getString('advancedTitle')}
-              panel={
-                <AdvancedStepsWithRef
-                  step={step}
-                  isReadonly={isReadonly}
-                  stepsFactory={stepsFactory}
-                  allowableTypes={allowableTypes}
-                  onChange={onChange}
-                  onUpdate={onUpdate}
-                  hiddenPanels={hiddenPanels}
-                  isStepGroup={isStepGroup}
-                  hasStepGroupAncestor={hasStepGroupAncestor}
-                  ref={advancedConfRef}
-                  stageType={stageType}
-                  stepType={stepType}
-                />
-              }
-            />
-            {templatesEnabled &&
-            !isStepGroup &&
-            viewType === StepCommandsViews.Pipeline &&
-            module !== 'cf' &&
-            (step as StepElementConfig).type !== StepType.FlagConfiguration ? (
-              <>
-                <Expander />
-                <SaveTemplateButton data={getStepDataForTemplate} type={'Step'} />
-              </>
-            ) : null}
-          </Tabs>
+        <div className={props.helpPanelVisible ? css.helpPanelGridVisible : css.helpPanelGridHidden}>
+          <Container className={cx(css.stepTabs, { stepTabsAdvanced: activeTab === StepCommandTabs.Advanced })}>
+            <Tabs id="step-commands" selectedTabId={activeTab} onChange={handleTabChange}>
+              <Tab
+                id={StepCommandTabs.StepConfiguration}
+                title={isStepGroup ? getString('stepGroupConfiguration') : getString('stepConfiguration')}
+                panel={getStepWidgetWithFormikRef()}
+              />
+              <Tab
+                id={StepCommandTabs.Advanced}
+                title={getString('advancedTitle')}
+                panel={
+                  <AdvancedStepsWithRef
+                    helpPanelVisible
+                    step={step}
+                    isReadonly={isReadonly}
+                    stepsFactory={stepsFactory}
+                    allowableTypes={allowableTypes}
+                    onChange={onChange}
+                    onUpdate={onUpdate}
+                    hiddenPanels={hiddenPanels}
+                    isStepGroup={isStepGroup}
+                    hasStepGroupAncestor={hasStepGroupAncestor}
+                    ref={advancedConfRef}
+                    stageType={stageType}
+                    stepType={stepType}
+                  />
+                }
+              />
+              {isSaveAsTemplateEnabled &&
+                !isStepGroup &&
+                viewType === StepCommandsViews.Pipeline &&
+                module !== 'cf' &&
+                (step as StepElementConfig).type !== StepType.FlagConfiguration && (
+                  <>
+                    <Expander />
+                    <SaveTemplateButton
+                      data={getStepDataForTemplate}
+                      type={'Step'}
+                      gitDetails={gitDetails}
+                      storeMetadata={storeMetadata}
+                    />
+                  </>
+                )}
+            </Tabs>
+          </Container>
+          {!isEmpty(referenceId) ? (
+            <FloatingButton className={css.floatingButton} onClick={props.showHelpPanel} />
+          ) : null}
+          {props.helpPanelVisible ? (
+            <div className={css.helpPanelStyleOpen}>
+              <HelpPanel referenceId={referenceId || ''} type={HelpPanelType.CONTENT_ONLY}></HelpPanel>
+            </div>
+          ) : (
+            <div className={css.helpPanelStyleClose}></div>
+          )}
         </div>
       )}
     </div>

@@ -8,6 +8,7 @@
 import React from 'react'
 import { FormikProps, FieldArray } from 'formik'
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   FormikForm,
@@ -19,8 +20,7 @@ import {
 } from '@wings-software/uicore'
 import { v4 as uuid } from 'uuid'
 import cx from 'classnames'
-import type { IOptionProps } from '@blueprintjs/core'
-
+import { Radio, RadioGroup } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -38,23 +38,13 @@ import {
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScript.module.scss'
 
-export const targetTypeOptions: IOptionProps[] = [
-  {
-    label: 'Specify Target Host',
-    value: 'targethost'
-  },
-  {
-    label: 'On Delegate',
-    value: 'delegate'
-  }
-]
-
 export default function OptionalConfiguration(props: {
   formik: FormikProps<ShellScriptFormData>
   readonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
+  enableOutputVar?: boolean
 }): React.ReactElement {
-  const { formik, readonly, allowableTypes } = props
+  const { formik, readonly, allowableTypes, enableOutputVar = true } = props
   const { values: formValues, setFieldValue } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -132,82 +122,86 @@ export default function OptionalConfiguration(props: {
             />
           </MultiTypeFieldSelector>
         </div>
-        <div className={stepCss.formGroup}>
-          <MultiTypeFieldSelector
-            name="spec.outputVariables"
-            label={getString('pipeline.scriptOutputVariables')}
-            isOptional
-            optionalLabel={getString('common.optionalLabel')}
-            defaultValueToReset={[]}
-            disableTypeSelection
-          >
-            <FieldArray
+        {enableOutputVar ? (
+          <div className={stepCss.formGroup}>
+            <MultiTypeFieldSelector
               name="spec.outputVariables"
-              render={({ push, remove }) => {
-                return (
-                  <div className={css.panel}>
-                    <div className={css.outputVarHeader}>
-                      <span className={css.label}>Name</span>
-                      <span className={css.label}>Type</span>
-                      <span className={css.label}>Value</span>
+              label={getString('pipeline.scriptOutputVariables')}
+              isOptional
+              optionalLabel={getString('common.optionalLabel')}
+              defaultValueToReset={[]}
+              disableTypeSelection
+            >
+              <FieldArray
+                name="spec.outputVariables"
+                render={({ push, remove }) => {
+                  return (
+                    <div className={css.panel}>
+                      <div className={css.outputVarHeader}>
+                        <span className={css.label}>Name</span>
+                        <span className={css.label}>Type</span>
+                        <span className={css.label}>Value</span>
+                      </div>
+                      {formValues.spec.outputVariables?.map(({ id }: ShellScriptOutputStepVariable, i: number) => {
+                        return (
+                          <div className={css.outputVarHeader} key={id}>
+                            <FormInput.Text
+                              name={`spec.outputVariables[${i}].name`}
+                              placeholder={getString('name')}
+                              disabled={readonly}
+                            />
+                            <FormInput.Select
+                              items={scriptOutputType}
+                              name={`spec.outputVariables[${i}].type`}
+                              placeholder={getString('typeLabel')}
+                              disabled={readonly}
+                            />
+
+                            <FormInput.MultiTextInput
+                              name={`spec.outputVariables[${i}].value`}
+                              placeholder={getString('valueLabel')}
+                              multiTextInputProps={{
+                                allowableTypes,
+                                expressions,
+                                disabled: readonly
+                              }}
+                              label=""
+                              disabled={readonly}
+                            />
+
+                            <Button minimal icon="main-trash" onClick={() => remove(i)} disabled={readonly} />
+                          </div>
+                        )
+                      })}
+                      <Button
+                        icon="plus"
+                        variation={ButtonVariation.LINK}
+                        onClick={() => push({ name: '', type: 'String', value: '', id: uuid() })}
+                        disabled={readonly}
+                        className={css.addButton}
+                      >
+                        {getString('addOutputVar')}
+                      </Button>
                     </div>
-                    {formValues.spec.outputVariables?.map(({ id }: ShellScriptOutputStepVariable, i: number) => {
-                      return (
-                        <div className={css.outputVarHeader} key={id}>
-                          <FormInput.Text
-                            name={`spec.outputVariables[${i}].name`}
-                            placeholder={getString('name')}
-                            disabled={readonly}
-                          />
-                          <FormInput.Select
-                            items={scriptOutputType}
-                            name={`spec.outputVariables[${i}].type`}
-                            placeholder={getString('typeLabel')}
-                            disabled={readonly}
-                          />
-
-                          <FormInput.MultiTextInput
-                            name={`spec.outputVariables[${i}].value`}
-                            placeholder={getString('valueLabel')}
-                            multiTextInputProps={{
-                              allowableTypes,
-                              expressions,
-                              disabled: readonly
-                            }}
-                            label=""
-                            disabled={readonly}
-                          />
-
-                          <Button minimal icon="main-trash" onClick={() => remove(i)} disabled={readonly} />
-                        </div>
-                      )
-                    })}
-                    <Button
-                      icon="plus"
-                      variation={ButtonVariation.LINK}
-                      onClick={() => push({ name: '', type: 'String', value: '', id: uuid() })}
-                      disabled={readonly}
-                      className={css.addButton}
-                    >
-                      {getString('addOutputVar')}
-                    </Button>
-                  </div>
-                )
-              }}
-            />
-          </MultiTypeFieldSelector>
-        </div>
+                  )
+                }}
+              />
+            </MultiTypeFieldSelector>
+          </div>
+        ) : null}
         <div className={stepCss.formGroup}>
-          <FormInput.RadioGroup
-            name="spec.onDelegate"
-            label={getString('pipeline.executionTarget')}
-            isOptional
-            optionalLabel={getString('common.optionalLabel')}
-            radioGroup={{ inline: true }}
-            items={targetTypeOptions}
-            className={css.radioGroup}
+          <RadioGroup
+            selectedValue={formValues.spec.onDelegate}
             disabled={readonly}
-          />
+            inline={true}
+            label={getString('pipeline.executionTarget') + ' ' + getString('common.optionalLabel')}
+            onChange={e => {
+              formik.setFieldValue('spec.onDelegate', e.currentTarget.value)
+            }}
+          >
+            <Radio value={'targethost'} label={'Specify Target Host'} />
+            <Radio value={'delegate'} label={'On Delegate'} />
+          </RadioGroup>
         </div>
         {formValues.spec.onDelegate === 'targethost' ? (
           <div>
@@ -236,9 +230,13 @@ export default function OptionalConfiguration(props: {
             </div>
             <div className={cx(stepCss.formGroup, stepCss.md)}>
               <MultiTypeSecretInput
-                type="SSHKey"
+                type={formValues.spec.shell === 'PowerShell' ? 'WinRmCredentials' : 'SSHKey'}
                 name="spec.executionTarget.connectorRef"
-                label={getString('sshConnector')}
+                label={
+                  formValues.spec.shell === 'PowerShell'
+                    ? getString('secrets.secret.winrmCredential')
+                    : getString('sshConnector')
+                }
                 expressions={expressions}
                 allowableTypes={allowableTypes}
                 disabled={readonly}

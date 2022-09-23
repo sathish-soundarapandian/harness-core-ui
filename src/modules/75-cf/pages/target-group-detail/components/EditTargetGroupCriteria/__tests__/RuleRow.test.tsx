@@ -1,5 +1,12 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
-import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { getByTestId, render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { SelectOption } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -17,6 +24,8 @@ const renderComponent = (props: Partial<RuleRowProps> = {}): RenderResult =>
           { label: 'Identifier', value: 'identifier' }
         ]}
         onDelete={jest.fn()}
+        selectedOp=""
+        setFieldValue={jest.fn()}
         {...props}
       />
     </TestWrapper>
@@ -51,11 +60,9 @@ describe('RuleRow', () => {
 
     userEvent.click(screen.getByLabelText('cf.segmentDetail.attribute'))
 
-    await waitFor(() => {
-      for (const item of targetAttributeItems) {
-        expect(screen.getByText(item.label)).toBeInTheDocument()
-      }
-    })
+    for (const item of targetAttributeItems) {
+      expect(screen.getByText(item.label)).toBeInTheDocument()
+    }
   })
 
   test('it should display a select for the operations', async () => {
@@ -74,16 +81,63 @@ describe('RuleRow', () => {
 
     userEvent.click(screen.getByLabelText('cf.segmentDetail.operator'))
 
-    await waitFor(() => {
-      for (const op of ops) {
-        expect(screen.getByText(op.label)).toBeInTheDocument()
-      }
-    })
+    for (const op of ops) {
+      expect(screen.getByText(op.label)).toBeInTheDocument()
+    }
   })
 
-  test('it should display a tag input for the value', async () => {
+  test('it should display a text input for the value when no op selected', async () => {
     renderComponent()
-    expect(screen.getByLabelText('cf.segmentDetail.values')).toBeInTheDocument()
+
+    const ruleRow = screen.getByTestId('ruleRowFields')
+    expect(getByTestId(ruleRow, 'valuesTextInput').querySelector('input')).toBeVisible()
+  })
+
+  test('it should display a text input for the value when "starts with" op selected', async () => {
+    renderComponent({ selectedOp: 'starts_with' })
+
+    const ruleRow = screen.getByTestId('ruleRowFields')
+    expect(getByTestId(ruleRow, 'valuesTextInput').querySelector('input')).toBeVisible()
+  })
+
+  test('it should display a text input for the value when "ends with" op selected', async () => {
+    renderComponent({ selectedOp: 'ends_with' })
+
+    const ruleRow = screen.getByTestId('ruleRowFields')
+    expect(getByTestId(ruleRow, 'valuesTextInput').querySelector('input')).toBeVisible()
+  })
+
+  test('it should display a text input for the value when "contains" op selected', async () => {
+    renderComponent({ selectedOp: 'contains' })
+
+    const ruleRow = screen.getByTestId('ruleRowFields')
+    expect(getByTestId(ruleRow, 'valuesTextInput').querySelector('input')).toBeVisible()
+  })
+
+  test('it should display a text input for the value when "equals" op selected', async () => {
+    renderComponent({ selectedOp: 'equals' })
+
+    const ruleRow = screen.getByTestId('ruleRowFields')
+    expect(getByTestId(ruleRow, 'valuesTextInput').querySelector('input')).toBeVisible()
+  })
+
+  test('it should display a text input for the value when "equals (sensitive)" op selected', async () => {
+    renderComponent({ selectedOp: 'equals_sensitive' })
+
+    const ruleRow = screen.getByTestId('ruleRowFields')
+    expect(getByTestId(ruleRow, 'valuesTextInput').querySelector('input')).toBeVisible()
+  })
+
+  test('it should display a text input for the value when "starts with" op selected', async () => {
+    renderComponent({ selectedOp: 'starts_with' })
+
+    const ruleRow = screen.getByTestId('ruleRowFields')
+    expect(getByTestId(ruleRow, 'valuesTextInput').querySelector('input')).toBeVisible()
+  })
+
+  test('it should display a tag input for the value when "in" op selected', async () => {
+    renderComponent({ selectedOp: 'in' })
+    expect(screen.getByTestId('valuesTagInput')).toBeVisible()
   })
 
   test('it should display a remove rule button', async () => {

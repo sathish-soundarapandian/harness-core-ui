@@ -1,0 +1,28 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 1,
+    "pageItemCount": 1,
+    "pageSize": 100,
+    "content": [
+      {
+        "service": {
+          "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+          "identifier": "svc_1",
+          "orgIdentifier": "default",
+          "projectIdentifier": "Ashwin_svc_env",
+          "name": "svc_1",
+          "deleted": false,
+          "tags": {},
+          "yaml": "service:\n    name: \"\"\n    identifier: svc_1\n    tags: {}\n    serviceDefinition:\n        spec:\n            manifests:\n                - manifest:\n                      identifier: Man 1\n                      type: K8sManifest\n                      spec:\n                          store:\n                              type: Git\n                              spec:\n                                  connectorRef: Ashwin_Env_Redesign\n                                  gitFetchType: Branch\n                                  paths:\n                                      - manifest.yaml\n                                  branch: main\n                          skipResourceVersioning: false\n            artifacts:\n                primary:\n                    spec:\n                        connectorRef: account.harnessImage\n                        imagePath: artifact_path\n                        tag: <+input>\n                    type: DockerRegistry\n            variables:\n                - name: var1\n                  type: String\n                  value: test\n                - name: var2\n                  type: Secret\n                  value: ashwin_repo\n                - name: var3\n                  type: Number\n                  value: 12313\n        type: Kubernetes\n    gitOpsEnabled: false\n"
+        },
+        "createdAt": 1658638928458,
+        "lastModifiedAt": 1659002345742
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "correlationId": "7ccf0cb4-fdae-43b9-a02a-41051a95e314"
+}

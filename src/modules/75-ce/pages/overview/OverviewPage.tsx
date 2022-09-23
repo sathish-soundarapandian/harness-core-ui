@@ -29,7 +29,7 @@ import OverviewSummary from '@ce/components/OverviewPage/OverviewSummary'
 import OverviewTopCluster from '@ce/components/OverviewPage/OverviewTopClusters'
 import OverviewTopRecommendations from '@ce/components/OverviewPage/OverviewTopRecommendations'
 import OverviewCostByProviders from '@ce/components/OverviewPage/OverviewCostByProviders'
-import PerspectiveTimeRangePicker from '@ce/components/PerspectiveTimeRangePicker/PerspectiveTimeRangePicker'
+import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
 import { PageSpinner } from '@common/components'
 import OverviewAddCluster from '@ce/components/OverviewPage/OverviewAddCluster'
 import { Utils } from '@ce/common/Utils'
@@ -40,7 +40,10 @@ import SustainabilityCard from '@ce/components/OverviewPage/SustainabilityCard'
 import { getEmissionsValue } from '@ce/utils/formatResourceValue'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
+import HandleError from '@ce/components/PermissionError/PermissionError'
+import PermissionError from '@ce/images/permission-error.svg'
 import bgImage from './images/CD/overviewBg.png'
 import css from './Overview.module.scss'
 
@@ -78,7 +81,14 @@ const NoDataOverviewPage: React.FC<NoDataOverviewPageProps> = (props: NoDataOver
   }
 
   return (
-    <div style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover', height: '100%', width: '100%' }}>
+    <div
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        height: 'var(--page-min-height)',
+        width: '100%'
+      }}
+    >
       {showNoDataOverlay && <NoData onConnectorCreateClick={handleClick} />}
     </div>
   )
@@ -92,6 +102,8 @@ const OverviewPage: React.FC = () => {
     from: DATE_RANGE_SHORTCUTS.LAST_30_DAYS[0].format(CE_DATE_FORMAT_INTERNAL)
   })
 
+  useDocumentTitle([getString('cloudCostsText'), getString('overview')], true)
+
   const [summaryResult] = useFetchPerspectiveDetailsSummaryQuery({
     variables: {
       isClusterQuery: false,
@@ -99,7 +111,6 @@ const OverviewPage: React.FC = () => {
       filters: [...getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to))]
     }
   })
-
   const { data: summaryData, fetching: summaryFetching } = summaryResult
   const cloudCost = (summaryData?.perspectiveTrendStats?.cost || {}) as StatsInfo
   const forecastedCost = (summaryData?.perspectiveForecastCost?.cost || {}) as StatsInfo
@@ -112,7 +123,8 @@ const OverviewPage: React.FC = () => {
     defaultAwsPerspectiveId,
     defaultAzurePerspectiveId,
     defaultClusterPerspectiveId,
-    defaultGcpPerspectiveId
+    defaultGcpPerspectiveId,
+    showCostOverview
   } = (ccmData?.ccmMetaData || {}) as CcmMetaData
 
   if (fetchingCCMMetaData) {
@@ -131,75 +143,80 @@ const OverviewPage: React.FC = () => {
     <Container>
       <Page.Header
         title={<TitleWithToolTipId title={getString('overview')} toolTipId="ccmOverviewTitle" />}
-        content={<PerspectiveTimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />}
+        content={<TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />}
       />
       <Page.Body>
-        <Container padding={{ top: 'medium', right: 'xlarge', bottom: 'medium', left: 'xlarge' }}>
-          <div className={css.mainContainer}>
-            <div className={css.columnOne}>
-              <div className={cx(css.summary, css.noColor)}>
-                <OverviewSummary cost={cloudCost} fetching={summaryFetching} name="TotalCost" />
-                <OverviewSummary cost={forecastedCost} fetching={summaryFetching} name="ForecastedCost" />
+        {!showCostOverview && (
+          <HandleError errorMsg={getString('ce.overview.costPermissionError')} imgSrc={PermissionError} />
+        )}
+        {showCostOverview && (
+          <Container padding={{ top: 'medium', right: 'xlarge', bottom: 'medium', left: 'xlarge' }}>
+            <div className={css.mainContainer}>
+              <div className={css.columnOne}>
+                <div className={cx(css.summary, css.noColor)}>
+                  <OverviewSummary cost={cloudCost} fetching={summaryFetching} name="TotalCost" />
+                  <OverviewSummary cost={forecastedCost} fetching={summaryFetching} name="ForecastedCost" />
+                </div>
+                {clusterDataPresent && (
+                  <OverviewClusterCostBreakdown
+                    timeRange={timeRange}
+                    defaultClusterPerspectiveId={defaultClusterPerspectiveId}
+                  />
+                )}
+                {!clusterDataPresent && cloudDataPresent && (
+                  <OverviewCloudCost
+                    layout={OverviewLayout.VERTICAL}
+                    timeRange={timeRange}
+                    providers={{
+                      defaultAwsPerspectiveId,
+                      defaultAzurePerspectiveId,
+                      defaultGcpPerspectiveId
+                    }}
+                  />
+                )}
+                {clusterDataPresent && cloudDataPresent && (
+                  <OverviewCloudCost
+                    layout={OverviewLayout.HORIZONTAL}
+                    timeRange={timeRange}
+                    providers={{
+                      defaultAwsPerspectiveId,
+                      defaultAzurePerspectiveId,
+                      defaultGcpPerspectiveId
+                    }}
+                  />
+                )}
+                {!cloudDataPresent && clusterDataPresent && <OverviewTopCluster timeRange={timeRange} />}
               </div>
-              {clusterDataPresent && (
-                <OverviewClusterCostBreakdown
-                  timeRange={timeRange}
-                  defaultClusterPerspectiveId={defaultClusterPerspectiveId}
-                />
-              )}
-              {!clusterDataPresent && cloudDataPresent && (
-                <OverviewCloudCost
-                  layout={OverviewLayout.VERTICAL}
-                  timeRange={timeRange}
-                  providers={{
-                    defaultAwsPerspectiveId,
-                    defaultAzurePerspectiveId,
-                    defaultGcpPerspectiveId
-                  }}
-                />
-              )}
-              {clusterDataPresent && cloudDataPresent && (
-                <OverviewCloudCost
-                  layout={OverviewLayout.HORIZONTAL}
-                  timeRange={timeRange}
-                  providers={{
-                    defaultAwsPerspectiveId,
-                    defaultAzurePerspectiveId,
-                    defaultGcpPerspectiveId
-                  }}
-                />
-              )}
-              {!cloudDataPresent && clusterDataPresent && <OverviewTopCluster timeRange={timeRange} />}
+              <div className={css.columnTwo}>
+                {sustainabilityEnabled && (
+                  <SustainabilityCard
+                    className={css.cloudEmissionCard}
+                    title={getString('ce.overview.sustainability.fromClousUsageTitle')}
+                    firstColValue={getEmissionsValue(
+                      defaultTo(Number(cloudCost?.statsValue?.substring(1).replace(/,/g, '')), 0)
+                    )}
+                    firstColText={getString('ce.overview.sustainability.tillDate')}
+                    secondColText={getString('ce.recommendation.listPage.byEOM')}
+                    secondColValue={getEmissionsValue(
+                      defaultTo(Number(forecastedCost?.statsValue?.substring(1).replace(',', '')), 0)
+                    )}
+                    fetching={summaryFetching}
+                  />
+                )}
+                <OverviewCostByProviders timeRange={timeRange} clusterDataPresent={clusterDataPresent} />
+                {clusterDataPresent && <OverviewTopRecommendations />}
+                {/* <div>PUT AUTOSTOPPING COMPONENT HERE</div> */}
+              </div>
             </div>
-            <div className={css.columnTwo}>
-              {sustainabilityEnabled && (
-                <SustainabilityCard
-                  className={css.cloudEmissionCard}
-                  title={getString('ce.overview.sustainability.fromClousUsageTitle')}
-                  firstColValue={getEmissionsValue(
-                    defaultTo(Number(cloudCost?.statsValue?.substring(1).replace(/,/g, '')), 0)
-                  )}
-                  firstColText={getString('ce.overview.sustainability.tillDate')}
-                  secondColText={getString('ce.recommendation.listPage.byEOM')}
-                  secondColValue={getEmissionsValue(
-                    defaultTo(Number(forecastedCost?.statsValue?.substring(1).replace(',', '')), 0)
-                  )}
-                  fetching={summaryFetching}
-                />
-              )}
-              <OverviewCostByProviders timeRange={timeRange} clusterDataPresent={clusterDataPresent} />
-              {clusterDataPresent && <OverviewTopRecommendations />}
-              {/* <div>PUT AUTOSTOPPING COMPONENT HERE</div> */}
-            </div>
-          </div>
-          {!clusterDataPresent && (
-            <OverviewAddCluster
-              onAddClusterSuccess={() => {
-                refetchCCMMetaData({ requestPolicy: 'network-only' })
-              }}
-            />
-          )}
-        </Container>
+            {!clusterDataPresent && (
+              <OverviewAddCluster
+                onAddClusterSuccess={() => {
+                  refetchCCMMetaData({ requestPolicy: 'network-only' })
+                }}
+              />
+            )}
+          </Container>
+        )}
       </Page.Body>
     </Container>
   )

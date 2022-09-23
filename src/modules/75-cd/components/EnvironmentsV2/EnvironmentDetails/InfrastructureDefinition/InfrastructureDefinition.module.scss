@@ -12,10 +12,53 @@
 }
 
 .dialogStyles {
-  width: 1300px !important;
+  :global {
+    .ModalDialog--body {
+      padding: 0 !important;
+
+      &::before,
+      &::after {
+        margin: 0 !important;
+      }
+    }
+
+    .ModalDialog--bodyContent {
+      padding: 0 !important;
+    }
+  }
+
+  overflow: hidden;
+}
+
+.modalFooter {
+  position: sticky;
+  bottom: 0;
+  background-color: var(--white) !important;
+  z-index: 11;
+  border-radius: 6px !important;
+  height: 80px;
 }
 
 .nameIdCard {
   width: 40%;
   margin-bottom: var(--spacing-large);
+}
+
+.yamlBuilder {
+  position: relative;
+
+  .buttonWrapper {
+    position: absolute;
+    top: var(--spacing-medium);
+    right: var(--spacing-large);
+    display: flex;
+    column-gap: var(--spacing-large);
+    align-items: center;
+    z-index: 2;
+  }
+}
+.body {
+  height: calc(100% - 80px);
+  overflow-x: hidden !important;
+  overflow-y: auto;
 }

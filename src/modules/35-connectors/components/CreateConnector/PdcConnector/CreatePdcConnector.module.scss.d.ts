@@ -13,6 +13,7 @@ declare const styles: {
   readonly hostContainer: string
   readonly manualHostContainer: string
   readonly secondStep: string
+  readonly selectionWrapper: string
   readonly testConnectionContentContainer: string
   readonly textInput: string
 }

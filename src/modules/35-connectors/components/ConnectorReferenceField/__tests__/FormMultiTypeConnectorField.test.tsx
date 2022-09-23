@@ -6,17 +6,17 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, queryByText, render } from '@testing-library/react'
 import { MultiTypeInputType } from '@wings-software/uicore'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { FormMultiTypeConnectorField } from '../FormMultiTypeConnectorField'
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn().mockImplementation(() => ({ data: {} }))
 }))
 describe('FormMultiTypeConnectorField tests', () => {
-  test(`renders without crashing`, () => {
-    const { container } = render(
+  test(`renders without crashing`, async () => {
+    const { container, getByText } = render(
       <TestWrapper>
         <FormMultiTypeConnectorField
           key={'Github'}
@@ -36,5 +36,15 @@ describe('FormMultiTypeConnectorField tests', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+    const selectConnector = getByText('Select Connector')
+    fireEvent.click(selectConnector)
+    const dialog = findDialogContainer() as HTMLElement
+    const newconnect = queryByText(dialog, '+ newConnectorLabel')
+    fireEvent.click(newconnect as HTMLElement)
+    const newConnectorDialog = document.querySelectorAll('.bp3-dialog')[1]
+    expect(newConnectorDialog).toMatchSnapshot()
+    const cross = queryByText(newConnectorDialog as HTMLElement, 'cross')
+    fireEvent.click(cross as HTMLElement)
+    expect(document.querySelectorAll('.bp3-dialog').length).toEqual(1)
   })
 })

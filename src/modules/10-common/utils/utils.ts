@@ -5,9 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName } from '@harness/uicore'
+import { getMultiTypeFromValue, IconName, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { Editions } from '@common/constants/SubscriptionTypes'
+import type { UserMetadataDTO } from 'services/cd-ng'
+
+const PR_ENV_HOST_NAME = 'pr.harness.io'
 
 interface SetPageNumberProps {
   setPage: (value: React.SetStateAction<number>) => void
@@ -29,6 +35,8 @@ export const getModuleIcon = (module: ModuleName): IconName => {
       return 'cf-main'
     case ModuleName.STO:
       return 'sto-color-filled'
+    case ModuleName.CHAOS:
+      return 'chaos-main'
   }
   return 'nav-project'
 }
@@ -64,7 +72,10 @@ export const formatCount = (num: number): string => {
   return num.toLocaleString()
 }
 
-export const isCommunityPlan = (): boolean => window.deploymentType === 'COMMUNITY'
+export function useGetCommunity(): boolean {
+  const { licenseInformation } = useLicenseStore()
+  return licenseInformation?.['CD']?.edition === Editions.COMMUNITY
+}
 
 export const isOnPrem = (): boolean => window.deploymentType === 'ON_PREM'
 
@@ -96,10 +107,37 @@ export const addHotJarSuppressionAttribute = (): { [HOTJAR_SUPPRESSION_ATTR]: bo
 
 // Utility to check if environment is a PR environment
 export const isPR = (): boolean => {
-  return location.hostname === 'pr.harness.io'
+  return location.hostname === PR_ENV_HOST_NAME
 }
 
 // Utility to check if environment is a local develop environment
 export const isLocalHost = (): boolean => {
   return location.hostname === 'localhost' || location.hostname === '127.0.0.1'
 }
+
+export const getPREnvNameFromURL = (url: string): string => {
+  if (!url) {
+    return ''
+  }
+  return isPR() ? url.split(PR_ENV_HOST_NAME)?.[1]?.split('/')?.[1] : ''
+}
+
+export function isMultiTypeRuntime(type: MultiTypeInputType): boolean {
+  return [MultiTypeInputType.EXECUTION_TIME, MultiTypeInputType.RUNTIME].includes(type)
+}
+
+export function isValueRuntimeInput(
+  value: boolean | string | number | SelectOption | string[] | MultiSelectOption[]
+): boolean {
+  const type = getMultiTypeFromValue(value)
+
+  return isMultiTypeRuntime(type)
+}
+
+export const getUserName = (user: UserMetadataDTO): string => {
+  return defaultTo(user.name, user.email)
+}
+
+export const REFERER_URL = 'refererURL'
+
+export const getSavedRefererURL = (): string => localStorage.getItem(REFERER_URL) || ''

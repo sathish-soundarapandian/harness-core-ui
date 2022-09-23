@@ -7,12 +7,20 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addToGroup: string
   readonly body: string
   readonly card: string
   readonly header: string
   readonly lockIcon: string
   readonly name: string
   readonly popover: string
+  readonly roleBindingTable: string
+  readonly secondaryHeader: string
+  readonly selectedTabs: string
+  readonly tabButton: string
+  readonly tabs: string
+  readonly userDetailsBody: string
   readonly userGroupTable: string
+  readonly userGroupsEmptyState: string
 }
 export default styles

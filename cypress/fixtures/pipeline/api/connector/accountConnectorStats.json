@@ -1,0 +1,13 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "typeStats": [
+      { "type": "DockerRegistry", "count": 1 },
+      { "type": "Jenkins", "count": 1 },
+      { "type": "Local", "count": 1 }
+    ],
+    "statusStats": [{ "status": "SUCCESS", "count": 3 }]
+  },
+  "metaData": null,
+  "correlationId": "f21d41d0-7b2a-4bae-8f17-e4203a34e448"
+}

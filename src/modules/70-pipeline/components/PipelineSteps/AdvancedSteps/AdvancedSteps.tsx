@@ -20,6 +20,8 @@ import {
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
+import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
+import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
 import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import DelegateSelectorPanel from './DelegateSelectorPanel/DelegateSelectorPanel'
@@ -30,7 +32,7 @@ import type { StepType } from '../PipelineStepInterface'
 import ConditionalExecutionPanel from './ConditionalExecutionPanel/ConditionalExecutionPanel'
 import css from './AdvancedSteps.module.scss'
 
-export type FormValues = Pick<Values, 'delegateSelectors' | 'when'> & {
+export type FormValues = Pick<Values, 'delegateSelectors' | 'when' | 'strategy'> & {
   failureStrategies?: AllFailureStrategyConfig[]
 }
 
@@ -38,10 +40,13 @@ export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTempla
   stepType?: StepType
 }
 
+type Step = StepElementConfig | StepGroupElementConfig
+
 export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: StepFormikFowardRef): React.ReactElement {
   const { step, onChange, onUpdate } = props
   const { getString } = useStrings()
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdate = React.useCallback(
     debounce((data: FormValues): void => {
       onChange?.({ ...data, tab: TabTypes.Advanced })
@@ -51,23 +56,24 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
 
   const failureStrategies =
     ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.failureStrategies ||
-    (step as StepElementConfig | StepGroupElementConfig)?.failureStrategies
+    (step as Step)?.failureStrategies
 
   const delegateSelectors =
     ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.spec?.delegateSelectors ||
     (step as StepElementConfig)?.spec?.delegateSelectors ||
     (step as StepGroupElementConfig)?.delegateSelectors
 
-  const when =
-    ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.when ||
-    (step as StepElementConfig | StepGroupElementConfig)?.when
+  const when = ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.when || (step as Step)?.when
+
+  const strategy = (step as any)?.strategy
 
   return (
     <Formik<FormValues>
       initialValues={{
         failureStrategies: defaultTo(failureStrategies, []) as AllFailureStrategyConfig[],
         delegateSelectors: defaultTo(delegateSelectors, []),
-        when
+        when,
+        strategy
       }}
       onSubmit={data => {
         onUpdate({ ...data, tab: TabTypes.Advanced })
@@ -100,11 +106,13 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
     stepsFactory,
     isReadonly,
     stageType,
-    stepType
+    stepType,
+    step
   } = props
 
   const accordionRef = React.useRef<AccordionHandle>({} as AccordionHandle)
   const { getString } = useStrings()
+  const isFailureStrategyDisabled = getIsFailureStrategyDisabled({ stageType, stepType })
 
   React.useEffect(() => {
     if (formikProps.isSubmitting) {
@@ -139,15 +147,15 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
               : ''
           }
         >
-          {hiddenPanels.indexOf(AdvancedPanels.DelegateSelectors) === -1 &&
-            stepsFactory.getStep(stepType)?.hasDelegateSelectionVisible && (
-              <Accordion.Panel
-                id={AdvancedPanels.DelegateSelectors}
-                summary={getString('delegate.DelegateSelector')}
-                details={<DelegateSelectorPanel isReadonly={isReadonly} formikProps={formikProps} />}
-              />
-            )}
-          {hiddenPanels.indexOf(AdvancedPanels.ConditionalExecution) === -1 && (
+          {!hiddenPanels.includes(AdvancedPanels.DelegateSelectors) &&
+          stepsFactory.getStep(stepType)?.hasDelegateSelectionVisible ? (
+            <Accordion.Panel
+              id={AdvancedPanels.DelegateSelectors}
+              summary={getString('delegate.DelegateSelector')}
+              details={<DelegateSelectorPanel isReadonly={isReadonly} formikProps={formikProps} />}
+            />
+          ) : null}
+          {hiddenPanels.includes(AdvancedPanels.ConditionalExecution) ? null : (
             <Accordion.Panel
               id={AdvancedPanels.ConditionalExecution}
               summary={getString('pipeline.conditionalExecution.title')}
@@ -160,7 +168,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
               }
             />
           )}
-          {hiddenPanels.indexOf(AdvancedPanels.FailureStrategy) === -1 && (
+          {hiddenPanels.includes(AdvancedPanels.FailureStrategy) ? null : (
             <Accordion.Panel
               id={AdvancedPanels.FailureStrategy}
               summary={getString('pipeline.failureStrategies.title')}
@@ -169,7 +177,23 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
                   mode={hasStepGroupAncestor || isStepGroup ? Modes.STEP_GROUP : Modes.STEP}
                   stageType={stageType}
                   formikProps={formikProps}
+                  isReadonly={isReadonly || isFailureStrategyDisabled}
+                />
+              }
+            />
+          )}
+          {hiddenPanels.includes(AdvancedPanels.LoopingStrategy) ? null : (
+            <Accordion.Panel
+              id={AdvancedPanels.LoopingStrategy}
+              summary={getString('pipeline.loopingStrategy.title')}
+              details={
+                <LoopingStrategy
+                  strategy={formikProps.values.strategy}
                   isReadonly={isReadonly}
+                  onUpdateStrategy={strategy => {
+                    formikProps.setValues({ ...formikProps.values, strategy })
+                  }}
+                  step={step}
                 />
               }
             />

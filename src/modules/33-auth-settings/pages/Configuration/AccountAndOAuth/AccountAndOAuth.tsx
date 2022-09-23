@@ -14,12 +14,12 @@ import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { AuthenticationSettingsResponse } from 'services/cd-ng'
 import { useUpdateAuthMechanism } from 'services/cd-ng'
-import { AuthenticationMechanisms } from '@auth-settings/constants/utils'
 import { useToaster } from '@common/components'
 import HarnessAccount from '@auth-settings/pages/Configuration/AccountAndOAuth/HarnessAccount/HarnessAccount'
 import PublicOAuthProviders from '@auth-settings/pages/Configuration/AccountAndOAuth/OAuthProviders/PublicOAuthProviders'
 import { getForgotPasswordURL } from 'framework/utils/SessionUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import cssConfiguration from '@auth-settings/pages/Configuration/Configuration.module.scss'
 
 interface Props {

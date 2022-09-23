@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { PipelineContextInterface } from '../../PipelineContext/PipelineContext'
 
@@ -166,6 +166,7 @@ const stateMock = {
   },
   schemaErrors: false,
   gitDetails: {},
+  storeMetadata: {},
   isLoading: false,
   isBEPipelineUpdated: false,
   isDBInitialized: true,
@@ -176,13 +177,18 @@ const stateMock = {
     selectedStepId: 'step1'
   },
   templateTypes: {},
+  templateServiceData: {},
   error: ''
 }
 
 const pipelineContextMock: PipelineContextInterface = {
   state: stateMock as any,
   contextType: 'Pipeline',
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepsFactory: {
     getStep: (type: string) => {
       switch (type) {
@@ -196,6 +202,9 @@ const pipelineContextMock: PipelineContextInterface = {
     },
     getStepDescription: (type: string) => {
       return 'Awesome description for step ' + type
+    },
+    getStepAdditionalInfo: (type: string) => {
+      return 'Awesome additional info for step ' + type
     },
     getStepIsHarnessSpecific: (type: string) => {
       if (type) {
@@ -237,7 +246,7 @@ const pipelineContextMock: PipelineContextInterface = {
   setSelection: jest.fn(),
   getStagePathFromPipeline: () => '',
   setTemplateTypes: jest.fn(),
-  getTemplate: jest.fn()
+  setTemplateServiceData: jest.fn()
 }
 
 export const updateStageFnArg1 = {

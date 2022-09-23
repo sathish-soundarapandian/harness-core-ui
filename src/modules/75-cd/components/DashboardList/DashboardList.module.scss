@@ -15,7 +15,7 @@
 
 .loader {
   position: relative;
-  height: 80%;
+  height: calc(var(--page-min-height) * 0.5);
 }
 
 .timeRangeSelector {
@@ -27,4 +27,11 @@
 .separator {
   width: 100%;
   border-bottom: 1px solid var(--grey-200);
+}
+
+.searchIconStyle {
+  margin-right: var(--spacing-medium);
+  & > input:focus {
+    width: 232px !important;
+  }
 }

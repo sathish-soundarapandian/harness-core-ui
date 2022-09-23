@@ -15,7 +15,6 @@ import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, inputSetFormPathProps } from '@common/utils/routeUtils'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
-import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { EnhancedInputSetForm } from '../InputSetForm'
 import {
   TemplateResponse,
@@ -25,13 +24,11 @@ import {
   GetInputSetEdit,
   MergeInputSetResponse,
   GetOverlayInputSetEdit,
-  MergedPipelineResponse,
   createInputSetCallFirstArg,
   createInputSetCallSecondArg,
   updateInputSetCallSecondArgNewBranch,
   updateInputSetCallSecondArg
 } from './InputSetMocks'
-import pipelineContextMock from '../../PipelineStudio/PipelineCanvas/__tests__/PipelineCanvasGitSyncTestHelper'
 
 const successResponse = (): Promise<{ status: string }> => Promise.resolve({ status: 'SUCCESS' })
 
@@ -49,6 +46,7 @@ jest.mock('services/cd-ng', () => ({
   useCreatePR: jest.fn(() => noop),
   useCreatePRV2: jest.fn(() => noop),
   useGetFileContent: jest.fn(() => noop),
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
@@ -57,17 +55,6 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetSourceCodeManagers: jest.fn().mockImplementation(() => {
     return { data: sourceCodeManagers, refetch: jest.fn() }
-  })
-}))
-
-jest.mock('@common/hooks', () => ({
-  ...(jest.requireActual('@common/hooks') as any),
-  useMutateAsGet: jest.fn().mockImplementation(props => {
-    if (props.name === 'useGetYamlWithTemplateRefsResolved') {
-      return MergedPipelineResponse
-    } else {
-      return TemplateResponse
-    }
   })
 }))
 
@@ -109,26 +96,24 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
   describe('Edit InputSet', () => {
     test('render Input Set Form view in edit mode', async () => {
       const { container } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <GitSyncTestWrapper
-            path={TEST_INPUT_SET_FORM_PATH}
-            pathParams={{
-              accountId: 'testAcc',
-              orgIdentifier: 'testOrg',
-              projectIdentifier: 'test',
-              pipelineIdentifier: 'pipeline',
-              inputSetIdentifier: 'asd',
-              module: 'cd'
-            }}
-            queryParams={{
-              repoIdentifier: 'identifier',
-              branch: 'feature'
-            }}
-            defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
-          >
-            <EnhancedInputSetForm />
-          </GitSyncTestWrapper>
-        </PipelineContext.Provider>
+        <GitSyncTestWrapper
+          path={TEST_INPUT_SET_FORM_PATH}
+          pathParams={{
+            accountId: 'testAcc',
+            orgIdentifier: 'testOrg',
+            projectIdentifier: 'test',
+            pipelineIdentifier: 'pipeline',
+            inputSetIdentifier: 'asd',
+            module: 'cd'
+          }}
+          queryParams={{
+            repoIdentifier: 'identifier',
+            branch: 'feature'
+          }}
+          defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
+        >
+          <EnhancedInputSetForm />
+        </GitSyncTestWrapper>
       )
       const saveBtn = (await findByText(container, 'save')).parentElement
       expect(saveBtn).toBeInTheDocument()
@@ -151,28 +136,25 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
 
     test('save an existing input set to a new branch', async () => {
       const { container } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <GitSyncTestWrapper
-            path={TEST_INPUT_SET_FORM_PATH}
-            pathParams={{
-              accountId: 'testAcc',
-              orgIdentifier: 'testOrg',
-              projectIdentifier: 'test',
-              pipelineIdentifier: 'pipeline',
-              inputSetIdentifier: 'asd',
-              module: 'cd'
-            }}
-            queryParams={{
-              repoIdentifier: 'identifier',
-              branch: 'feature'
-            }}
-            defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
-          >
-            <EnhancedInputSetForm />
-          </GitSyncTestWrapper>
-        </PipelineContext.Provider>
+        <GitSyncTestWrapper
+          path={TEST_INPUT_SET_FORM_PATH}
+          pathParams={{
+            accountId: 'testAcc',
+            orgIdentifier: 'testOrg',
+            projectIdentifier: 'test',
+            pipelineIdentifier: 'pipeline',
+            inputSetIdentifier: 'asd',
+            module: 'cd'
+          }}
+          queryParams={{
+            repoIdentifier: 'identifier',
+            branch: 'feature'
+          }}
+          defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
+        >
+          <EnhancedInputSetForm />
+        </GitSyncTestWrapper>
       )
-      jest.runOnlyPendingTimers()
       const saveBtn = (await findByText(container, 'save')).parentElement
       expect(saveBtn).toBeInTheDocument()
       fireEvent.click(saveBtn!)
@@ -213,28 +195,25 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
     })
     test('render Input Set Form view in create mode', async () => {
       const { container } = render(
-        <PipelineContext.Provider value={pipelineContextMock}>
-          <GitSyncTestWrapper
-            path={TEST_INPUT_SET_FORM_PATH}
-            pathParams={{
-              accountId: 'testAcc',
-              orgIdentifier: 'testOrg',
-              projectIdentifier: 'test',
-              pipelineIdentifier: 'pipeline',
-              inputSetIdentifier: '-1',
-              module: 'cd'
-            }}
-            queryParams={{
-              repoIdentifier: 'identifier',
-              branch: 'feature'
-            }}
-            defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
-          >
-            <EnhancedInputSetForm />
-          </GitSyncTestWrapper>
-        </PipelineContext.Provider>
+        <GitSyncTestWrapper
+          path={TEST_INPUT_SET_FORM_PATH}
+          pathParams={{
+            accountId: 'testAcc',
+            orgIdentifier: 'testOrg',
+            projectIdentifier: 'test',
+            pipelineIdentifier: 'pipeline',
+            inputSetIdentifier: '-1',
+            module: 'cd'
+          }}
+          queryParams={{
+            repoIdentifier: 'identifier',
+            branch: 'feature'
+          }}
+          defaultAppStoreValues={{ ...defaultAppStoreValues, isGitSyncEnabled: true }}
+        >
+          <EnhancedInputSetForm />
+        </GitSyncTestWrapper>
       )
-      jest.runOnlyPendingTimers()
       const saveBtn = (await findByText(container, 'save')).parentElement
       expect(saveBtn).toBeInTheDocument()
       fireEvent.click(saveBtn!)

@@ -1,0 +1,182 @@
+{
+  "state": {
+    "pipeline": {
+      "name": "Pipeline test 123",
+      "identifier": "Pipeline_test_123",
+      "projectIdentifier": "Test_Yunus",
+      "orgIdentifier": "default",
+      "tags": {},
+      "stages": [
+        {
+          "stage": {
+            "name": "Stage 1",
+            "identifier": "Stage_1",
+            "description": "",
+            "type": "Deployment",
+            "spec": {
+              "serviceConfig": {
+                "serviceRef": "Service_1",
+                "serviceDefinition": {
+                  "type": "Kubernetes",
+                  "spec": {
+                    "variables": []
+                  }
+                }
+              },
+              "execution": {
+                "steps": [
+                  {
+                    "step": {
+                      "name": "Rollout Deployment",
+                      "identifier": "rolloutDeployment",
+                      "type": "K8sRollingDeploy",
+                      "timeout": "10m",
+                      "spec": {
+                        "skipDryRun": false
+                      }
+                    }
+                  }
+                ],
+                "rollbackSteps": [
+                  {
+                    "step": {
+                      "name": "Rollback Rollout Deployment",
+                      "identifier": "rollbackRolloutDeployment",
+                      "type": "K8sRollingRollback",
+                      "timeout": "10m",
+                      "spec": {}
+                    }
+                  }
+                ]
+              }
+            },
+            "tags": {},
+            "failureStrategies": [
+              {
+                "onFailure": {
+                  "errors": ["AllErrors"],
+                  "action": {
+                    "type": "StageRollback"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "originalPipeline": {
+      "name": "Pipeline test 123",
+      "identifier": "Pipeline_test_123",
+      "projectIdentifier": "Test_Yunus",
+      "orgIdentifier": "default",
+      "tags": {},
+      "stages": [
+        {
+          "stage": {
+            "name": "Stage 1",
+            "identifier": "Stage_1",
+            "description": "",
+            "type": "Deployment",
+            "spec": {
+              "serviceConfig": {
+                "serviceRef": "Service_1",
+                "serviceDefinition": {
+                  "type": "Kubernetes",
+                  "spec": {
+                    "variables": []
+                  }
+                }
+              },
+              "infrastructure": {
+                "environmentRef": "dev",
+                "infrastructureDefinition": {
+                  "type": "KubernetesDirect",
+                  "spec": {
+                    "connectorRef": "Contector",
+                    "namespace": "ns",
+                    "releaseName": "release-<+INFRA_KEY>"
+                  }
+                },
+                "allowSimultaneousDeployments": false
+              },
+              "execution": {
+                "steps": [
+                  {
+                    "step": {
+                      "name": "Rollout Deployment",
+                      "identifier": "rolloutDeployment",
+                      "type": "K8sRollingDeploy",
+                      "timeout": "10m",
+                      "spec": {
+                        "skipDryRun": false
+                      }
+                    }
+                  }
+                ],
+                "rollbackSteps": [
+                  {
+                    "step": {
+                      "name": "Rollback Rollout Deployment",
+                      "identifier": "rollbackRolloutDeployment",
+                      "type": "K8sRollingRollback",
+                      "timeout": "10m",
+                      "spec": {}
+                    }
+                  }
+                ]
+              }
+            },
+            "tags": {},
+            "failureStrategies": [
+              {
+                "onFailure": {
+                  "errors": ["AllErrors"],
+                  "action": {
+                    "type": "StageRollback"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "pipelineIdentifier": "Pipeline_test_123",
+    "pipelineView": {
+      "isSplitViewOpen": true,
+      "isDrawerOpened": false,
+      "isYamlEditable": false,
+      "splitViewData": {
+        "type": "StageView"
+      },
+      "drawerData": {
+        "type": "AddCommand"
+      }
+    },
+    "templateView": {
+      "isTemplateDrawerOpened": false,
+      "templateDrawerData": {
+        "type": "UseTemplate"
+      }
+    },
+    "schemaErrors": false,
+    "gitDetails": {},
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "templateTypes": {},
+    "isLoading": false,
+    "isBEPipelineUpdated": false,
+    "isDBInitialized": true,
+    "isUpdated": false,
+    "isInitialized": true,
+    "selectionState": {
+      "selectedStageId": "Stage_1",
+      "selectedSectionId": "INFRASTRUCTURE"
+    },
+    "error": ""
+  },
+  "allowableTypes": []
+}

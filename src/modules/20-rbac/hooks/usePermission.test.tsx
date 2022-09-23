@@ -227,6 +227,56 @@ describe('usePermission', () => {
     })
   })
 
+  test('basic function with default scope and attribute filters', async () => {
+    const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
+      <TestWrapper
+        path={routes.toConnectors({
+          accountId: ':accountId',
+          orgIdentifier: ':orgIdentifier',
+          projectIdentifier: ':projectIdentifier'
+        })}
+        pathParams={{ accountId: 'account123', orgIdentifier: 'org123', projectIdentifier: 'project123' }}
+      >
+        <PermissionsProvider debounceWait={0}>{children}</PermissionsProvider>
+      </TestWrapper>
+    )
+    renderHook(
+      () =>
+        usePermission({
+          resource: {
+            resourceIdentifier: 'connector',
+            resourceType: ResourceType.CONNECTOR
+          },
+          permissions: [PermissionIdentifier.DELETE_CONNECTOR],
+          attributeFilter: {
+            attributeName: 'category',
+            attributeValues: ['ARTIFACTORY']
+          }
+        }),
+      { wrapper }
+    )
+
+    jest.runAllTimers()
+
+    expect(getPermissions).toHaveBeenCalledWith({
+      permissions: [
+        {
+          resourceScope: {
+            accountIdentifier: 'account123',
+            orgIdentifier: 'org123',
+            projectIdentifier: 'project123'
+          },
+          resourceType: 'CONNECTOR',
+          resourceAttributes: {
+            category: 'ARTIFACTORY'
+          },
+          resourceIdentifier: 'connector',
+          permission: 'core_connector_delete'
+        }
+      ]
+    })
+  })
+
   test('when api has incomplete response', async () => {
     const getPermissionslocal = jest.fn(() => {
       return {}

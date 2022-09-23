@@ -18,8 +18,9 @@ import { accountPathProps, pipelineModuleParams, templatePathProps } from '@comm
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
 import { useSaveTemplate } from '@pipeline/utils/useSaveTemplate'
-import { SaveTemplatePopover, SaveTemplatePopoverProps } from '../SaveTemplatePopover'
+import { SaveTemplatePopoverWithRef, SaveTemplatePopoverProps } from '../SaveTemplatePopover'
 
+jest.useFakeTimers()
 jest.mock('@common/hooks/CommentModal/useCommentModal', () => ({
   __esModule: true,
   default: () => {
@@ -31,8 +32,25 @@ jest.mock('@common/hooks/CommentModal/useCommentModal', () => ({
 
 jest.mock('@pipeline/utils/useSaveTemplate', () => ({
   useSaveTemplate: jest.fn().mockReturnValue({
-    saveAndPublish: jest.fn()
+    saveAndPublish: jest.fn().mockImplementation(() => {
+      return new Promise(resolve => {
+        setTimeout(resolve, 100)
+      })
+    })
   })
+}))
+
+const openTemplateErrorsModalMock = jest.fn()
+
+jest.mock('@pipeline/components/TemplateErrors/useTemplateErrors', () => ({
+  __esModule: true,
+  default: () => {
+    return {
+      openTemplateErrorsModal: jest.fn().mockImplementation(() => {
+        openTemplateErrorsModalMock()
+      })
+    }
+  }
 }))
 
 const PATH = routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...pipelineModuleParams })
@@ -60,7 +78,7 @@ describe('<SaveTemplatePopover /> tests', () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplateContext.Provider value={stepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
@@ -71,7 +89,7 @@ describe('<SaveTemplatePopover /> tests', () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={{ ...PATH_PARAMS, templateIdentifier: DefaultNewTemplateId }}>
         <TemplateContext.Provider value={stepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
@@ -81,10 +99,42 @@ describe('<SaveTemplatePopover /> tests', () => {
       fireEvent.click(saveButton)
     })
 
-    expect(
-      useSaveTemplate({ template: { name: 'name', identifier: 'identifier', type: 'Step', versionLabel: 'v1' } })
-        .saveAndPublish
-    ).toBeCalledWith(stepTemplateContextMock.state.template, { comment: 'Some Comment', isEdit: false })
+    expect(useSaveTemplate({}).saveAndPublish).toBeCalledWith(stepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: false,
+      updatedGitDetails: {}
+    })
+  })
+
+  test('should not call saveAndPublish if yaml is empty or yaml has schema validation errors', async () => {
+    const updatedTemplateContextMock = {
+      ...stepTemplateContextMock,
+      state: {
+        ...stepTemplateContextMock.state,
+        yamlHandler: {
+          getLatestYaml: () => '',
+          getYAMLValidationErrorMap: () => {
+            const errorMap = new Map()
+            errorMap.set(4, 'Expected type string')
+            return errorMap
+          }
+        }
+      }
+    }
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={{ ...PATH_PARAMS, templateIdentifier: DefaultNewTemplateId }}>
+        <TemplateContext.Provider value={updatedTemplateContextMock}>
+          <SaveTemplatePopoverWithRef {...baseProps} />
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+
+    const saveButton = getByText(container, 'save')
+    await act(async () => {
+      fireEvent.click(saveButton)
+    })
+
+    expect(useSaveTemplate({}).saveAndPublish).not.toBeCalled()
   })
 
   test('should call saveAndPublish with correct params when updating a template', async () => {
@@ -95,74 +145,64 @@ describe('<SaveTemplatePopover /> tests', () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplateContext.Provider value={updatedStepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
 
-    const saveButton = getByText(container, 'save')
-    act(() => {
-      fireEvent.click(saveButton)
-    })
-
-    const popover = findPopoverContainer() as HTMLElement
-    await waitFor(() => popover)
-
-    const updateButton = getByText(popover, 'save')
+    const updateButton = getByText(container, 'save')
     await act(async () => {
       fireEvent.click(updateButton)
     })
 
-    expect(
-      useSaveTemplate({ template: { name: 'name', identifier: 'identifier', type: 'Step', versionLabel: 'v1' } })
-        .saveAndPublish
-    ).toBeCalledWith(updatedStepTemplateContextMock.state.template, { comment: 'Some Comment', isEdit: true })
+    expect(useSaveTemplate({}).saveAndPublish).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: true,
+      updatedGitDetails: {}
+    })
   })
 
   test('should call saveAndPublish with correct params when updating a template when git sync is enabled', async () => {
     const updatedStepTemplateContextMock = produce(stepTemplateContextMock, draft => {
       set(draft, 'state.isUpdated', true)
+      set(draft, 'state.gitDetails.repoIdentifier', 'repoIdentifier')
+      set(draft, 'state.gitDetails.branch', 'branch')
     })
 
     const { container } = render(
-      <TestWrapper path={PATH} pathParams={PATH_PARAMS} defaultAppStoreValues={{ isGitSyncEnabled: true }}>
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplateContext.Provider value={updatedStepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
 
-    const saveButton = getByText(container, 'save')
-    act(() => {
-      fireEvent.click(saveButton)
-    })
-
-    const popover = findPopoverContainer() as HTMLElement
-    await waitFor(() => popover)
-
-    const updateButton = getByText(popover, 'save')
+    const updateButton = getByText(container, 'save')
     await act(async () => {
       fireEvent.click(updateButton)
     })
 
-    expect(
-      useSaveTemplate({ template: { name: 'name', identifier: 'identifier', type: 'Step', versionLabel: 'v1' } })
-        .saveAndPublish
-    ).toBeCalledWith(updatedStepTemplateContextMock.state.template, { comment: '', isEdit: true })
+    expect(useSaveTemplate({}).saveAndPublish).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      isEdit: true,
+      updatedGitDetails: {
+        repoIdentifier: 'repoIdentifier',
+        branch: 'branch'
+      }
+    })
   })
 
   test('should show dialog when saving as new version', async () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplateContext.Provider value={stepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
 
-    const saveButton = getByText(container, 'save')
+    const popoverButton = container.getElementsByClassName('SplitButton--dropdown')[0]
     act(() => {
-      fireEvent.click(saveButton)
+      fireEvent.click(popoverButton)
     })
 
     const popover = findPopoverContainer() as HTMLElement
@@ -181,14 +221,14 @@ describe('<SaveTemplatePopover /> tests', () => {
     const { container } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplateContext.Provider value={stepTemplateContextMock}>
-          <SaveTemplatePopover {...baseProps} />
+          <SaveTemplatePopoverWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
 
-    const saveButton = getByText(container, 'save')
+    const popoverButton = container.getElementsByClassName('SplitButton--dropdown')[0]
     act(() => {
-      fireEvent.click(saveButton)
+      fireEvent.click(popoverButton)
     })
 
     const popover = findPopoverContainer() as HTMLElement
@@ -201,5 +241,72 @@ describe('<SaveTemplatePopover /> tests', () => {
 
     const dialogContainer = findDialogContainer() as HTMLElement
     expect(dialogContainer).toBeTruthy()
+  })
+
+  test('show loading indicator when inline templates are saved', async () => {
+    const updatedStepTemplateContextMock = produce(stepTemplateContextMock, draft => {
+      set(draft, 'state.isUpdated', true)
+    })
+
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <TemplateContext.Provider value={updatedStepTemplateContextMock}>
+          <SaveTemplatePopoverWithRef {...baseProps} />
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+    const updateButton = getByText(container, 'save')
+    await act(async () => {
+      fireEvent.click(updateButton)
+    })
+
+    await waitFor(() => {
+      const spinner = container.querySelector('.bp3-spinner')
+      expect(spinner).toBeInTheDocument()
+    })
+
+    expect(useSaveTemplate({}).saveAndPublish).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: true,
+      updatedGitDetails: {}
+    })
+  })
+
+  test('should openTemplateErrorsModal if save threw exception', async () => {
+    ;(useSaveTemplate as jest.Mock).mockReturnValue({
+      saveAndPublish: jest.fn().mockImplementation(() => {
+        return new Promise((_, reject) => {
+          reject({
+            metadata: {
+              errorNodeSummary: ['test']
+            }
+          })
+        })
+      })
+    })
+
+    const updatedStepTemplateContextMock = produce(stepTemplateContextMock, draft => {
+      set(draft, 'state.isUpdated', true)
+    })
+
+    const { container } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <TemplateContext.Provider value={updatedStepTemplateContextMock}>
+          <SaveTemplatePopoverWithRef {...baseProps} />
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+    const updateButton = getByText(container, 'save')
+    await act(async () => {
+      fireEvent.click(updateButton)
+    })
+
+    expect(useSaveTemplate({}).saveAndPublish).toBeCalledWith(updatedStepTemplateContextMock.state.template, {
+      comment: 'Some Comment',
+      isEdit: true,
+      updatedGitDetails: {}
+    })
+
+    await waitFor(() => expect(openTemplateErrorsModalMock).toBeCalled())
   })
 })

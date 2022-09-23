@@ -33,6 +33,7 @@ describe('Save to git form', () => {
         <SaveToGitForm
           {...pathParams}
           isEditing={false}
+          disableCreatingNewBranch={false}
           resource={{ type: 'Connectors', name: 'testConnector', identifier: 'testConnector' }}
           onSuccess={noop}
           onClose={noop}
@@ -50,6 +51,7 @@ describe('Save to git form', () => {
         <SaveToGitForm
           {...pathParams}
           isEditing={false}
+          disableCreatingNewBranch={false}
           resource={{ type: 'Connectors', name: 'testConnector', identifier: 'testConnector' }}
           onSuccess={noop}
           onClose={noop}
@@ -90,6 +92,7 @@ describe('Save to git form', () => {
         <SaveToGitForm
           {...pathParams}
           isEditing={false}
+          disableCreatingNewBranch={false}
           resource={{
             type: 'Connectors',
             name: 'testConnector',

@@ -31,26 +31,26 @@ exports[`ServiceNowcreateupdate view test  snapshot for displaying ticketNumber 
         details
       </div>
       <div
-        aria-controls="bp3-tab-panel_step-details_Input"
+        aria-controls="bp3-tab-panel_step-details_INPUT"
         aria-disabled="false"
         aria-expanded="false"
         aria-selected="false"
         class="bp3-tab"
-        data-tab-id="Input"
-        id="bp3-tab-title_step-details_Input"
+        data-tab-id="INPUT"
+        id="bp3-tab-title_step-details_INPUT"
         role="tab"
         tabindex="0"
       >
         common.input
       </div>
       <div
-        aria-controls="bp3-tab-panel_step-details_Output"
+        aria-controls="bp3-tab-panel_step-details_OUTPUT"
         aria-disabled="false"
         aria-expanded="false"
         aria-selected="false"
         class="bp3-tab"
-        data-tab-id="Output"
-        id="bp3-tab-title_step-details_Output"
+        data-tab-id="OUTPUT"
+        id="bp3-tab-title_step-details_OUTPUT"
         role="tab"
         tabindex="0"
       >

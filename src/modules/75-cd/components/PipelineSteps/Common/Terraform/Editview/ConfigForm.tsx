@@ -18,7 +18,8 @@ import {
   Button,
   SelectOption,
   Container,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 
 import cx from 'classnames'
@@ -38,7 +39,7 @@ interface ConfigFormProps {
   data?: any
   onHide: (values: any) => void
   isReadonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function ConfigForm(props: ConfigFormProps): React.ReactElement {

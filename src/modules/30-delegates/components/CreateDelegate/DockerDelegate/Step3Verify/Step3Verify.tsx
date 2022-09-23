@@ -16,6 +16,7 @@ import { useToaster } from '@common/exports'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
+import { DelegateTypes } from '@delegates/constants'
 import StepProcessing from '../../components/StepProcessing/StepProcessing'
 import type { DockerDelegateWizardData } from '../CreateDockerDelegate'
 
@@ -78,6 +79,7 @@ const Step3Verify: React.FC<StepProps<DockerDelegateWizardData> & StepSuccessVer
       <Layout.Horizontal className={css.baseContainer}>
         <Layout.Vertical className={css.leftPanel}>
           <StepProcessing
+            delegateType={DelegateTypes.DOCKER}
             name={props?.prevStepData?.name}
             replicas={1}
             onSuccessHandler={() => setIsVerifiedSuccessfully(true)}

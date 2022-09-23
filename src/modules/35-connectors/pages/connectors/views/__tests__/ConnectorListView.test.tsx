@@ -245,7 +245,8 @@ describe('Connectors List Test', () => {
     })
     expect(openConnectorModal).toBeCalledWith(true, currentConnector.type, {
       connectorInfo: currentConnector,
-      gitDetails: gitDetails
+      gitDetails: gitDetails,
+      status: null
     })
   })
 

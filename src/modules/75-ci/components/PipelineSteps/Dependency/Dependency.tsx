@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import { parse } from 'yaml'
 import get from 'lodash-es/get'
@@ -85,7 +85,7 @@ export interface DependencyProps {
   stepViewType: StepViewType
   onUpdate?: (data: DependencyData) => void
   onChange?: (data: DependencyData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 
@@ -131,7 +131,7 @@ export class Dependency extends PipelineStep<DependencyData> {
     if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.connectorRef', ''))
       if (obj.type === StepType.Dependency) {
-        return getConnectorSuggestions(params, ['Gcp', 'Aws', 'DockerRegistry'])
+        return getConnectorSuggestions(params, ['Gcp', 'Aws', 'DockerRegistry', 'Azure'])
       }
     }
     return []
@@ -179,7 +179,7 @@ export class Dependency extends PipelineStep<DependencyData> {
       allowableTypes
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <DependencyInputSet
           initialValues={initialValues}

@@ -18,7 +18,10 @@ import { mockSetFlagSwitchFieldValues } from '../FlagChanges/subSections/__tests
 jest.mock('services/cf', () => ({
   useGetAllFeatures: jest
     .fn()
-    .mockReturnValue({ data: { features: [{ identifier: 'f1', name: 'f1' }] }, loading: false, reload: jest.fn() })
+    .mockReturnValue({ data: { features: [{ identifier: 'f1', name: 'f1' }] }, loading: false, reload: jest.fn() }),
+  useGetFeatureFlag: jest
+    .fn()
+    .mockReturnValue({ data: { identifier: 'f1', name: 'f1' }, loading: false, reload: jest.fn() })
 }))
 
 jest.mock('../FlagChanges/FlagChangesForm', () => ({

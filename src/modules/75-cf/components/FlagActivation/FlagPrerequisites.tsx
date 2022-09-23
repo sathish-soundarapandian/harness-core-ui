@@ -46,6 +46,7 @@ import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import patch from '../../utils/instructions'
 import SaveFlagToGitSubForm from '../SaveFlagToGitSubForm/SaveFlagToGitSubForm'
 import { PrerequisiteItem } from './FlagPrerequisiteItem'
@@ -73,7 +74,6 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
   const [searchTerm, setSearchTerm] = useState<string>()
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
   const gitSyncFormMeta = gitSync?.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.UPDATES_FLAG_PREREQS)
-  const PAGE_SIZE = 500
 
   const queryParams = useMemo(
     () => ({
@@ -82,7 +82,7 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
       accountIdentifier,
       orgIdentifier,
       name: searchTerm,
-      pageSize: PAGE_SIZE
+      pageSize: CF_DEFAULT_PAGE_SIZE
     }),
     [accountIdentifier, environmentIdentifier, orgIdentifier, projectIdentifier, searchTerm]
   )
@@ -94,12 +94,12 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
   } = useGetAllFeatures({
     lazy: true,
     queryParams,
-    debounce: 500
+    debounce: 250
   })
 
   const featureList = useMemo(() => {
     return searchedFeatures?.features?.filter(_feature => _feature.identifier !== featureFlag.identifier) || []
-  }, [featureFlag.identifier, searchedFeatures?.features?.filter])
+  }, [featureFlag.identifier, searchedFeatures?.features])
 
   const [isEditingPrerequisites, setEditingPrerequisites] = useState<boolean>(false)
 
@@ -129,6 +129,7 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
     } else {
       setEditingPrerequisites(true)
       openModalPrerequisites()
+      fetchFlags({ queryParams: queryParams })
     }
   }
 
@@ -220,19 +221,6 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
     const title = isEditingPrerequisites
       ? getString('cf.addPrerequisites.editPrerequisitesHeading')
       : getString('cf.addPrerequisites.addPrerequisitesHeading')
-    const updateSelect = (e: React.FormEvent<HTMLInputElement>): void => {
-      const _searchTerm = (e?.target as HTMLInputElement)?.value || ''
-      if (_searchTerm && _searchTerm !== searchTerm) {
-        setSearchTerm(_searchTerm)
-        fetchFlags({ queryParams: { ...queryParams, name: _searchTerm } })
-      } else {
-        fetchFlags()
-      }
-    }
-    const updateSelectFromVariation = (entry: PrerequisiteEntry): void => {
-      setSearchTerm(entry.feature)
-      fetchFlags({ queryParams: { ...queryParams, name: entry.feature } })
-    }
 
     return (
       <Dialog enforceFocus={false} title="" onClose={hideModalPrerequisites} isOpen={true}>
@@ -243,7 +231,7 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
           <Text margin={{ top: 'medium', bottom: 'xlarge' }}>
             {getString('cf.addPrerequisites.addPrerequisitesDesc')}
           </Text>
-          {!loading && !error && (
+          {!error && (
             <Formik
               enableReinitialize={true}
               initialValues={initialPrereqValues}
@@ -282,8 +270,11 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
                                     }
                                     selectProps={{
                                       inputProps: {
-                                        onFocus: updateSelect,
-                                        onInput: updateSelect
+                                        onInput: e => {
+                                          const text = (e?.target as HTMLInputElement)?.value
+                                          setSearchTerm(text)
+                                          fetchFlags({ queryParams: { ...queryParams, name: text } })
+                                        }
                                       }
                                     }}
                                   />
@@ -308,11 +299,6 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
                                           ]
                                         : [])
                                     }
-                                    selectProps={{
-                                      inputProps: {
-                                        onFocus: () => updateSelectFromVariation(elem)
-                                      }
-                                    }}
                                   />
                                 </div>
                               </Layout.Horizontal>
@@ -356,7 +342,7 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
         </Layout.Vertical>
       </Dialog>
     )
-  }, [featureList, isEditingPrerequisites, gitSync.isGitSyncEnabled, gitSync.isAutoCommitEnabled])
+  }, [featureList, isEditingPrerequisites, gitSync.isGitSyncEnabled, gitSync.isAutoCommitEnabled, loading])
 
   const rbacPermission: Omit<PermissionsRequest, 'permissions'> & { permission: PermissionIdentifier } = {
     resource: { resourceType: ResourceType.FEATUREFLAG },
@@ -417,6 +403,7 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
           onClick={() => {
             setEditingPrerequisites(false)
             openModalPrerequisites()
+            fetchFlags({ queryParams: queryParams })
           }}
           disabled={featureFlag.archived}
           permission={rbacPermission}

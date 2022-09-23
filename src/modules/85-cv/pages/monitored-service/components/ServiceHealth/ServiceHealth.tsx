@@ -60,12 +60,10 @@ export default function ServiceHealth({
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
 
   useEffect(() => {
-    //changing timeperiod in dropdown should reset the timerange and remove the slider.
-    if (showTimelineSlider) {
-      resetSlider()
+    if (selectedTimePeriod?.value) {
+      setShowTimelineSlider(true)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedTimePeriod?.value])
+  }, [selectedTimePeriod.value, timestamps])
 
   // calculating the min and max width for the the timeline slider
   const sliderDimensions = useMemo(() => {
@@ -193,6 +191,7 @@ export default function ServiceHealth({
                 maxSliderWidth={sliderDimensions.maxWidth}
                 infoCard={renderInfoCard()}
                 onSliderDragEnd={onSliderDragEnd}
+                setDefaultSlider
               />
               <ChangeTimeline
                 duration={selectedTimePeriod}

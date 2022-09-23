@@ -7,8 +7,12 @@
 
 import React from 'react'
 import { pick } from 'lodash-es'
+import type {
+  GetTemplateProps,
+  GetTemplateResponse
+} from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { Connectors } from '@connectors/constants'
-import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
+import type { ConnectorRequestBody, ConnectorInfoDTO, ConnectorConnectivityDetails } from 'services/cd-ng'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 import type { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -48,10 +52,13 @@ import CreateSumoLogicConnector from '../CreateConnector/SumoLogicConnector/Crea
 import CENGAwsConnector from '../CreateConnector/CENGAwsConnector/CreateCeAwsConnector'
 import CreateCeGcpConnector from '../CreateConnector/CEGcpConnector/CreateCeGcpConnector'
 import CreateCustomHealthConnector from '../CreateConnector/CustomHealthConnector/CreateCustomHealthConnector'
+import CreateElkHealthConnector from '../CreateConnector/ElkConnector/CreateElkConnector'
 import CreateErrorTrackingConnector from '../CreateConnector/ErrorTrackingConnector/CreateErrorTrackingConnector'
 import CreateAzureConnector from '../CreateConnector/AzureConnector/CreateAzureConnector'
 import { ConnectorWizardContextProvider } from './ConnectorWizardContext'
 import CreateJenkinsConnector from '../CreateConnector/JenkinsConnector/CreateJenkinsConnector'
+import OCIHelmConnector from '../CreateConnector/OCIHelmConnector.tsx/OCIHelmConnector'
+import CreateCustomSMConnector from '../CreateConnector/CustomSecretManagerConnector/CreateCustomSMConnector'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -64,8 +71,10 @@ interface CreateConnectorWizardProps {
   connectivityMode?: ConnectivityModeType
   setConnectivityMode?: (val: ConnectivityModeType) => void
   gitDetails?: IGitContextFormProps
+  status?: ConnectorConnectivityDetails
   onClose: () => void
   onSuccess: (data?: ConnectorRequestBody) => void | Promise<void>
+  getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }
 
 export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
@@ -85,18 +94,20 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     'setIsEditMode',
     'connectorInfo',
     'gitDetails',
+    'status',
     'accountId',
     'orgIdentifier',
     'projectIdentifier',
     'connectivityMode',
-    'setConnectivityMode'
+    'setConnectivityMode',
+    'getTemplate'
   ])
   commonProps = {
     ...commonProps,
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { ERROR_TRACKING_ENABLED, NG_AZURE } = useFeatureFlags()
+  const { ERROR_TRACKING_ENABLED } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -106,6 +117,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
   switch (type) {
     case Connectors.CUSTOM:
       return <CreateCustomHealthConnector {...commonProps} />
+    case Connectors.ELK:
+      return <CreateElkHealthConnector {...commonProps} />
     case Connectors.KUBERNETES_CLUSTER:
       return <CreateK8sConnector {...commonProps} />
     case Connectors.GIT:
@@ -134,6 +147,8 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return <CreateDockerConnector {...commonProps} />
     case Connectors.HttpHelmRepo:
       return <HelmRepoConnector {...commonProps} />
+    case Connectors.OciHelmRepo:
+      return <OCIHelmConnector {...commonProps} />
     case Connectors.AWS:
       return <CreateAWSConnector {...commonProps} />
     case Connectors.AWS_CODECOMMIT:
@@ -175,9 +190,11 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.ERROR_TRACKING:
       return ERROR_TRACKING_ENABLED ? <CreateErrorTrackingConnector {...commonProps} /> : null
     case Connectors.AZURE:
-      return NG_AZURE ? <CreateAzureConnector {...commonProps} /> : null
+      return <CreateAzureConnector {...commonProps} />
     case Connectors.JENKINS:
       return <CreateJenkinsConnector {...commonProps} />
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return <CreateCustomSMConnector {...commonProps} />
     default:
       return null
   }

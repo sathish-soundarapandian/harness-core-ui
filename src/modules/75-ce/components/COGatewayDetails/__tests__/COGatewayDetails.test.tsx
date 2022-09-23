@@ -7,9 +7,10 @@
 
 import React from 'react'
 import { act } from 'react-dom/test-utils'
-import { fireEvent, getAllByText, getByText, render } from '@testing-library/react'
+import { fireEvent, getAllByText, getByText, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ASRuleTabs } from '@ce/constants'
+import type { GatewayDetails } from '@ce/components/COCreateGateway/models'
 import COGatewayDetails from '../COGatewayDetails'
 
 const accessDetails = {
@@ -74,7 +75,8 @@ const initialGatewayDetails = {
     protocol: 'http',
     path: '/',
     port: 80,
-    timeout: 30
+    timeout: 30,
+    interval: 90
   },
   opts: {
     preservePrivateIP: false,
@@ -113,6 +115,87 @@ const initialGatewayDetails = {
   deps: []
 }
 
+const rdsGatewayDetails = {
+  id: 480,
+  name: 'RDS Test 1',
+  idleTimeMins: 10,
+  fullfilment: 'ondemand',
+  orgID: 'orgIdentifier',
+  projectID: 'projectIdentifier',
+  filter: '',
+  kind: 'database',
+  healthCheck: {
+    protocol: 'http',
+    path: '/',
+    port: 80,
+    timeout: 30,
+    id: '',
+    status_code_from: 200,
+    status_code_to: 299
+  },
+  hostName: 'enjoyed-catfish-c852ctqqejqm0186kq40.test.io',
+  routing: {
+    database: {
+      id: 'database-3-rdstest',
+      region: 'us-east-1'
+    },
+    instance: {},
+    lb: '',
+    ports: []
+  },
+  opts: {
+    preservePrivateIP: false,
+    deleteCloudResources: false,
+    alwaysUsePrivateIP: false,
+    access_details: {
+      backgroundTasks: {
+        selected: false
+      },
+      dnsLink: {
+        selected: false
+      },
+      ipaddress: {
+        selected: false
+      },
+      rdp: {
+        selected: false
+      },
+      ssh: {
+        selected: false
+      }
+    },
+    hide_progress_page: false,
+    dry_run: false
+  },
+  provider: {
+    name: 'AWS',
+    value: 'aws',
+    icon: 'service-aws'
+  },
+  selectedInstances: [],
+  accessPointID: null,
+  accountID: 'acc1',
+  cloudAccount: {
+    id: 'Lightwing_Non_prod_old',
+    name: 'Lightwing Non prod old'
+  },
+  metadata: {
+    target_group_details: null,
+    access_details: null,
+    cloud_provider_details: {
+      name: 'Lightwing Non prod old'
+    },
+    service_errors: null,
+    kubernetes_connector_id: '',
+    health_check_details: null,
+    custom_domain_providers: null,
+    port_config: null,
+    dns_mapping_to_retain: null
+  },
+  deps: [],
+  schedules: []
+}
+
 const mockAccessPointList = {
   response: [
     {
@@ -143,6 +226,15 @@ const mockAccessPointResourceData = {
   ]
 }
 
+const mockedFetchRuleResponse = {
+  response: {
+    records: [],
+    total: 0,
+    pages: 1
+  },
+  loading: false
+}
+
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('@common/hooks/useFeatureFlag', () => ({
@@ -152,7 +244,10 @@ jest.mock('@common/hooks/useFeatureFlag', () => ({
 
 jest.mock('services/lw', () => ({
   useSaveService: jest.fn().mockImplementation(() => ({
-    mutate: jest.fn()
+    mutate: jest.fn(() => Promise.resolve({}))
+  })),
+  useFetchRules: jest.fn().mockImplementation(() => ({
+    mutate: () => Promise.resolve(mockedFetchRuleResponse)
   })),
   useAllResourcesOfAccount: jest.fn().mockImplementation(() => ({
     mutate: jest.fn(),
@@ -192,7 +287,7 @@ jest.mock('services/lw', () => ({
     mutate: jest.fn()
   })),
   useToggleRuleMode: jest.fn().mockImplementation(() => ({
-    mutate: jest.fn()
+    mutate: jest.fn(() => Promise.resolve())
   }))
 }))
 
@@ -279,5 +374,43 @@ describe('Test GatewayDetails', () => {
     })
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('should save the rule', async () => {
+    const setFn = jest.fn()
+    const { container } = render(
+      <TestWrapper path={testpath} pathParams={testparams}>
+        <COGatewayDetails
+          gatewayDetails={rdsGatewayDetails as unknown as GatewayDetails}
+          setGatewayDetails={setFn}
+          previousTab={jest.fn()}
+          isEditFlow={false}
+        />
+      </TestWrapper>
+    )
+
+    const nextBtn = getByText(container, 'next')
+    expect(nextBtn).toBeDefined()
+    act(() => {
+      fireEvent.click(nextBtn)
+    })
+
+    await waitFor(() => {
+      const step2NextBtn = getByText(container, 'next')
+      expect(step2NextBtn).toBeDefined()
+      act(() => {
+        fireEvent.click(step2NextBtn)
+      })
+    })
+
+    await waitFor(() => {
+      const saveBtn = getByText(container, 'ce.co.autoStoppingRule.save')
+      expect(saveBtn).toBeDefined()
+      act(() => {
+        fireEvent.click(saveBtn)
+      })
+    })
+
+    await waitFor(() => expect(setFn).toHaveBeenCalled())
   })
 })

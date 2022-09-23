@@ -21,17 +21,23 @@ const TEST_PATH = routes.toPipelineStudio({ ...accountPathProps, ...pipelinePath
 const argsMock = {
   showSelectMenu: true,
   contextType: 'Pipeline',
+  gitDetails: {},
+  storeMetadata: {},
   getNewStageFromType: jest.fn()
 }
 
 const argsMockWithOnSelectStage = {
   showSelectMenu: true,
   contextType: 'Pipeline',
+  gitDetails: {},
+  storeMetadata: {},
   onSelectStage: jest.fn()
 }
 
 const argsMockWithSelectMenuFalse = {
   showSelectMenu: false,
+  gitDetails: {},
+  storeMetadata: {},
   contextType: 'Pipeline'
 }
 

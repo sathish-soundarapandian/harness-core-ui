@@ -48,6 +48,7 @@ interface NexusAuthenticationProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 interface NexusFormInterface {
@@ -110,7 +111,9 @@ const StepNexusAuthentication: React.FC<StepProps<StepNexusAuthenticationProps> 
     })
     nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as StepNexusAuthenticationProps)
   }
-  useConnectorWizard({ helpPanel: { referenceId: 'NexusDetails', contentWidth: 900 } })
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+  })
 
   const { trackEvent } = useTelemetry()
 

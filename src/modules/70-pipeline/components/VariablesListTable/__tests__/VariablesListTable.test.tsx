@@ -63,6 +63,7 @@ describe('<VariablesListTable /> tests', () => {
         }}
         data={flatObject({
           type: StepType.Run,
+          __uuid: 'step-identifier',
           identifier: 'run',
           name: 'step-name',
           description: 'step-description',
@@ -92,6 +93,17 @@ describe('<VariablesListTable /> tests', () => {
             yamlProperties: {
               fqn: 'pipeline.stages.qaStage.execution.steps.run.name',
               localName: 'step.run.name'
+            }
+          },
+          'step-identifier': {
+            yamlExtraProperties: {
+              properties: [
+                {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.run.identifier',
+                  localName: 'step.run.identifier',
+                  variableName: 'identifier'
+                }
+              ]
             }
           },
           'step-description': {

@@ -15,11 +15,9 @@ import {
   Icon,
   TableV2,
   useConfirmationDialog,
-  useToaster,
-  Dialog
+  useToaster
 } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useModalHook } from '@harness/use-modal'
 import type { CellProps, Renderer, Column } from 'react-table'
 import { Classes, Position, Menu, Intent, PopoverInteractionKind, IconName, MenuItem } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
@@ -50,8 +48,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
-import { isCommunityPlan } from '@common/utils/utils'
-import CopyGroupForm from '../CopyGroupMenuItem/CopyGroupForm'
+import { getUserName, useGetCommunity } from '@common/utils/utils'
 import css from './UserGroupsListView.module.scss'
 
 interface UserGroupsListViewProps {
@@ -69,6 +66,7 @@ interface UserGroupsListViewProps {
 export const UserGroupColumn = (data: UserGroupDTO): React.ReactElement => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const userGroupInherited = isUserGroupInherited(accountId, orgIdentifier, projectIdentifier, data)
+  const parentScope = mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(data))
   const { getString } = useStrings()
   return (
     <Layout.Vertical>
@@ -103,7 +101,7 @@ export const UserGroupColumn = (data: UserGroupDTO): React.ReactElement => {
         {userGroupInherited ? (
           <Text color={Color.PURPLE_500} lineClamp={1} font={{ variation: FontVariation.SMALL }}>
             {getString('rbac.unableToEditInheritedMembership', {
-              parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(data))
+              parentScope: parentScope ? parentScope.charAt(0).toUpperCase() + parentScope.slice(1) : undefined
             })}
           </Text>
         ) : null}
@@ -128,7 +126,7 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
   const { getString } = useStrings()
   const avatars =
     data.users?.map(user => {
-      return { email: user.email, name: user.name }
+      return { email: user.email, name: getUserName(user) }
     }) || []
 
   const handleAddMember = (e: React.MouseEvent<HTMLElement | Element, MouseEvent>): void => {
@@ -141,7 +139,12 @@ const RenderColumnMembers: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, 
     childProjectIdentifier,
     data.userGroupDTO
   )
-  const disabled = data.userGroupDTO.ssoLinked || data.userGroupDTO.externallyManaged || userGroupInherited
+  const disabled =
+    data.userGroupDTO.ssoLinked ||
+    data.userGroupDTO.externallyManaged ||
+    userGroupInherited ||
+    data.userGroupDTO.harnessManaged
+
   const disableTooltipText = getUserGroupActionTooltipText(
     accountIdentifier,
     childOrgIdentifier,
@@ -275,19 +278,6 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
     }
   })
 
-  const [openCopyGroupModal, closeCopyGroupModal] = useModalHook(() => {
-    return (
-      <Dialog
-        isOpen={true}
-        enforceFocus={false}
-        title={getString('rbac.copyGroup.title', { name: data.name })}
-        onClose={closeCopyGroupModal}
-      >
-        <CopyGroupForm closeModal={closeCopyGroupModal} identifier={identifier} />
-      </Dialog>
-    )
-  }, [data])
-
   const handleDelete = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.stopPropagation()
     setMenuOpen(false)
@@ -298,12 +288,6 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
     e.stopPropagation()
     setMenuOpen(false)
     ;(column as any).openUserGroupModal(data)
-  }
-
-  const handleCopyUserGroup = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    e.stopPropagation()
-    setMenuOpen(false)
-    openCopyGroupModal()
   }
 
   const userGroupInherited = isUserGroupInherited(accountIdentifier, childOrgIdentifier, childProjectIdentifier, data)
@@ -341,7 +325,9 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
     return <RbacMenuItem icon={icon} text={text} onClick={clickHandler} permission={permissionRequest} />
   }
 
-  return (
+  return row.original.userGroupDTO.harnessManaged ? (
+    <></>
+  ) : (
     <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
       <Popover
         isOpen={menuOpen}
@@ -373,10 +359,6 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
             handleDelete,
             getUserGroupMenuOptionText(getString('delete'), getString('rbac.group'), data, userGroupInherited)
           )}
-          {/* IMP TO VERIFY */}
-          {data.externallyManaged && !userGroupInherited ? (
-            <MenuItem icon="duplicate" text={getString('common.copy')} onClick={handleCopyUserGroup} />
-          ) : undefined}
         </Menu>
       </Popover>
     </Layout.Horizontal>
@@ -387,7 +369,7 @@ const UserGroupsListView: React.FC<UserGroupsListViewProps> = props => {
   const { data, gotoPage, reload, openRoleAssignmentModal, openUserGroupModal } = props
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
   const history = useHistory()
   const columns: Column<UserGroupAggregateDTO>[] = useMemo(
     () => [

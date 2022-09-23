@@ -39,7 +39,7 @@ export type NotificationConditions = StepProps<SRMNotification> & {
 export interface NotificationRule {
   id: string
   condition: SelectOption | null
-  changeType?: MultiSelectOption[]
+  changeType?: MultiSelectOption[] | SelectOption
   duration?: string | SelectOption
   lookBackDuration?: string | SelectOption
   value?: string | SelectOption

@@ -6,28 +6,42 @@
  */
 
 import React from 'react'
-import { Color } from '@harness/design-system'
-import { Template, TemplateProps } from '@templates-library/components/AbstractTemplate/Template'
-import { TemplateType } from '@templates-library/utils/templatesUtils'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
+import type { IconName } from '@wings-software/uicore'
+import { Template } from '@templates-library/components/AbstractTemplate/Template'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
+import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
+import MonitoredServiceInputSetsTemplate from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { MonitoredTemplateCanvasWithRef } from './MonitoredServiceTemplateCanvas'
 
-export class MonitoredServiceTemplate extends Template<NGTemplateInfoConfig> {
+export class MonitoredServiceTemplate extends Template {
+  protected label = 'Monitored Service'
   protected type = TemplateType.MonitoredService
-  protected name = 'Monitored Service Template'
-  protected color = Color.TEAL_700
+  protected icon: IconName = 'cv-main'
+  protected allowedScopes = [Scope.PROJECT]
+  protected colorMap = {
+    color: '#06B7C3',
+    stroke: '#D4E7D1',
+    fill: '#E4F7E1'
+  }
+  protected isRemoteEnabled = false
+  protected allowedUsage = [TemplateUsage.USE]
 
-  protected defaultValues: NGTemplateInfoConfig = {
-    name: 'Template name',
-    identifier: 'Template_name',
-    versionLabel: '',
-    type: 'MonitoredService'
+  renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
+    return <MonitoredTemplateCanvasWithRef ref={formikRef} />
   }
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
-    const { formikRef } = props
-    return <MonitoredTemplateCanvasWithRef ref={formikRef as any} />
+  renderTemplateInputsForm(props: TemplateInputsProps & { accountId: string }): JSX.Element {
+    const { template, accountId } = props
+    const { identifier = '', orgIdentifier = '', projectIdentifier = '', versionLabel = '' } = template
+    const templateData = {
+      accountId,
+      identifier,
+      orgIdentifier,
+      projectIdentifier,
+      versionLabel
+    }
+    return <MonitoredServiceInputSetsTemplate templateData={templateData} />
   }
 }

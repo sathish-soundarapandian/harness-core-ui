@@ -13,6 +13,7 @@ declare const styles: {
   readonly emptyViewCard: string
   readonly emptyViewItem: string
   readonly main: string
+  readonly marginBottom2: string
   readonly marginBottom4: string
   readonly rangeSelectorHeader: string
 }

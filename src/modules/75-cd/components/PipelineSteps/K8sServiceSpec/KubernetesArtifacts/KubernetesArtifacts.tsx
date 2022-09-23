@@ -9,6 +9,7 @@ import React from 'react'
 import type { KubernetesArtifactsProps } from '../K8sServiceSpecInterface'
 import { KubernetesPrimaryArtifacts } from './KubernetesPrimaryArtifacts/KubernetesPrimaryArtifacts'
 import { KubernetesSidecarArtifacts } from './KubernetesSidecarArtifacts/KubernetesSidecarArtifacts'
+import { PrimaryArtifactSource } from './PrimaryArtifactSource/PrimaryArtifactSource'
 
 export const KubernetesArtifacts: React.FC<KubernetesArtifactsProps> = props => {
   const commonProps = {
@@ -17,6 +18,7 @@ export const KubernetesArtifacts: React.FC<KubernetesArtifactsProps> = props => 
     artifactSourceBaseFactory: props.artifactSourceBaseFactory,
     stepViewType: props.stepViewType,
     stageIdentifier: props.stageIdentifier,
+    serviceIdentifier: props.serviceIdentifier,
     formik: props.formik,
     path: props.path,
     initialValues: props.initialValues,
@@ -27,7 +29,11 @@ export const KubernetesArtifacts: React.FC<KubernetesArtifactsProps> = props => 
   }
   return (
     <>
-      <KubernetesPrimaryArtifacts type={props.type} {...commonProps} />
+      {props.type ? (
+        <KubernetesPrimaryArtifacts type={props.type} {...commonProps} />
+      ) : (
+        <PrimaryArtifactSource {...commonProps} />
+      )}
       <KubernetesSidecarArtifacts {...commonProps} />
     </>
   )

@@ -20,7 +20,7 @@ export interface TargetAttributesProps {
 
 function formatAttributeValue(getString: UseStringsReturn['getString'], value: boolean | string): string {
   if (typeof value === 'boolean') {
-    return value ? getString('cf.shared.true') : getString('cf.shared.false')
+    return value ? getString('common.true') : getString('common.false')
   }
 
   return value

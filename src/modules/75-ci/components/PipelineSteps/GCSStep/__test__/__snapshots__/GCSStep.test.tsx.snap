@@ -21,7 +21,7 @@ exports[`GCS Step Edit View edit mode works 1`] = `
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="ciGcsStep_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -128,7 +128,7 @@ exports[`GCS Step Edit View edit mode works 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -484,7 +484,7 @@ exports[`GCS Step Edit View renders runtime inputs 1`] = `
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="ciGcsStep_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -591,7 +591,7 @@ exports[`GCS Step Edit View renders runtime inputs 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -991,7 +991,7 @@ exports[`GCS Step Edit View should render edit view as new step 1`] = `
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="ciGcsStep_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -1096,7 +1096,7 @@ exports[`GCS Step Edit View should render edit view as new step 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -1438,7 +1438,7 @@ exports[`GCS Step InputSet View InputSet View should render all fields 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -2130,6 +2130,25 @@ exports[`GCS Step InputVariable View should render properly 1`] = `
   <div
     class="variablesListTable"
   >
+    <div
+      class="variableListRow variable-list-row"
+    >
+      <span
+        class="nameSection"
+      >
+        identifier
+      </span>
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
+        style="--text-line-clamp: 1;"
+      >
+        <span
+          class=""
+        >
+          Test_A
+        </span>
+      </p>
+    </div>
     <div
       class="variableListRow variable-list-row"
     >

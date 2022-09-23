@@ -88,11 +88,15 @@ exports[`BuildCommits snapshot test should render properly 1`] = `
                       </span>
                     </span>
                   </div>
-                  <p
-                    class="StyledProps--font StyledProps--main"
+                  <div
+                    class="userDetails"
                   >
-                    userid
-                  </p>
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      userid
+                    </p>
+                  </div>
                 </div>
               </span>
             </span>
@@ -219,11 +223,15 @@ exports[`BuildCommits snapshot test should render properly 1`] = `
                       </span>
                     </span>
                   </div>
-                  <p
-                    class="StyledProps--font StyledProps--main"
+                  <div
+                    class="userDetails"
                   >
-                    userid
-                  </p>
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      userid
+                    </p>
+                  </div>
                 </div>
               </span>
             </span>

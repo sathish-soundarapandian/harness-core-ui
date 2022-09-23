@@ -389,7 +389,7 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
         role="tabpanel"
       >
         <div
-          class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
+          class="StyledProps--font StyledProps--main PageBody--pageBody"
           data-name="page-body"
         >
           <div
@@ -450,7 +450,7 @@ exports[`Test cases for CVSLODetailsPage it should render the component with cor
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny-semi StyledProps--color StyledProps--color-grey400"
                   >
-                    cv.healthScore
+                    pipeline.verification.healthSourceLabel
                   </p>
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-small-bold StyledProps--color StyledProps--color-grey800"

@@ -10,6 +10,7 @@
   display: grid;
   grid-template-columns: minmax(500px, 1fr) 1fr;
   overflow: hidden !important;
+  overflow-y: auto !important;
 
   .tableContent {
     position: relative;
@@ -76,4 +77,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.logCountsDetail {
+  margin-bottom: var(--spacing-small);
+  flex-wrap: wrap;
 }

@@ -6,13 +6,13 @@
  */
 
 import React from 'react'
-import { getByText, render } from '@testing-library/react'
+import { findByText, render } from '@testing-library/react'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import * as hooksMock from '@common/hooks'
-import dataPipeline from '@pipeline/pages/pipeline-deployment-list/__tests__/execution-list.json'
-import pipelines from '@pipeline/components/PipelineModalListView/__tests__/RunPipelineListViewMocks'
-import filters from '@pipeline/pages/pipeline-deployment-list/__tests__/filters.json'
+import executionList from '@pipeline/pages/execution-list/__tests__/mocks/execution-list.json'
+import pipelines from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-list.json'
+import filters from '@pipeline/pages/execution-list/__tests__/mocks/filters.json'
 import CDDashboardPage from '../CDDashboardPage'
 import { deploymentExecutionMock, deploymentHealthMock, deploymentsMock, workloadsMock } from './mocks'
 
@@ -51,13 +51,13 @@ const mockGetCallFunction = jest.fn()
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
   useMutateAsGet: jest.fn().mockImplementation(() => {
-    return { data: dataPipeline, refetch: jest.fn(), error: null, loading: false }
+    return { data: executionList, refetch: jest.fn(), error: null, loading: false }
   })
 }))
 
 jest.mock('services/pipeline-ng', () => ({
   useGetListOfExecutions: jest.fn(() => ({
-    mutate: jest.fn(() => Promise.resolve([dataPipeline])),
+    mutate: jest.fn(() => Promise.resolve([executionList])),
     loading: false,
     cancel: jest.fn()
   })),
@@ -106,10 +106,10 @@ describe('CDDashboardPage snapshot test', () => {
 
     // modal should open saying run pipeline
     const dailog = findDialogContainer()
-    expect(getByText(dailog!, 'pipeline.runAPipeline')).toBeDefined()
+    expect(findByText(dailog!, 'pipeline.runAPipeline')).toBeDefined()
 
     //bgImage should be applied
-    expect(container.querySelector('div[style*="background-image: url(test-file-stub)"')).toBeDefined()
+    expect(container.querySelector('div[style*="background-image: url(test-file-stub)"]')).toBeDefined()
   })
 
   test('if loading true', () => {
@@ -121,14 +121,14 @@ describe('CDDashboardPage snapshot test', () => {
         loading: true
       }
     })
-    const { container } = render(
+    const { getByText, container } = render(
       <TestWrapper defaultAppStoreValues={defaultAppStoreValues}>
         <CDDashboardPage />
       </TestWrapper>
     )
 
     //loading icon and text should be visible
-    expect(container.querySelector('[data-icon="steps-spinner"]'))
-    expect(getByText(container, 'Loading, please wait...'))
+    expect(container.querySelector('[data-icon="steps-spinner"]')).toBeDefined()
+    expect(getByText('Loading, please wait...')).toBeDefined()
   })
 })

@@ -38,7 +38,6 @@ describe('Resource Scope Form ', () => {
           orgIdentifier: 'testOrg',
           resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
         }}
-        defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
       >
         <ResourceScopeForm scopes={[]} onSubmit={onSubmit} onCancel={jest.fn()} />
       </TestWrapper>
@@ -47,92 +46,6 @@ describe('Resource Scope Form ', () => {
   afterEach(() => {
     renderObj.unmount()
     jest.resetAllMocks()
-  })
-  test('render data', async () => {
-    const { container } = render(
-      <TestWrapper
-        path={routes.toResourceGroupDetails({ ...accountPathProps, ...orgPathProps, ...resourceGroupPathProps })}
-        pathParams={{
-          accountId: 'dummy',
-          orgIdentifier: 'testOrg',
-          resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
-        }}
-        defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
-      >
-        <ResourceScopeForm scopes={[]} onSubmit={onSubmit} onCancel={jest.fn()} />
-      </TestWrapper>
-    )
-    const scope = getByText(container, 'rbac.scopeItems.orgOnly')
-    act(() => {
-      fireEvent.click(scope)
-    })
-
-    const customScope = getByText(container, 'rbac.scopeItems.orgAll')
-    act(() => {
-      fireEvent.click(customScope)
-    })
-    act(() => {
-      fireEvent.click(getByText(container, 'common.apply'))
-    })
-    expect(onSubmit).toHaveBeenCalledWith([
-      {
-        accountIdentifier: 'dummy',
-        filter: 'INCLUDING_CHILD_SCOPES',
-        orgIdentifier: 'testOrg'
-      }
-    ])
-  })
-  test('custom scope', async () => {
-    useGetProjectListMock.mockImplementation(() => {
-      return { data: { data: { content: projectMockData } }, refetch: jest.fn(), error: null }
-    })
-    const { container } = render(
-      <TestWrapper
-        path={routes.toResourceGroupDetails({ ...accountPathProps, ...orgPathProps, ...resourceGroupPathProps })}
-        pathParams={{
-          accountId: 'dummy',
-          orgIdentifier: 'testOrg',
-          resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
-        }}
-        defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
-      >
-        <ResourceScopeForm
-          scopes={[
-            {
-              filter: 'EXCLUDING_CHILD_SCOPES',
-              accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
-              orgIdentifier: 'testOrg',
-              projectIdentifier: 'fdfder32432'
-            }
-          ]}
-          onSubmit={onSubmit}
-          onCancel={jest.fn()}
-        />
-      </TestWrapper>
-    )
-
-    const includeCurrentScope = getByText(container, 'rbac.resourceScope.includeOrgResources')
-    act(() => {
-      fireEvent.click(includeCurrentScope)
-    })
-
-    act(() => {
-      fireEvent.click(getByText(container, 'common.apply'))
-    })
-
-    expect(onSubmit).toHaveBeenCalledWith([
-      {
-        accountIdentifier: 'dummy',
-        filter: 'EXCLUDING_CHILD_SCOPES',
-        orgIdentifier: 'testOrg'
-      },
-      {
-        accountIdentifier: 'kmpySmUISimoRrJL6NL73w',
-        filter: 'EXCLUDING_CHILD_SCOPES',
-        orgIdentifier: 'testOrg',
-        projectIdentifier: 'fdfder32432'
-      }
-    ])
   })
   test('custom scope at account', async () => {
     useGetProjectListMock.mockImplementation(() => {
@@ -148,7 +61,6 @@ describe('Resource Scope Form ', () => {
           accountId: 'dummy',
           resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
         }}
-        defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
       >
         <ResourceScopeForm
           scopes={[
@@ -173,11 +85,6 @@ describe('Resource Scope Form ', () => {
     const includeCurrentScope = getByText(container, 'rbac.resourceScope.includeAccResources')
     act(() => {
       fireEvent.click(includeCurrentScope)
-    })
-
-    const addOrgs = getByText(container, 'rbac.resourceScope.selectOrgsandProjects')
-    act(() => {
-      fireEvent.click(addOrgs)
     })
 
     const selectOrg = getByText(container, 'Select')

@@ -7,8 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly body: string
+  readonly buttonWrapper: string
   readonly dialogStyles: string
+  readonly modalFooter: string
   readonly nameIdCard: string
   readonly tagsPopover: string
+  readonly yamlBuilder: string
 }
 export default styles

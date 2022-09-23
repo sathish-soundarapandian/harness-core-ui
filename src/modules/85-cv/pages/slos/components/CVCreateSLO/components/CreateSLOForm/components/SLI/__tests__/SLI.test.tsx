@@ -20,9 +20,15 @@ import {
   getMonitoredServiceOptions
 } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.utils'
 import { getSLIMetricOptions, getSLITypeOptions } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.constants'
-import type { MonitoredServiceDTO } from 'services/cv'
+import type { MonitoredServiceDTO, ResponsePageMSDropdownResponse } from 'services/cv'
+import { getMonitoredServicesOptions } from '../SLI.utils'
 import SLI from '../SLI'
-import { expectedMonitoredServiceOptions, mockedMonitoredService, mockedMonitoredServiceData } from './SLI.mock'
+import {
+  expectedMonitoredServiceOptions,
+  mockedMonitoredService,
+  mockedMonitoredServiceData,
+  mockedMonitoredServiceDataWithNullData
+} from './SLI.mock'
 
 jest.mock('@cv/pages/slos/components/SLOTargetChart/SLOTargetChart', () => ({
   __esModule: true,
@@ -57,7 +63,7 @@ jest.mock('services/cv', () => ({
     error: null,
     refetch: jest.fn()
   })),
-  useGetAllMonitoredServicesWithTimeSeriesHealthSources: jest.fn().mockImplementation(() => {
+  useGetSLOAssociatedMonitoredServices: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   }),
   useGetSloMetrics: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
@@ -81,6 +87,13 @@ describe('Test SLI component', () => {
   test('verify getMonitoredServicesOptions method', async () => {
     const actualMonitoredServiceOptions = getMonitoredServiceOptions(mockedMonitoredServiceData.data)
     expect(actualMonitoredServiceOptions).toEqual(expectedMonitoredServiceOptions)
+  })
+
+  test('verify getMonitoredServicesOptions method when null monitored service is passed', async () => {
+    const actualMonitoredServiceOptions = getMonitoredServicesOptions(
+      mockedMonitoredServiceDataWithNullData as ResponsePageMSDropdownResponse | null
+    )
+    expect(actualMonitoredServiceOptions).toEqual([])
   })
 
   test('verify healthSourcesOptions method', async () => {

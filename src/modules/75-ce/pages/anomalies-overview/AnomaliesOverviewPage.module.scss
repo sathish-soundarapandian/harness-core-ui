@@ -58,7 +58,7 @@
 }
 
 .noResultsContainer {
-  height: calc(100vh - 400px);
+  height: calc(var(--page-min-height) - 400px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,4 +83,8 @@
   border-right: 1px solid var(--grey-300);
   padding-left: var(--spacing-medium) !important;
   margin-right: var(--spacing-medium) !important;
+}
+
+.permissionErrorWrapper {
+  height: calc(var(--page-min-height) - 138px);
 }

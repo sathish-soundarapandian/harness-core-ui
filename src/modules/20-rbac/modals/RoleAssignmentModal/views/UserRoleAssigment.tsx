@@ -32,14 +32,13 @@ import {
   getScopeBasedDefaultAssignment,
   InvitationStatus,
   isNewRoleAssignment,
-  isAccountBasicRole,
-  isAccountBasicRolePresent
+  isAccountBasicRole
 } from '@rbac/utils/utils'
 import { getIdentifierFromValue, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
-import { isCommunityPlan } from '@common/utils/utils'
+import { useGetCommunity } from '@common/utils/utils'
 import UserItemRenderer from '@audit-trail/components/UserItemRenderer/UserItemRenderer'
 import UserTagRenderer from '@audit-trail/components/UserTagRenderer/UserTagRenderer'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -91,7 +90,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
   const { ACCOUNT_BASIC_ROLE } = useFeatureFlags()
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
   const [query, setQuery] = useState<string>()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
@@ -154,12 +153,7 @@ const UserRoleAssignment: React.FC<UserRoleAssignmentData> = props => {
       }
       return acc
     }, []),
-    getScopeBasedDefaultAssignment(
-      scope,
-      getString,
-      isCommunity,
-      isAccountBasicRolePresent(scope, !!ACCOUNT_BASIC_ROLE)
-    )
+    getScopeBasedDefaultAssignment(scope, getString, isCommunity, !!ACCOUNT_BASIC_ROLE)
   )
 
   const handleRoleAssignment = async (values: UserRoleAssignmentValues): Promise<void> => {

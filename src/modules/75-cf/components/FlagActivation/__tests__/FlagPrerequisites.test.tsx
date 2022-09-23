@@ -6,29 +6,30 @@
  */
 
 import React from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
+import { getByTestId, getByText, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-
+import * as ffServices from 'services/cf'
 import { TestWrapper } from '@common/utils/testUtils'
-
 import mockFeature from '@cf/utils/testData/data/mockFeature'
+import mockFeatureFlags from '@cf/pages/feature-flags/__tests__/mockFeatureFlags'
 import mockGitSync from '@cf/utils/testData/data/mockGitSync'
 import { FlagPrerequisites } from '../FlagPrerequisites'
 
-jest.mock('services/cf', () => ({
-  useGetAllFeatures: jest.fn().mockReturnValue({ data: [], loading: false }),
-  usePatchFeature: jest.fn().mockReturnValue({ mutate: jest.fn(), loading: false })
-}))
-
-jest.mock('@cf/hooks/useEnvironmentSelectV2', () => ({
-  useEnvironmentSelectV2: jest.fn().mockReturnValue({ data: [], loading: false })
-}))
+const mockFeatures = {
+  ...mockFeatureFlags,
+  features: [...mockFeatureFlags.features.slice(-3)]
+}
 
 const renderComponent = (): void => {
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
-      pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      pathParams={{
+        accountId: 'dummy',
+        orgIdentifier: 'dummy',
+        projectIdentifier: 'dummy',
+        environmentIdentifier: 'Mock_Environment'
+      }}
     >
       <FlagPrerequisites
         gitSync={mockGitSync}
@@ -41,77 +42,128 @@ const renderComponent = (): void => {
 }
 
 describe('FlagPrerequisites', () => {
+  beforeEach(() => {
+    jest.spyOn(ffServices, 'useGetAllFeatures').mockReturnValue({
+      data: mockFeatures,
+      loading: false,
+      error: null,
+      refetch: jest.fn()
+    } as any)
+  })
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('it should render correctly', async () => {
     renderComponent()
     await waitFor(() => {
-      expect(screen.getByText('cf.shared.prerequisites')).toBeInTheDocument()
-      expect(screen.getByText('cf.featureFlags.prerequisitesDesc')).toBeInTheDocument()
-      expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeInTheDocument()
+      expect(screen.getByText('cf.shared.prerequisites')).toBeVisible()
+      expect(screen.getByText('cf.featureFlags.prerequisitesDesc')).toBeVisible()
+      expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeVisible()
     })
 
     userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
 
-    await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeInTheDocument())
-
+    const modal = screen.getByTestId('flag-prerequisite-modal')
+    await waitFor(() => {
+      expect(modal).toBeVisible()
+      expect(getByText(modal, 'cf.addPrerequisites.addPrerequisitesHeading')).toBeVisible()
+    })
     expect(screen.getByTestId('flag-prerequisite-modal')).toMatchSnapshot()
   })
 
   test('form should render when adding prerequisite', async () => {
     renderComponent()
+
     await waitFor(() => {
-      expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeVisible()
     })
 
     userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
 
-    await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeVisible())
 
     userEvent.click(screen.getByTestId('prerequisites-button'))
 
-    await waitFor(() => expect(screen.getByTestId('prerequisites-form')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByTestId('prerequisites-form')).toBeVisible())
   })
 
   test('it should render feature flags in dropdown', async () => {
     renderComponent()
     await waitFor(() => {
-      expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeInTheDocument()
+      expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeVisible()
     })
 
     userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
-    await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeVisible())
     userEvent.click(screen.getByTestId('prerequisites-button'))
 
-    await waitFor(() => expect(screen.getByTestId('prerequisites-form')).toBeInTheDocument())
+    await waitFor(() => expect(screen.getByTestId('prerequisites-form')).toBeVisible())
 
-    expect(screen.getByTestId('prerequisites-variations-dropdown-0')).toBeInTheDocument()
+    expect(screen.getByTestId('prerequisites-variations-dropdown-0')).toBeVisible()
     userEvent.click(screen.getByTestId('prerequisites-dropdown-0'))
     mockFeature.prerequisites?.forEach(prerequisite => {
-      expect(screen.getByText(prerequisite.feature)).toBeInTheDocument()
+      expect(screen.getByText(prerequisite.feature)).toBeVisible()
     })
   })
 
-  test('its should render variation when feature flag is selected', async () => {
+  test('It should render the modal & form when Edit prerequisites is clicked', async () => {
     renderComponent()
+
+    const rows = screen.getAllByTestId('prerequisiteItem')
+    expect(rows).toHaveLength(3)
+
+    // click first row menu button
+    const btn = getByTestId(rows[0], 'prerequisiteMenuBtn')
+    userEvent.click(btn)
+
+    // wait for popover menu & elements to be visible (not just in document)
     await waitFor(() => {
-      expect(screen.getByText('cf.featureFlags.newPrerequisite')).toBeInTheDocument()
+      expect(screen.getByRole('link', { name: /edit/ })).toBeVisible()
+      expect(screen.getByRole('link', { name: /delete/ })).toBeVisible()
     })
 
-    userEvent.click(screen.getByText('cf.featureFlags.newPrerequisite'))
-    await waitFor(() => expect(screen.getByTestId('flag-prerequisite-modal')).toBeInTheDocument())
-    userEvent.click(screen.getByTestId('prerequisites-button'))
+    // click 'Edit'
+    userEvent.click(screen.getByRole('link', { name: /edit/ }))
+
+    // check modal, form & add prereq button is visible, and title is correct
+    const modal = screen.getByTestId('flag-prerequisite-modal')
+    expect(modal).toBeVisible()
+    expect(getByText(modal, 'cf.addPrerequisites.editPrerequisitesHeading')).toBeVisible()
+    expect(getByTestId(modal, 'prerequisites-form')).toBeVisible()
+    expect(getByTestId(modal, 'prerequisites-button')).toBeVisible()
+  })
+
+  test('It should populate the form inputs with the correct values', async () => {
+    renderComponent()
+
+    const rows = screen.getAllByTestId('prerequisiteItem')
+    const btn = getByTestId(rows[0], 'prerequisiteMenuBtn')
+
+    expect(rows[0].querySelectorAll('p')[0]).toHaveTextContent('Test_Paging_Flag')
+
+    // click first row menu button, then click Edit
+    userEvent.click(btn)
+    userEvent.click(screen.getByRole('link', { name: /edit/ }))
 
     await waitFor(() => {
-      expect(screen.getByTestId('prerequisites-form')).toBeInTheDocument()
-      expect(screen.getByTestId('prerequisites-dropdown-0')).toBeInTheDocument()
-      expect(screen.getByTestId('prerequisites-variations-dropdown-0')).toBeInTheDocument()
-    })
+      // check modal is visible & title correct
+      const modal = screen.getByTestId('flag-prerequisite-modal')
+      expect(modal).toBeVisible()
+      expect(getByText(modal, 'cf.addPrerequisites.editPrerequisitesHeading')).toBeVisible()
+      expect(getByTestId(modal, 'prerequisites-form')).toBeVisible()
 
-    mockFeature.prerequisites?.forEach(prerequisite => {
-      userEvent.click(screen.getByTestId('prerequisites-dropdown-0'))
-      userEvent.dblClick(screen.getByText(prerequisite.feature))
+      // first row
+      expect(getByTestId(modal, 'prerequisites-dropdown-0').querySelector('input')).toHaveValue('Test Paging Flag')
+      expect(getByTestId(modal, 'prerequisites-variations-dropdown-0').querySelector('input')).toHaveValue('False')
 
-      userEvent.click(screen.getByTestId('prerequisites-variations-dropdown-0'))
-      expect(screen.getByText('cf.featureFlags.false')).toBeInTheDocument()
+      // second row
+      expect(getByTestId(modal, 'prerequisites-dropdown-1').querySelector('input')).toHaveValue('X Flag 11')
+      expect(getByTestId(modal, 'prerequisites-variations-dropdown-1').querySelector('input')).toHaveValue('False')
+
+      // third row
+      expect(getByTestId(modal, 'prerequisites-dropdown-2').querySelector('input')).toHaveValue('X Flag 10')
+      expect(getByTestId(modal, 'prerequisites-variations-dropdown-2').querySelector('input')).toHaveValue('True')
     })
   })
 })

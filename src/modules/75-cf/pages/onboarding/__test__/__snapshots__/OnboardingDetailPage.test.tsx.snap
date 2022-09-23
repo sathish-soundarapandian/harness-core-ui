@@ -7,13 +7,12 @@ exports[`OnboardingDetailPage CreateAFlagView 1`] = `
     style="height: 100%;"
   >
     <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"
+      class="StyledProps--font StyledProps--main container"
       style="overflow: auto; width: calc(100% - 765px); height: calc(100vh - 140px);"
     >
       <h2
-        class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--padding-bottom-xxlarge"
+        class="StyledProps--font StyledProps--font-h2 StyledProps--main letsStartHeading"
         level="2"
-        style="font-weight: 600; font-size: 20px; line-height: 28px; color: rgb(34, 34, 42);"
       >
         cf.onboarding.letsStart
       </h2>
@@ -22,7 +21,7 @@ exports[`OnboardingDetailPage CreateAFlagView 1`] = `
         style="width: 400px;"
       >
         <p
-          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+          class="StyledProps--font StyledProps--main inputLabel StyledProps--color StyledProps--color-black"
         >
           cf.onboarding.inputLabel
         </p>
@@ -102,7 +101,7 @@ exports[`OnboardingDetailPage CreateAFlagView 1`] = `
           >
             <a
               class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--link"
-              href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_4_create_a_flag_type"
+              href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_4_create_a_flag_type"
               rel="noreferrer noopener"
               role="button"
               tabindex="0"
@@ -129,8 +128,8 @@ exports[`OnboardingDetailPage OnboardingDetailPage empty state should be rendere
     style="height: 100%;"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--padding-large"
-      style="background: rgb(248, 251, 254); border: 1px solid #e7e7e7; height: 40px;"
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main containerLayout StyledProps--flex"
+      style="height: 40px;"
     >
       <a
         href="/account/dummy/cf/orgs/dummy/projects/dummy/onboarding"
@@ -189,7 +188,7 @@ exports[`OnboardingDetailPage OnboardingDetailPage empty state should be rendere
             <p
               class="StyledProps--font StyledProps--main"
             >
-              cf.onboarding.createAFlag
+              cf.onboarding.oneCreateAFlag
             </p>
           </div>
           <span
@@ -277,13 +276,12 @@ exports[`OnboardingDetailPage OnboardingDetailPage empty state should be rendere
             style="height: 100%;"
           >
             <div
-              class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"
+              class="StyledProps--font StyledProps--main container"
               style="overflow: auto; width: calc(100% - 765px); height: calc(100vh - 140px);"
             >
               <h2
-                class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--padding-bottom-xxlarge"
+                class="StyledProps--font StyledProps--font-h2 StyledProps--main letsStartHeading"
                 level="2"
-                style="font-weight: 600; font-size: 20px; line-height: 28px; color: rgb(34, 34, 42);"
               >
                 cf.onboarding.letsStart
               </h2>
@@ -292,7 +290,7 @@ exports[`OnboardingDetailPage OnboardingDetailPage empty state should be rendere
                 style="width: 400px;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main inputLabel StyledProps--color StyledProps--color-black"
                 >
                   cf.onboarding.inputLabel
                 </p>
@@ -344,7 +342,7 @@ exports[`OnboardingDetailPage OnboardingDetailPage empty state should be rendere
                   >
                     <a
                       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--link"
-                      href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_4_create_a_flag_type"
+                      href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_4_create_a_flag_type"
                       rel="noreferrer noopener"
                       role="button"
                       tabindex="0"
@@ -511,21 +509,19 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
     style="height: 100%;"
   >
     <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"
-      style="overflow: auto; width: calc(100% - 400px); height: calc(100vh - 140px);"
+      class="StyledProps--font StyledProps--main container"
+      style="width: calc(100% - 400px); height: calc(100vh - 140px);"
     >
       <span
-        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-black StyledProps--padding-top-xsmall StyledProps--padding-bottom-xsmall StyledProps--padding-left-small StyledProps--padding-right-small"
-        style="background: rgb(243, 243, 250); border-radius: 4px;"
+        class="StyledProps--font StyledProps--main successLabel StyledProps--inline StyledProps--color StyledProps--color-black"
       >
         <span>
           cf.onboarding.successLabel
         </span>
       </span>
       <h2
-        class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--padding-top-xlarge StyledProps--padding-bottom-xlarge"
+        class="StyledProps--font StyledProps--font-h2 StyledProps--main setUpLabel"
         level="2"
-        style="font-weight: 600; font-size: 20px; line-height: 28px; color: rgb(34, 34, 42);"
       >
         cf.onboarding.setupLabel
       </h2>
@@ -536,14 +532,12 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
           class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
         >
           <p
-            class="StyledProps--font StyledProps--main"
-            style="font-weight: 600; font-size: 16px; color: rgb(34, 34, 42);"
+            class="StyledProps--font StyledProps--main selectLanguage"
           >
             cf.onboarding.selectLanguage
           </p>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-large"
-            style="background: rgb(250, 251, 252);"
+            class="StyledProps--font StyledProps--main languageSelectionContainer"
           >
             <ul
               class="list"
@@ -751,14 +745,12 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
           class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
         >
           <p
-            class="StyledProps--font StyledProps--main"
-            style="font-weight: 600; font-size: 16px; color: rgb(34, 34, 42);"
+            class="StyledProps--font StyledProps--main selectEnvironment"
           >
             cf.onboarding.selectEnvironment
           </p>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-large"
-            style="background: rgb(250, 251, 252);"
+            class="StyledProps--font StyledProps--main environmentContainer"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -799,14 +791,12 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
           class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
         >
           <p
-            class="StyledProps--font StyledProps--main"
-            style="font-weight: 600; font-size: 16px; color: rgb(34, 34, 42);"
+            class="StyledProps--font StyledProps--main setUpYourCode"
           >
             cf.onboarding.setUpYourCode
           </p>
           <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-large"
-            style="padding-top: 0px;"
+            class="StyledProps--font StyledProps--main setUpYourCodeContainer"
           >
             <div
               class="StyledProps--font StyledProps--main"
@@ -825,16 +815,15 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
       </div>
     </div>
     <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-      style="box-shadow: -8px 0 10px -5px rgb(96 97 112 / 16%); position: fixed; top: 90px; right: 0px; bottom: 60px; z-index: 0; width: 400px;"
+      class="StyledProps--font StyledProps--main container"
+      style="width: 400px;"
     >
       <div
         class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main"
       >
         <h2
-          class="StyledProps--font StyledProps--font-h2 StyledProps--main"
+          class="StyledProps--font StyledProps--font-h2 StyledProps--main heading"
           level="2"
-          style="font-weight: 500; color: rgb(34, 34, 42);"
         >
           cf.onboarding.help.heading1
         </h2>
@@ -845,27 +834,24 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
           width="248"
         />
         <p
-          class="StyledProps--font StyledProps--main"
-          style="line-height: 20px; color: rgb(107, 109, 133);"
+          class="StyledProps--font StyledProps--main text"
         >
           cf.onboarding.help.text1
         </p>
         <h2
-          class="StyledProps--font StyledProps--font-h2 StyledProps--main"
+          class="StyledProps--font StyledProps--font-h2 StyledProps--main heading"
           level="2"
-          style="font-weight: 500; color: rgb(34, 34, 42);"
         >
           cf.onboarding.help.heading2
         </h2>
         <img
+          class="img"
           height="134"
           src="test-file-stub"
-          style="align-self: center;"
           width="180"
         />
         <p
-          class="StyledProps--font StyledProps--main"
-          style="line-height: 20px; color: rgb(107, 109, 133);"
+          class="StyledProps--font StyledProps--main text"
         >
           cf.onboarding.help.text2
         </p>
@@ -874,7 +860,7 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
         >
           <a
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--link"
-            href="https://ngdocs.harness.io/article/rvqprvbq8f-client-side-and-server-side-sdks"
+            href="https://docs.harness.io/article/rvqprvbq8f-client-side-and-server-side-sdks"
             rel="noreferrer noopener"
             role="button"
             tabindex="0"
@@ -900,8 +886,8 @@ exports[`OnboardingDetailPage Should be able to create a flag 1`] = `
     style="height: 100%;"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--padding-large"
-      style="background: rgb(248, 251, 254); border: 1px solid #e7e7e7; height: 40px;"
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main containerLayout StyledProps--flex"
+      style="height: 40px;"
     >
       <a
         href="/account/dummy/cf/orgs/dummy/projects/dummy/onboarding"
@@ -960,7 +946,7 @@ exports[`OnboardingDetailPage Should be able to create a flag 1`] = `
             <p
               class="StyledProps--font StyledProps--main"
             >
-              cf.onboarding.createAFlag
+              cf.onboarding.oneCreateAFlag
             </p>
           </div>
           <span
@@ -1049,13 +1035,12 @@ exports[`OnboardingDetailPage Should be able to create a flag 1`] = `
             style="height: 100%;"
           >
             <div
-              class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"
+              class="StyledProps--font StyledProps--main container"
               style="overflow: auto; width: calc(100% - 765px); height: calc(100vh - 140px);"
             >
               <h2
-                class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--padding-bottom-xxlarge"
+                class="StyledProps--font StyledProps--font-h2 StyledProps--main letsStartHeading"
                 level="2"
-                style="font-weight: 600; font-size: 20px; line-height: 28px; color: rgb(34, 34, 42);"
               >
                 cf.onboarding.letsStart
               </h2>
@@ -1064,7 +1049,7 @@ exports[`OnboardingDetailPage Should be able to create a flag 1`] = `
                 style="width: 400px;"
               >
                 <p
-                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+                  class="StyledProps--font StyledProps--main inputLabel StyledProps--color StyledProps--color-black"
                 >
                   cf.onboarding.inputLabel
                 </p>
@@ -1116,7 +1101,7 @@ exports[`OnboardingDetailPage Should be able to create a flag 1`] = `
                   >
                     <a
                       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--link"
-                      href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_4_create_a_flag_type"
+                      href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_4_create_a_flag_type"
                       rel="noreferrer noopener"
                       role="button"
                       tabindex="0"
@@ -1229,216 +1214,6 @@ exports[`OnboardingDetailPage Should be able to create a flag 1`] = `
       <span
         style="flex-grow: 1;"
       />
-    </div>
-  </div>
-</div>
-`;
-
-exports[`OnboardingDetailPage TestYourFlagViewView 1`] = `
-<div>
-  <div
-    class="StyledProps--font StyledProps--main"
-    style="height: 100%;"
-  >
-    <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xlarge"
-      style="overflow: auto; width: calc(100% - 765px); height: calc(100vh - 140px);"
-    >
-      <h2
-        class="StyledProps--font StyledProps--font-h2 StyledProps--main StyledProps--padding-bottom-medium"
-        level="2"
-        style="font-weight: 600; font-size: 20px; line-height: 28px; color: rgb(34, 34, 42);"
-      >
-        cf.onboarding.listenToEvent
-      </h2>
-      <p
-        class="StyledProps--font StyledProps--main"
-        style="color: rgb(34, 34, 42);"
-      >
-        cf.onboarding.toggleLabel
-      </p>
-      <div
-        class="StyledProps--font StyledProps--main StyledProps--margin-top-xlarge StyledProps--margin-bottom-xlarge StyledProps--padding-top-xlarge"
-        style="border: 1px solid #d9dae5; border-radius: 8px;"
-      >
-        <div
-          class="Layout--horizontal StyledProps--main StyledProps--padding-left-small StyledProps--padding-bottom-large"
-        >
-          <label
-            class="bp3-control bp3-switch bp3-align-right bp3-large"
-          >
-            <input
-              type="checkbox"
-            />
-            <span
-              class="bp3-control-indicator"
-            />
-          </label>
-          <div
-            class="StyledProps--font StyledProps--main StyledProps--padding-left-large"
-          >
-            <p
-              class="StyledProps--font StyledProps--main"
-              style="font-weight: 600; font-size: 13px; line-height: 20px; color: rgb(11, 11, 13); align-self: baseline;"
-            >
-              test-flag
-            </p>
-          </div>
-        </div>
-        <div
-          class="Layout--horizontal StyledProps--main StyledProps--padding-top-large StyledProps--padding-left-large StyledProps--padding-bottom-large"
-          style="align-items: center; background: rgb(243, 243, 250); border-top: 1px solid #D9DAE5;"
-        >
-          <span
-            class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
-            data-icon="steps-spinner"
-          >
-            <svg
-              height="24"
-              viewBox="0 0 128 128"
-              width="24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g>
-                <path
-                  d="M122.5 69.25H96.47a33.1 33.1 0 000-10.5h26.05a5.25 5.25 0 010 10.5z"
-                  fill="#ff8e02"
-                />
-                <path
-                  d="M112.04 97.83L89.47 84.8a33.1 33.1 0 005.25-9.1l22.57 13.03a5.25 5.25 0 01-5.28 9.1zM88.68 117.35L75.65 94.78a33.1 33.1 0 009.1-5.25l13.02 22.57a5.25 5.25 0 11-9.1 5.25zM58.7 122.57V96.5a33.1 33.1 0 0010.5 0v26.07a5.25 5.25 0 01-10.5 0zM30.1 112.1l13.04-22.57a33.1 33.1 0 009.1 5.25L39.2 117.35a5.25 5.25 0 11-9.1-5.25zM10.6 88.74L33.16 75.7a33.1 33.1 0 005.25 9.1L15.88 97.83a5.25 5.25 0 11-5.25-9.1z"
-                  fill="#ffddb3"
-                  fill-opacity="0.3"
-                />
-                <path
-                  d="M5.37 58.75h26.06a33.1 33.1 0 000 10.5H5.37a5.25 5.25 0 010-10.5z"
-                  fill="#ffd29a"
-                  fill-opacity="0.4"
-                />
-                <path
-                  d="M15.85 30.17L38.4 43.2a33.1 33.1 0 00-5.24 9.1L10.6 39.25a5.25 5.25 0 115.25-9.1z"
-                  fill="#ffc680"
-                  fill-opacity="0.5"
-                />
-                <path
-                  d="M39.2 10.65l13.03 22.57a33.1 33.1 0 00-9.1 5.25l-13-22.57a5.25 5.25 0 119.1-5.25z"
-                  fill="#ffbb67"
-                  fill-opacity="0.6"
-                />
-                <path
-                  d="M69.2 5.43V31.5a33.1 33.1 0 00-10.5 0V5.42a5.25 5.25 0 1110.5 0z"
-                  fill="#ffb04d"
-                  fill-opacity="0.7"
-                />
-                <path
-                  d="M97.77 15.9L84.75 38.47a33.1 33.1 0 00-9.1-5.25l13.03-22.57a5.25 5.25 0 119.1 5.25z"
-                  fill="#ffa535"
-                  fill-opacity="0.8"
-                />
-                <path
-                  d="M117.3 39.26L94.7 52.3a33.1 33.1 0 00-5.25-9.1l22.57-13.03a5.25 5.25 0 015.25 9.1z"
-                  fill="#ff991b"
-                  fill-opacity="0.9"
-                />
-                <animatetransform
-                  attributeName="transform"
-                  calcMode="discrete"
-                  dur="1200ms"
-                  repeatCount="indefinite"
-                  type="rotate"
-                  values="0 64 64;30 64 64;60 64 64;90 64 64;120 64 64;150 64 64;180 64 64;210 64 64;240 64 64;270 64 64;300 64 64;330 64 64"
-                />
-              </g>
-            </svg>
-          </span>
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--padding-left-medium"
-            style="font-size: 14px;"
-          >
-            cf.onboarding.listeningToEvent
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-      style="box-shadow: -8px 0 10px -5px rgb(96 97 112 / 16%); position: fixed; top: 90px; right: 400px; bottom: 60px; z-index: 0;"
-    >
-      <div
-        class="StyledProps--font StyledProps--main StyledProps--padding-large StyledProps--background-black"
-        style="border-radius: 8px; border: 1px solid #d9dae6; width: 300px; height: 150px;"
-      >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-mono StyledProps--color StyledProps--color-white"
-        >
-          <pre
-            style="margin: 0px;"
-          >
-            cf.onboarding.waitForConnect
-          </pre>
-        </p>
-      </div>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--margin-top-large"
-        style="width: 300px;"
-      >
-        cf.onboarding.behindTheSenes
-      </p>
-    </div>
-    <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-      style="box-shadow: -8px 0 10px -5px rgb(96 97 112 / 16%); position: fixed; top: 90px; right: 0px; bottom: 60px; z-index: 0; width: 400px;"
-    >
-      <div
-        class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main"
-      >
-        <h2
-          class="StyledProps--font StyledProps--font-h2 StyledProps--main"
-          level="2"
-          style="font-weight: 500; color: rgb(34, 34, 42);"
-        >
-          cf.onboarding.help.test.heading
-        </h2>
-        <img
-          height="163"
-          src="test-file-stub"
-          style="align-self: center;"
-          width="192"
-        />
-        <div
-          class="StyledProps--font StyledProps--main"
-        >
-          <p
-            class="StyledProps--font StyledProps--main"
-            style="line-height: 20px; color: rgb(107, 109, 133);"
-          >
-            cf.onboarding.help.test.text1
-          </p>
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
-            style="line-height: 20px; color: rgb(107, 109, 133);"
-          >
-            cf.onboarding.help.test.text2
-          </p>
-          <div
-            class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
-          >
-            <a
-              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--link"
-              href="https://ngdocs.harness.io/category/vjolt35atg-feature-flags"
-              rel="noreferrer noopener"
-              role="button"
-              tabindex="0"
-              target="_blank"
-            >
-              <span
-                class="bp3-button-text"
-              >
-                cf.onboarding.help.test.readmore
-              </span>
-            </a>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>

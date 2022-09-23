@@ -27,6 +27,7 @@ import PermissionCard from '@rbac/components/PermissionCard/PermissionCard'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 import { getPermissionMap, onPermissionChange } from '@rbac/pages/RoleDetails/utils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 import TagsRenderer from '@common/components/TagsRenderer/TagsRenderer'
 import { getRoleIcon } from '@rbac/utils/utils'
@@ -127,8 +128,10 @@ const RoleDetails: React.FC = () => {
 
   useDocumentTitle([defaultTo(role?.name, ''), getString('roles')])
 
+  const { getRBACErrorMessage } = useRBACError()
+
   if (error) {
-    return <PageError message={defaultTo((error.data as Error)?.message, error.message)} onClick={() => refetch()} />
+    return <PageError message={getRBACErrorMessage(error)} onClick={() => refetch()} />
   }
   if (!role) {
     return <></>

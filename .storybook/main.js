@@ -48,6 +48,14 @@ module.exports = {
         ...webpackConfig.resolve,
         alias: {
           ...webpackConfig.resolve.alias,
+          'gitopsui/MicroFrontendApp': false,
+          'chaos/MicroFrontendApp': false,
+          'sto/App': false,
+          'governance/App': false,
+          'governance/EvaluationView': false,
+          'governance/PolicySetWizard': false,
+          'governance/EvaluationModal': false,
+          'governance/PipelineGovernanceView': false,
           'monaco-editor/.*': false,
           '@harness/monaco-yaml/.*': false
         }

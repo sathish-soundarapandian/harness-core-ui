@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react'
-import { isEmpty } from 'lodash-es'
+import { debounce, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { Text, IconName, Icon, Button, ButtonVariation } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
@@ -32,6 +32,9 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
     }
     setVisibilityOfAdd(visibility)
   }
+  const debounceHideVisibility = debounce(() => {
+    setVisibilityOfAdd(false)
+  }, 300)
   const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
   const onDropEvent = (event: React.DragEvent) => {
     event.stopPropagation()
@@ -62,7 +65,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
         event.stopPropagation()
 
         if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
-          setAddVisibility(false)
+          debounceHideVisibility()
         }
       }}
       onClick={event => {
@@ -174,7 +177,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
       {allowAdd && !props.readonly && CreateNode ? (
         <CreateNode
           onMouseOver={() => setAddVisibility(true)}
-          onMouseLeave={() => setAddVisibility(false)}
+          onMouseLeave={debounceHideVisibility}
           onDragOver={() => setAddVisibility(true)}
           onDrop={onDropEvent}
           onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -228,7 +231,8 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
         />
       )}
       {(props?.nextNode?.nodeType === NodeType.StepGroupNode || (!props?.nextNode && props?.parentIdentifier)) &&
-        !props.isParallelNode && (
+        !props.isParallelNode &&
+        !props.readonly && (
           <AddLinkNode<IconNodeProps>
             nextNode={props?.nextNode}
             style={{ right: getPositionOfAddIcon(props, true) }}

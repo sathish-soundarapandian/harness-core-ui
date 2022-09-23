@@ -29,6 +29,7 @@ export interface PercentageRolloutProps {
   hideTargetGroupDivider?: boolean
   addClearButton?: boolean
   distributionWidth?: string | number
+  disabled?: boolean
   [propName: string]: unknown
 }
 
@@ -43,6 +44,7 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
   hideOverError = false,
   hideTargetGroupDivider = false,
   addClearButton = false,
+  disabled = false,
   ...restProps
 }) => {
   const { getString } = useStrings()
@@ -99,6 +101,7 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
             items={targetGroupItems}
             label={getString('cf.percentageRollout.toTargetGroup')}
             addClearButton={addClearButton}
+            disabled={disabled}
           />
         </div>
       )}
@@ -111,6 +114,7 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
             name={prefix('bucketBy')}
             items={bucketByItems}
             label={getString('cf.percentageRollout.bucketBy')}
+            disabled={disabled}
           />
         )}
 
@@ -128,6 +132,7 @@ const PercentageRollout: FC<PercentageRolloutProps> = ({
                 name={prefix(`variations[${index}].weight`)}
                 label={variation.name || variation.identifier}
                 inputGroup={{ type: 'number', max: 100, min: 0 }}
+                disabled={disabled}
               />
             </div>
           )

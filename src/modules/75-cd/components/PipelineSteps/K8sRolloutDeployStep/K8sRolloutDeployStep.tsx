@@ -6,7 +6,14 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  IconName,
+  Formik,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 
@@ -15,7 +22,7 @@ import { isEmpty } from 'lodash-es'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { K8sRollingStepInfo, StepElementConfig } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
@@ -31,6 +38,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -45,7 +53,7 @@ interface K8RolloutDeployProps {
   onUpdate?: (data: K8RolloutDeployData) => void
   stepViewType: StepViewType
   onChange?: (data: K8RolloutDeployData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
   inputSetData?: {
@@ -120,6 +128,7 @@ function K8RolloutDeployWidget(
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
@@ -147,7 +156,7 @@ const K8RolloutDeployInputStep: React.FC<K8RolloutDeployProps> = ({ inputSetData
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
@@ -156,6 +165,8 @@ const K8RolloutDeployInputStep: React.FC<K8RolloutDeployProps> = ({ inputSetData
               expressions,
               disabled: inputSetData?.readonly
             }}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
             disabled={inputSetData?.readonly}
           />
         </div>
@@ -221,7 +232,7 @@ export class K8RolloutDeployStep extends PipelineStep<K8RolloutDeployData> {
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <K8RolloutDeployInputStep
           initialValues={initialValues}
@@ -296,6 +307,7 @@ export class K8RolloutDeployStep extends PipelineStep<K8RolloutDeployData> {
   protected stepIcon: IconName = 'rolling'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sRollingDeploy'
   protected isHarnessSpecific = true
+  protected referenceId = 'rollingDeploymentStep'
 
   protected defaultValues: K8RolloutDeployData = {
     identifier: '',

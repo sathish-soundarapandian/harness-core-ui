@@ -37,7 +37,7 @@ export const ServiceInstancesWidget: React.FC<ServiceInstanceWidgetProps> = prop
       orgIdentifier,
       projectIdentifier,
       startTime: moment().utc().startOf('day').subtract(6, 'months').toDate().getTime(),
-      endTime: moment().utc().startOf('day').toDate().getTime(),
+      endTime: moment().utc().endOf('day').toDate().getTime(),
       timeGroupByType: 'DAY'
     }),
     [accountId, orgIdentifier, projectIdentifier]

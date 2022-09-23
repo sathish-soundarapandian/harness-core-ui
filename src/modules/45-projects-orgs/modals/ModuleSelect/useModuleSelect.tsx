@@ -17,7 +17,7 @@ import { getModuleLink } from '@projects-orgs/components/ModuleListCard/ModuleLi
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getModuleDescriptionsForModuleSelectionDialog, getModuleFullLengthTitle } from '@projects-orgs/utils/utils'
-import { getModuleIcon, isCommunityPlan, isOnPrem } from '@common/utils/utils'
+import { getModuleIcon, useGetCommunity, isOnPrem } from '@common/utils/utils'
 import {
   Project,
   StartFreeLicenseQueryParams,
@@ -96,7 +96,17 @@ const getModulesWithSubscriptionsRoutesMap = ({
       }
     ],
     [ModuleName.CD, cdCiPath],
-    [ModuleName.CI, cdCiPath]
+    [ModuleName.CI, cdCiPath],
+    [
+      ModuleName.STO,
+      {
+        pathname: routes.toSTOProjectOverview({
+          orgIdentifier: projectData?.orgIdentifier || '',
+          projectIdentifier: projectData.identifier,
+          accountId
+        })
+      }
+    ]
   ])
 }
 
@@ -303,7 +313,7 @@ export const useModuleSelectModal = ({
           </Layout.Horizontal>
           <Container className={css.moduleActionDiv} padding={{ left: 'huge' }}>
             {selectedModuleName
-              ? ModuleSelectionFactory.getModuleSelectionEle(selectedModuleName) || (
+              ? ModuleSelectionFactory.getModuleSelectionPanel(selectedModuleName, projectData) || (
                   <Layout.Vertical spacing="medium">
                     <Text font={{ variation: FontVariation.H4 }}>
                       {getString(getModuleFullLengthTitle(selectedModuleName))}
@@ -340,10 +350,11 @@ export const useModuleSelectModal = ({
       )
     }
   }
+  const isCommunity = useGetCommunity()
 
   return {
     openModuleSelectModal: (projectDataLocal: Project) => {
-      if (isCommunityPlan()) {
+      if (isCommunity) {
         communityEditionCDHomeRedirect(projectDataLocal)
       } else {
         open(projectDataLocal)

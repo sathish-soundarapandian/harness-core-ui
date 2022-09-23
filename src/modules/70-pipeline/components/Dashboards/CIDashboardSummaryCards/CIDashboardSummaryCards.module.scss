@@ -45,32 +45,39 @@
     .diffContent {
       display: flex;
       align-items: center;
+      padding: var(--spacing-tiny) var(--spacing-xsmall);
+      border-radius: var(--spacing-small);
       margin-top: var(--spacing-small) !important;
       p {
         color: var(--ci-color-blue-500);
-        font-size: var(--ci-font-size-normal);
+        font-size: var(--ci-font-size-small);
         margin-right: var(--spacing-xsmall);
         font-weight: 600;
       }
       svg {
         stroke: var(--ci-color-blue-500);
+        fill: var(--ci-color-blue-500);
       }
     }
   }
-  &.variantIncrease .cardContent .diffContent {
+  &.variantDecrease .cardContent .diffContent {
+    background-color: var(--green-50);
     p {
       color: var(--ci-color-green-500);
     }
     svg {
       stroke: var(--ci-color-green-500);
+      fill: var(--ci-color-green-500);
     }
   }
-  &.variantDecrease .cardContent .diffContent {
+  &.variantIncrease .cardContent .diffContent {
+    background-color: var(--red-50);
     p {
       color: var(--ci-color-red-600);
     }
     svg {
       stroke: var(--ci-color-red-600);
+      fill: var(--ci-color-red-600);
     }
   }
 }

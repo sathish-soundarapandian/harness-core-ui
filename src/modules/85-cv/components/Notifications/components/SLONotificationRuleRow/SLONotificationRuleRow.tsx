@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, Container, Layout, Select, Text, TextInput } from '@harness/uicore'
+import { Button, Container, FormInput, Layout, Text, TextInput } from '@harness/uicore'
 import React, { useCallback } from 'react'
 import HorizontalLineWithText from '@cv/components/HorizontalLineWithText/HorizontalLineWithText'
 import { useStrings } from 'framework/strings'
@@ -18,7 +18,8 @@ export default function SLONotificationRuleRow({
   notificationRule,
   showDeleteNotificationsIcon,
   handleDeleteNotificationRule,
-  handleChangeField
+  handleChangeField,
+  index
 }: NotificationRuleRowProps): JSX.Element {
   const { getString } = useStrings()
   const { threshold, lookBackDuration, id, condition } = notificationRule || {}
@@ -31,7 +32,7 @@ export default function SLONotificationRuleRow({
     [lookBackDuration, notificationRule]
   )
 
-  const renderThresholdField = (): JSX.Element => {
+  const renderThresholdField = (idx: number): JSX.Element => {
     switch (condition?.value) {
       case SLOCondition.ERROR_BUDGET_REMAINING_MINUTES:
         return (
@@ -43,7 +44,7 @@ export default function SLONotificationRuleRow({
               placeholder={'min'}
               min={0}
               value={threshold as string}
-              name={`${id}.threshold`}
+              name={`${idx}.threshold`}
               className={css.numberField}
               onChange={handleThresholdChange}
             />
@@ -59,7 +60,7 @@ export default function SLONotificationRuleRow({
               placeholder={'%'}
               min={0}
               value={threshold as string}
-              name={`${id}.threshold`}
+              name={`${idx}.threshold`}
               className={css.numberField}
               onChange={handleThresholdChange}
             />
@@ -76,7 +77,7 @@ export default function SLONotificationRuleRow({
               min={0}
               max={100}
               value={threshold as string}
-              name={`${id}.threshold`}
+              name={`${idx}.threshold`}
               className={css.numberField}
               onChange={handleThresholdChange}
             />
@@ -92,8 +93,10 @@ export default function SLONotificationRuleRow({
       <Layout.Horizontal padding={{ top: 'large' }} key={id} spacing="medium">
         <Layout.Vertical spacing="xsmall" padding={{ right: 'small' }}>
           <Text>{getString('cv.notifications.condition')}</Text>
-          <Select
-            name="condition"
+
+          <FormInput.Select
+            name={`conditions.${index}.condition`}
+            data-name="condition"
             className={css.sloConditionField}
             value={condition}
             items={sloConditionOptions}
@@ -102,7 +105,7 @@ export default function SLONotificationRuleRow({
             }}
           />
         </Layout.Vertical>
-        {threshold ? renderThresholdField() : null}
+        {threshold ? renderThresholdField(index) : null}
         {lookBackDuration && condition?.value === SLOCondition.ERROR_BUDGET_BURN_RATE_IS_ABOVE ? (
           <Layout.Vertical spacing="xsmall" padding={{ left: 'small' }}>
             <Text>{'Lookback Duration'}</Text>
@@ -112,7 +115,7 @@ export default function SLONotificationRuleRow({
               min={0}
               placeholder="min"
               value={lookBackDuration as string}
-              name={`${id}.lookBackDuration`}
+              name={`${index}.lookBackDuration`}
               className={css.numberField}
               onChange={e => {
                 handleChangeField(notificationRule, getValueFromEvent(e), 'lookBackDuration')
@@ -123,6 +126,7 @@ export default function SLONotificationRuleRow({
         {showDeleteNotificationsIcon ? (
           <Container padding={{ top: 'large' }}>
             <Button
+              data-name="trash"
               icon="main-trash"
               iconProps={{ size: 20 }}
               minimal

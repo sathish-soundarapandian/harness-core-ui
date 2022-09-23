@@ -5,32 +5,56 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { Color } from '@harness/design-system'
-import type { TemplateType } from '@templates-library/utils/templatesUtils'
+import type React from 'react'
+import type { IconName } from '@wings-software/uicore'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateInputsProps } from '../TemplateInputs/TemplateInputs'
 
-export interface TemplateProps<T, U = unknown> {
-  customTemplateProps?: U
-  formikRef?: TemplateFormRef<T>
-}
-
-export abstract class Template<T> {
+export abstract class Template {
+  protected abstract label: string
   protected abstract type: TemplateType
-  protected abstract name: string
-  protected abstract defaultValues: T
-  protected abstract color: Color
+  protected abstract icon: IconName
+  protected abstract allowedScopes: Scope[]
+  protected abstract colorMap: React.CSSProperties
+  protected isEnabled = true
+  protected abstract isRemoteEnabled: boolean
+  protected allowedUsage = [TemplateUsage.USE, TemplateUsage.COPY]
+
+  getLabel(): string {
+    return this.label
+  }
 
   getType(): TemplateType {
     return this.type
   }
 
-  getName(): string {
-    return this.name
+  getIcon(): IconName {
+    return this.icon
   }
 
-  getColor(): Color {
-    return this.color
+  getColorMap(): React.CSSProperties {
+    return this.colorMap
   }
 
-  abstract renderTemplateCanvas(props: TemplateProps<T>): JSX.Element
+  getAllowedScopes(): Scope[] {
+    return this.allowedScopes
+  }
+
+  getIsEnabled(): boolean {
+    return this.isEnabled
+  }
+
+  getIsRemoteEnabled(): boolean {
+    return this.isRemoteEnabled
+  }
+
+  getAllowedUsage(): TemplateUsage[] {
+    return this.allowedUsage
+  }
+
+  abstract renderTemplateCanvas(formikRef?: TemplateFormRef): JSX.Element
+
+  abstract renderTemplateInputsForm(props: TemplateInputsProps & { accountId: string }): JSX.Element
 }

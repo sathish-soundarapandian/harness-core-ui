@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { debounce, defaultTo } from 'lodash-es'
 import { Icon, Text, Button, ButtonVariation, IconName, Utils } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
@@ -41,6 +41,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
     stepIconColor = Utils.getRealCSSColor(stepIconColor)
   }
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
+  const showMarkers = defaultTo(props?.showMarkers, true)
 
   const stepStatus = defaultTo(props?.status, props?.data?.step?.status as ExecutionStatus)
   const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
@@ -70,6 +71,10 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
       }
     })
   }
+
+  const debounceHideVisibility = debounce(() => {
+    setVisibilityOfAdd(false)
+  }, 300)
   // const isPrevNodeParallel = !!defaultTo(props.prevNode?.children?.length, 1)
   const isTemplateNode = props?.data?.isTemplateNode
   return (
@@ -83,7 +88,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
       }}
       onMouseLeave={e => {
         e.stopPropagation()
-        setAddVisibility(false)
+        debounceHideVisibility()
       }}
       onClick={event => {
         event.stopPropagation()
@@ -113,12 +118,12 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         event.stopPropagation()
 
         if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
-          setAddVisibility(false)
+          debounceHideVisibility()
         }
       }}
       onDrop={onDropEvent}
     >
-      {!isServiceStep && (
+      {!isServiceStep && showMarkers && (
         <div className={cx(defaultCss.markerStart, defaultCss.stepMarker, defaultCss.stepMarkerLeft)}>
           <SVGMarker />
         </div>
@@ -222,6 +227,22 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             </Text>
           </div>
         )}
+        {props.data?.loopingStrategyEnabled && (
+          <div className={defaultCss.loopingStrategy}>
+            <Text
+              tooltip={getString('pipeline.loopingStrategy.title')}
+              tooltipProps={{
+                isDark: true
+              }}
+            >
+              <Icon
+                size={16}
+                name={'looping'}
+                {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
+              />
+            </Text>
+          </div>
+        )}
         {isTemplateNode && (
           <Icon
             {...(isSelectedNode()
@@ -256,7 +277,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           withoutCurrentColor={true}
         />
       </div>
-      {!isServiceStep && (
+      {!isServiceStep && showMarkers && (
         <div className={cx(defaultCss.markerEnd, defaultCss.stepMarker, defaultCss.stepMarkerRight)}>
           <SVGMarker />
         </div>
@@ -279,7 +300,8 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           onMouseOver={() => setAddVisibility(true)}
           onDragOver={() => setAddVisibility(true)}
           onDrop={onDropEvent}
-          onMouseLeave={() => setAddVisibility(false)}
+          onMouseLeave={debounceHideVisibility}
+          onDragLeave={debounceHideVisibility}
           onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             event.stopPropagation()
             props?.fireEvent?.({

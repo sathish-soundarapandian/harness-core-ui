@@ -21,6 +21,12 @@
   }
 }
 
+.delegateSelector {
+  width: 55%;
+  border: 1px solid var(--bp3-intent-color, var(--grey-200));
+  outline: none;
+}
+
 .checkbox {
   padding-left: var(--spacing-xlarge) !important;
 }
@@ -163,12 +169,20 @@
   margin-top: var(--spacing-large) !important;
 }
 
+.topMargin3 {
+  margin-top: var(--spacing-3) !important;
+}
+
 .topMargin4 {
   margin-top: var(--spacing-4) !important;
 }
 
 .topMargin5 {
   margin-top: var(--spacing-5) !important;
+}
+
+.bottomMargin0 {
+  margin-bottom: 0 !important;
 }
 
 .bottomMargin1 {
@@ -229,5 +243,12 @@
       margin: 0 !important;
       font-weight: 500 !important;
     }
+  }
+}
+
+.shellScriptMonacoField {
+  min-height: 180px !important;
+  > div {
+    height: 180px !important;
   }
 }

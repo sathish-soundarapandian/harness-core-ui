@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Container,
   Dialog,
@@ -19,11 +19,16 @@ import {
   getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { isUndefined, defaultTo } from 'lodash-es'
+import { Context } from 'urql'
 import * as Yup from 'yup'
 import { useModalHook } from '@harness/use-modal'
+import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { QlceViewEntityStatsDataPoint, useFetchperspectiveGridQuery } from 'services/ce/services'
+import {
+  FetchperspectiveGridDocument,
+  QlceViewEntityStatsDataPoint,
+  useFetchPerspectiveTotalCountQuery
+} from 'services/ce/services'
 import { useToaster } from '@common/exports'
 import { downloadPerspectiveGridAsCsv } from '@ce/utils/downloadPerspectiveGridAsCsv'
 import type { Column } from './Columns'
@@ -33,75 +38,51 @@ import css from './PerspectiveGrid.module.scss'
 const MAX_ROWS_ALLOWED = 10000
 
 interface Props {
-  perspectiveTotalCount: number
   variables: Record<string, any>
   selectedColumnsToDownload: Column[]
   perspectiveName: string
 }
 
-interface DownloadConfig {
-  fileName: string
-  exportRowsUpto: string
-  excludeRowsWithCost: string
-}
-
 export const useDownloadPerspectiveGridAsCsv = (options: Props) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const { perspectiveTotalCount, variables, selectedColumnsToDownload, perspectiveName } = options
+  const { query } = React.useContext(Context)
 
-  const [downloadConfig, setDownloadConfig] = useState<DownloadConfig | undefined>()
-  const dataRefetchRef = useRef(perspectiveTotalCount)
+  const { variables, selectedColumnsToDownload, perspectiveName } = options
 
-  const [downloadGridData, executeQuery] = useFetchperspectiveGridQuery({
-    pause: Boolean(downloadConfig?.exportRowsUpto),
-    variables: { ...variables, limit: Number(downloadConfig?.exportRowsUpto) || perspectiveTotalCount } as any
+  const [totalCountResult] = useFetchPerspectiveTotalCountQuery({
+    variables: pick(variables, ['filters', 'isClusterOnly', 'groupBy']) as any,
+    pause: !isModalOpen
   })
 
-  const downloadData = defaultTo(downloadGridData.data?.perspectiveGrid?.data, [])
-
-  useEffect(() => {
-    try {
-      if (!isUndefined(downloadConfig)) {
-        executeQuery({ requestPolicy: 'network-only' })
-
-        dataRefetchRef.current = Number(downloadConfig.exportRowsUpto)
-      }
-    } catch (error) {
-      showError(getErrorInfoFromErrorObject(error as Record<string, any>))
-    }
-  }, [downloadConfig])
-
-  useEffect(() => {
-    try {
-      if (!isUndefined(downloadConfig) && dataRefetchRef.current === downloadData.length) {
-        downloadPerspectiveGridAsCsv({
-          csvFileName: downloadConfig.fileName,
-          downloadData: downloadData as QlceViewEntityStatsDataPoint[],
-          excludeRowsWithCost: downloadConfig.excludeRowsWithCost,
-          selectedColumnsToDownload
-        })
-        closeDownloadCSVModal()
-      }
-    } catch (error) {
-      showError(getErrorInfoFromErrorObject(error))
-    }
-  }, [downloadData, dataRefetchRef.current])
+  const perspectiveTotalCount = totalCountResult.data?.perspectiveTotalCount || 0
 
   const [openDownloadCSVModal, closeDownloadCSVModal] = useModalHook(() => {
     const maxNoOfRows = Math.min(perspectiveTotalCount, MAX_ROWS_ALLOWED)
+
+    const onModalClose: () => void = () => {
+      setIsModalOpen(false)
+      closeDownloadCSVModal()
+    }
+
+    const onModalOpen: () => void = () => {
+      setIsModalOpen(true)
+    }
 
     return (
       <Dialog
         isOpen={true}
         enforceFocus={false}
-        onClose={closeDownloadCSVModal}
+        onClose={onModalClose}
         className={css.dialog}
         title={getString('ce.perspectives.exportCSV')}
+        onOpening={onModalOpen}
       >
         <Formik
           formName="formikFormBasic"
+          enableReinitialize
           initialValues={{
             fileName: perspectiveName,
             exportRowsUpto: String(maxNoOfRows),
@@ -115,8 +96,23 @@ export const useDownloadPerspectiveGridAsCsv = (options: Props) => {
               .max(maxNoOfRows, getString('ce.perspectives.noOfRowsLessThan', { number: maxNoOfRows })),
             excludeRowsWithCost: Yup.number()
           })}
-          onSubmit={({ fileName, exportRowsUpto, excludeRowsWithCost }) => {
-            setDownloadConfig({ fileName, excludeRowsWithCost, exportRowsUpto })
+          onSubmit={({ excludeRowsWithCost, exportRowsUpto, fileName }) => {
+            query(FetchperspectiveGridDocument, {
+              ...variables,
+              limit: Number(exportRowsUpto) || perspectiveTotalCount,
+              offset: 0
+            })
+              .toPromise()
+              .then(result => {
+                downloadPerspectiveGridAsCsv({
+                  csvFileName: fileName,
+                  downloadData: result.data.perspectiveGrid?.data as QlceViewEntityStatsDataPoint[],
+                  excludeRowsWithCost,
+                  selectedColumnsToDownload
+                })
+                closeDownloadCSVModal()
+              })
+              .catch(err => showError(getErrorInfoFromErrorObject(err)))
           }}
         >
           {formikProps => {
@@ -164,12 +160,7 @@ export const useDownloadPerspectiveGridAsCsv = (options: Props) => {
                   </Container>
                 </Layout.Vertical>
                 <Layout.Horizontal spacing="small" padding={{ top: 'xxlarge' }}>
-                  <Button
-                    text={getString('common.download')}
-                    variation={ButtonVariation.PRIMARY}
-                    type="submit"
-                    loading={downloadGridData.fetching}
-                  />
+                  <Button text={getString('common.download')} variation={ButtonVariation.PRIMARY} type="submit" />
                   <Button
                     text={getString('cancel')}
                     variation={ButtonVariation.TERTIARY}
@@ -182,7 +173,7 @@ export const useDownloadPerspectiveGridAsCsv = (options: Props) => {
         </Formik>
       </Dialog>
     )
-  }, [perspectiveTotalCount, downloadGridData, selectedColumnsToDownload])
+  }, [perspectiveTotalCount, selectedColumnsToDownload])
 
   return [openDownloadCSVModal, closeDownloadCSVModal]
 }

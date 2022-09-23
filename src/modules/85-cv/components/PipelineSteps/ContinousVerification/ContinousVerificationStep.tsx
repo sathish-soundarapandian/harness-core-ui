@@ -19,7 +19,15 @@ import type { ContinousVerificationData, ContinousVerificationVariableStepProps,
 import { ContinousVerificationWidgetWithRef } from './components/ContinousVerificationWidget/ContinousVerificationWidget'
 import { ContinousVerificationInputSetStep } from './components/ContinousVerificationInputSetStep/ContinousVerificationInputSetStep'
 import { ContinousVerificationVariableStep } from './components/ContinousVerificationVariableStep/ContinousVerificationVariableStep'
-import { getSpecFormData, getSpecYamlData, validateField, validateTimeout } from './utils'
+import {
+  getMonitoredServiceYamlData,
+  getSpecFormData,
+  getSpecYamlData,
+  validateField,
+  validateMonitoredService,
+  validateMonitoredServiceTemplateInputs,
+  validateTimeout
+} from './utils'
 import { cvDefaultValues } from './constants'
 
 const ContinousVerificationInputSetStepFormik = connect(ContinousVerificationInputSetStep)
@@ -49,7 +57,7 @@ export class ContinousVerificationStep extends PipelineStep<ContinousVerificatio
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <ContinousVerificationInputSetStepFormik
           initialValues={initialValues}
@@ -90,6 +98,7 @@ export class ContinousVerificationStep extends PipelineStep<ContinousVerificatio
   }: ValidateInputSetProps<ContinousVerificationData>): FormikErrors<ContinousVerificationData> {
     const errors: FormikErrors<ContinousVerificationData> = {}
     const { sensitivity, duration, baseline, deploymentTag } = (template?.spec?.spec as spec) || {}
+    const { monitoredService } = template?.spec || {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (getString) {
       validateField(sensitivity as string, 'sensitivity', data, errors, getString, isRequired)
@@ -97,6 +106,8 @@ export class ContinousVerificationStep extends PipelineStep<ContinousVerificatio
       validateField(baseline as string, 'baseline', data, errors, getString, isRequired)
       validateField(deploymentTag as string, 'deploymentTag', data, errors, getString, isRequired)
       validateTimeout(getString, data, errors, template, isRequired)
+      validateMonitoredService(data, errors, getString, isRequired, monitoredService)
+      validateMonitoredServiceTemplateInputs(data, errors, getString, monitoredService)
     }
     return errors
   }
@@ -112,12 +123,14 @@ export class ContinousVerificationStep extends PipelineStep<ContinousVerificatio
   }
 
   processFormData(data: ContinousVerificationData): ContinousVerificationData {
-    return {
+    const output = {
       ...data,
       spec: {
-        ...omit(data?.spec, ['monitoredServiceRef', 'healthSources']),
+        ...omit(data?.spec, ['monitoredServiceRef', 'healthSources', 'initialMonitoredService']),
+        ...(data?.spec?.monitoredService?.type && { monitoredService: getMonitoredServiceYamlData(data?.spec) }),
         spec: getSpecYamlData(data?.spec?.spec, data?.spec?.type)
       }
     }
+    return output
   }
 }

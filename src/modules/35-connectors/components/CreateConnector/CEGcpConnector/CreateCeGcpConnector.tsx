@@ -11,8 +11,7 @@ import { Connectors, CreateConnectorModalProps } from '@connectors/constants'
 import DialogExtention from '@connectors/common/ConnectorExtention/DialogExtention'
 import { getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CCM_CONNECTOR_SAVE_EVENT, CCM_CONNECTOR_SAVE_SUCCESS } from '@connectors/trackingConstants'
 import OverviewStep, { CEGcpConnectorDTO } from './steps/OverviewStep'
@@ -23,7 +22,6 @@ import css from './CreateCeGcpConnector.module.scss'
 
 const CreateCeGcpConnector: React.FC<CreateConnectorModalProps> = props => {
   const { getString } = useStrings()
-  const { CE_AS_GCP_VM_SUPPORT } = useFeatureFlags()
   const { trackEvent } = useTelemetry()
   return (
     <DialogExtention>
@@ -39,11 +37,9 @@ const CreateCeGcpConnector: React.FC<CreateConnectorModalProps> = props => {
           connectorInfo={props.connectorInfo as CEGcpConnectorDTO}
         />
         <BillingExport name={getString('connectors.ceGcp.billingExport.heading')} />
-        {CE_AS_GCP_VM_SUPPORT ? (
-          <ChooseRequirements name={getString('connectors.ceGcp.chooseRequirements.name')} />
-        ) : null}
+        <ChooseRequirements name={getString('connectors.ceGcp.chooseRequirements.name')} />
         <GrantPermission name={getString('connectors.ceGcp.grantPermission.heading')}></GrantPermission>
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.ceGcp.testConnection.heading')}
           connectorInfo={props.connectorInfo}
           isStep={true}

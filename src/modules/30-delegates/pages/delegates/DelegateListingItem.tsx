@@ -20,18 +20,18 @@ import {
   useConfirmationDialog,
   Icon
 } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem, Classes, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useDeleteDelegateGroupByIdentifier, DelegateGroupDetails } from 'services/portal'
 import routes from '@common/RouteDefinitions'
-import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
 import { delegateTypeToIcon } from '@common/utils/delegateUtils'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
 import css from './DelegatesPage.module.scss'
 
 type delTroubleshoterProps = {
@@ -39,31 +39,62 @@ type delTroubleshoterProps = {
   setOpenTroubleshoter: (prop: { isConnected: boolean | undefined }) => void
 }
 
-const columnWidths = {
-  icon: '80px',
-  name: '25%',
-  tags: '20%',
-  instances: '20%',
-  heartbeat: 'calc(15% - 40px)',
-  status: 'calc(15% - 40px)',
-  actions: '5%'
+enum InstanceStatus {
+  EXPIRED = 'Expired',
+  EXPIRINGIN = 'Expiring In',
+  UPGRADEREQUIRED = 'Upgrade Required'
 }
 
 export const DelegateListingHeader = () => {
   const { getString } = useStrings()
+  const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
+  const columnWidths = USE_IMMUTABLE_DELEGATE
+    ? {
+        icon: '80px',
+        name: '25%',
+        tags: '15%',
+        version: '12%',
+        instanceStatus: '18%',
+        heartbeat: '14%',
+        status: '12%',
+        actions: '2%'
+      }
+    : {
+        icon: '80px',
+        name: '28%',
+        tags: '16%',
+        version: '16%',
+        heartbeat: '15%',
+        status: '14%',
+        actions: '2%'
+      }
   return (
     <Layout.Horizontal className={css.delegateListHeader}>
       <div key="icon" style={{ width: columnWidths.icon }}></div>
       <div key="del-name" style={{ width: columnWidths.name }}>
         {getString('delegate.DelegateName')}
       </div>
-      <div key="tags" style={{ width: columnWidths.tags }}>
+      <div
+        key="tags"
+        style={{
+          width: columnWidths.tags,
+          paddingLeft: 'var(--spacing-xlarge)'
+        }}
+      >
         {getString('tagsLabel')}
       </div>
-      <div key="instances" style={{ width: columnWidths.instances }}>
-        {getString('instanceFieldOptions.instances')}
+      <div key="version" style={{ width: columnWidths.version, paddingLeft: 'var(--spacing-medium)' }}>
+        {getString('version')}
       </div>
-      <div key="heartbeat" style={{ width: columnWidths.heartbeat }}>
+      {USE_IMMUTABLE_DELEGATE ? (
+        <div key="instanceStatus" style={{ width: columnWidths.instanceStatus, paddingLeft: 'var(--spacing-4)' }}>
+          {getString('delegates.instanceStatus')}
+        </div>
+      ) : null}
+      <div
+        key="heartbeat"
+        style={{ width: columnWidths.heartbeat, paddingLeft: USE_IMMUTABLE_DELEGATE ? 'var(--spacing-small)' : '' }}
+      >
         {getString('delegate.LastHeartBeat')}
       </div>
       <div key="status" style={{ width: columnWidths.status }}>
@@ -85,8 +116,21 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
     queryParams: { accountId: accountId, orgId: orgIdentifier, projectId: projectIdentifier }
   })
 
+  const deleteDelegateDialogContent = (
+    <>
+      <Text font={{ variation: FontVariation.BODY }} margin={{ bottom: 'medium' }}>
+        {getString('delegates.infoForDeleteDelegate')}
+      </Text>
+      <Text font={{ variation: FontVariation.BODY }}>
+        {getString('delegates.questionForceDeleteDelegate', {
+          name: groupName
+        })}
+      </Text>
+    </>
+  )
+
   const forceDeleteDialog = useConfirmationDialog({
-    contentText: `${getString('delegates.questionForceDeleteDelegate')} ${groupName}`,
+    contentText: deleteDelegateDialogContent,
     titleText: getString('delegate.deleteDelegate'),
     confirmButtonText: getString('delete'),
     cancelButtonText: getString('cancel'),
@@ -97,6 +141,7 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
             const deleted = await forceDeleteDelegate(delegateGroupIdentifier)
 
             if (deleted) {
+              /*istanbul ignore next */
               showSuccess(getString('delegates.delegateDeleted', { name: groupName }))
             }
           }
@@ -145,7 +190,7 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
               },
               permission: PermissionIdentifier.VIEW_DELEGATE
             }}
-            icon="edit"
+            icon="info-sign"
             text={getString('details')}
           />
           <RbacMenuItem
@@ -169,6 +214,7 @@ const RenderColumnMenu = ({ delegate, setOpenTroubleshoter }: delTroubleshoterPr
             <MenuItem
               text={getString('delegates.openTroubleshooter')}
               onClick={(e: React.MouseEvent) => {
+                /*istanbul ignore next */
                 e.stopPropagation()
                 setOpenTroubleshoter({ isConnected: activelyConnected })
               }}
@@ -221,11 +267,53 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
     }
   }
 
+  const currentTime = Date.now()
   const isConnected = delegate.activelyConnected
   const text = isConnected ? getString('connected') : getString('delegate.notConnected')
+  const status =
+    delegate?.delegateGroupExpirationTime !== undefined
+      ? delegate?.delegateGroupExpirationTime < 0
+        ? InstanceStatus.UPGRADEREQUIRED
+        : currentTime > delegate?.delegateGroupExpirationTime
+        ? InstanceStatus.EXPIRED
+        : InstanceStatus.EXPIRINGIN
+      : null
+
+  const statusBackgroundColor =
+    status === InstanceStatus.EXPIRED
+      ? Color.RED_500
+      : status === InstanceStatus.EXPIRINGIN || status === InstanceStatus.UPGRADEREQUIRED
+      ? Color.ORANGE_400
+      : ''
+  const [autoUpgradeColor, autoUpgradeText] =
+    delegate?.upgraderLastUpdated === 0 && delegate?.immutable
+      ? [Color.ORANGE_400, 'Upgrade Required']
+      : delegate?.autoUpgrade
+      ? [Color.GREEN_600, 'AUTO UPGRADE: ON']
+      : [Color.GREY_300, 'AUTO UPGRADE: OFF']
   const color: Color = isConnected ? Color.GREEN_600 : Color.GREY_400
   const allSelectors = Object.keys(delegate.groupImplicitSelectors || {}).concat(delegate.groupCustomSelectors || [])
-
+  const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
+  const columnWidths = USE_IMMUTABLE_DELEGATE
+    ? {
+        icon: '80px',
+        name: '25%',
+        tags: '15%',
+        version: '11%',
+        instanceStatus: '17%',
+        heartbeat: '15%',
+        status: '12%',
+        actions: '2%'
+      }
+    : {
+        icon: '80px',
+        name: '28%',
+        tags: '17%',
+        version: '15%',
+        heartbeat: '14%',
+        status: '15%',
+        actions: '2%'
+      }
   return (
     <Card elevation={2} interactive={true} onClick={onDelegateClick} className={css.delegateItemContainer}>
       <Layout.Horizontal className={css.delegateItemSubcontainer}>
@@ -243,27 +331,75 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
           <Text icon={delegateTypeToIcon(delegate.delegateType as string)} iconProps={{ size: 24 }} />
         </div>
         <Layout.Horizontal width={columnWidths.name}>
-          <Layout.Vertical>
+          <Layout.Vertical width={'55%'} margin={{ right: 'large' }}>
             <Layout.Horizontal spacing="small" data-testid={delegate.groupName}>
-              <Text color={Color.BLACK}>{delegate.groupName}</Text>
+              <Text color={Color.BLACK} lineClamp={1}>
+                {delegate.groupName}
+              </Text>
             </Layout.Horizontal>
+
+            <Text font={{ size: 'small' }} color={Color.GREY_500} lineClamp={1}>
+              {delegate.delegateGroupIdentifier}
+            </Text>
           </Layout.Vertical>
+
+          <Text
+            background={autoUpgradeColor}
+            color={Color.WHITE}
+            font={{ weight: 'semi-bold', size: 'xsmall' }}
+            className={css.statusText}
+          >
+            {autoUpgradeText}
+          </Text>
         </Layout.Horizontal>
 
-        <Container className={css.connectivity} width={columnWidths.tags}>
+        <Container className={css.connectivity} width={columnWidths.tags} padding={{ left: 'large' }}>
           {delegate.groupImplicitSelectors && (
             <>
-              <TagsViewer key="tags" tags={allSelectors.slice(0, 3)} />
-              <span key="hidenTags">{allSelectors.length > 3 ? '+' + (allSelectors.length - 3) : ''}</span>
+              <Text lineClamp={1}>
+                <TagsViewer key="tags" tags={allSelectors.slice(0, 3)} />
+                <span key="hidenTags">{allSelectors.length > 3 ? '+' + (allSelectors.length - 3) : ''}</span>
+              </Text>
             </>
           )}
         </Container>
 
-        <Layout.Horizontal width={columnWidths.instances}>
-          {delegate.delegateInstanceDetails?.length || 0}
+        <Layout.Horizontal width={columnWidths.version} padding={{ left: USE_IMMUTABLE_DELEGATE ? 'xxlarge' : '' }}>
+          {delegate?.delegateGroupExpirationTime !== undefined
+            ? delegate.delegateGroupExpirationTime <= 0
+              ? getString('na')
+              : delegate.delegateVersion
+            : null}
         </Layout.Horizontal>
 
-        <Layout.Horizontal width={columnWidths.heartbeat}>
+        {USE_IMMUTABLE_DELEGATE ? (
+          <Layout.Horizontal width={columnWidths.instanceStatus} className={css.paddingLeft}>
+            {!delegate?.immutable ? (
+              <Text>{getString('na')}</Text>
+            ) : (
+              <>
+                <Text
+                  background={statusBackgroundColor}
+                  color={Color.WHITE}
+                  font={{ weight: 'semi-bold', size: 'xsmall' }}
+                  className={css.statusText}
+                  lineClamp={1}
+                >
+                  {status}
+                </Text>
+                {status === InstanceStatus.UPGRADEREQUIRED ? (
+                  ''
+                ) : delegate.delegateGroupExpirationTime ? (
+                  <ReactTimeago date={delegate.delegateGroupExpirationTime} live />
+                ) : (
+                  ''
+                )}
+              </>
+            )}
+          </Layout.Horizontal>
+        ) : null}
+
+        <Layout.Horizontal width={columnWidths.heartbeat} style={{ paddingLeft: USE_IMMUTABLE_DELEGATE ? '40px' : '' }}>
           {delegate.lastHeartBeat ? <ReactTimeago date={delegate.lastHeartBeat} live /> : getString('na')}
         </Layout.Horizontal>
 
@@ -300,39 +436,98 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
               <Layout.Horizontal width={columnWidths.name}>
                 <Text color={Color.BLACK}>{getString('delegates.noInstances')}</Text>
               </Layout.Horizontal>
-              <Container width={columnWidths.tags} />
-              <Layout.Horizontal width={columnWidths.instances} />
+              <Layout.Horizontal width={columnWidths.tags} />
+              <Layout.Horizontal width={columnWidths.version} />
+              {USE_IMMUTABLE_DELEGATE ? <Container width={columnWidths.instanceStatus} /> : null}
               <Layout.Horizontal width={columnWidths.heartbeat} />
               <Layout.Vertical width={columnWidths.status} />
               <Layout.Vertical width={columnWidths.actions} />
             </Layout.Horizontal>
           )}
-          {delegate.delegateInstanceDetails?.map((instanceDetails, index) => {
+          {delegate.delegateInstanceDetails?.map(instanceDetails => {
             const podStatusColor = instanceDetails.activelyConnected ? Color.GREEN_600 : Color.GREY_400
+
             const statusText = instanceDetails.activelyConnected
               ? getString('connected')
               : getString('delegate.notConnected')
+            /*istanbul ignore next */
+            const instanceStatus = instanceDetails?.version?.startsWith('1.0')
+              ? InstanceStatus.UPGRADEREQUIRED
+              : instanceDetails?.delegateExpirationTime !== undefined
+              ? currentTime > instanceDetails?.delegateExpirationTime
+                ? InstanceStatus.EXPIRED
+                : InstanceStatus.EXPIRINGIN
+              : null
+
+            /*istanbul ignore next */
+            const instanceStatusBackgroundColor =
+              instanceStatus === InstanceStatus.EXPIRED
+                ? Color.RED_500
+                : instanceStatus === InstanceStatus.EXPIRINGIN || instanceStatus === InstanceStatus.UPGRADEREQUIRED
+                ? Color.ORANGE_400
+                : ''
+
+            /*istanbul ignore next */
             return (
               <Layout.Horizontal key={instanceDetails.hostName} width="100%" spacing={'small'}>
-                <Layout.Horizontal style={{ width: columnWidths.icon }} />
+                <Layout.Horizontal style={{ width: USE_IMMUTABLE_DELEGATE ? '52px' : '80px' }} />
                 <Layout.Horizontal width={columnWidths.name}>
-                  {index === 0 && <Text color={Color.BLACK}>{getString('instanceFieldOptions.instances')}</Text>}
+                  <Text lineClamp={1}>{instanceDetails.hostName} </Text>
                 </Layout.Horizontal>
-                <Container className={css.connectivity} width={columnWidths.tags} />
-                <Layout.Horizontal width={columnWidths.instances}>{instanceDetails.hostName}</Layout.Horizontal>
-                <Layout.Horizontal width={columnWidths.heartbeat}>
-                  {instanceDetails.lastHeartbeat ? (
-                    <ReactTimeago date={instanceDetails.lastHeartbeat} live />
-                  ) : (
-                    getString('na')
-                  )}
+                <Layout.Horizontal width={USE_IMMUTABLE_DELEGATE ? '16%' : '17%'}></Layout.Horizontal>
+                <Layout.Horizontal
+                  width={columnWidths.version}
+                  className={css.marginLeft}
+                  style={{ paddingLeft: !USE_IMMUTABLE_DELEGATE ? '6px' : '9px' }}
+                >
+                  <Text>{instanceDetails.version?.startsWith('1.0') ? getString('na') : instanceDetails.version}</Text>
                 </Layout.Horizontal>
-                <Layout.Vertical width={columnWidths.status}>
+                {USE_IMMUTABLE_DELEGATE ? (
+                  <Layout.Horizontal width={columnWidths.instanceStatus} className={css.instanceStatus}>
+                    {!delegate?.immutable ? (
+                      <Text>{getString('na')}</Text>
+                    ) : (
+                      <>
+                        <Text
+                          background={instanceStatusBackgroundColor}
+                          color={Color.WHITE}
+                          font={{ weight: 'semi-bold', size: 'xsmall' }}
+                          className={css.statusText}
+                          lineClamp={1}
+                        >
+                          {instanceStatus}
+                        </Text>
+                        {instanceDetails.version?.startsWith('1.0') ? (
+                          ''
+                        ) : instanceDetails?.delegateExpirationTime ? (
+                          <ReactTimeago date={instanceDetails.delegateExpirationTime} live />
+                        ) : (
+                          ''
+                        )}
+                      </>
+                    )}
+                  </Layout.Horizontal>
+                ) : null}
+                <Layout.Horizontal
+                  width={USE_IMMUTABLE_DELEGATE ? columnWidths.status : '14%'}
+                  className={USE_IMMUTABLE_DELEGATE ? css.statusPadding : ''}
+                >
+                  <Text>
+                    {instanceDetails.lastHeartbeat ? (
+                      <ReactTimeago date={instanceDetails.lastHeartbeat} live />
+                    ) : (
+                      getString('na')
+                    )}
+                  </Text>
+                </Layout.Horizontal>
+                <Layout.Vertical
+                  width={columnWidths.status}
+                  padding={{ left: USE_IMMUTABLE_DELEGATE ? 'medium' : '2px' }}
+                >
                   <Text icon="full-circle" iconProps={{ size: 6, color: podStatusColor, padding: 'small' }}>
                     {statusText}
                   </Text>
                 </Layout.Vertical>
-
                 <Layout.Vertical width={columnWidths.actions} />
               </Layout.Horizontal>
             )

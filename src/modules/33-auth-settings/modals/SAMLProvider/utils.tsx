@@ -6,7 +6,7 @@
  */
 
 import type { IconName } from '@wings-software/uicore'
-import { AuthenticationMechanisms } from '@auth-settings/constants/utils'
+import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import type { UseStringsReturn } from 'framework/strings'
 export interface FormValues {
   displayName: string

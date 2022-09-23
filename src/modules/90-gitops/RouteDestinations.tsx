@@ -25,6 +25,7 @@ import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import DeployServiceWidget from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceWidget'
+import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 
 // eslint-disable-next-line import/no-unresolved
 const GitOpsServersList = React.lazy(() => import('gitopsui/MicroFrontendApp'))
@@ -41,23 +42,11 @@ const pipelineModuleParams: ModulePathParams = {
 }
 
 const GitOpsPage = (): React.ReactElement | null => {
-  const { ARGO_PHASE1, ARGO_PHASE2_MANAGED } = useFeatureFlags()
+  const { ARGO_PHASE1 } = useFeatureFlags()
 
-  if (ARGO_PHASE2_MANAGED) {
-    return (
-      <ChildAppMounter<GitOpsCustomMicroFrontendProps>
-        ChildApp={GitOpsServersList}
-        customComponents={{
-          DeployEnvironmentWidget,
-          DeployServiceWidget,
-          NewEditEnvironmentModal,
-          NewEditServiceModal
-        }}
-      />
-    )
-  }
-
-  if (ARGO_PHASE1) {
+  // In localhost when argo_phase1 is true
+  // we just need to show the microfrontend gitops
+  if (ARGO_PHASE1 && window.location.hostname !== 'localhost') {
     return (
       <GitOpsServersPage>
         <GitOpsModalContainer />
@@ -65,7 +54,18 @@ const GitOpsPage = (): React.ReactElement | null => {
     )
   }
 
-  return null
+  return (
+    <ChildAppMounter<GitOpsCustomMicroFrontendProps>
+      getLinkForAccountResources={getLinkForAccountResources}
+      ChildApp={GitOpsServersList}
+      customComponents={{
+        DeployEnvironmentWidget,
+        DeployServiceWidget,
+        NewEditEnvironmentModal,
+        NewEditServiceModal
+      }}
+    />
+  )
 }
 
 export default (

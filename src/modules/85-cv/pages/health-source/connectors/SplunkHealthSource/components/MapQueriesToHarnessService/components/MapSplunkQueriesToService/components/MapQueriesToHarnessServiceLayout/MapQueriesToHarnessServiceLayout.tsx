@@ -5,8 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Accordion, FormInput, Layout, SelectOption, Utils } from '@wings-software/uicore'
-import React, { useCallback, useMemo, useState } from 'react'
+import {
+  Accordion,
+  FormInput,
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType,
+  SelectOption,
+  Utils
+} from '@wings-software/uicore'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { MapSplunkToServiceFieldNames } from '@cv/pages/health-source/connectors/SplunkHealthSource/components/MapQueriesToHarnessService/constants'
 import { useGetSplunkSampleData, useGetSplunkSavedSearches } from 'services/cv'
@@ -19,13 +27,14 @@ import type { MapQueriesToHarnessServiceLayoutProps } from './types'
 import css from './MapQueriesToHarnessServiceLayout.module.scss'
 
 export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarnessServiceLayoutProps): JSX.Element {
-  const { formikProps, connectorIdentifier, onChange } = props
+  const { formikProps, connectorIdentifier, onChange, isConnectorRuntimeOrExpression, isTemplate, expressions } = props
   const [isQueryExecuted, setIsQueryExecuted] = useState(false)
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const values = formikProps?.values
-
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
+  const isQueryRuntimeOrExpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
+
   const queryParams = useMemo(
     () => ({
       accountId,
@@ -37,7 +46,12 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
     [accountId, projectIdentifier, orgIdentifier, connectorIdentifier]
   )
 
-  const { data: savedQuery, loading: loadingSavedQuery } = useGetSplunkSavedSearches({
+  const {
+    data: savedQuery,
+    loading: loadingSavedQuery,
+    refetch: refetchSavedQuery
+  } = useGetSplunkSavedSearches({
+    lazy: isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression,
     queryParams: {
       accountId,
       orgIdentifier,
@@ -46,6 +60,13 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
       requestGuid: queryParams?.tracingId
     }
   })
+
+  useEffect(() => {
+    if (!isConnectorRuntimeOrExpression || !isQueryRuntimeOrExpression) {
+      refetchSavedQuery()
+    }
+  }, [isConnectorRuntimeOrExpression, isQueryRuntimeOrExpression])
+
   const { data: splunkData, loading, refetch, error } = useGetSplunkSampleData({ lazy: true })
 
   const fetchSplunkRecords = useCallback(async () => {
@@ -116,20 +137,25 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
                   isQueryExecuted={isQueryExecuted}
                   onChange={onChange}
                   loading={loading}
+                  isTemplate={isTemplate}
+                  expressions={expressions}
+                  isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                 />
               }
             />
           </Accordion>
           <div className={css.queryViewContainer}>
-            <FormInput.Select
-              className={css.savedQueryDropdown}
-              label={getString('cv.selectQuery')}
-              name={'savedSearchQuery'}
-              placeholder={getString('cv.monitoringSources.splunk.savedSearchQuery')}
-              value={getSavedQueryValue()}
-              items={savedSearchQueryOption}
-              onChange={onSavedQueryChange}
-            />
+            {!isConnectorRuntimeOrExpression && (
+              <FormInput.Select
+                className={css.savedQueryDropdown}
+                label={getString('cv.selectQuery')}
+                name={'savedSearchQuery'}
+                placeholder={getString('cv.monitoringSources.splunk.savedSearchQuery')}
+                value={getSavedQueryValue()}
+                items={savedSearchQueryOption}
+                onChange={onSavedQueryChange}
+              />
+            )}
             <QueryViewer
               isQueryExecuted={isQueryExecuted}
               className={css.validationContainer}
@@ -147,6 +173,9 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
               }}
               staleRecordsWarning={staleRecordsWarningMessage}
               dataTooltipId={'splunkQuery'}
+              isTemplate={isTemplate}
+              expressions={expressions}
+              isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
             />
           </div>
         </Layout.Horizontal>

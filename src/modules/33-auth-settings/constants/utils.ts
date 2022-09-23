@@ -5,13 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export enum AuthenticationMechanisms {
-  SAML = 'SAML',
-  OAUTH = 'OAUTH',
-  LDAP = 'LDAP',
-  USER_PASSWORD = 'USER_PASSWORD'
-}
-
 export const getSamlEndpoint = (accountId: string): string => {
   let url = window.location.href.split('/#')[0]?.replace('/ng', '')
 

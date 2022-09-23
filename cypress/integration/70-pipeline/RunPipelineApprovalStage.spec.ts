@@ -24,6 +24,9 @@ describe('RUN PIPELINE MODAL - approval stage', () => {
       return false
     })
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
+    cy.intercept('GET', yamlSnippetCall, { fixture: 'pipeline/api/approvals/stageYamlSnippet' })
+    cy.intercept('GET', userGroupCall, { fixture: 'pipeline/api/approvals/userGroup' })
+    cy.intercept('POST', stepsCall, { fixture: 'pipeline/api/approvals/steps' })
     cy.login('test', 'test')
 
     cy.visitCreatePipeline()
@@ -38,9 +41,6 @@ describe('RUN PIPELINE MODAL - approval stage', () => {
     cy.fillName('testStage')
     cy.contains('p', 'Harness Approval').click({ multiple: true })
     cy.clickSubmit()
-    cy.intercept('GET', yamlSnippetCall, { fixture: 'pipeline/api/approvals/stageYamlSnippet' })
-    cy.intercept('GET', userGroupCall, { fixture: 'pipeline/api/approvals/userGroup' })
-    cy.intercept('POST', stepsCall, { fixture: 'pipeline/api/approvals/steps' })
   })
 
   it('should display the delete pipeline stage modal', () => {

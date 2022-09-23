@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { cloneDeep, isEmpty } from 'lodash-es'
 import type { GroupedCreatedMetrics } from './components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import type { MultiItemsSideNavProps } from './MultiItemsSideNav'
 
@@ -76,4 +77,22 @@ export const getSelectedMetricIndex = (
     }
   }
   return selectedMetricIndex
+}
+
+export const getFilteredGroupedCreatedMetric = (
+  filteredGroupMetric?: GroupedCreatedMetrics,
+  filter?: string
+): GroupedCreatedMetrics => {
+  const cloneFilteredGroupMetric = cloneDeep(filteredGroupMetric || {})
+  if (filter && !isEmpty(cloneFilteredGroupMetric)) {
+    const entryFilteredGroupMetric = Object.entries(cloneFilteredGroupMetric)
+    entryFilteredGroupMetric?.forEach(groupItem => {
+      const [label, items] = groupItem
+      const filteredMetric = items?.filter(metric =>
+        metric?.metricName?.toLocaleLowerCase()?.includes(filter?.toLocaleLowerCase())
+      )
+      cloneFilteredGroupMetric[label] = filteredMetric
+    })
+  }
+  return cloneFilteredGroupMetric
 }

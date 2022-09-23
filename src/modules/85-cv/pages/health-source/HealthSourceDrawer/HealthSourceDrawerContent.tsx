@@ -30,7 +30,8 @@ function HealthSourceDrawerContent({
   shouldRenderAtVerifyStep,
   changeSources,
   metricDetails,
-  isTemplate
+  isTemplate,
+  expressions
 }: HealthSourceDrawerInterface): JSX.Element {
   const { getString } = useStrings()
 
@@ -54,9 +55,13 @@ function HealthSourceDrawerContent({
     if (selectedProduct === GCOProduct.CLOUD_METRICS || selectedProduct === DatadogProduct.CLOUD_METRICS) {
       const dashboardsScreen =
         selectedProduct === DatadogProduct.CLOUD_METRICS ? (
-          <SelectDatadogMetricsDashboards key="selectDatadogDashboards" />
+          <SelectDatadogMetricsDashboards
+            key="selectDatadogDashboards"
+            isTemplate={isTemplate}
+            expressions={expressions}
+          />
         ) : (
-          <SelectGCODashboards key="selectGCODashboards" />
+          <SelectGCODashboards key="selectGCODashboards" isTemplate={isTemplate} expressions={expressions} />
         )
       return [
         [
@@ -66,6 +71,8 @@ function HealthSourceDrawerContent({
         ],
         <DefineHealthSource
           key="defineHealthSource"
+          isTemplate={isTemplate}
+          expressions={expressions}
           onSubmit={values => {
             setSelectedProduct(values.product?.value)
           }}
@@ -74,17 +81,25 @@ function HealthSourceDrawerContent({
         <CustomiseHealthSource
           key="customiseHealthSource"
           onSuccess={onSuccess}
+          isTemplate={isTemplate}
+          expressions={expressions}
           shouldRenderAtVerifyStep={shouldRenderAtVerifyStep}
         />
       ]
     }
     return [
       [getString('cv.healthSource.defineHealthSource'), getString('cv.healthSource.customizeHealthSource')],
-      <DefineHealthSource key="defineHealthSource" onSubmit={values => setSelectedProduct(values.product?.value)} />,
+      <DefineHealthSource
+        key="defineHealthSource"
+        isTemplate={isTemplate}
+        expressions={expressions}
+        onSubmit={values => setSelectedProduct(values.product?.value)}
+      />,
       <CustomiseHealthSource
         key="customiseHealthSource"
         onSuccess={onSuccess}
         isTemplate={isTemplate}
+        expressions={expressions}
         shouldRenderAtVerifyStep={shouldRenderAtVerifyStep}
       />
     ]

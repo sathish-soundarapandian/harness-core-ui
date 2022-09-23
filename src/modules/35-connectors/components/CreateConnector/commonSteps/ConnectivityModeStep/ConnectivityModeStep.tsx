@@ -39,6 +39,7 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from './ConnectivityModeStep.module.scss'
 
 interface ConnectivityModeStepData extends BuildPayloadProps {
@@ -60,6 +61,7 @@ interface ConnectivityModeStepProps {
   hideModal?: () => void
   customHandleCreate?: (payload: ConnectorConfigDTO) => Promise<ConnectorInfoDTO | undefined>
   customHandleUpdate?: (payload: ConnectorConfigDTO) => Promise<ConnectorInfoDTO | undefined>
+  helpPanelReferenceId?: string
 }
 
 const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectivityModeStepProps> = props => {
@@ -71,12 +73,19 @@ const ConnectivityModeStep: React.FC<StepProps<ConnectorConfigDTO> & Connectivit
     orgIdentifier: orgIdentifierFromUrl
   } = useParams<ProjectPathProps>()
 
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 1040 } : undefined
+  })
   const projectIdentifier = connectorInfo ? connectorInfo.projectIdentifier : projectIdentifierFromUrl
   const orgIdentifier = connectorInfo ? connectorInfo.orgIdentifier : orgIdentifierFromUrl
-  const isGitSyncEnabled = (useAppStore().isGitSyncEnabled &&
-    !props.disableGitSync &&
-    orgIdentifier &&
-    projectIdentifier) as boolean
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = Boolean(
+    isGitSyncEnabledForProject &&
+      !gitSyncEnabledOnlyForFF &&
+      !props.disableGitSync &&
+      orgIdentifier &&
+      projectIdentifier
+  )
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
 
   const afterSuccessHandler = (response: ResponseConnectorResponse): void => {

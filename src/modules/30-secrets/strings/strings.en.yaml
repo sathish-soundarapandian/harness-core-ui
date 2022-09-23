@@ -9,10 +9,12 @@ confirmDelete: Are you sure you want to delete the secret '{{name}}'
 confirmDeleteTitle: 'Delete Secret'
 incompleteSecret: 'Incomplete Secret'
 typeSSH: 'Execution Credential'
+typeWinRM: 'WinRM Credential'
 stepTitleVerify: 'Verify Connection'
 blank: '{{$.common.blank}}'
 labelSecretName: 'Secret Name'
 noSecrets: There are no Secrets in your {{resourceName}}
+fileNotSupported: File Secret is not supported for selected Secret Manager Type.
 
 sshAuthFormFields:
   optionKey: 'Username/SSH Key'
@@ -29,6 +31,13 @@ sshAuthFormFields:
   labelRealm: 'Realm'
   labelTGT: 'TGT Generation'
   labelKeyTab: 'Key Tab File Path'
+
+winRmAuthFormFields:
+  ntlm: 'NTLM'
+  domain: 'Domain'
+  labelWinRmPort: 'WinRM Port'
+  skipCertCheck: 'Skip Cert Check'
+  useNoProfile: 'Use No Profile'
 
 createSSHCredWizard:
   btnSaving: 'Saving...'
@@ -47,7 +56,10 @@ createSSHCredWizard:
   validateRealm: 'Realm is required'
   verifyStepOne: 'Checking for Delegates'
   verifyStepTwo: 'Verifying Connection'
-  verifyRetest: 'RETEST CONNECTION'
+createWinRmCredWizard:
+  titleDetails: 'WinRm Details'
+  validateDomain: 'Domain is required'
+  validatePassword: '{{$.validation.password}}'
 secret:
   titleCreateText: 'Add new Encrypted Text'
   titleCreateFile: 'Add new Encrypted File'
@@ -59,7 +71,6 @@ secret:
   secretActivity: Secret Activity
   labelSecretFile: 'Select File'
   labelSecretReference: 'Reference Secret Identifier'
-  saving: 'Saving'
   messageSelectSM: 'Please select a Secret Manager'
   placeholderSecretValue: 'Add your secret value'
   placeholderSecretReference: 'Add the Identifier of the secret to reference'
@@ -73,8 +84,14 @@ secret:
   configureSecret: 'Configure Secret'
   updateSuccess: 'Secret updated successfully'
   newSSHCredential: New SSH Credential
+  newWinRmCredential: New WinRm Credential
   newSecretText: New Secret Text
   newSecretFile: New Secret File
   secretNotFound: 'Secret not found'
+  successMessage: Secret '{{name}}' {{action}} successfully
+  winrmCredential: WinRm Credential
 secretsTitle: 'Resources: Secrets'
 createSecret: Create a Secret
+policyEvaluations:
+  failedToSave: Secret cannot be saved due to the policy evaluation failures
+  warning: Secret saved with policy warnings

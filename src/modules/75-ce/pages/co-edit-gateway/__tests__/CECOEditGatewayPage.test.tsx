@@ -169,6 +169,15 @@ const mockedStaticSchedulesList = { response: [] }
 
 const mockedRouteDetails = { response: { service: mockedService } }
 
+const mockedFetchRuleResponse = {
+  response: {
+    records: [],
+    total: 0,
+    pages: 1
+  },
+  loading: false
+}
+
 const testPath = '/account/:accountId/ce/orgs/:orgIdentifier/projects/:projectIdentifier/autostopping-rules/edit/10'
 
 const testParams = { accountId: 'accountId', orgIdentifier: 'orgIdentifier', projectIdentifier: 'projectIdentifier' }
@@ -185,6 +194,9 @@ jest.mock('services/lw', () => ({
   useAllServiceResources: jest.fn().mockImplementation(() => ({ data: mockedData, loading: false })),
   useSaveService: jest.fn().mockImplementation(() => ({
     mutate: jest.fn()
+  })),
+  useFetchRules: jest.fn().mockImplementation(() => ({
+    mutate: () => Promise.resolve(mockedFetchRuleResponse)
   })),
   useAllResourcesOfAccount: jest.fn().mockImplementation(() => ({
     mutate: jest.fn(() =>

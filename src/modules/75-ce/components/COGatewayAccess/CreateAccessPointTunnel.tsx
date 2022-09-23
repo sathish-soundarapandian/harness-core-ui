@@ -264,7 +264,7 @@ const CreateTunnelStep: React.FC<StepProps<any> & Props> = props => {
           })
         }}
         validationSchema={Yup.object().shape({
-          cloudConnector: Yup.string().required(getString('ce.co.accessPoint.validation.connector')),
+          cloudConnector: Yup.string().required(getString('common.validation.connectorRef')),
           accessPointName: Yup.string().required(getString('ce.co.accessPoint.validation.name')),
           accessPointRegion: Yup.string().required(getString('validation.regionRequired')),
           vpc: Yup.string().required(getString('ce.co.accessPoint.validation.vpc')),

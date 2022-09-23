@@ -139,7 +139,6 @@ const CVSLODetailsPage: React.FC = () => {
                   noData={{
                     when: () => !sloDashboardWidget
                   }}
-                  className={css.pageBody}
                 >
                   <CVCreateSLO />
                 </Page.Body>

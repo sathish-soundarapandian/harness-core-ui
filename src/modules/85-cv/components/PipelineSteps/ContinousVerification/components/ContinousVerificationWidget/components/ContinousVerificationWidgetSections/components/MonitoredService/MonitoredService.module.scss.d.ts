@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly disabled: string
+  readonly division: string
   readonly monitoredService: string
   readonly monitoredServiceText: string
   readonly notAllowed: string

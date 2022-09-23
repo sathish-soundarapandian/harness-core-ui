@@ -9,7 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cdngServices from 'services/cd-ng'
-import { ServiceDetailsHeader } from '../ServiceDetailsHeader/ServiceDetailsHeader'
+import { ServiceDetailHeaderRef } from '../ServiceDetailsHeader/ServiceDetailsHeader'
 
 describe('ServiceDetailsHeader', () => {
   test('should render ServiceDetailsHeader', () => {
@@ -31,7 +31,7 @@ describe('ServiceDetailsHeader', () => {
     })
     const { container } = render(
       <TestWrapper>
-        <ServiceDetailsHeader />
+        <ServiceDetailHeaderRef ref={jest.fn()} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -42,7 +42,7 @@ describe('ServiceDetailsHeader', () => {
     })
     const { container } = render(
       <TestWrapper>
-        <ServiceDetailsHeader />
+        <ServiceDetailHeaderRef ref={jest.fn()} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -70,7 +70,7 @@ const renderSetup = () => {
   })
   return render(
     <TestWrapper>
-      <ServiceDetailsHeader />
+      <ServiceDetailHeaderRef ref={jest.fn()} />
     </TestWrapper>
   )
 }

@@ -17,7 +17,8 @@ import {
   HarnessDocTooltip,
   ThumbnailSelect,
   ButtonVariation,
-  useConfirmationDialog
+  useConfirmationDialog,
+  FormInput
 } from '@harness/uicore'
 import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import { Color, Intent } from '@harness/design-system'
@@ -39,39 +40,24 @@ import { NameId, NameIdDescriptionTags } from '@common/components/NameIdDescript
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import {
+  DeployTabs,
+  isNewServiceEnvEntity
+} from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
-import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { StringNGVariable } from 'services/cd-ng'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
-import type { TemplateSummaryResponse } from 'services/template-ng'
 import { createTemplate, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { hasStageData, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import SelectDeploymentType from '../../DeployServiceSpecifications/SelectDeploymentType'
+import type { EditStageFormikType, EditStageViewProps } from '../EditStageViewInterface'
 import css from './EditStageView.module.scss'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
-
-export interface EditStageViewProps {
-  data?: StageElementWrapper<DeploymentStageElementConfig>
-  template?: TemplateSummaryResponse
-  onSubmit?: (values: StageElementWrapper<DeploymentStageElementConfig>, identifier?: string) => void
-  onChange?: (values: DeploymentStageElementConfig) => void
-  context?: string
-  isReadonly: boolean
-  updateDeploymentType?: (deploymentType: ServiceDeploymentType, isDeleteStage?: boolean) => void
-}
-
-interface Values {
-  identifier: string
-  name: string
-  description?: string
-  tags?: { [key: string]: string }
-  serviceType: string
-  deploymentType: string | undefined
-}
 
 export const EditStageView: React.FC<EditStageViewProps> = ({
   data,
@@ -122,7 +108,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   const { errorMap } = useValidationErrors()
   const { subscribeForm, unSubscribeForm, submitFormsForTab } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
-  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const getDeploymentType = (): ServiceDeploymentType => {
     return get(data, 'stage.spec.deploymentType')
   }
@@ -165,7 +151,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     </>
   )
 
-  const handleSubmit = (values: Values): void => {
+  const handleSubmit = (values: EditStageFormikType): void => {
     /* istanbul ignore else */
     if (data?.stage) {
       if (template) {
@@ -183,19 +169,23 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
         if (values.tags) {
           data.stage.tags = values.tags
         }
+        if (values.gitOpsEnabled) {
+          set(data, 'stage.spec.gitOpsEnabled', values.gitOpsEnabled)
+        }
         onSubmit?.(data, values.identifier)
       }
     }
   }
   const { openDialog: openStageDataDeleteWarningDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
-    contentText: getString('pipeline.stageDataDeleteWarningContent'),
+    contentText: getString('pipeline.stageDataDeleteWarningText'),
     titleText: getString('pipeline.stageDataDeleteWarningTitle'),
     confirmButtonText: getString('confirm'),
     intent: Intent.WARNING,
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
-        const newDeploymentType = (formikRef.current?.values as Values)?.deploymentType as ServiceDeploymentType
+        const newDeploymentType = (formikRef.current?.values as EditStageFormikType)
+          ?.deploymentType as ServiceDeploymentType
         setSelectedDeploymentType(newDeploymentType)
         updateDeploymentType && updateDeploymentType(newDeploymentType, true)
       } else {
@@ -219,15 +209,25 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
 
   const shouldRenderDeploymentType = (): boolean => {
     if (context) {
-      return !!NG_SVC_ENV_REDESIGN && !isEmpty(selectedDeploymentType)
+      return !!(
+        isNewServiceEnvEntity(isSvcEnvEntityEnabled, data?.stage as DeploymentStageElementConfig) &&
+        !isEmpty(selectedDeploymentType)
+      )
     }
-    return !!NG_SVC_ENV_REDESIGN
+    return !!isNewServiceEnvEntity(isSvcEnvEntityEnabled, data?.stage as DeploymentStageElementConfig)
+  }
+
+  const isStageCreationDisabled = (): boolean => {
+    return !template && shouldRenderDeploymentType() && isEmpty(selectedDeploymentType)
   }
 
   return (
     <div className={stageCss.deployStage}>
       <DeployServiceErrors domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-      <div className={context ? stageCss.contentSection : css.contentSection} ref={scrollRef}>
+      <div
+        className={context ? cx(stageCss.contentSection, stageCss.paddedSection) : css.contentSection}
+        ref={scrollRef}
+      >
         {context ? (
           <div className={stageCss.tabHeading} id="stageOverview">
             {getString('stageOverview')}
@@ -238,14 +238,15 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
           </Text>
         )}
         <Container>
-          <Formik<Values>
+          <Formik<EditStageFormikType>
             initialValues={{
               identifier: data?.stage?.identifier || '',
               name: data?.stage?.name || '',
               description: data?.stage?.description,
               tags: data?.stage?.tags || {},
               serviceType: newStageData[0].value,
-              deploymentType: selectedDeploymentType
+              deploymentType: selectedDeploymentType,
+              gitOpsEnabled: data?.stage?.spec?.gitOpsEnabled
             }}
             formName="cdEditStage"
             onSubmit={handleSubmit}
@@ -255,7 +256,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                 errors.name = getString('validation.identifierDuplicate')
               }
               if (context && data) {
-                onChange?.(omit(values as unknown as DeploymentStageElementConfig, 'serviceType', 'deploymentType'))
+                onChange?.(omit(values, 'serviceType', 'deploymentType'))
               }
               return errors
             }}
@@ -269,19 +270,21 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                   {isContextTypeNotStageTemplate(contextType) && (
                     <>
                       {context ? (
-                        <Card className={stageCss.sectionCard}>
-                          <NameIdDescriptionTags
-                            formikProps={formikProps}
-                            identifierProps={{
-                              inputLabel: getString('stageNameLabel'),
-                              isIdentifierEditable: !context,
-                              inputGroupProps: { disabled: isReadonly }
-                            }}
-                            descriptionProps={{ disabled: isReadonly }}
-                            tagsProps={{ disabled: isReadonly }}
-                            className={css.nameIdDescriptionTags}
-                          />
-                        </Card>
+                        <div>
+                          <Card className={stageCss.sectionCard}>
+                            <NameIdDescriptionTags
+                              formikProps={formikProps}
+                              identifierProps={{
+                                inputLabel: getString('stageNameLabel'),
+                                isIdentifierEditable: !context,
+                                inputGroupProps: { disabled: isReadonly }
+                              }}
+                              descriptionProps={{ disabled: isReadonly }}
+                              tagsProps={{ disabled: isReadonly }}
+                              className={css.nameIdDescriptionTags}
+                            />
+                          </Card>
+                        </div>
                       ) : template ? (
                         <NameId
                           identifierProps={{
@@ -318,25 +321,37 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                   ) : !context ? (
                     whatToDeploy
                   ) : (
-                    <Card className={stageCss.sectionCard}>{whatToDeploy}</Card>
+                    <div>
+                      <Card className={stageCss.sectionCard}>{whatToDeploy}</Card>
+                    </div>
                   )}
 
-                  {shouldRenderDeploymentType() && (
-                    <div>
-                      <SelectDeploymentType
-                        viewContext={context}
-                        selectedDeploymentType={selectedDeploymentType}
-                        isReadonly={isReadonly}
-                        handleDeploymentTypeChange={handleDeploymentTypeChange}
-                      />
-                    </div>
+                  {shouldRenderDeploymentType() && !template && (
+                    <>
+                      <div className={cx({ [css.deploymentType]: !isEmpty(context) })}>
+                        <SelectDeploymentType
+                          viewContext={context}
+                          selectedDeploymentType={selectedDeploymentType}
+                          isReadonly={isReadonly}
+                          handleDeploymentTypeChange={handleDeploymentTypeChange}
+                          shouldShowGitops={false}
+                        />
+                      </div>
+                      {selectedDeploymentType === ServiceDeploymentType['Kubernetes'] && (
+                        <FormInput.CheckBox
+                          name="gitOpsEnabled"
+                          label={getString('common.gitOps')}
+                          className={css.gitOpsCheck}
+                        />
+                      )}
+                    </>
                   )}
 
                   {!context && (
                     <Button
                       margin={{ top: 'medium' }}
                       type="submit"
-                      disabled={shouldRenderDeploymentType() && isEmpty(selectedDeploymentType)}
+                      disabled={isStageCreationDisabled()}
                       variation={ButtonVariation.PRIMARY}
                       text={getString('pipelineSteps.build.create.setupStage')}
                     />

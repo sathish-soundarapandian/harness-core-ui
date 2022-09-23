@@ -22,6 +22,47 @@ export const sourceData = {
   connectorRef: 'AppD_Connector_102'
 }
 
+export const sourceDataSplunkMetric = {
+  connectorRef: 'splunk_trial',
+  isEdit: true,
+  healthSourceList: [
+    {
+      type: 'SplunkMetric',
+      identifier: 'ghjghj',
+      name: 'ghjghj',
+      spec: {
+        connectorRef: 'splunk_trial',
+        feature: 'Splunk Metric',
+        metricDefinitions: [
+          {
+            identifier: 'splunk_metric',
+            groupName: 'G1',
+            metricName: 'Splunk Metric',
+            query: 'sdfsdf',
+            sli: {
+              enabled: false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  serviceRef: 'prometheustest',
+  environmentRef: 'prod',
+  monitoredServiceRef: {
+    name: 'prometheustest_prod',
+    identifier: 'prometheustest_prod'
+  },
+  existingMetricDetails: null,
+  healthSourceName: 'ghjghj',
+  healthSourceIdentifier: 'ghjghj',
+  sourceType: 'SplunkMetric',
+  product: {
+    label: 'Splunk Metric',
+    value: 'Splunk Metric'
+  }
+}
+
 export const healthSourcesPayload = {
   type: 'Splunk' as any,
   identifier: 'Splunk_dev',

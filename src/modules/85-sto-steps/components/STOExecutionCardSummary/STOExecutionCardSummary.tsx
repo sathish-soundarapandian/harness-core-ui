@@ -20,56 +20,107 @@ export default function STOExecutionCardSummary(
   props: ExecutionCardInfoProps<PipelineExecutionSummary>
 ): React.ReactElement {
   const { data } = props
-  const { pipelineIdentifier = '', planExecutionId: executionId = '' } = data
+  const { pipelineIdentifier = '', planExecutionId: executionId = '', status: pipelineStatus = '' } = data
 
   const { getString } = useStrings()
   const { data: issueCounts, loading, error } = useIssueCounts(pipelineIdentifier, executionId)
 
-  if (!pipelineIdentifier || !executionId) {
+  if (!pipelineIdentifier || !executionId || !pipelineStatus) {
     return <></>
   }
 
-  if (loading) {
+  if (pipelineStatuses['Loading'].includes(pipelineStatus)) {
+    return RenderLoading()
+  }
+  return RenderSecurityResults()
+
+  function RenderLoading(): React.ReactElement {
     return (
       <div className={css.spinnerWrapper}>
         <Spinner size={Spinner.SIZE_SMALL} />
+        {RenderSecurityResults()}
       </div>
     )
   }
 
-  // Determine if an informational message should be shown, instead of Security Issue counts
-  let message: JSX.Element | undefined = undefined
-  if (!issueCounts || error) {
-    if (error?.status === 404) {
-      message = <Text>{getString('stoSteps.noSecurityTests')}</Text>
+  function RenderSecurityResults(): React.ReactElement {
+    if (loading) {
+      if (pipelineStatuses['Loading'].includes(pipelineStatus)) {
+        return <></>
+      } else {
+        return (
+          <div className={css.spinnerWrapper}>
+            <Spinner size={Spinner.SIZE_SMALL} />
+          </div>
+        )
+      }
     } else {
-      message = (
-        <Text icon="error" intent="danger">
-          {getString('stoSteps.failedToGetIssueCounts')}
-        </Text>
-      )
+      if (!issueCounts || error) {
+        return (
+          <div className={css.main}>
+            <Text icon="error" intent="danger" font={{ size: 'small' }}>
+              {getString('stoSteps.failedToGetIssueCounts')}
+            </Text>
+          </div>
+        )
+      }
+      const counts = issueCounts[executionId]
+      if (issueCounts && Object.keys(issueCounts).length === 0) {
+        return (
+          <div className={css.main}>
+            <Text font={{ size: 'small' }}>{getString(`stoSteps.noSecurityResults`)}</Text>
+          </div>
+        )
+      } else if (
+        !(counts?.critical > 0 || counts?.high > 0 || counts?.medium > 0 || counts?.low > 0 || counts?.info > 0)
+      ) {
+        return (
+          <div className={css.main}>
+            <Text icon={'tick-circle'} iconProps={{ intent: 'success' }} font={{ size: 'small' }}>
+              {getString('stoSteps.noSecurityIssues')}
+            </Text>
+          </div>
+        )
+      } else {
+        return (
+          <div className={css.main}>
+            {counts?.critical ? <SeverityPill severity={SeverityCode.Critical} value={counts.critical} /> : null}
+            {counts?.high ? <SeverityPill severity={SeverityCode.High} value={counts.high} /> : null}
+            {counts?.medium ? <SeverityPill severity={SeverityCode.Medium} value={counts.medium} /> : null}
+            {counts?.low ? <SeverityPill severity={SeverityCode.Low} value={counts.low} /> : null}
+            {counts?.info ? <SeverityPill severity={SeverityCode.Info} value={counts.info} /> : null}
+          </div>
+        )
+      }
     }
-  } else if (!(issueCounts?.critical || issueCounts?.high || issueCounts?.medium || issueCounts?.low)) {
-    message = (
-      <Text icon={'tick-circle'} iconProps={{ intent: 'success' }}>
-        {getString('stoSteps.noSecurityIssues')}
-      </Text>
-    )
   }
+}
 
-  // Render the message
-  if (message) {
-    return <div className={css.main}>{message}</div>
-  }
-
-  // Otherwise, render the Security Issue counts
-  return (
-    <div className={css.main}>
-      {(issueCounts?.critical && <SeverityPill severity={SeverityCode.Critical} value={issueCounts.critical} />) ||
-        null}
-      {(issueCounts?.high && <SeverityPill severity={SeverityCode.High} value={issueCounts.high} />) || null}
-      {(issueCounts?.medium && <SeverityPill severity={SeverityCode.Medium} value={issueCounts.medium} />) || null}
-      {(issueCounts?.low && <SeverityPill severity={SeverityCode.Low} value={issueCounts.low} />) || null}
-    </div>
-  )
+const pipelineStatuses = {
+  Loading: [
+    'ApprovalWaiting',
+    'AsyncWaiting',
+    'InputWaiting',
+    'InterventionWaiting',
+    'NotStarted',
+    'Paused',
+    'Pausing',
+    'Queued',
+    'ResourceWaiting',
+    'Running',
+    'TaskWaiting',
+    'TimedWaiting'
+  ],
+  Succeeded: ['Success'],
+  Failed: [
+    'Aborted',
+    'ApprovalRejected',
+    'Discontinuing',
+    'Errored',
+    'Expired',
+    'Failed',
+    'IgnoreFailed',
+    'Skipped',
+    'Suspended'
+  ]
 }

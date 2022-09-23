@@ -39,6 +39,7 @@
 
 .validationStatus {
   padding-right: var(--spacing-large);
+  z-index: 1;
 }
 
 .invalidYaml {

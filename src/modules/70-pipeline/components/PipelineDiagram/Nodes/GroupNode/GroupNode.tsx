@@ -7,8 +7,8 @@
 
 import React, { CSSProperties, useRef } from 'react'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
-import { Icon, IconName, Text, Layout } from '@wings-software/uicore'
+import { debounce, defaultTo } from 'lodash-es'
+import { Icon, IconName, Text, Layout, Container } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/exports'
@@ -34,10 +34,12 @@ interface Node {
   id: string
   type: string
   status: string
+  isTemplateNode: boolean
 }
 function GroupNode(props: GroupNodeProps): React.ReactElement {
   const [selected, setSelected] = React.useState<boolean>(false)
   const [hasFailedNode, setFailedNode] = React.useState<boolean>(false)
+  const [hasRunningNode, setRunningNode] = React.useState<boolean>(false)
   const allowAdd = defaultTo(props.allowAdd, false)
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
   const CreateNode: React.FC<BaseReactComponentProps> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
@@ -55,7 +57,8 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
         identifier: props.identifier as string,
         id: props.id,
         type: props.type as string,
-        status: props.status as string
+        status: props.status as string,
+        isTemplateNode: !!props.data?.isTemplateNode
       }
 
       nodesArr = props?.children && props.children.length ? [firstNodeData, ...props.children] : [firstNodeData]
@@ -65,6 +68,8 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
 
     const nodesFinal: Node[] = []
     let isNodeSelected = false
+    const runningNodeFound = nodesArr.find((node: Node) => node.status === ExecutionStatusEnum.Running)
+    setRunningNode(runningNodeFound)
     nodesArr.forEach((node: Node) => {
       if (node.status === ExecutionStatusEnum.Failed) {
         setFailedNode(true)
@@ -79,7 +84,8 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
         identifier: node.identifier,
         id: node.id,
         type: node.type,
-        status: node.status as string
+        status: node.status as string,
+        isTemplateNode: !!defaultTo((node as any)?.data?.isTemplateNode, node?.isTemplateNode)
       }
       if (isSelectedNode) {
         nodesFinal.unshift(nodeToBePushed)
@@ -107,38 +113,62 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
     nodesInfo: Node[]
     isExecutionView: boolean
   }): JSX.Element => {
-    return (
-      <div className={groupnodecss.nodelistpopover}>
-        {stageList.map((node: any) => (
-          <Layout.Horizontal
-            style={{ cursor: 'pointer' }}
-            spacing="small"
-            padding="small"
-            key={node.identifier}
-            onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-              event.stopPropagation()
-              props?.fireEvent?.({
-                type: Event.ClickNode,
-                target: event.target,
-                data: {
-                  entityType: DiagramType.GroupNode,
-                  node,
-                  ...props,
-                  identifier: node?.identifier,
-                  id: node.id
-                }
-              })
-              dynamicPopoverHandler?.hide()
-            }}
-          >
+    const { restStageList, runningStageList } = stageList.reduce(
+      (acc, node) => {
+        if (node.status === ExecutionStatusEnum.Running) {
+          acc?.runningStageList?.push(node)
+        } else {
+          acc?.restStageList?.push(node)
+        }
+        return acc
+      },
+      {
+        runningStageList: [] as Node[],
+        restStageList: [] as Node[]
+      }
+    )
+
+    const renderView = (node: Node): JSX.Element => {
+      return (
+        <Container
+          key={node.identifier}
+          className={groupnodecss.stageRow}
+          background={node.isTemplateNode ? Color.PRIMARY_1 : undefined}
+          padding="small"
+          onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            event.stopPropagation()
+            props?.fireEvent?.({
+              type: Event.ClickNode,
+              target: event.target,
+              data: {
+                entityType: DiagramType.GroupNode,
+                node,
+                ...props,
+                identifier: node?.identifier,
+                id: node.id
+              }
+            })
+            dynamicPopoverHandler?.hide()
+          }}
+        >
+          {node.isTemplateNode && (
+            <Icon name={'template-library'} size={6} className={groupnodecss.secondaryIcon} color={Color.PRIMARY_7} />
+          )}
+          <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">
             <Icon name={node.icon} />
-            <Text lineClamp={1} width={200}>
+            <Text lineClamp={1} width={200} font={{ weight: 'semi-bold', size: 'small' }} color={Color.GREY_800}>
               {node.name}
             </Text>
-            {isExecutionView && <ExecutionStatusLabel status={node.status} />}
+            {isExecutionView && <ExecutionStatusLabel status={node?.status as ExecutionStatus} />}
           </Layout.Horizontal>
-        ))}
-      </div>
+        </Container>
+      )
+    }
+    return (
+      <Layout.Vertical padding={'small'} spacing={'xsmall'} className={groupnodecss.nodelistpopover}>
+        {runningStageList.length > 0 && runningStageList.map((node: Node) => renderView(node))}
+        {restStageList.map((node: Node) => renderView(node))}
+      </Layout.Vertical>
     )
   }
 
@@ -152,11 +182,22 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
     }
     setVisibilityOfAdd(visibility)
   }
+
+  const debounceHideVisibility = debounce(() => {
+    setVisibilityOfAdd(false)
+  }, 300)
+
   const isExecutionView = Boolean(props?.data?.status)
   const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
     ExecutionStatusEnum.Failed as ExecutionStatus,
     ExecutionPipelineNodeType.NORMAL
   )
+  // running status style
+  const {
+    secondaryIconProps: runningIconProps,
+    secondaryIcon: runningIcon,
+    secondaryIconStyle: runningIconStyle
+  } = getStatusProps(ExecutionStatusEnum.Running as ExecutionStatus, ExecutionPipelineNodeType.NORMAL)
 
   return (
     <div style={{ position: 'relative' }}>
@@ -176,7 +217,7 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
           )
         }}
         onMouseOver={() => setAddVisibility(true)}
-        onMouseLeave={() => setAddVisibility(false)}
+        onMouseLeave={() => debounceHideVisibility()}
         onDragOver={event => {
           if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
             setAddVisibility(true)
@@ -185,7 +226,7 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
         }}
         onDragLeave={event => {
           if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
-            setAddVisibility(false)
+            debounceHideVisibility()
           }
         }}
         onDrop={event => {
@@ -240,13 +281,22 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
             {nodesInfo?.[1]?.icon && nodesInfo[1].icon && <Icon size={28} name={nodesInfo[1].icon} />}
           </div>
         </div>
-        {secondaryIcon && hasFailedNode && (
+        {secondaryIcon && hasFailedNode && !hasRunningNode && (
           <Icon
             name={secondaryIcon}
             style={secondaryIconStyle}
             size={13}
             className={css.secondaryIcon}
             {...secondaryIconProps}
+          />
+        )}
+        {runningIcon && hasRunningNode && (
+          <Icon
+            name={runningIcon}
+            style={runningIconStyle}
+            size={13}
+            className={css.secondaryIcon}
+            {...runningIconProps}
           />
         )}
         <div className={cx(css.nodeNameText, css.stageName)}>
@@ -277,7 +327,7 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
         <CreateNode
           id={props.id}
           onMouseOver={() => setAddVisibility(true)}
-          onMouseLeave={() => setAddVisibility(false)}
+          onMouseLeave={debounceHideVisibility}
           onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             event.stopPropagation()
             props?.fireEvent?.({
@@ -300,6 +350,7 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
         className={css.renderPopover}
         render={renderPopover}
         bind={setDynamicPopoverHandler}
+        closeOnMouseOut
         usePortal
       />
       {!props.readonly && (

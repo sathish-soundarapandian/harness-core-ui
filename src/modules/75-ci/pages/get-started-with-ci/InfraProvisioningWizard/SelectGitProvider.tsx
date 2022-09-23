@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import set from 'lodash-es/set'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -25,28 +25,40 @@ import {
   ButtonVariation,
   ButtonSize,
   Color,
-  FormError
+  FormError,
+  PageSpinner
 } from '@harness/uicore'
+import { getRequestOptions } from 'framework/app/App'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import {
   ConnectorInfoDTO,
+  ResponseConnectorResponse,
   ResponseMessage,
   ResponseScmConnectorResponse,
   SecretDTOV2,
   SecretTextSpecDTO,
+  useCreateConnector,
   useCreateDefaultScmConnector
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { OAuthProviders, OAuthProviderType } from '@common/constants/OAuthProviders'
 import { joinAsASentence } from '@common/utils/StringUtils'
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
-import { Status } from '@common/utils/CIConstants'
+import { Status } from '@common/utils/Constants'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CIOnboardingActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import {
+  getBackendServerUrl,
+  isEnvironmentAllowedForOAuth,
+  OAUTH_REDIRECT_URL_PREFIX,
+  OAUTH_PLACEHOLDER_VALUE,
+  MAX_TIMEOUT_OAUTH
+} from '@connectors/components/CreateConnector/CreateConnectorUtils'
+import { getGitUrl } from '@pipeline/utils/CIUtils'
+import {
   AllSaaSGitProviders,
-  AllOnPremGitProviders,
   GitAuthenticationMethod,
   GitProvider,
   GitProviderTypeToAuthenticationMethodMapping,
@@ -55,8 +67,11 @@ import {
   GitProviderPermissions,
   ACCOUNT_SCOPE_PREFIX,
   DEFAULT_HARNESS_KMS,
-  OAUTH_REDIRECT_URL_PREFIX
+  AccessTokenPermissionsDocLinks,
+  GitProviderIcons,
+  NonGitOption
 } from './Constants'
+import { getOAuthConnectorPayload } from '../../../utils/HostedBuildsUtils'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -78,6 +93,7 @@ interface SelectGitProviderProps {
   selectedHosting?: Hosting
   disableNextBtn: () => void
   enableNextBtn: () => void
+  updateFooterLabel?: React.Dispatch<React.SetStateAction<string>>
 }
 
 export interface SelectGitProviderInterface {
@@ -94,7 +110,7 @@ const SelectGitProviderRef = (
   props: SelectGitProviderProps,
   forwardRef: SelectGitProviderForwardRef
 ): React.ReactElement => {
-  const { selectedHosting, disableNextBtn, enableNextBtn } = props
+  const { selectedHosting, disableNextBtn, enableNextBtn, updateFooterLabel } = props
   const { getString } = useStrings()
   const [gitProvider, setGitProvider] = useState<GitProvider | undefined>()
   const [authMethod, setAuthMethod] = useState<GitAuthenticationMethod>()
@@ -105,9 +121,143 @@ const SelectGitProviderRef = (
   const [connector, setConnector] = useState<ConnectorInfoDTO>()
   const [secret, setSecret] = useState<SecretDTOV2>()
   const scrollRef = useRef<Element>()
+  const oAuthSecretIntercepted = useRef<boolean>(false)
+  const [oAuthStatus, setOAuthStatus] = useState<Status>(Status.TO_DO)
   const { mutate: createSCMConnector } = useCreateDefaultScmConnector({
     queryParams: { accountIdentifier: accountId }
   })
+  const { mutate: createConnector } = useCreateConnector({
+    queryParams: { accountIdentifier: accountId }
+  })
+  let timerId: NodeJS.Timeout
+  const { trackEvent } = useTelemetry()
+
+  //#region OAuth validation and integration
+  const disableOAuthForGitProvider = gitProvider?.type === Connectors.BITBUCKET
+
+  const createOAuthConnector = useCallback(
+    ({ tokenRef, refreshTokenRef }: { tokenRef: string; refreshTokenRef?: string }): void => {
+      if (gitProvider?.type) {
+        try {
+          createConnector(
+            set(
+              getOAuthConnectorPayload({
+                tokenRef: ACCOUNT_SCOPE_PREFIX.concat(tokenRef),
+                refreshTokenRef: refreshTokenRef ? ACCOUNT_SCOPE_PREFIX.concat(refreshTokenRef) : '',
+                gitProviderType: gitProvider.type as ConnectorInfoDTO['type']
+              }),
+              'connector.spec.url',
+              getGitUrl(getString, gitProvider?.type as ConnectorInfoDTO['type'])
+            )
+          )
+            .then((createOAuthCtrResponse: ResponseConnectorResponse) => {
+              const { data, status } = createOAuthCtrResponse
+              const { connector: oAuthConnector } = data || {}
+              if (oAuthConnector && status === Status.SUCCESS) {
+                oAuthSecretIntercepted.current = true
+                setOAuthStatus(Status.SUCCESS)
+                setConnector(oAuthConnector)
+                clearTimeout(timerId)
+              }
+            })
+            .catch(_err => {
+              setOAuthStatus(Status.FAILURE)
+            })
+        } catch (_err) {
+          setOAuthStatus(Status.FAILURE)
+        }
+      }
+    },
+    [gitProvider?.type]
+  )
+
+  /* Event listener for OAuth server event, this is essential for landing user back to the same tab from where the OAuth started, once it's done */
+  const handleOAuthServerEvent = useCallback(
+    (event: MessageEvent): void => {
+      if (oAuthStatus === Status.IN_PROGRESS) {
+        if (!gitProvider) {
+          return
+        }
+        if (event.origin !== getBackendServerUrl() && !isEnvironmentAllowedForOAuth()) {
+          return
+        }
+        if (!event || !event.data) {
+          return
+        }
+        const { accessTokenRef, refreshTokenRef, status, errorMessage } = event.data
+        // valid oauth event from server will always have some value
+        if (accessTokenRef && refreshTokenRef && status && errorMessage) {
+          //safeguard against backend server sending multiple oauth events, which could lead to multiple duplicate connectors getting created
+          if (!oAuthSecretIntercepted.current) {
+            if (
+              accessTokenRef !== OAUTH_PLACEHOLDER_VALUE &&
+              (status as string).toLowerCase() === Status.SUCCESS.toLowerCase()
+            ) {
+              createOAuthConnector({ tokenRef: accessTokenRef, refreshTokenRef })
+            } else if (errorMessage !== OAUTH_PLACEHOLDER_VALUE) {
+              setOAuthStatus(Status.FAILURE)
+            }
+          }
+        }
+      }
+    },
+    [createOAuthConnector, gitProvider, oAuthStatus]
+  )
+
+  useEffect(() => {
+    window.addEventListener('message', handleOAuthServerEvent)
+
+    return () => {
+      window.removeEventListener('message', handleOAuthServerEvent)
+    }
+  }, [handleOAuthServerEvent])
+
+  useEffect(() => {
+    if (oAuthSecretIntercepted.current) {
+      window.removeEventListener('message', handleOAuthServerEvent) // remove event listener once oauth is done
+    }
+  }, [oAuthSecretIntercepted.current])
+
+  const renderOAuthConnectionStatus = useCallback((): JSX.Element => {
+    switch (oAuthStatus) {
+      case Status.SUCCESS:
+        return (
+          <Container padding={{ left: 'large' }}>
+            <Layout.Horizontal
+              className={css.provisioningSuccessful}
+              flex={{ justifyContent: 'flex-start' }}
+              padding={{ left: 'small', top: 'xsmall', right: 'small', bottom: 'xsmall' }}
+              spacing="xsmall"
+            >
+              <Icon name={'success-tick'} size={24} />
+              <Text font={{ weight: 'semi-bold' }} color={Color.GREEN_800}>
+                {getString('common.test.connectionSuccessful')}
+              </Text>
+            </Layout.Horizontal>
+          </Container>
+        )
+      case Status.FAILURE:
+        return (
+          <Container padding={{ left: 'large' }}>
+            <Layout.Horizontal
+              className={css.provisioningFailed}
+              flex={{ justifyContent: 'flex-start' }}
+              padding={{ left: 'small', top: 'xsmall', right: 'small', bottom: 'xsmall' }}
+              spacing="xsmall"
+            >
+              <Icon name={'circle-cross'} size={24} color={Color.RED_500} />
+              <Text font={{ weight: 'semi-bold' }} color={Color.RED_500}>
+                {getString('connectors.oAuth.failed')}
+              </Text>
+            </Layout.Horizontal>
+          </Container>
+        )
+      default:
+        return <></>
+    }
+  }, [oAuthStatus])
+
+  //#endregion
 
   useEffect(() => {
     if (shouldRenderAuthFormFields()) {
@@ -117,31 +267,27 @@ const SelectGitProviderRef = (
   }, [gitProvider, authMethod, selectedHosting])
 
   useEffect(() => {
-    if (gitProvider) {
-      if (selectedHosting === Hosting.SaaS) {
-        if (
-          authMethod &&
-          [
-            GitAuthenticationMethod.AccessToken,
-            GitAuthenticationMethod.AccessKey,
-            GitAuthenticationMethod.UserNameAndApplicationPassword
-          ].includes(authMethod)
-        ) {
-          if (testConnectionStatus === TestStatus.SUCCESS) {
-            enableNextBtn()
-          } else {
-            disableNextBtn()
-          }
-        }
+    if (
+      authMethod &&
+      [
+        GitAuthenticationMethod.AccessToken,
+        GitAuthenticationMethod.AccessKey,
+        GitAuthenticationMethod.UserNameAndApplicationPassword
+      ].includes(authMethod)
+    ) {
+      if (testConnectionStatus === TestStatus.SUCCESS) {
+        enableNextBtn()
       } else {
-        if (testConnectionStatus === TestStatus.SUCCESS) {
-          enableNextBtn()
-        } else {
-          disableNextBtn()
-        }
+        disableNextBtn()
+      }
+    } else if (authMethod === GitAuthenticationMethod.OAuth) {
+      if (oAuthStatus === Status.SUCCESS) {
+        enableNextBtn()
+      } else {
+        disableNextBtn()
       }
     }
-  }, [gitProvider, authMethod, testConnectionStatus])
+  }, [authMethod, oAuthStatus, testConnectionStatus])
 
   const setForwardRef = ({
     values,
@@ -170,20 +316,33 @@ const SelectGitProviderRef = (
 
   useEffect(() => {
     if (formikRef.current?.values && formikRef.current?.setFieldTouched) {
+      const existingValues = { ...formikRef.current?.values }
+      let updatedValues = set(existingValues, 'gitProvider', gitProvider)
+      updatedValues = set(updatedValues, 'gitAuthenticationMethod', authMethod)
+      formikRef.current?.setValues(updatedValues)
+
       setForwardRef({
-        values: formikRef.current.values,
+        values: updatedValues,
         setFieldTouched: formikRef.current.setFieldTouched,
         validatedConnector: connector,
         validatedSecret: secret
       })
     }
-  }, [formikRef.current?.values, formikRef.current?.setFieldTouched, connector, secret])
+  }, [formikRef, connector, secret, authMethod, gitProvider])
+
+  useEffect(() => {
+    if (gitProvider?.type === NonGitOption.OTHER) {
+      updateFooterLabel?.(getString('ci.getStartedWithCI.createPipeline'))
+    } else {
+      updateFooterLabel?.(`${getString('next')}: ${getString('ci.getStartedWithCI.selectRepo')}`)
+    }
+  }, [gitProvider])
 
   //#region scm validation
 
   const getSecretPayload = React.useCallback((): SecretDTOV2 => {
     const gitProviderLabel = gitProvider?.type as string
-    const secretName = `${gitProviderLabel} ${getString('ci.getStartedWithCI.accessTokenLabel')}`
+    const secretName = `${gitProviderLabel} ${getString('common.getStarted.accessTokenLabel')}`
     const secretPayload: SecretDTOV2 = {
       name: secretName,
       identifier: secretName.split(' ').join('_'), // an identifier cannot contain spaces
@@ -205,32 +364,16 @@ const SelectGitProviderRef = (
     }
   }, [gitProvider?.type, formikRef.current?.values])
 
-  const getGitUrl = React.useCallback((): string => {
-    let url = ''
-    switch (gitProvider?.type) {
-      case Connectors.GITHUB:
-        url = getString('ci.getStartedWithCI.gitProviderURLs.github')
-        break
-      case Connectors.BITBUCKET:
-        url = getString('ci.getStartedWithCI.gitProviderURLs.bitbucket')
-        break
-      case Connectors.GITLAB:
-        url = getString('ci.getStartedWithCI.gitProviderURLs.gitlab')
-        break
-    }
-    return url ? url.replace('/account/', '') : ''
-  }, [gitProvider?.type])
-
   const getSCMConnectorPayload = React.useCallback(
     (secretId: string, type: GitProvider['type']): ConnectorInfoDTO => {
-      const commonConnectorPayload = {
+      const commonConnectorPayload: ConnectorInfoDTO = {
         name: type,
         identifier: type,
-        type,
+        type: type as ConnectorInfoDTO['type'],
         spec: {
-          executeOnDelegate: true,
+          executeOnDelegate: false,
           type: 'Account',
-          url: getGitUrl(),
+          url: getGitUrl(getString, gitProvider?.type as ConnectorInfoDTO['type']),
           authentication: {
             type: 'Http',
             spec: {}
@@ -321,10 +464,16 @@ const SelectGitProviderRef = (
                         } else {
                           setTestConnectionStatus(TestStatus.FAILED)
                           const errorMsgs: ResponseMessage[] = []
+                          if (scmCtrData?.connectorValidationResult?.errorSummary) {
+                            errorMsgs.push({
+                              level: 'ERROR',
+                              message: scmCtrData?.connectorValidationResult?.errorSummary
+                            })
+                          }
                           if (!connectorId) {
                             errorMsgs.push({
                               level: 'ERROR',
-                              message: getString('ci.getStartedWithCI.fieldIsMissing', {
+                              message: getString('common.getStarted.fieldIsMissing', {
                                 field: `${getString('connector')} ${getString('identifier').toLowerCase()}`
                               })
                             })
@@ -332,7 +481,7 @@ const SelectGitProviderRef = (
                           if (!secretId) {
                             errorMsgs.push({
                               level: 'ERROR',
-                              message: getString('ci.getStartedWithCI.fieldIsMissing', {
+                              message: getString('common.getStarted.fieldIsMissing', {
                                 field: `${getString('secretType')} ${getString('identifier').toLowerCase()}`
                               })
                             })
@@ -399,9 +548,9 @@ const SelectGitProviderRef = (
   const getButtonLabel = React.useCallback((): string => {
     switch (gitProvider?.type) {
       case Connectors.GITHUB:
-        return getString('ci.getStartedWithCI.accessTokenLabel')
+        return getString('common.getStarted.accessTokenLabel')
       case Connectors.BITBUCKET:
-        return `${getString('username')} & ${getString('ci.getStartedWithCI.appPassword')}`
+        return `${getString('username')} & ${getString('common.getStarted.appPassword')}`
       case Connectors.GITLAB:
         return getString('common.accessKey')
       default:
@@ -441,7 +590,7 @@ const SelectGitProviderRef = (
     (_formikProps: FormikProps<SelectGitProviderInterface>): JSX.Element => {
       const apiUrlField = renderTextField({
         name: 'url',
-        label: 'ci.getStartedWithCI.apiUrlLabel',
+        label: 'common.getStarted.apiUrlLabel',
         tooltipId: 'url'
       })
       switch (gitProvider?.type) {
@@ -451,7 +600,7 @@ const SelectGitProviderRef = (
               {selectedHosting === Hosting.OnPrem ? apiUrlField : null}
               {renderTextField({
                 name: 'accessToken',
-                label: 'ci.getStartedWithCI.accessTokenLabel',
+                label: 'common.getStarted.accessTokenLabel',
                 tooltipId: 'accessToken',
                 inputGroupType: 'password'
               })}
@@ -468,7 +617,7 @@ const SelectGitProviderRef = (
               })}
               {renderTextField({
                 name: 'applicationPassword',
-                label: 'ci.getStartedWithCI.appPassword',
+                label: 'common.getStarted.appPassword',
                 tooltipId: 'applicationPassword',
                 inputGroupType: 'password'
               })}
@@ -570,8 +719,9 @@ const SelectGitProviderRef = (
         )
       } else if (selectedHosting === Hosting.OnPrem) {
         return (
-          [Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET].includes(gitProvider.type) &&
-          selectedHosting === Hosting.OnPrem
+          [Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET].includes(
+            gitProvider.type as ConnectorInfoDTO['type']
+          ) && selectedHosting === Hosting.OnPrem
         )
       }
     }
@@ -602,7 +752,7 @@ const SelectGitProviderRef = (
         .trim()
         .required(
           getString('fieldRequired', {
-            field: getString('ci.getStartedWithCI.apiUrlLabel')
+            field: getString('common.getStarted.apiUrlLabel')
           })
         )
     })
@@ -613,7 +763,7 @@ const SelectGitProviderRef = (
           .shape({
             accessToken: Yup.string()
               .trim()
-              .required(getString('fieldRequired', { field: getString('ci.getStartedWithCI.accessTokenLabel') }))
+              .required(getString('fieldRequired', { field: getString('common.getStarted.accessTokenLabel') }))
           })
           .required()
         return selectedHosting === Hosting.SaaS ? baseSchema : urlSchema.concat(baseSchema)
@@ -634,7 +784,7 @@ const SelectGitProviderRef = (
               .required(getString('fieldRequired', { field: getString('username') })),
             applicationPassword: Yup.string()
               .trim()
-              .required(getString('fieldRequired', { field: getString('ci.getStartedWithCI.appPassword') }))
+              .required(getString('fieldRequired', { field: getString('common.getStarted.appPassword') }))
           })
           .required()
         return selectedHosting === Hosting.SaaS ? baseSchema : urlSchema.concat(baseSchema)
@@ -670,15 +820,30 @@ const SelectGitProviderRef = (
     }
   }, [gitProvider, authMethod])
 
+  const handleGitProviderSelection = useCallback(
+    (item: GitProvider) => {
+      trackEvent(CIOnboardingActions.SelectGitProvider, { gitProvider: item.type, ...(authMethod && { authMethod }) })
+      setGitProvider(item)
+      setTestConnectionStatus(TestStatus.NOT_INITIATED)
+      resetFormFields()
+      setAuthMethod(undefined)
+      setOAuthStatus(Status.TO_DO)
+    },
+    [formikRef, trackEvent]
+  )
+
   //#endregion
 
   return (
     <Layout.Vertical width="70%">
+      {authMethod === GitAuthenticationMethod.OAuth && oAuthStatus === Status.IN_PROGRESS ? (
+        <PageSpinner message={getString('connectors.oAuth.inProgress')} />
+      ) : null}
       <Text font={{ variation: FontVariation.H4 }}>{getString('ci.getStartedWithCI.codeRepo')}</Text>
       <Formik<SelectGitProviderInterface>
         initialValues={{
           ...getInitialValues(),
-          gitProvider: undefined,
+          gitProvider,
           gitAuthenticationMethod: undefined
         }}
         formName="ciInfraProvisiong-gitProvider"
@@ -692,61 +857,59 @@ const SelectGitProviderRef = (
             <Form>
               <Container
                 padding={{ top: 'xxlarge', bottom: 'xxxlarge' }}
-                className={cx({ [css.borderBottom]: gitProvider })}
+                className={cx({ [css.borderBottom]: gitProvider && gitProvider.type !== NonGitOption.OTHER })}
               >
-                <CardSelect
-                  data={selectedHosting === Hosting.SaaS ? AllSaaSGitProviders : AllOnPremGitProviders}
-                  cornerSelected={true}
-                  className={css.icons}
-                  cardClassName={css.gitProviderCard}
-                  renderItem={(item: GitProvider) => (
-                    <Layout.Vertical flex>
-                      <Icon
-                        name={item.icon}
-                        size={30}
-                        flex
-                        className={cx(
-                          { [css.githubIcon]: item.icon === 'github' },
-                          { [css.gitlabIcon]: item.icon === 'gitlab' },
-                          { [css.bitbucketIcon]: item.icon === 'bitbucket-blue' },
-                          { [css.genericGitIcon]: item.icon === 'service-github' }
-                        )}
-                      />
-                      <Text font={{ variation: FontVariation.SMALL_SEMI }} padding={{ top: 'small' }}>
-                        {getString(item.label)}
-                      </Text>
-                    </Layout.Vertical>
-                  )}
-                  selected={gitProvider}
-                  onChange={(item: GitProvider) => {
-                    formikProps.setFieldValue('gitProvider', item)
-                    setGitProvider(item)
-                    setTestConnectionStatus(TestStatus.NOT_INITIATED)
-                    resetFormFields()
-                    setAuthMethod(undefined)
-                  }}
-                />
+                <Layout.Horizontal spacing="large">
+                  <CardSelect
+                    data={AllSaaSGitProviders}
+                    selected={gitProvider}
+                    cornerSelected={true}
+                    className={css.icons}
+                    cardClassName={css.gitProviderCard}
+                    renderItem={(item: GitProvider) => (
+                      <Layout.Vertical flex>
+                        <Icon
+                          name={item.icon}
+                          size={30}
+                          flex
+                          className={cx(
+                            { [css.githubIcon]: item.icon === GitProviderIcons.get(Connectors.GITHUB) },
+                            { [css.gitlabIcon]: item.icon === GitProviderIcons.get(Connectors.GITLAB) },
+                            { [css.bitbucketIcon]: item.icon === GitProviderIcons.get(Connectors.BITBUCKET) },
+                            { [css.genericGitIcon]: item.icon === GitProviderIcons.get(Connectors.GIT) }
+                          )}
+                        />
+                        <Text font={{ variation: FontVariation.SMALL_SEMI }} padding={{ top: 'small' }}>
+                          {getString(item.label)}
+                        </Text>
+                      </Layout.Vertical>
+                    )}
+                    onChange={handleGitProviderSelection}
+                  />
+                </Layout.Horizontal>
                 {formikProps.touched.gitProvider && !formikProps.values.gitProvider ? (
                   <Container padding={{ top: 'xsmall' }}>
                     <FormError
                       name={'gitProvider'}
-                      errorMessage={getString('ci.getStartedWithCI.plsChoose', {
-                        field: `a ${getString('ci.getStartedWithCI.codeRepoLabel').toLowerCase()}`
+                      errorMessage={getString('common.getStarted.plsChoose', {
+                        field: `a ${getString('common.getStarted.codeRepoLabel').toLowerCase()}`
                       })}
                     />
                   </Container>
                 ) : null}
               </Container>
-              {gitProvider ? (
+              {gitProvider && gitProvider.type !== NonGitOption.OTHER ? (
                 <Layout.Vertical>
                   <Container
-                    className={cx({ [css.borderBottom]: shouldRenderAuthFormFields() })}
+                    className={cx({
+                      [css.borderBottom]: shouldRenderAuthFormFields()
+                    })}
                     padding={{ bottom: 'xxlarge' }}
                   >
                     <Text font={{ variation: FontVariation.H5 }} padding={{ top: 'xlarge', bottom: 'small' }}>
                       {getString(
                         selectedHosting === Hosting.SaaS
-                          ? 'ci.getStartedWithCI.authMethod'
+                          ? 'common.getStarted.authMethod'
                           : 'ci.getStartedWithCI.setUpAuth'
                       )}
                     </Text>
@@ -756,44 +919,82 @@ const SelectGitProviderRef = (
                           <Button
                             className={css.authMethodBtn}
                             round
-                            text={getString('ci.getStartedWithCI.oAuthLabel')}
-                            onClick={() => {
-                              const oAuthProviderDetails = OAuthProviders.filter(
-                                (oAuthProvider: OAuthProviderType) =>
-                                  gitProvider && gitProvider.type.toUpperCase() === oAuthProvider.name.toUpperCase()
-                              )[0]
-                              if (oAuthProviderDetails) {
-                                const redirectionUrl = `${OAUTH_REDIRECT_URL_PREFIX}api/users/${oAuthProviderDetails.url}`
-                                window.open(redirectionUrl, '_blank')
-                              }
-                              formikProps.setFieldValue('gitAuthenticationMethod', GitAuthenticationMethod.OAuth)
+                            text={getString('common.oAuthLabel')}
+                            onClick={async () => {
+                              setOAuthStatus(Status.IN_PROGRESS)
+                              setTimeout(() => {
+                                if (oAuthStatus !== Status.SUCCESS) {
+                                  setOAuthStatus(Status.FAILURE)
+                                }
+                              }, MAX_TIMEOUT_OAUTH)
+                              oAuthSecretIntercepted.current = false
                               setAuthMethod(GitAuthenticationMethod.OAuth)
+                              if (gitProvider?.type) {
+                                try {
+                                  const { headers } = getRequestOptions()
+                                  const oauthRedirectEndpoint = `${OAUTH_REDIRECT_URL_PREFIX}?provider=${gitProvider.type.toLowerCase()}&accountId=${accountId}`
+                                  const response = await fetch(oauthRedirectEndpoint, {
+                                    headers
+                                  })
+                                  const oAuthURL = await response.text()
+                                  if (typeof oAuthURL === 'string') {
+                                    window.open(oAuthURL, '_blank')
+                                  }
+                                } catch (e) {
+                                  setOAuthStatus(Status.FAILURE)
+                                }
+                              }
                             }}
                             intent={authMethod === GitAuthenticationMethod.OAuth ? 'primary' : 'none'}
-                            /* Disabling till OAuth support is ready */
-                            disabled={true}
+                            disabled={
+                              disableOAuthForGitProvider ||
+                              (gitProvider?.type &&
+                                [Connectors.GITHUB, Connectors.GITLAB].includes(
+                                  gitProvider.type as ConnectorInfoDTO['type']
+                                ) &&
+                                oAuthStatus === Status.IN_PROGRESS)
+                            }
+                            tooltipProps={
+                              disableOAuthForGitProvider
+                                ? {
+                                    isDark: true
+                                  }
+                                : { isOpen: false }
+                            }
+                            tooltip={
+                              disableOAuthForGitProvider ? (
+                                <Text padding="small" color={Color.WHITE}>
+                                  {getString('common.comingSoon2')}
+                                </Text>
+                              ) : (
+                                <></>
+                              )
+                            }
                           />
                           <Button
                             className={css.authMethodBtn}
                             round
                             text={getButtonLabel()}
                             onClick={() => {
+                              oAuthSecretIntercepted.current = false
                               resetFormFields()
                               if (gitProvider?.type) {
-                                const gitAuthMethod = GitProviderTypeToAuthenticationMethodMapping.get(gitProvider.type)
-                                formikProps.setFieldValue('gitAuthenticationMethod', gitAuthMethod)
+                                const gitAuthMethod = GitProviderTypeToAuthenticationMethodMapping.get(
+                                  gitProvider.type as ConnectorInfoDTO['type']
+                                )
                                 setAuthMethod(gitAuthMethod)
                               }
                             }}
                             intent={shouldRenderAuthFormFields() ? 'primary' : 'none'}
                           />
+                          {authMethod === GitAuthenticationMethod.OAuth ? renderOAuthConnectionStatus() : null}
                         </Layout.Horizontal>
                         {formikProps.touched.gitAuthenticationMethod && !formikProps.values.gitAuthenticationMethod ? (
                           <Container padding={{ top: 'xsmall' }}>
                             <FormError
                               name={'gitAuthenticationMethod'}
-                              errorMessage={getString('ci.getStartedWithCI.plsChoose', {
-                                field: `an ${getString('ci.getStartedWithCI.authMethodLabel').toLowerCase()}`
+                              errorMessage={getString('common.getStarted.plsChoose', {
+                                field: `an ${getString('common.getStarted.authMethodLabel').toLowerCase()}`
                               })}
                             />
                           </Container>
@@ -807,9 +1008,17 @@ const SelectGitProviderRef = (
                         </Container>
                         <Button
                           variation={ButtonVariation.LINK}
-                          text={getString('ci.getStartedWithCI.learnMoreAboutPermissions')}
+                          text={getString('common.getStarted.learnMoreAboutPermissions')}
                           className={css.learnMore}
                           tooltipProps={{ dataTooltipId: 'learnMoreAboutPermissions' }}
+                          rightIcon="link"
+                          onClick={(event: React.MouseEvent<Element, MouseEvent>) => {
+                            event.preventDefault()
+                            window.open(
+                              AccessTokenPermissionsDocLinks.get(gitProvider?.type as ConnectorInfoDTO['type']),
+                              '_blank'
+                            )
+                          }}
                         />
                         <Layout.Horizontal>
                           {permissionsForSelectedGitProvider.type &&
@@ -831,7 +1040,7 @@ const SelectGitProviderRef = (
                   {shouldRenderAuthFormFields() ? (
                     <Layout.Vertical padding={{ top: formikProps.errors.url ? 'xsmall' : 'large' }} spacing="small">
                       <Text font={{ variation: FontVariation.H5 }}>{getString('common.smtp.testConnection')}</Text>
-                      <Text>{getString('ci.getStartedWithCI.verifyConnection')}</Text>
+                      <Text>{getString('common.getStarted.verifyConnection')}</Text>
                       <Container padding={{ top: 'small' }}>
                         <TestConnection />
                       </Container>

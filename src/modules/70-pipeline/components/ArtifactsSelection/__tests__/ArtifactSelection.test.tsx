@@ -8,17 +8,20 @@
 import React from 'react'
 import { render, findByText, fireEvent, waitFor, findAllByText, getByText } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactsSelection from '../ArtifactsSelection'
 import pipelineContextMock from './pipelineContext.json'
 import pipelineContextWithoutArtifactsMock from './pipelineContextWithoutArtifacts.json'
 import connectorsData from './connectors_mock.json'
 import ArtifactListView from '../ArtifactListView/ArtifactListView'
 import type { ArtifactListViewProps } from '../ArtifactInterface'
+import { testArtifactTypeList } from './helper'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -43,6 +46,15 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetRepositoriesDetailsForArtifactory: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  }),
+  useGetV2BucketListForS3: jest.fn().mockImplementation(() => {
+    return { data: { data: ['bucket1'] }, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
+jest.mock('services/portal', () => ({
+  useListAwsRegions: jest.fn().mockImplementation(() => {
+    return { data: { data: ['region1'] }, refetch: jest.fn(), error: null, loading: false }
   })
 }))
 
@@ -51,7 +63,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -63,7 +75,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -75,7 +87,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -92,12 +104,17 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" isPropagating={true} />
+          <ArtifactsSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType="Kubernetes"
+            isPropagating={true}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )
 
-    const addPrimaryArtifact = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryArtifact = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryArtifact).toBeDefined()
   })
 
@@ -105,7 +122,12 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" isPropagating={false} />
+          <ArtifactsSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType="Kubernetes"
+            isPropagating={false}
+          />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -116,11 +138,11 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addFileButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -136,11 +158,11 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addFileButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -157,7 +179,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -336,7 +358,7 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -348,19 +370,19 @@ describe('ArtifactsSelection tests', () => {
     expect(remove).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for Kubernetes for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for Kubernetes for activated CUSTOM_ARTIFACT_NG', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="Kubernetes" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="Kubernetes" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addFileButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addFileButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addFileButton).toBeDefined()
     fireEvent.click(addFileButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -376,19 +398,19 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for NativeHelm for activated CUSTOM_ARTIFACT_NG', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="NativeHelm" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="NativeHelm" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addSidecarButton).toBeDefined()
     fireEvent.click(addSidecarButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -404,19 +426,19 @@ describe('ArtifactsSelection tests', () => {
     expect(custom).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for NativeHelm for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for NativeHelm for activated CUSTOM_ARTIFACT_NG', async () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={getContextValue()}>
-          <ArtifactsSelection readonly={false} deploymentType="NativeHelm" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="NativeHelm" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    const addSidecarButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addSidecar')
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
     expect(addSidecarButton).toBeDefined()
     fireEvent.click(addSidecarButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
@@ -430,7 +452,7 @@ describe('ArtifactsSelection tests', () => {
     expect(acr).toBeDefined()
   })
 
-  test('is artifacts type list containing all types for ServerlessAwsLambda for activated NG_AZURE, NG_NEXUS_ARTIFACTORY and CUSTOM_ARTIFACT_NG', async () => {
+  test('is artifacts type list containing all types for ServerlessAwsLambda for activated CUSTOM_ARTIFACT_NG', async () => {
     const context = {
       ...pipelineContextWithoutArtifactsMock,
       getStageFromPipeline: jest.fn(() => {
@@ -441,32 +463,38 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={context}>
-          <ArtifactsSelection readonly={false} deploymentType="ServerlessAwsLambda" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="ServerlessAwsLambda" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
 
-    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
     expect(addPrimaryButton).toBeDefined()
     fireEvent.click(addPrimaryButton)
     const portal = document.getElementsByClassName('bp3-dialog')[0]
     const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
     expect(artifactLabel).toBeDefined()
-    const artifactory = await container.querySelector('input[value="ArtifactoryRegistry"]')
-    expect(artifactory).toBeDefined()
-    const nexus = await container.querySelector('input[value="Nexus3Registry"]')
+    // Artifactory, ECR, AmazonS3 should be rendered
+    const artifactory = await portal.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).not.toBeNull()
+    const ecr = await portal.querySelector('input[value="Ecr"]')
+    expect(ecr).not.toBeNull()
+    const amazonS3 = await portal.querySelector('input[value="AmazonS3"]')
+    expect(amazonS3).not.toBeNull()
+    // Nexus, ACR, Custom should NOT be rendered
+    const nexus = await portal.querySelector('input[value="Nexus3Registry"]')
     expect(nexus).toBeNull()
-    const acr = await container.querySelector('input[value="Acr"]')
+    const acr = await portal.querySelector('input[value="Acr"]')
     expect(acr).toBeNull()
-    const custom = await container.querySelector('input[value="CustomArtifact"]')
+    const custom = await portal.querySelector('input[value="CustomArtifact"]')
     expect(custom).toBeNull()
   })
 
-  test('clicking on Create Artifactory Connector should open create dialog properly', async () => {
+  test('clicking on Add Sidecar should show all types for ServerlessAwsLambda when CUSTOM_ARTIFACT_NG is ON', async () => {
     const context = {
       ...pipelineContextWithoutArtifactsMock,
       getStageFromPipeline: jest.fn(() => {
@@ -477,17 +505,59 @@ describe('ArtifactsSelection tests', () => {
     const { container } = render(
       <TestWrapper
         defaultAppStoreValues={{
-          featureFlags: { NG_AZURE: true, NG_NEXUS_ARTIFACTORY: true, CUSTOM_ARTIFACT_NG: true }
+          featureFlags: { CUSTOM_ARTIFACT_NG: true }
         }}
       >
         <PipelineContext.Provider value={context}>
-          <ArtifactsSelection readonly={false} deploymentType="ServerlessAwsLambda" />
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="ServerlessAwsLambda" />
         </PipelineContext.Provider>
       </TestWrapper>
     )
 
-    const addPrimaryButton = await findByText(container, 'pipelineSteps.serviceTab.artifactList.addPrimary')
-    expect(addPrimaryButton).toBeDefined()
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
+    expect(addSidecarButton).toBeDefined()
+    fireEvent.click(addSidecarButton)
+    const portal = document.getElementsByClassName('bp3-dialog')[0]
+    const artifactLabel = await waitFor(() => findByText(portal as HTMLElement, 'connectors.specifyArtifactRepoType'))
+    expect(artifactLabel).toBeDefined()
+    // Artifactory, ECR, AmazonS3 should be rendered
+    const artifactory = await portal.querySelector('input[value="ArtifactoryRegistry"]')
+    expect(artifactory).not.toBeNull()
+    const ecr = await portal.querySelector('input[value="Ecr"]')
+    expect(ecr).not.toBeNull()
+    const amazonS3 = await portal.querySelector('input[value="AmazonS3"]')
+    expect(amazonS3).not.toBeNull()
+    // Nexus, ACR, Custom should NOT be rendered
+    const nexus = await portal.querySelector('input[value="Nexus3Registry"]')
+    expect(nexus).toBeNull()
+    const acr = await portal.querySelector('input[value="Acr"]')
+    expect(acr).toBeNull()
+    const custom = await portal.querySelector('input[value="CustomArtifact"]')
+    expect(custom).toBeNull()
+  })
+
+  test('clicking on Create Artifactory Connector should show create view when deployment type is ServerlessAwsLambda', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="ServerlessAwsLambda" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
+    expect(addPrimaryButton).toBeInTheDocument()
     fireEvent.click(addPrimaryButton)
 
     const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
@@ -504,6 +574,105 @@ describe('ArtifactsSelection tests', () => {
     expect(artifactRepoLabel).toBeDefined()
     const newConnectorButton = getByText(portal, 'newLabel Artifactory connector')
     userEvent.click(newConnectorButton!)
+
+    const overviewTitle = await findAllByText(portal, 'overview')
+    expect(overviewTitle).toHaveLength(2)
+    expect(getByText(portal, 'name')).toBeDefined()
+  })
+
+  test('clicking on Add Primary Artifact button should display all required artifact types for Amazon ECS', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { ECS_NG: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType={ServiceDeploymentType.ECS}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
+    expect(addPrimaryButton).toBeInTheDocument()
+    fireEvent.click(addPrimaryButton)
+    await testArtifactTypeList()
+  })
+
+  test('clicking on Add Sidecar button should display all required artifact types for Amazon ECS', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { ECS_NG: true, CUSTOM_ARTIFACT_NG: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection
+            isReadonlyServiceMode={false}
+            readonly={false}
+            deploymentType={ServiceDeploymentType.ECS}
+          />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addSidecarButton = await findByText(container, 'pipeline.artifactsSelection.addSidecar')
+    expect(addSidecarButton).toBeInTheDocument()
+    fireEvent.click(addSidecarButton)
+    await testArtifactTypeList()
+  })
+
+  test('clicking on New AWS Connector should show create view when deployment type is Azure Web App', async () => {
+    const context = {
+      ...pipelineContextWithoutArtifactsMock,
+      getStageFromPipeline: jest.fn(() => {
+        return { stage: pipelineContextWithoutArtifactsMock.state.pipeline.stages[0], parent: undefined }
+      })
+    } as any
+
+    const { container } = render(
+      <TestWrapper
+        defaultAppStoreValues={{
+          featureFlags: { AZURE_WEBAPP_NG_S3_ARTIFACTS: true }
+        }}
+      >
+        <PipelineContext.Provider value={context}>
+          <ArtifactsSelection isReadonlyServiceMode={false} readonly={false} deploymentType="AzureWebApp" />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    const addPrimaryButton = await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')
+    expect(await findByText(container, 'pipeline.artifactsSelection.addPrimaryArtifact')).toBeInTheDocument()
+    fireEvent.click(addPrimaryButton)
+
+    const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+    userEvent.click(getByText(portal, 'pipeline.artifactsSelection.amazonS3Title')!)
+    const continueButton = getByText(portal, 'continue').parentElement as HTMLElement
+    await waitFor(() => expect(continueButton).not.toBeDisabled())
+    userEvent.click(continueButton)
+
+    const artifactRepoLabel = await findByText(portal, 'AWS connector')
+    expect(artifactRepoLabel).toBeDefined()
+    userEvent.click(getByText(portal, 'newLabel AWS connector')!)
 
     const overviewTitle = await findAllByText(portal, 'overview')
     expect(overviewTitle).toHaveLength(2)

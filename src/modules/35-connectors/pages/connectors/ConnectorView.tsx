@@ -203,7 +203,8 @@ const ConnectorView: React.FC<ConnectorViewProps> = props => {
                 selectedView === SelectedView.VISUAL
                   ? openConnectorModal(true, props.type, {
                       connectorInfo: connector,
-                      gitDetails: { ...props.response?.gitDetails, getDefaultFromOtherRepo: false }
+                      gitDetails: { ...props.response?.gitDetails, getDefaultFromOtherRepo: false },
+                      status: props.response?.status
                     })
                   : undefined
               }}

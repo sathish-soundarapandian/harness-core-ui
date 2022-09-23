@@ -1,0 +1,62 @@
+# Copyright 2021 Harness Inc. All rights reserved.
+# Use of this source code is governed by the PolyForm Shield 1.0.0 license
+# that can be found in the licenses directory at the root of this repository, also available at
+# https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+
+query FetchServiceTimeSeries(
+  $filters: [QLCEViewFilterWrapperInput]
+  $aggregateFunction: [QLCEViewAggregationInput]
+  $isClusterQuery: Boolean
+  $groupBy: [QLCEViewGroupByInput]
+) {
+  perspectiveTimeSeriesStats(
+    filters: $filters
+    isClusterQuery: $isClusterQuery
+    aggregateFunction: $aggregateFunction
+    groupBy: $groupBy
+    limit: 100
+    offset: 0
+    preferences: { includeOthers: false, includeUnallocatedCost: false }
+  ) {
+    cpuRequest {
+      time
+      values {
+        key {
+          name
+          id
+        }
+        value
+      }
+    }
+    cpuUtilValues {
+      time
+      values {
+        key {
+          name
+          id
+        }
+        value
+      }
+    }
+    memoryRequest {
+      time
+      values {
+        key {
+          name
+          id
+        }
+        value
+      }
+    }
+    memoryUtilValues {
+      time
+      values {
+        key {
+          name
+          id
+        }
+        value
+      }
+    }
+  }
+}

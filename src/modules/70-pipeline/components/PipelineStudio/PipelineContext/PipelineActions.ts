@@ -8,14 +8,20 @@
 import { clone } from 'lodash-es'
 import type { IDrawerProps } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
-import type { YamlSnippetMetaData, PipelineInfoConfig } from 'services/cd-ng'
+import type { YamlSnippetMetaData } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type * as Diagram from '@pipeline/components/Diagram'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
-import type { EntityGitDetails, EntityValidityDetails, ErrorNodeSummary, Failure } from 'services/pipeline-ng'
+import type {
+  EntityGitDetails,
+  EntityValidityDetails,
+  ErrorNodeSummary,
+  Failure,
+  YamlSchemaErrorWrapperDTO,
+  PipelineInfoConfig
+} from 'services/pipeline-ng'
 import type { DependencyElement } from 'services/ci'
-import type { TemplateType } from '@common/interfaces/RouteInterfaces'
-import type { TemplateSummaryResponse } from 'services/template-ng'
+import type { TemplateServiceDataType } from '@pipeline/utils/templateUtils'
 import type { StepState } from '../ExecutionGraph/ExecutionGraphUtil'
 import type { AdvancedPanels, StepOrStepGroupOrTemplateStepData } from '../StepCommands/StepCommandTypes'
 
@@ -29,6 +35,7 @@ export enum PipelineActions {
   UpdatePipeline = 'UpdatePipeline',
   SetYamlHandler = 'SetYamlHandler',
   SetTemplateTypes = 'SetTemplateTypes',
+  SetTemplateServiceData = 'SetTemplateServiceData',
   PipelineSaved = 'PipelineSaved',
   UpdateSchemaErrorsFlag = 'UpdateSchemaErrorsFlag',
   Success = 'Success',
@@ -50,7 +57,8 @@ export enum DrawerTypes {
   PolicySets = 'PolicySets',
   ProvisionerStepConfig = 'ProvisionerStepConfig',
   AddProvisionerStep = 'AddProvisionerStep',
-  TemplateInputs = 'TemplateInputs'
+  TemplateInputs = 'TemplateInputs',
+  ViewTemplateDetails = 'ViewTemplateDetails'
 }
 
 export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
@@ -67,7 +75,8 @@ export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
   [DrawerTypes.FlowControl]: 600,
   [DrawerTypes.AdvancedOptions]: 840,
   [DrawerTypes.PolicySets]: 1000,
-  [DrawerTypes.TemplateInputs]: 876
+  [DrawerTypes.TemplateInputs]: 876,
+  [DrawerTypes.ViewTemplateDetails]: 600
 }
 
 export enum SplitViewTypes {
@@ -97,15 +106,6 @@ export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
   }
 }
 
-export interface SelectorData {
-  templateType: TemplateType
-  selectedChildType?: string
-  allChildTypes?: string[]
-  selectedTemplate?: TemplateSummaryResponse
-  onSubmit?: (template: TemplateSummaryResponse, isCopied: boolean) => void
-  onCancel?: () => void
-}
-
 export interface PipelineViewData {
   isSplitViewOpen: boolean
   isYamlEditable: boolean
@@ -114,12 +114,13 @@ export interface PipelineViewData {
   }
   isDrawerOpened: boolean
   drawerData: DrawerData
+  isRollbackToggled?: boolean
 }
 
 export interface SelectionState {
-  selectedStageId?: string | undefined
-  selectedStepId?: string | undefined
-  selectedSectionId?: string | undefined
+  selectedStageId?: string
+  selectedStepId?: string
+  selectedSectionId?: string
 }
 
 export interface PipelineReducerState {
@@ -131,6 +132,7 @@ export interface PipelineReducerState {
   error?: string
   schemaErrors: boolean
   templateTypes: { [key: string]: string }
+  templateServiceData: TemplateServiceDataType
   storeMetadata?: StoreMetadata
   gitDetails: EntityGitDetails
   entityValidityDetails: EntityValidityDetails
@@ -143,6 +145,7 @@ export interface PipelineReducerState {
   selectionState: SelectionState
   templateError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
+  yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
 
 export const DefaultPipeline: PipelineInfoConfig = {
@@ -161,12 +164,14 @@ export interface ActionResponse {
   pipelineIdentifier?: string
   yamlHandler?: YamlBuilderHandlerBinding
   templateTypes?: { [key: string]: string }
+  templateServiceData?: TemplateServiceDataType
   originalPipeline?: PipelineInfoConfig
   isBEPipelineUpdated?: boolean
   pipelineView?: PipelineViewData
   selectionState?: SelectionState
   templateError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
+  yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
 
 export interface ActionReturnType {
@@ -190,6 +195,10 @@ const setYamlHandler = (response: ActionResponse): ActionReturnType => ({
 })
 const setTemplateTypes = (response: ActionResponse): ActionReturnType => ({
   type: PipelineActions.SetTemplateTypes,
+  response
+})
+const setTemplateServiceData = (response: ActionResponse): ActionReturnType => ({
+  type: PipelineActions.SetTemplateServiceData,
   response
 })
 const updating = (): ActionReturnType => ({ type: PipelineActions.UpdatePipeline })
@@ -219,6 +228,7 @@ export const PipelineContextActions = {
   updateTemplateView,
   setYamlHandler,
   setTemplateTypes,
+  setTemplateServiceData,
   success,
   error,
   updateSchemaErrorsFlag,
@@ -243,6 +253,7 @@ export const initialState: PipelineReducerState = {
   gitDetails: {},
   entityValidityDetails: {},
   templateTypes: {},
+  templateServiceData: {},
   isLoading: false,
   isBEPipelineUpdated: false,
   isDBInitialized: false,
@@ -282,6 +293,11 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
       return {
         ...state,
         templateTypes: data.response?.templateTypes || {}
+      }
+    case PipelineActions.SetTemplateServiceData:
+      return {
+        ...state,
+        templateServiceData: data.response?.templateServiceData || {}
       }
     case PipelineActions.UpdatePipelineView:
       return {

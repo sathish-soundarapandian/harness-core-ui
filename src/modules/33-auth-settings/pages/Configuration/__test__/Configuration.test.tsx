@@ -11,11 +11,45 @@ import { TestWrapper } from '@common/utils/testUtils'
 import Configuration from '@auth-settings/pages/Configuration/Configuration'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
-import { mockResponse } from '@auth-settings/pages/Configuration/__test__/mock'
+import { mockAuthSettingsResponse, mockResponse } from '@auth-settings/pages/Configuration/__test__/mock'
 
+const syncLdapGroupsMock = jest.fn()
 jest.mock('services/cd-ng', () => ({
   useGetAuthenticationSettings: jest.fn().mockImplementation(() => {
+    return { data: mockAuthSettingsResponse, refetch: Promise.resolve(mockAuthSettingsResponse) }
+  }),
+  useUpdateAuthMechanism: jest.fn().mockImplementation(() => {
     return { mutate: () => Promise.resolve(mockResponse) }
+  }),
+  usePutLoginSettings: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
+  }),
+  useSetTwoFactorAuthAtAccountLevel: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
+  }),
+  useUpdateOauthProviders: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
+  }),
+  useGetSamlLoginTest: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
+  }),
+  usePostLdapAuthenticationTest: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
+  }),
+  useUpdateWhitelistedDomains: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
+  }),
+  useRemoveOauthMechanism: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
+  }),
+  useDeleteSamlMetaData: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
+  }),
+  useDeleteLdapSettings: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
+  }),
+  syncLdapGroupsPromise: jest.fn().mockImplementation(() => {
+    return syncLdapGroupsMock()
   })
 }))
 
@@ -25,6 +59,7 @@ describe('Configuration', () => {
       <TestWrapper
         path={routes.toAuthenticationSettings({ ...accountPathProps })}
         pathParams={{ accountId: 'testAcc' }}
+        defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}
       >
         <Configuration />
       </TestWrapper>

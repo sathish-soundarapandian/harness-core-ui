@@ -18,52 +18,52 @@ exports[`SUCCESS show tabs when data is present and authorized: ServiceNow appro
         />
       </div>
       <div
-        aria-controls="bp3-tab-panel_step-details_Approval"
+        aria-controls="bp3-tab-panel_step-details_APPROVAL"
         aria-disabled="false"
         aria-expanded="true"
         aria-selected="true"
         class="bp3-tab"
-        data-tab-id="Approval"
-        id="bp3-tab-title_step-details_Approval"
+        data-tab-id="APPROVAL"
+        id="bp3-tab-title_step-details_APPROVAL"
         role="tab"
         tabindex="0"
       >
         approvalStage.title
       </div>
       <div
-        aria-controls="bp3-tab-panel_step-details_PipelineDetails"
+        aria-controls="bp3-tab-panel_step-details_PIPELINE_DETAILS"
         aria-disabled="false"
         aria-expanded="false"
         aria-selected="false"
         class="bp3-tab"
-        data-tab-id="PipelineDetails"
-        id="bp3-tab-title_step-details_PipelineDetails"
+        data-tab-id="PIPELINE_DETAILS"
+        id="bp3-tab-title_step-details_PIPELINE_DETAILS"
         role="tab"
         tabindex="0"
       >
         common.pipelineDetails
       </div>
       <div
-        aria-controls="bp3-tab-panel_step-details_Input"
+        aria-controls="bp3-tab-panel_step-details_INPUT"
         aria-disabled="false"
         aria-expanded="false"
         aria-selected="false"
         class="bp3-tab"
-        data-tab-id="Input"
-        id="bp3-tab-title_step-details_Input"
+        data-tab-id="INPUT"
+        id="bp3-tab-title_step-details_INPUT"
         role="tab"
         tabindex="0"
       >
         common.input
       </div>
       <div
-        aria-controls="bp3-tab-panel_step-details_Output"
+        aria-controls="bp3-tab-panel_step-details_OUTPUT"
         aria-disabled="false"
         aria-expanded="false"
         aria-selected="false"
         class="bp3-tab"
-        data-tab-id="Output"
-        id="bp3-tab-title_step-details_Output"
+        data-tab-id="OUTPUT"
+        id="bp3-tab-title_step-details_OUTPUT"
         role="tab"
         tabindex="0"
       >
@@ -105,9 +105,9 @@ exports[`SUCCESS show tabs when data is present and authorized: ServiceNow appro
     </div>
     <div
       aria-hidden="false"
-      aria-labelledby="bp3-tab-title_step-details_Approval"
+      aria-labelledby="bp3-tab-title_step-details_APPROVAL"
       class="bp3-tab-panel"
-      id="bp3-tab-panel_step-details_Approval"
+      id="bp3-tab-panel_step-details_APPROVAL"
       role="tabpanel"
     >
       <div
@@ -148,7 +148,7 @@ exports[`SUCCESS show tabs when data is present and authorized: ServiceNow appro
         </div>
       </div>
       <div
-        class="serviceNowApproval"
+        class="serviceNowApproval applyTopPadding"
       />
     </div>
   </div>

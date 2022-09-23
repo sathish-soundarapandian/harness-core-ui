@@ -19,13 +19,14 @@ import DelegateInstallationError from '@delegates/components/CreateDelegate/comp
 import css from './StepProcessing.module.scss'
 
 interface StepDelegateData {
+  delegateType?: string
   name?: string
   replicas?: number
   onSuccessHandler?: () => void
 }
 
 const StepProcessing: FC<StepDelegateData> = props => {
-  const { name, replicas, onSuccessHandler } = props
+  const { name, replicas, onSuccessHandler, delegateType } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const [showSuccess, setShowSuccess] = useState(false)
@@ -75,7 +76,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
   }, [data, verifyHeartBeat, loading, onSuccessHandler])
 
   if (showError) {
-    return <DelegateInstallationError />
+    return <DelegateInstallationError delegateType={delegateType} />
   } else if (showSuccess && isHeartBeatVerified) {
     return (
       <Layout.Horizontal spacing="medium" className={css.checkItemsWrapper}>

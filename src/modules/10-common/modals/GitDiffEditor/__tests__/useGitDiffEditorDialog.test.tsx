@@ -12,7 +12,12 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { useGitDiffEditorDialog } from '../useGitDiffEditorDialog'
 
 jest.mock('services/cd-ng', () => ({
-  useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
+  useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useGetFileByBranch: () => ({
+    data: {},
+    mutate: jest.fn(),
+    refetch: jest.fn()
+  })
 }))
 
 describe('Test hook for correctness', () => {

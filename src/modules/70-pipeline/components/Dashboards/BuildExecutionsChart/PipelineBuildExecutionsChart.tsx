@@ -37,8 +37,10 @@ export default function PipelineBuildExecutionsChart() {
     if (data?.data?.pipelineExecutionInfoList?.length) {
       return data.data.pipelineExecutionInfoList.map(val => ({
         time: val.date,
-        success: val.count!.success,
-        failed: val.count!.failure
+        success: val.count?.success,
+        failed: val.count?.failure,
+        aborted: val.count?.aborted,
+        expired: val.count?.expired
       }))
     }
   }, [data])

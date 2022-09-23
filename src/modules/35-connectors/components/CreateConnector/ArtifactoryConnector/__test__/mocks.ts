@@ -7,7 +7,7 @@
 
 import type { ConnectorInfoDTO, ResponseBoolean } from 'services/cd-ng'
 
-export const mockConnector: ConnectorInfoDTO = {
+export const delegateMockConnector: ConnectorInfoDTO = {
   name: 'ArtifactoryTest',
   identifier: 'ArtifactoryTest',
   description: 'connectorDescription',
@@ -21,7 +21,26 @@ export const mockConnector: ConnectorInfoDTO = {
     auth: {
       type: 'UsernamePassword',
       spec: { username: 'dev', usernameRef: undefined, passwordRef: 'account.connectorPass' }
-    }
+    },
+    executeOnDelegate: true
+  }
+}
+
+export const hostedMockConnector: ConnectorInfoDTO = {
+  name: 'ArtifactoryTest',
+  identifier: 'ArtifactoryTest',
+  description: 'connectorDescription',
+  orgIdentifier: undefined,
+  projectIdentifier: undefined,
+  tags: {},
+  type: 'Artifactory',
+  spec: {
+    artifactoryServerUrl: 'dummyRespositoryUrl',
+    auth: {
+      type: 'UsernamePassword',
+      spec: { username: 'dev', usernameRef: undefined, passwordRef: 'account.connectorPass' }
+    },
+    executeOnDelegate: false
   }
 }
 

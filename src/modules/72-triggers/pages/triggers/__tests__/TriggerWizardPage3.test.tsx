@@ -214,11 +214,6 @@ describe('Artifact Trigger Tests', () => {
     await waitFor(() => expect(mockUpdate).toHaveBeenCalledTimes(1))
 
     expect(mockUpdate).toBeCalled()
-    // expect(mockUpdate).toBeCloseTo(clearedArtifactIdentifierResponse)
-    // expect(mockUpdate).not.toContain('identifier: null')
-    // expect(mockUpdate).toBecalled(40)
-    // expect(mockUpdate).not.('identifier: undefined')
-    // console.log(mockUpdate.length)
     expect(mockUpdate).toBeCalledWith(clearedArtifactIdentifierResponse)
   })
 })
