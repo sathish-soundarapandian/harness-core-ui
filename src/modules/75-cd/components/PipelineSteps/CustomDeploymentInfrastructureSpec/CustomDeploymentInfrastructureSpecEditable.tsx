@@ -12,7 +12,6 @@ import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { debounce, noop, defaultTo } from 'lodash-es'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import type { CustomDeploymentInfrastructure } from 'services/cd-ng'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -30,6 +29,7 @@ import type { CustomVariableEditableExtraProps } from '@pipeline/components/Pipe
 import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
 import {
   CustomDeploymentInfrastructureSpecEditableProps,
+  CustomDeploymentInfrastructureStep,
   getValidationSchema
 } from './CustomDeploymentInfrastructureInterface'
 import css from './CustomDeploymentInfrastructureSpec.module.scss'
@@ -44,8 +44,8 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { getString } = useStrings()
   const { connectorsList } = useGetConnectorsListHook()
-  const formikRef = React.useRef<FormikProps<CustomDeploymentInfrastructure> | null>(null)
-  const getInitialValues = (): CustomDeploymentInfrastructure => {
+  const formikRef = React.useRef<FormikProps<CustomDeploymentInfrastructureStep> | null>(null)
+  const getInitialValues = (): CustomDeploymentInfrastructureStep => {
     return initialValues
   }
 
@@ -68,11 +68,11 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
 
   return (
     <Layout.Vertical spacing="medium">
-      <Formik<CustomDeploymentInfrastructure>
+      <Formik<CustomDeploymentInfrastructureStep>
         formName="customDeploymentInfra"
         initialValues={getInitialValues()}
         validate={value => {
-          const data: Partial<CustomDeploymentInfrastructure> = {
+          const data: Partial<CustomDeploymentInfrastructureStep> = {
             variables: value?.variables,
             customDeploymentRef: value?.customDeploymentRef
           }
