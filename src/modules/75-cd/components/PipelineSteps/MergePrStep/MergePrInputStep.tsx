@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, AllowedTypes } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@wings-software/uicore'
 import { get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 
@@ -14,19 +14,20 @@ import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { StepElementConfig } from 'services/cd-ng'
 
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import type { MergePRStepData } from './MergePrStep'
+
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface MergePrInputStepProps {
-  initialValues: StepElementConfig
-  onUpdate?: (data: StepElementConfig) => void
-  onChange?: (data: StepElementConfig) => void
+  initialValues: MergePRStepData
+  onUpdate?: (data: MergePRStepData) => void
+  onChange?: (data: MergePRStepData) => void
   allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   readonly?: boolean
-  template?: StepElementConfig
+  template?: MergePRStepData
   path?: string
 }
 
@@ -37,7 +38,7 @@ export default function MergePRInputStep(props: MergePrInputStepProps): React.Re
   const prefix = defaultTo(path, '')
 
   return (
-    <FormikForm>
+    <>
       {getMultiTypeFromValue(get(template, 'timeout', '')) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TimeoutFieldInputSetView
@@ -55,6 +56,6 @@ export default function MergePRInputStep(props: MergePrInputStepProps): React.Re
           />
         </div>
       )}
-    </FormikForm>
+    </>
   )
 }

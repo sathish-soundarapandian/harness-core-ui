@@ -48,38 +48,44 @@ import { validateStepForm } from '../DeployInfrastructureStep/utils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface MergePrProps {
-  initialValues: StepElementConfig
-  onUpdate?: (data: StepElementConfig) => void
-  onChange?: (data: StepElementConfig) => void
+  initialValues: MergePRStepData
+  onUpdate?: (data: MergePRStepData) => void
+  onChange?: (data: MergePRStepData) => void
   allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
   readonly?: boolean
   inputSetData?: {
-    template?: StepElementConfig
+    template?: MergePRStepData
     path?: string
     readonly?: boolean
   }
 }
 
-function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<StepElementConfig>): React.ReactElement {
+export interface MergePRStepData extends StepElementConfig {
+  spec: {
+    deleteSourceBranch: boolean
+  }
+}
+
+function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<MergePRStepData>): React.ReactElement {
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes, onChange, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
   return (
     <>
-      <Formik<StepElementConfig>
+      <Formik<MergePRStepData>
         onSubmit={
           /* istanbul ignore next */
-          (values: StepElementConfig) => {
+          (values: MergePRStepData) => {
             /* istanbul ignore next */
             onUpdate?.(values)
           }
         }
         validate={
           /* istanbul ignore next */
-          (values: StepElementConfig) => {
+          (values: MergePRStepData) => {
             /* istanbul ignore next */
             onChange?.(values)
           }
@@ -91,7 +97,7 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<StepE
           timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
         })}
       >
-        {(formik: FormikProps<StepElementConfig>) => {
+        {(formik: FormikProps<MergePRStepData>) => {
           // this is required
           setFormikRef(formikRef, formik)
 
@@ -156,13 +162,13 @@ function MergePRWidget(props: MergePrProps, formikRef: StepFormikFowardRef<StepE
 }
 
 const MergePRWidgetWithRef = React.forwardRef(MergePRWidget)
-export class MergePR extends PipelineStep<StepElementConfig> {
+export class MergePR extends PipelineStep<MergePRStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
-  renderStep(props: StepProps<StepElementConfig>): JSX.Element {
+  renderStep(props: StepProps<MergePRStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -217,14 +223,17 @@ export class MergePR extends PipelineStep<StepElementConfig> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<StepElementConfig>): FormikErrors<StepElementConfig> {
+  }: ValidateInputSetProps<MergePRStepData>): FormikErrors<MergePRStepData> {
     return validateStepForm({ data, template, getString, viewType })
   }
 
-  protected defaultValues: StepElementConfig = {
+  protected defaultValues: MergePRStepData = {
     name: '',
     identifier: '',
     type: StepType.MergePR,
-    timeout: '10m'
+    timeout: '10m',
+    spec: {
+      deleteSourceBranch: false
+    }
   }
 }
