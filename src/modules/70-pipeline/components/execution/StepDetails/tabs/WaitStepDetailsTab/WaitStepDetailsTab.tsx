@@ -18,7 +18,7 @@ import css from './WaitStepTab.module.scss'
 export interface WaitStepDetailsTabProps {
   step: ExecutionNode
 }
-
+let showActionButtonsCount = 0
 export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactElement {
   const { step } = props
   const { getString } = useStrings()
@@ -80,6 +80,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
     setActionButtons(false)
+    showActionButtonsCount = 1
     console.log(e.target.value, 'hello2')
     const actionPassed = (
       e.target.value === 'MarkAsSuccess' ? 'MARK_AS_SUCCESS' : 'MARK_AS_FAIL'
@@ -98,8 +99,10 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
     <React.Fragment>
       <DurationMessage />
       <div className={css.manualInterventionTab}>
-        {showActionButtons ? <String tagName="div" className={css.title} stringID="common.PermissibleActions" /> : null}
-        {showActionButtons ? (
+        {showActionButtons && showActionButtonsCount === 0 ? (
+          <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
+        ) : null}
+        {showActionButtons && showActionButtonsCount === 0 ? (
           <div className={css.actionRow}>
             <Thumbnail
               key={0}
