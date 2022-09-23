@@ -92,7 +92,7 @@ export function YamlDiffView({
                 orgIdentifier,
                 projectIdentifier
               },
-              body: { refreshedYaml: originalEntityYaml }
+              body: { yaml: originalEntityYaml }
             })
           : await getRefreshedYamlPromise({
               queryParams: {

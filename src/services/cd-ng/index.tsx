@@ -2372,6 +2372,10 @@ export interface CustomDeploymentVariableResponse {
   yaml: string
 }
 
+export interface CustomDeploymentYaml {
+  yaml: string
+}
+
 export interface CustomDeploymentYamlRequest {
   entityYaml: string
 }
@@ -2939,6 +2943,23 @@ export interface EcrResponseDTO {
   buildDetailsList?: EcrBuildDetailsDTO[]
 }
 
+export type EcsBlueGreenCreateServiceStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  loadBalancer: string
+  prodListener: string
+  prodListenerRuleArn: string
+  stageListener: string
+  stageListenerRuleArn: string
+}
+
+export type EcsBlueGreenRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type EcsBlueGreenSwapTargetGroupsStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
 export type EcsCanaryDeleteStepInfo = StepSpecType & {
   delegateSelectors?: string[]
 }
@@ -3183,6 +3204,9 @@ export interface EntityDetail {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
 }
 
 export interface EntityDetailProtoDTO {
@@ -5254,6 +5278,9 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   searchTerm?: string
@@ -5366,6 +5393,9 @@ export interface GitEntityFilterProperties {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -5511,6 +5541,9 @@ export interface GitFullSyncEntityInfoDTO {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -5631,6 +5664,9 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -5859,6 +5895,9 @@ export interface GitSyncEntityDTO {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -5973,6 +6012,9 @@ export interface GitSyncEntityListDTO {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -6104,6 +6146,9 @@ export interface GitSyncErrorDTO {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8928,6 +8973,9 @@ export interface ReferencedByDTO {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
 }
 
 export interface RegionGar {
@@ -9898,6 +9946,9 @@ export interface ResponseListEntityType {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12603,7 +12654,6 @@ export type SshWinRmAzureInfrastructure = Infrastructure & {
   tags?: {
     [key: string]: string
   }
-  usePublicDns?: boolean
 }
 
 export type SshWinrmInfrastructureDetails = InfrastructureDetails & {
@@ -12726,6 +12776,9 @@ export interface StepData {
     | 'AzureCreateARMResource'
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
 }
 
 export interface StepElementConfig {
@@ -14339,6 +14392,9 @@ export interface ListActivitiesQueryParams {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -14445,6 +14501,9 @@ export interface ListActivitiesQueryParams {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -14655,6 +14714,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -14761,6 +14823,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -23110,7 +23175,7 @@ export type GetUpdatedYamlForInfrastructureProps = Omit<
     ResponseCustomDeploymentRefreshYaml,
     Failure | Error,
     GetUpdatedYamlForInfrastructureQueryParams,
-    CustomDeploymentRefreshYaml,
+    CustomDeploymentYaml,
     GetUpdatedYamlForInfrastructurePathParams
   >,
   'path' | 'verb'
@@ -23128,7 +23193,7 @@ export const GetUpdatedYamlForInfrastructure = ({
     ResponseCustomDeploymentRefreshYaml,
     Failure | Error,
     GetUpdatedYamlForInfrastructureQueryParams,
-    CustomDeploymentRefreshYaml,
+    CustomDeploymentYaml,
     GetUpdatedYamlForInfrastructurePathParams
   >
     verb="POST"
@@ -23143,7 +23208,7 @@ export type UseGetUpdatedYamlForInfrastructureProps = Omit<
     ResponseCustomDeploymentRefreshYaml,
     Failure | Error,
     GetUpdatedYamlForInfrastructureQueryParams,
-    CustomDeploymentRefreshYaml,
+    CustomDeploymentYaml,
     GetUpdatedYamlForInfrastructurePathParams
   >,
   'path' | 'verb'
@@ -23161,7 +23226,7 @@ export const useGetUpdatedYamlForInfrastructure = ({
     ResponseCustomDeploymentRefreshYaml,
     Failure | Error,
     GetUpdatedYamlForInfrastructureQueryParams,
-    CustomDeploymentRefreshYaml,
+    CustomDeploymentYaml,
     GetUpdatedYamlForInfrastructurePathParams
   >(
     'POST',
@@ -23181,7 +23246,7 @@ export const getUpdatedYamlForInfrastructurePromise = (
     ResponseCustomDeploymentRefreshYaml,
     Failure | Error,
     GetUpdatedYamlForInfrastructureQueryParams,
-    CustomDeploymentRefreshYaml,
+    CustomDeploymentYaml,
     GetUpdatedYamlForInfrastructurePathParams
   > & { infraIdentifier: string },
   signal?: RequestInit['signal']
@@ -23190,7 +23255,7 @@ export const getUpdatedYamlForInfrastructurePromise = (
     ResponseCustomDeploymentRefreshYaml,
     Failure | Error,
     GetUpdatedYamlForInfrastructureQueryParams,
-    CustomDeploymentRefreshYaml,
+    CustomDeploymentYaml,
     GetUpdatedYamlForInfrastructurePathParams
   >('POST', getConfig('ng/api'), `/customDeployment/get-updated-Yaml/${infraIdentifier}`, props, signal)
 
@@ -26419,6 +26484,9 @@ export interface ListReferredByEntitiesQueryParams {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -26585,6 +26653,9 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   searchTerm?: string
 }
 
@@ -29511,6 +29582,9 @@ export interface GetReferencedByQueryParams {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   searchTerm?: string
 }
 
@@ -31354,6 +31428,9 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -31528,6 +31605,9 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'Background'
       | 'Wait'
       | 'ArtifactSource'
+      | 'EcsBlueGreenCreateService'
+      | 'EcsBlueGreenSwapTargetGroups'
+      | 'EcsBlueGreenRollback'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -36951,6 +37031,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   yamlGroup?: string
 }
 
@@ -37185,6 +37268,9 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -48994,6 +49080,9 @@ export interface GetYamlSchemaQueryParams {
     | 'Background'
     | 'Wait'
     | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
   subtype?:
     | 'K8sCluster'
     | 'Git'

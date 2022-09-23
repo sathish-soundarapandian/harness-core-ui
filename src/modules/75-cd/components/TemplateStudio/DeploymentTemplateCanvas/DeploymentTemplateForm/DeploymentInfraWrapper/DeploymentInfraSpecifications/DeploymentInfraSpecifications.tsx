@@ -38,7 +38,7 @@ import type { JsonNode } from 'services/pipeline-ng'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
-import { getDTInfraVariablesValidationField } from '../DeploymentInfraUtils'
+import { getDTInfraVariablesValidationField, InstanceScriptTypes } from '../DeploymentInfraUtils'
 import css from './DeploymentInfraSpecifications.module.scss'
 
 export enum VariableType {
@@ -46,10 +46,6 @@ export enum VariableType {
   Secret = 'Secret',
   Number = 'Number',
   Connector = 'Connector'
-}
-export enum InstanceScriptTypes {
-  Inline = 'Inline',
-  FileStore = 'Harness'
 }
 
 export default function DeploymentInfraSpecifications(props: { formik: FormikProps<JsonNode> }): React.ReactElement {
