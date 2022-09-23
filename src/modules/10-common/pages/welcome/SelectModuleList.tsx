@@ -108,24 +108,24 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
           clickHandle: async (): Promise<void> => {
             trackEvent(PurposeActions.ModuleContinue, { category: Category.SIGNUP, module: buttonType })
             try {
-              // if (AUTO_FREE_MODULE_LICENSE) {
-              //   await updateDefaultExperience({
-              //     defaultExperience: Experiences.NG
-              //   })
+              if (AUTO_FREE_MODULE_LICENSE) {
+                await updateDefaultExperience({
+                  defaultExperience: Experiences.NG
+                })
 
-              //   await startFreeLicense()
-              //   const defaultURL = getModuleToDefaultURLMap(accountId, selected as Module)[selected as string]
+                await startFreeLicense()
+                const defaultURL = getModuleToDefaultURLMap(accountId, selected as Module)[selected as string]
 
-              //   CREATE_DEFAULT_PROJECT
-              //     ? history.push(defaultURL)
-              //     : history.push(routes.toModuleTrialHome({ accountId, module: buttonType }))
-              // } else {
-              updateDefaultExperience({
-                defaultExperience: Experiences.NG
-              }).then(() => {
-                history.push(routes.toModuleTrialHome({ accountId, module: buttonType }))
-              })
-              // }
+                CREATE_DEFAULT_PROJECT
+                  ? history.push(defaultURL)
+                  : history.push(routes.toModuleTrialHome({ accountId, module: buttonType }))
+              } else {
+                updateDefaultExperience({
+                  defaultExperience: Experiences.NG
+                }).then(() => {
+                  history.push(routes.toModuleTrialHome({ accountId, module: buttonType }))
+                })
+              }
             } catch (error) {
               showError(error.data?.message || getString('somethingWentWrong'))
             }
