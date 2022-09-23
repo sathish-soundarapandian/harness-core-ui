@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
 import { Duration } from '@common/exports'
@@ -24,6 +24,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   const { getString } = useStrings()
   const STRATEGIES: Strategy[][] = [[Strategy.MarkAsSuccess], [Strategy.MarkAsFailure]]
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
+  const [showActionButtons, setActionButtons] = useState(true)
   const { mutate: handleInterrupt } = useMarkWaitStep({
     nodeExecutionId: step.uuid || /* istanbul ignore next */ ''
   })
@@ -78,6 +79,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    setActionButtons(false)
     console.log(e.target.value, 'hello2')
     const actionPassed = (
       e.target.value === 'MarkAsSuccess' ? 'MARK_AS_SUCCESS' : 'MARK_AS_FAIL'
@@ -96,28 +98,29 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
     <React.Fragment>
       <DurationMessage />
       <div className={css.manualInterventionTab}>
-        <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
-
-        <div className={css.actionRow}>
-          <Thumbnail
-            key={0}
-            label={getString(stringsMap[Strategy.MarkAsSuccess])}
-            icon={strategyIconMap[Strategy.MarkAsSuccess]}
-            value={Strategy.MarkAsSuccess}
-            name={Strategy.MarkAsSuccess}
-            onClick={handleChange}
-            className={css.thumbnail}
-          />
-          <Thumbnail
-            key={0}
-            label={getString(stringsMap[Strategy.MarkAsFailure])}
-            icon={strategyIconMap[Strategy.MarkAsFailure]}
-            value={Strategy.MarkAsFailure}
-            name={Strategy.MarkAsFailure}
-            onClick={handleChange}
-            className={css.thumbnail}
-          />
-        </div>
+        {showActionButtons ? <String tagName="div" className={css.title} stringID="common.PermissibleActions" /> : null}
+        {showActionButtons ? (
+          <div className={css.actionRow}>
+            <Thumbnail
+              key={0}
+              label={getString(stringsMap[Strategy.MarkAsSuccess])}
+              icon={strategyIconMap[Strategy.MarkAsSuccess]}
+              value={Strategy.MarkAsSuccess}
+              name={Strategy.MarkAsSuccess}
+              onClick={handleChange}
+              className={css.thumbnail}
+            />
+            <Thumbnail
+              key={0}
+              label={getString(stringsMap[Strategy.MarkAsFailure])}
+              icon={strategyIconMap[Strategy.MarkAsFailure]}
+              value={Strategy.MarkAsFailure}
+              name={Strategy.MarkAsFailure}
+              onClick={handleChange}
+              className={css.thumbnail}
+            />
+          </div>
+        ) : null}
       </div>
     </React.Fragment>
   )
