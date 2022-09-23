@@ -9,17 +9,29 @@ import * as Yup from 'yup'
 import { uniqBy } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import { InstanceScriptTypes } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraSpecifications/DeploymentInfraSpecifications'
 import { NameSchema } from '@common/utils/Validation'
 
-export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
-  return Yup.object().shape({
+export function getDTInfraVariablesValidationField(
+  getString: UseStringsReturn['getString']
+): Record<string, Yup.Schema<unknown>> {
+  return {
     variables: Yup.array().of(
       Yup.object({
         name: Yup.string().required(getString('common.validation.nameIsRequired')),
         type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
       })
-    ),
+    )
+  }
+}
+
+export enum InstanceScriptTypes {
+  Inline = 'Inline',
+  FileStore = 'Harness'
+}
+
+export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
+  return Yup.object().shape({
+    ...getDTInfraVariablesValidationField(getString),
     fetchInstancesScript: Yup.object().shape({
       store: Yup.object().shape({
         type: Yup.string(),

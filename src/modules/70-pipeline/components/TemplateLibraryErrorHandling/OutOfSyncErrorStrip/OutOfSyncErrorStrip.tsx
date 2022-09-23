@@ -24,6 +24,7 @@ export interface OutOfSyncErrorStripProps {
   isReadOnly: boolean
   onRefreshEntity: () => void
   updateRootEntity: (entityYaml: string) => Promise<void>
+  isEdit?: boolean
 }
 
 export function OutOfSyncErrorStrip({
@@ -32,14 +33,15 @@ export function OutOfSyncErrorStrip({
   originalYaml,
   isReadOnly,
   onRefreshEntity,
-  updateRootEntity
-}: OutOfSyncErrorStripProps) {
+  updateRootEntity,
+  isEdit = true
+}: OutOfSyncErrorStripProps): JSX.Element {
   const { getString } = useStrings()
   const [resolvedTemplateResponses, setResolvedTemplateResponses] = React.useState<TemplateResponse[]>([])
   const hasChildren = !isEmpty(errorNodeSummary.childrenErrorNodes)
 
   const [showReconcileDialog, hideReconcileDialog] = useModalHook(() => {
-    const onClose = () => {
+    const onClose = (): void => {
       hideReconcileDialog()
       if (!isEmpty(resolvedTemplateResponses)) {
         onRefreshEntity()
@@ -51,7 +53,7 @@ export function OutOfSyncErrorStrip({
         <ReconcileDialog
           errorNodeSummary={errorNodeSummary}
           entity={entity}
-          isEdit={true}
+          isEdit={isEdit}
           originalEntityYaml={originalYaml}
           setResolvedTemplateResponses={setResolvedTemplateResponses}
           onRefreshEntity={onRefreshEntity}

@@ -26,10 +26,12 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useQueryParams } from '@common/hooks'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
+import { getUpdatedYamlForInfrastructurePromise, InfrastructureDefinitionConfig } from 'services/cd-ng'
+import { TemplateErrorEntity } from '../utils'
 import css from './YamlDiffView.module.scss'
 
 export interface YamlDiffViewProps {
@@ -38,6 +40,7 @@ export interface YamlDiffViewProps {
   originalEntityYaml: string
   resolvedTemplateResponses?: TemplateResponse[]
   onUpdate: (refreshedYaml: string) => Promise<void>
+  entity: TemplateErrorEntity
 }
 
 export function YamlDiffView({
@@ -45,8 +48,9 @@ export function YamlDiffView({
   rootErrorNodeSummary,
   originalEntityYaml,
   resolvedTemplateResponses = [],
+  entity,
   onUpdate
-}: YamlDiffViewProps) {
+}: YamlDiffViewProps): JSX.Element {
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
@@ -65,7 +69,7 @@ export function YamlDiffView({
     [resolvedTemplateResponses, errorNodeSummary?.templateResponse]
   )
 
-  const onNodeUpdate = () => {
+  const onNodeUpdate = (): void => {
     onUpdate(refreshedYaml).then(_ => {
       if (isMounted) {
         setOriginalYaml(refreshedYaml)
@@ -73,19 +77,35 @@ export function YamlDiffView({
     })
   }
 
-  const getYamlDiffFromYaml = async () => {
+  const getYamlDiffFromYaml = async (): Promise<void> => {
     try {
-      const response = await getRefreshedYamlPromise({
-        queryParams: {
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier,
-          branch,
-          repoIdentifier,
-          getDefaultFromOtherRepo: true
-        },
-        body: { yaml: originalEntityYaml }
-      })
+      const templateJSON = (
+        parse(originalEntityYaml || '') as { infrastructureDefinition: InfrastructureDefinitionConfig }
+      )?.infrastructureDefinition
+
+      const response =
+        entity === TemplateErrorEntity.INFRASTRUCTURE
+          ? await getUpdatedYamlForInfrastructurePromise({
+              infraIdentifier: templateJSON?.identifier,
+              queryParams: {
+                accountIdentifier: accountId,
+                orgIdentifier,
+                projectIdentifier
+              },
+              body: { yaml: originalEntityYaml }
+            })
+          : await getRefreshedYamlPromise({
+              queryParams: {
+                accountIdentifier: accountId,
+                orgIdentifier,
+                projectIdentifier,
+                branch,
+                repoIdentifier,
+                getDefaultFromOtherRepo: true
+              },
+              body: { yaml: originalEntityYaml }
+            })
+
       if (response && response.status === 'SUCCESS') {
         setOriginalYaml(yamlStringify(yamlParse(originalEntityYaml)))
         setRefreshedYaml(yamlStringify(yamlParse(defaultTo(response.data?.refreshedYaml, ''))))
@@ -99,7 +119,7 @@ export function YamlDiffView({
     }
   }
 
-  const getYamlDiffForTemplate = async () => {
+  const getYamlDiffForTemplate = async (): Promise<void> => {
     try {
       const templateResponse = errorNodeSummary?.templateResponse
       const templateRef = defaultTo(templateResponse?.identifier, '')
@@ -127,7 +147,7 @@ export function YamlDiffView({
     }
   }
 
-  const refetch = async () => {
+  const refetch = async (): Promise<void> => {
     setLoading(true)
     setError(undefined)
     if (isEqual(errorNodeSummary, rootErrorNodeSummary)) {

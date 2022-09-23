@@ -37,7 +37,8 @@ import {
   InfrastructureResponseDTO,
   useCreateInfrastructure,
   useGetYamlSchema,
-  useUpdateInfrastructure
+  useUpdateInfrastructure,
+  validateInfrastructureForDeploymentTemplatePromise
 } from 'services/cd-ng'
 
 import type { PipelineInfoConfig, StageElementConfig, TemplateLinkConfig } from 'services/pipeline-ng'
@@ -81,6 +82,8 @@ import type {
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import { useDeepCompareEffect } from '@common/hooks'
+import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import css from './InfrastructureDefinition.module.scss'
 
 interface CustomDeploymentMetaData {
@@ -247,6 +250,7 @@ function BootstrapDeployInfraDefinition({
   const [isSavingInfrastructure, setIsSavingInfrastructure] = useState(false)
   const [selectedDeploymentType, setSelectedDeploymentType] = useState<ServiceDeploymentType | undefined>()
   const [isYamlEditable, setIsYamlEditable] = useState(false)
+  const [showReconcile, setShowReconcile] = useState(false)
   const [formValues, setFormValues] = useState({
     name,
     identifier,
@@ -345,6 +349,35 @@ function BootstrapDeployInfraDefinition({
       scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
     }
   })
+
+  const validateInfrastructureReconcile = async (): Promise<void> => {
+    try {
+      const response = await validateInfrastructureForDeploymentTemplatePromise({
+        infraIdentifier: identifier,
+        queryParams: {
+          accountIdentifier: accountId,
+          envIdentifier: environmentIdentifier,
+          orgIdentifier,
+          projectIdentifier
+        }
+      })
+      if (response?.data) {
+        setShowReconcile(!!response?.data?.obsolete)
+      }
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+  useEffect(() => {
+    if (
+      stageDeploymentType === ServiceDeploymentType.CustomDeployment &&
+      !isEmpty(customDeploymentMetaData?.templateMetaData)
+    ) {
+      validateInfrastructureReconcile()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customDeploymentMetaData?.templateMetaData, stageDeploymentType])
 
   const addOrUpdateTemplate = async (): Promise<void> => {
     if (getTemplate) {
@@ -537,6 +570,26 @@ function BootstrapDeployInfraDefinition({
       }
     })
   }
+  const updateInfraEntity = React.useCallback(
+    async (entityYaml: string) => {
+      const entityInfrastructureDefinition = parse(entityYaml || '')
+      const stageData = produce(stage, draft => {
+        if (draft) {
+          set(
+            draft,
+            'stage.spec.infrastructure.infrastructureDefinition.spec',
+            entityInfrastructureDefinition?.infrastructureDefinition.spec
+          )
+        }
+      })
+      updateStage(stageData?.stage as StageElementConfig)
+      setShowReconcile(false)
+      setDeployInfraRemountCount(deployInfraRemountCount + 1)
+    },
+    [deployInfraRemountCount, stage, updateStage]
+  )
+
+  const refreshYAMLBuilder = React.useMemo(() => JSON.stringify(pipeline.stages), [pipeline.stages])
 
   return (
     <>
@@ -548,6 +601,17 @@ function BootstrapDeployInfraDefinition({
         <Layout.Horizontal padding={{ bottom: 'large' }} width={'100%'}>
           <VisualYamlToggle selectedView={selectedView} onChange={handleModeSwitch} />
         </Layout.Horizontal>
+        {showReconcile && (
+          <OutOfSyncErrorStrip
+            errorNodeSummary={{}}
+            entity={TemplateErrorEntity.INFRASTRUCTURE}
+            originalYaml={yamlStringify({ infrastructureDefinition })}
+            isReadOnly={false}
+            onRefreshEntity={noop}
+            updateRootEntity={updateInfraEntity}
+            isEdit={false}
+          />
+        )}
         <Container>
           {selectedView === SelectedView.VISUAL ? (
             <>
@@ -619,7 +683,7 @@ function BootstrapDeployInfraDefinition({
                       ?.infrastructure?.allowSimultaneousDeployments
                   } as InfrastructureDefinitionConfig
                 }}
-                key={isYamlEditable.toString()}
+                key={refreshYAMLBuilder}
                 schema={infrastructureDefinitionSchema?.data}
                 bind={setYamlHandler}
                 showSnippetSection={false}

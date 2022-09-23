@@ -6,11 +6,17 @@
  */
 
 import type { AddDrawerMapInterface } from '@common/components/AddDrawer/AddDrawer'
-import type { ConnectorCatalogueItem, ConnectorInfoDTO } from 'services/cd-ng'
+import type { UseGetMockData } from '@common/utils/testUtils'
+import type { ConnectorCatalogueItem, ConnectorInfoDTO, ResponseConnectorCatalogueResponse } from 'services/cd-ng'
 
 export interface ComputedDrawerMapData {
   categoriesMap: AddDrawerMapInterface
   categoriesList: ConnectorInfoDTO['type']
+}
+
+export interface UseGetConnectorsListHookProps {
+  catalogueMockData?: UseGetMockData<ResponseConnectorCatalogueResponse>
+  lazy?: boolean
 }
 
 export interface UseGetConnectorsListHookReturn {

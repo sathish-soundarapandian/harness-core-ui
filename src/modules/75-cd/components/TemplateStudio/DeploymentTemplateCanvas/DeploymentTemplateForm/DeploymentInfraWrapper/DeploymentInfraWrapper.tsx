@@ -32,12 +32,7 @@ export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unk
     const infraVars = get(deploymentConfig, 'infrastructure.variables')
     return {
       ...(deploymentConfig?.infrastructure as DeploymentInfra),
-      variables: Array.isArray(infraVars)
-        ? infraVars.map(variable => ({
-            ...variable,
-            id: uuid()
-          }))
-        : [],
+      variables: Array.isArray(infraVars) ? infraVars : [],
       instanceAttributes: instanceAttributes?.map(variable => ({
         ...variable,
         id: uuid()
@@ -60,11 +55,6 @@ export const DeploymentInfraWrapper = ({ children }: React.PropsWithChildren<unk
   const updateConfigValue = (infraValues: DeploymentInfra): void => {
     const updatedInfraValues = produce(infraValues, draft => {
       if (draft) {
-        set(
-          draft,
-          'variables',
-          draft?.variables?.map(({ id, ...variable }) => variable)
-        )
         set(
           draft,
           'instanceAttributes',

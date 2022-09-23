@@ -21,7 +21,6 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
 }
 
 export type CustomDeploymentInfrastructureStep = Omit<CustomDeploymentInfrastructure, 'customDeploymentRef'>
-
 export interface CustomDeploymentInfrastructureSpecEditableProps {
   initialValues: CustomDeploymentInfrastructureStep
   allValues?: CustomDeploymentInfrastructureStep

@@ -37,7 +37,7 @@ describe('useGetConnectorsListHook', () => {
       <TestWrapper>{children}</TestWrapper>
     )
 
-    const { result } = renderHook(useGetConnectorsListHook, { wrapper })
+    const { result } = renderHook(() => useGetConnectorsListHook({}), { wrapper })
 
     const { loading, categoriesMap, connectorsList, connectorCatalogueOrder } = result.current
     expect(loading).toBeFalsy()

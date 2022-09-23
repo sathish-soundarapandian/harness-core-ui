@@ -271,7 +271,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
     loading: loadingCatalogue,
     categoriesMap,
     connectorCatalogueOrder
-  } = useGetConnectorsListHook(catalogueMockData)
+  } = useGetConnectorsListHook({ catalogueMockData })
 
   const {
     loading: isFetchingConnectorStats,

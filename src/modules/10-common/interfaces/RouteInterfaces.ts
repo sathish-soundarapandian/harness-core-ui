@@ -83,6 +83,7 @@ export type TemplateType =
   | ':templateType(Execution)'
   | ':templateType(MonitoredService)'
   | ':templateType(SecretManager)'
+  | ':templateType(ArtifactSource)'
   | ':templateType'
 
 export interface TemplateStudioPathProps extends ProjectPathProps {
