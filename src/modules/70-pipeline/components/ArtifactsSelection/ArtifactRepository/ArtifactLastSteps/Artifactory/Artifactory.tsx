@@ -364,8 +364,7 @@ function Artifactory({
                           formik.setFieldValue('repositoryFormat', value?.value)
                           setRepositoryFormat(value?.value as string)
                           setIsAzureWebAppGeneric(
-                            showRepositoryFormatForAllowedTypes &&
-                              value?.value === RepositoryFormatTypes.Generic
+                            showRepositoryFormatForAllowedTypes && value?.value === RepositoryFormatTypes.Generic
                           )
                         }
                       }}

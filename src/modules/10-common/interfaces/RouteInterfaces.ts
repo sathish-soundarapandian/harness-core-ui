@@ -67,6 +67,7 @@ export type TemplateType =
   | 'Stage'
   | 'Pipeline'
   | 'CustomDeployment'
+  | 'ArtifactSource'
   | 'Service'
   | 'Infrastructure'
   | 'StepGroup'

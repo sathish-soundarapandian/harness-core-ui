@@ -20,7 +20,8 @@ import type {
   GetExecutionStrategyYamlQueryParams,
   Infrastructure,
   ServerlessAwsLambdaInfrastructure,
-  ServiceDefinition
+  ServiceDefinition,
+  CustomDeploymentServiceSpec
 } from 'services/cd-ng'
 import { connectorTypes } from '@pipeline/utils/constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -458,7 +459,10 @@ export const isConfigFilesPresent = (stage: DeploymentStageElementConfig): boole
 }
 
 export const isCustomDeploymentDataPresent = (stage: DeploymentStageElementConfig): boolean => {
-  return !!stage.spec?.serviceConfig && !!stage.spec?.serviceConfig.serviceDefinition?.spec.customDeploymentRef
+  return (
+    !!stage.spec?.serviceConfig &&
+    !!(stage.spec?.serviceConfig.serviceDefinition?.spec as CustomDeploymentServiceSpec)?.customDeploymentRef
+  )
 }
 
 export const isServiceEntityPresent = (stage: DeploymentStageElementConfig): boolean => {
@@ -516,10 +520,11 @@ export const deleteStageData = (stage?: DeploymentStageElementConfig): void => {
 }
 export const deleteServiceData = (stage?: DeploymentStageElementConfig): void => {
   if (stage) {
-    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
-    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
-    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.configFiles
-    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec?.customDeploymentRef
+    const serviceSpec = stage?.spec?.serviceConfig?.serviceDefinition?.spec as Partial<CustomDeploymentServiceSpec>
+    delete serviceSpec?.artifacts
+    delete serviceSpec?.manifests
+    delete serviceSpec?.configFiles
+    delete serviceSpec?.customDeploymentRef
   }
 }
 //This is to delete stage data in case of new service/ env entity

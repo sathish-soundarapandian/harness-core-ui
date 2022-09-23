@@ -61,6 +61,7 @@ const getInitialValues = (): SshWinRmAzureInfrastructure => ({
   connectorRef: 'connectorRef',
   subscriptionId: 'subscriptionId',
   resourceGroup: 'resourceGroup',
+  hostConnectionType: 'Hostname',
   tags: {
     key: 'value'
   }
@@ -71,6 +72,7 @@ const getRuntimeInputsValues = (): SshWinRmAzureInfrastructureTemplate => ({
   connectorRef: RUNTIME_INPUT_VALUE,
   subscriptionId: RUNTIME_INPUT_VALUE,
   resourceGroup: RUNTIME_INPUT_VALUE,
+  hostConnectionType: 'Hostname',
   tags: RUNTIME_INPUT_VALUE
 })
 
