@@ -6,20 +6,28 @@
  */
 
 import React from 'react'
+import { merge } from 'lodash-es'
 import { Tabs, Tab } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
+import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 import css from '../DefaultView/DefaultView.module.scss'
 import { WaitStepDetailsTab } from '../../tabs/WaitStepDetailsTab/WaitStepDetailsTab'
 
 enum StepDetailTab {
-  STEP_DETAILS = 'STEP_DETAILS'
+  STEP_DETAILS = 'STEP_DETAILS',
+  INPUT = 'INPUT',
+  OUTPUT = 'OUTPUT'
 }
 
 export function WaitStepView(props: StepDetailProps): React.ReactElement {
   const { step, stageType = StageType.DEPLOY, isStageExecutionInputConfigured } = props
   const { getString } = useStrings()
+  const shouldShowInputOutput =
+    ((step?.stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
+  const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.STEP_DETAILS)
   const manuallySelected = React.useRef(false)
 
@@ -41,6 +49,28 @@ export function WaitStepView(props: StepDetailProps): React.ReactElement {
             panel={<WaitStepDetailsTab step={step} />}
           />
         }
+        {shouldShowInputOutput && (
+          <Tab
+            id={StepDetailTab.INPUT}
+            title={getString('common.input')}
+            disabled={isWaitingOnExecInputs}
+            panel={<InputOutputTab baseFqn={step.baseFqn} mode="input" data={step.stepParameters} />}
+          />
+        )}
+        {shouldShowInputOutput && (
+          <Tab
+            id={StepDetailTab.OUTPUT}
+            title={getString('outputLabel')}
+            disabled={isWaitingOnExecInputs}
+            panel={
+              <InputOutputTab
+                baseFqn={step.baseFqn}
+                mode="output"
+                data={Array.isArray(step.outcomes) ? { output: merge({}, ...step.outcomes) } : step.outcomes}
+              />
+            }
+          />
+        )}
       </Tabs>
     </div>
   )
