@@ -18,13 +18,15 @@ import css from './WaitStepTab.module.scss'
 export interface WaitStepDetailsTabProps {
   step: ExecutionNode
 }
-let showActionButtonsCount = 0
+
+let hideSuccessButton = false
+let hideFailButton = false
+
 export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactElement {
   const { step } = props
   const { getString } = useStrings()
   const STRATEGIES: Strategy[][] = [[Strategy.MarkAsSuccess], [Strategy.MarkAsFailure]]
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
-  const [showActionButtons, setActionButtons] = useState(true)
   const { mutate: handleInterrupt } = useMarkWaitStep({
     nodeExecutionId: step.uuid || /* istanbul ignore next */ ''
   })
@@ -57,14 +59,18 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
     console.log(stepData, 'hello')
     const duration = stepData?.data?.duration
     const daysDuration = msToTime(duration || 0)
+    const startedTimeValue = step?.startTs ? new Date(step.startTs).toLocaleString() : '-'
+    const endTimeValue = step?.endTs ? new Date(step.endTs).toLocaleString() : '-'
     return (
       <Container
         color={Color.ORANGE_400}
         background={Color.YELLOW_100}
         padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'large', right: 'large' }}
       >
-        <div className={css.durationMsg}>{`Duration : ${daysDuration}`}</div>
-        <div className={css.timeEllapsedMsg}>
+        <div>{`${getString('startedAt')}-${startedTimeValue}`}</div>
+        <div>{`${getString('endedAt')}  -${endTimeValue}`}</div>
+        <div>{`Duration  -${daysDuration}`}</div>
+        <div>
           <Duration
             color={Color.ORANGE_400}
             className={css.timer}
@@ -79,12 +85,15 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    setActionButtons(false)
-    showActionButtonsCount = 1
     console.log(e.target.value, 'hello2')
     const actionPassed = (
       e.target.value === 'MarkAsSuccess' ? 'MARK_AS_SUCCESS' : 'MARK_AS_FAIL'
     ) as WaitStepRequestDto['action']
+    if (e.target.value === 'MarkAsSuccess') {
+      hideFailButton = true
+    } else {
+      hideSuccessButton = true
+    }
     const waitStepRequestDto = { action: actionPassed }
     handleInterrupt(waitStepRequestDto, {
       queryParams: {
@@ -99,31 +108,40 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
     <React.Fragment>
       <DurationMessage />
       <div className={css.manualInterventionTab}>
-        {showActionButtons && showActionButtonsCount === 0 ? (
-          <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
-        ) : null}
-        {showActionButtons && showActionButtonsCount === 0 ? (
-          <div className={css.actionRow}>
+        <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
+
+        <div className={css.actionRow}>
+          {!hideSuccessButton ? (
             <Thumbnail
               key={0}
-              label={getString(stringsMap[Strategy.MarkAsSuccess])}
+              label={
+                hideFailButton
+                  ? getString(stringsMap[Strategy.MarkedAsSuccess])
+                  : getString(stringsMap[Strategy.MarkAsSuccess])
+              }
               icon={strategyIconMap[Strategy.MarkAsSuccess]}
               value={Strategy.MarkAsSuccess}
               name={Strategy.MarkAsSuccess}
               onClick={handleChange}
               className={css.thumbnail}
             />
+          ) : null}
+          {!hideFailButton ? (
             <Thumbnail
               key={0}
-              label={getString(stringsMap[Strategy.MarkAsFailure])}
+              label={
+                hideSuccessButton
+                  ? getString(stringsMap[Strategy.MarkedAsFailure])
+                  : getString(stringsMap[Strategy.MarkAsFailure])
+              }
               icon={strategyIconMap[Strategy.MarkAsFailure]}
               value={Strategy.MarkAsFailure}
               name={Strategy.MarkAsFailure}
               onClick={handleChange}
               className={css.thumbnail}
             />
-          </div>
-        ) : null}
+          ) : null}
+        </div>
       </div>
     </React.Fragment>
   )

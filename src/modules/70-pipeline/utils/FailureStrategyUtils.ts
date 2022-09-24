@@ -18,7 +18,9 @@ export enum Strategy {
   Retry = 'Retry',
   ManualIntervention = 'ManualIntervention',
   MarkAsSuccess = 'MarkAsSuccess',
-  MarkAsFailure = 'MarkAsFailure'
+  MarkedAsSuccess = 'MarkedAsSuccess',
+  MarkAsFailure = 'MarkAsFailure',
+  MarkedAsFailure = 'MarkedAsFailure'
 }
 
 export const ErrorType: Record<FailureErrorType, FailureErrorType> = {
@@ -38,18 +40,23 @@ export const strategyIconMap: Record<Strategy, IconName> = {
   [Strategy.Ignore]: 'delete',
   [Strategy.Abort]: 'ban-circle',
   [Strategy.MarkAsSuccess]: 'tick',
+  [Strategy.MarkedAsSuccess]: 'tick',
+  [Strategy.MarkAsSuccess]: 'tick',
   [Strategy.StageRollback]: 'repeat',
   [Strategy.Retry]: 'refresh',
   [Strategy.ManualIntervention]: 'hand-up',
-  [Strategy.MarkAsFailure]: 'ban-circle'
+  [Strategy.MarkAsFailure]: 'ban-circle',
+  [Strategy.MarkedAsFailure]: 'ban-circle'
 }
 
 export const stringsMap: Record<Strategy, StringKeys> = {
   [Strategy.Ignore]: 'pipeline.failureStrategies.strategiesLabel.Ignore',
   [Strategy.Abort]: 'pipeline.failureStrategies.strategiesLabel.Abort',
   [Strategy.MarkAsSuccess]: 'pipeline.failureStrategies.strategiesLabel.MarkAsSuccess',
+  [Strategy.MarkedAsSuccess]: 'pipeline.failureStrategies.strategiesLabel.MarkedAsSuccess',
   [Strategy.StageRollback]: 'pipeline.failureStrategies.strategiesLabel.StageRollback',
   [Strategy.Retry]: 'pipeline.failureStrategies.strategiesLabel.Retry',
   [Strategy.ManualIntervention]: 'pipeline.failureStrategies.strategiesLabel.ManualIntervention',
-  [Strategy.MarkAsFailure]: 'pipeline.failureStrategies.strategiesLabel.MarkAsFail'
+  [Strategy.MarkAsFailure]: 'pipeline.failureStrategies.strategiesLabel.MarkAsFail',
+  [Strategy.MarkedAsFailure]: 'pipeline.failureStrategies.strategiesLabel.MarkedAsFail'
 }

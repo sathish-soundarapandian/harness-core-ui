@@ -406,7 +406,9 @@ failureStrategies:
     StageRollback: Rollback Stage
     ManualIntervention: Manual Intervention
     MarkAsSuccess: Mark As Success
+    MarkedAsSuccess: Marked As Success
     MarkAsFail: Mark As Fail
+    MarkedAsFail: Marked As Fail
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors
