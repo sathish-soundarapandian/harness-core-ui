@@ -633,6 +633,7 @@ healthSource:
     CloudWatch:
       awsSelectorPlaceholder: Select an AWS Region
       validationMessage:
+        expression: Expression is required
 
     NewRelic:
       applicationLabel: Find an NewRelic application

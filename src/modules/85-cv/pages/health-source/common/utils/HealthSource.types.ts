@@ -33,5 +33,5 @@ export interface BaseHealthSourceMetricInfo {
 }
 
 export interface CommonSetupHealthSourceListType {
-  name: string
+  identifier: string
 }

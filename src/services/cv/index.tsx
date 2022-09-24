@@ -6903,6 +6903,100 @@ export const getMonitoredServiceChangeTimelinePromise = (
     signal
   )
 
+export interface GetSampleDataForQueryQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier: string
+  requestGuid: string
+  region: string
+  expression: string
+  metricName: string
+  metricIdentifier: string
+}
+
+export type GetSampleDataForQueryProps = Omit<
+  GetProps<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>,
+  'path'
+>
+
+/**
+ * get sample data for given query
+ */
+export const GetSampleDataForQuery = (props: GetSampleDataForQueryProps) => (
+  <Get<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>
+    path={`/cloudwatch/metrics/fetch-sample-data`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSampleDataForQueryProps = Omit<
+  UseGetProps<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>,
+  'path'
+>
+
+/**
+ * get sample data for given query
+ */
+export const useGetSampleDataForQuery = (props: UseGetSampleDataForQueryProps) =>
+  useGet<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>(
+    `/cloudwatch/metrics/fetch-sample-data`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get sample data for given query
+ */
+export const getSampleDataForQueryPromise = (
+  props: GetUsingFetchProps<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>(
+    getConfig('cv/api'),
+    `/cloudwatch/metrics/fetch-sample-data`,
+    props,
+    signal
+  )
+
+export type GetRegionsProps = Omit<GetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * get regions
+ */
+export const GetRegions = (props: GetRegionsProps) => (
+  <Get<ResponseListString, Failure | Error, void, void>
+    path={`/cloudwatch/metrics/regions`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetRegionsProps = Omit<UseGetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * get regions
+ */
+export const useGetRegions = (props: UseGetRegionsProps) =>
+  useGet<ResponseListString, Failure | Error, void, void>(`/cloudwatch/metrics/regions`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * get regions
+ */
+export const getRegionsPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, void, void>(
+    getConfig('cv/api'),
+    `/cloudwatch/metrics/regions`,
+    props,
+    signal
+  )
+
 export interface FetchSampleDataQueryParams {
   accountId: string
   orgIdentifier: string

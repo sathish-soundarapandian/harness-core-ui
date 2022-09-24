@@ -11,7 +11,7 @@ export default function ServiceInstance<T extends CommonCustomMetricPropertyType
     <Layout.Vertical margin={{ top: 'medium' }} spacing="medium">
       <ServiceInstanceLabel />
       <FormInput.Text
-        name={`customMetrics.${formValues.selectedCustomMetricIndex}.analysis.deploymentVerification.serviceInstanceJsonPath`}
+        name={`customMetrics.${formValues.selectedCustomMetricIndex}.responseMapping.serviceInstanceJsonPath`}
       />
     </Layout.Vertical>
   )

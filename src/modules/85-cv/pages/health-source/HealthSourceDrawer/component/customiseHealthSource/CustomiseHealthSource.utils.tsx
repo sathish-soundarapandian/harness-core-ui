@@ -140,7 +140,7 @@ export const LoadSourceByType = ({
     case Connectors.ERROR_TRACKING:
       return <ErrorTrackingHealthSource data={data} onSubmit={onSubmit} />
     case Connectors.AWS:
-    case HealthSourceTypes.CloudWatch:
+    case HealthSourceTypes.CloudWatchMetrics:
       if (!isCloudWatchEnabled) {
         return null
       }

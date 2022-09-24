@@ -58,8 +58,6 @@ export default function GroupedSideNav({
     [onRemoveItem]
   )
 
-  console.log('groupedSelectedAppsList', groupedSelectedAppsList)
-
   return (
     <>
       {groupedSelectedAppsList.map(groupItem => {

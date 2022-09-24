@@ -10,7 +10,7 @@ import { getThresholdTypeOptions } from '@cv/pages/health-source/common/CustomMe
 export default function ThresholdTypes<T extends CommonCustomMetricPropertyType>(): JSX.Element {
   const { getString } = useStrings()
 
-  const { values: formikValues } = useFormikContext<T>()
+  const { values: formikValues, errors } = useFormikContext<T>()
 
   const { selectedCustomMetricIndex, customMetrics } = formikValues
 
@@ -25,6 +25,10 @@ export default function ThresholdTypes<T extends CommonCustomMetricPropertyType>
         items={items}
         name={`customMetrics.${selectedCustomMetricIndex}.analysis.riskProfile.thresholdTypes`}
         values={currentThresholdValues as string[]}
+        // TS Ignored inorder to display error for Baseline deviation
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        errorMessage={errors[`baselineDeviation-${selectedCustomMetricIndex}`]}
       />
     </>
   )

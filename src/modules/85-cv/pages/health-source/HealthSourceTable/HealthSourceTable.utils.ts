@@ -16,6 +16,7 @@ import type { UpdatedHealthSource, RowData } from '../HealthSourceDrawer/HealthS
 export const getTypeByFeature = (feature: string, getString: UseStringsReturn['getString']): string => {
   switch (feature) {
     case Connectors.APP_DYNAMICS:
+    case Connectors.AWS:
     case Connectors.GCP:
     case Connectors.NEW_RELIC:
     case Connectors.PROMETHEUS:
@@ -23,6 +24,7 @@ export const getTypeByFeature = (feature: string, getString: UseStringsReturn['g
     case HealthSourceTypes.StackdriverMetrics:
     case HealthSourceTypes.DatadogMetrics:
     case HealthSourceTypes.SplunkMetric:
+    case HealthSourceTypes.CloudWatch:
       return getString('pipeline.verification.analysisTab.metrics')
     case HealthSourceTypes.StackdriverLog:
     case HealthSourceTypes.DatadogLog:
@@ -88,7 +90,7 @@ export const getIconBySourceType = (type: string): IconName => {
       return 'service-dynatrace'
     case 'ErrorTracking':
       return 'error-tracking'
-    case HealthSourceTypes.CloudWatch:
+    case HealthSourceTypes.CloudWatchMetrics:
       return 'service-aws'
     default:
       return 'placeholder'

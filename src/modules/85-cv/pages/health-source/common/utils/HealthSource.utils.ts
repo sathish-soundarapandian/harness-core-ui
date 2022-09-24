@@ -164,13 +164,15 @@ export function mapCommonMetricDefinitionToCommonMetricInfo(
 // ⭐️ V2 utils ⭐️
 export const getCurrentHealthSourceData = (
   healthSourceList: CommonSetupHealthSourceListType[],
-  selectedHealthSourceName: string
+  selectedHealthSourceIdentifier: string
 ): CommonSetupHealthSourceListType | null => {
-  if (!healthSourceList || !selectedHealthSourceName) {
+  if (!healthSourceList || !selectedHealthSourceIdentifier) {
     return null
   }
 
-  const foundHealthSource = healthSourceList.find(healthSource => healthSource.name === selectedHealthSourceName)
+  const foundHealthSource = healthSourceList.find(
+    healthSource => healthSource.identifier === selectedHealthSourceIdentifier
+  )
 
   if (!foundHealthSource) {
     return null

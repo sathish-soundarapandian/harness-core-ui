@@ -1,11 +1,21 @@
-import { groupBy } from 'lodash-es'
+import { groupBy, isEmpty } from 'lodash-es'
 import type { IOptionProps } from '@blueprintjs/core'
 import type { SelectOption } from '@harness/uicore'
-import type { MetricPackDTO } from 'services/cv'
+import type { AnalysisDTO, MetricPackDTO, RiskProfile } from 'services/cv'
 import { getIsValidPrimitive } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
 import type { CommonCustomMetricsType, GroupedCreatedMetrics, GroupedMetric } from './CustomMetric.types'
 import { DefaultCustomMetricGroupName, ExceptionGroupName, RiskProfileBaslineValues } from './CustomMetricV2.constants'
+
+export function isAssignSectionValid(customMetric: CommonCustomMetricsType): boolean {
+  if (!customMetric) {
+    return false
+  }
+
+  const { sli, analysis } = customMetric
+
+  return Boolean(sli?.enabled || analysis?.deploymentVerification?.enabled || analysis?.liveMonitoring?.enabled)
+}
 
 export function getNewMetricIdentifier(
   customMetrics: CommonCustomMetricsType[],
@@ -226,19 +236,24 @@ export function isDuplicateMetricIdentifier(
 
 // ⭐️ Payload utils ⭐️
 
-export const updateGroupNameInSpecForPayload = (
-  customMetrics: CommonCustomMetricsType[]
-): CommonCustomMetricsType[] => {
-  if (!getIsCustomMetricPresent(customMetrics)) {
-    return []
+const isRiskProfileAndCategoryPresent = (analysis: AnalysisDTO): boolean => {
+  if (!analysis || isEmpty(analysis)) {
+    return false
   }
 
-  return customMetrics.map(customMetric => {
-    return {
-      ...customMetric,
-      groupName: (customMetric.groupName as SelectOption)?.value as string
-    }
-  })
+  const { deploymentVerification, liveMonitoring, riskProfile } = analysis
+
+  return Boolean(
+    // For SLI alone scenario
+    (deploymentVerification?.enabled || liveMonitoring?.enabled) &&
+      riskProfile &&
+      !isEmpty(riskProfile) &&
+      riskProfile?.category
+  )
+}
+
+const isRiskProfileAndCategoryPresentForFormik = (analysis: AnalysisDTO): boolean => {
+  return Boolean(isRiskProfileAndCategoryPresent(analysis) && analysis?.riskProfile?.metricType)
 }
 
 const getGroupOption = (groupName?: string): SelectOption | undefined => {
@@ -252,9 +267,75 @@ const getGroupOption = (groupName?: string): SelectOption | undefined => {
   return undefined
 }
 
-export const updateGroupNameInSpecForFormik = (
-  customMetrics?: CommonCustomMetricsType[]
-): CommonCustomMetricsType[] => {
+// ⭐️ Formik to Payload ⭐️
+
+const getRiskProfileForPayload = (analysis?: AnalysisDTO): AnalysisDTO['riskProfile'] => {
+  if (!analysis || !isRiskProfileAndCategoryPresent(analysis)) {
+    return {}
+  }
+
+  const { riskProfile } = analysis
+
+  return {
+    ...riskProfile,
+    category: riskProfile?.category?.split('/')[0] as RiskProfile['category'],
+    metricType: riskProfile?.category?.split('/')[1] as RiskProfile['metricType']
+  }
+}
+
+const getAnalysisForPayload = (analysis?: AnalysisDTO): AnalysisDTO => {
+  if (!analysis || isEmpty(analysis)) {
+    return {}
+  }
+
+  return {
+    ...analysis,
+    riskProfile: getRiskProfileForPayload(analysis)
+  }
+}
+
+export const updateFormikValuesForPayload = (customMetrics: CommonCustomMetricsType[]): CommonCustomMetricsType[] => {
+  if (!getIsCustomMetricPresent(customMetrics)) {
+    return []
+  }
+
+  return customMetrics.map(customMetric => {
+    return {
+      ...customMetric,
+      groupName: (customMetric.groupName as SelectOption)?.value as string,
+      analysis: getAnalysisForPayload(customMetric.analysis),
+      riskProfile: getRiskProfileForPayload(customMetric.analysis)
+    }
+  })
+}
+
+// ⭐️ Response to Formik ⭐️
+
+const getRiskProfileForFormik = (analysis: AnalysisDTO): AnalysisDTO['riskProfile'] => {
+  if (!isRiskProfileAndCategoryPresentForFormik(analysis)) {
+    return {}
+  }
+
+  const { riskProfile } = analysis
+
+  return {
+    ...riskProfile,
+    category: `${riskProfile?.category}/${riskProfile?.metricType}` as RiskProfile['category']
+  }
+}
+
+const getAnalysisForFormik = (analysis?: AnalysisDTO): AnalysisDTO => {
+  if (!analysis || isEmpty(analysis)) {
+    return {}
+  }
+
+  return {
+    ...analysis,
+    riskProfile: getRiskProfileForFormik(analysis)
+  }
+}
+
+export const updateResponseForFormik = (customMetrics?: CommonCustomMetricsType[]): CommonCustomMetricsType[] => {
   if (!customMetrics || !getIsCustomMetricPresent(customMetrics)) {
     return []
   }
@@ -263,7 +344,8 @@ export const updateGroupNameInSpecForFormik = (
     return {
       ...customMetric,
       // From payload it comes as string, hence converting to Select option
-      groupName: getGroupOption(customMetric.groupName)
+      groupName: getGroupOption(customMetric.groupName),
+      analysis: getAnalysisForFormik(customMetric.analysis)
     }
   })
 }

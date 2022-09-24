@@ -14,6 +14,7 @@ import { createPayloadForCloudWatch, getFormikInitialValue, validateForm } from 
 import { CustomMetricsV2HelperContext } from '../../common/CustomMetricV2/CustomMetricV2.constants'
 import type { CustomMetricsV2HelperContextType } from '../../common/CustomMetricV2/CustomMetric.types'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
+import { CloudWatchTypeForMetricsPacks } from './CloudWatchConstants'
 import css from './CloudWatch.module.scss'
 
 export interface CloudWatchProps {
@@ -28,9 +29,8 @@ export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Ele
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
-  // 🚨 TODO: update dataSourceType as "cloudWatch"
   const metricPacksResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'CLOUDWATCH_METRICS' }
+    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: CloudWatchTypeForMetricsPacks }
   })
 
   const initialValues = getFormikInitialValue(data)

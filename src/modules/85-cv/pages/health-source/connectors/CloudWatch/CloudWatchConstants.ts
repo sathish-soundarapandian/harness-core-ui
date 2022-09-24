@@ -1,9 +1,12 @@
+import type { CloudWatchMetricDefinition } from 'services/cv'
 import { customMetricsFormikPropertyName } from '../../common/CustomMetricV2/CustomMetricV2.constants'
 import type { CloudWatchFormCustomMetricType, CloudWatchFormType } from './CloudWatch.types'
 
 export const CloudWatchProductNames = {
   METRICS: 'CloudWatch Metrics'
 }
+
+export const CloudWatchTypeForMetricsPacks = 'CLOUDWATCH_METRICS'
 
 export const cloudWatchInitialValues: CloudWatchFormType = {
   region: '',
@@ -21,4 +24,20 @@ export const CloudWatchCustomMetricsProperties: Record<string, keyof CloudWatchF
   identifier: 'identifier',
   groupName: 'groupName',
   expression: 'expression'
+}
+
+export const newCloudWatchCustomMetricValues: CloudWatchMetricDefinition = {
+  expression: '',
+  groupName: '',
+  identifier: '',
+  metricName: '',
+  analysis: {
+    riskProfile: {},
+    liveMonitoring: {
+      enabled: false
+    },
+    deploymentVerification: {
+      enabled: false
+    }
+  }
 }

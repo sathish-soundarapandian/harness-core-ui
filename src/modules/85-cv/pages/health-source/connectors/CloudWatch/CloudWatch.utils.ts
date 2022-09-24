@@ -1,11 +1,18 @@
 import type { SelectOption } from '@harness/uicore'
+import { cloneDeep } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
-import type { CloudWatchMetricsHealthSourceSpec, HealthSource } from 'services/cv'
+import type {
+  CloudWatchMetricDefinition,
+  CloudWatchMetricsHealthSourceSpec,
+  HealthSource,
+  ResponseListString
+} from 'services/cv'
 import {
   isDuplicateMetricIdentifier,
   isDuplicateMetricName,
-  updateGroupNameInSpecForFormik,
-  updateGroupNameInSpecForPayload
+  updateResponseForFormik,
+  updateFormikValuesForPayload,
+  isAssignSectionValid
 } from '../../common/CustomMetricV2/CustomMetric.utils'
 import { getCurrentHealthSourceData } from '../../common/utils/HealthSource.utils'
 import { HealthSourceTypes } from '../../types'
@@ -16,18 +23,26 @@ import type {
   CreatePayloadUtilParams,
   HealthSourceListData
 } from './CloudWatch.types'
-import { cloudWatchInitialValues, CloudWatchProductNames, CloudWatchProperties } from './CloudWatchConstants'
+import {
+  cloudWatchInitialValues,
+  CloudWatchProductNames,
+  CloudWatchProperties,
+  newCloudWatchCustomMetricValues
+} from './CloudWatchConstants'
 
-export function getRegionsDropdownOptions(regions: string[]): SelectOption[] {
+export function getRegionsDropdownOptions(regions: ResponseListString['data']): SelectOption[] {
   const regionOptions: SelectOption[] = []
-  regions.forEach(region => {
-    if (region) {
-      regionOptions.push({
-        value: region,
-        label: region
-      })
-    }
-  })
+
+  if (regions) {
+    regions.forEach(region => {
+      if (region) {
+        regionOptions.push({
+          value: region,
+          label: region
+        })
+      }
+    })
+  }
 
   return regionOptions
 }
@@ -39,7 +54,7 @@ export const getFormikInitialValue = (data: CloudWatchSetupSource): CloudWatchFo
 
   const currentHealthSourceData = getCurrentHealthSourceData(
     data.healthSourceList,
-    data.healthSourceName
+    data.healthSourceIdentifier
   ) as HealthSourceListData
 
   if (!currentHealthSourceData) {
@@ -50,7 +65,7 @@ export const getFormikInitialValue = (data: CloudWatchSetupSource): CloudWatchFo
 
   return {
     region: spec?.region,
-    customMetrics: updateGroupNameInSpecForFormik(spec?.metricDefinitions) as CloudWatchFormType['customMetrics'],
+    customMetrics: updateResponseForFormik(spec?.metricDefinitions) as CloudWatchFormType['customMetrics'],
     selectedCustomMetricIndex: 0
   }
 }
@@ -77,7 +92,7 @@ const getCloudWatchSpec = (params: CreatePayloadUtilParams): CloudWatchMetricsHe
     region,
     connectorRef: setupSourceData.connectorRef,
     feature: CloudWatchProductNames.METRICS,
-    metricDefinitions: updateGroupNameInSpecForPayload(customMetrics)
+    metricDefinitions: updateFormikValuesForPayload(customMetrics)
   }
 }
 
@@ -89,7 +104,7 @@ export const createPayloadForCloudWatch = (params: CreatePayloadUtilParams): Hea
   const cloudWatchSpec = getCloudWatchSpec(params)
 
   return {
-    type: HealthSourceTypes.CloudWatch,
+    type: HealthSourceTypes.CloudWatchMetrics,
     name: healthSourceName,
     identifier: healthSourceIdentifier,
     spec: cloudWatchSpec
@@ -114,7 +129,7 @@ export const validateForm = (
 
   if (Array.isArray(customMetrics)) {
     customMetrics.forEach((customMetric, index) => {
-      const { identifier, metricName, groupName } = customMetric
+      const { identifier, metricName, groupName, expression, analysis } = customMetric
 
       if (!metricName) {
         errors[`customMetrics.${index}.metricName`] = getString('cv.monitoringSources.metricNameValidation')
@@ -128,6 +143,12 @@ export const validateForm = (
         errors[`customMetrics.${index}.groupName`] = getString('cv.monitoringSources.prometheus.validation.groupName')
       }
 
+      if (!expression) {
+        errors[`customMetrics.${index}.expression`] = getString(
+          'cv.healthSource.connectors.CloudWatch.validationMessage.expression'
+        )
+      }
+
       if (metricName && isDuplicateMetricName(customMetrics, metricName, index)) {
         errors[`customMetrics.${index}.metricName`] = getString(
           'cv.monitoringSources.prometheus.validation.metricNameUnique'
@@ -139,8 +160,36 @@ export const validateForm = (
           'cv.monitoringSources.prometheus.validation.metricIdentifierUnique'
         )
       }
+
+      if (!isAssignSectionValid(customMetric)) {
+        errors[`HealthSourceServicesV2-${index}`] = getString(
+          'cv.monitoringSources.gco.mapMetricsToServicesPage.validation.baseline'
+        )
+      } else {
+        if (analysis?.deploymentVerification?.enabled || analysis?.liveMonitoring?.enabled) {
+          if (!analysis.riskProfile?.thresholdTypes?.length) {
+            errors[`baselineDeviation-${index}`] = getString('cv.monitoringSources.prometheus.validation.deviation')
+          }
+
+          if (!analysis.riskProfile?.category) {
+            errors[`customMetrics.${index}.analysis.riskProfile.category`] = getString(
+              'cv.monitoringSources.gco.mapMetricsToServicesPage.validation.riskCategory'
+            )
+          }
+
+          if (analysis?.deploymentVerification?.enabled && !customMetric.responseMapping?.serviceInstanceJsonPath) {
+            errors[`customMetrics.${index}.responseMapping.serviceInstanceJsonPath`] = getString(
+              'cv.monitoringSources.gcoLogs.validation.serviceInstance'
+            )
+          }
+        }
+      }
     })
   }
 
   return errors
+}
+
+export const getDefaultValuesForNewCustomMetric = (): CloudWatchMetricDefinition => {
+  return cloneDeep(newCloudWatchCustomMetricValues)
 }

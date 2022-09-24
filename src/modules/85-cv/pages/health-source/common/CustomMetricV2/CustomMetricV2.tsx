@@ -2,9 +2,10 @@ import React, { useCallback, useMemo } from 'react'
 import { useFormikContext } from 'formik'
 import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import CustomMetricSideNav from './components/CustomMetricSideNav'
 import CustomMetricDetails from './components/CustomMetricDetails'
-import type { CommonCustomMetricPropertyType } from './CustomMetric.types'
+import type { CommonCustomMetricPropertyType, CommonCustomMetricsType } from './CustomMetric.types'
 import {
   getIsCustomMetricPresent,
   getIsGivenMetricPresent,
@@ -12,20 +13,20 @@ import {
   getUpdatedSelectedMetricIndex
 } from './CustomMetric.utils'
 import { defaultNewCustomMetricName } from './CustomMetricV2.constants'
-import CardWithOuterTitle from '../CardWithOuterTitle/CardWithOuterTitle'
 import AddCustomMetricButton from './components/AddCustomMetricsButton'
 import css from './CustomMetricV2.module.scss'
 
 export interface CustomMetricV2Props {
   headingText: string
   subHeading?: string
+  newCustomMetricDefaultValues: CommonCustomMetricsType
   children: React.ReactNode
 }
 
 export default function CustomMetricV2<T extends CommonCustomMetricPropertyType>(
   props: CustomMetricV2Props
 ): JSX.Element {
-  const { headingText, subHeading, children } = props
+  const { headingText, subHeading, newCustomMetricDefaultValues, children } = props
   const { values: formikValues, isValid: isFormValid, setValues } = useFormikContext<T>()
 
   const { getString } = useStrings()
@@ -35,6 +36,7 @@ export default function CustomMetricV2<T extends CommonCustomMetricPropertyType>
       const newMetricIdentifier = getNewMetricIdentifier(formikValues.customMetrics, defaultNewCustomMetricName)
       const updatedCustomMetric = [...formikValues.customMetrics]
       updatedCustomMetric.push({
+        ...newCustomMetricDefaultValues,
         metricName: newMetricIdentifier,
         identifier: newMetricIdentifier
       })
@@ -45,7 +47,7 @@ export default function CustomMetricV2<T extends CommonCustomMetricPropertyType>
         selectedCustomMetricIndex: updatedCustomMetric.length - 1
       })
     }
-  }, [formikValues, setValues])
+  }, [formikValues, setValues, newCustomMetricDefaultValues])
 
   const onDeleteMetric = useCallback(
     (customMetricNameToRemove: string) => {

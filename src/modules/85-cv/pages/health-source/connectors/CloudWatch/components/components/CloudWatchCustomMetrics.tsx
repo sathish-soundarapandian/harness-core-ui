@@ -5,6 +5,7 @@ import CustomMetricV2 from '@cv/pages/health-source/common/CustomMetricV2/Custom
 import { useStrings } from 'framework/strings'
 import type { CloudWatchFormType } from '../../CloudWatch.types'
 import CloudWatchForm from './components/CloudWatchForm'
+import { getDefaultValuesForNewCustomMetric } from '../../CloudWatch.utils'
 
 export default function CloudWatchCustomMetrics(): JSX.Element {
   const { getString } = useStrings()
@@ -13,6 +14,7 @@ export default function CloudWatchCustomMetrics(): JSX.Element {
     <CustomMetricV2<CloudWatchFormType>
       headingText={getString('cv.monitoringSources.prometheus.querySpecificationsAndMappings')}
       subHeading={getString('cv.monitoringSources.prometheus.customizeQuery')}
+      newCustomMetricDefaultValues={getDefaultValuesForNewCustomMetric()}
     >
       <CloudWatchForm />
     </CustomMetricV2>
