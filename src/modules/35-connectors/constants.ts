@@ -106,7 +106,6 @@ export const Connectors: ConnectorType = {
   PAGER_DUTY: 'PagerDuty',
   SERVICE_NOW: 'ServiceNow',
   CUSTOM_HEALTH: 'CustomHealth',
-  CLOUD_WATCH: 'CloudWatch',
   ERROR_TRACKING: 'ErrorTracking',
   AZURE: 'Azure',
   AWSSECRETMANAGER: 'AwsSecretManager',

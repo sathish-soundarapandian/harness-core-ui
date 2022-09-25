@@ -36,8 +36,6 @@ export const getTypeByFeature = (feature: string, getString: UseStringsReturn['g
 }
 
 export const getIconBySourceType = (type: string): IconName => {
-  console.log('type', type)
-
   switch (type) {
     case 'KUBERNETES':
       return 'service-kubernetes'

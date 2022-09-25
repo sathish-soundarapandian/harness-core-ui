@@ -53,7 +53,7 @@ export const getGroupAndMetric = (
 ): GroupedMetric[] => {
   return mappedMetrics.map(item => {
     return {
-      groupName: item.groupName || defaultGroupedMetric(getString),
+      groupName: (item.groupName || defaultGroupedMetric(getString)) as SelectOption,
       metricName: item.metricName
       // continuousVerification: item.continuousVerification
     }
@@ -122,7 +122,7 @@ export function getUpdatedSelectedMetricIndex(currentSelectedIndex: number): num
   return currentSelectedIndex
 }
 
-// ⭐️ Risk Profile
+// ⭐️ Risk Profile utils ⭐️
 
 function checkIsAnalysisAvailable(
   customMetrics: CommonCustomMetricsType[],
@@ -204,7 +204,7 @@ export const getThresholdTypeOptions = (getString: UseStringsReturn['getString']
   ]
 }
 
-// ⭐️ Validation utils
+// ⭐️ Validation utils ⭐️
 
 export function isDuplicateMetricName(
   customMetrics: CommonCustomMetricsType[],
@@ -344,7 +344,7 @@ export const updateResponseForFormik = (customMetrics?: CommonCustomMetricsType[
     return {
       ...customMetric,
       // From payload it comes as string, hence converting to Select option
-      groupName: getGroupOption(customMetric.groupName),
+      groupName: getGroupOption(customMetric.groupName) as unknown as string,
       analysis: getAnalysisForFormik(customMetric.analysis)
     }
   })

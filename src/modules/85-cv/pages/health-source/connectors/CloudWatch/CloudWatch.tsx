@@ -26,8 +26,8 @@ export interface CloudWatchProps {
 
 export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Element | null {
   // 🚨 TODO: Update it with Feature flag
-  // const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
-  const isCloudWatchEnabled = true
+  const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
+  // const isCloudWatchEnabled = true
 
   const { onPrevious } = useContext(SetupSourceTabsContext)
 

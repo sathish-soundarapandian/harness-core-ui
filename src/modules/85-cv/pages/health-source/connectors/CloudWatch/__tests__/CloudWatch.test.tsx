@@ -2,7 +2,6 @@ import React from 'react'
 import { render, screen, waitFor, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
-import * as cvService from 'services/cv'
 import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import CloudWatch from '../CloudWatch'
@@ -52,19 +51,15 @@ describe('CloudWatch', () => {
     expect(screen.getByTestId(/cloudWatchContainer/)).toBeInTheDocument()
   })
 
-  //   🚨 Unskip
-  test.skip('should initially show Add custom metric button as disabled and once region is selected, it should be enabled', async () => {
+  test('should show error message, if submitted with no custom metrics', async () => {
+    jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+
     const onSubmit = jest.fn()
-    const { container } = render(
+    render(
       <TestWrapper>
         <CloudWatch data={emptyHealthSource} onSubmit={onSubmit} />
       </TestWrapper>
     )
-    screen.debug(container, 30000)
-
-    expect(screen.getByTestId(/cloudWatchContainer/)).toBeInTheDocument()
-
-    expect(screen.getByTestId('addCustomMetricButton')).toBeDisabled()
 
     const regionDropdown = screen.getByPlaceholderText(
       '- cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder -'
@@ -80,10 +75,22 @@ describe('CloudWatch', () => {
     })
 
     act(() => {
-      userEvent.click(screen.getByText(/region 1/))
+      userEvent.click(screen.getByText('region 1'))
     })
 
-    expect(screen.getByTestId('addCustomMetricButton')).not.toBeDisabled()
+    expect(regionDropdown).toHaveValue('region 1')
+
+    const submitButton = screen.getAllByText(/submit/)[0]
+
+    act(() => {
+      userEvent.click(submitButton)
+    })
+
+    await waitFor(() =>
+      expect(
+        screen.getByText(/cv.healthSource.connectors.CloudWatch.validationMessage.customMetrics/)
+      ).toBeInTheDocument()
+    )
   })
 
   test('should add new custom metric upon clicking Add custom metric button', async () => {
@@ -190,6 +197,8 @@ describe('CloudWatch', () => {
       userEvent.click(submitButton)
     })
 
-    expect(onSubmit).toHaveBeenCalledWith()
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith()
+    })
   })
 })

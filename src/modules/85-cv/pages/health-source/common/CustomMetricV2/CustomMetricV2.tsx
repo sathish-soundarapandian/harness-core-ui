@@ -27,7 +27,7 @@ export default function CustomMetricV2<T extends CommonCustomMetricPropertyType>
   props: CustomMetricV2Props
 ): JSX.Element {
   const { headingText, subHeading, newCustomMetricDefaultValues, children } = props
-  const { values: formikValues, isValid: isFormValid, setValues } = useFormikContext<T>()
+  const { values: formikValues, setValues } = useFormikContext<T>()
 
   const { getString } = useStrings()
 
@@ -74,8 +74,8 @@ export default function CustomMetricV2<T extends CommonCustomMetricPropertyType>
 
   if (!isCustomMetricsPresent) {
     return (
-      <CardWithOuterTitle title={getString('cv.healthSource.connectors.customMetrics')}>
-        <AddCustomMetricButton disabled={!isFormValid} onClick={onAddMetric} />
+      <CardWithOuterTitle title={getString('cv.healthSource.connectors.customMetricsWithoutOptional')}>
+        <AddCustomMetricButton onClick={onAddMetric} />
       </CardWithOuterTitle>
     )
   }

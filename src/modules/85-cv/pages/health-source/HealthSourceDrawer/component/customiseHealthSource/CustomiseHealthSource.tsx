@@ -98,8 +98,6 @@ export default function CustomiseHealthSource({
     }
   }
 
-  console.log('sourceData', sourceData)
-
   return (
     <BGColorWrapper>
       <LoadSourceByType

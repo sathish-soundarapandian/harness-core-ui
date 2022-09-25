@@ -3,6 +3,7 @@ import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import type { GroupedMetric } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import GroupedSideNav from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav'
 import AddCustomMetricButton from '../AddCustomMetricsButton'
 import { getCurrentSelectedMetricName, getGroupedCustomMetrics } from '../../CustomMetric.utils'
@@ -56,7 +57,7 @@ export default function CustomMetricSideNav<T extends CommonCustomMetricProperty
         onSelect={onMetricNameSelect}
         selectedItem={currentSelectedMetricName}
         onRemoveItem={onDeleteMetric}
-        groupedSelectedAppsList={groupedEntries}
+        groupedSelectedAppsList={groupedEntries as [string, GroupedMetric[]][]}
         isMetricThresholdEnabled={false}
       />
     </Layout.Vertical>

@@ -27,6 +27,7 @@ import {
   cloudWatchInitialValues,
   CloudWatchProductNames,
   CloudWatchProperties,
+  CustomMetricsValidationName,
   newCloudWatchCustomMetricValues
 } from './CloudWatchConstants'
 
@@ -128,6 +129,14 @@ export const validateForm = (
   }
 
   if (Array.isArray(customMetrics)) {
+    if (region && !customMetrics.length) {
+      return {
+        [CustomMetricsValidationName]: getString(
+          'cv.healthSource.connectors.CloudWatch.validationMessage.customMetrics'
+        )
+      }
+    }
+
     customMetrics.forEach((customMetric, index) => {
       const { identifier, metricName, groupName, expression, analysis } = customMetric
 

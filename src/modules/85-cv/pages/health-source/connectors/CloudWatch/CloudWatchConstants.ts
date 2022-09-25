@@ -7,6 +7,7 @@ export const CloudWatchProductNames = {
 }
 
 export const CloudWatchTypeForMetricsPacks = 'CLOUDWATCH_METRICS'
+export const CustomMetricsValidationName = 'CustomMetricsNotPresent'
 
 export const cloudWatchInitialValues: CloudWatchFormType = {
   region: '',

@@ -1,15 +1,6 @@
 import type { SelectOption } from '@harness/uicore'
 import type { CloudWatchMetricDefinition, CloudWatchMetricsHealthSourceSpec } from 'services/cv'
 
-// export interface CloudWatchFormCustomMetricType {
-//   metricName: string
-//   identifier: string
-//   groupName?: SelectOption
-//   expression?: string
-//   sli?: Slidto
-//   analysis?: AnalysisDTO
-// }
-
 export type CloudWatchFormCustomMetricType = CloudWatchMetricDefinition & {
   groupName?: SelectOption
 }

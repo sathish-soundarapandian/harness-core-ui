@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act, waitFor } from '@testing-library/react'
+import { render, fireEvent, act, waitFor, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
@@ -89,5 +90,62 @@ describe('DefineHealthSource', () => {
     fireEvent.click(container.querySelector('[data-icon="service-custom-connector"]')!)
     await waitFor(() => expect(container.querySelector('[class*="Card--badge"]')).not.toBeNull())
     expect(container.querySelector('input[placeholder="- cv.healthSource.featurePlaceholder -"]')).not.toBeNull()
+  })
+
+  test('Click on cloud watch card', async () => {
+    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
+      if (flag === FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS) {
+        return true
+      }
+      return false
+    })
+    const { getByText, container } = render(
+      <TestWrapper {...createModeProps}>
+        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+          <DefineHealthSource />
+        </SetupSourceTabs>
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(getByText('CloudWatch Metrics')).not.toBeNull())
+
+    act(() => {
+      userEvent.click(container.querySelector('[data-icon="service-aws"]')!)
+    })
+
+    await waitFor(() => expect(container.querySelector('[class*="Card--badge"]')).not.toBeNull())
+    expect(container.querySelector('input[placeholder="- cv.healthSource.featurePlaceholder -"]')).not.toBeNull()
+
+    // const healthsourceNameInput = screen.getByPlaceholderText('cv.healthSource.namePlaceholder')
+
+    // act(() => {
+    //   const name = Array.from({ length: 64 }).fill('a').join('')
+    //   // Invalid lengthy name
+    //   userEvent.type(healthsourceNameInput, name)
+    // })
+
+    // expect(healthsourceNameInput).toHaveValue()
+
+    // await waitFor(() => {
+    //   expect(container.querySelector('div.FormError--errorDiv[data-name="Health Source Name"]')).toBeInTheDocument()
+    // })
+  })
+
+  test('should not render Cloud watch option, if feature flag is disabled', async () => {
+    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
+      if (flag === FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS) {
+        return false
+      }
+      return true
+    })
+    render(
+      <TestWrapper {...createModeProps}>
+        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+          <DefineHealthSource />
+        </SetupSourceTabs>
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(screen.queryByText('CloudWatch Metrics')).toBeNull())
   })
 })

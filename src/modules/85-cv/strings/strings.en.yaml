@@ -628,12 +628,14 @@ healthSource:
   connectors:
     selectConnector: Select {{sourceType}} Connector
     customMetrics: Custom Metrics (optional)
+    customMetricsWithoutOptional: Custom Metrics
     customMetricsTooltip: Add custom metrics
     buildChart: Build Chart
     CloudWatch:
       awsSelectorPlaceholder: Select an AWS Region
       validationMessage:
         expression: Expression is required
+        customMetrics: Add minimum one custom metric
 
     NewRelic:
       applicationLabel: Find an NewRelic application
