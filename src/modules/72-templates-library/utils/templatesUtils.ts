@@ -62,5 +62,5 @@ export const getVersionLabelText = (
     : template.versionLabel
 }
 
-export const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): number =>
+export const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any } = {}): number =>
   (JSON.stringify(templateInfo).match(/<\+input>/g) || []).length

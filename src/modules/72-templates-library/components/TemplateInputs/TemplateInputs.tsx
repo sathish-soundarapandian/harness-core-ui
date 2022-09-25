@@ -20,14 +20,18 @@ import { Color } from '@harness/design-system'
 import { defaultTo, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { TemplateSummaryResponse, useGetTemplateInputSetYaml } from 'services/template-ng'
-import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { PageSpinner, useToaster } from '@common/components'
+import { PageSpinner } from '@common/components'
 import {
   SecretManagerTemplateInputSet,
   ScriptVariablesRuntimeInput
 } from '@secrets/components/ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
-import type { StageElementConfig, StepElementConfig, PipelineInfoConfig } from 'services/pipeline-ng'
+import type {
+  StageElementConfig,
+  StepElementConfig,
+  PipelineInfoConfig,
+  TemplateLinkConfig
+} from 'services/pipeline-ng'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -40,7 +44,7 @@ import { PipelineInputSetFormInternal, StageForm } from '@pipeline/components/Pi
 import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
-import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
+import { getTemplateNameWithLabel, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
@@ -51,24 +55,14 @@ export interface TemplateInputsProps {
   storeMetadata?: StoreMetadata
 }
 
-type TemplateInputsFormData =
-  | StepElementConfig
-  | StageElementConfig
-  | PipelineInfoConfig
-  | SecretManagerTemplateInputSet
-  | DeploymentConfig
-  | ArtifactSourceConfigDetails
-
 export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeMetadata = {} }) => {
   const templateSpec =
     parse((template as TemplateSummaryResponse).yaml || '')?.template?.spec ||
     (template as NGTemplateInfoConfigWithGitDetails).spec
-  const [inputSetTemplate, setInputSetTemplate] = React.useState<
-    StepElementConfig | StageElementConfig | PipelineInfoConfig | DeploymentConfig
-  >()
+  const templateVariables =
+    parse((template as TemplateSummaryResponse).yaml || '')?.template?.variables ||
+    (template as NGTemplateInfoConfigWithGitDetails).variables
   const params = useParams<ProjectPathProps>()
-  const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const allowableTypes = [
@@ -100,12 +94,9 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
     }
   })
 
-  React.useEffect(() => {
-    try {
-      const templateInput = parse(templateInputYaml?.data || '')
-      setInputSetTemplate(templateInput)
-    } catch (error) {
-      showError(getRBACErrorMessage(error as RBACError), undefined, 'template.parse.inputSet.error')
+  const inputSetTemplate: { template: Omit<TemplateLinkConfig, 'templateRef'> } | undefined = React.useMemo(() => {
+    if (templateInputYaml?.data) {
+      return { template: parse(templateInputYaml.data) }
     }
   }, [templateInputYaml?.data])
 
@@ -143,21 +134,21 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                 {getTemplateNameWithLabel(template)}
               </Text>
               <Formik<{
-                data: TemplateInputsFormData
+                template: Omit<TemplateLinkConfig, 'templateRef'>
               }>
                 onSubmit={noop}
-                initialValues={{ data: templateSpec }}
+                initialValues={{ template: { templateInputs: templateSpec, variables: templateVariables } }}
                 formName="templateInputs"
                 enableReinitialize={true}
               >
                 {formikProps => {
                   return (
-                    <>
+                    <Layout.Vertical spacing={'large'}>
                       {templateEntityType === TemplateType.Pipeline && (
                         <PipelineInputSetFormInternal
                           template={inputSetTemplate as PipelineInfoConfig}
-                          originalPipeline={formikProps.values.data as PipelineInfoConfig}
-                          path={'data'}
+                          originalPipeline={formikProps.values.template.templateInputs as PipelineInfoConfig}
+                          path={TEMPLATE_INPUT_PATH}
                           viewType={StepViewType.TemplateUsage}
                           readonly={true}
                           allowableTypes={allowableTypes}
@@ -167,8 +158,8 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                       {templateEntityType === TemplateType.Stage && (
                         <StageForm
                           template={{ stage: inputSetTemplate as StageElementConfig }}
-                          allValues={{ stage: formikProps.values.data as StageElementConfig }}
-                          path={'data'}
+                          allValues={{ stage: formikProps.values.template.templateInputs as StageElementConfig }}
+                          path={''}
                           viewType={StepViewType.TemplateUsage}
                           readonly={true}
                           allowableTypes={allowableTypes}
@@ -184,9 +175,9 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                           margin={{ bottom: 'xxlarge' }}
                         >
                           <StepForm
-                            template={{ step: inputSetTemplate as StepElementConfig }}
-                            allValues={{ step: formikProps.values.data as StepElementConfig }}
-                            path={'data'}
+                            template={{ step: inputSetTemplate as unknown as StepElementConfig }}
+                            allValues={{ step: formikProps.values.template.templateInputs as StepElementConfig }}
+                            path={''}
                             viewType={StepViewType.TemplateUsage}
                             readonly={true}
                             allowableTypes={allowableTypes}
@@ -197,11 +188,13 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                       )}
                       {templateEntityType === TemplateType.SecretManager && (
                         <ScriptVariablesRuntimeInput
-                          template={inputSetTemplate as SecretManagerTemplateInputSet['templateInputs']}
+                          template={
+                            inputSetTemplate.template.templateInputs as SecretManagerTemplateInputSet['templateInputs']
+                          }
                           allowableTypes={[]}
                           readonly
                           enabledExecutionDetails
-                          path={'data'}
+                          path={TEMPLATE_INPUT_PATH}
                         />
                       )}
                       {templateEntityType === TemplateType.CustomDeployment && (
@@ -212,10 +205,10 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                           margin={{ bottom: 'xxlarge' }}
                         >
                           <DeploymentConfigRuntimeInputs
-                            template={inputSetTemplate as DeploymentConfig}
+                            template={inputSetTemplate.template.templateInputs as DeploymentConfig}
                             allowableTypes={allowableTypes}
                             readonly
-                            path={'data'}
+                            path={TEMPLATE_INPUT_PATH}
                           />
                         </Container>
                       )}
@@ -227,14 +220,14 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                           margin={{ bottom: 'xxlarge' }}
                         >
                           <ArtifactSourceConfigRuntimeInputs
-                            template={inputSetTemplate as ArtifactSourceConfigDetails}
+                            template={inputSetTemplate.template.templateInputs as ArtifactSourceConfigDetails}
                             allowableTypes={allowableTypes}
                             readonly
                             path={'data'}
                           />
                         </Container>
                       )}
-                    </>
+                    </Layout.Vertical>
                   )
                 }}
               </Formik>

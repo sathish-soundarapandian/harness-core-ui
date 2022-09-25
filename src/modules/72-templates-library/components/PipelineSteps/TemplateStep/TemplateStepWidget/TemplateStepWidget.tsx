@@ -21,7 +21,7 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, isEmpty, noop, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop, omit, set } from 'lodash-es'
 import { produce } from 'immer'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -36,7 +36,7 @@ import {
   getScopeBasedProjectPathParams,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
-import type { TemplateStepNode } from 'services/pipeline-ng'
+import type { TemplateLinkConfig, TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
 import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
@@ -74,9 +74,13 @@ function TemplateStepWidget(
   const stepTemplateVersionLabel = defaultTo(initialValues.template.versionLabel, '')
   const scope = getScopeFromValue(initialValues.template.templateRef)
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
-  const [formValues, setFormValues] = React.useState<TemplateStepNode>(initialValues)
+  const [formValues, setFormValues] = React.useState<TemplateStepNode>({
+    name: initialValues.name,
+    identifier: initialValues.identifier
+  } as TemplateStepNode)
   const [allValues, setAllValues] = React.useState<StepElementConfig>()
-  const [templateInputs, setTemplateInputs] = React.useState<StepElementConfig>()
+  const [allTemplateInputs, setAllTemplateInputs] =
+    React.useState<{ template: Omit<TemplateLinkConfig, 'templateRef'> }>()
 
   const {
     data: stepTemplateResponse,
@@ -112,28 +116,37 @@ function TemplateStepWidget(
     }
   })
 
-  const updateFormValues = (newTemplateInputs?: StepElementConfig) => {
+  const updateFormValues = (newTemplateInputs?: Omit<TemplateLinkConfig, 'templateRef'>) => {
     const updateValues = produce(initialValues, draft => {
       set(
         draft,
         'template.templateInputs',
-        !isEmpty(newTemplateInputs) ? replaceDefaultValues(newTemplateInputs) : undefined
+        !isEmpty(newTemplateInputs?.templateInputs)
+          ? replaceDefaultValues(newTemplateInputs?.templateInputs)
+          : undefined
+      )
+      set(
+        draft,
+        'template.variables',
+        !isEmpty(newTemplateInputs?.variables) ? replaceDefaultValues(newTemplateInputs?.variables) : undefined
       )
     })
     setFormValues(updateValues)
     onUpdate?.(updateValues)
   }
 
-  const retainInputsAndUpdateFormValues = (newTemplateInputs?: StepElementConfig) => {
-    if (isEmpty(newTemplateInputs)) {
-      updateFormValues(newTemplateInputs)
+  const retainInputsAndUpdateFormValues = (newAllTemplateInputs?: {
+    template: Omit<TemplateLinkConfig, 'templateRef'>
+  }) => {
+    if (isEmpty(newAllTemplateInputs?.template)) {
+      updateFormValues(newAllTemplateInputs?.template)
     } else {
       setLoadingMergedTemplateInputs(true)
       try {
         getsMergedTemplateInputYamlPromise({
           body: {
-            oldTemplateInputs: stringify(defaultTo(initialValues.template?.templateInputs, '')),
-            newTemplateInputs: stringify(newTemplateInputs)
+            oldTemplateInputs: stringify(omit(initialValues.template, 'templateRef', 'versionLabel')),
+            newTemplateInputs: stringify(newAllTemplateInputs?.template)
           },
           queryParams: {
             accountIdentifier: queryParams.accountId
@@ -141,33 +154,37 @@ function TemplateStepWidget(
         }).then(response => {
           if (response && response.status === 'SUCCESS') {
             setLoadingMergedTemplateInputs(false)
-            updateFormValues(parse<StepElementConfig>(defaultTo(response.data?.mergedTemplateInputs, '')))
+            updateFormValues(
+              parse<Omit<TemplateLinkConfig, 'templateRef'>>(defaultTo(response.data?.mergedTemplateInputs, ''))
+            )
           } else {
             throw response
           }
         })
       } catch (error) {
         setLoadingMergedTemplateInputs(false)
-        updateFormValues(newTemplateInputs)
+        updateFormValues(newAllTemplateInputs?.template)
       }
     }
   }
 
   React.useEffect(() => {
     if (stepTemplateInputSetLoading) {
-      setTemplateInputs(undefined)
+      setAllTemplateInputs(undefined)
       setAllValues(undefined)
     } else {
-      const newTemplateInputs = parse<StepElementConfig>(defaultTo(stepTemplateInputSetYaml?.data, ''))
-      setTemplateInputs(newTemplateInputs)
-      retainInputsAndUpdateFormValues(newTemplateInputs)
+      const newAllTemplateInputs = {
+        template: parse<Omit<TemplateLinkConfig, 'templateRef'>>(defaultTo(stepTemplateInputSetYaml?.data, ''))
+      }
+      setAllTemplateInputs(newAllTemplateInputs)
+      retainInputsAndUpdateFormValues(newAllTemplateInputs)
     }
   }, [stepTemplateInputSetLoading])
 
   const validateForm = (values: TemplateStepNode) => {
     const errorsResponse = validateStep({
       step: values.template?.templateInputs as StepElementConfig,
-      template: templateInputs,
+      template: allTemplateInputs?.template.templateInputs as StepElementConfig,
       originalStep: { step: initialValues?.template?.templateInputs as StepElementConfig },
       getString,
       viewType: StepViewType.DeploymentForm
@@ -206,7 +223,7 @@ function TemplateStepWidget(
         onSubmit={values => {
           onUpdate?.(values)
         }}
-        initialValues={formValues}
+        initialValues={defaultTo(formValues, { name: '', identifier: '' } as TemplateStepNode)}
         formName="templateStepWidget"
         validationSchema={Yup.object().shape({
           name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
@@ -233,18 +250,18 @@ function TemplateStepWidget(
                     <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
                   </Container>
                 )}
-                {!isLoading && !error && templateInputs && allValues && (
+                {!isLoading && !error && allTemplateInputs && allValues && formik.values.template && (
                   <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} spacing={'large'}>
                     <Heading level={5} color={Color.BLACK}>
                       {getString('pipeline.templateInputs')}
                     </Heading>
                     <StepForm
-                      template={{ step: templateInputs }}
-                      values={{ step: formik.values.template?.templateInputs as StepElementConfig }}
-                      allValues={{ step: allValues }}
+                      template={{ step: allTemplateInputs as unknown as StepElementConfig }}
+                      values={{ step: formik.values as unknown as StepElementConfig }}
+                      allValues={{ step: allValues as unknown as StepElementConfig }}
                       readonly={readonly}
                       viewType={StepViewType.TemplateUsage}
-                      path={TEMPLATE_INPUT_PATH}
+                      path={''}
                       allowableTypes={allowableTypes}
                       onUpdate={noop}
                       hideTitle={true}

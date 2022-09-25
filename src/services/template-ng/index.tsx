@@ -116,6 +116,13 @@ export type ConnectorFilterProperties = FilterProperties & {
   )[]
 }
 
+export interface CopyTemplateVariableRequest {
+  templateYaml: string
+  variableValues?: {
+    [key: string]: string
+  }
+}
+
 export interface EntityDetailProtoDTO {
   [key: string]: any
 }
@@ -3127,6 +3134,71 @@ export const getYamlWithTemplateRefsResolvedPromise = (
     TemplateApplyRequestRequestBody,
     void
   >('POST', getConfig('template/api'), `/templates/applyTemplates`, props, signal)
+
+export interface CopyTemplateWithVariablesQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type CopyTemplateWithVariablesProps = Omit<
+  MutateProps<ResponseString, Failure | Error, CopyTemplateWithVariablesQueryParams, CopyTemplateVariableRequest, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Copy yaml with variables resolved
+ */
+export const CopyTemplateWithVariables = (props: CopyTemplateWithVariablesProps) => (
+  <Mutate<ResponseString, Failure | Error, CopyTemplateWithVariablesQueryParams, CopyTemplateVariableRequest, void>
+    verb="POST"
+    path={`/templates/copyTemplateWithVariables`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseCopyTemplateWithVariablesProps = Omit<
+  UseMutateProps<
+    ResponseString,
+    Failure | Error,
+    CopyTemplateWithVariablesQueryParams,
+    CopyTemplateVariableRequest,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Copy yaml with variables resolved
+ */
+export const useCopyTemplateWithVariables = (props: UseCopyTemplateWithVariablesProps) =>
+  useMutate<ResponseString, Failure | Error, CopyTemplateWithVariablesQueryParams, CopyTemplateVariableRequest, void>(
+    'POST',
+    `/templates/copyTemplateWithVariables`,
+    { base: getConfig('template/api'), ...props }
+  )
+
+/**
+ * Copy yaml with variables resolved
+ */
+export const copyTemplateWithVariablesPromise = (
+  props: MutateUsingFetchProps<
+    ResponseString,
+    Failure | Error,
+    CopyTemplateWithVariablesQueryParams,
+    CopyTemplateVariableRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseString,
+    Failure | Error,
+    CopyTemplateWithVariablesQueryParams,
+    CopyTemplateVariableRequest,
+    void
+  >('POST', getConfig('template/api'), `/templates/copyTemplateWithVariables`, props, signal)
 
 export type DummyApiForSwaggerSchemaCheckProps = Omit<
   GetProps<ResponseNGTemplateConfig, Failure | Error, void, void>,

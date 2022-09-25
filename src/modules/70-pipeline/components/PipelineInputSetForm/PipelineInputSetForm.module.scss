@@ -109,6 +109,11 @@
   padding: var(--spacing-small) var(--spacing-xlarge);
 }
 
+.variablesSection :global(.customVariables) {
+  margin: 0 !important;
+  padding-bottom: 0px;
+}
+
 .conditionalExecutionTitle {
   font-size: var(--form-input-font-size) !important;
 }

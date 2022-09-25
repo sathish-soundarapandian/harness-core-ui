@@ -11,6 +11,7 @@ import { Field, FormikContextType, FormikProps } from 'formik'
 import { Container, Formik, FormikForm, FormInput } from '@wings-software/uicore'
 import { cloneDeep, defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
+import produce from 'immer'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
@@ -25,14 +26,20 @@ import {
   getInitialValuesInCorrectFormat,
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
-import { addStepOrGroup } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
-import { StepCategory, useGetStepsV2 } from 'services/pipeline-ng'
-import { createStepNodeFromTemplate } from '@pipeline/utils/templateUtils'
+import {
+  addStepOrGroup,
+  generateRandomString
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
+import { StepCategory, StepElementConfig, useGetStepsV2 } from 'services/pipeline-ng'
+import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { useMutateAsGet } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getFlattenedStages } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import type { TemplateSummaryResponse } from 'services/template-ng'
+import { parse } from '@common/utils/YamlHelperMethods'
+import useGetCopiedTemplate from '@pipeline/hooks/useGetCopiedTemplate/useGetCopiedTemplate'
 import useChooseProvisioner from './ChooseProvisioner'
 import type { InfraProvisioningData, InfraProvisioningDataUI, InfraProvisioningProps } from './InfraProvisioning'
 import { transformValuesFieldsConfig } from './InfraProvisioningFunctionConfigs'
@@ -64,6 +71,7 @@ export const InfraProvisioningBase = (
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const { accountId } = useParams<ProjectPathProps>()
   const formikRef = useRef<FormikContextType<InfraProvisioningDataUI>>()
+  const { getCopiedTemplate } = useGetCopiedTemplate({ storeMetadata })
 
   const { showModal } = useChooseProvisioner({
     onSubmit: (data: any) => {
@@ -120,6 +128,32 @@ export const InfraProvisioningBase = (
     }
   }, [stepsData?.data?.stepCategories])
 
+  const getNewStepData = async (
+    template: TemplateSummaryResponse,
+    isCopied: boolean
+  ): Promise<{ step: StepElementConfig }> => {
+    if (isCopied) {
+      const copiedTemplateYaml = await getCopiedTemplate(template)
+      return {
+        step: produce(defaultTo(parse<any>(copiedTemplateYaml)?.template.spec, {}) as StepElementConfig, draft => {
+          draft.name = defaultTo(template?.name, '')
+          draft.identifier = generateRandomString(defaultTo(template?.name, ''))
+        })
+      }
+    } else {
+      return {
+        step: produce({} as StepElementConfig, draft => {
+          draft.name = defaultTo(template?.name, '')
+          draft.identifier = generateRandomString(defaultTo(template?.name, ''))
+          set(draft, 'template.templateRef', getScopeBasedTemplateRef(template))
+          if (template.versionLabel) {
+            set(draft, 'template.versionLabel', template.versionLabel)
+          }
+        })
+      }
+    }
+  }
+
   const addTemplate = async (event: ExecutionGraphAddStepEvent) => {
     try {
       const { template, isCopied } = await getTemplate({
@@ -130,45 +164,49 @@ export const InfraProvisioningBase = (
         gitDetails,
         storeMetadata
       })
-      const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
-      const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId || ''))
-      executionRef.current?.stepGroupUpdated?.(newStepData.step)
-      if (pipelineStage && !get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')) {
-        set(pipelineStage, 'stage.spec.infrastructure.infrastructureDefinition.provisioner', {
-          steps: [],
-          rollbackSteps: []
-        })
-      }
-      const provisioner = get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')
-      // set empty arrays
-      if (!event.isRollback && !provisioner.steps) {
-        provisioner.steps = []
-      }
-      if (event.isRollback && !provisioner.rollbackSteps) {
-        provisioner.rollbackSteps = []
-      }
+      try {
+        const newStepData = await getNewStepData(template, isCopied)
+        const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId || ''))
+        executionRef.current?.stepGroupUpdated?.(newStepData.step)
+        if (pipelineStage && !get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')) {
+          set(pipelineStage, 'stage.spec.infrastructure.infrastructureDefinition.provisioner', {
+            steps: [],
+            rollbackSteps: []
+          })
+        }
+        const provisioner = get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')
+        // set empty arrays
+        if (!event.isRollback && !provisioner.steps) {
+          provisioner.steps = []
+        }
+        if (event.isRollback && !provisioner.rollbackSteps) {
+          provisioner.rollbackSteps = []
+        }
 
-      addStepOrGroup(event.entity, provisioner, newStepData, event.isParallel, event.isRollback)
-      if (pipelineStage?.stage) {
-        await updateStage(pipelineStage?.stage)
-      }
-      updatePipelineView({
-        ...pipelineView,
-        isDrawerOpened: true,
-        drawerData: {
-          type: DrawerTypes.ProvisionerStepConfig,
-          data: {
-            stepConfig: {
-              node: newStepData.step,
-              stepsMap: event.stepsMap,
-              onUpdate: executionRef.current?.stepGroupUpdated,
-              isStepGroup: false,
-              addOrEdit: 'edit',
-              hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
+        addStepOrGroup(event.entity, provisioner, newStepData, event.isParallel, event.isRollback)
+        if (pipelineStage?.stage) {
+          await updateStage(pipelineStage?.stage)
+        }
+        updatePipelineView({
+          ...pipelineView,
+          isDrawerOpened: true,
+          drawerData: {
+            type: DrawerTypes.ProvisionerStepConfig,
+            data: {
+              stepConfig: {
+                node: newStepData.step,
+                stepsMap: event.stepsMap,
+                onUpdate: executionRef.current?.stepGroupUpdated,
+                isStepGroup: false,
+                addOrEdit: 'edit',
+                hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
+              }
             }
           }
-        }
-      })
+        })
+      } catch (_) {
+        // Abort! Error occurred creating new step data
+      }
     } catch (_) {
       // Do nothing
     }

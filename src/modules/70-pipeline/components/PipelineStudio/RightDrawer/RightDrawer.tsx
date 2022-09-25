@@ -37,6 +37,7 @@ import type { StringsMap } from 'stringTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
+import useGetCopiedTemplate from '@pipeline/hooks/useGetCopiedTemplate/useGetCopiedTemplate'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -757,6 +758,24 @@ export function RightDrawer(): React.ReactElement {
     drawerData.data?.stepConfig?.onUpdate?.(processNode)
   }
 
+  const { getCopiedTemplate } = useGetCopiedTemplate({ storeMetadata })
+
+  const getNewStepData = async (
+    template: TemplateSummaryResponse,
+    isCopied: boolean,
+    node: StepOrStepGroupOrTemplateStepData
+  ): Promise<StepElementConfig | TemplateStepNode> => {
+    if (isCopied) {
+      const copiedTemplateYaml = await getCopiedTemplate(template)
+      return produce(defaultTo(parse<any>(copiedTemplateYaml)?.template.spec, {}) as StepElementConfig, draft => {
+        draft.name = defaultTo(node?.name, '')
+        draft.identifier = defaultTo(node?.identifier, '')
+      })
+    } else {
+      return createTemplate<TemplateStepNode>(node as unknown as TemplateStepNode, template)
+    }
+  }
+
   const addOrUpdateTemplate = async (
     selectedTemplate: TemplateSummaryResponse,
     drawerType: DrawerTypes,
@@ -776,17 +795,16 @@ export function RightDrawer(): React.ReactElement {
         gitDetails,
         storeMetadata
       })
-      const node = drawerData.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData
-      const processNode = isCopied
-        ? produce(
-            defaultTo(parse<any>(defaultTo(template?.yaml, '')).template.spec, {}) as StepElementConfig,
-            draft => {
-              draft.name = defaultTo(node?.name, '')
-              draft.identifier = defaultTo(node?.identifier, '')
-            }
-          )
-        : createTemplate<TemplateStepNode>(node as unknown as TemplateStepNode, template)
-      await updateNode(processNode, drawerType, isRollback)
+      try {
+        const processNode = await getNewStepData(
+          template,
+          isCopied,
+          drawerData.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData
+        )
+        await updateNode(processNode, drawerType, isRollback)
+      } catch (_) {
+        // Abort! Error occurred in creating new node
+      }
     } catch (_) {
       // Do nothing.. user cancelled template selection
     }

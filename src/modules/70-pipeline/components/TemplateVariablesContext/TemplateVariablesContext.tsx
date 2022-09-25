@@ -14,6 +14,7 @@ import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import {
   Failure,
   NGTemplateInfoConfig,
+  NGVariable,
   useCreateVariablesV2,
   useGetYamlWithTemplateRefsResolved,
   VariableMergeServiceResponse
@@ -46,6 +47,7 @@ export interface MonitoredServiceConfig {
 
 export interface TemplateVariablesData {
   variablesTemplate: StepElementConfig | StageElementConfig | MonitoredServiceConfig
+  variablesTemplateVariables: NGVariable[]
   originalTemplate: NGTemplateInfoConfig
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   serviceExpressionPropertiesList: ServiceExpressionProperties[]
@@ -56,6 +58,7 @@ export interface TemplateVariablesData {
 
 export const TemplateVariablesContext = React.createContext<TemplateVariablesData>({
   variablesTemplate: { name: '', identifier: '' },
+  variablesTemplateVariables: [],
   originalTemplate: { name: '', identifier: '', versionLabel: '', type: 'Step' },
   metadataMap: {},
   serviceExpressionPropertiesList: [],
@@ -72,14 +75,20 @@ export function TemplateVariablesContextProvider(
   props: React.PropsWithChildren<{ template: NGTemplateInfoConfig; storeMetadata?: StoreMetadata }>
 ): React.ReactElement {
   const { template: originalTemplate, storeMetadata = {} } = props
-  const [{ variablesTemplate, metadataMap, serviceExpressionPropertiesList }, setTemplateVariablesData] =
-    React.useState<
-      Pick<TemplateVariablesData, 'metadataMap' | 'variablesTemplate' | 'serviceExpressionPropertiesList'>
-    >({
-      variablesTemplate: { name: '', identifier: '' },
-      metadataMap: {},
-      serviceExpressionPropertiesList: []
-    })
+  const [
+    { variablesTemplate, variablesTemplateVariables, metadataMap, serviceExpressionPropertiesList },
+    setTemplateVariablesData
+  ] = React.useState<
+    Pick<
+      TemplateVariablesData,
+      'metadataMap' | 'variablesTemplate' | 'serviceExpressionPropertiesList' | 'variablesTemplateVariables'
+    >
+  >({
+    variablesTemplate: { name: '', identifier: '' },
+    metadataMap: {},
+    serviceExpressionPropertiesList: [],
+    variablesTemplateVariables: []
+  })
   const params = useParams<TemplateStudioPathProps>()
   const { accountId, orgIdentifier, projectIdentifier } = params
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -125,13 +134,15 @@ export function TemplateVariablesContextProvider(
   }, [resolvedTemplateResponse])
 
   React.useEffect(() => {
+    const variablesYaml = parse(defaultTo(data?.data?.yaml, ''))
     const templateType =
       templateTypeYamlKeyMap[resolvedTemplate.type?.toLowerCase()] || resolvedTemplate.type?.toLowerCase()
 
     setTemplateVariablesData({
       metadataMap: defaultTo(data?.data?.metadataMap, {}),
-      variablesTemplate: get(parse(defaultTo(data?.data?.yaml, '')), templateType),
-      serviceExpressionPropertiesList: defaultTo(data?.data?.serviceExpressionPropertiesList, [])
+      variablesTemplate: get(variablesYaml, templateType),
+      serviceExpressionPropertiesList: defaultTo(data?.data?.serviceExpressionPropertiesList, []),
+      variablesTemplateVariables: get(variablesYaml, 'variables')
     })
   }, [data?.data?.metadataMap, data?.data?.yaml])
 
@@ -139,6 +150,7 @@ export function TemplateVariablesContextProvider(
     <TemplateVariablesContext.Provider
       value={{
         variablesTemplate,
+        variablesTemplateVariables,
         originalTemplate: resolvedTemplate,
         metadataMap,
         serviceExpressionPropertiesList,

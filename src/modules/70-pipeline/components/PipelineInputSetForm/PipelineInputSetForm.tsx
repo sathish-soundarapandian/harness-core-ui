@@ -229,7 +229,7 @@ export function StageForm({
               ? { stage: allValues?.stage?.template?.templateInputs as StageElementConfig }
               : allValues
           }
-          path={isTemplateStage ? `${path}.${TEMPLATE_INPUT_PATH}` : path}
+          path={isTemplateStage ? (path ? `${path}.${TEMPLATE_INPUT_PATH}` : TEMPLATE_INPUT_PATH) : path}
           readonly={readonly}
           viewType={viewType}
           allowableTypes={allowableTypes}

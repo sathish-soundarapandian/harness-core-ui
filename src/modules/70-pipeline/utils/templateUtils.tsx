@@ -38,7 +38,6 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
-import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { Category } from '@common/constants/TrackingConstants'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
@@ -100,6 +99,7 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
         set(draft, 'template.versionLabel', template.versionLabel)
       }
       set(draft, 'template.templateInputs', get(data, 'template.templateInputs'))
+      set(draft, 'template.variables', get(data, 'template.variables'))
     }
   })
 }
@@ -109,22 +109,6 @@ export const getTemplateRefVersionLabelObject = (template: TemplateSummaryRespon
     templateRef: defaultTo(getScopeBasedTemplateRef(template), ''),
     versionLabel: defaultTo(template.versionLabel, '')
   }
-}
-
-export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, isCopied = false): StepElementConfig => {
-  return (isCopied
-    ? produce(defaultTo(parse<any>(defaultTo(template?.yaml, ''))?.template.spec, {}) as StepElementConfig, draft => {
-        draft.name = defaultTo(template?.name, '')
-        draft.identifier = generateRandomString(defaultTo(template?.name, ''))
-      })
-    : produce({} as TemplateStepNode, draft => {
-        draft.name = defaultTo(template?.name, '')
-        draft.identifier = generateRandomString(defaultTo(template?.name, ''))
-        set(draft, 'template.templateRef', getScopeBasedTemplateRef(template))
-        if (template.versionLabel) {
-          set(draft, 'template.versionLabel', template.versionLabel)
-        }
-      })) as unknown as StepElementConfig
 }
 
 export const getScopedTemplatesFromTemplateRefs = (templateRefs: string[]) => {

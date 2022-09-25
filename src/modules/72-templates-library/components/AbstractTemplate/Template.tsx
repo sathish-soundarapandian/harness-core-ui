@@ -19,6 +19,7 @@ export abstract class Template {
   protected abstract allowedScopes: Scope[]
   protected abstract colorMap: React.CSSProperties
   protected abstract isRemoteEnabled: boolean
+  protected variablesEnabled = false
 
   getLabel(): string {
     return this.label
@@ -42,6 +43,10 @@ export abstract class Template {
 
   getIsRemoteEnabled(): boolean {
     return this.isRemoteEnabled
+  }
+
+  getVariablesEnabled(): boolean {
+    return this.variablesEnabled
   }
 
   abstract renderTemplateCanvas(formikRef?: TemplateFormRef): JSX.Element

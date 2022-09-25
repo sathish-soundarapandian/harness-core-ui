@@ -6,7 +6,7 @@
  */
 
 import React, { useContext } from 'react'
-import { debounce, defaultTo, isEmpty, isEqual, noop, set } from 'lodash-es'
+import { debounce, defaultTo, isEmpty, isEqual, noop, omit, set } from 'lodash-es'
 import { Card, Container, Formik, FormikForm, Heading, Layout, PageError } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
@@ -38,6 +38,7 @@ import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/Tem
 import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import css from './TemplateStageSpecifications.module.scss'
 
 declare global {
@@ -64,14 +65,18 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const templateRef = getIdentifierFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
   const templateVersionLabel = getIdentifierFromValue(defaultTo(stage?.stage?.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(stage?.stage?.template?.templateRef, ''))
-  const [formValues, setFormValues] = React.useState<StageElementConfig | undefined>(stage?.stage)
+  const [formValues, setFormValues] = React.useState<StageElementConfig>({
+    name: stage?.stage?.name,
+    identifier: stage?.stage?.identifier
+  } as StageElementConfig)
   const [allValues, setAllValues] = React.useState<StageElementConfig>()
-  const [templateInputs, setTemplateInputs] = React.useState<StageElementConfig>()
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { getString } = useStrings()
   const [loadingMergedTemplateInputs, setLoadingMergedTemplateInputs] = React.useState<boolean>(false)
+  const [allTemplateInputs, setAllTemplateInputs] =
+    React.useState<{ template: Omit<TemplateLinkConfig, 'templateRef'> }>()
 
   const onChange = React.useCallback(
     debounce(async (values: StageElementConfig): Promise<void> => {
@@ -115,28 +120,37 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     }
   })
 
-  const updateFormValues = (newTemplateInputs?: StageElementConfig) => {
-    const updatedStage = produce(stage?.stage as StageElementConfig, draft => {
+  const updateFormValues = (newTemplateInputs?: Omit<TemplateLinkConfig, 'templateRef'>) => {
+    const updateValues = produce(stage?.stage as StageElementConfig, draft => {
       set(
         draft,
         'template.templateInputs',
-        !isEmpty(newTemplateInputs) ? replaceDefaultValues(newTemplateInputs) : undefined
+        !isEmpty(newTemplateInputs?.templateInputs)
+          ? replaceDefaultValues(newTemplateInputs?.templateInputs)
+          : undefined
+      )
+      set(
+        draft,
+        'template.variables',
+        !isEmpty(newTemplateInputs?.variables) ? replaceDefaultValues(newTemplateInputs?.variables) : undefined
       )
     })
-    setFormValues(updatedStage)
-    updateStage(updatedStage)
+    setFormValues(updateValues)
+    updateStage(updateValues)
   }
 
-  const retainInputsAndUpdateFormValues = (newTemplateInputs?: StageElementConfig) => {
-    if (isEmpty(newTemplateInputs)) {
-      updateFormValues(newTemplateInputs)
+  const retainInputsAndUpdateFormValues = (newAllTemplateInputs?: {
+    template: Omit<TemplateLinkConfig, 'templateRef'>
+  }) => {
+    if (isEmpty(newAllTemplateInputs?.template)) {
+      updateFormValues(newAllTemplateInputs?.template)
     } else {
       setLoadingMergedTemplateInputs(true)
       try {
         getsMergedTemplateInputYamlPromise({
           body: {
-            oldTemplateInputs: stringify(defaultTo(stage?.stage?.template?.templateInputs, '')),
-            newTemplateInputs: stringify(newTemplateInputs)
+            oldTemplateInputs: stringify(omit(stage?.stage?.template, 'templateRef', 'versionLabel')),
+            newTemplateInputs: stringify(newAllTemplateInputs?.template)
           },
           queryParams: {
             accountIdentifier: queryParams.accountId
@@ -151,19 +165,21 @@ export const TemplateStageSpecifications = (): JSX.Element => {
         })
       } catch (error) {
         setLoadingMergedTemplateInputs(false)
-        updateFormValues(newTemplateInputs)
+        updateFormValues(newAllTemplateInputs?.template)
       }
     }
   }
 
   React.useEffect(() => {
     if (templateInputSetLoading) {
-      setTemplateInputs(undefined)
+      setAllTemplateInputs(undefined)
       setAllValues(undefined)
     } else {
-      const newTemplateInputs = parse<StageElementConfig>(defaultTo(templateInputSetYaml?.data, ''))
-      setTemplateInputs(newTemplateInputs)
-      retainInputsAndUpdateFormValues(newTemplateInputs)
+      const newAllTemplateInputs = {
+        template: parse<Omit<TemplateLinkConfig, 'templateRef'>>(defaultTo(templateInputSetYaml?.data, ''))
+      }
+      setAllTemplateInputs(newAllTemplateInputs)
+      retainInputsAndUpdateFormValues(newAllTemplateInputs)
     }
   }, [templateInputSetLoading])
 
@@ -184,7 +200,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
       onChange?.(values)
       const errorsResponse = validateStage({
         stage: values.template?.templateInputs as StageElementConfig,
-        template: templateInputs,
+        template: allTemplateInputs?.template.templateInputs as StageElementConfig,
         originalStage: stage?.stage?.template?.templateInputs as StageElementConfig,
         getString,
         viewType: StepViewType.DeploymentForm
@@ -243,7 +259,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
           />
         )}
         <Formik<StageElementConfig>
-          initialValues={formValues as StageElementConfig}
+          initialValues={formValues}
           formName="templateStageOverview"
           onSubmit={noop}
           validate={validateForm}
@@ -277,7 +293,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                       <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
                     </Container>
                   )}
-                  {!isLoading && !error && templateInputs && allValues && (
+                  {!isLoading && !error && allTemplateInputs && allValues && formik.values.template && (
                     <Layout.Vertical
                       margin={{ top: 'medium' }}
                       padding={{ top: 'large', bottom: 'large' }}
@@ -287,9 +303,9 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                         {getString('pipeline.templateInputs')}
                       </Heading>
                       <StageForm
-                        template={{ stage: templateInputs }}
+                        template={{ stage: allTemplateInputs as StageElementConfig }}
                         allValues={{ stage: allValues }}
-                        path={TEMPLATE_INPUT_PATH}
+                        path={''}
                         readonly={isReadonly}
                         viewType={StepViewType.TemplateUsage}
                         hideTitle={true}

@@ -113,7 +113,7 @@ export default function MonitoredServiceInputSetsTemplate({
       const inputSet = isReadOnlyInputSet
         ? parse(templateInputYaml?.data)
         : (parse(templateInputYaml?.data?.replace(/"<\+input>"/g, '""')) as any)
-      setMonitoredServiceInputSet(inputSet)
+      setMonitoredServiceInputSet(inputSet.templateInputs)
     }
   }, [templateInputYaml])
 

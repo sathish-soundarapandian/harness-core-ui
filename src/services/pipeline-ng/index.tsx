@@ -4902,8 +4902,8 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 
 export interface TemplateLinkConfig {
   templateInputs?: JsonNode
+  variables?: NGVariable[]
   templateRef: string
-  templateVariables?: JsonNode
   versionLabel?: string
 }
 

@@ -7,7 +7,7 @@
 
 import React, { useCallback } from 'react'
 import { AllowedTypesWithRunTime, MultiTypeInputType, NestedAccordionProvider, PageError } from '@wings-software/uicore'
-import { isEmpty, omit, set } from 'lodash-es'
+import { isEmpty, omit, set, unset } from 'lodash-es'
 import { produce } from 'immer'
 import {
   MonitoredServiceConfig,
@@ -17,7 +17,7 @@ import { PageSpinner } from '@common/components'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import type { PipelineInfoConfig, StageElementConfig, StepElementConfig } from 'services/pipeline-ng'
+import type { NGVariable, PipelineInfoConfig, StageElementConfig, StepElementConfig } from 'services/pipeline-ng'
 import { StepCardPanel } from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StepCard'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { DefaultNewStageId } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'
@@ -34,6 +34,10 @@ import type {
   ArtifactSourceTemplateConfig,
   DeploymentTemplateConfig
 } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
+import TemplateVariablesCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/TemplateVariablesCard/TemplateVariablesCard'
+import templatesFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import css from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 const TemplateVariables: React.FC = (): JSX.Element => {
@@ -43,13 +47,14 @@ const TemplateVariables: React.FC = (): JSX.Element => {
     updateTemplate,
     updateTemplateView
   } = React.useContext(TemplateContext)
-  const { originalTemplate, variablesTemplate, metadataMap, error, initLoading } = useTemplateVariables()
+  const { originalTemplate, variablesTemplate, variablesTemplateVariables, metadataMap, error, initLoading } =
+    useTemplateVariables()
   const allowableTypes: AllowedTypesWithRunTime[] = [
     MultiTypeInputType.FIXED,
     MultiTypeInputType.RUNTIME,
     MultiTypeInputType.EXPRESSION
   ]
-  const [templateAtState, setTemplateAtState] = React.useState<NGTemplateInfoConfig>(originalTemplate)
+  const [templateAtState, setTemplateAtState] = React.useState<NGTemplateInfoConfig>(template)
 
   const onUpdate = useCallback(
     async (values: PipelineInfoConfig | StageElementConfig | StepElementConfig | DeploymentTemplateConfig) => {
@@ -57,6 +62,25 @@ const TemplateVariables: React.FC = (): JSX.Element => {
       sanitize(processNode, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
       const updatedTemplate = produce(templateAtState, draft => {
         set(draft, 'spec', processNode)
+      })
+      setTemplateAtState(updatedTemplate)
+    },
+    [templateAtState]
+  )
+
+  const onUpdateVariables = useCallback(
+    (variables: NGVariable[]) => {
+      const updatedTemplate = produce(templateAtState, draft => {
+        const sanitizedVariables = sanitize(variables, {
+          removeEmptyArray: false,
+          removeEmptyObject: false,
+          removeEmptyString: false
+        })
+        if (!isEmpty(sanitizedVariables)) {
+          set(draft, 'variables', sanitizedVariables)
+        } else {
+          unset(draft, 'variables')
+        }
       })
       setTemplateAtState(updatedTemplate)
     },
@@ -72,6 +96,9 @@ const TemplateVariables: React.FC = (): JSX.Element => {
     updateTemplateView({ ...templateView, isDrawerOpened: false })
   }
 
+  const templateVariablesEnabled =
+    useFeatureFlag(FeatureFlag.NG_TEMPLATE_VARIABLES) && !!templatesFactory.getTemplateVariablesEnabled(template.type)
+
   if (initLoading) {
     return <PageSpinner />
   }
@@ -85,6 +112,16 @@ const TemplateVariables: React.FC = (): JSX.Element => {
             <VariablesHeader enableSearch={false} applyChanges={applyChanges} discardChanges={discardChanges} />
             <div className={css.variableList}>
               <GitSyncStoreProvider>
+                {templateVariablesEnabled && (
+                  <TemplateVariablesCard
+                    variableVariables={variablesTemplateVariables}
+                    variables={template.variables as NGVariable[]}
+                    stepsFactory={factory}
+                    metadataMap={metadataMap}
+                    updateVariables={onUpdateVariables}
+                    allowableTypes={allowableTypes}
+                  />
+                )}
                 {originalTemplate.type === TemplateType.Pipeline && (
                   <PipelineCardPanel
                     variablePipeline={variablesTemplate as PipelineInfoConfig}

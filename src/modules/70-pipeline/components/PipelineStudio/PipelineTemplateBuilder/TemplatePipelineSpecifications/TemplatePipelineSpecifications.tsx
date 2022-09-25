@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { debounce, defaultTo, isEmpty, isEqual, noop, set } from 'lodash-es'
+import { debounce, defaultTo, isEmpty, isEqual, noop, omit, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Container, Formik, FormikForm, Heading, Layout, PageError } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
@@ -29,7 +29,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { PageSpinner } from '@common/components'
 import { PipelineInputSetFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import type { PipelineInfoConfig, TemplateLinkConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
@@ -54,7 +54,9 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   const pipelineScope = getScopeFromDTO(pipeline)
   const [formValues, setFormValues] = React.useState<PipelineInfoConfig | undefined>()
   const [allValues, setAllValues] = React.useState<PipelineInfoConfig>()
-  const [templateInputs, setTemplateInputs] = React.useState<PipelineInfoConfig | undefined>()
+  const [templateInputs, setTemplateInputs] = React.useState<
+    { template: Omit<TemplateLinkConfig, 'templateRef'> } | undefined
+  >()
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const formRefDom = React.useRef<HTMLElement | undefined>()
@@ -105,12 +107,19 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     }
   })
 
-  const updateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
+  const updateFormValues = (newTemplateInputs?: Omit<TemplateLinkConfig, 'templateRef'>) => {
     const updatedPipeline = produce(pipeline, draft => {
       set(
         draft,
         'template.templateInputs',
-        !isEmpty(newTemplateInputs) ? replaceDefaultValues(newTemplateInputs) : undefined
+        !isEmpty(newTemplateInputs?.templateInputs)
+          ? replaceDefaultValues(newTemplateInputs?.templateInputs)
+          : undefined
+      )
+      set(
+        draft,
+        'template.variables',
+        !isEmpty(newTemplateInputs?.variables) ? replaceDefaultValues(newTemplateInputs?.variables) : undefined
       )
     })
     setFormValues(updatedPipeline)
@@ -123,16 +132,18 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     }
   }, [formValues])
 
-  const retainInputsAndUpdateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
-    if (isEmpty(newTemplateInputs)) {
-      updateFormValues(newTemplateInputs)
+  const retainInputsAndUpdateFormValues = (newAllTemplateInputs?: {
+    template: Omit<TemplateLinkConfig, 'templateRef'>
+  }) => {
+    if (isEmpty(newAllTemplateInputs)) {
+      updateFormValues(newAllTemplateInputs?.template)
     } else {
       setLoadingMergedTemplateInputs(true)
       try {
         getsMergedTemplateInputYamlPromise({
           body: {
-            oldTemplateInputs: stringify(defaultTo(pipeline?.template?.templateInputs, '')),
-            newTemplateInputs: stringify(newTemplateInputs)
+            oldTemplateInputs: stringify(omit(pipeline?.template, 'templateRef', 'versionLabel')),
+            newTemplateInputs: stringify(newAllTemplateInputs?.template)
           },
           queryParams: {
             accountIdentifier: queryParams.accountId
@@ -147,7 +158,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
         })
       } catch (error) {
         setLoadingMergedTemplateInputs(false)
-        updateFormValues(newTemplateInputs)
+        updateFormValues(newAllTemplateInputs?.template)
       }
     }
   }
@@ -159,9 +170,9 @@ export function TemplatePipelineSpecifications(): JSX.Element {
       setAllValues(undefined)
       setFormValues(undefined)
     } else {
-      const newTemplateInputs = parse<PipelineInfoConfig>(defaultTo(templateInputSetYaml?.data, ''))
-      setTemplateInputs(newTemplateInputs)
-      retainInputsAndUpdateFormValues(newTemplateInputs)
+      const newAllTemplateInputs = { template: parse<PipelineInfoConfig>(defaultTo(templateInputSetYaml?.data, '')) }
+      setTemplateInputs(newAllTemplateInputs)
+      retainInputsAndUpdateFormValues(newAllTemplateInputs)
     }
   }, [templateInputSetLoading])
 
@@ -175,13 +186,12 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   const validateForm = (values: PipelineInfoConfig) => {
     if (
       isEqual(values.template?.templateRef, pipeline.template?.templateRef) &&
-      isEqual(values.template?.versionLabel, pipeline.template?.versionLabel) &&
-      templateInputs
+      isEqual(values.template?.versionLabel, pipeline.template?.versionLabel)
     ) {
       onChange?.(values)
       const errorsResponse = validatePipeline({
         pipeline: values.template?.templateInputs as PipelineInfoConfig,
-        template: templateInputs,
+        template: templateInputs?.template.templateInputs as PipelineInfoConfig,
         originalPipeline: allValues,
         getString,
         viewType: StepViewType.DeploymentForm,
@@ -250,9 +260,9 @@ export function TemplatePipelineSpecifications(): JSX.Element {
                       </Heading>
                       <Container>
                         <PipelineInputSetFormInternal
-                          template={templateInputs}
+                          template={templateInputs as PipelineInfoConfig}
                           originalPipeline={allValues}
-                          path={TEMPLATE_INPUT_PATH}
+                          path={''}
                           readonly={isReadonly}
                           viewType={StepViewType.TemplateUsage}
                           allowableTypes={allowableTypes}

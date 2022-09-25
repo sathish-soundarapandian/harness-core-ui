@@ -8,14 +8,18 @@
 import { cloneDeep, isNil, set, get, defaultTo } from 'lodash-es'
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import produce from 'immer'
 import type {
   ExecutionGraphAddStepEvent,
   ExecutionGraphRefObj
 } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
-import { addStepOrGroup } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
-import { StepCategory, useGetStepsV2 } from 'services/pipeline-ng'
-import { createStepNodeFromTemplate } from '@pipeline/utils/templateUtils'
+import {
+  addStepOrGroup,
+  generateRandomString
+} from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
+import { StepCategory, StepElementConfig, useGetStepsV2 } from 'services/pipeline-ng'
+import { getScopeBasedTemplateRef } from '@pipeline/utils/templateUtils'
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useMutateAsGet } from '@common/hooks'
@@ -23,6 +27,9 @@ import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { DeploymentStageConfig } from 'services/cd-ng'
+import useGetCopiedTemplate from '@pipeline/hooks/useGetCopiedTemplate/useGetCopiedTemplate'
+import { parse } from '@common/utils/YamlHelperMethods'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 
 interface AddStepTemplateReturnType {
   addTemplate: (event: ExecutionGraphAddStepEvent) => Promise<void>
@@ -60,6 +67,7 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     {}
   ) as Record<string, string | string[]>
   const [allChildTypes, setAllChildTypes] = React.useState<string[]>([])
+  const { getCopiedTemplate } = useGetCopiedTemplate({ storeMetadata })
 
   const { data: stepsData } = useMutateAsGet(useGetStepsV2, {
     queryParams: { accountId },
@@ -90,6 +98,32 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     }
   }, [stepsData?.data?.stepCategories])
 
+  const getNewStepData = async (
+    template: TemplateSummaryResponse,
+    isCopied: boolean
+  ): Promise<{ step: StepElementConfig }> => {
+    if (isCopied) {
+      const copiedTemplateYaml = await getCopiedTemplate(template)
+      return {
+        step: produce(defaultTo(parse<any>(copiedTemplateYaml)?.template.spec, {}) as StepElementConfig, draft => {
+          draft.name = defaultTo(template?.name, '')
+          draft.identifier = generateRandomString(defaultTo(template?.name, ''))
+        })
+      }
+    } else {
+      return {
+        step: produce({} as StepElementConfig, draft => {
+          draft.name = defaultTo(template?.name, '')
+          draft.identifier = generateRandomString(defaultTo(template?.name, ''))
+          set(draft, 'template.templateRef', getScopeBasedTemplateRef(template))
+          if (template.versionLabel) {
+            set(draft, 'template.versionLabel', template.versionLabel)
+          }
+        })
+      }
+    }
+  }
+
   const addTemplate = async (event: ExecutionGraphAddStepEvent) => {
     try {
       const { template, isCopied } = await getTemplate({
@@ -103,46 +137,50 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
         gitDetails,
         storeMetadata
       })
-      const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
-      const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
-      if (pipelineStage && !pipelineStage.stage?.spec) {
-        set(pipelineStage, 'stage.spec', {})
-      }
-      if (pipelineStage && isNil(pipelineStage.stage?.spec?.execution)) {
-        if (event.isRollback) {
-          set(pipelineStage, 'stage.spec.execution', { rollbackSteps: [] })
-        } else {
-          set(pipelineStage, 'stage.spec.execution', { steps: [] })
+      try {
+        const newStepData = await getNewStepData(template, isCopied)
+        const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
+        if (pipelineStage && !pipelineStage.stage?.spec) {
+          set(pipelineStage, 'stage.spec', {})
         }
-      }
-      executionRef?.stepGroupUpdated?.(newStepData.step)
-      addStepOrGroup(
-        event.entity,
-        pipelineStage?.stage?.spec?.execution as any,
-        newStepData,
-        event.isParallel,
-        event.isRollback
-      )
-      if (pipelineStage?.stage) {
-        await updateStage(pipelineStage?.stage)
-      }
-      updatePipelineView({
-        ...pipelineView,
-        isDrawerOpened: true,
-        drawerData: {
-          type: DrawerTypes.StepConfig,
-          data: {
-            stepConfig: {
-              node: newStepData.step,
-              stepsMap: event.stepsMap,
-              onUpdate: executionRef?.stepGroupUpdated,
-              isStepGroup: false,
-              addOrEdit: 'edit',
-              hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
-            }
+        if (pipelineStage && isNil(pipelineStage.stage?.spec?.execution)) {
+          if (event.isRollback) {
+            set(pipelineStage, 'stage.spec.execution', { rollbackSteps: [] })
+          } else {
+            set(pipelineStage, 'stage.spec.execution', { steps: [] })
           }
         }
-      })
+        executionRef?.stepGroupUpdated?.(newStepData.step)
+        addStepOrGroup(
+          event.entity,
+          pipelineStage?.stage?.spec?.execution as any,
+          newStepData,
+          event.isParallel,
+          event.isRollback
+        )
+        if (pipelineStage?.stage) {
+          await updateStage(pipelineStage?.stage)
+        }
+        updatePipelineView({
+          ...pipelineView,
+          isDrawerOpened: true,
+          drawerData: {
+            type: DrawerTypes.StepConfig,
+            data: {
+              stepConfig: {
+                node: newStepData.step,
+                stepsMap: event.stepsMap,
+                onUpdate: executionRef?.stepGroupUpdated,
+                isStepGroup: false,
+                addOrEdit: 'edit',
+                hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
+              }
+            }
+          }
+        })
+      } catch (error) {
+        // Abort! Error occurred creating new step data
+      }
     } catch (_) {
       // Do nothing.. user cancelled template selection
     }

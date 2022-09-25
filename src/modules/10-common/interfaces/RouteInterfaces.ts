@@ -74,6 +74,7 @@ export type TemplateType =
   | 'Execution'
   | 'MonitoredService'
   | 'SecretManager'
+  | 'ArtifactSource'
   | ':templateType(Step)'
   | ':templateType(Stage)'
   | ':templateType(Pipeline)'

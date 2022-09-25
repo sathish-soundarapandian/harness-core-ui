@@ -1463,3 +1463,6 @@ step:
     namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
 runDisabledOnFreeze: Cannot run pipeline due to an active freeze
 viewFreeze: View freeze details
+copiedTemplateDialog:
+  title: Define Template Variables
+  subTitle: This template has variables which are set as runtime input. Please define these to proceed
