@@ -7,9 +7,10 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
+import { defaultTo } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
-import { mockTemplatesInputYaml } from '@pipeline/components/PipelineStudio/PipelineStudioTestHelper'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
+import { stepTemplate } from '@pipeline/components/PipelineStudio/TemplateBar/__tests__/TemplateBar.test'
 import { TemplateYaml } from '../TemplateYaml'
 
 jest.mock('react-monaco-editor', () => ({
@@ -22,7 +23,7 @@ describe('<TemplateYaml /> tests', () => {
   test('snapshot test', async () => {
     const { container } = render(
       <TestWrapper>
-        <TemplateYaml templateYaml={mockTemplatesInputYaml.data || ''} />
+        <TemplateYaml templateYaml={defaultTo(stepTemplate.data?.yaml, '')} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
