@@ -10,6 +10,13 @@ import type { ResponseString } from 'services/cd-ng'
 export const mockTemplatesInputYaml: ResponseString = {
   status: 'SUCCESS',
   data:
-    'type: "HarnessApproval"\ntimeout: "<+input>"' +
-    '\nspec:\n  approvalMessage: "<+input>"\n  approvers:\n    userGroups: "<+input>"\n    minimumCount: "<+input>"\n'
+    'templateInputs:' +
+    '\n type: "HarnessApproval"' +
+    '\n timeout: "<+input>"' +
+    '\n spec:' +
+    '\n   approvalMessage: "<+input>"' +
+    '\n   approvers:' +
+    '\n     userGroups: "<+input>"' +
+    '\n     minimumCount: "<+input>"' +
+    '\n'
 }

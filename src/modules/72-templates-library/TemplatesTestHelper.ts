@@ -88,19 +88,20 @@ export const stageTemplateVersion1: ResponseTemplateResponse = {
 export const stageMockTemplateVersion1InputYaml: ResponseString = {
   status: 'SUCCESS',
   data:
-    'type: "Deployment"\n' +
-    'spec:\n' +
-    '  serviceConfig:\n' +
-    '    serviceRef: "<+input>"\n' +
-    '  infrastructure:\n' +
-    '    infrastructureDefinition:\n' +
-    '      type: "KubernetesDirect"\n' +
-    '      spec:\n' +
-    '        namespace: "<+input>"\n' +
-    'variables:\n' +
-    '- name: "var1"\n' +
-    '  type: "String"\n' +
-    '  value: "<+input>"\n'
+    'templateInputs:' +
+    '\n type: "Deployment"' +
+    '\n spec:' +
+    '\n   serviceConfig:' +
+    '\n     serviceRef: "<+input>"' +
+    '\n   infrastructure:' +
+    '\n     infrastructureDefinition:' +
+    '\n       type: "KubernetesDirect"' +
+    '\n       spec:' +
+    '\n         namespace: "<+input>"' +
+    '\n variables:' +
+    '\n - name: "var1"' +
+    '\n   type: "String"' +
+    '\n   value: "<+input>"'
 }
 
 export const stageTemplateVersion2: ResponseTemplateResponse = {
@@ -279,7 +280,8 @@ export const stepTemplate: ResponseTemplateResponse = {
 
 export const stepMockTemplatesInputYaml: ResponseString = {
   status: 'SUCCESS',
-  data: 'type: "Http"' + '\nspec:' + '\n  url: "<+input>"' + '\n  requestBody: "<+input>"' + '\n'
+  data:
+    'templateInputs:' + '\n type: "Http"' + '\n spec:' + '\n   url: "<+input>"' + '\n   requestBody: "<+input>"' + '\n'
 }
 
 export const mockTemplates: ResponsePageTemplateSummaryResponse = {

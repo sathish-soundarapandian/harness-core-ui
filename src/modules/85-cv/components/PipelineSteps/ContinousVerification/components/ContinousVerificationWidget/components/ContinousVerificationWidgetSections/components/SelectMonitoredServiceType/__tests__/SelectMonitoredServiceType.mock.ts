@@ -314,7 +314,7 @@ export const mockedFormikWithTemplatesData = {
 
 export const mockedTemplateInputYaml = {
   status: 'SUCCESS',
-  data: 'type: "Application"\nserviceRef: "<+input>"\nenvironmentRef: "<+input>"\nsources:\n  healthSources:\n  - identifier: "AddD_Health_source"\n    type: "AppDynamics"\n    spec:\n      applicationName: "<+input>"\n      tierName: "<+input>"\n      metricDefinitions:\n      - identifier: "appdMetric"\n        completeMetricPath: "<+input>"\n        analysis:\n          deploymentVerification:\n            serviceInstanceMetricPath: "<+input>"\nvariables:\n- name: "connectorRef"\n  type: "String"\n  value: "<+input>"\n',
+  data: 'templateInputs:\n type: "Application"\n serviceRef: "<+input>"\n environmentRef: "<+input>"\n sources:\n   healthSources:\n   - identifier: "AddD_Health_source"\n     type: "AppDynamics"\n     spec:\n       applicationName: "<+input>"\n       tierName: "<+input>"\n       metricDefinitions:\n       - identifier: "appdMetric"\n         completeMetricPath: "<+input>"\n         analysis:\n           deploymentVerification:\n             serviceInstanceMetricPath: "<+input>"\n variables:\n - name: "connectorRef"\n   type: "String"\n   value: "<+input>"\n',
   metaData: null,
   correlationId: '423a4b39-90cd-4d49-9dc5-0a55a29cdb4b'
 } as any
