@@ -3,7 +3,7 @@
 exports[`<TemplateVariables /> tests should render error 1`] = `
 <div>
   <div
-    class="pipelineVariables"
+    class="pipelineVariables templateVariables"
   >
     <div
       class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"

@@ -3360,6 +3360,8 @@ export interface StringsMap {
   'pipeline.configFiles.title': string
   'pipeline.configSource': string
   'pipeline.configureArtifactSource': string
+  'pipeline.copiedTemplateDialog.subTitle': string
+  'pipeline.copiedTemplateDialog.title': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string

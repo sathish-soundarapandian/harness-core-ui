@@ -21,7 +21,7 @@ jest.mock('services/template-ng', () => ({
   useGetTemplateInputSetYaml: jest.fn().mockReturnValue({
     data: {
       status: 'SUCCESS',
-      data: 'identifier: "<+monitoredService.serviceRef>_<+monitoredService.environmentRef>"\ntype: "Application"\nserviceRef: "<+input>"\nenvironmentRef: "<+input>"\nsources:\n  healthSources:\n  - identifier: "AppD_default_metrics_runtime_connector"\n    type: "AppDynamics"\n    spec:\n      applicationName: "<+input>"\n      tierName: "<+input>"\n      connectorRef: "<+input>"\n  - identifier: "Appd_with_custom_and_runtime_connector"\n    type: "AppDynamics"\n    spec:\n      applicationName: "<+input>"\n      tierName: "<+input>"\n      metricDefinitions:\n      - identifier: "appdMetric_101"\n        completeMetricPath: "<+input>"\n        analysis:\n          deploymentVerification:\n            serviceInstanceMetricPath: "<+input>"\n      connectorRef: "<+input>"\n'
+      data: 'templateInputs:\n identifier: "<+monitoredService.serviceRef>_<+monitoredService.environmentRef>"\n type: "Application"\n serviceRef: "<+input>"\n environmentRef: "<+input>"\n sources:\n   healthSources:\n   - identifier: "AppD_default_metrics_runtime_connector"\n     type: "AppDynamics"\n     spec:\n       applicationName: "<+input>"\n       tierName: "<+input>"\n       connectorRef: "<+input>"\n   - identifier: "Appd_with_custom_and_runtime_connector"\n     type: "AppDynamics"\n     spec:\n       applicationName: "<+input>"\n       tierName: "<+input>"\n       metricDefinitions:\n       - identifier: "appdMetric_101"\n         completeMetricPath: "<+input>"\n         analysis:\n           deploymentVerification:\n             serviceInstanceMetricPath: "<+input>"\n       connectorRef: "<+input>"\n'
     },
     error: null,
     loading: false,
@@ -249,7 +249,7 @@ describe('Test MonitoredServiceInputSetsTemplate with GCO', () => {
     jest.spyOn(templateService, 'useGetTemplateInputSetYaml').mockReturnValue({
       data: {
         correlationId: '69e17be6-aa27-4524-820c-79a1831c1cec',
-        data: 'type: "Application"\nserviceRef: "<+input>"\nsources:\n  healthSources:\n  - identifier: "metric"\n    type: "Stackdriver"\n    spec:\n      connectorRef: "<+input>"\n      metricDefinitions:\n      - identifier: "test"\n        jsonMetricDefinition: "<+input>"\n',
+        data: 'templateInputs:\n type: "Application"\n serviceRef: "<+input>"\n sources:\n   healthSources:\n   - identifier: "metric"\n     type: "Stackdriver"\n     spec:\n       connectorRef: "<+input>"\n       metricDefinitions:\n       - identifier: "test"\n         jsonMetricDefinition: "<+input>"\n',
         metaData: null,
         status: 'SUCCESS'
       },

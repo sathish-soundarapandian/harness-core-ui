@@ -7,6 +7,7 @@
 
 import React from 'react'
 import {
+  AllowedTypes,
   Container,
   FormInput,
   getMultiTypeFromValue,
@@ -14,9 +15,8 @@ import {
   Label,
   Layout,
   MultiTypeInputType,
-  Text,
   RUNTIME_INPUT_VALUE,
-  AllowedTypes
+  Text
 } from '@harness/uicore'
 import { connect, FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
@@ -66,6 +66,12 @@ import { getScopeFromDTO } from '@common/components/EntityReference/EntityRefere
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { Connectors } from '@connectors/constants'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type {
+  CustomVariableInputSetExtraProps,
+  CustomVariablesData
+} from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
+import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+import type { AllNGVariables } from '@pipeline/utils/types'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { CollapseForm } from './CollapseForm'
@@ -248,6 +254,10 @@ export function StepForm({
     ? ((template?.step as unknown as TemplateStepNode)?.template.templateInputs as StepElementConfig)?.type
     : ((template?.step as StepElementConfig)?.type as StepType)
   const iconColor = factory.getStepIconColor(type)
+  const templateVariables = (template?.step as unknown as TemplateStepNode)?.template?.variables
+  const finalStepTemplate = isTemplateStep
+    ? { step: (template?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
+    : template
 
   return (
     <Layout.Vertical spacing="medium" padding={{ top: 'medium' }}>
@@ -263,29 +273,54 @@ export function StepForm({
           {getString('pipeline.stepLabel', allValues?.step)}
         </Label>
       )}
-      <StepFormInternal
-        template={
-          isTemplateStep
-            ? { step: (template?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
-            : template
-        }
-        allValues={
-          (allValues?.step as unknown as TemplateStepNode)?.template
-            ? { step: (allValues?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
-            : allValues
-        }
-        values={
-          isTemplateStep
-            ? { step: (values?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
-            : values
-        }
-        path={isTemplateStep ? `${path}.${TEMPLATE_INPUT_PATH}` : path}
-        readonly={readonly}
-        viewType={viewType}
-        allowableTypes={allowableTypes}
-        onUpdate={onUpdate}
-        customStepProps={customStepProps}
-      />
+      {isTemplateStep && !isEmpty(templateVariables) && (
+        <Container>
+          <Layout.Vertical className={css.variablesSection} spacing={'xsmall'}>
+            <Text font={{ variation: FontVariation.FORM_INPUT_TEXT, weight: 'semi-bold' }} color={Color.GREY_600}>
+              Template Variables
+            </Text>
+            <Container>
+              <StepWidget<CustomVariablesData, CustomVariableInputSetExtraProps>
+                factory={factory as unknown as AbstractStepFactory}
+                initialValues={{
+                  variables: (values?.step as unknown as TemplateStepNode)?.template?.variables as AllNGVariables[]
+                }}
+                allowableTypes={allowableTypes}
+                readonly={readonly}
+                type={StepType.CustomVariable}
+                stepViewType={viewType}
+                customStepProps={{
+                  template: { variables: templateVariables as AllNGVariables[] },
+                  path: path ? `${path}.template` : 'template'
+                }}
+              />
+            </Container>
+          </Layout.Vertical>
+        </Container>
+      )}
+      {finalStepTemplate?.step && (
+        <StepFormInternal
+          template={finalStepTemplate}
+          allValues={
+            (allValues?.step as unknown as TemplateStepNode)?.template
+              ? {
+                  step: (allValues?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig
+                }
+              : allValues
+          }
+          values={
+            isTemplateStep
+              ? { step: (values?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
+              : values
+          }
+          path={isTemplateStep ? (path ? `${path}.${TEMPLATE_INPUT_PATH}` : TEMPLATE_INPUT_PATH) : path}
+          readonly={readonly}
+          viewType={viewType}
+          allowableTypes={allowableTypes}
+          onUpdate={onUpdate}
+          customStepProps={customStepProps}
+        />
+      )}
     </Layout.Vertical>
   )
 }

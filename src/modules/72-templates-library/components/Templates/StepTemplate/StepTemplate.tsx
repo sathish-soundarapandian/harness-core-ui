@@ -25,6 +25,7 @@ export class StepTemplate extends Template {
     fill: '#EADEFF'
   }
   protected isRemoteEnabled = true
+  protected variablesEnabled = true
 
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
     return <StepTemplateCanvasWithRef ref={formikRef} />

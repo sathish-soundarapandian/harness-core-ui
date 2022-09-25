@@ -1538,3 +1538,6 @@ pipelineCachedCopy:
   updateAvailable: Update Available
   cacheUpdateAvailable: Cache {{$.pipeline.pipelineCachedCopy.updateAvailable}}
   newCacheVersion: New Cache version is available, click reload to view details.
+copiedTemplateDialog:
+  title: Define Template Variables
+  subTitle: This template has variables which are set as runtime input. Please define these to proceed

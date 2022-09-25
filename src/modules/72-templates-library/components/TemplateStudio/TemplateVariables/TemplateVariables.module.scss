@@ -1,0 +1,8 @@
+.templateVariables {
+  .step-accordion-details :global(.variable-list-row) {
+    padding-left: var(--spacing-xxlarge) !important;
+  }
+  .template-variables-details :global(.variable-list-row) {
+    padding-left: var(--spacing-4) !important;
+  }
+}

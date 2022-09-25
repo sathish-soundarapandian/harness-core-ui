@@ -24,5 +24,6 @@ declare const styles: {
   readonly strategyContainer: string
   readonly tabSubHeading: string
   readonly topAccordion: string
+  readonly variablesSection: string
 }
 export default styles

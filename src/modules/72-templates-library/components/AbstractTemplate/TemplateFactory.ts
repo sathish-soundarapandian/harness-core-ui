@@ -47,4 +47,8 @@ export class TemplateFactory {
   getTemplateIsRemoteEnabled(type: string): boolean | undefined {
     return this.templateBank.get(type)?.getIsRemoteEnabled()
   }
+
+  getTemplateVariablesEnabled(type: string): boolean | undefined {
+    return this.templateBank.get(type)?.getVariablesEnabled()
+  }
 }

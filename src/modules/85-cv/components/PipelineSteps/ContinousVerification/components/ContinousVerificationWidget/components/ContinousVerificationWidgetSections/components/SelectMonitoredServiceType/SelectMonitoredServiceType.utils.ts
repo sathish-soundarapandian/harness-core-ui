@@ -40,7 +40,7 @@ export function getUpdatedSpecs(
   templateData?: TemplateSummaryResponse
 ): ContinousVerificationData['spec'] {
   let newSpecs = { ...formValues.spec }
-  const inputSet = templateInputYaml?.data ? parse(templateInputYaml?.data as string) : {}
+  const inputSet = templateInputYaml?.data ? parse(templateInputYaml.data as string).templateInputs : {}
   const { versionLabel = '', identifier = '' } = templateData || {}
   const updatedMonitoredService = {
     ...formValues.spec.monitoredService,

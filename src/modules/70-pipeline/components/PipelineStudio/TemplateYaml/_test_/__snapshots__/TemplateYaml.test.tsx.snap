@@ -1,5 +1,83 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`<TemplateBar /> tests should match snapshot in loading 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main container StyledProps--padding-top-small StyledProps--padding-right-medium StyledProps--padding-bottom-small StyledProps--padding-left-medium StyledProps--background-primary6 StyledProps--border"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
+    >
+      <span
+        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+        data-icon="template-library"
+      >
+        <svg
+          height="11"
+          viewBox="0 0 12 13"
+          width="11"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        >
+          <defs>
+            <path
+              d="M1.8 13c.2 0 .4-.3.4-.6V.6C2.2.3 2 0 1.8 0H.4C.2 0 0 .3 0 .6v11.7c0 .4.2.7.4.7h1.4zm8.8 0l.9-.3c.3-.1.5-.4.4-.8L8.9.6C8.8.3 8.5.1 8.1.2l-.9.3c-.4 0-.5.4-.5.7l3.1 11.3c.1.4.5.6.8.5zm-5 0c.2 0 .4-.3.4-.7V.6c0-.3-.2-.6-.4-.6H4.2c-.2 0-.4.3-.4.6v11.7c0 .4.2.7.4.7h1.4z"
+              id="template-library_svg__a"
+            />
+          </defs>
+          <clippath
+            id="template-library_svg__b"
+          >
+            <use
+              overflow="visible"
+              xlink:href="#template-library_svg__a"
+            />
+          </clippath>
+          <path
+            clip-path="url(#template-library_svg__b)"
+            d="M-5-5h22v23H-5z"
+            fill="#25a6f7"
+          />
+        </svg>
+      </span>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-white"
+        style="flex-grow: 1;"
+      >
+        loading
+      </p>
+      <span
+        class="bp3-popover-wrapper main"
+      >
+        <span
+          class="bp3-popover-target"
+        >
+          <span
+            class="bp3-icon bp3-icon-more StyledProps--main actionButton StyledProps--color StyledProps--color-white"
+            icon="more"
+          >
+            <svg
+              data-icon="more"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                more
+              </desc>
+              <path
+                d="M2 6.03a2 2 0 100 4 2 2 0 100-4zM14 6.03a2 2 0 100 4 2 2 0 100-4zM8 6.03a2 2 0 100 4 2 2 0 100-4z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </span>
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`<TemplateYaml /> tests snapshot test 1`] = `
 <div>
   <div
@@ -22,13 +100,24 @@ exports[`<TemplateYaml /> tests snapshot test 1`] = `
         style="flex-grow: 1;"
       >
         <textarea>
-          type: "HarnessApproval"
-timeout: "&lt;+input&gt;"
-spec:
-  approvalMessage: "&lt;+input&gt;"
-  approvers:
-    userGroups: "&lt;+input&gt;"
-    minimumCount: "&lt;+input&gt;"
+          template:
+    name: Test Http Template
+    identifier: Test_Http_Template
+    versionLabel: v1
+    type: Step
+    projectIdentifier: Yogesh_Test
+    orgIdentifier: default
+    description: null
+    tags: {}
+    spec:
+        type: Http
+        timeout: 1m 40s
+        spec:
+            url: &lt;+input&gt;
+            method: GET
+            headers: []
+            outputVariables: []
+            requestBody: &lt;+input&gt;
 
         </textarea>
       </div>
