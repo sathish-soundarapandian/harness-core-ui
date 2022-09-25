@@ -758,7 +758,7 @@ export function RightDrawer(): React.ReactElement {
     drawerData.data?.stepConfig?.onUpdate?.(processNode)
   }
 
-  const { getCopiedTemplate } = useGetCopiedTemplate({ storeMetadata })
+  const { getCopiedTemplate } = useGetCopiedTemplate()
 
   const getNewStepData = async (
     template: TemplateSummaryResponse,

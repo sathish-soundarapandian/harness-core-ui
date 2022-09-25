@@ -9,7 +9,7 @@ import React from 'react'
 import { Text, MultiTypeInputType, getMultiTypeFromValue, AllowedTypes } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { cloneDeep, defaultTo, get } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -41,6 +41,7 @@ export interface CustomVariableInputSetExtraProps {
   isDescriptionEnabled?: boolean
   allowedVarialblesTypes?: VariableType[]
   isDrawerMode?: boolean
+  expressions?: string[]
 }
 
 export interface CustomVariableInputSetProps extends CustomVariableInputSetExtraProps {
@@ -68,10 +69,12 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
     formik,
     allowableTypes,
     className,
-    isDrawerMode
+    isDrawerMode,
+    expressions: defaultExpressions = []
   } = props
   const basePath = path?.length ? `${path}.variables` : 'variables'
-  const { expressions } = useVariablesExpression()
+  const { expressions: variableExpressions } = useVariablesExpression()
+  const expressions = !isEmpty(variableExpressions) ? variableExpressions : defaultExpressions
   const { getString } = useStrings()
   const formikVariables = defaultTo(get(formik?.values, basePath), [])
   // get doesn't return defaultValue if it gets null

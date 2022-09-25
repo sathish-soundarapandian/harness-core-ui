@@ -71,7 +71,7 @@ export const InfraProvisioningBase = (
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const { accountId } = useParams<ProjectPathProps>()
   const formikRef = useRef<FormikContextType<InfraProvisioningDataUI>>()
-  const { getCopiedTemplate } = useGetCopiedTemplate({ storeMetadata })
+  const { getCopiedTemplate } = useGetCopiedTemplate()
 
   const { showModal } = useChooseProvisioner({
     onSubmit: (data: any) => {

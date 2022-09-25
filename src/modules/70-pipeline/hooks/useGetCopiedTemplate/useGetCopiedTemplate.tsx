@@ -1,9 +1,16 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, Spinner } from '@blueprintjs/core'
 import { Container, FormikForm } from '@harness/uicore'
 import { Formik, FormikProps } from 'formik'
-import { Button, ButtonVariation, Layout, MultiTypeInputType, Text } from '@wings-software/uicore'
+import { AllowedTypes, Button, ButtonVariation, Layout, MultiTypeInputType, Text } from '@wings-software/uicore'
 import { defaultTo, isEmpty, set } from 'lodash-es'
 import { Color } from '@wings-software/design-system'
 import { useStrings } from 'framework/strings'
@@ -31,11 +38,15 @@ import {
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useToaster } from '@common/components'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import css from './useGetCopiedTemplate.module.scss'
 
 export interface VariablesInputModalProps {
   template: TemplateSummaryResponse
   storeMetadata?: StoreMetadata
+  expressions?: string[]
   onResolve: (yaml: string) => void
   onReject: () => void
 }
@@ -55,7 +66,7 @@ const getVariablesMap = (variables: AllNGVariables[]) => {
 }
 
 function VariablesInputModal(props: VariablesInputModalProps) {
-  const { template, storeMetadata, onResolve, onReject } = props
+  const { template, onResolve, onReject, storeMetadata, expressions } = props
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -165,11 +176,16 @@ function VariablesInputModal(props: VariablesInputModalProps) {
                     <StepWidget<CustomVariablesData, CustomVariableInputSetExtraProps>
                       factory={factory as unknown as AbstractStepFactory}
                       initialValues={{ variables: formik.values.variables as AllNGVariables[] }}
-                      allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+                      allowableTypes={
+                        Object.values(MultiTypeInputType).filter(
+                          allowedType => !isMultiTypeRuntime(allowedType)
+                        ) as AllowedTypes
+                      }
                       type={StepType.CustomVariable}
                       stepViewType={StepViewType.InputSet}
                       customStepProps={{
-                        template: { variables: variablesTemplate as AllNGVariables[] }
+                        template: { variables: variablesTemplate as AllNGVariables[] },
+                        expressions
                       }}
                     />
                   </Container>
@@ -189,13 +205,13 @@ function VariablesInputModal(props: VariablesInputModalProps) {
   )
 }
 
-export interface GetTemplateVariables {
-  storeMetadata?: StoreMetadata
-}
-
-export default function useGetCopiedTemplate({ storeMetadata }: GetTemplateVariables): {
+export default function useGetCopiedTemplate(): {
   getCopiedTemplate: (template: TemplateSummaryResponse) => Promise<string>
 } {
+  const { expressions } = useVariablesExpression()
+  const {
+    state: { storeMetadata }
+  } = usePipelineContext()
   const [modalProps, setModalProps] = React.useState<{
     template: TemplateSummaryResponse
     resolve: (yaml: string) => void
@@ -208,14 +224,15 @@ export default function useGetCopiedTemplate({ storeMetadata }: GetTemplateVaria
         {modalProps && (
           <VariablesInputModal
             template={modalProps.template}
-            storeMetadata={storeMetadata}
             onResolve={modalProps.resolve}
             onReject={modalProps.reject}
+            storeMetadata={storeMetadata}
+            expressions={expressions}
           />
         )}
       </Dialog>
     )
-  }, [modalProps, storeMetadata])
+  }, [modalProps, storeMetadata, expressions])
 
   const getCopiedTemplate = (template: TemplateSummaryResponse): Promise<string> => {
     return new Promise((resolve, reject) => {

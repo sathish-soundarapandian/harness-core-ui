@@ -67,7 +67,7 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     {}
   ) as Record<string, string | string[]>
   const [allChildTypes, setAllChildTypes] = React.useState<string[]>([])
-  const { getCopiedTemplate } = useGetCopiedTemplate({ storeMetadata })
+  const { getCopiedTemplate } = useGetCopiedTemplate()
 
   const { data: stepsData } = useMutateAsGet(useGetStepsV2, {
     queryParams: { accountId },
