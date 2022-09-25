@@ -48,7 +48,7 @@ export function getRegionsDropdownOptions(regions: ResponseListString['data']): 
 }
 
 export const getFormikInitialValue = (data: CloudWatchSetupSource): CloudWatchFormType => {
-  if (!data || !data.isEdit) {
+  if (!data || !data?.isEdit) {
     return cloudWatchInitialValues
   }
 

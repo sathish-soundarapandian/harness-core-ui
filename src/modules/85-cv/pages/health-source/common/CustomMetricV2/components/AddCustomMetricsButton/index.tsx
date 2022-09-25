@@ -7,7 +7,14 @@ export default function AddCustomMetricButton(props: AddCustomMetricButtonProps)
   const { getString } = useStrings()
 
   return (
-    <Button disabled={props.disabled} icon="plus" minimal intent="primary" onClick={props.onClick}>
+    <Button
+      disabled={props.disabled}
+      icon="plus"
+      minimal
+      intent="primary"
+      onClick={props.onClick}
+      data-testid="addCustomMetricButton"
+    >
       {getString('cv.monitoringSources.addMetric')}
     </Button>
   )

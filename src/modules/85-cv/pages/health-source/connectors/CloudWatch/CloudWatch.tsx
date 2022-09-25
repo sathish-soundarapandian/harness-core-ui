@@ -7,6 +7,8 @@ import { useStrings } from 'framework/strings'
 import { useGetMetricPacks } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import CloudWatchContent from './components/CloudWatchContent'
 import type { CloudWatchFormType, CloudWatchSetupSource } from './CloudWatch.types'
 import DrawerFooter from '../../common/DrawerFooter/DrawerFooter'
@@ -22,7 +24,11 @@ export interface CloudWatchProps {
   onSubmit: (data: CloudWatchSetupSource, healthSourceList: UpdatedHealthSource) => Promise<void>
 }
 
-export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Element {
+export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Element | null {
+  // 🚨 TODO: Update it with Feature flag
+  // const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
+  const isCloudWatchEnabled = true
+
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
   const { getString } = useStrings()
@@ -43,8 +49,12 @@ export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Ele
     return value
   }, [metricPacksResponse])
 
+  if (!isCloudWatchEnabled) {
+    return null
+  }
+
   return (
-    <Container padding="medium" className={css.cloudWatch}>
+    <Container padding="medium" className={css.cloudWatch} data-testid="cloudWatchContainer">
       <Formik<CloudWatchFormType>
         validateOnMount
         initialValues={initialValues}
@@ -58,7 +68,7 @@ export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Ele
                 <CloudWatchContent />
 
                 {/* 🧑🏽‍💻 Debug 👩🏼‍💻 */}
-                <pre>{JSON.stringify(formikProps.values, null, 4)}</pre>
+                {/* <pre>{JSON.stringify(formikProps.values, null, 4)}</pre> */}
                 <Container height={520} />
                 <DrawerFooter
                   isSubmit
@@ -66,7 +76,7 @@ export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Ele
                   onNext={async () => {
                     formikProps.submitForm()
 
-                    if (formikProps.isValid) {
+                    if (formikProps.isValid && isCloudWatchEnabled) {
                       const payload = createPayloadForCloudWatch({
                         setupSourceData: data,
                         formikValues: formikProps.values

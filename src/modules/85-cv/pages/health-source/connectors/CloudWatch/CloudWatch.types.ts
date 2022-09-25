@@ -30,6 +30,7 @@ export interface HealthSourceListData {
 export interface CloudWatchSetupSource {
   isEdit: boolean
   healthSourceIdentifier: string
+  sourceType?: string
   healthSourceName: string
   product: SelectOption
   connectorRef?: string
