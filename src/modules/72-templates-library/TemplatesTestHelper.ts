@@ -284,6 +284,12 @@ export const stepMockTemplatesInputYaml: ResponseString = {
     'templateInputs:' + '\n type: "Http"' + '\n spec:' + '\n   url: "<+input>"' + '\n   requestBody: "<+input>"' + '\n'
 }
 
+export const stepMockTemplatesInputYamlWithTemplateVariables: ResponseString = {
+  status: 'SUCCESS',
+  data:
+    'templateInputs:' + '\n type: "Http"' + '\n spec:' + '\n   url: "<+input>"' + '\n   requestBody: "<+input>"' + '\n'
+}
+
 export const mockTemplates: ResponsePageTemplateSummaryResponse = {
   status: 'SUCCESS',
   data: {
