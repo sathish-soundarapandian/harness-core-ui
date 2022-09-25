@@ -42,6 +42,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import type { UseGetConnectorsListHookReturn } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook.types'
 import AddEditCustomVariable from './AddEditCustomVariable'
 import type { VariableState } from './AddEditCustomVariable'
 import { VariableType } from './CustomVariableUtils'
@@ -72,6 +73,7 @@ export interface CustomVariableEditableExtraProps {
   allowedConnectorTypes?: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
   addVariableLabel?: StringKeys
   validationSchema?: VariablesCustomValidationSchemaType
+  connectorDrawerData?: UseGetConnectorsListHookReturn
 }
 
 export interface CustomVariableEditableProps extends CustomVariableEditableExtraProps {
@@ -98,7 +100,8 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
     allowedVarialblesTypes,
     isDescriptionEnabled,
     headerComponent,
-    addVariableLabel
+    addVariableLabel,
+    connectorDrawerData
   } = props
   const uids = React.useRef<string[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -290,7 +293,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               connectorLabelClass="connectorVariableField"
                               enableConfigureOptions={false}
                               mini={true}
-                              isDrawerMode={true}
+                              connectorDrawerData={connectorDrawerData}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput

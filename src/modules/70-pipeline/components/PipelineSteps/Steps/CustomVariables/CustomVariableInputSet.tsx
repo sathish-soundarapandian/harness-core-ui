@@ -22,6 +22,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { UseGetConnectorsListHookReturn } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook.types'
 import { VariableType } from './CustomVariableUtils'
 import css from './CustomVariables.module.scss'
 export interface CustomVariablesData {
@@ -38,6 +39,7 @@ export interface CustomVariableInputSetExtraProps {
   executionIdentifier?: string
   isDescriptionEnabled?: boolean
   allowedVarialblesTypes?: VariableType[]
+  connectorDrawerData?: UseGetConnectorsListHookReturn
 }
 
 export interface CustomVariableInputSetProps extends CustomVariableInputSetExtraProps {
@@ -64,7 +66,8 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
     inputSetData,
     formik,
     allowableTypes,
-    className
+    className,
+    connectorDrawerData
   } = props
   const basePath = path?.length ? `${path}.variables` : 'variables'
   const { expressions } = useVariablesExpression()
@@ -120,7 +123,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                   setRefValue
                   connectorLabelClass="connectorVariableField"
                   enableConfigureOptions={false}
-                  isDrawerMode={true}
+                  connectorDrawerData={connectorDrawerData}
                 />
               ) : variable.type === VariableType.Secret ? (
                 <MultiTypeSecretInput

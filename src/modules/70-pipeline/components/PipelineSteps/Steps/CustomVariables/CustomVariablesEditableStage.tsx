@@ -70,7 +70,8 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
     allowedVarialblesTypes,
     isDescriptionEnabled,
     addVariableLabel,
-    validationSchema
+    validationSchema,
+    connectorDrawerData
   } = props
   const uids = React.useRef<string[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -201,7 +202,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                               setRefValue
                               connectorLabelClass="connectorVariableField"
                               enableConfigureOptions={false}
-                              isDrawerMode={true}
+                              connectorDrawerData={connectorDrawerData}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput name={`variables[${index}].value`} label="" disabled={readonly} />

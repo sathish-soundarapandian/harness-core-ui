@@ -51,8 +51,8 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
-import AddDrawer, { DrawerContext, ItemInterface } from '@common/components/AddDrawer/AddDrawer'
-import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
+import AddDrawer, { AddDrawerMapInterface, DrawerContext, ItemInterface } from '@common/components/AddDrawer/AddDrawer'
+import type { UseGetConnectorsListHookReturn } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook.types'
 import {
   ConnectorReferenceFieldProps,
   getReferenceFieldProps,
@@ -84,7 +84,7 @@ export interface MultiTypeConnectorFieldProps extends Omit<ConnectorReferenceFie
   onLoadingFinish?: () => void
   setConnector?: any
   mini?: boolean
-  isDrawerMode?: boolean
+  connectorDrawerData?: UseGetConnectorsListHookReturn
 }
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
   status: ConnectorResponse['status']
@@ -116,7 +116,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     createNewLabel,
     setConnector,
     mini,
-    isDrawerMode = false,
+    connectorDrawerData,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -349,11 +349,6 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
       { accountIdentifier, projectIdentifier, orgIdentifier }
     )
   }
-  const {
-    connectorsList: catalogueData,
-    loading: loadingCatalogue,
-    categoriesMap
-  } = useGetConnectorsListHook({ lazy: !isDrawerMode })
 
   const [openDrawer, hideDrawer] = useModalHook(() => {
     const onSelect = (val: ItemInterface): void => {
@@ -361,18 +356,18 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
       hideDrawer()
     }
 
-    return loadingCatalogue ? (
+    return connectorDrawerData?.loading ? (
       <PageSpinner />
     ) : (
       <AddDrawer
-        addDrawerMap={categoriesMap}
+        addDrawerMap={connectorDrawerData?.categoriesMap as AddDrawerMapInterface}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.PAGE}
         showRecentlyUsed={false}
       />
     )
-  }, [catalogueData])
+  }, [connectorDrawerData])
 
   const [pagedConnectorData, setPagedConnectorData] = useState<ResponsePageConnectorResponse>({})
   const [page, setPage] = useState(0)
@@ -421,7 +416,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
             <RbacButton
               variation={ButtonVariation.SECONDARY}
               onClick={() => {
-                isDrawerMode ? openDrawer() : optionalReferenceSelectProps.createNewHandler?.()
+                !isEmpty(connectorDrawerData) ? openDrawer() : optionalReferenceSelectProps.createNewHandler?.()
               }}
               text={`+ ${createNewLabel || getString('newConnector')}`}
               margin={{ right: 'small' }}

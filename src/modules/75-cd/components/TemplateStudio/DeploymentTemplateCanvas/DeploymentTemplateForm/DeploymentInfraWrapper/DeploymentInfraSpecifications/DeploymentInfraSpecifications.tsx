@@ -38,6 +38,7 @@ import type { JsonNode } from 'services/pipeline-ng'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
+import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
 import { getDTInfraVariablesValidationField, InstanceScriptTypes } from '../DeploymentInfraUtils'
 import css from './DeploymentInfraSpecifications.module.scss'
 
@@ -82,6 +83,8 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
     []
   )
 
+  const connectorDrawerData = useGetConnectorsListHook()
+
   return (
     <FormikForm>
       <CardWithOuterTitle
@@ -114,6 +117,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
               enableValidation={true}
               addVariableLabel={'variables.newVariable'}
               validationSchema={getDTInfraVariablesValidationField}
+              connectorDrawerData={connectorDrawerData}
             />
           </Layout.Horizontal>
         </Layout.Vertical>

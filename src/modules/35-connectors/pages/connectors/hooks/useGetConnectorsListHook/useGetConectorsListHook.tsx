@@ -21,18 +21,14 @@ import { usePermissionsContext } from 'framework/rbac/PermissionsContext'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeature } from '@common/hooks/useFeatures'
+import type { UseGetMockData } from '@common/utils/testUtils'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
-import type {
-  ComputedDrawerMapData,
-  UseGetConnectorsListHookProps,
-  UseGetConnectorsListHookReturn
-} from './useGetConectorsListHook.types'
+import type { ComputedDrawerMapData, UseGetConnectorsListHookReturn } from './useGetConectorsListHook.types'
 import css from './useGetConnectorsListHook.module.scss'
 
-export const useGetConnectorsListHook = ({
-  catalogueMockData,
-  lazy = false
-}: UseGetConnectorsListHookProps): UseGetConnectorsListHookReturn => {
+export const useGetConnectorsListHook = (
+  catalogueMockData?: UseGetMockData<ResponseConnectorCatalogueResponse>
+): UseGetConnectorsListHookReturn => {
   const isCustomHealthEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH)
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
   const isCustomSMEnabled = useFeatureFlag(FeatureFlag.CUSTOM_SECRET_MANAGER_NG)
@@ -63,8 +59,7 @@ export const useGetConnectorsListHook = ({
   const [connectorsData, setConnectorsData] = useState<ComputedDrawerMapData>()
   const { data, loading } = useGetConnectorCatalogue({
     queryParams: { accountIdentifier: accountId },
-    ...(catalogueMockData && { mock: catalogueMockData }),
-    lazy
+    ...(catalogueMockData && { mock: catalogueMockData })
   })
 
   const featureInfo = useFeature({
