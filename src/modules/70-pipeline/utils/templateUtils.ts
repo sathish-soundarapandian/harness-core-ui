@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get, isEmpty, isEqual, set, trim, unset } from 'lodash-es'
+import { defaultTo, get, isEmpty, isEqual, set, trim, unset, map } from 'lodash-es'
 import produce from 'immer'
 import { parse } from '@common/utils/YamlHelperMethods'
 import type {
@@ -148,6 +148,34 @@ const getPromisesForTemplateList = (params: GetTemplateListQueryParams, template
   })
 
   return promises
+}
+
+export const getLinkedStepTemplatesByRef = (
+  params: GetTemplateListQueryParams,
+  templateRefs: string[]
+): Promise<{ linkedTemplatesByCustomDeploymentRef: { [key: string]: string[] } }> => {
+  const promises = getPromisesForTemplateList(params, templateRefs)
+  return Promise.all(promises)
+    .then(responses => {
+      const linkedTemplatesByCustomDeploymentRef = {}
+      responses.forEach(response => {
+        response.data?.content?.forEach(item => {
+          const templateData = parse<any>(item.yaml || '').template
+          const scopeBasedTemplateRef = getScopeBasedTemplateRef(item)
+          set(
+            linkedTemplatesByCustomDeploymentRef,
+            scopeBasedTemplateRef,
+            map(templateData?.spec?.execution?.stepTemplateRefs, (stepTemplateRefObj: TemplateLinkConfig) =>
+              getIdentifierFromValue(stepTemplateRefObj.templateRef)
+            )
+          )
+        })
+      })
+      return { linkedTemplatesByCustomDeploymentRef }
+    })
+    .catch(_ => {
+      return { linkedTemplatesByCustomDeploymentRef: {} }
+    })
 }
 
 export const getTemplateTypesByRef = (

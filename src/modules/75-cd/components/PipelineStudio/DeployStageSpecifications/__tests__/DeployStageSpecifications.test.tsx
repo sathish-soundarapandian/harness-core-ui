@@ -65,7 +65,8 @@ const getPipelineContext = (): PipelineContextInterface => ({
     entityValidityDetails: {},
     isUpdated: true,
     templateTypes: {},
-    templateServiceData: {}
+    templateServiceData: {},
+    linkedTemplatesByCustomDeploymentRef: {}
   },
   contextType: PipelineContextType.Pipeline,
   allowableTypes: [
