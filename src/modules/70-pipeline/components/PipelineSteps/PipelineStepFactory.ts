@@ -6,7 +6,6 @@
  */
 
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-
 import { StepGroupStep } from './Steps/StepGroupStep/StepGroupStep'
 import { CustomVariables } from './Steps/CustomVariables/CustomVariables'
 import { BarrierStep } from './Steps/Barrier/Barrier'
