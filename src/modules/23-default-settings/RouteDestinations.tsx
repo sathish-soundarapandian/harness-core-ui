@@ -22,7 +22,111 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import { String } from 'framework/strings'
+import DefaultSettingsFactory from './factories/DefaultSettingsFactory'
+import { SettingGroups, SettingType } from './interfaces/SettingType.types'
+import {
+  DefaultSettingCheckBoxWithTrueAndFalse,
+  DefaultSettingNumberTextbox,
+  DefaultSettingRadioBtnWithTrueAndFalse,
+  DefaultSettingStringDropDown,
+  DefaultSettingTextbox
+} from './components/ReusableHandlers'
 
+DefaultSettingsFactory.registerCategory('CI', {
+  icon: 'ci-main',
+  label: 'common.purpose.ci.continuous',
+  settingsAndGroupDisplayOrder: [SettingGroups.group_1, SettingGroups.group_2, SettingType.test_setting_CI_7],
+  modulesWhereCategoryWillBeDisplayed: ['ci']
+})
+DefaultSettingsFactory.registerCategory('CORE', {
+  icon: 'cv-main',
+  label: 'common.module.core',
+  settingsAndGroupDisplayOrder: [SettingGroups.group_1, SettingGroups.group_2, SettingType.test_setting_CI_7],
+  modulesWhereCategoryWillBeDisplayed: ['ci', 'cd']
+})
+DefaultSettingsFactory.registerCategory('CD', {
+  icon: 'cd-main',
+  label: 'common.purpose.cd.continuous',
+  settingsAndGroupDisplayOrder: [
+    SettingType.test_setting_CD_1,
+    SettingType.test_setting_CD_2,
+    SettingType.test_setting_CD_3
+  ],
+  modulesWhereCategoryWillBeDisplayed: ['cd']
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CD_1, {
+  label: 'defaultSettings.test_setting_CD_1',
+  settingCategory: 'CD',
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CD_2, {
+  label: 'defaultSettings.test_setting_CD_2',
+  settingCategory: 'CD',
+  settingRenderer: props => <DefaultSettingStringDropDown {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CD_3, {
+  label: 'defaultSettings.test_setting_CD_3',
+  settingCategory: 'CD',
+  settingRenderer: props => <DefaultSettingTextbox {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_1, {
+  label: 'defaultSettings.test_setting_CI_1',
+  settingCategory: 'CI',
+
+  groupId: SettingGroups.group_1,
+  settingRenderer: props => <DefaultSettingTextbox {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_2, {
+  label: 'defaultSettings.test_setting_CI_2',
+  settingCategory: 'CI',
+
+  groupId: SettingGroups.group_1,
+  settingRenderer: props => <DefaultSettingNumberTextbox {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_3, {
+  label: 'defaultSettings.test_setting_CI_3',
+  settingCategory: 'CI',
+
+  groupId: SettingGroups.group_1,
+  settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_4, {
+  label: 'defaultSettings.test_setting_CI_4',
+  settingCategory: 'CI',
+
+  groupId: SettingGroups.group_2,
+  settingRenderer: props => <DefaultSettingTextbox {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_5, {
+  label: 'defaultSettings.test_setting_CI_5',
+  settingCategory: 'CI',
+  groupId: SettingGroups.group_2,
+  settingRenderer: props => <DefaultSettingStringDropDown {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_6, {
+  label: 'defaultSettings.test_setting_CI_6',
+  settingCategory: 'CI',
+
+  settingRenderer: props => <DefaultSettingTextbox {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_CI_7, {
+  label: 'defaultSettings.test_setting_CI_7',
+  settingCategory: 'CI',
+  settingRenderer: props => <DefaultSettingTextbox {...props} />
+})
+DefaultSettingsFactory.registerSettingHandler(SettingType.test_setting_disable_built_in_sm, {
+  label: 'defaultSettings.test_setting_disable_built_in_sm',
+  settingCategory: 'CORE',
+  settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />
+})
+DefaultSettingsFactory.registerGroupHandler(SettingGroups.group_1, {
+  settingCategory: 'CI',
+  groupName: 'common.advanced'
+})
+DefaultSettingsFactory.registerGroupHandler(SettingGroups.group_2, {
+  settingCategory: 'CI',
+  groupName: 'common.azure'
+})
 AuditTrailFactory.registerResourceHandler('SETTING', {
   moduleIcon: {
     name: 'nav-settings'

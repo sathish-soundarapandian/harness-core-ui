@@ -1247,6 +1247,17 @@ export interface StringsMap {
   'defaultSettings.inheritedFrom': string
   'defaultSettings.noSettingToDisplay': string
   'defaultSettings.restoreToDefault': string
+  'defaultSettings.test_setting_CD_1': string
+  'defaultSettings.test_setting_CD_2': string
+  'defaultSettings.test_setting_CD_3': string
+  'defaultSettings.test_setting_CI_1': string
+  'defaultSettings.test_setting_CI_2': string
+  'defaultSettings.test_setting_CI_3': string
+  'defaultSettings.test_setting_CI_4': string
+  'defaultSettings.test_setting_CI_5': string
+  'defaultSettings.test_setting_CI_6': string
+  'defaultSettings.test_setting_CI_7': string
+  'defaultSettings.test_setting_disable_built_in_sm': string
   'governance.permissions.governancePolicies': string
   'governance.permissions.governancePolicySets': string
   'delegates.GBRam': string

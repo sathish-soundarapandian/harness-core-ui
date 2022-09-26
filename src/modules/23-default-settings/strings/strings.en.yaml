@@ -3,3 +3,14 @@ allowOverrides: Allow Overrides
 noSettingToDisplay: No Settings to Display
 harnessDefault: Harness Default
 inheritedFrom: Inherited from {{source}}
+test_setting_CI_1: Test_setting_CI_1
+test_setting_CI_2: Test_setting_CI_2
+test_setting_CI_3: Test_setting_CI_3
+test_setting_CI_4: Test_setting_CI_4
+test_setting_CI_5: Test_setting_CI_5
+test_setting_CI_6: Test_setting_CI_6
+test_setting_CI_7: Test_setting_CI_7
+test_setting_CD_1: Test_setting_CD_1
+test_setting_CD_2: Test_setting_CD_2
+test_setting_CD_3: Test_setting_CD_3
+test_setting_disable_built_in_sm: Test_setting_disable_built_in_sm
