@@ -51,7 +51,12 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
     expect(
       validateMappings(mockGetString as any, ['metric1', 'metric4'], 0, {
         query: 'sdfsdf',
-        metricName: ''
+        metricName: '',
+        serviceInstance: '',
+        timeStampFormat: '',
+        logIndexes: '',
+        identify_timestamp: '',
+        messageIdentifier: ''
       })
     ).toEqual({
       //serviceInstance: MapElkToServiceFieldNames.SERVICE_INSTANCE,
@@ -77,7 +82,11 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
               metricName: 'metric1',
               query: 'test query',
               serviceInstance: 'service-instance',
-              recordCount: 0
+              recordCount: 0,
+              timeStampFormat: '',
+              logIndexes: '',
+              identify_timestamp: '',
+              messageIdentifier: ''
             }
           ]
         ]),
@@ -118,11 +127,14 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
           [
             'metric1',
             {
-              metricName: 'metric',
+              metricName: 'metric1',
               query: 'test query',
               serviceInstance: 'service-instance',
-
-              recordCount: 0
+              recordCount: 0,
+              timeStampFormat: '',
+              logIndexes: '',
+              identify_timestamp: '',
+              messageIdentifier: ''
             }
           ]
         ]),
@@ -163,7 +175,13 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             'metric',
             {
               metricName: 'metric',
-              query: 'sd'
+              query: 'sd',
+              serviceInstance: 'service-instance',
+              recordCount: 0,
+              timeStampFormat: '',
+              logIndexes: '',
+              identify_timestamp: '',
+              messageIdentifier: ''
             }
           ]
         ]),

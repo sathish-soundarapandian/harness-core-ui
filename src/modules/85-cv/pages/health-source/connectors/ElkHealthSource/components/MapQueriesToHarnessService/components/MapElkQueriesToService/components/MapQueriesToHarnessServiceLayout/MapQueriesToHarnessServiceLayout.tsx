@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 //xx
-import { Accordion, FormInput, Layout, Utils, useToaster } from '@wings-software/uicore'
+import { Accordion, Layout, Utils, useToaster } from '@wings-software/uicore'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { MapElkToServiceFieldNames } from '@cv/pages/health-source/connectors/ElkHealthSource/components/MapQueriesToHarnessService/constants'
@@ -113,12 +113,6 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
               error={null}
               query={formikProps?.values?.logIndexes ? query : ''}
               queryNotExecutedMessage="Submit query to see records from ELK"
-              // queryTextAreaProps={{
-              //   onChangeCapture: () => {
-              //     onChange(MapElkToServiceFieldNames.IS_STALE_RECORD, true)
-              //   }
-              // }}
-              //staleRecordsWarning={staleRecordsWarningMessage}
               dataTooltipId={'splunkQuery'}
               isTemplate={isTemplate}
               expressions={expressions}

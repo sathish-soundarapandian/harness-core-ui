@@ -13,7 +13,6 @@ import {
   mockedElkSampleData
 } from '@cv/pages/health-source/connectors/ElkHealthSource/__tests__/ElkHealthSource.mock'
 import { ElkMetricNameAndHostIdentifier } from '../ElkMetricNameAndHostIdentifier'
-import type { MapElkQueriesToServiceProps } from '../types'
 
 jest.mock('services/cv', () => ({
   // useGetElkSavedSearches: jest.fn().mockImplementation(() => ({
