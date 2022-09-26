@@ -125,7 +125,6 @@ export const getNestedEmptyFieldsWithPath = (
 }
 
 export const healthSourceTypeMapping = (type: ConnectorInfoDTO['type']): ConnectorInfoDTO['type'] => {
-  console.log('tyyyyyyyyyyype', type)
   switch (type) {
     case HealthSourceTypes.DatadogLog as ConnectorInfoDTO['type']:
     case HealthSourceTypes.DatadogMetrics as ConnectorInfoDTO['type']:
