@@ -77,6 +77,7 @@ export type TemplateType =
   | ':templateType(Step)'
   | ':templateType(Stage)'
   | ':templateType(Pipeline)'
+  | ':templateType(CustomDeployment)'
   | ':templateType(Service)'
   | ':templateType(Infrastructure)'
   | ':templateType(StepGroup)'

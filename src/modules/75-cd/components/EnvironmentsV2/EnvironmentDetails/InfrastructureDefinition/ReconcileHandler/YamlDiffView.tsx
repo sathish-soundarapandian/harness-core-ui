@@ -8,62 +8,29 @@
 import React, { useRef } from 'react'
 import { Button, ButtonSize, ButtonVariation, Container, Layout, Text, useIsMounted } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
-import { defaultTo, isEqual } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { MonacoDiffEditor } from 'react-monaco-editor'
 import { PageError, PageSpinner } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import {
-  ErrorNodeSummary,
-  getRefreshedYamlPromise,
-  getYamlDiffPromise as getYamlDiffPromiseForTemplate,
-  TemplateResponse
-} from 'services/template-ng'
-import {
-  getIdentifierFromValue,
-  getScopeBasedProjectPathParams,
-  getScopeFromDTO
-} from '@common/components/EntityReference/EntityReference'
-import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
-import { useQueryParams } from '@common/hooks'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
-import css from './YamlDiffView.module.scss'
+import type { ResponseCustomDeploymentRefreshYaml } from 'services/cd-ng'
+import css from './ReconcileHandler.module.scss'
 
 export interface YamlDiffViewProps {
-  errorNodeSummary?: ErrorNodeSummary
-  rootErrorNodeSummary: ErrorNodeSummary
   originalEntityYaml: string
-  resolvedTemplateResponses?: TemplateResponse[]
   onUpdate: (refreshedYaml: string) => Promise<void>
+  getUpdatedYaml: () => Promise<ResponseCustomDeploymentRefreshYaml>
 }
 
-export function YamlDiffView({
-  errorNodeSummary,
-  rootErrorNodeSummary,
-  originalEntityYaml,
-  resolvedTemplateResponses = [],
-  onUpdate
-}: YamlDiffViewProps): JSX.Element {
+export function YamlDiffView({ originalEntityYaml, getUpdatedYaml, onUpdate }: YamlDiffViewProps): JSX.Element {
   const { getString } = useStrings()
-  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
-  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const params = useParams<ProjectPathProps>()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const editorRef = useRef<MonacoDiffEditor>(null)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<any>()
   const [originalYaml, setOriginalYaml] = React.useState<string>('')
   const [refreshedYaml, setRefreshedYaml] = React.useState<string>('')
   const isMounted = useIsMounted()
-
-  const isTemplateResolved = React.useMemo(
-    () => !!resolvedTemplateResponses.find(item => isEqual(item, errorNodeSummary?.templateResponse)),
-    [resolvedTemplateResponses, errorNodeSummary?.templateResponse]
-  )
 
   const onNodeUpdate = (): void => {
     onUpdate(refreshedYaml).then(_ => {
@@ -75,47 +42,10 @@ export function YamlDiffView({
 
   const getYamlDiffFromYaml = async (): Promise<void> => {
     try {
-      const response = await getRefreshedYamlPromise({
-        queryParams: {
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier,
-          branch,
-          repoIdentifier,
-          getDefaultFromOtherRepo: true
-        },
-        body: { yaml: originalEntityYaml }
-      })
+      const response = await getUpdatedYaml()
+
       if (response && response.status === 'SUCCESS') {
         setOriginalYaml(yamlStringify(yamlParse(originalEntityYaml)))
-        setRefreshedYaml(yamlStringify(yamlParse(defaultTo(response.data?.refreshedYaml, ''))))
-      } else {
-        throw response
-      }
-    } catch (err) {
-      setError(err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const getYamlDiffForTemplate = async (): Promise<void> => {
-    try {
-      const templateResponse = errorNodeSummary?.templateResponse
-      const templateRef = defaultTo(templateResponse?.identifier, '')
-      const scope = getScopeFromDTO(templateResponse || {})
-      const response = await getYamlDiffPromiseForTemplate({
-        queryParams: {
-          ...getScopeBasedProjectPathParams(params, scope),
-          templateIdentifier: getIdentifierFromValue(templateRef),
-          versionLabel: defaultTo(templateResponse?.versionLabel, ''),
-          branch,
-          repoIdentifier,
-          getDefaultFromOtherRepo: true
-        }
-      })
-      if (response && response.status === 'SUCCESS') {
-        setOriginalYaml(yamlStringify(yamlParse(defaultTo(response.data?.originalYaml, ''))))
         setRefreshedYaml(yamlStringify(yamlParse(defaultTo(response.data?.refreshedYaml, ''))))
       } else {
         throw response
@@ -130,29 +60,16 @@ export function YamlDiffView({
   const refetch = async (): Promise<void> => {
     setLoading(true)
     setError(undefined)
-    if (isEqual(errorNodeSummary, rootErrorNodeSummary)) {
-      await getYamlDiffFromYaml()
-    } else {
-      await getYamlDiffForTemplate()
-    }
+    await getYamlDiffFromYaml()
   }
 
-  const buttonLabel = React.useMemo(() => {
-    if (isEqual(errorNodeSummary, rootErrorNodeSummary)) {
-      return getString('save')
-    } else {
-      return getString('update')
-    }
-  }, [errorNodeSummary, rootErrorNodeSummary])
-
   React.useEffect(() => {
-    if (errorNodeSummary) {
-      refetch()
-    }
-  }, [errorNodeSummary])
+    refetch()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
-    <Container className={css.mainContainer} height={'100%'} background={Color.WHITE} border={{ radius: 4 }}>
+    <Container className={css.diffContainer} height={'100%'} background={Color.WHITE} border={{ radius: 4 }}>
       {loading && <PageSpinner />}
       {!loading && error && (
         <PageError message={(error.data as Error)?.message || error.message} onClick={() => refetch()} />
@@ -181,18 +98,12 @@ export function YamlDiffView({
                   <Text font={{ variation: FontVariation.H6 }}>
                     {getString('pipeline.reconcileDialog.refreshedYamlLabel')}
                   </Text>
-                  {!isTemplateResolved ? (
-                    isGitSyncEnabled ? (
-                      <CopyToClipboard content={refreshedYaml} showFeedback={true} />
-                    ) : (
-                      <Button
-                        variation={ButtonVariation.PRIMARY}
-                        text={buttonLabel}
-                        onClick={onNodeUpdate}
-                        size={ButtonSize.SMALL}
-                      />
-                    )
-                  ) : null}
+                  <Button
+                    variation={ButtonVariation.PRIMARY}
+                    text={getString('update')}
+                    onClick={onNodeUpdate}
+                    size={ButtonSize.SMALL}
+                  />
                 </Layout.Horizontal>
               </Container>
             </Layout.Horizontal>

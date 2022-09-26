@@ -52,7 +52,7 @@ export function ReconcileDialog({
   setResolvedTemplateResponses: setResolvedTemplates,
   onRefreshEntity,
   updateRootEntity
-}: ReconcileDialogProps): JSX.Element {
+}: ReconcileDialogProps) {
   const { nodeInfo, templateResponse, childrenErrorNodes } = errorNodeSummary
   const hasChildren = !isEmpty(childrenErrorNodes)
   const [selectedErrorNodeSummary, setSelectedErrorNodeSummary] = React.useState<ErrorNodeSummary>()

@@ -17,8 +17,7 @@ import {
   FormError,
   FormikTooltipContext,
   useToaster,
-  ButtonVariation,
-  PageSpinner
+  ButtonVariation
 } from '@wings-software/uicore'
 import { connect, FormikContextType } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
@@ -51,8 +50,7 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
-import AddDrawer, { AddDrawerMapInterface, DrawerContext, ItemInterface } from '@common/components/AddDrawer/AddDrawer'
-import type { UseGetConnectorsListHookReturn } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook.types'
+import type { ItemInterface } from '@common/components/AddDrawer/AddDrawer'
 import {
   ConnectorReferenceFieldProps,
   getReferenceFieldProps,
@@ -62,6 +60,7 @@ import {
   getSelectedRenderer,
   getConnectorStatusCall
 } from './ConnectorReferenceField'
+import AddConnectorsDrawer from './AddConnectorsDrawer'
 import css from './ConnectorReferenceField.module.scss'
 
 export interface MultiTypeConnectorFieldConfigureOptionsProps
@@ -84,7 +83,7 @@ export interface MultiTypeConnectorFieldProps extends Omit<ConnectorReferenceFie
   onLoadingFinish?: () => void
   setConnector?: any
   mini?: boolean
-  connectorDrawerData?: UseGetConnectorsListHookReturn
+  isDrawerMode?: boolean
 }
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
   status: ConnectorResponse['status']
@@ -116,7 +115,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     createNewLabel,
     setConnector,
     mini,
-    connectorDrawerData,
+    isDrawerMode = false,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -356,18 +355,8 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
       hideDrawer()
     }
 
-    return connectorDrawerData?.loading ? (
-      <PageSpinner />
-    ) : (
-      <AddDrawer
-        addDrawerMap={connectorDrawerData?.categoriesMap as AddDrawerMapInterface}
-        onSelect={onSelect}
-        onClose={hideDrawer}
-        drawerContext={DrawerContext.PAGE}
-        showRecentlyUsed={false}
-      />
-    )
-  }, [connectorDrawerData])
+    return <AddConnectorsDrawer onSelect={onSelect} onClose={hideDrawer} />
+  }, [])
 
   const [pagedConnectorData, setPagedConnectorData] = useState<ResponsePageConnectorResponse>({})
   const [page, setPage] = useState(0)
@@ -416,7 +405,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
             <RbacButton
               variation={ButtonVariation.SECONDARY}
               onClick={() => {
-                !isEmpty(connectorDrawerData) ? openDrawer() : optionalReferenceSelectProps.createNewHandler?.()
+                isDrawerMode ? openDrawer() : optionalReferenceSelectProps.createNewHandler?.()
               }}
               text={`+ ${createNewLabel || getString('newConnector')}`}
               margin={{ right: 'small' }}

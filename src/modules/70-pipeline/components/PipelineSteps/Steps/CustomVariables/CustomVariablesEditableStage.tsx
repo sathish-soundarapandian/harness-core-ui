@@ -29,7 +29,7 @@ import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/Te
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import type { NGVariable } from 'services/cd-ng'
+import type { CustomDeploymentNGVariable, NGVariable } from 'services/cd-ng'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import type { AllNGVariables } from '@pipeline/utils/types'
@@ -71,7 +71,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
     isDescriptionEnabled,
     addVariableLabel,
     validationSchema,
-    connectorDrawerData
+    isDrawerMode
   } = props
   const uids = React.useRef<string[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -188,7 +188,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                         )}
 
                         <div className={css.valueColumn} data-type={getMultiTypeFromValue(variable.value as string)}>
-                          {(variable.type as any) === VariableType.Connector ? (
+                          {(variable.type as CustomDeploymentNGVariable) === VariableType.Connector ? (
                             <FormMultiTypeConnectorField
                               name={`variables[${index}].value`}
                               label=""
@@ -202,7 +202,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                               setRefValue
                               connectorLabelClass="connectorVariableField"
                               enableConfigureOptions={false}
-                              connectorDrawerData={connectorDrawerData}
+                              isDrawerMode={isDrawerMode}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput name={`variables[${index}].value`} label="" disabled={readonly} />

@@ -11,7 +11,6 @@ import { FontVariation } from '@harness/design-system'
 import { Color } from '@wings-software/design-system'
 import { PageSpinner } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { YamlDiffView } from '@pipeline/components/TemplateLibraryErrorHandling/YamlDiffView/YamlDiffView'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { useStrings } from 'framework/strings'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
@@ -21,8 +20,8 @@ import {
   ResponseCustomDeploymentRefreshYaml
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { EMPTY_ARRAY, EMPTY_OBJECT } from '../utils'
-
+import { YamlDiffView } from './YamlDiffView'
+import css from './ReconcileHandler.module.scss'
 export interface ReconcileInfraDialogProps {
   isEdit: boolean
   originalEntityYaml: string
@@ -76,16 +75,14 @@ export function ReconcileInfraDialog({ originalEntityYaml, updateRootEntity }: R
           <Text font={{ variation: FontVariation.H4 }}>{getString('pipeline.reconcileDialog.title')}</Text>
         </Container>
         <Container
+          className={css.diffContentContainer}
           background={Color.FORM_BG}
           padding={{ top: 'large', right: 'xxxlarge', bottom: 'xxxlarge', left: 'xxxlarge' }}
         >
           <Layout.Horizontal spacing={'huge'} height={'100%'}>
             <Container style={{ flex: 1 }}>
               <YamlDiffView
-                errorNodeSummary={EMPTY_OBJECT}
-                rootErrorNodeSummary={EMPTY_OBJECT}
                 originalEntityYaml={originalEntityYaml}
-                resolvedTemplateResponses={EMPTY_ARRAY}
                 onUpdate={onUpdateNode}
                 getUpdatedYaml={getUpdatedYamlForInfrastructure}
               />

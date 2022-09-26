@@ -82,8 +82,8 @@ import type {
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import { useDeepCompareEffect } from '@common/hooks'
-import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import ReconcileInfraDialogWrapper from './ReconcileHandler/ReconcileInfraDialogWrapper'
 import css from './InfrastructureDefinition.module.scss'
 
 interface CustomDeploymentMetaData {
@@ -602,14 +602,11 @@ function BootstrapDeployInfraDefinition({
           <VisualYamlToggle selectedView={selectedView} onChange={handleModeSwitch} />
         </Layout.Horizontal>
         {showReconcile && (
-          <OutOfSyncErrorStrip
-            errorNodeSummary={{}}
+          <ReconcileInfraDialogWrapper
             entity={TemplateErrorEntity.INFRASTRUCTURE}
+            isReadOnly={isReadOnly}
             originalYaml={yamlStringify({ infrastructureDefinition })}
-            isReadOnly={false}
-            onRefreshEntity={noop}
             updateRootEntity={updateInfraEntity}
-            isEdit={false}
           />
         )}
         <Container>

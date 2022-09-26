@@ -25,7 +25,6 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { VariableType } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableUtils'
 import { useStrings } from 'framework/strings'
 import type { StoreConfigWrapper } from 'services/cd-ng'
-import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
 import VariableAccordionSummary from '../VariableAccordionSummary'
 import type { DeploymentInfra, DeploymentTemplateConfig, PipelineVariablesData } from '../types'
 import css from '../PipelineVariables.module.scss'
@@ -77,8 +76,6 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
     },
     [updateDeploymentTemplate, unresolvedDeploymentTemplate]
   )
-
-  const connectorDrawerData = useGetConnectorsListHook()
 
   const content = (
     <div className={css.variableCard}>
@@ -156,7 +153,7 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
                       isDescriptionEnabled: true,
                       headerComponent: headerComponent,
                       addVariableLabel: 'variables.newVariable',
-                      connectorDrawerData
+                      isDrawerMode: true
                     }}
                   />
                 ) : /* istanbul ignore next */ null}

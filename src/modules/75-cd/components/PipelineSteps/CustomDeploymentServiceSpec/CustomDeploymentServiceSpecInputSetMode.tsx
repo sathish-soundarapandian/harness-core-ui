@@ -91,7 +91,7 @@ const CustomDeploymentServiceSpecInputSetModeFormikForm = (
               allowableTypes={allowableTypes}
               onUpdate={({ variables }: CustomVariablesData) => {
                 onUpdate?.({
-                  variables: variables as any
+                  variables: variables
                 })
               }}
               customStepProps={{
