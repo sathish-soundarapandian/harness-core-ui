@@ -124,6 +124,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                   connectorLabelClass="connectorVariableField"
                   enableConfigureOptions={false}
                   isDrawerMode={isDrawerMode}
+                  type={[]}
                 />
               ) : variable.type === VariableType.Secret ? (
                 <MultiTypeSecretInput

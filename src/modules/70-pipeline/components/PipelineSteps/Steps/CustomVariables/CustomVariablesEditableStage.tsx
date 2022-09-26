@@ -203,6 +203,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                               connectorLabelClass="connectorVariableField"
                               enableConfigureOptions={false}
                               isDrawerMode={isDrawerMode}
+                              type={[]}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput name={`variables[${index}].value`} label="" disabled={readonly} />

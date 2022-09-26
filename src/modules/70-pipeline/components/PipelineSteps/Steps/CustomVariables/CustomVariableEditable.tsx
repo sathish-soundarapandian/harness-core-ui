@@ -293,6 +293,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               enableConfigureOptions={false}
                               mini={true}
                               isDrawerMode={isDrawerMode}
+                              type={[]}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput
