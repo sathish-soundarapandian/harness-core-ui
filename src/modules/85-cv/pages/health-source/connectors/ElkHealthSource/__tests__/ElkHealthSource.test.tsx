@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import { Connectors } from '@connectors/constants'
 import { TestWrapper } from '@common/utils/testUtils'
 import ElkHealthSource from '../ElkHealthSource'
@@ -50,11 +50,12 @@ jest.mock('services/cv', () => ({
 
 describe('test ElkHealthsource', () => {
   test('check snapshot', () => {
-    const { container } = render(
+    const { container, getByText } = render(
       <TestWrapper>
         <ElkHealthSource data={data} onSubmit={jest.fn()} />
       </TestWrapper>
     )
+    fireEvent.click(getByText('submit'))
     expect(container).toMatchSnapshot()
   })
 })
