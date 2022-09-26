@@ -15,10 +15,6 @@ import {
 import { ElkMetricNameAndHostIdentifier } from '../ElkMetricNameAndHostIdentifier'
 
 jest.mock('services/cv', () => ({
-  // useGetElkSavedSearches: jest.fn().mockImplementation(() => ({
-  //   data: [],
-  //   refetch: jest.fn()
-  // })),
   useGetELKLogSampleData: jest.fn().mockImplementation(() => ({
     data: mockedElkSampleData,
     loading: false,
@@ -40,29 +36,6 @@ jest.mock('services/cv', () => ({
 }))
 
 describe('Unit tests for MapELKQueriesToService', () => {
-  // const initialProps: MapElkQueriesToServiceProps = {
-  //   onChange: jest.fn(),
-  //   sampleRecord: null,
-  //   serviceInstance: 'serviceInstance',
-  //   isQueryExecuted: true,
-  //   loading: false,
-  //   messageIdentifier: '',
-  //   identifyTimeStamp: '',
-  //   isConnectorRuntimeOrExpression: true,
-  //   isTemplate: false,
-  //   connectorIdentifier: ''
-  // }
-
-  // onChange,
-  // sampleRecord,
-  // isQueryExecuted,
-  // loading,
-  // serviceInstance,
-  // messageIdentifier,
-  // isConnectorRuntimeOrExpression,
-  // isTemplate,
-  // expressions,
-  // connectorIdentifier
   const initialProps = {
     onChange: jest.fn(),
     sampleRecord: null,

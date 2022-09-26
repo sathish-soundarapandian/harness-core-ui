@@ -28,10 +28,6 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
 }))
 
 jest.mock('services/cv', () => ({
-  // useGetElkSavedSearches: jest.fn().mockImplementation(() => ({
-  //   data: [],
-  //   refetch: jest.fn()
-  // })),
   useGetELKLogSampleData: jest.fn().mockImplementation(() => ({
     data: mockedElkSampleData,
     loading: false,
