@@ -14,7 +14,7 @@ export default function CloudWatchContent(): JSX.Element {
       <AWSRegionSelector />
       <CloudWatchCustomMetrics />
 
-      {/* ⭐️ Error display ⛔️ */}
+      {/* ⭐️ Error display for empty Custom metric ⛔️ */}
       <FormError
         name={CustomMetricsValidationName}
         // TS Ignored to display error for HealthSourceServicesV2

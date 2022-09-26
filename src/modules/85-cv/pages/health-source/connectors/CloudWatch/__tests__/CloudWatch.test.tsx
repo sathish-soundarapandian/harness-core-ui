@@ -5,11 +5,17 @@ import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import { TestWrapper } from '@common/utils/testUtils'
 import CloudWatch from '../CloudWatch'
-import { emptyHealthSource, mockData } from './CloudWatch.mock'
+import {
+  emptyHealthSource,
+  metricPack,
+  mockData,
+  submitRequestDataPayload,
+  submitRequestFormikPayload
+} from './CloudWatch.mock'
 
 jest.mock('services/cv', () => ({
   useGetMetricPacks: jest.fn().mockImplementation(() => {
-    return { data: { data: [] } } as any
+    return { loading: false, error: null, data: metricPack } as any
   }),
   useGetRegions: jest.fn().mockImplementation(() => {
     return { data: { data: ['region 1', 'region 2'] } } as any
@@ -184,21 +190,41 @@ describe('CloudWatch', () => {
     expect(screen.getByText('cv.monitoredServices.continuousVerification')).toBeInTheDocument()
 
     const sliCheckbox = container.querySelector('input[name="customMetrics.0.sli.enabled"]')
+    const serviceHealthCheckbox = container.querySelector(
+      'input[name="customMetrics.0.analysis.liveMonitoring.enabled"]'
+    )
 
     act(() => {
       userEvent.click(sliCheckbox!)
+      userEvent.click(serviceHealthCheckbox!)
     })
 
     expect(sliCheckbox).toBeChecked()
+    expect(serviceHealthCheckbox).toBeChecked()
 
-    const submitButton = screen.getAllByText(/submit/)[0]
+    const riskCategoryLabel = screen.getByText(/cv.monitoringSources.riskCategoryLabel/)
+
+    expect(riskCategoryLabel).toBeInTheDocument()
+
+    const riskProfileRadio = screen.getByLabelText('Errors/Number of Errors')
+
+    expect(riskProfileRadio).toBeInTheDocument()
+  })
+
+  test('should check correct payload is being passed upon clicking submit', () => {
+    const onSubmit = jest.fn()
+    render(
+      <TestWrapper>
+        <CloudWatch data={mockData} onSubmit={onSubmit} />
+      </TestWrapper>
+    )
+
+    const submit = screen.getByText('submit')
 
     act(() => {
-      userEvent.click(submitButton)
+      userEvent.click(submit)
     })
 
-    await waitFor(() => {
-      expect(onSubmit).toHaveBeenCalledWith()
-    })
+    expect(onSubmit).toHaveBeenCalledWith(submitRequestDataPayload, submitRequestFormikPayload)
   })
 })

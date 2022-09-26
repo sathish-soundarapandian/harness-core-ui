@@ -55,7 +55,6 @@ export default function MetricPackOptions<T extends CommonCustomMetricPropertyTy
         label={getString('cv.monitoringSources.riskCategoryLabel')}
         name={`customMetrics.${selectedCustomMetricIndex}.analysis.riskProfile.category`}
         items={metricPackOptions}
-        key={selectedCustomMetricIndex}
       />
     )
   }
