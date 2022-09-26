@@ -109,6 +109,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
       headers: { 'content-type': 'application/json' }
     })
   }
+  const status = step?.status === 'AsyncWaiting' ? true : false
   return (
     <React.Fragment>
       <DurationMessage />
@@ -117,7 +118,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
           <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
           <div className={css.actionRow}>
             <Thumbnail
-              disabled={isDisabled === true ? true : false}
+              disabled={isDisabled === true && status === false ? true : false}
               key={0}
               label={
                 hideFailButton
@@ -131,7 +132,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
               className={css.thumbnail}
             />
             <Thumbnail
-              disabled={isDisabled === true ? true : false}
+              disabled={isDisabled === true && status === false ? true : false}
               key={0}
               label={
                 hideSuccessButton
