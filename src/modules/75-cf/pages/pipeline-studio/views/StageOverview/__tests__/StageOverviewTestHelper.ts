@@ -40,7 +40,7 @@ export const getPipelineContext = (): PipelineContextInterface => ({
     isUpdated: false,
     templateTypes: {},
     templateServiceData: {},
-    linkedTemplatesByCustomDeploymentRef: {}
+    resolvedCustomDeploymentDetailsByRef: {}
   },
   contextType: PipelineContextType.Pipeline,
   allowableTypes: [
@@ -100,7 +100,7 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
     isUpdated: true,
     templateTypes: {},
     templateServiceData: {},
-    linkedTemplatesByCustomDeploymentRef: {}
+    resolvedCustomDeploymentDetailsByRef: {}
   },
   contextType: PipelineContextType.Pipeline,
   allowableTypes: [

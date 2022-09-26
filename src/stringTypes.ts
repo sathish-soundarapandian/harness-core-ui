@@ -3169,6 +3169,7 @@ export interface StringsMap {
   'pipeline.customDeployment.infraVariablesTitle': string
   'pipeline.customDeployment.jsonPathRelativeLabel': string
   'pipeline.customDeployment.newAttribute': string
+  'pipeline.customDeployment.seeOnlyTemplatesFor': string
   'pipeline.customDeployment.validations.nameUnique': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.plural': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.singular': string

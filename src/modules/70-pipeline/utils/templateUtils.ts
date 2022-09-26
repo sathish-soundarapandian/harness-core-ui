@@ -150,31 +150,31 @@ const getPromisesForTemplateList = (params: GetTemplateListQueryParams, template
   return promises
 }
 
-export const getLinkedStepTemplatesByRef = (
+export const getResolvedCustomDeploymentDetailsByRef = (
   params: GetTemplateListQueryParams,
   templateRefs: string[]
-): Promise<{ linkedTemplatesByCustomDeploymentRef: { [key: string]: string[] } }> => {
+): Promise<{ resolvedCustomDeploymentDetailsByRef: { [key: string]: Record<string, string | string[]> } }> => {
   const promises = getPromisesForTemplateList(params, templateRefs)
   return Promise.all(promises)
     .then(responses => {
-      const linkedTemplatesByCustomDeploymentRef = {}
+      const resolvedCustomDeploymentDetailsByRef = {}
       responses.forEach(response => {
         response.data?.content?.forEach(item => {
           const templateData = parse<any>(item.yaml || '').template
           const scopeBasedTemplateRef = getScopeBasedTemplateRef(item)
-          set(
-            linkedTemplatesByCustomDeploymentRef,
-            scopeBasedTemplateRef,
-            map(templateData?.spec?.execution?.stepTemplateRefs, (stepTemplateRefObj: TemplateLinkConfig) =>
-              getIdentifierFromValue(stepTemplateRefObj.templateRef)
+          set(resolvedCustomDeploymentDetailsByRef, scopeBasedTemplateRef, {
+            name: item.name,
+            linkedTemplateRefs: map(
+              templateData?.spec?.execution?.stepTemplateRefs,
+              (stepTemplateRefObj: TemplateLinkConfig) => getIdentifierFromValue(stepTemplateRefObj.templateRef)
             )
-          )
+          })
         })
       })
-      return { linkedTemplatesByCustomDeploymentRef }
+      return { resolvedCustomDeploymentDetailsByRef }
     })
     .catch(_ => {
-      return { linkedTemplatesByCustomDeploymentRef: {} }
+      return { resolvedCustomDeploymentDetailsByRef: {} }
     })
 }
 

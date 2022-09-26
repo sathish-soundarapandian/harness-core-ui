@@ -53,7 +53,7 @@ import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import {
-  getLinkedStepTemplatesByRef,
+  getResolvedCustomDeploymentDetailsByRef,
   getTemplateTypesByRef,
   TemplateServiceDataType
 } from '@pipeline/utils/templateUtils'
@@ -331,9 +331,9 @@ export const findAllByKey = (keyToFind: string, obj?: PipelineInfoConfig): strin
     : []
 }
 
-const getLinkedTemplatesMap = (pipeline: PipelineInfoConfig, queryParams: GetPipelineQueryParams) => {
+const getResolvedCustomDeploymentDetailsMap = (pipeline: PipelineInfoConfig, queryParams: GetPipelineQueryParams) => {
   const templateRefs = map(findAllByKey('customDeploymentRef', pipeline), 'templateRef')
-  return getLinkedStepTemplatesByRef(
+  return getResolvedCustomDeploymentDetailsByRef(
     {
       accountIdentifier: queryParams.accountIdentifier,
       orgIdentifier: queryParams.orgIdentifier,
@@ -469,9 +469,9 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         ? await getTemplateType(data.pipeline, templateQueryParams)
         : { templateTypes: {}, templateServiceData: {} }
 
-      const { linkedTemplatesByCustomDeploymentRef } = data.pipeline
-        ? await getLinkedTemplatesMap(data.pipeline, templateQueryParams)
-        : { linkedTemplatesByCustomDeploymentRef: {} }
+      const { resolvedCustomDeploymentDetailsByRef } = data.pipeline
+        ? await getResolvedCustomDeploymentDetailsMap(data.pipeline, templateQueryParams)
+        : { resolvedCustomDeploymentDetailsByRef: {} }
 
       dispatch(
         PipelineContextActions.success({
@@ -486,7 +486,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
               : defaultTo(data?.gitDetails, {}),
           templateTypes,
           templateServiceData,
-          linkedTemplatesByCustomDeploymentRef,
+          resolvedCustomDeploymentDetailsByRef,
           entityValidityDetails: defaultTo(
             pipelineWithGitDetails?.entityValidityDetails,
             defaultTo(data?.entityValidityDetails, {})
@@ -506,7 +506,10 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         logger.info(DBNotFoundErrorMessage)
       }
       const { templateTypes, templateServiceData } = await getTemplateType(pipeline, templateQueryParams)
-      const { linkedTemplatesByCustomDeploymentRef } = await getLinkedTemplatesMap(pipeline, templateQueryParams)
+      const { resolvedCustomDeploymentDetailsByRef } = await getResolvedCustomDeploymentDetailsMap(
+        pipeline,
+        templateQueryParams
+      )
       dispatch(
         PipelineContextActions.success({
           error: '',
@@ -518,7 +521,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           entityValidityDetails: payload.entityValidityDetails,
           templateTypes,
           templateServiceData,
-          linkedTemplatesByCustomDeploymentRef,
+          resolvedCustomDeploymentDetailsByRef,
           templateInputsErrorNodeSummary,
           yamlSchemaErrorWrapper: payload?.yamlSchemaErrorWrapper
         })
@@ -1097,9 +1100,9 @@ export function PipelineProvider({
     const unresolvedCustomDeploymentRefs = map(
       findAllByKey('customDeploymentRef', state.pipeline),
       'templateRef'
-    )?.filter(customDeploymentRef => isEmpty(get(state.linkedTemplatesByCustomDeploymentRef, customDeploymentRef)))
+    )?.filter(customDeploymentRef => isEmpty(get(state.resolvedCustomDeploymentDetailsByRef, customDeploymentRef)))
 
-    getLinkedStepTemplatesByRef(
+    getResolvedCustomDeploymentDetailsByRef(
       {
         ...queryParams,
         templateListType: 'Stable',
@@ -1108,9 +1111,9 @@ export function PipelineProvider({
         getDefaultFromOtherRepo: true
       },
       unresolvedCustomDeploymentRefs
-    ).then(({ linkedTemplatesByCustomDeploymentRef }) => {
-      setLinkedTemplatesByCustomDeploymentRef(
-        merge(state.linkedTemplatesByCustomDeploymentRef, linkedTemplatesByCustomDeploymentRef)
+    ).then(({ resolvedCustomDeploymentDetailsByRef }) => {
+      setResolvedCustomDeploymentDetailsByRef(
+        merge(state.resolvedCustomDeploymentDetailsByRef, resolvedCustomDeploymentDetailsByRef)
       )
     })
   }, [state.pipeline])
@@ -1143,8 +1146,8 @@ export function PipelineProvider({
     dispatch(PipelineContextActions.setTemplateServiceData({ templateServiceData }))
   }, [])
 
-  const setLinkedTemplatesByCustomDeploymentRef = React.useCallback(linkedTemplatesByCustomDeploymentRef => {
-    dispatch(PipelineContextActions.setLinkedTemplatesByCustomDeploymentRef({ linkedTemplatesByCustomDeploymentRef }))
+  const setResolvedCustomDeploymentDetailsByRef = React.useCallback(resolvedCustomDeploymentDetailsByRef => {
+    dispatch(PipelineContextActions.setResolvedCustomDeploymentDetailsByRef({ resolvedCustomDeploymentDetailsByRef }))
   }, [])
 
   const setSchemaErrorView = React.useCallback(flag => {

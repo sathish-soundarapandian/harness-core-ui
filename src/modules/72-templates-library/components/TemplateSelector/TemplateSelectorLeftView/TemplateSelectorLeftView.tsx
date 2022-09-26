@@ -258,7 +258,11 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                     {!isEmpty(identifiers) && (
                       <Checkbox
                         checked={!isEmpty(selectedTemplateRefs)}
-                        label={checkboxLabel}
+                        labelElement={
+                          <Text lineClamp={1} font={{ size: 'small' }} className={css.linkedTemplateCheckboxLabel}>
+                            {checkboxLabel}
+                          </Text>
+                        }
                         onChange={onLinkedTemplateChange}
                         className={css.linkedTemplateCheckbox}
                       />

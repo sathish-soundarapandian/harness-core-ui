@@ -1374,6 +1374,7 @@ skipInstances:
 selectiveStageExecution: 'Selective stage execution'
 customDeployment:
   infraVariablesTitle: 'Define the variables to be used in your environment and infrastructure.'
+  seeOnlyTemplatesFor: See only templates for {{name}}
   hostObjectArrayPath: 'Host Object Array Path'
   hostAttributes: 'Host Attributes'
   newAttribute: 'New Attribute'
