@@ -62,78 +62,80 @@ export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
         return validateMappings(getString, createdMetrics, selectedMetricIndex, values)
       }}
     >
-      {formikProps => (
-        <FormikForm className={css.formFullheight}>
-          <SetupSourceLayout
-            leftPanelContent={
-              <MultiItemsSideNav
-                defaultMetricName={`getString('cv.monitoringSources.Elk.ElkLogsQuery')`}
-                tooptipMessage={getString('cv.monitoringSources.gcoLogs.addQueryTooltip')}
-                addFieldLabel={getString('cv.monitoringSources.addQuery')}
-                createdMetrics={createdMetrics}
-                defaultSelectedMetric={selectedMetric}
-                renamedMetric={formikProps.values?.metricName}
-                onRemoveMetric={(removedMetric, updatedMetric, updatedList, smIndex) => {
-                  setMappedMetrics(oldState => {
-                    const { selectedMetric: oldMetric, mappedMetrics: oldMappedMetric } = oldState
-                    const updatedMap = new Map(oldMappedMetric)
+      {formikProps => {
+        return (
+          <FormikForm className={css.formFullheight}>
+            <SetupSourceLayout
+              leftPanelContent={
+                <MultiItemsSideNav
+                  defaultMetricName={`getString('cv.monitoringSources.Elk.ElkLogsQuery')`}
+                  tooptipMessage={getString('cv.monitoringSources.gcoLogs.addQueryTooltip')}
+                  addFieldLabel={getString('cv.monitoringSources.addQuery')}
+                  createdMetrics={createdMetrics}
+                  defaultSelectedMetric={selectedMetric}
+                  renamedMetric={formikProps.values?.metricName}
+                  onRemoveMetric={(removedMetric, updatedMetric, updatedList, smIndex) => {
+                    setMappedMetrics(oldState => {
+                      const { selectedMetric: oldMetric, mappedMetrics: oldMappedMetric } = oldState
+                      const updatedMap = new Map(oldMappedMetric)
 
-                    if (updatedMap.has(removedMetric)) {
-                      updatedMap.delete(removedMetric)
-                    } else {
-                      // handle case where user updates the metric name for current selected metric
-                      updatedMap.delete(oldMetric)
-                    }
+                      if (updatedMap.has(removedMetric)) {
+                        updatedMap.delete(removedMetric)
+                      } else {
+                        // handle case where user updates the metric name for current selected metric
+                        updatedMap.delete(oldMetric)
+                      }
 
-                    // update map with current values
-                    if (formikProps.values?.metricName !== removedMetric) {
-                      updatedMap.set(
-                        updatedMetric,
-                        { ...(formikProps.values as MapElkQueryToService) } || { metricName: updatedMetric }
-                      )
-                    } else {
-                      setRerenderKey(Utils.randomId())
-                    }
+                      // update map with current values
+                      if (formikProps.values?.metricName !== removedMetric) {
+                        updatedMap.set(
+                          updatedMetric,
+                          { ...(formikProps.values as MapElkQueryToService) } || { metricName: updatedMetric }
+                        )
+                      } else {
+                        setRerenderKey(Utils.randomId())
+                      }
 
-                    setCreatedMetrics({ selectedMetricIndex: smIndex, createdMetrics: updatedList })
-                    return { selectedMetric: updatedMetric, mappedMetrics: updatedMap }
-                  })
-                }}
-                onSelectMetric={(newMetric, updatedList, smIndex) => {
-                  setCreatedMetrics({ selectedMetricIndex: smIndex, createdMetrics: updatedList })
-                  setMappedMetrics((oldState: any) => {
-                    return updateSelectedMetricsMap({
-                      updatedMetric: newMetric,
-                      oldMetric: oldState.selectedMetric,
-                      mappedMetrics: new Map<string, MapElkQueryToService>(oldState.mappedMetrics),
-                      formikProps
+                      setCreatedMetrics({ selectedMetricIndex: smIndex, createdMetrics: updatedList })
+                      return { selectedMetric: updatedMetric, mappedMetrics: updatedMap }
                     })
-                  })
-                  setRerenderKey(Utils.randomId())
-                }}
-                isValidInput={formikProps.isValid}
-              />
-            }
-            content={
-              <>
-                <SetupSourceCardHeader
-                  mainHeading={getString('cv.monitoringSources.gcoLogs.querySpecificationsAndMappings')}
-                  subHeading={getString('cv.monitoringSources.gcoLogs.customizeQuery')}
+                  }}
+                  onSelectMetric={(newMetric, updatedList, smIndex) => {
+                    setCreatedMetrics({ selectedMetricIndex: smIndex, createdMetrics: updatedList })
+                    setMappedMetrics((oldState: any) => {
+                      return updateSelectedMetricsMap({
+                        updatedMetric: newMetric,
+                        oldMetric: oldState.selectedMetric,
+                        mappedMetrics: new Map<string, MapElkQueryToService>(oldState.mappedMetrics),
+                        formikProps
+                      })
+                    })
+                    setRerenderKey(Utils.randomId())
+                  }}
+                  isValidInput={formikProps.isValid}
                 />
-                <MapQueriesToHarnessServiceLayout
-                  onChange={formikProps.setFieldValue}
-                  formikProps={formikProps}
-                  connectorIdentifier={connectorIdentifier}
-                  isTemplate={isTemplate}
-                  expressions={expressions}
-                  isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
-                />
-              </>
-            }
-          />
-          <DrawerFooter isSubmit onPrevious={onPrevious} onNext={formikProps.submitForm} />
-        </FormikForm>
-      )}
+              }
+              content={
+                <>
+                  <SetupSourceCardHeader
+                    mainHeading={getString('cv.monitoringSources.gcoLogs.querySpecificationsAndMappings')}
+                    subHeading={getString('cv.monitoringSources.gcoLogs.customizeQuery')}
+                  />
+                  <MapQueriesToHarnessServiceLayout
+                    onChange={formikProps.setFieldValue}
+                    formikProps={formikProps}
+                    connectorIdentifier={connectorIdentifier}
+                    isTemplate={isTemplate}
+                    expressions={expressions}
+                    isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+                  />
+                </>
+              }
+            />
+            <DrawerFooter isSubmit onPrevious={onPrevious} onNext={formikProps.submitForm} />
+          </FormikForm>
+        )
+      }}
     </Formik>
   )
 }

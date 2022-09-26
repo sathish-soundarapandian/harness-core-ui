@@ -7,9 +7,9 @@
 
 const mappedServicesAndEnvs = new Map()
 
-mappedServicesAndEnvs.set('Elk Logs Query', {
+mappedServicesAndEnvs.set('ELK Logs Query', {
   serviceInstance: '_sourcetype',
-  metricName: 'Elk Logs Query',
+  metricName: 'ELK Logs Query',
   query: 'error OR failed OR severe OR ( sourcetype=access_* ( 404 OR 500 OR 503 ) )'
 })
 
@@ -28,23 +28,30 @@ export const setupSource = {
   connectorRef: 'Elk_Conn',
   isEdit: true,
   product: 'Elk Cloud Logs',
-  type: 'Elk' as any,
-  mappedServicesAndEnvs
+  type: 'ELKLog' as any,
+  mappedServicesAndEnvs,
+  identify_timestamp: undefined,
+  logIndexes: undefined,
+  messageIdentifier: undefined,
+  timeStampFormat: undefined
 }
 
 export const ElkPayload = {
-  type: 'Elk',
+  type: 'ELKLog',
   identifier: 'Elk_dev',
   name: 'Elk dev 12',
   spec: {
     connectorRef: 'Elk_Conn',
-    feature: 'Elk Cloud Logs',
+    feature: 'ELK Logs',
     queries: [
       {
-        name: 'Elk Logs Query',
-        identifier: 'Elk_Logs_Query',
+        name: 'ELK Logs Query',
         query: 'error OR failed OR severe OR ( sourcetype=access_* ( 404 OR 500 OR 503 ) )',
-        serviceInstanceIdentifier: '_sourcetype'
+        serviceInstanceIdentifier: '_sourcetype',
+        index: undefined,
+        messageIdentifier: undefined,
+        timeStampFormat: undefined,
+        timeStampIdentifier: undefined
       }
     ]
   }
@@ -62,7 +69,7 @@ export const data = {
         feature: 'Elk Cloud Logs',
         queries: [
           {
-            name: 'Elk Logs Query',
+            name: 'ELK Logs Query',
             query: 'error OR failed OR severe OR ( sourcetype=access_* ( 404 OR 500 OR 503 ) )',
             serviceInstanceIdentifier: '_sourcetype'
           }

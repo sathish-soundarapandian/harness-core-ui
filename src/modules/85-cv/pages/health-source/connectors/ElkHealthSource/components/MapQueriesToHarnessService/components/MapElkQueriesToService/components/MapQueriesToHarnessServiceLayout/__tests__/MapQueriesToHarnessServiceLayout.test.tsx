@@ -11,9 +11,10 @@ import { FormikForm } from '@wings-software/uicore'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
+import { mockedElkIndicesData } from '@cv/pages/health-source/connectors/ElkHealthSource/__tests__/ElkHealthSource.mock'
 import MapQueriesToHarnessServiceLayout from '../MapQueriesToHarnessServiceLayout'
 import type { MapQueriesToHarnessServiceLayoutProps } from '../types'
-import { mockedSplunkSampleData } from './MapQueriesToHarnessServiceLayout.mocks'
+import { mockedELKSampleData } from './MapQueriesToHarnessServiceLayout.mocks'
 
 const WrapperComponent = (props: MapQueriesToHarnessServiceLayoutProps): JSX.Element => {
   return (
@@ -34,23 +35,60 @@ const WrapperComponent = (props: MapQueriesToHarnessServiceLayoutProps): JSX.Ele
 }
 
 jest.mock('services/cv', () => ({
-  useGetSplunkSavedSearches: jest.fn().mockImplementation(() => ({
+  useGetELKSavedSearches: jest.fn().mockImplementation(() => ({
     data: [],
     refetch: jest.fn()
   })),
-  useGetSplunkSampleData: jest.fn().mockImplementation(() => ({
-    data: mockedSplunkSampleData,
+  useGetELKLogSampleData: jest.fn().mockImplementation(() => ({
+    data: mockedELKSampleData,
+    loading: false,
+    error: null,
+    refetch: jest.fn()
+  })),
+  useGetELKIndices: jest.fn().mockImplementation(() => ({
+    data: mockedElkIndicesData,
+    loading: false,
+    error: null,
+    refetch: jest.fn()
+  })),
+  useGetTimeFormat: jest.fn().mockImplementation(() => ({
+    data: [],
     loading: false,
     error: null,
     refetch: jest.fn()
   }))
 }))
 
+// jest.mock('services/cv', () => ({
+//   // useGetElkSavedSearches: jest.fn().mockImplementation(() => ({
+//   //   data: [],
+//   //   refetch: jest.fn()
+//   // })),
+//   useGetELKLogSampleData: jest.fn().mockImplementation(() => ({
+//     data: mockedElkSampleData,
+//     loading: false,
+//     error: null,
+//     refetch: jest.fn()
+//   })),
+//   useGetELKIndices: jest.fn().mockImplementation(() => ({
+//     data: mockedElkIndicesData,
+//     loading: false,
+//     error: null,
+//     refetch: jest.fn()
+//   })),
+//   useGetTimeFormat: jest.fn().mockImplementation(() => ({
+//     data: [],
+//     loading: false,
+//     error: null,
+//     refetch: jest.fn()
+//   }))
+// }))
+
 describe('Unit tests for MapQueriesToHarnessServiceLayout', () => {
   const initialProps = {
     formikProps: {
       initialValues: {
-        metricName: 'Splunk Logs Query',
+        metricName: 'ELK Logs Query',
         query: '',
         serviceInstance: ''
       }
@@ -85,7 +123,7 @@ describe('Unit tests for MapQueriesToHarnessServiceLayout', () => {
     const propsWhenQueryIsPresent = {
       formikProps: {
         initialValues: {
-          metricName: 'Splunk Logs Query',
+          metricName: 'ELK Logs Query',
           query: 'Test',
           serviceInstance: ''
         }

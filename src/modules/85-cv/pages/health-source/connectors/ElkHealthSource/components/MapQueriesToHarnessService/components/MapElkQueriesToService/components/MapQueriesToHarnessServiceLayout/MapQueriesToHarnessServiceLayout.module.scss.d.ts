@@ -10,7 +10,6 @@ declare const styles: {
   readonly accordian: string
   readonly content: string
   readonly queryViewContainer: string
-  readonly savedQueryDropdown: string
   readonly validationContainer: string
 }
 export default styles

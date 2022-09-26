@@ -6,10 +6,10 @@
  */
 //xxx
 import React, { useMemo } from 'react'
-import { Container, FormInput, MultiTypeInputType, Utils } from '@wings-software/uicore'
-import { useParams } from 'react-router'
+import { Container, FormInput, MultiTypeInputType } from '@wings-software/uicore'
+
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { InputWithDynamicModalForJson } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJson'
 import { useGetELKIndices, useGetTimeFormat } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { InputWithDynamicModalForJsonMultiType } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJsonMultiType'
@@ -71,6 +71,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
         name={MapElkToServiceFieldNames.LOG_INDEXES}
         placeholder="Select Log Index"
         items={getIndexItems}
+        selectProps={{ allowCreatingNewItems: true }}
       />
 
       <InputWithDynamicModalForJsonMultiType
@@ -110,8 +111,8 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
             : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
         }
         inputLabel="Identify TimeStamp"
-        //noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsMessageIdentifier')}
-        //noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsMessageIdentifer')}
+        noRecordModalHeader="New TimeStamp Identifier"
+        noRecordInputLabel="Add TimeStamp Identifier"
         recordsModalHeader="Select Path for TimeStamp"
       />
 
@@ -138,8 +139,8 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
             : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
         }
         inputLabel="Identify Message"
-        // noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsMessageIdentifier')}
-        //noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsMessageIdentifer')}
+        noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsMessageIdentifier')}
+        noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsMessageIdentifer')}
         recordsModalHeader="Select Path for Message"
       />
     </Container>

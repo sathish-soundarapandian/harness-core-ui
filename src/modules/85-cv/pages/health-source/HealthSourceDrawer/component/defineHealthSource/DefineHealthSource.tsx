@@ -35,7 +35,10 @@ import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { AllMultiTypeInputTypesForStep } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
-import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
+import {
+  healthSourceTypeMapping,
+  healthSourceTypeMappingForReferenceField
+} from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { ConnectorRefFieldName, HEALTHSOURCE_LIST } from './DefineHealthSource.constant'
 import {
@@ -94,7 +97,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   }, [sourceData?.healthSourceIdentifier])
 
   const isCardSelected = useCallback((name, formik) => {
-    console.log('ddddd', name, formik)
+    //console.log('ddddd', name, formik)
     if (formik?.values?.product?.value) {
       const features = getFeatureOption(name, getString, isSplunkMetricEnabled)
       return features.some(el => el?.value === formik.values.product.value)
@@ -140,7 +143,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         <FormConnectorReferenceField
           width={400}
           formik={formik}
-          type={formik?.values?.sourceType}
+          //type={formik?.values?.sourceType}
+          type={healthSourceTypeMappingForReferenceField(formik?.values?.sourceType)}
           name={ConnectorRefFieldName}
           label={
             <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>

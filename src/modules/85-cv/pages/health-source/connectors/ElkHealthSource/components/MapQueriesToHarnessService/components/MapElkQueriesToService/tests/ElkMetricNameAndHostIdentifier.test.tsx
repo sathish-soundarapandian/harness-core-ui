@@ -8,21 +8,74 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import {
+  mockedElkIndicesData,s
+  mockedElkSampleData
+} from '@cv/pages/health-source/connectors/ElkHealthSource/__tests__/ElkHealthSource.mock'
 import { ElkMetricNameAndHostIdentifier } from '../ElkMetricNameAndHostIdentifier'
 import type { MapElkQueriesToServiceProps } from '../types'
 
-describe('Unit tests for MapSplunkQueriesToService', () => {
-  const initialProps: MapElkQueriesToServiceProps = {
+jest.mock('services/cv', () => ({
+  // useGetElkSavedSearches: jest.fn().mockImplementation(() => ({
+  //   data: [],
+  //   refetch: jest.fn()
+  // })),
+  useGetELKLogSampleData: jest.fn().mockImplementation(() => ({
+    data: mockedElkSampleData,
+    loading: false,
+    error: null,
+    refetch: jest.fn()
+  })),
+  useGetELKIndices: jest.fn().mockImplementation(() => ({
+    data: mockedElkIndicesData,
+    loading: false,
+    error: null,
+    refetch: jest.fn()
+  })),
+  useGetTimeFormat: jest.fn().mockImplementation(() => ({
+    data: [],
+    loading: false,
+    error: null,
+    refetch: jest.fn()
+  }))
+}))
+
+describe('Unit tests for MapELKQueriesToService', () => {
+  // const initialProps: MapElkQueriesToServiceProps = {
+  //   onChange: jest.fn(),
+  //   sampleRecord: null,
+  //   serviceInstance: 'serviceInstance',
+  //   isQueryExecuted: true,
+  //   loading: false,
+  //   messageIdentifier: '',
+  //   identifyTimeStamp: '',
+  //   isConnectorRuntimeOrExpression: true,
+  //   isTemplate: false,
+  //   connectorIdentifier: ''
+  // }
+
+  // onChange,
+  // sampleRecord,
+  // isQueryExecuted,
+  // loading,
+  // serviceInstance,
+  // messageIdentifier,
+  // isConnectorRuntimeOrExpression,
+  // isTemplate,
+  // expressions,
+  // connectorIdentifier
+  const initialProps = {
     onChange: jest.fn(),
     sampleRecord: null,
     serviceInstance: 'serviceInstance',
     isQueryExecuted: true,
     loading: false,
     messageIdentifier: '',
-    identifyTimeStamp: '',
     isConnectorRuntimeOrExpression: true,
     isTemplate: false,
-    connectorIdentifier: ''
+    expressions: [],
+    connectorIdentifier: '',
+    identifyTimeStamp: ''
   }
 
   test('Ensure that query name is present', async () => {

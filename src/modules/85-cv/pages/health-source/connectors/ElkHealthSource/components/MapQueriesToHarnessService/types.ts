@@ -7,7 +7,7 @@
 
 import type { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { UseStringsReturn } from 'framework/strings'
-import type { ELKHealthSourceSpec } from 'services/cv'
+import type { ELKHealthSourceSpec, HealthSourceSpec } from 'services/cv'
 import type { ElkHealthSourceInfo } from '../../ElkHealthSource.types'
 
 export interface ElkQueryBuilderProps {

@@ -15,11 +15,10 @@ export const MapElkToServiceFieldNames = {
   LOG_INDEXES: 'logIndexes',
   IDENTIFY_TIMESTAMP: 'identify_timestamp',
   MESSAGE_IDENTIFIER: 'messageIdentifier'
-  // RECORD_COUNT: 'recordCount'
 }
 
 export const initialFormData: MapElkQueryToService = {
-  metricName: 'Elk Logs Query',
+  metricName: 'ELK Logs Query',
   query: '',
   timeStampFormat: '',
   serviceInstance: '',

@@ -38,7 +38,7 @@ export function initializeElkConnector({
   const { spec, ...prevData } = prevStepData
   return {
     ...defaultObj,
-    url: prevData?.url || spec?.controllerUrl || '',
+    url: prevData?.url || spec?.controllerUrl || spec?.url || '',
     password: prevData?.password || spec?.passwordRef,
     clientSecretRef: prevData?.clientSecretRef || spec?.clientSecretRef,
     authType: prevData?.authType || spec?.authType || ElkAuthType.USERNAME_PASSWORD,

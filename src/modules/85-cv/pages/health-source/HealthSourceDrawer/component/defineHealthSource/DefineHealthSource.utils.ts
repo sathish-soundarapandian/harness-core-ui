@@ -123,7 +123,7 @@ export const getFeatureOption = (
         ...optionalFeature
       ]
     }
-    case Connectors.ELK: {
+    case HealthSourceTypes.Elk: {
       return [
         {
           value: 'Elk Cloud Logs',

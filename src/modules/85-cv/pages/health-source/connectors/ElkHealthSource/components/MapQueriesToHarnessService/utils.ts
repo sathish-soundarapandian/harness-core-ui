@@ -56,8 +56,20 @@ export function validateMappings(
     ...(!values?.query && {
       [MapElkToServiceFieldNames.QUERY]: getString('cv.monitoringSources.gco.manualInputQueryModal.validation.query')
     }),
+    ...(!values?.logIndexes && {
+      [MapElkToServiceFieldNames.LOG_INDEXES]: 'Log Index is required field'
+    }),
     ...(!values?.serviceInstance && {
-      [MapElkToServiceFieldNames.SERVICE_INSTANCE]: getString('cv.monitoringSources.gcoLogs.validation.serviceInstance')
+      [MapElkToServiceFieldNames.SERVICE_INSTANCE]: 'Service Instance is required field'
+    }),
+    ...(!values?.identify_timestamp && {
+      [MapElkToServiceFieldNames.IDENTIFY_TIMESTAMP]: 'Identify TimeStamp is required field'
+    }),
+    ...(!values?.timeStampFormat && {
+      [MapElkToServiceFieldNames.TIMESTAMP_FORMAT]: 'TimeStamp Format is required field'
+    }),
+    ...(!values?.messageIdentifier && {
+      [MapElkToServiceFieldNames.MESSAGE_IDENTIFIER]: 'Message Identifier is required field'
     })
   }
 

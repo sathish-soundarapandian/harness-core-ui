@@ -122,7 +122,7 @@ export const LoadSourceByType = ({
       } else {
         return <SplunkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
       }
-    case Connectors.ELK:
+    case HealthSourceTypes.Elk:
       return <ElkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
 
     case HealthSourceTypes.SplunkMetric:

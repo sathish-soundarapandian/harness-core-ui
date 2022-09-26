@@ -5,17 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { MapSplunkToServiceFieldNames } from '../constants'
+import { MapElkToServiceFieldNames } from '../constants'
 import { validateMappings, updateSelectedMetricsMap } from '../utils'
 
 function mockGetString(name: string): string {
   switch (name) {
     case 'cv.monitoringSources.metricNameValidation':
-      return MapSplunkToServiceFieldNames.METRIC_NAME
+      return MapElkToServiceFieldNames.METRIC_NAME
     case 'cv.monitoringSources.gcoLogs.validation.serviceInstance':
-      return MapSplunkToServiceFieldNames.SERVICE_INSTANCE
+      return MapElkToServiceFieldNames.SERVICE_INSTANCE
     case 'cv.monitoringSources.gco.manualInputQueryModal.validation.query':
-      return MapSplunkToServiceFieldNames.QUERY
+      return MapElkToServiceFieldNames.QUERY
     default:
       return ''
   }
@@ -25,30 +25,42 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
   test('Ensure validation returns correctly', () => {
     // no values
     expect(validateMappings(mockGetString as any, [], 0)).toEqual({
-      query: MapSplunkToServiceFieldNames.QUERY,
-      serviceInstance: MapSplunkToServiceFieldNames.SERVICE_INSTANCE,
-      metricName: ''
+      query: MapElkToServiceFieldNames.QUERY,
+      serviceInstance: 'Service Instance is required field',
+      timeStampFormat: 'TimeStamp Format is required field',
+      metricName: '',
+      identify_timestamp: 'Identify TimeStamp is required field',
+      logIndexes: 'Log Index is required field',
+      messageIdentifier: 'Message Identifier is required field'
     })
 
     // some values
     expect(
       validateMappings(mockGetString as any, [], 0, {
         query: 'Test',
-        metricName: 'adasd'
+        metricName: 'adasd',
+        serviceInstance: 'Service Instance is required field',
+        timeStampFormat: 'TimeStamp Format is required field',
+        identify_timestamp: 'Identify TimeStamp is required field',
+        logIndexes: 'Log Index is required field',
+        messageIdentifier: 'Message Identifier is required field'
       })
-    ).toEqual({
-      serviceInstance: MapSplunkToServiceFieldNames.SERVICE_INSTANCE
-    })
+    ).toEqual({})
 
     // nonunique metricName
     expect(
       validateMappings(mockGetString as any, ['metric1', 'metric4'], 0, {
         query: 'sdfsdf',
-        metricName: 'metric4'
+        metricName: ''
       })
     ).toEqual({
-      serviceInstance: MapSplunkToServiceFieldNames.SERVICE_INSTANCE,
-      metricName: ''
+      //serviceInstance: MapElkToServiceFieldNames.SERVICE_INSTANCE,
+      metricName: '',
+      identify_timestamp: 'Identify TimeStamp is required field',
+      logIndexes: 'Log Index is required field',
+      messageIdentifier: 'Message Identifier is required field',
+      serviceInstance: 'Service Instance is required field',
+      timeStampFormat: 'TimeStamp Format is required field'
     })
   })
 
@@ -79,7 +91,11 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             metricName: 'metric4',
             query: '',
             serviceInstance: '',
-            recordCount: 0
+            //recordCount: 0
+            identify_timestamp: '',
+            logIndexes: '',
+            messageIdentifier: '',
+            timeStampFormat: ''
           }
         ],
         [
@@ -120,8 +136,10 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             metricName: 'metric4',
             query: '',
             serviceInstance: '',
-
-            recordCount: 0
+            identify_timestamp: '',
+            logIndexes: '',
+            messageIdentifier: '',
+            timeStampFormat: ''
           }
         ],
         [
@@ -154,8 +172,12 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             metricName: 'metric',
             query: 'test query',
             serviceInstance: 'service-instance',
+            identify_timestamp: '',
+            logIndexes: '',
+            messageIdentifier: '',
+            timeStampFormat: ''
 
-            recordCount: 0
+            //recordCount: 0
           }
         } as any
       })
@@ -167,8 +189,12 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             metricName: 'metric',
             query: 'test query',
             serviceInstance: 'service-instance',
+            identify_timestamp: '',
+            logIndexes: '',
+            messageIdentifier: '',
+            timeStampFormat: ''
 
-            recordCount: 0
+            //recordCount: 0
           }
         ],
         [
@@ -177,8 +203,11 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             metricName: 'metric6',
             query: '',
             serviceInstance: '',
-
-            recordCount: 0
+            identify_timestamp: '',
+            logIndexes: '',
+            messageIdentifier: '',
+            timeStampFormat: ''
+            //recordCount: 0
           }
         ]
       ]),

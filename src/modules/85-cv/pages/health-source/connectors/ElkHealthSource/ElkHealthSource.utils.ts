@@ -20,7 +20,7 @@ export function createElkHealthSourcePayload(setupSource: ElkHealthSourceInfo): 
       connectorRef: (typeof setupSource.connectorRef === 'string'
         ? setupSource.connectorRef
         : setupSource.connectorRef?.value) as string,
-      feature: 'Elk Cloud Logs',
+      feature: 'ELK Logs',
       queries: []
     }
   }
