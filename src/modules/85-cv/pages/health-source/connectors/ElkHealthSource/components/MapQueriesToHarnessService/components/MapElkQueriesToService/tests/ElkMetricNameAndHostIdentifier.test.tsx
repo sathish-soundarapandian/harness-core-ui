@@ -22,13 +22,13 @@ jest.mock('services/cv', () => ({
     refetch: jest.fn()
   })),
   useGetELKIndices: jest.fn().mockImplementation(() => ({
-    data: mockedElkIndicesData,
+    data: { data: mockedElkIndicesData },
     loading: false,
     error: null,
     refetch: jest.fn()
   })),
   useGetTimeFormat: jest.fn().mockImplementation(() => ({
-    data: [],
+    data: { data: ['test'] },
     loading: false,
     error: null,
     refetch: jest.fn()
@@ -43,7 +43,7 @@ describe('Unit tests for MapELKQueriesToService', () => {
     isQueryExecuted: true,
     loading: false,
     messageIdentifier: '',
-    isConnectorRuntimeOrExpression: true,
+    isConnectorRuntimeOrExpression: false,
     isTemplate: false,
     expressions: [],
     connectorIdentifier: '',
@@ -53,7 +53,21 @@ describe('Unit tests for MapELKQueriesToService', () => {
   test('Ensure that query name is present', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <ElkMetricNameAndHostIdentifier {...initialProps} />
+        <ElkMetricNameAndHostIdentifier
+          {...{
+            onChange: jest.fn(),
+            sampleRecord: null,
+            serviceInstance: 'serviceInstance',
+            isQueryExecuted: true,
+            loading: false,
+            messageIdentifier: '',
+            isConnectorRuntimeOrExpression: true,
+            isTemplate: true,
+            expressions: [],
+            connectorIdentifier: '',
+            identifyTimeStamp: ''
+          }}
+        />
       </TestWrapper>
     )
     await waitFor(() => expect(getByText('cv.monitoringSources.queryNameLabel')).not.toBeNull())

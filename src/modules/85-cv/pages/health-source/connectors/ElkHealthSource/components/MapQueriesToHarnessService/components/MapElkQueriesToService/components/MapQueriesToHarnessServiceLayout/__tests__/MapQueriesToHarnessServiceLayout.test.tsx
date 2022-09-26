@@ -43,7 +43,8 @@ jest.mock('services/cv', () => ({
     data: mockedELKSampleData,
     loading: false,
     error: null,
-    refetch: jest.fn()
+    refetch: jest.fn(),
+    mutate: jest.fn(() => Promise.resolve(mockedELKSampleData))
   })),
   useGetELKIndices: jest.fn().mockImplementation(() => ({
     data: mockedElkIndicesData,
@@ -59,31 +60,6 @@ jest.mock('services/cv', () => ({
   }))
 }))
 
-// jest.mock('services/cv', () => ({
-//   // useGetElkSavedSearches: jest.fn().mockImplementation(() => ({
-//   //   data: [],
-//   //   refetch: jest.fn()
-//   // })),
-//   useGetELKLogSampleData: jest.fn().mockImplementation(() => ({
-//     data: mockedElkSampleData,
-//     loading: false,
-//     error: null,
-//     refetch: jest.fn()
-//   })),
-//   useGetELKIndices: jest.fn().mockImplementation(() => ({
-//     data: mockedElkIndicesData,
-//     loading: false,
-//     error: null,
-//     refetch: jest.fn()
-//   })),
-//   useGetTimeFormat: jest.fn().mockImplementation(() => ({
-//     data: [],
-//     loading: false,
-//     error: null,
-//     refetch: jest.fn()
-//   }))
-// }))
-
 describe('Unit tests for MapQueriesToHarnessServiceLayout', () => {
   const initialProps = {
     formikProps: {
@@ -97,21 +73,21 @@ describe('Unit tests for MapQueriesToHarnessServiceLayout', () => {
     onChange: jest.fn()
   }
   test('Verify that records are fetched when fetch records button is clicked', async () => {
-    const { getByText, container } = render(<WrapperComponent {...initialProps} />)
+    const { getByText } = render(
+      <WrapperComponent
+        {...{
+          ...initialProps,
+          formikProps: {
+            ...initialProps.formikProps,
+            values: { query: 'queerytt', logIndexes: 'test' }
+          }
+        }}
+      />
+    )
     // When query is empty initially then fetch records button should be disabled
     const fetchRecordsButton = getByText('cv.monitoringSources.gcoLogs.fetchRecords')
     await waitFor(() => expect(fetchRecordsButton).not.toBeNull())
-    await waitFor(() => expect(fetchRecordsButton.parentElement?.className).toContain('disabled'))
 
-    // Entering query
-    await setFieldValue({
-      container,
-      type: InputTypes.TEXTAREA,
-      fieldId: 'query',
-      value: 'Test'
-    })
-
-    // Clicking on the fetch query button
     await waitFor(() => expect(fetchRecordsButton).not.toBeNull())
     fireEvent.click(fetchRecordsButton)
 
