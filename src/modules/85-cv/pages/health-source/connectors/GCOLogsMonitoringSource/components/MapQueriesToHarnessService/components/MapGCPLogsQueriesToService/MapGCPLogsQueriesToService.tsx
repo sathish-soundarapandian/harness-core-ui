@@ -69,9 +69,9 @@ export function MapGCPLogsQueriesToService(props: MapGCPLogsQueriesToServiceProp
             ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
             : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
         }
-        inputLabel="Identify TimeStamp"
-        // noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsMessageIdentifier')}
-        //noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsMessageIdentifer')}
+        inputLabel={getString('cv.monitoringSources.gcoLogs.messageIdentifier')}
+        noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsMessageIdentifier')}
+        noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsMessageIdentifer')}
         recordsModalHeader={getString('cv.monitoringSources.gcoLogs.selectPathForMessageIdentifier')}
       />
     </Container>
