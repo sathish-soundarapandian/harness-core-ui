@@ -595,7 +595,7 @@ function BootstrapDeployInfraDefinition({
                 handleDeploymentTypeChange={handleDeploymentTypeChange}
                 shouldShowGitops={false}
                 customDeploymentData={customDeploymentMetaData?.templateMetaData}
-                addOrUpdateTemplate={addOrUpdateTemplate}
+                addOrUpdateTemplate={isEmpty(stageCustomDeploymentData) ? addOrUpdateTemplate : undefined}
               />
               {selectedDeploymentType && <DeployInfraDefinition key={deployInfraRemountCount} />}
             </>

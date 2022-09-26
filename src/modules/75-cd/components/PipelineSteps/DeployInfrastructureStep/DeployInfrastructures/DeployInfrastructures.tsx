@@ -32,6 +32,7 @@ import {
   DeploymentStageConfig,
   InfrastructureResponse,
   InfrastructureResponseDTO,
+  TemplateLinkConfig,
   useGetInfrastructureInputs,
   useGetInfrastructureList
 } from 'services/cd-ng'
@@ -51,7 +52,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
-import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { isEditInfrastructure } from '../utils'
 
 import css from './DeployInfrastructures.module.scss'
@@ -93,6 +94,13 @@ function DeployInfrastructures({
 
   const { stage } = getStageFromPipeline(selectedStageId || '')
   const { getTemplate } = useTemplateSelector()
+  const deploymentType = (stage?.stage?.spec as DeployStageConfig)?.deploymentType
+
+  const { templateRef: deploymentTemplateIdentifier, versionLabel } =
+    (get(stage, 'stage.spec.customDeploymentRef') as TemplateLinkConfig) || {}
+
+  const shouldAddCustomDeploymentData =
+    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier && versionLabel
 
   const {
     data: infrastructuresResponse,
@@ -104,7 +112,8 @@ function DeployInfrastructures({
       orgIdentifier,
       projectIdentifier,
       environmentIdentifier,
-      deploymentType: (stage?.stage?.spec as DeployStageConfig)?.deploymentType
+      deploymentType,
+      ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
     },
     lazy: getMultiTypeFromValue(environmentIdentifier) === MultiTypeInputType.RUNTIME
   })

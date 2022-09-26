@@ -31,10 +31,7 @@ import { DeploymentConfigStepDrawerTitle } from './DeploymentConfigStepDrawerTit
 import css from './DeploymentConfigStepDrawer.module.scss'
 
 const DEFAULT_STEP_PALETTE_MODULE_INFO = [
-  {
-    module: 'cd',
-    shouldShowCommonSteps: true
-  }
+  { module: 'cd', category: 'Utilities', shouldShowCommonSteps: true, commonStepCategory: 'Utilities' }
 ]
 
 function TemplateDetailsWrapper() {
