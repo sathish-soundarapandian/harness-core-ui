@@ -18,11 +18,13 @@ import {
   Page,
   Button,
   ButtonVariation
+  // useToaster,
+  // getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { useGetOrganizationList, useGetProjectList, UserAggregate } from 'services/cd-ng'
+import { getOrganizationListPromise, useGetProjectList, UserAggregate } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ScopeSelector } from 'services/rbac'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -113,33 +115,50 @@ interface OrgSelectProps {
 }
 const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onChange }) => {
   const [orgQuery, setOrgQuery] = useState<string>('')
+  const [loadingOrgs, setLoadingOrgs] = useState<boolean>(false)
   const { getString } = useStrings()
-  const { data: orgsData, loading } = useGetOrganizationList({
-    queryParams: {
-      accountIdentifier,
-      searchTerm: orgQuery
+  // const { showError } = useToaster()
+
+  const orgsPromise = async (): Promise<SelectOption[]> => {
+    setLoadingOrgs(true)
+    let organizations: SelectOption[] = []
+    try {
+      const orgsData = await getOrganizationListPromise({
+        queryParams: {
+          accountIdentifier,
+          searchTerm: orgQuery
+        }
+      })
+      const orgsList = orgsData?.data?.content
+      organizations = defaultTo(
+        orgsList?.map(org => {
+          return {
+            label: org.organization.name,
+            value: org.organization.identifier
+          }
+        }) as SelectOption[],
+        []
+      )
+      // if (!orgsList) {
+      //   showError(`Couldn't fetch`)
+      // }
+    } finally {
+      setLoadingOrgs(false)
     }
-  })
-  const organizations: SelectOption[] = defaultTo(
-    orgsData?.data?.content?.map(org => {
-      return {
-        label: org.organization.name,
-        value: org.organization.identifier
-      }
-    }),
-    []
-  )
+    return organizations
+  }
 
   return (
     <DropDown
-      disabled={loading}
+      disabled={loadingOrgs}
       placeholder={getString('rbac.resourceScope.selectOrg')}
       value={orgFilter}
-      items={organizations}
+      items={orgsPromise}
       onQueryChange={query => {
         setOrgQuery(query)
       }}
       onChange={onChange}
+      query={orgQuery}
     />
   )
 }
