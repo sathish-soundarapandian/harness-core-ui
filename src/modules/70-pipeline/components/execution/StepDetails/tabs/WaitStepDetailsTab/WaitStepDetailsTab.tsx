@@ -71,19 +71,37 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
         background={Color.YELLOW_100}
         padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'large', right: 'large' }}
       >
-        <div>{`${getString('startedAt')}-${startedTimeValue}`}</div>
-        <div>{`${getString('endedAt')}  -${endTimeValue}`}</div>
-        <div>{`Duration  -${daysDuration}`}</div>
-        <div>
-          <Duration
-            color={Color.ORANGE_400}
-            className={css.timer}
-            durationText="Ellapsed Time"
-            startTime={step?.startTs}
-            endTime={step?.endTs}
-            showZeroSecondsResult
-          />
-        </div>
+        <table className={css.detailsTable}>
+          <tbody>
+            <tr>
+              <th>{getString('startedAt')}</th>
+              <td>{step?.startTs ? new Date(step.startTs).toLocaleString() : '-'}</td>
+            </tr>
+            <tr>
+              <th>{getString('endedAt')}</th>
+              <td>{step?.startTs ? new Date(step.endTs || '').toLocaleString() : '-'}</td>
+            </tr>
+            <tr>
+              <th>{getString('duration')}</th>
+              <td>{daysDuration ? daysDuration : '-'}</td>
+            </tr>
+            <tr>
+              <th>{getString('elapsedTime')}</th>
+              <td>
+                <div>
+                  <Duration
+                    color={Color.ORANGE_400}
+                    className={css.timer}
+                    durationText=""
+                    startTime={step?.startTs}
+                    endTime={step?.endTs}
+                    showZeroSecondsResult
+                  />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </Container>
     )
   }
