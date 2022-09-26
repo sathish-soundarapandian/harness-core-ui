@@ -9,7 +9,7 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
-  mockedElkIndicesData,s
+  mockedElkIndicesData,
   mockedElkSampleData
 } from '@cv/pages/health-source/connectors/ElkHealthSource/__tests__/ElkHealthSource.mock'
 import { ElkMetricNameAndHostIdentifier } from '../ElkMetricNameAndHostIdentifier'

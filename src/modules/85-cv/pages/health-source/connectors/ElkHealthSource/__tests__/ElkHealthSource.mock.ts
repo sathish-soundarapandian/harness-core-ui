@@ -120,10 +120,10 @@ export const mockedElkSampleData = [
 ]
 
 export const mockedElkIndicesData = [
-  "filebeat-6.8.8-2022.09.03",
-  ".kibana_1",
-  "filebeat-6.8.8-2022.08.25",
-  "filebeat-6.8.8-2022.09.12",
-  "filebeat-6.8.8-2022.09.04",
-  "filebeat-6.8.8-2022.09.15"
+  'filebeat-6.8.8-2022.09.03',
+  '.kibana_1',
+  'filebeat-6.8.8-2022.08.25',
+  'filebeat-6.8.8-2022.09.12',
+  'filebeat-6.8.8-2022.09.04',
+  'filebeat-6.8.8-2022.09.15'
 ]

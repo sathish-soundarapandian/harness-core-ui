@@ -55,7 +55,6 @@ jest.mock('services/cv', () => ({
 describe('test ElkHealthsource', () => {
   test('check snapshot', () => {
     const { container } = render(
-      
       <TestWrapper>
         <ElkHealthSource data={data} onSubmit={jest.fn()} />
       </TestWrapper>
