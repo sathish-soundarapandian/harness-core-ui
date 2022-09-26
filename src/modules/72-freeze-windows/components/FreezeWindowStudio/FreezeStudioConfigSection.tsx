@@ -33,6 +33,7 @@ interface FreezeStudioConfigSectionProps {
 }
 
 interface ConfigRendererProps {
+  entityConfigs: EntityConfig[]
   config: EntityConfig
   isEdit: boolean
   getString: UseStringsReturn['getString']
@@ -41,12 +42,23 @@ interface ConfigRendererProps {
   formikProps: any
 }
 
-const ConfigRenderer = ({ config, isEdit, getString, index, updateFreeze, formikProps }: ConfigRendererProps) => {
+const ConfigRenderer = ({
+  config,
+  isEdit,
+  getString,
+  index,
+  updateFreeze,
+  formikProps,
+  entityConfigs
+}: ConfigRendererProps) => {
   const [isEditView, setEditView] = React.useState(isEdit)
   const setVisualView = () => {
     const values = formikProps.values.entity
-    // todo: update only current one
-    updateFreeze({ entityConfigs: values })
+
+    const updatedEntityConfigs = [...entityConfigs]
+    updatedEntityConfigs[index] = values[index]
+
+    updateFreeze({ entityConfigs: updatedEntityConfigs })
     setEditView(false)
   }
   return (
@@ -92,6 +104,7 @@ const ConfigsSection = ({ entityConfigs, getString, updateFreeze }: ConfigsSecti
             index={index}
             updateFreeze={updateFreeze}
             formikProps={formikProps}
+            entityConfigs={entityConfigs}
           />
         ))
       }
