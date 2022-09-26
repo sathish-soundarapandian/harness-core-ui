@@ -122,7 +122,8 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.EcsServiceDefinition,
     ManifestDataType.EcsScalingPolicyDefinition,
     ManifestDataType.EcsScalableTargetDefinition
-  ]
+  ],
+  CustomDeployment: []
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [
@@ -161,10 +162,10 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   Kustomize: gitStoreTypesWithHarnessStoreType,
   KustomizePatches: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
   ServerlessAwsLambda: gitStoreTypes,
-  EcsTaskDefinition: gitStoreTypes,
-  EcsServiceDefinition: gitStoreTypes,
-  EcsScalingPolicyDefinition: gitStoreTypes,
-  EcsScalableTargetDefinition: gitStoreTypes
+  EcsTaskDefinition: gitStoreTypesWithHarnessStoreType,
+  EcsServiceDefinition: gitStoreTypesWithHarnessStoreType,
+  EcsScalingPolicyDefinition: gitStoreTypesWithHarnessStoreType,
+  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {

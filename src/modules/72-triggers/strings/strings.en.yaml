@@ -103,7 +103,6 @@ conditionsPanel:
 triggerOverviewPanel:
   title: 'Trigger Overview'
 schedulePanel:
-  title: 'Schedule'
   minutesLabel: 'Minutes'
   hourlyTabTitle: '{{$.common.hourly}}'
   dailyTabTitle: '{{$.common.daily}}'

@@ -73,11 +73,20 @@ export interface LdapWizardStepProps<T> {
   auxilliaryData?: Partial<LDAPSettings>
 }
 
+interface LdapOverviewBackend {
+  disabled?: boolean
+  displayName?: string
+}
+
 const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
   const { getString } = useStrings()
   const { ldapSettings, isEdit } = props
-  const { connectionSettings, displayName, identifier, userSettingsList, groupSettingsList } = ldapSettings || {}
-  const [ldapOverviewState, setLdapOverviewState] = useState<LdapOverview>({ displayName })
+  const { connectionSettings, displayName, disabled, identifier, userSettingsList, groupSettingsList } =
+    ldapSettings || {}
+  const [ldapOverviewState, setLdapOverviewState] = useState<LdapOverviewBackend>({
+    displayName,
+    disabled
+  })
   const [connectionSettingsState, setConnectionSettingsState] = useState<LdapConnectionSettings | undefined>(
     connectionSettings
   )
@@ -151,8 +160,10 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
     >
       <StepOverview
         name={getString('overview')}
-        stepData={ldapOverviewState}
-        updateStepData={(val: LdapOverview) => setLdapOverviewState(val)}
+        stepData={{ displayName: ldapOverviewState.displayName, authorizationEnabled: !ldapOverviewState.disabled }}
+        updateStepData={(val: LdapOverview) =>
+          setLdapOverviewState({ displayName: val.displayName, disabled: !val.authorizationEnabled })
+        }
         closeWizard={props.closeWizard}
       />
       <StepConnectionSettings

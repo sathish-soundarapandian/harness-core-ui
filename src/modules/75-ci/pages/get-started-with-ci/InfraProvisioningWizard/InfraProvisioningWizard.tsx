@@ -317,7 +317,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                           projectIdentifier,
                           pipelineIdentifier: createPipelineResponse?.data?.identifier,
                           stageId: getString('buildText'),
-                          sectionId: BuildTabs.INFRASTRUCTURE
+                          sectionId: BuildTabs.EXECUTION
                         })
                       )
                     }
@@ -367,7 +367,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               projectIdentifier,
               pipelineIdentifier: createPipelineRes?.data?.identifier,
               stageId: getString('buildText'),
-              sectionId: BuildTabs.INFRASTRUCTURE
+              sectionId: BuildTabs.EXECUTION
             })
           )
         }

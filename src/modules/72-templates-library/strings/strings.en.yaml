@@ -54,3 +54,4 @@ changeGitBranch: Change git branch
 templateDoesNotExistInBranch: The Template you are using, {{template}} does not exist in this branch. Please change Git branch.
 chooseTemplateSetupHeader: How do you want to setup your template?
 diffTitle: template.yaml (saved) ↔ template.yaml (updated)
+seeLinkedTemplate: See only linked templates

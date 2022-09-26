@@ -77,7 +77,8 @@ import type {
   JenkinsArtifactType,
   GoogleArtifactRegistryInitialValuesType,
   CustomArtifactSource,
-  GithubPackageRegistryInitialValuesType
+  GithubPackageRegistryInitialValuesType,
+  Nexus2InitialValuesType
 } from './ArtifactInterface'
 import {
   ArtifactToConnectorMap,
@@ -90,7 +91,7 @@ import {
   isSidecarAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
+import { Nexus3Artifact } from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
 import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
 import {
   CustomArtifact,
@@ -102,6 +103,7 @@ import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifac
 import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
 import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
 import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
+import { Nexus2Artifact } from './ArtifactRepository/ArtifactLastSteps/Nexus2Artifact/Nexus2Artifact'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ArtifactsSelection({
@@ -156,7 +158,7 @@ export default function ArtifactsSelection({
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     }
     if (
-      deploymentType === 'Kubernetes' &&
+      ['Kubernetes', 'CustomDeployment'].includes(deploymentType) &&
       NG_GOOGLE_ARTIFACT_REGISTRY &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     ) {
@@ -509,7 +511,8 @@ export default function ArtifactsSelection({
       JenkinsArtifactType &
       GoogleArtifactRegistryInitialValuesType &
       CustomArtifactSource &
-      GithubPackageRegistryInitialValuesType
+      GithubPackageRegistryInitialValuesType &
+      Nexus2InitialValuesType
   > => {
     return {
       ...getLastStepName(),
@@ -670,7 +673,9 @@ export default function ArtifactsSelection({
       case ENABLED_ARTIFACT_TYPES.Ecr:
         return <ECRArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
-        return <NexusArtifact {...artifactLastStepProps()} />
+        return <Nexus3Artifact {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
+        return <Nexus2Artifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return <Artifactory {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.AmazonS3:

@@ -79,7 +79,9 @@ import type {
   AmazonS3InitialValuesType,
   JenkinsArtifactType,
   GoogleArtifactRegistryInitialValuesType,
-  CustomArtifactSource
+  CustomArtifactSource,
+  GithubPackageRegistryInitialValuesType,
+  Nexus2InitialValuesType
 } from './ArtifactInterface'
 import {
   ArtifactToConnectorMap,
@@ -92,7 +94,7 @@ import {
   isSidecarAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
+import { Nexus3Artifact } from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
 import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
 import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
@@ -100,6 +102,8 @@ import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/
 import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
 import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
 import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
+import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
+import { Nexus2Artifact } from './ArtifactRepository/ArtifactLastSteps/Nexus2Artifact/Nexus2Artifact'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ServiceV2ArtifactsSelection({
@@ -438,7 +442,9 @@ export default function ServiceV2ArtifactsSelection({
       AmazonS3InitialValuesType &
       JenkinsArtifactType &
       GoogleArtifactRegistryInitialValuesType &
-      CustomArtifactSource
+      CustomArtifactSource &
+      GithubPackageRegistryInitialValuesType &
+      Nexus2InitialValuesType
   > => {
     return {
       key: getString('connectors.stepFourName'),
@@ -609,7 +615,9 @@ export default function ServiceV2ArtifactsSelection({
       case ENABLED_ARTIFACT_TYPES.Ecr:
         return <ECRArtifact {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
-        return <NexusArtifact {...artifactLastStepProps} />
+        return <Nexus3Artifact {...artifactLastStepProps} />
+      case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
+        return <Nexus2Artifact {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return <Artifactory {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
@@ -622,6 +630,8 @@ export default function ServiceV2ArtifactsSelection({
         return <JenkinsArtifact {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
         return <GoogleArtifactRegistry {...artifactLastStepProps} />
+      case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+        return <GithubPackageRegistry {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       default:
         return <DockerRegistryArtifact {...artifactLastStepProps} />

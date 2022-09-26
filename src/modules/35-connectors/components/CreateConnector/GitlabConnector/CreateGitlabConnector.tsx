@@ -53,6 +53,7 @@ const CreateGitlabConnector = (props: CreateConnectorModalProps): JSX.Element =>
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
         mock={props.mock}
+        helpPanelReferenceId="GitLabConnectorOverview"
       />
       <GitDetailsStep
         type={Connectors.GITLAB}
@@ -60,12 +61,14 @@ const CreateGitlabConnector = (props: CreateConnectorModalProps): JSX.Element =>
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo}
         mock={props.mock}
+        helpPanelReferenceId="GitLabConnectorDetails"
       />
       <StepGitlabAuthentication
         name={getString('credentials')}
         identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
         {...commonProps}
         onConnectorCreated={props.onSuccess}
+        helpPanelReferenceId="GitLabConnectorCredentials"
       />
       <ConnectivityModeStep
         name={getString('connectors.selectConnectivityMode')}
@@ -79,6 +82,7 @@ const CreateGitlabConnector = (props: CreateConnectorModalProps): JSX.Element =>
         setConnectivityMode={props.setConnectivityMode}
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
+        helpPanelReferenceId="ConnectorConnectToTheProvider"
       />
       {props.connectivityMode === ConnectivityModeType.Delegate ? (
         <DelegateSelectorStep
@@ -101,6 +105,7 @@ const CreateGitlabConnector = (props: CreateConnectorModalProps): JSX.Element =>
         type={Connectors.GITLAB}
         onClose={props.onClose}
         stepIndex={GIT_TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

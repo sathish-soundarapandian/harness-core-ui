@@ -20,7 +20,8 @@ import type {
   GetExecutionStrategyYamlQueryParams,
   Infrastructure,
   ServerlessAwsLambdaInfrastructure,
-  ServiceDefinition
+  ServiceDefinition,
+  CustomDeploymentServiceSpec
 } from 'services/cd-ng'
 import { connectorTypes } from '@pipeline/utils/constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -55,6 +56,7 @@ export enum ServiceDeploymentType {
   pcf = 'pcf',
   Pdc = 'Pdc',
   Ssh = 'Ssh',
+  CustomDeployment = 'CustomDeployment',
   ServerlessAwsLambda = 'ServerlessAwsLambda',
   ServerlessAzureFunctions = 'ServerlessAzureFunctions',
   ServerlessGoogleFunctions = 'ServerlessGoogleFunctions',
@@ -66,8 +68,25 @@ export enum ServiceDeploymentType {
 
 export enum RepositoryFormatTypes {
   Generic = 'generic',
-  Docker = 'docker'
+  Docker = 'docker',
+  Maven = 'maven',
+  NPM = 'npm',
+  NuGet = 'nuget'
 }
+
+export const nexus2RepositoryFormatTypes = [
+  { label: 'Maven', value: RepositoryFormatTypes.Maven },
+  { label: 'NPM', value: RepositoryFormatTypes.NPM },
+  { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
+]
+
+export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]
+
+export const nonK8sRepositoryFormatTypes = [
+  { label: 'Maven', value: RepositoryFormatTypes.Maven },
+  { label: 'NPM', value: RepositoryFormatTypes.NPM },
+  { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
+]
 
 export const repositoryFormats = [
   { label: 'Generic', value: RepositoryFormatTypes.Generic },
@@ -167,6 +186,10 @@ export const getHelpeTextForTags = (
     repositoryName?: string
     package?: string
     project?: string
+    repositoryFormat?: RepositoryFormatTypes
+    artifactId?: string
+    groupId?: string
+    packageName?: string
   },
   getString: (key: StringKeys) => string,
   isServerlessDeploymentTypeSelected = false
@@ -183,8 +206,12 @@ export const getHelpeTextForTags = (
     registry,
     subscriptionId,
     repositoryName,
-    package: packageName,
-    project
+    package: packageVal,
+    project,
+    repositoryFormat,
+    artifactId,
+    groupId,
+    packageName
   } = fields
   const invalidFields: string[] = []
   if (!connectorRef || getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME) {
@@ -200,6 +227,9 @@ export const getHelpeTextForTags = (
     packageName !== undefined &&
     (!packageName || getMultiTypeFromValue(packageName) === MultiTypeInputType.RUNTIME)
   ) {
+    invalidFields.push(getString('pipeline.testsReports.callgraphField.package'))
+  }
+  if (packageVal !== undefined && (!packageVal || getMultiTypeFromValue(packageVal) === MultiTypeInputType.RUNTIME)) {
     invalidFields.push(getString('pipeline.testsReports.callgraphField.package'))
   }
   if (project !== undefined && (!project || getMultiTypeFromValue(project) === MultiTypeInputType.RUNTIME)) {
@@ -247,6 +277,21 @@ export const getHelpeTextForTags = (
   }
 
   if (
+    repositoryFormat !== undefined &&
+    (!repositoryFormat || getMultiTypeFromValue(repositoryFormat) === MultiTypeInputType.RUNTIME)
+  ) {
+    invalidFields.push(getString('common.repositoryFormat'))
+  }
+
+  if (artifactId !== undefined && (!artifactId || getMultiTypeFromValue(artifactId) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.artifactsSelection.artifactId'))
+  }
+
+  if (groupId !== undefined && (!groupId || getMultiTypeFromValue(groupId) === MultiTypeInputType.RUNTIME)) {
+    invalidFields.push(getString('pipeline.artifactsSelection.groupId'))
+  }
+
+  if (
     subscriptionId !== undefined &&
     (!subscriptionId || getMultiTypeFromValue(subscriptionId) === MultiTypeInputType.RUNTIME)
   ) {
@@ -277,6 +322,10 @@ export const isWinRmDeploymentType = (deploymentType: string): boolean => {
 
 export const isAzureWebAppDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.AzureWebApp
+}
+
+export const isCustomDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.CustomDeployment
 }
 
 export const isAzureWebAppGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
@@ -452,6 +501,13 @@ export const isConfigFilesPresent = (stage: DeploymentStageElementConfig): boole
   return !!stage.spec?.serviceConfig && !!stage.spec?.serviceConfig.serviceDefinition?.spec.configFiles
 }
 
+export const isCustomDeploymentDataPresent = (stage: DeploymentStageElementConfig): boolean => {
+  return (
+    !!stage.spec?.serviceConfig &&
+    !!(stage.spec?.serviceConfig.serviceDefinition?.spec as CustomDeploymentServiceSpec)?.customDeploymentRef
+  )
+}
+
 export const isServiceEntityPresent = (stage: DeploymentStageElementConfig): boolean => {
   return !!stage.spec?.service?.serviceRef
 }
@@ -475,7 +531,8 @@ export const doesStageContainOtherData = (stage?: DeploymentStageElementConfig):
     isArtifactManifestPresent(stage) ||
     isInfraDefinitionPresent(stage) ||
     isExecutionFieldPresent(stage) ||
-    isConfigFilesPresent(stage)
+    isConfigFilesPresent(stage) ||
+    isCustomDeploymentDataPresent(stage)
   )
 }
 
@@ -506,9 +563,11 @@ export const deleteStageData = (stage?: DeploymentStageElementConfig): void => {
 }
 export const deleteServiceData = (stage?: DeploymentStageElementConfig): void => {
   if (stage) {
-    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.artifacts
-    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.manifests
-    delete stage?.spec?.serviceConfig?.serviceDefinition?.spec.configFiles
+    const serviceSpec = stage?.spec?.serviceConfig?.serviceDefinition?.spec as Partial<CustomDeploymentServiceSpec>
+    delete serviceSpec?.artifacts
+    delete serviceSpec?.manifests
+    delete serviceSpec?.configFiles
+    delete serviceSpec?.customDeploymentRef
   }
 }
 //This is to delete stage data in case of new service/ env entity
@@ -517,6 +576,7 @@ export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
     delete stage?.spec?.service
     delete stage?.spec?.environment
     delete stage?.spec?.environmentGroup
+    delete stage?.spec?.customDeploymentRef
     if (stage?.spec?.execution?.steps) {
       stage.spec.execution.steps.splice(0)
     }
@@ -526,7 +586,8 @@ export const deleteStageInfo = (stage?: DeploymentStageElementConfig): void => {
 
 export const infraDefinitionTypeMapping: { [key: string]: string } = {
   ServerlessAwsLambda: StepType.ServerlessAwsInfra,
-  ECS: StepType.EcsInfra
+  ECS: StepType.EcsInfra,
+  CustomDeployment: StepType.CustomDeployment
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -541,6 +602,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.WinRmServiceSpec
     case ServiceDeploymentType.ECS:
       return StepType.EcsService
+    case ServiceDeploymentType.CustomDeployment:
+      return StepType.CustomDeploymentServiceSpec
     default:
       return StepType.K8sServiceSpec
   }

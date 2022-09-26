@@ -143,7 +143,7 @@ describe('CDPipelineDeploymentList', () => {
   test('should render pipelines', async () => {
     renderExecutionPage()
     const pipeline = await screen.findByRole('link', {
-      name: 'Multi-ServiceWithMatrix CD Success : 1'
+      name: 'Multi-ServiceWithMatrix CD Success'
     })
     expect(pipeline).toHaveAttribute(
       'href',

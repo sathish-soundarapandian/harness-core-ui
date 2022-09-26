@@ -9,13 +9,17 @@ import * as Yup from 'yup'
 import { uniqBy } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import { variableSchema } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import { InstanceScriptTypes } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraSpecifications/DeploymentInfraSpecifications'
 import { NameSchema } from '@common/utils/Validation'
 
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
-    variables: variableSchema(getString),
+    variables: Yup.array().of(
+      Yup.object({
+        name: Yup.string().required(getString('common.validation.nameIsRequired')),
+        type: Yup.string().trim().required(getString('common.validation.typeIsRequired'))
+      })
+    ),
     fetchInstancesScript: Yup.object().shape({
       store: Yup.object().shape({
         type: Yup.string(),
@@ -34,11 +38,9 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
             then: Yup.object().shape({
               /* istanbul ignore next */
               files: Yup.lazy((value): Yup.Schema<unknown> => {
-                /* istanbul ignore next */
                 if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
                   return Yup.array().of(Yup.string().required(getString('pipeline.manifestType.pathRequired')))
                 }
-                /* istanbul ignore next */
                 return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
               })
             })

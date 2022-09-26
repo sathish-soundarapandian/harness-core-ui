@@ -37,11 +37,13 @@ export default function CreateAWSCodeCommitConnector(props: CreateConnectorModal
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
+        helpPanelReferenceId="CodeCommitConnectorOverviewId"
       />
       <AWSCCDetailsStep
         name={getString('details')}
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo as ConnectorInfoDTO}
+        helpPanelReferenceId="CodeCommitConnectorDetails"
       />
       <AWSCCAuthStep
         name={getString('credentials')}
@@ -50,6 +52,7 @@ export default function CreateAWSCodeCommitConnector(props: CreateConnectorModal
         connectorInfo={props.connectorInfo as ConnectorInfoDTO}
         onSuccess={props.onSuccess}
         setIsEditMode={props.setIsEditMode}
+        helpPanelReferenceId="CodeCommitConnectorCredentials"
       />
 
       <DelegateSelectorStep
@@ -61,6 +64,7 @@ export default function CreateAWSCodeCommitConnector(props: CreateConnectorModal
         onConnectorCreated={props.onSuccess}
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
+        helpPanelReferenceId="ConnectorDelegatesSetup"
       />
       <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
@@ -70,6 +74,7 @@ export default function CreateAWSCodeCommitConnector(props: CreateConnectorModal
         type={Connectors.AWS_CODECOMMIT}
         onClose={props.onClose}
         stepIndex={TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

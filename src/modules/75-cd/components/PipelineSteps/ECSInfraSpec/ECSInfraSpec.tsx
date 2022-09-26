@@ -176,7 +176,7 @@ export class ECSInfraSpec extends PipelineStep<EcsInfrastructureStep> {
 
   renderStep(props: StepProps<EcsInfrastructure>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, customStepProps, readonly, allowableTypes } = props
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <ECSInfraSpecInputSetMode
           {...(customStepProps as ECSInfraSpecInputFormProps)}

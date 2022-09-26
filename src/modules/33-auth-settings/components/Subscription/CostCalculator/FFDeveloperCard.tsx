@@ -10,8 +10,7 @@ import { capitalize, defaultTo } from 'lodash-es'
 import { Card, Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { Editions, CurrencyType } from '@common/constants/SubscriptionTypes'
-import { getAmountInCurrency } from '@auth-settings/utils'
+import { Editions } from '@common/constants/SubscriptionTypes'
 import SliderBar from './SliderBar'
 import css from './CostCalculator.module.scss'
 
@@ -23,20 +22,24 @@ export const generateRangeArray = (min: number, max: number, stepSize: number): 
   return rangeArray
 }
 
-const Header: React.FC<{ unitPrice: number }> = ({ unitPrice }) => {
+const Header: React.FC<{ unitPrice: number }> = () => {
   const { getString } = useStrings()
-  const unitPriceDescr = `${getString('authSettings.unitPrice')}: ${getAmountInCurrency(
-    CurrencyType.USD,
-    unitPrice
-  )} ${getString('common.perDeveloper')} ${getString('common.perMonth')}`
+  // const unitPriceDescr = `${getString('authSettings.unitPrice')}: ${getAmountInCurrency(
+  //   CurrencyType.USD,
+  //   unitPrice
+  // )} ${getString('common.perDeveloper')} ${getString('common.perMonth')}`
   return (
     <Layout.Vertical padding={{ bottom: 'medium' }}>
       <Text font={{ variation: FontVariation.H5 }}>{getString('authSettings.costCalculator.developer.title')}</Text>
       <Layout.Horizontal spacing={'small'}>
-        <Text color={Color.PRIMARY_7} font={{ size: 'xsmall' }}>
+        <Text
+          color={Color.PRIMARY_7}
+          tooltip={getString('authSettings.costCalculator.developer.developerDefinition')}
+          font={{ size: 'xsmall' }}
+        >
           {getString('authSettings.costCalculator.developer.developer')}
         </Text>
-        <Text font={{ size: 'xsmall' }}>{unitPriceDescr}</Text>
+        {/* <Text font={{ size: 'xsmall' }}>{unitPriceDescr}</Text> */}
       </Layout.Horizontal>
     </Layout.Vertical>
   )

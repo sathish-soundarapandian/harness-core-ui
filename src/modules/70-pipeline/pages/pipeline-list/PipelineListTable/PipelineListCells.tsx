@@ -35,6 +35,7 @@ import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelp
 import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
+import { killEvent } from '@common/utils/eventUtils'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
@@ -178,7 +179,7 @@ export const LastExecutionCell: CellType = ({ row }) => {
 
   return (
     <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
-      <div className={cx(css.avatar, executor ? css.trigger : css.neverRan)}>
+      <div className={cx(css.avatar, executor ? css.trigger : css.neverRan)} onClick={killEvent}>
         {executor ? (
           isAutoTrigger ? (
             <Link
@@ -273,7 +274,7 @@ export const MenuCell: CellType = ({ row, column }) => {
   })
 
   return (
-    <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
+    <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
       <Popover className={Classes.DARK} position={Position.LEFT}>
         <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
         <Menu style={{ backgroundColor: 'unset' }}>
@@ -352,43 +353,45 @@ export const RecentExecutionsCell: CellType = ({ row }) => {
   })
 
   return (
-    <StatusHeatMap
-      className={css.recentExecutions}
-      data={recentExecutions}
-      getId={(i, index) => defaultTo(i.planExecutionId, index)}
-      getStatus={i => i.status as ExecutionStatus}
-      getLinkProps={i => (i.planExecutionId ? getLinkProps(i.planExecutionId) : undefined)}
-      getPopoverProps={i => ({
-        position: Position.TOP,
-        interactionKind: PopoverInteractionKind.HOVER,
-        content: (
-          <Layout.Vertical padding="large" spacing="medium">
-            <div className={css.statusLabel}>
-              <ExecutionStatusLabel status={i.status as ExecutionStatus} />
-            </div>
-            {i.startTs && (
-              <>
-                <LabeValue label={getString('pipeline.executionId')} value={i.runSequence || i.planExecutionId} />
-                <LabeValue
-                  label={getString('common.executedBy')}
-                  value={
-                    <Layout.Horizontal spacing="xsmall" color={Color.WHITE} font="normal">
-                      <span>{i.executorInfo?.email || i.executorInfo?.username}</span>
-                      <span>|</span>
-                      <ReactTimeago date={i.startTs} />
-                    </Layout.Horizontal>
-                  }
-                />
-                <LabeValue
-                  label={getString('common.triggerName')}
-                  value={getString(mapTriggerTypeToStringID(i.executorInfo?.triggerType))}
-                />
-              </>
-            )}
-          </Layout.Vertical>
-        ),
-        className: Classes.DARK
-      })}
-    />
+    <div onClick={killEvent}>
+      <StatusHeatMap
+        className={css.recentExecutions}
+        data={recentExecutions}
+        getId={(i, index) => defaultTo(i.planExecutionId, index)}
+        getStatus={i => i.status as ExecutionStatus}
+        getLinkProps={i => (i.planExecutionId ? getLinkProps(i.planExecutionId) : undefined)}
+        getPopoverProps={i => ({
+          position: Position.TOP,
+          interactionKind: PopoverInteractionKind.HOVER,
+          content: (
+            <Layout.Vertical padding="large" spacing="medium">
+              <div className={css.statusLabel}>
+                <ExecutionStatusLabel status={i.status as ExecutionStatus} />
+              </div>
+              {i.startTs && (
+                <>
+                  <LabeValue label={getString('pipeline.executionId')} value={i.runSequence || i.planExecutionId} />
+                  <LabeValue
+                    label={getString('common.executedBy')}
+                    value={
+                      <Layout.Horizontal spacing="xsmall" color={Color.WHITE} font="normal">
+                        <span>{i.executorInfo?.email || i.executorInfo?.username}</span>
+                        <span>|</span>
+                        <ReactTimeago date={i.startTs} />
+                      </Layout.Horizontal>
+                    }
+                  />
+                  <LabeValue
+                    label={getString('common.triggerName')}
+                    value={getString(mapTriggerTypeToStringID(i.executorInfo?.triggerType))}
+                  />
+                </>
+              )}
+            </Layout.Vertical>
+          ),
+          className: Classes.DARK
+        })}
+      />
+    </div>
   )
 }

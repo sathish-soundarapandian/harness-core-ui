@@ -9,6 +9,7 @@
 declare const styles: {
   readonly checkbox: string
   readonly ci: string
+  readonly divider: string
   readonly execution: string
   readonly icon: string
   readonly iconWrapper: string
@@ -22,6 +23,7 @@ declare const styles: {
   readonly stageInfo: string
   readonly table: string
   readonly tags: string
+  readonly toggleAccordion: string
   readonly triggerInfo: string
   readonly triggerInfoCell: string
 }

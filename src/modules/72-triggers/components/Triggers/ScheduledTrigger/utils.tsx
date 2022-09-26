@@ -110,7 +110,7 @@ export const getPanels = (getString: UseStringsReturn['getString']): PanelInterf
     },
     {
       id: 'Schedule',
-      tabTitle: getString('triggers.schedulePanel.title'),
+      tabTitle: getString('common.schedule'),
       checkValidPanel: checkValidCronExpression,
       requiredFields: ['expression']
     },

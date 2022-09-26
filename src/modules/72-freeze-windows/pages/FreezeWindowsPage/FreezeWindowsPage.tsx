@@ -53,7 +53,7 @@ export default function FreezeWindowsPage(): React.ReactElement {
   }, [searchRef.current, setGitFilter]) // updateQueryParams,
 
   const loading = false
-  const hasListContent = false
+  const hasListContent = true
 
   return (
     <>

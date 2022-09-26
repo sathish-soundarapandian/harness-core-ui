@@ -26,11 +26,12 @@ import type { AzureArmProps } from '../AzureArm.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 const InputStepRef = (props: AzureArmProps & { formik?: FormikContextType<any> }): JSX.Element => {
-  const { inputSetData, readonly, path, allowableTypes, allValues } = props
+  const { inputSetData, readonly, path, allowableTypes, formik, allValues } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const connectorRef = get(allValues, 'spec.configuration.connectorRef')
+  const connectorRef =
+    get(formik?.values, `${path}.spec.configuration.connectorRef`) || get(allValues, 'spec.configuration.connectorRef')
 
   return (
     <FormikForm>

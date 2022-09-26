@@ -923,10 +923,7 @@ export function StageInputSetFormInternal({
                   const deploymentType = serviceTemplate.serviceInputs?.serviceDefinition?.type
                   const service: ServiceYamlV2 = get(deploymentStageInputSet, `services.values[${i}]`, {})
 
-                  if (
-                    deploymentType &&
-                    getMultiTypeFromValue(serviceTemplate.serviceRef) === MultiTypeInputType.RUNTIME
-                  ) {
+                  if (deploymentType) {
                     return (
                       <React.Fragment key={`${service.serviceRef}_${i}`}>
                         <Text

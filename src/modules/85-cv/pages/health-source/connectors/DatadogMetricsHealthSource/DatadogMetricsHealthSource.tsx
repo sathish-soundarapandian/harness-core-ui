@@ -329,6 +329,12 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
     getString
   )
 
+  const handleOnManualMetricDelete = (metricIdToBeDeleted: string): void => {
+    metricHealthDetailsData.delete(metricIdToBeDeleted)
+    setMetricHealthDetailsData(new Map(metricHealthDetailsData))
+    setCurrentTimeseriesData(null)
+  }
+
   return (
     <Formik<DatadogMetricInfo>
       enableReinitialize={true}
@@ -383,6 +389,9 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
               connectorRef={connectorIdentifier as string}
               onWidgetMetricSelected={selectedWidgetMetricData =>
                 handleOnMetricSelected(selectedWidgetMetricData, formikProps)
+              }
+              onDeleteManualMetric={metricIdToBeDeleted =>
+                metricIdToBeDeleted && handleOnManualMetricDelete(metricIdToBeDeleted)
               }
               serviceInstanceList={serviceInstanceList}
               isTemplate={isTemplate}

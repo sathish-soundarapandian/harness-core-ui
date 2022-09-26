@@ -326,7 +326,7 @@ const RuleDetailsTabContainer: React.FC<RuleDetailsTabContainerProps> = ({
             {isK8sRule ? (
               <DetailRow label={getString('common.smtp.port')} value={get(k8sYaml, 'spec.service.port', '')} />
             ) : isEcsRule ? null : (
-              <DetailRow label={getString('ce.co.accessPoint.loadbalancer')} value={get(accessPointData, 'name', '')} />
+              <DetailRow label={getString('pipeline.loadBalancer')} value={get(accessPointData, 'name', '')} />
             )}
             {resources && (
               <DetailRow

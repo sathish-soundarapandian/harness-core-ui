@@ -159,10 +159,10 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
     closeDeploymentStepPopover()
   }, [])
 
-  const handleUseTemplateClick = React.useCallback(() => {
+  const handleUseTemplateClick = () => {
     onUseTemplate()
     closeDeploymentStepPopover()
-  }, [])
+  }
 
   return (
     <Container className={css.executionWidgetWrapper}>

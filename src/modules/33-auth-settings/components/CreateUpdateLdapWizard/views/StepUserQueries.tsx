@@ -22,9 +22,11 @@ import {
   FormInput,
   Intent
 } from '@harness/uicore'
+import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
+import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   LdapUserSettings,
@@ -108,9 +110,42 @@ const UserQueryEdit: React.FC<
   const { getString } = useStrings()
   const userQueryFormRef = useRef<FormikProps<LdapUserSettings>>(null)
   const [userQueryTestResult, setUserQueryTestResult] = useState<React.ReactNode | undefined>()
+  enum useryQueryFields {
+    BASE_DN = 'baseDN',
+    SEARCH_FILTER = 'searchFilter',
+    DISPLAY_NAME_ATTR = 'displayNameAttr',
+    EMAIL_ATTR = 'emailAttr',
+    GROUP_MEMBERSHIP_ATTR = 'groupMembershipAttr'
+  }
+  const userQueryValidationSchema = Yup.object().shape({
+    [useryQueryFields.BASE_DN]: Yup.string().trim().required(getString('authSettings.ldap.baseDNRequired')),
+    [useryQueryFields.SEARCH_FILTER]: Yup.string().trim().required(getString('authSettings.ldap.searchFilterRequired')),
+    [useryQueryFields.DISPLAY_NAME_ATTR]: Yup.string()
+      .trim()
+      .required(getString('authSettings.ldap.nameAttributesRequired')),
+    [useryQueryFields.EMAIL_ATTR]: Yup.string().trim().required(getString('authSettings.ldap.emailAttributesRequired')),
+    [useryQueryFields.GROUP_MEMBERSHIP_ATTR]: Yup.string()
+      .trim()
+      .required(getString('authSettings.ldap.groupMembershipAttributesRequired'))
+  })
   const testUserQuery = async (): Promise<void> => {
     try {
       setUserQueryTestResult(undefined)
+      if (!userQueryFormRef.current) {
+        return
+      }
+      userQueryFormRef.current.setTouched({
+        ...userQueryFormRef.current.touched,
+        [useryQueryFields.BASE_DN]: true,
+        [useryQueryFields.SEARCH_FILTER]: true,
+        [useryQueryFields.DISPLAY_NAME_ATTR]: true,
+        [useryQueryFields.EMAIL_ATTR]: true,
+        [useryQueryFields.GROUP_MEMBERSHIP_ATTR]: true
+      })
+      const userQueryFormValidation = await userQueryFormRef.current.validateForm()
+      if (!isEmpty(userQueryFormValidation)) {
+        return
+      }
       const result = await onTestUserQuery((userQueryFormRef.current as FormikProps<LdapUserSettings>).values)
       if (result.resource?.status === 'SUCCESS') {
         setUserQueryTestResult(<QueryTestSuccessMsg message={getString('authSettings.ldap.queryTestSuccessful')} />)
@@ -146,6 +181,7 @@ const UserQueryEdit: React.FC<
         onSubmit={formData => {
           onUserQueryCommitEdit(formData, index)
         }}
+        validationSchema={userQueryValidationSchema}
       >
         <FormikForm>
           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
@@ -368,7 +404,7 @@ export const StepUserQueries: React.FC<
   }
 
   const onUserQueriesSave = (): void => {
-    /** This is to preserve any uncommitted changes on step change */
+    /** MapFilter is to ignore any uncommitted changes on step change */
     updateStepData(
       userSettingsList
         .filter(userSetting => !userSetting.isNewSetting)
@@ -454,7 +490,10 @@ export const StepUserQueries: React.FC<
       </Layout.Vertical>
       <Layout.Horizontal className={css.stepCtaContainer}>
         <Button
-          onClick={() => props.previousStep?.()}
+          onClick={() => {
+            onUserQueriesSave()
+            props.previousStep?.()
+          }}
           text={getString('back')}
           icon="chevron-left"
           margin={{ right: 'small' }}

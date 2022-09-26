@@ -15,8 +15,6 @@ import {
   Layout,
   FlexExpander,
   Container,
-  Heading,
-  HarnessDocTooltip,
   SelectOption,
   TableV2,
   Text,
@@ -90,10 +88,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
       dispatch(SLODashboardFilterActions.updateMonitoredServices(getMonitoredServicesInitialState(monitoredService)))
     }
   }, [monitoredService])
-
-  useEffect(() => {
-    setPageNumber(0)
-  }, [projectIdentifier])
 
   const pathParams = useMemo(() => {
     return {
@@ -394,10 +388,9 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             breadcrumbs={<NGBreadcrumbs />}
             title={
               <Layout.Vertical>
-                <Heading level={3} font={{ variation: FontVariation.H4 }}>
+                <Text font={{ variation: FontVariation.H4 }} tooltipProps={{ dataTooltipId: 'sloHeader' }}>
                   {getString('cv.slos.completeTitle')}
-                  <HarnessDocTooltip tooltipId={'sloDashboardTitle'} useStandAlone />
-                </Heading>
+                </Text>
                 <Text title={getString('cv.slos.subTitle')} font={{ align: 'left', size: 'small' }}>
                   {getString('cv.slos.subTitle')}
                 </Text>
@@ -543,7 +536,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   itemCount: totalItems,
                   gotoPage: nextPage => {
                     setPageNumber(nextPage)
-                    refetchDashboardWidgets()
                   }
                 }}
               />

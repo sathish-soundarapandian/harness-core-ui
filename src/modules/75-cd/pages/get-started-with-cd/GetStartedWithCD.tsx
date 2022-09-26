@@ -51,15 +51,16 @@ export default function GetStartedWithCI(): React.ReactElement {
                 <Text font={{ variation: FontVariation.H3, weight: 'semi-bold' }} padding={{ bottom: 'large' }}>
                   {getString('cd.delegateInstallation')}
                 </Text>
-                <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }} width={'80%'}>
+                <Text font={{ variation: FontVariation.SMALL }} padding={{ top: 'small' }} width={'90%'}>
                   {getString('cd.getStartedWithCD.delegateInfo')}
                 </Text>
                 <Layout.Horizontal className={css.buttonRow}>
                   <Button
                     variation={ButtonVariation.PRIMARY}
                     size={ButtonSize.LARGE}
-                    text={getString('cd.delegateInstallBtnText')}
+                    text={getString('cd.installDelegate')}
                     onClick={() => setShowWizard(true)}
+                    className={css.btn}
                   />
                   <a
                     href="https://docs.harness.io/article/2k7lnc7lvl-delegates-overview"
@@ -77,7 +78,6 @@ export default function GetStartedWithCI(): React.ReactElement {
                 title={getString('common.getStarted.buildPipeline')}
                 src={delegateImageURL}
                 width="50%"
-                height={260}
               />
             </Layout.Horizontal>
           </Container>

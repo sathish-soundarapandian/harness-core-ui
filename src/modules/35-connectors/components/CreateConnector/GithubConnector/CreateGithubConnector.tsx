@@ -84,7 +84,7 @@ const CreateGithubConnector = (props: CreateConnectorModalProps): JSX.Element =>
         setConnectivityMode={props.setConnectivityMode}
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
-        helpPanelReferenceId="gitHubConnectorConnectToTheProvider"
+        helpPanelReferenceId="ConnectorConnectToTheProvider"
       />
 
       {props.connectivityMode === ConnectivityModeType.Delegate ? (

@@ -9,7 +9,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import cx from 'classnames'
 import { AllowedTypes, Container, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import produce from 'immer'
-import { debounce, defaultTo, get, isEmpty, isNil, pick, set, unset } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, isEqual, isNil, pick, set, unset } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { StageElementConfig } from 'services/cd-ng'
@@ -24,6 +24,7 @@ import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpec
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { setupMode } from '@cd/components/PipelineSteps/PipelineStepsUtil'
@@ -90,10 +91,21 @@ export default function DeployServiceEntitySpecifications({
         const isSingleSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef)
         const isMultiSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values)
 
+        const prevStageItemDeploymentType = (stageItem.stage as DeploymentStageElementConfig)?.spec?.deploymentType
+        const prevStageItemCustomDeploymentConfig = (stageItem.stage as DeploymentStageElementConfig)?.spec
+          ?.customDeploymentRef
+        const currentStageCustomDeploymentConfig = stage?.stage?.spec?.customDeploymentRef
+
+        const areDeploymentDetailsSame =
+          currentStageDeploymentType === ServiceDeploymentType.CustomDeployment
+            ? prevStageItemDeploymentType === currentStageDeploymentType &&
+              isEqual(prevStageItemCustomDeploymentConfig, currentStageCustomDeploymentConfig)
+            : prevStageItemDeploymentType === currentStageDeploymentType
+
         return (
           (!isSingleSvcEmpty || !isMultiSvcEmpty) &&
           currentStageType === stageItem?.stage?.type &&
-          (stageItem.stage as DeploymentStageElementConfig)?.spec?.deploymentType === currentStageDeploymentType
+          areDeploymentDetailsSame
         )
       }
     },

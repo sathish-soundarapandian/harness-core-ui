@@ -1329,6 +1329,11 @@ const routes = {
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/onboarding/detail`
   ),
 
+  toCFConfigurePath: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/configurePath`
+  ),
+
   // SCM Module (https://harness.atlassian.net/wiki/spaces/SCM/overview?homepageId=21144371782)
   toSCM: withAccountId(() => `/scm`),
   toSCMHome: withAccountId(() => `/scm/home`),

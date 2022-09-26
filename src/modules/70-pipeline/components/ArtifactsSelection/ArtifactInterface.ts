@@ -23,6 +23,7 @@ import type {
   ArtifactSource
 } from 'services/cd-ng'
 import type { ScriptType } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import type { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import type { ModalViewFor } from './ArtifactHelper'
 
 export interface ArtifactListViewProps {
@@ -94,7 +95,7 @@ export interface CustomArtifactSource {
   identifier?: string
   spec?: {
     version: string
-    delegateSelectors?: string[] | string
+    delegateSelectors?: SelectOption | string[] | string
     inputs?: VariableInterface[]
     timeout?: string
     scripts: {
@@ -238,6 +239,41 @@ export interface GoogleArtifactRegistryProps {
   isMultiArtifactSource?: boolean
 }
 
+export interface Nexus2ArtifactProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: Nexus2InitialValuesType
+  handleSubmit: (data: ArtifactConfig) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
+}
+
+export interface Nexus2InitialValuesType {
+  identifier: string
+  tagType?: string
+  connectorRef: string
+  tag: SelectOption & string
+  tagRegex: string
+  repository: string
+  repositoryFormat: string
+  spec: {
+    artifactId?: string
+    groupId?: string
+    extension?: string
+    classifier?: string
+    packageName?: string
+    artifactPath?: string
+    repositoryUrl?: string
+    repositoryPort?: string
+    repositoryPortorRepositoryURL?: string
+  }
+}
+
 export interface JenkinsArtifactType {
   identifier: string
   spec: {
@@ -268,6 +304,10 @@ export interface ArtifactTagHelperText {
   subscription?: string
   registry?: string
   subscriptionId?: string
+  repositoryFormat?: RepositoryFormatTypes
+  artifactId?: string
+  groupId?: string
+  packageName?: string
 }
 export interface ArtifactImagePathTagViewProps {
   selectedArtifact: ArtifactType
@@ -283,6 +323,7 @@ export interface ArtifactImagePathTagViewProps {
   tagError: GetDataError<Failure | Error> | null
   tagDisabled: boolean
   isArtifactPath?: boolean
+  isImagePath?: boolean
   isServerlessDeploymentTypeSelected?: boolean
 }
 

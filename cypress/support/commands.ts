@@ -258,7 +258,7 @@ Cypress.Commands.add('visitSRMMonitoredServicePage', () => {
 Cypress.Commands.add('addNewMonitoredServiceWithServiceAndEnv', () => {
   cy.intercept('GET', servicesCall, servicesResponse).as('ServiceCall')
   cy.intercept('GET', environmentsCall, environmentResponse).as('EnvCall')
-
+  cy.wait(1000)
   cy.contains('span', 'New Monitored Service').click()
   cy.wait('@ServiceCall')
   cy.wait('@EnvCall')

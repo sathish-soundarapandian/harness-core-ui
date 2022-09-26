@@ -473,6 +473,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         })
       )
     } else {
+      // try_catch to update IDBPipeline only if IdbPipeline is defined
       try {
         await IdbPipeline?.put(IdbPipelineStoreName, payload)
       } catch (_) {
@@ -1136,14 +1137,12 @@ export function PipelineProvider({
   })
 
   React.useEffect(() => {
-    if (state.isDBInitialized) {
-      abortControllerRef.current = new AbortController()
-      fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
+    abortControllerRef.current = new AbortController()
+    fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
 
-      return () => {
-        if (abortControllerRef.current) {
-          abortControllerRef.current.abort()
-        }
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

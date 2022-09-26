@@ -12,7 +12,7 @@ import { Container, Formik, FormikForm, Heading, Layout, PageError, Text } from 
 import { Color } from '@wings-software/design-system'
 import type { FormikProps, FormikErrors } from 'formik'
 import { produce } from 'immer'
-import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getsMergedTemplateInputYamlPromise,
@@ -115,7 +115,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
 
   const updateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
     const updatedPipeline = produce(pipeline, draft => {
-      set(draft, 'template.templateInputs', newTemplateInputs)
+      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
     })
     setFormValues(updatedPipeline)
     updatePipeline(updatedPipeline)

@@ -259,7 +259,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
               [cssDefault.show]: showAddLink
             },
             {
-              [cssDefault.stepAddIcon]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+              ['stepAddIcon']: props.data?.graphType === PipelineGraphType.STEP_GRAPH
             },
             {
               [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH
@@ -285,7 +285,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             className={cx(
               cssDefault.addNodeIcon,
               {
-                [cssDefault.stepAddIcon]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+                ['stepAddIcon']: props.data?.graphType === PipelineGraphType.STEP_GRAPH
               },
               {
                 [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH

@@ -58,6 +58,7 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
     sanitize(processNode, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
     set(template, 'spec', processNode)
     await updateTemplate(template)
+    setPipeline(pipelineConfig)
   }
 
   useGlobalEventListener('OPEN_PIPELINE_TEMPLATE_RIGHT_DRAWER', event => {

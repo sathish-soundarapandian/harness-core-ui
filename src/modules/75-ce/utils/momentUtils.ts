@@ -49,6 +49,7 @@ export const DATE_RANGE_SHORTCUTS: Record<string, moment.Moment[]> = {
   LAST_7_DAYS: [todayInUTC().subtract(6, 'days').startOf('day'), todayInUTC().endOf('day')],
   LAST_30_DAYS: [todayInUTC().subtract(30, 'days').startOf('day'), todayInUTC().endOf('day')],
   CURRENT_MONTH: [todayInUTC().startOf('month').startOf('day'), todayInUTC().endOf('day')],
+  THIS_MONTH: [todayInUTC().startOf('month').startOf('day'), todayInUTC().endOf('month').subtract(1, 'days')],
   THIS_YEAR: [todayInUTC().startOf('year'), todayInUTC().endOf('day')],
   LAST_MONTH: [todayInUTC().subtract(1, 'month').startOf('month'), todayInUTC().subtract(1, 'month').endOf('month')],
   LAST_YEAR: [todayInUTC().subtract(1, 'year').startOf('year'), todayInUTC().subtract(1, 'year').endOf('year')],

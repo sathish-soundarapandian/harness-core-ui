@@ -29,8 +29,6 @@ import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaD
 import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { CEAzureDTO } from '../Overview/AzureConnectorOverview'
 import css from '../../CreateCeAzureConnector_new.module.scss'
 
@@ -52,7 +50,6 @@ const CreateServicePrincipal: React.FC<StepProps<CEAzureDTO>> = (props): JSX.Ele
   const { mutate: createConnector } = useCreateConnector({ queryParams: { accountIdentifier: accountId } })
   const { mutate: updateConnector } = useUpdateConnector({ queryParams: { accountIdentifier: accountId } })
 
-  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   useStepLoadTelemetry(CE_AZURE_CONNECTOR_CREATION_EVENTS.LOAD_SERVICE_PRINCIPAL)
 
@@ -82,7 +79,7 @@ const CreateServicePrincipal: React.FC<StepProps<CEAzureDTO>> = (props): JSX.Ele
         if ('SUCCESS' !== response.status) {
           throw response as Failure
         }
-        if (opaFlagEnabled && response.data?.governanceMetadata) {
+        if (response.data?.governanceMetadata) {
           conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
             nextStep?.(prevStepData)
           })

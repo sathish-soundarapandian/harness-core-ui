@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from 'react'
+import { defaultTo } from 'lodash-es'
 import { Button, ButtonVariation, Container, Layout, useConfirmationDialog } from '@wings-software/uicore'
 import { Intent } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
@@ -13,11 +14,13 @@ import type { TemplateSummaryResponse } from 'services/template-ng'
 import { String, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { TemplateUsage } from '@templates-library/utils/templatesUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { TemplateSelectorLeftView } from '@templates-library/components/TemplateSelector/TemplateSelectorLeftView/TemplateSelectorLeftView'
 import { areTemplatesEqual, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { useTemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import { TemplateDetails } from '../TemplateDetails/TemplateDetails'
+import templateFactory from '../Templates/TemplatesFactory'
 import css from './TemplateSelector.module.scss'
 
 export const TemplateSelector: React.FC = (): JSX.Element => {
@@ -114,6 +117,13 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
     }
   }, [defaultTemplate, openCopyTemplateDialog, onUseTemplateConfirm])
 
+  const allowedUsage = React.useMemo(
+    () => templateFactory.getTemplateAllowedUsage(defaultTo(selectedTemplate?.templateEntityType, '')) || [],
+    [selectedTemplate?.templateEntityType]
+  )
+  const showUseTemplate = React.useMemo(() => allowedUsage?.includes(TemplateUsage.USE), [allowedUsage])
+  const showCopyTemplate = React.useMemo(() => allowedUsage?.includes(TemplateUsage.COPY), [allowedUsage])
+
   return (
     <Container height={'100%'} className={css.container}>
       <Layout.Horizontal height={'100%'}>
@@ -136,17 +146,21 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
                     className={css.btnContainer}
                     spacing={'small'}
                   >
-                    <Button
-                      variation={ButtonVariation.PRIMARY}
-                      text={getString('templatesLibrary.useTemplateLabel')}
-                      disabled={areTemplatesEqual(defaultTemplate, selectedTemplate)}
-                      onClick={onUseTemplateClick}
-                    />
-                    <Button
-                      variation={ButtonVariation.LINK}
-                      text={getString('templatesLibrary.copyTemplateLabel')}
-                      onClick={onCopyTemplateClick}
-                    />
+                    {showUseTemplate && (
+                      <Button
+                        variation={ButtonVariation.PRIMARY}
+                        text={getString('templatesLibrary.useTemplateLabel')}
+                        disabled={areTemplatesEqual(defaultTemplate, selectedTemplate)}
+                        onClick={onUseTemplateClick}
+                      />
+                    )}
+                    {showCopyTemplate && (
+                      <Button
+                        variation={ButtonVariation.LINK}
+                        text={getString('templatesLibrary.copyTemplateLabel')}
+                        onClick={onCopyTemplateClick}
+                      />
+                    )}
                   </Layout.Horizontal>
                 </Container>
               )}

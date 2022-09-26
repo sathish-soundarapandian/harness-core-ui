@@ -74,6 +74,7 @@ const CreateAWSConnector: React.FC<CreateConnectorModalProps> = props => {
           setConnectivityMode={props.setConnectivityMode}
           hideModal={props.onClose}
           onConnectorCreated={props.onSuccess}
+          helpPanelReferenceId="ConnectorConnectToTheProvider"
         />
         {props.connectivityMode === ConnectivityModeType.Delegate ? (
           <DelegateSelectorStep

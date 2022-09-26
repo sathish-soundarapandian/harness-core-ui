@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import {
+  Checkbox,
   Container,
   DropDown,
   ExpandingSearchInput,
@@ -19,7 +20,7 @@ import {
   Views
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -54,11 +55,13 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   const {
     templateType = '',
     allChildTypes = [],
+    linkedTemplate,
     selectedTemplate: defaultTemplate,
     gitDetails = {}
   } = selectorData || {}
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
   const { getString } = useStrings()
+  const { identifiers, checkboxLabel = getString('templatesLibrary.seeLinkedTemplate') } = linkedTemplate || {}
   const [page, setPage] = useState(0)
   const [view, setView] = useState<Views>(Views.GRID)
   const [searchParam, setSearchParam] = useState('')
@@ -74,6 +77,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   const [selectedChildType, setSelectedChildType] = React.useState<string | undefined>(
     allChildTypes.length === 1 ? allChildTypes[0] : undefined
   )
+  const [selectedTemplateRefs, setSelectedTemplateRefs] = React.useState<string[] | undefined>(identifiers)
   const scopeOptions: SelectOption[] = React.useMemo(
     () => getScopeOptions(getScopeFromDTO(params), getString),
     [params]
@@ -96,9 +100,10 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     return {
       filterType: 'Template',
       templateEntityTypes: [templateType],
-      childTypes: selectedChildType ? [selectedChildType] : allChildTypes
+      childTypes: selectedChildType ? [selectedChildType] : allChildTypes,
+      templateIdentifiers: selectedTemplateRefs
     }
-  }, [templateType, selectedChildType, allChildTypes])
+  }, [templateType, selectedChildType, allChildTypes, selectedTemplateRefs])
 
   const queryParams = React.useMemo(() => {
     return {
@@ -125,7 +130,8 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     }
     setSelectedChildType(allChildTypes.length === 1 ? allChildTypes[0] : undefined)
     setSelectedScope(scopeOptions[0])
-  }, [searchParam, searchRef.current, allChildTypes])
+    setSelectedTemplateRefs(identifiers)
+  }, [searchParam, searchRef.current, allChildTypes, identifiers])
 
   const getName = React.useCallback(
     (item: string): string => {
@@ -163,6 +169,17 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     queryParamStringifyOptions: { arrayFormat: 'comma' },
     debounce: true
   })
+
+  const onLinkedTemplateChange = React.useCallback(
+    (e: FormEvent<HTMLInputElement>) => {
+      if (e.currentTarget.checked) {
+        setSelectedTemplateRefs(identifiers)
+      } else {
+        setSelectedTemplateRefs(undefined)
+      }
+    },
+    [identifiers]
+  )
 
   useEffect(() => {
     if (areTemplatesSame(selectedTemplate, defaultTemplate)) {
@@ -238,6 +255,14 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                 </Text>
                 <Container>
                   <Layout.Horizontal flex={{ alignItems: 'center' }} spacing={'medium'}>
+                    {!isEmpty(identifiers) && (
+                      <Checkbox
+                        checked={!isEmpty(selectedTemplateRefs)}
+                        label={checkboxLabel}
+                        onChange={onLinkedTemplateChange}
+                        className={css.linkedTemplateCheckbox}
+                      />
+                    )}
                     {dropdownItems.length > 1 && (
                       <DropDown
                         onChange={item => {

@@ -39,6 +39,7 @@ import type { StringKeys } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
+import { killEvent } from '@common/utils/eventUtils'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
@@ -316,11 +317,6 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   })
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/
-
-  function killEvent(e: React.MouseEvent<HTMLDivElement>): void {
-    e.preventDefault()
-    e.stopPropagation()
-  }
 
   return (
     <Layout.Horizontal onClick={killEvent}>

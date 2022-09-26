@@ -25,7 +25,7 @@ import pDebounce from 'p-debounce'
 import { useToaster } from '@common/exports'
 import useDidMountEffect from '@ce/common/useDidMountEffect'
 import type { NodepoolTimeRangeValue } from '@ce/types'
-import { getTimePeriodString, GET_NODEPOOL_DATE_RANGE } from '@ce/utils/momentUtils'
+import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@ce/utils/momentUtils'
 import type {
   NodeRecommendationDto,
   RecommendationItemDto,
@@ -144,7 +144,6 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
 }) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const timeRangeFilter = GET_NODEPOOL_DATE_RANGE[timeRange.value]
 
   const [buffer, setBuffer] = useQueryParamsState('bufferValue', 0)
   const [tuneRecomVisible, setTuneRecomVisible] = useState(true)
@@ -317,7 +316,7 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
                 )}
                 withoutRecommendationAmount={formatCost(recommendationStats?.totalMonthlyCost)}
                 title={`${getString('ce.recommendation.listPage.monthlyPotentialCostText')}`}
-                spentBy={getTimePeriodString(timeRangeFilter[1], 'MMM DD')}
+                spentBy={getTimePeriodString(+DATE_RANGE_SHORTCUTS.THIS_MONTH[1], 'MMM DD')}
               />
             </Container>
             <Container>
@@ -328,10 +327,10 @@ const NodeRecommendationDetails: React.FC<NodeRecommendationDetailsProps> = ({
                   recommendationStats?.totalMonthlySaving,
                   recommendationStats?.totalMonthlyCost
                 )}
-                subTitle={`${getTimePeriodString(timeRangeFilter[0], 'MMM DD')} - ${getTimePeriodString(
-                  timeRangeFilter[1],
+                subTitle={`${getTimePeriodString(
+                  +DATE_RANGE_SHORTCUTS.THIS_MONTH[0],
                   'MMM DD'
-                )}`}
+                )} - ${getTimePeriodString(+DATE_RANGE_SHORTCUTS.THIS_MONTH[1], 'MMM DD')}`}
               />
             </Container>
           </Layout.Horizontal>

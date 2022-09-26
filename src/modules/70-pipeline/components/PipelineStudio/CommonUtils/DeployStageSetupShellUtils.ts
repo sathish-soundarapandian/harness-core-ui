@@ -31,7 +31,8 @@ export enum ExecutionType {
   BASIC = 'Basic',
   CANARY = 'Canary',
   ROLLING = 'Rolling',
-  GITOPS = 'GitOps'
+  GITOPS = 'GitOps',
+  DEFAULT = 'Default'
 }
 
 export const isNewEnvInfraDef = (isSvcEnvEntityEnabled: boolean, stage: DeploymentStageElementConfig): boolean => {

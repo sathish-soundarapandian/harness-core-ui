@@ -85,5 +85,35 @@ describe('SkipInstances test', () => {
     })
     const formEl = component.querySelector('[name=skipInstances]') as Element
     expect(formEl).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(multiBtn)
+    })
+    expect(await waitFor(() => findByText('Runtime input'))).toBeInTheDocument()
+  })
+  test('No Multi button', async () => {
+    pipelineContextMockValue = getDummyPipelineContextValue()
+    const { container } = render(
+      <TestWrapper
+        path="/account/:accountId/cd/orgs/:orgIdentifier/projects/:projectId/pipelines/:pipelineIdentifier/pipeline-studio"
+        pathParams={{
+          accountId: 'dummy',
+          orgIdentifier: 'testOrg',
+          projectId: 'testProject',
+          pipelineIdentifier: 'test'
+        }}
+        queryParams={{
+          stageId: 'testStage',
+          sectionId: 'ADVANCED'
+        }}
+      >
+        <PipelineContext.Provider value={pipelineContextMockValue}>
+          <MultiTypeSkipInstances value={true} disableTypeSelection={true} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    component = container
+    const multiButton = container.querySelector('button')
+    expect(multiButton).toBeNull()
   })
 })

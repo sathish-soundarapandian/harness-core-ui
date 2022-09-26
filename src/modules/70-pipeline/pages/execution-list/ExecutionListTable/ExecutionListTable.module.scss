@@ -130,3 +130,13 @@
 .matrixStage {
   background-color: var(--magenta-50);
 }
+
+.divider {
+  border-color: var(--white) !important;
+  margin: var(--spacing-xsmall) 0 !important;
+}
+
+.toggleAccordion {
+  // to have better click target area for toggle
+  padding: var(--spacing-large) var(--spacing-medium) !important;
+}

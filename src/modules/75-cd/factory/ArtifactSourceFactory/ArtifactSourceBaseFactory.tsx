@@ -15,7 +15,8 @@ import { GCRArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/A
 import { GithubPackageRegistrySource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/GithubPackageRegistrySource/GithubPackageRegistrySource'
 import { GoogleArtifactRegistrySource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/GoogleArtifactsRegistrySource/GoogleArtifactRegistrySource'
 import { JenkinsArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/JenkinsArtifactSource/JenkinsArtifactSource'
-import { NexusArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/NexusArtifactSource/NexusArtifactSource'
+import { Nexus2ArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/Nexus2ArtifactSource/Nexus2ArtifactSource'
+import { Nexus3ArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/NexusArtifactSource/NexusArtifactSource'
 import type { ArtifactSourceBase } from './ArtifactSourceBase'
 
 export class ArtifactSourceBaseFactory {
@@ -44,7 +45,8 @@ const artifactSourceBaseFactory = new ArtifactSourceBaseFactory()
 artifactSourceBaseFactory.registerArtifactSource(new DockerArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new GCRArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new ECRArtifactSource())
-artifactSourceBaseFactory.registerArtifactSource(new NexusArtifactSource())
+artifactSourceBaseFactory.registerArtifactSource(new Nexus3ArtifactSource())
+artifactSourceBaseFactory.registerArtifactSource(new Nexus2ArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new ArtifactoryArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new CustomArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new ACRArtifactSource())

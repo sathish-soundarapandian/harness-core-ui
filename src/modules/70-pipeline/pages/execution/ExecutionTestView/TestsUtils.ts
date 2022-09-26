@@ -10,7 +10,7 @@ import type { GetDataError } from 'restful-react'
 import type { SelectOption } from '@wings-software/uicore'
 import { uniqWith, isEqual, orderBy } from 'lodash-es'
 import type { StepInfo, Error } from 'services/ti-service'
-import type { GraphLayoutNode } from 'services/pipeline-ng'
+import type { GraphLayoutNode, ExecutionNode } from 'services/pipeline-ng'
 
 export const StepTypes = {
   RUN_TESTS: 'RunTests'
@@ -136,22 +136,50 @@ const getUniqueStageAndStepOptions = ({
   testInfoData: StepInfo[]
   context?: any
 }) => {
-  const uniqItems = uniqWith([...reportInfoData, ...testInfoData], isEqual)
+  let uniqItems: { [key: string]: any }[] = uniqWith([...reportInfoData, ...testInfoData], isEqual)
   let uniqueStageIdOptions: SelectOption[] | any = [] // any includes additionally index for ordering below
   const uniqueStepIdOptionsFromStageKeyMap: { [key: string]: SelectOption[] | any } = {}
-  const pipelineOrderedStagesMap: { [key: string]: { index: number; isFailed: boolean } } = {}
+  const pipelineOrderedStagesMap: { [key: string]: { index: number; isFailed: boolean; name?: string } } = {}
+  const pipelineOrderedStepsMap: { [key: string]: { isFailed: boolean; name?: string } } = {}
+  let hasParallelism = false
   Array.from(context?.pipelineStagesMap?.values() || {})?.forEach(
     (stage, index) =>
       (pipelineOrderedStagesMap[`${(stage as GraphLayoutNode).nodeIdentifier}`] = {
         index,
-        isFailed: (stage as GraphLayoutNode).status === StageStatus.FAILED
+        isFailed: (stage as GraphLayoutNode).status === StageStatus.FAILED,
+        name: (stage as GraphLayoutNode).name
       })
   )
+  Array.from(Array.from(Object.values(context?.pipelineExecutionDetail?.executionGraph?.nodeMap || {})))?.forEach(
+    step => {
+      if ((step as ExecutionNode).strategyMetadata?.totaliterations) {
+        hasParallelism = true
+      }
+
+      if ((step as ExecutionNode).identifier) {
+        pipelineOrderedStepsMap[`${(step as ExecutionNode).identifier}`] = {
+          name: (step as ExecutionNode).name,
+          isFailed: (step as ExecutionNode).status === StageStatus.FAILED
+        }
+        if (hasParallelism) {
+          const uniqItemsIndex = uniqItems.findIndex(item => item.step === (step as ExecutionNode).identifier)
+
+          if (uniqItemsIndex > -1) {
+            uniqItems[uniqItemsIndex].currentIteration = (step as ExecutionNode)?.strategyMetadata?.currentiteration
+          }
+        }
+      }
+    }
+  )
+
+  if (hasParallelism) {
+    uniqItems = orderBy(uniqItems, 'currentIteration')
+  }
 
   uniqItems.forEach(({ stage, step }) => {
-    if (stage && !uniqueStageIdOptions.some((option: { value: string }) => option.value === stage)) {
+    if (stage && !uniqueStageIdOptions.some((option: { value: string; name?: string }) => option.value === stage)) {
       uniqueStageIdOptions.push({
-        label: `Stage: ${stage}`,
+        label: `Stage: ${pipelineOrderedStagesMap[stage]?.name || stage}`,
         value: stage,
         index: typeof stage === 'string' && pipelineOrderedStagesMap[stage]?.index,
         ...(pipelineOrderedStagesMap[stage]?.isFailed ? { icon: { name: 'warning-sign' } } : {})
@@ -160,19 +188,22 @@ const getUniqueStageAndStepOptions = ({
     // Will support Steps with warning icon in redesign + api support
     if (stage && Array.isArray(uniqueStepIdOptionsFromStageKeyMap?.[stage])) {
       uniqueStepIdOptionsFromStageKeyMap[stage].push({
-        label: `Step: ${step}`,
+        label: `Step: ${pipelineOrderedStepsMap[step]?.name || step}`,
         value: step
       })
     } else if (stage && step) {
       uniqueStepIdOptionsFromStageKeyMap[stage] = [
         {
-          label: `Step: ${step}`,
+          label: `Step: ${pipelineOrderedStepsMap[step]?.name || step}`,
           value: step
         }
       ]
     }
   })
 
+  if (uniqueStageIdOptions.length > 1) {
+    uniqueStageIdOptions = orderBy(uniqueStageIdOptions, 'index')
+  }
   if (uniqueStageIdOptions.length > 1) {
     uniqueStageIdOptions = orderBy(uniqueStageIdOptions, 'index')
   }

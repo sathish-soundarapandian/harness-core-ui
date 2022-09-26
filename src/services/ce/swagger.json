@@ -323,6 +323,39 @@
         }
       }
     },
+    "/budgets/forecastCost": {
+      "get": {
+        "tags": ["budgets"],
+        "summary": "Deprecated use /perspective/forecastCost instead, Get forecast cost for Perspective.",
+        "description": "",
+        "operationId": "getForecastCost",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "perspectiveId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseDouble"
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
     "/budgets/lastMonthCost": {
       "get": {
         "tags": ["budgets"],
@@ -386,39 +419,6 @@
             }
           }
         }
-      }
-    },
-    "/budgets/forecastCost": {
-      "get": {
-        "tags": ["budgets"],
-        "summary": "Deprecated use /perspective/forecastCost instead, Get forecast cost for Perspective.",
-        "description": "",
-        "operationId": "getForecastCost",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "perspectiveId",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseDouble"
-            }
-          }
-        },
-        "deprecated": true
       }
     },
     "/budgets/{id}": {
@@ -794,31 +794,6 @@
         }
       }
     },
-    "/testconnection/firstConnector": {
-      "get": {
-        "tags": ["testconnection"],
-        "summary": "Get connector details",
-        "description": "",
-        "operationId": "get connector details",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseCCMConnectorDetails"
-            }
-          }
-        }
-      }
-    },
     "/testconnection": {
       "post": {
         "tags": ["testconnection"],
@@ -847,6 +822,31 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseConnectorValidationResult"
+            }
+          }
+        }
+      }
+    },
+    "/testconnection/firstConnector": {
+      "get": {
+        "tags": ["testconnection"],
+        "summary": "Get connector details",
+        "description": "",
+        "operationId": "get connector details",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCCMConnectorDetails"
             }
           }
         }
@@ -1117,89 +1117,6 @@
         }
       }
     },
-    "/yaml/generate-cost-optimisation-yaml": {
-      "post": {
-        "tags": ["yaml"],
-        "summary": "Get Cost Optimisation Yaml",
-        "description": "",
-        "operationId": "getCostOptimisationYamlTemplate",
-        "produces": ["application/json", "application/yaml"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "connectorIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        },
-        "deprecated": true
-      }
-    },
-    "/yaml/cloudCostCapabilityCheck": {
-      "post": {
-        "tags": ["yaml"],
-        "summary": "check if the existing k8s cloud provider have necessary permissions to enable Cloud Cost Visibility",
-        "description": "",
-        "operationId": "cloudCostCapabilityCheck",
-        "produces": ["application/json", "application/yaml"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/K8sClusterSetupRequest"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseConnectorValidationResult"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
     "/yaml/cloudCostK8sClusterSetup": {
       "post": {
         "tags": ["yaml"],
@@ -1276,6 +1193,89 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/yaml/generate-cost-optimisation-yaml": {
+      "post": {
+        "tags": ["yaml"],
+        "summary": "Get Cost Optimisation Yaml",
+        "description": "",
+        "operationId": "getCostOptimisationYamlTemplate",
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        },
+        "deprecated": true
+      }
+    },
+    "/yaml/cloudCostCapabilityCheck": {
+      "post": {
+        "tags": ["yaml"],
+        "summary": "check if the existing k8s cloud provider have necessary permissions to enable Cloud Cost Visibility",
+        "description": "",
+        "operationId": "cloudCostCapabilityCheck",
+        "produces": ["application/json", "application/yaml"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/K8sClusterSetupRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseConnectorValidationResult"
+            }
+          },
           "400": {
             "description": "Bad Request",
             "schema": {
@@ -2158,12 +2158,12 @@
         }
       }
     },
-    "/perspective/lastMonthCost": {
+    "/perspective/forecastCost": {
       "get": {
         "tags": ["perspective"],
-        "summary": "Get last month cost for perspective",
+        "summary": "Get forecast cost for perspective",
         "description": "",
-        "operationId": "getLastMonthCostV2",
+        "operationId": "getForecastCostV2",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -2190,12 +2190,12 @@
         }
       }
     },
-    "/perspective/forecastCostForPeriod": {
+    "/perspective/lastPeriodCost": {
       "get": {
         "tags": ["perspective"],
-        "summary": "Get forecast cost for perspective for given period",
+        "summary": "Get last period cost for perspective",
         "description": "",
-        "operationId": "getForecastCostForPeriod",
+        "operationId": "getLastPeriodCost",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -2236,12 +2236,12 @@
         }
       }
     },
-    "/perspective/forecastCost": {
+    "/perspective/lastMonthCost": {
       "get": {
         "tags": ["perspective"],
-        "summary": "Get forecast cost for perspective",
+        "summary": "Get last month cost for perspective",
         "description": "",
-        "operationId": "getForecastCostV2",
+        "operationId": "getLastMonthCostV2",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -2268,12 +2268,12 @@
         }
       }
     },
-    "/perspective/lastPeriodCost": {
+    "/perspective/forecastCostForPeriod": {
       "get": {
         "tags": ["perspective"],
-        "summary": "Get last period cost for perspective",
+        "summary": "Get forecast cost for perspective for given period",
         "description": "",
-        "operationId": "getLastPeriodCost",
+        "operationId": "getForecastCostForPeriod",
         "consumes": ["application/json"],
         "produces": ["application/json"],
         "parameters": [
@@ -3093,6 +3093,63 @@
         }
       }
     },
+    "/usage/{module}": {
+      "get": {
+        "tags": ["usage"],
+        "summary": "Gets License Usage By Module and Timestamp",
+        "description": "",
+        "operationId": "getLicenseUsage",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "module",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "CDLicenseType",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseLicenseUsageDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/usage/CD/serviceInstancesLicense": {
       "get": {
         "tags": ["usage"],
@@ -3166,63 +3223,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseServiceUsageDTO"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/usage/{module}": {
-      "get": {
-        "tags": ["usage"],
-        "summary": "Gets License Usage By Module and Timestamp",
-        "description": "",
-        "operationId": "getLicenseUsage",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "module",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "timestamp",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "CDLicenseType",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseLicenseUsageDTO"
             }
           },
           "400": {
@@ -4760,7 +4760,6 @@
             "VAULT_OPERATION_ERROR",
             "AWS_SECRETS_MANAGER_OPERATION_ERROR",
             "AZURE_KEY_VAULT_OPERATION_ERROR",
-            "CYBERARK_OPERATION_ERROR",
             "UNSUPPORTED_OPERATION_EXCEPTION",
             "FEATURE_UNAVAILABLE",
             "GENERAL_ERROR",
@@ -4854,6 +4853,7 @@
             "GIT_UNSEEN_REMOTE_HEAD_COMMIT",
             "TIMEOUT_ENGINE_EXCEPTION",
             "NO_AVAILABLE_DELEGATES",
+            "NO_GLOBAL_DELEGATE_ACCOUNT",
             "NO_INSTALLED_DELEGATES",
             "DUPLICATE_DELEGATE_EXCEPTION",
             "GCP_MARKETPLACE_EXCEPTION",
@@ -4937,7 +4937,14 @@
             "INVALID_IDENTIFIER_REF",
             "SPOTINST_NULL_ERROR",
             "SCM_UNEXPECTED_ERROR",
-            "DUPLICATE_FILE_IMPORT"
+            "DUPLICATE_FILE_IMPORT",
+            "AZURE_APP_SERVICES_TASK_EXCEPTION",
+            "MEDIA_NOT_SUPPORTED",
+            "AWS_ECS_ERROR",
+            "AWS_APPLICATION_AUTO_SCALING",
+            "AWS_ECS_SERVICE_NOT_ACTIVE",
+            "AWS_ECS_CLIENT_ERROR",
+            "AWS_STS_ERROR"
           ]
         },
         "level": {
@@ -4963,7 +4970,8 @@
               "APPLICATION_ERROR",
               "AUTHORIZATION_ERROR",
               "TIMEOUT_ERROR",
-              "POLICY_EVALUATION_FAILURE"
+              "POLICY_EVALUATION_FAILURE",
+              "EXECUTION_INPUT_TIMEOUT_FAILURE"
             ]
           }
         }
@@ -5229,21 +5237,6 @@
         }
       }
     },
-    "CCMConnectorDetails": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "connectorValidationResult": {
-          "$ref": "#/definitions/ConnectorValidationResult"
-        }
-      }
-    },
     "ConnectorValidationResult": {
       "type": "object",
       "properties": {
@@ -5281,24 +5274,6 @@
         "code": {
           "type": "integer",
           "format": "int32"
-        }
-      }
-    },
-    "ResponseCCMConnectorDetails": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/CCMConnectorDetails"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
         }
       }
     },
@@ -5399,6 +5374,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             }
           }
         }
@@ -5535,6 +5513,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             }
           }
         }
@@ -5553,6 +5534,9 @@
         },
         "spec": {
           "$ref": "#/definitions/AwsCredentialSpec"
+        },
+        "region": {
+          "type": "string"
         }
       }
     },
@@ -5890,6 +5874,9 @@
             "azureEnvironmentType": {
               "type": "string",
               "enum": ["AZURE", "AZURE_US_GOVERNMENT"]
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             }
           }
         }
@@ -6053,6 +6040,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             },
             "type": {
               "type": "string",
@@ -6246,6 +6236,9 @@
                 "type": "string"
               }
             },
+            "executeOnDelegate": {
+              "type": "boolean"
+            },
             "type": {
               "type": "string",
               "enum": ["Account", "Repo", "Project"]
@@ -6357,6 +6350,9 @@
             },
             "awsAccountId": {
               "type": "string"
+            },
+            "isAWSGovCloudAccount": {
+              "type": "boolean"
             },
             "featuresEnabled": {
               "type": "array",
@@ -6530,7 +6526,9 @@
             "Pdc",
             "AzureRepo",
             "Jenkins",
-            "OciHelmRepo"
+            "OciHelmRepo",
+            "CustomSecretManager",
+            "ELK"
           ]
         },
         "spec": {
@@ -6647,6 +6645,44 @@
         }
       }
     },
+    "CustomSecretManager": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["onDelegate", "template"],
+          "properties": {
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "onDelegate": {
+              "type": "boolean"
+            },
+            "connectorRef": {
+              "type": "string"
+            },
+            "host": {
+              "type": "string"
+            },
+            "workingDirectory": {
+              "type": "string"
+            },
+            "template": {
+              "$ref": "#/definitions/TemplateLinkConfigForCustomSecretManager"
+            },
+            "default": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
     "DatadogConnectorDTO": {
       "allOf": [
         {
@@ -6717,6 +6753,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             }
           }
         }
@@ -6770,6 +6809,45 @@
         }
       ]
     },
+    "ELKConnectorDTO": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["url"],
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "username": {
+              "type": "string"
+            },
+            "apiKeyId": {
+              "type": "string"
+            },
+            "passwordRef": {
+              "type": "string"
+            },
+            "apiKeyRef": {
+              "type": "string"
+            },
+            "authType": {
+              "type": "string",
+              "enum": ["UsernamePassword", "ApiClientToken", "None"]
+            }
+          }
+        }
+      ]
+    },
     "EntityGitDetails": {
       "type": "object",
       "properties": {
@@ -6795,6 +6873,9 @@
           "type": "string"
         },
         "fileUrl": {
+          "type": "string"
+        },
+        "repoUrl": {
           "type": "string"
         }
       }
@@ -6895,6 +6976,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             }
           }
         }
@@ -7319,6 +7403,9 @@
               "items": {
                 "type": "string"
               }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
             },
             "type": {
               "type": "string",
@@ -7851,6 +7938,24 @@
         }
       ]
     },
+    "NameValuePairWithDefault": {
+      "type": "object",
+      "required": ["type", "value"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "useAsDefault": {
+          "type": "boolean"
+        }
+      }
+    },
     "NewRelicConnectorDTO": {
       "allOf": [
         {
@@ -8187,6 +8292,28 @@
         }
       ]
     },
+    "TemplateLinkConfigForCustomSecretManager": {
+      "type": "object",
+      "required": ["templateRef", "versionLabel"],
+      "properties": {
+        "templateRef": {
+          "type": "string"
+        },
+        "versionLabel": {
+          "type": "string",
+          "pattern": "^[0-9a-zA-Z][^\\s]{0,63}$"
+        },
+        "templateInputs": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/NameValuePairWithDefault"
+            }
+          }
+        }
+      }
+    },
     "VaultConnectorDTO": {
       "allOf": [
         {
@@ -8265,6 +8392,9 @@
             "k8sAuthEndpoint": {
               "type": "string"
             },
+            "renewAppRoleToken": {
+              "type": "boolean"
+            },
             "accessType": {
               "type": "string",
               "enum": ["APP_ROLE", "TOKEN", "VAULT_AGENT", "AWS_IAM", "K8s_AUTH"]
@@ -8278,6 +8408,39 @@
           }
         }
       ]
+    },
+    "CCMConnectorDetails": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "connectorValidationResult": {
+          "$ref": "#/definitions/ConnectorValidationResult"
+        }
+      }
+    },
+    "ResponseCCMConnectorDetails": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/CCMConnectorDetails"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
     },
     "CcmK8sMetaInfo": {
       "type": "object",
@@ -8809,7 +8972,6 @@
             "VAULT_OPERATION_ERROR",
             "AWS_SECRETS_MANAGER_OPERATION_ERROR",
             "AZURE_KEY_VAULT_OPERATION_ERROR",
-            "CYBERARK_OPERATION_ERROR",
             "UNSUPPORTED_OPERATION_EXCEPTION",
             "FEATURE_UNAVAILABLE",
             "GENERAL_ERROR",
@@ -8903,6 +9065,7 @@
             "GIT_UNSEEN_REMOTE_HEAD_COMMIT",
             "TIMEOUT_ENGINE_EXCEPTION",
             "NO_AVAILABLE_DELEGATES",
+            "NO_GLOBAL_DELEGATE_ACCOUNT",
             "NO_INSTALLED_DELEGATES",
             "DUPLICATE_DELEGATE_EXCEPTION",
             "GCP_MARKETPLACE_EXCEPTION",
@@ -8986,7 +9149,14 @@
             "INVALID_IDENTIFIER_REF",
             "SPOTINST_NULL_ERROR",
             "SCM_UNEXPECTED_ERROR",
-            "DUPLICATE_FILE_IMPORT"
+            "DUPLICATE_FILE_IMPORT",
+            "AZURE_APP_SERVICES_TASK_EXCEPTION",
+            "MEDIA_NOT_SUPPORTED",
+            "AWS_ECS_ERROR",
+            "AWS_APPLICATION_AUTO_SCALING",
+            "AWS_ECS_SERVICE_NOT_ACTIVE",
+            "AWS_ECS_CLIENT_ERROR",
+            "AWS_STS_ERROR"
           ]
         },
         "message": {
@@ -9178,7 +9348,6 @@
             "VAULT_OPERATION_ERROR",
             "AWS_SECRETS_MANAGER_OPERATION_ERROR",
             "AZURE_KEY_VAULT_OPERATION_ERROR",
-            "CYBERARK_OPERATION_ERROR",
             "UNSUPPORTED_OPERATION_EXCEPTION",
             "FEATURE_UNAVAILABLE",
             "GENERAL_ERROR",
@@ -9272,6 +9441,7 @@
             "GIT_UNSEEN_REMOTE_HEAD_COMMIT",
             "TIMEOUT_ENGINE_EXCEPTION",
             "NO_AVAILABLE_DELEGATES",
+            "NO_GLOBAL_DELEGATE_ACCOUNT",
             "NO_INSTALLED_DELEGATES",
             "DUPLICATE_DELEGATE_EXCEPTION",
             "GCP_MARKETPLACE_EXCEPTION",
@@ -9355,7 +9525,14 @@
             "INVALID_IDENTIFIER_REF",
             "SPOTINST_NULL_ERROR",
             "SCM_UNEXPECTED_ERROR",
-            "DUPLICATE_FILE_IMPORT"
+            "DUPLICATE_FILE_IMPORT",
+            "AZURE_APP_SERVICES_TASK_EXCEPTION",
+            "MEDIA_NOT_SUPPORTED",
+            "AWS_ECS_ERROR",
+            "AWS_APPLICATION_AUTO_SCALING",
+            "AWS_ECS_SERVICE_NOT_ACTIVE",
+            "AWS_ECS_CLIENT_ERROR",
+            "AWS_STS_ERROR"
           ]
         },
         "message": {
@@ -10871,6 +11048,24 @@
         }
       }
     },
+    "ResponseCEViewFolder": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/CEViewFolder"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
     "ResponseListCEViewFolder": {
       "type": "object",
       "properties": {
@@ -10883,24 +11078,6 @@
           "items": {
             "$ref": "#/definitions/CEViewFolder"
           }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "ResponseCEViewFolder": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/CEViewFolder"
         },
         "metaData": {
           "type": "object"
@@ -11929,6 +12106,39 @@
         }
       }
     },
+    "LicenseUsageDTO": {
+      "type": "object",
+      "properties": {
+        "accountIdentifier": {
+          "type": "string"
+        },
+        "module": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ResponseLicenseUsageDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/LicenseUsageDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
     "ResponseServiceInstanceUsageDTO": {
       "type": "object",
       "properties": {
@@ -12015,39 +12225,6 @@
         },
         "serviceLicenses": {
           "$ref": "#/definitions/UsageDataDTO"
-        }
-      }
-    },
-    "LicenseUsageDTO": {
-      "type": "object",
-      "properties": {
-        "accountIdentifier": {
-          "type": "string"
-        },
-        "module": {
-          "type": "string"
-        },
-        "timestamp": {
-          "type": "integer",
-          "format": "int64"
-        }
-      }
-    },
-    "ResponseLicenseUsageDTO": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/LicenseUsageDTO"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
         }
       }
     }

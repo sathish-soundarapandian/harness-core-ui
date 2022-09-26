@@ -85,7 +85,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
 })
 
 describe('StepWidget tests', () => {
-  test(`renders DeployStageSpecifications without crashing `, () => {
+  test('it renders StageOverview', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getPipelineContext()}>

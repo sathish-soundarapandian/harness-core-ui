@@ -31,6 +31,7 @@ import ConnectorResourceRenderer from './components/ConnectorResourceRenderer/Co
 RbacFactory.registerResourceTypeHandler(ResourceType.CONNECTOR, {
   icon: 'res-connectors',
   label: 'connectorsLabel',
+  labelSingular: 'connector',
   category: ResourceCategory.SHARED_RESOURCES,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CONNECTOR]: <String stringID="rbac.permissionLabels.view" />,

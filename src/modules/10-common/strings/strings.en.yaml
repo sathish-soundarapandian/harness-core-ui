@@ -19,6 +19,7 @@ gnupgKeys: GnuPG Keys
 featureComingSoon: This feature is coming soon.
 skip: Skip
 sync: Sync
+schedule: Schedule
 selectService: Select Service
 selectServices: Select Services
 inputVariables: Input Variables

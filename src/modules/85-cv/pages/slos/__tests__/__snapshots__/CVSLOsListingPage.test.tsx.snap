@@ -91,12 +91,16 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
       <div
         class="Layout--vertical StyledProps--main"
       >
-        <h3
-          class="StyledProps--font StyledProps--font-h3 StyledProps--main StyledProps--font-variation-h4"
-          level="3"
+        <div
+          class="Text--withDocsTooltip"
+          data-tooltip-id="sloHeader"
         >
-          cv.slos.completeTitle
-        </h3>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+          >
+            cv.slos.completeTitle
+          </p>
+        </div>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-align-left StyledProps--font-size-small"
           title="cv.slos.subTitle"

@@ -111,7 +111,7 @@ function SaveTemplatePopover(
 
   const triggerSave = async (latestTemplate: NGTemplateInfoConfig, comment?: string) => {
     try {
-      if (isEmpty(gitDetails)) {
+      if (isEmpty(gitDetails?.branch)) {
         setLoading(true)
       }
       await saveAndPublish(latestTemplate, {
@@ -123,7 +123,7 @@ function SaveTemplatePopover(
     } catch (error) {
       onError(error, comment)
     } finally {
-      if (isEmpty(gitDetails)) {
+      if (isEmpty(gitDetails?.branch)) {
         setLoading(false)
       }
     }
@@ -176,7 +176,7 @@ function SaveTemplatePopover(
   }
 
   const getComment = (): Promise<string | undefined> => {
-    if (!isEmpty(gitDetails) || storeMetadata?.storeType === StoreType.REMOTE) {
+    if (!isEmpty(gitDetails?.branch) || storeMetadata?.storeType === StoreType.REMOTE) {
       return Promise.resolve(undefined)
     }
     const templateName = getTemplateNameWithLabel(template)

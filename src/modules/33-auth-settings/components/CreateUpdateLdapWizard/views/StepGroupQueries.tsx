@@ -22,9 +22,11 @@ import {
   FormikForm,
   Intent
 } from '@harness/uicore'
+import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
+import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   LdapGroupSettings,
@@ -107,9 +109,37 @@ const GroupQueryEdit: React.FC<
   const { getString } = useStrings()
   const groupQueryFormRef = useRef<FormikProps<LdapGroupSettings>>(null)
   const [groupQueryTestResult, setGroupQueryTestResult] = useState<React.ReactNode | undefined>()
+  enum groupQueryFields {
+    BASE_DN = 'baseDN',
+    SEARCH_FILTER = 'searchFilter',
+    NAME_ATTR = 'nameAttr',
+    DESCRIPTION_ATTR = 'descriptionAttr'
+  }
+  const groupQueryValidationSchema = Yup.object().shape({
+    [groupQueryFields.BASE_DN]: Yup.string().trim().required(getString('authSettings.ldap.baseDNRequired')),
+    [groupQueryFields.SEARCH_FILTER]: Yup.string().trim().required(getString('authSettings.ldap.searchFilterRequired')),
+    [groupQueryFields.NAME_ATTR]: Yup.string().trim().required(getString('authSettings.ldap.nameAttributesRequired')),
+    [groupQueryFields.DESCRIPTION_ATTR]: Yup.string()
+      .trim()
+      .required(getString('authSettings.ldap.descriptionAttributesRequired'))
+  })
   const testQuery = async (): Promise<void> => {
     try {
       setGroupQueryTestResult(undefined)
+      if (!groupQueryFormRef.current) {
+        return
+      }
+      groupQueryFormRef.current.setTouched({
+        ...groupQueryFormRef.current.touched,
+        [groupQueryFields.BASE_DN]: true,
+        [groupQueryFields.SEARCH_FILTER]: true,
+        [groupQueryFields.NAME_ATTR]: true,
+        [groupQueryFields.DESCRIPTION_ATTR]: true
+      })
+      const groupQueryFormValidation = await groupQueryFormRef.current.validateForm()
+      if (!isEmpty(groupQueryFormValidation)) {
+        return
+      }
       const result = await onTestGroupQuery(
         (groupQueryFormRef.current as FormikProps<LdapGroupSettings>).values as LdapGroupSettings
       )
@@ -147,6 +177,7 @@ const GroupQueryEdit: React.FC<
         onSubmit={formData => {
           onGroupQueryCommitEdit(formData, index)
         }}
+        validationSchema={groupQueryValidationSchema}
       >
         <FormikForm>
           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
@@ -356,7 +387,7 @@ export const StepGroupQueries: React.FC<
   }
 
   const onGroupQueriesSave = (): void => {
-    /** This is to preserve any uncommitted changes on step change */
+    /** MapFilter is to ignore any uncommitted changes on step change */
     updateStepData(
       groupSettingsList
         .filter(groupSetting => !groupSetting.isNewSetting)
@@ -442,7 +473,10 @@ export const StepGroupQueries: React.FC<
       {createUpdateError}
       <Layout.Horizontal className={css.stepCtaContainer}>
         <Button
-          onClick={() => props.previousStep?.()}
+          onClick={() => {
+            onGroupQueriesSave()
+            props.previousStep?.()
+          }}
           text={getString('back')}
           icon="chevron-left"
           margin={{ right: 'small' }}

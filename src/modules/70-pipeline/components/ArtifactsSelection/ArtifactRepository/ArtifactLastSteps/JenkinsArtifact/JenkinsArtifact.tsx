@@ -37,7 +37,7 @@ import {
   useGetBuildsForJenkins,
   BuildDetails
 } from 'services/cd-ng'
-import { getConnectorIdValue, getJenkinsFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getConnectorIdValue, getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
   JenkinsArtifactProps,
@@ -442,7 +442,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
 
   const getInitialValues = (): JenkinsArtifactType => {
-    return getJenkinsFormData(
+    return getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed

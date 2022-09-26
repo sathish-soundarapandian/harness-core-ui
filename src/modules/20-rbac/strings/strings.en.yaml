@@ -190,6 +190,8 @@ roleCard:
   successMessage: Role '{{name}}' is deleted successfully
 addResourceModal:
   selectedText: Selected {{name}} ({{number}})
+  modalCtaLabelSingular: Add {{count}} {{resource}} type
+  modalCtaLabelPlural: Add {{count}} {{resource}} types
 resourceGroup:
   newResourceGroup: 'New Resource Group'
   updateResourceGroupDialogTitle: 'Update Resource Group'

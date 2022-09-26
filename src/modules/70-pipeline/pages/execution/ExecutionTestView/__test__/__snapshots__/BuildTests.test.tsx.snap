@@ -3,13 +3,13 @@
 exports[`BuildTests snapshot test Call Graph full view should be renderred properly 1`] = `
 <div>
   <div
-    data-highcharts-chart="2"
+    data-highcharts-chart="3"
     style="overflow: hidden;"
   >
     <div
       class="highcharts-container "
       dir="ltr"
-      id="highcharts-20"
+      id="highcharts-30"
       style="position: relative; overflow: hidden; width: 824px; height: 453px; text-align: left; line-height: normal; z-index: 0; user-select: none; outline: none;"
     >
       <svg
@@ -26,7 +26,7 @@ exports[`BuildTests snapshot test Call Graph full view should be renderred prope
         </desc>
         <defs>
           <clippath
-            id="highcharts-21-"
+            id="highcharts-31-"
           >
             <rect
               fill="none"
@@ -37,7 +37,7 @@ exports[`BuildTests snapshot test Call Graph full view should be renderred prope
             />
           </clippath>
           <lineargradient
-            id="highcharts-43"
+            id="highcharts-53"
             x1="0"
             x2="0"
             y1="0"
@@ -55,7 +55,7 @@ exports[`BuildTests snapshot test Call Graph full view should be renderred prope
             />
           </lineargradient>
           <lineargradient
-            id="highcharts-44"
+            id="highcharts-54"
             x1="0"
             x2="0"
             y1="0"
@@ -106,7 +106,7 @@ exports[`BuildTests snapshot test Call Graph full view should be renderred prope
         >
           <g
             class="highcharts-series highcharts-series-0 highcharts-networkgraph-series highcharts-color-0 highcharts-tracker"
-            clip-path="url(#highcharts-21-)"
+            clip-path="url(#highcharts-31-)"
             data-z-index="0.1"
             opacity="1"
             transform="translate(10,10) scale(1 1)"
@@ -290,7 +290,7 @@ exports[`BuildTests snapshot test Call Graph full view should be renderred prope
           >
             <image
               class="highcharts-point highcharts-color-0 highcharts-node"
-              fill="url(#highcharts-43)"
+              fill="url(#highcharts-53)"
               height="80"
               href="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiB2aWV3Qm94PSIwIDAgNDUgNDQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxmaWx0ZXIgaWQ9ImEiIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0ic1JHQiIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBoZWlnaHQ9IjQzLjA2MTYiIHdpZHRoPSI0My44MzciIHg9Ii45OTQxNDEiIHk9Ii4yNDE2OTkiPjxmZUZsb29kIGZsb29kLW9wYWNpdHk9IjAiIHJlc3VsdD0iQmFja2dyb3VuZEltYWdlRml4Ii8+PGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiByZXN1bHQ9ImhhcmRBbHBoYSIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDEyNyAwIi8+PGZlT2Zmc2V0IGR5PSIyIi8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNiIvPjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAuNzU1MTU1IDAgMCAwIDAgMC41MzQ4NzUgMCAwIDAgMCAwLjgyNSAwIDAgMCAwLjE2IDAiLz48ZmVCbGVuZCBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgbW9kZT0ibm9ybWFsIiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvdyIvPjxmZUNvbG9yTWF0cml4IGluPSJTb3VyY2VBbHBoYSIgcmVzdWx0PSJoYXJkQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIvPjxmZU9mZnNldC8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iLjUiLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwLjYyMzUyOSAwIDAgMCAwIDAuMzAxOTYxIDAgMCAwIDAgMC43MjU0OSAwIDAgMCAwLjA0IDAiLz48ZmVCbGVuZCBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvdyIgbW9kZT0ibm9ybWFsIiByZXN1bHQ9ImVmZmVjdDJfZHJvcFNoYWRvdyIvPjxmZUJsZW5kIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDJfZHJvcFNoYWRvdyIgbW9kZT0ibm9ybWFsIiByZXN1bHQ9InNoYXBlIi8+PC9maWx0ZXI+PGxpbmVhckdyYWRpZW50IGlkPSJiIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjE2LjE5OCIgeDI9IjI2LjAwNjciIHkxPSI5Ljc2OTUzIiB5Mj0iMjkuNzA4NiI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmVhMWZmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOGEzNmZmIi8+PC9saW5lYXJHcmFkaWVudD48ZyBmaWx0ZXI9InVybCgjYSkiPjxwYXRoIGQ9Im0yMS43MzcgMTAuNjIzNmMuNzAxLS41MDkzIDEuNjUwMi0uNTA5MyAyLjM1MTIgMGw3LjkxODMgNS43NTNjLjcwMS41MDkzLjk5NDMgMS40MTIxLjcyNjYgMi4yMzYxbC0zLjAyNDYgOS4zMDg2Yy0uMjY3Ny44MjQtMS4wMzU2IDEuMzgyLTEuOTAyMSAxLjM4MmgtOS43ODc2Yy0uODY2NCAwLTEuNjM0NC0uNTU4LTEuOTAyMS0xLjM4MmwtMy4wMjQ1LTkuMzA4NmMtLjI2NzgtLjgyNC4wMjU1LTEuNzI2OC43MjY1LTIuMjM2MXoiIGZpbGw9InVybCgjYikiLz48L2c+PC9zdmc+"
               opacity="1"
@@ -303,7 +303,7 @@ exports[`BuildTests snapshot test Call Graph full view should be renderred prope
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 407.4151846497376 223.9602971033652 A 10 10 0 1 1 407.42518464807097 223.96029210336562 Z"
-              fill="url(#highcharts-44)"
+              fill="url(#highcharts-54)"
               opacity="1"
             />
             <path
@@ -369,13 +369,13 @@ exports[`BuildTests snapshot test Call Graph full view should be renderred prope
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 404.63895558421217 219.21806447137132 A 10 10 0 1 1 404.6489555825455 219.21805947137173 Z"
-              fill="url(#highcharts-44)"
+              fill="url(#highcharts-54)"
               opacity="1"
             />
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 398.0663184619033 227.80362751404232 A 10 10 0 1 1 398.0763184602366 227.80362251404273 Z"
-              fill="url(#highcharts-44)"
+              fill="url(#highcharts-54)"
               opacity="1"
             />
             <path
@@ -393,7 +393,7 @@ exports[`BuildTests snapshot test Call Graph full view should be renderred prope
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 402.75684893395055 229.41701305637105 A 10 10 0 1 1 402.7668489322839 229.41700805637146 Z"
-              fill="url(#highcharts-44)"
+              fill="url(#highcharts-54)"
               opacity="1"
             />
             <path
@@ -405,13 +405,13 @@ exports[`BuildTests snapshot test Call Graph full view should be renderred prope
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 406.16092372647415 220.48201040276962 A 10 10 0 1 1 406.1709237248075 220.48200540277003 Z"
-              fill="url(#highcharts-44)"
+              fill="url(#highcharts-54)"
               opacity="1"
             />
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 407.2397616630773 222.7150043150928 A 10 10 0 1 1 407.2497616614106 222.71499931509322 Z"
-              fill="url(#highcharts-44)"
+              fill="url(#highcharts-54)"
               opacity="1"
             />
           </g>
@@ -470,13 +470,13 @@ exports[`BuildTests snapshot test Call Graph full view should be renderred prope
 exports[`BuildTests snapshot test Call Graph full view should handle search properly 1`] = `
 <div>
   <div
-    data-highcharts-chart="3"
+    data-highcharts-chart="4"
     style="overflow: hidden;"
   >
     <div
       class="highcharts-container "
       dir="ltr"
-      id="highcharts-45"
+      id="highcharts-55"
       style="position: relative; overflow: hidden; width: 824px; height: 453px; text-align: left; line-height: normal; z-index: 0; user-select: none; outline: none;"
     >
       <svg
@@ -493,7 +493,7 @@ exports[`BuildTests snapshot test Call Graph full view should handle search prop
         </desc>
         <defs>
           <clippath
-            id="highcharts-46-"
+            id="highcharts-56-"
           >
             <rect
               fill="none"
@@ -504,7 +504,7 @@ exports[`BuildTests snapshot test Call Graph full view should handle search prop
             />
           </clippath>
           <lineargradient
-            id="highcharts-68"
+            id="highcharts-78"
             x1="0"
             x2="0"
             y1="0"
@@ -522,7 +522,7 @@ exports[`BuildTests snapshot test Call Graph full view should handle search prop
             />
           </lineargradient>
           <lineargradient
-            id="highcharts-69"
+            id="highcharts-79"
             x1="0"
             x2="0"
             y1="0"
@@ -573,7 +573,7 @@ exports[`BuildTests snapshot test Call Graph full view should handle search prop
         >
           <g
             class="highcharts-series highcharts-series-0 highcharts-networkgraph-series highcharts-color-0 highcharts-tracker"
-            clip-path="url(#highcharts-46-)"
+            clip-path="url(#highcharts-56-)"
             data-z-index="0.1"
             opacity="1"
             transform="translate(10,10) scale(1 1)"
@@ -757,7 +757,7 @@ exports[`BuildTests snapshot test Call Graph full view should handle search prop
           >
             <image
               class="highcharts-point highcharts-color-0 highcharts-node"
-              fill="url(#highcharts-68)"
+              fill="url(#highcharts-78)"
               height="80"
               href="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiB2aWV3Qm94PSIwIDAgNDUgNDQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxmaWx0ZXIgaWQ9ImEiIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0ic1JHQiIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBoZWlnaHQ9IjQzLjA2MTYiIHdpZHRoPSI0My44MzciIHg9Ii45OTQxNDEiIHk9Ii4yNDE2OTkiPjxmZUZsb29kIGZsb29kLW9wYWNpdHk9IjAiIHJlc3VsdD0iQmFja2dyb3VuZEltYWdlRml4Ii8+PGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiByZXN1bHQ9ImhhcmRBbHBoYSIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDEyNyAwIi8+PGZlT2Zmc2V0IGR5PSIyIi8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNiIvPjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAuNzU1MTU1IDAgMCAwIDAgMC41MzQ4NzUgMCAwIDAgMCAwLjgyNSAwIDAgMCAwLjE2IDAiLz48ZmVCbGVuZCBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgbW9kZT0ibm9ybWFsIiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvdyIvPjxmZUNvbG9yTWF0cml4IGluPSJTb3VyY2VBbHBoYSIgcmVzdWx0PSJoYXJkQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIvPjxmZU9mZnNldC8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iLjUiLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwLjYyMzUyOSAwIDAgMCAwIDAuMzAxOTYxIDAgMCAwIDAgMC43MjU0OSAwIDAgMCAwLjA0IDAiLz48ZmVCbGVuZCBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvdyIgbW9kZT0ibm9ybWFsIiByZXN1bHQ9ImVmZmVjdDJfZHJvcFNoYWRvdyIvPjxmZUJsZW5kIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDJfZHJvcFNoYWRvdyIgbW9kZT0ibm9ybWFsIiByZXN1bHQ9InNoYXBlIi8+PC9maWx0ZXI+PGxpbmVhckdyYWRpZW50IGlkPSJiIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjE2LjE5OCIgeDI9IjI2LjAwNjciIHkxPSI5Ljc2OTUzIiB5Mj0iMjkuNzA4NiI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmVhMWZmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOGEzNmZmIi8+PC9saW5lYXJHcmFkaWVudD48ZyBmaWx0ZXI9InVybCgjYSkiPjxwYXRoIGQ9Im0yMS43MzcgMTAuNjIzNmMuNzAxLS41MDkzIDEuNjUwMi0uNTA5MyAyLjM1MTIgMGw3LjkxODMgNS43NTNjLjcwMS41MDkzLjk5NDMgMS40MTIxLjcyNjYgMi4yMzYxbC0zLjAyNDYgOS4zMDg2Yy0uMjY3Ny44MjQtMS4wMzU2IDEuMzgyLTEuOTAyMSAxLjM4MmgtOS43ODc2Yy0uODY2NCAwLTEuNjM0NC0uNTU4LTEuOTAyMS0xLjM4MmwtMy4wMjQ1LTkuMzA4NmMtLjI2NzgtLjgyNC4wMjU1LTEuNzI2OC43MjY1LTIuMjM2MXoiIGZpbGw9InVybCgjYikiLz48L2c+PC9zdmc+"
               opacity="1"
@@ -770,7 +770,7 @@ exports[`BuildTests snapshot test Call Graph full view should handle search prop
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 474.5541062848157 169.39940618718072 A 10 10 0 1 1 474.56410628314904 169.39940118718113 Z"
-              fill="url(#highcharts-69)"
+              fill="url(#highcharts-79)"
               opacity="1"
             />
             <path
@@ -836,13 +836,13 @@ exports[`BuildTests snapshot test Call Graph full view should handle search prop
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 456.8447264726991 63.46301297150255 A 10 10 0 1 1 456.85472647103245 63.46300797150297 Z"
-              fill="url(#highcharts-69)"
+              fill="url(#highcharts-79)"
               opacity="1"
             />
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 229.31371759992675 318.574087466863 A 10 10 0 1 1 229.3237175982601 318.5740824668634 Z"
-              fill="url(#highcharts-69)"
+              fill="url(#highcharts-79)"
               opacity="1"
             />
             <path
@@ -860,7 +860,7 @@ exports[`BuildTests snapshot test Call Graph full view should handle search prop
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 479.77945505148017 428 A 10 10 0 1 1 479.7894550498135 427.9999950000004 Z"
-              fill="url(#highcharts-69)"
+              fill="url(#highcharts-79)"
               opacity="1"
             />
             <path
@@ -872,13 +872,13 @@ exports[`BuildTests snapshot test Call Graph full view should handle search prop
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 507.4130644596592 68.35644945499664 A 10 10 0 1 1 507.42306445799255 68.35644445499705 Z"
-              fill="url(#highcharts-69)"
+              fill="url(#highcharts-79)"
               opacity="1"
             />
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 509.81821335034726 127.88769809775727 A 10 10 0 1 1 509.8282133486806 127.88769309775768 Z"
-              fill="url(#highcharts-69)"
+              fill="url(#highcharts-79)"
               opacity="1"
             />
           </g>
@@ -937,13 +937,13 @@ exports[`BuildTests snapshot test Call Graph full view should handle search prop
 exports[`BuildTests snapshot test Call Graph preview should be renderred properly 1`] = `
 <div>
   <div
-    data-highcharts-chart="1"
+    data-highcharts-chart="2"
     style="overflow: hidden;"
   >
     <div
       class="highcharts-container "
       dir="ltr"
-      id="highcharts-10"
+      id="highcharts-20"
       style="position: relative; overflow: hidden; width: 600px; height: 600px; text-align: left; line-height: normal; z-index: 0; user-select: none; outline: none;"
     >
       <svg
@@ -960,7 +960,7 @@ exports[`BuildTests snapshot test Call Graph preview should be renderred properl
         </desc>
         <defs>
           <clippath
-            id="highcharts-11-"
+            id="highcharts-21-"
           >
             <rect
               fill="none"
@@ -971,7 +971,7 @@ exports[`BuildTests snapshot test Call Graph preview should be renderred properl
             />
           </clippath>
           <lineargradient
-            id="highcharts-18"
+            id="highcharts-28"
             x1="0"
             x2="0"
             y1="0"
@@ -989,7 +989,7 @@ exports[`BuildTests snapshot test Call Graph preview should be renderred properl
             />
           </lineargradient>
           <lineargradient
-            id="highcharts-19"
+            id="highcharts-29"
             x1="0"
             x2="0"
             y1="0"
@@ -1040,7 +1040,7 @@ exports[`BuildTests snapshot test Call Graph preview should be renderred properl
         >
           <g
             class="highcharts-series highcharts-series-0 highcharts-networkgraph-series highcharts-color-0 highcharts-tracker"
-            clip-path="url(#highcharts-11-)"
+            clip-path="url(#highcharts-21-)"
             data-z-index="0.1"
             opacity="1"
             transform="translate(10,10) scale(1 1)"
@@ -1106,7 +1106,7 @@ exports[`BuildTests snapshot test Call Graph preview should be renderred properl
           >
             <image
               class="highcharts-point highcharts-color-0 highcharts-node"
-              fill="url(#highcharts-18)"
+              fill="url(#highcharts-28)"
               height="40"
               href="data:image/svg+xml;base64,PHN2ZyBmaWxsPSJub25lIiB2aWV3Qm94PSIwIDAgNDUgNDQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxmaWx0ZXIgaWQ9ImEiIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0ic1JHQiIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBoZWlnaHQ9IjQzLjA2MTYiIHdpZHRoPSI0My44MzciIHg9Ii45OTQxNDEiIHk9Ii4yNDE2OTkiPjxmZUZsb29kIGZsb29kLW9wYWNpdHk9IjAiIHJlc3VsdD0iQmFja2dyb3VuZEltYWdlRml4Ii8+PGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiByZXN1bHQ9ImhhcmRBbHBoYSIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDEyNyAwIi8+PGZlT2Zmc2V0IGR5PSIyIi8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNiIvPjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAuNzU1MTU1IDAgMCAwIDAgMC41MzQ4NzUgMCAwIDAgMCAwLjgyNSAwIDAgMCAwLjE2IDAiLz48ZmVCbGVuZCBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgbW9kZT0ibm9ybWFsIiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvdyIvPjxmZUNvbG9yTWF0cml4IGluPSJTb3VyY2VBbHBoYSIgcmVzdWx0PSJoYXJkQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIvPjxmZU9mZnNldC8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iLjUiLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwLjYyMzUyOSAwIDAgMCAwIDAuMzAxOTYxIDAgMCAwIDAgMC43MjU0OSAwIDAgMCAwLjA0IDAiLz48ZmVCbGVuZCBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvdyIgbW9kZT0ibm9ybWFsIiByZXN1bHQ9ImVmZmVjdDJfZHJvcFNoYWRvdyIvPjxmZUJsZW5kIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDJfZHJvcFNoYWRvdyIgbW9kZT0ibm9ybWFsIiByZXN1bHQ9InNoYXBlIi8+PC9maWx0ZXI+PGxpbmVhckdyYWRpZW50IGlkPSJiIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjE2LjE5OCIgeDI9IjI2LjAwNjciIHkxPSI5Ljc2OTUzIiB5Mj0iMjkuNzA4NiI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmVhMWZmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjOGEzNmZmIi8+PC9saW5lYXJHcmFkaWVudD48ZyBmaWx0ZXI9InVybCgjYSkiPjxwYXRoIGQ9Im0yMS43MzcgMTAuNjIzNmMuNzAxLS41MDkzIDEuNjUwMi0uNTA5MyAyLjM1MTIgMGw3LjkxODMgNS43NTNjLjcwMS41MDkzLjk5NDMgMS40MTIxLjcyNjYgMi4yMzYxbC0zLjAyNDYgOS4zMDg2Yy0uMjY3Ny44MjQtMS4wMzU2IDEuMzgyLTEuOTAyMSAxLjM4MmgtOS43ODc2Yy0uODY2NCAwLTEuNjM0NC0uNTU4LTEuOTAyMS0xLjM4MmwtMy4wMjQ1LTkuMzA4NmMtLjI2NzgtLjgyNC4wMjU1LTEuNzI2OC43MjY1LTIuMjM2MXoiIGZpbGw9InVybCgjYikiLz48L2c+PC9zdmc+"
               opacity="1"
@@ -1119,37 +1119,37 @@ exports[`BuildTests snapshot test Call Graph preview should be renderred properl
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 293.10618214769306 296.3226503194771 A 7 7 0 1 1 293.1131821465264 296.32264681947737 Z"
-              fill="url(#highcharts-19)"
+              fill="url(#highcharts-29)"
               opacity="1"
             />
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 290.3957226064137 298.11598998827844 A 7 7 0 1 1 290.40272260524705 298.11598648827874 Z"
-              fill="url(#highcharts-19)"
+              fill="url(#highcharts-29)"
               opacity="1"
             />
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 287.4825954744877 297.13656838404086 A 7 7 0 1 1 287.48959547332106 297.13656488404115 Z"
-              fill="url(#highcharts-19)"
+              fill="url(#highcharts-29)"
               opacity="1"
             />
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 286.3615304873198 294.3038402929826 A 7 7 0 1 1 286.36853048615313 294.3038367929829 Z"
-              fill="url(#highcharts-19)"
+              fill="url(#highcharts-29)"
               opacity="1"
             />
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 287.84935694505316 291.5756419866933 A 7 7 0 1 1 287.8563569438865 291.5756384866936 Z"
-              fill="url(#highcharts-19)"
+              fill="url(#highcharts-29)"
               opacity="1"
             />
             <path
               class="highcharts-point highcharts-color-0 highcharts-node"
               d="M 291.2024992297023 291.143308335279 A 7 7 0 1 1 291.20949922853566 291.1433048352793 Z"
-              fill="url(#highcharts-19)"
+              fill="url(#highcharts-29)"
               opacity="1"
             />
           </g>

@@ -132,7 +132,7 @@ export function GCRImagePath({
   }, [lastQueryData, refetch])
 
   const getInitialValues = useCallback((): ImagePathTypes => {
-    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed)
+    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed) as ImagePathTypes
   }, [initialValues, isIdentifierAllowed, selectedArtifact])
 
   const fetchTags = (imagePath = '', registryHostname = ''): void => {

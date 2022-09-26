@@ -48,7 +48,6 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, SecretActions } from '@common/constants/TrackingConstants'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { InputSetSchema } from '@secrets/components/ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
 import VaultFormFields from './views/VaultFormFields'
 import LocalFormFields from './views/LocalFormFields'
@@ -82,7 +81,6 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const { onSuccess, connectorTypeContext, privateSecret } = props
   const propsSecret = props.secret
   const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const { OPA_SECRET_GOVERNANCE } = useFeatureFlags()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const secretTypeFromProps = props.type
@@ -274,13 +272,10 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
         })
       }
 
-      conditionallyOpenGovernanceErrorModal(
-        OPA_SECRET_GOVERNANCE ? response?.data?.governanceMetadata : undefined,
-        () => {
-          showSuccess(successMessage)
-          onSuccess?.(data)
-        }
-      )
+      conditionallyOpenGovernanceErrorModal(response?.data?.governanceMetadata, () => {
+        showSuccess(successMessage)
+        onSuccess?.(data)
+      })
     } catch (error) {
       modalErrorHandler?.showDanger(getRBACErrorMessage(error))
     }

@@ -26,7 +26,7 @@ import { defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { IDialogProps, Intent } from '@blueprintjs/core'
 import produce from 'immer'
-import type { ServiceDefinition, ServiceYaml, ServiceYamlV2 } from 'services/cd-ng'
+import type { ServiceDefinition, ServiceYaml, ServiceYamlV2, TemplateLinkConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -35,7 +35,9 @@ import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import RbacButton from '@rbac/components/Button/Button'
 import ServiceEntityEditModal from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
-import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import {
@@ -134,6 +136,18 @@ export default function DeployServiceEntityWidget({
   const [allServices, setAllServices] = useState(getAllFixedServices(initialValues))
   const { MULTI_SERVICE_INFRA } = useFeatureFlags()
   const {
+    state: {
+      selectionState: { selectedStageId }
+    },
+    getStageFromPipeline
+  } = usePipelineContext()
+  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const { templateRef: deploymentTemplateIdentifier, versionLabel } =
+    (get(stage, 'stage.spec.customDeploymentRef') as TemplateLinkConfig) || {}
+  const shouldAddCustomDeploymentData =
+    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier && versionLabel
+
+  const {
     servicesData,
     servicesList,
     loadingServicesData,
@@ -145,7 +159,8 @@ export default function DeployServiceEntityWidget({
   } = useGetServicesData({
     gitOpsEnabled,
     serviceIdentifiers: allServices,
-    deploymentType: deploymentType as ServiceDefinition['type']
+    deploymentType: deploymentType as ServiceDefinition['type'],
+    ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
   })
 
   useEffect(() => {
@@ -454,7 +469,7 @@ export default function DeployServiceEntityWidget({
                 {isFixed ? (
                   <ServiceEntitiesList
                     loading={loading || updatingData}
-                    servicesData={servicesData}
+                    servicesData={allServices.length > 0 ? servicesData : []}
                     gitOpsEnabled={gitOpsEnabled}
                     readonly={readonly}
                     onRemoveServiceFormList={removeSvcfromList}

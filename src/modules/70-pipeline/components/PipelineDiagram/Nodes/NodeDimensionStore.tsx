@@ -10,6 +10,8 @@ import React, { useReducer } from 'react'
 export interface Dimension {
   height: number
   width: number
+  type: string
+  isNodeCollapsed: boolean
 }
 
 export interface Dimensions {

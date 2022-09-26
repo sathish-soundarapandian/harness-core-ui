@@ -23,6 +23,11 @@
   }
 }
 
+/** Create New Freeze **/
+.createNewFreezeForm {
+  padding: var(--spacing-large) 12px 0 12px;
+}
+
 /** YAML VIEW **/
 .yamlBuilder {
   padding: var(--spacing-large);
@@ -35,5 +40,40 @@
     display: flex;
     column-gap: var(--spacing-large);
     align-items: center;
+  }
+}
+
+/** VISUAL VIEW **/
+.stepTabs {
+  height: 100%;
+  width: 100%;
+  :global(.bp3-tab-list) {
+    border-bottom: 1px solid var(--grey-300);
+    background-color: var(--white);
+    padding: 0 var(--spacing-5);
+    align-items: center;
+  }
+  :global(.bp3-tab-panel) {
+    padding: var(--spacing-7);
+    margin-top: 0;
+    background-color: var(--form-bg);
+    height: calc(100% - 60px);
+  }
+}
+
+.tabIcon {
+  margin-right: var(--spacing-small) !important;
+}
+
+.sectionCard {
+  width: 1024px;
+  margin-top: var(--spacing-3);
+}
+
+.configFormContainer {
+  border: 1px solid var(--grey-200);
+  min-height: 100px;
+  &.isEditView {
+    background-color: var(--primary-1) !important;
   }
 }

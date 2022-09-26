@@ -140,7 +140,7 @@ describe('SchedulePanel Triggers tests', () => {
   describe('Renders/snapshots', () => {
     test('Initial Render - Schedule Panel', async () => {
       const { container } = render(<WrapperComponent initialValues={getTriggerConfigInitialValues({})} />)
-      await waitFor(() => queryByText(container, result.current.getString('triggers.schedulePanel.title')))
+      await waitFor(() => queryByText(container, result.current.getString('common.schedule')))
       expect(container).toMatchSnapshot()
     })
   })
@@ -154,7 +154,7 @@ describe('SchedulePanel Triggers tests', () => {
           })}
         />
       )
-      await waitFor(() => queryByText(container, result.current.getString('triggers.schedulePanel.title')))
+      await waitFor(() => queryByText(container, result.current.getString('common.schedule')))
 
       setFieldValue({ container, type: InputTypes.SELECT, fieldId: 'minutes', value: '30' })
 

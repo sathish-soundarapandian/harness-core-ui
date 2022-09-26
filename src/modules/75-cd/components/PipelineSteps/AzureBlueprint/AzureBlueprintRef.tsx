@@ -186,6 +186,7 @@ export const AzureBlueprintRef = (
                 disabled={readonly}
                 name="spec.configuration.assignmentName"
                 label={getString('cd.azureBlueprint.assignmentName')}
+                multiTextInputProps={{ expressions }}
               />
               {
                 /* istanbul ignore next */

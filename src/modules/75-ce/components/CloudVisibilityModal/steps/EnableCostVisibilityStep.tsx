@@ -116,7 +116,10 @@ const EnableCostVisibilityStep: React.FC<Props & StepProps<ConnectorInfoDTO>> = 
       featuresEnabled: ccmConnector?.spec?.featuresEnabled,
       ccmConnectorIdentifier: defaultTo(ccmConnector?.identifier, '')
     },
-    lazy: !ccmConnector?.identifier || !testConnectionRes || testConnectionRes?.status === 'SUCCESS'
+    lazy:
+      !ccmConnector?.identifier ||
+      !testConnectionRes ||
+      (testConnectionRes?.status === 'SUCCESS' && testConnectionRes.data?.status === 'SUCCESS')
   })
 
   const handleDownload = /* istanbul ignore next */ async (): Promise<void> => {

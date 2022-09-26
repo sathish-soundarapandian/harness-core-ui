@@ -34,7 +34,7 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { getCustomArtifactFormData, shellScriptType } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getArtifactFormData, shellScriptType } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
@@ -271,7 +271,11 @@ export function CustomArtifact(
     if (prevStepData?.spec) {
       currentValue = { ...prevStepData, type: 'CustomArtifact' }
     }
-    return getCustomArtifactFormData(currentValue || {}, selectedArtifact as ArtifactType, isIdentifierAllowed)
+    return getArtifactFormData(
+      currentValue || {},
+      selectedArtifact as ArtifactType,
+      isIdentifierAllowed
+    ) as CustomArtifactSource
   }
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
@@ -321,7 +325,7 @@ export function CustomArtifactOptionalConfiguration(
   }
 
   const getInitialValues = (): CustomArtifactSource => {
-    const initialValuesWithDelegates = cloneDeep(initialValues)
+    const initialValuesWithDelegates: CustomArtifactSource = cloneDeep(initialValues)
     if (getMultiTypeFromValue(get(initialValuesWithDelegates, `spec.delegateSelectors`)) === MultiTypeInputType.FIXED) {
       set(
         initialValuesWithDelegates,
@@ -334,7 +338,7 @@ export function CustomArtifactOptionalConfiguration(
         })
       )
     }
-    return getCustomArtifactFormData(
+    return getArtifactFormData(
       initialValuesWithDelegates,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed

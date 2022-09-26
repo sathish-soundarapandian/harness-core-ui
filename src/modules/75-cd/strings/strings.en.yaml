@@ -93,6 +93,15 @@ steps:
       hostName: Host Name Convention
       vpcs: VPCs
       loadBalancer: Load  Balancer
+  ecsBGCreateServiceStep:
+    sectionHeaders:
+      configureProductionService: Configure your Production Service
+      configureStageService: Configure your Stage Service
+    labels:
+      prodListener: Prod Listener
+      prodListenerRuleARN: Prod Listener Rule ARN
+      stageListener: Stage Listener
+      stageListenerRuleARN: Stage Listener Rule ARN
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -260,6 +269,7 @@ serviceDashboard:
   taskDefinitionArn: Task Definition ARN
   taskArn: Task ARN
   awsRegion: AWS Region
+  containerList: containerList
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment
@@ -485,7 +495,6 @@ validation:
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
 delegateInstallation: Install the Delegate to deploy your cluster
-delegateInstallBtnText: Install the Delegate
 learnMoreDelegate: Learn more about Delegates
 runDelegate: How do you want to run the Delegate
 installDelegate: Install Delegate
@@ -549,3 +558,6 @@ azureArm:
 removeStepTemplateSuccess: Step Template has been successfully removed
 addStepTemplate: Add step template
 useStepTemplate: Use step template
+ignoreReleaseHistFailStatus: 'Ignore Release History Failed Status'
+artifactVersion: 'Version :'
+artifactPath: 'Path :'

@@ -337,7 +337,6 @@ co:
 
   accessPoint:
     ap: 'Access Point'
-    loadbalancer: 'Load Balancer'
     aps: 'Access Points'
     loadbalancers: 'Load Balancers'
     new: 'New Load Balancer'

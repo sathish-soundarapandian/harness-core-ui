@@ -138,3 +138,55 @@ export const resourceTypeToRoute: Record<ResourceType, RouteFn> = {
   [ResourceType.NodePool]: routes.toCENodeRecommendationDetails,
   [ResourceType.EcsService]: routes.toCEECSRecommendationDetails
 }
+
+/**
+ * AWS only allows these as valid combinations for CPU and Memory
+ *
+ * Record<CPU Value, Allowed Memory Values>
+ */
+export const FargateResourceValues: Record<number, number[]> = {
+  256: [0.5, 1.0, 2.0],
+  512: [1, 4],
+  1024: [2, 8],
+  2048: [4, 16],
+  4096: [8, 30]
+}
+
+/**
+ *
+ * @param cpuMilliUnits Requested CPU Value
+ * @param memoryBytes Requested Memory Value
+ * @returns Values of CPU and Memory Allowed by AWS
+ */
+export const getECSFargateResourceValues = (
+  cpuMilliUnits: number,
+  memoryBytes: number
+): { currentCPU: number; currentMemoryGB: number } => {
+  const cpuCores = cpuMilliUnits
+  const memoryGb = memoryBytes / 1024 // Convert MB to GB
+
+  const allowedCPUValues = Object.keys(FargateResourceValues) as unknown as number[]
+
+  for (const currentCPU of allowedCPUValues) {
+    const memoryValuesForCurrentCPU = FargateResourceValues[currentCPU]
+
+    if (currentCPU < cpuCores || memoryValuesForCurrentCPU[memoryValuesForCurrentCPU.length - 1] < memoryGb) {
+      continue
+    }
+
+    for (const currentMemoryGB of memoryValuesForCurrentCPU) {
+      if (currentMemoryGB >= memoryGb) {
+        return {
+          currentCPU: currentCPU,
+          currentMemoryGB: currentMemoryGB * 1024 // Convert back to MB
+        }
+      }
+    }
+  }
+
+  // Return the Highest Values if Limits are Exceeded
+  return {
+    currentCPU: 4096,
+    currentMemoryGB: 30720 // 30 GB in MB
+  }
+}

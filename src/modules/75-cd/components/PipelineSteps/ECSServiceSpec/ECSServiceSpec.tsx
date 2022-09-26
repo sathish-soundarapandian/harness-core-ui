@@ -24,7 +24,8 @@ import {
   getBuildDetailsForDockerPromise,
   getBuildDetailsForEcrPromise,
   getBuildDetailsForNexusArtifactPromise,
-  ResponseArtifactoryResponseDTO
+  ResponseArtifactoryResponseDTO,
+  ArtifactoryBuildDetailsDTO
 } from 'services/cd-ng'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -37,6 +38,7 @@ import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import type { K8SDirectServiceStep } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import { getConnectorName, getConnectorValue } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import {
   GenericServiceSpecVariablesForm,
@@ -50,7 +52,7 @@ interface ValidateInputSetField {
   template?: K8SDirectServiceStep
   isRequired: boolean
   errors: FormikErrors<K8SDirectServiceStep>
-  getString: ((key: keyof StringsMap, vars?: Record<string, any> | undefined) => string) | undefined
+  getString: ((key: keyof StringsMap, vars?: Record<string, string> | undefined) => string) | undefined
 }
 
 const logger = loggerFor(ModuleName.CD)
@@ -171,8 +173,8 @@ export class ECSServiceSpec extends Step<ServiceSpec> {
     return Promise.resolve([])
   }
 
-  trasformTagData(response: ResponseArtifactoryResponseDTO) {
-    const data = response?.data?.buildDetailsList?.map(buildDetails => ({
+  trasformTagData(response: ResponseArtifactoryResponseDTO): CompletionItemInterface[] {
+    const data = response?.data?.buildDetailsList?.map((buildDetails: ArtifactoryBuildDetailsDTO) => ({
       label: defaultTo(buildDetails.tag, ''),
       insertText: defaultTo(buildDetails.tag, ''),
       kind: CompletionItemKind.Field
@@ -261,7 +263,7 @@ export class ECSServiceSpec extends Step<ServiceSpec> {
     return Promise.resolve([])
   }
 
-  validateSidecarInputSetFields({ data, template, isRequired, errors, getString }: ValidateInputSetField) {
+  validateSidecarInputSetFields({ data, template, isRequired, errors, getString }: ValidateInputSetField): void {
     data?.artifacts?.sidecars?.forEach((sidecar, index) => {
       const currentSidecarTemplate = get(template, `artifacts.sidecars[${index}].sidecar.spec`, '')
       if (
@@ -318,7 +320,7 @@ export class ECSServiceSpec extends Step<ServiceSpec> {
     })
   }
 
-  validateManifestInputSetFields({ data, template, isRequired, errors, getString }: ValidateInputSetField) {
+  validateManifestInputSetFields({ data, template, isRequired, errors, getString }: ValidateInputSetField): void {
     data?.manifests?.forEach((manifest, index) => {
       const currentManifestTemplate = get(template, `manifests[${index}].manifest.spec.store.spec`, '')
       if (
@@ -429,7 +431,7 @@ export class ECSServiceSpec extends Step<ServiceSpec> {
       )
     }
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (isTemplatizedView(stepViewType)) {
       return (
         <GenericServiceSpecInputSetMode
           {...(customStepProps as K8sServiceSpecVariablesFormProps)}

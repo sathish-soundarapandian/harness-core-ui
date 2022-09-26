@@ -19,6 +19,10 @@ export interface GetTemplateResponse {
 export interface GetTemplateProps {
   templateType: TemplateType
   allChildTypes?: string[]
+  linkedTemplate?: {
+    identifiers: string[]
+    checkboxLabel?: string
+  }
   selectedTemplate?: TemplateSummaryResponse
   gitDetails?: EntityGitDetails
   storeMetadata?: StoreMetadata

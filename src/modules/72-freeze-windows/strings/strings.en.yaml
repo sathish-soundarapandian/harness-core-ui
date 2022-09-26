@@ -1,3 +1,7 @@
 freezeWindowsPage:
   noFreezeWindows: There are no freeze windows in your {{scope}}.
   newFreezeWindow: New Freeze Window
+freezeStudio:
+  freezeConfiguration: Freeze Configuration
+  freezeOverview: Freeze Overview
+  defineResources: Define which resources you want to include in this freeze window

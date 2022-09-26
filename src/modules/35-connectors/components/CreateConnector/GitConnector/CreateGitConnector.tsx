@@ -48,6 +48,7 @@ const CreateGitConnector = (props: CreateConnectorModalProps): JSX.Element => {
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
         mock={props.mock}
+        helpPanelReferenceId="gitConnectorOverview"
       />
       <GitDetailsStep
         type={Connectors.GIT}
@@ -55,12 +56,14 @@ const CreateGitConnector = (props: CreateConnectorModalProps): JSX.Element => {
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo}
         mock={props.mock}
+        helpPanelReferenceId="gitConnectorDetails"
       />
       <StepGitAuthentication
         name={getString('credentials')}
         identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
         {...commonProps}
         onConnectorCreated={props.onSuccess}
+        helpPanelReferenceId="gitConnectorCredentials"
       />
       <DelegateSelectorStep
         name={getString('delegate.DelegateselectionLabel')}
@@ -71,6 +74,7 @@ const CreateGitConnector = (props: CreateConnectorModalProps): JSX.Element => {
         onConnectorCreated={props.onSuccess}
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
+        helpPanelReferenceId="ConnectorDelegatesSetup"
       />
       <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
@@ -80,6 +84,7 @@ const CreateGitConnector = (props: CreateConnectorModalProps): JSX.Element => {
         type={Connectors.GIT}
         onClose={props.onClose}
         stepIndex={GIT_TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

@@ -15,7 +15,7 @@ import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
-import { useQueryParams } from '@common/hooks'
+import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import { isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
@@ -160,10 +160,13 @@ export function MatrixNode(props: any): JSX.Element {
     return state.some(node => node?.id && node.id === queryParams?.stageExecId)
   }, [queryParams?.stageExecId, isNodeCollapsed])
 
+  useDeepCompareEffect(() => {
+    !maxParallelism && !hasChildrenToBeCollapsed && setShowAllNodes(true)
+  }, [maxParallelism])
+
   return (
     <>
       <div style={{ position: 'relative' }}>
-        <MatrixNodeLabelWrapper isParallelNode={props?.isParallelNode} nodeType={props?.data?.nodeType} />
         <div
           onMouseOver={e => {
             e.stopPropagation()
@@ -180,6 +183,7 @@ export function MatrixNode(props: any): JSX.Element {
             [css.nestedGroup]: isNestedStepGroup
           })}
         >
+          <MatrixNodeLabelWrapper isParallelNode={props?.isParallelNode} nodeType={props?.data?.nodeType} />
           <div id={props?.id} className={css.horizontalBar}></div>
           {props.data?.skipCondition && (
             <div className={css.conditional}>
@@ -368,9 +372,11 @@ export function MatrixNode(props: any): JSX.Element {
                           </>
                         )}
                       </Layout.Horizontal>
-                      <Text font="normal" className={css.concurrencyLabel}>
-                        {maxParallelism ? `${getString('pipeline.MatrixNode.maxConcurrency')} ${maxParallelism}` : ''}
-                      </Text>
+                      {maxParallelism && (
+                        <Text font="normal" className={css.concurrencyLabel}>
+                          {maxParallelism ? `${getString('pipeline.MatrixNode.maxConcurrency')} ${maxParallelism}` : ''}
+                        </Text>
+                      )}
                     </Layout.Horizontal>
                   </Layout.Horizontal>
                 )}
@@ -417,7 +423,7 @@ export function MatrixNode(props: any): JSX.Element {
                         }
                       })
                     }}
-                    className={cx(defaultCss.addNodeIcon, defaultCss.stepAddIcon, defaultCss.stepGroupAddIcon, {
+                    className={cx(defaultCss.addNodeIcon, 'stepAddIcon', defaultCss.stepGroupAddIcon, {
                       [defaultCss.show]: showAddLink
                     })}
                   >

@@ -169,7 +169,18 @@ function HomePageByModule({ moduleName, bgImageURL, useTrialModal }: HomePageMod
   const { openProjectModal, closeProjectModal } = useProjectModal({
     onWizardComplete: (projectData?: Project) => {
       closeProjectModal()
-      pushToPipelineStudio('-1', projectData, `?modal=${experience}`)
+      if (modal === ModuleLicenseType.FREE && experience === ModuleLicenseType.FREE && module === 'cd') {
+        history.push(
+          routes.toGetStartedWithCD({
+            accountId,
+            module,
+            orgIdentifier: projectData?.orgIdentifier || '',
+            projectIdentifier: projectData?.identifier || ''
+          })
+        )
+      } else {
+        pushToPipelineStudio('-1', projectData, `?modal=${experience}`)
+      }
     }
   })
 

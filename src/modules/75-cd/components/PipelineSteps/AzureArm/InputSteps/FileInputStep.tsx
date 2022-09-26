@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import cx from 'classnames'
@@ -32,6 +32,7 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const [isAccount, setIsAccount] = useState<boolean>(false)
   const type = isParam ? 'parameters' : 'template'
   const connectorType = get(inputSetData, `template.spec.configuration.${type}.store.type`)
   const newConnectorLabel = `${
@@ -59,10 +60,14 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
             multiTypeProps={{ expressions, allowableTypes }}
             disabled={readonly}
             setRefValue
+            onChange={(value: any, _unused, _notUsed) => {
+              /* istanbul ignore next */
+              setIsAccount(value?.record?.spec?.type === 'Account')
+            }}
           />
         </div>
       )}
-      {isValueRuntimeInput(inputSet?.store?.spec?.repoName as string) && (
+      {(isAccount || isValueRuntimeInput(inputSet?.store?.spec?.repoName as string)) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
           <TextFieldInputSetView
             name={`${path}.spec.configuration.${type}.store.spec.repoName`}

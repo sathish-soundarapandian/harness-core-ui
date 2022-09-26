@@ -66,7 +66,7 @@ const logger = loggerFor(ModuleName.CD)
 
 const errorMessage = 'data.message'
 
-const hostConnectionTypes = ['PublicIP', 'PrivateIP']
+const hostConnectionTypes = ['PublicIP', 'PrivateIP'] as SshWinRmAwsInfrastructure['hostConnectionType'][]
 const hostConnectionTypeOptions = hostConnectionTypes.map(type => ({
   value: type,
   label: type

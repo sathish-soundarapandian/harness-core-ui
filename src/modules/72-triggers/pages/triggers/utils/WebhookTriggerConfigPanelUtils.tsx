@@ -166,6 +166,7 @@ export const renderNonCustomEventFields = ({
                 allowableTypes: [MultiTypeInputType.FIXED],
                 width: 324
               }}
+              placeholder="Enter h/m/s/ms"
             />
           )}
         </>

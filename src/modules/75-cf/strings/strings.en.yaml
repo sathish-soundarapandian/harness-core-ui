@@ -244,27 +244,30 @@ featureFlags:
     noData: No metrics found in this time range.
     totalEvaluations: Total Evaluations
   flagPipeline:
-    deleteModalTitle: Remove this pipeline from this flag?
+    deleteModalTitle: Remove this Pipeline from this Flag?
     deleteModalText:
-      If you remove the pipeline from the flag, the automated steps in this pipeline won’t be triggered, for example, automated approval steps.
-      The pipeline will be saved and you can add it again later.
+      If you remove the Pipeline from the Flag, the automated steps in this Pipeline won’t be triggered, for example, automated approval steps.
+      The Pipeline will be saved and you can add it again later.
 
-      Are you sure you want to separate the pipeline?
+      Are you sure you want to separate the Pipeline?
     title: Flag Pipeline
     noDataMessage: Automate processes with Flag Pipelines
     noDataDescription: Flag Pipelines help to automate routine processes like approval requests, notifications, Jira ticket creation or update
-    noDataButtonText: Add Flag Pipeline
     drawerTitle: Flag Pipelines
-    drawerDescription:
-      Flag pipelines allow to automate routine actions and execute automatically after any change. Flag pipelines
-      have no CI or CD steps, instead they have only one flag change step. Flag, target and environment are all set
-      to runtime input
+    drawerDescription: |
+      You can only set Pipelines that:
+        <ul>
+          <li>Have a Flag stage configured</li>
+          <li>The Flag must be set as a runtime input</li>
+          <li>Don’t include a Build or Deploy stage</li>
+        <ul>
     drawerButtonText: Set as Flag Pipeline
     envText: 'Set all Flags in {{ env }}'
     saveSuccess: Flag Pipeline updated
-    noAvailablePipelines: No available pipelines found
-    noExecutionMessage: There are no pipeline executions yet
-    noExecutionDescription: Once a pipeline has been triggered, the execution details will appear here
+    noAvailablePipelinesMessage: There are no Pipelines available
+    noAvailablePipelinesDescription: You can create a Flag Pipeline in Pipeline Studio to automate your workflow
+    noExecutionMessage: There are no Pipeline executions yet
+    noExecutionDescription: Once a Pipeline has been triggered, the execution details will appear here
     triggerDetails: Trigger Details
     flagState: Flag State
     defaultOffVariation: When Flag is Disabled - Default Rule
@@ -471,7 +474,7 @@ noEnvironment:
   message: <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_2_create_an_environment" target="_blank" rel="noreferrer">Environments</a> are the different places you run your application where you can configure Flags - i.e. your dev server, your QA server and your production server
 pipeline:
   listing: Pipeline Listing
-  rollloutStrategy:
+  rolloutStrategy:
     title: Rollout Strategy
   advanced:
     title: '{{ $.advancedTitle }}'

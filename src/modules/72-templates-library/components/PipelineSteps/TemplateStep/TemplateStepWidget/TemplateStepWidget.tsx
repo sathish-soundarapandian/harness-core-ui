@@ -41,7 +41,7 @@ import {
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
-import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
 import { useQueryParams } from '@common/hooks'
 import { stringify } from '@common/utils/YamlHelperMethods'
@@ -124,7 +124,7 @@ function TemplateStepWidget(
 
   const updateFormValues = (newTemplateInputs?: StepElementConfig) => {
     const updateValues = produce(initialValues, draft => {
-      set(draft, 'template.templateInputs', newTemplateInputs)
+      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
     })
     setFormValues(updateValues)
     onUpdate?.(updateValues)

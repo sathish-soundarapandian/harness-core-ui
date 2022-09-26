@@ -108,6 +108,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SERVICE, {
 RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT, {
   icon: 'environment',
   label: 'environments',
+  labelSingular: 'environment',
   permissionLabels: {
     [PermissionIdentifier.VIEW_ENVIRONMENT]: <String stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.EDIT_ENVIRONMENT]: <String stringID="rbac.permissionLabels.createEdit" />,

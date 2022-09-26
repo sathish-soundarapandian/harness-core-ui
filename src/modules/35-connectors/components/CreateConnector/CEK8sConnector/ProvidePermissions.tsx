@@ -34,8 +34,6 @@ import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaD
 import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import CopyCodeSection from './components/CopyCodeSection'
 import PermissionYAMLPreview from './PermissionYAMLPreview'
 import css from './CEK8sConnector.module.scss'
@@ -71,7 +69,6 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
     queryParams: { accountIdentifier: accountId }
   })
 
-  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   const { data: permissionsYaml, loading: yamlLoading } = useMutateAsGet(useCloudCostK8sClusterSetup, {
     queryParams: {
@@ -115,7 +112,7 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
         props.onSuccess?.(response?.data as ConnectorRequestBody)
         props.nextStep?.({ ...props.prevStepData } as ConnectorInfoDTO)
       }
-      if (opaFlagEnabled && response.data?.governanceMetadata) {
+      if (response.data?.governanceMetadata) {
         conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, nextSteps)
       } else {
         nextSteps()

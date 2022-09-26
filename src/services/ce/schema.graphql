@@ -260,6 +260,7 @@ type ECSRecommendationDTO {
   current: Map_String_StringScalar
   id: String
   lastDayCost: Cost
+  launchType: LaunchType
   memoryHistogram: HistogramExp
   percentileBased: Map_String_Map_String_StringScalar
   serviceArn: String
@@ -530,6 +531,8 @@ type Query {
   perspectives(folderId: String, sortCriteria: QLCEViewSortCriteriaInput): PerspectiveData
   "recommendation details/drillDown"
   recommendationDetails(
+    "defaults to zero"
+    bufferPercentage: Int = 0
     "defaults to Now()"
     endTime: OffsetDateTime
     id: String!
@@ -579,6 +582,8 @@ type RecommendationItemDTO {
   namespace: String
   "recommendation details/drillDown"
   recommendationDetails(
+    "defaults to zero"
+    bufferPercentage: Int = 0
     "defaults to Now()"
     endTime: OffsetDateTime
     "defaults to Now().minusDays(7)"
@@ -743,6 +748,12 @@ enum InstanceCategory {
   ON_DEMAND
   RESERVED
   SPOT
+}
+
+enum LaunchType {
+  EC2
+  EXTERNAL
+  FARGATE
 }
 
 enum QLCESortOrder {

@@ -154,7 +154,7 @@ describe('Execution List', () => {
     // should navigate to execution details as primary link
     expect(
       within(cdExecutionRow).getByRole('link', {
-        name: 'MultipleStage CD Running : 4'
+        name: 'MultipleStage CD Running'
       })
     ).toHaveAttribute(
       'href',
