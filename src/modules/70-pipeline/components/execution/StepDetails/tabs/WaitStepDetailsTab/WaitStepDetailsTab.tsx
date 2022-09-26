@@ -111,36 +111,34 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
         <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
 
         <div className={css.actionRow}>
-          {!hideSuccessButton ? (
-            <Thumbnail
-              key={0}
-              label={
-                hideFailButton
-                  ? getString(stringsMap[Strategy.MarkedAsSuccess])
-                  : getString(stringsMap[Strategy.MarkAsSuccess])
-              }
-              icon={strategyIconMap[Strategy.MarkAsSuccess]}
-              value={Strategy.MarkAsSuccess}
-              name={Strategy.MarkAsSuccess}
-              onClick={handleChange}
-              className={css.thumbnail}
-            />
-          ) : null}
-          {!hideFailButton ? (
-            <Thumbnail
-              key={0}
-              label={
-                hideSuccessButton
-                  ? getString(stringsMap[Strategy.MarkedAsFailure])
-                  : getString(stringsMap[Strategy.MarkAsFailure])
-              }
-              icon={strategyIconMap[Strategy.MarkAsFailure]}
-              value={Strategy.MarkAsFailure}
-              name={Strategy.MarkAsFailure}
-              onClick={handleChange}
-              className={css.thumbnail}
-            />
-          ) : null}
+          <Thumbnail
+            disabled={hideFailButton || hideSuccessButton === true ? true : false}
+            key={0}
+            label={
+              hideFailButton
+                ? getString(stringsMap[Strategy.MarkedAsSuccess])
+                : getString(stringsMap[Strategy.MarkAsSuccess])
+            }
+            icon={strategyIconMap[Strategy.MarkAsSuccess]}
+            value={Strategy.MarkAsSuccess}
+            name={Strategy.MarkAsSuccess}
+            onClick={handleChange}
+            className={css.thumbnail}
+          />
+          <Thumbnail
+            disabled={hideFailButton || hideSuccessButton === true ? true : false}
+            key={0}
+            label={
+              hideSuccessButton
+                ? getString(stringsMap[Strategy.MarkedAsFailure])
+                : getString(stringsMap[Strategy.MarkAsFailure])
+            }
+            icon={strategyIconMap[Strategy.MarkAsFailure]}
+            value={Strategy.MarkAsFailure}
+            name={Strategy.MarkAsFailure}
+            onClick={handleChange}
+            className={css.thumbnail}
+          />
         </div>
       </div>
     </React.Fragment>
