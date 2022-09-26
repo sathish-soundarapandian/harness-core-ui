@@ -13,6 +13,8 @@ export enum TemplateErrorEntity {
   TEMPLATE = 'Template',
   INFRASTRUCTURE = 'Infrastructure'
 }
+export const EMPTY_ARRAY = []
+export const EMPTY_OBJECT = {}
 
 export const getTitleFromErrorNodeSummary = (
   errorNodeSummary: ErrorNodeSummary,

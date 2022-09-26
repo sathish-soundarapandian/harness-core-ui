@@ -14,7 +14,8 @@ import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ErrorNodeSummary, TemplateResponse } from 'services/template-ng'
 import { ReconcileDialog } from '@pipeline/components/TemplateLibraryErrorHandling/ReconcileDialog/ReconcileDialog'
-import type { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import { ReconcileInfraDialog } from '../ReconcileInfraDialog/ReconcileInfraDialog'
 import css from './OutOfSyncErrorStrip.module.scss'
 
 export interface OutOfSyncErrorStripProps {
@@ -50,18 +51,29 @@ export function OutOfSyncErrorStrip({
 
     return (
       <Dialog enforceFocus={false} isOpen={true} onClose={onClose} className={css.reconcileDialog}>
-        <ReconcileDialog
-          errorNodeSummary={errorNodeSummary}
-          entity={entity}
-          isEdit={isEdit}
-          originalEntityYaml={originalYaml}
-          setResolvedTemplateResponses={setResolvedTemplateResponses}
-          onRefreshEntity={onRefreshEntity}
-          updateRootEntity={async (entityYaml: string) => {
-            hideReconcileDialog()
-            await updateRootEntity(entityYaml)
-          }}
-        />
+        {entity === TemplateErrorEntity.INFRASTRUCTURE ? (
+          <ReconcileInfraDialog
+            isEdit={isEdit}
+            originalEntityYaml={originalYaml}
+            updateRootEntity={async (entityYaml: string) => {
+              hideReconcileDialog()
+              await updateRootEntity(entityYaml)
+            }}
+          />
+        ) : (
+          <ReconcileDialog
+            errorNodeSummary={errorNodeSummary}
+            entity={entity}
+            isEdit={isEdit}
+            originalEntityYaml={originalYaml}
+            setResolvedTemplateResponses={setResolvedTemplateResponses}
+            onRefreshEntity={onRefreshEntity}
+            updateRootEntity={async (entityYaml: string) => {
+              hideReconcileDialog()
+              await updateRootEntity(entityYaml)
+            }}
+          />
+        )}
       </Dialog>
     )
   }, [
