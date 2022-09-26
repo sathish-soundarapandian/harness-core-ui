@@ -13799,8 +13799,8 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 
 export interface TemplateLinkConfig {
   templateInputs?: JsonNode
+  variables?: JsonNode
   templateRef: string
-  templateVariables?: JsonNode
   versionLabel?: string
 }
 
