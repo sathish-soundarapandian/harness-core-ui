@@ -57,12 +57,12 @@ const ConfigRenderer = ({ config, isEdit, getString, index, updateFreeze, formik
     >
       {isEditView ? (
         <FormikForm>
-          <FormInput.Text name={`entity[${index}].entity.rule`} label={getString('name')} />
+          <FormInput.Text name={`entity[${index}].name`} label={getString('name')} />
           <button onClick={setVisualView}>Save</button>
         </FormikForm>
       ) : (
         <div>
-          {config.entity?.rule}
+          {config.name}
           <button onClick={() => setEditView(true)}>Edit</button>
         </div>
       )}

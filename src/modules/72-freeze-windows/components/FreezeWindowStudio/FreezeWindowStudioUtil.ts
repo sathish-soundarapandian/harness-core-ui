@@ -42,8 +42,8 @@ export const getInitialValues = (freezeObj: any) => {
 
 export const getInitialValuesForConfigSection = (entityConfigs: EntityConfig[]) => {
   const initialValues = {}
-  entityConfigs.forEach((c: EntityConfig, i: number) => {
-    set(initialValues, `entity[${i}].entity.rule`, c.entity.rule)
+  entityConfigs?.forEach((c: EntityConfig, i: number) => {
+    set(initialValues, `entity[${i}].name`, c.name)
   })
   return initialValues
 }

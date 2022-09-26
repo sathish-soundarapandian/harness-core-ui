@@ -1,5 +1,4 @@
 export interface EntityConfig {
-  entity: {
-    rule: string
-  }
+  name: string
+  entities: any[]
 }

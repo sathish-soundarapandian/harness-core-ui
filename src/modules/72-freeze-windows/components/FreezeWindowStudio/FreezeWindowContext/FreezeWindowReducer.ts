@@ -15,9 +15,12 @@ export const DefaultFreeze = {
   name: '',
   identifier: DefaultFreezeId,
   entityConfigs: [
-    { entity: { rule: 'Rule 1 - Weekend Freeze' } },
-    { entity: { rule: 'Rule 2 - Diwali Freeze' } },
-    { entity: { rule: 'Rule 3 - Black Friday' } }
+    { name: 'Rule 1 - Weekend Freeze', entities: [] },
+    { name: 'Rule 2 - Diwali Freeze', entities: [] },
+    { name: 'Rule 3 - Black Friday', entities: [] }
+    // { entity: { rule: 'Rule 1 - Weekend Freeze' } },
+    // { entity: { rule: 'Rule 2 - Diwali Freeze' } },
+    // { entity: { rule: 'Rule 3 - Black Friday' } }
   ]
 }
 

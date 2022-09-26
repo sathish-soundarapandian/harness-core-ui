@@ -79,7 +79,7 @@ export const FreezeWindowStudioYAMLView = () => {
       <YamlBuilderMemo
         key={isYamlEditable.toString()}
         fileName={defaultTo(yamlFileName, defaultFileName)}
-        entityType="CreatePR" // should be Freeze Window
+        // entityType="CreatePR" // should be Freeze Window
         isReadOnlyMode={isReadonly || !isYamlEditable}
         existingJSON={{ freeze: freezeObj }}
         // existingYaml
