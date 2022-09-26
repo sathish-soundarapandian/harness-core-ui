@@ -8,6 +8,7 @@ import GroupedSideNav from '@cv/components/MultiItemsSideNav/components/Selected
 import AddCustomMetricButton from '../AddCustomMetricsButton'
 import { getCurrentSelectedMetricName, getGroupedCustomMetrics } from '../../CustomMetric.utils'
 import type { CommonCustomMetricPropertyType } from '../../CustomMetric.types'
+import { selectedIndexFormikPropertyName } from '../../CustomMetricV2.constants'
 import css from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/SelectedAppsSideNav.module.scss'
 import customCSS from '../../CustomMetricV2.module.scss'
 
@@ -32,8 +33,7 @@ export default function CustomMetricSideNav<T extends CommonCustomMetricProperty
       )
 
       if (selectedMetricNameIndex !== -1) {
-        // TODO: update from constant
-        setFieldValue('selectedCustomMetricIndex', selectedMetricNameIndex)
+        setFieldValue(selectedIndexFormikPropertyName, selectedMetricNameIndex)
       }
     },
     [formValues.customMetrics, setFieldValue]

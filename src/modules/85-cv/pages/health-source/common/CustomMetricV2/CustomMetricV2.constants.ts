@@ -8,6 +8,7 @@ export const CustomMetricsV2HelperContext = React.createContext<CustomMetricsV2H
 CustomMetricsV2HelperContext.displayName = 'CustomMetricsV2HelperContext'
 
 export const customMetricsFormikPropertyName = 'customMetrics'
+export const selectedIndexFormikPropertyName = 'selectedCustomMetricIndex'
 
 export const defaultNewCustomMetricName = 'CustomMetric'
 
