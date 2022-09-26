@@ -32,6 +32,8 @@ export interface StepCardProps {
   path?: string
   allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory // REQUIRED (pass to addUpdateGraph)
+  summaryClassName?: string
+  detailsClassName?: string
 }
 
 export function StepCard(props: StepCardProps): React.ReactElement {
@@ -97,7 +99,8 @@ export function StepCardPanel(props: StepCardProps): React.ReactElement {
           </Text>
         </VariableAccordionSummary>
       }
-      summaryClassName={css.accordianSummaryL2}
+      summaryClassName={defaultTo(props.summaryClassName, css.accordianSummaryL2)}
+      detailsClassName={props.detailsClassName}
       details={<StepCard {...props} />}
     />
   )

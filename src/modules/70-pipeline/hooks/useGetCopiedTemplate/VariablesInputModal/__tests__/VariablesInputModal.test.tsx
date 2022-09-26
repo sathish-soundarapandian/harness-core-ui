@@ -132,7 +132,9 @@ describe('<VariablesInputModal/> tests', () => {
     })
 
     expect(copyTemplateWithVariablesPromiseMock).toBeCalledWith(
-      expect.objectContaining({ body: expect.objectContaining({ variableValues: { var1: 'random' } }) })
+      expect.objectContaining({
+        body: expect.objectContaining({ variables: [{ name: 'var1', type: 'String', value: 'random' }] })
+      })
     )
 
     await waitFor(() =>

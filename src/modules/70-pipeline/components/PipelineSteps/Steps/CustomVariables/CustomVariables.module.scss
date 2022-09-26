@@ -69,9 +69,10 @@
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: repeat(2, minmax(10px, 1fr));
-    align-items: baseline;
+    align-items: center;
     border-bottom: solid 1px var(--grey-200);
     position: relative;
+    height: 39px;
     &:before {
       position: absolute;
       width: 100%;

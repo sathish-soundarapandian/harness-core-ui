@@ -118,9 +118,7 @@ export type ConnectorFilterProperties = FilterProperties & {
 
 export interface CopyTemplateVariableRequest {
   templateYaml: string
-  variableValues?: {
-    [key: string]: string
-  }
+  variables?: NGVariable[]
 }
 
 export interface EntityDetailProtoDTO {

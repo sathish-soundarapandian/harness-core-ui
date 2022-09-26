@@ -9,6 +9,7 @@ import React, { useCallback } from 'react'
 import { AllowedTypesWithRunTime, MultiTypeInputType, NestedAccordionProvider, PageError } from '@wings-software/uicore'
 import { isEmpty, omit, set, unset } from 'lodash-es'
 import { produce } from 'immer'
+import cx from 'classnames'
 import {
   MonitoredServiceConfig,
   useTemplateVariables
@@ -38,7 +39,8 @@ import TemplateVariablesCard from '@pipeline/components/PipelineStudio/PipelineV
 import templatesFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import css from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
+import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
+import css from './TemplateVariables.module.scss'
 
 const TemplateVariables: React.FC = (): JSX.Element => {
   const {
@@ -103,14 +105,14 @@ const TemplateVariables: React.FC = (): JSX.Element => {
     return <PageSpinner />
   }
   return (
-    <div className={css.pipelineVariables}>
+    <div className={cx(pipelineVariablesCss.pipelineVariables, css.templateVariables)}>
       {error ? (
         <PageError message={(error?.data as Error)?.message || error?.message} />
       ) : (
         !isEmpty(variablesTemplate) && (
-          <div className={css.content}>
+          <div className={pipelineVariablesCss.content}>
             <VariablesHeader enableSearch={false} applyChanges={applyChanges} discardChanges={discardChanges} />
-            <div className={css.variableList}>
+            <div className={pipelineVariablesCss.variableList}>
               <GitSyncStoreProvider>
                 {templateVariablesEnabled && (
                   <TemplateVariablesCard
@@ -120,6 +122,7 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                     metadataMap={metadataMap}
                     updateVariables={onUpdateVariables}
                     allowableTypes={allowableTypes}
+                    detailsClassName={css.templateVariablesDetails}
                   />
                 )}
                 {originalTemplate.type === TemplateType.Pipeline && (
@@ -158,6 +161,8 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                     stageIdentifier={DefaultNewStageId}
                     onUpdateStep={onUpdate}
                     stepsFactory={factory}
+                    summaryClassName={pipelineVariablesCss.accordionSummary}
+                    detailsClassName={css.stepAccordionDetails}
                   />
                 )}
                 {originalTemplate.type === TemplateType.SecretManager && (

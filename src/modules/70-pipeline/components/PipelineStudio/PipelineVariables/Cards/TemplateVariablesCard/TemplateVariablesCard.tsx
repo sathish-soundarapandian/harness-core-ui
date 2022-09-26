@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { Card, AllowedTypes, NestedAccordionPanel } from '@wings-software/uicore'
+import { Card, AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import cx from 'classnames'
+import { Color, FontVariation } from '@wings-software/design-system'
 import type { NGVariable } from 'services/pipeline-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -30,10 +31,22 @@ export interface TemplateVariablesCardProps {
   updateVariables(variables: NGVariable[]): void
   readonly?: boolean
   allowableTypes: AllowedTypes
+  summaryClassName?: string
+  detailsClassName?: string
 }
 
 export default function TemplateVariablesCard(props: TemplateVariablesCardProps): React.ReactElement {
-  const { variableVariables, variables, metadataMap, stepsFactory, updateVariables, readonly, allowableTypes } = props
+  const {
+    variableVariables,
+    variables,
+    metadataMap,
+    stepsFactory,
+    updateVariables,
+    readonly,
+    allowableTypes,
+    summaryClassName,
+    detailsClassName
+  } = props
 
   return (
     <Card className={css.variableCard} id="Pipeline-panel">
@@ -46,7 +59,13 @@ export default function TemplateVariablesCard(props: TemplateVariablesCardProps)
         collapseProps={{
           keepChildrenMounted: true
         }}
-        summary={<VariableAccordionSummary>Template Variables</VariableAccordionSummary>}
+        summary={
+          <VariableAccordionSummary>
+            <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
+              Template Variables
+            </Text>
+          </VariableAccordionSummary>
+        }
         details={
           <StepWidget<CustomVariablesData, CustomVariableEditableExtraProps>
             factory={stepsFactory}
@@ -72,6 +91,8 @@ export default function TemplateVariablesCard(props: TemplateVariablesCardProps)
             }}
           />
         }
+        summaryClassName={summaryClassName}
+        detailsClassName={detailsClassName}
       />
     </Card>
   )

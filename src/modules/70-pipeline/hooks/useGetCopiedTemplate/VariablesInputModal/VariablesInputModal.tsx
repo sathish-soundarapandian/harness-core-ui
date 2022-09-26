@@ -47,20 +47,6 @@ import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { VariablesInputModalProps } from '@pipeline/hooks/useGetCopiedTemplate/useGetCopiedTemplate'
 import { useStrings } from 'framework/strings'
 
-const getVariablesMap = (variables: AllNGVariables[]) => {
-  return variables.reduce(
-    (acc, curr) => {
-      if (curr.name) {
-        acc[curr.name] = curr.value
-      }
-      return acc
-    },
-    {} as {
-      [key: string]: any
-    }
-  )
-}
-
 export function VariablesInputModal({
   template,
   onResolve,
@@ -110,13 +96,13 @@ export function VariablesInputModal({
     }
   }, [inputSetError])
 
-  const onSubmit = async ({ variables: updatedVariables }: { variables: AllNGVariables[] }) => {
+  const onSubmit = async ({ variables }: { variables: AllNGVariables[] }) => {
     setLoadingCopyTemplate(true)
     try {
       const response = await copyTemplateWithVariablesPromise({
         body: {
           templateYaml: defaultTo(template.yaml, ''),
-          variableValues: getVariablesMap(updatedVariables)
+          variables
         },
         queryParams: {
           accountIdentifier: defaultTo(template.accountId, ''),
