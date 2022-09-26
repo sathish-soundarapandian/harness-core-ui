@@ -19,14 +19,17 @@ export interface WaitStepDetailsTabProps {
   step: ExecutionNode
 }
 
-let hideSuccessButton = false
-let hideFailButton = false
+// let hideSuccessButton = false
+// let hideFailButton = false
+let isDisabled = false
 
 export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactElement {
   const { step } = props
   const { getString } = useStrings()
   const STRATEGIES: Strategy[][] = [[Strategy.MarkAsSuccess], [Strategy.MarkAsFailure]]
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
+  const [hideFailButton, setHideFailButton] = useState(false)
+  const [hideSuccessButton, setHideSuccessButton] = useState(false)
   const { mutate: handleInterrupt } = useMarkWaitStep({
     nodeExecutionId: step.uuid || /* istanbul ignore next */ ''
   })
@@ -61,6 +64,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
     const daysDuration = msToTime(duration || 0)
     const startedTimeValue = step?.startTs ? new Date(step.startTs).toLocaleString() : '-'
     const endTimeValue = step?.endTs ? new Date(step.endTs).toLocaleString() : '-'
+
     return (
       <Container
         color={Color.ORANGE_400}
@@ -85,14 +89,15 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    isDisabled = true
     console.log(e.target.value, 'hello2')
     const actionPassed = (
       e.target.value === 'MarkAsSuccess' ? 'MARK_AS_SUCCESS' : 'MARK_AS_FAIL'
     ) as WaitStepRequestDto['action']
     if (e.target.value === 'MarkAsSuccess') {
-      hideFailButton = true
+      setHideFailButton(true)
     } else {
-      hideSuccessButton = true
+      setHideSuccessButton(true)
     }
     const waitStepRequestDto = { action: actionPassed }
     handleInterrupt(waitStepRequestDto, {
@@ -107,40 +112,41 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   return (
     <React.Fragment>
       <DurationMessage />
-      <div className={css.manualInterventionTab}>
-        <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
-
-        <div className={css.actionRow}>
-          <Thumbnail
-            disabled={hideFailButton || hideSuccessButton === true ? true : false}
-            key={0}
-            label={
-              hideFailButton
-                ? getString(stringsMap[Strategy.MarkedAsSuccess])
-                : getString(stringsMap[Strategy.MarkAsSuccess])
-            }
-            icon={strategyIconMap[Strategy.MarkAsSuccess]}
-            value={Strategy.MarkAsSuccess}
-            name={Strategy.MarkAsSuccess}
-            onClick={handleChange}
-            className={css.thumbnail}
-          />
-          <Thumbnail
-            disabled={hideFailButton || hideSuccessButton === true ? true : false}
-            key={0}
-            label={
-              hideSuccessButton
-                ? getString(stringsMap[Strategy.MarkedAsFailure])
-                : getString(stringsMap[Strategy.MarkAsFailure])
-            }
-            icon={strategyIconMap[Strategy.MarkAsFailure]}
-            value={Strategy.MarkAsFailure}
-            name={Strategy.MarkAsFailure}
-            onClick={handleChange}
-            className={css.thumbnail}
-          />
+      {step?.status === 'AsyncWaiting' ? (
+        <div className={css.manualInterventionTab}>
+          <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
+          <div className={css.actionRow}>
+            <Thumbnail
+              disabled={isDisabled === true ? true : false}
+              key={0}
+              label={
+                hideFailButton
+                  ? getString(stringsMap[Strategy.MarkedAsSuccess])
+                  : getString(stringsMap[Strategy.MarkAsSuccess])
+              }
+              icon={strategyIconMap[Strategy.MarkAsSuccess]}
+              value={Strategy.MarkAsSuccess}
+              name={Strategy.MarkAsSuccess}
+              onClick={handleChange}
+              className={css.thumbnail}
+            />
+            <Thumbnail
+              disabled={isDisabled === true ? true : false}
+              key={0}
+              label={
+                hideSuccessButton
+                  ? getString(stringsMap[Strategy.MarkedAsFailure])
+                  : getString(stringsMap[Strategy.MarkAsFailure])
+              }
+              icon={strategyIconMap[Strategy.MarkAsFailure]}
+              value={Strategy.MarkAsFailure}
+              name={Strategy.MarkAsFailure}
+              onClick={handleChange}
+              className={css.thumbnail}
+            />
+          </div>
         </div>
-      </div>
+      ) : null}
     </React.Fragment>
   )
 }
