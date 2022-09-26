@@ -40,7 +40,7 @@ $ cd harness-core-ui
 ```
 
 4. Add config to make Harness Github Package Registry accessible. Before running this step, make sure your github personal access token is authorized for both "wings-software" and "harness", step is here: https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on
-
+asdfads
 ```
 $ yarn setup-github-registry
 ```
@@ -51,7 +51,7 @@ $ yarn setup-github-registry
 
 ```
 $ yarn generate-certificate
-```
+```dsfasdf
 
 6. Install/Update/Refresh dependencies
 
