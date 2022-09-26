@@ -82,12 +82,6 @@ export const nexus2RepositoryFormatTypes = [
 
 export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]
 
-export const nonK8sRepositoryFormatTypes = [
-  { label: 'Maven', value: RepositoryFormatTypes.Maven },
-  { label: 'NPM', value: RepositoryFormatTypes.NPM },
-  { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
-]
-
 export const repositoryFormats = [
   { label: 'Generic', value: RepositoryFormatTypes.Generic },
   { label: 'Docker', value: RepositoryFormatTypes.Docker }

@@ -260,13 +260,12 @@ export const getArtifactFormData = (
   initialValues: artifactInitialValueTypes,
   selectedArtifact: ArtifactType,
   isIdentifierAllowed: boolean,
-  isServerlessDeploymentTypeSelected = false,
-  selectedDeploymentType?: string
+  isServerlessDeploymentTypeSelected = false
 ): artifactInitialValueTypes => {
   const specValues = get(initialValues, 'spec', null)
 
   if (selectedArtifact !== (initialValues as any)?.type || !specValues) {
-    return defaultArtifactInitialValues(selectedArtifact, selectedDeploymentType)
+    return defaultArtifactInitialValues(selectedArtifact)
   }
 
   let values: artifactInitialValueTypes | null = {} as artifactInitialValueTypes
@@ -327,7 +326,7 @@ export const isFieldFixedAndNonEmpty = (field: string): boolean => {
   return getMultiTypeFromValue(field) === MultiTypeInputType.FIXED ? field?.length > 0 : true
 }
 
-export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType, selectedDeploymentType?: string): any => {
+export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): any => {
   switch (selectedArtifact) {
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
       return {
@@ -350,7 +349,7 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType, sel
         tag: RUNTIME_INPUT_VALUE,
         tagRegex: RUNTIME_INPUT_VALUE,
         repository: '',
-        repositoryFormat: selectedDeploymentType === 'Kubernetes' ? 'docker' : 'maven',
+        repositoryFormat: 'docker',
         spec: {
           repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl,
           artifactPath: '',
