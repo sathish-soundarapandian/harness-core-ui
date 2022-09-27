@@ -160,3 +160,38 @@ export const ProjectField = ({ getString, namePrefix, projects, values, setField
     </>
   )
 }
+
+/***
+ *
+ entityConfigs:
+   - name: "rule1"
+     entities:
+       - filterType: "All"
+         type: "Service"
+       - filterType: "Equals"
+         type: "Project"
+       entityRefs:
+         - "pip1"
+         - "pip2"
+       - filterType: "Equals"
+         type: "Org"
+         entityRefs:
+           - "pip1"
+           - "pip2"
+       - filterType: "Equals"
+         type: "EnvType"
+         entityRefs:
+           - PROD
+       - filterType: "Equals"
+         type: "Environment"
+         entityRefs:
+         - "pip1"
+         - "pip2"
+         - name: "rule2"
+     entities:
+       - filterType: "All"
+         type: "Service"
+       -filterType: "All"
+         type: "EnvType"
+ *
+ */

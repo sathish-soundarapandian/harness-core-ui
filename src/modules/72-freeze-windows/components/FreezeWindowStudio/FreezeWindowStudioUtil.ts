@@ -6,7 +6,7 @@
  */
 
 import { parse } from 'yaml'
-import { defaultTo, pick, set } from 'lodash-es'
+import { defaultTo, pick, set, isEmpty } from 'lodash-es'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { StringKeys } from 'framework/strings'
 import type { EntityConfig } from '@freeze-windows/types'
@@ -63,6 +63,36 @@ export const getInitialValuesForConfigSection = (entityConfigs: EntityConfig[]) 
 }
 
 const SINGLE_SELECT_FIELDS = [FIELD_KEYS.EnvType]
+const ORG_FIELD = [FIELD_KEYS.Org]
+
+const adaptForOrgField = (currentValues, newValues, entities) => {
+  const fieldKey = FIELD_KEYS.Org
+  const orgFieldIndex = entities.findIndex(e => e.type === fieldKey)
+  const obj = { type: fieldKey, filterType: '', entityRefs: [] }
+  if (newValues[fieldKey] === 'All') {
+    const hasExcludedOrgs = newValues[FIELD_KEYS.ExcludeOrgCheckbox] && !isEmpty(newValues[FIELD_KEYS.ExcludeOrg])
+    obj.filterType = hasExcludedOrgs ? 'NotEquals' : 'All'
+    if (hasExcludedOrgs) {
+      obj.entityRefs.push(newValues[FIELD_KEYS.ExcludeOrg])
+    }
+    // exclude can be there
+    // entityRefs reqd, if exclude is true
+  } else {
+    obj.filterType = 'Equals'
+    obj.entityRefs.push(newValues[fieldKey])
+  }
+
+  if (obj.entityRefs.length === 0) {
+    delete obj.entityRefs
+  }
+
+  if (orgFieldIndex >= 0) {
+    // update
+    entities[orgFieldIndex] = obj
+  } else {
+    entities.push(obj)
+  }
+}
 
 export const convertValuesToYamlObj = (currentValues, newValues) => {
   const entities = [...(currentValues.entities || [])]
@@ -94,6 +124,8 @@ export const convertValuesToYamlObj = (currentValues, newValues) => {
       entities.push(obj)
     }
   })
+
+  adaptForOrgField(currentValues, newValues, entities)
 
   return { name: newValues.name, entities }
 }
