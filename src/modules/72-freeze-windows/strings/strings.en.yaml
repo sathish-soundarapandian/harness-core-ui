@@ -6,3 +6,4 @@ freezeStudio:
   freezeOverview: Freeze Overview
   defineResources: Define which resources you want to include in this freeze window
   excludeOrgs: Exclude specific Organizations
+  excludeProjects: Exclude specific Projects

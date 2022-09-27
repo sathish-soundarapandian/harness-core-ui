@@ -28,6 +28,7 @@ import {
   ServiceFieldRenderer,
   EnvironmentTypeRenderer,
   Organizationfield,
+  ProjectField,
   FIELD_KEYS
 } from './FreezeStudioConfigSectionRenderers'
 import css from './FreezeWindowStudio.module.scss'
@@ -82,7 +83,14 @@ const ConfigRenderer = ({
             namePrefix={`entity[${index}]`}
             values={formikProps.values?.entity?.[index]}
             setFieldValue={formikProps.setFieldValue}
-            organizations={resources.orgs}
+            organizations={resources.orgs || []}
+          />
+          <ProjectField
+            getString={getString}
+            namePrefix={`entity[${index}]`}
+            values={formikProps.values?.entity?.[index]}
+            setFieldValue={formikProps.setFieldValue}
+            projects={resources.projects || []}
           />
           <ServiceFieldRenderer
             getString={getString}

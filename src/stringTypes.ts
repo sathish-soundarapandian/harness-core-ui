@@ -4100,6 +4100,7 @@ export interface StringsMap {
   'pipeline.warningForInvalidYAMLDiscard': string
   'freezeWindows.freezeStudio.defineResources': string
   'freezeWindows.freezeStudio.excludeOrgs': string
+  'freezeWindows.freezeStudio.excludeProjects': string
   'freezeWindows.freezeStudio.freezeConfiguration': string
   'freezeWindows.freezeStudio.freezeOverview': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string

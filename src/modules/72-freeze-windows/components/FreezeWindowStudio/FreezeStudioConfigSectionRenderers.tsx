@@ -15,7 +15,10 @@ export enum FIELD_KEYS {
   Service = 'Service',
   Org = 'Org',
   ExcludeOrgCheckbox = 'ExcludeOrgCheckbox',
-  ExcludeOrg = 'ExcludeOrg'
+  ExcludeOrg = 'ExcludeOrg',
+  Proj = 'Proj',
+  ExcludeProjCheckbox = 'ExcludeProjCheckbox',
+  ExcludeProj = 'ExcludeProj'
 }
 const All = 'All'
 export enum EnvironmentType {
@@ -50,12 +53,27 @@ export const ServiceFieldRenderer = ({ getString, isDisabled, name }) => {
   return <div>null</div>
 }
 
+const getOrgNameKeys = namePrefix => {
+  const orgFieldName = `${namePrefix}.${FIELD_KEYS.Org}`
+  const orgCheckBoxName = `${namePrefix}.${FIELD_KEYS.ExcludeOrgCheckbox}`
+  const excludeOrgName = `${namePrefix}.${FIELD_KEYS.ExcludeOrg}`
+  return { orgFieldName, orgCheckBoxName, excludeOrgName }
+}
+
+const getProjNameKeys = namePrefix => {
+  const projFieldName = `${namePrefix}.${FIELD_KEYS.Proj}`
+  const projCheckBoxName = `${namePrefix}.${FIELD_KEYS.ExcludeProjCheckbox}`
+  const excludeProjName = `${namePrefix}.${FIELD_KEYS.ExcludeProj}`
+  return { projFieldName, projCheckBoxName, excludeProjName }
+}
+
 export const Organizationfield = ({ getString, namePrefix, organizations, values, setFieldValue }) => {
   const orgValue = values[FIELD_KEYS.Org]
   const excludeOrgValue = values[FIELD_KEYS.ExcludeOrgCheckbox]
   const isCheckBoxEnabled = orgValue === All
-  const checkBoxName = `${namePrefix}.${FIELD_KEYS.ExcludeOrgCheckbox}`
-  const excludeOrgName = `${namePrefix}.${FIELD_KEYS.ExcludeOrg}`
+  const { orgFieldName, orgCheckBoxName, excludeOrgName } = getOrgNameKeys(namePrefix)
+  const { projFieldName, projCheckBoxName, excludeProjName } = getProjNameKeys(namePrefix)
+
   const [allOrgs, setAllOrgs] = React.useState([])
   React.useEffect(() => {
     if (organizations.length) {
@@ -65,19 +83,24 @@ export const Organizationfield = ({ getString, namePrefix, organizations, values
   return (
     <>
       <FormInput.Select
-        name={`${namePrefix}.${FIELD_KEYS.Org}`}
+        name={orgFieldName}
         items={allOrgs}
         label={getString('orgLabel')}
         onChange={(selected?: SelectOption) => {
           if (!(selected?.value === All)) {
-            setFieldValue(checkBoxName, false)
-            // todo: clear exclude Orgs also
+            setFieldValue(orgCheckBoxName, false)
+            // todo: clear exclude Orgs
+          }
+          if (selected?.value === All) {
+            setFieldValue(projFieldName, All)
+            setFieldValue(projCheckBoxName, false)
+            setFieldValue(excludeProjName, undefined)
           }
         }}
       />
 
       <FormInput.CheckBox
-        name={checkBoxName}
+        name={orgCheckBoxName}
         label={getString('freezeWindows.freezeStudio.excludeOrgs')}
         disabled={!isCheckBoxEnabled}
         onChange={() => {
@@ -86,6 +109,54 @@ export const Organizationfield = ({ getString, namePrefix, organizations, values
       />
 
       {isCheckBoxEnabled && excludeOrgValue ? <FormInput.Select name={excludeOrgName} items={organizations} /> : null}
+    </>
+  )
+}
+
+export const ProjectField = ({ getString, namePrefix, projects, values, setFieldValue }) => {
+  // If one organization, show projects, else show all projects
+  const orgValue = values[FIELD_KEYS.Org]
+  const isOrgValueAll = orgValue === All
+  const projValue = values[FIELD_KEYS.Proj]
+  const excludeProjValue = values[FIELD_KEYS.ExcludeProjCheckbox]
+  const isCheckBoxEnabled = projValue === All
+  const { projFieldName, projCheckBoxName, excludeProjName } = getProjNameKeys(namePrefix)
+  const [allProj, setAllProj] = React.useState([])
+
+  React.useEffect(() => {
+    if (isOrgValueAll) {
+      setAllProj([{ label: 'All Projects', value: All }])
+    } else if (projects.length) {
+      setAllProj([{ label: 'All Projects', value: All }, ...projects])
+    }
+  }, [projects, isOrgValueAll])
+  return (
+    <>
+      <FormInput.Select
+        name={projFieldName}
+        items={allProj}
+        label={getString('projectsText')}
+        disabled={isOrgValueAll}
+        onChange={(selected?: SelectOption) => {
+          if (!(selected?.value === All)) {
+            setFieldValue(projCheckBoxName, false)
+            // todo: clear exclude Proj also
+          }
+        }}
+      />
+
+      <FormInput.CheckBox
+        name={projCheckBoxName}
+        label={getString('freezeWindows.freezeStudio.excludeProjects')}
+        disabled={!isCheckBoxEnabled || isOrgValueAll}
+        onChange={() => {
+          setFieldValue(excludeProjName, undefined)
+        }}
+      />
+
+      {isCheckBoxEnabled && excludeProjValue ? (
+        <FormInput.Select disabled={isOrgValueAll} name={excludeProjName} items={projects} />
+      ) : null}
     </>
   )
 }
