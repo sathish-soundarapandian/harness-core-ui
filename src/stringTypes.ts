@@ -4099,6 +4099,7 @@ export interface StringsMap {
   'pipeline.viewPipeline': string
   'pipeline.warningForInvalidYAMLDiscard': string
   'freezeWindows.freezeStudio.defineResources': string
+  'freezeWindows.freezeStudio.excludeOrgs': string
   'freezeWindows.freezeStudio.freezeConfiguration': string
   'freezeWindows.freezeStudio.freezeOverview': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string

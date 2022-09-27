@@ -6,12 +6,16 @@
  */
 
 import React from 'react'
-import { FormInput, SelectOption } from '@wings-software/uicore'
-import { UseStringsReturn } from 'framework/strings'
+import { SelectOption } from '@wings-software/uicore'
+import { FormInput } from '@harness/uicore'
+import type { UseStringsReturn } from 'framework/strings'
 
 export enum FIELD_KEYS {
   EnvType = 'EnvType',
-  Service = 'Service'
+  Service = 'Service',
+  Org = 'Org',
+  ExcludeOrgCheckbox = 'ExcludeOrgCheckbox',
+  ExcludeOrg = 'ExcludeOrg'
 }
 const All = 'All'
 export enum EnvironmentType {
@@ -35,13 +39,47 @@ export const EnvironmentTypeRenderer = ({ getString, name }: EnvTypeRendererProp
     { label: getString('common.preProduction'), value: EnvironmentType.NON_PROD }
   ])
 
-  return <FormInput.Select name={name} items={envTypes} />
+  return <FormInput.Select name={name} items={envTypes} label={getString('envType')} />
 }
 
 export const ServiceFieldRenderer = ({ getString, isDisabled, name }) => {
   const [disabledItems] = React.useState<SelectOption[]>([{ label: getString('common.allServices'), value: All }])
   if (isDisabled) {
-    return <FormInput.Select name={name} items={disabledItems} placeholder="All Services11" disabled={isDisabled} />
+    return <FormInput.Select name={name} items={disabledItems} disabled={isDisabled} label={getString('services')} />
   }
   return <div>null</div>
+}
+
+export const Organizationfield = ({ getString, namePrefix, organizations, values, setFieldValue }) => {
+  const orgValue = values[FIELD_KEYS.Org]
+  const excludeOrgValue = values[FIELD_KEYS.ExcludeOrgCheckbox]
+  const isCheckBoxEnabled = orgValue === All
+  const checkBoxName = `${namePrefix}.${FIELD_KEYS.ExcludeOrgCheckbox}`
+  const excludeOrgName = `${namePrefix}.${FIELD_KEYS.ExcludeOrg}`
+  return (
+    <>
+      <FormInput.Select
+        name={`${namePrefix}.${FIELD_KEYS.Org}`}
+        items={organizations}
+        label={getString('orgLabel')}
+        onChange={(selected?: SelectOption) => {
+          if (!(selected?.value === All)) {
+            setFieldValue(checkBoxName, false)
+            // todo: clear exclude Orgs also
+          }
+        }}
+      />
+
+      <FormInput.CheckBox
+        name={checkBoxName}
+        label={getString('freezeWindows.freezeStudio.excludeOrgs')}
+        disabled={!isCheckBoxEnabled}
+        onChange={() => {
+          setFieldValue(excludeOrgName, undefined)
+        }}
+      />
+
+      {isCheckBoxEnabled && excludeOrgValue ? <FormInput.Select name={excludeOrgName} items={organizations} /> : null}
+    </>
+  )
 }

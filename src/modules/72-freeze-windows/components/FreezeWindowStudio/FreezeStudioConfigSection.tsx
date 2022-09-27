@@ -24,7 +24,12 @@ import { useStrings, UseStringsReturn } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import type { EntityConfig } from '@freeze-windows/types'
 import { getInitialValuesForConfigSection, convertValuesToYamlObj } from './FreezeWindowStudioUtil'
-import { ServiceFieldRenderer, EnvironmentTypeRenderer, FIELD_KEYS } from './FreezeStudioConfigSectionRenderers'
+import {
+  ServiceFieldRenderer,
+  EnvironmentTypeRenderer,
+  Organizationfield,
+  FIELD_KEYS
+} from './FreezeStudioConfigSectionRenderers'
 import css from './FreezeWindowStudio.module.scss'
 
 interface FreezeStudioConfigSectionProps {
@@ -71,6 +76,16 @@ const ConfigRenderer = ({
       {isEditView ? (
         <FormikForm>
           <FormInput.Text name={`entity[${index}].name`} label={getString('name')} />
+          <Organizationfield
+            getString={getString}
+            namePrefix={`entity[${index}]`}
+            values={formikProps.values?.entity?.[index]}
+            setFieldValue={formikProps.setFieldValue}
+            organizations={[
+              { label: 'All', value: 'All' },
+              { label: 'All2', value: 'All2' }
+            ]}
+          />
           <ServiceFieldRenderer
             getString={getString}
             name={`entity[${index}].${FIELD_KEYS.Service}`}

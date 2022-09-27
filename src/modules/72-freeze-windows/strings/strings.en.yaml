@@ -5,3 +5,4 @@ freezeStudio:
   freezeConfiguration: Freeze Configuration
   freezeOverview: Freeze Overview
   defineResources: Define which resources you want to include in this freeze window
+  excludeOrgs: Exclude specific Organizations
