@@ -27,7 +27,8 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ScopeSelector } from 'services/rbac'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { getDefaultSelectedFilter, ScopeFilterItems } from '@rbac/utils/utils'
+import { useUpdateQueryParams, useQueryParams } from '@common/hooks'
+import { getDefaultSelectedFilter, ScopeFilterItems, ScopeFilterParams } from '@rbac/utils/utils'
 import UserRoleBindings from './UserRoleBindings'
 import UserGroupTable from './UserGroupTable'
 import css from '../UserDetails.module.scss'
@@ -168,9 +169,20 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
-  const [accountFilter, setAccountFilter] = useState(getDefaultSelectedFilter(scope))
+  const { scopeForFilterParams } = useQueryParams<ScopeFilterParams>()
+  const [accountFilter, setAccountFilter] = useState(defaultTo(scopeForFilterParams, getDefaultSelectedFilter(scope)))
   const [orgFilter, setOrgFilter] = useState<string | undefined>(orgIdentifier)
   const [orgFetchError, setOrgFetchError] = useState<boolean>(false)
+  const { updateQueryParams } = useUpdateQueryParams<ScopeFilterParams>()
+
+  const handleAccountFilterChange = (newScope: ScopeFilterItems): void => {
+    updateQueryParams({
+      scopeForFilterParams: newScope
+    })
+    setOrgFetchError(false)
+    setAccountFilter(newScope)
+  }
+
   const getScopeDropDownItems = (): SelectOption[] => {
     switch (scope) {
       case Scope.ACCOUNT:
@@ -335,8 +347,7 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
               text={btnText}
               variation={ButtonVariation.SECONDARY}
               onClick={() => {
-                setOrgFetchError(false)
-                setAccountFilter(ScopeFilterItems.ALL)
+                handleAccountFilterChange(ScopeFilterItems.ALL)
                 setScopeFilters(getScopeFilter(ScopeFilterItems.ALL))
               }}
             />
@@ -374,8 +385,7 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
           )}
           filterable={false}
           onChange={item => {
-            setOrgFetchError(false)
-            setAccountFilter(item.value as ScopeFilterItems)
+            handleAccountFilterChange(item.value as ScopeFilterItems)
             if (scope === Scope.ACCOUNT) {
               setOrgFilter(DEFAULT_ORG_ID)
             }

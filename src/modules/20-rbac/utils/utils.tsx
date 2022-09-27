@@ -91,6 +91,11 @@ export enum ScopeFilterItems {
   ORG_WITH_PROJECTS = 'ORG_WITH_PROJECTS',
   PROJECT_ONLY = 'PROJECT_ONLY'
 }
+
+export interface ScopeFilterParams {
+  scopeForFilterParams?: string
+}
+
 interface HandleInvitationResponse {
   responseType: InvitationStatus
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
