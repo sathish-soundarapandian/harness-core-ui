@@ -103,7 +103,8 @@ export enum StepType {
   AzureArmRollback = 'AzureARMRollback',
   Background = 'Background',
   AzureBlueprint = 'AzureCreateBPResource',
-  CreateAzureARMResource = 'AzureCreateARMResource'
+  CreateAzureARMResource = 'AzureCreateARMResource',
+  Wait = 'Wait'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

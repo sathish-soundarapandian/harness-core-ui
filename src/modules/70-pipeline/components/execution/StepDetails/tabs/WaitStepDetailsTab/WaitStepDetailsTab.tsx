@@ -26,7 +26,6 @@ let isDisabled = false
 export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactElement {
   const { step } = props
   const { getString } = useStrings()
-  const STRATEGIES: Strategy[][] = [[Strategy.MarkAsSuccess], [Strategy.MarkAsFailure]]
   const { orgIdentifier, projectIdentifier, accountId } = useParams<PipelineType<ExecutionPathProps>>()
   const [hideFailButton, setHideFailButton] = useState(false)
   const [hideSuccessButton, setHideSuccessButton] = useState(false)
@@ -62,8 +61,6 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
     console.log(stepData, 'hello')
     const duration = stepData?.data?.duration
     const daysDuration = msToTime(duration || 0)
-    const startedTimeValue = step?.startTs ? new Date(step.startTs).toLocaleString() : '-'
-    const endTimeValue = step?.endTs ? new Date(step.endTs).toLocaleString() : '-'
 
     return (
       <Container
