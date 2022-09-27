@@ -162,6 +162,7 @@ allowpaths:
   - /log-dashboard/logs-radar-chart-cluster
   - /cloudwatch/metrics/fetch-sample-data
   - /cloudwatch/metrics/regions
+  - /cloudwatch/metrics/fetch-sample-data
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

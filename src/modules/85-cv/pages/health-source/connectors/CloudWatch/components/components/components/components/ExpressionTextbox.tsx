@@ -3,6 +3,7 @@ import { useFormikContext } from 'formik'
 import { FormInput, Text, FontVariation } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { CloudWatchFormType } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch.types'
+import QueryDataChart from './component/QueryDataChart'
 
 export default function ExpressionTextbox(): JSX.Element {
   const { getString } = useStrings()
@@ -17,6 +18,7 @@ export default function ExpressionTextbox(): JSX.Element {
         {getString('cv.query')}
       </Text>
       <FormInput.TextArea name={`customMetrics.${selectedCustomMetricIndex}.expression`} />
+      <QueryDataChart />
     </>
   )
 }
