@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { RUNTIME_INPUT_VALUE, shouldShowError, StepWizard, useToaster } from '@harness/uicore'
+import { RUNTIME_INPUT_VALUE, shouldShowError, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -22,7 +22,6 @@ import { defaultTo, isEmpty, merge, unset } from 'lodash-es'
 import {
   useGetConnectorListV2,
   PageConnectorResponse,
-  ConnectorInfoDTO,
   SidecarArtifactWrapper,
   PrimaryArtifact,
   ArtifactConfig,
@@ -37,33 +36,15 @@ import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { useStrings } from 'framework/strings'
-import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import StepDockerAuthentication from '@connectors/components/CreateConnector/DockerConnector/StepAuth/StepDockerAuthentication'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
-import GcrAuthentication from '@connectors/components/CreateConnector/GcrConnector/StepAuth/GcrAuthentication'
-import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
-import {
-  buildArtifactoryPayload,
-  buildAWSPayload,
-  buildAzurePayload,
-  buildDockerPayload,
-  buildGcpPayload,
-  buildNexusPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ArtifactActions } from '@common/constants/TrackingConstants'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import StepNexusAuthentication from '@connectors/components/CreateConnector/NexusConnector/StepAuth/StepNexusAuthentication'
-import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
 import { useCache } from '@common/hooks/useCache'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -79,10 +60,11 @@ import type {
   AmazonS3InitialValuesType,
   JenkinsArtifactType,
   GoogleArtifactRegistryInitialValuesType,
-  CustomArtifactSource
+  CustomArtifactSource,
+  GithubPackageRegistryInitialValuesType,
+  Nexus2InitialValuesType
 } from './ArtifactInterface'
 import {
-  ArtifactToConnectorMap,
   ENABLED_ARTIFACT_TYPES,
   ArtifactIconByType,
   ArtifactTitleIdByType,
@@ -92,7 +74,7 @@ import {
   isSidecarAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
+import { Nexus3Artifact } from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
 import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
 import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
@@ -100,6 +82,8 @@ import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/
 import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
 import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
 import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
+import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
+import { Nexus2Artifact } from './ArtifactRepository/ArtifactLastSteps/Nexus2Artifact/Nexus2Artifact'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ServiceV2ArtifactsSelection({
@@ -130,7 +114,6 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const stepWizardTitle = getString('connectors.createNewConnector')
   const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, AZURE_WEBAPP_NG_S3_ARTIFACTS } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
@@ -198,7 +181,7 @@ export default function ServiceV2ArtifactsSelection({
       }
       return artifacts.sidecars
     }
-  }, [artifactContext, artifacts?.primary, artifacts?.sidecars])
+  }, [artifactContext, artifacts, artifacts?.primary, artifacts?.sidecars, stage])
 
   const getArtifactsPath = useCallback((type: ModalViewFor) => {
     if (type === ModalViewFor.PRIMARY) {
@@ -438,7 +421,9 @@ export default function ServiceV2ArtifactsSelection({
       AmazonS3InitialValuesType &
       JenkinsArtifactType &
       GoogleArtifactRegistryInitialValuesType &
-      CustomArtifactSource
+      CustomArtifactSource &
+      GithubPackageRegistryInitialValuesType &
+      Nexus2InitialValuesType
   > => {
     return {
       key: getString('connectors.stepFourName'),
@@ -505,101 +490,20 @@ export default function ServiceV2ArtifactsSelection({
     setIsEditMode,
     connectorInfo: undefined
   }
-  const verifyOutofClusterDelegateProps = {
+
+  const connectivityStepProps = {
+    gitDetails: { repoIdentifier, branch, getDefaultFromOtherRepo: true },
+    isEditMode,
+    setIsEditMode,
+    connectorInfo: undefined
+  }
+
+  const ConnectorTestConnectionProps = {
     name: getString('connectors.stepThreeName'),
     connectorInfo: undefined,
     isStep: true,
     isLastStep: false
   }
-  const getNewConnectorSteps = useCallback((): JSX.Element => {
-    switch (selectedArtifact) {
-      case ENABLED_ARTIFACT_TYPES.DockerRegistry:
-        return (
-          <StepWizard title={stepWizardTitle}>
-            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
-            <StepDockerAuthentication name={getString('details')} {...authenticationStepProps} />
-            <DelegateSelectorStep buildPayload={buildDockerPayload} {...delegateStepProps} />
-            <VerifyOutOfClusterDelegate
-              type={ArtifactToConnectorMap[selectedArtifact]}
-              {...verifyOutofClusterDelegateProps}
-            />
-          </StepWizard>
-        )
-      case ENABLED_ARTIFACT_TYPES.Gcr:
-        return (
-          <StepWizard title={stepWizardTitle}>
-            <ConnectorDetailsStep type={'Gcr' as unknown as ConnectorInfoDTO['type']} {...connectorDetailStepProps} />
-            <GcrAuthentication name={getString('details')} {...authenticationStepProps} />
-            <DelegateSelectorStep {...delegateStepProps} buildPayload={buildGcpPayload} />
-            <VerifyOutOfClusterDelegate {...verifyOutofClusterDelegateProps} type={'Gcr'} />
-          </StepWizard>
-        )
-      case ENABLED_ARTIFACT_TYPES.Ecr:
-      case ENABLED_ARTIFACT_TYPES.AmazonS3:
-        return (
-          <StepWizard iconProps={{ size: 37 }} title={stepWizardTitle}>
-            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
-            <StepAWSAuthentication name={getString('credentials')} {...authenticationStepProps} />
-            <DelegateSelectorStep {...delegateStepProps} buildPayload={buildAWSPayload} />
-            <VerifyOutOfClusterDelegate
-              {...verifyOutofClusterDelegateProps}
-              type={ArtifactToConnectorMap[selectedArtifact]}
-            />
-          </StepWizard>
-        )
-      case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
-        return (
-          <StepWizard title={stepWizardTitle}>
-            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
-            <StepNexusAuthentication name={getString('details')} {...authenticationStepProps} />
-            <DelegateSelectorStep {...delegateStepProps} buildPayload={buildNexusPayload} />
-            <VerifyOutOfClusterDelegate
-              {...verifyOutofClusterDelegateProps}
-              type={ArtifactToConnectorMap[selectedArtifact]}
-            />
-          </StepWizard>
-        )
-      case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
-        return (
-          <StepWizard title={stepWizardTitle}>
-            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
-            <StepArtifactoryAuthentication name={getString('details')} {...authenticationStepProps} />
-            <DelegateSelectorStep {...delegateStepProps} buildPayload={buildArtifactoryPayload} />
-            <VerifyOutOfClusterDelegate
-              {...verifyOutofClusterDelegateProps}
-              type={ArtifactToConnectorMap[selectedArtifact]}
-            />
-          </StepWizard>
-        )
-      case ENABLED_ARTIFACT_TYPES.Acr:
-        return (
-          <StepWizard title={stepWizardTitle}>
-            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
-            <AzureAuthentication name={getString('details')} {...authenticationStepProps} />
-            <DelegateSelectorStep buildPayload={buildAzurePayload} {...delegateStepProps} />
-            <VerifyOutOfClusterDelegate
-              type={ArtifactToConnectorMap[selectedArtifact]}
-              {...verifyOutofClusterDelegateProps}
-            />
-          </StepWizard>
-        )
-      case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
-        return (
-          <StepWizard title={stepWizardTitle}>
-            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
-            <GcpAuthentication name={getString('details')} {...authenticationStepProps} />
-            <DelegateSelectorStep buildPayload={buildGcpPayload} {...delegateStepProps} />
-            <VerifyOutOfClusterDelegate
-              type={ArtifactToConnectorMap[selectedArtifact]}
-              {...verifyOutofClusterDelegateProps}
-            />
-          </StepWizard>
-        )
-      default:
-        return <></>
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connectorView, selectedArtifact, isEditMode])
   /******************************************************************Connector Steps************************************************************** */
 
   const getLastSteps = useCallback((): JSX.Element => {
@@ -609,7 +513,9 @@ export default function ServiceV2ArtifactsSelection({
       case ENABLED_ARTIFACT_TYPES.Ecr:
         return <ECRArtifact {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
-        return <NexusArtifact {...artifactLastStepProps} />
+        return <Nexus3Artifact {...artifactLastStepProps} />
+      case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
+        return <Nexus2Artifact {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return <Artifactory {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
@@ -622,6 +528,8 @@ export default function ServiceV2ArtifactsSelection({
         return <JenkinsArtifact {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
         return <GoogleArtifactRegistry {...artifactLastStepProps} />
+      case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+        return <GithubPackageRegistry {...artifactLastStepProps} />
       case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       default:
         return <DockerRegistryArtifact {...artifactLastStepProps} />
@@ -651,7 +559,13 @@ export default function ServiceV2ArtifactsSelection({
         selectedArtifact={selectedArtifact}
         changeArtifactType={changeArtifactType}
         newConnectorView={connectorView}
-        newConnectorSteps={getNewConnectorSteps()}
+        newConnectorProps={{
+          auth: authenticationStepProps,
+          connector: connectorDetailStepProps,
+          connectivity: connectivityStepProps,
+          delegate: delegateStepProps,
+          verify: ConnectorTestConnectionProps
+        }}
         handleViewChange={handleConnectorViewChange}
         showConnectorStep={showConnectorStep(selectedArtifact as ArtifactType)}
       />

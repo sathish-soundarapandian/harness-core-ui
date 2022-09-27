@@ -65,6 +65,7 @@ import { OnboardingDetailPage } from './pages/onboarding/OnboardingDetailPage'
 import CFTrialHomePage from './pages/home/CFTrialHomePage'
 import FeatureFlagsLandingPage from './pages/feature-flags/FeatureFlagsLandingPage'
 import { FFGitSyncProvider } from './contexts/ff-git-sync-context/FFGitSyncContext'
+import ConfigurePath from './pages/onboarding/ConfigurePath'
 
 featureFactory.registerFeaturesByModule('cf', {
   features: [FeatureIdentifier.MAUS],
@@ -93,7 +94,7 @@ const RedirectToCFProject = (): React.ReactElement => {
   const { selectedProject } = useAppStore()
 
   if (selectedProject?.modules?.includes(ModuleName.CF)) {
-    return <Redirect to={routes.toCFFeatureFlags(params)} />
+    return <Redirect to={routes.toCFConfigurePath(params)} />
   } else {
     return <Redirect to={routes.toCFHome(params)} />
   }
@@ -314,6 +315,16 @@ const CFRoutes: FC = () => {
         pageName={PAGE_NAME.OnboardingDetailPage}
       >
         <OnboardingDetailPage />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={CFSideNavProps}
+        path={routes.toCFConfigurePath({ ...accountPathProps, ...projectPathProps, ...environmentPathProps })}
+        exact
+        pageName={PAGE_NAME.CFConfigurePath}
+      >
+        <ConfigurePath />
       </RouteWithLayout>
 
       <RouteWithLayout

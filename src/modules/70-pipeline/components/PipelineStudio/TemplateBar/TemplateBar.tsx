@@ -28,8 +28,8 @@ import {
 import { TemplateYaml } from '@pipeline/components/PipelineStudio/TemplateYaml/TemplateYaml'
 import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { createParentEntityQueryParams } from '@common/utils/gitSyncUtils'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import css from './TemplateBar.module.scss'
 
 interface TemplateMenuItem {
@@ -41,17 +41,22 @@ interface TemplateMenuItem {
 
 export interface TemplateBarProps {
   templateLinkConfig: TemplateLinkConfig
-  onOpenTemplateSelector: (selectedTemplate: TemplateSummaryResponse) => void
+  onOpenTemplateSelector?: (selectedTemplate: TemplateSummaryResponse) => void
   onRemoveTemplate?: () => Promise<void>
   className?: string
+  isReadonly?: boolean
+  storeMetadata?: StoreMetadata
 }
 
 export function TemplateBar(props: TemplateBarProps): JSX.Element {
   const {
+    templateLinkConfig,
+    onOpenTemplateSelector,
+    onRemoveTemplate,
+    className = '',
     isReadonly,
-    state: { storeMetadata }
-  } = usePipelineContext()
-  const { templateLinkConfig, onOpenTemplateSelector, onRemoveTemplate, className = '' } = props
+    storeMetadata
+  } = props
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
   const { module, ...params } = useParams<PipelineType<ProjectPathProps>>()
@@ -70,9 +75,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     queryParams: {
       ...getScopeBasedProjectPathParams(params, scope),
       versionLabel: defaultTo(templateLinkConfig.versionLabel, ''),
-      repoIdentifier,
-      getDefaultFromOtherRepo: true,
-      ...createParentEntityQueryParams(storeMetadata, params, branch)
+      ...getGitQueryParamsWithParentScope(storeMetadata, params, repoIdentifier, branch)
     }
   })
 
@@ -83,7 +86,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
 
   const onChangeTemplate = () => {
     if (selectedTemplate) {
-      onOpenTemplateSelector(selectedTemplate)
+      onOpenTemplateSelector?.(selectedTemplate)
     }
   }
 
@@ -161,11 +164,15 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
   )
 
   const menuItems = [
-    {
-      icon: 'command-switch',
-      label: getString('pipeline.changeTemplateLabel'),
-      onClick: onChangeTemplate
-    },
+    ...(onOpenTemplateSelector
+      ? [
+          {
+            icon: 'command-switch',
+            label: getString('pipeline.changeTemplateLabel'),
+            onClick: onChangeTemplate
+          }
+        ]
+      : []),
     ...(onRemoveTemplate
       ? [
           {

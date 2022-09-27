@@ -91,31 +91,6 @@ export const mockAuditData = {
         actor: 'username',
         comment: '',
         environment: 'mock environment',
-        executedOn: 1662480695740,
-        instructionSet: [
-          {
-            Kind: 'removeClause',
-            Parameters: {
-              accountID: 'zEaak-FLS425IEO7OLzMUg',
-              identifier: 'test',
-              name: 'test',
-              organizationIdentifier: 'default',
-              projectIdentifier: 'mock project'
-            }
-          }
-        ],
-        objectAfter: '80ba8940-bc7c-4a4f-87cd-d672ddd48bcf',
-        objectBefore: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
-        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
-        objectType: 'FeatureActivation',
-        project: 'mock project',
-        status: 'Success'
-      },
-      {
-        action: 'FeatureActivationPatched',
-        actor: 'username',
-        comment: '',
-        environment: 'mock environment',
         executedOn: 1662480689659,
         instructionSet: [
           {
@@ -344,6 +319,31 @@ export const mockAuditData = {
         executedOn: 1662480689659,
         instructionSet: [
           {
+            Kind: 'clearVariationTargetMapping',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'FeatureActivationPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
             Kind: 'setDefaultOffVariation',
             Parameters: {
               accountID: 'zEaak-FLS425IEO7OLzMUg',
@@ -394,6 +394,33 @@ export const mockAuditData = {
         executedOn: 1662480689659,
         instructionSet: [
           {
+            Kind: 'addVariation',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              description: 'g',
+              identifier: 'gh',
+              name: 'gh',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project',
+              value: 'g'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'FeatureActivationPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
             Kind: 'updateVariation',
             Parameters: {
               accountID: 'zEaak-FLS425IEO7OLzMUg',
@@ -419,7 +446,7 @@ export const mockAuditData = {
         executedOn: 1662480689659,
         instructionSet: [
           {
-            Kind: 'addToExcludeList',
+            Kind: 'deleteVariation',
             Parameters: {
               accountID: 'zEaak-FLS425IEO7OLzMUg',
               identifier: 'test',
@@ -576,6 +603,358 @@ export const mockAuditData = {
               name: 'test',
               organizationIdentifier: 'default',
               projectIdentifier: 'mock project'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'SegmentPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'addToExcludeList',
+            Parameters: {
+              segmentID: '03e0dbf0-09dd-4e2e-b52c-432ae58e3581',
+              targets: ['targ1']
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'SegmentPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'addToIncludeList',
+            Parameters: {
+              segmentID: '03e0dbf0-09dd-4e2e-b52c-432ae58e3581',
+              targets: ['targ2']
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'SegmentPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'removeFromIncludeList',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'SegmentPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'removeFromExcludeList',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'SegmentPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'addClause',
+            Parameters: {
+              attribute: 'name',
+              negate: false,
+              op: 'starts_with',
+              segmentID: '03e0dbf0-09dd-4e2e-b52c-432ae58e3581',
+              values: ['green']
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'SegmentPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'removeClause',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'FeatureActivationPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'setFeatureFlagState',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project',
+              state: 'off'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'FeatureActivationPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'setFeatureFlagState',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project',
+              state: 'on'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'FeatureActivationPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'removeTargetsToVariationTargetMap',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project',
+              variation: 'test variation',
+              targets: ['targ1']
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'FeatureActivationPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'addSegmentToVariationTargetMap',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project',
+              variation: 'test variation',
+              segment: 'teset segment'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'FeatureActivationPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'addTag',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'FeatureActivationPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'updateTag',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'FeatureActivationPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'updateDefaultServe',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project',
+              bucketBy: 'test bucketby'
+            }
+          }
+        ],
+        objectAfter: '951038c3-f6c3-4dd4-9db5-b4445a2b8cd4',
+        objectBefore: '00000000-0000-0000-0000-000000000000',
+        objectIdentifier: 'b5685687-25ad-4d73-9194-50202285d128',
+        objectType: 'FeatureActivation',
+        project: 'mock project',
+        status: 'Success'
+      },
+      {
+        action: 'FeatureActivationPatched',
+        actor: 'username',
+        comment: '',
+        environment: 'mock environment',
+        executedOn: 1662480689659,
+        instructionSet: [
+          {
+            Kind: 'updateDefaultServe',
+            Parameters: {
+              accountID: 'zEaak-FLS425IEO7OLzMUg',
+              identifier: 'test',
+              name: 'test',
+              organizationIdentifier: 'default',
+              projectIdentifier: 'mock project',
+              variation: 'test variation'
             }
           }
         ],

@@ -120,6 +120,7 @@ export default function EnvironmentConfiguration({
   const history = useHistory()
   const { expressions } = useVariablesExpression()
   const { NG_SERVICE_MANIFEST_OVERRIDE, NG_SERVICE_CONFIG_FILES_OVERRIDE } = useFeatureFlags()
+  const { variables, overrides } = formikProps.values
 
   const [canEdit] = usePermission({
     resource: {
@@ -201,6 +202,8 @@ export default function EnvironmentConfiguration({
   }, [yamlHandler])
 
   const invalidYaml = isInvalidYaml()
+  const accordionActiveId =
+    variables?.length || overrides?.manifests?.length || overrides?.configFiles?.length ? 'advanced' : ''
 
   /**********************************************Service Overide CRUD Operations ************************************************/
   const handleOverrideSubmit = useCallback(
@@ -302,7 +305,7 @@ export default function EnvironmentConfiguration({
           </Card>
           {/* #region Advanced section */}
           {data?.data && (
-            <Accordion activeId={formikProps?.values?.variables?.length ? 'advanced' : ''} className={css.accordion}>
+            <Accordion activeId={accordionActiveId} className={css.accordion}>
               <Accordion.Panel
                 id="advanced"
                 addDomId={true}

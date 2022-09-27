@@ -101,3 +101,10 @@ export const QueryFormTitle: React.FC<{ title: string }> = ({ title }) => {
     </>
   )
 }
+
+export const getErrorMessageFromException = (e: any, fallbackMessage?: string): ResponseMessage[] => {
+  const hasResponseMessages = e.data?.responseMessages && e.data?.responseMessages.length > 0
+  return hasResponseMessages
+    ? e.data?.responseMessages
+    : [{ level: 'ERROR', message: e.data?.message || e.message || fallbackMessage }]
+}

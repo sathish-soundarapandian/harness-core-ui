@@ -136,6 +136,7 @@ exports[`RDS DB Selector Modal should display message for selecting region 1`] =
               data-icon="execution-warning"
             >
               <svg
+                fill="currentColor"
                 height="20"
                 viewBox="0 0 19 15"
                 width="20"

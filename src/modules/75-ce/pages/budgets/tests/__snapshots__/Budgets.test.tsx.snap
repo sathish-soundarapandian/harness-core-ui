@@ -314,6 +314,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
                         data-icon="execution-warning"
                       >
                         <svg
+                          fill="currentColor"
                           height="14"
                           viewBox="0 0 19 15"
                           width="14"
@@ -493,6 +494,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
                         data-icon="execution-warning"
                       >
                         <svg
+                          fill="currentColor"
                           height="14"
                           viewBox="0 0 19 15"
                           width="14"
@@ -676,6 +678,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
                         data-icon="execution-warning"
                       >
                         <svg
+                          fill="currentColor"
                           height="14"
                           viewBox="0 0 19 15"
                           width="14"
@@ -859,6 +862,7 @@ exports[`test cases for Budgets List Page should be able to render the budget li
                         data-icon="execution-warning"
                       >
                         <svg
+                          fill="currentColor"
                           height="14"
                           viewBox="0 0 19 15"
                           width="14"

@@ -10,6 +10,7 @@ declare const styles: {
   readonly commandUnitForm: string
   readonly destinationPath: string
   readonly destinationPathLabel: string
+  readonly fieldWrapper: string
   readonly footerContainer: string
   readonly minConfigBtn: string
   readonly scriptField: string

@@ -11,6 +11,7 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 import LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { isOnPrem } from '@common/utils/utils'
 import { useStrings } from 'framework/strings'
 
 import { DashboardsContextProvider } from './DashboardsContext'
@@ -25,6 +26,12 @@ const isEnterpriseLicense = (
   )
 }
 
+const isDashboardsLicensed = (
+  licenseInformation: Record<string, ModuleLicenseDTO> | Record<string, undefined>
+): boolean => {
+  return isOnPrem() || isEnterpriseLicense(licenseInformation)
+}
+
 const DashboardsPage: React.FC = ({ children }) => {
   const { getString } = useStrings()
   const { licenseInformation } = useLicenseStore()
@@ -35,7 +42,7 @@ const DashboardsPage: React.FC = ({ children }) => {
     <DashboardsContextProvider>
       <Container className={css.customDashboards}>
         <DashboardsHeader />
-        {isEnterpriseLicense(licenseInformation) ? children : banner}
+        {isDashboardsLicensed(licenseInformation) ? children : banner}
       </Container>
     </DashboardsContextProvider>
   )

@@ -5,46 +5,29 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useMemo } from 'react'
 import {
   AllowedTypes,
-  ButtonSize,
-  ButtonVariation,
-  Dialog,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
-  useToaster
+  SelectOption
 } from '@harness/uicore'
-import { defaultTo, get, isEmpty } from 'lodash-es'
-import type { FormikValues } from 'formik'
+import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
+import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
-import { useModalHook } from '@harness/use-modal'
-import type { IDialogProps } from '@blueprintjs/core'
+import { v4 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import {
-  ServiceDefinition,
-  ServiceResponseDTO,
-  ServiceYaml,
-  useGetRuntimeInputsServiceEntity,
-  useGetServiceAccessList,
-  useGetServiceV2
-} from 'services/cd-ng'
-import type { PipelineType } from '@common/interfaces/RouteInterfaces'
-import { yamlParse } from '@common/utils/YamlHelperMethods'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import RbacButton from '@rbac/components/Button/Button'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
+import type { ServiceDefinition, ServiceYamlV2 } from 'services/cd-ng'
 import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
-import type { ServiceInputsConfig } from '@pipeline/utils/DeployStageInterface'
-import ServiceEntityEditModal from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
+import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
+import { useDeepCompareEffect } from '@common/hooks'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
-import { isEditService, DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
+import type { DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
+import { useGetServicesData } from './useGetServicesData'
 import css from './DeployServiceEntityStep.module.scss'
 
 export interface DeployServiceEntityInputStepProps extends DeployServiceEntityCustomProps {
@@ -67,207 +50,142 @@ export function DeployServiceEntityInputStep({
 }: DeployServiceEntityInputStepProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { showError, clear } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
-  const { template: getTemplate, updateTemplate } = useRunPipelineFormContext()
+  const { updateTemplate } = useRunPipelineFormContext()
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
   const formik = useFormikContext()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<
-    PipelineType<{
-      orgIdentifier: string
-      projectIdentifier: string
-      pipelineIdentifier: string
-      accountId: string
-    }>
-  >()
+  const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
 
-  const queryParams = useMemo(
-    () => ({
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    }),
-    [accountId, orgIdentifier, projectIdentifier]
-  )
-  const {
-    data: serviceResponse,
-    error,
-    loading: serviceListLoading,
-    refetch: refetchServiceList
-  } = useGetServiceAccessList({
-    queryParams: {
-      ...queryParams,
-      type: deploymentType as ServiceDefinition['type'],
-      gitOpsEnabled: defaultTo(gitOpsEnabled, false)
+  const serviceValue = get(initialValues, `service.serviceRef`)
+  const servicesValue: ServiceYamlV2[] = get(initialValues, `services.values`, [])
+  const serviceTemplate = inputSetData?.template?.service?.serviceRef
+  const servicesTemplate = inputSetData?.template?.services?.values
+  const serviceIdentifiers: string[] = useMemo(() => {
+    if (serviceValue) {
+      return [serviceValue]
     }
-  })
 
-  const { data: serviceInputsResponse, refetch: refetchServiceInputs } = useGetRuntimeInputsServiceEntity({
-    serviceIdentifier: '',
-    queryParams,
-    lazy: true
-  })
-
-  const {
-    data: selectedServiceResponse,
-    refetch: refetchServiceData,
-    loading: serviceDataLoading
-  } = useGetServiceV2({
-    serviceIdentifier: '',
-    queryParams,
-    lazy: true
-  })
-
-  const services = serviceResponse?.data?.map(service => ({
-    label: service.service?.name || '',
-    value: service.service?.identifier || ''
-  }))
-
-  useEffect(() => {
-    if (initialValues.service?.serviceRef && inputSetData?.path) {
-      const serviceInputsTemplate = getTemplate(`${inputSetData?.path}.serviceInputs`)
-      const serviceInputsFormikValue = get(formik?.values, `${inputSetData?.path}.serviceInputs`)
-      if (
-        typeof serviceInputsTemplate === 'string' &&
-        getMultiTypeFromValue(serviceInputsTemplate) === MultiTypeInputType.RUNTIME &&
-        !isEmpty(serviceInputsFormikValue)
-      ) {
-        refetchServiceInputs({
-          pathParams: {
-            serviceIdentifier: initialValues.service?.serviceRef
-          },
-          queryParams
-        })
-      }
+    if (Array.isArray(servicesValue)) {
+      return servicesValue.map(svc => svc.serviceRef)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialValues.service?.serviceRef]) // This dependency is added to update the template on switching from yaml to visual view and when input set is selected
 
-  useEffect(() => {
-    if (serviceInputsResponse?.data) {
-      const serviceInputsData = serviceInputsResponse?.data?.inputSetTemplateYaml
-      if (serviceInputsData) {
-        const serviceInputSetResponse = yamlParse<ServiceInputsConfig>(defaultTo(serviceInputsData, ''))
-        if (serviceInputSetResponse) {
-          updateTemplate(serviceInputSetResponse?.serviceInputs, `${inputSetData?.path}.serviceInputs`)
+    return []
+  }, [serviceValue, servicesValue])
+  const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
+  const { servicesData, servicesList, loadingServicesData, loadingServicesList, updatingData } = useGetServicesData({
+    gitOpsEnabled,
+    deploymentType: deploymentType as ServiceDefinition['type'],
+    serviceIdentifiers
+  })
+  const isMultiSvcTemplate =
+    getMultiTypeFromValue(servicesTemplate as unknown as string) === MultiTypeInputType.RUNTIME ||
+    (Array.isArray(servicesTemplate) &&
+      servicesTemplate.some(svc => getMultiTypeFromValue(svc.serviceRef) === MultiTypeInputType.RUNTIME))
 
-          const serviceInputsFormikValue = get(formik?.values, `${inputSetData?.path}.serviceInputs`)
-          if (isEmpty(serviceInputsFormikValue)) {
-            formik?.setFieldValue(
-              `${inputSetData?.path}.serviceInputs`,
-              isStageTemplateInputSetForm
-                ? serviceInputSetResponse?.serviceInputs
-                : clearRuntimeInput(serviceInputSetResponse?.serviceInputs)
-            )
-          }
-        }
+  const selectOptions = useMemo(() => {
+    /* istanbul ignore else */
+    if (!isNil(servicesList)) {
+      return servicesList.map(service => ({ label: service.name, value: service.identifier }))
+    }
+
+    return []
+  }, [servicesList])
+
+  useDeepCompareEffect(() => {
+    // if this is a multi service template, then set up a dummy field,
+    // so that services can be updated in this dummy field
+    if (isMultiSvcTemplate) {
+      formik.setFieldValue(
+        uniquePath.current,
+        serviceIdentifiers.map(svcId => ({
+          label: defaultTo(servicesList.find(s => s.identifier === svcId)?.name, svcId),
+          value: svcId
+        }))
+      )
+    }
+  }, [servicesList])
+
+  useDeepCompareEffect(() => {
+    // if no value is selected, clear the inputs and template
+    if (serviceIdentifiers.length === 0) {
+      if (isMultiSvcTemplate) {
+        updateTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}values`)
+        formik.setFieldValue(`${pathPrefix}values`, [])
       } else {
-        updateTemplate({}, `${inputSetData?.path}.serviceInputs`)
-        formik?.setFieldValue(`${inputSetData?.path}`, { serviceRef: initialValues.service?.serviceRef })
+        updateTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}serviceInputs`)
+        formik.setFieldValue(`${pathPrefix}serviceInputs`, {})
       }
+      return
+    }
+
+    // updated template data based on selected services
+    const newServicesTemplate: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
+      return {
+        serviceRef: RUNTIME_INPUT_VALUE,
+        serviceInputs: servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
+      }
+    })
+
+    // updated values based on selected services
+    const newServicesValues: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
+      const svcTemplate = servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
+      return {
+        serviceRef: svcId,
+        serviceInputs: svcTemplate ? clearRuntimeInput(svcTemplate) : {}
+      }
+    })
+
+    if (isMultiSvcTemplate) {
+      updateTemplate(newServicesTemplate, `${pathPrefix}values`)
+      formik.setFieldValue(`${pathPrefix}values`, newServicesValues)
+    } else {
+      updateTemplate(defaultTo(newServicesTemplate[0].serviceInputs, {}), `${pathPrefix}serviceInputs`)
+      formik.setFieldValue(`${pathPrefix}serviceInputs`, defaultTo(newServicesValues[0].serviceInputs, {}))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serviceInputsResponse?.data])
+  }, [servicesData, serviceIdentifiers])
 
-  const onServiceEntityUpdate = (newServiceInfo: ServiceYaml): void => {
-    refetchServiceList()
-    formik?.setFieldValue(
-      `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}serviceRef`,
-      newServiceInfo.identifier
-    )
-    hideModal()
-  }
-
-  const editService = (values: FormikValues): void => {
-    refetchServiceData({
-      pathParams: {
-        serviceIdentifier: values.serviceRef
-      },
-      queryParams
-    })
-    showModal()
-  }
-
-  const DIALOG_PROPS: IDialogProps = {
-    isOpen: true,
-    usePortal: true,
-    autoFocus: true,
-    canEscapeKeyClose: false,
-    canOutsideClickClose: false,
-    enforceFocus: false,
-    className: css.editServiceDialog,
-    style: { width: 1114 }
-  }
-
-  const [showModal, hideModal] = useModalHook(
-    () => (
-      <Dialog onClose={onClose} title={getString('editService')} {...DIALOG_PROPS}>
-        <ServiceEntityEditModal
-          serviceResponse={selectedServiceResponse?.data?.service as ServiceResponseDTO}
-          isLoading={serviceDataLoading}
-          onCloseModal={hideModal}
-          onServiceCreate={onServiceEntityUpdate}
-          isServiceCreateModalView={false}
-        />
-      </Dialog>
-    ),
-    [selectedServiceResponse, serviceDataLoading]
-  )
-  const onClose = useCallback(() => {
-    hideModal()
-  }, [hideModal])
-
-  if (error?.message) {
-    clear()
-    showError(getRBACErrorMessage(error), undefined, 'cd.svc.list.error')
-  }
-
-  const onServiceRefChange = (value: any): void => {
+  const onServiceRefChange = (value: SelectOption): void => {
     if (
       isStageTemplateInputSetForm &&
       getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME &&
       inputSetData?.path
     ) {
-      formik?.setFieldValue(inputSetData.path, {
+      formik.setFieldValue(inputSetData.path, {
         serviceRef: RUNTIME_INPUT_VALUE,
         serviceInputs: RUNTIME_INPUT_VALUE
       })
       return
     }
-    if (isEmpty(value?.value)) {
-      formik?.setFieldValue(`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}serviceInputs`, {})
-      updateTemplate({}, `${inputSetData?.path}.serviceInputs`)
-    } else {
-      refetchServiceInputs({
-        pathParams: {
-          serviceIdentifier: value.value
-        },
-        queryParams
-      })
-    }
   }
 
-  if (!services?.length && !inputSetData?.readonly) {
-    return null
+  function handleServicesChange(values: SelectOption[]): void {
+    const newValues = values.map(val => ({
+      serviceRef: val.value as string,
+      serviceInputs: RUNTIME_INPUT_VALUE
+    }))
+
+    formik.setFieldValue(`${pathPrefix}values`, newValues)
   }
+
+  const loading = loadingServicesList || loadingServicesData || updatingData
 
   return (
     <>
-      {getMultiTypeFromValue(inputSetData?.template?.service?.serviceRef) === MultiTypeInputType.RUNTIME && (
-        <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
+      <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
+        {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
           <ExperimentalInput
             tooltipProps={{ dataTooltipId: 'specifyYourService' }}
             label={getString('cd.pipelineSteps.serviceTab.specifyYourService')}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}serviceRef`}
+            name={`${pathPrefix}serviceRef`}
             placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
-            selectItems={services}
+            selectItems={selectOptions}
             useValue
             multiTypeInputProps={{
               expressions,
               allowableTypes: allowableTypes,
               selectProps: {
                 addClearBtn: true && !inputSetData?.readonly,
-                items: services
+                items: selectOptions
               },
               onChange: onServiceRefChange
             }}
@@ -275,32 +193,28 @@ export function DeployServiceEntityInputStep({
             className={css.inputWidth}
             formik={formik}
           />
-          {getMultiTypeFromValue(initialValues.service?.serviceRef) === MultiTypeInputType.FIXED && (
-            <>
-              {isEditService(initialValues) && !serviceListLoading && (
-                <RbacButton
-                  size={ButtonSize.SMALL}
-                  text={getString('editService')}
-                  variation={ButtonVariation.LINK}
-                  id="edit-service"
-                  disabled={inputSetData?.readonly}
-                  permission={{
-                    permission: PermissionIdentifier.EDIT_SERVICE,
-                    resource: {
-                      resourceType: ResourceType.SERVICE,
-                      resourceIdentifier: services?.[0]?.value as string
-                    },
-                    options: {
-                      skipCondition: ({ resourceIdentifier }) => !resourceIdentifier
-                    }
-                  }}
-                  onClick={() => editService(initialValues)}
-                />
-              )}
-            </>
-          )}
-        </Layout.Horizontal>
-      )}
+        ) : null}
+        {isMultiSvcTemplate ? (
+          <FormMultiTypeMultiSelectDropDown
+            tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+            label={getString('cd.pipelineSteps.serviceTab.specifyYourServices')}
+            name={uniquePath.current}
+            disabled={inputSetData?.readonly || loading}
+            dropdownProps={{
+              items: selectOptions,
+              placeholder: getString('services'),
+              disabled: loading || inputSetData?.readonly
+            }}
+            onChange={handleServicesChange}
+            multiTypeProps={{
+              width: 300,
+              expressions,
+              allowableTypes
+            }}
+          />
+        ) : null}
+        {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}
+      </Layout.Horizontal>
     </>
   )
 }

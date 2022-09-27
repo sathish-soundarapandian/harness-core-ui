@@ -47,6 +47,7 @@ jest.mock('@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesV
 const contextMock = produce(templateSelectorContextMock, draft => {
   set(draft, 'state.selectorData.templateType', 'Step')
   set(draft, 'state.selectorData.allChildTypes', ['HarnessApproval', 'ShellScript'])
+  set(draft, 'state.selectorData.linkedTemplate.identifiers', ['manjutesttemplate'])
 })
 
 const defaultQueryParams = {
@@ -157,7 +158,8 @@ describe('<TemplateSelectorLeftView> tests', () => {
         body: {
           childTypes: ['ShellScript'],
           filterType: 'Template',
-          templateEntityTypes: ['Step']
+          templateEntityTypes: ['Step'],
+          templateIdentifiers: ['manjutesttemplate']
         }
       })
     )
@@ -232,7 +234,8 @@ describe('<TemplateSelectorLeftView> tests', () => {
         body: {
           childTypes: ['HarnessApproval', 'ShellScript'],
           filterType: 'Template',
-          templateEntityTypes: ['Step']
+          templateEntityTypes: ['Step'],
+          templateIdentifiers: ['manjutesttemplate']
         },
         queryParams: defaultQueryParams
       })

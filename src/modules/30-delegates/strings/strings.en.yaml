@@ -35,7 +35,7 @@ successVerification:
   addHelmRepoLabel: 'Add Harness helm repo'
   addHelmRepoCmd: '$ helm repo add <repo-name> https://app.harness.io/storage/harness-download/harness-helm-charts/'
   installHelmChartLabel: 'To install the helm chart use the below command'
-  installHelmChartCmd: '$ helm upgrade -i <delegate-name> --namespace <namespace> --create-namespace <repo-name>/harness-delegate-ng -f harness-delegate-values.yaml'
+  installHelmChartCmd: '$ helm install  --namespace <namespace> --create-namespace harness/harness-delegate-ng -f harness-delegate-values.yaml'
   checkingForHeartbeat: Checking for heartbeat
 delegateNotInstalled:
   verifyStatus1: 'docker container ls -a'
@@ -148,3 +148,4 @@ noInstances: 'No instances'
 successfullyUpdatedConfig: 'Successfully Updated Delegate Configuration'
 configNameRequired: 'Delegate Configuration name is Required.'
 instanceStatus: 'Instance Status'
+runAsRoot: 'Run delegate with root access'

@@ -28,6 +28,8 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { StageType } from '@pipeline/utils/stageHelpers'
 import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export default function DeployEnvSpecifications(props: PropsWithChildren<unknown>): JSX.Element {
@@ -35,6 +37,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   const { getString } = useStrings()
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
+  const isMultiInfra = useFeatureFlag(FeatureFlag.MULTI_SERVICE_INFRA)
   useEffect(() => {
     if (errorMap.size > 0) {
       submitFormsForTab(DeployTabs.ENVIRONMENT)
@@ -66,6 +69,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   useEffect(() => {
+    // TODO: MULTI_SERVICE_INFRA add support
     if (
       isEmpty(stage?.stage?.spec?.environment) &&
       isEmpty(stage?.stage?.spec?.environmentGroup) &&
@@ -85,6 +89,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   }, [])
 
   const updateEnvStep = useCallback(
+    // TODO: MULTI_SERVICE_INFRA add support
     /* istanbul ignore next */ (value: DeployStageConfig) => {
       const stageData = produce(stage, draft => {
         const specObject: DeployStageConfig = get(draft, 'stage.spec', {})
@@ -109,12 +114,47 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     <div className={stageCss.deployStage} key="1">
       <DeployServiceErrors domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
       <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
-        <Text className={stageCss.tabHeading} id="environment" margin={{ bottom: 'small' }}>
-          {getString('environment')}
-        </Text>
-        <Card>
+        {!isMultiInfra ? (
+          <>
+            <Text className={stageCss.tabHeading} id="environment" margin={{ bottom: 'small' }}>
+              {getString('environment')}
+            </Text>
+            <Card>
+              <StepWidget
+                type={StepType.DeployInfrastructure}
+                readonly={isReadonly}
+                initialValues={{
+                  gitOpsEnabled: get(stage, 'stage.spec.gitOpsEnabled', false),
+                  ...(get(stage, 'stage.spec.environment', false) && {
+                    environment: get(stage, 'stage.spec.environment')
+                  }),
+                  ...(scope !== Scope.PROJECT && {
+                    environment: { environmentRef: RUNTIME_INPUT_VALUE }
+                  }),
+                  ...(get(stage, 'stage.spec.environmentGroup', false) && {
+                    environmentGroup: get(stage, 'stage.spec.environmentGroup')
+                  })
+                }}
+                allowableTypes={
+                  (scope === Scope.PROJECT
+                    ? (allowableTypes as MultiTypeInputType[]).filter(item => item !== MultiTypeInputType.EXPRESSION)
+                    : (allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.FIXED && item !== MultiTypeInputType.EXPRESSION
+                      )) as AllowedTypes
+                }
+                onUpdate={val => updateEnvStep(val)}
+                factory={factory}
+                stepViewType={StepViewType.Edit}
+                customStepProps={{
+                  getString: getString,
+                  serviceRef: stage?.stage?.spec?.service?.serviceRef
+                }}
+              />
+            </Card>
+          </>
+        ) : (
           <StepWidget
-            type={StepType.DeployInfrastructure}
+            type={StepType.DeployEnvironmentEntity}
             readonly={isReadonly}
             initialValues={{
               gitOpsEnabled: get(stage, 'stage.spec.gitOpsEnabled', false),
@@ -140,10 +180,11 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
             stepViewType={StepViewType.Edit}
             customStepProps={{
               getString: getString,
+              // is serviceRef required?
               serviceRef: stage?.stage?.spec?.service?.serviceRef
             }}
           />
-        </Card>
+        )}
         <Container margin={{ top: 'xxlarge' }}>{props.children}</Container>
       </div>
     </div>

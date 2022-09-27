@@ -41,12 +41,12 @@ import {
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
-import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
 import { useQueryParams } from '@common/hooks'
 import { stringify } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { createParentEntityQueryParams } from '@common/utils/gitSyncUtils'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TemplateStepWidget.module.scss'
 
@@ -89,9 +89,7 @@ function TemplateStepWidget(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
-      repoIdentifier,
-      getDefaultFromOtherRepo: true,
-      ...createParentEntityQueryParams(storeMetadata, queryParams, branch)
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
 
@@ -113,9 +111,7 @@ function TemplateStepWidget(
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
 
@@ -128,7 +124,7 @@ function TemplateStepWidget(
 
   const updateFormValues = (newTemplateInputs?: StepElementConfig) => {
     const updateValues = produce(initialValues, draft => {
-      set(draft, 'template.templateInputs', newTemplateInputs)
+      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
     })
     setFormValues(updateValues)
     onUpdate?.(updateValues)

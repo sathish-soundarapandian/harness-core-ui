@@ -15,6 +15,7 @@ import {
   GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams,
   GitOpsInstanceInfoDTO,
   InstanceDetailsDTO,
+  K8sInstanceInfoDTO,
   NativeHelmInstanceInfoDTO,
   ServiceDefinition,
   useGetActiveInstancesByServiceIdEnvIdAndBuildIds
@@ -110,6 +111,20 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
 
   const instanceData = data?.data?.instancesByBuildIdList?.[0]?.instances[instanceNum] || {}
 
+  const defaultInstanceInfoData = [
+    {
+      label:
+        instanceData.instanceInfoDTO?.type === ServiceDeploymentType.ServerlessAwsLambda
+          ? getString('cd.serviceDashboard.function')
+          : getString('cd.serviceDashboard.pod'),
+      value: instanceData.podName || ''
+    },
+    {
+      label: getString('cd.serviceDashboard.artifact'),
+      value: instanceData.artifactName || ''
+    }
+  ]
+
   function instanceInfoData(deploymentType: string | undefined): any {
     switch (deploymentType) {
       case ServiceDeploymentType.AzureWebApp:
@@ -151,19 +166,27 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
           }
         ]
       default:
-        return [
-          {
-            label:
-              instanceData.instanceInfoDTO?.type === ServiceDeploymentType.ServerlessAwsLambda
-                ? getString('cd.serviceDashboard.function')
-                : getString('cd.serviceDashboard.pod'),
-            value: instanceData.podName || ''
-          },
-          {
-            label: getString('cd.serviceDashboard.artifact'),
-            value: instanceData.artifactName || ''
-          }
-        ]
+        return ((instanceData?.instanceInfoDTO as K8sInstanceInfoDTO)?.containerList || []).length
+          ? [
+              ...defaultInstanceInfoData,
+              {
+                label: getString('cd.serviceDashboard.containerList'),
+                value: (
+                  <>
+                    {(instanceData?.instanceInfoDTO as K8sInstanceInfoDTO)?.containerList?.map(
+                      (cont: { containerId?: string; image?: string }) => {
+                        return (
+                          <Text lineClamp={1} className={css.containerListItems} key={cont?.containerId}>
+                            {cont?.image}
+                          </Text>
+                        )
+                      }
+                    )}
+                  </>
+                )
+              }
+            ]
+          : [...defaultInstanceInfoData]
     }
   }
 

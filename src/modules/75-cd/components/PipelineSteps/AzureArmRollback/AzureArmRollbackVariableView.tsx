@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { get } from 'lodash-es'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { RollbackStackData, RollbackVariableStepProps } from './AzureArmRollback.types'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
@@ -17,8 +18,8 @@ export function AzureArmRollbackVariableStep({
 }: RollbackVariableStepProps): React.ReactElement {
   return (
     <VariablesListTable
-      data={variablesData}
-      originalData={initialValues}
+      data={get(variablesData, 'spec')}
+      originalData={get(initialValues, 'spec')}
       metadataMap={metadataMap}
       className={pipelineVariableCss.variablePaddingL3}
     />

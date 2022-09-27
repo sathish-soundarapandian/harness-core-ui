@@ -48,6 +48,8 @@ import {
   ciCodebaseBuildPullRequest
 } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { TriggerConfigDTO } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { BuildTabs } from '@ci/components/PipelineStudio/CIPipelineStagesUtils'
 import {
   InfraProvisioningWizardProps,
   WizardStep,
@@ -59,7 +61,9 @@ import {
   getFullRepoName,
   Hosting,
   GitAuthenticationMethod,
-  getPipelinePayloadWithCodebase
+  getPipelinePayloadWithCodebase,
+  getCloudPipelinePayloadWithCodebase,
+  getCloudPipelinePayloadWithoutCodebase
 } from './Constants'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
@@ -84,6 +88,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const { setShowGetStartedTabInMainMenu } = useSideNavContext()
   const { showError: showErrorToaster } = useToaster()
   const [buttonLabel, setButtonLabel] = useState<string>('')
+
+  const { CIE_HOSTED_VMS } = useFeatureFlags()
 
   useEffect(() => {
     setCurrentWizardStepId(lastConfiguredWizardStepId)
@@ -122,7 +128,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         return ''
       }
       const payload = addDetailsToPipeline({
-        originalPipeline: getPipelinePayloadWithCodebase(),
+        originalPipeline: CIE_HOSTED_VMS ? getCloudPipelinePayloadWithCodebase() : getPipelinePayloadWithCodebase(),
         name: `${getString('buildText')} ${repoName}`,
         identifier: `${getString('buildText')}_${repoName.replace(/-/g, '_')}_${UNIQUE_PIPELINE_ID}`,
         projectIdentifier,
@@ -143,7 +149,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const constructPipelinePayloadWithoutCodebase = React.useCallback((): string => {
     const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
     const payload = addDetailsToPipeline({
-      originalPipeline: getPipelinePayloadWithoutCodebase(),
+      originalPipeline: CIE_HOSTED_VMS ? getCloudPipelinePayloadWithoutCodebase() : getPipelinePayloadWithoutCodebase(),
       name: `${getString('buildText')} ${getString('common.pipeline').toLowerCase()}`,
       identifier: `${getString('buildText')}_${getString('common.pipeline').toLowerCase()}_${UNIQUE_PIPELINE_ID}`,
       projectIdentifier,
@@ -310,7 +316,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                           orgIdentifier,
                           projectIdentifier,
                           pipelineIdentifier: createPipelineResponse?.data?.identifier,
-                          stageId: getString('buildText')
+                          stageId: getString('buildText'),
+                          sectionId: BuildTabs.EXECUTION
                         })
                       )
                     }
@@ -359,7 +366,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               orgIdentifier,
               projectIdentifier,
               pipelineIdentifier: createPipelineRes?.data?.identifier,
-              stageId: getString('buildText')
+              stageId: getString('buildText'),
+              sectionId: BuildTabs.EXECUTION
             })
           )
         }

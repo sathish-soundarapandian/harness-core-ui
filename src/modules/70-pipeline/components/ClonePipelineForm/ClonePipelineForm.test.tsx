@@ -174,7 +174,7 @@ describe('<ClonePipelineForm /> tests', () => {
               projectIdentifier: 'TEST_PROJECT1'
             }
           },
-          { queryParams: { accountIdentifier: 'TEST_ACCOUNT1' } }
+          { queryParams: { accountIdentifier: 'TEST_ACCOUNT1', storeType: 'INLINE' } }
         )
       )
       const newLocation = await findByTestId('location')
@@ -183,7 +183,7 @@ describe('<ClonePipelineForm /> tests', () => {
         <div
           data-testid="location"
         >
-          /account/TEST_ACCOUNT1/cd/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone
+          /account/TEST_ACCOUNT1/cd/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone/pipeline-studio/?storeType=INLINE
         </div>
       `)
     })
@@ -478,7 +478,7 @@ describe('<ClonePipelineForm /> tests', () => {
         <div
           data-testid="location"
         >
-          /account/TEST_ACCOUNT1/cd/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone
+          /account/TEST_ACCOUNT1/cd/orgs/TEST_ORG1/projects/TEST_PROJECT1/pipelines/My_Pipeline_Clone/pipeline-studio/?storeType=REMOTE&repoName=MyRepo&branch=main&connectorRef=MyConnector
         </div>
       `)
     })

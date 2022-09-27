@@ -299,14 +299,14 @@ exports[`KustomizeManifestSource tests Should match snapshot 1`] = `
                                     class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
                                   >
                                     <span
-                                      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small"
+                                      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
                                       icon="chevron-down"
                                     >
                                       <svg
                                         data-icon="chevron-down"
-                                        height="16"
+                                        height="15"
                                         viewBox="0 0 16 16"
-                                        width="16"
+                                        width="15"
                                       >
                                         <desc>
                                           chevron-down
@@ -477,14 +477,14 @@ exports[`KustomizeManifestSource tests Should match snapshot 1`] = `
                                     class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
                                   >
                                     <span
-                                      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small"
+                                      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
                                       icon="chevron-down"
                                     >
                                       <svg
                                         data-icon="chevron-down"
-                                        height="16"
+                                        height="15"
                                         viewBox="0 0 16 16"
-                                        width="16"
+                                        width="15"
                                       >
                                         <desc>
                                           chevron-down
@@ -880,14 +880,14 @@ exports[`KustomizeManifestSource tests Should match snapshot with fromTrigger 1`
                                     class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
                                   >
                                     <span
-                                      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small"
+                                      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
                                       icon="chevron-down"
                                     >
                                       <svg
                                         data-icon="chevron-down"
-                                        height="16"
+                                        height="15"
                                         viewBox="0 0 16 16"
-                                        width="16"
+                                        width="15"
                                       >
                                         <desc>
                                           chevron-down
@@ -1058,14 +1058,14 @@ exports[`KustomizeManifestSource tests Should match snapshot with fromTrigger 1`
                                     class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
                                   >
                                     <span
-                                      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small"
+                                      class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
                                       icon="chevron-down"
                                     >
                                       <svg
                                         data-icon="chevron-down"
-                                        height="16"
+                                        height="15"
                                         viewBox="0 0 16 16"
-                                        width="16"
+                                        width="15"
                                       >
                                         <desc>
                                           chevron-down

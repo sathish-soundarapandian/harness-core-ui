@@ -47,8 +47,6 @@ import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
 import { connectorGovernanceModalProps } from '@connectors/utils/utils'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { doesGovernanceHasErrorOrWarning } from '@governance/utils'
 import { isSMConnector } from '../connectors/utils/ConnectorUtils'
 import css from './CreateConnectorFromYamlPage.module.scss'
@@ -62,7 +60,6 @@ const CreateConnectorFromYamlPage: React.FC = () => {
   const { mutate: createConnector, loading: creating } = useCreateConnector({
     queryParams: { accountIdentifier: accountId }
   })
-  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
 
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   const [editorContent, setEditorContent] = React.useState<Record<string, any>>()
@@ -120,14 +117,10 @@ const CreateConnectorFromYamlPage: React.FC = () => {
       ? { accountIdentifier: accountId, ...gitData, baseBranch: gitResourceDetails.gitDetails?.branch }
       : {}
     const response = await createConnector(connectorJSON, { queryParams })
-    let { governanceMetaDataHasError, governanceMetaDataHasWarning } = doesGovernanceHasErrorOrWarning(
+    const { governanceMetaDataHasError, governanceMetaDataHasWarning } = doesGovernanceHasErrorOrWarning(
       response.data?.governanceMetadata
     )
-    if (!opaFlagEnabled) {
-      governanceMetaDataHasError = false
-      governanceMetaDataHasWarning = false
-    }
-    if (opaFlagEnabled && response.data?.governanceMetadata) {
+    if (response.data?.governanceMetadata) {
       conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
         rerouteBasedOnContext()
       })

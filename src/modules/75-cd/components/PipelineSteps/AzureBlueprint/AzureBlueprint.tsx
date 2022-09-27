@@ -44,7 +44,12 @@ export class AzureBlueprintStep extends PipelineStep<AzureBlueprintStepInfo> {
         connectorRef: '',
         assignmentName: '',
         scope: ScopeTypes.Subscription,
-        template: {}
+        template: {
+          store: {
+            type: '',
+            spec: {}
+          }
+        }
       }
     }
   }

@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { Container, Icon, IconName, Layout, Text } from '@wings-software/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import type { RiskCount } from 'services/cv'
 import { getRiskColorLogo, getRiskColorValue } from '@cv/utils/CommonUtils'
 import type { RiskTypes } from '../../CVSLOsListingPage.types'
@@ -17,12 +17,11 @@ interface SLOCardSelectProps extends RiskCount {
   displayColor: string
 }
 
-const SLOCardSelect: React.FC<SLOCardSelectProps> = ({ displayName, count, displayColor }) => {
+const SLOCardSelect: React.FC<SLOCardSelectProps> = ({ displayName, count }) => {
   const riskCategory = displayName?.toUpperCase()?.replace(/ /g, '_') as RiskTypes
-  const dataTooltipId = useMemo(() => riskCategory + '_tooltip', [displayName])
+  const dataTooltipId = useMemo(() => displayName?.replace(/ /g, '') + '_tooltip', [displayName])
   const iconCardBackgroundColor = getRiskColorValue(riskCategory)
   const riskCategoryLogo = getRiskColorLogo(riskCategory) as IconName
-  // const isRiskCategoryHealthOrUnhealthy = riskCategory === RiskValues.HEALTHY || riskCategory === RiskValues.UNHEALTHY
 
   return (
     <Layout.Horizontal height={76} className={css.sloCardSelectContainer} data-test-id={dataTooltipId}>
@@ -32,19 +31,13 @@ const SLOCardSelect: React.FC<SLOCardSelectProps> = ({ displayName, count, displ
         style={{ backgroundColor: `${iconCardBackgroundColor}` }}
         className={css.filterIcons}
       >
-        <Icon
-          name={riskCategoryLogo}
-          size={30}
-          // color={isRiskCategoryHealthOrUnhealthy ? Color.WHITE : undefined}
-        />
+        <Icon name={riskCategoryLogo} size={30} color={Color.WHITE} />
       </Container>
       <Layout.Vertical flex={{ justifyContent: 'center', alignItems: 'flex-start' }}>
         <Text font={{ variation: FontVariation.FORM_HELP }} tooltipProps={{ dataTooltipId }}>
           {displayName}
         </Text>
-        <Text color={displayColor} font={{ variation: FontVariation.H2 }}>
-          {count}
-        </Text>
+        <Text font={{ variation: FontVariation.H2 }}>{count}</Text>
       </Layout.Vertical>
     </Layout.Horizontal>
   )

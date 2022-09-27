@@ -47,6 +47,12 @@ export default function ExecutionInputsView(props: ExecutionInputsViewInterface)
     }
   })
 
+  const storeMetadata = {
+    connectorRef: pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef,
+    branch: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch,
+    repoName: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName
+  }
+
   const [inputSetYaml, setInputSetYaml] = useState('')
   const [inputSetTemplateYaml, setInputSetTemplateYaml] = useState('')
   useEffect(() => {
@@ -84,6 +90,7 @@ export default function ExecutionInputsView(props: ExecutionInputsViewInterface)
         mockData={props.mockData}
         executionInputSetTemplateYaml={inputSetTemplateYaml}
         storeType={pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType}
+        storeMetadata={storeMetadata}
       />
     </div>
   )

@@ -25,11 +25,6 @@ export interface SpecificTargetingItemProps {
   refetchTargets: (searchTerm: string) => void
 }
 
-export interface TagInputItem {
-  label: string
-  value: string
-}
-
 const SpecificTargetingItem = (props: SpecificTargetingItemProps): ReactElement => {
   const {
     targets,

@@ -63,9 +63,8 @@ export type TemplateFormRef<T = unknown> =
 export function TemplateStudio(): React.ReactElement {
   const { state, view, updateTemplateView, updateTemplate, deleteTemplateCache, isReadonly, fetchTemplate, setView } =
     React.useContext(TemplateContext)
-  const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, module, templateType } = useParams<
-    TemplateStudioPathProps & ModulePathParams
-  >()
+  const params = useParams<TemplateStudioPathProps & ModulePathParams>()
+  const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, module, templateType } = params
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const {
     template,
@@ -306,7 +305,7 @@ export function TemplateStudio(): React.ReactElement {
   )
 
   return (
-    <TemplateVariablesContextProvider template={template}>
+    <TemplateVariablesContextProvider template={template} storeMetadata={storeMetadata}>
       <NavigationCheck
         when={template?.identifier !== ''}
         shouldBlockNavigation={nextLocation => {

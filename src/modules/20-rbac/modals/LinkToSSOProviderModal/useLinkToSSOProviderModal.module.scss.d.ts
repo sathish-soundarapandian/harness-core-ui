@@ -10,6 +10,7 @@ declare const styles: {
   readonly checkbox: string
   readonly crossIcon: string
   readonly dialog: string
+  readonly layoutErrorMessage: string
   readonly select: string
   readonly wrapper: string
 }

@@ -109,6 +109,7 @@ exports[`Node Status Indicator Test Should render diagramnodes 1`] = `
         data-status="failed"
       >
         <svg
+          fill="currentColor"
           height="16"
           viewBox="0 0 19 15"
           width="16"

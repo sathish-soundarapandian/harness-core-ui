@@ -20,8 +20,7 @@ import {
 } from '@wings-software/uicore'
 import { v4 as uuid } from 'uuid'
 import cx from 'classnames'
-import type { IOptionProps } from '@blueprintjs/core'
-
+import { Radio, RadioGroup } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -38,17 +37,6 @@ import {
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ShellScript.module.scss'
-
-export const targetTypeOptions: IOptionProps[] = [
-  {
-    label: 'Specify Target Host',
-    value: 'targethost'
-  },
-  {
-    label: 'On Delegate',
-    value: 'delegate'
-  }
-]
 
 export default function OptionalConfiguration(props: {
   formik: FormikProps<ShellScriptFormData>
@@ -202,16 +190,18 @@ export default function OptionalConfiguration(props: {
           </div>
         ) : null}
         <div className={stepCss.formGroup}>
-          <FormInput.RadioGroup
-            name="spec.onDelegate"
-            label={getString('pipeline.executionTarget')}
-            isOptional
-            optionalLabel={getString('common.optionalLabel')}
-            radioGroup={{ inline: true }}
-            items={targetTypeOptions}
-            className={css.radioGroup}
+          <RadioGroup
+            selectedValue={formValues.spec.onDelegate}
             disabled={readonly}
-          />
+            inline={true}
+            label={getString('pipeline.executionTarget') + ' ' + getString('common.optionalLabel')}
+            onChange={e => {
+              formik.setFieldValue('spec.onDelegate', e.currentTarget.value)
+            }}
+          >
+            <Radio value={'targethost'} label={'Specify Target Host'} />
+            <Radio value={'delegate'} label={'On Delegate'} />
+          </RadioGroup>
         </div>
         {formValues.spec.onDelegate === 'targethost' ? (
           <div>
@@ -240,9 +230,13 @@ export default function OptionalConfiguration(props: {
             </div>
             <div className={cx(stepCss.formGroup, stepCss.md)}>
               <MultiTypeSecretInput
-                type="SSHKey"
+                type={formValues.spec.shell === 'PowerShell' ? 'WinRmCredentials' : 'SSHKey'}
                 name="spec.executionTarget.connectorRef"
-                label={getString('sshConnector')}
+                label={
+                  formValues.spec.shell === 'PowerShell'
+                    ? getString('secrets.secret.winrmCredential')
+                    : getString('sshConnector')
+                }
                 expressions={expressions}
                 allowableTypes={allowableTypes}
                 disabled={readonly}

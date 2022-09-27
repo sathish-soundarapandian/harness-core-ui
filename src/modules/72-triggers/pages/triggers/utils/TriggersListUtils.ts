@@ -79,11 +79,7 @@ export const getTriggerIcon = ({
   return 'yaml-builder-trigger'
 }
 
-const triggerDrawerMap = (
-  getString: (key: StringKeys) => string,
-  isNewService: boolean,
-  includeAzureReposTrigger?: boolean
-): AddDrawerMapInterface => ({
+const triggerDrawerMap = (getString: (key: StringKeys) => string, isNewService: boolean): AddDrawerMapInterface => ({
   drawerLabel: getString('common.triggersLabel'),
   showAllLabel: getString('triggers.showAllTriggers'),
   categories: [
@@ -106,15 +102,11 @@ const triggerDrawerMap = (
           value: GitSourceProviders.BITBUCKET.value,
           iconName: GitSourceProviders.BITBUCKET.iconName
         },
-        ...(includeAzureReposTrigger
-          ? [
-              {
-                itemLabel: getString('common.repo_provider.azureRepos'),
-                value: GitSourceProviders.AZURE_REPO.value,
-                iconName: GitSourceProviders.AZURE_REPO.iconName as IconName
-              }
-            ]
-          : []),
+        {
+          itemLabel: getString('common.repo_provider.azureRepos'),
+          value: GitSourceProviders.AZURE_REPO.value,
+          iconName: GitSourceProviders.AZURE_REPO.iconName
+        },
         {
           itemLabel: getString('common.repo_provider.awscodecommit'),
           value: GitSourceProviders.AWS_CODECOMMIT.value,
@@ -240,9 +232,8 @@ export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { 
 
 export const getCategoryItems = (
   getString: (key: StringKeys) => string,
-  isNewService: boolean,
-  includeAzureReposTrigger?: boolean
-): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService, includeAzureReposTrigger)
+  isNewService: boolean
+): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService)
 
 export interface ItemInterface {
   itemLabel: string

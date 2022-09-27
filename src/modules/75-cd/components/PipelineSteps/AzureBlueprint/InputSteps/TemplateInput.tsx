@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import cx from 'classnames'
@@ -38,7 +38,7 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
   const newConnectorLabel = `${
     !!connectorType && getString(ConnectorLabelMap[connectorType as ConnectorTypes])
   } ${getString('connector')}`
-
+  const [isAccount, setIsAccount] = useState<boolean>(false)
   const inputSet = get(inputSetData, 'template.spec.configuration.template')
   return (
     <>
@@ -61,13 +61,17 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
               multiTypeProps={{ expressions, allowableTypes }}
               disabled={readonly}
               setRefValue
+              onChange={(value: any, _unused, _notUsed) => {
+                /* istanbul ignore next */
+                setIsAccount(value?.record?.spec?.type === 'Account')
+              }}
             />
           </div>
         )
       }
       {
         /* istanbul ignore next */
-        isValueRuntimeInput(inputSet?.store?.spec?.repoName as string) && (
+        (isAccount || isValueRuntimeInput(inputSet?.store?.spec?.repoName as string)) && (
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
             <TextFieldInputSetView
               name={`${path}.spec.configuration.template.store.spec.repoName`}

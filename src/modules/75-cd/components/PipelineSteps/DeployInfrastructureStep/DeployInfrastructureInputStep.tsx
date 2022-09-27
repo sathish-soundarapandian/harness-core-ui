@@ -53,6 +53,7 @@ function DeployInfrastructureInputStepInternal({
 }): JSX.Element {
   const { getString } = useStrings()
   const { gitOpsEnabled, serviceRef, environmentRef, infrastructureRef, clusterRef } = customStepProps
+  const { serviceOverrideInputs } = inputSetData?.template?.environment || {}
 
   return (
     <>
@@ -164,7 +165,9 @@ function DeployInfrastructureInputStepInternal({
             </>
           )}
 
-          {inputSetData?.template?.environment?.serviceOverrideInputs && (
+          {(serviceOverrideInputs?.variables ||
+            serviceOverrideInputs?.manifest ||
+            serviceOverrideInputs?.configFiles) && (
             <>
               <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>
                 {getString('common.serviceOverrides')}

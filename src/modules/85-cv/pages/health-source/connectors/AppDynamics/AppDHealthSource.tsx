@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { noop } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import {
   Text,
@@ -220,7 +220,9 @@ export default function AppDMonitoredSource({
     }
   }, [selectedMetricPacks, tierLoading, appDynamicsData.isEdit])
 
-  const [showCustomMetric, setShowCustomMetric] = useState(!!Array.from(appDynamicsData?.mappedServicesAndEnvs)?.length)
+  const [showCustomMetric, setShowCustomMetric] = useState(
+    !!Array.from(defaultTo(appDynamicsData?.mappedServicesAndEnvs, []))?.length
+  )
 
   const {
     createdMetrics,

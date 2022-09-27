@@ -864,7 +864,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                           2
                         </span>
                       </div>
-                      triggers.schedulePanel.title
+                      common.schedule
                     </span>
                     <span
                       class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
@@ -4610,7 +4610,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                           />
                         </svg>
                       </span>
-                      triggers.schedulePanel.title
+                      common.schedule
                     </span>
                     <span
                       class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
@@ -5109,7 +5109,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                           />
                         </svg>
                       </span>
-                      triggers.schedulePanel.title
+                      common.schedule
                     </span>
                     <span
                       class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
@@ -5184,7 +5184,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                     <span
                       class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
                     >
-                      triggers.schedulePanel.title
+                      common.schedule
                     </span>
                     <div
                       class="Layout--vertical StyledProps--main formContent"

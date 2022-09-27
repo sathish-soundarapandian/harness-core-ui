@@ -10,6 +10,7 @@ declare const styles: {
   readonly bottom: string
   readonly bottombutton: string
   readonly communityTooltip: string
+  readonly contactLink: string
   readonly helpCenterIcon: string
   readonly icon: string
   readonly iconFilled: string

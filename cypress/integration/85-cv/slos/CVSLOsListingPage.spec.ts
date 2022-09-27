@@ -22,13 +22,13 @@ import {
   errorResponse,
   getSLORiskCountResponse,
   getMonitoredServiceResponse,
-  sloDashboardWidgetResponseForCalender,
   errorBudgetResetHistory,
   errorBudgetResetHistoryResponse,
-  resetErrorBudget,
   getChangeEventTimeline,
   changeEventTimelineResponse,
-  updatedListSLOsCallResponseCalenderType
+  updatedListSLOsCallResponseCalenderType,
+  listMonitoredServicesForSLOs,
+  listMonitoredServicesCallResponseForSLOs
 } from '../../../support/85-cv/slos/constants'
 
 describe('CVSLOsListingPage', () => {
@@ -39,6 +39,7 @@ describe('CVSLOsListingPage', () => {
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponseCalenderType)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
+    cy.intercept('GET', listMonitoredServicesForSLOs, listMonitoredServicesCallResponseForSLOs)
     cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
     cy.intercept('GET', getChangeEventTimeline, changeEventTimelineResponse)
@@ -136,6 +137,7 @@ describe('CVSLOsListingPage', () => {
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
+    cy.intercept('GET', listMonitoredServicesForSLOs, listMonitoredServicesCallResponseForSLOs)
     cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
     cy.intercept('GET', errorBudgetResetHistory, errorBudgetResetHistoryResponse)
 

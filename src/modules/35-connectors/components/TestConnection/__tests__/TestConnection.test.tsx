@@ -9,13 +9,13 @@ import React from 'react'
 import { render, act, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { TestWrapper } from '@common/utils/testUtils'
-import testConnectionSuccess from '@connectors/common/VerifyOutOfClusterDelegate/__tests__/mockData/test-connection-success.json'
-import delegateNameresponse from '@connectors/common/VerifyOutOfClusterDelegate/__tests__/mockData/delegate-name-response-error.json'
+import testConnectionSuccess from '@connectors/common/ConnectorTestConnection/__tests__/mockData/test-connection-success.json'
+import delegateNameresponse from '@connectors/common/ConnectorTestConnection/__tests__/mockData/delegate-name-response-error.json'
 
 import {
   ManualK8s,
   K8WithInheritFromDelegate
-} from '@connectors/common/VerifyOutOfClusterDelegate/__tests__/mockData/connectorsMock'
+} from '@connectors/common/ConnectorTestConnection/__tests__/mockData/connectorsMock'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import TestConnection from '../TestConnection'
 

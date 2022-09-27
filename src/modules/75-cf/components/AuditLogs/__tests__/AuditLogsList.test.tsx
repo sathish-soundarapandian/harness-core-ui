@@ -89,6 +89,26 @@ describe('AuditLogsList', () => {
 
     mockAuditData.data.auditTrails.forEach(trail => {
       switch (trail.instructionSet[0]?.Kind) {
+        case 'addClause':
+          expect(screen.queryByText('cf.auditLogs.events.addClause')).toBeInTheDocument()
+          break
+
+        case 'addToIncludeList':
+          expect(screen.queryByText('cf.auditLogs.events.addToIncludeList')).toBeInTheDocument()
+          break
+
+        case 'addToExcludeList':
+          expect(screen.queryByText('cf.auditLogs.events.addToExcludeList')).toBeInTheDocument()
+          break
+
+        case 'removeFromIncludeList':
+          expect(screen.queryByText('cf.auditLogs.events.removeFromIncludeList')).toBeInTheDocument()
+          break
+
+        case 'removeFromExcludeList':
+          expect(screen.queryByText('cf.auditLogs.events.removeFromExcludeList')).toBeInTheDocument()
+          break
+
         case 'updateClause':
           expect(screen.queryByText('cf.auditLogs.events.updateClause')).toBeInTheDocument()
           break
@@ -115,6 +135,7 @@ describe('AuditLogsList', () => {
 
         case 'updateDefaultServe':
           expect(screen.queryByText('cf.auditLogs.events.updateDefaultServe.bucketBy')).toBeInTheDocument()
+          expect(screen.queryByText('cf.auditLogs.events.updateDefaultServe.variation')).toBeInTheDocument()
           break
 
         case 'addTargetsToVariationTargetMap':
@@ -156,6 +177,10 @@ describe('AuditLogsList', () => {
           expect(screen.queryByText('cf.auditLogs.events.addSegmentToVariationTargetMap')).toBeInTheDocument()
           break
 
+        case 'clearVariationTargetMapping':
+          expect(screen.queryByText('cf.auditLogs.events.clearVariationTargetMapping')).toBeInTheDocument()
+          break
+
         case 'addPrerequisite':
           expect(screen.queryByText('cf.auditLogs.events.addPrerequisite')).toBeInTheDocument()
           break
@@ -182,6 +207,19 @@ describe('AuditLogsList', () => {
 
         case 'addService':
           expect(screen.queryByText('cf.auditLogs.events.addService')).toBeInTheDocument()
+          break
+
+        case 'setFeatureFlagState':
+          expect(screen.queryByText('cf.auditLogs.events.setFeatureFlagStateOn')).toBeInTheDocument()
+          expect(screen.queryByText('cf.auditLogs.events.setFeatureFlagStateOn')).toBeInTheDocument()
+          break
+
+        case 'addTag':
+          expect(screen.queryAllByText('cf.auditLogs.events.tagUpdated')[0]).toBeInTheDocument()
+          break
+
+        case 'updateTag':
+          expect(screen.queryAllByText('cf.auditLogs.events.tagUpdated')[1]).toBeInTheDocument()
           break
       }
     })

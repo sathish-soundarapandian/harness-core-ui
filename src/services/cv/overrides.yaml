@@ -135,6 +135,7 @@ allowpaths:
   - /slo-dashboard/widgets
   - /slo-dashboard/widgets/list
   - /slo-dashboard/widget/{identifier}
+  - /slo-dashboard/monitored-services
   - /monitored-service/all/time-series-health-sources
   - /monitored-service/{monitoredServiceIdentifier}/health-source/{healthSourceIdentifier}/slo-metrics
   - /monitored-service/{monitoredServiceIdentifier}/sli/onboarding-graph

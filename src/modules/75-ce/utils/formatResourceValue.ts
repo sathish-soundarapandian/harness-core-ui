@@ -86,6 +86,14 @@ export const getMemoryValueInGBFromExpression: (val: string | number) => number 
   return Number(val) / BYTES_IN_A_GB
 }
 
+export const getECSMemValueFromExpression: (val: string | number) => number = val => {
+  const stringVal = `${val}`
+  if (stringVal.includes('M')) {
+    return Number(stringVal.split('M')[0])
+  }
+  return Number(val)
+}
+
 export const getCPUValueInCPUFromExpression: (val: string | number) => number = val => {
   const stringVal = `${val}`
   if (stringVal.includes('m')) {

@@ -123,7 +123,7 @@ describe('Secrets List', () => {
   })
 
   test('Verify Connection SSH', async () => {
-    const testConnection = getAllByText('common.labelTestConnection')[0]
+    const testConnection = getAllByText('test')[0]
     let form = findDialogContainer()
     await act(async () => {
       fireEvent.click(testConnection)

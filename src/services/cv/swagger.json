@@ -29,6 +29,9 @@
       "name": "trend-analysis"
     },
     {
+      "name": "automation"
+    },
+    {
       "name": "verify-step"
     },
     {
@@ -50,6 +53,9 @@
       "name": "demo"
     },
     {
+      "name": "cloudwatch"
+    },
+    {
       "name": "customhealth"
     },
     {
@@ -69,6 +75,9 @@
     },
     {
       "name": "dynatrace"
+    },
+    {
+      "name": "elk"
     },
     {
       "name": "health"
@@ -747,6 +756,39 @@
         }
       }
     },
+    "/log-analysis/deployment-save-analysis": {
+      "post": {
+        "tags": ["log-analysis"],
+        "summary": "saves log risk analysis for a deployment verification",
+        "description": "",
+        "operationId": "saveDeploymentAnalysis",
+        "produces": ["application/json", "application/v1+json"],
+        "parameters": [
+          {
+            "name": "taskId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/DeploymentLogAnalysisDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseVoid"
+            }
+          }
+        }
+      }
+    },
     "/log-analysis/previous-analysis": {
       "get": {
         "tags": ["log-analysis"],
@@ -816,39 +858,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/RestResponseListLogAnalysisCluster"
-            }
-          }
-        }
-      }
-    },
-    "/log-analysis/deployment-save-analysis": {
-      "post": {
-        "tags": ["log-analysis"],
-        "summary": "saves log risk analysis for a deployment verification",
-        "description": "",
-        "operationId": "saveDeploymentAnalysis",
-        "produces": ["application/json", "application/v1+json"],
-        "parameters": [
-          {
-            "name": "taskId",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/DeploymentLogAnalysisDTO"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/RestResponseVoid"
             }
           }
         }
@@ -3214,7 +3223,9 @@
               "BuildAndPushACR",
               "AzureCreateBPResource",
               "AzureARMRollback",
-              "Background"
+              "Background",
+              "Wait",
+              "ArtifactSource"
             ]
           },
           {
@@ -4036,6 +4047,121 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/RestResponseVoid"
+            }
+          }
+        }
+      }
+    },
+    "/cloudwatch/metrics/fetch-sample-data": {
+      "get": {
+        "tags": ["cloudwatch"],
+        "summary": "get sample data for given query",
+        "description": "",
+        "operationId": "getSampleDataForQuery",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "requestGuid",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "expression",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metricName",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "metricIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseMap"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/cloudwatch/metrics/regions": {
+      "get": {
+        "tags": ["cloudwatch"],
+        "summary": "get regions",
+        "description": "",
+        "operationId": "getRegions",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListString"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -5249,6 +5375,118 @@
         }
       }
     },
+    "/elk/sample-data": {
+      "post": {
+        "tags": ["elk"],
+        "summary": "get sample data for a query",
+        "description": "",
+        "operationId": "getELKLogSampleData",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tracingId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "index",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/LogSampleRequestDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListLinkedHashMap"
+            }
+          }
+        }
+      }
+    },
+    "/elk/indices": {
+      "get": {
+        "tags": ["elk"],
+        "summary": "gets indices in ELK",
+        "description": "",
+        "operationId": "getELKIndices",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "tracingId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListString"
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "tags": ["health"],
@@ -5385,7 +5623,8 @@
               "ERROR_TRACKING",
               "DYNATRACE",
               "CUSTOM_HEALTH_METRIC",
-              "CUSTOM_HEALTH_LOG"
+              "CUSTOM_HEALTH_LOG",
+              "CLOUDWATCH_METRICS"
             ]
           }
         ],
@@ -5442,7 +5681,8 @@
               "ERROR_TRACKING",
               "DYNATRACE",
               "CUSTOM_HEALTH_METRIC",
-              "CUSTOM_HEALTH_LOG"
+              "CUSTOM_HEALTH_LOG",
+              "CLOUDWATCH_METRICS"
             ]
           },
           {
@@ -7183,7 +7423,8 @@
               "ERROR_TRACKING",
               "DYNATRACE",
               "CUSTOM_HEALTH_METRIC",
-              "CUSTOM_HEALTH_LOG"
+              "CUSTOM_HEALTH_LOG",
+              "CLOUDWATCH_METRICS"
             ]
           }
         ],
@@ -7680,110 +7921,6 @@
         }
       }
     },
-    "/splunk/latest-histogram": {
-      "get": {
-        "tags": ["splunk"],
-        "summary": "get latest histogram for the query",
-        "description": "",
-        "operationId": "getSplunkLatestHistogram",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "connectorIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "query",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "requestGuid",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/RestResponseListLinkedHashMap"
-            }
-          }
-        }
-      }
-    },
-    "/splunk/saved-searches": {
-      "get": {
-        "tags": ["splunk"],
-        "summary": "gets saved searches in splunk",
-        "description": "",
-        "operationId": "getSplunkSavedSearches",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "connectorIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "requestGuid",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/RestResponseListSplunkSavedSearch"
-            }
-          }
-        }
-      }
-    },
     "/splunk/sample-data": {
       "get": {
         "tags": ["splunk"],
@@ -7889,6 +8026,110 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/RestResponseSortedSetTimeSeriesSampleDTO"
+            }
+          }
+        }
+      }
+    },
+    "/splunk/latest-histogram": {
+      "get": {
+        "tags": ["splunk"],
+        "summary": "get latest histogram for the query",
+        "description": "",
+        "operationId": "getSplunkLatestHistogram",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "requestGuid",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseListLinkedHashMap"
+            }
+          }
+        }
+      }
+    },
+    "/splunk/saved-searches": {
+      "get": {
+        "tags": ["splunk"],
+        "summary": "gets saved searches in splunk",
+        "description": "",
+        "operationId": "getSplunkSavedSearches",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "connectorIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "requestGuid",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseListSplunkSavedSearch"
             }
           }
         }
@@ -8549,110 +8790,6 @@
         }
       }
     },
-    "/log-dashboard/logs-radar-chart-cluster": {
-      "get": {
-        "tags": ["log-dashboard"],
-        "summary": "get all log cluster data for a time range and filters",
-        "description": "",
-        "operationId": "getAllRadarChartLogsClusterData",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "orgIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "projectIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "monitoredServiceIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "filter",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "healthSources",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "clusterTypes",
-            "in": "query",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
-            },
-            "collectionFormat": "multi"
-          },
-          {
-            "name": "startTime",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "endTime",
-            "in": "query",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "minAngle",
-            "in": "query",
-            "required": false,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "maxAngle",
-            "in": "query",
-            "required": false,
-            "type": "number",
-            "format": "double"
-          },
-          {
-            "name": "clusterId",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/RestResponseListLiveMonitoringLogAnalysisRadarChartClusterDTO"
-            }
-          }
-        }
-      }
-    },
     "/log-dashboard/logs-radar-chart-data": {
       "get": {
         "tags": ["log-dashboard"],
@@ -8768,6 +8905,110 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/RestResponseAnalyzedRadarChartLogDataWithCountDTO"
+            }
+          }
+        }
+      }
+    },
+    "/log-dashboard/logs-radar-chart-cluster": {
+      "get": {
+        "tags": ["log-dashboard"],
+        "summary": "get all log cluster data for a time range and filters",
+        "description": "",
+        "operationId": "getAllRadarChartLogsClusterData",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "monitoredServiceIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "healthSources",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "clusterTypes",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "minAngle",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "maxAngle",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "clusterId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseListLiveMonitoringLogAnalysisRadarChartClusterDTO"
             }
           }
         }
@@ -9303,6 +9544,12 @@
             "type": "integer",
             "default": 10,
             "format": "int32"
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -9458,10 +9705,63 @@
         }
       }
     },
+    "/slo-dashboard/monitored-services": {
+      "get": {
+        "tags": ["slo-dashboard"],
+        "summary": "get all monitored services associated with the slos",
+        "description": "",
+        "operationId": "getSLOAssociatedMonitoredServices",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 0,
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "default": 10,
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponsePageMSDropdownResponse"
+            }
+          }
+        }
+      }
+    },
     "/slo": {
       "get": {
         "tags": ["slo"],
-        "summary": "get all service level objectives ",
+        "summary": "get all service level objectives",
         "description": "",
         "operationId": "getServiceLevelObjectives",
         "produces": ["application/json"],
@@ -12425,6 +12725,29 @@
         }
       }
     },
+    "RestResponseVoid": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "$ref": "#/definitions/Void"
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
+        }
+      }
+    },
+    "Void": {
+      "type": "object"
+    },
     "Cluster": {
       "type": "object",
       "properties": {
@@ -12581,26 +12904,6 @@
         }
       }
     },
-    "RestResponseDeploymentLogAnalysisDTO": {
-      "type": "object",
-      "properties": {
-        "metaData": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object"
-          }
-        },
-        "resource": {
-          "$ref": "#/definitions/DeploymentLogAnalysisDTO"
-        },
-        "responseMessages": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResponseMessage"
-          }
-        }
-      }
-    },
     "ResultSummary": {
       "type": "object",
       "properties": {
@@ -12649,6 +12952,26 @@
         }
       }
     },
+    "RestResponseDeploymentLogAnalysisDTO": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "$ref": "#/definitions/DeploymentLogAnalysisDTO"
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
+        }
+      }
+    },
     "RestResponseListLogAnalysisCluster": {
       "type": "object",
       "properties": {
@@ -12671,29 +12994,6 @@
           }
         }
       }
-    },
-    "RestResponseVoid": {
-      "type": "object",
-      "properties": {
-        "metaData": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object"
-          }
-        },
-        "resource": {
-          "$ref": "#/definitions/Void"
-        },
-        "responseMessages": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResponseMessage"
-          }
-        }
-      }
-    },
-    "Void": {
-      "type": "object"
     },
     "MetricSumDTO": {
       "type": "object",
@@ -12876,7 +13176,11 @@
         },
         "thresholdConfigType": {
           "type": "string",
-          "enum": ["CUSTOMER", "DEFAULT"]
+          "enum": ["DEFAULT", "USER_DEFINED", "CUSTOMER"]
+        },
+        "deviationType": {
+          "type": "string",
+          "enum": ["HIGHER_IS_RISKY", "LOWER_IS_RISKY", "BOTH_ARE_RISKY"]
         }
       }
     },
@@ -13282,7 +13586,8 @@
             "ERROR_TRACKING",
             "DYNATRACE",
             "CUSTOM_HEALTH_METRIC",
-            "CUSTOM_HEALTH_LOG"
+            "CUSTOM_HEALTH_LOG",
+            "CLOUDWATCH_METRICS"
           ]
         },
         "nodes": {
@@ -13497,7 +13802,8 @@
             "ERROR_TRACKING",
             "DYNATRACE",
             "CUSTOM_HEALTH_METRIC",
-            "CUSTOM_HEALTH_LOG"
+            "CUSTOM_HEALTH_LOG",
+            "CLOUDWATCH_METRICS"
           ]
         },
         "verificationType": {
@@ -14458,7 +14764,8 @@
             "ERROR_TRACKING",
             "DYNATRACE",
             "CUSTOM_HEALTH_METRIC",
-            "CUSTOM_HEALTH_LOG"
+            "CUSTOM_HEALTH_LOG",
+            "CLOUDWATCH_METRICS"
           ]
         },
         "identifier": {
@@ -14500,6 +14807,10 @@
         },
         "criteria": {
           "type": "string"
+        },
+        "deviationType": {
+          "type": "string",
+          "enum": ["HIGHER_IS_RISKY", "LOWER_IS_RISKY", "BOTH_ARE_RISKY"]
         }
       }
     },
@@ -14531,7 +14842,8 @@
             "ERROR_TRACKING",
             "DYNATRACE",
             "CUSTOM_HEALTH_METRIC",
-            "CUSTOM_HEALTH_LOG"
+            "CUSTOM_HEALTH_LOG",
+            "CLOUDWATCH_METRICS"
           ]
         },
         "metricPackIdentifier": {
@@ -15393,6 +15705,27 @@
           "type": "string"
         },
         "monitoredServiceIdentifier": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseMap": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
           "type": "string"
         }
       }
@@ -16289,7 +16622,8 @@
             "ERROR_TRACKING",
             "DYNATRACE",
             "CUSTOM_HEALTH_METRIC",
-            "CUSTOM_HEALTH_LOG"
+            "CUSTOM_HEALTH_LOG",
+            "CLOUDWATCH_METRICS"
           ]
         }
       }
@@ -16591,7 +16925,8 @@
               "ERROR_TRACKING",
               "DYNATRACE",
               "CUSTOM_HEALTH_METRIC",
-              "CUSTOM_HEALTH_LOG"
+              "CUSTOM_HEALTH_LOG",
+              "CLOUDWATCH_METRICS"
             ]
           }
         },
@@ -17296,6 +17631,9 @@
         "offsetAfter": {
           "$ref": "#/definitions/ZoneOffset"
         },
+        "duration": {
+          "$ref": "#/definitions/Duration"
+        },
         "gap": {
           "type": "boolean"
         },
@@ -17309,9 +17647,6 @@
         "instant": {
           "type": "integer",
           "format": "int64"
-        },
-        "duration": {
-          "$ref": "#/definitions/Duration"
         },
         "dateTimeBefore": {
           "type": "string",
@@ -17352,6 +17687,10 @@
         "offsetAfter": {
           "$ref": "#/definitions/ZoneOffset"
         },
+        "dayOfWeek": {
+          "type": "string",
+          "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
+        },
         "dayOfMonthIndicator": {
           "type": "integer",
           "format": "int32"
@@ -17361,10 +17700,6 @@
         },
         "midnightEndOfDay": {
           "type": "boolean"
-        },
-        "dayOfWeek": {
-          "type": "string",
-          "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"]
         }
       }
     },
@@ -17724,7 +18059,8 @@
             "ERROR_TRACKING",
             "DYNATRACE",
             "CUSTOM_HEALTH_METRIC",
-            "CUSTOM_HEALTH_LOG"
+            "CUSTOM_HEALTH_LOG",
+            "CLOUDWATCH_METRICS"
           ]
         },
         "identifier": {
@@ -17794,7 +18130,8 @@
             "ERROR_TRACKING",
             "DYNATRACE",
             "CUSTOM_HEALTH_METRIC",
-            "CUSTOM_HEALTH_LOG"
+            "CUSTOM_HEALTH_LOG",
+            "CLOUDWATCH_METRICS"
           ]
         },
         "metricPackIdentifier": {
@@ -17822,7 +18159,11 @@
         },
         "thresholdConfigType": {
           "type": "string",
-          "enum": ["CUSTOMER", "DEFAULT"]
+          "enum": ["DEFAULT", "USER_DEFINED", "CUSTOMER"]
+        },
+        "deviationType": {
+          "type": "string",
+          "enum": ["HIGHER_IS_RISKY", "LOWER_IS_RISKY", "BOTH_ARE_RISKY"]
         }
       }
     },
@@ -17940,6 +18281,68 @@
     "ChangeSourceSpec": {
       "type": "object",
       "discriminator": "type"
+    },
+    "CloudWatchMetricDefinition": {
+      "type": "object",
+      "required": ["identifier", "metricName"],
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "metricName": {
+          "type": "string"
+        },
+        "riskProfile": {
+          "$ref": "#/definitions/RiskProfile"
+        },
+        "analysis": {
+          "$ref": "#/definitions/AnalysisDTO"
+        },
+        "sli": {
+          "$ref": "#/definitions/SLIDTO"
+        },
+        "groupName": {
+          "type": "string"
+        },
+        "expression": {
+          "type": "string"
+        },
+        "responseMapping": {
+          "$ref": "#/definitions/MetricResponseMapping"
+        }
+      }
+    },
+    "CloudWatchMetricsHealthSourceSpec": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/HealthSourceSpec"
+        },
+        {
+          "type": "object",
+          "required": ["feature", "region"],
+          "properties": {
+            "region": {
+              "type": "string"
+            },
+            "feature": {
+              "type": "string"
+            },
+            "metricThresholds": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "$ref": "#/definitions/TimeSeriesMetricPackDTO"
+              }
+            },
+            "metricDefinitions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CloudWatchMetricDefinition"
+              }
+            }
+          }
+        }
+      ]
     },
     "CustomHealthLogDefinition": {
       "type": "object",
@@ -18123,10 +18526,10 @@
             "type": "string"
           }
         },
-        "isManualQuery": {
+        "isCustomCreatedMetric": {
           "type": "boolean"
         },
-        "isCustomCreatedMetric": {
+        "isManualQuery": {
           "type": "boolean"
         }
       }
@@ -18342,7 +18745,8 @@
             "ErrorTracking",
             "CustomHealthMetric",
             "CustomHealthLog",
-            "SplunkMetric"
+            "SplunkMetric",
+            "CloudWatchMetrics"
           ]
         },
         "spec": {
@@ -21522,7 +21926,12 @@
             "DYNATRACE_VALIDATION_REQUEST",
             "DYNATRACE_SAMPLE_DATA_REQUEST",
             "DYNATRACE_METRIC_LIST_REQUEST",
-            "SPLUNK_METRIC_SAMPLE_DATA"
+            "SPLUNK_METRIC_SAMPLE_DATA",
+            "ELK_SAMPLE_DATA",
+            "ELK_INDEX_DATA",
+            "CLOUDWATCH_METRIC_SAMPLE_DATA_REQUEST",
+            "CLOUDWATCH_METRIC_DATA_REQUEST",
+            "CLOUDWATCH_METRICS_METADATA_REQUEST"
           ]
         },
         "baseUrl": {
@@ -23563,6 +23972,30 @@
         }
       }
     },
+    "RestResponseSortedSetTimeSeriesSampleDTO": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/definitions/TimeSeriesSampleDTO"
+          }
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
+        }
+      }
+    },
     "RestResponseListSplunkSavedSearch": {
       "type": "object",
       "properties": {
@@ -23594,30 +24027,6 @@
         },
         "searchQuery": {
           "type": "string"
-        }
-      }
-    },
-    "RestResponseSortedSetTimeSeriesSampleDTO": {
-      "type": "object",
-      "properties": {
-        "metaData": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object"
-          }
-        },
-        "resource": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": {
-            "$ref": "#/definitions/TimeSeriesSampleDTO"
-          }
-        },
-        "responseMessages": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResponseMessage"
-          }
         }
       }
     },
@@ -24067,56 +24476,6 @@
         }
       }
     },
-    "LiveMonitoringLogAnalysisRadarChartClusterDTO": {
-      "type": "object",
-      "properties": {
-        "message": {
-          "type": "string"
-        },
-        "clusterId": {
-          "type": "string"
-        },
-        "risk": {
-          "type": "string",
-          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
-        },
-        "angle": {
-          "type": "number",
-          "format": "double"
-        },
-        "radius": {
-          "type": "number",
-          "format": "double"
-        },
-        "clusterType": {
-          "type": "string",
-          "enum": ["KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
-        }
-      }
-    },
-    "RestResponseListLiveMonitoringLogAnalysisRadarChartClusterDTO": {
-      "type": "object",
-      "properties": {
-        "metaData": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "object"
-          }
-        },
-        "resource": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/LiveMonitoringLogAnalysisRadarChartClusterDTO"
-          }
-        },
-        "responseMessages": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ResponseMessage"
-          }
-        }
-      }
-    },
     "AnalyzedRadarChartLogDataDTO": {
       "type": "object",
       "properties": {
@@ -24233,6 +24592,56 @@
         },
         "resource": {
           "$ref": "#/definitions/AnalyzedRadarChartLogDataWithCountDTO"
+        },
+        "responseMessages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResponseMessage"
+          }
+        }
+      }
+    },
+    "LiveMonitoringLogAnalysisRadarChartClusterDTO": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "clusterId": {
+          "type": "string"
+        },
+        "risk": {
+          "type": "string",
+          "enum": ["NO_DATA", "NO_ANALYSIS", "HEALTHY", "OBSERVE", "NEED_ATTENTION", "UNHEALTHY"]
+        },
+        "angle": {
+          "type": "number",
+          "format": "double"
+        },
+        "radius": {
+          "type": "number",
+          "format": "double"
+        },
+        "clusterType": {
+          "type": "string",
+          "enum": ["KNOWN_EVENT", "UNEXPECTED_FREQUENCY", "UNKNOWN_EVENT"]
+        }
+      }
+    },
+    "RestResponseListLiveMonitoringLogAnalysisRadarChartClusterDTO": {
+      "type": "object",
+      "properties": {
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "resource": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LiveMonitoringLogAnalysisRadarChartClusterDTO"
+          }
         },
         "responseMessages": {
           "type": "array",
@@ -24417,7 +24826,8 @@
             "ERROR_TRACKING",
             "DYNATRACE",
             "CUSTOM_HEALTH_METRIC",
-            "CUSTOM_HEALTH_LOG"
+            "CUSTOM_HEALTH_LOG",
+            "CLOUDWATCH_METRICS"
           ]
         },
         "category": {
@@ -24918,6 +25328,76 @@
           "items": {
             "$ref": "#/definitions/RiskCount"
           }
+        }
+      }
+    },
+    "MSDropdownResponse": {
+      "type": "object",
+      "required": ["identifier", "name"],
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "serviceRef": {
+          "type": "string"
+        },
+        "environmentRef": {
+          "type": "string"
+        }
+      }
+    },
+    "PageMSDropdownResponse": {
+      "type": "object",
+      "properties": {
+        "totalPages": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageItemCount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "content": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MSDropdownResponse"
+          }
+        },
+        "pageIndex": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "empty": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ResponsePageMSDropdownResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/PageMSDropdownResponse"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
         }
       }
     },

@@ -44,7 +44,7 @@ export const OnboardingPage = (): React.ReactElement => {
                 {getString('cf.onboarding.title')}
               </Text>
               <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_800} margin={{ bottom: 'huge' }}>
-                {getString('cf.onboarding.subtitle')}
+                {getString('cf.onboarding.subTitle')}
               </Text>
               {OnboardingStepsDescription()}
             </Layout.Vertical>

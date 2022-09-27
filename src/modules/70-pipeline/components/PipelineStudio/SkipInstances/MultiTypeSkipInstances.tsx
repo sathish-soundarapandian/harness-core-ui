@@ -81,7 +81,7 @@ export function MultiTypeSkipInstances(props: MultiTypeSkipInstancesProps): Reac
   }
 
   return (
-    <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-end' }}>
+    <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-end' }} className={css.skipInstancesContainer}>
       {disableTypeSelection || type === MultiTypeInputType.FIXED ? (
         <SkipInstances
           value={value}
@@ -108,7 +108,7 @@ export function MultiTypeSkipInstances(props: MultiTypeSkipInstancesProps): Reac
         <FormInput.Text
           label={getString('pipeline.skipInstances.title')}
           name={name}
-          className={css.runtimeDisabled}
+          className={css.runtimeDisabledSkipInstances}
           disabled
           placeholder={`${value}`}
           data-testid="skip-instances-runtime"

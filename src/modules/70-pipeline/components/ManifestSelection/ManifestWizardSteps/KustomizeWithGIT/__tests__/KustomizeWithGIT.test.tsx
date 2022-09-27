@@ -11,7 +11,6 @@ import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uic
 import userEvent from '@testing-library/user-event'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { FeatureFlag } from '@common/featureFlags'
 import KustomizeWithGIT from '../KustomizeWithGIT'
 
 const props = {
@@ -189,11 +188,7 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
       pluginPath: ''
     }
     const { container, getByTestId } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          [FeatureFlag.NG_OPTIMIZE_FETCH_FILES_KUSTOMIZE]: true
-        }}
-      >
+      <TestWrapper>
         <KustomizeWithGIT {...props} initialValues={initialValues} />
       </TestWrapper>
     )
@@ -216,11 +211,7 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
       pluginPath: ''
     }
     const { container, getByTestId } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          [FeatureFlag.NG_OPTIMIZE_FETCH_FILES_KUSTOMIZE]: true
-        }}
-      >
+      <TestWrapper>
         <KustomizeWithGIT {...props} initialValues={initialValues} />
       </TestWrapper>
     )

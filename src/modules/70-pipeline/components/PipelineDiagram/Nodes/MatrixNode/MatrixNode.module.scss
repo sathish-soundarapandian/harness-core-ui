@@ -26,7 +26,7 @@
   height: fit-content;
   padding-bottom: var(--spacing-large);
   background: rgb(239 251 255);
-  border-radius: 8px;
+  border-radius: 4px;
   border: dashed 2px #ae82fc !important;
   z-index: 1 !important;
 
@@ -277,5 +277,19 @@
     margin: 0;
     line-height: 14px;
     letter-spacing: 1px;
+  }
+}
+
+:global {
+  .matrixNodeNameLabel {
+    .bp3-popover-content div {
+      padding: var(--spacing-medium);
+      max-width: 500px;
+      max-height: 500px;
+      overflow: auto;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      hyphens: auto;
+    }
   }
 }

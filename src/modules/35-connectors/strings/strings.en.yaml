@@ -252,9 +252,9 @@ hashiCorpVault:
   serviceAccountTokenPath: Service Account Token Path
   vaultK8sAuthRoleRequired: Role Required
   serviceAccountRequired: Service Account Token Path Required
-  preventDefaultWhenReadOnly: Read only secret manager cannot be set as default
 nexus:
-  nexusLabel: Nexus
+  nexusLabel: Nexus3
+  nexus2Label: Nexus2
   nexusServerUrl: 'Nexus Repository URL'
 artifactory:
   artifactoryLabel: Artifactory
@@ -554,6 +554,7 @@ ceAws:
     trySuggestion: '{{ $.common.errorHandler.tryTheseSuggestions }}'
     editConnector: '{{ $.connectors.editConnector }}'
     ifReq: '{{ $.connectors.ifReq }}'
+    govCloudHeader: 'Is this an AWS GovCloud account?'
     validation:
       numeric: 'AWS Account Id must be numeric'
       positive: 'AWS Account Id must be a positive number'

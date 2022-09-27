@@ -31,6 +31,7 @@ import type {
   PipelineInfrastructure,
   ServiceConfig,
   ServiceSpec,
+  ServiceYamlV2,
   StageOverridesConfig,
   StepElementConfig
 } from 'services/cd-ng'
@@ -831,8 +832,8 @@ export function StageInputSetFormInternal({
             {deploymentStageTemplate.service?.serviceRef && (
               <StepWidget<DeployServiceEntityData>
                 factory={factory}
-                initialValues={pick(deploymentStageInputSet, ['service', 'services'])}
-                template={pick(deploymentStageTemplate, ['service', 'services'])}
+                initialValues={pick(deploymentStageInputSet, ['service'])}
+                template={pick(deploymentStageTemplate, ['service'])}
                 type={StepType.DeployServiceEntity}
                 stepViewType={viewType}
                 path={`${path}.service`}
@@ -848,7 +849,7 @@ export function StageInputSetFormInternal({
                   stageIdentifier,
                   deploymentType: deploymentStage?.deploymentType,
                   gitOpsEnabled: deploymentStage?.gitOpsEnabled,
-                  allValues: pick(deploymentStage, ['service', 'services'])
+                  allValues: pick(deploymentStage, ['service'])
                 }}
               />
             )}
@@ -887,13 +888,44 @@ export function StageInputSetFormInternal({
         <div id={`Stage.${stageIdentifier}.Service`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('services')}</div>
           <div className={css.nestedAccordions}>
+            {getMultiTypeFromValue(deploymentStageTemplate.services.values as unknown as string) ===
+              MultiTypeInputType.RUNTIME ||
+            (Array.isArray(deploymentStageTemplate.services.values) &&
+              deploymentStageTemplate.services.values.some(
+                svc => getMultiTypeFromValue(svc.serviceRef) === MultiTypeInputType.RUNTIME
+              )) ? (
+              <StepWidget<DeployServiceEntityData>
+                factory={factory}
+                initialValues={pick(deploymentStageInputSet, ['services'])}
+                template={pick(deploymentStageTemplate, ['services'])}
+                type={StepType.DeployServiceEntity}
+                stepViewType={viewType}
+                path={`${path}.services`}
+                allowableTypes={
+                  scope === Scope.PROJECT
+                    ? allowableTypes
+                    : ((allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.FIXED
+                      ) as AllowedTypes)
+                }
+                readonly={readonly}
+                customStepProps={{
+                  stageIdentifier,
+                  deploymentType: deploymentStage?.deploymentType,
+                  gitOpsEnabled: deploymentStage?.gitOpsEnabled,
+                  allValues: pick(deploymentStage, ['services'])
+                }}
+              />
+            ) : null}
             {Array.isArray(deploymentStageTemplate.services.values) ? (
               <>
-                {deploymentStageTemplate.services.values.map((service, i) => {
-                  const deploymentType = service.serviceInputs?.serviceDefinition?.type
+                {deploymentStageTemplate.services.values.map((serviceTemplate, i) => {
+                  const deploymentType = serviceTemplate.serviceInputs?.serviceDefinition?.type
+                  const service: ServiceYamlV2 = get(deploymentStageInputSet, `services.values[${i}]`, {})
+
                   if (deploymentType) {
                     return (
-                      <>
+                      <React.Fragment key={`${service.serviceRef}_${i}`}>
                         <Text
                           font={{ size: 'normal', weight: 'bold' }}
                           margin={{ top: 'medium', bottom: 'medium' }}
@@ -903,27 +935,20 @@ export function StageInputSetFormInternal({
                         </Text>
                         <StepWidget<ServiceSpec>
                           factory={factory}
-                          initialValues={get(
-                            deploymentStageInputSet,
-                            `services.values[${i}].serviceInputs.serviceDefinition.spec`,
-                            {}
-                          )}
+                          initialValues={get(service, `serviceInputs.serviceDefinition.spec`, {})}
                           allowableTypes={allowableTypes}
-                          template={service?.serviceInputs?.serviceDefinition?.spec || {}}
+                          template={defaultTo(serviceTemplate?.serviceInputs?.serviceDefinition?.spec, {})}
                           type={getStepTypeByDeploymentType(deploymentType)}
                           stepViewType={viewType}
                           path={`${path}.services.values[${i}].serviceInputs.serviceDefinition.spec`}
                           readonly={readonly}
                           customStepProps={{
                             stageIdentifier,
-                            serviceIdentifier: defaultTo(
-                              service.serviceRef,
-                              get(deploymentStage, `services.values[${i}].serviceRef`)
-                            ),
-                            allValues: deploymentStage?.service?.serviceInputs?.serviceDefinition?.spec
+                            serviceIdentifier: defaultTo(service.serviceRef, ''),
+                            allValues: service.serviceInputs?.serviceDefinition?.spec
                           }}
                         />
-                      </>
+                      </React.Fragment>
                     )
                   }
 

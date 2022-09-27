@@ -245,6 +245,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
   const getHosts = () => {
     setIsLoading(true)
     setErrors([])
+    setHostsToTest([])
     const getData = async () => {
       try {
         const hosts = (await fetchHosts()) as []
@@ -356,13 +357,12 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
     [getString]
   )
 
-  const testConnection = async (testHost?: string) => {
+  const testConnection = async () => {
     setErrors([])
     try {
-      const validationHosts = testHost ? [testHost] : hostsToTest.map(host => get(host, 'host', ''))
       const hostResults = await validateHosts(
         {
-          hosts: validationHosts,
+          hosts: hostsToTest.map(host => get(host, 'host', '')),
           tags: get(formikRef, 'current.values.delegateSelectors', [])
         },
         {

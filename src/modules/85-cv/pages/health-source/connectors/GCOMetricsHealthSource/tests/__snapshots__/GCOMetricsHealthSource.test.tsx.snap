@@ -103,14 +103,18 @@ exports[`Test GCOMetricsHealthSource Should show please Enter Query when ther is
                           <span
                             class="bp3-tree-node-label"
                           >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
-                              style="--text-line-clamp: 1; width: 192px;"
+                            <div
+                              class="Layout--horizontal StyledProps--main"
                             >
-                              <span>
-                                cv.monitoringSources.gco.mapMetricsToServicesPage.manuallyInputQueriesLabel
-                              </span>
-                            </p>
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
+                                style="--text-line-clamp: 1; width: 192px;"
+                              >
+                                <span>
+                                  cv.monitoringSources.gco.mapMetricsToServicesPage.manuallyInputQueriesLabel
+                                </span>
+                              </p>
+                            </div>
                           </span>
                         </div>
                         <div
@@ -151,12 +155,16 @@ exports[`Test GCOMetricsHealthSource Should show please Enter Query when ther is
                           <span
                             class="bp3-tree-node-label"
                           >
-                            <p
-                              class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
-                              style="--text-line-clamp: 1; width: 192px;"
+                            <div
+                              class="Layout--horizontal StyledProps--main"
                             >
-                              Pod Traffic
-                            </p>
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
+                                style="--text-line-clamp: 1; width: 192px;"
+                              >
+                                Pod Traffic
+                              </p>
+                            </div>
                           </span>
                         </div>
                         <div
@@ -199,12 +207,16 @@ exports[`Test GCOMetricsHealthSource Should show please Enter Query when ther is
                                   <span
                                     class="bp3-tree-node-label"
                                   >
-                                    <p
-                                      class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
-                                      style="--text-line-clamp: 1; width: 170px;"
+                                    <div
+                                      class="Layout--horizontal StyledProps--main"
                                     >
-                                      Restart count - Works
-                                    </p>
+                                      <p
+                                        class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
+                                        style="--text-line-clamp: 1; width: 170px;"
+                                      >
+                                        Restart count - Works
+                                      </p>
+                                    </div>
                                   </span>
                                 </div>
                                 <div
@@ -231,12 +243,16 @@ exports[`Test GCOMetricsHealthSource Should show please Enter Query when ther is
                                           <span
                                             class="bp3-tree-node-label"
                                           >
-                                            <p
-                                              class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
-                                              style="--text-line-clamp: 1; width: 140px;"
+                                            <div
+                                              class="Layout--horizontal StyledProps--main"
                                             >
-                                              kubernetes.io/container/restart_count
-                                            </p>
+                                              <p
+                                                class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
+                                                style="--text-line-clamp: 1; width: 140px;"
+                                              >
+                                                kubernetes.io/container/restart_count
+                                              </p>
+                                            </div>
                                           </span>
                                         </div>
                                         <div
@@ -281,12 +297,16 @@ exports[`Test GCOMetricsHealthSource Should show please Enter Query when ther is
                                   <span
                                     class="bp3-tree-node-label"
                                   >
-                                    <p
-                                      class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
-                                      style="--text-line-clamp: 1; width: 170px;"
+                                    <div
+                                      class="Layout--horizontal StyledProps--main"
                                     >
-                                      Kubernetes Container - Memory usage 
-                                    </p>
+                                      <p
+                                        class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
+                                        style="--text-line-clamp: 1; width: 170px;"
+                                      >
+                                        Kubernetes Container - Memory usage 
+                                      </p>
+                                    </div>
                                   </span>
                                 </div>
                                 <div

@@ -42,6 +42,7 @@ import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemp
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import {
   getServiceDefinitionType,
+  isCustomDeploymentType,
   isServerlessDeploymentType,
   ServiceDeploymentType,
   StageType
@@ -185,6 +186,8 @@ export default function DeployStageSetupShell(): JSX.Element {
       return ExecutionType.GITOPS
     } else if (selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda) {
       return ExecutionType.BASIC
+    } else if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment) {
+      return ExecutionType.DEFAULT
     }
     return ExecutionType.ROLLING
   }
@@ -206,9 +209,12 @@ export default function DeployStageSetupShell(): JSX.Element {
     }
   }, [selectedDeploymentType, refetchYamlSnippet])
 
+  const fetchDefaultStep =
+    isServerlessDeploymentType(selectedDeploymentType || '') || isCustomDeploymentType(selectedDeploymentType || '')
+
   React.useEffect(() => {
     if (
-      (isServerlessDeploymentType(selectedDeploymentType || '') || selectedStage?.stage?.spec?.gitOpsEnabled) &&
+      (fetchDefaultStep || selectedStage?.stage?.spec?.gitOpsEnabled) &&
       yamlSnippet?.data &&
       selectedStage &&
       isEmpty(selectedStage.stage?.spec?.execution)

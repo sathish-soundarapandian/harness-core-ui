@@ -88,6 +88,7 @@ export const EditStageView: React.FC<EditStageView> = ({
   const { expressions } = useVariablesExpression()
   const [connectionType, setConnectionType] = React.useState('')
   const [connectorUrl, setConnectorUrl] = React.useState('')
+  const [connectorType, setConnectorType] = React.useState('')
   const gitScope = useGitScope()
   const repositoryNameLabel = getString('common.repositoryName')
 
@@ -337,6 +338,8 @@ export const EditStageView: React.FC<EditStageView> = ({
                     setCodebaseRuntimeInputs,
                     codebaseRuntimeInputs,
                     connectorWidth: 366,
+                    setConnectorType,
+                    connectorType,
                     allowableTypes: [
                       MultiTypeInputType.FIXED,
                       MultiTypeInputType.EXPRESSION,

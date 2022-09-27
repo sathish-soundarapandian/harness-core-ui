@@ -55,7 +55,8 @@ export const mockAuthSettingsResponse = {
         1661413500000, 1661414400000, 1661415300000, 1661416200000, 1661417100000, 1661418000000, 1661418900000,
         1661419800000
       ],
-      settingsType: 'LDAP'
+      settingsType: 'LDAP',
+      disabled: false
     }
   ],
   authenticationMechanism: AuthenticationMechanisms.LDAP

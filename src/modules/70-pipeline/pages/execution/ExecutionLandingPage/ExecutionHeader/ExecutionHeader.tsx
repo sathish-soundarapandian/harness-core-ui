@@ -59,7 +59,9 @@ export function ExecutionHeader(): React.ReactElement {
   )
 
   useDocumentTitle([
-    `${pipelineExecutionSummary.name || getString('pipelines')} ${getString(
+    `${pipelineExecutionSummary?.status ? pipelineExecutionSummary?.status + ' | ' : ''} ${
+      pipelineExecutionSummary.name || getString('pipelines')
+    } ${getString(
       module === 'cd' ? 'execution.pipelineIdentifierTextCD' : 'execution.pipelineIdentifierTextCI',
       pipelineExecutionSummary
     )}`
@@ -177,7 +179,7 @@ export function ExecutionHeader(): React.ReactElement {
             }}
             isPipelineInvalid={isPipelineInvalid}
             canEdit={canEdit}
-            showEditButton={false}
+            showEditButton={true}
             canExecute={canExecute}
             canRetry={pipelineExecutionSummary.canRetry}
             modules={pipelineExecutionSummary.modules}

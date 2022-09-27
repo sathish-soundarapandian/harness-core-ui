@@ -32,7 +32,9 @@ import {
   getTwoSLODashboardWidgets,
   getTwoSLOsRiskCountResponse,
   getSLODetails,
-  responseSLODashboardDetail
+  responseSLODashboardDetail,
+  listMonitoredServicesForSLOs,
+  listMonitoredServicesCallResponseForSLOs
 } from '../../../support/85-cv/slos/constants'
 
 describe('Create SLO', () => {
@@ -49,6 +51,7 @@ describe('Create SLO', () => {
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
+    cy.intercept('GET', listMonitoredServicesForSLOs, listMonitoredServicesCallResponseForSLOs)
     cy.intercept('GET', getSLOMetrics, listSLOMetricsCallResponse)
 
     cy.visitChangeIntelligenceForSLOs()

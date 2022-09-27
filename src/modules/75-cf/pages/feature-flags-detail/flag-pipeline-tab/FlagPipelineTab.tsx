@@ -91,7 +91,8 @@ const FlagPipelineTab: React.FC<FlagPipelineTabProps> = ({ flagIdentifier, flagV
           <Container height="100%" flex={{ align: 'center-center' }}>
             <NoData
               message={getString('cf.featureFlags.flagPipeline.noDataMessage')}
-              buttonText={getString('cf.featureFlags.flagPipeline.noDataButtonText')}
+              buttonText={getString('cf.featureFlags.flagPipeline.title')}
+              buttonProps={{ icon: 'plus' }}
               description={getString('cf.featureFlags.flagPipeline.noDataDescription')}
               imageURL={imageUrl}
               onClick={() => {

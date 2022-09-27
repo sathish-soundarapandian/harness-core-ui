@@ -161,7 +161,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       orgIdentifier,
       pipelineIdentifier,
       projectIdentifier,
-      branch
+      branch,
+      parentEntityConnectorRef: pipelineConnectorRef,
+      parentEntityRepoName: pipelineRepoName
     },
     body: {
       stageIdentifiers: []
@@ -186,7 +188,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       orgIdentifier,
       projectIdentifier,
       getTemplatesResolvedPipeline: true,
-      branch
+      branch,
+      parentEntityConnectorRef: pipelineConnectorRef,
+      parentEntityRepoName: pipelineRepoName
     }
   })
 

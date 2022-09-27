@@ -1,0 +1,26 @@
+[
+  {
+    "step": "Bucket1_1",
+    "stage": "Build_and_Test"
+  },
+  {
+    "step": "Bucket1_0",
+    "stage": "Build_and_Test"
+  },
+  {
+    "step": "Bucket1_3",
+    "stage": "Build_and_Test"
+  },
+  {
+    "step": "Bucket1_5",
+    "stage": "Build_and_Test"
+  },
+  {
+    "step": "Bucket1_4",
+    "stage": "Build_and_Test"
+  },
+  {
+    "step": "Bucket1_2",
+    "stage": "Build_and_Test"
+  }
+]

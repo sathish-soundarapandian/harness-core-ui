@@ -13,9 +13,11 @@ export const artifacts = {
         type: 'Nexus3Registry',
         spec: {
           connectorRef: '<+input>',
-          artifactPath: '<+input>',
           repository: '<+input>',
-          tag: '<+input>'
+          tag: '<+input>',
+          spec: {
+            artifactPath: '<+input>'
+          }
         }
       }
     }
@@ -23,9 +25,11 @@ export const artifacts = {
   primary: {
     spec: {
       connectorRef: '<+input>',
-      artifactPath: '<+input>',
       repository: '<+input>',
-      tag: '<+input>'
+      tag: '<+input>',
+      spec: {
+        artifactPath: '<+input>'
+      }
     },
     type: 'Nexus3Registry'
   }
@@ -40,9 +44,11 @@ export const template = {
           type: 'Nexus3Registry',
           spec: {
             connectorRef: '<+input>',
-            artifactPath: '<+input>',
             repository: '<+input>',
-            tag: '<+input>'
+            tag: '<+input>',
+            spec: {
+              artifactPath: '<+input>'
+            }
           }
         }
       }
@@ -50,9 +56,11 @@ export const template = {
     primary: {
       spec: {
         connectorRef: '<+input>',
-        artifactPath: '<+input>',
         repository: '<+input>',
-        tag: '<+input>'
+        tag: '<+input>',
+        spec: {
+          artifactPath: '<+input>'
+        }
       },
       type: 'Nexus3Registry'
     }

@@ -680,6 +680,112 @@ describe('LDAP setup Wizard', () => {
       fireEvent.click(getByTestId('submit-group-query-step'))
     })
   })
+
+  test('Queries persist after going to previous step and coming back', async () => {
+    const { getByTestId, getByText } = render(
+      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+        <LDAPProvider
+          authSettings={mockAuthSettingsResponseWithoutLdap}
+          canEdit={true}
+          refetchAuthSettings={refetchAuthSettings}
+          permissionRequest={permissionRequest}
+          setUpdating={mockDispatch}
+        />
+      </TestWrapper>
+    )
+    const openLdapWizardLabel = getByText('authSettings.ldap.addLdap')
+    await act(async () => {
+      fireEvent.click(openLdapWizardLabel)
+    })
+    await waitFor(() => expect(getByTestId('close-ldap-setup-wizard')).toBeVisible())
+
+    const wizardDialog = findDialogContainer() as HTMLElement
+    const overviewDisplayNameEl = wizardDialog?.querySelector('[name="displayName"]')
+    await act(async () => {
+      overviewDisplayNameEl && fireEvent.change(overviewDisplayNameEl, { target: { value: 'LDAP0002' } })
+    })
+
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-overview-step'))
+    })
+
+    fillAtForm(getConnectionFormFieldValues(wizardDialog))
+
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-connection-step'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByTestId('add-first-user-query-btn'))
+    })
+
+    // There are no errors when form rendered at first
+    expect(wizardDialog.querySelectorAll('.FormError--error').length).toEqual(0)
+
+    await act(async () => {
+      const testUserQueryBtn = wizardDialog.querySelector('[data-testid="test-user-query-btn"')
+      testUserQueryBtn && fireEvent.click(testUserQueryBtn)
+    })
+
+    // The form shows errors when we try to test user query
+    expect(wizardDialog.querySelectorAll('.FormError--error').length).toEqual(5)
+    fillAtForm(getUserQueryFormFieldValues(wizardDialog))
+
+    await act(async () => {
+      fireEvent.click(getByTestId('commit-query-btn'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByTestId('back-to-connection-step'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-connection-step'))
+    })
+
+    expect(getByText('ou=Users,o=611a119873e7186e37f75599,dc=jumpcloud,dc=com')).toBeVisible()
+
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-usery-query-step'))
+    })
+
+    const addFirstGroupQueryBtn = wizardDialog.querySelector('[data-testid="add-first-group-query-btn"')
+
+    await act(async () => {
+      addFirstGroupQueryBtn && fireEvent.click(addFirstGroupQueryBtn)
+    })
+
+    // There are no errors when form rendered at first
+    expect(wizardDialog.querySelectorAll('.FormError--error').length).toEqual(0)
+
+    await act(async () => {
+      const testGroupQueryBtn = wizardDialog.querySelector('[data-testid="test-group-query-btn"')
+      testGroupQueryBtn && fireEvent.click(testGroupQueryBtn)
+    })
+
+    // The form shows errors when we try to test user query
+    expect(wizardDialog.querySelectorAll('.FormError--error').length).toEqual(4)
+
+    fillAtForm(getGroupQueryFormFieldValues(wizardDialog))
+
+    await act(async () => {
+      fireEvent.click(getByTestId('commit-group-query-btn'))
+    })
+
+    expect(getByText('authSettings.ldap.descriptionAttributes:')).toBeVisible()
+
+    await act(async () => {
+      fireEvent.click(getByTestId('back-to-user-query-step'))
+    })
+
+    expect(getByText('ou=Users,o=611a119873e7186e37f75599,dc=jumpcloud,dc=com')).toBeVisible()
+
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-usery-query-step'))
+    })
+
+    expect(getByText('authSettings.ldap.descriptionAttributes:')).toBeVisible()
+  })
 })
 
 describe('LDAP Wizard in edit mode', () => {
@@ -771,6 +877,7 @@ describe('LDAP Wizard in edit mode', () => {
       fireEvent.click(getByTestId('add-another-user-query-btn'))
     })
     await waitFor(() => expect(getByTestId('commit-query-btn')).toBeVisible())
+    wizardDialog && fillAtForm(getUserQueryFormFieldValues(wizardDialog))
     expect(getByTestId('add-another-user-query-btn')).toBeDisabled()
     await act(async () => {
       fireEvent.click(getByTestId('commit-query-btn'))
@@ -803,6 +910,7 @@ describe('LDAP Wizard in edit mode', () => {
       fireEvent.click(getByTestId('add-another-group-query-btn'))
     })
     await waitFor(() => expect(getByTestId('commit-group-query-btn')).toBeVisible())
+    wizardDialog && fillAtForm(getGroupQueryFormFieldValues(wizardDialog))
     expect(getByTestId('add-another-group-query-btn')).toBeDisabled()
     await act(async () => {
       fireEvent.click(getByTestId('commit-group-query-btn'))

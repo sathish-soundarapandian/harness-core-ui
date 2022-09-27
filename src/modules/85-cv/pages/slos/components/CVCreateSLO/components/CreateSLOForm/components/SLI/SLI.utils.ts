@@ -10,7 +10,12 @@ import type { SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import type { UseStringsReturn, StringKeys } from 'framework/strings'
-import type { HealthSource, MetricDTO, ResponseListMonitoredServiceWithHealthSources } from 'services/cv'
+import type {
+  HealthSource,
+  MetricDTO,
+  ResponseListMonitoredServiceWithHealthSources,
+  ResponsePageMSDropdownResponse
+} from 'services/cv'
 import { Comparators } from './SLI.types'
 import type { SLOForm } from '../../CreateSLO.types'
 import { SLIMetricEnum, SLITypeEnum } from './SLI.constants'
@@ -27,10 +32,10 @@ export function updateMonitoredServiceForUserJourney(
 }
 
 export function getMonitoredServicesOptions(
-  monitoredServicesData: ResponseListMonitoredServiceWithHealthSources | null
+  monitoredServicesData: ResponsePageMSDropdownResponse | null
 ): SelectOption[] {
   const monitoredServicesOptions: SelectOption[] = []
-  monitoredServicesData?.data?.forEach(monitoredService => {
+  monitoredServicesData?.data?.content?.forEach(monitoredService => {
     const { identifier = '', name = '' } = monitoredService
     if (identifier && name) {
       monitoredServicesOptions.push({

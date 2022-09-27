@@ -36,10 +36,10 @@ import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { useStageTemplateActions } from '@pipeline/utils/useStageTemplateActions'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
-import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
 import { stringify } from '@common/utils/YamlHelperMethods'
-import { createParentEntityQueryParams } from '@common/utils/gitSyncUtils'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import css from './TemplateStageSpecifications.module.scss'
 
 declare global {
@@ -90,9 +90,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: templateVersionLabel,
-      repoIdentifier,
-      getDefaultFromOtherRepo: true,
-      ...createParentEntityQueryParams(storeMetadata, queryParams, branch)
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
 
@@ -117,9 +115,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: defaultTo(stage?.stage?.template?.versionLabel, ''),
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
 
@@ -132,7 +128,7 @@ export const TemplateStageSpecifications = (): JSX.Element => {
 
   const updateFormValues = (newTemplateInputs?: StageElementConfig) => {
     const updatedStage = produce(stage?.stage as StageElementConfig, draft => {
-      set(draft, 'template.templateInputs', newTemplateInputs)
+      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
     })
     setFormValues(updatedStage)
     updateStage(updatedStage)
@@ -224,6 +220,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
             onRemoveTemplate={removeTemplate}
             onOpenTemplateSelector={addOrUpdateTemplate}
             className={css.templateBar}
+            isReadonly={isReadonly}
+            storeMetadata={storeMetadata}
           />
         )}
         <Formik<StageElementConfig>

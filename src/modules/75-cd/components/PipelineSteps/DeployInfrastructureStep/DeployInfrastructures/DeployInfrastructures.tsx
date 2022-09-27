@@ -44,7 +44,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
-
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
@@ -92,6 +92,7 @@ function DeployInfrastructures({
   } = usePipelineContext()
 
   const { stage } = getStageFromPipeline(selectedStageId || '')
+  const { getTemplate } = useTemplateSelector()
 
   const {
     data: infrastructuresResponse,
@@ -302,6 +303,8 @@ function DeployInfrastructures({
               ? undefined
               : ((stage?.stage?.spec as DeploymentStageConfig)?.deploymentType as ServiceDeploymentType)
           }
+          stageCustomDeploymentData={(stage?.stage?.spec as DeploymentStageConfig)?.customDeploymentRef}
+          getTemplate={getTemplate}
         />
       </ModalDialog>
     ),

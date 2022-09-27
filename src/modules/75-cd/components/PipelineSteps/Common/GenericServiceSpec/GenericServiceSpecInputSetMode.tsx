@@ -10,6 +10,7 @@ import { connect } from 'formik'
 import { AllowedTypes, Layout } from '@wings-software/uicore'
 import cx from 'classnames'
 
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ServiceSpec } from 'services/cd-ng'
 import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
@@ -102,7 +103,7 @@ const GenericServiceSpecInputSetModeFormikForm = (props: KubernetesInputSetProps
 
       {!!template?.configFiles?.length && (
         <ConfigFiles
-          configFiles={allValues?.configFiles}
+          configFiles={defaultTo(allValues?.configFiles, initialValues?.configFiles)}
           configFileSourceBaseFactory={configFileSourceBaseFactory}
           stageIdentifier={stageIdentifier}
           template={template}

@@ -793,7 +793,7 @@ exports[`Rule details page tests should render successfully 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
                     >
-                      ce.co.accessPoint.loadbalancer
+                      pipeline.loadBalancer
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
@@ -1757,7 +1757,7 @@ exports[`Rule details page tests should render successfully 2`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-body2"
                     >
-                      ce.co.accessPoint.loadbalancer
+                      pipeline.loadBalancer
                     </p>
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-body"

@@ -100,13 +100,23 @@ export default function ServerlessArtifactoryRepository(
   }, [artifactRepoLoading, artifactRepoError])
 
   useEffect(() => {
-    if (getMultiTypeFromValue(connectorRef) === MultiTypeInputType.FIXED && !artifactRepoData) {
-      getArtifactRepos()
-    }
     if (artifactRepoData) {
       setConnectorRepos(map(artifactRepoData.data?.repositories, repo => ({ label: repo, value: repo })))
     }
   }, [artifactRepoData, connectorRef])
+
+  const hasRepositoryData = () => {
+    if (
+      (artifactRepoError?.data as Failure)?.status === 'ERROR' ||
+      (artifactRepoError?.data as Failure)?.status === 'FAILURE'
+    ) {
+      return false
+    }
+    if (connectorRepos.length > 0) {
+      return true
+    }
+    return false
+  }
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
@@ -157,7 +167,8 @@ export default function ServerlessArtifactoryRepository(
           onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
             if (
               e?.target?.type !== 'text' ||
-              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+              hasRepositoryData()
             ) {
               return
             }

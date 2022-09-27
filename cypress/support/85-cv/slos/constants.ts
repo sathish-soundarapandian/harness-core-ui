@@ -27,6 +27,7 @@ export const listSLOsCallWithLatency = `/cv/api/slo-dashboard/widgets/list?routi
 export const listSLOsCallWithUnhealthy = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&errorBudgetRisks=UNHEALTHY`
 export const listSLOsCallWithHealthy = `/cv/api/slo-dashboard/widgets/list?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&pageNumber=0&pageSize=10&errorBudgetRisks=HEALTHY`
 export const listMonitoredServices = `/cv/api/monitored-service/all/time-series-health-sources?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
+export const listMonitoredServicesForSLOs = `/cv/api/slo-dashboard/monitored-services?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const listMonitoredServicesForNewerProject = `/cv/api/monitored-service/all/time-series-health-sources?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}`
 export const getSLOMetrics = `/cv/api/monitored-service/cvng_prod/health-source/${healthSource}/slo-metrics?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getSliGraph = `/cv/api/monitored-service/cvng_prod/sli/onboarding-graph?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
@@ -121,6 +122,28 @@ export const listMonitoredServicesCallResponse = {
   ],
   metaData: null,
   correlationId: 'fe6686a2-cd9e-45e1-bca4-2cc86285eb82'
+}
+
+export const listMonitoredServicesCallResponseForSLOs = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 1,
+    totalItems: 1,
+    pageItemCount: 1,
+    pageSize: 10,
+    content: [
+      {
+        identifier: 'cvng_prod',
+        name: 'cvng_prod',
+        serviceRef: 'cvng',
+        environmentRef: 'prod'
+      }
+    ],
+    pageIndex: 0,
+    empty: false
+  },
+  metaData: null,
+  correlationId: '9507e975-e5e3-45e8-a794-7cc5c7fb5de6'
 }
 
 export const listSLOMetricsCallResponse = {

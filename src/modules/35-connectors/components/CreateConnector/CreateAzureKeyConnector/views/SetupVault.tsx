@@ -46,8 +46,6 @@ import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 
 export interface SetupVaultFormData {
   vaultName?: string
@@ -84,7 +82,6 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
     queryParams: { accountIdentifier: accountId }
   })
 
-  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   useEffect(() => {
     if (isEditMode && connectorInfo) {
@@ -154,7 +151,7 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
             ? showSuccess(getString('secretManager.editmessageSuccess'))
             : showSuccess(getString('secretManager.createmessageSuccess'))
         }
-        if (opaFlagEnabled && response.data?.governanceMetadata) {
+        if (response.data?.governanceMetadata) {
           conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSuccessCreateOrUpdateNextSteps)
         } else {
           onSuccessCreateOrUpdateNextSteps()

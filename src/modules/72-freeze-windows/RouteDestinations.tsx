@@ -15,11 +15,24 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { RouteWithLayout } from '@common/router'
 import FreezeWindowsPage from '@freeze-windows/pages/FreezeWindowsPage/FreezeWindowsPage'
+import { FreezeStudioWrapper } from '@freeze-windows/components/FreezeStudioWrapper'
 
 export default (
   <>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toFreezeWindows({ ...accountPathProps })} exact>
       <FreezeWindowsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routes.toFreezeWindowStudio({
+        ...accountPathProps,
+        ...{
+          windowIdentifier: ':windowIdentifier'
+        }
+      })}
+      exact
+    >
+      <FreezeStudioWrapper />
     </RouteWithLayout>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toFreezeWindows({ ...orgPathProps })} exact>
       <FreezeWindowsPage />

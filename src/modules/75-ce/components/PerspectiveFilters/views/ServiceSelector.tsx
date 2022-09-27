@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Container } from '@wings-software/uicore'
+import { sortBy } from 'lodash-es'
 import CustomMenuItem from '@ce/components/CustomMenu/CustomMenuItem'
 import type { QlceViewFieldIdentifierData } from 'services/ce/services'
 import type { ProviderType } from '../FilterPill'
@@ -19,8 +20,10 @@ interface ServiceSelectorProps {
 }
 
 const ServiceSelector: React.FC<ServiceSelectorProps> = ({ provider, fieldValueList, setService }) => {
-  const serviceData = fieldValueList && fieldValueList.filter(field => field.identifier === provider.id)[0].values
-
+  const serviceData = sortBy(
+    fieldValueList && fieldValueList.filter(field => field.identifier === provider.id)[0].values,
+    'fieldName'
+  )
   return (
     <Container className={css.providerDropDown}>
       <ul className={css.providerList}>

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   Container,
   Text,
@@ -15,17 +15,19 @@ import {
   TableV2,
   useConfirmationDialog,
   useToaster,
-  NoDataCard
+  NoDataCard,
+  Pagination
 } from '@wings-software/uicore'
 import type { Column, Renderer, CellProps } from 'react-table'
 import { useParams, useHistory } from 'react-router-dom'
 import { get, defaultTo } from 'lodash-es'
 import { Intent } from '@blueprintjs/core'
 import {
-  useGetUser,
   useSetDefaultAccountForCurrentUser,
   RestResponseUser,
-  useRestrictedSwitchAccount
+  useRestrictedSwitchAccount,
+  useGetUserAccounts,
+  useGetUser
 } from 'services/portal'
 import type { User, Account } from 'services/portal'
 import { PageSpinner } from '@common/components'
@@ -35,6 +37,9 @@ import routes from '@common/RouteDefinitions'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { getLoginPageURL } from 'framework/utils/SessionUtils'
 import SecureStorage from 'framework/utils/SecureStorage'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useGetCurrentUserInfo } from 'services/cd-ng'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './SwitchAccount.module.scss'
 
 interface SwitchAccountProps {
@@ -60,6 +65,7 @@ const RenderColumnAccountEdition: Renderer<CellProps<Account>> = ({ row }) => {
 
 const ReAuthenticationNote: React.FC<ReAuthenticationNoteProps> = ({ accounts, accountId }) => {
   const { getString } = useStrings()
+
   return accounts.length > 1 || (accounts[0] && accounts[0].uuid !== accountId) ? (
     <Text intent="warning" padding={{ left: 'large', right: 'large', top: 'small' }}>
       {getString('common.noteAccountSwitch')}
@@ -67,25 +73,63 @@ const ReAuthenticationNote: React.FC<ReAuthenticationNoteProps> = ({ accounts, a
   ) : null
 }
 
-const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }) => {
+const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
   const { accountId } = useParams<AccountPathProps>()
+  const [page, setPage] = useState(0)
   const [user, setUser] = useState<User>()
+  const [switchAccountId, setSwitchAccountId] = useState<string | undefined>()
   const { showError } = useToaster()
   const history = useHistory()
   const { getString } = useStrings()
-  const { data, loading, error, refetch } = useGetUser({
-    mock
+  const { currentUserInfo, updateAppStore } = useAppStore()
+  const { PL_ENABLE_SWITCH_ACCOUNT_PAGINATION } = useFeatureFlags()
+  const {
+    data: userData,
+    loading: userLoading,
+    error: userError,
+    refetch: userRefetch
+  } = useGetUser({ lazy: PL_ENABLE_SWITCH_ACCOUNT_PAGINATION })
+
+  const { data, loading, refetch, error } = useGetUserAccounts({
+    queryParams: {
+      pageIndex: page,
+      pageSize: 10,
+      searchTerm: searchString
+    },
+    lazy: !PL_ENABLE_SWITCH_ACCOUNT_PAGINATION
+  })
+
+  const {
+    data: userInfo,
+    loading: userInfoLoading,
+    refetch: fetchCurrentUserInfo
+  } = useGetCurrentUserInfo({
+    queryParams: { accountIdentifier: accountId },
+    lazy: true
   })
   const { mutate: setDefaultAccount, loading: settingDefault } = useSetDefaultAccountForCurrentUser({ accountId })
   const { mutate: switchAccount, loading: switchAccountLoading } = useRestrictedSwitchAccount({
     // requestOptions: { headers: { 'content-type': 'application/json' } }
   })
 
+  useEffect(() => {
+    if (userInfo?.data?.defaultAccountId !== currentUserInfo.defaultAccountId) {
+      updateAppStore({
+        currentUserInfo: userInfo?.data
+      })
+    }
+  }, [userInfo])
+
+  useEffect(() => {
+    setPage(0)
+  }, [searchString])
+
   const RenderColumnAccountName: Renderer<CellProps<Account>> = ({ row }) => {
     const account = row.original
 
     const handleSwitchAccount = async (): Promise<void> => {
       try {
+        setSwitchAccountId(account.uuid)
         const response = await switchAccount({ accountId: account.uuid })
         if (response.resource?.requiresReAuthentication) {
           const baseUrl = window.location.href.split('#')[0]
@@ -102,6 +146,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }
           showError(getString('common.switchAccountError'))
         }
       } catch (err) {
+        setSwitchAccountId(undefined)
         showError(getString('common.switchAccountError'))
       }
     }
@@ -110,7 +155,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }
       <Button
         onClick={handleSwitchAccount}
         text={account.accountName}
-        loading={switchAccountLoading}
+        loading={switchAccountLoading && switchAccountId === account.uuid}
         disabled={account.uuid === accountId}
         minimal={account.uuid === accountId}
         variation={ButtonVariation.LINK}
@@ -126,7 +171,11 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }
         pathParams: { accountId: account.uuid }
       })
       if (resource === true) {
-        refetch()
+        if (!PL_ENABLE_SWITCH_ACCOUNT_PAGINATION) {
+          userRefetch()
+        } else {
+          fetchCurrentUserInfo()
+        }
       } else {
         showError(get(responseMessages, '[0].message', getString('somethingWentWrong')))
       }
@@ -145,8 +194,11 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }
       }
     })
 
+    const isDefaultAccount = !PL_ENABLE_SWITCH_ACCOUNT_PAGINATION
+      ? account.uuid === user?.defaultAccountId
+      : account.uuid === currentUserInfo?.defaultAccountId
     // default account should not be actionable
-    return account.uuid === user?.defaultAccountId ? (
+    return isDefaultAccount ? (
       <Text flex={{ align: 'center-center' }}>Default</Text>
     ) : (
       <Button
@@ -160,20 +212,23 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }
   }
 
   useEffect(() => {
-    setUser(data?.resource)
-  }, [data])
+    setUser(userData?.resource)
+  }, [userData])
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const accounts = useMemo(
-    () =>
-      defaultTo(
+  const getAccounts = () => {
+    if (!PL_ENABLE_SWITCH_ACCOUNT_PAGINATION) {
+      return defaultTo(
         user?.accounts
           ?.concat(defaultTo(user.supportAccounts, []))
           ?.filter(account => account.accountName.toLowerCase().includes(searchString.toLowerCase())),
         []
-      ),
-    [user, searchString]
-  )
+      )
+    }
+
+    return data?.resource?.content || []
+  }
+
+  const accounts = getAccounts()
 
   const columns: Column<Account>[] = useMemo(
     () => [
@@ -206,19 +261,34 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '', mock }
         Cell: RenderColumnDefaultAccount
       }
     ],
-    [accounts]
+    [accounts, currentUserInfo, switchAccountId]
   )
+  const apiError = error || userError
+
   return (
     <>
       <ReAuthenticationNote accounts={accounts} accountId={accountId} />
       <Container padding={{ left: 'large', right: 'large' }} className={css.container}>
-        {loading || settingDefault ? <PageSpinner /> : null}
-        {error ? (
-          <PageError message={error.message || getString('somethingWentWrong')} onClick={() => refetch()} />
+        {userLoading || loading || userInfoLoading || settingDefault ? <PageSpinner /> : undefined}
+
+        {apiError ? (
+          <PageError message={apiError.message || getString('somethingWentWrong')} onClick={() => refetch()} />
         ) : null}
-        {!loading && !settingDefault && !error && accounts ? (
+        {!settingDefault && !apiError && accounts ? (
           accounts.length ? (
-            <TableV2 columns={columns} data={accounts} sortable={false} />
+            <>
+              <TableV2 columns={columns} data={accounts} sortable={false} className={css.table} />
+              {PL_ENABLE_SWITCH_ACCOUNT_PAGINATION && (
+                <Pagination
+                  itemCount={data?.resource?.totalItems || 0}
+                  pageSize={data?.resource?.pageSize || 10}
+                  pageCount={data?.resource?.totalPages || 0}
+                  pageIndex={data?.resource?.pageIndex || 0}
+                  gotoPage={setPage}
+                  className={css.pagination}
+                />
+              )}
+            </>
           ) : (
             <NoDataCard
               message={getString('noData')}

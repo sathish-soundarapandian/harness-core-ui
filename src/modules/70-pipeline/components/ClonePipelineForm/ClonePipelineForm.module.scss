@@ -27,8 +27,14 @@
 .inlineRemoteSelect {
   width: 700px;
   display: flex;
-  column-gap: var(--spacing-4);
+  column-gap: var(--spacing-6);
   margin-bottom: var(--spacing-4);
+  & > :first-child {
+    flex: 1;
+    & > div {
+      justify-content: flex-start !important;
+    }
+  }
 }
 
 .inputWithSpinner {

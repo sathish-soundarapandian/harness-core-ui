@@ -5,7 +5,8 @@ import {
   pipelineListAPI,
   pipelinesRoute,
   serviceStepAPI,
-  serviceStepStageID
+  serviceStepStageID,
+  updatedPipelineExecutionEndpoint
 } from '../../support/70-pipeline/constants'
 
 describe('Pipeline Execution', () => {
@@ -16,9 +17,9 @@ describe('Pipeline Execution', () => {
       return false
     })
     cy.initializeRoute()
-    cy.intercept('POST', executePipeline, { fixture: 'pipeline/api/pipelineExecution/executePipeline' }).as(
-      'executePipeline'
-    )
+    cy.intercept('POST', updatedPipelineExecutionEndpoint, {
+      fixture: 'pipeline/api/pipelineExecution/executePipeline'
+    }).as('executePipeline')
 
     cy.intercept('GET', serviceStepAPI, { fixture: 'pipeline/api/pipelineExecution/serviceStep' }).as('serviceStep')
     cy.intercept('GET', serviceStepStageID, { fixture: 'pipeline/api/pipelineExecution/serviceStepStageID' })
@@ -226,10 +227,6 @@ describe('Pipeline Execution', () => {
   })
 
   it('Pipeline Execution Serverless Aws Lambda Deploy step - Failed', () => {
-    // Execute Pipeline call which is made when user click on Run button
-    cy.intercept('POST', executePipeline, {
-      fixture: 'pipeline/api/pipelineExecution/serverlessAwsLambda/executePipeline'
-    }).as('executePipeline')
     // execution/:executionId calls are made from here onwards
     cy.intercept('GET', serviceStepAPI, {
       fixture: 'pipeline/api/pipelineExecution/serverlessAwsLambda/serviceStep'
@@ -363,10 +360,6 @@ describe('Pipeline Execution', () => {
   })
 
   it('Pipeline Execution steps phases - Running & Abort', () => {
-    cy.intercept('POST', executePipeline, {
-      fixture: 'pipeline/api/pipelineExecution/successPipeline/executePipeline'
-    }).as('executePipeline')
-
     cy.intercept('GET', serviceStepAPI, { fixture: 'pipeline/api/pipelineExecution/successPipeline/serviceStep' }).as(
       'serviceStep'
     )
@@ -438,7 +431,6 @@ describe('Pipeline Execution', () => {
     cy.get('.Pane.horizontal.Pane1').within(() => {
       cy.get('.default-node').first().should('be.visible').trigger('mouseover')
       cy.get('.default-node').first().should('be.visible').trigger('onmouseover')
-      cy.get('.default-node').first().should('be.visible').trigger('mouseenter')
     })
   })
 })

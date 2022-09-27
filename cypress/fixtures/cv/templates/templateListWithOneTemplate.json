@@ -1,0 +1,86 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "content": [
+      {
+        "accountId": "accountId",
+        "orgIdentifier": "default",
+        "projectIdentifier": "project1",
+        "identifier": "MS_Template_101",
+        "name": "MS Template 101",
+        "description": "",
+        "tags": {},
+        "yaml": "template:\n  name: MS Template 101\n  identifier: MS_Template_101\n  versionLabel: \"1\"\n  type: MonitoredService\n  projectIdentifier: testSRM\n  orgIdentifier: default\n  tags: {}\n  spec:\n    serviceRef: <+input>\n    environmentRef: <+input>\n    type: Application\n    sources:\n      changeSources:\n        - name: Harness CD Next Gen\n          identifier: harness_cd_next_gen\n          type: HarnessCDNextGen\n          enabled: true\n          category: Deployment\n          spec: {}\n      healthSources:\n        - name: AppDynamics\n          identifier: AppDynamics\n          type: AppDynamics\n          spec:\n            applicationName: <+input>\n            tierName: <+input>\n            metricData:\n              Errors: true\n              Performance: true\n            metricDefinitions:\n              - identifier: appdMetric_101\n                metricName: appdMetric 101\n                baseFolder: \"\"\n                metricPath: \"\"\n                completeMetricPath: <+input>\n                groupName: Group 1\n                sli:\n                  enabled: true\n                analysis:\n                  riskProfile:\n                    category: Errors\n                    metricType: ERROR\n                    thresholdTypes:\n                      - ACT_WHEN_HIGHER\n                  liveMonitoring:\n                    enabled: true\n                  deploymentVerification:\n                    enabled: true\n                    serviceInstanceMetricPath: <+input>\n            feature: Application Monitoring\n            connectorRef: <+input>\n            metricPacks:\n              - identifier: Errors\n              - identifier: Performance\n        - name: NewRelic\n          identifier: NewRelic\n          type: NewRelic\n          spec:\n            applicationName: <+input>\n            applicationId: <+input>\n            metricData:\n              Performance: true\n            newRelicMetricDefinitions:\n              - identifier: New_Relic_Metric\n                metricName: New Relic Metric\n                groupName: Group 1\n                nrql: <+input>\n                responseMapping:\n                  metricValueJsonPath: <+input>\n                  timestampJsonPath: <+input>\n                sli:\n                  enabled: true\n                analysis:\n                  riskProfile:\n                    category: Performance\n                    metricType: ERROR\n                    thresholdTypes:\n                      - ACT_WHEN_HIGHER\n                  liveMonitoring:\n                    enabled: true\n                  deploymentVerification:\n                    enabled: true\n            feature: apm\n            connectorRef: <+input>\n            metricPacks:\n              - identifier: Performance\n        - type: Prometheus\n          identifier: Prometheus\n          name: Prometheus\n          spec:\n            connectorRef: <+input>\n            feature: apm\n            metricDefinitions:\n              - metricName: Prometheus Metric\n                identifier: prometheus_metric\n                serviceFilter: []\n                isManualQuery: true\n                query: <+input>\n                envFilter: []\n                additionalFilters: []\n                groupName: Group 1\n                sli:\n                  enabled: true\n                analysis:\n                  riskProfile:\n                    category: Errors\n                    metricType: ERROR\n                    thresholdTypes:\n                      - ACT_WHEN_HIGHER\n                  liveMonitoring:\n                    enabled: true\n                  deploymentVerification:\n                    enabled: true\n                    serviceInstanceFieldName: <+input>\n            metricPacks: []\n",
+        "versionLabel": "1",
+        "templateEntityType": "MonitoredService",
+        "childType": "Application",
+        "templateScope": "project",
+        "version": 0,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null
+        },
+        "entityValidityDetails": { "valid": true, "invalidYaml": null },
+        "lastUpdatedAt": 1661838047936,
+        "createdAt": 1661838047936,
+        "stableTemplate": true
+      },
+      {
+        "accountId": "accountId",
+        "orgIdentifier": "default",
+        "projectIdentifier": "project1",
+        "identifier": "new_monitoredservice_template_name",
+        "name": "New MonitoredService Template Name",
+        "description": "",
+        "tags": {},
+        "yaml": "template:\n  name: New MonitoredService Template Name\n  identifier: new_monitoredservice_template_name\n  versionLabel: \"1\"\n  type: MonitoredService\n  projectIdentifier: testSRM\n  orgIdentifier: default\n  tags: {}\n  spec:\n    serviceRef: <+input>\n    environmentRef: <+input>\n    type: Application\n    sources:\n      changeSources:\n        - name: Harness CD Next Gen\n          identifier: harness_cd_next_gen\n          type: HarnessCDNextGen\n          enabled: true\n          category: Deployment\n          spec: {}\n      healthSources:\n        - type: StackdriverLog\n          identifier: Google_Cloud_Operations\n          name: Google Cloud Operations\n          spec:\n            connectorRef: account.gcp\n            feature: Cloud Logs\n            queries:\n              - name: GCO Logs Query\n                query: <+input>\n                serviceInstanceIdentifier: <+input>\n                messageIdentifier: <+input>\n",
+        "versionLabel": "1",
+        "templateEntityType": "MonitoredService",
+        "childType": "Application",
+        "templateScope": "project",
+        "version": 1,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null
+        },
+        "entityValidityDetails": { "valid": true, "invalidYaml": null },
+        "lastUpdatedAt": 1661618220264,
+        "createdAt": 1661511635630,
+        "stableTemplate": true
+      }
+    ],
+    "pageable": {
+      "sort": { "sorted": true, "unsorted": false, "empty": false },
+      "pageSize": 20,
+      "pageNumber": 0,
+      "offset": 0,
+      "paged": true,
+      "unpaged": false
+    },
+    "totalElements": 2,
+    "last": true,
+    "totalPages": 1,
+    "sort": { "sorted": true, "unsorted": false, "empty": false },
+    "number": 0,
+    "first": true,
+    "numberOfElements": 2,
+    "size": 20,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "02ba45bb-c4e4-4885-a3ed-08ea2ef7ea8b"
+}

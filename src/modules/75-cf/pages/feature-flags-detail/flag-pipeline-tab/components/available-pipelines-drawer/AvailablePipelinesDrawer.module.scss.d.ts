@@ -8,8 +8,10 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly drawer: string
+  readonly drawerContent: string
   readonly envTag: string
   readonly footer: string
+  readonly noDataContainer: string
   readonly pipelineCardsGrid: string
 }
 export default styles

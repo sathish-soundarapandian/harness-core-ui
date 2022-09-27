@@ -28,6 +28,7 @@ export enum StepType {
   DeployServiceEntity = 'DeployServiceEntity',
   DeployService = 'DeployService',
   DeployEnvironment = 'DeployEnvironment',
+  DeployEnvironmentEntity = 'DeployEnvironmentEntity',
   DeployInfrastructure = 'DeployInfrastructure',
   KubernetesDirect = 'KubernetesDirect',
   K8sServiceSpec = 'K8sServiceSpec',
@@ -103,8 +104,14 @@ export enum StepType {
   AzureArmRollback = 'AzureARMRollback',
   Background = 'Background',
   AzureBlueprint = 'AzureCreateBPResource',
+  Wait = 'Wait',
+  EcsBlueGreenCreateService = 'EcsBlueGreenCreateService',
+  EcsBlueGreenSwapTargetGroups = 'EcsBlueGreenSwapTargetGroups',
+  EcsBlueGreenRollback = 'EcsBlueGreenRollback',
   CreateAzureARMResource = 'AzureCreateARMResource',
-  Wait = 'Wait'
+  CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec',
+  CustomDeployment = 'CustomDeployment',
+  FetchInstanceScript = 'FetchInstanceScript'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

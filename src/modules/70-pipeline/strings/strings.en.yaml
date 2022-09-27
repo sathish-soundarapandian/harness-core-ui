@@ -799,9 +799,19 @@ infraSpecifications:
     arm64: ARM64
 imagePathLabel: Image Path
 artifactPathLabel: Artifact Path
+artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
+  artifactId: Artifact ID
+  artifactIdPlaceholder: Enter Artifact ID
+  groupId: Group ID
+  groupIdPlaceholder: Enter Group ID
+  extension: Extension
+  extensionPlaceholder: Enter Extension
+  classifier: Classifier
+  classifierPlaceholder: Enter Classifier
+  packageName: Package Name
   addPrimaryArtifact: Add Primary Artifact
   addArtifactSource: Add Artifact Source
   addSidecar: Add Sidecar
@@ -809,7 +819,6 @@ artifactsSelection:
   projectPlaceholder: Enter Project
   repositoryTypePlaceholder: Select Repository Type
   delegateselectionPlaceholder: Add specific selectors or leave empty to target any delegate
-  packageName: Package Name
   repositoryPort: Repository Port
   artifactsArrayPath: Artifacts Array Path
   versionPath: Version Path
@@ -847,11 +856,14 @@ artifactsSelection:
     packageName: Package Name is required
     imagePath: Image Path is required
     artifactPath: Artifact Path is required
+    artifactId: Artifact ID is required
+    groupId: Group ID is required
     region: '{{$.validation.regionRequired}}'
     tag: Tag is required
     tagRegex: Tag Regex is required
     sidecarId: Sidecar Identifier is required
     repositoryPort: Repository Port is required
+    repositoryFormat: Repository Format is required
     repositoryUrl: Repository URL is required
     repositoryType: Repository Type is required
     artifactDirectory: Artifact Directory is required
@@ -1020,6 +1032,7 @@ stepDescription:
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
   createPR: Create PR
   mergePR: Merge PR
+  fetchInstanceScript: Fetch Instances
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
   CustomApproval: Custom Approval
   AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
@@ -1366,6 +1379,7 @@ skipInstances:
 selectiveStageExecution: 'Selective stage execution'
 customDeployment:
   infraVariablesTitle: 'Define the variables to be used in your environment and infrastructure.'
+  seeOnlyTemplatesFor: See only templates for {{name}}
   hostObjectArrayPath: 'Host Object Array Path'
   hostAttributes: 'Host Attributes'
   newAttribute: 'New Attribute'
@@ -1379,3 +1393,4 @@ customDeployment:
     fetchScriptBodyRequired: 'Fetch Instances Script body is required'
   validations:
     nameUnique: Field Name should be unique
+loadBalancer: Load Balancer

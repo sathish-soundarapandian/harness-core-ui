@@ -36,6 +36,7 @@ export enum PipelineActions {
   SetYamlHandler = 'SetYamlHandler',
   SetTemplateTypes = 'SetTemplateTypes',
   SetTemplateServiceData = 'SetTemplateServiceData',
+  SetResolvedCustomDeploymentDetailsByRef = 'SetResolvedCustomDeploymentDetailsByRef',
   PipelineSaved = 'PipelineSaved',
   UpdateSchemaErrorsFlag = 'UpdateSchemaErrorsFlag',
   Success = 'Success',
@@ -133,6 +134,7 @@ export interface PipelineReducerState {
   schemaErrors: boolean
   templateTypes: { [key: string]: string }
   templateServiceData: TemplateServiceDataType
+  resolvedCustomDeploymentDetailsByRef: { [key: string]: Record<string, string | string[]> }
   storeMetadata?: StoreMetadata
   gitDetails: EntityGitDetails
   entityValidityDetails: EntityValidityDetails
@@ -165,6 +167,7 @@ export interface ActionResponse {
   yamlHandler?: YamlBuilderHandlerBinding
   templateTypes?: { [key: string]: string }
   templateServiceData?: TemplateServiceDataType
+  resolvedCustomDeploymentDetailsByRef?: { [key: string]: Record<string, string | string[]> }
   originalPipeline?: PipelineInfoConfig
   isBEPipelineUpdated?: boolean
   pipelineView?: PipelineViewData
@@ -201,6 +204,10 @@ const setTemplateServiceData = (response: ActionResponse): ActionReturnType => (
   type: PipelineActions.SetTemplateServiceData,
   response
 })
+const setResolvedCustomDeploymentDetailsByRef = (response: ActionResponse): ActionReturnType => ({
+  type: PipelineActions.SetResolvedCustomDeploymentDetailsByRef,
+  response
+})
 const updating = (): ActionReturnType => ({ type: PipelineActions.UpdatePipeline })
 const fetching = (): ActionReturnType => ({ type: PipelineActions.Fetching })
 const pipelineSavedAction = (response: ActionResponse): ActionReturnType => ({
@@ -229,6 +236,7 @@ export const PipelineContextActions = {
   setYamlHandler,
   setTemplateTypes,
   setTemplateServiceData,
+  setResolvedCustomDeploymentDetailsByRef,
   success,
   error,
   updateSchemaErrorsFlag,
@@ -254,6 +262,7 @@ export const initialState: PipelineReducerState = {
   entityValidityDetails: {},
   templateTypes: {},
   templateServiceData: {},
+  resolvedCustomDeploymentDetailsByRef: {},
   isLoading: false,
   isBEPipelineUpdated: false,
   isDBInitialized: false,
@@ -298,6 +307,11 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
       return {
         ...state,
         templateServiceData: data.response?.templateServiceData || {}
+      }
+    case PipelineActions.SetResolvedCustomDeploymentDetailsByRef:
+      return {
+        ...state,
+        resolvedCustomDeploymentDetailsByRef: data.response?.resolvedCustomDeploymentDetailsByRef || {}
       }
     case PipelineActions.UpdatePipelineView:
       return {

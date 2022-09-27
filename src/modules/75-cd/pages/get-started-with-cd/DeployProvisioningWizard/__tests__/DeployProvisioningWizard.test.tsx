@@ -155,7 +155,7 @@ describe('Render and test DeployProvisioningWizard', () => {
         })}
         pathParams={pathParams}
       >
-        <CDOnboardingContext.Provider value={{ ...contextValues }}>
+        <CDOnboardingContext.Provider value={{ ...contextValues } as any}>
           <DeployProvisioningWizard />
         </CDOnboardingContext.Provider>
       </TestWrapper>

@@ -167,6 +167,23 @@ exports[`<TemplateSelectorLeftView> tests should match snapshot 1`] = `
                 <div
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                 >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox linkedTemplateCheckbox StyledProps--main"
+                  >
+                    <input
+                      checked=""
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main linkedTemplateCheckboxLabel StyledProps--font-size-small"
+                      style="--text-line-clamp: 1;"
+                    >
+                      templatesLibrary.seeLinkedTemplate
+                    </p>
+                  </label>
                   <div
                     class="bp3-popover-wrapper DropDown--main"
                   >
@@ -461,6 +478,23 @@ exports[`<TemplateSelectorLeftView> tests should render error view correctly 1`]
                 <div
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                 >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox linkedTemplateCheckbox StyledProps--main"
+                  >
+                    <input
+                      checked=""
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main linkedTemplateCheckboxLabel StyledProps--font-size-small"
+                      style="--text-line-clamp: 1;"
+                    >
+                      templatesLibrary.seeLinkedTemplate
+                    </p>
+                  </label>
                   <div
                     class="bp3-popover-wrapper DropDown--main"
                   >
@@ -796,6 +830,23 @@ exports[`<TemplateSelectorLeftView> tests should render loading view correctly 1
                 <div
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                 >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox linkedTemplateCheckbox StyledProps--main"
+                  >
+                    <input
+                      checked=""
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main linkedTemplateCheckboxLabel StyledProps--font-size-small"
+                      style="--text-line-clamp: 1;"
+                    >
+                      templatesLibrary.seeLinkedTemplate
+                    </p>
+                  </label>
                   <div
                     class="bp3-popover-wrapper DropDown--main"
                   >
@@ -1162,6 +1213,23 @@ exports[`<TemplateSelectorLeftView> tests should render no results view correctl
                 <div
                   class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                 >
+                  <label
+                    class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox linkedTemplateCheckbox StyledProps--main"
+                  >
+                    <input
+                      checked=""
+                      type="checkbox"
+                    />
+                    <span
+                      class="bp3-control-indicator"
+                    />
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main linkedTemplateCheckboxLabel StyledProps--font-size-small"
+                      style="--text-line-clamp: 1;"
+                    >
+                      templatesLibrary.seeLinkedTemplate
+                    </p>
+                  </label>
                   <div
                     class="bp3-popover-wrapper DropDown--main"
                   >

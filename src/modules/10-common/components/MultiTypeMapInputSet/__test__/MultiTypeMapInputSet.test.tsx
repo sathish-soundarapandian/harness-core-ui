@@ -50,8 +50,6 @@ describe('<MultiTypeMapInputSet /> tests', () => {
 
     expect(queryByNameAttribute('test[0].key')).toBeTruthy()
     expect(queryByNameAttribute('test[0].value')).toBeTruthy()
-    expect(queryByNameAttribute('test[1].key')).toBeTruthy()
-    expect(queryByNameAttribute('test[1].value')).toBeTruthy()
   })
 
   test('Remove button should remove a field', async () => {
@@ -64,13 +62,11 @@ describe('<MultiTypeMapInputSet /> tests', () => {
     })
 
     await act(async () => {
-      fireEvent.click(getByTestId('remove-test-[1]'))
+      fireEvent.click(getByTestId('remove-test-[0]'))
     })
 
-    expect(queryByNameAttribute('test[0].key')).toBeTruthy()
-    expect(queryByNameAttribute('test[0].value')).toBeTruthy()
-    expect(queryByNameAttribute('test[1].key')).toBeNull()
-    expect(queryByNameAttribute('test[1].value')).toBeNull()
+    expect(queryByNameAttribute('test[0].key')).toBeNull()
+    expect(queryByNameAttribute('test[0].value')).toBeNull()
   })
 
   test('Should render properly', () => {

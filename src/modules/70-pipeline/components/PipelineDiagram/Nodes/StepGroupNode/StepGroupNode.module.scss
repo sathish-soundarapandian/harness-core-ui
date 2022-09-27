@@ -13,7 +13,7 @@
 .stepGroup {
   width: fit-content;
   height: fit-content;
-  padding-bottom: var(--spacing-large);
+  // padding-bottom: var(--spacing-large);
   &.marginBottom {
     margin-bottom: 30px;
   }
@@ -77,11 +77,8 @@
     opacity: 0;
     right: 0;
   }
-  background: linear-gradient(90deg, var(--white) 9px, transparent 1%) center,
-    linear-gradient(#f6fcff 9px, transparent 1%) center, #bbc1c4;
-  background-size: 10px 10px;
 
-  border-radius: 8px;
+  border-radius: 4px;
   border: dashed 1px var(--primary-4);
 
   &.firstnode {
@@ -114,12 +111,6 @@
       }
     }
   }
-  .nestedGroup {
-    top: -10px;
-    :global(.default-node) {
-      top: 0px !important;
-    }
-  }
 
   &.stepGroupNormal {
     :global(.default-node) {
@@ -132,7 +123,18 @@
       top: -1px !important;
     }
   }
-
+  .nestedGroup {
+    top: -10px;
+    :global(.default-node) {
+      top: 0px !important;
+    }
+    :global(.diamond-node) {
+      top: 0px !important;
+    }
+    :global(.icon-node) {
+      top: 0px !important;
+    }
+  }
   .stepGroupHeader {
     padding: var(--spacing-small) var(--spacing-small) 0 var(--spacing-small);
 
@@ -178,6 +180,30 @@
     }
     :global(.default-node) {
       top: 27px;
+    }
+    :global(.diamond-node) {
+      top: 27px;
+    }
+    :global(.icon-node) {
+      top: 27px;
+    }
+
+    .stepGroupNormal {
+      :global(#tree-container) {
+        top: 27px !important;
+      }
+      svg {
+        top: 27px !important;
+      }
+      :global(.default-node) {
+        top: 0 !important;
+      }
+      :global(.diamond-node) {
+        top: 0 !important;
+      }
+      :global(.icon-node) {
+        top: 0 !important;
+      }
     }
   }
 }

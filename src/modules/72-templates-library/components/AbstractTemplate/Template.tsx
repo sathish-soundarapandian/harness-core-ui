@@ -7,7 +7,7 @@
 
 import type React from 'react'
 import type { IconName } from '@wings-software/uicore'
-import type { TemplateType } from '@templates-library/utils/templatesUtils'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import type { TemplateInputsProps } from '../TemplateInputs/TemplateInputs'
@@ -20,6 +20,7 @@ export abstract class Template {
   protected abstract colorMap: React.CSSProperties
   protected isEnabled = true
   protected abstract isRemoteEnabled: boolean
+  protected allowedUsage = [TemplateUsage.USE, TemplateUsage.COPY]
 
   getLabel(): string {
     return this.label
@@ -47,6 +48,10 @@ export abstract class Template {
 
   getIsRemoteEnabled(): boolean {
     return this.isRemoteEnabled
+  }
+
+  getAllowedUsage(): TemplateUsage[] {
+    return this.allowedUsage
   }
 
   abstract renderTemplateCanvas(formikRef?: TemplateFormRef): JSX.Element

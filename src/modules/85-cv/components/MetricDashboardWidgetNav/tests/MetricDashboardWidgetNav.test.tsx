@@ -201,6 +201,48 @@ describe('unit tests for dashboard widget metric', () => {
     expect(container.querySelector(`.${Classes.TREE_NODE_SELECTED} p`)?.innerHTML).toEqual('solo-dolo')
   })
 
+  test('Ensure that when manual input query can be deleted', async () => {
+    const mockMetricSelect = jest.fn()
+    const onDeleteManualMetric = jest.fn()
+    const { container } = render(
+      <TestWrapper
+        path={routes.toCVActivitySourceEditSetup({
+          ...accountPathProps,
+          ...projectPathProps,
+          activitySource: ':activitySource',
+          activitySourceId: ':activitySourceId'
+        })}
+        pathParams={{
+          accountId: '1234_account',
+          projectIdentifier: '1234_project',
+          orgIdentifier: '1234_ORG',
+          activitySource: '1234_activitySource',
+          activitySourceId: '1234_sourceId'
+        }}
+      >
+        <MetricDashboardWidgetNav
+          dashboardDetailsRequest={mockedReturnedValue}
+          dashboardWidgetMapper={widgetMapper}
+          addManualQueryTitle={'cv.monitoringSources.datadog.manualInputQueryModal.modalTitle'}
+          dashboards={[]}
+          connectorIdentifier={MockConnectorIdentifier}
+          onSelectMetric={mockMetricSelect}
+          onDeleteManualMetric={onDeleteManualMetric}
+          manuallyInputQueries={['manual 101']}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(container.querySelector('[class*="main"]')).not.toBeNull())
+    await waitFor(() => expect(document.body.querySelector(`[class*="${Classes.DIALOG_HEADER}"]`)))
+    expect(container.querySelector(`.${Classes.TREE_NODE_SELECTED} p`)?.innerHTML).toEqual('manual 101')
+    // delete metric
+    expect(container.querySelectorAll('[data-icon="cross"]')?.length).toEqual(1)
+    fireEvent.click(container.querySelector('[data-icon="cross"]')!)
+    expect(onDeleteManualMetric).toHaveBeenCalledWith('manual 101')
+    expect(container.querySelector(`.${Classes.TREE_NODE_SELECTED} p`)).not.toBeTruthy()
+  })
+
   test('Ensure that when s', async () => {
     const mockMetricSelect = jest.fn()
 

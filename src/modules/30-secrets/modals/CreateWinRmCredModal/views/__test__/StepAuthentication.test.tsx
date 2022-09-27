@@ -13,7 +13,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import StepAuthentication from '@secrets/modals/CreateWinRmCredModal/views/StepAuthentication'
 import { clickSubmit } from '@common/utils/JestFormHelper'
 import { usePutSecret, usePostSecret, WinRmAuthDTO } from 'services/cd-ng'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
 jest.mock('services/cd-ng')
 
@@ -44,16 +44,11 @@ jest.mock('@common/exports', () => ({
 jest.mock('@common/hooks/useFeatureFlag')
 
 const useFeatureFlagMock = useFeatureFlag as jest.MockedFunction<any>
-const useFeatureFlagsMock = useFeatureFlags as jest.MockedFunction<any>
 
 useFeatureFlagMock.mockImplementation(() => {
   return {
     mutate: jest.fn()
   }
-})
-
-useFeatureFlagsMock.mockImplementation(() => {
-  return { OPA_SECRET_GOVERNANCE: true }
 })
 
 const prevStepData: any = {
@@ -232,10 +227,6 @@ describe('Create WinRm Cred Wizard Step Authentication', () => {
     const previousStep = jest.fn()
     const nextStep = jest.fn()
 
-    useFeatureFlagsMock.mockImplementation(() => {
-      return { OPA_SECRET_GOVERNANCE: false }
-    })
-
     const { container } = render(
       <TestWrapper>
         <StepAuthentication
@@ -269,10 +260,7 @@ describe('Create WinRm Cred Wizard Step Authentication', () => {
     const nextStep = jest.fn()
 
     jest.mock('@common/hooks/useFeatureFlag', () => ({
-      useFeatureFlag: jest.fn(() => true),
-      useFeatureFlags: jest.fn(() => {
-        return { OPA_SECRET_GOVERNANCE: false }
-      })
+      useFeatureFlag: jest.fn(() => true)
     }))
 
     usePostSecretMock.mockImplementation(() => {

@@ -152,10 +152,7 @@ const VaultConfigForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsPr
             is: HashiCorpVaultAccessTypes.K8s_AUTH,
             then: Yup.string().trim().required(getString('connectors.hashiCorpVault.serviceAccountRequired'))
           }),
-          default: Yup.boolean().when('readOnly', {
-            is: true,
-            then: Yup.boolean().equals([false], getString('connectors.hashiCorpVault.preventDefaultWhenReadOnly'))
-          })
+          default: Yup.boolean()
         })}
         onSubmit={formData => {
           trackEvent(ConnectorActions.ConfigSubmit, {

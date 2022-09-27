@@ -8,7 +8,7 @@
 import { FontVariation, Color } from '@harness/design-system'
 import { Container, Text } from '@harness/uicore'
 import React, { FC } from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Duration, TimeAgo } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
@@ -31,6 +31,7 @@ const ExecutionCardHeader: FC<ExecutionCardHeaderProps> = ({ executionHistoryIte
   const { orgIdentifier, accountId, projectIdentifier } = useParams<Record<string, string>>()
 
   const { getString } = useStrings()
+  const history = useHistory()
 
   return (
     <Container
@@ -77,20 +78,18 @@ const ExecutionCardHeader: FC<ExecutionCardHeaderProps> = ({ executionHistoryIte
           items={[
             {
               text: getString('cf.featureFlags.flagPipeline.openExecution'),
-              onClick:
-                /* istanbul ignore next */
-                () =>
-                  window.open(
-                    `/#${routes.toExecutionPipelineView({
-                      accountId,
-                      orgIdentifier,
-                      module: 'cf',
-                      projectIdentifier,
-                      executionIdentifier: executionHistoryItem.executionId,
-                      pipelineIdentifier: pipelineIdentifier,
-                      source: 'executions'
-                    })}`
-                  ),
+              onClick: () =>
+                history.push(
+                  routes.toExecutionPipelineView({
+                    accountId,
+                    orgIdentifier,
+                    module: 'cf',
+                    projectIdentifier,
+                    executionIdentifier: executionHistoryItem.executionId,
+                    pipelineIdentifier: pipelineIdentifier,
+                    source: 'executions'
+                  })
+                ),
               permission: {
                 resource: { resourceType: ResourceType.FEATUREFLAG },
                 permission: PermissionIdentifier.EDIT_FF_FEATUREFLAG

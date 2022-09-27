@@ -15,12 +15,11 @@ import {
   Layout,
   FlexExpander,
   Container,
-  Heading,
-  HarnessDocTooltip,
   SelectOption,
   TableV2,
   Text,
-  IconName
+  IconName,
+  ExpandingSearchInput
 } from '@wings-software/uicore'
 
 import { Color, FontVariation } from '@harness/design-system'
@@ -37,10 +36,10 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import {
   useDeleteSLOData,
   useGetAllJourneys,
-  useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetServiceLevelObjectivesRiskCount,
   RiskCount,
-  useGetSLOHealthListView
+  useGetSLOHealthListView,
+  useGetSLOAssociatedMonitoredServices
 } from 'services/cv'
 import RbacButton from '@rbac/components/Button/Button'
 import { getErrorMessage, getRiskColorLogo, getRiskColorValue, getSearchString } from '@cv/utils/CommonUtils'
@@ -82,16 +81,13 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     getInitialFilterStateLazy(passedInitialState, monitoredService)
   )
   const [pageNumber, setPageNumber] = useState(0)
+  const [search, setSearch] = useState<string>('')
 
   useEffect(() => {
     if (monitoredService && monitoredServiceIdentifier) {
       dispatch(SLODashboardFilterActions.updateMonitoredServices(getMonitoredServicesInitialState(monitoredService)))
     }
   }, [monitoredService])
-
-  useEffect(() => {
-    setPageNumber(0)
-  }, [projectIdentifier])
 
   const pathParams = useMemo(() => {
     return {
@@ -101,12 +97,16 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     }
   }, [accountId, orgIdentifier, projectIdentifier])
 
+  const sloDashboardWidgetsParams = useMemo(() => {
+    return getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber, search)
+  }, [pathParams, filterState, pageNumber, search])
+
   const {
     data: dashboardWidgetsResponse,
     loading: dashboardWidgetsLoading,
     refetch: refetchDashboardWidgets,
     error: dashboardWidgetsError
-  } = useGetSLOHealthListView(getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber))
+  } = useGetSLOHealthListView(sloDashboardWidgetsParams)
 
   const {
     data: riskCountResponse,
@@ -122,7 +122,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     loading: monitoredServicesLoading,
     error: monitoredServicesDataError,
     refetch: refetchMonitoredServicesData
-  } = useGetAllMonitoredServicesWithTimeSeriesHealthSources({
+  } = useGetSLOAssociatedMonitoredServices({
     queryParams: pathParams
   })
 
@@ -299,10 +299,10 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     return (
       <Text
         className={css.titleInSloTable}
-        title={`${defaultTo(Number(burnRate?.currentRatePercentage), 0).toFixed(2)}%`}
+        title={`${defaultTo(Number(burnRate), 0).toFixed(2)}%`}
         font={{ align: 'left', size: 'normal', weight: 'semi-bold' }}
       >
-        {defaultTo(Number(burnRate?.currentRatePercentage), 0).toFixed(2)}%
+        {defaultTo(Number(burnRate), 0).toFixed(2)}%
       </Text>
     )
   }
@@ -345,6 +345,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         title={errorBudgetRisk}
         style={{ backgroundColor: getRiskColorValue(errorBudgetRisk), color: Color.WHITE }}
         font={{ align: 'left', size: 'normal' }}
+        iconProps={{ color: Color.WHITE, padding: { right: 'small' } }}
         icon={riskCategory}
       >
         {errorBudgetRisk}
@@ -367,7 +368,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         </Text>
         <Container className={css.errorBudgetRemainingContainer}>
           <Text font={{ variation: FontVariation.SMALL }} className={css.errorBudgetRemaining}>
-            {`${errorBudgetRemaining}m`}
+            {`${errorBudgetRemaining} m`}
           </Text>
         </Container>
       </Layout.Horizontal>
@@ -386,10 +387,14 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           <Page.Header
             breadcrumbs={<NGBreadcrumbs />}
             title={
-              <Heading level={3} font={{ variation: FontVariation.H4 }}>
-                {getString('cv.slos.title')}
-                <HarnessDocTooltip tooltipId={'sloDashboardTitle'} useStandAlone />
-              </Heading>
+              <Layout.Vertical>
+                <Text font={{ variation: FontVariation.H4 }} tooltipProps={{ dataTooltipId: 'sloHeader' }}>
+                  {getString('cv.slos.completeTitle')}
+                </Text>
+                <Text title={getString('cv.slos.subTitle')} font={{ align: 'left', size: 'small' }}>
+                  {getString('cv.slos.subTitle')}
+                </Text>
+              </Layout.Vertical>
             }
           />
           <Page.Header title={getAddSLOButton()} />
@@ -436,6 +441,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             {monitoredServiceIdentifier && getAddSLOButton()}
             {hasSloFilterApplied && (
               <Container
+                flex
                 className={getClassNameForMonitoredServicePage(css.sloDropdownFilters, monitoredServiceIdentifier)}
               >
                 <SLODashbordFilters
@@ -443,6 +449,12 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   dispatch={dispatch}
                   filterItemsData={filterItemsData}
                   hideMonitoresServicesFilter={Boolean(monitoredService)}
+                />
+                <ExpandingSearchInput
+                  width={250}
+                  throttle={500}
+                  onChange={setSearch}
+                  placeholder={getString('cv.slos.searchSLO')}
                 />
               </Container>
             )}
@@ -524,7 +536,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   itemCount: totalItems,
                   gotoPage: nextPage => {
                     setPageNumber(nextPage)
-                    refetchDashboardWidgets()
                   }
                 }}
               />

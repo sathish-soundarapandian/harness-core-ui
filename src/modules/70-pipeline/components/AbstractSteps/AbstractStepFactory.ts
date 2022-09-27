@@ -111,6 +111,10 @@ export abstract class AbstractStepFactory {
     return this.stepBank.get(type)?.getIsHarnessSpecific() || false
   }
 
+  getIsStepNonDeletable(type: string): boolean | undefined {
+    return this.stepBank.get(type)?.getIsNonDeletable()
+  }
+
   getStepData(type: string): StepData | undefined {
     return this.stepIconMap.get(type)
   }

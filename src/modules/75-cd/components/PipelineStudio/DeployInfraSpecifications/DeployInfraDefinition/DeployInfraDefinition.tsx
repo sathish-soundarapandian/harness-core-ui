@@ -19,6 +19,7 @@ import {
 } from '@wings-software/uicore'
 import { debounce, defaultTo, get, isEmpty, isNil, omit, set } from 'lodash-es'
 import produce from 'immer'
+import { useParams } from 'react-router-dom'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   getProvisionerExecutionStrategyYamlPromise,
@@ -32,7 +33,8 @@ import {
   StageElementConfig,
   EcsInfrastructure,
   GetExecutionStrategyYamlQueryParams,
-  SshWinRmAwsInfrastructure
+  SshWinRmAwsInfrastructure,
+  CustomDeploymentInfrastructure
 } from 'services/cd-ng'
 import StringWithTooltip from '@common/components/StringWithTooltip/StringWithTooltip'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
@@ -69,10 +71,11 @@ import {
 import type { ServerlessAwsLambdaSpec } from '@cd/components/PipelineSteps/ServerlessAWSLambda/ServerlessAwsLambdaSpec'
 import type { ServerlessGCPSpec } from '@cd/components/PipelineSteps/ServerlessGCP/ServerlessGCPSpec'
 import type { ServerlessAzureSpec } from '@cd/components/PipelineSteps/ServerlessAzure/ServerlessAzureSpec'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import type { ECSInfraSpec } from '@cd/components/PipelineSteps/ECSInfraSpec/ECSInfraSpec'
+import type { CustomDeploymentInfrastructureSpec } from '@cd/components/PipelineSteps/CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
@@ -81,6 +84,7 @@ import {
   getInfrastructureDefaultValue,
   InfrastructureGroup,
   isAzureWebAppInfrastructureType,
+  isCustomDeploymentInfrastructureType,
   isServerlessInfrastructureType
 } from '../deployInfraHelper'
 import stageCss from '../../DeployStageSetupShell/DeployStage.module.scss'
@@ -101,7 +105,8 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   AmazonSAM: InfraDeploymentType.AmazonSAM,
   AzureFunctions: InfraDeploymentType.AzureFunctions,
   AzureWebApp: InfraDeploymentType.AzureWebApp,
-  ECS: InfraDeploymentType.ECS
+  ECS: InfraDeploymentType.ECS,
+  CustomDeployment: InfraDeploymentType.CustomDeployment
 }
 
 type InfraTypes =
@@ -113,12 +118,14 @@ type InfraTypes =
   | SshWinRmAwsInfrastructure
   | AzureWebAppInfrastructure
   | EcsInfrastructure
+  | CustomDeploymentInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
     React.useState<Infrastructure>({})
 
   const { getString } = useStrings()
+  const { NG_DEPLOYMENT_TEMPLATE } = useFeatureFlags()
 
   const {
     state: {
@@ -145,6 +152,10 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
+  const { accountId } = useParams<{
+    accountId: string
+  }>()
+
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
   const [selectedInfrastructureType, setSelectedInfrastructureType] = React.useState<string | undefined>()
@@ -154,7 +165,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   >(getServiceDefinitionType(stage, getStageFromPipeline, isNewServiceEnvEntity, isSvcEnvEnabled, templateServiceData))
 
   const [infraGroups, setInfraGroups] = React.useState<InfrastructureGroup[]>(
-    getInfraGroups(selectedDeploymentType, getString)
+    getInfraGroups(selectedDeploymentType, getString, {
+      NG_DEPLOYMENT_TEMPLATE: defaultTo(NG_DEPLOYMENT_TEMPLATE, false)
+    })
   )
 
   useEffect(() => {
@@ -228,7 +241,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       infraReset = true
     }
 
-    const initialInfraGroups = getInfraGroups(newDeploymentType, getString)
+    const initialInfraGroups = getInfraGroups(newDeploymentType, getString, {
+      NG_DEPLOYMENT_TEMPLATE: defaultTo(NG_DEPLOYMENT_TEMPLATE, false)
+    })
 
     const filteredInfraGroups = initialInfraGroups.map(group => ({
       ...group,
@@ -242,12 +257,29 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
         : deploymentTypeInfraTypeMap[newDeploymentType])
 
     setSelectedInfrastructureType(infrastructureType)
-    setInfraGroups(getInfraGroups(newDeploymentType, getString))
+    setInfraGroups(
+      getInfraGroups(newDeploymentType, getString, {
+        NG_DEPLOYMENT_TEMPLATE: defaultTo(NG_DEPLOYMENT_TEMPLATE, false)
+      })
+    )
 
     const initialInfraDefValues = getInfrastructureDefaultValue(stage, infrastructureType)
     setInitialInfrastructureDefinitionValues(initialInfraDefValues)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage])
+
+  React.useEffect(() => {
+    // explicitly setting infraDefinition.type as variables prepoluated from template
+    if (selectedDeploymentType === InfraDeploymentType.CustomDeployment) {
+      const stageData = produce(stage, draft => {
+        !!draft && set(draft, 'stage.spec.infrastructure.infrastructureDefinition.type', selectedDeploymentType)
+      })
+      debounceUpdateStage(stageData?.stage)
+      const initialInfraDefValues = getInfrastructureDefaultValue(stageData, selectedDeploymentType)
+      setInitialInfrastructureDefinitionValues(initialInfraDefValues)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDeploymentType])
 
   const onUpdateInfrastructureDefinition = (extendedSpec: InfraTypes, type: string): void => {
     if (get(stageRef.current, 'stage.spec.infrastructure', null)) {
@@ -277,7 +309,11 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
   useEffect(() => {
     if (stage && isProvisionerEmpty(stage) && provisionerEnabled) {
       setProvisionerSnippetLoading(true)
-      getProvisionerExecutionStrategyYamlPromise({ queryParams: { provisionerType: provisionerType } }).then(res => {
+      getProvisionerExecutionStrategyYamlPromise({
+        // eslint-disable-next-line
+        // @ts-ignore
+        queryParams: { provisionerType: provisionerType, routingId: accountId }
+      }).then(res => {
         const provisionerSnippet = YAML.parse(defaultTo(res?.data, ''))
         if (stage && isProvisionerEmpty(stage) && provisionerSnippet) {
           const stageData = produce(stage, draft => {
@@ -554,7 +590,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   credentialsRef: value.credentialsRef,
                   connectorRef: value.connectorRef,
                   region: value.region,
-                  awsInstanceFilter: value.awsInstanceFilter
+                  awsInstanceFilter: value.awsInstanceFilter,
+                  hostConnectionType: value.hostConnectionType
                 },
                 InfraDeploymentType.SshWinRmAws
               )
@@ -580,7 +617,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   subscriptionId: value.subscriptionId,
                   resourceGroup: value.resourceGroup,
                   tags: value.tags,
-                  usePublicDns: value.usePublicDns,
+                  hostConnectionType: value.hostConnectionType,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.SshWinRmAzure
@@ -608,6 +645,29 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.ECS
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.CustomDeployment: {
+        return (
+          <StepWidget<CustomDeploymentInfrastructureSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as CustomDeploymentInfrastructureSpec}
+            type={StepType.CustomDeployment}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  customDeploymentRef: value.customDeploymentRef,
+                  variables: value.variables,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.CustomDeployment
               )
             }
           />
@@ -676,7 +736,8 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       )}
       {!(
         isAzureWebAppDeploymentType(selectedDeploymentType) ||
-        isAzureWebAppInfrastructureType(selectedInfrastructureType)
+        isAzureWebAppInfrastructureType(selectedInfrastructureType) ||
+        isCustomDeploymentInfrastructureType(selectedInfrastructureType)
       ) && (
         <Card className={stageCss.sectionCard}>
           {!(
@@ -744,7 +805,9 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       ) : null}
       {selectedInfrastructureType && (
         <>
-          {isAzureWebAppDeploymentType(selectedInfrastructureType) && isSvcEnvEnabled ? (
+          {(isAzureWebAppDeploymentType(selectedInfrastructureType) ||
+            isCustomDeploymentInfrastructureType(selectedInfrastructureType)) &&
+          isSvcEnvEnabled ? (
             <></>
           ) : (
             <div

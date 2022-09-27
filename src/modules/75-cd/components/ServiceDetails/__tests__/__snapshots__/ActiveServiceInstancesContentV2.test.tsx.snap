@@ -185,12 +185,21 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                           role="cell"
                           style="width: 18%;"
                         >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                            style="max-width: 200px; --text-line-clamp: 1;"
+                          <span
+                            class="bp3-popover-wrapper"
                           >
-                            artifact-1
-                          </p>
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                style="max-width: 200px; --text-line-clamp: 1;"
+                                tabindex="0"
+                              >
+                                artifact-1
+                              </p>
+                            </span>
+                          </span>
                         </div>
                         <div
                           class="TableV2--cell"
@@ -769,12 +778,21 @@ exports[`ActiveInstance Details Dialog Expand all sections in dialog 1`] = `
                           role="cell"
                           style="width: 18%;"
                         >
-                          <p
-                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                            style="max-width: 200px; --text-line-clamp: 1;"
+                          <span
+                            class="bp3-popover-wrapper"
                           >
-                            perl
-                          </p>
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <p
+                                class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                                style="max-width: 200px; --text-line-clamp: 1;"
+                                tabindex="0"
+                              >
+                                perl
+                              </p>
+                            </span>
+                          </span>
                         </div>
                         <div
                           class="TableV2--cell"
@@ -1387,12 +1405,21 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                         role="cell"
                         style="width: 18%;"
                       >
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                          style="max-width: 200px; --text-line-clamp: 1;"
+                        <span
+                          class="bp3-popover-wrapper"
                         >
-                          artifact-1
-                        </p>
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                              style="max-width: 200px; --text-line-clamp: 1;"
+                              tabindex="0"
+                            >
+                              artifact-1
+                            </p>
+                          </span>
+                        </span>
                       </div>
                       <div
                         class="TableV2--cell"
@@ -1653,12 +1680,21 @@ exports[`ActiveInstance Details Dialog Open details dialog 1`] = `
                         role="cell"
                         style="width: 18%;"
                       >
-                        <p
-                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                          style="max-width: 200px; --text-line-clamp: 1;"
+                        <span
+                          class="bp3-popover-wrapper"
                         >
-                          perl
-                        </p>
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                              style="max-width: 200px; --text-line-clamp: 1;"
+                              tabindex="0"
+                            >
+                              perl
+                            </p>
+                          </span>
+                        </span>
                       </div>
                       <div
                         class="TableV2--cell"
@@ -2193,12 +2229,21 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                       role="cell"
                       style="width: 26%;"
                     >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                        style="max-width: 200px; --text-line-clamp: 1;"
+                      <span
+                        class="bp3-popover-wrapper"
                       >
-                        artifact-1
-                      </p>
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                            style="max-width: 200px; --text-line-clamp: 1;"
+                            tabindex="0"
+                          >
+                            artifact-1
+                          </p>
+                        </span>
+                      </span>
                     </div>
                     <div
                       class="TableV2--cell"
@@ -2445,12 +2490,21 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                       role="cell"
                       style="width: 26%;"
                     >
-                      <p
-                        class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
-                        style="max-width: 200px; --text-line-clamp: 1;"
+                      <span
+                        class="bp3-popover-wrapper"
                       >
-                        perl
-                      </p>
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey800"
+                            style="max-width: 200px; --text-line-clamp: 1;"
+                            tabindex="0"
+                          >
+                            perl
+                          </p>
+                        </span>
+                      </span>
                     </div>
                     <div
                       class="TableV2--cell"

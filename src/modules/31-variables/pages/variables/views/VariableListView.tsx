@@ -12,12 +12,7 @@ import React, { useMemo } from 'react'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Color, FontVariation } from '@harness/design-system'
 import { String, useStrings, UseStringsReturn } from 'framework/strings'
-import {
-  PageVariableResponseDTO,
-  StringVariableConfigDTO,
-  useDeleteVariable,
-  VariableResponseDTO
-} from 'services/cd-ng'
+import { PageVariableResponseDTO, useDeleteVariable, VariableResponseDTO } from 'services/cd-ng'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
 import { getValueFromVariableAndValidationType } from '@variables/utils/VariablesUtils'
 
@@ -83,14 +78,6 @@ export const RenderColumnValue: Renderer<CellProps<VariableResponseDTO>> = ({ ro
     </Text>
   )
 }
-export const RenderColumnDefaultValue: Renderer<CellProps<VariableResponseDTO>> = ({ row }) => {
-  const data = row.original.variable
-  return (
-    <Text color={Color.GREY_600} font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
-      {(data.spec as StringVariableConfigDTO)?.defaultValue}
-    </Text>
-  )
-}
 
 export function VariableListColumnHeader(getString: UseStringsReturn['getString']): Column<VariableResponseDTO>[] {
   return [
@@ -98,36 +85,29 @@ export function VariableListColumnHeader(getString: UseStringsReturn['getString'
       Header: getString('variableLabel'),
       accessor: row => row.variable.name,
       id: 'name',
-      width: '25%',
+      width: '30%',
       Cell: RenderColumnVariable
     },
     {
       Header: getString('typeLabel'),
       accessor: row => row.variable.type,
       id: 'type',
-      width: '15%',
+      width: '20%',
       Cell: RenderColumnType
     },
     {
       Header: getString('variables.inputValidation'),
       accessor: row => row.variable.spec.valueType,
       id: 'validation',
-      width: '15%',
+      width: '20%',
       Cell: RenderColumnValidation
     },
     {
       Header: getString('valueLabel'),
       accessor: row => row.variable.spec.value,
       id: 'value',
-      width: '20%',
+      width: '25%',
       Cell: RenderColumnValue
-    },
-    {
-      Header: getString('variables.defaultValue'),
-      accessor: row => row.variable.spec,
-      id: 'defaultValue',
-      width: '20%',
-      Cell: RenderColumnDefaultValue
     }
   ]
 }

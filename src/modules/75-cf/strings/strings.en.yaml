@@ -244,27 +244,30 @@ featureFlags:
     noData: No metrics found in this time range.
     totalEvaluations: Total Evaluations
   flagPipeline:
-    deleteModalTitle: Remove this pipeline from this flag?
+    deleteModalTitle: Remove this Pipeline from this Flag?
     deleteModalText:
-      If you remove the pipeline from the flag, the automated steps in this pipeline won’t be triggered, for example, automated approval steps.
-      The pipeline will be saved and you can add it again later.
+      If you remove the Pipeline from the Flag, the automated steps in this Pipeline won’t be triggered, for example, automated approval steps.
+      The Pipeline will be saved and you can add it again later.
 
-      Are you sure you want to separate the pipeline?
+      Are you sure you want to separate the Pipeline?
     title: Flag Pipeline
     noDataMessage: Automate processes with Flag Pipelines
     noDataDescription: Flag Pipelines help to automate routine processes like approval requests, notifications, Jira ticket creation or update
-    noDataButtonText: Add Flag Pipeline
     drawerTitle: Flag Pipelines
-    drawerDescription:
-      Flag pipelines allow to automate routine actions and execute automatically after any change. Flag pipelines
-      have no CI or CD steps, instead they have only one flag change step. Flag, target and environment are all set
-      to runtime input
+    drawerDescription: |
+      You can only set Pipelines that:
+        <ul>
+          <li>Have a Flag stage configured</li>
+          <li>The Flag must be set as a runtime input</li>
+          <li>Don’t include a Build or Deploy stage</li>
+        <ul>
     drawerButtonText: Set as Flag Pipeline
     envText: 'Set all Flags in {{ env }}'
     saveSuccess: Flag Pipeline updated
-    noAvailablePipelines: No available pipelines found
-    noExecutionMessage: There are no pipeline executions yet
-    noExecutionDescription: Once a pipeline has been triggered, the execution details will appear here
+    noAvailablePipelinesMessage: There are no Pipelines available
+    noAvailablePipelinesDescription: You can create a Flag Pipeline in Pipeline Studio to automate your workflow
+    noExecutionMessage: There are no Pipeline executions yet
+    noExecutionDescription: Once a Pipeline has been triggered, the execution details will appear here
     triggerDetails: Trigger Details
     flagState: Flag State
     defaultOffVariation: When Flag is Disabled - Default Rule
@@ -432,6 +435,12 @@ auditLogs:
   changeDetails: Change details
   events:
     updateClause: A clause was updated for a rule
+    removeClause: A clause was removed
+    addClause: A clause was added
+    addToIncludeList: '{{target}} added to included Targets'
+    removeFromIncludeList: '{{target}} removed from included Targets'
+    addToExcludeList: '{{target}} added to excluded Targets'
+    removeFromExcludeList: '{{target}} removed from excluded Targets'
     reorderRules: Rules reordered
     updateDefaultServe:
       bucketBy: Default serve updated for bucket by '{{bucketBy}}'
@@ -458,7 +467,6 @@ auditLogs:
     removeTargetsToVariationTargetMap: Variation '{{variation}}' removed for targets '{{targets}}'
     clearVariationTargetMapping: Variation target mapping removed
     updateOffVariation: Off variation updated to '{{variation}}'
-    removeClause: A clause was removed
     addService: Service {{name}} added
     removeService: Service {{name}} removed
 noEnvironment:
@@ -466,7 +474,7 @@ noEnvironment:
   message: <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_2_create_an_environment" target="_blank" rel="noreferrer">Environments</a> are the different places you run your application where you can configure Flags - i.e. your dev server, your QA server and your production server
 pipeline:
   listing: Pipeline Listing
-  rollloutStrategy:
+  rolloutStrategy:
     title: Rollout Strategy
   advanced:
     title: '{{ $.advancedTitle }}'
@@ -599,9 +607,9 @@ onboarding:
   waitForConnect: Waiting for SDK...{{ message }}
   allSet: Congratulations! You’re all set!
   tryTarget: Try out our robust <a href='{{ link }}'>targeting rules for this flag</a> for more granular rollouts.
-  backToStart: Back to Quick Start Guide
-  title: Let’s get you started with your first Feature Flag!
-  subtitle: Take your progressive rollout to the next level with Harness Feature Flags
+  backToStart: Complete
+  title: Feature Flags Quick Start Guide
+  subTitle: Everything you need to know in less than 15 minutes.
   upAndRunning: Get a flag up and running in 3 steps
   tryItOut: '{{ $.getStarted }}'
   createAFlag: Create a Flag
@@ -624,8 +632,15 @@ onboarding:
   secret: SDK Secret
   clientKey: Client SDK Key
   setUpYourCode: Set up your code
-  listenToEvent: We’re listening for the event of your feature flag.
-  toggleLabel: Enable or disable your flag by turning the flag toggle on or off, then verify the event we receive has the same value as your application.
+  listenToEvent: We're listening for the change to your Flag status...<br>Be patient, it may take up to 3-5 minutes
+  validatingYourFlag: Validating your Flag
+  validatingFlagInfo: 'Enable your Flag to verify that the event we received has the same value. Learn more about <a target="_blank" href="https://docs.harness.io/article/7ikyqtmjce-communication-sdks-harness-feature-flags">Events and Evaluation</a>'
+  eventWeReceived: Event we received
+  createdAndValidated: Congrats! You have created and validated your first Flag! <br><br>Now you can define which Targets and Target Groups this Flag should be enabled for, and then see how that affects your application.
+  errorReceivingEvent: We couldn't receive a Flag status from your application, check the <a target="_blank" href="https://docs.harness.io/category/eyzngtupao-sdk-overview"> SDK reference guide</a> to ensure you've set up the SDK correctly, then toggle the Flag to try again.
+  furtherAssistance: '<br>If you are still having issues,'
+  toggleError: We couldn’t receive events, check possible reasons below and toggle the Flag to try again
+  toggleLabel: Enable or disable your Flag by turning the Flag toggle on or off, then verify the event we receive has the same value as your application.
   help:
     heading1: The Importance of Your Flag Id
     text1: Your flag Id is required to reference the flag in your code.

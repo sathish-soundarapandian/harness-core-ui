@@ -139,7 +139,7 @@ describe('Unit tests for createAppd monitoring source', () => {
   })
 
   // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('Validate metric packs', async () => {
+  test('Validate metric packs', async () => {
     const submitData = jest.fn()
     const { container, getByText } = render(
       <TestWrapper {...createModeProps}>

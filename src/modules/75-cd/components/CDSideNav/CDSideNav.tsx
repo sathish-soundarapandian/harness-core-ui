@@ -70,7 +70,7 @@ export default function CDSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isCommunity = useGetCommunity()
-  const { showGetStartedTabInMainMenu, setShowGetStartedTabInMainMenu } = useSideNavContext()
+  const { showGetStartedCDTabInMainMenu, setShowGetStartedCDTabInMainMenu } = useSideNavContext()
   const isOverviewPage = !!matchPath(location.pathname, {
     path: routes.toProjectOverview({ ...params, module })
   })
@@ -99,7 +99,7 @@ export default function CDSideNav(): React.ReactElement {
       const { data, status } = fetchPipelinesData
       const isGettingStartedEnabled =
         status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
-      setShowGetStartedTabInMainMenu(isGettingStartedEnabled)
+      setShowGetStartedCDTabInMainMenu(isGettingStartedEnabled)
       if (isGettingStartedEnabled) {
         isOverviewPage && history.replace(routes.toGetStartedWithCD({ ...params, module }))
       }
@@ -211,10 +211,10 @@ export default function CDSideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier ? (
         <React.Fragment>
-          {showGetStartedTabInMainMenu && CD_ONBOARDING_ENABLED && (
+          {showGetStartedCDTabInMainMenu && CD_ONBOARDING_ENABLED && (
             <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
           )}
-          {!isCommunity && (!CD_ONBOARDING_ENABLED || !showGetStartedTabInMainMenu) && (
+          {!isCommunity && (!CD_ONBOARDING_ENABLED || !showGetStartedCDTabInMainMenu) && (
             <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module })} />
           )}
           <SidebarLink label="Deployments" to={routes.toDeployments({ ...params, module })} />

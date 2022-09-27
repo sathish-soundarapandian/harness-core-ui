@@ -28,6 +28,7 @@ import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
 import TextReference, { TextReferenceInterface, ValueType } from '@secrets/components/TextReference/TextReference'
 import { useStrings } from 'framework/strings'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import css from './StepGitAuthentication.module.scss'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
 
@@ -45,6 +46,7 @@ interface GitAuthenticationProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 interface GitFormInterface {
@@ -80,6 +82,9 @@ const StepGitAuthentication: React.FC<StepProps<StepGitAuthenticationProps> & Gi
   const { prevStepData, nextStep, accountId } = props
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(true && props.isEditMode)
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+  })
 
   useEffect(() => {
     if (loadingConnectorSecrets) {

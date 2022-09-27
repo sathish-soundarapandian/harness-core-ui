@@ -238,6 +238,12 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
   })
 
   const formInitialValues: GCOMetricInfo = updatedData.get(selectedMetric || '') || {}
+
+  const handleOnManualMetricDelete = (metricIdToBeDeleted: string): void => {
+    updatedData.delete(metricIdToBeDeleted)
+    setUpdatedData(new Map(updatedData))
+  }
+
   return (
     <Formik<GCOMetricInfo>
       enableReinitialize={true}
@@ -465,6 +471,9 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                 connectorIdentifier={connectorIdentifier}
                 manuallyInputQueries={getManuallyCreatedQueries(updatedData)}
                 showSpinnerOnLoad={!selectedMetric}
+                onDeleteManualMetric={metricIdToBeDeleted =>
+                  metricIdToBeDeleted && handleOnManualMetricDelete(metricIdToBeDeleted)
+                }
                 onSelectMetric={(id, metricName, query, widget, dashboardId, dashboardTitle) => {
                   onSelectNavItem({
                     id,

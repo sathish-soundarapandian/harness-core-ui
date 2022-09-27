@@ -90,6 +90,12 @@ exports[`LDAP Provider LDAP Provider Snapshot 1`] = `
                 >
                   ldap11223355
                 </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                  style="width: 70%;"
+                >
+                  authSettings.authorizationEnabled
+                </p>
                 <button
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                   data-testid="ldap-config-test"
@@ -272,6 +278,12 @@ exports[`LDAP Wizard in edit mode Check for wizard rendering in edit mode and ov
                 >
                   ldap11223355
                 </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                  style="width: 70%;"
+                >
+                  authSettings.authorizationEnabled
+                </p>
                 <button
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                   data-testid="ldap-config-test"
@@ -424,6 +436,12 @@ exports[`LDAP Wizard in edit mode Check for wizard rendering in edit mode and qu
                   class="StyledProps--font StyledProps--main flexGrowFull StyledProps--font-variation-card-title"
                 >
                   ldap11223355
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                  style="width: 70%;"
+                >
+                  authSettings.authorizationEnabled
                 </p>
                 <button
                   class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
@@ -2555,6 +2573,33 @@ exports[`LDAP setup Wizard Setup Wizard renders with Overview step in ADD mode 1
                           </span>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  <div
+                    class="bp3-form-group"
+                    data-id="authorizationEnabled-1"
+                  >
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <label
+                        class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                      >
+                        <input
+                          checked=""
+                          name="authorizationEnabled"
+                          type="checkbox"
+                        />
+                        <span
+                          class="bp3-control-indicator"
+                        />
+                        <span
+                          class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                          data-tooltip-id="stepOverviewForm_authorizationEnabled"
+                        >
+                          authSettings.enableAuthorization
+                        </span>
+                      </label>
                     </div>
                   </div>
                 </div>

@@ -6,14 +6,15 @@
  */
 
 import React from 'react'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 
-import { FormInput, Layout } from '@wings-software/uicore'
+import { FormInput, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 
-import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isArtifactSourceRuntime } from '../artifactSourceUtils'
 import css from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
@@ -30,7 +31,14 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     readonly,
     allowableTypes,
     isSidecar,
-    artifactPath
+    artifactPath,
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    artifact,
+    initialValues
   } = props
 
   const { getString } = useStrings()
@@ -42,6 +50,30 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     <>
       {isRuntime && (
         <Layout.Vertical key={artifactPath} className={css.inputWidth}>
+          {isFieldRuntime(`artifacts.${artifactPath}.spec.connectorRef`, template) && (
+            <FormMultiTypeConnectorField
+              name={`${path}.artifacts.${artifactPath}.spec.connectorRef`}
+              label={getString('pipelineSteps.deploy.inputSet.artifactServer')}
+              selected={get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')}
+              placeholder={''}
+              accountIdentifier={accountId}
+              projectIdentifier={projectIdentifier}
+              orgIdentifier={orgIdentifier}
+              width={391}
+              setRefValue
+              disabled={readonly}
+              multiTypeProps={{
+                allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+                expressions
+              }}
+              type={ArtifactToConnectorMap[defaultTo(artifact?.type, '')]}
+              gitScope={{
+                repo: defaultTo(repoIdentifier, ''),
+                branch: defaultTo(branch, ''),
+                getDefaultFromOtherRepo: true
+              }}
+            />
+          )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.org`, template) && (
             <FormInput.MultiTextInput
               name={`${path}.artifacts.${artifactPath}.spec.org`}
@@ -49,6 +81,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.orgNamePlaceholder')}
               disabled={readonly}
               multiTextInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes
               }}
@@ -61,6 +94,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.manifestType.packagePlaceholder')}
               disabled={readonly}
               multiTextInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes
               }}
@@ -73,6 +107,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               disabled={readonly}
               multiTextInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes
               }}
@@ -85,6 +120,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
               placeholder={getString('pipeline.artifactsSelection.versionRegexPlaceholder')}
               disabled={readonly}
               multiTextInputProps={{
+                width: 391,
                 expressions,
                 allowableTypes
               }}

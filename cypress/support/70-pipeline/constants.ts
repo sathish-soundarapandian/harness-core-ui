@@ -97,9 +97,13 @@ export const s3bucketData = `/ng/api/buckets/s3/getBucketsV2?routingId=${account
 export const triggersList = `/pipeline/api/triggers?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&targetIdentifier=${pipelineIdentifier}&searchTerm=`
 export const stagesExecutionList = `pipeline/execute/stagesExecutionList?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&pipelineIdentifier=${pipelineIdentifier}`
 export const getArtifactPaths = `/ng/api/artifacts/jenkins/job/AutomationQA/paths?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}`
-export const getJenkinsBuild = `/ng/api/artifacts/jenkins/job/AutomationQA/builds?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}&artifactPath=sa`
+export const azureSubscriptions = `/ng/api/azure/subscriptions?routingId=${accountId}&connectorRef=${connectorRef}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
+export const azureResourceGroups = `/ng/api/azure/subscriptions/1111-1111-1111-1111-1111/resourceGroups?routingId=${accountId}&connectorRef=${connectorRef}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
+export const stepTemplateSchemaEndpoint = `/template/api/templates/schema/templateSchema?routingId=${accountId}&templateEntityType=Step&entityType=ShellScript&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&accountIdentifier=${accountId}&scope=project`
+
 // Routes
 
+export const updatedPipelineExecutionEndpoint = `/pipeline/api/pipeline/execute/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&moduleType=cd&notifyOnlyUser=false`
 export const executionListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/deployments`
 export const pipelinesExecutionDelegateRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/${delegateExecutionId}/pipeline`
 export const executionHistoryRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/executions`
@@ -367,7 +371,7 @@ export const stepsData = {
 }
 
 export const triggersListData = {
-  Webhook: ['GitHub', 'GitLab', 'BitBucket', 'AWS Code Commit', 'Custom'],
+  Webhook: ['GitHub', 'GitLab', 'BitBucket', 'Azure Repos', 'AWS Code Commit', 'Custom'],
   Artifact: ['GCR', 'ECR', 'Docker Registry', 'Artifactory', 'Amazon S3', 'ACR'],
   Manifest: ['Helm Chart'],
   Scheduled: ['Cron']

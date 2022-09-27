@@ -29,8 +29,8 @@
 .stage {
   display: grid;
   margin-left: 3%;
-  margin-right: 5%;
-  grid-template-columns: 17% 8% 1fr 4%;
+  margin-right: 3%;
+  grid-template-columns: 20% 11% 1fr 4%;
   padding: var(--spacing-4) 0;
   position: relative;
   align-items: center;
@@ -51,22 +51,14 @@
   }
 }
 
-.ci * {
-  color: var(--grey-800) !important;
-}
-
-.executionStageSummary {
-  > div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    &:not(:last-child):after {
-      content: '';
-      height: 100%;
-      width: 1px;
-      margin: 0 0.5rem;
-      border-right: 1px solid rgba(11, 11, 11, 0.5);
-    }
+.service {
+  &:after {
+    content: '';
+    height: 100%;
+    width: 1px;
+    margin: 0 0.5rem;
+    border-right: 1px solid var(--grey-600);
+    opacity: 0.5;
   }
 }
 
@@ -133,4 +125,29 @@
 
 .matrixStage {
   background-color: var(--magenta-50);
+}
+
+.divider {
+  border-color: var(--white) !important;
+  margin: var(--spacing-xsmall) 0 !important;
+}
+
+.toggleAccordion {
+  // to have better click target area for toggle
+  padding: var(--spacing-large) var(--spacing-medium) !important;
+}
+
+.separator::before {
+  content: '';
+  flex: 1;
+  border-right: 1px solid var(--grey-200);
+}
+
+.prState {
+  text-transform: uppercase;
+  border-radius: var(--spacing-2);
+  background-color: var(--grey-100) !important;
+  color: var(--grey-700) !important;
+  padding: var(--spacing-1) var(--spacing-2) !important;
+  display: inline-block !important;
 }

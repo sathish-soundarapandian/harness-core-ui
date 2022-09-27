@@ -24,10 +24,7 @@ import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, isNil } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import {
-  getConnectorIdValue,
-  getGithubPackageRegistryFormData
-} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getConnectorIdValue, getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
   GithubPackageRegistryProps,
@@ -224,7 +221,7 @@ export function GithubPackageRegistry(
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const getInitialValues = (): GithubPackageRegistryInitialValuesType => {
-    return getGithubPackageRegistryFormData(
+    return getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed

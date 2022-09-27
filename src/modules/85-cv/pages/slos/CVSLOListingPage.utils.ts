@@ -18,11 +18,11 @@ import type {
   UserJourneyResponse,
   UserJourneyDTO,
   SLODashboardWidget,
-  ResponseListMonitoredServiceWithHealthSources,
-  GetSLODashboardWidgetsQueryParams,
   RiskCount,
   MonitoredServiceDTO,
-  GetAllJourneysQueryParams
+  GetAllJourneysQueryParams,
+  ResponsePageMSDropdownResponse,
+  GetSLOHealthListViewQueryParams
 } from 'services/cv'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
 import { DAYS, HOURS } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.constants'
@@ -197,7 +197,7 @@ export const getUserJourneyOptionsForFilter = (
 }
 
 export const getMonitoredServicesOptionsForFilter = (
-  monitoredServiceData: ResponseListMonitoredServiceWithHealthSources | null,
+  monitoredServiceData: ResponsePageMSDropdownResponse | null,
   getString: UseStringsReturn['getString']
 ): SelectOption[] => {
   return [getAllOption(getString), ...getMonitoredServicesOptions(monitoredServiceData)]
@@ -452,7 +452,7 @@ export const getIsMonitoresServicePageClearFilterDisabled = (
 }
 
 interface SLODashboardWidgetsParams {
-  queryParams: GetSLODashboardWidgetsQueryParams
+  queryParams: GetSLOHealthListViewQueryParams
   queryParamStringifyOptions: QueryString.IStringifyOptions
 }
 
@@ -466,7 +466,8 @@ export const getSLODashboardWidgetsParams = (
   pathParams: PathParams,
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   filterState: SLOFilterState,
-  pageNumber?: number
+  pageNumber?: number,
+  search?: string
 ): SLODashboardWidgetsParams => {
   return {
     queryParams: {
@@ -477,6 +478,7 @@ export const getSLODashboardWidgetsParams = (
       userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, filterState.userJourney),
       targetTypes: getFilterValueForSLODashboardParams(getString, filterState.targetTypes) as TargetTypesParams[],
       sliTypes: getFilterValueForSLODashboardParams(getString, filterState.sliTypes) as SLITypesParams[],
+      filter: search,
       errorBudgetRisks: getRiskFilterForSLODashboardParams(
         getString,
         filterState.sloRiskFilter?.identifier as string | null

@@ -7,17 +7,35 @@
 
 import React from 'react'
 import { Button, ButtonVariation } from '@wings-software/uicore'
-import { noop } from 'lodash-es'
+import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import routes from '@common/RouteDefinitions'
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 export const NewFreezeWindowButton = () => {
   const { getString } = useStrings()
+  const history = useHistory()
+  const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
+  const { projectIdentifier, orgIdentifier, accountId } = params
+
+  const goToFreezeWindowStudio = React.useCallback(() => {
+    history.push(
+      routes.toFreezeWindowStudio({
+        projectIdentifier,
+        orgIdentifier,
+        accountId,
+        module,
+        windowIdentifier: '-1'
+      })
+    )
+  }, [projectIdentifier, orgIdentifier, accountId, module])
+
   return (
     <Button
       variation={ButtonVariation.PRIMARY}
       icon="plus"
       text={getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
-      onClick={noop}
+      onClick={goToFreezeWindowStudio}
       // disabled={!canEdit || !templatesEnabled}
       // tooltip={tooltipBtn()}
     />

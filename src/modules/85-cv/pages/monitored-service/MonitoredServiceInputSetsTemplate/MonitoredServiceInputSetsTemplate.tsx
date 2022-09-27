@@ -36,7 +36,7 @@ import DetailsBreadcrumb from '@cv/pages/monitored-service/views/DetailsBreadcru
 import ServiceEnvironmentInputSet from './components/ServiceEnvironmentInputSet/ServiceEnvironmentInputSet'
 import HealthSourceInputset from './components/HealthSourceInputset/HealthSourceInputset'
 import MonitoredServiceInputsetVariables from './components/MonitoredServiceInputsetVariables/MonitoredServiceInputsetVariables'
-import { validateInputSet } from './MonitoredServiceInputSetsTemplate.utils'
+import { getPopulateSource, validateInputSet } from './MonitoredServiceInputSetsTemplate.utils'
 import type {
   TemplateDataInterface,
   MonitoredServiceInputSetInterface
@@ -115,7 +115,7 @@ export default function MonitoredServiceInputSetsTemplate({
     if (monitoredServiceInputSet?.environmentRef !== undefined) {
       monitoredServiceInputSet.environmentRef = value.environmentRef
     }
-    const populateSource = value.sources ? { sources: value.sources } : {}
+    const populateSource = getPopulateSource(value)
     const populateVariables = value.variables ? { variables: value.variables } : {}
     const structure = {
       monitoredService: {

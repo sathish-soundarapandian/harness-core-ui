@@ -42,7 +42,7 @@ export default function StageOverview(_props: React.PropsWithChildren<unknown>):
   )
 
   return (
-    <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
+    <Container padding="huge">
       <Heading color={Color.BLACK} level={3} style={{ fontWeight: 600, fontSize: '16px', lineHeight: '24px' }}>
         {getString('stageOverview')}
       </Heading>

@@ -7,18 +7,19 @@
  */
 
 import { Color, FontVariation } from '@harness/design-system'
-import { Icon, IconName, Layout, Text } from '@harness/uicore'
+import { Icon, IconName, Layout, Popover, Text } from '@harness/uicore'
 import React, { FC } from 'react'
 import type { CellProps } from 'react-table'
 import cx from 'classnames'
+import { Classes, Divider, PopoverInteractionKind } from '@blueprintjs/core'
 import { Duration } from '@common/components'
 import { ExecutionStatusIcon } from '@pipeline/components/ExecutionStatusIcon/ExecutionStatusIcon'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useStrings } from 'framework/strings'
-import type { CDStageModuleInfo } from 'services/cd-ng'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
+import { LabeValue } from '@pipeline/pages/pipeline-list/PipelineListTable/PipelineListCells'
 import css from './ExecutionListTable.module.scss'
 
 export interface ExecutionStageProps {
@@ -29,9 +30,12 @@ export interface ExecutionStageProps {
 }
 
 const stageIconMap: Partial<Record<StageType, IconName>> = {
-  [StageType.BUILD]: 'ci-main',
-  [StageType.DEPLOY]: 'cd-main',
-  [StageType.SECURITY]: 'sto-color-filled'
+  [StageType.BUILD]: 'ci-solid',
+  [StageType.DEPLOY]: 'cd-solid',
+  [StageType.SECURITY]: 'sto-color-filled',
+  [StageType.FEATURE]: 'ff-solid',
+  [StageType.APPROVAL]: 'approval-stage-icon',
+  [StageType.CUSTOM]: 'pipeline-custom'
 }
 
 export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStage, isMatrixStage }) => {
@@ -39,19 +43,13 @@ export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStag
   const iconName = stageIconMap[stage.type as StageType]
   const data: PipelineExecutionSummary = stage.data || {}
   const stageFailureMessage = data?.failureInfo?.message
-
-  const stageInfo = stage.data?.moduleInfo?.cd || ({} as CDStageModuleInfo)
-  const serviceDisplayName = stageInfo.serviceInfo?.displayName
-  const environment = stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier
+  // TODO: others stages UX not available yet
+  const cdStageInfo = (stage.data as PipelineExecutionSummary)?.moduleInfo?.cd || {}
 
   return (
     <div className={cx(css.stage, isMatrixStage && css.matrixStage)}>
-      <Layout.Horizontal
-        spacing="small"
-        flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-        margin={{ left: 'small' }}
-      >
-        {iconName && <Icon name={iconName} size={18} />}
+      <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+        {iconName && <Icon name={iconName} size={16} />}
         <Text font={{ size: 'small' }} color={Color.GREY_900} lineClamp={1}>
           {stage.name}
         </Text>
@@ -60,11 +58,7 @@ export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStag
       <ExecutionStatusIcon status={data?.status as ExecutionStatus} />
 
       <div className={css.stageInfo}>
-        {serviceDisplayName && environment && (
-          <div color={Color.GREY_900}>
-            <ExecutionStageSummary serviceDisplayName={serviceDisplayName} environment={environment} />
-          </div>
-        )}
+        <CDExecutionStageSummary stageInfo={cdStageInfo} />
 
         {isSelectiveStage && (
           <div className={css.selectiveStageExecution}>
@@ -93,29 +87,50 @@ export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStag
   )
 }
 
-export const ExecutionStageSummary: FC<{ environment?: string; serviceDisplayName?: string }> = ({
-  environment,
-  serviceDisplayName
-}) => {
+export const CDExecutionStageSummary: FC<{ stageInfo: Record<string, any> }> = ({ stageInfo }) => {
   const { getString } = useStrings()
+  const serviceDisplayName = stageInfo.serviceInfo?.displayName
+  const environment = stageInfo.infraExecutionSummary?.name || stageInfo.infraExecutionSummary?.identifier
+  const { imagePath, tag } = stageInfo.serviceInfo?.artifacts?.primary || {}
 
-  return (
-    <Layout.Horizontal className={css.executionStageSummary}>
-      {serviceDisplayName && (
-        <div>
-          <Text font={{ size: 'small' }}>
-            {getString('pipeline.executionList.servicesDeployedText', { size: 1 })}:{' '}
+  return serviceDisplayName && environment ? (
+    <Layout.Horizontal>
+      <Popover
+        interactionKind={PopoverInteractionKind.HOVER}
+        className={Classes.DARK}
+        content={
+          <Layout.Vertical spacing="small" padding="medium" style={{ maxWidth: 400 }}>
+            <div>
+              <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.WHITE}>
+                {serviceDisplayName}
+              </Text>
+              <Divider className={css.divider} />
+            </div>
+            {imagePath && <LabeValue label="Image" value={imagePath} />}
+            {tag && <LabeValue label="Tag" value={tag} />}
+          </Layout.Vertical>
+        }
+      >
+        <Layout.Horizontal spacing="xsmall" className={css.service} style={{ alignItems: 'center' }}>
+          <Icon name="services" size={14} />
+          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+            {getString('service')}:
           </Text>
-          <Text font={{ size: 'small', weight: 'semi-bold' }}>{serviceDisplayName} </Text>
-        </div>
-      )}
+          <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_800}>
+            {serviceDisplayName}
+          </Text>
+        </Layout.Horizontal>
+      </Popover>
 
-      {environment && (
-        <div>
-          <Text font={{ size: 'small' }}>{getString('pipeline.executionList.EnvironmentsText', { size: 1 })}: </Text>
-          <Text font={{ size: 'small', weight: 'semi-bold' }}>{environment} </Text>
-        </div>
-      )}
+      <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }}>
+        <Icon name="environments" size={12} />
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+          {getString('environment')}:
+        </Text>
+        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_800}>
+          {environment}
+        </Text>
+      </Layout.Horizontal>
     </Layout.Horizontal>
-  )
+  ) : null
 }

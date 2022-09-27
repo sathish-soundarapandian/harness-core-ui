@@ -17,7 +17,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
         action="#"
       >
         <div
-          class="connectorForm"
+          class="artifactForm"
         >
           <div
             class="dockerSideCard"
@@ -31,7 +31,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_identifier"
+                  data-tooltip-id="imagePath_identifier"
                 >
                   pipeline.artifactsSelection.existingDocker.sidecarId
                 </span>
@@ -59,56 +59,6 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
             </div>
           </div>
           <div
-            class="tagGroup"
-          >
-            <div
-              class="bp3-form-group radioGroup"
-            >
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="StyledProps--main"
-                >
-                  
-                  <div
-                    class="RadioButtonGroup--inline"
-                  >
-                    <label
-                      class="RadioButton--radio StyledProps--main"
-                    >
-                      <input
-                        checked=""
-                        class="RadioButton--input"
-                        name="repositoryPortorRepositoryURL"
-                        type="radio"
-                        value="repositoryUrl"
-                      />
-                      <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Repository URL
-                    </label>
-                    <label
-                      class="RadioButton--radio StyledProps--main"
-                    >
-                      <input
-                        class="RadioButton--input"
-                        name="repositoryPortorRepositoryURL"
-                        type="radio"
-                        value="repositoryPort"
-                      />
-                      <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Repository Port
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
             class="imagePathContainer"
           >
             <div
@@ -116,13 +66,13 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
             >
               <label
                 class="bp3-label"
-                for="repositoryUrl"
+                for="repositoryFormat"
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_repositoryUrl"
+                  data-tooltip-id="imagePath_repositoryFormat"
                 >
-                  repositoryUrlLabel
+                  common.repositoryFormat
                 </span>
                  
                 <span
@@ -133,48 +83,48 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                 class="bp3-form-content"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  class="bp3-popover-wrapper Select--main bp3-fill"
                 >
                   <div
-                    class="bp3-input-group MultiTypeInput--input"
+                    class="bp3-popover-target"
                   >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="repositoryUrl"
-                      placeholder="pipeline.repositoryUrlPlaceholder"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
+                    <div
+                      class="bp3-input-group"
                     >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="repositoryFormat"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value="Docker"
+                      />
+                      <span
+                        class="bp3-input-action"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
                         >
                           <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
                           >
+                            <desc>
+                              chevron-down
+                            </desc>
                             <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
                             />
                           </svg>
                         </span>
-                      </button>
-                    </span>
-                  </span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -191,7 +141,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_repository"
+                  data-tooltip-id="imagePath_repository"
                 >
                   repository
                 </span>
@@ -258,11 +208,11 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
             >
               <label
                 class="bp3-label"
-                for="artifactPath"
+                for="spec.artifactPath"
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_artifactPath"
+                  data-tooltip-id="imagePath_spec.artifactPath"
                 >
                   pipeline.artifactPathLabel
                 </span>
@@ -283,8 +233,129 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                     <input
                       autocomplete="off"
                       class="bp3-input"
-                      name="artifactPath"
+                      name="spec.artifactPath"
                       placeholder="pipeline.artifactsSelection.artifactPathPlaceholder"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="tagGroup"
+          >
+            <div
+              class="bp3-form-group radioGroup"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="StyledProps--main"
+                >
+                  
+                  <div
+                    class="RadioButtonGroup--inline"
+                  >
+                    <label
+                      class="RadioButton--radio StyledProps--main"
+                    >
+                      <input
+                        checked=""
+                        class="RadioButton--input"
+                        name="spec.repositoryPortorRepositoryURL"
+                        type="radio"
+                        value="repositoryUrl"
+                      />
+                      <span
+                        class="RadioButton--radioIcon"
+                      />
+                      Repository URL
+                    </label>
+                    <label
+                      class="RadioButton--radio StyledProps--main"
+                    >
+                      <input
+                        class="RadioButton--input"
+                        name="spec.repositoryPortorRepositoryURL"
+                        type="radio"
+                        value="repositoryPort"
+                      />
+                      <span
+                        class="RadioButton--radioIcon"
+                      />
+                      Repository Port
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="imagePathContainer"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="spec.repositoryUrl"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="imagePath_spec.repositoryUrl"
+                >
+                  repositoryUrlLabel
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-input-group MultiTypeInput--input"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="spec.repositoryUrl"
+                      placeholder="pipeline.repositoryUrlPlaceholder"
                       type="text"
                       value=""
                     />
@@ -383,7 +454,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_tag"
+                  data-tooltip-id="imagePath_tag"
                 >
                   tagLabel
                 </span>
@@ -563,7 +634,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
         action="#"
       >
         <div
-          class="connectorForm"
+          class="artifactForm"
         >
           <div
             class="dockerSideCard"
@@ -577,7 +648,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_identifier"
+                  data-tooltip-id="imagePath_identifier"
                 >
                   pipeline.artifactsSelection.existingDocker.sidecarId
                 </span>
@@ -605,56 +676,6 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
             </div>
           </div>
           <div
-            class="tagGroup"
-          >
-            <div
-              class="bp3-form-group radioGroup"
-            >
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="StyledProps--main"
-                >
-                  
-                  <div
-                    class="RadioButtonGroup--inline"
-                  >
-                    <label
-                      class="RadioButton--radio StyledProps--main"
-                    >
-                      <input
-                        checked=""
-                        class="RadioButton--input"
-                        name="repositoryPortorRepositoryURL"
-                        type="radio"
-                        value="repositoryUrl"
-                      />
-                      <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Repository URL
-                    </label>
-                    <label
-                      class="RadioButton--radio StyledProps--main"
-                    >
-                      <input
-                        class="RadioButton--input"
-                        name="repositoryPortorRepositoryURL"
-                        type="radio"
-                        value="repositoryPort"
-                      />
-                      <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Repository Port
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
             class="imagePathContainer"
           >
             <div
@@ -662,13 +683,13 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
             >
               <label
                 class="bp3-label"
-                for="repositoryUrl"
+                for="repositoryFormat"
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_repositoryUrl"
+                  data-tooltip-id="imagePath_repositoryFormat"
                 >
-                  repositoryUrlLabel
+                  common.repositoryFormat
                 </span>
                  
                 <span
@@ -679,48 +700,48 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                 class="bp3-form-content"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  class="bp3-popover-wrapper Select--main bp3-fill"
                 >
                   <div
-                    class="bp3-input-group MultiTypeInput--input"
+                    class="bp3-popover-target"
                   >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="repositoryUrl"
-                      placeholder="pipeline.repositoryUrlPlaceholder"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
+                    <div
+                      class="bp3-input-group"
                     >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="repositoryFormat"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value="Docker"
+                      />
+                      <span
+                        class="bp3-input-action"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
                         >
                           <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
                           >
+                            <desc>
+                              chevron-down
+                            </desc>
                             <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
                             />
                           </svg>
                         </span>
-                      </button>
-                    </span>
-                  </span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -737,7 +758,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_repository"
+                  data-tooltip-id="imagePath_repository"
                 >
                   repository
                 </span>
@@ -804,11 +825,11 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
             >
               <label
                 class="bp3-label"
-                for="artifactPath"
+                for="spec.artifactPath"
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_artifactPath"
+                  data-tooltip-id="imagePath_spec.artifactPath"
                 >
                   pipeline.artifactPathLabel
                 </span>
@@ -829,8 +850,129 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                     <input
                       autocomplete="off"
                       class="bp3-input"
-                      name="artifactPath"
+                      name="spec.artifactPath"
                       placeholder="pipeline.artifactsSelection.artifactPathPlaceholder"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="tagGroup"
+          >
+            <div
+              class="bp3-form-group radioGroup"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="StyledProps--main"
+                >
+                  
+                  <div
+                    class="RadioButtonGroup--inline"
+                  >
+                    <label
+                      class="RadioButton--radio StyledProps--main"
+                    >
+                      <input
+                        checked=""
+                        class="RadioButton--input"
+                        name="spec.repositoryPortorRepositoryURL"
+                        type="radio"
+                        value="repositoryUrl"
+                      />
+                      <span
+                        class="RadioButton--radioIcon"
+                      />
+                      Repository URL
+                    </label>
+                    <label
+                      class="RadioButton--radio StyledProps--main"
+                    >
+                      <input
+                        class="RadioButton--input"
+                        name="spec.repositoryPortorRepositoryURL"
+                        type="radio"
+                        value="repositoryPort"
+                      />
+                      <span
+                        class="RadioButton--radioIcon"
+                      />
+                      Repository Port
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="imagePathContainer"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="spec.repositoryUrl"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="imagePath_spec.repositoryUrl"
+                >
+                  repositoryUrlLabel
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-input-group MultiTypeInput--input"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="spec.repositoryUrl"
+                      placeholder="pipeline.repositoryUrlPlaceholder"
                       type="text"
                       value=""
                     />
@@ -929,7 +1071,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_tag"
+                  data-tooltip-id="imagePath_tag"
                 >
                   tagLabel
                 </span>
@@ -1109,7 +1251,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
         action="#"
       >
         <div
-          class="connectorForm"
+          class="artifactForm"
         >
           <div
             class="dockerSideCard"
@@ -1123,7 +1265,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_identifier"
+                  data-tooltip-id="imagePath_identifier"
                 >
                   pipeline.artifactsSelection.existingDocker.sidecarId
                 </span>
@@ -1151,56 +1293,6 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
             </div>
           </div>
           <div
-            class="tagGroup"
-          >
-            <div
-              class="bp3-form-group radioGroup"
-            >
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="StyledProps--main"
-                >
-                  
-                  <div
-                    class="RadioButtonGroup--inline"
-                  >
-                    <label
-                      class="RadioButton--radio StyledProps--main"
-                    >
-                      <input
-                        checked=""
-                        class="RadioButton--input"
-                        name="repositoryPortorRepositoryURL"
-                        type="radio"
-                        value="repositoryUrl"
-                      />
-                      <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Repository URL
-                    </label>
-                    <label
-                      class="RadioButton--radio StyledProps--main"
-                    >
-                      <input
-                        class="RadioButton--input"
-                        name="repositoryPortorRepositoryURL"
-                        type="radio"
-                        value="repositoryPort"
-                      />
-                      <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Repository Port
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
             class="imagePathContainer"
           >
             <div
@@ -1208,13 +1300,13 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
             >
               <label
                 class="bp3-label"
-                for="repositoryUrl"
+                for="repositoryFormat"
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_repositoryUrl"
+                  data-tooltip-id="imagePath_repositoryFormat"
                 >
-                  repositoryUrlLabel
+                  common.repositoryFormat
                 </span>
                  
                 <span
@@ -1225,48 +1317,48 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
                 class="bp3-form-content"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  class="bp3-popover-wrapper Select--main bp3-fill"
                 >
                   <div
-                    class="bp3-input-group MultiTypeInput--input"
+                    class="bp3-popover-target"
                   >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="repositoryUrl"
-                      placeholder="pipeline.repositoryUrlPlaceholder"
-                      type="text"
-                      value="repositoryUrl"
-                    />
-                  </div>
-                  <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
+                    <div
+                      class="bp3-input-group"
                     >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="repositoryFormat"
+                        placeholder="- Select -"
+                        style="padding-right: 0px;"
+                        type="text"
+                        value="Docker"
+                      />
+                      <span
+                        class="bp3-input-action"
                       >
                         <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
+                          class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                          icon="chevron-down"
                         >
                           <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
+                            data-icon="chevron-down"
+                            height="14"
+                            viewBox="0 0 16 16"
+                            width="14"
                           >
+                            <desc>
+                              chevron-down
+                            </desc>
                             <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
+                              d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                              fill-rule="evenodd"
                             />
                           </svg>
                         </span>
-                      </button>
-                    </span>
-                  </span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1283,7 +1375,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_repository"
+                  data-tooltip-id="imagePath_repository"
                 >
                   repository
                 </span>
@@ -1350,11 +1442,11 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
             >
               <label
                 class="bp3-label"
-                for="artifactPath"
+                for="spec.artifactPath"
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_artifactPath"
+                  data-tooltip-id="imagePath_spec.artifactPath"
                 >
                   pipeline.artifactPathLabel
                 </span>
@@ -1375,10 +1467,131 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
                     <input
                       autocomplete="off"
                       class="bp3-input"
-                      name="artifactPath"
+                      name="spec.artifactPath"
                       placeholder="pipeline.artifactsSelection.artifactPathPlaceholder"
                       type="text"
                       value="artifact-path"
+                    />
+                  </div>
+                  <span
+                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="fixed-input"
+                        >
+                          <svg
+                            height="12"
+                            viewBox="0 0 9 9"
+                            width="12"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="tagGroup"
+          >
+            <div
+              class="bp3-form-group radioGroup"
+            >
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="StyledProps--main"
+                >
+                  
+                  <div
+                    class="RadioButtonGroup--inline"
+                  >
+                    <label
+                      class="RadioButton--radio StyledProps--main"
+                    >
+                      <input
+                        checked=""
+                        class="RadioButton--input"
+                        name="spec.repositoryPortorRepositoryURL"
+                        type="radio"
+                        value="repositoryUrl"
+                      />
+                      <span
+                        class="RadioButton--radioIcon"
+                      />
+                      Repository URL
+                    </label>
+                    <label
+                      class="RadioButton--radio StyledProps--main"
+                    >
+                      <input
+                        class="RadioButton--input"
+                        name="spec.repositoryPortorRepositoryURL"
+                        type="radio"
+                        value="repositoryPort"
+                      />
+                      <span
+                        class="RadioButton--radioIcon"
+                      />
+                      Repository Port
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="imagePathContainer"
+          >
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="spec.repositoryUrl"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="imagePath_spec.repositoryUrl"
+                >
+                  repositoryUrlLabel
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                >
+                  <div
+                    class="bp3-input-group MultiTypeInput--input"
+                  >
+                    <input
+                      autocomplete="off"
+                      class="bp3-input"
+                      name="spec.repositoryUrl"
+                      placeholder="pipeline.repositoryUrlPlaceholder"
+                      type="text"
+                      value="repositoryUrl"
                     />
                   </div>
                   <span
@@ -1475,7 +1688,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
               >
                 <span
                   class="Tooltip--acenter"
-                  data-tooltip-id="nexusArtifact_tag"
+                  data-tooltip-id="imagePath_tag"
                 >
                   tagLabel
                 </span>

@@ -46,6 +46,10 @@ module.exports = {
   '/cv/api': {
     target: targetLocalHost ? 'https://localhost:6060' : `${baseUrl}`
   },
+  '/cf/web': {
+    pathRewrite: { '^/cf/web': '' },
+    target: process.env.FF_UI_URL || 'http://localhost:9292'
+  },
   '/cf': {
     target: targetLocalHost ? 'http://localhost:3000' : baseUrl,
     pathRewrite: targetLocalHost ? { '^/cf': '/api/1.0' } : {}
@@ -125,7 +129,6 @@ module.exports = {
     target: process.env.ERROR_TRACKING_URL || 'http://localhost:9191'
   },
   '/audit/api': {
-    pathRewrite: { '^/audit/api': '/api' },
     target: targetLocalHost ? 'http://localhost:9005' : baseUrl
   },
   '/auth': {

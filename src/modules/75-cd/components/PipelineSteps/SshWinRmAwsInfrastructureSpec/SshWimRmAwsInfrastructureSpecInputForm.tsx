@@ -237,7 +237,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
                   allowableTypes={allowableTypes}
                   tags={tags}
                   isLoadingTags={loadingTags}
-                  initialTags={formik.values.awsInstanceFilter?.tags}
+                  initialTags={initialValues?.awsInstanceFilter?.tags}
                   errorMessage={get(tagsError, 'data.message', '')}
                   className="tags-select"
                 />

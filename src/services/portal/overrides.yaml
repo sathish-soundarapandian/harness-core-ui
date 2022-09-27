@@ -55,6 +55,8 @@ allowpaths:
   - '/delegates-verification/initialized'
   - '/delegates-verification/initializedV2'
   - '/awshelper/aws-regions'
+  - '/sso/ldap/iterations'
+  - '/users/userAccounts'
 operationIdOverrides:
   /setup/delegates.get: getDelegates
   /setup/delegates/status.get: getDelegatesStatus
@@ -105,3 +107,5 @@ operationIdOverrides:
   /delegates-verification/initialized: verifyDelegateInitialization
   /delegates-verification/initializedV2: verifyDelegateInitializationV2
   /awshelper/aws-regions: getAwsRegions
+  /sso/ldap/iterations: getCronExpressionIterations
+  /users/userAccounts: getUserAccounts

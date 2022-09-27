@@ -34,18 +34,17 @@ const DetailsToolbar: React.FC<ToolbarProps> = ({ loading, monitoredService, las
     <Layout.Vertical spacing="xsmall" style={{ textAlign: 'right' }}>
       <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
         <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL }}>{`${getString('lastUpdated')}: `}</Text>
-        <Text color={Color.BLACK} font={{ variation: FontVariation.SMALL_SEMI }}>
-          &nbsp; {`${moment(lastModifiedAt).format('lll')}`}
+        <Text color={Color.BLACK} font={{ variation: FontVariation.SMALL_SEMI }} padding={{ left: 'xsmall' }}>
+          {`${moment(lastModifiedAt).format('lll')}`}
         </Text>
       </Layout.Horizontal>
       {monitoredService?.type === MonitoredServiceType.INFRASTRUCTURE ? (
-        <Layout.Horizontal>
+        <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
           <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL }}>
             {`${getString('environment')}:`}
           </Text>
-          <Text color={Color.BLACK} font={{ variation: FontVariation.SMALL_SEMI }}>
+          <Text color={Color.BLACK} font={{ variation: FontVariation.SMALL_SEMI }} padding={{ left: 'xsmall' }}>
             {envRefList?.slice(0, 1).join(',')}
-
             {envRefList && envRefList?.length > 1 ? <span>+{envRefList.length - 1}</span> : ''}
           </Text>
         </Layout.Horizontal>
@@ -62,8 +61,9 @@ const DetailsToolbar: React.FC<ToolbarProps> = ({ loading, monitoredService, las
             color={Color.BLACK}
             title={monitoredService?.environmentRef}
             font={{ variation: FontVariation.SMALL_SEMI }}
+            padding={{ left: 'xsmall' }}
           >
-            &nbsp; {monitoredService?.environmentRef}
+            {monitoredService?.environmentRef}
           </Text>
         </Layout.Horizontal>
       )}
@@ -71,8 +71,8 @@ const DetailsToolbar: React.FC<ToolbarProps> = ({ loading, monitoredService, las
         <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL }}>
           {`${getString('typeLabel')}:`}
         </Text>
-        <Text color={Color.BLACK} font={{ variation: FontVariation.SMALL_SEMI }}>
-          &nbsp; {` ${monitoredService?.type}`}
+        <Text color={Color.BLACK} font={{ variation: FontVariation.SMALL_SEMI }} padding={{ left: 'xsmall' }}>
+          {`${monitoredService?.type}`}
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>

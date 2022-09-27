@@ -5,12 +5,24 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState, useRef } from 'react'
-import { Text, Layout, SelectOption, getMultiTypeFromValue, MultiTypeInputType, Formik } from '@wings-software/uicore'
+import React, { useEffect, useMemo, useState } from 'react'
+import {
+  Text,
+  Layout,
+  FormInput,
+  SelectOption,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  ExpressionInput,
+  Select,
+  Button,
+  ButtonSize,
+  ButtonVariation
+} from '@wings-software/uicore'
 
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { get, defaultTo, set, noop, debounce } from 'lodash-es'
+import { get, defaultTo, set } from 'lodash-es'
 import {
   AzureSubscriptionDTO,
   AzureTagDTO,
@@ -18,8 +30,7 @@ import {
   useGetAzureSubscriptions,
   useGetSubscriptionTags,
   useGetAzureResourceGroupsV2,
-  useGetSubscriptionTagsV2,
-  SshWinRmAzureInfrastructure
+  useGetSubscriptionTagsV2
 } from 'services/cd-ng'
 
 import { Connectors } from '@connectors/constants'
@@ -31,16 +42,15 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import {
   AzureInfrastructureSpecEditableProps,
   subscriptionLabel,
-  resourceGroupLabel,
-  getValue
+  resourceGroupLabel
 } from './SshWinRmAzureInfrastructureInterface'
 import css from './SshWinRmAzureInfrastructureSpec.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -62,8 +72,8 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
     const [subscriptions, setSubscriptions] = useState<SelectOption[]>([])
     const [resourceGroups, setResourceGroups] = useState<SelectOption[]>([])
     const [azureTags, setAzureTags] = useState([])
+    const [selectedTags, setSelectedTags] = useState([] as SelectedTagsType[])
     const { expressions } = useVariablesExpression()
-    const delayedOnUpdate = useRef(debounce(onUpdate || noop, 300)).current
 
     const [renderCount, setRenderCount] = useState<number>(0)
 
@@ -112,6 +122,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
         tagKeys.map(tagKey => {
           initialValues?.tags && selTags.push({ key: tagKey, value: initialValues?.tags[tagKey] })
         })
+        setSelectedTags(selTags)
       }
     }, [initialValues?.tags])
     const queryParams = {
@@ -139,7 +150,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
         defaultTo(subscriptionsData?.data?.subscriptions, []).reduce(
           (subscriptionValues: SelectOption[], subscription: AzureSubscriptionDTO) => {
             subscriptionValues.push({
-              label: subscription.subscriptionId,
+              label: `${subscription.subscriptionName}:${subscription.subscriptionId}`,
               value: subscription.subscriptionId
             })
             return subscriptionValues
@@ -238,6 +249,15 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
     useEffect(() => {
       setRenderCount(renderCount + 1)
       if (
+        initialValues?.subscriptionId &&
+        getMultiTypeFromValue(initialValues?.subscriptionId) !== MultiTypeInputType.RUNTIME
+      ) {
+        refetchSubscriptions({
+          queryParams
+        })
+        /* istanbul ignore else */
+      }
+      if (
         initialValues?.connectorRef &&
         getMultiTypeFromValue(initialValues?.connectorRef) === MultiTypeInputType.FIXED &&
         initialValues.subscriptionId &&
@@ -269,228 +289,285 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    const usedTagKeys = useMemo(
+      () =>
+        selectedTags.reduce((map, tag) => {
+          tag.key && set(map, tag.key, true)
+          return map
+        }, {}),
+      [selectedTags]
+    )
+    const availableTags = useMemo(
+      () => azureTags.filter(tag => !get(usedTagKeys, get(tag, 'value', ''), false)),
+      [azureTags, usedTagKeys]
+    )
     return (
-      <Formik<SshWinRmAzureInfrastructure>
-        formName="sshWinRmAzureInfra"
-        initialValues={initialValues as SshWinRmAzureInfrastructure}
-        validate={value => {
-          const data: Partial<SshWinRmAzureInfrastructure> = {}
-          if (value.connectorRef) {
-            set(data, 'connectorRef', getValue(value.connectorRef))
-          }
-          if (value.resourceGroup) {
-            set(data, 'resourceGroup', getValue(value.resourceGroup))
-          }
-          if (value.subscriptionId) {
-            set(data, 'subscriptionId', getValue(value.subscriptionId))
-          }
-          if (value.tags) {
-            set(data, 'tags', value.tags)
-          }
-          if (value.credentialsRef) {
-            set(
-              data,
-              'credentialsRef',
-              typeof get(value, 'credentialsRef', '') === 'string'
-                ? get(value, 'credentialsRef', '')
-                : get(value, 'credentialsRef.referenceString', '')
-            )
-          }
-          delayedOnUpdate(data as SshWinRmAzureInfrastructure)
-        }}
-        onSubmit={noop}
-      >
-        {formik => (
-          <Layout.Vertical spacing="small">
-            {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
-              <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-                <FormMultiTypeConnectorField
-                  accountIdentifier={accountId}
-                  projectIdentifier={projectIdentifier}
-                  orgIdentifier={orgIdentifier}
-                  name={`${path}.connectorRef`}
-                  tooltipProps={{
-                    dataTooltipId: 'azureInfraConnector'
-                  }}
-                  label={getString('connector')}
-                  enableConfigureOptions={false}
-                  placeholder={getString('connectors.selectConnector')}
-                  disabled={readonly}
-                  multiTypeProps={{ allowableTypes, expressions }}
-                  type={Connectors.AZURE}
-                  setRefValue
-                  onChange={
-                    /* istanbul ignore next */ () => {
-                      setSubscriptions([])
-                      setResourceGroups([])
-                      if (getMultiTypeFromValue(get(formik.values, 'tags', {}) === MultiTypeInputType.FIXED)) {
-                        formik.setFieldValue('tags', {})
-                      }
-                    }
-                  }
-                  gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
-                />
-              </div>
-            )}
-            {getMultiTypeFromValue(template?.subscriptionId) === MultiTypeInputType.RUNTIME && (
-              <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-                <SelectInputSetView
-                  name={`${path}.subscriptionId`}
-                  tooltipProps={{
-                    dataTooltipId: 'azureInfraSubscription'
-                  }}
-                  disabled={readonly}
-                  placeholder={
-                    loadingSubscriptions
-                      ? /* istanbul ignore next */ getString('loading')
-                      : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
-                  }
-                  useValue
-                  selectItems={subscriptions}
-                  label={getString(subscriptionLabel)}
-                  multiTypeInputProps={{
-                    onChange: /* istanbul ignore next */ () => {
-                      setResourceGroups([])
-                      if (getMultiTypeFromValue(get(formik.values, 'tags', {}) === MultiTypeInputType.FIXED)) {
-                        formik.setFieldValue('tags', {})
-                      }
-                    },
-                    onFocus: () => {
-                      if (getMultiTypeFromValue(initialValues?.connectorRef) !== MultiTypeInputType.RUNTIME) {
-                        refetchSubscriptions({
-                          queryParams
-                        })
-                      }
-                    },
-                    selectProps: {
-                      items: subscriptions,
-                      allowCreatingNewItems: true,
-                      addClearBtn: !(loadingSubscriptions || readonly),
-                      noResults: (
-                        <Text padding={'small'}>
-                          {loadingSubscriptions
-                            ? getString('loading')
-                            : defaultTo(
-                                get(subscriptionsError, errorMessage, subscriptionsError?.message),
-                                getString('pipeline.ACR.subscriptionError')
-                              )}
-                        </Text>
-                      )
-                    },
-                    expressions,
-                    allowableTypes
-                  }}
-                  fieldPath="subscriptionId"
-                  template={template}
-                />
-              </div>
-            )}
-            {getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME && (
-              <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-                <SelectInputSetView
-                  name={`${path}.resourceGroup`}
-                  tooltipProps={{
-                    dataTooltipId: 'azureInfraResourceGroup'
-                  }}
-                  disabled={readonly}
-                  placeholder={
-                    loadingResourceGroups || loadingResourceGroupsV2
-                      ? /* istanbul ignore next */ getString('loading')
-                      : getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')
-                  }
-                  useValue
-                  selectItems={resourceGroups}
-                  label={getString(resourceGroupLabel)}
-                  multiTypeInputProps={{
-                    onFocus: () => {
-                      if (connectorRef && subscriptionIdRef) {
-                        refetchResourceGroups({
-                          queryParams: {
-                            accountIdentifier: accountId,
-                            projectIdentifier,
-                            orgIdentifier,
-                            connectorRef: initialValues?.connectorRef as string
-                          },
-                          pathParams: {
-                            subscriptionId: initialValues?.subscriptionId
-                          }
-                        })
-                        refetchSubscriptionTags({
-                          queryParams: {
-                            accountIdentifier: accountId,
-                            projectIdentifier,
-                            orgIdentifier,
-                            connectorRef: initialValues?.connectorRef as string
-                          },
-                          pathParams: {
-                            subscriptionId: initialValues?.subscriptionId
-                          }
-                        })
-                      } else if (fetchResourceUsingEnvId()) {
-                        refetchResourceGroupsV2({
-                          queryParams
-                        })
-                        refetchSubscriptionTagsV2({
-                          queryParams
-                        })
-                      }
-                    },
-                    selectProps: {
-                      items: resourceGroups,
-                      allowCreatingNewItems: true,
-                      addClearBtn: !(loadingResourceGroups || readonly),
-                      noResults: (
-                        <Text padding={'small'}>
-                          {loadingResourceGroups || loadingResourceGroupsV2
-                            ? getString('loading')
-                            : defaultTo(
-                                defaultTo(
-                                  get(resourceGroupsError, errorMessage, resourceGroupsError?.message),
-                                  get(resourceGroupsErrorV2, errorMessage, resourceGroupsError?.message)
-                                ),
-                                getString('cd.steps.azureInfraStep.resourceGroupError')
-                              )}
-                        </Text>
-                      )
-                    },
-                    expressions,
-                    allowableTypes
-                  }}
-                  fieldPath="resourceGroup"
-                  template={template}
-                />
-              </div>
-            )}
-            {getMultiTypeFromValue(template?.tags) === MultiTypeInputType.RUNTIME && (
-              <Layout.Vertical className={css.inputWidth}>
-                <MultiTypeTagSelector
-                  name={'tags'}
-                  formik={formik}
-                  allowableTypes={allowableTypes}
-                  tags={azureTags}
-                  isLoadingTags={loadingSubscriptionTags || loadingSubscriptionTagsV2}
-                  initialTags={formik.values?.tags}
-                  className="tags-select"
-                  errorMessage={
-                    get(subscriptionTagsError || subscriptionTagsV2Error, errorMessage, '') ||
-                    getString('cd.infrastructure.sshWinRmAzure.noTagsAzure')
-                  }
-                />
-              </Layout.Vertical>
-            )}
-            {getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME && (
-              <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-                <MultiTypeSecretInput
-                  name={`${path}.credentialsRef`}
-                  type={getMultiTypeSecretInputType(initialValues.serviceType)}
-                  label={getString('cd.steps.common.specifyCredentials')}
-                  expressions={expressions}
-                />
-              </div>
-            )}
-          </Layout.Vertical>
+      <Layout.Vertical spacing="small">
+        {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}></div>
         )}
-      </Formik>
+        {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
+            <FormMultiTypeConnectorField
+              accountIdentifier={accountId}
+              projectIdentifier={projectIdentifier}
+              orgIdentifier={orgIdentifier}
+              name={`${path}.connectorRef`}
+              tooltipProps={{
+                dataTooltipId: 'azureInfraConnector'
+              }}
+              label={getString('connector')}
+              enableConfigureOptions={false}
+              placeholder={getString('connectors.selectConnector')}
+              disabled={readonly}
+              multiTypeProps={{ allowableTypes, expressions }}
+              type={Connectors.AZURE}
+              setRefValue
+              onChange={
+                /* istanbul ignore next */ () => {
+                  setSubscriptions([])
+                  setResourceGroups([])
+                  setSelectedTags([])
+                }
+              }
+              gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(template?.subscriptionId) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
+            <SelectInputSetView
+              name={`${path}.subscriptionId`}
+              tooltipProps={{
+                dataTooltipId: 'azureInfraSubscription'
+              }}
+              disabled={readonly}
+              placeholder={
+                loadingSubscriptions
+                  ? /* istanbul ignore next */ getString('loading')
+                  : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
+              }
+              useValue
+              selectItems={subscriptions}
+              label={getString(subscriptionLabel)}
+              multiTypeInputProps={{
+                onChange: /* istanbul ignore next */ () => {
+                  setResourceGroups([])
+                  setSelectedTags([])
+                },
+                onFocus: () => {
+                  if (getMultiTypeFromValue(initialValues?.connectorRef) !== MultiTypeInputType.RUNTIME) {
+                    refetchSubscriptions({
+                      queryParams
+                    })
+                  }
+                },
+                selectProps: {
+                  items: subscriptions,
+                  allowCreatingNewItems: true,
+                  addClearBtn: !(loadingSubscriptions || readonly),
+                  noResults: (
+                    <Text padding={'small'}>
+                      {loadingSubscriptions
+                        ? getString('loading')
+                        : defaultTo(
+                            get(subscriptionsError, errorMessage, subscriptionsError?.message),
+                            getString('pipeline.ACR.subscriptionError')
+                          )}
+                    </Text>
+                  )
+                },
+                expressions,
+                allowableTypes
+              }}
+              fieldPath="subscriptionId"
+              template={template}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
+            <SelectInputSetView
+              name={`${path}.resourceGroup`}
+              tooltipProps={{
+                dataTooltipId: 'azureInfraResourceGroup'
+              }}
+              disabled={readonly}
+              placeholder={
+                loadingResourceGroups || loadingResourceGroupsV2
+                  ? /* istanbul ignore next */ getString('loading')
+                  : getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')
+              }
+              useValue
+              selectItems={resourceGroups}
+              label={getString(resourceGroupLabel)}
+              multiTypeInputProps={{
+                onFocus: () => {
+                  if (connectorRef && subscriptionIdRef) {
+                    refetchResourceGroups({
+                      queryParams: {
+                        accountIdentifier: accountId,
+                        projectIdentifier,
+                        orgIdentifier,
+                        connectorRef: initialValues?.connectorRef as string
+                      },
+                      pathParams: {
+                        subscriptionId: initialValues?.subscriptionId
+                      }
+                    })
+                    refetchSubscriptionTags({
+                      queryParams: {
+                        accountIdentifier: accountId,
+                        projectIdentifier,
+                        orgIdentifier,
+                        connectorRef: initialValues?.connectorRef as string
+                      },
+                      pathParams: {
+                        subscriptionId: initialValues?.subscriptionId
+                      }
+                    })
+                  } else if (fetchResourceUsingEnvId()) {
+                    refetchResourceGroupsV2({
+                      queryParams
+                    })
+                    refetchSubscriptionTagsV2({
+                      queryParams
+                    })
+                  }
+                },
+                selectProps: {
+                  items: resourceGroups,
+                  allowCreatingNewItems: true,
+                  addClearBtn: !(loadingResourceGroups || readonly),
+                  noResults: (
+                    <Text padding={'small'}>
+                      {loadingResourceGroups || loadingResourceGroupsV2
+                        ? getString('loading')
+                        : defaultTo(
+                            defaultTo(
+                              get(resourceGroupsError, errorMessage, resourceGroupsError?.message),
+                              get(resourceGroupsErrorV2, errorMessage, resourceGroupsError?.message)
+                            ),
+                            getString('cd.steps.azureInfraStep.resourceGroupError')
+                          )}
+                    </Text>
+                  )
+                },
+                expressions,
+                allowableTypes
+              }}
+              fieldPath="resourceGroup"
+              template={template}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(template?.tags) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
+            <MultiTypeFieldSelector
+              name={`${path}.tags`}
+              label={'Tags'}
+              skipRenderValueInExpressionLabel
+              allowedTypes={allowableTypes}
+              supportListOfExpressions={true}
+              disableMultiSelectBtn={false}
+              style={{ flexGrow: 1, marginBottom: 0 }}
+              expressionRender={() => (
+                <ExpressionInput
+                  name={`${path}.tags`}
+                  value={initialValues.tags as any}
+                  onChange={value => {
+                    set(initialValues, `tags`, value)
+                    onUpdate?.(initialValues)
+                  }}
+                  inputProps={{
+                    placeholder: '<+expression>'
+                  }}
+                />
+              )}
+            >
+              {selectedTags.map((tag, index) => (
+                <Layout.Horizontal spacing="small" key={index}>
+                  <Layout.Vertical spacing="small">
+                    <Text className={css.textStyles}>{index === 0 ? getString('keyLabel') : null}</Text>
+                    <Select
+                      name={`${path}.tagslabel${index + 1}`}
+                      value={{ label: tag.key, value: tag.key }}
+                      items={availableTags}
+                      className={css.tagsSelect}
+                      allowCreatingNewItems={true}
+                      noResults={
+                        <Text padding={'small'}>
+                          {loadingSubscriptionTags || loadingSubscriptionTagsV2
+                            ? getString('loading')
+                            : defaultTo(
+                                get(subscriptionTagsError, errorMessage, null),
+                                get(subscriptionTagsV2Error, errorMessage, null)
+                              ) || getString('cd.infrastructure.sshWinRmAzure.noTagsAzure')}
+                        </Text>
+                      }
+                      onChange={option => {
+                        const newSelTags = [...selectedTags]
+                        newSelTags[index].key = option.value as string
+                        setSelectedTags(newSelTags)
+                      }}
+                    />
+                  </Layout.Vertical>
+                  <Layout.Vertical spacing="small">
+                    <Text className={css.textStyles}>{index === 0 ? 'Value' : null}</Text>
+                    <FormInput.Text
+                      name={`${path}.tags.${tag.key}`}
+                      onChange={event => {
+                        const newSelTags = [...selectedTags]
+                        newSelTags[index].value = get(event.target, 'value', '')
+                        setSelectedTags(newSelTags)
+                      }}
+                    />
+                  </Layout.Vertical>
+                  <Layout.Horizontal className={css.removeTagBtn}>
+                    <Button
+                      icon="trash"
+                      iconProps={{ size: 12, margin: { right: 8 } }}
+                      onClick={() => {
+                        const newSelTags = [...selectedTags]
+                        newSelTags.splice(index, 1)
+                        setSelectedTags(newSelTags)
+                        set(initialValues, `tags.${tag.key}`, undefined)
+                        onUpdate?.(initialValues)
+                      }}
+                      size={ButtonSize.SMALL}
+                      variation={ButtonVariation.LINK}
+                    />
+                  </Layout.Horizontal>
+                </Layout.Horizontal>
+              ))}
+              <Button
+                intent="primary"
+                icon="add"
+                className={css.addBtn}
+                iconProps={{ size: 12, margin: { right: 8 } }}
+                onClick={() => {
+                  const newTagPair: SelectedTagsType = { key: '', value: '' }
+                  setSelectedTags(selTags => [...selTags, newTagPair])
+                }}
+                size={ButtonSize.SMALL}
+                variation={ButtonVariation.LINK}
+              >
+                {getString('tagLabel')}
+              </Button>
+            </MultiTypeFieldSelector>
+          </div>
+        )}
+        {getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
+            <MultiTypeSecretInput
+              name={`${path}.credentialsRef`}
+              type={getMultiTypeSecretInputType(initialValues.serviceType)}
+              label={getString('cd.steps.common.specifyCredentials')}
+              expressions={expressions}
+            />
+          </div>
+        )}
+      </Layout.Vertical>
     )
   }
 

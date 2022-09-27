@@ -130,7 +130,7 @@ describe('FlagPipelineTab', () => {
 
       // assert empty state initially
       const addFlagPipelineButton = screen.getByRole('button', {
-        name: 'cf.featureFlags.flagPipeline.noDataButtonText'
+        name: 'plus cf.featureFlags.flagPipeline.title'
       })
       expect(screen.getByText('cf.featureFlags.flagPipeline.noDataMessage')).toBeInTheDocument()
       expect(addFlagPipelineButton).toBeInTheDocument()
@@ -176,7 +176,7 @@ describe('FlagPipelineTab', () => {
     test('it should let user search for a flag pipeline', async () => {
       renderComponent()
       const addFlagPipelineButton = screen.getByRole('button', {
-        name: 'cf.featureFlags.flagPipeline.noDataButtonText'
+        name: 'plus cf.featureFlags.flagPipeline.title'
       })
       userEvent.click(addFlagPipelineButton)
 
@@ -205,7 +205,7 @@ describe('FlagPipelineTab', () => {
     test('it should close drawer when close icon clicked', async () => {
       renderComponent()
       const addFlagPipelineButton = screen.getByRole('button', {
-        name: 'cf.featureFlags.flagPipeline.noDataButtonText'
+        name: 'plus cf.featureFlags.flagPipeline.title'
       })
 
       userEvent.click(addFlagPipelineButton)
@@ -229,7 +229,7 @@ describe('FlagPipelineTab', () => {
 
       renderComponent()
       const addFlagPipelineButton = screen.getByRole('button', {
-        name: 'cf.featureFlags.flagPipeline.noDataButtonText'
+        name: 'plus cf.featureFlags.flagPipeline.title'
       })
       userEvent.click(addFlagPipelineButton)
 
@@ -247,12 +247,12 @@ describe('FlagPipelineTab', () => {
 
         renderComponent()
         const addFlagPipelineButton = screen.getByRole('button', {
-          name: 'cf.featureFlags.flagPipeline.noDataButtonText'
+          name: 'plus cf.featureFlags.flagPipeline.title'
         })
         userEvent.click(addFlagPipelineButton)
 
         await waitFor(() =>
-          expect(screen.getByText('cf.featureFlags.flagPipeline.noAvailablePipelines')).toBeInTheDocument()
+          expect(screen.getByText('cf.featureFlags.flagPipeline.noAvailablePipelinesMessage')).toBeInTheDocument()
         )
       }
     )
@@ -483,6 +483,20 @@ describe('FlagPipelineTab', () => {
 
       expect(screen.getAllByText('warning-sign')).toHaveLength(2)
       expect(screen.getByTestId('stage-count')).toHaveTextContent('1')
+    })
+
+    test('it should link to Flag Executions page', async () => {
+      setupExecutionMocks([mockExecutionHistory[1]])
+      renderComponent()
+
+      const openPipelineExecutionBtn = document.querySelectorAll("[data-icon='Options']")[1] as HTMLElement
+      userEvent.click(openPipelineExecutionBtn)
+
+      userEvent.click(screen.getByText('cf.featureFlags.flagPipeline.openExecution'))
+
+      expect(screen.getByTestId('location')).toHaveTextContent(
+        '/account/dummy/cf/orgs/dummy/projects/dummy/pipelines/pipeline5/executions/1997/pipeline'
+      )
     })
   })
 })

@@ -133,5 +133,6 @@ export enum PAGE_NAME {
   SCMCommitDetail = 'SCMCommitDetail',
   SCMPullRequests = 'SCMPullRequests',
   SCMPullRequestDetail = 'SCMPullRequestDetail',
-  ExecutionList = 'ExecutionList'
+  ExecutionList = 'ExecutionList',
+  CFConfigurePath = 'CFConfigurePath'
 }

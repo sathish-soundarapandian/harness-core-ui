@@ -1,0 +1,400 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "name": "Library",
+    "stepsData": [],
+    "stepCategories": [
+      {
+        "name": "Continuous Deployment",
+        "stepsData": [],
+        "stepCategories": [
+          {
+            "name": "Cloudformation",
+            "stepsData": [
+              {
+                "name": "CloudFormation Rollback",
+                "type": "RollbackStack",
+                "disabled": false,
+                "featureRestrictionName": "ROLLBACK_STACK"
+              },
+              {
+                "name": "CloudFormation Create Stack",
+                "type": "CreateStack",
+                "disabled": false,
+                "featureRestrictionName": "CREATE_STACK"
+              },
+              {
+                "name": "CloudFormation Delete Stack",
+                "type": "DeleteStack",
+                "disabled": false,
+                "featureRestrictionName": "DELETE_STACK"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "AzureWebApp",
+            "stepsData": [
+              {
+                "name": "Azure WebApp Rollback",
+                "type": "AzureWebAppRollback",
+                "disabled": false,
+                "featureRestrictionName": "AZURE_WEBAPP_ROLLBACK"
+              },
+              {
+                "name": "Azure Slot Deployment",
+                "type": "AzureSlotDeployment",
+                "disabled": false,
+                "featureRestrictionName": "AZURE_SLOT_DEPLOYMENT"
+              },
+              {
+                "name": "Azure Swap Slot",
+                "type": "AzureSwapSlot",
+                "disabled": false,
+                "featureRestrictionName": "AZURE_SWAP_SLOT"
+              },
+              {
+                "name": "Azure Traffic Shift",
+                "type": "AzureTrafficShift",
+                "disabled": false,
+                "featureRestrictionName": "AZURE_TRAFFIC_SHIFT"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Terraform",
+            "stepsData": [
+              {
+                "name": "Terraform Destroy",
+                "type": "TerraformDestroy",
+                "disabled": false,
+                "featureRestrictionName": "TERRAFORM_DESTROY"
+              },
+              {
+                "name": "Terraform Rollback",
+                "type": "TerraformRollback",
+                "disabled": false,
+                "featureRestrictionName": "TERRAFORM_ROLLBACK"
+              },
+              {
+                "name": "Terraform Plan",
+                "type": "TerraformPlan",
+                "disabled": false,
+                "featureRestrictionName": "TERRAFORM_PLAN"
+              },
+              {
+                "name": "Terraform Apply",
+                "type": "TerraformApply",
+                "disabled": false,
+                "featureRestrictionName": "TERRAFORM_APPLY"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Kubernetes",
+            "stepsData": [
+              {
+                "name": "Apply",
+                "type": "K8sApply",
+                "disabled": false,
+                "featureRestrictionName": "K8S_APPLY"
+              },
+              {
+                "name": "Delete",
+                "type": "K8sDelete",
+                "disabled": false,
+                "featureRestrictionName": "K8S_DELETE"
+              },
+              {
+                "name": "Canary Deployment",
+                "type": "K8sCanaryDeploy",
+                "disabled": false,
+                "featureRestrictionName": "K8S_CANARY_DEPLOY"
+              },
+              {
+                "name": "BG Swap Services",
+                "type": "K8sBGSwapServices",
+                "disabled": false,
+                "featureRestrictionName": "K8S_BG_SWAP_SERVICES"
+              },
+              {
+                "name": "Stage Deployment",
+                "type": "K8sBlueGreenDeploy",
+                "disabled": false,
+                "featureRestrictionName": "K8S_BLUE_GREEN_DEPLOY"
+              },
+              {
+                "name": "Canary Delete",
+                "type": "K8sCanaryDelete",
+                "disabled": false,
+                "featureRestrictionName": "K8S_CANARY_DELETE"
+              },
+              {
+                "name": "Rolling Deployment",
+                "type": "K8sRollingDeploy",
+                "disabled": false,
+                "featureRestrictionName": "K8S_ROLLING_DEPLOY"
+              },
+              {
+                "name": "Scale",
+                "type": "K8sScale",
+                "disabled": false,
+                "featureRestrictionName": "K8S_SCALE"
+              },
+              {
+                "name": "Rolling Rollback",
+                "type": "K8sRollingRollback",
+                "disabled": false,
+                "featureRestrictionName": "K8S_ROLLING_ROLLBACK"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "ECS",
+            "stepsData": [
+              {
+                "name": "Ecs Rolling Deploy",
+                "type": "EcsRollingDeploy",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Ecs Canary Delete",
+                "type": "EcsCanaryDelete",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Ecs Rolling Rollback",
+                "type": "EcsRollingRollback",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Ecs Canary Deploy",
+                "type": "EcsCanaryDeploy",
+                "disabled": false,
+                "featureRestrictionName": null
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Helm",
+            "stepsData": [
+              {
+                "name": "Helm Deploy",
+                "type": "HelmDeploy",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Helm Rollback",
+                "type": "HelmRollback",
+                "disabled": false,
+                "featureRestrictionName": null
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Serverless Lambda",
+            "stepsData": [
+              {
+                "name": "Serverless Lambda Deploy",
+                "type": "ServerlessAwsLambdaDeploy",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Serverless Lambda Rollback",
+                "type": "ServerlessAwsLambdaRollback",
+                "disabled": false,
+                "featureRestrictionName": null
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "SSH or WinRM",
+            "stepsData": [
+              {
+                "name": "Command",
+                "type": "Command",
+                "disabled": false,
+                "featureRestrictionName": "COMMAND"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Utilities",
+            "stepsData": [],
+            "stepCategories": [
+              {
+                "name": "Scripted",
+                "stepsData": [
+                  {
+                    "name": "Shell Script",
+                    "type": "ShellScript",
+                    "disabled": false,
+                    "featureRestrictionName": null
+                  }
+                ],
+                "stepCategories": []
+              },
+              {
+                "name": "Non-Scripted",
+                "stepsData": [
+                  {
+                    "name": "HTTP",
+                    "type": "Http",
+                    "disabled": false,
+                    "featureRestrictionName": null
+                  }
+                ],
+                "stepCategories": []
+              }
+            ]
+          },
+          {
+            "name": "Approval",
+            "stepsData": [
+              {
+                "name": "Harness Approval",
+                "type": "HarnessApproval",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_HARNESS_UI"
+              },
+              {
+                "name": "Custom Approval",
+                "type": "CustomApproval",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_CUSTOM_SCRIPT"
+              },
+              {
+                "name": "Jira Approval",
+                "type": "JiraApproval",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_JIRA"
+              },
+              {
+                "name": "ServiceNow Approval",
+                "type": "ServiceNowApproval",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_SERVICE_NOW"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Jira",
+            "stepsData": [
+              {
+                "name": "Jira Create",
+                "type": "JiraCreate",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_JIRA"
+              },
+              {
+                "name": "Jira Update",
+                "type": "JiraUpdate",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_JIRA"
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "FlowControl",
+            "stepsData": [],
+            "stepCategories": [
+              {
+                "name": "Barrier",
+                "stepsData": [
+                  {
+                    "name": "Barrier",
+                    "type": "Barrier",
+                    "disabled": false,
+                    "featureRestrictionName": null
+                  }
+                ],
+                "stepCategories": []
+              },
+              {
+                "name": "Queue",
+                "stepsData": [
+                  {
+                    "name": "Queue",
+                    "type": "Queue",
+                    "disabled": false,
+                    "featureRestrictionName": null
+                  }
+                ],
+                "stepCategories": []
+              }
+            ]
+          },
+          {
+            "name": "Governance",
+            "stepsData": [
+              {
+                "name": "Policy",
+                "type": "Policy",
+                "disabled": false,
+                "featureRestrictionName": null
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "ServiceNow",
+            "stepsData": [
+              {
+                "name": "ServiceNow Create",
+                "type": "ServiceNowCreate",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_SERVICE_NOW"
+              },
+              {
+                "name": "ServiceNow Update",
+                "type": "ServiceNowUpdate",
+                "disabled": false,
+                "featureRestrictionName": "INTEGRATED_APPROVALS_WITH_SERVICE_NOW"
+              }
+            ],
+            "stepCategories": []
+          }
+        ]
+      },
+      {
+        "name": "Continuous Deployment",
+        "stepsData": [],
+        "stepCategories": []
+      },
+      {
+        "name": "Continuous Verification",
+        "stepsData": [],
+        "stepCategories": [
+          {
+            "name": "Continuous Verification",
+            "stepsData": [
+              {
+                "name": "Verify",
+                "type": "Verify",
+                "disabled": false,
+                "featureRestrictionName": null
+              }
+            ],
+            "stepCategories": []
+          }
+        ]
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "9c6436f8-f36c-40bd-817b-a538dc429346"
+}

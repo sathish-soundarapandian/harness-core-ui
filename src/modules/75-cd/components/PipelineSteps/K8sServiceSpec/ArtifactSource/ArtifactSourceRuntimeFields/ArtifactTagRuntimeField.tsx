@@ -142,7 +142,8 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
           ),
           itemRenderer,
           allowCreatingNewItems: true,
-          popoverClassName: css.selectPopover
+          popoverClassName: css.selectPopover,
+          loadingItems: fetchingTags
         },
         expressions,
         allowableTypes

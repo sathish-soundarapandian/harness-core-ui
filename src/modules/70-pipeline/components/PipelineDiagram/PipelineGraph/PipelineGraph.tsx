@@ -32,7 +32,7 @@ interface ControlPosition {
   y: number
 }
 
-const DEFAULT_POSITION: ControlPosition = { x: 30, y: 80 }
+const DEFAULT_POSITION: ControlPosition = { x: 30, y: 120 }
 export interface PipelineGraphProps {
   data: PipelineGraphState[]
   fireEvent: (event: any) => void
@@ -125,13 +125,20 @@ function PipelineGraph({
       readonly,
       scalingFactor: graphScale
     })
-    const SVGLinks = getSVGLinksFromPipeline(
-      state,
-      undefined,
-      undefined,
-      readonly ? uniqueNodeIds.endNode : uniqueNodeIds.createNode,
-      graphScale
-    )
+    let endNodeId: string | undefined
+    if (readonly && showEndNode) {
+      endNodeId = uniqueNodeIds.endNode
+    }
+    if (!readonly) {
+      endNodeId = uniqueNodeIds.createNode
+    }
+    const SVGLinks = getSVGLinksFromPipeline({
+      states: state,
+      parentElement: undefined,
+      resultArr: undefined,
+      endNodeId,
+      scalingFactor: graphScale
+    })
 
     return setSvgPath([...SVGLinks, ...terminalNodeLinks])
   }
@@ -175,7 +182,6 @@ function PipelineGraph({
     <GraphConfigStore.Provider
       value={{
         graphScale,
-
         showEndNode,
         parentSelector,
         loaderComponent,

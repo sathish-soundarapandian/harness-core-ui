@@ -22,6 +22,7 @@ oneLogin: OneLogin
 samlProviderAddedSuccessfully: SAML provider added successfully
 samlProviderUpdatedSuccessfully: SAML provider updated successfully
 authorizationEnabledFor: 'Authorization enabled for: '
+authorizationEnabled: Authorization is enabled
 authorizationNotEnabled: Authorization not enabled
 plusSAMLProvider: + SAML Provider
 loginViaSAML: Login via SAML
@@ -168,9 +169,11 @@ costCalculator:
   developer:
     title: How many developers will use Feature Flags?
     developer: Who is a developer?
+    developerDefinition: A Developer is an active Feature Flags user with create/edit/delete permissions on Feature Flags, Targets, or Segments.
   mau:
     title: How many Monthly Active Users will view Feature Flags?
     mau: Who is a Monthly Active User?
+    mauDefinition: '"MAUs" refers to the Monthly Active Users viewing your Feature Flags'
     perkMau: 'per {{quantity}}K / month'
     kMauFree: (first 100k included free)
     permMau: 'per {{quantity}}M / month'
@@ -206,11 +209,17 @@ ldap:
   groupQueries: Group Queries
   scheduledSyncs: Scheduled Syncs
   baseDN: Base DN
+  baseDNRequired: Base DN is required
   searchFilter: Search Filter
+  searchFilterRequired: Search Filter is required
   nameAttributes: Name Attribute
+  nameAttributesRequired: Name Attribute is required
   emailAttributes: Email Attribute
+  emailAttributesRequired: Email Attribute is required
   descriptionAttributes: Description Attribute
+  descriptionAttributesRequired: Description Attribute is required
   groupMembershipAttributes: Group Membership Attribute
+  groupMembershipAttributesRequired: Group Membership Attribute is required
   userQueryTitle: User Query {{index}}
   groupQueryTitle: Group Query {{index}}
   setScopeForUserQuery: Set the scope of any searches for LDAP users

@@ -119,12 +119,14 @@ export function EmailSchemaWithoutRequired(emailProps: EmailProps = {}): Yup.Sch
   return Yup.string().trim().email(getString('common.validation.email.format'))
 }
 
-export function URLValidationSchema(): Yup.Schema<string | undefined> {
+export function URLValidationSchema(
+  { urlMessage, requiredMessage } = {} as { urlMessage?: string; requiredMessage?: string }
+): Yup.Schema<string | undefined> {
   const { getString } = useStrings()
   return Yup.string()
     .trim()
-    .required(getString('common.validation.urlIsRequired'))
-    .url(getString('validation.urlIsNotValid'))
+    .required(requiredMessage ?? getString('common.validation.urlIsRequired'))
+    .url(urlMessage ?? getString('validation.urlIsNotValid'))
 }
 export function URLValidationSchemaWithoutRequired(): Yup.Schema<string | undefined> {
   const { getString } = useStrings()

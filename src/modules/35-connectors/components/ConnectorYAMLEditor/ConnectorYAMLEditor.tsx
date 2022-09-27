@@ -46,9 +46,7 @@ import {
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
 import { connectorGovernanceModalProps } from '@connectors/utils/utils'
-import { FeatureFlag } from '@common/featureFlags'
 import { doesGovernanceHasErrorOrWarning } from '@governance/utils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import css from './ConnectorYAMLEditor.module.scss'
 
 interface ConnectorYAMLEditorProp {
@@ -176,7 +174,6 @@ const ConnectorYAMLEditor: React.FC<ConnectorYAMLEditorProp> = props => {
   const { mutate: updateConnector, loading: updating } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
-  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
 
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
 
@@ -253,14 +250,10 @@ const ConnectorYAMLEditor: React.FC<ConnectorYAMLEditorProp> = props => {
           baseBranch: responsedata.gitDetails?.branch
         }
       })
-      let { governanceMetaDataHasError, governanceMetaDataHasWarning } = doesGovernanceHasErrorOrWarning(
+      const { governanceMetaDataHasError, governanceMetaDataHasWarning } = doesGovernanceHasErrorOrWarning(
         response.data?.governanceMetadata
       )
-      if (!opaFlagEnabled) {
-        governanceMetaDataHasError = false
-        governanceMetaDataHasWarning = false
-      }
-      if (opaFlagEnabled && response.data?.governanceMetadata) {
+      if (response.data?.governanceMetadata) {
         conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
           setEnableEdit(false)
           refetchConnector()

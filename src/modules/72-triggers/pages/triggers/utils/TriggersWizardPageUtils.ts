@@ -283,7 +283,7 @@ const getPanels = ({
       },
       {
         id: 'Schedule',
-        tabTitle: getString('triggers.schedulePanel.title'),
+        tabTitle: getString('common.schedule'),
         checkValidPanel: checkValidCronExpression,
         requiredFields: ['expression']
       },

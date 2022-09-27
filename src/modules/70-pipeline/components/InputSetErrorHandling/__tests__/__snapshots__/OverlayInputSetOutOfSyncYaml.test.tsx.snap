@@ -232,7 +232,7 @@ exports[`Old Git Sync Input Set Error Exp should open delete input set modal on 
           class="Layout--horizontal StyledProps--main ConfirmationDialog--header StyledProps--padding-left-xsmall"
         >
           <span
-            class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+            class="bp3-icon StyledProps--main StyledProps--margin-right-small StyledProps--intent-danger"
             data-icon="danger-icon"
           >
             <svg
@@ -700,7 +700,7 @@ exports[`Remote Git Sync Input Set Error Exp should open delete input set modal 
           class="Layout--horizontal StyledProps--main ConfirmationDialog--header StyledProps--padding-left-xsmall"
         >
           <span
-            class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+            class="bp3-icon StyledProps--main StyledProps--margin-right-small StyledProps--intent-danger"
             data-icon="danger-icon"
           >
             <svg

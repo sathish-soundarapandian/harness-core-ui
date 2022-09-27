@@ -10,7 +10,11 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ActiveServiceInstancePopover } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancePopover'
 import * as cdngServices from 'services/cd-ng'
-import { mockserviceInstanceDetails, mockGitopsServiceInstanceDetails } from './mocks'
+import {
+  mockserviceInstanceDetails,
+  mockGitopsServiceInstanceDetails,
+  mockServiceInstanceDetailsWithContainerList
+} from './mocks'
 
 describe('ActiveServiceInstancePopover', () => {
   beforeEach(() => {
@@ -71,5 +75,21 @@ describe('ActiveServiceInstancePopover', () => {
     )
 
     expect(getByText('common.cluster:')).toBeDefined()
+  })
+
+  test('should render container list images', () => {
+    jest
+      .spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds')
+      .mockImplementation(() => mockServiceInstanceDetailsWithContainerList as any)
+
+    const { getByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={0} />
+      </TestWrapper>
+    )
+    expect(getByText('cd.serviceDashboard.containerList:')!).toBeDefined()
   })
 })

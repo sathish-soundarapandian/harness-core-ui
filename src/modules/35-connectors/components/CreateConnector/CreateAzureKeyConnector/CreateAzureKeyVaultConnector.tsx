@@ -17,7 +17,7 @@ import {
 } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
 import { buildAzureKeyVaultPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import AzureKeyVaultForm from './views/AzureKeyVaultForm'
@@ -75,7 +75,7 @@ const CreateAzureKeyVaultConnector: React.FC<CreateConnectorModalProps> = props 
         orgIdentifier={props.orgIdentifier}
         projectIdentifier={props.projectIdentifier}
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep

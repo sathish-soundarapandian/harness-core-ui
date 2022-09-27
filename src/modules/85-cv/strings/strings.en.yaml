@@ -691,6 +691,8 @@ templates:
 sensitivityValidation: Sensitivity should be high, medium or low
 slos:
   title: SLOs
+  subTitle: Review the status and error budget of all your defined service level objectives
+  completeTitle: Service Level Objectives (SLOs)
   monitoredService: MONITORED SERVICE
   status: STATUS
   target: TARGET
@@ -728,6 +730,7 @@ slos:
   reviewChanges: Review changes
   sloEditWarningMessage: It may take a few minutes to recalculate the Error Budget. Are you sure you want to proceed?
   noSLOsStateMessage: Service level objectives (SLOs) are used to describe and measure service level performance and reliability for any service/microservice applications.
+  searchSLO: Search by SLO name
   validations:
     nameValidation: SLO name is required
     userJourneyRequired: User journey is required

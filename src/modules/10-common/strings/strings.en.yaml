@@ -19,6 +19,7 @@ gnupgKeys: GnuPG Keys
 featureComingSoon: This feature is coming soon.
 skip: Skip
 sync: Sync
+schedule: Schedule
 selectService: Select Service
 selectServices: Select Services
 inputVariables: Input Variables
@@ -94,6 +95,7 @@ timeframe: Timeframe
 selectTimeFrame: Select Timeframe
 lastModified: 'Last Modified'
 servicePrefix: 'Service: {{ name }}'
+serviceInputs: Service inputs
 accountSetting:
   connector:
     loading: 'Loading settings...'
@@ -859,6 +861,7 @@ scope: '{{ $.delegate.Scope }}'
 community: Community
 resourceCenter:
   title: 'RESOURCE CENTER'
+  link: 'contact our support'
   productUpdates:
     title: Product Updates
     whatsnew: 'What’s New'

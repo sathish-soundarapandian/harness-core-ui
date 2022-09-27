@@ -69,7 +69,7 @@ export const getRiskColorLogo = (riskStatus?: RiskTypes | SloHealthIndicatorDTO[
     case RiskValues.OBSERVE:
       return 'warning-icon'
     case RiskValues.NEED_ATTENTION:
-      return 'warning-outline'
+      return 'warning-sign'
     case RiskValues.UNHEALTHY:
       return 'heart-broken'
     case SLOErrorBudget.EXHAUSTED:

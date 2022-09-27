@@ -132,7 +132,7 @@ export function DockerRegistryArtifact({
   }, [])
 
   const getInitialValues = (): ImagePathTypes => {
-    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed)
+    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed) as ImagePathTypes
   }
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
     const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)

@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { render, waitFor, findByText as findByTextGlobal, queryByAttribute } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -19,8 +26,8 @@ const defaultFeatureFlagValues = { MULTI_SERVICE_INFRA: true, NG_SVC_ENV_REDESIG
 const initialValues = { services: { values: [{ serviceRef: 'svc_1' }, { serviceRef: 'svc_2' }] } }
 
 jest.mock('services/cd-ng', () => ({
-  useGetServiceList: jest.fn(() => ({
-    data: { data: { content: services } },
+  useGetServiceAccessList: jest.fn(() => ({
+    data: { data: services },
     loading: false
   })),
   useGetServicesYamlAndRuntimeInputs: jest.fn().mockReturnValue({ mutate: jest.fn(() => ({ data: metadata })) }),
@@ -55,8 +62,6 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
     const toggle = container.querySelector('.Toggle--input')!
 
     userEvent.click(toggle)
-    // act(() => {
-    // })
 
     const multi = await findByTestId('multi-select-dropdown-button')
 
@@ -68,11 +73,13 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
     const svc1 = await findByTextGlobal(menu, 'Service 1')
     userEvent.click(svc1)
 
+    userEvent.click(multi)
+
     await waitFor(() => {
       expect(onUpdate).toHaveBeenLastCalledWith({
         services: {
           metadata: {
-            parallel: false
+            parallel: true
           },
           values: [
             {
@@ -144,7 +151,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
     expect(onUpdate).toHaveBeenLastCalledWith({
       services: {
         metadata: {
-          parallel: false
+          parallel: true
         },
         values: [{ serviceRef: 'svc_2' }]
       }
@@ -153,7 +160,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
     await waitFor(() => expect(container.querySelector('.bp3-spinner')).not.toBeInTheDocument())
   })
 
-  test('user can deploy in parallel', async () => {
+  test('user can uncheck deploy in parallel', async () => {
     const onUpdate = jest.fn()
     const { container } = render(
       <TestWrapper defaultFeatureFlagValues={defaultFeatureFlagValues}>
@@ -194,7 +201,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
             },
             { serviceRef: 'svc_2' }
           ],
-          metadata: { parallel: true }
+          metadata: { parallel: false }
         }
       })
     })
@@ -231,7 +238,7 @@ describe('DeployServiceEntityWidget - multi services tests', () => {
     userEvent.click(runtimeMenu)
 
     await waitFor(() => {
-      expect(onUpdate).toHaveBeenLastCalledWith({ services: { values: '<+input>', metadata: { parallel: false } } })
+      expect(onUpdate).toHaveBeenLastCalledWith({ services: { values: '<+input>', metadata: { parallel: true } } })
     })
   })
 })

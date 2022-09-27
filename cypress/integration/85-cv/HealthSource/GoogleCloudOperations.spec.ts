@@ -257,7 +257,7 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.findByText('Monitored Service updated').should('be.visible')
   })
 
-  it.skip('should be able to edit an existing GCO health source with a Dashboard query', () => {
+  it('should be able to edit an existing GCO health source with a Dashboard query', () => {
     cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', monitoredService)
 
     cy.wait(2000)

@@ -12,6 +12,7 @@ declare const styles: {
   readonly formFullheight: string
   readonly main: string
   readonly manualQueryWarning: string
+  readonly spaceProvider: string
   readonly timeParameter: string
 }
 export default styles

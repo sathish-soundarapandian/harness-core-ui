@@ -464,7 +464,7 @@ function K8sDeleteDeployWidget(props: K8sDeleteProps, formikRef: StepFormikFowar
                     }}
                     flex={{ justifyContent: 'flex-start' }}
                   >
-                    <Icon name="warning-icon" intent={Intent.DANGER} margin={{ right: 'small' }} />
+                    <Icon name="warning-icon" intent={Intent.WARNING} margin={{ right: 'small' }} />
                     <Text font={{ variation: FontVariation.FORM_MESSAGE_WARNING }}>
                       {getString('pipelineSteps.deleteNamespaceWarning')}
                     </Text>

@@ -12,7 +12,7 @@ import { Container, Formik, FormikForm, Heading, Layout, PageError, Text } from 
 import { Color } from '@wings-software/design-system'
 import type { FormikProps, FormikErrors } from 'formik'
 import { produce } from 'immer'
-import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getsMergedTemplateInputYamlPromise,
@@ -36,6 +36,7 @@ import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
 import { useMutateAsGet } from '@common/hooks'
 import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { Pipeline } from '@pipeline/utils/types'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import css from './TemplatePipelineSpecifications.module.scss'
 
 const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): number =>
@@ -43,7 +44,7 @@ const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): nu
 
 export function TemplatePipelineSpecifications(): JSX.Element {
   const {
-    state: { pipeline, schemaErrors, gitDetails },
+    state: { pipeline, schemaErrors, gitDetails, storeMetadata },
     allowableTypes,
     updatePipeline,
     isReadonly
@@ -79,9 +80,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, pipelineScope),
       pipelineIdentifier: pipeline.identifier,
-      repoIdentifier: gitDetails.repoIdentifier,
-      branch: gitDetails.branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
     },
     body: {
       originalEntityYaml: yamlStringify({ pipeline: formValues })
@@ -103,9 +102,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     queryParams: {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: templateVersionLabel,
-      repoIdentifier: gitDetails.repoIdentifier,
-      branch: gitDetails.branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, gitDetails.repoIdentifier, gitDetails.branch)
     }
   })
 
@@ -118,7 +115,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
 
   const updateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
     const updatedPipeline = produce(pipeline, draft => {
-      set(draft, 'template.templateInputs', newTemplateInputs)
+      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
     })
     setFormValues(updatedPipeline)
     updatePipeline(updatedPipeline)

@@ -29,8 +29,6 @@ import {
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
 import { connectorGovernanceModalProps } from '@connectors/utils/utils'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import css from './CreateCeAzureConnector.module.scss'
 
 interface OverviewDetails {
@@ -63,8 +61,6 @@ const AzureBillingInfo: React.FC<StepProps<StepSecretManagerProps> & AzureBillin
   const { mutate: updateConnector } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
-  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
-
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
 
   const handleSubmit = async (values: OverviewDetails): Promise<void> => {
@@ -89,7 +85,7 @@ const AzureBillingInfo: React.FC<StepProps<StepSecretManagerProps> & AzureBillin
         props.onSuccess?.(response.data as ConnectorRequestBody)
         props.nextStep?.({ ...connectorDetails })
       }
-      if (opaFlagEnabled && response.data?.governanceMetadata) {
+      if (response.data?.governanceMetadata) {
         conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSucessCreateOrUpdateNextStep)
       } else {
         onSucessCreateOrUpdateNextStep()

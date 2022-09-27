@@ -13,7 +13,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
       >
         <input
           checked=""
-          name="Blueprint3.RadioGroup-0"
+          name="Blueprint3.RadioGroup-2"
           type="radio"
           value="false"
         />
@@ -26,7 +26,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
         class="bp3-control bp3-radio"
       >
         <input
-          name="Blueprint3.RadioGroup-0"
+          name="Blueprint3.RadioGroup-2"
           type="radio"
           value="true"
         />

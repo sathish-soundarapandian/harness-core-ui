@@ -1,0 +1,8 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "resourceGroups": [{ "resourceGroup": "test-tf-rg" }, { "resourceGroup": "test-rg" }]
+  },
+  "metaData": null,
+  "correlationId": "849935a1-6a3d-483b-be69-66b85da4b81f"
+}

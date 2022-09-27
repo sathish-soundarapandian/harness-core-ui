@@ -28,7 +28,7 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import {
   getConnectorIdValue,
-  getGithubPackageRegistryFormData,
+  getArtifactFormData,
   helperTextData,
   isFieldFixedAndNonEmpty
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -427,7 +427,7 @@ export function GoogleArtifactRegistry(
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
 
   const getInitialValues = (): GoogleArtifactRegistryInitialValuesType => {
-    return getGithubPackageRegistryFormData(
+    return getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed

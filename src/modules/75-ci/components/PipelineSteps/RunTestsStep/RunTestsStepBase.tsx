@@ -100,6 +100,7 @@ const ET_COMMANDS =
   '    wget -qO- https://get.et.harness.io/releases/latest/alpine/harness-et-agent.tar.gz | tar -xz\n' +
   '  else\n' +
   '    wget -qO- https://get.et.harness.io/releases/latest/nix/harness-et-agent.tar.gz | tar -xz\n' +
+  '  fi\n' +
   'elif [ $arch = "aarch64" ]; then\n' +
   '  wget -qO- https://get.et.harness.io/releases/latest/arm/harness-et-agent.tar.gz | tar -xz\n' +
   'fi\n' +

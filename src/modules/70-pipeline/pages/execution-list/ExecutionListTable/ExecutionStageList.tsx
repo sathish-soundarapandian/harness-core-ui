@@ -12,6 +12,7 @@ import { Color, FontVariation, Icon, Text } from '@harness/uicore'
 import { processLayoutNodeMapV1 } from '@pipeline/utils/executionUtils'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
+import { killEvent } from '@common/utils/eventUtils'
 import { ExecutionStage } from './ExecutionStage'
 import css from './ExecutionListTable.module.scss'
 
@@ -20,7 +21,7 @@ export function ExecutionStageList({ row }: { row: Row<PipelineExecutionSummary>
   const elements = processLayoutNodeMapV1(data)
 
   return (
-    <div role="list">
+    <div role="list" onClick={killEvent}>
       {elements?.map(stage => {
         return (
           <Fragment key={stage.identifier}>

@@ -175,7 +175,7 @@ $headerHeight: 146px;
 
 .errorBudgetRemaining {
   padding: var(--spacing-xxsmall) !important;
-  width: 30px;
+  min-width: 30px;
   height: 16px;
   border-radius: var(--spacing-2);
   background-color: var(--grey-200) !important;

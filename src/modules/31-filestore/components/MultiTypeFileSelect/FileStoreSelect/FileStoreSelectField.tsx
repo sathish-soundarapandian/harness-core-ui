@@ -133,7 +133,7 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
           )}
           <Container padding={{ right: 'small' }}>
             {fileStoreValue && scope ? <Tag>{scope.toUpperCase()}</Tag> : null}
-            <Icon name="chevron-down" margin={{ right: 'small', left: 'small' }} />
+            <Icon name="chevron-down" size={15} color="grey300" margin={{ left: 'small' }} />
           </Container>
         </Container>
       </Layout.Vertical>

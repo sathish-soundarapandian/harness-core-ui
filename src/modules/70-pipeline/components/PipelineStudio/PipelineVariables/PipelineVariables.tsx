@@ -30,6 +30,7 @@ import PipelineCard, {
   PipelineCardProps
 } from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/PipelineCard'
 import StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import VariableAccordionSummary from './VariableAccordionSummary'
@@ -287,12 +288,16 @@ export function PipelineCardPanel(props: PipelineCardProps): React.ReactElement 
 }
 
 function PipelineVariablesWrapperWithRef(
-  props: { pipeline?: PipelineInfoConfig },
+  props: { pipeline?: PipelineInfoConfig; storeMetadata?: StoreMetadata },
   ref: React.ForwardedRef<PipelineVariablesRef>
 ): React.ReactElement {
   return (
     <NestedAccordionProvider>
-      <PipelineVariablesContextProvider pipeline={props.pipeline} enablePipelineTemplatesResolution>
+      <PipelineVariablesContextProvider
+        pipeline={props.pipeline}
+        enablePipelineTemplatesResolution
+        storeMetadata={props.storeMetadata}
+      >
         <PipelineVariables ref={ref} />
       </PipelineVariablesContextProvider>
     </NestedAccordionProvider>

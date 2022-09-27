@@ -13,7 +13,6 @@ import {
   getSLORiskCount,
   getSLORiskCountResponse,
   getUserJourneysCall,
-  listMonitoredServices,
   listMonitoredServicesCallResponse,
   listRiskCountDataEmptyResponse,
   listSLOsCall,
@@ -44,7 +43,10 @@ import {
   getExecutionDetailv2,
   mockedExecutionSummary,
   getMonitoredServiceChangeDetails,
-  getSLODashboardWidgets
+  getSLODashboardWidgets,
+  listMonitoredServicesForSLOs,
+  listMonitoredServices,
+  listMonitoredServicesCallResponseForSLOs
 } from '../../../support/85-cv/slos/constants'
 
 describe('CVSLODetailsPage', () => {
@@ -54,6 +56,7 @@ describe('CVSLODetailsPage', () => {
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
+    cy.intercept('GET', listMonitoredServicesForSLOs, listMonitoredServicesCallResponseForSLOs)
     cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
     cy.intercept('GET', getChangeEventTimeline, changeEventTimelineResponse)

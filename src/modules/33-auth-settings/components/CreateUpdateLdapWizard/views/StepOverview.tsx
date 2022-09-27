@@ -27,6 +27,7 @@ import css from '../CreateUpdateLdapWizard.module.scss'
 
 export interface LdapOverview {
   displayName?: string
+  authorizationEnabled?: boolean
 }
 
 export const StepOverview: React.FC<StepProps<CreateUpdateLdapWizardProps> & LdapWizardStepProps<LdapOverview>> =
@@ -34,13 +35,16 @@ export const StepOverview: React.FC<StepProps<CreateUpdateLdapWizardProps> & Lda
     const { getString } = useStrings()
     const { stepData, updateStepData, name, closeWizard } = props
     const displayName = stepData?.displayName ?? ''
+    const authorizationEnabled = stepData?.authorizationEnabled ?? false
 
     const getInitialValues = {
-      displayName
+      displayName,
+      authorizationEnabled: authorizationEnabled
     }
     const validationSchema = Yup.object().shape({
       displayName: NameSchema()
     })
+
     return (
       <Layout.Vertical className={cx(css.stepContainer, css.verticalStretch)}>
         <Formik<LdapOverview>
@@ -60,6 +64,7 @@ export const StepOverview: React.FC<StepProps<CreateUpdateLdapWizardProps> & Lda
             </Layout.Horizontal>
             <Container>
               <FormInput.Text label={getString('name')} name="displayName" />
+              <FormInput.CheckBox name="authorizationEnabled" label={getString('authSettings.enableAuthorization')} />
             </Container>
             <Layout.Horizontal className={css.stepCtaContainer}>
               <Button

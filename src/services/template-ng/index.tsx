@@ -1267,8 +1267,17 @@ export interface NGTemplateInfoConfig {
   tags?: {
     [key: string]: string
   }
-  type: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
+  type: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager' | 'ArtifactSource'
+  variables?: NGVariable[]
   versionLabel: string
+}
+
+export interface NGVariable {
+  description?: string
+  metadata?: string
+  name?: string
+  required?: boolean
+  type?: 'String' | 'Number' | 'Secret'
 }
 
 export interface NodeErrorInfo {
@@ -1282,6 +1291,13 @@ export interface NodeInfo {
   identifier?: string
   localFqn?: string
   name?: string
+}
+
+export type NumberNGVariable = NGVariable & {
+  default?: number
+  name?: string
+  type?: 'Number'
+  value: number
 }
 
 export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
@@ -1870,6 +1886,13 @@ export interface ResponseString {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseTemplateImportSaveResponse {
+  correlationId?: string
+  data?: TemplateImportSaveResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseTemplateMergeResponse {
   correlationId?: string
   data?: TemplateMergeResponse
@@ -1887,6 +1910,13 @@ export interface ResponseTemplateResponse {
 export interface ResponseTemplateRetainVariablesResponse {
   correlationId?: string
   data?: TemplateRetainVariablesResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseTemplateWithInputsResponse {
+  correlationId?: string
+  data?: TemplateWithInputsResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -1929,6 +1959,13 @@ export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
 }
 
+export type SecretNGVariable = NGVariable & {
+  default?: string
+  name?: string
+  type?: 'Secret'
+  value: string
+}
+
 export interface ServiceExpressionProperties {
   expression?: string
   serviceName?: string
@@ -1949,6 +1986,13 @@ export interface StackTraceElement {
   moduleName?: string
   moduleVersion?: string
   nativeMethod?: boolean
+}
+
+export type StringNGVariable = NGVariable & {
+  default?: string
+  name?: string
+  type?: 'String'
+  value: string
 }
 
 export interface TemplateApplyRequest {
@@ -1981,13 +2025,39 @@ export interface TemplateFilterProperties {
   tags?: {
     [key: string]: string
   }
-  templateEntityTypes?: ('Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager')[]
+  templateEntityTypes?: (
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
+  )[]
   templateIdentifiers?: string[]
   templateNames?: string[]
 }
 
+export interface TemplateImportRequest {
+  templateDescription?: string
+  templateIdentifier?: string
+  templateVersion?: string
+}
+
+export interface TemplateImportSaveResponse {
+  templateIdentifier?: string
+  templateVersion?: string
+}
+
 export interface TemplateInfo {
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
   templateIdentifier?: string
   versionLabel?: string
 }
@@ -2028,7 +2098,14 @@ export interface TemplateMetadataSummaryResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2064,7 +2141,14 @@ export interface TemplateResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -2096,11 +2180,23 @@ export interface TemplateSummaryResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
   yaml?: string
+}
+
+export interface TemplateWithInputsResponse {
+  templateInputs?: string
+  templateResponseDTO?: TemplateResponse
 }
 
 export interface TemplateWrapperResponse {
@@ -3052,6 +3148,103 @@ export const dummyApiForSwaggerSchemaCheckPromise = (
     signal
   )
 
+export interface ImportTemplateQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  connectorRef?: string
+  repoName?: string
+  branch?: string
+  filePath?: string
+  isForceImport?: boolean
+}
+
+export interface ImportTemplatePathParams {
+  templateIdentifier: string
+}
+
+export type ImportTemplateProps = Omit<
+  MutateProps<
+    ResponseTemplateImportSaveResponse,
+    Failure | Error,
+    ImportTemplateQueryParams,
+    TemplateImportRequest,
+    ImportTemplatePathParams
+  >,
+  'path' | 'verb'
+> &
+  ImportTemplatePathParams
+
+/**
+ * import template from git
+ */
+export const ImportTemplate = ({ templateIdentifier, ...props }: ImportTemplateProps) => (
+  <Mutate<
+    ResponseTemplateImportSaveResponse,
+    Failure | Error,
+    ImportTemplateQueryParams,
+    TemplateImportRequest,
+    ImportTemplatePathParams
+  >
+    verb="POST"
+    path={`/templates/import/${templateIdentifier}`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseImportTemplateProps = Omit<
+  UseMutateProps<
+    ResponseTemplateImportSaveResponse,
+    Failure | Error,
+    ImportTemplateQueryParams,
+    TemplateImportRequest,
+    ImportTemplatePathParams
+  >,
+  'path' | 'verb'
+> &
+  ImportTemplatePathParams
+
+/**
+ * import template from git
+ */
+export const useImportTemplate = ({ templateIdentifier, ...props }: UseImportTemplateProps) =>
+  useMutate<
+    ResponseTemplateImportSaveResponse,
+    Failure | Error,
+    ImportTemplateQueryParams,
+    TemplateImportRequest,
+    ImportTemplatePathParams
+  >('POST', (paramsInPath: ImportTemplatePathParams) => `/templates/import/${paramsInPath.templateIdentifier}`, {
+    base: getConfig('template/api'),
+    pathParams: { templateIdentifier },
+    ...props
+  })
+
+/**
+ * import template from git
+ */
+export const importTemplatePromise = (
+  {
+    templateIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseTemplateImportSaveResponse,
+    Failure | Error,
+    ImportTemplateQueryParams,
+    TemplateImportRequest,
+    ImportTemplatePathParams
+  > & { templateIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseTemplateImportSaveResponse,
+    Failure | Error,
+    ImportTemplateQueryParams,
+    TemplateImportRequest,
+    ImportTemplatePathParams
+  >('POST', getConfig('template/api'), `/templates/import/${templateIdentifier}`, props, signal)
+
 export interface GetTemplateListQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -3250,7 +3443,7 @@ export type GetsMergedTemplateInputYamlProps = Omit<
 >
 
 /**
- * Gets merged template input yaml
+ * Get merged Template input YAML
  */
 export const GetsMergedTemplateInputYaml = (props: GetsMergedTemplateInputYamlProps) => (
   <Mutate<
@@ -3279,7 +3472,7 @@ export type UseGetsMergedTemplateInputYamlProps = Omit<
 >
 
 /**
- * Gets merged template input yaml
+ * Get merged Template input YAML
  */
 export const useGetsMergedTemplateInputYaml = (props: UseGetsMergedTemplateInputYamlProps) =>
   useMutate<
@@ -3291,7 +3484,7 @@ export const useGetsMergedTemplateInputYaml = (props: UseGetsMergedTemplateInput
   >('POST', `/templates/mergeTemplateInputs`, { base: getConfig('template/api'), ...props })
 
 /**
- * Gets merged template input yaml
+ * Get merged Template input YAML
  */
 export const getsMergedTemplateInputYamlPromise = (
   props: MutateUsingFetchProps<
@@ -3312,7 +3505,14 @@ export const getsMergedTemplateInputYamlPromise = (
   >('POST', getConfig('template/api'), `/templates/mergeTemplateInputs`, props, signal)
 
 export interface GetTemplateSchemaQueryParams {
-  templateEntityType: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
+  templateEntityType:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -3523,6 +3723,106 @@ export const getTemplateReferencesPromise = (
     TemplateReferenceRequest,
     void
   >('POST', getConfig('template/api'), `/templates/templateReferences`, props, signal)
+
+export interface GetTemplateAlongWithInputSetYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  versionLabel: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+}
+
+export interface GetTemplateAlongWithInputSetYamlPathParams {
+  templateIdentifier: string
+}
+
+export type GetTemplateAlongWithInputSetYamlProps = Omit<
+  GetProps<
+    ResponseTemplateWithInputsResponse,
+    Failure | Error,
+    GetTemplateAlongWithInputSetYamlQueryParams,
+    GetTemplateAlongWithInputSetYamlPathParams
+  >,
+  'path'
+> &
+  GetTemplateAlongWithInputSetYamlPathParams
+
+/**
+ * Get Template along with Input Set YAML
+ */
+export const GetTemplateAlongWithInputSetYaml = ({
+  templateIdentifier,
+  ...props
+}: GetTemplateAlongWithInputSetYamlProps) => (
+  <Get<
+    ResponseTemplateWithInputsResponse,
+    Failure | Error,
+    GetTemplateAlongWithInputSetYamlQueryParams,
+    GetTemplateAlongWithInputSetYamlPathParams
+  >
+    path={`/templates/templateWithInputs/${templateIdentifier}`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseGetTemplateAlongWithInputSetYamlProps = Omit<
+  UseGetProps<
+    ResponseTemplateWithInputsResponse,
+    Failure | Error,
+    GetTemplateAlongWithInputSetYamlQueryParams,
+    GetTemplateAlongWithInputSetYamlPathParams
+  >,
+  'path'
+> &
+  GetTemplateAlongWithInputSetYamlPathParams
+
+/**
+ * Get Template along with Input Set YAML
+ */
+export const useGetTemplateAlongWithInputSetYaml = ({
+  templateIdentifier,
+  ...props
+}: UseGetTemplateAlongWithInputSetYamlProps) =>
+  useGet<
+    ResponseTemplateWithInputsResponse,
+    Failure | Error,
+    GetTemplateAlongWithInputSetYamlQueryParams,
+    GetTemplateAlongWithInputSetYamlPathParams
+  >(
+    (paramsInPath: GetTemplateAlongWithInputSetYamlPathParams) =>
+      `/templates/templateWithInputs/${paramsInPath.templateIdentifier}`,
+    { base: getConfig('template/api'), pathParams: { templateIdentifier }, ...props }
+  )
+
+/**
+ * Get Template along with Input Set YAML
+ */
+export const getTemplateAlongWithInputSetYamlPromise = (
+  {
+    templateIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseTemplateWithInputsResponse,
+    Failure | Error,
+    GetTemplateAlongWithInputSetYamlQueryParams,
+    GetTemplateAlongWithInputSetYamlPathParams
+  > & { templateIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseTemplateWithInputsResponse,
+    Failure | Error,
+    GetTemplateAlongWithInputSetYamlQueryParams,
+    GetTemplateAlongWithInputSetYamlPathParams
+  >(getConfig('template/api'), `/templates/templateWithInputs/${templateIdentifier}`, props, signal)
 
 export interface UpdateExistingTemplateVersionQueryParams {
   accountIdentifier: string

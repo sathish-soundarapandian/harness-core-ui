@@ -103,7 +103,7 @@ describe('<ExecutionActions /> tests', () => {
       })
     )
 
-    await findByText(document.body, 'pipeline.viewPipeline')
+    await findByText(document.body, 'editPipeline')
 
     expect(document.body.querySelector('.bp3-menu')).toMatchSnapshot('Menu')
   })
@@ -286,8 +286,33 @@ describe('<ExecutionActions /> tests', () => {
       })
     )
     const menuItems = result!.baseElement.querySelectorAll('.bp3-menu-item')
-    const viewPipelineMenuItem = Array.from(menuItems).find(item => item.textContent === 'pipeline.viewPipeline')
+    const viewPipelineMenuItem = Array.from(menuItems).find(item => item.textContent === 'editPipeline')
     expect(viewPipelineMenuItem).toBeInTheDocument()
+    expect(viewPipelineMenuItem).toHaveAttribute('hidden')
+  })
+
+  test('when showEditButton is true and canEdit is false, View Pipeline button should appear', () => {
+    const { getByText } = render(
+      <TestWrapper path={TEST_PATH} pathParams={pathParams}>
+        <ExecutionActions
+          source="executions"
+          params={pathParams as any}
+          executionStatus="Expired"
+          refetch={jest.fn()}
+          showEditButton={true}
+          canEdit={false}
+        />
+      </TestWrapper>
+    )
+
+    userEvent.click(
+      screen.getByRole('button', {
+        name: /execution menu actions/i
+      })
+    )
+    const viewPipelineBtn = getByText('pipeline.viewPipeline')
+    expect(viewPipelineBtn).toBeInTheDocument()
+    expect(viewPipelineBtn.parentElement?.parentElement).not.toHaveAttribute('hidden')
   })
 
   test('Open in new tab button visible on Execution History', () => {

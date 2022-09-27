@@ -49,6 +49,8 @@ interface DrawSVGPathOptions {
   parentNode?: string
   scalingFactor?: number
   dataProps?: KVPair
+  isParentNodeStepGroup?: boolean
+  skipParallelRightPath?: boolean
 }
 /**
  * Direction of SVG Path (Only supported for straight horizontal lines)
@@ -68,17 +70,47 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
   const node2VerticalMid = getScaledValue(node2.top + node2.height / 2, scalingFactor)
 
   const startPoint = `${getScaledValue(node1.right, scalingFactor)},${node1VerticalMid}`
-  const horizontalMid = Math.abs((node1.right + node2.left) / 2)
+  const horizontalMid = (node1.right + node2.left) / 2
   const endPoint = `${getScaledValue(node2.left, scalingFactor)},${node2VerticalMid}`
   const node1Y = Math.round(node1.y)
   const node2Y = Math.round(node2.y)
 
   if (node2Y < node1Y) {
     //  child node is at top
-    const curveLeftToTop = `Q${horizontalMid},${node1VerticalMid} ${horizontalMid},${node1VerticalMid - 20}`
-    const curveBottomToRight = `Q${horizontalMid},${node2VerticalMid} ${horizontalMid + 20},${node2VerticalMid}`
-    finalSVGPath = `M${startPoint} L${horizontalMid - 20},${node1VerticalMid} ${curveLeftToTop}
+
+    if (options?.direction === 'ltl') {
+      const startPointLeft = `${node1.left},${node1VerticalMid}`
+      const endPointLeft = `${node2.left},${node2VerticalMid}`
+      const horizontalMidUpdated = (node1.left + node2.left) / 2
+      const curveLeftToTopUpdated = `Q${horizontalMidUpdated},${node1VerticalMid} ${horizontalMidUpdated},${
+        node1VerticalMid + 11
+      }`
+
+      const curveBottomToRightUpdated = `Q${horizontalMidUpdated},${node2VerticalMid} ${
+        horizontalMidUpdated + 11
+      },${node2VerticalMid}`
+
+      finalSVGPath = `M${startPointLeft} L${horizontalMidUpdated - 20},${node1VerticalMid} ${curveLeftToTopUpdated}
+  L${horizontalMidUpdated},${node2VerticalMid - 20} ${curveBottomToRightUpdated} L${endPointLeft}`
+    } else if (options?.direction === 'rtr') {
+      const horizontalMidUpdated = (node1.right + node2.right) / 2
+      const curveRightToTop = `Q${horizontalMidUpdated},${node1VerticalMid} ${horizontalMidUpdated},${
+        node1VerticalMid - 20
+      }`
+      const endPointRight = `${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}`
+
+      const curveBottomToRight = `Q${horizontalMidUpdated},${node1VerticalMid - 27} ${horizontalMidUpdated + 20},${
+        node1VerticalMid - 27
+      }`
+
+      finalSVGPath = `M${startPoint} L${horizontalMidUpdated - 20},${node1VerticalMid} ${curveRightToTop}
+  L${horizontalMidUpdated},${node1VerticalMid - 20} ${curveBottomToRight} L${endPointRight}`
+    } else {
+      const curveLeftToTop = `Q${horizontalMid},${node1VerticalMid} ${horizontalMid},${node1VerticalMid - 20}`
+      const curveBottomToRight = `Q${horizontalMid},${node2VerticalMid} ${horizontalMid + 20},${node2VerticalMid}`
+      finalSVGPath = `M${startPoint} L${horizontalMid - 20},${node1VerticalMid} ${curveLeftToTop}
     L${horizontalMid},${node2VerticalMid + 20} ${curveBottomToRight} L${endPoint}`
+    }
   } else if (node1Y === node2Y) {
     // both nodes are at same level vertically
     if (options?.direction === 'ltl') {
@@ -92,26 +124,31 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
     }
   } else {
     //  child node is at bottom
-    const curveLeftToBottom = `Q${horizontalMid},${node1VerticalMid} ${horizontalMid},${node1VerticalMid + 20}`
-
-    const curveTopToRight = `Q${horizontalMid},${node2VerticalMid} ${horizontalMid + 20},${node2VerticalMid}`
-
     if (options?.isParallelNode) {
       const updatedStart = getScaledValue(node1.left, scalingFactor) - 45 // new start point
+      const updatedNode1VerticalMid = node1VerticalMid - (options?.isParentNodeStepGroup ? 30 : 0)
       const parallelLinkStart = `${
         updatedStart // half of link length
-      },${node1VerticalMid}`
+      },${updatedNode1VerticalMid}`
 
-      const curveLBparallel = `Q${updatedStart + 20},${node1VerticalMid} ${updatedStart + 20},${node1VerticalMid + 20} `
-      const curveTRparallel = `Q${updatedStart + 20},${node2VerticalMid} ${updatedStart + 40},${node2VerticalMid}`
+      const curveLBparallel = `Q${updatedStart + 20},${updatedNode1VerticalMid} ${updatedStart + 20},${
+        updatedNode1VerticalMid + 20
+      } `
+      const curveBRparallel = `Q${updatedStart + 20},${node2VerticalMid} ${updatedStart + 40},${node2VerticalMid}`
 
-      const firstCurve = `M${parallelLinkStart}
+      const leftPath = `M${parallelLinkStart}
       ${curveLBparallel}
       L${updatedStart + 20},${node2VerticalMid - 20}
-      ${curveTRparallel}
+      ${curveBRparallel}
       L${getScaledValue(node1.left, scalingFactor)},${node2VerticalMid}`
 
-      let secondCurve = ''
+      if (options?.skipParallelRightPath) {
+        return {
+          [id1]: { pathData: leftPath, dataProps: options?.dataProps }
+        }
+      }
+
+      let rightPath = ''
       if (options?.nextNode && options?.parentNode) {
         const nextNode = getComputedPosition(options.nextNode, options?.parentElement)
         const parentNode = getComputedPosition(options.parentNode, options?.parentElement)
@@ -128,31 +165,57 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
           scalingFactor
         )
         const nextNodeVerticalMid = getScaledValue(nextNode.top + nextNode.height / 2, scalingFactor)
-
-        secondCurve = `M${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}
+        const updatedNextNodeVerticalMid = nextNodeVerticalMid - (options?.isParentNodeStepGroup ? 10 : 0)
+        rightPath = `M${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}
         L${newRight + 10},${node2VerticalMid}
         Q${newRight + 25},${node2VerticalMid} ${newRight + 25},${node2VerticalMid - 20}
         L${newRight + 25},${nextNodeVerticalMid + 20}
-        Q${newRight + 25},${nextNodeVerticalMid} ${newRight + 40},${nextNodeVerticalMid}`
+        Q${newRight + 25},${updatedNextNodeVerticalMid} ${
+          newRight + 40 + (options?.isParentNodeStepGroup ? 5 : 0)
+        },${updatedNextNodeVerticalMid}`
       } else {
-        secondCurve = `M${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}
+        const updatedNode1VerticalMid1 = node1VerticalMid - (options?.isParentNodeStepGroup ? 10 : 0)
+        rightPath = `M${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}
         L${getScaledValue(node2.right, scalingFactor) + 10},${node2VerticalMid}
         Q${getScaledValue(node2.right, scalingFactor) + 25},${node2VerticalMid} ${
           getScaledValue(node2.right, scalingFactor) + 25
         },${node2VerticalMid - 20}
         L${getScaledValue(node2.right, scalingFactor) + 25},${node1VerticalMid + 20}
-        Q${getScaledValue(node2.right, scalingFactor) + 25},${node1VerticalMid} ${
-          getScaledValue(node2.right, scalingFactor) + 40
-        },${node1VerticalMid}`
+        Q${getScaledValue(node2.right, scalingFactor) + 25},${updatedNode1VerticalMid1} ${
+          getScaledValue(node2.right, scalingFactor) + 40 + (options?.isParentNodeStepGroup ? 5 : 0)
+        },${updatedNode1VerticalMid1}`
       }
-      finalSVGPath = firstCurve + secondCurve
+
       return {
-        [id1]: { pathData: firstCurve, dataProps: options?.dataProps },
-        [id2]: { pathData: secondCurve, dataProps: options?.dataProps }
+        [id1]: { pathData: leftPath, dataProps: options?.dataProps },
+        [id2]: { pathData: rightPath, dataProps: options?.dataProps }
       }
     } else {
-      finalSVGPath = `M${startPoint} L${horizontalMid - 20},${node1VerticalMid} ${curveLeftToBottom}
+      const curveLeftToBottom = `Q${horizontalMid},${node1VerticalMid} ${horizontalMid},${node1VerticalMid + 20}`
+      const curveTopToRight = `Q${horizontalMid},${node2VerticalMid} ${horizontalMid + 20},${node2VerticalMid}`
+
+      if (options?.direction === 'ltl') {
+        const startPointLeft = `${node1.left},${node1VerticalMid}`
+        const endPointLeft = `${node2.left},${node2VerticalMid}`
+        const horizontalMidUpdated = (node1.left + node2.left) / 2
+        const curveLeftToBottomUpdated = `Q${horizontalMidUpdated},${node1VerticalMid} ${horizontalMidUpdated},${
+          node1VerticalMid + 11
+        }`
+
+        const curveTopToRightUpdated = `Q${horizontalMidUpdated},${node2VerticalMid} ${
+          horizontalMidUpdated + 11
+        },${node2VerticalMid}`
+
+        finalSVGPath = `M${startPointLeft} L${horizontalMidUpdated - 20},${node1VerticalMid} ${curveLeftToBottomUpdated}
+    L${horizontalMidUpdated},${node2VerticalMid - 20} ${curveTopToRightUpdated} L${endPointLeft}`
+      } else if (options?.direction === 'rtr') {
+        const endPointRight = `${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}`
+        finalSVGPath = `M${startPoint} L${horizontalMid - 20},${node1VerticalMid} ${curveLeftToBottom}
+    L${horizontalMid},${node2VerticalMid - 20} ${curveTopToRight} L${endPointRight}`
+      } else {
+        finalSVGPath = `M${startPoint} L${horizontalMid - 20},${node1VerticalMid} ${curveLeftToBottom}
     L${horizontalMid},${node2VerticalMid - 20} ${curveTopToRight} L${endPoint}`
+      }
     }
   }
   return { [id1]: { pathData: finalSVGPath, dataProps: options?.dataProps } }
@@ -178,7 +241,7 @@ const getComputedPosition = (childId: string | HTMLElement, parentElement?: HTML
       top: getScaledValue(updatedTop, 1),
       right: getScaledValue(updatedRight, 1),
       bottom: updatedBottom,
-      width: childPos.height,
+      width: childPos.width,
       height: childPos.height,
       x: childPos.x,
       y: childPos.y
@@ -244,19 +307,45 @@ const setupDragEventListeners = (draggableParent: HTMLElement, overlay: HTMLElem
   }
 }
 
-const getSVGLinksFromPipeline = (
-  states?: PipelineGraphState[],
-  parentElement?: HTMLDivElement,
-  resultArr: SVGPathRecord[] = [],
-  endNodeId?: string,
+const getSVGLinksFromPipeline = ({
+  states,
+  parentElement,
+  resultArr = [],
+  endNodeId,
+  scalingFactor,
+  isStepGroup = false
+}: {
+  states?: PipelineGraphState[]
+  parentElement?: HTMLDivElement
+  resultArr?: SVGPathRecord[]
+  endNodeId?: string
   scalingFactor?: number
-): SVGPathRecord[] => {
+  isStepGroup?: boolean
+}): SVGPathRecord[] => {
   let prevElement: PipelineGraphState
 
   states?.forEach((state, index) => {
     if (state?.children?.length) {
-      const nextNodeId = states?.[index + 1]?.id || endNodeId
-      getParallelNodeLinks(state?.children, state, resultArr, parentElement, nextNodeId, state.id, scalingFactor)
+      let nextNodeId = states?.[index + 1]?.id || endNodeId
+      const hasRightNode = !!nextNodeId
+      if (!nextNodeId && ['StepGroup', 'STEP_GROUP'].includes(state?.type)) {
+        // pass parentElementID (parent of children == parent stepGroup and not parallel top) if child sole node inside stepGroup
+        const el = document.getElementById(state?.id)
+        nextNodeId = el?.closest('.stepGroupNode')?.id
+      }
+      getParallelNodeLinks({
+        stages: state?.children,
+        firstStage: state,
+        resultArr,
+        parentElement,
+        nextNode: nextNodeId,
+        parentNode: state.id,
+        scalingFactor,
+        isFirstSGChild: index === 0,
+        // skip computing the right path of the parallel nodes if there's no right node
+        // and when not inside step group
+        skipParallelRightPath: !hasRightNode && !isStepGroup
+      })
     }
     if (prevElement) {
       resultArr.push(
@@ -275,26 +364,47 @@ const getSVGLinksFromPipeline = (
   return resultArr
 }
 
-const getParallelNodeLinks = (
-  stages: PipelineGraphState[],
-  firstStage: PipelineGraphState | undefined,
-  resultArr: SVGPathRecord[] = [],
-  parentElement?: HTMLDivElement,
-  nextNode?: string,
-  parentNode?: string,
+const getParallelNodeLinks = ({
+  stages,
+  firstStage,
+  resultArr = [],
+  parentElement,
+  nextNode,
+  parentNode,
+  scalingFactor,
+  skipParallelRightPath,
+  isFirstSGChild = false
+}: {
+  stages: PipelineGraphState[]
+  firstStage: PipelineGraphState | undefined
+  resultArr: SVGPathRecord[]
+  parentElement?: HTMLDivElement
+  nextNode?: string
+  parentNode?: string
   scalingFactor?: number
-): void => {
+  isFirstSGChild?: boolean
+  skipParallelRightPath?: boolean
+}): void => {
   stages?.forEach(stage => {
+    const checkParentElementCollapsed =
+      document.getElementById(firstStage?.id as string)?.dataset.collapsednode === 'true'
+    const isParentNodeStepGroup =
+      ['StepGroup', 'STEP_GROUP'].includes(firstStage?.type as string) &&
+      firstStage?.data?.isNestedGroup &&
+      isFirstSGChild &&
+      !checkParentElementCollapsed
     resultArr.push(
       getFinalSVGArrowPath(firstStage?.id as string, stage?.id, {
         isParallelNode: true,
+        skipParallelRightPath,
         parentElement,
         nextNode,
         parentNode,
         scalingFactor,
         dataProps: {
           'data-link-executed': String(stage.status !== ExecutionStatusEnum.NotStarted)
-        }
+        },
+        isParentNodeStepGroup
       })
     )
   })
@@ -333,6 +443,7 @@ interface GetPipelineGraphDataParams {
   errorMap?: Map<string, string[]>
   parentPath?: string
   graphDataType?: PipelineGraphType
+  isNestedGroup?: boolean
 }
 const getPipelineGraphData = ({
   data = [],
@@ -340,7 +451,8 @@ const getPipelineGraphData = ({
   serviceDependencies,
   errorMap,
   parentPath,
-  graphDataType
+  graphDataType,
+  isNestedGroup
 }: GetPipelineGraphDataParams): PipelineGraphState[] => {
   let graphState: PipelineGraphState[] = []
   const pipGraphDataType = graphDataType ? graphDataType : getPipelineGraphDataType(data)
@@ -348,7 +460,7 @@ const getPipelineGraphData = ({
   if (pipGraphDataType === PipelineGraphType.STAGE_GRAPH) {
     graphState = transformStageData(data, pipGraphDataType, templateTypes, errorMap, parentPath)
   } else {
-    graphState = transformStepsData(data, pipGraphDataType, templateTypes, errorMap, parentPath)
+    graphState = transformStepsData(data, pipGraphDataType, templateTypes, errorMap, parentPath, 0, isNestedGroup)
 
     if (Array.isArray(serviceDependencies)) {
       //CI module
@@ -468,7 +580,8 @@ const transformStepsData = (
   templateTypes?: KVPair,
   errorMap?: Map<string, string[]>,
   parentPath?: string,
-  offsetIndex = 0
+  offsetIndex = 0,
+  isNestedGroup = false
 ): PipelineGraphState[] => {
   const finalData: PipelineGraphState[] = []
 
@@ -501,7 +614,8 @@ const transformStepsData = (
             : step.step?.when
             ? step.step?.when?.stageStatus !== 'Success' || !!step.step?.when?.condition?.trim()
             : false,
-          isTemplateNode: Boolean(templateRef)
+          isTemplateNode: Boolean(templateRef),
+          isNestedGroup
         },
         children: (step?.step as any)?.children
           ? transformStepsData((step?.step as any)?.children, graphType, templateTypes, errorMap, updatedStagetPath, 1)
@@ -526,6 +640,7 @@ const transformStepsData = (
           icon: iconName,
           data: {
             ...first,
+            isNestedGroup,
             isInComplete: isCustomGeneratedString(first.stepGroup?.identifier) || hasErrors,
             loopingStrategyEnabled: !!first.stepGroup?.strategy,
             graphType
@@ -561,6 +676,7 @@ const transformStepsData = (
               ? first.step?.when?.stageStatus !== 'Success' || !!first.step?.when?.condition?.trim()
               : false,
             isTemplateNode: Boolean(templateRef),
+            isNestedGroup,
             graphType
           },
           children: transformStepsData(rest, graphType, templateTypes, errorMap, updatedStagetPath, 1)
@@ -583,6 +699,7 @@ const transformStepsData = (
           icon: iconName,
           data: {
             ...step,
+            isNestedGroup,
             type: 'StepGroup',
             nodeType: 'StepGroup',
             icon: iconName,
@@ -620,6 +737,7 @@ const transformStepsData = (
               ? stepData?.when?.stageStatus !== 'Success' || !!stepData?.when?.condition?.trim()
               : false,
             graphType,
+            isNestedGroup,
             isInComplete: isCustomGeneratedString(stepData?.identifier as string) || hasErrors
           }
         })

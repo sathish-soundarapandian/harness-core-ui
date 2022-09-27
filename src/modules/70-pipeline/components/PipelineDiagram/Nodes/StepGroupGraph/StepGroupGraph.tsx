@@ -7,11 +7,10 @@
 
 import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import cx from 'classnames'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { DiagramType, Event } from '@pipeline/components/Diagram'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { isNodeTypeMatrixOrFor } from '@pipeline/utils/executionUtils'
 import { useDeepCompareEffect } from '@common/hooks'
 import { SVGComponent } from '../../PipelineGraph/PipelineGraph'
 import { PipelineGraphRecursive } from '../../PipelineGraph/PipelineGraphNode'
@@ -23,7 +22,6 @@ import {
 import type { GetNodeMethod, NodeDetails, NodeIds, PipelineGraphState, SVGPathRecord } from '../../types'
 import { NodeType } from '../../types'
 import GraphConfigStore from '../../PipelineGraph/GraphConfigStore'
-import { getCalculatedStepNodeStyles } from '../MatrixStepNode/MatrixStepNode'
 import { Dimension, Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
 import css from './StepGroupGraph.module.scss'
 
@@ -45,83 +43,67 @@ interface StepGroupGraphProps {
   readonly?: boolean
   hideLinks?: boolean
   hideAdd?: boolean
+  setVisibilityOfAdd: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-interface LayoutStyles extends Dimension {
+interface LayoutStyles extends Pick<Dimension, 'height' | 'width'> {
   marginLeft?: string
-}
-
-const getNestedStepGroupHeight = (steps?: any[]): number => {
-  let maxParalellNodesCount = 0
-  steps?.forEach(step => {
-    if (step?.parallel) {
-      maxParalellNodesCount = Math.max(maxParalellNodesCount, step.parallel.length)
-    }
-  })
-  return maxParalellNodesCount
 }
 
 const getCalculatedStyles = (data: PipelineGraphState[], childrenDimensions: Dimensions): LayoutStyles => {
   let width = 0
   let height = 0
   let maxChildLength = 0
-  let hasStepGroupNode = false
   let finalHeight = 0
   data.forEach(node => {
-    const childSteps = get(node, 'data.step.data.stepGroup.steps') || get(node, 'data.stepGroup.steps')
-    const childrenNodesId = defaultTo(node?.children, []).map(o => o.id)
-    const childNodesId = [node.id, ...childrenNodesId]
+    const childrenNodesId = defaultTo(node?.children, []).map(o => o.id) // list of all parallel nodes of current node
+    const childNodesId = [node.id, ...childrenNodesId] // node + all parallel nodes id list
 
     if (childrenDimensions[node.id]) {
+      // stepGroup child dimension from context
       let nodeHeight = 0
       let nodeWidth = 0
       childNodesId.forEach((childNode, index) => {
-        const dimension = childrenDimensions[childNode]
-        nodeHeight += dimension?.height || 0
-        nodeWidth = Math.max(nodeWidth, dimension?.width || 0)
+        // check all parallel nodes
+        const dimensionMetaData = childrenDimensions[childNode]
 
-        nodeHeight += index > 0 ? 120 : 0 //nodeGap
+        let hh = dimensionMetaData?.height + (dimensionMetaData?.isNodeCollapsed ? 0 : 68) // padding for StepGroupNode
+        let ww = dimensionMetaData?.width + (dimensionMetaData?.isNodeCollapsed ? 0 : 82) // padding for StepGroupNode
+
+        if (dimensionMetaData?.type === 'matrix') {
+          hh += 45
+          ww -= 20
+        }
+        nodeHeight += hh || 0 // height added for all child (68 -> padding of StepGroupNode)
+        nodeWidth = Math.max(nodeWidth, ww || 0) // width is max of all child nodes
+
+        nodeHeight += index > 0 ? 120 : 20 //nodeGap for parallel nodes
       })
+      if (node.children?.length && data.length > 0) {
+        width += 40 // for parallel node -> parallel link joint
+      }
 
-      height = Math.max(height, nodeHeight) + 40 //(each node)
-      width = width + nodeWidth + 125 + 40 // gap
+      height = Math.max(height, nodeHeight) //+ 40 //(each node)
+      width = width + nodeWidth + 80 //+ 40 // gap
+      finalHeight = Math.max(finalHeight, height)
     } else {
-      if (node.type === 'STEP_GROUP') {
-        hasStepGroupNode = true
-      }
-      const maxParallelism = defaultTo(node?.data?.maxParallelism, node?.data?.step?.data?.maxParallelism) || 1
+      let nodeHeight = 0
+      let nodeWidth = 0
+      childNodesId.forEach((childNode, index) => {
+        const dimensionMetaData = childrenDimensions[childNode]
+        const hh = dimensionMetaData?.height ? dimensionMetaData?.height + 68 : 138
+        const ww = dimensionMetaData?.width ? dimensionMetaData?.width + 82 + (index > 0 ? 80 : 0) : 150
+        nodeHeight += hh
+        nodeWidth = Math.max(nodeWidth, ww)
+      })
+      width += nodeWidth + 10
 
-      if (isNodeTypeMatrixOrFor(node.type)) {
-        const dimensions = getCalculatedStepNodeStyles(childSteps, maxParallelism, false)
-        width += dimensions.width
-        height += dimensions.height
-      } else if (childSteps) {
-        const count = getNestedStepGroupHeight(childSteps)
-        maxChildLength = Math.max(maxChildLength, count)
-        width += childSteps.length * 170
-      }
-      if (node.children?.length && data.length > 1) {
-        let nodeWidth = 0
-        node.children?.map(childNode => {
-          if (childrenDimensions[childNode.id]) {
-            const dimension = childrenDimensions[childNode.id]
-            let nodeHeight = 0
-            nodeHeight += dimension?.height || 0
-            nodeWidth = Math.max(nodeWidth, dimension?.width || 0)
-            nodeHeight += 120 //nodeGap
-
-            height = Math.max(height, nodeHeight) + 40 //(each node)
-          }
-        })
-        width = Math.max(width, nodeWidth) + 40 // gap
-      }
-      width += 150
       maxChildLength = Math.max(maxChildLength, node?.children?.length || 0)
-      finalHeight = Math.max(height, (maxChildLength + 1) * 140)
+      finalHeight = Math.max(finalHeight, nodeHeight)
     }
   })
-  finalHeight = hasStepGroupNode ? finalHeight + 50 : finalHeight
-  return { height: finalHeight + height, width: width - 80 } // 80 is link gap that we dont need for last stepgroup node
+
+  return { height: finalHeight, width: width - 80 } // 80 is link gap that we dont need for last stepgroup node
 }
 
 function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
@@ -154,7 +136,8 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
           templateTypes: templateTypes,
           serviceDependencies: undefined,
           errorMap: errorMap,
-          parentPath: `${stagePath}.stage.spec.execution.steps.stepGroup.steps` //index after step missing - getStepPathFromPipeline??
+          parentPath: `${stagePath}.stage.spec.execution.steps.stepGroup.steps`, //index after step missing - getStepPathFromPipeline??
+          isNestedGroup: true
         })
       )
     }
@@ -177,7 +160,13 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   useLayoutEffect(() => {
     if (state?.length) {
       props?.updateGraphLinks?.()
-      updateDimensions?.({ [props?.id as string]: layoutStyles })
+      updateDimensions?.({
+        [props?.id as string]: {
+          ...layoutStyles,
+          type: 'STEP_GROUP',
+          isNodeCollapsed: props?.isNodeCollapsed
+        }
+      })
     }
   }, [layoutStyles])
 
@@ -189,11 +178,18 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
     if (props.hideLinks) {
       return
     }
-    /* direction is required to connect internal nodes to step group terminals */
-    const SVGLinks = getSVGLinksFromPipeline(state, undefined, undefined, undefined, graphScale)
+    const SVGLinks = getSVGLinksFromPipeline({
+      states: state,
+      parentElement: undefined,
+      resultArr: undefined,
+      endNodeId: undefined,
+      scalingFactor: graphScale,
+      isStepGroup: true
+    })
     const firstNodeIdentifier = state?.[0]?.id
     const lastNodeIdentifier = state?.[state?.length - 1]?.id
     const parentElement = graphRef.current?.querySelector('#tree-container') as HTMLDivElement
+    /* direction is required to connect internal nodes to step group terminals */
     const finalPaths = [
       ...SVGLinks,
       getFinalSVGArrowPath(props?.id, firstNodeIdentifier as string, {
@@ -214,7 +210,21 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
     updateTreeRect()
   }, [])
   return (
-    <div className={css.main} style={layoutStyles} ref={graphRef}>
+    <div
+      className={css.main}
+      style={layoutStyles}
+      data-stepGroup-name={props?.identifier}
+      data-stepGroup-id={props?.id}
+      ref={graphRef}
+      onMouseEnter={e => {
+        e.stopPropagation()
+        props.setVisibilityOfAdd?.(false)
+      }}
+      onMouseOut={e => {
+        e.stopPropagation()
+        props.setVisibilityOfAdd?.(false)
+      }}
+    >
       <SVGComponent svgPath={svgPath} className={cx(css.stepGroupSvg)} />
       {props?.data?.length ? (
         <>

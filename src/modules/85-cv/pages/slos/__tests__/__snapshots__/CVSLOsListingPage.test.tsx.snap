@@ -88,12 +88,26 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
           </div>
         </div>
       </div>
-      <h3
-        class="StyledProps--font StyledProps--font-h3 StyledProps--main StyledProps--font-variation-h4"
-        level="3"
+      <div
+        class="Layout--vertical StyledProps--main"
       >
-        cv.slos.title
-      </h3>
+        <div
+          class="Text--withDocsTooltip"
+          data-tooltip-id="sloHeader"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+          >
+            cv.slos.completeTitle
+          </p>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-align-left StyledProps--font-size-small"
+          title="cv.slos.subTitle"
+        >
+          cv.slos.subTitle
+        </p>
+      </div>
     </div>
   </div>
   <div
@@ -145,7 +159,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
         class="Layout--horizontal StyledProps--main sloFiltersRow1"
       >
         <div
-          class="StyledProps--font StyledProps--main"
+          class="StyledProps--font StyledProps--main StyledProps--flex"
         >
           <div
             class="Layout--horizontal StyledProps--main sloFilters"
@@ -347,6 +361,39 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               </div>
             </div>
           </div>
+          <div
+            class="bp3-input-group ui-search-box ExpandingSearchInput--main    ExpandingSearchInput--light"
+            data-name=""
+            style="max-width: 250px;"
+          >
+            <span
+              class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+              data-icon="thinner-search"
+            >
+              <svg
+                fill="none"
+                height="14"
+                viewBox="0 0 16 16"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <input
+              class="bp3-input  ExpandingSearchInput--filter"
+              dir="auto"
+              placeholder="cv.slos.searchSLO"
+              style="padding-right: 0px;"
+              type="search"
+              value=""
+            />
+          </div>
         </div>
       </div>
       <div
@@ -359,7 +406,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
         >
           <div
             class="Layout--horizontal StyledProps--main sloCardSelectContainer"
-            data-test-id="CV.SLOS.TOTALSERVICES_tooltip"
+            data-test-id="cv.slos.totalServices_tooltip"
             style="height: 76px;"
           >
             <div
@@ -367,11 +414,11 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               style="width: 56px;"
             >
               <span
-                class="bp3-icon StyledProps--main"
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
                 data-icon="grid"
               >
                 <svg
-                  fill="none"
+                  fill="currentColor"
                   height="30"
                   viewBox="0 0 16 16"
                   width="30"
@@ -461,7 +508,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="CV.SLOS.TOTALSERVICES_tooltip"
+                data-tooltip-id="cv.slos.totalServices_tooltip"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-form-help"
@@ -470,7 +517,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 </p>
               </div>
               <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-h2"
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h2"
               >
                 3
               </p>
@@ -484,7 +531,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
         >
           <div
             class="Layout--horizontal StyledProps--main sloCardSelectContainer"
-            data-test-id="HEALTHY_tooltip"
+            data-test-id="Healthy_tooltip"
             style="height: 76px;"
           >
             <div
@@ -492,7 +539,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               style="width: 56px;"
             >
               <span
-                class="bp3-icon bp3-icon-heart StyledProps--main"
+                class="bp3-icon bp3-icon-heart StyledProps--main StyledProps--color StyledProps--color-white"
                 icon="heart"
               >
                 <svg
@@ -516,7 +563,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="HEALTHY_tooltip"
+                data-tooltip-id="Healthy_tooltip"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-form-help"
@@ -525,7 +572,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 </p>
               </div>
               <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-green500 StyledProps--font-variation-h2"
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h2"
               >
                 2
               </p>
@@ -723,7 +770,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                   title="HEALTHY"
                 >
                   <span
-                    class="bp3-icon bp3-icon-heart StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+                    class="bp3-icon bp3-icon-heart StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-white"
                     icon="heart"
                   >
                     <svg
@@ -764,7 +811,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main errorBudgetRemaining StyledProps--font-variation-small"
                     >
-                      60m
+                      60 m
                     </p>
                   </div>
                 </div>
@@ -788,9 +835,9 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
               >
                 <p
                   class="StyledProps--font StyledProps--main titleInSloTable StyledProps--font-align-left StyledProps--font-size-normal StyledProps--font-weight-semi-bold"
-                  title="90.00%"
+                  title="0.00%"
                 >
-                  90.00
+                  0.00
                   %
                 </p>
               </div>

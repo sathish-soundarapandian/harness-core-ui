@@ -177,7 +177,9 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                             label={''}
                                             defaultValueToReset={''}
                                             style={{ flexGrow: 1, marginBottom: 0, marginTop: 0 }}
-                                            disableTypeSelection={false}
+                                            disableTypeSelection={
+                                              multiTypeFieldSelectorProps.disableTypeSelection || false
+                                            }
                                             changed={changed}
                                             supportListOfExpressions={true}
                                             defaultType={getMultiTypeFromValue(

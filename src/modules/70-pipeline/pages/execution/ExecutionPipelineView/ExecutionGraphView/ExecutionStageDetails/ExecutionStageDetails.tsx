@@ -227,8 +227,6 @@ export default function ExecutionStageDetails(props: ExecutionStageDetailsProps)
 
   // NOTE: check if we show stop node when stage has paused status
   const showEndNode = !(isExecutionRunning(stage?.status) || isExecutionPaused(stage?.status))
-
-  processExecutionDataV1(pipelineExecutionDetail?.executionGraph)
   return (
     <div className={cx(css.main, css.stepGroup)} data-layout={props.layout}>
       {!isEmpty(selectedStageId) && data.items?.length > 0 && (

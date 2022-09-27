@@ -13,7 +13,6 @@ import {
   FormikForm,
   FormInput,
   Label,
-  getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
   SelectOption,
@@ -36,14 +35,13 @@ import { FileUsage } from '@filestore/interfaces/FileStore'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { JsonNode } from 'services/pipeline-ng'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
-import { Connectors } from '@connectors/constants'
+import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
 import css from './DeploymentInfraSpecifications.module.scss'
 
-enum VariableType {
+export enum VariableType {
   String = 'String',
   Secret = 'Secret',
   Number = 'Number',
@@ -61,6 +59,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const infraAllowableTypes: AllowedTypesWithRunTime[] = [MultiTypeInputType.FIXED]
+  const { connectorsList } = useGetConnectorsListHook()
 
   const scriptType: ScriptType = 'Bash'
   const instanceScriptTypes = React.useMemo(
@@ -118,8 +117,8 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
               ]}
               isDescriptionEnabled={true}
               enableValidation={true}
-              allowedConnectorTypes={Object.values(Connectors)}
-              addVariableLabel={getString('variables.newVariable')}
+              allowedConnectorTypes={connectorsList}
+              addVariableLabel={'variables.newVariable'}
             />
           </Layout.Horizontal>
         </Layout.Vertical>
@@ -131,7 +130,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
         headerClassName={css.headerText}
       >
         <div>
-          <Layout.Horizontal flex={{ alignItems: 'flex-start' }} margin={{ bottom: 'medium' }}>
+          <Layout.Horizontal flex={{ alignItems: 'flex-start' }} margin={{ top: 'medium', bottom: 'medium' }}>
             {fetchInstanceScriptType === InstanceScriptTypes.Inline && (
               <div className={css.halfWidth}>
                 <MultiTypeFieldSelector
@@ -140,7 +139,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                   defaultValueToReset=""
                   disabled={isReadOnly}
                   allowedTypes={infraAllowableTypes}
-                  disableTypeSelection={isReadOnly}
+                  disableTypeSelection={true} // to hide type selection as only fixed value allowed
                   skipRenderValueInExpressionLabel
                   expressionRender={() => {
                     return (
@@ -160,22 +159,6 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                     expressions={expressions}
                   />
                 </MultiTypeFieldSelector>
-                {getMultiTypeFromValue(formValues.fetchInstancesScript?.store?.spec?.content) ===
-                  MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={formValues.fetchInstancesScript?.store?.spec?.content as string}
-                    type="String"
-                    variableName="fetchInstancesScript.store.spec.content"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={
-                      /* istanbul ignore next */ value =>
-                        setFieldValue('fetchInstancesScript.store.spec.content', value)
-                    }
-                    isReadonly={isReadOnly}
-                  />
-                )}
               </div>
             )}
             {fetchInstanceScriptType === InstanceScriptTypes.FileStore && (
@@ -188,10 +171,11 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                 fileUsage={FileUsage.SCRIPT}
                 values={formValues?.fetchInstancesScript?.store?.spec?.files || ['']}
                 multiTypeFieldSelectorProps={{
-                  disableTypeSelection: false,
+                  disableTypeSelection: true,
                   label: fetchScriptWidgetTitle
                 }}
                 addFileLabel={getString('common.plusNewName', { name: getString('common.file') })}
+                restrictToSingleEntry={true}
               />
             )}
           </Layout.Horizontal>
@@ -234,7 +218,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
         <MultiTypeFieldSelector
           name="instanceAttributes"
           label=""
-          defaultValueToReset={[{ name: 'hostName', jsonPath: '', description: '', id: uuid() }]}
+          defaultValueToReset={[{ name: 'hostname', jsonPath: '', description: '', id: uuid() }]}
           disableTypeSelection
         >
           <FieldArray
@@ -250,8 +234,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
                       {getString('pipeline.customDeployment.jsonPathRelativeLabel')}
                     </Text>
                     <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
-                      {getString('description')}
-                      {getString('common.optionalLabel')}
+                      {`${getString('description')} ${getString('common.optionalLabel')}`}
                     </Text>
                   </div>
 

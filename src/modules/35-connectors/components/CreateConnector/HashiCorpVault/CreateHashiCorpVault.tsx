@@ -15,7 +15,7 @@ import {
   GIT_TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { buildVaultPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import SetupEngine from './views/SetupEngine'
@@ -73,7 +73,7 @@ const CreateHashiCorpVault: React.FC<CreateConnectorModalProps> = props => {
         orgIdentifier={props.orgIdentifier}
         projectIdentifier={props.projectIdentifier}
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep

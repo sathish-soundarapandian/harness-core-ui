@@ -58,8 +58,8 @@ describe('Create WinRm Cred Wizard Step Verify', () => {
       clickSubmit(container)
     })
 
-    const verifyRetestBtn = queryByText(container, 'secrets.createSSHCredWizard.verifyRetest')
-    expect(verifyRetestBtn).toBeDefined()
+    const verifyRetestBtn = queryByText(container, 'retry')
+    expect(verifyRetestBtn).toBeTruthy()
     if (verifyRetestBtn) fireEvent.click(verifyRetestBtn)
 
     expect(container).toMatchSnapshot()

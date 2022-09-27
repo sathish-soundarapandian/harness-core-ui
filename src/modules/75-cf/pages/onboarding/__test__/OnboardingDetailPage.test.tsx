@@ -13,7 +13,6 @@ import mockImport from 'framework/utils/mockImport'
 import { OnboardingDetailPage } from '../OnboardingDetailPage'
 import { CreateAFlagView } from '../views/CreateAFlagView'
 import { SetUpYourApplicationView } from '../views/SetUpYourApplicationView'
-import { TestYourFlagView } from '../views/TestYourFlagView'
 import { SelectEnvironmentView } from '../views/SelectEnvironmentView'
 
 jest.mock('@common/hooks/useTelemetry', () => ({
@@ -184,60 +183,6 @@ describe('OnboardingDetailPage', () => {
           }}
           setApiKey={jest.fn()}
           setEnvironmentIdentifier={jest.fn()}
-        />
-      </TestWrapper>
-    )
-
-    expect(container).toMatchSnapshot()
-  })
-
-  test('TestYourFlagViewView', () => {
-    mockImport('@cf/hooks/useEnvironmentSelectV2', {
-      useEnvironmentSelectV2: () => ({
-        loading: true,
-        refetch: jest.fn(),
-        EnvironmentSelect: <div />,
-        environments: [
-          {
-            accountId: 'harness',
-            identifier: 'foo',
-            name: 'bar',
-            type: 'Production'
-          }
-        ]
-      })
-    })
-
-    const { container } = render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <TestYourFlagView
-          flagInfo={{
-            project: 'dummy',
-            name: 'test-flag',
-            identifier: 'test_flag',
-            kind: 'boolean',
-            archived: false,
-            variations: [
-              { identifier: 'true', name: 'True', value: 'true' },
-              { identifier: 'false', name: 'False', value: 'false' }
-            ],
-            defaultOnVariation: 'true',
-            defaultOffVariation: 'false',
-            permanent: false
-          }}
-          language={SupportPlatforms[1]}
-          apiKey={{
-            name: 'xxx-xxx-xxx',
-            apiKey: 'xxx-xxx-xxx',
-            identifier: 'xxx-xxx-xxx',
-            type: 'server'
-          }}
-          environmentIdentifier="foo-123-bar"
-          testDone={false}
-          setTestDone={jest.fn()}
         />
       </TestWrapper>
     )

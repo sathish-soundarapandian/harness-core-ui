@@ -9,18 +9,33 @@
   box-shadow: none !important;
 
   :global {
+    .connectorVariableField {
+      [data-test-id='connectorTooltip'] {
+        margin-bottom: 0 !important;
+      }
+      :global(.bp3-form-content) > div {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+    }
+
     .customVariables {
       padding-left: 0;
       padding-right: 0;
       margin-left: 0;
       margin-right: 0;
       border: none;
+
+      :global(.bp3-form-group) {
+        margin-bottom: 0 !important;
+      }
     }
   }
 }
 
 .customVariablesContainer {
   background: none !important;
+  width: 100%;
 }
 
 .hostObjectArrayPathInputContainer {

@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly arrow: string
+  readonly btn: string
   readonly buildImg: string
   readonly buildYourOwnPipeline: string
   readonly buttonRow: string

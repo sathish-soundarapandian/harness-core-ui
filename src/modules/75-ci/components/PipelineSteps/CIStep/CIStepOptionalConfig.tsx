@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { useParams, useLocation } from 'react-router-dom'
-import { isEmpty, startCase, get } from 'lodash-es'
+import { isEmpty, startCase, get, set, uniq } from 'lodash-es'
 import cx from 'classnames'
 import {
   Container,
@@ -40,6 +40,7 @@ import {
   useGitScope
 } from '@pipeline/utils/CIUtils'
 import { ConnectorRefWidth, sslVerifyOptions } from '@pipeline/utils/constants'
+import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { ArchiveFormatOptions } from '../../../constants/Constants'
 import {
@@ -68,8 +69,20 @@ export interface CIStepOptionalConfigProps {
 
 export const PathnameParams = {
   PIPELINE_STUDIO: 'pipeline-studio',
-  TEMPLATE_STUDIO: 'template-studio'
+  TEMPLATE_STUDIO: 'template-studio',
+  INPUT_SETS: 'input-sets'
 }
+
+// adding additional keys should also be added to stageHelpers.ts ignoreKeys
+// to prevent Input Set page Save re-assigning key/empty value as key/<+input> value
+const MapComponentFieldNames = {
+  SETTINGS: 'spec.settings',
+  ENV_VARIABLES: 'spec.envVariables',
+  PORT_BINDINGS: 'spec.portBindings',
+  LABELS: 'spec.labels',
+  BUILD_ARGS: 'spec.buildArgs'
+}
+
 export const getOptionalSubLabel = (
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   tooltip?: string
@@ -210,10 +223,68 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
   const pathnameParams = useLocation()?.pathname?.split('/') || []
   // Fields dependent on VM infra will always appear in Template Studio
   const isTemplateStudio = pathnameParams.includes(PathnameParams.TEMPLATE_STUDIO)
+  const isPipelineStudio = pathnameParams.includes(PathnameParams.PIPELINE_STUDIO)
+  const isInputSetsPage = pathnameParams.includes(PathnameParams.INPUT_SETS)
   // applying template should allow editing and all runtime inputs
   const isApplyingTemplate =
     isInputSetView && (pathnameParams.includes(PathnameParams.PIPELINE_STUDIO) || isTemplateStudio)
   const stepCss = stepViewType === StepViewType.DeploymentForm ? css.sm : css.lg
+  const { selectedInputSetsContext } = usePipelineVariables()
+  const [registeredMaps, setRegisteredMaps] = React.useState<string[]>([])
+  const [registeredPrefixes, setRegisteredPrefixes] = React.useState<string[]>([])
+  const hasAppliedInputSet = typeof selectedInputSetsContext !== 'undefined' && selectedInputSetsContext?.length > 0
+
+  // All optional values that have a map structure should never be defaulted with ""
+  // and instead set to {} once pipeline api completes
+  React.useEffect(() => {
+    if (isInputSetsPage && !isEmpty(formik?.values?.pipeline)) {
+      const newFormikValues = { ...formik.values }
+      let shouldUpdate = false
+      const registeredMapFields: string[] = []
+      Object.values(MapComponentFieldNames).forEach(fieldName => {
+        const fieldNamePath = `${prefix}${fieldName}`
+        registeredMapFields.push(fieldNamePath)
+        if (get(newFormikValues, fieldNamePath) === '') {
+          shouldUpdate = true
+          set(newFormikValues, fieldNamePath, {})
+        } else if (!isEmpty(get(newFormikValues, fieldNamePath)) && registeredMaps.includes(fieldNamePath)) {
+          // address race condition with maps
+          shouldUpdate = true
+        }
+      })
+      if (!registeredPrefixes.includes(prefix)) {
+        // address race condition for maps w/ different prefixes (multiple steps)
+        shouldUpdate = true
+      }
+      if (shouldUpdate) {
+        formik.setValues({ ...newFormikValues })
+        setRegisteredMaps(uniq([...registeredMaps, ...registeredMapFields]))
+        setRegisteredPrefixes(uniq([...registeredPrefixes, prefix]))
+      }
+    }
+  }, [formik?.values?.pipeline])
+
+  React.useEffect(() => {
+    if (isPipelineStudio && formik?.values) {
+      const newFormikValues = { ...formik.values }
+      let shouldUpdate = false
+      const registeredMapFields: string[] = []
+      Object.values(MapComponentFieldNames).forEach(fieldName => {
+        const fieldNamePath = `${prefix}${fieldName}`
+        registeredMapFields.push(fieldNamePath)
+        if (get(newFormikValues, fieldNamePath) === '') {
+          shouldUpdate = true
+          set(newFormikValues, fieldNamePath, {})
+        }
+      })
+      if (shouldUpdate) {
+        formik.setValues({ ...newFormikValues })
+        setRegisteredMaps(uniq([...registeredMaps, ...registeredMapFields]))
+        setRegisteredPrefixes(uniq([...registeredPrefixes, prefix]))
+      }
+    }
+  }, [])
+
   const renderMultiTypeMap = React.useCallback(
     ({
       fieldName,
@@ -261,7 +332,6 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
     ),
     [expressions]
   )
-
   const renderMultiTypeMapInputSet = React.useCallback(
     ({
       fieldName,
@@ -269,7 +339,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       tooltipId,
       keyLabel,
       valueLabel,
-      restrictToSingleEntry
+      restrictToSingleEntry,
+      appliedInputSetValue
     }: {
       fieldName: string
       stringKey: keyof StringsMap
@@ -277,6 +348,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       keyLabel?: keyof StringsMap
       valueLabel?: keyof StringsMap
       restrictToSingleEntry?: boolean
+      appliedInputSetValue?: { [key: string]: string }
     }): React.ReactElement => (
       <Container className={cx(css.formGroup, css.bottomMargin5)}>
         <MultiTypeMapInputSet
@@ -302,10 +374,12 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           keyLabel={keyLabel ? getString(keyLabel) : ''}
           valueLabel={valueLabel ? getString(valueLabel) : ''}
           restrictToSingleEntry={restrictToSingleEntry}
+          isApplyingTemplate={isApplyingTemplate}
+          appliedInputSetValue={appliedInputSetValue}
         />
       </Container>
     ),
-    [expressions, readonly, formik]
+    [expressions, readonly, formik?.setFieldValue, registeredMaps] // do not add formik?.values otherwise will re-render after every key-press
   )
 
   const renderMultiTypeTextField = React.useCallback(
@@ -543,12 +617,13 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           })}
         </div>
       )}
-      {get(enableFields, 'spec.settings')
+      {get(enableFields, MapComponentFieldNames.SETTINGS)
         ? isInputSetView
           ? renderMultiTypeMapInputSet({
               fieldName: `${prefix}spec.settings`,
               stringKey: 'settingsLabel',
-              tooltipId: 'pluginSettings'
+              tooltipId: 'pluginSettings',
+              appliedInputSetValue: hasAppliedInputSet && get(formik?.values, `${prefix}spec.settings`)
             })
           : renderMultiTypeMap({
               fieldName: `${prefix}spec.settings`,
@@ -604,9 +679,13 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               })}
         </Container>
       )}
-      {get(enableFields, 'spec.envVariables')
+      {get(enableFields, MapComponentFieldNames.ENV_VARIABLES)
         ? isInputSetView
-          ? renderMultiTypeMapInputSet({ fieldName: `${prefix}spec.envVariables`, stringKey: 'environmentVariables' })
+          ? renderMultiTypeMapInputSet({
+              fieldName: `${prefix}spec.envVariables`,
+              stringKey: 'environmentVariables',
+              appliedInputSetValue: hasAppliedInputSet && get(formik?.values, `${prefix}spec.envVariables`)
+            })
           : renderMultiTypeMap({
               fieldName: `${prefix}spec.envVariables`,
               stringKey: 'environmentVariables',
@@ -661,7 +740,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               })}
         </Container>
       )}
-      {get(enableFields, 'spec.portBindings')
+      {get(enableFields, MapComponentFieldNames.PORT_BINDINGS)
         ? isInputSetView
           ? renderMultiTypeMapInputSet({
               fieldName: `${prefix}spec.portBindings`,
@@ -669,7 +748,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               tooltipId: 'portBindings',
               keyLabel: 'ci.hostPort',
               valueLabel: 'ci.containerPort',
-              restrictToSingleEntry: true
+              restrictToSingleEntry: true,
+              appliedInputSetValue: hasAppliedInputSet && get(formik?.values, `${prefix}spec.portBindings`)
             })
           : renderMultiTypeMap({
               fieldName: `${prefix}spec.portBindings`,
@@ -725,20 +805,25 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           })}
         </Container>
       )}
-      {get(enableFields, 'spec.labels')
+      {get(enableFields, MapComponentFieldNames.LABELS)
         ? isInputSetView
-          ? renderMultiTypeMapInputSet({ fieldName: `${prefix}spec.labels`, stringKey: 'pipelineSteps.labelsLabel' })
+          ? renderMultiTypeMapInputSet({
+              fieldName: `${prefix}spec.labels`,
+              stringKey: 'pipelineSteps.labelsLabel',
+              appliedInputSetValue: hasAppliedInputSet && get(formik?.values, `${prefix}spec.labels`)
+            })
           : renderMultiTypeMap({
               fieldName: `${prefix}spec.labels`,
               stringKey: 'pipelineSteps.labelsLabel',
               allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
             })
         : null}
-      {get(enableFields, 'spec.buildArgs')
+      {get(enableFields, MapComponentFieldNames.BUILD_ARGS)
         ? isInputSetView
           ? renderMultiTypeMapInputSet({
               fieldName: `${prefix}spec.buildArgs`,
-              stringKey: 'pipelineSteps.buildArgsLabel'
+              stringKey: 'pipelineSteps.buildArgsLabel',
+              appliedInputSetValue: hasAppliedInputSet && get(formik?.values, `${prefix}spec.buildArgs`)
             })
           : renderMultiTypeMap({
               fieldName: `${prefix}spec.buildArgs`,

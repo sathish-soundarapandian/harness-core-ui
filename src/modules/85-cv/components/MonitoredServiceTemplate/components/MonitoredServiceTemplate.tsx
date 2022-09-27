@@ -8,7 +8,7 @@
 import React from 'react'
 import type { IconName } from '@wings-software/uicore'
 import { Template } from '@templates-library/components/AbstractTemplate/Template'
-import { TemplateType } from '@templates-library/utils/templatesUtils'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import MonitoredServiceInputSetsTemplate from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
 import { Scope } from '@common/interfaces/SecretsInterface'
@@ -26,6 +26,7 @@ export class MonitoredServiceTemplate extends Template {
     fill: '#E4F7E1'
   }
   protected isRemoteEnabled = false
+  protected allowedUsage = [TemplateUsage.USE]
 
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
     return <MonitoredTemplateCanvasWithRef ref={formikRef} />

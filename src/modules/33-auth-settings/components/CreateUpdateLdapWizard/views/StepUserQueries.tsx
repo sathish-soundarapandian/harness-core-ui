@@ -22,10 +22,11 @@ import {
   FormInput,
   Intent
 } from '@harness/uicore'
+import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   LdapUserSettings,
@@ -35,7 +36,13 @@ import {
 } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CreateUpdateLdapWizardProps, LdapWizardStepProps } from '../CreateUpdateLdapWizard'
-import { QueryFormTitle, QueryStepTitle, QueryTestFailMsgs, QueryTestSuccessMsg } from '../utils'
+import {
+  getErrorMessageFromException,
+  QueryFormTitle,
+  QueryStepTitle,
+  QueryTestFailMsgs,
+  QueryTestSuccessMsg
+} from '../utils'
 import css from '../CreateUpdateLdapWizard.module.scss'
 
 export interface StepUserQueriesProps {
@@ -45,6 +52,7 @@ export interface StepUserQueriesProps {
 
 interface UserQueryPreviewProps {
   index: number
+  displayIndex: number
   customClass?: string
 }
 
@@ -93,6 +101,7 @@ const UserQueryEdit: React.FC<
   emailAttr,
   groupMembershipAttr,
   index,
+  displayIndex,
   customClass,
   onUserQueryCommitEdit,
   onUserQueryDiscardEdit,
@@ -101,9 +110,42 @@ const UserQueryEdit: React.FC<
   const { getString } = useStrings()
   const userQueryFormRef = useRef<FormikProps<LdapUserSettings>>(null)
   const [userQueryTestResult, setUserQueryTestResult] = useState<React.ReactNode | undefined>()
+  enum useryQueryFields {
+    BASE_DN = 'baseDN',
+    SEARCH_FILTER = 'searchFilter',
+    DISPLAY_NAME_ATTR = 'displayNameAttr',
+    EMAIL_ATTR = 'emailAttr',
+    GROUP_MEMBERSHIP_ATTR = 'groupMembershipAttr'
+  }
+  const userQueryValidationSchema = Yup.object().shape({
+    [useryQueryFields.BASE_DN]: Yup.string().trim().required(getString('authSettings.ldap.baseDNRequired')),
+    [useryQueryFields.SEARCH_FILTER]: Yup.string().trim().required(getString('authSettings.ldap.searchFilterRequired')),
+    [useryQueryFields.DISPLAY_NAME_ATTR]: Yup.string()
+      .trim()
+      .required(getString('authSettings.ldap.nameAttributesRequired')),
+    [useryQueryFields.EMAIL_ATTR]: Yup.string().trim().required(getString('authSettings.ldap.emailAttributesRequired')),
+    [useryQueryFields.GROUP_MEMBERSHIP_ATTR]: Yup.string()
+      .trim()
+      .required(getString('authSettings.ldap.groupMembershipAttributesRequired'))
+  })
   const testUserQuery = async (): Promise<void> => {
     try {
       setUserQueryTestResult(undefined)
+      if (!userQueryFormRef.current) {
+        return
+      }
+      userQueryFormRef.current.setTouched({
+        ...userQueryFormRef.current.touched,
+        [useryQueryFields.BASE_DN]: true,
+        [useryQueryFields.SEARCH_FILTER]: true,
+        [useryQueryFields.DISPLAY_NAME_ATTR]: true,
+        [useryQueryFields.EMAIL_ATTR]: true,
+        [useryQueryFields.GROUP_MEMBERSHIP_ATTR]: true
+      })
+      const userQueryFormValidation = await userQueryFormRef.current.validateForm()
+      if (!isEmpty(userQueryFormValidation)) {
+        return
+      }
       const result = await onTestUserQuery((userQueryFormRef.current as FormikProps<LdapUserSettings>).values)
       if (result.resource?.status === 'SUCCESS') {
         setUserQueryTestResult(<QueryTestSuccessMsg message={getString('authSettings.ldap.queryTestSuccessful')} />)
@@ -125,9 +167,7 @@ const UserQueryEdit: React.FC<
     } catch (e: any) /* istanbul ignore next */ {
       setUserQueryTestResult(
         <QueryTestFailMsgs
-          errorMessages={defaultTo(e.data?.responseMessages, [
-            { level: 'ERROR', message: e.data?.message || e.message }
-          ])}
+          errorMessages={getErrorMessageFromException(e, getString('authSettings.ldap.queryTestFail'))}
         />
       )
     }
@@ -141,10 +181,11 @@ const UserQueryEdit: React.FC<
         onSubmit={formData => {
           onUserQueryCommitEdit(formData, index)
         }}
+        validationSchema={userQueryValidationSchema}
       >
         <FormikForm>
           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
-            <QueryFormTitle title={getString('authSettings.ldap.userQueryTitle', { index: index + 1 })} />
+            <QueryFormTitle title={getString('authSettings.ldap.userQueryTitle', { index: displayIndex })} />
             <Container className={css.queryCtaContainer} flex={{ alignItems: 'center' }}>
               <Button
                 text={getString('test')}
@@ -225,6 +266,7 @@ const UserQueryPreview: React.FC<
   emailAttr,
   groupMembershipAttr,
   index,
+  displayIndex,
   customClass,
   onDeleteUserQuery,
   onEnableUserQueryDraftMode
@@ -235,7 +277,7 @@ const UserQueryPreview: React.FC<
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
         <Text font={{ variation: FontVariation.H5 }}>
           <Icon name="chevron-down" color={Color.PRIMARY_6} margin={{ right: 'small' }} />
-          {getString('authSettings.ldap.userQueryTitle', { index: index + 1 })}
+          {getString('authSettings.ldap.userQueryTitle', { index: displayIndex })}
         </Text>
         <Container className={css.queryCtaContainer}>
           <Button
@@ -362,7 +404,7 @@ export const StepUserQueries: React.FC<
   }
 
   const onUserQueriesSave = (): void => {
-    /** This is to preserve any uncommitted changes on step change */
+    /** MapFilter is to ignore any uncommitted changes on step change */
     updateStepData(
       userSettingsList
         .filter(userSetting => !userSetting.isNewSetting)
@@ -394,7 +436,7 @@ export const StepUserQueries: React.FC<
       accountId: accountId
     })
   }
-  const UserQueryListPreview = userSettingsList?.map((userSetting, userQueryIdx) => {
+  const UserQueryListPreview = userSettingsList?.map((userSetting, userQueryIdx, userSettingsArr) => {
     if (userSetting.isDraft) {
       return (
         <UserQueryEdit
@@ -405,6 +447,7 @@ export const StepUserQueries: React.FC<
           onUserQueryCommitEdit={onUserQueryCommitEdit}
           onUserQueryDiscardEdit={onUserQueryDiscardEdit}
           onTestUserQuery={onTestUserQuery}
+          displayIndex={userSettingsArr.length - userQueryIdx}
         />
       )
     }
@@ -416,6 +459,7 @@ export const StepUserQueries: React.FC<
         customClass={css.queryPreviewItem}
         onEnableUserQueryDraftMode={onEnableUserQueryDraftMode}
         onDeleteUserQuery={onDeleteUserQuery}
+        displayIndex={userSettingsArr.length - userQueryIdx}
       />
     )
   })
@@ -446,7 +490,10 @@ export const StepUserQueries: React.FC<
       </Layout.Vertical>
       <Layout.Horizontal className={css.stepCtaContainer}>
         <Button
-          onClick={() => props.previousStep?.()}
+          onClick={() => {
+            onUserQueriesSave()
+            props.previousStep?.()
+          }}
           text={getString('back')}
           icon="chevron-left"
           margin={{ right: 'small' }}

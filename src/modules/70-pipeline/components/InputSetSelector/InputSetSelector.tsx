@@ -24,6 +24,7 @@ import { useToaster } from '@common/exports'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
+import { usePipelineVariables } from '../PipelineVariablesContext/PipelineVariablesContext'
 import type { InputSetValue } from './utils'
 import { MultipleInputSetList } from './MultipleInputSetList'
 import { RenderValue } from './RenderValue'
@@ -83,6 +84,7 @@ export function InputSetSelector({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   useEffect(() => setSelectedInputSets(defaultTo(value, [])), [value])
+  const { setSelectedInputSetsContext } = usePipelineVariables()
 
   const getGitQueryParams = React.useCallback(() => {
     if (!isEmpty(selectedRepo) && !isEmpty(selectedBranch)) {
@@ -157,6 +159,7 @@ export function InputSetSelector({
         selected.splice(selected.indexOf(removedItem), 1)
       }
       setSelectedInputSets(selected)
+      setSelectedInputSetsContext?.(selected)
     },
     [selectedInputSets]
   )

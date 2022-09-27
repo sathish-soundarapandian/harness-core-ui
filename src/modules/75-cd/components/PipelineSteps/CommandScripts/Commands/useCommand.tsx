@@ -13,7 +13,13 @@ import type { AllowedTypes } from '@harness/uicore'
 import { HideModal, useModalHook } from '@harness/use-modal'
 
 import { useStrings } from 'framework/strings'
-import { CommandType, CommandUnitType, CustomScriptCommandUnit, CopyCommandUnit } from '../CommandScriptsTypes'
+import {
+  CommandType,
+  CommandUnitType,
+  CustomScriptCommandUnit,
+  CopyCommandUnit,
+  DownloadArtifactCommandUnit
+} from '../CommandScriptsTypes'
 import { CommandEdit } from './CommandEdit'
 
 interface OpenCommandModalArgs {
@@ -57,6 +63,17 @@ export default function useCommands(props: UseImportResourceProps): UseImportRes
         }
       }
     }
+
+    if (commandData.type === CommandType.DownloadArtifact) {
+      const downloadArtifactCommandData = commandData as DownloadArtifactCommandUnit
+      return {
+        ...downloadArtifactCommandData,
+        spec: {
+          destinationPath: downloadArtifactCommandData.spec.destinationPath
+        }
+      }
+    }
+
     const scriptCommandData = commandData as CustomScriptCommandUnit
     return {
       ...scriptCommandData,
@@ -67,7 +84,8 @@ export default function useCommands(props: UseImportResourceProps): UseImportRes
           type: scriptCommandData.spec.source.type,
           spec: {
             type: scriptCommandData.spec.source.spec.type,
-            script: scriptCommandData.spec.source.spec.script
+            script: scriptCommandData.spec.source.spec.script,
+            file: scriptCommandData.spec.source.spec.file
           }
         },
         tailFiles: scriptCommandData.spec.tailFiles
@@ -92,6 +110,7 @@ export default function useCommands(props: UseImportResourceProps): UseImportRes
     const { isUpdate = false, initialModalValues, updateIndex, arrayHelpers } = args
     setAllArrayHelpers(arrayHelpers)
     setIsEdit(isUpdate)
+
     if (!isUndefined(updateIndex)) {
       setEditIndex(updateIndex)
     }

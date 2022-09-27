@@ -45,7 +45,9 @@ describe('<TemplateInputsWrapper /> tests', () => {
       </TestWrapper>
     )
     expect(TemplateInputsMock).toBeCalledWith(
-      { template: { ...stepTemplateMock, repo: 'repoIdentifier', branch: 'branch' } },
+      {
+        template: { ...stepTemplateMock, repo: 'repoIdentifier', branch: 'branch' }
+      },
       expect.anything()
     )
   })

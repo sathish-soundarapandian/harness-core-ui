@@ -201,7 +201,10 @@ export const ScriptWizardStepTwo = ({
               <div className={css.scriptWizard}>
                 {
                   /* istanbul ignore next */
-                  !!(connectionType === GitRepoName.Account) && (
+                  !!(
+                    connectionType === GitRepoName.Account &&
+                    getMultiTypeFromValue(prevStepData?.connectorRef) === MultiTypeInputType.FIXED
+                  ) && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
                         multiTextInputProps={{ expressions, allowableTypes }}

@@ -11,6 +11,5 @@ declare const styles: {
   readonly disabled: string
   readonly selected: string
   readonly stageAddIcon: string
-  readonly stepAddIcon: string
 }
 export default styles

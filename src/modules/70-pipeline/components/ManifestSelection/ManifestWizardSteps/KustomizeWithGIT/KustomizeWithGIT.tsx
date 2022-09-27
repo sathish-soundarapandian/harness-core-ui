@@ -30,8 +30,6 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { KustomizeWithGITDataType } from '../../ManifestInterface'
 import {
   gitFetchTypeList,
@@ -69,7 +67,6 @@ function KustomizeWithGIT({
   isReadonly = false
 }: StepProps<ConnectorConfigDTO> & KustomizeWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
-  const isOptimizeFetchFilesEnabled = useFeatureFlag(FeatureFlag.NG_OPTIMIZE_FETCH_FILES_KUSTOMIZE)
 
   const kustomizeYamlFolderPath = get(initialValues, 'spec.overlayConfiguration.kustomizeYamlFolderPath', '')
   const isActiveAdvancedStep: boolean =
@@ -127,7 +124,7 @@ function KustomizeWithGIT({
         identifier: formData.identifier,
         type: ManifestDataType.Kustomize,
         spec: {
-          ...(isOptimizeFetchFilesEnabled && formData.optimizedKustomizeManifestCollection
+          ...(formData.optimizedKustomizeManifestCollection
             ? {
                 overlayConfiguration: {
                   kustomizeYamlFolderPath: formData.kustomizeYamlFolderPath
@@ -423,7 +420,7 @@ function KustomizeWithGIT({
                   summary={getString('advancedTitle')}
                   details={
                     <>
-                      {isOptimizeFetchFilesEnabled && (
+                      {
                         <Layout.Vertical margin={{ bottom: 'small' }}>
                           <FormInput.CheckBox
                             name="optimizedKustomizeManifestCollection"
@@ -459,7 +456,7 @@ function KustomizeWithGIT({
                             </Layout.Horizontal>
                           )}
                         </Layout.Vertical>
-                      )}
+                      }
 
                       <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
                         <FormMultiTypeCheckboxField

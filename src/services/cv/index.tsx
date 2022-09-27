@@ -654,6 +654,7 @@ export interface CVConfig {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'CLOUDWATCH_METRICS'
   uuid?: string
   verificationTaskTags?: {
     [key: string]: string
@@ -814,6 +815,24 @@ export interface ChangeTimeline {
   categoryTimeline?: {
     [key: string]: TimeRangeDetail[]
   }
+}
+
+export interface CloudWatchMetricDefinition {
+  analysis?: AnalysisDTO
+  expression?: string
+  groupName?: string
+  identifier: string
+  metricName: string
+  responseMapping?: MetricResponseMapping
+  riskProfile?: RiskProfile
+  sli?: Slidto
+}
+
+export type CloudWatchMetricsHealthSourceSpec = HealthSourceSpec & {
+  feature: string
+  metricDefinitions?: CloudWatchMetricDefinition[]
+  metricThresholds?: TimeSeriesMetricPackDTO[]
+  region: string
 }
 
 export interface Cluster {
@@ -1050,6 +1069,11 @@ export interface DataCollectionRequest {
     | 'DYNATRACE_SAMPLE_DATA_REQUEST'
     | 'DYNATRACE_METRIC_LIST_REQUEST'
     | 'SPLUNK_METRIC_SAMPLE_DATA'
+    | 'ELK_SAMPLE_DATA'
+    | 'ELK_INDEX_DATA'
+    | 'CLOUDWATCH_METRIC_SAMPLE_DATA_REQUEST'
+    | 'CLOUDWATCH_METRIC_DATA_REQUEST'
+    | 'CLOUDWATCH_METRICS_METADATA_REQUEST'
 }
 
 export interface DataCollectionTask {
@@ -2376,6 +2400,7 @@ export interface HealthSource {
     | 'CustomHealthMetric'
     | 'CustomHealthLog'
     | 'SplunkMetric'
+    | 'CloudWatchMetrics'
 }
 
 export interface HealthSourceDTO {
@@ -2396,6 +2421,7 @@ export interface HealthSourceDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'CLOUDWATCH_METRICS'
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
@@ -2833,6 +2859,13 @@ export interface LogsAnalysisSummary {
   totalClusterCount?: number
 }
 
+export interface MSDropdownResponse {
+  environmentRef?: string
+  identifier: string
+  name: string
+  serviceRef?: string
+}
+
 export interface MessageFrequency {
   count?: number
   host?: string
@@ -2906,6 +2939,7 @@ export interface MetricPack {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'CLOUDWATCH_METRICS'
   identifier?: string
   lastUpdatedAt?: number
   metrics?: MetricDefinition[]
@@ -2932,6 +2966,7 @@ export interface MetricPackDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'CLOUDWATCH_METRICS'
   identifier?: string
   metrics?: MetricDefinitionDTO[]
   orgIdentifier?: string
@@ -3320,6 +3355,16 @@ export interface PageLogAnalysisClusterDTO {
 
 export interface PageLogAnalysisRadarChartListDTO {
   content?: LogAnalysisRadarChartListDTO[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageMSDropdownResponse {
+  content?: MSDropdownResponse[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -3751,6 +3796,15 @@ export interface ResponseListTimeSeriesSampleDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseMap {
+  correlationId?: string
+  data?: {
+    [key: string]: { [key: string]: any }
+  }
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseMessage {
   code?:
     | 'DEFAULT_ERROR_CODE'
@@ -4161,6 +4215,13 @@ export interface ResponsePageCVNGLogDTO {
 export interface ResponsePageDatadogDashboardDTO {
   correlationId?: string
   data?: PageDatadogDashboardDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageMSDropdownResponse {
+  correlationId?: string
+  data?: PageMSDropdownResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5416,6 +5477,7 @@ export interface TimeSeriesMetricDataDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'CLOUDWATCH_METRICS'
   environmentIdentifier?: string
   groupName?: string
   metricDataList?: MetricData[]
@@ -5431,12 +5493,13 @@ export interface TimeSeriesMetricDefinition {
   action?: 'FAIL_IMMEDIATELY' | 'FAIL_AFTER_OCCURRENCES' | 'FAIL_AFTER_CONSECUTIVE_OCCURRENCES' | 'IGNORE'
   actionType?: 'IGNORE' | 'FAIL'
   comparisonType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   metricGroupName?: string
   metricIdentifier?: string
   metricName?: string
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
   occurrenceCount?: number
-  thresholdConfigType?: 'CUSTOMER' | 'DEFAULT'
+  thresholdConfigType?: 'DEFAULT' | 'USER_DEFINED' | 'CUSTOMER'
   thresholdType?: 'ACT_WHEN_LOWER' | 'ACT_WHEN_HIGHER'
   value?: number
 }
@@ -5517,6 +5580,8 @@ export interface TimeSeriesThreshold {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'CLOUDWATCH_METRICS'
+  deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
   metricGroupName?: string
   metricIdentifier: string
@@ -5525,13 +5590,14 @@ export interface TimeSeriesThreshold {
   metricType: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
   orgIdentifier: string
   projectIdentifier: string
-  thresholdConfigType?: 'CUSTOMER' | 'DEFAULT'
+  thresholdConfigType?: 'DEFAULT' | 'USER_DEFINED' | 'CUSTOMER'
   uuid?: string
 }
 
 export interface TimeSeriesThresholdCriteria {
   action?: 'FAIL_IMMEDIATELY' | 'FAIL_AFTER_OCCURRENCES' | 'FAIL_AFTER_CONSECUTIVE_OCCURRENCES' | 'IGNORE'
   criteria?: string
+  deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   occurrenceCount?: number
   type?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
 }
@@ -5555,6 +5621,7 @@ export interface TimeSeriesThresholdDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'CLOUDWATCH_METRICS'
   metricGroupName?: string
   metricName?: string
   metricPackIdentifier?: string
@@ -5613,6 +5680,7 @@ export interface TransactionMetricInfo {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'CLOUDWATCH_METRICS'
   nodeRiskCountDTO?: NodeRiskCountDTO
   nodes?: HostData[]
   transactionMetric?: TransactionMetric
@@ -5706,6 +5774,7 @@ export interface VerificationJob {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'CLOUDWATCH_METRICS'
   )[]
   defaultJob?: boolean
   duration?: Duration
@@ -8324,6 +8393,7 @@ export interface GetMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'CLOUDWATCH_METRICS'
 }
 
 export type GetMetricPacksProps = Omit<
@@ -8389,6 +8459,7 @@ export interface SaveMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'CLOUDWATCH_METRICS'
 }
 
 export type SaveMetricPacksProps = Omit<
@@ -11287,6 +11358,63 @@ export const saveSLODataPromise = (
     void
   >('POST', getConfig('cv/api'), `/slo`, props, signal)
 
+export interface GetSLOAssociatedMonitoredServicesQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  pageNumber?: number
+  pageSize?: number
+}
+
+export type GetSLOAssociatedMonitoredServicesProps = Omit<
+  GetProps<ResponsePageMSDropdownResponse, unknown, GetSLOAssociatedMonitoredServicesQueryParams, void>,
+  'path'
+>
+
+/**
+ * get all monitored services associated with the slos
+ */
+export const GetSLOAssociatedMonitoredServices = (props: GetSLOAssociatedMonitoredServicesProps) => (
+  <Get<ResponsePageMSDropdownResponse, unknown, GetSLOAssociatedMonitoredServicesQueryParams, void>
+    path={`/slo-dashboard/monitored-services`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSLOAssociatedMonitoredServicesProps = Omit<
+  UseGetProps<ResponsePageMSDropdownResponse, unknown, GetSLOAssociatedMonitoredServicesQueryParams, void>,
+  'path'
+>
+
+/**
+ * get all monitored services associated with the slos
+ */
+export const useGetSLOAssociatedMonitoredServices = (props: UseGetSLOAssociatedMonitoredServicesProps) =>
+  useGet<ResponsePageMSDropdownResponse, unknown, GetSLOAssociatedMonitoredServicesQueryParams, void>(
+    `/slo-dashboard/monitored-services`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get all monitored services associated with the slos
+ */
+export const getSLOAssociatedMonitoredServicesPromise = (
+  props: GetUsingFetchProps<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetSLOAssociatedMonitoredServicesQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageMSDropdownResponse, unknown, GetSLOAssociatedMonitoredServicesQueryParams, void>(
+    getConfig('cv/api'),
+    `/slo-dashboard/monitored-services`,
+    props,
+    signal
+  )
+
 export interface GetServiceLevelObjectivesRiskCountQueryParams {
   accountId: string
   orgIdentifier: string
@@ -11473,6 +11601,7 @@ export interface GetSLOHealthListViewQueryParams {
   errorBudgetRisks?: ('EXHAUSTED' | 'UNHEALTHY' | 'NEED_ATTENTION' | 'OBSERVE' | 'HEALTHY')[]
   pageNumber?: number
   pageSize?: number
+  filter?: string
 }
 
 export type GetSLOHealthListViewProps = Omit<

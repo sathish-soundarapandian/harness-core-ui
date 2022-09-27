@@ -61,21 +61,29 @@ interface DetailsStepInterface {
   validationRepo?: string
 }
 
+const helpPanelTypes = [
+  Connectors.GITHUB,
+  Connectors.GIT,
+  Connectors.BITBUCKET,
+  Connectors.GITLAB,
+  Connectors.AZURE_REPO
+]
+
 /**
  * Function to getTooltipAnchorForHeading
  */
 const getTooltipAnchorForHeading = (connectorType: ConnectorInfoDTO['type']): string => {
-  if (connectorType === 'Aws') {
+  if (connectorType === Connectors.AWS) {
     return 'awsCCDetailsTooltip'
-  } else if (connectorType === 'Git') {
+  } else if (connectorType === Connectors.GIT) {
     return 'gitConnectorDetailsTooltip'
-  } else if (connectorType === 'Github') {
+  } else if (connectorType === Connectors.GITHUB) {
     return 'githubConnectorDetailsTooltip'
-  } else if (connectorType === 'Bitbucket') {
+  } else if (connectorType === Connectors.BITBUCKET) {
     return 'bitbucketConnectorDetailsTooltip'
   } else if (connectorType === Connectors.AZURE_REPO) {
     return 'azureReposConnectorDetailsTooltip'
-  } else if (connectorType === 'Gitlab') {
+  } else if (connectorType === Connectors.GITLAB) {
     return 'gitlabConnectorDetailsTooltip'
   }
   return 'connectorDetailsTooltip'
@@ -93,7 +101,7 @@ const GitDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDetailsS
   const isEdit = props.isEditMode || prevStepData?.isEdit
   const { getString } = useStrings()
   let helpPanelReferenceId = ''
-  if (type === 'Github') {
+  if (helpPanelTypes.includes(type)) {
     helpPanelReferenceId = props.helpPanelReferenceId || ''
   }
   useConnectorWizard({

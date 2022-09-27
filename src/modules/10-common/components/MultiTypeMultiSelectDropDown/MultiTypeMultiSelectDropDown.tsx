@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import {
@@ -18,7 +18,11 @@ import {
   MultiSelectDropDown,
   MultiTypeInputType,
   MultiSelectDropDownProps,
-  getFormFieldLabel
+  getFormFieldLabel,
+  SelectOption,
+  FixedTypeComponentProps,
+  MultiSelectOption,
+  MultiTypeInputValue
 } from '@harness/uicore'
 import { get } from 'lodash-es'
 import cx from 'classnames'
@@ -28,6 +32,38 @@ import { useStrings } from 'framework/strings'
 
 import css from './MultiTypeMultiSelectDropDown.module.scss'
 
+export type MultiSelectDropDownFixedProps = FixedTypeComponentProps & MultiSelectDropDownProps
+
+export function MultiSelectDropDownFixed(props: MultiSelectDropDownFixedProps): React.ReactElement {
+  const { onChange, value, disabled, ...rest } = props
+  const [localValue, setLocalValue] = useState<MultiSelectOption[]>([])
+
+  useEffect(() => {
+    if (Array.isArray(value)) {
+      setLocalValue(value)
+    }
+  }, [value])
+
+  function handleChangeNoop(opts: MultiSelectOption[]): void {
+    setLocalValue(opts)
+  }
+
+  function handleChange(opts: MultiSelectOption[]): void {
+    onChange?.(opts as SelectOption[], MultiTypeInputValue.MULTI_SELECT_OPTION, MultiTypeInputType.FIXED)
+    rest.onPopoverClose?.(opts)
+  }
+
+  return (
+    <MultiSelectDropDown
+      {...rest}
+      value={localValue}
+      disabled={disabled}
+      onChange={handleChangeNoop}
+      onPopoverClose={handleChange}
+    />
+  )
+}
+
 export interface FormMultiTypeMultiSelectDropDownProps extends Omit<IFormGroupProps, 'label'> {
   label: string
   name: string
@@ -36,6 +72,7 @@ export interface FormMultiTypeMultiSelectDropDownProps extends Omit<IFormGroupPr
   tooltipProps?: DataTooltipInterface
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'name' | 'type' | 'value' | 'onChange'>
+  onChange?: (value: SelectOption[]) => void
 }
 
 export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelectDropDownProps): React.ReactElement {
@@ -48,6 +85,7 @@ export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelect
     tooltipProps,
     enableConfigureOptions,
     configureOptionsProps,
+    onChange,
     ...restProps
   } = props
   const { getString } = useStrings()
@@ -63,9 +101,14 @@ export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelect
     ...rest
   } = restProps
 
-  const handleChange: ExpressionAndRuntimeTypeProps['onChange'] = (val, _, valueType) => {
+  const handleChange: ExpressionAndRuntimeTypeProps['onChange'] = (val, _mutliType, valueType) => {
     formik.setFieldValue(name, valueType === MultiTypeInputType.EXPRESSION ? '' : val)
+    onChange?.(val as SelectOption[])
     setType(valueType)
+  }
+
+  function handleConfigChange(cvalue: string): void {
+    formik.setFieldValue(name, cvalue)
   }
 
   return (
@@ -85,11 +128,22 @@ export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelect
         onChange={handleChange}
         multitypeInputValue={type}
         className={cx(css.multitype, multiTypeProps?.className, { [css.hasError]: hasError })}
-        fixedTypeComponent={MultiSelectDropDown}
-        fixedTypeComponentProps={{ ...dropdownProps, value, className: cx(css.dropdown, dropdownProps.className) }}
+        fixedTypeComponent={MultiSelectDropDownFixed}
+        fixedTypeComponentProps={{
+          usePortal: true,
+          ...dropdownProps,
+          value,
+          className: cx(css.dropdown, dropdownProps.className)
+        }}
       />
       {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME ? (
-        <ConfigureOptions value={value} variableName={name} type={getString('service')} {...configureOptionsProps} />
+        <ConfigureOptions
+          value={value}
+          variableName={name}
+          type={getString('service')}
+          onChange={handleConfigChange}
+          {...configureOptionsProps}
+        />
       ) : null}
     </FormGroup>
   )

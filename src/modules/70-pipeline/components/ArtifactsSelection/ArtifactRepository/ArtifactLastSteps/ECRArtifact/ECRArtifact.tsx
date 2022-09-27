@@ -165,7 +165,11 @@ export function ECRArtifact({
   }, [])
 
   const getInitialValues = useCallback((): ImagePathTypes => {
-    const values = getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed)
+    const values = getArtifactFormData(
+      initialValues,
+      selectedArtifact as ArtifactType,
+      isIdentifierAllowed
+    ) as ImagePathTypes
     const specValues = get(initialValues, 'spec', null)
     if (getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED) {
       values.region = regions.find(regionData => regionData.value === specValues?.region)
