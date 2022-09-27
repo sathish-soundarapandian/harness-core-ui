@@ -24,7 +24,7 @@ import { useStrings, UseStringsReturn } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import type { EntityConfig } from '@freeze-windows/types'
 import { getInitialValuesForConfigSection, convertValuesToYamlObj } from './FreezeWindowStudioUtil'
-import { EnvironmentTypeRenderer, FIELD_KEYS } from './FreezeStudioConfigSectionRenderers'
+import { ServiceFieldRenderer, EnvironmentTypeRenderer, FIELD_KEYS } from './FreezeStudioConfigSectionRenderers'
 import css from './FreezeWindowStudio.module.scss'
 
 interface FreezeStudioConfigSectionProps {
@@ -71,9 +71,13 @@ const ConfigRenderer = ({
       {isEditView ? (
         <FormikForm>
           <FormInput.Text name={`entity[${index}].name`} label={getString('name')} />
+          <ServiceFieldRenderer
+            getString={getString}
+            name={`entity[${index}].${FIELD_KEYS.Service}`}
+            isDisabled={true}
+          />
           <EnvironmentTypeRenderer getString={getString} name={`entity[${index}].${FIELD_KEYS.EnvType}`} />
           <button onClick={setVisualView}>Save</button>
-          /* * env ENV: PROD * svg * pro * org * */
         </FormikForm>
       ) : (
         <div>

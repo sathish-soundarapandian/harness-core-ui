@@ -49,6 +49,7 @@ export interface StringsMap {
   'common.agents': string
   'common.allEnvironments': string
   'common.allErrors': string
+  'common.allServices': string
   'common.and': string
   'common.andCaps': string
   'common.annually': string

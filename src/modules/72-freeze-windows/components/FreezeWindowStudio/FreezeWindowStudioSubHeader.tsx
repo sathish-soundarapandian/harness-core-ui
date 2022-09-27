@@ -86,7 +86,7 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
   React.useEffect(() => {
     if (freezeIdentifier === DefaultFreezeId) {
       hideConfigModal()
-      showConfigModal()
+      // showConfigModal()
     }
   }, [freezeIdentifier, showConfigModal]) // freezeIdentifier
 

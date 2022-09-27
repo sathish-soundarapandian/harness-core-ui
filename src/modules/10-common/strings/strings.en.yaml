@@ -46,6 +46,7 @@ duplicateId: 'Duplicate Identifier'
 createPipeline: Create a Pipeline
 importFromGit: Import From Git
 allEnvironments: All Environments
+allServices: All Services
 production: Production
 preProduction: 'Pre-Production'
 addVariable: Add Variable
