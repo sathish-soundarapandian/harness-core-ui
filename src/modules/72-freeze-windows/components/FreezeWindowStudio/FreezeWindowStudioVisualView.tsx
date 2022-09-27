@@ -18,7 +18,7 @@ enum FreezeWindowTabs {
   SCHEDULE = 'SCHEDULE'
 }
 
-export const FreezeWindowStudioVisualView = () => {
+export const FreezeWindowStudioVisualView = ({ resources }) => {
   const { getString } = useStrings()
   const [selectedTabId, setSelectedTabId] = React.useState<FreezeWindowTabs>(FreezeWindowTabs.FREEZE_CONFIG)
 
@@ -56,6 +56,7 @@ export const FreezeWindowStudioVisualView = () => {
               isReadOnly={isReadOnly}
               onBack={() => setSelectedTabId(FreezeWindowTabs.OVERVIEW)}
               onNext={() => setSelectedTabId(FreezeWindowTabs.SCHEDULE)}
+              resources={resources}
             />
           }
           title={

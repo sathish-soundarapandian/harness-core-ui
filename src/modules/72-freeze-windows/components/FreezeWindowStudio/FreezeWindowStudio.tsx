@@ -13,6 +13,9 @@ import { isValidYaml } from '@freeze-windows/components/FreezeWindowStudio/Freez
 import { FreezeWindowStudioHeader } from './FreezeWindowStudioHeader'
 import { FreezeWindowStudioSubHeader } from './FreezeWindowStudioSubHeader'
 import { FreezeWindowStudioBody } from './FreezeWindowStudioBody'
+import { useFreezeStudioData } from '@freeze-windows/components/FreezeWindowStudio/useFreezeStudioData'
+import { useParams } from 'react-router-dom'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 export const FreezeWindowStudio = () => {
   const {
@@ -22,6 +25,9 @@ export const FreezeWindowStudio = () => {
     updateFreeze,
     state: { isYamlEditable, yamlHandler }
   } = React.useContext(FreezeWindowContext)
+  const { accountId } = useParams<ProjectPathProps>()
+
+  const resources = useFreezeStudioData({ accountId })
 
   // isYamlError
   const [, setYamlError] = React.useState(false)
@@ -56,7 +62,7 @@ export const FreezeWindowStudio = () => {
     <div>
       <FreezeWindowStudioHeader />
       <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
-      <FreezeWindowStudioBody />
+      <FreezeWindowStudioBody resources={resources} />
     </div>
   )
 }

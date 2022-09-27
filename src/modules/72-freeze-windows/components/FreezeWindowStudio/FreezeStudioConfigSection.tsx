@@ -55,7 +55,8 @@ const ConfigRenderer = ({
   index,
   updateFreeze,
   formikProps,
-  entityConfigs
+  entityConfigs,
+  resources
 }: ConfigRendererProps) => {
   const [isEditView, setEditView] = React.useState(isEdit)
   const setVisualView = () => {
@@ -81,10 +82,7 @@ const ConfigRenderer = ({
             namePrefix={`entity[${index}]`}
             values={formikProps.values?.entity?.[index]}
             setFieldValue={formikProps.setFieldValue}
-            organizations={[
-              { label: 'All', value: 'All' },
-              { label: 'All2', value: 'All2' }
-            ]}
+            organizations={resources.orgs}
           />
           <ServiceFieldRenderer
             getString={getString}
@@ -109,7 +107,7 @@ interface ConfigsSectionProps {
   getString: UseStringsReturn['getString']
   updateFreeze: (freeze: any) => void
 }
-const ConfigsSection = ({ entityConfigs, getString, updateFreeze }: ConfigsSectionProps) => {
+const ConfigsSection = ({ entityConfigs, getString, updateFreeze, resources }: ConfigsSectionProps) => {
   const [initialValues, setInitialValues] = React.useState(getInitialValuesForConfigSection(entityConfigs))
   React.useEffect(() => {
     setInitialValues(getInitialValuesForConfigSection(entityConfigs))
@@ -127,6 +125,7 @@ const ConfigsSection = ({ entityConfigs, getString, updateFreeze }: ConfigsSecti
             updateFreeze={updateFreeze}
             formikProps={formikProps}
             entityConfigs={entityConfigs}
+            resources={resources}
           />
         ))
       }
@@ -134,7 +133,7 @@ const ConfigsSection = ({ entityConfigs, getString, updateFreeze }: ConfigsSecti
   )
 }
 
-export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps> = ({ onNext, onBack }) => {
+export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps> = ({ onNext, onBack, resources }) => {
   const { getString } = useStrings()
   const {
     state: { freezeObj },
@@ -156,6 +155,7 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
           entityConfigs={entityConfigs as EntityConfig[]}
           getString={getString}
           updateFreeze={updateFreeze}
+          resources={resources}
         />
       </Card>
       <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>

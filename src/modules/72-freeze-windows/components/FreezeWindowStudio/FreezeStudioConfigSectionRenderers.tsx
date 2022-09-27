@@ -56,11 +56,17 @@ export const Organizationfield = ({ getString, namePrefix, organizations, values
   const isCheckBoxEnabled = orgValue === All
   const checkBoxName = `${namePrefix}.${FIELD_KEYS.ExcludeOrgCheckbox}`
   const excludeOrgName = `${namePrefix}.${FIELD_KEYS.ExcludeOrg}`
+  const [allOrgs, setAllOrgs] = React.useState([])
+  React.useEffect(() => {
+    if (organizations.length) {
+      setAllOrgs([{ label: 'All Organizations', value: All }, ...organizations])
+    }
+  }, [organizations])
   return (
     <>
       <FormInput.Select
         name={`${namePrefix}.${FIELD_KEYS.Org}`}
-        items={organizations}
+        items={allOrgs}
         label={getString('orgLabel')}
         onChange={(selected?: SelectOption) => {
           if (!(selected?.value === All)) {
