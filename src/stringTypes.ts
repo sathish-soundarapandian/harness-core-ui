@@ -3329,7 +3329,10 @@ export interface StringsMap {
   'pipeline.failureStrategies.strategiesLabel.Abort': string
   'pipeline.failureStrategies.strategiesLabel.Ignore': string
   'pipeline.failureStrategies.strategiesLabel.ManualIntervention': string
+  'pipeline.failureStrategies.strategiesLabel.MarkAsFail': string
   'pipeline.failureStrategies.strategiesLabel.MarkAsSuccess': string
+  'pipeline.failureStrategies.strategiesLabel.MarkedAsFail': string
+  'pipeline.failureStrategies.strategiesLabel.MarkedAsSuccess': string
   'pipeline.failureStrategies.strategiesLabel.Retry': string
   'pipeline.failureStrategies.strategiesLabel.StageRollback': string
   'pipeline.failureStrategies.tabHasErrors': string
@@ -3907,6 +3910,7 @@ export interface StringsMap {
   'pipeline.stepDescription.TerraformPlan': string
   'pipeline.stepDescription.TerraformRollback': string
   'pipeline.stepDescription.Verify': string
+  'pipeline.stepDescription.Wait': string
   'pipeline.stepDescription.createPR': string
   'pipeline.stepDescription.mergePR': string
   'pipeline.stepDetails': string
@@ -8445,6 +8449,10 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   editService: string
+  /**
+   * @deprecated migrate this string to module level file
+   */
+  elapsedTime: string
   /**
    * @deprecated migrate this string to module level file
    */
