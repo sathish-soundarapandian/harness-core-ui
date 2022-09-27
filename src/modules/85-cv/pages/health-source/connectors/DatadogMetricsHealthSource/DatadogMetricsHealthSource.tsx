@@ -86,9 +86,6 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const [selectedMetricId, setSelectedMetricId] = useState<string>()
   const selectedMetricData = metricHealthDetailsData.get(selectedMetricId || '')
-  const initialCustomCreatedMetrics = useMemo(() => {
-    return getCustomCreatedMetrics(data?.selectedMetrics || transformedData.metricDefinition)
-  }, [data?.selectedMetrics, transformedData.metricDefinition])
 
   const [metricThresholds, setMetricThresholds] = useState<MetricThresholdsState>({
     ignoreThresholds: transformedData.ignoreThresholds,
@@ -266,7 +263,7 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
       )
     }
     metricHealthDetailsData.set(selectedWidgetMetricData.id, metricInfo)
-    if (selectedMetricId) {
+    if (selectedMetricId && selectedMetricId !== selectedWidgetMetricData.id) {
       // save changes for previous metric
       metricHealthDetailsData.set(selectedMetricId, { ...selectedMetricData, ...formikProps.values })
     }
@@ -332,8 +329,15 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   const handleOnManualMetricDelete = (metricIdToBeDeleted: string): void => {
     metricHealthDetailsData.delete(metricIdToBeDeleted)
     setMetricHealthDetailsData(new Map(metricHealthDetailsData))
+    if (!metricHealthDetailsData.size) {
+      setSelectedMetricId('')
+    }
     setCurrentTimeseriesData(null)
   }
+
+  const initialCustomCreatedMetrics = useMemo(() => {
+    return getCustomCreatedMetrics(data?.selectedMetrics || metricHealthDetailsData)
+  }, [data?.selectedMetrics, metricHealthDetailsData])
 
   return (
     <Formik<DatadogMetricInfo>
@@ -358,7 +362,6 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
           formikValues: formikProps.values,
           setMappedMetrics: setMetricHealthDetailsData
         })
-
         const shouldShowIdentifierPlaceholder = !selectedMetricData?.identifier && !formikProps.values?.identifier
         if (shouldShowIdentifierPlaceholder) {
           formikProps.setFieldValue(

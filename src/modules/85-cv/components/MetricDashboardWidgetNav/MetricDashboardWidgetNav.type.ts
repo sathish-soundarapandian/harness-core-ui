@@ -39,6 +39,7 @@ export interface MetricDashboardWidgetNavProps<T> {
   addManualQueryTitle: StringKeys
   dashboardWidgetMapper: (dashboardId: string, item: T) => MetricWidget
   dashboardDetailsRequest: UseGetReturn<any, any, any>
+  renamedMetric?: string
   onDeleteManualMetric?: (id?: string) => void
 }
 

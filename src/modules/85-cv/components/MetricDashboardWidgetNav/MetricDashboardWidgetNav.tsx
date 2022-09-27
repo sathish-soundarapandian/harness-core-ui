@@ -271,7 +271,15 @@ function TreeNodeLabel(props: TreeNodeLabelProps): JSX.Element {
       >
         {label}
       </Text>
-      {onDelete && <Icon name="cross" onClick={() => onDelete(label as string)} />}
+      {onDelete && (
+        <Icon
+          name="cross"
+          onClick={e => {
+            e.stopPropagation()
+            onDelete(label as string)
+          }}
+        />
+      )}
     </Layout.Horizontal>
   )
 }
