@@ -6,11 +6,14 @@
  */
 
 import React from 'react'
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, prettyDOM, render } from '@testing-library/react'
 import { Connectors } from '@connectors/constants'
 import { TestWrapper } from '@common/utils/testUtils'
 import ElkHealthSource from '../ElkHealthSource'
-import { data, mockedElkIndicesData, mockedElkSampleData } from './ElkHealthSource.mock'
+import { data, mockedElkIndicesData, mockedElkSampleData, mockedElkTimeStampFormat } from './ElkHealthSource.mock'
+import userEvent from '@testing-library/user-event'
+import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
+import { Button } from '@harness/uicore'
 
 const onNextMock = jest.fn().mockResolvedValue(jest.fn())
 const onPrevious = jest.fn().mockResolvedValue(jest.fn())
@@ -27,6 +30,19 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', (
   }
 }))
 
+jest.mock(
+  '@cv/pages/health-source/connectors/ElkHealthSource/components/MapQueriesToHarnessService/ElkQueryBuilder',
+  () => ({
+    ElkQueryBuilder: function MockComponent(props: any) {
+      return (
+        <>
+          <Button onClick={props.onSubmit}>submit</Button>
+          <Button onClick={props.onPrevious}>previous</Button>
+        </>
+      )
+    }
+  })
+)
 jest.mock('services/cv', () => ({
   useGetELKLogSampleData: jest.fn().mockImplementation(() => ({
     data: mockedElkSampleData,
@@ -41,7 +57,7 @@ jest.mock('services/cv', () => ({
     refetch: jest.fn()
   })),
   useGetTimeFormat: jest.fn().mockImplementation(() => ({
-    data: [],
+    data: mockedElkTimeStampFormat,
     loading: false,
     error: null,
     refetch: jest.fn()
@@ -49,13 +65,16 @@ jest.mock('services/cv', () => ({
 }))
 
 describe('test ElkHealthsource', () => {
-  test('check snapshot', () => {
-    const { container, getByText } = render(
+  test('check snapshot', async () => {
+    const onSubmit = jest.fn()
+    const { getByText } = render(
       <TestWrapper>
-        <ElkHealthSource data={data} onSubmit={jest.fn()} />
+        <ElkHealthSource data={data} onSubmit={onSubmit} />
       </TestWrapper>
     )
+
     fireEvent.click(getByText('submit'))
-    expect(container).toMatchSnapshot()
+    fireEvent.click(getByText('previous'))
+    expect(onSubmit).toHaveBeenCalled()
   })
 })

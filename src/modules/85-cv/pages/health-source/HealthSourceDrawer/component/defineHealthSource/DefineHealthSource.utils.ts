@@ -126,8 +126,8 @@ export const getFeatureOption = (
     case HealthSourceTypes.Elk: {
       return [
         {
-          value: 'Elk Cloud Logs',
-          label: 'Elk Cloud Logs'
+          value: 'Cloud Logs',
+          label: 'Cloud Logs'
         }
       ]
     }

@@ -58,43 +58,101 @@ export const ElkPayload = {
 }
 
 export const data = {
+  connectorRef: 'ddsfdsfdf',
   isEdit: true,
   healthSourceList: [
     {
-      name: 'Elk dev 12',
-      identifier: 'Elk_dev',
-      type: 'Elk',
+      name: 'NewRelic_editname',
+      identifier: 'NewRelic',
+      type: 'NewRelic',
       spec: {
-        connectorRef: 'Elk_Conn',
-        feature: 'Elk Cloud Logs',
+        connectorRef: 'org.newrelicinsightsconnectorforautomation',
+        applicationName: 'My Application',
+        applicationId: '107019083',
+        feature: 'apm',
+        metricPacks: [
+          {
+            identifier: 'Performance',
+            metricThresholds: null
+          }
+        ],
+        newRelicMetricDefinitions: []
+      }
+    },
+    {
+      name: 'elk_hs3',
+      identifier: 'elk_hs3',
+      type: 'ELKLog',
+      spec: {
+        connectorRef: 'account.ELK',
+        feature: 'ELK Logs',
         queries: [
           {
             name: 'ELK Logs Query',
-            query: 'error OR failed OR severe OR ( sourcetype=access_* ( 404 OR 500 OR 503 ) )',
-            serviceInstanceIdentifier: '_sourcetype'
+            query: '*',
+            index: '.kibana_1',
+            serviceInstanceIdentifier: '_source.updated_at',
+            timeStampIdentifier: '_source.space.description',
+            timeStampFormat: 'MMM dd HH:mm:ss ZZZZ yyyy',
+            messageIdentifier: '_index'
+          }
+        ]
+      }
+    },
+
+    {
+      name: 'elk1',
+      identifier: 'elk1',
+      type: 'ELKLog',
+      spec: {
+        connectorRef: 'ddsfdsfdf',
+        feature: 'ELK Logs',
+        queries: [
+          {
+            name: 'ELK Logs Query',
+            query: '*',
+            index: '.kibana_1',
+            serviceInstanceIdentifier: '_source.space.description',
+            timeStampIdentifier: '_source.space.name',
+            timeStampFormat: 'yyyy MMM dd HH:mm:ss.SSS zzz',
+            messageIdentifier: '_type'
           }
         ]
       }
     }
   ],
-  serviceRef: 'AppDService102',
-  environmentRef: 'delete',
+  serviceRef: 'demo',
+  environmentRef: 'prod',
   monitoredServiceRef: {
-    name: 'WithTagAndDescription 12',
-    identifier: 'dadadadadsa',
-    description: 'dasdasdas',
-    tags: {
-      tag1: '',
-      tag2: ''
+    name: 'demo_prod',
+    identifier: 'demo_prod'
+  },
+  existingMetricDetails: {
+    name: 'elk1',
+    identifier: 'elk1',
+    type: 'ELKLog',
+    spec: {
+      connectorRef: 'ddsfdsfdf',
+      feature: 'ELK Logs',
+      queries: [
+        {
+          name: 'ELK Logs Query',
+          query: '*',
+          index: '.kibana_1',
+          serviceInstanceIdentifier: '_source.space.description',
+          timeStampIdentifier: '_source.space.name',
+          timeStampFormat: 'yyyy MMM dd HH:mm:ss.SSS zzz',
+          messageIdentifier: '_type'
+        }
+      ]
     }
   },
-  healthSourceName: 'Elk dev 12',
-  healthSourceIdentifier: 'Elk_dev',
-  sourceType: 'Elk',
-  connectorRef: 'Elk_Conn',
+  healthSourceName: 'elk1',
+  healthSourceIdentifier: 'elk1',
+  sourceType: 'ELKLog',
   product: {
-    label: 'Elk Cloud Logs',
-    value: 'Elk Cloud Logs'
+    label: 'ELK Logs',
+    value: 'ELK Logs'
   }
 }
 
@@ -120,6 +178,15 @@ export const mockedElkSampleData = [
 ]
 
 export const mockedElkIndicesData = [
+  'filebeat-6.8.8-2022.09.03',
+  '.kibana_1',
+  'filebeat-6.8.8-2022.08.25',
+  'filebeat-6.8.8-2022.09.12',
+  'filebeat-6.8.8-2022.09.04',
+  'filebeat-6.8.8-2022.09.15'
+]
+
+export const mockedElkTimeStampFormat = [
   'filebeat-6.8.8-2022.09.03',
   '.kibana_1',
   'filebeat-6.8.8-2022.08.25',

@@ -57,24 +57,23 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
       query
     })
       .then(response => {
-        if (response.data?.length) {
-          setElkSampleData(response.data)
-        }
+        setElkSampleData(response.data ?? [])
       })
       .catch(error => {
         showError(error)
+        setElkSampleData([])
       })
       .finally(() => {
         setLoading(false)
       })
     setIsQueryExecuted(true)
-  }, [query])
+  }, [getSampleData, query, showError])
   const postFetchingRecords = useCallback(() => {
     // resetting values of service once fetch records button is clicked.
     onChange(MapElkToServiceFieldNames.SERVICE_INSTANCE, '')
     // eslint-disable-next-line react-hooks/exhaustive-deps
     //onChange(MapSplunkToServiceFieldNames.IS_STALE_RECORD, false)
-  }, [])
+  }, [onChange])
 
   return (
     <Card>
@@ -112,7 +111,7 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
               error={null}
               query={formikProps?.values?.logIndexes ? query : ''}
               queryNotExecutedMessage="Submit query to see records from ELK"
-              dataTooltipId={'splunkQuery'}
+              dataTooltipId={'elkQuery'}
               isTemplate={isTemplate}
               expressions={expressions}
               isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
