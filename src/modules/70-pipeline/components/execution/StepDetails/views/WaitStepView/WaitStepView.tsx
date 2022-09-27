@@ -13,12 +13,12 @@ import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { isExecutionWaitingForInput, isExecutionWaitingForIntervention } from '@pipeline/utils/statusHelpers'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
-import css from '../DefaultView/DefaultView.module.scss'
 import { WaitStepDetailsTab } from '../../tabs/WaitStepDetailsTab/WaitStepDetailsTab'
 import { ManualInterventionTab } from '../../tabs/ManualInterventionTab/ManualInterventionTab'
 import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
 import { StepMode } from '@pipeline/utils/stepUtils'
 import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import css from '../DefaultView/DefaultView.module.scss'
 
 enum StepDetailTab {
   STEP_DETAILS = 'STEP_DETAILS',
@@ -29,18 +29,20 @@ enum StepDetailTab {
 
 export function WaitStepView(props: StepDetailProps): React.ReactElement {
   const { step, stageType = StageType.DEPLOY, isStageExecutionInputConfigured } = props
+  console.log(isStageExecutionInputConfigured, 'hello')
+  console.log(step?.stepType, 'hello')
   const { getString } = useStrings()
   const shouldShowInputOutput =
     ((step?.stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.STEP_DETAILS)
+  console.log(step.status, 'hello')
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
   const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
     st => st !== Strategy.ManualIntervention
   )
-
+  console.log(step, 'hello1123')
   const manuallySelected = React.useRef(false)
-
   return (
     <div className={css.tabs}>
       <Tabs

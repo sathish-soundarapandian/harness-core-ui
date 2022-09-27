@@ -42,6 +42,5 @@ factory.registerStep(new ServiceNowUpdate())
 factory.registerStep(new JenkinsStep())
 factory.registerStep(new WaitStep())
 factory.registerStep(new CustomApproval())
-
 // build steps
 export default factory
