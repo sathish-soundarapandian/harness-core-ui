@@ -19,7 +19,8 @@ import {
   NewRelicProductNames,
   ConnectorRefFieldName,
   SplunkProduct,
-  DynatraceProductNames
+  DynatraceProductNames,
+  ElkProduct
 } from './DefineHealthSource.constant'
 import type { DefineHealthSourceFormInterface } from './DefineHealthSource.types'
 
@@ -126,8 +127,8 @@ export const getFeatureOption = (
     case HealthSourceTypes.Elk: {
       return [
         {
-          value: 'Cloud Logs',
-          label: 'Cloud Logs'
+          value: ElkProduct.ELK_LOGS,
+          label: ElkProduct.ELK_LOGS
         }
       ]
     }

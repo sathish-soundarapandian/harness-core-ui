@@ -65,4 +65,8 @@ export const SplunkProduct = {
   SPLUNK_METRICS: 'Splunk Metric'
 }
 
+export const ElkProduct = {
+  ELK_LOGS: 'Cloud Logs'
+}
+
 export const ConnectorRefFieldName = 'connectorRef'
