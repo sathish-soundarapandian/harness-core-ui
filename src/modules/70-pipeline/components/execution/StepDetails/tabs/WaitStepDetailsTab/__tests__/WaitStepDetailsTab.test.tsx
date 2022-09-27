@@ -7,8 +7,6 @@
 
 import React from 'react'
 import { render, fireEvent, waitFor, queryByAttribute } from '@testing-library/react'
-
-import routes from '@common/RouteDefinitions'
 import { useMarkWaitStep, ResponseWaitStepExecutionDetailsDto } from 'services/pipeline-ng'
 import { TestWrapper, UseGetMockData } from '@common/utils/testUtils'
 import { WaitStepDetailsTab } from '../WaitStepDetailsTab'
