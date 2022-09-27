@@ -336,17 +336,10 @@ describe('Unit tests for createElkConnector', () => {
       </TestWrapper>
     )
 
-    //console.log('rrrrrr', prettyDOM(container, 100000000))
-
     await waitFor(() => expect(getByText('authentication')).not.toBeNull())
 
     // expect recieved value to be there
     expect(document.body.querySelector(`input[value="${elkURL}"]`)).not.toBeNull()
-    // expect(document.body.querySelector(`input[value="appdclientid"]`)).not.toBeNull()
-    // expect(document.body.querySelector(`input[value="appdsecretf"]`)).not.toBeNull()
-    //expect(document.body.querySelector(`input[value="solo-dolo"]`)).not.toBeNull()
-    //expect(document.body.querySelector('input[value="connectors.elk.apiId"]')).not.toBeNull()
-
     // switch auth type to username password
     await updateApiClientAuthType(ElkAuthType.USERNAME_PASSWORD)
 
@@ -433,16 +426,10 @@ describe('Unit tests for createElkConnector', () => {
       </TestWrapper>
     )
 
-    //console.log('rrrrrr', prettyDOM(container, 100000000))
-
     await waitFor(() => expect(getByText('authentication')).not.toBeNull())
 
     // expect recieved value to be there
     expect(document.body.querySelector(`input[value="${elkURL}"]`)).not.toBeNull()
-    // expect(document.body.querySelector(`input[value="appdclientid"]`)).not.toBeNull()
-    // expect(document.body.querySelector(`input[value="appdsecretf"]`)).not.toBeNull()
-    //expect(document.body.querySelector(`input[value="solo-dolo"]`)).not.toBeNull()
-    //expect(document.body.querySelector('input[value="connectors.elk.apiId"]')).not.toBeNull()
 
     // switch auth type to username password
     await updateApiClientAuthType(ElkAuthType.USERNAME_PASSWORD)
@@ -533,16 +520,10 @@ describe('Unit tests for createElkConnector', () => {
       </TestWrapper>
     )
 
-    //console.log('rrrrrr', prettyDOM(container, 100000000))
-
     await waitFor(() => expect(getByText('authentication')).not.toBeNull())
 
     // expect recieved value to be there
     expect(document.body.querySelector(`input[value="${elkURL}"]`)).not.toBeNull()
-    // expect(document.body.querySelector(`input[value="appdclientid"]`)).not.toBeNull()
-    // expect(document.body.querySelector(`input[value="appdsecretf"]`)).not.toBeNull()
-    //expect(document.body.querySelector(`input[value="solo-dolo"]`)).not.toBeNull()
-    //expect(document.body.querySelector('input[value="connectors.elk.apiId"]')).not.toBeNull()
 
     // switch auth type to username password
     await updateApiClientAuthType(ElkAuthType.USERNAME_PASSWORD)
@@ -629,16 +610,10 @@ describe('Unit tests for createElkConnector', () => {
       </TestWrapper>
     )
 
-    //console.log('rrrrrr', prettyDOM(container, 100000000))
-
     await waitFor(() => expect(getByText('authentication')).not.toBeNull())
 
     // expect recieved value to be there
     expect(document.body.querySelector(`input[value="${elkURL}"]`)).not.toBeNull()
-    // expect(document.body.querySelector(`input[value="appdclientid"]`)).not.toBeNull()
-    // expect(document.body.querySelector(`input[value="appdsecretf"]`)).not.toBeNull()
-    //expect(document.body.querySelector(`input[value="solo-dolo"]`)).not.toBeNull()
-    //expect(document.body.querySelector('input[value="connectors.elk.apiId"]')).not.toBeNull()
 
     // switch auth type to username password
     await updateApiClientAuthType(ElkAuthType.USERNAME_PASSWORD)

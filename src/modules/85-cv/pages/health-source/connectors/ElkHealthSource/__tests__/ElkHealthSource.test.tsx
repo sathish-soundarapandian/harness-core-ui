@@ -6,14 +6,12 @@
  */
 
 import React from 'react'
-import { fireEvent, prettyDOM, render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
+import { Button } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import { TestWrapper } from '@common/utils/testUtils'
 import ElkHealthSource from '../ElkHealthSource'
 import { data, mockedElkIndicesData, mockedElkSampleData, mockedElkTimeStampFormat } from './ElkHealthSource.mock'
-import userEvent from '@testing-library/user-event'
-import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
-import { Button } from '@harness/uicore'
 
 const onNextMock = jest.fn().mockResolvedValue(jest.fn())
 const onPrevious = jest.fn().mockResolvedValue(jest.fn())
