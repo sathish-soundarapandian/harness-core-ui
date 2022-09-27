@@ -18,8 +18,6 @@ import {
   Page,
   Button,
   ButtonVariation
-  // useToaster,
-  // getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
@@ -112,8 +110,9 @@ interface OrgSelectProps {
   accountIdentifier: string
   orgFilter?: string
   onChange: (opt: SelectOption) => void
+  onError?: (error?: Error) => void
 }
-const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onChange }) => {
+const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onChange, onError }) => {
   const [orgQuery, setOrgQuery] = useState<string>('')
   const [loadingOrgs, setLoadingOrgs] = useState<boolean>(false)
   const { getString } = useStrings()
@@ -139,9 +138,9 @@ const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onC
         }) as SelectOption[],
         []
       )
-      // if (!orgsList) {
-      //   showError(`Couldn't fetch`)
-      // }
+      if (!orgsList) {
+        onError?.()
+      }
     } finally {
       setLoadingOrgs(false)
     }
@@ -173,6 +172,7 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
   const { getString } = useStrings()
   const [accountFilter, setAccountFilter] = useState(getDefaultSelectedFilter(scope))
   const [orgFilter, setOrgFilter] = useState<string | undefined>(orgIdentifier)
+  const [orgFetchError, setOrgFetchError] = useState<boolean>(false)
   const getScopeDropDownItems = (): SelectOption[] => {
     switch (scope) {
       case Scope.ACCOUNT:
@@ -319,17 +319,25 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
 
   const getPageBody = (): React.ReactElement => {
     if (
-      !orgFilter &&
-      (accountFilter === ScopeFilterItems.ORG_ONLY || accountFilter === ScopeFilterItems.ORG_WITH_PROJECTS)
+      (!orgFilter &&
+        (accountFilter === ScopeFilterItems.ORG_ONLY || accountFilter === ScopeFilterItems.ORG_WITH_PROJECTS)) ||
+      orgFetchError
     ) {
+      let message = getString('rbac.userDetails.invalidScopeText', { scope: getString('rbac.scopeItems.orgOnly') })
+      let btnText = getString('rbac.userDetails.scopeAll')
+      if (orgFetchError) {
+        message = getString('rbac.userDetails.errorFetchingOrgs')
+        btnText = getString('retry')
+      }
       return (
         <Page.NoDataCard
-          message={getString('rbac.userDetails.invalidScopeText', { scope: getString('rbac.scopeItems.orgOnly') })}
+          message={message}
           button={
             <Button
-              text={getString('rbac.userDetails.scopeAll')}
+              text={btnText}
               variation={ButtonVariation.SECONDARY}
               onClick={() => {
+                setOrgFetchError(false)
                 setAccountFilter(ScopeFilterItems.ALL)
                 setScopeFilters(getScopeFilter(ScopeFilterItems.ALL))
               }}
@@ -344,6 +352,10 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
         return <UserGroupTable user={userData} scopeFilters={scopeFilters} />
       }
     }
+  }
+
+  const onOrgFetchError = (): void => {
+    setOrgFetchError(true)
   }
 
   return (
@@ -364,6 +376,7 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
           )}
           filterable={false}
           onChange={item => {
+            setOrgFetchError(false)
             setAccountFilter(item.value as ScopeFilterItems)
             if (scope === Scope.ACCOUNT) {
               setOrgFilter(DEFAULT_ORG_ID)
@@ -377,9 +390,11 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
               accountIdentifier={accountId}
               orgFilter={orgFilter}
               onChange={item => {
+                setOrgFetchError(false)
                 setOrgFilter(item.value.toString())
                 setScopeFilters(getScopeFilter(accountFilter, item.value.toString()))
               }}
+              onError={onOrgFetchError}
             />
           )}
         {orgFilter && accountFilter === ScopeFilterItems.ORG_WITH_PROJECTS ? (

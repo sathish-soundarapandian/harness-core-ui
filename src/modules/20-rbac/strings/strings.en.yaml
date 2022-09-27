@@ -140,6 +140,7 @@ usersPage:
   lockedOutLabel: (Locked out)
 userDetails:
   invalidScopeText: 'You are in the scope: {{scope}}. Please select the organization for which you want to view results. or'
+  errorFetchingOrgs: 'An error occurred while fetching organizations.'
   scopeAll: 'Switch to Scope: All'
   groupMemberships: Group Memberships
   noMembersMessage: There are no members added to this User Group

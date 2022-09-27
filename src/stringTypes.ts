@@ -1163,6 +1163,7 @@ export interface StringsMap {
   'rbac.unableToEditInheritedMembershipDetailed': string
   'rbac.unableToEditSCIMMembership': string
   'rbac.updateNotificationSuccess': string
+  'rbac.userDetails.errorFetchingOrgs': string
   'rbac.userDetails.groupMemberships': string
   'rbac.userDetails.invalidScopeText': string
   'rbac.userDetails.linkToSSOProviderModal.btnDisabledTooltipText': string
