@@ -23,7 +23,8 @@ import { Color } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import type { EntityConfig } from '@freeze-windows/types'
-import { getInitialValuesForConfigSection } from './FreezeWindowStudioUtil'
+import { getInitialValuesForConfigSection, convertValuesToYamlObj } from './FreezeWindowStudioUtil'
+import { EnvironmentTypeRenderer, FIELD_KEYS } from './FreezeStudioConfigSectionRenderers'
 import css from './FreezeWindowStudio.module.scss'
 
 interface FreezeStudioConfigSectionProps {
@@ -56,7 +57,7 @@ const ConfigRenderer = ({
     const values = formikProps.values.entity
 
     const updatedEntityConfigs = [...entityConfigs]
-    updatedEntityConfigs[index] = values[index]
+    updatedEntityConfigs[index] = convertValuesToYamlObj(updatedEntityConfigs[index], values[index])
 
     updateFreeze({ entityConfigs: updatedEntityConfigs })
     setEditView(false)
@@ -70,7 +71,9 @@ const ConfigRenderer = ({
       {isEditView ? (
         <FormikForm>
           <FormInput.Text name={`entity[${index}].name`} label={getString('name')} />
+          <EnvironmentTypeRenderer getString={getString} name={`entity[${index}].${FIELD_KEYS.EnvType}`} />
           <button onClick={setVisualView}>Save</button>
+          /* * env ENV: PROD * svg * pro * org * */
         </FormikForm>
       ) : (
         <div>

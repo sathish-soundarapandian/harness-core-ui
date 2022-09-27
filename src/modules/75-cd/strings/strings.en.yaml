@@ -169,7 +169,6 @@ pipelineSteps:
     deployToAll: Deploy in parallel on all infrastructure
     environmentOrEnvGroupAsRuntime: Which of Environment or Environment Group should be marked as runtime?
     allClustersSelected: All Clusters in Environment
-    allEnvironmentsInEnvGroupSelected: All Environments
     environmentIsRequired: '{{ $.common.validation.environmentIsRequired }}'
     infrastructureIsRequired: 'Infrastructure is required'
     environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'
