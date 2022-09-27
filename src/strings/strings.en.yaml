@@ -461,7 +461,6 @@ collaboratorsLabel: 'Collaborators'
 viewDetails: 'View Details'
 startedAt: 'Started at'
 endedAt: 'Ended at'
-elapsedTime: 'Elapsed time'
 lastUpdatedBy: Last Updated By
 loggedAt: 'Logged at {{time}}'
 order: Order

@@ -473,6 +473,7 @@ createPipeline:
 selectOrCreateForm:
   description: '{{$.common.selectAVersion.description}}'
 execution:
+  elapsedTime: 'Elapsed time'
   stagesExecuted: Stages executed (most recent first)
   upcomingStagesPrefix: 'Upcoming stages: '
   stepTitlePrefix: 'Step: '

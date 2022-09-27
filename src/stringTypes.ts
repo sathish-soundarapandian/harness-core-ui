@@ -3224,6 +3224,7 @@ export interface StringsMap {
   'pipeline.execution.currentExecution': string
   'pipeline.execution.dialogMessages.abortExecution': string
   'pipeline.execution.dialogMessages.abortTitle': string
+  'pipeline.execution.elapsedTime': string
   'pipeline.execution.ignoreFailedWarningText': string
   'pipeline.execution.iotab.noInputText': string
   'pipeline.execution.iotab.noOutputText': string
@@ -8449,10 +8450,6 @@ export interface StringsMap {
    * @deprecated migrate this string to module level file
    */
   editService: string
-  /**
-   * @deprecated migrate this string to module level file
-   */
-  elapsedTime: string
   /**
    * @deprecated migrate this string to module level file
    */

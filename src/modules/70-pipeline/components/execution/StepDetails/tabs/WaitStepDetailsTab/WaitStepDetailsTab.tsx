@@ -86,7 +86,7 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
               <td>{daysDuration ? daysDuration : '-'}</td>
             </tr>
             <tr>
-              <th>{getString('elapsedTime')}</th>
+              <th>{getString('pipeline.execution.elapsedTime')}</th>
               <td>
                 <div>
                   <Duration
