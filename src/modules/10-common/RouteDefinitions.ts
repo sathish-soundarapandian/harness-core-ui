@@ -1767,7 +1767,12 @@ const routes = {
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-delegates`
   ),
 
-  toIDP: withAccountId(() => '/idp')
+  toIDP: withAccountId(() => '/idp'),
+  toIDPCatalog: withAccountId(() => '/idp/catalog'),
+  toIDPAPIs: withAccountId(() => '/idp/api-docs'),
+  toIDPDocs: withAccountId(() => '/idp/docs'),
+  toIDPPlaylists: withAccountId(() => '/idp/playlist'),
+  toIDPExplore: withAccountId(() => '/idp/explore')
 }
 
 export default routes
