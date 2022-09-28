@@ -62,9 +62,16 @@ export const getInitialValuesForConfigSection = (entityConfigs: EntityConfig[]) 
   return initialValues
 }
 
-const SINGLE_SELECT_FIELDS = [FIELD_KEYS.EnvType]
-const ORG_FIELD = [FIELD_KEYS.Org]
-
+const updateEntities = (obj, entities, index) => {
+  if (obj.entityRefs.length === 0) {
+    delete obj.entityRefs
+  }
+  if (index >= 0) {
+    entities[index] = obj
+  } else {
+    entities.push(obj)
+  }
+}
 const adaptForOrgField = (currentValues, newValues, entities) => {
   const fieldKey = FIELD_KEYS.Org
   const orgFieldIndex = entities.findIndex(e => e.type === fieldKey)
@@ -82,49 +89,29 @@ const adaptForOrgField = (currentValues, newValues, entities) => {
     obj.entityRefs.push(newValues[fieldKey])
   }
 
-  if (obj.entityRefs.length === 0) {
-    delete obj.entityRefs
+  updateEntities(obj, entities, orgFieldIndex)
+}
+
+const adaptForEnvField = (currentValues, newValues, entities) => {
+  const fieldKey = FIELD_KEYS.EnvType
+  const index = entities.findIndex(e => e.type === fieldKey)
+  const obj = { type: fieldKey, filterType: '', entityRefs: [] }
+
+  if (newValues[fieldKey] === 'All') {
+    obj.filterType = newValues[fieldKey]
+  } else {
+    obj.filterType = 'Equals'
+    obj.entityRefs = [newValues[fieldKey]]
+    // equals, not equals
   }
 
-  if (orgFieldIndex >= 0) {
-    // update
-    entities[orgFieldIndex] = obj
-  } else {
-    entities.push(obj)
-  }
+  updateEntities(obj, entities, index)
 }
 
 export const convertValuesToYamlObj = (currentValues, newValues) => {
   const entities = [...(currentValues.entities || [])]
-  SINGLE_SELECT_FIELDS.forEach(fieldKey => {
-    // if present, update
-    // else create
 
-    const index = entities.findIndex(e => e.type === fieldKey)
-    const obj = { type: fieldKey, filterType: '', entityRefs: [] }
-
-    if (newValues[fieldKey] === 'All') {
-      obj.filterType = newValues[fieldKey]
-    } else {
-      obj.filterType = 'Equals'
-      obj.entityRefs = [newValues[fieldKey]]
-      // equals, not equals
-    }
-
-    if (obj.entityRefs.length === 0) {
-      delete obj.entityRefs
-    }
-
-    // const isPresentInNewValues = [] -> delete
-
-    if (index >= 0) {
-      // update
-      entities[index] = obj
-    } else {
-      entities.push(obj)
-    }
-  })
-
+  adaptForEnvField(currentValues, newValues, entities)
   adaptForOrgField(currentValues, newValues, entities)
 
   return { name: newValues.name, entities }
