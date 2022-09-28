@@ -23,7 +23,7 @@ import { Color } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import type { EntityConfig } from '@freeze-windows/types'
-import { getInitialValuesForConfigSection, convertValuesToYamlObj } from './FreezeWindowStudioUtil'
+import { getInitialValuesForConfigSection, convertValuesToYamlObj, getFieldsVisibility } from './FreezeWindowStudioUtil'
 import {
   ServiceFieldRenderer,
   EnvironmentTypeRenderer,
@@ -75,27 +75,39 @@ const ConfigViewModeRenderer = ({ config, getString, setEditView, deleteConfig }
   )
 }
 
-const ConfigEditModeRenderer = ({ index, getString, formikProps, resources, saveEntity, setVisualView }) => {
+const ConfigEditModeRenderer = ({
+  index,
+  getString,
+  formikProps,
+  resources,
+  saveEntity,
+  setVisualView,
+  fieldsVisibility
+}) => {
   return (
     <FormikForm>
       <Layout.Vertical>
         <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
           <Layout.Vertical width={'400px'}>
             <FormInput.Text name={`entity[${index}].name`} label={getString('name')} />
-            <Organizationfield
-              getString={getString}
-              namePrefix={`entity[${index}]`}
-              values={formikProps.values?.entity?.[index]}
-              setFieldValue={formikProps.setFieldValue}
-              organizations={resources.orgs || []}
-            />
-            <ProjectField
-              getString={getString}
-              namePrefix={`entity[${index}]`}
-              values={formikProps.values?.entity?.[index]}
-              setFieldValue={formikProps.setFieldValue}
-              projects={resources.projects || []}
-            />
+            {fieldsVisibility.showOrgField ? (
+              <Organizationfield
+                getString={getString}
+                namePrefix={`entity[${index}]`}
+                values={formikProps.values?.entity?.[index]}
+                setFieldValue={formikProps.setFieldValue}
+                organizations={resources.orgs || []}
+              />
+            ) : null}
+            {fieldsVisibility.showProjectField ? (
+              <ProjectField
+                getString={getString}
+                namePrefix={`entity[${index}]`}
+                values={formikProps.values?.entity?.[index]}
+                setFieldValue={formikProps.setFieldValue}
+                projects={resources.projects || []}
+              />
+            ) : null}
           </Layout.Vertical>
           <Layout.Horizontal spacing="small">
             <Button icon="tick" minimal withoutCurrentColor className={css.tickButton} onClick={saveEntity} />
@@ -126,7 +138,8 @@ const ConfigRenderer = ({
   updateFreeze,
   formikProps,
   entityConfigs,
-  resources
+  resources,
+  fieldsVisibility
 }: ConfigRendererProps) => {
   const [isEditView, setEditView] = React.useState(isEdit)
   const saveEntity = () => {
@@ -165,6 +178,7 @@ const ConfigRenderer = ({
           resources={resources}
           saveEntity={saveEntity}
           setVisualView={setVisualViewMode}
+          fieldsVisibility={fieldsVisibility}
         />
       ) : (
         <ConfigViewModeRenderer
@@ -172,6 +186,7 @@ const ConfigRenderer = ({
           getString={getString}
           setEditView={setEditViewMode}
           deleteConfig={deleteConfig}
+          fieldsVisibility={fieldsVisibility}
         />
       )}
     </Container>
@@ -183,7 +198,13 @@ interface ConfigsSectionProps {
   getString: UseStringsReturn['getString']
   updateFreeze: (freeze: any) => void
 }
-const ConfigsSection = ({ entityConfigs, getString, updateFreeze, resources }: ConfigsSectionProps) => {
+const ConfigsSection = ({
+  entityConfigs,
+  getString,
+  updateFreeze,
+  resources,
+  fieldsVisibility
+}: ConfigsSectionProps) => {
   const [initialValues, setInitialValues] = React.useState(getInitialValuesForConfigSection(entityConfigs))
   React.useEffect(() => {
     setInitialValues(getInitialValuesForConfigSection(entityConfigs))
@@ -203,6 +224,7 @@ const ConfigsSection = ({ entityConfigs, getString, updateFreeze, resources }: C
               formikProps={formikProps}
               entityConfigs={entityConfigs}
               resources={resources}
+              fieldsVisibility={fieldsVisibility}
             />
           ))
         }
@@ -224,8 +246,13 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
   const { getString } = useStrings()
   const {
     state: { freezeObj },
-    updateFreeze
+    updateFreeze,
+    freezeWindowLevel
   } = React.useContext(FreezeWindowContext)
+
+  const fieldsVisibility = React.useMemo(() => {
+    return getFieldsVisibility(freezeWindowLevel)
+  }, [freezeWindowLevel])
 
   const entityConfigs = freezeObj?.entityConfigs || []
 
@@ -243,6 +270,7 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
           getString={getString}
           updateFreeze={updateFreeze}
           resources={resources}
+          fieldsVisibility={fieldsVisibility}
         />
       </Card>
       <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>

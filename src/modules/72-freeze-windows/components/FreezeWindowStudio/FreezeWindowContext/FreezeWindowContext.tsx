@@ -57,7 +57,7 @@ export const FreezeWindowContext = React.createContext<FreezeWindowContextInterf
   setYamlHandler: noop,
   updateYamlView: noop,
   updateFreeze: noop,
-  freezeWindowLevel: FreezeWindowLevels.PROJECT
+  freezeWindowLevel: FreezeWindowLevels.ACCOUNT
 })
 
 const getFreezeWindowLevel = ({ accountId, projectIdentifier, orgIdentifier }) => {

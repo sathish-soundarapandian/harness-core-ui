@@ -6,11 +6,12 @@
  */
 
 import { parse } from 'yaml'
-import { defaultTo, pick, set, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, pick, set } from 'lodash-es'
+import { ExcludeFieldKeys, FIELD_KEYS } from './FreezeStudioConfigSectionRenderers'
+import { FreezeWindowLevels } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { StringKeys } from 'framework/strings'
 import type { EntityConfig } from '@freeze-windows/types'
-import { FIELD_KEYS, ExcludeFieldKeys } from './FreezeStudioConfigSectionRenderers'
 
 export function isValidYaml(
   yamlHandler: YamlBuilderHandlerBinding | undefined,
@@ -39,6 +40,18 @@ export const getInitialValues = (freezeObj: any) => {
   return {
     ...pickedValues
   }
+}
+
+export const getFieldsVisibility = (freezeWindowLevel: FreezeWindowLevels) => {
+  const obj = { showOrgField: false, showProjectField: false }
+  if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+    obj.showOrgField = true
+    obj.showProjectField = true
+  }
+  if (freezeWindowLevel === FreezeWindowLevels.ORG) {
+    obj.showProjectField = true
+  }
+  return obj
 }
 
 export const getInitialValuesForConfigSection = (entityConfigs: EntityConfig[]) => {
