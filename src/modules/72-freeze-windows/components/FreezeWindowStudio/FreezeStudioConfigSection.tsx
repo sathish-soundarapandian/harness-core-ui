@@ -83,7 +83,7 @@ const ConfigRenderer = ({
       {isEditView ? (
         <FormikForm>
           <Layout.Vertical>
-            <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+            <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
               <Layout.Vertical width={'400px'}>
                 <FormInput.Text name={`entity[${index}].name`} label={getString('name')} />
                 <Organizationfield
@@ -101,9 +101,9 @@ const ConfigRenderer = ({
                   projects={resources.projects || []}
                 />
               </Layout.Vertical>
-              <Layout.Horizontal>
-                <button onClick={setVisualView}>Cancel</button>
-                <button onClick={saveEntity}>Save</button>
+              <Layout.Horizontal spacing="small">
+                <Button icon="tick" minimal withoutCurrentColor className={css.tickButton} />
+                <Button icon="cross" minimal withoutCurrentColor className={css.crossButton} />
               </Layout.Horizontal>
             </Layout.Horizontal>
             <hr className={css.separator} />
@@ -146,7 +146,7 @@ const ConfigsSection = ({ entityConfigs, getString, updateFreeze, resources }: C
           <ConfigRenderer
             key={index}
             config={config}
-            isEdit={false}
+            isEdit={index === 0}
             getString={getString}
             index={index}
             updateFreeze={updateFreeze}

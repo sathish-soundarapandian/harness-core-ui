@@ -12,11 +12,13 @@ declare const styles: {
   readonly canvasWrapper: string
   readonly configFormContainer: string
   readonly createNewFreezeForm: string
+  readonly crossButton: string
   readonly isEditView: string
   readonly sectionCard: string
   readonly separator: string
   readonly stepTabs: string
   readonly tabIcon: string
+  readonly tickButton: string
   readonly yamlBuilder: string
 }
 export default styles

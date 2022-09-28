@@ -190,6 +190,11 @@ export const ProjectField = ({ getString, namePrefix, projects, values, setField
 
 /***
  *
+ *
+
+ <Button icon="edit" minimal withoutCurrentColor className={css.editButton} />
+ <Button icon="trash" minimal withoutCurrentColor />
+
  entityConfigs:
    - name: "rule1"
      entities:
