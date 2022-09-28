@@ -35,7 +35,7 @@ exports[`<WaitStepDetailsTab /> tests snapshot test 1`] = `
         </tr>
         <tr>
           <th>
-            elapsedTime
+            pipeline.execution.elapsedTime
           </th>
           <td>
             <div>
