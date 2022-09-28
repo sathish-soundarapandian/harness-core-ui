@@ -51,21 +51,27 @@ interface ConfigRendererProps {
   formikProps: any
 }
 
-const ConfigViewModeRenderer = ({ config, getString, setEditView }) => {
+const ConfigViewModeRenderer = ({ config, getString, setEditView, deleteConfig }) => {
   const { name, entities } = config || {}
-  const entitiesMap = entities.reduce((accum, item) => {
-    if (item?.type) {
-      accum[item.type] = item
-    }
-    return accum
-  }, {})
+  const entitiesMap =
+    entities?.reduce((accum, item) => {
+      if (item?.type) {
+        accum[item.type] = item
+      }
+      return accum
+    }, {}) || {}
   return (
-    <div>
-      {name}
-      <OrgFieldViewMode data={entitiesMap[FIELD_KEYS.Org]} getString={getString} />
-      <ProjectFieldViewMode data={entitiesMap[FIELD_KEYS.Proj]} getString={getString} />
-      <button onClick={() => setEditView(true)}>Edit</button>
-    </div>
+    <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
+      <Layout.Vertical>
+        {name}
+        <OrgFieldViewMode data={entitiesMap[FIELD_KEYS.Org]} getString={getString} />
+        <ProjectFieldViewMode data={entitiesMap[FIELD_KEYS.Proj]} getString={getString} />
+      </Layout.Vertical>
+      <Layout.Horizontal>
+        <Button icon="edit" minimal withoutCurrentColor onClick={() => setEditView(true)} />
+        <Button icon="trash" minimal withoutCurrentColor onClick={deleteConfig} />
+      </Layout.Horizontal>
+    </Layout.Horizontal>
   )
 }
 
@@ -92,6 +98,11 @@ const ConfigRenderer = ({
 
   const setVisualView = () => {
     setEditView(false)
+  }
+
+  const deleteConfig = () => {
+    const updatedEntityConfigs = entityConfigs.filter((config, i) => index !== i)
+    updateFreeze({ entityConfigs: updatedEntityConfigs })
   }
 
   return (
@@ -140,7 +151,12 @@ const ConfigRenderer = ({
           </Layout.Vertical>
         </FormikForm>
       ) : (
-        <ConfigViewModeRenderer config={config} getString={getString} setEditView={setEditView} />
+        <ConfigViewModeRenderer
+          config={config}
+          getString={getString}
+          setEditView={setEditView}
+          deleteConfig={deleteConfig}
+        />
       )}
     </Container>
   )
