@@ -68,10 +68,53 @@ const ConfigViewModeRenderer = ({ config, getString, setEditView, deleteConfig }
         <ProjectFieldViewMode data={entitiesMap[FIELD_KEYS.Proj]} getString={getString} />
       </Layout.Vertical>
       <Layout.Horizontal>
-        <Button icon="edit" minimal withoutCurrentColor onClick={() => setEditView(true)} />
+        <Button icon="edit" minimal withoutCurrentColor onClick={setEditView} />
         <Button icon="trash" minimal withoutCurrentColor onClick={deleteConfig} />
       </Layout.Horizontal>
     </Layout.Horizontal>
+  )
+}
+
+const ConfigEditModeRenderer = ({ index, getString, formikProps, resources, saveEntity, setVisualView }) => {
+  return (
+    <FormikForm>
+      <Layout.Vertical>
+        <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
+          <Layout.Vertical width={'400px'}>
+            <FormInput.Text name={`entity[${index}].name`} label={getString('name')} />
+            <Organizationfield
+              getString={getString}
+              namePrefix={`entity[${index}]`}
+              values={formikProps.values?.entity?.[index]}
+              setFieldValue={formikProps.setFieldValue}
+              organizations={resources.orgs || []}
+            />
+            <ProjectField
+              getString={getString}
+              namePrefix={`entity[${index}]`}
+              values={formikProps.values?.entity?.[index]}
+              setFieldValue={formikProps.setFieldValue}
+              projects={resources.projects || []}
+            />
+          </Layout.Vertical>
+          <Layout.Horizontal spacing="small">
+            <Button icon="tick" minimal withoutCurrentColor className={css.tickButton} onClick={saveEntity} />
+            <Button icon="cross" minimal withoutCurrentColor className={css.crossButton} onClick={setVisualView} />
+          </Layout.Horizontal>
+        </Layout.Horizontal>
+        <hr className={css.separator} />
+        <Layout.Vertical>
+          <Layout.Horizontal spacing="medium">
+            <ServiceFieldRenderer
+              getString={getString}
+              name={`entity[${index}].${FIELD_KEYS.Service}`}
+              isDisabled={true}
+            />
+            <EnvironmentTypeRenderer getString={getString} name={`entity[${index}].${FIELD_KEYS.EnvType}`} />
+          </Layout.Horizontal>
+        </Layout.Vertical>
+      </Layout.Vertical>
+    </FormikForm>
   )
 }
 
@@ -96,9 +139,12 @@ const ConfigRenderer = ({
     setEditView(false)
   }
 
-  const setVisualView = () => {
+  const setVisualViewMode = React.useCallback(() => {
     setEditView(false)
-  }
+  }, [])
+  const setEditViewMode = React.useCallback(() => {
+    setEditView(true)
+  }, [])
 
   const deleteConfig = () => {
     const updatedEntityConfigs = entityConfigs.filter((config, i) => index !== i)
@@ -112,49 +158,19 @@ const ConfigRenderer = ({
       margin={{ top: 'xlarge' }}
     >
       {isEditView ? (
-        <FormikForm>
-          <Layout.Vertical>
-            <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
-              <Layout.Vertical width={'400px'}>
-                <FormInput.Text name={`entity[${index}].name`} label={getString('name')} />
-                <Organizationfield
-                  getString={getString}
-                  namePrefix={`entity[${index}]`}
-                  values={formikProps.values?.entity?.[index]}
-                  setFieldValue={formikProps.setFieldValue}
-                  organizations={resources.orgs || []}
-                />
-                <ProjectField
-                  getString={getString}
-                  namePrefix={`entity[${index}]`}
-                  values={formikProps.values?.entity?.[index]}
-                  setFieldValue={formikProps.setFieldValue}
-                  projects={resources.projects || []}
-                />
-              </Layout.Vertical>
-              <Layout.Horizontal spacing="small">
-                <Button icon="tick" minimal withoutCurrentColor className={css.tickButton} onClick={saveEntity} />
-                <Button icon="cross" minimal withoutCurrentColor className={css.crossButton} onClick={setVisualView} />
-              </Layout.Horizontal>
-            </Layout.Horizontal>
-            <hr className={css.separator} />
-            <Layout.Vertical>
-              <Layout.Horizontal spacing="medium">
-                <ServiceFieldRenderer
-                  getString={getString}
-                  name={`entity[${index}].${FIELD_KEYS.Service}`}
-                  isDisabled={true}
-                />
-                <EnvironmentTypeRenderer getString={getString} name={`entity[${index}].${FIELD_KEYS.EnvType}`} />
-              </Layout.Horizontal>
-            </Layout.Vertical>
-          </Layout.Vertical>
-        </FormikForm>
+        <ConfigEditModeRenderer
+          index={index}
+          getString={getString}
+          formikProps={formikProps}
+          resources={resources}
+          saveEntity={saveEntity}
+          setVisualView={setVisualViewMode}
+        />
       ) : (
         <ConfigViewModeRenderer
           config={config}
           getString={getString}
-          setEditView={setEditView}
+          setEditView={setEditViewMode}
           deleteConfig={deleteConfig}
         />
       )}
