@@ -406,6 +406,9 @@ failureStrategies:
     StageRollback: Rollback Stage
     ManualIntervention: Manual Intervention
     MarkAsSuccess: Mark As Success
+    MarkedAsSuccess: Marked As Success
+    MarkAsFail: Mark As Fail
+    MarkedAsFail: Marked As Fail
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors
@@ -470,6 +473,7 @@ createPipeline:
 selectOrCreateForm:
   description: '{{$.common.selectAVersion.description}}'
 execution:
+  elapsedTime: 'Elapsed time'
   stagesExecuted: Stages executed (most recent first)
   upcomingStagesPrefix: 'Upcoming stages: '
   stepTitlePrefix: 'Step: '

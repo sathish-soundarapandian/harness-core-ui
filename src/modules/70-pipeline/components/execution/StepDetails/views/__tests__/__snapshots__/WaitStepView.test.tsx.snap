@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Wait Step View Test renders snapshot 1`] = `
+<div>
+  <div
+    class="tabs"
+  >
+    <div
+      class="bp3-tabs Tabs--main Tabs--horizontal"
+    >
+      <div
+        class="bp3-tab-list"
+        role="tablist"
+      >
+        <div
+          class="bp3-tab-indicator-wrapper"
+          style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+        >
+          <div
+            class="bp3-tab-indicator"
+          />
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_STEP_DETAILS"
+          aria-disabled="false"
+          aria-expanded="true"
+          aria-selected="true"
+          class="bp3-tab"
+          data-tab-id="STEP_DETAILS"
+          id="bp3-tab-title_step-details_STEP_DETAILS"
+          role="tab"
+          tabindex="0"
+        >
+          details
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_INPUT"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="INPUT"
+          id="bp3-tab-title_step-details_INPUT"
+          role="tab"
+          tabindex="0"
+        >
+          common.input
+        </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_OUTPUT"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="OUTPUT"
+          id="bp3-tab-title_step-details_OUTPUT"
+          role="tab"
+          tabindex="0"
+        >
+          outputLabel
+        </div>
+      </div>
+      <div
+        aria-hidden="false"
+        aria-labelledby="bp3-tab-title_step-details_STEP_DETAILS"
+        class="bp3-tab-panel"
+        id="bp3-tab-panel_step-details_STEP_DETAILS"
+        role="tabpanel"
+      >
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-orange400 StyledProps--background-yellow100 StyledProps--padding-top-xxlarge StyledProps--padding-bottom-xxlarge StyledProps--padding-left-large StyledProps--padding-right-large"
+        >
+          <table
+            class="detailsTable"
+          >
+            <tbody>
+              <tr>
+                <th>
+                  startedAt
+                </th>
+                <td>
+                  24/09/2022, 11:19:18
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  endedAt
+                </th>
+                <td>
+                  24/09/2022, 11:19:36
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  duration
+                </th>
+                <td>
+                  0 Sec
+                </td>
+              </tr>
+              <tr>
+                <th>
+                  pipeline.execution.elapsedTime
+                </th>
+                <td>
+                  <div>
+                    <span
+                      class="StyledProps--font StyledProps--main timer StyledProps--inline StyledProps--color StyledProps--color-orange400"
+                    >
+                      
+                      18s
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

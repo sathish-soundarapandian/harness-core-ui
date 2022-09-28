@@ -104,6 +104,7 @@ export enum StepType {
   AzureArmRollback = 'AzureARMRollback',
   Background = 'Background',
   AzureBlueprint = 'AzureCreateBPResource',
+  Wait = 'Wait',
   EcsBlueGreenCreateService = 'EcsBlueGreenCreateService',
   EcsBlueGreenSwapTargetGroups = 'EcsBlueGreenSwapTargetGroups',
   EcsBlueGreenRollback = 'EcsBlueGreenRollback',

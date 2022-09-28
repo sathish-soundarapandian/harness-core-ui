@@ -2681,6 +2681,7 @@ export interface PMSPipelineResponseDTO {
   governanceMetadata?: GovernanceMetadata
   modules?: string[]
   resolvedTemplatesPipelineYaml?: string
+  validateTemplateInputsResponse?: ValidateTemplateInputsResponseDTO
   yamlPipeline?: string
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
@@ -3113,6 +3114,7 @@ export interface PlanExecution {
     | 'RESOURCE_WAITING'
     | 'APPROVAL_REJECTED'
     | 'INPUT_WAITING'
+    | 'WAIT_STEP_RUNNING'
     | 'UNRECOGNIZED'
   uuid?: string
   validUntil?: string

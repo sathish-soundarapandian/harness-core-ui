@@ -17,7 +17,15 @@ export enum Strategy {
   StageRollback = 'StageRollback',
   Retry = 'Retry',
   ManualIntervention = 'ManualIntervention',
-  MarkAsSuccess = 'MarkAsSuccess'
+  MarkAsSuccess = 'MarkAsSuccess',
+  MarkAsFailure = 'MarkAsFailure'
+}
+
+export enum WaitActions {
+  MarkAsSuccess = 'MarkAsSuccess',
+  MarkedAsSuccess = 'MarkedAsSuccess',
+  MarkAsFailure = 'MarkAsFailure',
+  MarkedAsFailure = 'MarkedAsFailure'
 }
 
 export const ErrorType: Record<FailureErrorType, FailureErrorType> = {
@@ -39,14 +47,29 @@ export const strategyIconMap: Record<Strategy, IconName> = {
   [Strategy.MarkAsSuccess]: 'tick',
   [Strategy.StageRollback]: 'repeat',
   [Strategy.Retry]: 'refresh',
-  [Strategy.ManualIntervention]: 'hand-up'
+  [Strategy.ManualIntervention]: 'hand-up',
+  [Strategy.MarkAsFailure]: 'ban-circle'
 }
 
+export const waitActionsIconMap: Record<WaitActions, IconName> = {
+  [WaitActions.MarkAsFailure]: 'ban-circle',
+  [WaitActions.MarkedAsFailure]: 'ban-circle',
+  [WaitActions.MarkedAsSuccess]: 'tick',
+  [WaitActions.MarkAsSuccess]: 'tick'
+}
 export const stringsMap: Record<Strategy, StringKeys> = {
   [Strategy.Ignore]: 'pipeline.failureStrategies.strategiesLabel.Ignore',
   [Strategy.Abort]: 'pipeline.failureStrategies.strategiesLabel.Abort',
   [Strategy.MarkAsSuccess]: 'pipeline.failureStrategies.strategiesLabel.MarkAsSuccess',
   [Strategy.StageRollback]: 'pipeline.failureStrategies.strategiesLabel.StageRollback',
   [Strategy.Retry]: 'pipeline.failureStrategies.strategiesLabel.Retry',
-  [Strategy.ManualIntervention]: 'pipeline.failureStrategies.strategiesLabel.ManualIntervention'
+  [Strategy.ManualIntervention]: 'pipeline.failureStrategies.strategiesLabel.ManualIntervention',
+  [Strategy.MarkAsFailure]: 'pipeline.failureStrategies.strategiesLabel.MarkAsFail'
+}
+
+export const waitActionsStringMap: Record<WaitActions, StringKeys> = {
+  [WaitActions.MarkAsSuccess]: 'pipeline.failureStrategies.strategiesLabel.MarkAsSuccess',
+  [WaitActions.MarkedAsSuccess]: 'pipeline.failureStrategies.strategiesLabel.MarkedAsSuccess',
+  [WaitActions.MarkedAsFailure]: 'pipeline.failureStrategies.strategiesLabel.MarkedAsFail',
+  [WaitActions.MarkAsFailure]: 'pipeline.failureStrategies.strategiesLabel.MarkAsFail'
 }
