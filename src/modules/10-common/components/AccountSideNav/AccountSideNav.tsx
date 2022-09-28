@@ -23,6 +23,7 @@ export default function AccountSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { NG_LICENSES_ENABLED, OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE } = useFeatureFlags()
+  const NG_DEPLOYMENT_FREEZE = false
   const canUsePolicyEngine = useAnyEnterpriseLicense()
   const { data: accountData } = useGetAccountNG({
     accountIdentifier: accountId,
@@ -36,6 +37,9 @@ export default function AccountSideNav(): React.ReactElement {
       {canUsePolicyEngine && (OPA_PIPELINE_GOVERNANCE || OPA_FF_GOVERNANCE) && (
         <SidebarLink label={getString('common.governance')} to={routes.toGovernance({ accountId })} />
       )}
+      {NG_DEPLOYMENT_FREEZE ? (
+        <SidebarLink label={getString('common.freezeWindows')} to={routes.toFreezeWindows({ accountId })} />
+      ) : null}
       <SidebarLink to={routes.toAccessControl({ accountId })} label={getString('accessControl')} />
       {accountData?.data?.productLed && (
         <SidebarLink exact label={getString('common.billing')} to={routes.toBilling({ accountId })} />
