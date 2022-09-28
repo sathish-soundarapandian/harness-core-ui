@@ -118,10 +118,11 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                   <TemplateVariablesCard
                     variableVariables={variablesTemplateVariables}
                     variables={template.variables as NGVariable[]}
-                    stepsFactory={factory}
                     metadataMap={metadataMap}
-                    updateVariables={onUpdateVariables}
                     allowableTypes={allowableTypes}
+                    stepsFactory={factory}
+                    updateVariables={onUpdateVariables}
+                    readonly={isReadonly}
                     detailsClassName={css.templateVariablesDetails}
                   />
                 )}
