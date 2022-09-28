@@ -33,6 +33,8 @@ export const ExcludeFieldKeys = {
 }
 
 const All = 'All'
+const Equals = 'Equals'
+const NotEquals = 'NotEquals'
 export enum EnvironmentType {
   All = 'All', // BE YAML Mapping
   PROD = 'PROD',
@@ -186,6 +188,42 @@ export const ProjectField = ({ getString, namePrefix, projects, values, setField
       ) : null}
     </>
   )
+}
+
+const renderKeyValue = (key, value) => {
+  return (
+    <div>
+      <span>{key}</span>: <span>{value}</span>
+    </div>
+  )
+}
+
+export const OrgFieldViewMode = ({ data, getString }) => {
+  if (!data) return null
+  const { filterType, entityRefs } = data
+  let value = 'All Organizations'
+  if (filterType === All) {
+    value = 'All Organizations'
+  } else if (filterType === Equals) {
+    value = entityRefs.join(', ')
+  } else if (filterType === NotEquals) {
+    value = `All Organizations except ${entityRefs.join(', ')}`
+  }
+  return renderKeyValue(getString('orgLabel'), value)
+}
+
+export const ProjectFieldViewMode = ({ data, getString }) => {
+  if (!data) return null
+  const { filterType, entityRefs } = data
+  let value = 'All Projects'
+  if (filterType === All) {
+    value = 'All Projects'
+  } else if (filterType === Equals) {
+    value = entityRefs.join(', ')
+  } else if (filterType === NotEquals) {
+    value = `All Projects except ${entityRefs.join(', ')}`
+  }
+  return renderKeyValue(getString('projectsText'), value)
 }
 
 /***

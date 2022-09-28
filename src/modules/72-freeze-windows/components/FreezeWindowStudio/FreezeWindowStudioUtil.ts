@@ -82,6 +82,10 @@ const updateEntities = (obj, entities, index) => {
 const adaptForOrgField = (currentValues, newValues, entities) => {
   const fieldKey = FIELD_KEYS.Org
   const orgFieldIndex = entities.findIndex(e => e.type === fieldKey)
+
+  if (orgFieldIndex < 0 && !newValues[fieldKey]) {
+    return
+  }
   const obj = { type: fieldKey, filterType: '', entityRefs: [] }
   if (newValues[fieldKey] === 'All') {
     const hasExcludedOrgs = newValues[FIELD_KEYS.ExcludeOrgCheckbox] && !isEmpty(newValues[FIELD_KEYS.ExcludeOrg])
@@ -102,6 +106,11 @@ const adaptForOrgField = (currentValues, newValues, entities) => {
 const adaptForEnvField = (currentValues, newValues, entities) => {
   const fieldKey = FIELD_KEYS.EnvType
   const index = entities.findIndex(e => e.type === fieldKey)
+
+  if (index < 0 && newValues[fieldKey]) {
+    return
+  }
+
   const obj = { type: fieldKey, filterType: '', entityRefs: [] }
 
   if (newValues[fieldKey] === 'All') {

@@ -28,6 +28,8 @@ import {
   ServiceFieldRenderer,
   EnvironmentTypeRenderer,
   Organizationfield,
+  OrgFieldViewMode,
+  ProjectFieldViewMode,
   ProjectField,
   FIELD_KEYS
 } from './FreezeStudioConfigSectionRenderers'
@@ -47,6 +49,24 @@ interface ConfigRendererProps {
   index: number
   updateFreeze: (freeze: any) => void
   formikProps: any
+}
+
+const ConfigViewModeRenderer = ({ config, getString, setEditView }) => {
+  const { name, entities } = config || {}
+  const entitiesMap = entities.reduce((accum, item) => {
+    if (item?.type) {
+      accum[item.type] = item
+    }
+    return accum
+  }, {})
+  return (
+    <div>
+      {name}
+      <OrgFieldViewMode data={entitiesMap[FIELD_KEYS.Org]} getString={getString} />
+      <ProjectFieldViewMode data={entitiesMap[FIELD_KEYS.Proj]} getString={getString} />
+      <button onClick={() => setEditView(true)}>Edit</button>
+    </div>
+  )
 }
 
 const ConfigRenderer = ({
@@ -108,7 +128,7 @@ const ConfigRenderer = ({
             </Layout.Horizontal>
             <hr className={css.separator} />
             <Layout.Vertical>
-              <Layout.Horizontal spacing="small">
+              <Layout.Horizontal spacing="medium">
                 <ServiceFieldRenderer
                   getString={getString}
                   name={`entity[${index}].${FIELD_KEYS.Service}`}
@@ -120,10 +140,7 @@ const ConfigRenderer = ({
           </Layout.Vertical>
         </FormikForm>
       ) : (
-        <div>
-          {config.name}
-          <button onClick={() => setEditView(true)}>Edit</button>
-        </div>
+        <ConfigViewModeRenderer config={config} getString={getString} setEditView={setEditView} />
       )}
     </Container>
   )
