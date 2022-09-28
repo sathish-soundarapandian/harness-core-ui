@@ -253,7 +253,7 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
   const fieldsVisibility = React.useMemo(() => {
     return getFieldsVisibility(freezeWindowLevel)
   }, [freezeWindowLevel])
-
+  // console.log('freezeWindowLevel', freezeWindowLevel)
   const entityConfigs = freezeObj?.entityConfigs || []
 
   return (

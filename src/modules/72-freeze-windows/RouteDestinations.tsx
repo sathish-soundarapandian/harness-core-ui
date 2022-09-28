@@ -37,6 +37,18 @@ export default (
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toFreezeWindows({ ...orgPathProps })} exact>
       <FreezeWindowsPage />
     </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routes.toFreezeWindowStudio({
+        ...orgPathProps,
+        ...{
+          windowIdentifier: ':windowIdentifier'
+        }
+      })}
+      exact
+    >
+      <FreezeStudioWrapper />
+    </RouteWithLayout>
   </>
 )
 
