@@ -10,7 +10,7 @@ import { defaultTo, pick, set, isEmpty } from 'lodash-es'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { StringKeys } from 'framework/strings'
 import type { EntityConfig } from '@freeze-windows/types'
-import { FIELD_KEYS } from './FreezeStudioConfigSectionRenderers'
+import { FIELD_KEYS, ExcludeFieldKeys } from './FreezeStudioConfigSectionRenderers'
 
 export function isValidYaml(
   yamlHandler: YamlBuilderHandlerBinding | undefined,
@@ -56,6 +56,13 @@ export const getInitialValuesForConfigSection = (entityConfigs: EntityConfig[]) 
         set(initialValues, `entity[${i}].${type}`, entityRefs[0])
         // equals
       } else if (filterType === 'NotEquals') {
+        const excludeFieldKeys = ExcludeFieldKeys[type]
+        if (excludeFieldKeys) {
+          const { CheckboxKey, ExcludeFieldKey } = excludeFieldKeys
+          set(initialValues, `entity[${i}].${type}`, 'All')
+          set(initialValues, `entity[${i}].${CheckboxKey}`, true)
+          set(initialValues, `entity[${i}].${ExcludeFieldKey}`, entityRefs[0])
+        }
       }
     })
   })

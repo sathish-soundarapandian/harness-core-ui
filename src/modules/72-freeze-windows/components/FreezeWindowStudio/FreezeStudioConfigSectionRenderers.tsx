@@ -20,6 +20,18 @@ export enum FIELD_KEYS {
   ExcludeProjCheckbox = 'ExcludeProjCheckbox',
   ExcludeProj = 'ExcludeProj'
 }
+
+export const ExcludeFieldKeys = {
+  [FIELD_KEYS.Org]: {
+    CheckboxKey: FIELD_KEYS.ExcludeOrgCheckbox,
+    ExcludeFieldKey: FIELD_KEYS.ExcludeOrg
+  },
+  [FIELD_KEYS.Proj]: {
+    CheckboxKey: FIELD_KEYS.ExcludeOrgCheckbox,
+    ExcludeFieldKey: FIELD_KEYS.ExcludeProj
+  }
+}
+
 const All = 'All'
 export enum EnvironmentType {
   All = 'All', // BE YAML Mapping
