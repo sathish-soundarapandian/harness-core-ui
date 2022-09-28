@@ -63,7 +63,7 @@ const getCalculatedStyles = (data: PipelineGraphState[], parallelism: number, sh
     const finalWidth = nodeWidth * (parallelism === 0 ? 1 : Math.min(parallelism, (data || []).length))
     return {
       height: `${finalHeight}px`,
-      width: `${finalWidth}px`
+      width: `${finalWidth + 40}px`
     }
   } else {
     const updatedParallelism = Math.min(parallelism, MAX_ALLOWED_MATRIX_COLLAPSED_NODES)

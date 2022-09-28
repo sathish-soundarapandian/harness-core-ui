@@ -294,9 +294,9 @@ function Artifactory({
     ? getString('pipeline.artifactsSelection.loadingArtifactPaths')
     : getString('pipeline.artifactsSelection.loadingTags')
 
-  const getSelectItems = useCallback(selectItemsMapper.bind(null, tagList, isServerlessDeploymentTypeSelected), [
+  const getSelectItems = useCallback(selectItemsMapper.bind(null, tagList, isGenericArtifactory), [
     tagList,
-    isServerlessDeploymentTypeSelected
+    isGenericArtifactory
   ])
 
   const tags = artifactoryBuildDetailsLoading
@@ -321,7 +321,7 @@ function Artifactory({
     if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
       return
     }
-    fetchTags(getArtifactPathToFetchTags(formik, true, isServerlessDeploymentTypeSelected), formik.values?.repository)
+    fetchTags(getArtifactPathToFetchTags(formik, true, isGenericArtifactory), formik.values?.repository)
   }
 
   return (
@@ -349,7 +349,7 @@ function Artifactory({
           }
           return (
             <Form>
-              <div className={css.connectorForm}>
+              <div className={css.artifactForm}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 {showRepositoryFormatForAllowedTypes && (
@@ -529,7 +529,7 @@ function Artifactory({
                         getHelpeTextForTags(
                           helperTextData(selectedArtifact, formik, getConnectorIdValue(prevStepData)),
                           getString,
-                          isServerlessDeploymentTypeSelected
+                          isGenericArtifactory
                         )
                       }
                       multiTypeInputProps={{
@@ -540,7 +540,7 @@ function Artifactory({
                           noResults: (
                             <NoTagResults
                               tagError={artifactoryTagError}
-                              isServerlessDeploymentTypeSelected={isServerlessDeploymentTypeSelected}
+                              isServerlessDeploymentTypeSelected={isGenericArtifactory}
                             />
                           ),
                           items: tags,
@@ -551,11 +551,7 @@ function Artifactory({
                         },
                         onFocus: (e: React.FocusEvent<HTMLInputElement>) => onTagInputFocus(e, formik)
                       }}
-                      label={
-                        isServerlessDeploymentTypeSelected
-                          ? getString('pipeline.artifactPathLabel')
-                          : getString('tagLabel')
-                      }
+                      label={isGenericArtifactory ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
                       name="tag"
                       className={css.tagInputButton}
                     />
@@ -583,9 +579,7 @@ function Artifactory({
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTextInput
                       label={
-                        isServerlessDeploymentTypeSelected
-                          ? getString('pipeline.artifactPathFilterLabel')
-                          : getString('tagRegex')
+                        isGenericArtifactory ? getString('pipeline.artifactPathFilterLabel') : getString('tagRegex')
                       }
                       name="tagRegex"
                       placeholder={getString('pipeline.artifactsSelection.existingDocker.enterTagRegex')}
@@ -611,11 +605,7 @@ function Artifactory({
                 ) : null}
                 <div className={cx(css.tagGroup, css.marginBottom)}>
                   <FormInput.RadioGroup
-                    label={
-                      isServerlessDeploymentTypeSelected
-                        ? getString('pipeline.artifactsSelection.artifactDetails')
-                        : undefined
-                    }
+                    label={isGenericArtifactory ? getString('pipeline.artifactsSelection.artifactDetails') : undefined}
                     name="tagType"
                     radioGroup={{ inline: true }}
                     items={tagOptions}

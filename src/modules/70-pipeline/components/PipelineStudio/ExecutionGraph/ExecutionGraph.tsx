@@ -14,6 +14,7 @@ import { Button, ButtonVariation, Layout, Text } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
+import { useToaster } from '@common/exports'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StepActions } from '@common/constants/TrackingConstants'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
@@ -56,6 +57,7 @@ import {
   StepState,
   getStepsState,
   removeStepOrGroup,
+  isLinkUnderStepGroup,
   getStepFromNode,
   generateRandomString,
   getDependenciesState,
@@ -309,6 +311,8 @@ function ExecutionGraphRef<T extends StageElementConfig>(
     DynamicPopoverHandlerBinding<PopoverData> | undefined
   >()
 
+  const { showError } = useToaster()
+
   //1) setup the diagram engine
   const engine = React.useMemo(() => createEngine(), [])
 
@@ -414,28 +418,32 @@ function ExecutionGraphRef<T extends StageElementConfig>(
         const skipFlattenIfSameParallel = drop.parent === current.node?.parallel
         // Check Drop Node and Current node should not be same
         if (event.node.identifier !== eventTemp.entity.getIdentifier() && dropNode) {
-          const isRemove = removeStepOrGroup({
-            state,
-            entity: dropEntity,
-            skipFlatten: skipFlattenIfSameParallel,
-            isRollback: state.isRollback
-          })
-          if (isRemove) {
-            if (current.node) {
-              if (current.parent && (current.node.step || current.node.stepGroup)) {
-                const index = current.parent?.indexOf(current.node) ?? -1
-                if (index > -1) {
-                  // Remove current Stage also and make it parallel
-                  current.parent?.splice(index, 1, { parallel: [current.node, dropNode] })
+          if (dropNode?.stepGroup && eventTemp.entity.getParent() instanceof StepGroupNodeLayerModel) {
+            showError(getString('stepGroupInAnotherStepGroup'), undefined, 'pipeline.setgroup.error')
+          } else {
+            const isRemove = removeStepOrGroup({
+              state,
+              entity: dropEntity,
+              skipFlatten: skipFlattenIfSameParallel,
+              isRollback: state.isRollback
+            })
+            if (isRemove) {
+              if (current.node) {
+                if (current.parent && (current.node.step || current.node.stepGroup)) {
+                  const index = current.parent?.indexOf(current.node) ?? -1
+                  if (index > -1) {
+                    // Remove current Stage also and make it parallel
+                    current.parent?.splice(index, 1, { parallel: [current.node, dropNode] })
+                    updateStageWithNewData(state)
+                  }
+                } else if (current.node.parallel && (current.node.parallel?.length || 0) > 0) {
+                  current.node.parallel?.push?.(dropNode)
                   updateStageWithNewData(state)
                 }
-              } else if (current.node.parallel && (current.node.parallel?.length || 0) > 0) {
-                current.node.parallel?.push?.(dropNode)
+              } else {
+                addStepOrGroup(eventTemp.entity, state.stepsData, dropNode, false, state.isRollback)
                 updateStageWithNewData(state)
               }
-            } else {
-              addStepOrGroup(eventTemp.entity, state.stepsData, dropNode, false, state.isRollback)
-              updateStageWithNewData(state)
             }
           }
         }
@@ -470,52 +478,56 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       const skipFlattenIfSameParallel = drop.parent === current.node?.parallel
       // Check Drop Node and Current node should not be same
       if (event.node?.identifier !== event?.destination?.identifier && dropNode) {
-        const isRemove = removeStepOrGroup({
-          state,
-          entity: event,
-          skipFlatten: skipFlattenIfSameParallel,
-          isRollback: state.isRollback
-        })
-        if (isRemove) {
-          if (current.node) {
-            if (
-              event?.entityType === DiagramType.CreateNew &&
-              event?.destination?.isInsideStepGroup &&
-              event?.destination?.nodeType === NodeType.StepGroupNode &&
-              event?.destination?.data?.length === 0
-            ) {
-              if (current.node.stepGroup) current.node.stepGroup.steps.push(dropNode)
-              else if (current.node.parallel) {
-                const index = current.node.parallel.findIndex(
-                  obj => obj?.stepGroup?.identifier === event?.destination?.identifier
-                )
-                if (index > -1) {
-                  current.node.parallel?.[index].stepGroup?.steps.push(dropNode)
+        if (dropNode?.stepGroup && event?.destination?.parentIdentifier) {
+          showError(getString('stepGroupInAnotherStepGroup'), undefined, 'pipeline.setgroup.error')
+        } else {
+          const isRemove = removeStepOrGroup({
+            state,
+            entity: event,
+            skipFlatten: skipFlattenIfSameParallel,
+            isRollback: state.isRollback
+          })
+          if (isRemove) {
+            if (current.node) {
+              if (
+                event?.entityType === DiagramType.CreateNew &&
+                event?.destination?.isInsideStepGroup &&
+                event?.destination?.nodeType === NodeType.StepGroupNode &&
+                event?.destination?.data?.length === 0
+              ) {
+                if (current.node.stepGroup) current.node.stepGroup.steps.push(dropNode)
+                else if (current.node.parallel) {
+                  const index = current.node.parallel.findIndex(
+                    obj => obj?.stepGroup?.identifier === event?.destination?.identifier
+                  )
+                  if (index > -1) {
+                    current.node.parallel?.[index].stepGroup?.steps.push(dropNode)
+                  }
                 }
-              }
-            } else if (current.parent && (current.node.step || current.node.stepGroup)) {
-              const index = current.parent?.indexOf(current.node) ?? -1
-              if (index > -1) {
-                // Remove current Stage also and make it parallel
-                current.parent?.splice(index, 1, { parallel: [current.node, dropNode] })
+              } else if (current.parent && (current.node.step || current.node.stepGroup)) {
+                const index = current.parent?.indexOf(current.node) ?? -1
+                if (index > -1) {
+                  // Remove current Stage also and make it parallel
+                  current.parent?.splice(index, 1, { parallel: [current.node, dropNode] })
+                  // updateStageWithNewData(state)
+                }
+              } else if (current.node.stepGroup && current.node.stepGroup?.steps?.length === 0) {
+                current.node.stepGroup.steps.push(dropNode)
+              } else if (current.node.parallel && (current.node.parallel?.length || 0) > 0) {
+                current.node.parallel?.push?.(dropNode)
                 // updateStageWithNewData(state)
               }
-            } else if (current.node.stepGroup && current.node.stepGroup?.steps?.length === 0) {
-              current.node.stepGroup.steps.push(dropNode)
-            } else if (current.node.parallel && (current.node.parallel?.length || 0) > 0) {
-              current.node.parallel?.push?.(dropNode)
-              // updateStageWithNewData(state)
+              updateStageWithNewData(state)
+            } else {
+              addStepOrGroup(
+                { ...event, node: { ...event?.destination } },
+                state.stepsData,
+                dropNode,
+                false,
+                state.isRollback
+              )
+              updateStageWithNewData(state)
             }
-            updateStageWithNewData(state)
-          } else {
-            addStepOrGroup(
-              { ...event, node: { ...event?.destination } },
-              state.stepsData,
-              dropNode,
-              false,
-              state.isRollback
-            )
-            updateStageWithNewData(state)
           }
         }
       }
@@ -685,7 +697,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             parentIdentifier: event?.parentIdentifier // (event.entity.getParent().getOptions() as StepGroupNodeLayerOptions).identifier
           })
         } else {
-          handleAdd(false, nodeRender, true, { entity: { ...event } })
+          handleAdd(false, nodeRender, !event?.parentIdentifier, { entity: { ...event } })
         }
       } else if (stepState && stepState.isStepGroupCollapsed) {
         const stepStates = state.states.set(event?.identifier, {
@@ -793,7 +805,7 @@ function ExecutionGraphRef<T extends StageElementConfig>(
           isRollback: state.isRollback
         }).node
         if (node) {
-          handleAdd(true, event.target, true, { entity: { ...event } }, event.callback)
+          handleAdd(true, event.target, false, { entity: { ...event } }, event.callback)
         }
       } else {
         /* istanbul ignore else */ if (event.target) {
@@ -839,14 +851,18 @@ function ExecutionGraphRef<T extends StageElementConfig>(
             isFindParallelNode: false,
             isRollback: state.isRollback
           }).node as ExecutionWrapperConfig
-          const isRemove = removeStepOrGroup({
-            state,
-            entity: dropEntity,
-            isRollback: state.isRollback
-          })
-          if (isRemove && dropNode) {
-            addStepOrGroup(eventTemp.entity, state.stepsData, dropNode, false, state.isRollback)
-            updateStageWithNewData(state)
+          if (dropNode?.stepGroup && isLinkUnderStepGroup(eventTemp.entity)) {
+            showError(getString('stepGroupInAnotherStepGroup'), undefined, 'pipeline.setgroup.error')
+          } else {
+            const isRemove = removeStepOrGroup({
+              state,
+              entity: dropEntity,
+              isRollback: state.isRollback
+            })
+            if (isRemove && dropNode) {
+              addStepOrGroup(eventTemp.entity, state.stepsData, dropNode, false, state.isRollback)
+              updateStageWithNewData(state)
+            }
           }
         }
       }
@@ -859,7 +875,10 @@ function ExecutionGraphRef<T extends StageElementConfig>(
       dynamicPopoverHandler?.hide()
       const targetEl = event?.target
       const linkRender = targetEl || document.querySelector(`[data-linkid="${event.identifier}"]`)
-      if (linkRender) {
+      // check if the link is under step group then directly show add Step
+      if (event?.node?.parentIdentifier && linkRender) {
+        handleAdd(false, linkRender, false, { entity: { ...event } })
+      } else if (linkRender) {
         handleAdd(false, linkRender, true, { entity: { ...event } })
       }
     },

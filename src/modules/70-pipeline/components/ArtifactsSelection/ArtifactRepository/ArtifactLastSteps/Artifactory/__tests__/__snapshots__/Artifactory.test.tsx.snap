@@ -17,7 +17,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
         action="#"
       >
         <div
-          class="connectorForm"
+          class="artifactForm"
         >
           <div
             class="dockerSideCard"
@@ -513,7 +513,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
         action="#"
       >
         <div
-          class="connectorForm"
+          class="artifactForm"
         >
           <div
             class="dockerSideCard"
@@ -1009,7 +1009,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository while fetching repo
         action="#"
       >
         <div
-          class="connectorForm"
+          class="artifactForm"
         >
           <div
             class="imagePathContainer"
@@ -1442,7 +1442,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with repository as 
         action="#"
       >
         <div
-          class="connectorForm"
+          class="artifactForm"
         >
           <div
             class="imagePathContainer"
@@ -1892,7 +1892,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as erro
         action="#"
       >
         <div
-          class="connectorForm"
+          class="artifactForm"
         >
           <div
             class="imagePathContainer"
@@ -2325,7 +2325,7 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as fail
         action="#"
       >
         <div
-          class="connectorForm"
+          class="artifactForm"
         >
           <div
             class="imagePathContainer"
@@ -2758,7 +2758,7 @@ exports[`Serverless artifact renders serverlessArtifactRepository 1`] = `
         action="#"
       >
         <div
-          class="connectorForm"
+          class="artifactForm"
         >
           <div
             class="imagePathContainer"
