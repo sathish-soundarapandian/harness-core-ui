@@ -96,6 +96,12 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
                 </div>
               </td>
             </tr>
+            {step?.stepDetails?.waitStepActionTaken?.actionTaken ? (
+              <tr>
+                <th>{getString('action')}</th>
+                <td>{step?.stepDetails?.waitStepActionTaken?.actionTaken}</td>
+              </tr>
+            ) : null}
           </tbody>
         </table>
       </Container>
