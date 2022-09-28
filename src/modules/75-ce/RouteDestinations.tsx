@@ -595,6 +595,15 @@ const CENonMFERoutes = (
     >
       <NodeDetailsPage />
     </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCEDashboards({ ...accountPathProps })}
+      exact
+      pageName={PAGE_NAME.CEDashboards}
+    >
+      <BIDashboard />
+    </RouteWithLayout>
   </>
 )
 
@@ -683,7 +692,8 @@ const CERoutes: React.FC = () => {
           perspectiveName: ':perspectiveName',
           clusterName: ':clusterName',
           nodeId: ':nodeId'
-        })
+        }),
+        routes.toCEDashboards({ ...accountPathProps })
       ]
     : []
 
@@ -770,15 +780,6 @@ const CERoutes: React.FC = () => {
           exact
         >
           <RedirectToNewNodeRecommendationDetailsRoute />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCEDashboards({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CEDashboards}
-        >
-          <BIDashboard />
         </RouteWithLayout>
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}
