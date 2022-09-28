@@ -11,6 +11,7 @@ export const customMetricsFormikPropertyName = 'customMetrics'
 export const selectedIndexFormikPropertyName = 'selectedCustomMetricIndex'
 
 export const defaultNewCustomMetricName = 'CustomMetric'
+export const defaultNewCustomMetricIdentifier = 'customMetric'
 
 export const DefaultCustomMetricGroupName = 'Please Select Group Name'
 export const ExceptionGroupName = '+ Add New'

@@ -9,6 +9,7 @@ import {
   emptyHealthSource,
   metricPack,
   mockData,
+  sampleDataMockResponse,
   submitRequestDataPayload,
   submitRequestFormikPayload
 } from './CloudWatch.mock'
@@ -19,6 +20,9 @@ jest.mock('services/cv', () => ({
   }),
   useGetRegions: jest.fn().mockImplementation(() => {
     return { data: { data: ['region 1', 'region 2'] } } as any
+  }),
+  useGetSampleDataForQuery: jest.fn().mockImplementation(() => {
+    return { data: sampleDataMockResponse } as any
   })
 }))
 
@@ -227,4 +231,24 @@ describe('CloudWatch', () => {
 
     expect(onSubmit).toHaveBeenCalledWith(submitRequestDataPayload, submitRequestFormikPayload)
   })
+
+  test('fetch records button should be disabled if no query is entered', () => {
+    const onSubmit = jest.fn()
+    render(
+      <TestWrapper>
+        <CloudWatch data={emptyHealthSource} onSubmit={onSubmit} />
+      </TestWrapper>
+    )
+
+    act(() => {
+      userEvent.click(screen.getByTestId('addCustomMetricButton'))
+    })
+
+    expect(screen.getByTestId(/fetchRecordsButton/)).toBeInTheDocument()
+    expect(screen.getByTestId(/fetchRecordsButton/)).toBeDisabled()
+  })
+
+  // test("should render query helper text, if fetch records button is not clicked", () => {
+
+  // })
 })

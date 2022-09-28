@@ -17,11 +17,23 @@ export function isAssignSectionValid(customMetric: CommonCustomMetricsType): boo
   return Boolean(sli?.enabled || analysis?.deploymentVerification?.enabled || analysis?.liveMonitoring?.enabled)
 }
 
+const areValidInputs = (customMetrics: CommonCustomMetricsType[], defaultString: string): boolean => {
+  return Boolean(defaultString) && Array.isArray(customMetrics)
+}
+
 export function getNewMetricIdentifier(
   customMetrics: CommonCustomMetricsType[],
-  newMetricDefaultNameString: string
+  newMetricDefaultIdentifierString: string
 ): string {
-  if (!newMetricDefaultNameString || !Array.isArray(customMetrics)) {
+  if (!areValidInputs(customMetrics, newMetricDefaultIdentifierString)) {
+    return ''
+  }
+
+  return `${newMetricDefaultIdentifierString}_${customMetrics.length + 1}`
+}
+
+export function getNewMetricName(customMetrics: CommonCustomMetricsType[], newMetricDefaultNameString: string): string {
+  if (!areValidInputs(customMetrics, newMetricDefaultNameString)) {
     return ''
   }
 

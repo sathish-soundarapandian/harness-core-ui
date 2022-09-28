@@ -1,17 +1,24 @@
-import React, { useContext } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import { useFormikContext } from 'formik'
 import { useParams } from 'react-router-dom'
-import { Button, Utils } from '@harness/uicore'
+import { Button, Container, Text, Utils } from '@harness/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { CloudWatchFormType } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch.types'
+import type { CloudWatchFormType, SampleDataType } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch.types'
 import { useGetSampleDataForQuery } from 'services/cv'
 import MetricLineChart from '@cv/pages/health-source/common/MetricLineChart/MetricLineChart'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import { getSampleDataHightchartPoints } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch.utils'
+import { useStrings } from 'framework/strings'
+import css from './QueryDataChart.module.scss'
 
 const guid = Utils.randomId()
 
 export default function QueryDataChart(): JSX.Element {
   const { values: formValues } = useFormikContext<CloudWatchFormType>()
+
+  const { getString } = useStrings()
+
+  const [isQueryExectuted, setIsQueryExectuted] = useState(false)
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
@@ -22,6 +29,29 @@ export default function QueryDataChart(): JSX.Element {
 
   const { sourceData } = useContext(SetupSourceTabsContext)
 
+  const queryParams = useMemo(() => {
+    return {
+      expression: expression || '',
+      region,
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      metricName,
+      metricIdentifier: identifier,
+      requestGuid: guid,
+      connectorIdentifier: sourceData?.connectorRef
+    }
+  }, [
+    accountId,
+    expression,
+    identifier,
+    metricName,
+    orgIdentifier,
+    projectIdentifier,
+    region,
+    sourceData?.connectorRef
+  ])
+
   const {
     refetch: fetchSampleData,
     data: sampleData,
@@ -29,69 +59,40 @@ export default function QueryDataChart(): JSX.Element {
     error
   } = useGetSampleDataForQuery({
     lazy: true,
-    queryParams: {
-      expression: 'SELECT AVG(CPUUtilization) FROM SCHEMA("AWS/EC2", InstanceId)',
-      region: 'us-east-1',
-      accountId: 'kmpySmUISimoRrJL6NL73w',
-      orgIdentifier: 'default',
-      projectIdentifier: 'cw',
-      connectorIdentifier: 'aws1',
-      metricIdentifier: 'cwmetric4',
-      metricName: 'cw-metric-4',
-      requestGuid: guid
-    }
-    // queryParams: {
-    //   expression: expression || '',
-    //   region,
-    //   accountId,
-    //   orgIdentifier,
-    //   projectIdentifier,
-    //   metricName,
-    //   metricIdentifier: identifier,
-    //   requestGuid: guid,
-    //   connectorIdentifier: sourceData?.connectorRef
-    // }
+    queryParams
   })
 
-  const options = [
-    [1664307420000, 16],
-    [1664307480000, 16],
-    [1664307540000, 16],
-    [1664307600000, 16],
-    [1664307660000, 16],
-    [1664307720000, 17],
-    [1664307780000, 16],
-    [1664307840000, 16],
-    [1664307900000, 15],
-    [1664307960000, 17],
-    [1664308020000, 16],
-    [1664308080000, 16],
-    [1664308140000, 16],
-    [1664308200000, 16],
-    [1664308260000, 16],
-    [1664308320000, 16],
-    [1664308380000, 16],
-    [1664308440000, 15],
-    [1664308500000, 16],
-    [1664308560000, 15],
-    [1664308620000, 17],
-    [1664308680000, 16],
-    [1664308740000, 16],
-    [1664308800000, 16],
-    [1664308860000, 16],
-    [1664308920000, 16],
-    [1664308980000, 16],
-    [1664309040000, 16],
-    [1664309100000, 15],
-    [1664309160000, 16]
-  ]
+  const fetchSampleDataForQuery = (): ReturnType<typeof fetchSampleData> => {
+    setIsQueryExectuted(true)
+    return fetchSampleData({
+      queryParams
+    })
+  }
+
+  const options = getSampleDataHightchartPoints(sampleData?.data as SampleDataType)
+
+  const tooltipText = !expression ? getString('cv.monitoringSources.gco.manualInputQueryModal.validation.query') : ''
 
   return (
     <>
-      <Button margin={{ bottom: 'large' }} intent="primary" onClick={() => fetchSampleData()}>
-        Fetch records
+      <Button
+        margin={{ bottom: 'medium' }}
+        intent="primary"
+        disabled={!expression}
+        tooltip={tooltipText}
+        onClick={fetchSampleDataForQuery}
+        data-testid="fetchRecordsButton"
+      >
+        {getString('cv.monitoringSources.gcoLogs.fetchRecords')}
       </Button>
-      <MetricLineChart loading={false} options={options} error={error} />
+      <Container className={css.fetchDataMessage}>
+        {!isQueryExectuted && (
+          <Text data-testid="querySubmitText" icon="timeline-line-chart" iconProps={{ size: 50, intent: 'success' }}>
+            {getString('cv.healthSource.connectors.CloudWatch.validationMessage.submitQuery')}
+          </Text>
+        )}
+        {isQueryExectuted && <MetricLineChart loading={loading} options={options} error={error} />}
+      </Container>
     </>
   )
 }

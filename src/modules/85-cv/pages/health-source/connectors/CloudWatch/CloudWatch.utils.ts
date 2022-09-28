@@ -21,7 +21,8 @@ import type {
   CloudWatchFormType,
   CloudWatchSetupSource,
   CreatePayloadUtilParams,
-  HealthSourceListData
+  HealthSourceListData,
+  MetricSamplePointsData
 } from './CloudWatch.types'
 import {
   cloudWatchInitialValues,
@@ -112,6 +113,12 @@ export const createPayloadForCloudWatch = (params: CreatePayloadUtilParams): Hea
   }
 }
 
+const isIdentifierValid = (identifierText: string): boolean => {
+  const testRegex = new RegExp('^[a-z][a-zA-Z0-9_]*$')
+
+  return Boolean(identifierText && testRegex.test(identifierText))
+}
+
 export const validateForm = (
   formValues: CloudWatchFormType,
   getString: UseStringsReturn['getString']
@@ -146,6 +153,8 @@ export const validateForm = (
 
       if (!identifier) {
         errors[`customMetrics.${index}.identifier`] = getString('cv.monitoringSources.metricIdentifierValidation')
+      } else if (!isIdentifierValid(identifier)) {
+        errors[`customMetrics.${index}.identifier`] = getString('cv.monitoringSources.metricIdentifierPattern')
       }
 
       if (!groupName) {
@@ -201,4 +210,31 @@ export const validateForm = (
 
 export const getDefaultValuesForNewCustomMetric = (): CloudWatchMetricDefinition => {
   return cloneDeep(newCloudWatchCustomMetricValues)
+}
+
+const isRequiredSampleDataPresent = (sampleData: MetricSamplePointsData | null): boolean => {
+  return Boolean(
+    sampleData &&
+      sampleData?.MetricDataResults &&
+      Array.isArray(sampleData?.MetricDataResults) &&
+      sampleData?.MetricDataResults?.length
+  )
+}
+
+export const getSampleDataHightchartPoints = (sampleData: MetricSamplePointsData | null): Array<Array<number>> => {
+  const options: Array<Array<number>> = []
+
+  if (!isRequiredSampleDataPresent(sampleData) || !sampleData) {
+    return options
+  }
+
+  const [pointsData] = sampleData.MetricDataResults
+
+  if (pointsData && pointsData?.Timestamps) {
+    pointsData?.Timestamps?.forEach((timeStamp, index) => {
+      options.push([timeStamp * 1000, pointsData?.Values[index]])
+    })
+  }
+
+  return options
 }

@@ -6845,6 +6845,7 @@ export interface StringsMap {
   'cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder': string
   'cv.healthSource.connectors.CloudWatch.validationMessage.customMetrics': string
   'cv.healthSource.connectors.CloudWatch.validationMessage.expression': string
+  'cv.healthSource.connectors.CloudWatch.validationMessage.submitQuery': string
   'cv.healthSource.connectors.Dynatrace.defaultMetricName': string
   'cv.healthSource.connectors.Dynatrace.keyRequestRequiredLabel': string
   'cv.healthSource.connectors.Dynatrace.servicePlaceholder': string
@@ -7157,6 +7158,7 @@ export interface StringsMap {
   'cv.monitoringSources.lowerCounts': string
   'cv.monitoringSources.mapMetricsToServices': string
   'cv.monitoringSources.mapQueriesToServices': string
+  'cv.monitoringSources.metricIdentifierPattern': string
   'cv.monitoringSources.metricIdentifierValidation': string
   'cv.monitoringSources.metricLabel': string
   'cv.monitoringSources.metricNameLabel': string

@@ -197,6 +197,7 @@ monitoringSources:
   higherCounts: Higher value is higher risk
   lowerCounts: Lower value is higher risk
   metricNameValidation: Metric Name is required.
+  metricIdentifierPattern: Identifier should be alphanumeric and should start with lower case. Only allowed special character is "_"
   metricIdentifierValidation: Metric identifier is required.
   metricValidation: Metric is required.
   uniqueIdentifierValidation: '{{idName}} already exists. Provide a unique identifier.'
@@ -636,6 +637,7 @@ healthSource:
       validationMessage:
         expression: Expression is required
         customMetrics: Add minimum one custom metric
+        submitQuery: Submit query to see records
 
     NewRelic:
       applicationLabel: Find an NewRelic application

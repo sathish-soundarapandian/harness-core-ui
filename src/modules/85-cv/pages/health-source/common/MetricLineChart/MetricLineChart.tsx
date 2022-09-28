@@ -29,6 +29,8 @@ export default function MetricLineChart({
 }): JSX.Element {
   const { getString } = useStrings()
 
+  console.log('options', options)
+
   if (loading) {
     return (
       <Container>

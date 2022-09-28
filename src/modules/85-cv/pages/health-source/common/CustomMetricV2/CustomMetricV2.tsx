@@ -10,9 +10,10 @@ import {
   getIsCustomMetricPresent,
   getIsGivenMetricPresent,
   getNewMetricIdentifier,
+  getNewMetricName,
   getUpdatedSelectedMetricIndex
 } from './CustomMetric.utils'
-import { defaultNewCustomMetricName } from './CustomMetricV2.constants'
+import { defaultNewCustomMetricIdentifier, defaultNewCustomMetricName } from './CustomMetricV2.constants'
 import AddCustomMetricButton from './components/AddCustomMetricsButton'
 import css from './CustomMetricV2.module.scss'
 
@@ -33,12 +34,11 @@ export default function CustomMetricV2<T extends CommonCustomMetricPropertyType>
 
   const onAddMetric = useCallback(() => {
     if (Array.isArray(formikValues.customMetrics)) {
-      const newMetricIdentifier = getNewMetricIdentifier(formikValues.customMetrics, defaultNewCustomMetricName)
       const updatedCustomMetric = [...formikValues.customMetrics]
       updatedCustomMetric.push({
         ...newCustomMetricDefaultValues,
-        metricName: newMetricIdentifier,
-        identifier: newMetricIdentifier
+        metricName: getNewMetricName(formikValues.customMetrics, defaultNewCustomMetricName),
+        identifier: getNewMetricIdentifier(formikValues.customMetrics, defaultNewCustomMetricIdentifier)
       })
 
       setValues({
