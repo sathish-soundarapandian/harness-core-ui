@@ -102,8 +102,8 @@ const ConfigRenderer = ({
                 />
               </Layout.Vertical>
               <Layout.Horizontal spacing="small">
-                <Button icon="tick" minimal withoutCurrentColor className={css.tickButton} />
-                <Button icon="cross" minimal withoutCurrentColor className={css.crossButton} />
+                <Button icon="tick" minimal withoutCurrentColor className={css.tickButton} onClick={saveEntity} />
+                <Button icon="cross" minimal withoutCurrentColor className={css.crossButton} onClick={setVisualView} />
               </Layout.Horizontal>
             </Layout.Horizontal>
             <hr className={css.separator} />
