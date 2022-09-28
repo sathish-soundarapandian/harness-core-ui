@@ -5,8 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { createElkHealthSourcePayload, buildElkHealthSourceInfo } from '../ElkHealthSource.utils'
-import { setupSource, ElkPayload, data, params } from './ElkHealthSource.mock'
+import { getElkMappedMetric } from '../components/MapQueriesToHarnessService/utils'
+import {
+  createElkHealthSourcePayload,
+  buildElkHealthSourceInfo,
+  getMappedServicesAndEnvs
+} from '../ElkHealthSource.utils'
+import { setupSource, ElkPayload, data, params, setupSource_noData } from './ElkHealthSource.mock'
 
 describe('Test Util functions', () => {
   test('Test CreateElkHealthSourcePayload', () => {
@@ -14,5 +19,14 @@ describe('Test Util functions', () => {
   })
   test('Test buildElkHealthSourceInfo', () => {
     expect(buildElkHealthSourceInfo(params, data)).toEqual(setupSource)
+  })
+  test('Test buildElkHealthSourceInfo with no data', () => {
+    expect(buildElkHealthSourceInfo(params, null)).toEqual(setupSource_noData)
+  })
+  test('Test buildElkHealthSourceInfo with no data', () => {
+    expect(getElkMappedMetric({ sourceData: setupSource, isConnectorRuntimeOrExpression: true })).toEqual({
+      selectedMetric: 'ELK Logs Query',
+      mappedMetrics: getMappedServicesAndEnvs(data)
+    })
   })
 })

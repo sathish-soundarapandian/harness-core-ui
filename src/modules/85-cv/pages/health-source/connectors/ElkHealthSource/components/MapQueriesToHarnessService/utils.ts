@@ -25,20 +25,21 @@ export function updateSelectedMetricsMap({
   formikProps
 }: UpdateSelectedQueriesMap): any {
   const updatedMap = new Map(mappedMetrics)
+  const formValues = formikProps.values ?? ({} as MapElkQueryToService)
 
   // in the case where user updates query name, update the key for current value
-  if (oldMetric !== formikProps.values?.metricName) {
+  if (oldMetric !== formValues.metricName) {
     updatedMap.delete(oldMetric)
   }
 
   // if newly created query create form object
-  if (!updatedMap.has(updatedMetric)) {
+  /* istanbul ignore else */ if (!updatedMap.has(updatedMetric)) {
     updatedMap.set(updatedMetric, { ...initialFormData, metricName: updatedMetric })
   }
 
   // update map with current form data
-  if (formikProps.values?.metricName) {
-    updatedMap.set(formikProps.values.metricName, formikProps.values as MapElkQueryToService)
+  /* istanbul ignore else */ if (formValues.metricName) {
+    updatedMap.set(formValues.metricName, formValues)
   }
   return { selectedMetric: updatedMetric, mappedMetrics: updatedMap }
 }
@@ -73,7 +74,7 @@ export function validateMappings(
     })
   }
 
-  const duplicateNames = createdMetrics?.filter((metricName, index) => {
+  const duplicateNames = createdMetrics.filter((metricName, index) => {
     if (index === selectedMetricIndex) {
       return false
     }

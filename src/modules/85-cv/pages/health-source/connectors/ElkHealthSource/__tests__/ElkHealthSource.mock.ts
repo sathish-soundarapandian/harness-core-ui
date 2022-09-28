@@ -47,24 +47,6 @@ export const data = {
   isEdit: true,
   healthSourceList: [
     {
-      name: 'NewRelic_editname',
-      identifier: 'NewRelic',
-      type: 'NewRelic',
-      spec: {
-        connectorRef: 'org.newrelicinsightsconnectorforautomation',
-        applicationName: 'My Application',
-        applicationId: '107019083',
-        feature: 'apm',
-        metricPacks: [
-          {
-            identifier: 'Performance',
-            metricThresholds: null
-          }
-        ],
-        newRelicMetricDefinitions: []
-      }
-    },
-    {
       name: 'elk_hs3',
       identifier: 'elk_hs3',
       type: 'ELKLog',
@@ -140,7 +122,6 @@ export const data = {
     value: 'ELK Logs'
   }
 }
-
 export const setupSource = {
   accountId: 'kmpySmUISimoRrJL6NL73w',
   orgIdentifier: 'default',
@@ -152,6 +133,26 @@ export const setupSource = {
   product: 'ELK Logs',
   type: 'ELKLog' as any,
   mappedServicesAndEnvs: getMappedServicesAndEnvs(data),
+  messageIdentifier: undefined,
+  timeStampFormat: undefined
+}
+
+export const setupSource_noData = {
+  accountId: 'kmpySmUISimoRrJL6NL73w',
+  orgIdentifier: 'default',
+  projectIdentifier: 'Demo',
+  type: 'ELKLog' as any,
+  mappedServicesAndEnvs: getMappedServicesAndEnvs(null),
+  messageIdentifier: undefined,
+  timeStampFormat: undefined
+}
+
+export const setupSourceMappedMetric = {
+  accountId: 'kmpySmUISimoRrJL6NL73w',
+  orgIdentifier: 'default',
+  projectIdentifier: 'Demo',
+  type: 'ELKLog' as any,
+  mappedServicesAndEnvs: getMappedServicesAndEnvs(null),
   messageIdentifier: undefined,
   timeStampFormat: undefined
 }

@@ -14,8 +14,8 @@ import type { ElkHealthSourceInfo } from './ElkHealthSource.types'
 export function createElkHealthSourcePayload(setupSource: ElkHealthSourceInfo): ElkHealthSourcePayload {
   const ElkHealthSourcePayload: ElkHealthSourcePayload = {
     type: HealthSourceTypes.Elk,
-    identifier: setupSource?.identifier as string,
-    name: setupSource?.name as string,
+    identifier: setupSource.identifier as string,
+    name: setupSource.name as string,
     spec: {
       connectorRef: (typeof setupSource.connectorRef === 'string'
         ? setupSource.connectorRef
@@ -25,7 +25,7 @@ export function createElkHealthSourcePayload(setupSource: ElkHealthSourceInfo): 
     }
   }
 
-  for (const entry of setupSource?.mappedServicesAndEnvs?.entries() || []) {
+  for (const entry of setupSource.mappedServicesAndEnvs?.entries() || []) {
     const {
       metricName,
       query,

@@ -51,7 +51,7 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
     expect(
       validateMappings(mockGetString as any, ['metric1', 'metric4'], 0, {
         query: 'sdfsdf',
-        metricName: '',
+        metricName: 'metric4',
         serviceInstance: '',
         timeStampFormat: '',
         logIndexes: '',
