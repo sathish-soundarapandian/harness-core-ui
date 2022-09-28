@@ -14,6 +14,7 @@ declare const styles: {
   readonly createNewFreezeForm: string
   readonly isEditView: string
   readonly sectionCard: string
+  readonly separator: string
   readonly stepTabs: string
   readonly tabIcon: string
   readonly yamlBuilder: string

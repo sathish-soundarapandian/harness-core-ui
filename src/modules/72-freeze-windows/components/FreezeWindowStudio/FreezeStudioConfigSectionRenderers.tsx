@@ -54,13 +54,21 @@ export const EnvironmentTypeRenderer = ({ getString, name }: EnvTypeRendererProp
     { label: getString('common.preProduction'), value: EnvironmentType.NON_PROD }
   ])
 
-  return <FormInput.Select name={name} items={envTypes} label={getString('envType')} />
+  return <FormInput.Select name={name} items={envTypes} label={getString('envType')} style={{ width: '400px' }} />
 }
 
 export const ServiceFieldRenderer = ({ getString, isDisabled, name }) => {
   const [disabledItems] = React.useState<SelectOption[]>([{ label: getString('common.allServices'), value: All }])
   if (isDisabled) {
-    return <FormInput.Select name={name} items={disabledItems} disabled={isDisabled} label={getString('services')} />
+    return (
+      <FormInput.Select
+        name={name}
+        items={disabledItems}
+        disabled={isDisabled}
+        label={getString('services')}
+        style={{ width: '400px' }}
+      />
+    )
   }
   return <div>null</div>
 }
@@ -120,7 +128,9 @@ export const Organizationfield = ({ getString, namePrefix, organizations, values
         }}
       />
 
-      {isCheckBoxEnabled && excludeOrgValue ? <FormInput.Select name={excludeOrgName} items={organizations} /> : null}
+      {isCheckBoxEnabled && excludeOrgValue ? (
+        <FormInput.Select name={excludeOrgName} items={organizations} style={{ marginLeft: '24px' }} />
+      ) : null}
     </>
   )
 }
@@ -167,7 +177,12 @@ export const ProjectField = ({ getString, namePrefix, projects, values, setField
       />
 
       {isCheckBoxEnabled && excludeProjValue ? (
-        <FormInput.Select disabled={isOrgValueAll} name={excludeProjName} items={projects} />
+        <FormInput.Select
+          disabled={isOrgValueAll}
+          name={excludeProjName}
+          items={projects}
+          style={{ marginLeft: '24px' }}
+        />
       ) : null}
     </>
   )

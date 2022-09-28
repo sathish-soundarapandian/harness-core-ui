@@ -60,7 +60,7 @@ const ConfigRenderer = ({
   resources
 }: ConfigRendererProps) => {
   const [isEditView, setEditView] = React.useState(isEdit)
-  const setVisualView = () => {
+  const saveEntity = () => {
     const values = formikProps.values.entity
 
     const updatedEntityConfigs = [...entityConfigs]
@@ -69,6 +69,11 @@ const ConfigRenderer = ({
     updateFreeze({ entityConfigs: updatedEntityConfigs })
     setEditView(false)
   }
+
+  const setVisualView = () => {
+    setEditView(false)
+  }
+
   return (
     <Container
       padding="large"
@@ -77,28 +82,42 @@ const ConfigRenderer = ({
     >
       {isEditView ? (
         <FormikForm>
-          <FormInput.Text name={`entity[${index}].name`} label={getString('name')} />
-          <Organizationfield
-            getString={getString}
-            namePrefix={`entity[${index}]`}
-            values={formikProps.values?.entity?.[index]}
-            setFieldValue={formikProps.setFieldValue}
-            organizations={resources.orgs || []}
-          />
-          <ProjectField
-            getString={getString}
-            namePrefix={`entity[${index}]`}
-            values={formikProps.values?.entity?.[index]}
-            setFieldValue={formikProps.setFieldValue}
-            projects={resources.projects || []}
-          />
-          <ServiceFieldRenderer
-            getString={getString}
-            name={`entity[${index}].${FIELD_KEYS.Service}`}
-            isDisabled={true}
-          />
-          <EnvironmentTypeRenderer getString={getString} name={`entity[${index}].${FIELD_KEYS.EnvType}`} />
-          <button onClick={setVisualView}>Save</button>
+          <Layout.Vertical>
+            <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+              <Layout.Vertical width={'400px'}>
+                <FormInput.Text name={`entity[${index}].name`} label={getString('name')} />
+                <Organizationfield
+                  getString={getString}
+                  namePrefix={`entity[${index}]`}
+                  values={formikProps.values?.entity?.[index]}
+                  setFieldValue={formikProps.setFieldValue}
+                  organizations={resources.orgs || []}
+                />
+                <ProjectField
+                  getString={getString}
+                  namePrefix={`entity[${index}]`}
+                  values={formikProps.values?.entity?.[index]}
+                  setFieldValue={formikProps.setFieldValue}
+                  projects={resources.projects || []}
+                />
+              </Layout.Vertical>
+              <Layout.Horizontal>
+                <button onClick={setVisualView}>Cancel</button>
+                <button onClick={saveEntity}>Save</button>
+              </Layout.Horizontal>
+            </Layout.Horizontal>
+            <hr className={css.separator} />
+            <Layout.Vertical>
+              <Layout.Horizontal spacing="small">
+                <ServiceFieldRenderer
+                  getString={getString}
+                  name={`entity[${index}].${FIELD_KEYS.Service}`}
+                  isDisabled={true}
+                />
+                <EnvironmentTypeRenderer getString={getString} name={`entity[${index}].${FIELD_KEYS.EnvType}`} />
+              </Layout.Horizontal>
+            </Layout.Vertical>
+          </Layout.Vertical>
         </FormikForm>
       ) : (
         <div>
