@@ -3937,6 +3937,7 @@ export interface StringsMap {
   'pipeline.stepDescription.TerraformPlan': string
   'pipeline.stepDescription.TerraformRollback': string
   'pipeline.stepDescription.Verify': string
+  'pipeline.stepDescription.Wait': string
   'pipeline.stepDescription.createPR': string
   'pipeline.stepDescription.fetchInstanceScript': string
   'pipeline.stepDescription.mergePR': string
