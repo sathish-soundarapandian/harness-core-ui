@@ -7,11 +7,12 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { Thumbnail, Container } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import { Duration } from '@common/exports'
 import { useMarkWaitStep, ExecutionNode, useExecutionDetails, WaitStepRequestDto } from 'services/pipeline-ng'
-import { Thumbnail, Container, Color } from '@wings-software/uicore'
-import { Strategy, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
+import { WaitActions, waitActionsIconMap, waitActionsStringMap } from '@pipeline/utils/FailureStrategyUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import css from './WaitStepTab.module.scss'
 
@@ -47,10 +48,10 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   })
 
   function msToTime(ms: number) {
-    let seconds: number = parseInt((ms / 1000).toFixed(1))
-    let minutes: number = parseInt((ms / (1000 * 60)).toFixed(1))
-    let hours: number = parseInt((ms / (1000 * 60 * 60)).toFixed(1))
-    let days: number = parseInt((ms / (1000 * 60 * 60 * 24)).toFixed(1))
+    const seconds: number = parseInt((ms / 1000).toFixed(1))
+    const minutes: number = parseInt((ms / (1000 * 60)).toFixed(1))
+    const hours: number = parseInt((ms / (1000 * 60 * 60)).toFixed(1))
+    const days: number = parseInt((ms / (1000 * 60 * 60 * 24)).toFixed(1))
     if (seconds < 60) return seconds + ' Sec'
     else if (minutes < 60) return minutes + ' Min'
     else if (hours < 24) return hours + ' Hrs'
@@ -58,10 +59,8 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
   }
 
   function DurationMessage() {
-    console.log(stepData, 'hello')
     const duration = stepData?.data?.duration
     const daysDuration = msToTime(duration || 0)
-
     return (
       <Container
         color={Color.ORANGE_400}
@@ -105,7 +104,6 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
     isDisabled = true
-    console.log(e.target.value, 'hello2')
     const actionPassed = (
       e.target.value === 'MarkAsSuccess' ? 'MARK_AS_SUCCESS' : 'MARK_AS_FAIL'
     ) as WaitStepRequestDto['action']
@@ -137,12 +135,12 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
               key={0}
               label={
                 hideFailButton
-                  ? getString(stringsMap[Strategy.MarkedAsSuccess])
-                  : getString(stringsMap[Strategy.MarkAsSuccess])
+                  ? getString(waitActionsStringMap[WaitActions.MarkedAsSuccess])
+                  : getString(waitActionsStringMap[WaitActions.MarkAsSuccess])
               }
-              icon={strategyIconMap[Strategy.MarkAsSuccess]}
-              value={Strategy.MarkAsSuccess}
-              name={Strategy.MarkAsSuccess}
+              icon={waitActionsIconMap[WaitActions.MarkAsSuccess]}
+              value={WaitActions.MarkAsSuccess}
+              name={WaitActions.MarkAsSuccess}
               onClick={handleChange}
               className={css.thumbnail}
             />
@@ -151,12 +149,12 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
               key={0}
               label={
                 hideSuccessButton
-                  ? getString(stringsMap[Strategy.MarkedAsFailure])
-                  : getString(stringsMap[Strategy.MarkAsFailure])
+                  ? getString(waitActionsStringMap[WaitActions.MarkedAsFailure])
+                  : getString(waitActionsStringMap[WaitActions.MarkAsFailure])
               }
-              icon={strategyIconMap[Strategy.MarkAsFailure]}
-              value={Strategy.MarkAsFailure}
-              name={Strategy.MarkAsFailure}
+              icon={waitActionsIconMap[WaitActions.MarkAsFailure]}
+              value={WaitActions.MarkAsFailure}
+              name={WaitActions.MarkAsFailure}
               onClick={handleChange}
               className={css.thumbnail}
             />

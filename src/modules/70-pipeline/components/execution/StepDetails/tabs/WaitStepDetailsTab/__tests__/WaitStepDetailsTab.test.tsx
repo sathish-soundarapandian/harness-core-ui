@@ -7,10 +7,10 @@
 
 import React from 'react'
 import { render, fireEvent, waitFor, queryByAttribute } from '@testing-library/react'
-import { useMarkWaitStep, ResponseWaitStepExecutionDetailsDto } from 'services/pipeline-ng'
+import type { ResponseWaitStepExecutionDetailsDto } from 'services/pipeline-ng'
 import { TestWrapper, UseGetMockData } from '@common/utils/testUtils'
-import { WaitStepDetailsTab } from '../WaitStepDetailsTab'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
+import { WaitStepDetailsTab } from '../WaitStepDetailsTab'
 
 const data = {
   uuid: 'VsAwQ8XLTP2uktP0IPopTQ',

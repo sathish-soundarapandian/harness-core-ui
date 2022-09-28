@@ -100,7 +100,7 @@ exports[`Wait Step View Test renders snapshot 1`] = `
               </tr>
               <tr>
                 <th>
-                  elapsedTime
+                  pipeline.execution.elapsedTime
                 </th>
                 <td>
                   <div>
