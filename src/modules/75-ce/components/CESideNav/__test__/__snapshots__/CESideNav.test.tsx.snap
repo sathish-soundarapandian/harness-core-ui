@@ -93,6 +93,16 @@ exports[`side nav tests feedback tooltip appears on hover of project 1`] = `
           </a>
           <a
             class="link"
+            href="/account/accountId/ce/anomaly-detection"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.anomalyDetection.sideNavText
+            </p>
+          </a>
+          <a
+            class="link"
             href="/account/accountId/ce/recommendations"
           >
             <p
@@ -103,12 +113,32 @@ exports[`side nav tests feedback tooltip appears on hover of project 1`] = `
           </a>
           <a
             class="link"
+            href="/account/accountId/ce/commitment-orchestration"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.commitmentOrchestration.sideNavLabel
+            </p>
+          </a>
+          <a
+            class="link"
             href="/account/accountId/ce/autostopping-rules"
           >
             <p
               class="StyledProps--font StyledProps--main text"
             >
               ce.co.breadCrumb.rules
+            </p>
+          </a>
+          <a
+            class="link"
+            href="/account/accountId/ce/bi-dashboards"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.biDashboard.sideNavText
             </p>
           </a>
           <div>
@@ -251,6 +281,16 @@ exports[`side nav tests side nav renders without error when no project is select
           </a>
           <a
             class="link"
+            href="/account/accountId/ce/anomaly-detection"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.anomalyDetection.sideNavText
+            </p>
+          </a>
+          <a
+            class="link"
             href="/account/accountId/ce/recommendations"
           >
             <p
@@ -261,12 +301,32 @@ exports[`side nav tests side nav renders without error when no project is select
           </a>
           <a
             class="link"
+            href="/account/accountId/ce/commitment-orchestration"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.commitmentOrchestration.sideNavLabel
+            </p>
+          </a>
+          <a
+            class="link"
             href="/account/accountId/ce/autostopping-rules"
           >
             <p
               class="StyledProps--font StyledProps--main text"
             >
               ce.co.breadCrumb.rules
+            </p>
+          </a>
+          <a
+            class="link"
+            href="/account/accountId/ce/bi-dashboards"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.biDashboard.sideNavText
             </p>
           </a>
           <div>
@@ -409,6 +469,16 @@ exports[`side nav tests side nav renders without error when on Access Point tab 
           </a>
           <a
             class="link"
+            href="/account/accountId/ce/anomaly-detection"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.anomalyDetection.sideNavText
+            </p>
+          </a>
+          <a
+            class="link"
             href="/account/accountId/ce/recommendations"
           >
             <p
@@ -419,12 +489,32 @@ exports[`side nav tests side nav renders without error when on Access Point tab 
           </a>
           <a
             class="link"
+            href="/account/accountId/ce/commitment-orchestration"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.commitmentOrchestration.sideNavLabel
+            </p>
+          </a>
+          <a
+            class="link"
             href="/account/accountId/ce/autostopping-rules"
           >
             <p
               class="StyledProps--font StyledProps--main text"
             >
               ce.co.breadCrumb.rules
+            </p>
+          </a>
+          <a
+            class="link"
+            href="/account/accountId/ce/bi-dashboards"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.biDashboard.sideNavText
             </p>
           </a>
           <div>
@@ -567,6 +657,16 @@ exports[`side nav tests side nav renders without error when on AutoStopping Rule
           </a>
           <a
             class="link"
+            href="/account/accountId/ce/anomaly-detection"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.anomalyDetection.sideNavText
+            </p>
+          </a>
+          <a
+            class="link"
             href="/account/accountId/ce/recommendations"
           >
             <p
@@ -577,12 +677,32 @@ exports[`side nav tests side nav renders without error when on AutoStopping Rule
           </a>
           <a
             class="link"
+            href="/account/accountId/ce/commitment-orchestration"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.commitmentOrchestration.sideNavLabel
+            </p>
+          </a>
+          <a
+            class="link"
             href="/account/accountId/ce/autostopping-rules"
           >
             <p
               class="StyledProps--font StyledProps--main text"
             >
               ce.co.breadCrumb.rules
+            </p>
+          </a>
+          <a
+            class="link"
+            href="/account/accountId/ce/bi-dashboards"
+          >
+            <p
+              class="StyledProps--font StyledProps--main text"
+            >
+              ce.biDashboard.sideNavText
             </p>
           </a>
           <div>

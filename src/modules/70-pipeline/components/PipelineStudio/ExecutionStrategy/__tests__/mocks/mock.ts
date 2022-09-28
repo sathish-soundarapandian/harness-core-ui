@@ -414,3 +414,144 @@ export const defaultUpdateStageFnArg = {
     }
   ]
 }
+
+export const rollingUpdateSshStageFnArg = {
+  identifier: 'stage_1',
+  name: 'stage 1',
+  spec: {
+    serviceConfig: { serviceDefinition: { type: 'Ssh' }, serviceRef: 'service_3' },
+    execution: {
+      steps: [
+        {
+          step: {
+            identifier: 'rolloutDeployment',
+            name: 'Rollout Deployment',
+            spec: {
+              skipDryRun: false
+            },
+            timeout: '10m',
+            type: 'K8sRollingDeploy'
+          }
+        }
+      ],
+      rollbackSteps: [
+        {
+          step: {
+            identifier: 'rollbackRolloutDeployment',
+            name: 'Rollback Rollout Deployment',
+            spec: {},
+            timeout: '10m',
+            type: 'K8sRollingRollback'
+          }
+        }
+      ]
+    }
+  },
+  type: 'Deployment',
+  failureStrategies: [
+    {
+      onFailure: {
+        action: { type: 'StageRollback' },
+        errors: ['AllErrors']
+      }
+    }
+  ]
+}
+
+export const canaryUpdateSshStageFnArg = {
+  identifier: 'stage_1',
+  name: 'stage 1',
+  spec: {
+    serviceConfig: { serviceDefinition: { type: 'Ssh' }, serviceRef: 'service_3' },
+    execution: {
+      steps: [
+        {
+          stepGroup: {
+            identifier: 'canaryDepoyment',
+            name: 'Canary Deployment',
+            rollbackSteps: [
+              {
+                step: {
+                  identifier: 'rollbackCanaryDelete',
+                  name: 'Canary Delete',
+                  spec: {},
+                  timeout: '10m',
+                  type: 'K8sCanaryDelete'
+                }
+              }
+            ],
+            steps: [
+              {
+                step: {
+                  identifier: 'canaryDeployment',
+                  name: 'Canary Deployment',
+                  spec: {
+                    instanceSelection: {
+                      spec: {
+                        count: 1
+                      },
+                      type: 'Count'
+                    },
+                    skipDryRun: false
+                  },
+                  timeout: '10m',
+                  type: 'K8sCanaryDeploy'
+                }
+              },
+              {
+                step: {
+                  identifier: 'canaryDelete',
+                  name: 'Canary Delete',
+                  spec: {},
+                  timeout: '10m',
+                  type: 'K8sCanaryDelete'
+                }
+              }
+            ]
+          }
+        },
+        {
+          stepGroup: {
+            identifier: 'primaryDepoyment',
+            name: 'Primary Deployment',
+            rollbackSteps: [
+              {
+                step: {
+                  identifier: 'rollingRollback',
+                  name: 'Rolling Rollback',
+                  spec: {},
+                  timeout: '10m',
+                  type: 'K8sRollingRollback'
+                }
+              }
+            ],
+            steps: [
+              {
+                step: {
+                  identifier: 'rollingDeployment',
+                  name: 'Rolling Deployment',
+                  spec: {
+                    skipDryRun: false
+                  },
+                  timeout: '10m',
+                  type: 'K8sRollingDeploy'
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  type: 'Deployment',
+  failureStrategies: [
+    {
+      onFailure: {
+        action: {
+          type: 'StageRollback'
+        },
+        errors: ['AllErrors']
+      }
+    }
+  ]
+}

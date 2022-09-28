@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { defaultTo as _defaultTo, isBoolean } from 'lodash-es'
+import React, { useEffect, useState } from 'react'
+import { defaultTo, get, isBoolean } from 'lodash-es'
 import { Layout, Tabs, Tab, Button, Container, Icon } from '@wings-software/uicore'
 import { useParams, useHistory } from 'react-router-dom'
 import { useToaster } from '@common/exports'
@@ -24,7 +24,8 @@ import {
   useGetServices,
   useCreateStaticSchedules,
   useDeleteStaticSchedule,
-  useToggleRuleMode
+  useToggleRuleMode,
+  useFetchRules
 } from 'services/lw'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import { ASRuleTabs } from '@ce/constants'
@@ -45,6 +46,9 @@ interface COGatewayDetailsProps {
   isEditFlow: boolean
   originalRuleDetails?: Service
 }
+
+const TOTAL_ITEMS_PER_PAGE = 100
+
 const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<{
     accountId: string
@@ -58,12 +62,13 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
   const { currentUserInfo } = useAppStore()
   const dryRunModeEnabled = useFeatureFlag(FeatureFlag.CCM_AS_DRY_RUN)
 
-  const [selectedTabId, setSelectedTabId] = useState<string>(_defaultTo(props.activeTab, ASRuleTabs.CONFIGURATION))
+  const [selectedTabId, setSelectedTabId] = useState<string>(defaultTo(props.activeTab, ASRuleTabs.CONFIGURATION))
   const [validConfig, setValidConfig] = useState<boolean>(false)
   const [validAccessSetup, setValidAccessSetup] = useState<boolean>(false)
   const [saveInProgress, setSaveInProgress] = useState<boolean>(false)
   const [activeConfigStep, setActiveConfigStep] = useState<{ count?: number; tabId?: string } | null>(null)
   const [serverNames, setServerNames] = useState<string[]>([])
+  const [dryRunRules, setDryRunRules] = useState<Service[]>([])
 
   const tabs = [ASRuleTabs.CONFIGURATION, ASRuleTabs.SETUP_ACCESS, ASRuleTabs.REVIEW]
 
@@ -74,9 +79,17 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
     },
     debounce: 300
   })
+  /* istanbul ignore else */
   if (error) {
-    showError('Faield to fetch services', undefined, 'ce.svc.fetch.error')
+    showError(getString('ce.co.autoStoppingRule.serviceFetchFailureMessage'), undefined, 'ce.svc.fetch.error')
   }
+
+  const { mutate: fetchDryRunRules } = useFetchRules({
+    account_id: accountId,
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
 
   const { mutate: saveGateway } = useSaveService({
     account_id: accountId,
@@ -100,19 +113,30 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
 
   const { mutate: toggleMode } = useToggleRuleMode({
     account_id: accountId,
-    rule_id: _defaultTo(props.originalRuleDetails?.id, 0),
+    rule_id: defaultTo(props.originalRuleDetails?.id, 0),
     queryParams: { accountIdentifier: accountId }
   })
 
+  useEffect(() => {
+    fetchDryRunRules({
+      page: 1,
+      limit: TOTAL_ITEMS_PER_PAGE,
+      dry_run: true
+    }).then(({ response }) => {
+      setDryRunRules(defaultTo(get(response, 'records'), []))
+    })
+  }, [])
+
+  /* istanbul ignore next */
   const saveStaticSchedules = async (ruleId: number) => {
-    const schedules = _defaultTo(
+    const schedules = defaultTo(
       props.gatewayDetails.schedules
         ?.filter(s => !s.isDeleted)
         ?.map(s =>
           Utils.convertScheduleClientToSchedule(s, {
             accountId,
             ruleId,
-            userId: _defaultTo(currentUserInfo.uuid, '')
+            userId: defaultTo(currentUserInfo.uuid, '')
           })
         ),
       []
@@ -129,16 +153,17 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
     } catch (e) {
       showError(
         getString('ce.co.autoStoppingRule.configuration.step4.tabs.schedules.unsuccessfulDeletionMessage', {
-          error: _defaultTo(e.data?.errors?.join('\n'), e.data?.message)
+          error: defaultTo(Utils.getASErrorMessage(e), e.data?.message)
         })
       )
     }
   }
 
+  /* istanbul ignore next */
   const deleteStaticSchedules = async () => {
     const deletedSchedules = Utils.getConditionalResult(
       props.isEditFlow,
-      _defaultTo(
+      defaultTo(
         props.gatewayDetails.schedules?.filter(s => s.isDeleted),
         []
       ),
@@ -150,6 +175,7 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
     }
   }
 
+  /* istanbul ignore next */
   const triggerDeleteSchedule = async (data: FixedScheduleClient) => {
     await deleteSchedule(data.id as number)
     showSuccess(
@@ -165,21 +191,24 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
       await saveStaticSchedules(response?.id as number)
       history.push(
         routes.toCECORules({
-          accountId
+          accountId,
+          params: response.opts?.dry_run === true ? 'mode=dryrun' : ''
         })
       )
     }
   }
 
   const handleModeToggle = async (currRuleDetails: Service) => {
+    const currentDryrunStatus = get(currRuleDetails, 'opts.dry_run')
+    const originalDryrunStatus = get(props, 'originalRuleDetails.opts.dry_run')
     if (
       dryRunModeEnabled &&
       props.isEditFlow &&
-      isBoolean(currRuleDetails?.opts?.dry_run) &&
-      currRuleDetails?.opts?.dry_run !== props.originalRuleDetails?.opts?.dry_run
+      isBoolean(currentDryrunStatus) &&
+      currentDryrunStatus !== originalDryrunStatus
     ) {
       await toggleMode({
-        id: _defaultTo(props.originalRuleDetails?.id, 0)
+        id: defaultTo(props.originalRuleDetails?.id, 0)
       })
     }
   }
@@ -198,13 +227,14 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
       const result = await saveGateway({ service: gateway, deps: props.gatewayDetails.deps, apply_now: false }) // eslint-disable-line
       // Rule creation is halted until the access point creation takes place successfully.
       // Informing the user regarding the same
+      /* istanbul ignore next */
       if (props.gatewayDetails.accessPointData?.status === 'submitted') {
         showSuccess('Rule will take effect once the load balancer creation is successful!!')
       }
       await handlePostRuleSave(result.response)
-    } catch (e) {
+    } catch (e) /* istanbul ignore next */ {
       setSaveInProgress(false)
-      showError(e.data?.errors?.join('\n') || e.data?.message || e.message, undefined, 'ce.savegw.error')
+      showError(Utils.getASErrorMessage(e) || e.data?.message || e.message, undefined, 'ce.savegw.error')
     }
   }
   const nextTab = (): void => {
@@ -216,6 +246,7 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
       setSelectedTabId(tabs[tabIndex + 1])
     }
   }
+  /* istanbul ignore next */
   const previousTab = (): void => {
     const tabIndex = tabs.findIndex(t => t == selectedTabId)
     if (tabIndex > 0) {
@@ -237,24 +268,27 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
     )
   }
 
+  /* istanbul ignore next */
   const handleReviewDetailsEdit = (tabDetails: {
     id: string
     metaData?: { activeStepCount?: number; activeStepTabId?: string }
   }) => {
     setSelectedTabId(tabDetails.id)
     const activeStepDetails: { count?: number; tabId?: string } = {}
-    activeStepDetails['count'] = tabDetails.metaData?.activeStepCount
-    activeStepDetails['tabId'] = tabDetails.metaData?.activeStepTabId
+    activeStepDetails['count'] = get(tabDetails, 'metaData.activeStepCount')
+    activeStepDetails['tabId'] = get(tabDetails, 'metaData.activeStepTabId')
     setActiveConfigStep(activeStepDetails)
   }
 
+  const allServices = defaultTo(get(servicesData, 'response'), []).concat(dryRunRules)
+
   return (
-    <Container style={{ overflow: 'scroll', maxHeight: '100vh', backgroundColor: 'var(--white)' }}>
+    <Container className={css.gatewayDetailsContainer}>
       <Breadcrumbs
         className={css.breadCrumb}
         links={[
           {
-            url: routes.toCECORules({ accountId }),
+            url: routes.toCECORules({ accountId, params: '' }),
             label: getString('ce.co.breadCrumb.rules')
           },
           {
@@ -277,7 +311,7 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
                   valid={validConfig}
                   setValidity={setValidConfig}
                   activeStepDetails={activeConfigStep}
-                  allServices={servicesData?.response as Service[]}
+                  allServices={allServices}
                 />
               }
             />
@@ -292,7 +326,7 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
                   gatewayDetails={props.gatewayDetails}
                   setGatewayDetails={props.setGatewayDetails}
                   activeStepDetails={activeConfigStep}
-                  allServices={servicesData?.response as Service[]}
+                  allServices={allServices}
                   serverNames={serverNames}
                   setServerNames={setServerNames}
                 />
@@ -306,7 +340,7 @@ const COGatewayDetails: React.FC<COGatewayDetailsProps> = props => {
                 <COGatewayReview
                   gatewayDetails={props.gatewayDetails}
                   onEdit={handleReviewDetailsEdit}
-                  allServices={servicesData?.response as Service[]}
+                  allServices={allServices}
                   serverNames={serverNames}
                 />
               }

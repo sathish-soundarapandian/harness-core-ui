@@ -13,6 +13,7 @@ import cx from 'classnames'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
+  AllowedTypes,
   Button,
   Formik,
   FormikForm,
@@ -46,10 +47,11 @@ import type {
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowTemplateFieldRenderer'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { ServiceNowTicketTypeSelectOption } from '../ServiceNowApproval/types'
 import { getGenuineValue } from '../ServiceNowApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
@@ -334,6 +336,7 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('timeout', value)}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
           />
         )}
       </div>
@@ -545,7 +548,9 @@ function FormContent({
                                 placeholder={getString('common.valuePlaceholder')}
                                 disabled={isApprovalStepFieldDisabled(readonly)}
                                 multiTextInputProps={{
-                                  allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                    item => !isMultiTypeRuntime(item)
+                                  ) as AllowedTypes,
                                   expressions
                                 }}
                               />
@@ -609,7 +614,10 @@ function FormContent({
                     />
                   )}
                 </div>
-                <ServiceNowTemplateFieldsRenderer templateFields={formik.values.spec.templateFields} />
+                <ServiceNowTemplateFieldsRenderer
+                  templateFields={formik.values.spec.templateFields}
+                  templateName={formik.values.spec.templateName}
+                />
               </>
             )}
           </div>

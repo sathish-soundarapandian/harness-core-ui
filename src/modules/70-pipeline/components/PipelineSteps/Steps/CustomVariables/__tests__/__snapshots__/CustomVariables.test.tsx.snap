@@ -212,7 +212,7 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
     class="customVariablesStage"
   >
     <div
-      class="tableRow headerRow"
+      class="tableRow headerRow variablesTableRow"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -231,7 +231,7 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       </p>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -441,7 +441,7 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       </div>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -651,13 +651,32 @@ exports[`Custom Variables can delete variable: After Delete 1`] = `
       </div>
     </div>
     <button
-      class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+      class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
       type="button"
     >
       <span
+        class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+        icon="plus"
+      >
+        <svg
+          data-icon="plus"
+          height="16"
+          viewBox="0 0 16 16"
+          width="16"
+        >
+          <desc>
+            plus
+          </desc>
+          <path
+            d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <span
         class="bp3-button-text"
       >
-        + common.addVariable
+        common.addVariable
       </span>
     </button>
   </div>
@@ -670,7 +689,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
     class="customVariablesStage"
   >
     <div
-      class="tableRow headerRow"
+      class="tableRow headerRow variablesTableRow"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -689,7 +708,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       </p>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -899,7 +918,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       </div>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -1109,7 +1128,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       </div>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -1359,13 +1378,32 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
       </div>
     </div>
     <button
-      class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+      class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
       type="button"
     >
       <span
+        class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+        icon="plus"
+      >
+        <svg
+          data-icon="plus"
+          height="16"
+          viewBox="0 0 16 16"
+          width="16"
+        >
+          <desc>
+            plus
+          </desc>
+          <path
+            d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <span
         class="bp3-button-text"
       >
-        + common.addVariable
+        common.addVariable
       </span>
     </button>
   </div>
@@ -1427,7 +1465,7 @@ exports[`Custom Variables should render variables 1`] = `
     class="customVariablesStage"
   >
     <div
-      class="tableRow headerRow"
+      class="tableRow headerRow variablesTableRow"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -1446,7 +1484,7 @@ exports[`Custom Variables should render variables 1`] = `
       </p>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -1656,7 +1694,7 @@ exports[`Custom Variables should render variables 1`] = `
       </div>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -1866,7 +1904,7 @@ exports[`Custom Variables should render variables 1`] = `
       </div>
     </div>
     <div
-      class="tableRow"
+      class="tableRow variablesTableRow"
     >
       <div
         class="textInputWithCopyBtn disabled"
@@ -2116,13 +2154,32 @@ exports[`Custom Variables should render variables 1`] = `
       </div>
     </div>
     <button
-      class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+      class="bp3-button Button--button StyledProps--font StyledProps--main addVariable Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
       type="button"
     >
       <span
+        class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+        icon="plus"
+      >
+        <svg
+          data-icon="plus"
+          height="16"
+          viewBox="0 0 16 16"
+          width="16"
+        >
+          <desc>
+            plus
+          </desc>
+          <path
+            d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+      <span
         class="bp3-button-text"
       >
-        + common.addVariable
+        common.addVariable
       </span>
     </button>
   </div>

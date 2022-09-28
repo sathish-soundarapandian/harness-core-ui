@@ -69,7 +69,8 @@ const DelegateSelectStep: React.FC<StepProps<DelegateInfoDTO> & DelegateSelectSt
       icon: getString('delegate.cardData.kubernetes.icon'),
       name: getString('kubernetesText'),
       type: DelegateTypes.KUBERNETES_CLUSTER
-    },
+    }
+    /* Disable this item for now (see https://harness.atlassian.net/browse/DEL-4537)
     {
       text: getString('delegate.cardData.amazonECS.text'),
       value: getString('delegate.cardData.amazonECS.value'),
@@ -83,7 +84,7 @@ const DelegateSelectStep: React.FC<StepProps<DelegateInfoDTO> & DelegateSelectSt
       icon: getString('delegate.cardData.linux.icon'),
       name: getString('delegate.cardData.linux.name'),
       type: DelegateTypes.LINUX
-    }
+    } */
   ]
 
   const [selectedCard, setSelectedCard] = useState<CardData>()

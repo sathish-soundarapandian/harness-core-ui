@@ -10,13 +10,19 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ActiveServiceInstancePopover } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancePopover'
 import * as cdngServices from 'services/cd-ng'
-import { mockserviceInstanceDetails } from './mocks'
-
-jest
-  .spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds')
-  .mockImplementation(() => mockserviceInstanceDetails as any)
+import {
+  mockserviceInstanceDetails,
+  mockGitopsServiceInstanceDetails,
+  mockServiceInstanceDetailsWithContainerList
+} from './mocks'
 
 describe('ActiveServiceInstancePopover', () => {
+  beforeEach(() => {
+    jest
+      .spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds')
+      .mockImplementation(() => mockserviceInstanceDetails as any)
+  })
+
   test('should render ActiveServiceInstancePopover', () => {
     const { container } = render(
       <TestWrapper
@@ -28,6 +34,7 @@ describe('ActiveServiceInstancePopover', () => {
     )
     expect(container).toMatchSnapshot()
   })
+
   test('should render loading', () => {
     jest.spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds').mockImplementation(() => {
       return { loading: true, error: false, data: [], refetch: jest.fn() } as any
@@ -38,5 +45,51 @@ describe('ActiveServiceInstancePopover', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('should display function (not pod) as label when deployment type is ServerlessAwsLambda', () => {
+    const { getByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={3} />
+      </TestWrapper>
+    )
+
+    expect(getByText('cd.serviceDashboard.function:')).toBeDefined()
+  })
+
+  test('should display cluster when clusterIdentifier field is present', () => {
+    jest
+      .spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds')
+      .mockImplementation(() => mockGitopsServiceInstanceDetails as any)
+
+    const { getByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={0} />
+      </TestWrapper>
+    )
+
+    expect(getByText('common.cluster:')).toBeDefined()
+  })
+
+  test('should render container list images', () => {
+    jest
+      .spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds')
+      .mockImplementation(() => mockServiceInstanceDetailsWithContainerList as any)
+
+    const { getByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={0} />
+      </TestWrapper>
+    )
+    expect(getByText('cd.serviceDashboard.containerList:')!).toBeDefined()
   })
 })

@@ -6,9 +6,11 @@
  */
 
 import React, { useState } from 'react'
-import { TextInput, Button } from '@wings-software/uicore'
+import { ExpandingSearchInput, Button, ButtonVariation, Text } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 import { Popover, Position, PopoverInteractionKind, Classes, MenuItem } from '@blueprintjs/core'
 import cx from 'classnames'
+import { sortBy } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   ViewFieldIdentifier,
@@ -18,6 +20,9 @@ import {
   QlceViewField
 } from 'services/ce/services'
 import type { setGroupByFn } from '@ce/types'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import css from './GroupByView.module.scss'
 
 interface BaseGroupByProps {
@@ -30,22 +35,40 @@ interface GroupByDropDownProps {
   setGroupBy: setGroupByFn
   isBusinessMapping: boolean
   openBusinessMappingDrawer: () => void
+  canAddCostCategory: boolean
 }
 
 export const GroupByDropDown: React.FC<GroupByDropDownProps> = ({
   data,
   setGroupBy,
   isBusinessMapping,
-  openBusinessMappingDrawer
+  openBusinessMappingDrawer,
+  canAddCostCategory
 }) => {
   const { getString } = useStrings()
 
-  const values = data.values.filter(val => val) as QlceViewField[]
+  const values = sortBy(
+    data.values.filter(val => val),
+    'fieldName'
+  ) as QlceViewField[]
+  const [searchText, setSearchText] = useState('')
+
+  const filteredResults = values.filter(val => val.fieldName.toLowerCase().includes(searchText.toLowerCase()))
 
   return (
     <>
+      {isBusinessMapping ? (
+        <ExpandingSearchInput
+          throttle={0}
+          autoFocus
+          alwaysExpanded
+          placeholder={getString('ce.perspectives.createPerspective.filters.searchValue')}
+          onChange={setSearchText}
+          className={css.search}
+        />
+      ) : null}
       <ul className={css.groupByList}>
-        {values.map((value, index) => {
+        {filteredResults.map((value, index) => {
           const onClick: () => void = () => {
             setGroupBy({
               identifier: data.identifier,
@@ -56,18 +79,22 @@ export const GroupByDropDown: React.FC<GroupByDropDownProps> = ({
           }
           return (
             <li key={`fieldName-${index}`} className={cx(css.groupByListItems, Classes.POPOVER_DISMISS)}>
-              <MenuItem text={value.fieldName} onClick={onClick} />
+              <MenuItem className={css.listItem} text={value.fieldName} onClick={onClick} />
             </li>
           )
         })}
       </ul>
+      {!filteredResults.length ? (
+        <div className={css.noResults}>{getString('common.filters.noResultsFound')}</div>
+      ) : null}
       {isBusinessMapping ? (
         <Button
           icon="plus"
+          disabled={!canAddCostCategory}
           text={getString('ce.businessMapping.newButton')}
           onClick={openBusinessMappingDrawer}
-          minimal
-          intent="primary"
+          variation={ButtonVariation.LINK}
+          style={{ fontSize: 13 }}
         />
       ) : null}
     </>
@@ -81,6 +108,15 @@ interface GroupByViewProps extends BaseGroupByProps {
 
 export const GroupByView: React.FC<GroupByViewProps> = ({ field, setGroupBy, groupBy, openBusinessMappingDrawer }) => {
   const isBusinessMapping = field.identifier === ViewFieldIdentifier.BusinessMapping
+  const [canViewCostCategory, canAddCostCategory] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CCM_COST_CATEGORY
+      },
+      permissions: [PermissionIdentifier.VIEW_CCM_COST_CATEGORY, PermissionIdentifier.EDIT_CCM_COST_CATEGORY]
+    },
+    []
+  )
   return (
     <Popover
       key={`identifierName-${field.identifierName}`}
@@ -93,10 +129,13 @@ export const GroupByView: React.FC<GroupByViewProps> = ({ field, setGroupBy, gro
         preventOverflow: { enabled: true }
       }}
       usePortal={false}
+      popoverClassName={css.popover}
+      disabled={isBusinessMapping && !canViewCostCategory}
       content={
         <GroupByDropDown
           openBusinessMappingDrawer={openBusinessMappingDrawer}
           isBusinessMapping={isBusinessMapping}
+          canAddCostCategory={canAddCostCategory}
           setGroupBy={setGroupBy}
           data={field}
         />
@@ -105,7 +144,9 @@ export const GroupByView: React.FC<GroupByViewProps> = ({ field, setGroupBy, gro
       {groupBy.identifier === field.identifier ? (
         <div className={cx(css.groupByItems, css.activeItem)}>{`${field.identifierName}: ${groupBy.fieldName}`}</div>
       ) : (
-        <div className={css.groupByItems}>{field.identifierName}</div>
+        <div className={cx(css.groupByItems, { [css.disabledPopover]: isBusinessMapping && !canViewCostCategory })}>
+          {field.identifierName}
+        </div>
       )}
     </Popover>
   )
@@ -117,21 +158,20 @@ interface LabelDropDownProps {
 }
 
 export const LabelDropDown: React.FC<LabelDropDownProps> = ({ data, setGroupBy }) => {
-  const values = data.filter(val => val) as string[]
+  const { getString } = useStrings()
+  const values = data.filter(val => val).sort() as string[]
   const [searchText, setSearchText] = useState('')
 
-  const filteredResults = values.filter(val => val.includes(searchText))
+  const filteredResults = values.filter(val => val.toLowerCase().includes(searchText.toLowerCase()))
   return (
-    <section className={css.labelDropDownContainer}>
-      <TextInput
-        className={css.search}
+    <section>
+      <ExpandingSearchInput
+        throttle={0}
         autoFocus
-        placeholder="Search Value"
-        onChange={e => {
-          const event = e as any
-          const value = event.target.value
-          setSearchText(value)
-        }}
+        alwaysExpanded
+        placeholder={getString('ce.perspectives.createPerspective.filters.searchValue')}
+        onChange={setSearchText}
+        className={css.search}
       />
       <ul className={css.groupByList}>
         {filteredResults.map(value => {
@@ -145,12 +185,14 @@ export const LabelDropDown: React.FC<LabelDropDownProps> = ({ data, setGroupBy }
           }
           return (
             <li key={`fieldName-${value}`} className={cx(css.groupByListItems, Classes.POPOVER_DISMISS)}>
-              <MenuItem text={value} onClick={onClick} />
+              <MenuItem className={css.listItem} text={value} onClick={onClick} />
             </li>
           )
         })}
       </ul>
-      {!filteredResults.length ? <div className={css.noResults}>No results found</div> : null}
+      {!filteredResults.length ? (
+        <div className={css.noResults}>{getString('common.filters.noResultsFound')}</div>
+      ) : null}
     </section>
   )
 }
@@ -172,6 +214,7 @@ export const LabelView: React.FC<LabelViewProps> = ({ setGroupBy, labelData, gro
         preventOverflow: { enabled: true }
       }}
       usePortal={false}
+      popoverClassName={css.popover}
       content={<LabelDropDown setGroupBy={setGroupBy} data={labelData} />}
     >
       {groupBy.identifier === 'LABEL' ? (
@@ -231,7 +274,14 @@ const GroupByComponent: React.FC<GroupByComponentProps> = ({
 
   return (
     <section className={css.groupByContainer}>
-      <label className={css.groupByLabel}> {getString('ce.perspectives.createPerspective.preview.groupBy')}</label>
+      <Text
+        color={Color.GREY_400}
+        className={css.groupByLabel}
+        iconProps={{ color: Color.GREY_400 }}
+        icon="default-dashboard"
+      >
+        {getString('ce.perspectives.createPerspective.preview.groupBy')}
+      </Text>
       <div className={css.groupBys}>
         {otherFields.map(field => {
           return field.values.length ? (

@@ -6,10 +6,14 @@
  */
 
 import React from 'react'
-import { PageError } from '@harness/uicore'
+import { PageBody, PageError } from '@harness/uicore'
 
 const devErrorMsg = 'This app is rendered as a microfrontend. It looks like it is not reachable.'
 
 export default function ChildAppError(): React.ReactElement {
-  return <PageError message={__DEV__ ? devErrorMsg : ''} />
+  return (
+    <PageBody>
+      <PageError message={__DEV__ ? devErrorMsg : ''} />
+    </PageBody>
+  )
 }

@@ -28,6 +28,9 @@ jest.mock('services/pipeline-ng', () => ({
       data: { pipelineExecution: {}, stageGraph: {} }
     }
   })),
+  useCreateVariablesForPipelineExecution: jest.fn().mockReturnValue({
+    mutate: jest.fn()
+  }),
   useHandleInterrupt: jest.fn(() => ({
     mutate: jest.fn()
   })),
@@ -65,6 +68,7 @@ describe('<ExecutionLandingPage /> tests', () => {
     projectIdentifier: 'TEST_PROJECT',
     pipelineIdentifier: 'TEST_PIPELINE',
     executionIdentifier: 'TEST_EXECUTION',
+    source: 'executions',
     module: 'cd'
   }
 
@@ -198,7 +202,7 @@ describe('<ExecutionLandingPage /> tests', () => {
     jest.runOnlyPendingTimers()
 
     expect(getByTestId('autoSelectedStageId').innerHTML).toBe(stage)
-    expect(getByTestId('autoSelectedStepId').innerHTML).toBe(runningStep)
+    expect(getByTestId('autoSelectedStepId').innerHTML).toBe(runningStep?.node)
   })
 
   test('auto stage should not work when user has selected a stage/step', () => {
@@ -243,6 +247,7 @@ describe('<ExecutionLandingPage /> tests for CI', () => {
     projectIdentifier: 'TEST_PROJECT',
     pipelineIdentifier: 'TEST_PIPELINE',
     executionIdentifier: 'TEST_EXECUTION',
+    source: 'executions',
     module: 'ci'
   }
 

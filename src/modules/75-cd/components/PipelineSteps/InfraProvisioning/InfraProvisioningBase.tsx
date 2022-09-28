@@ -32,8 +32,7 @@ import { useMutateAsGet } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getFlattenedStages } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import useChooseProvisioner from './ChooseProvisioner'
 import type { InfraProvisioningData, InfraProvisioningDataUI, InfraProvisioningProps } from './InfraProvisioning'
 import { transformValuesFieldsConfig } from './InfraProvisioningFunctionConfigs'
@@ -49,16 +48,17 @@ export const InfraProvisioningBase = (
       pipelineView,
       selectionState: { selectedStageId = '' },
       templateTypes,
-      pipeline
+      pipeline,
+      gitDetails,
+      storeMetadata
     },
     updateStage,
     updatePipelineView,
     isReadonly,
     getStageFromPipeline,
-    getStagePathFromPipeline,
-    getTemplate
+    getStagePathFromPipeline
   } = usePipelineContext()
-
+  const { getTemplate } = useTemplateSelector()
   const { getString } = useStrings()
   const { stage: selectedStage } = getStageFromPipeline(defaultTo(selectedStageId, ''))
   const stagePath = getStagePathFromPipeline(selectedStageId || '', 'pipeline.stages')
@@ -67,7 +67,6 @@ export const InfraProvisioningBase = (
   const { accountId } = useParams<ProjectPathProps>()
   const formikRef = useRef<FormikContextType<InfraProvisioningDataUI>>()
 
-  const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
   const { showModal } = useChooseProvisioner({
     onSubmit: (data: any) => {
       onUpdate?.(data)
@@ -127,7 +126,9 @@ export const InfraProvisioningBase = (
     try {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
-        allChildTypes
+        allChildTypes,
+        gitDetails,
+        storeMetadata
       })
       const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId || ''))
@@ -147,14 +148,7 @@ export const InfraProvisioningBase = (
         provisioner.rollbackSteps = []
       }
 
-      addStepOrGroup(
-        event.entity,
-        provisioner,
-        newStepData,
-        event.isParallel,
-        event.isRollback,
-        newPipelineStudioEnabled
-      )
+      addStepOrGroup(event.entity, provisioner, newStepData, event.isParallel, event.isRollback)
       if (pipelineStage?.stage) {
         await updateStage(pipelineStage?.stage)
       }

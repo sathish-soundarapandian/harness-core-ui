@@ -14,7 +14,7 @@ import { TemplateContext } from '@templates-library/components/TemplateStudio/Te
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import {
-  TemplateStudioSubHeader,
+  TemplateStudioSubHeaderWithRef,
   TemplateStudioSubHeaderProps
 } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/TemplateStudioSubHeader'
 
@@ -29,6 +29,13 @@ jest.mock(
     }
   })
 )
+
+jest.mock('@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover', () => ({
+  ...jest.requireActual('@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'),
+  SaveTemplatePopoverWithRef: React.forwardRef(() => {
+    return <div className={'save-template-popover-mock'}></div>
+  })
+}))
 
 const stepTemplateContext = getTemplateContextMock(TemplateType.Step)
 
@@ -47,7 +54,7 @@ describe('TemplateStudioSubHeader tests', async () => {
     const { container } = render(
       <TestWrapper>
         <TemplateContext.Provider value={stepTemplateContext}>
-          <TemplateStudioSubHeader {...baseProps} />
+          <TemplateStudioSubHeaderWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
@@ -61,7 +68,7 @@ describe('TemplateStudioSubHeader tests', async () => {
     const { container, getByRole } = render(
       <TestWrapper>
         <TemplateContext.Provider value={templateContext}>
-          <TemplateStudioSubHeader {...baseProps} />
+          <TemplateStudioSubHeaderWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )
@@ -80,7 +87,7 @@ describe('TemplateStudioSubHeader tests', async () => {
     const { container } = render(
       <TestWrapper>
         <TemplateContext.Provider value={templateContext}>
-          <TemplateStudioSubHeader {...baseProps} />
+          <TemplateStudioSubHeaderWithRef {...baseProps} />
         </TemplateContext.Provider>
       </TestWrapper>
     )

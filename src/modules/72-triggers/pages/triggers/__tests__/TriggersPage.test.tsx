@@ -6,10 +6,10 @@
  */
 
 import React from 'react'
-import { render, waitFor, queryByText, fireEvent, queryAllByText } from '@testing-library/react'
+import { render, waitFor, queryByText, fireEvent, queryAllByText, getByText } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 import { useStrings } from 'framework/strings'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import * as usePermission from '@rbac/hooks/usePermission'
 import routes from '@common/RouteDefinitions'
 import { pipelinePathProps } from '@common/utils/routeUtils'
@@ -63,6 +63,21 @@ describe('TriggersPage Triggers tests', () => {
       // eslint-disable-next-line no-document-body-snapshot
       expect(document.body).toMatchSnapshot()
     })
+    test('Initial Render - New Triggers Drawer', async () => {
+      const { container } = render(
+        <TestWrapper>
+          <TriggersPage />
+        </TestWrapper>
+      )
+      await waitFor(() => expect(result.current.getString('common.triggerLabel').toUpperCase()).not.toBeNull())
+      const addTriggerButton = queryByText(container, result.current.getString('triggers.newTrigger'))
+      if (!addTriggerButton) {
+        throw Error('No action button')
+      }
+      fireEvent.click(addTriggerButton)
+      // eslint-disable-next-line no-document-body-snapshot
+      expect(document.body).toMatchSnapshot()
+    })
   })
   describe('Interactivity', () => {
     test('Delete a trigger', async () => {
@@ -82,7 +97,9 @@ describe('TriggersPage Triggers tests', () => {
       }
       fireEvent.click(deleteButton)
       await waitFor(() => expect(result.current.getString('triggers.confirmDelete')).not.toBeNull())
-      const confirmDeleteButton = document.body.querySelector('[class*="dialog"] [class*="intent-danger"]')
+
+      const confirmationDailog = findDialogContainer()
+      const confirmDeleteButton = getByText(confirmationDailog as HTMLElement, 'delete')
       if (!confirmDeleteButton) {
         throw Error('No error button')
       }

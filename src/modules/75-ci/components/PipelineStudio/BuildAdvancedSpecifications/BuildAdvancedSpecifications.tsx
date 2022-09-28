@@ -9,7 +9,7 @@ import { Card, HarnessDocTooltip, Layout } from '@wings-software/uicore'
 import React from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'
-import { isEmpty, set } from 'lodash-es'
+import { isEmpty, set, unset } from 'lodash-es'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { FailureStrategyWithRef } from '@pipeline/components/PipelineStudio/FailureStrategy/FailureStrategy'
 import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepCommands/StepCommands'
@@ -18,6 +18,7 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StepActions } from '@common/constants/TrackingConstants'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import css from './BuildAdvancedSpecifications.module.scss'
 
 export interface AdvancedSpecifications {
@@ -75,6 +76,31 @@ const BuildAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childre
             </Layout.Horizontal>
           </Card>
         )}
+        <div className={css.tabHeading}>
+          <span data-tooltip-id="loopingStrategyBuildStage">
+            {getString('pipeline.loopingStrategy.title')}
+            <HarnessDocTooltip tooltipId="loopingStrategyBuildStage" useStandAlone={true} />
+          </span>
+        </div>
+        <Card className={css.sectionCard} id="loopingStrategy">
+          <LoopingStrategy
+            strategy={stage?.stage?.strategy}
+            isReadonly={isReadonly}
+            onUpdateStrategy={strategy => {
+              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+              if (pipelineStage && pipelineStage.stage) {
+                const stageData = produce(pipelineStage, draft => {
+                  if (isEmpty(strategy)) {
+                    unset(draft, 'stage.strategy')
+                  } else {
+                    set(draft, 'stage.strategy', strategy)
+                  }
+                })
+                if (stageData.stage) updateStage(stageData.stage)
+              }
+            }}
+          />
+        </Card>
         <div className={css.tabHeading}>
           <span data-tooltip-id="failureStrategyBuildStage">
             {getString('pipeline.failureStrategies.title')}

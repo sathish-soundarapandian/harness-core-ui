@@ -6,10 +6,6 @@
 export BRANCH=develop
 git checkout $BRANCH
 
-# Upgrade ng-tooltip to pick the latest
-yarn upgrade @harness/ng-tooltip
-git add yarn.lock
-
 # bump minor version (0.1.0 -> 0.2.0)
 yarn version --minor --no-git-tag-version --no-commit-hooks
 git add package.json
@@ -21,8 +17,15 @@ echo $NEW_VERSION
 NEW_BRANCH="release/$NEW_VERSION"
 echo $NEW_BRANCH
 
-# updating the jira tickets
+# Allow execute on scripts
 chmod 700 scripts/ci/*.*
+
+# Add new versions to Jira
+echo "Adding new versions to Jira"
+if [[ "$EXECUTE_NEW_VERSION_CODE" == "true" ]]; then
+  scripts/ci/release-branch-create-versions.sh
+fi
+# updating the jira tickets
 scripts/ci/release-branch-update-jiras.sh
 
 # commit to develop

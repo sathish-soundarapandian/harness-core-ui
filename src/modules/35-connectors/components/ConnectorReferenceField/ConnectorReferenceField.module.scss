@@ -52,6 +52,9 @@
 .connector-label {
   padding-bottom: var(--spacing-small);
 
+  [data-test-id='connectorTooltip'] {
+    margin-bottom: 5px;
+  }
   :global {
     .bp3-icon-chevron-down {
       position: absolute;
@@ -181,4 +184,29 @@
 }
 .selectedConnector {
   cursor: pointer;
+}
+
+.mini {
+  min-height: 0;
+
+  :global {
+    [data-test-id='connectorTooltip'] {
+      margin-bottom: 0 !important;
+    }
+    .MultiTypeInput--btn {
+      &:before {
+        height: 21px !important;
+        border-right: none !important;
+      }
+      height: 22px !important;
+    }
+    .bp3-button {
+      min-height: var(--spacing-7) !important;
+      height: var(--spacing-7) !important;
+    }
+  }
+  input[type='text'],
+  :global(.bp3-input) {
+    height: var(--spacing-7);
+  }
 }

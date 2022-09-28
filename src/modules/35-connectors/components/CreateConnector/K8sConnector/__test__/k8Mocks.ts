@@ -20,7 +20,7 @@ export const usernamePassword: ConnectorInfoDTO = {
     credential: {
       type: 'ManualConfig',
       spec: {
-        masterUrl: '/url7878',
+        masterUrl: 'https://url.com',
         auth: {
           type: 'UsernamePassword',
           spec: {
@@ -47,7 +47,7 @@ export const serviceAccount: ConnectorInfoDTO = {
     credential: {
       type: 'ManualConfig',
       spec: {
-        masterUrl: '/url',
+        masterUrl: 'https://url.com',
         auth: { type: 'ServiceAccount', spec: { serviceAccountTokenRef: 'account.k8serviceToken' } }
       }
     }
@@ -67,7 +67,7 @@ export const oidcMock: ConnectorInfoDTO = {
     credential: {
       type: 'ManualConfig',
       spec: {
-        masterUrl: '/url',
+        masterUrl: 'https://url.com',
         auth: {
           type: 'OpenIdConnect',
           spec: {
@@ -97,7 +97,7 @@ export const clientKeyMock: ConnectorInfoDTO = {
     credential: {
       type: 'ManualConfig',
       spec: {
-        masterUrl: '/url',
+        masterUrl: 'https://url.com',
         auth: {
           type: 'ClientKeyCert',
           spec: {
@@ -125,7 +125,7 @@ export const backButtonMock: ConnectorInfoDTO = {
     credential: {
       type: 'ManualConfig',
       spec: {
-        masterUrl: '/url7878',
+        masterUrl: 'https://url.com',
         auth: { type: 'UsernamePassword', spec: { username: 'dev', passwordRef: 'account.k8serviceToken' } }
       }
     }

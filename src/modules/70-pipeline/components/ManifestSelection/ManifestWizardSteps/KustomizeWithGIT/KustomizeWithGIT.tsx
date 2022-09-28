@@ -16,7 +16,8 @@ import {
   Text,
   StepProps,
   Accordion,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -39,7 +40,7 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
@@ -47,7 +48,7 @@ import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 interface KustomizeWithGITPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -67,7 +68,9 @@ function KustomizeWithGIT({
 }: StepProps<ConnectorConfigDTO> & KustomizeWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
 
-  const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
+  const kustomizeYamlFolderPath = get(initialValues, 'spec.overlayConfiguration.kustomizeYamlFolderPath', '')
+  const isActiveAdvancedStep: boolean =
+    initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags || !!kustomizeYamlFolderPath
   const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
   const connectionType =
     prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
@@ -82,7 +85,7 @@ function KustomizeWithGIT({
         : prevStepData?.url
       : null
 
-  const getInitialValues = React.useCallback((): KustomizeWithGITDataType => {
+  const getInitialValues = (): KustomizeWithGITDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -96,7 +99,9 @@ function KustomizeWithGIT({
           typeof initialValues?.spec?.patchesPaths === 'string'
             ? initialValues?.spec?.patchesPaths
             : initialValues?.spec?.patchesPaths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) })),
-        skipResourceVersioning: initialValues?.spec?.skipResourceVersioning
+        skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        optimizedKustomizeManifestCollection: !!kustomizeYamlFolderPath,
+        kustomizeYamlFolderPath
       }
     }
     return {
@@ -107,9 +112,11 @@ function KustomizeWithGIT({
       folderPath: '',
       skipResourceVersioning: false,
       repoName: getRepositoryName(prevStepData, initialValues),
-      pluginPath: ''
+      pluginPath: '',
+      optimizedKustomizeManifestCollection: false,
+      kustomizeYamlFolderPath: ''
     }
-  }, [])
+  }
 
   const submitFormData = (formData: KustomizeWithGITDataType & { store?: string; connectorRef?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
@@ -117,6 +124,13 @@ function KustomizeWithGIT({
         identifier: formData.identifier,
         type: ManifestDataType.Kustomize,
         spec: {
+          ...(formData.optimizedKustomizeManifestCollection
+            ? {
+                overlayConfiguration: {
+                  kustomizeYamlFolderPath: formData.kustomizeYamlFolderPath
+                }
+              }
+            : {}),
           store: {
             type: formData?.store,
             spec: {
@@ -187,6 +201,11 @@ function KustomizeWithGIT({
               )
             }
             return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
+          }),
+          optimizedKustomizeManifestCollection: Yup.boolean(),
+          kustomizeYamlFolderPath: Yup.string().when('optimizedKustomizeManifestCollection', {
+            is: true,
+            then: Yup.string().trim().required(getString('pipeline.manifestType.kustomizeYamlFolderPathRequired'))
           })
         })}
         onSubmit={formData => {
@@ -300,11 +319,17 @@ function KustomizeWithGIT({
                   })}
                 >
                   <FormInput.MultiTextInput
-                    label={getString('pipeline.manifestType.kustomizeFolderPath')}
+                    label={
+                      formik.values.optimizedKustomizeManifestCollection
+                        ? getString('pipeline.manifestType.kustomizeBasePath')
+                        : getString('pipeline.manifestType.kustomizeFolderPath')
+                    }
                     placeholder={getString('pipeline.manifestType.kustomizeFolderPathPlaceholder')}
                     name="folderPath"
                     tooltipProps={{
-                      dataTooltipId: 'kustomizePathHelperText'
+                      dataTooltipId: formik.values.optimizedKustomizeManifestCollection
+                        ? 'kustomizeBasePath'
+                        : 'kustomizePathHelperText'
                     }}
                     multiTextInputProps={{ expressions, allowableTypes }}
                   />
@@ -354,7 +379,12 @@ function KustomizeWithGIT({
                   )}
                 </div>
               </Layout.Horizontal>
-              <div className={helmcss.halfWidth}>
+              <div
+                className={cx({
+                  [helmcss.runtimeInput]:
+                    getMultiTypeFromValue(formik.values?.patchesPaths) === MultiTypeInputType.RUNTIME
+                })}
+              >
                 <DragnDropPaths
                   formik={formik}
                   expressions={expressions}
@@ -362,7 +392,21 @@ function KustomizeWithGIT({
                   fieldPath="patchesPaths"
                   pathLabel={getString('pipeline.manifestTypeLabels.KustomizePatches')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                  dragDropFieldWidth={filePathWidth}
                 />
+                {getMultiTypeFromValue(formik.values.patchesPaths) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={formik.values.patchesPaths}
+                    type={getString('string')}
+                    variableName={'patchesPaths'}
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    onChange={val => formik?.setFieldValue('patchesPaths', val)}
+                    isReadonly={isReadonly}
+                  />
+                )}
               </div>
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}
@@ -375,34 +419,72 @@ function KustomizeWithGIT({
                   addDomId={true}
                   summary={getString('advancedTitle')}
                   details={
-                    <Layout.Horizontal
-                      flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                      margin={{ bottom: 'huge' }}
-                    >
-                      <FormMultiTypeCheckboxField
-                        name="skipResourceVersioning"
-                        label={getString('skipResourceVersion')}
-                        multiTypeTextbox={{ expressions, allowableTypes }}
-                        tooltipProps={{
-                          dataTooltipId: 'helmSkipResourceVersion'
-                        }}
-                        className={cx(helmcss.checkbox, helmcss.halfWidth)}
-                      />
-                      {getMultiTypeFromValue(formik.values?.skipResourceVersioning) === MultiTypeInputType.RUNTIME && (
-                        <ConfigureOptions
-                          value={(formik.values?.skipResourceVersioning || '') as string}
-                          type="String"
-                          variableName="skipResourceVersioning"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          showAdvanced={true}
-                          onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
-                          style={{ alignSelf: 'center', marginTop: 11 }}
-                          className={css.addmarginTop}
-                          isReadonly={isReadonly}
+                    <>
+                      {
+                        <Layout.Vertical margin={{ bottom: 'small' }}>
+                          <FormInput.CheckBox
+                            name="optimizedKustomizeManifestCollection"
+                            label={getString('pipeline.manifestType.optimizedKustomizeManifestCollection')}
+                          />
+                          {!!formik.values.optimizedKustomizeManifestCollection && (
+                            <Layout.Horizontal
+                              flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+                              margin={{ left: 'xlarge' }}
+                              width={430}
+                            >
+                              <FormInput.MultiTextInput
+                                className={css.kustomizeYamlFolderPath}
+                                label={getString('pipeline.manifestType.kustomizeYamlFolderPath')}
+                                placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                                name="kustomizeYamlFolderPath"
+                                multiTextInputProps={{ expressions, allowableTypes }}
+                              />
+                              {getMultiTypeFromValue(formik.values?.kustomizeYamlFolderPath) ===
+                                MultiTypeInputType.RUNTIME && (
+                                <ConfigureOptions
+                                  style={{ alignSelf: 'center', marginBottom: 4 }}
+                                  value={formik.values?.kustomizeYamlFolderPath || ''}
+                                  type="String"
+                                  variableName="kustomizeYamlFolderPath"
+                                  showRequiredField={false}
+                                  showDefaultField={false}
+                                  showAdvanced={true}
+                                  onChange={value => formik.setFieldValue('kustomizeYamlFolderPath', value)}
+                                  isReadonly={isReadonly}
+                                />
+                              )}
+                            </Layout.Horizontal>
+                          )}
+                        </Layout.Vertical>
+                      }
+
+                      <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+                        <FormMultiTypeCheckboxField
+                          name="skipResourceVersioning"
+                          label={getString('skipResourceVersion')}
+                          multiTypeTextbox={{ expressions, allowableTypes }}
+                          tooltipProps={{
+                            dataTooltipId: 'helmSkipResourceVersion'
+                          }}
+                          className={cx(helmcss.checkbox, helmcss.halfWidth)}
                         />
-                      )}
-                    </Layout.Horizontal>
+                        {getMultiTypeFromValue(formik.values?.skipResourceVersioning) ===
+                          MultiTypeInputType.RUNTIME && (
+                          <ConfigureOptions
+                            value={(formik.values?.skipResourceVersioning || '') as string}
+                            type="String"
+                            variableName="skipResourceVersioning"
+                            showRequiredField={false}
+                            showDefaultField={false}
+                            showAdvanced={true}
+                            onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
+                            style={{ alignSelf: 'center', marginTop: 11 }}
+                            className={css.addmarginTop}
+                            isReadonly={isReadonly}
+                          />
+                        )}
+                      </Layout.Horizontal>
+                    </>
                   }
                 />
               </Accordion>

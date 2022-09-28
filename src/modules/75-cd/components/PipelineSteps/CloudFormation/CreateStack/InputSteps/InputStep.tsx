@@ -7,10 +7,9 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty, map, get } from 'lodash-es'
+import { isEmpty, map, get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
 import {
-  FormInput,
   FormikForm,
   Text,
   Color,
@@ -18,21 +17,31 @@ import {
   MultiSelectTypeInput,
   Label,
   Layout,
-  useToaster
+  useToaster,
+  getMultiTypeFromValue,
+  MultiTypeInputType
 } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import {
+  ConnectorReferenceDTO,
+  FormMultiTypeConnectorField
+} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useListAwsRegions } from 'services/portal'
 import { useCFCapabilitiesForAws, useCFStatesForAws, useGetIamRolesForAws } from 'services/cd-ng'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TFMonaco } from '../../../Common/Terraform/Editview/TFMonacoEditor'
 import TemplateFileInputs from './TemplateFile'
 import ParameterFileInputs from './ParameterInputs'
+import OverrideParameterFileInputs from './OverrideParameterFileInputs'
+import TagsInputs from './TagsInputs'
 import type { CreateStackData, CreateStackProps, Tags } from '../../CloudFormationInterfaces.types'
 import { isRuntime } from '../../CloudFormationHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -40,7 +49,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   props: CreateStackProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, path, allowableTypes, formik, allValues } = props
+  const { inputSetData, readonly, path, allowableTypes, formik, allValues, initialValues } = props
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { expressions } = useVariablesExpression()
@@ -51,7 +60,12 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
   const [capabilities, setCapabilities] = useState<MultiSelectOption[]>([])
   const [selectedCapabilities, setSelectedCapabilities] = useState<MultiSelectOption[]>([])
   const [selectedStackStatus, setSelectedStackStatus] = useState<MultiSelectOption[]>([])
-  const [awsRef, setAwsRef] = useState(get(allValues, 'spec.configuration.connectorRef'))
+  const [awsRef, setAwsRef] = useState(
+    defaultTo(get(initialValues, 'spec.configuration.connectorRef'), get(allValues, 'spec.configuration.connectorRef'))
+  )
+  const [regionsRef, setRegionsRef] = useState(
+    defaultTo(get(initialValues, 'spec.configuration.region'), get(allValues, 'spec.configuration.region'))
+  )
 
   useEffect(() => {
     /* istanbul ignore next */
@@ -146,7 +160,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       accountIdentifier: accountId,
       orgIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      awsConnectorRef: awsRef as string
+      awsConnectorRef: awsRef as string,
+      region: regionsRef as string
     }
   })
 
@@ -160,10 +175,18 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
       setAwsRoles(roles)
     }
     /* istanbul ignore next */
-    if (!roleData && roleRequired && awsRef) {
+  }, [roleData, roleRequired])
+
+  useEffect(() => {
+    if (
+      !isEmpty(awsRef) &&
+      getMultiTypeFromValue(awsRef) === MultiTypeInputType.FIXED &&
+      !isEmpty(regionsRef) &&
+      getMultiTypeFromValue(regionsRef) === MultiTypeInputType.FIXED
+    ) {
       getRoles()
     }
-  }, [roleData, roleRequired, awsRef])
+  }, [awsRef, getRoles, regionsRef])
 
   return (
     <FormikForm>
@@ -171,7 +194,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
           <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <FormMultiTypeDurationField
+            <TimeoutFieldInputSetView
               label={getString('pipelineSteps.timeoutLabel')}
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
@@ -181,13 +204,15 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
                 expressions,
                 disabled: readonly
               }}
+              fieldPath={'timeout'}
+              template={inputSetData?.template}
             />
           </div>
         )
       }
       {isRuntime(inputSetData?.template?.spec?.provisionerIdentifier as string) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.spec.provisionerIdentifier`}
             label={getString('pipelineSteps.provisionerIdentifier')}
             disabled={readonly}
@@ -196,6 +221,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               allowableTypes
             }}
             data-testid={`${path}.spec.provisionerIdentifier`}
+            template={inputSetData?.template}
+            fieldPath={'spec.provisionerIdentifier'}
           />
         </div>
       )}
@@ -214,24 +241,42 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
             disabled={readonly}
             width={300}
             setRefValue
-            onChange={(value: any, _unused, _notUsed) => {
+            onChange={(selected: any, _typeValue, type) => {
+              const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
               /* istanbul ignore next */
-              setAwsRef(value?.record?.identifier || value)
-              /* istanbul ignore next */
-              formik?.setFieldValue(`${path}.spec.configuration.connectorRef`, value?.record?.identifier || value)
+              if (type === MultiTypeInputType.FIXED) {
+                const connectorRefValue =
+                  item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
+                    ? `${item.scope}.${item?.record?.identifier}`
+                    : item.record?.identifier
+                setAwsRef(connectorRefValue as string)
+              } else setAwsRef(selected as string)
+              get(formik?.values, `${path}.spec.configuration.roleArn`) &&
+                getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.roleArn`)) ===
+                  MultiTypeInputType.FIXED &&
+                formik?.setFieldValue(`${path}.spec.configuration.roleArn`, '')
+              setAwsRoles([])
             }}
           />
         </div>
       )}
       {isRuntime(inputSetData?.template?.spec?.configuration?.region as string) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             label={getString('regionLabel')}
             name={`${path}.spec.configuration.region`}
             placeholder={getString(regionsLoading ? 'common.loading' : 'pipeline.regionPlaceholder')}
             disabled={readonly}
             useValue
             multiTypeInputProps={{
+              onChange: value => {
+                setRegionsRef((value as any).value as string)
+                get(formik?.values, `${path}.spec.configuration.roleArn`) &&
+                  getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.roleArn`)) ===
+                    MultiTypeInputType.FIXED &&
+                  formik?.setFieldValue(`${path}.spec.configuration.roleArn`, '')
+                setAwsRoles([])
+              },
               selectProps: {
                 allowCreatingNewItems: true,
                 items: regions ? regions : []
@@ -240,14 +285,17 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               allowableTypes
             }}
             selectItems={regions ? regions : []}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.region'}
           />
         </div>
       )}
       {inputSetData?.template?.spec?.configuration?.templateFile && <TemplateFileInputs {...props} />}
       {inputSetData?.template?.spec?.configuration?.parameters && <ParameterFileInputs {...props} />}
+      {inputSetData?.template?.spec?.configuration?.parameterOverrides && <OverrideParameterFileInputs {...props} />}
       {isRuntime(inputSetData?.template?.spec?.configuration?.stackName as string) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.spec.configuration.stackName`}
             label={getString('cd.cloudFormation.stackName')}
             disabled={readonly}
@@ -255,15 +303,17 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               expressions,
               allowableTypes
             }}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.stackName'}
           />
         </div>
       )}
       {isRuntime(inputSetData?.template?.spec?.configuration?.roleArn as string) && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             label={getString('connectors.awsKms.roleArnLabel')}
             name={`${path}.spec.configuration.roleArn`}
-            disabled={readonly}
+            disabled={readonly || rolesLoading}
             useValue
             placeholder={getString(rolesLoading ? 'common.loading' : 'select')}
             multiTypeInputProps={{
@@ -275,6 +325,8 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
               allowableTypes
             }}
             selectItems={awsRoles}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.roleArn'}
           />
         </div>
       )}
@@ -301,6 +353,7 @@ function CreateStackInputStepRef<T extends CreateStackData = CreateStackData>(
           </Layout.Vertical>
         )
       }
+      {inputSetData?.template?.spec?.configuration?.tags?.type === 'Remote' && <TagsInputs {...props} />}
       {
         /* istanbul ignore next */
         isRuntime((inputSetData?.template?.spec?.configuration?.tags as Tags)?.spec?.content) && (

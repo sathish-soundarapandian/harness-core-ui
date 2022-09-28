@@ -13,7 +13,7 @@ import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
 import { IKeyboardEvent, languages } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
-import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every } from 'lodash-es'
+import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil } from 'lodash-es'
 import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
 import SplitPane from 'react-split-pane'
@@ -54,7 +54,12 @@ import {
   KEY_CODE_FOR_PERIOD,
   KEY_CODE_FOR_SPACE,
   KEY_CODE_FOR_CHAR_Z,
-  MAX_ERR_MSSG_LENGTH
+  MAX_ERR_MSSG_LENGTH,
+  CONTROL_EVENT_KEY_CODE,
+  META_EVENT_KEY_CODE,
+  SHIFT_EVENT_KEY_CODE,
+  navigationKeysMap,
+  allowedKeysInEditModeMap
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -114,7 +119,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     yamlSanityConfig,
     onChange,
     onErrorCallback,
-    renderCustomHeader
+    renderCustomHeader,
+    openDialogProp
   } = props
   setUpEditor(theme)
   const params = useParams()
@@ -156,6 +162,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   useEffect(() => {
     bind?.(handler)
+
+    return () => {
+      bind?.(undefined)
+    }
   }, [bind, handler])
 
   useEffect(() => {
@@ -236,18 +246,21 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #region Handle various interactions with the editor */
 
-  const onYamlChange = debounce((updatedYaml: string): void => {
-    setCurrentYaml(updatedYaml)
-    yamlRef.current = updatedYaml
-    verifyYAML({
-      updatedYaml,
-      setYamlValidationErrors,
-      showError,
-      schema,
-      errorMessage: yamlError
-    })
-    onChange?.(!(updatedYaml === ''))
-  }, 500)
+  const onYamlChange = useCallback(
+    debounce((updatedYaml: string): void => {
+      setCurrentYaml(updatedYaml)
+      yamlRef.current = updatedYaml
+      verifyYAML({
+        updatedYaml,
+        setYamlValidationErrors,
+        showError,
+        schema,
+        errorMessage: yamlError
+      })
+      onChange?.(!(updatedYaml === ''))
+    }, 500),
+    [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
+  )
 
   const showNoPermissionError = useCallback(
     throttle(() => {
@@ -382,24 +395,36 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   /* #endregion */
 
-  const { openDialog } = useConfirmationDialog({
-    contentText: getString('yamlBuilder.enableEditContext'),
-    titleText: getString('confirm'),
-    confirmButtonText: getString('enable'),
-    cancelButtonText: getString('cancel'),
-    intent: Intent.WARNING,
-    onCloseDialog: async didConfirm => {
-      if (didConfirm) {
-        onEnableEditMode?.()
-      }
-    }
-  })
+  const { openDialog } = openDialogProp
+    ? { openDialog: openDialogProp }
+    : useConfirmationDialog({
+        contentText: getString('yamlBuilder.enableEditContext'),
+        titleText: getString('confirm'),
+        confirmButtonText: getString('enable'),
+        cancelButtonText: getString('cancel'),
+        intent: Intent.WARNING,
+        onCloseDialog: async didConfirm => {
+          if (didConfirm) {
+            onEnableEditMode?.()
+          }
+        }
+      })
 
   const handleEditorKeyDownEvent = (event: IKeyboardEvent, editor: any): void => {
     if (isHarnessManaged) {
       showHarnessManagedError()
     } else if (props.isReadOnlyMode && isEditModeSupported) {
-      openDialog()
+      const { keyCode, code, ctrlKey, metaKey, shiftKey } = event
+      const isMetaOrControlKeyPressed = [CONTROL_EVENT_KEY_CODE, META_EVENT_KEY_CODE, SHIFT_EVENT_KEY_CODE].includes(
+        keyCode
+      )
+      const isMetaOrControlKeyPressedForCopyPaste =
+        (ctrlKey || metaKey || shiftKey) && allowedKeysInEditModeMap.includes(code)
+      const navigationKeysPressed = navigationKeysMap.includes(code)
+      if (!(isMetaOrControlKeyPressed || isMetaOrControlKeyPressedForCopyPaste || navigationKeysPressed)) {
+        // this is to avoid showing warning dialog if user just wants to copy paste
+        openDialog()
+      }
     } else if (props.isReadOnlyMode && !isEditModeSupported && !hideErrorMesageOnReadOnlyMode) {
       showNoPermissionError()
     }
@@ -470,7 +495,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         <li className={css.item} title={value} key={key}>
           {getString('yamlBuilder.lineNumberLabel')}&nbsp;
           {key + 1},&nbsp;
-          {truncate(value.toLowerCase(), { length: MAX_ERR_MSSG_LENGTH })}
+          {truncate(value, { length: MAX_ERR_MSSG_LENGTH })}
         </li>
       )
       errors.push(error)
@@ -507,7 +532,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           ) : null}
         </div>
         <div className={cx(css.flexCenter, css.validationStatus)}>
-          {yamlValidationErrors && yamlValidationErrors.size > 0 ? (
+          {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
             <Popover
               interactionKind={PopoverInteractionKind.HOVER}
               position={Position.TOP}
@@ -519,7 +544,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                 <span className={css.invalidYaml}>{getString('invalidText')}</span>
               </div>
             </Popover>
-          ) : null}
+          )}
         </div>
       </div>
     ),
@@ -601,3 +626,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 }
 
 export default YAMLBuilder
+
+export const YamlBuilderMemo = React.memo(YAMLBuilder, (prevProps, nextProps) => {
+  if (isNil(prevProps.schema) && !isNil(nextProps.schema)) {
+    return false
+  }
+  return isEqualWith(nextProps, prevProps, (_arg1, _arg2, key) => {
+    if (
+      ['existingJSON', 'onExpressionTrigger', 'schema', 'onEnableEditMode', 'openDialogProp'].indexOf(key as string) >
+      -1
+    ) {
+      return true
+    }
+  })
+})

@@ -20,6 +20,7 @@ import {
   RecommendationItemDto
 } from 'services/ce/services'
 import { CCM_PAGE_TYPE } from '@ce/types'
+import { resourceTypeToRoute } from '@ce/utils/recommendationUtils'
 import css from './PerspectiveSummary.module.scss'
 
 interface RecommendationSummaryCardProps {
@@ -42,7 +43,7 @@ const RecommendationSummaryCard: (props: RecommendationSummaryCardProps) => JSX.
     variables: {
       filter: {
         ...filters,
-        minSaving: 0,
+        minSaving: 1,
         offset: 0,
         limit: 10
       } as unknown as K8sRecommendationFilterDtoInput
@@ -72,18 +73,18 @@ const RecommendationSummaryCard: (props: RecommendationSummaryCardProps) => JSX.
       queryString['filters'] = filters
       queryString['origin'] = pageType
     }
+    if (!pageType) {
+      queryString['perspectiveFilters'] = JSON.stringify(filters.perspectiveFilters)
+    }
     if (recommendationsDetails.length === 1 && recommendationData?.count === 1) {
       const recommendationId = recommendationsDetails[0].id
       const recommendationName = recommendationsDetails[0].resourceName || recommendationId
+      const resourceType = recommendationsDetails[0].resourceType
 
       recommendationId &&
-        history.push({
-          pathname: routes.toCERecommendationDetails({
-            accountId,
-            recommendation: recommendationId,
-            recommendationName: recommendationName
-          })
-        })
+        history.push(
+          resourceTypeToRoute[resourceType]({ accountId, recommendation: recommendationId, recommendationName })
+        )
     } else {
       history.push({
         pathname: routes.toCERecommendations({
@@ -98,7 +99,7 @@ const RecommendationSummaryCard: (props: RecommendationSummaryCardProps) => JSX.
     return (
       <Card elevation={1}>
         <Container className={css.mainCard}>
-          <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL }}>
+          <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL_BOLD }}>
             {getString('ce.recommendation.sideNavText')}
           </Text>
           <Text
@@ -124,7 +125,7 @@ const RecommendationSummaryCard: (props: RecommendationSummaryCardProps) => JSX.
     <Card elevation={1} interactive={false}>
       <Container className={css.mainCard}>
         <Layout.Horizontal>
-          <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL }}>
+          <Text color={Color.GREY_500} font={{ variation: FontVariation.SMALL_BOLD }}>
             {getString('ce.recommendation.sideNavText')}
           </Text>
           <FlexExpander />

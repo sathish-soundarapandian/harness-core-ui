@@ -19,6 +19,18 @@ const saveMonitoredService = jest.fn()
 const updateMonitoredService = jest.fn()
 const fetchMonitoredService = jest.fn()
 const setOverrideBlockNavigation = jest.fn()
+
+export const defaultState = {
+  cachedInitialValues,
+  initialValues: {} as any,
+  overrideBlockNavigation: false,
+  isExactPath: false,
+  selectedTabID: serviceTab,
+  serviceTabformRef: cleanFormik,
+  dependencyTabformRef: cleanFormik,
+  getString: (val: any) => val
+}
+
 describe('Validate configuration tab util function', () => {
   test('validate isUpdated ', () => {
     expect(isUpdated(false, monitoredService, null)).toEqual(false)
@@ -28,49 +40,49 @@ describe('Validate configuration tab util function', () => {
 
   test('validate determineUnSaveState', () => {
     const changeInDependencyTab = determineUnSaveState({
-      cachedInitialValues,
+      ...defaultState,
       initialValues: monitoredService,
-      overrideBlockNavigation: false,
-      isExactPath: false,
-      selectedTabID: dependencyTab,
-      serviceTabformRef: cleanFormik,
-      dependencyTabformRef: dirtyFormik,
-      getString: val => val
+      selectedTabID: dependencyTab
     })
     expect(changeInDependencyTab).toEqual(true)
     const changeInServiceTab = determineUnSaveState({
-      cachedInitialValues,
+      ...defaultState,
       initialValues: monitoredService,
-      overrideBlockNavigation: false,
-      isExactPath: false,
-      selectedTabID: serviceTab,
-      serviceTabformRef: dirtyFormik,
-      dependencyTabformRef: cleanFormik,
-      getString: val => val
+      serviceTabformRef: dirtyFormik
     })
     expect(changeInServiceTab).toEqual(true)
     const nonDirtyFormsWithCacheData = determineUnSaveState({
-      cachedInitialValues,
-      initialValues: monitoredService,
-      overrideBlockNavigation: false,
-      isExactPath: false,
-      selectedTabID: serviceTab,
-      serviceTabformRef: cleanFormik,
-      dependencyTabformRef: cleanFormik,
-      getString: val => val
+      ...defaultState,
+      initialValues: monitoredService
     })
     expect(nonDirtyFormsWithCacheData).toEqual(true)
     const noChange = determineUnSaveState({
+      ...defaultState,
       cachedInitialValues: monitoredService,
-      initialValues: monitoredService,
-      overrideBlockNavigation: false,
-      isExactPath: false,
-      selectedTabID: serviceTab,
-      serviceTabformRef: cleanFormik,
-      dependencyTabformRef: cleanFormik,
-      getString: val => val
+      initialValues: monitoredService
     })
     expect(noChange).toEqual(false)
+    const overrideBlockNavigation = determineUnSaveState({
+      ...defaultState,
+      overrideBlockNavigation: true
+    })
+    expect(overrideBlockNavigation).toEqual(false)
+    const isExactPath = determineUnSaveState({
+      ...defaultState,
+      isExactPath: true
+    })
+    expect(isExactPath).toEqual(false)
+    const emptyCachedInitialValuesService = determineUnSaveState({
+      ...defaultState,
+      cachedInitialValues: null
+    })
+    expect(emptyCachedInitialValuesService).toEqual(false)
+    const emptyCachedInitialValuesDependency = determineUnSaveState({
+      ...defaultState,
+      cachedInitialValues: null,
+      selectedTabID: 'Dependencies'
+    })
+    expect(emptyCachedInitialValuesDependency).toEqual(false)
   })
 
   test('validate onSubmit', async () => {
@@ -105,5 +117,18 @@ describe('Validate configuration tab util function', () => {
     const createPayload = omit(monitoredService, 'isEdit')
     expect(saveMonitoredService).toHaveBeenCalledWith({ ...createPayload })
     expect(setOverrideBlockNavigation).toHaveBeenCalled()
+
+    monitoredService.environmentRef = ['EnvironmentRef101', 'EnvironmentRef102'] as any
+    await onSubmit({
+      formikValues: monitoredService,
+      identifier: 'monitoredService',
+      orgIdentifier: 'default',
+      projectIdentifier: 'Demo',
+      cachedInitialValues: monitoredService,
+      updateMonitoredService,
+      saveMonitoredService,
+      fetchMonitoredService,
+      setOverrideBlockNavigation
+    })
   })
 })

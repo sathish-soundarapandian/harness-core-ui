@@ -9,29 +9,34 @@ import { render, screen, waitFor } from '@testing-library/react'
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { FeatureAddEditStageView, FeatureAddEditStageViewProps } from '../FeatureAddStageView'
 import mockFFStageTemplate from './__data__/mockFFStageTemplate'
+import { getDummyPipelineContextValue } from './FeatureFlagAddStageViewTestHelpers'
 
 const renderComponent = (props: Partial<FeatureAddEditStageViewProps> = {}): void => {
+  const pipelineContextMockValue = getDummyPipelineContextValue()
   render(
     <TestWrapper
       path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
-      <FeatureAddEditStageView
-        data={{
-          stage: {
-            name: '',
-            identifier: '',
-            description: '',
-            type: 'FeatureFlag',
-            spec: {}
-          }
-        }}
-        onChange={jest.fn()}
-        onSubmit={jest.fn()}
-        {...props}
-      />
+      <PipelineContext.Provider value={pipelineContextMockValue}>
+        <FeatureAddEditStageView
+          data={{
+            stage: {
+              name: '',
+              identifier: '',
+              description: '',
+              type: 'FeatureFlag',
+              spec: {}
+            }
+          }}
+          onChange={jest.fn()}
+          onSubmit={jest.fn()}
+          {...props}
+        />
+      </PipelineContext.Provider>
     </TestWrapper>
   )
 }
@@ -67,6 +72,22 @@ describe('FeatureFlagAddStageView', () => {
         'FF_TEST_STAGE'
       )
     )
+  })
+
+  test('it should prevent duplicate stages from being added', async () => {
+    const mockSubmit = jest.fn()
+
+    renderComponent({ onSubmit: mockSubmit })
+
+    const stageNameInput = screen.getByPlaceholderText('common.namePlaceholder')
+
+    userEvent.type(stageNameInput, 'FF_STAGE_1')
+
+    const setUpStageBtn = screen.getByRole('button', { name: 'pipelineSteps.build.create.setupStage' })
+
+    userEvent.click(setUpStageBtn)
+
+    await waitFor(() => expect(screen.getByText('validation.identifierDuplicate')).toBeInTheDocument())
   })
 
   test('it should add template stage correctly', async () => {

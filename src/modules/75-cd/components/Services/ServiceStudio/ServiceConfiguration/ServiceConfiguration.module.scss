@@ -6,7 +6,8 @@
  */
 
 .serviceEntity {
-  overflow: hidden;
+  overflow: hidden auto;
+  height: 80vh;
   .optionBtns {
     display: flex;
     margin-top: var(--spacing-medium);
@@ -27,6 +28,20 @@
       .nameIdDescriptionTags {
         width: 324px;
       }
+    }
+  }
+
+  .yamlBuilder {
+    padding: var(--spacing-large);
+    position: relative;
+
+    .buttonsWrapper {
+      position: absolute;
+      right: var(--spacing-xxxlarge);
+      top: var(--spacing-xxlarge);
+      display: flex;
+      column-gap: var(--spacing-large);
+      align-items: center;
     }
   }
 }

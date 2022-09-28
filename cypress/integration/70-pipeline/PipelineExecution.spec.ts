@@ -5,7 +5,8 @@ import {
   pipelineListAPI,
   pipelinesRoute,
   serviceStepAPI,
-  serviceStepStageID
+  serviceStepStageID,
+  updatedPipelineExecutionEndpoint
 } from '../../support/70-pipeline/constants'
 
 describe('Pipeline Execution', () => {
@@ -16,34 +17,37 @@ describe('Pipeline Execution', () => {
       return false
     })
     cy.initializeRoute()
-    cy.intercept('POST', executePipeline, { fixture: 'pipeline/api/pipelineExecution/executePipeline' }).as(
-      'executePipeline'
-    )
+    cy.intercept('POST', updatedPipelineExecutionEndpoint, {
+      fixture: 'pipeline/api/pipelineExecution/executePipeline'
+    }).as('executePipeline')
 
     cy.intercept('GET', serviceStepAPI, { fixture: 'pipeline/api/pipelineExecution/serviceStep' }).as('serviceStep')
     cy.intercept('GET', serviceStepStageID, { fixture: 'pipeline/api/pipelineExecution/serviceStepStageID' })
       .as('serviceStepStageID')
       .wait(1000)
-
+    cy.intercept('POST', pipelineListAPI, {
+      fixture: '/pipeline/api/pipelineExecution/getPipelineList'
+    }).as('pipelineList')
     cy.visit(pipelinesRoute, {
       timeout: 30000
     })
   })
 
   it('Pipeline Execution steps phases - Running & Failed', () => {
-    cy.intercept('POST', pipelineListAPI, {
-      fixture: '/pipeline/api/pipelineExecution/getPipelineList'
-    }).as('pipelineList')
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
-      timeout: 10000
+      timeout: 30000
     })
-    cy.wait(2000)
-
-    cy.contains('span', 'Run').click()
+    cy.get('[data-icon="Options"]').first().click()
+    cy.findByText('Run').click()
     cy.wait(1000)
-    cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
-    cy.contains('span', 'Run Pipeline').click()
+    cy.get('*[class^="RunPipelineForm-module_run-form"')
+      .should('be.visible')
+      .within(() => {
+        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        cy.contains('span', 'Run Pipeline').click()
+      })
+
     cy.wait(1000)
     cy.wait('@serviceStep', { timeout: 30000 })
     cy.contains('span', 'Pipeline started successfully').should('be.visible')
@@ -138,9 +142,6 @@ describe('Pipeline Execution', () => {
   })
 
   it('Pipeline Execution steps phases - Running & Success', () => {
-    cy.intercept('POST', pipelineListAPI, {
-      fixture: '/pipeline/api/pipelineExecution/getPipelineList'
-    }).as('pipelineList')
     cy.intercept('POST', executePipeline, {
       fixture: 'pipeline/api/pipelineExecution/successPipeline/executePipeline'
     }).as('executePipeline')
@@ -154,13 +155,17 @@ describe('Pipeline Execution', () => {
     cy.wait(1000)
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
-      timeout: 10000
+      timeout: 30000
     })
+    cy.get('[data-icon="Options"]').first().click()
+    cy.findByText('Run').click()
+    cy.get('*[class^="RunPipelineForm-module_run-form"')
+      .should('be.visible')
+      .within(() => {
+        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        cy.contains('span', 'Run Pipeline').click()
+      })
 
-    cy.contains('span', 'Run').click()
-    cy.wait(1000)
-    cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
-    cy.contains('span', 'Run Pipeline').click()
     cy.wait(1000)
     cy.wait('@serviceStep', { timeout: 30000 })
     cy.contains('span', 'Pipeline started successfully').should('be.visible')
@@ -222,15 +227,6 @@ describe('Pipeline Execution', () => {
   })
 
   it('Pipeline Execution Serverless Aws Lambda Deploy step - Failed', () => {
-    // Pipeline List call
-    cy.intercept('POST', pipelineListAPI, {
-      fixture: '/pipeline/api/pipelineExecution/getPipelineList'
-    }).as('pipelineList')
-
-    // Execute Pipeline call which is made when user click on Run button
-    cy.intercept('POST', executePipeline, {
-      fixture: 'pipeline/api/pipelineExecution/serverlessAwsLambda/executePipeline'
-    }).as('executePipeline')
     // execution/:executionId calls are made from here onwards
     cy.intercept('GET', serviceStepAPI, {
       fixture: 'pipeline/api/pipelineExecution/serverlessAwsLambda/serviceStep'
@@ -245,17 +241,21 @@ describe('Pipeline Execution', () => {
     cy.wait(1000)
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
-      timeout: 10000
+      timeout: 30000
     })
-    cy.wait(2000)
 
-    // Click on Run button in pipeline card
-    cy.contains('span', 'Run').click()
+    cy.get('[data-icon="Options"]').first().click()
+    cy.findByText('Run').click()
     cy.wait(1000)
-    // Click on checkbox 'Skip preflight check'
-    cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
-    // Click Run Pipeline button inside Run Pipeline Form
-    cy.contains('span', 'Run Pipeline').click()
+    cy.get('*[class^="RunPipelineForm-module_run-form"')
+      .should('be.visible')
+      .within(() => {
+        // Click on checkbox 'Skip preflight check'
+        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        // Click Run Pipeline button inside Run Pipeline Form
+        cy.contains('span', 'Run Pipeline').click()
+      })
+
     // Wait for API calls to be executed
     cy.wait(1000)
     cy.wait('@executePipeline', { timeout: 30000 })
@@ -360,13 +360,6 @@ describe('Pipeline Execution', () => {
   })
 
   it('Pipeline Execution steps phases - Running & Abort', () => {
-    cy.intercept('POST', pipelineListAPI, {
-      fixture: '/pipeline/api/pipelineExecution/getPipelineList'
-    }).as('pipelineList')
-    cy.intercept('POST', executePipeline, {
-      fixture: 'pipeline/api/pipelineExecution/successPipeline/executePipeline'
-    }).as('executePipeline')
-
     cy.intercept('GET', serviceStepAPI, { fixture: 'pipeline/api/pipelineExecution/successPipeline/serviceStep' }).as(
       'serviceStep'
     )
@@ -376,15 +369,20 @@ describe('Pipeline Execution', () => {
     cy.wait(1000)
     cy.visitPageAssertion(pageHeaderClassName)
     cy.wait('@pipelineList', {
-      timeout: 10000
+      timeout: 30000
     })
 
     cy.intercept('PUT', abortPipelineCall, { fixture: 'pipeline/api/pipeline/execute/statusAbort' }).as('statusAbort')
-
-    cy.contains('span', 'Run').click()
+    cy.get('[data-icon="Options"]').first().click()
+    cy.findByText('Run').click()
     cy.wait(1000)
-    cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
-    cy.contains('span', 'Run Pipeline').click()
+    cy.get('*[class^="RunPipelineForm-module_run-form"')
+      .should('be.visible')
+      .within(() => {
+        cy.get('input[type="checkbox"]').eq(0).check({ force: true }).should('be.checked')
+        cy.contains('span', 'Run Pipeline').click()
+      })
+
     cy.wait(1000)
     cy.wait('@serviceStep')
     cy.contains('span', 'Pipeline started successfully').should('be.visible')
@@ -409,9 +407,7 @@ describe('Pipeline Execution', () => {
     cy.get("span[data-icon='spinner']").should('be.visible')
 
     cy.get('*[class^="ExecutionHeader"]').within(() => {
-      cy.get('*[class^="ExecutionActions"]').within(() => {
-        cy.get('span[icon="stop"]').click()
-      })
+      cy.get('span[icon="stop"]').click()
     })
     cy.wait(1000)
     cy.contains('span', 'Confirm').click({ force: true })
@@ -435,7 +431,6 @@ describe('Pipeline Execution', () => {
     cy.get('.Pane.horizontal.Pane1').within(() => {
       cy.get('.default-node').first().should('be.visible').trigger('mouseover')
       cy.get('.default-node').first().should('be.visible').trigger('onmouseover')
-      cy.get('.default-node').first().should('be.visible').trigger('mouseenter')
     })
   })
 })

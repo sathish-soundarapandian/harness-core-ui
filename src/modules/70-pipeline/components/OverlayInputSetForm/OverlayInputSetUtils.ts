@@ -36,6 +36,7 @@ export interface GetOverlayCreateUpdateOptionsInterface {
   initialGitDetails: any
   isEdit: boolean
   initialStoreMetadata?: StoreMetadata
+  conflictCommitId?: string
 }
 
 export const getCreateUpdateRequestBodyOptions = ({
@@ -48,7 +49,8 @@ export const getCreateUpdateRequestBodyOptions = ({
   objectId,
   initialGitDetails,
   isEdit,
-  initialStoreMetadata
+  initialStoreMetadata,
+  conflictCommitId
 }: GetOverlayCreateUpdateOptionsInterface):
   | MutateRequestOptions<UpdateOverlayInputSetForPipelineQueryParams, UpdateOverlayInputSetForPipelinePathParams>
   | MutateRequestOptions<CreateOverlayInputSetForPipelineQueryParams, void> => {
@@ -64,7 +66,9 @@ export const getCreateUpdateRequestBodyOptions = ({
         queryParams: {
           ...commonQueryParams,
           ...(initialStoreMetadata?.storeType === StoreType.REMOTE ? initialStoreMetadata : {}),
-          ...(gitDetails ? { ...gitDetails, lastObjectId: objectId, lastCommitId: initialGitDetails.commitId } : {}),
+          ...(gitDetails
+            ? { ...gitDetails, lastObjectId: objectId, lastCommitId: conflictCommitId || initialGitDetails.commitId }
+            : {}),
           ...(gitDetails && gitDetails.isNewBranch ? { baseBranch: initialGitDetails.branch } : {})
         }
       }

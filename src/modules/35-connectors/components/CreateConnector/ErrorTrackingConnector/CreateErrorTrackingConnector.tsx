@@ -53,7 +53,7 @@ export function ErrorTrackingConfigStep(props: ConnectionConfigProps): JSX.Eleme
 
   return (
     <Container className={css.credentials}>
-      <StepDetailsHeader connectorTypeLabel={getString('connectors.title.errorTracking')} />
+      <StepDetailsHeader connectorTypeLabel={getString('common.purpose.errorTracking.title')} />
       <Formik
         formName="createErrorTrackingConnectorsForm"
         enableReinitialize

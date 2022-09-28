@@ -15,12 +15,12 @@ import { TemplateListCardContextMenu } from '@templates-library/pages/TemplatesP
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { TemplateSummaryResponse } from 'services/template-ng'
-import { templateColorStyleMap } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import { TagsPopover } from '@common/components'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import GitDetailsColumn from '@common/components/Table/GitDetailsColumn/GitDetailsColumn'
-import { TemplateType } from '@templates-library/utils/templatesUtils'
+import { ScopeBadge } from '@common/components/ScopeBadge/ScopeBadge'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import css from './TemplatesListView.module.scss'
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
@@ -50,25 +50,27 @@ const RenderColumnMenu: Renderer<CellProps<TemplateSummaryResponse>> = ({ row, c
 
 const RenderColumnType: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
   const data = row.original
-  const templateEntityType = data.templateEntityType
-  const style = templateColorStyleMap[defaultTo(templateEntityType, TemplateType.Step)]
+  const templateEntityType = defaultTo(data.templateEntityType, '')
+  const templateLabel = templateFactory.getTemplateLabel(templateEntityType)
+  const style = templateFactory.getTemplateColorMap(templateEntityType)
 
   return (
     <Layout.Horizontal
       className={css.templateColor}
       spacing="large"
       flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+      padding={{ right: 'medium' }}
     >
       <svg width="8" height="64" viewBox="0 0 8 64" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M7.5 63.5L7.5 0.5H5C2.51472 0.5 0.5 2.51472 0.5 5L0.5 59C0.5 61.4853 2.51472 63.5 5 63.5H7.5Z"
-          fill={style.fill}
-          stroke={style.stroke}
+          fill={style?.fill}
+          stroke={style?.stroke}
         />
       </svg>
-      {templateEntityType && (
-        <Text font={{ size: 'xsmall', weight: 'bold' }} style={{ color: style.color, letterSpacing: 2 }}>
-          {templateEntityType.toUpperCase()}
+      {templateLabel && (
+        <Text font={{ size: 'xsmall', weight: 'bold' }} style={{ color: style?.color, letterSpacing: 2 }}>
+          {templateLabel.toUpperCase()}
         </Text>
       )}
     </Layout.Horizontal>
@@ -79,36 +81,43 @@ const RenderColumnTemplate: Renderer<CellProps<TemplateSummaryResponse>> = ({ ro
   const data = row.original
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
-      <Layout.Vertical spacing="xsmall" data-testid={data.identifier} padding={{ right: 'medium' }}>
-        <Layout.Horizontal spacing="medium">
+    <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }} padding={{ right: 'medium' }}>
+      <Container>
+        <Layout.Vertical spacing="xsmall">
+          <Layout.Horizontal spacing="medium">
+            <Text
+              color={Color.GREY_800}
+              tooltipProps={{ position: Position.BOTTOM }}
+              lineClamp={1}
+              tooltip={
+                <Layout.Vertical
+                  color={Color.GREY_800}
+                  spacing="small"
+                  padding="medium"
+                  style={{ maxWidth: 400, overflowWrap: 'anywhere' }}
+                >
+                  <Text color={Color.GREY_800}>{getString('nameLabel', { name: data.name })}</Text>
+                  <br />
+                  <Text lineClamp={1}>
+                    {getString('descriptionLabel', { description: defaultTo(data.description, '-') })}
+                  </Text>
+                </Layout.Vertical>
+              }
+            >
+              {data.name}
+            </Text>
+            {data.tags && !isEmpty(data.tags) && <TagsPopover tags={data.tags} />}
+          </Layout.Horizontal>
           <Text
-            color={Color.GREY_800}
-            tooltipProps={{ position: Position.BOTTOM }}
             lineClamp={1}
-            tooltip={
-              <Layout.Vertical
-                color={Color.GREY_800}
-                spacing="small"
-                padding="medium"
-                style={{ maxWidth: 400, overflowWrap: 'anywhere' }}
-              >
-                <Text color={Color.GREY_800}>{getString('nameLabel', { name: data.name })}</Text>
-                <br />
-                <Text lineClamp={1}>
-                  {getString('descriptionLabel', { description: defaultTo(data.description, '-') })}
-                </Text>
-              </Layout.Vertical>
-            }
+            tooltipProps={{ position: Position.BOTTOM }}
+            color={Color.GREY_400}
+            font={{ size: 'small' }}
           >
-            {data.name}
+            {getString('idLabel', { id: data.identifier })}
           </Text>
-          {data.tags && !isEmpty(data.tags) && <TagsPopover tags={data.tags} />}
-        </Layout.Horizontal>
-        <Text tooltipProps={{ position: Position.BOTTOM }} color={Color.GREY_400} font={{ size: 'small' }}>
-          {getString('idLabel', { id: data.identifier })}
-        </Text>
-      </Layout.Vertical>
+        </Layout.Vertical>
+      </Container>
       {data.entityValidityDetails?.valid === false && (
         <Container>
           <Badge
@@ -135,32 +144,60 @@ const RenderColumnLabel: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }
   )
 }
 
+const RenderColumnScope: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+  const data = row.original
+  return (
+    <Layout.Horizontal padding={{ right: 'medium' }}>
+      <ScopeBadge data={data} minimal={true} />
+    </Layout.Horizontal>
+  )
+}
+
+const RenderRepoName: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }) => {
+  const { gitDetails } = row.original
+  const repoName = gitDetails?.repoName || '-'
+
+  return (
+    <Layout.Horizontal padding={{ right: 'medium' }}>
+      <Text color={Color.GREY_800} lineClamp={1}>
+        {repoName}
+      </Text>
+    </Layout.Horizontal>
+  )
+}
+
 export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Element => {
   const { getString } = useStrings()
   const { data, selectedTemplate, gotoPage, onPreview, onOpenEdit, onOpenSettings, onDelete, onSelect } = props
-  const { isGitSyncEnabled } = useAppStore()
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingTemplatesGitx
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const isGitView = isGitSyncEnabled || supportingTemplatesGitx
   const hideMenu = !onPreview && !onOpenEdit && !onOpenSettings && !onDelete
 
-  const getTemplateNameWidth = (): string => {
-    if (isGitSyncEnabled) {
+  const getTemplateNameWidth = React.useCallback(() => {
+    if (isGitView) {
       if (hideMenu) {
-        return '40%'
+        return '35%'
       }
-      return '35%'
+      return '30%'
     } else {
       if (hideMenu) {
-        return '50%'
+        return '45%'
       }
-      return '45%'
+      return '40%'
     }
-  }
+  }, [isGitView, hideMenu])
 
   const columns: CustomColumn<TemplateSummaryResponse>[] = React.useMemo(
     () => [
       {
         Header: getString('typeLabel').toUpperCase(),
         accessor: 'templateEntityType',
-        width: isGitSyncEnabled ? '15%' : '25%',
+        width: isGitView ? '15%' : '20%',
         Cell: RenderColumnType
       },
       {
@@ -172,15 +209,22 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
       {
         Header: getString('version').toUpperCase(),
         accessor: 'versionLabel',
-        width: isGitSyncEnabled ? '10%' : '25%',
+        width: isGitView ? '10%' : '20%',
         Cell: RenderColumnLabel,
         disableSortBy: true
       },
       {
         Header: getString('common.gitSync.repoDetails').toUpperCase(),
         accessor: 'gitDetails',
-        width: '35%',
-        Cell: GitDetailsColumn,
+        width: '30%',
+        Cell: supportingTemplatesGitx ? RenderRepoName : GitDetailsColumn,
+        disableSortBy: true
+      },
+      {
+        Header: 'Scope',
+        accessor: 'accountId',
+        width: isGitView ? '10%' : '15%',
+        Cell: RenderColumnScope,
         disableSortBy: true
       },
       {
@@ -195,14 +239,14 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
         onDelete
       }
     ],
-    [isGitSyncEnabled, onPreview, onOpenEdit, onOpenSettings, onDelete]
+    [isGitView, getTemplateNameWidth, supportingTemplatesGitx, onPreview, onOpenEdit, onOpenSettings, onDelete]
   )
 
   if (hideMenu) {
     columns.pop()
   }
 
-  if (!isGitSyncEnabled) {
+  if (!isGitView) {
     columns.splice(3, 1)
   }
 

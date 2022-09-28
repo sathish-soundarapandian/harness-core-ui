@@ -48,8 +48,7 @@ export function ApprovalTypeCards({ isReadonly }: { formikProps: FormikValues; i
       {
         label: 'Custom',
         value: 'CUSTOM_APPROVAL',
-        icon: 'other-workload',
-        disabled: true
+        icon: 'custom-approval'
       }
     ],
     []

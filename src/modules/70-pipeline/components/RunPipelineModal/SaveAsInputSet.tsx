@@ -9,11 +9,11 @@ import React, { Dispatch, SetStateAction } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikErrors } from 'formik'
-import { defaultTo, isUndefined, omit, omitBy, isNull, noop } from 'lodash-es'
+import { defaultTo, isUndefined, omit, omitBy, isNull } from 'lodash-es'
 import type { MutateMethod } from 'restful-react'
 import { Button, ButtonVariation, Container, Formik, Layout, Popover } from '@wings-software/uicore'
 import { Classes } from '@blueprintjs/core'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
   CreateInputSetForPipelineQueryParams,
   EntityGitDetails,
@@ -151,9 +151,9 @@ interface SaveAsInputSetProps {
   connectorRef?: string
   repoName?: string
   branch?: string
-  storeType?: StoreType
+  storeType?: 'INLINE' | 'REMOTE'
   isGitSyncEnabled?: boolean
-  isGitSimplificationEnabled?: boolean
+  supportingGitSimplification?: boolean
   setFormErrors: Dispatch<SetStateAction<FormikErrors<InputSetDTO>>>
   refetchParentData: (newId?: string) => void
 }
@@ -172,7 +172,7 @@ function SaveAsInputSet({
   branch,
   storeType,
   isGitSyncEnabled = false,
-  isGitSimplificationEnabled = false,
+  supportingGitSimplification = false,
   setFormErrors,
   refetchParentData
 }: SaveAsInputSetProps): JSX.Element | null {
@@ -236,8 +236,7 @@ function SaveAsInputSet({
         'connectorRef',
         'repoName',
         'filePath',
-        'storeType',
-        'remoteType'
+        'storeType'
       )
       setSavedInputSetObj(inputSetObj)
       setInitialGitDetails(gitDetails as EntityGitDetails)
@@ -247,6 +246,7 @@ function SaveAsInputSet({
         if (isGitSyncEnabled || storeMetadata?.storeType === StoreType.REMOTE) {
           openSaveToGitDialog({
             isEditing: false,
+            disableCreatingNewBranch: true,
             resource: {
               type: 'InputSets',
               name: inputSetObj.name as string,
@@ -277,10 +277,10 @@ function SaveAsInputSet({
               onSubmit={input => {
                 handleSubmit(
                   input,
-                  { repoIdentifier: input.repo, branch: input.branch },
+                  { repoIdentifier: input.repo, branch: input.branch, repoName: input.repo },
                   {
                     connectorRef: input.connectorRef,
-                    repoName: input.repoName,
+                    repoName: input.repo,
                     branch: input.branch,
                     filePath: input.filePath,
                     storeType: input.storeType
@@ -332,13 +332,11 @@ function SaveAsInputSet({
                       </GitSyncStoreProvider>
                     )}
 
-                    {isGitSimplificationEnabled && storeType === StoreType.REMOTE && (
+                    {supportingGitSimplification && storeType === StoreType.REMOTE && (
                       <Container>
                         <GitSyncForm
                           formikProps={createInputSetFormikProps as any}
-                          handleSubmit={noop}
                           isEdit={false}
-                          showRemoteTypeSelection={false}
                           disableFields={{
                             connectorRef: true,
                             repoName: true,

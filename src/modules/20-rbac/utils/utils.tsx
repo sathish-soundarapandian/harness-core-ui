@@ -12,7 +12,6 @@ import type { StringsMap } from 'stringTypes'
 import type {
   AccessControlCheckError,
   RoleAssignmentMetadataDTO,
-  UserMetadataDTO,
   Scope as CDScope,
   UserGroupDTO,
   Failure,
@@ -35,9 +34,18 @@ import { FeatureWarningTooltip } from '@common/components/FeatureWarning/Feature
 import type { UseStringsReturn } from 'framework/strings'
 import type { ProjectSelectOption } from '@audit-trail/components/FilterDrawer/FilterDrawer'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
+import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
+import type { AttributeFilter } from 'services/resourcegroups'
 
 export const DEFAULT_RG = '_all_resources_including_child_scopes'
 export const PROJECT_DEFAULT_RG = '_all_project_level_resources'
+
+export enum AuthenticationMechanisms {
+  SAML = 'SAML',
+  OAUTH = 'OAUTH',
+  LDAP = 'LDAP',
+  USER_PASSWORD = 'USER_PASSWORD'
+}
 
 export enum PrincipalType {
   USER = 'USER',
@@ -75,6 +83,13 @@ export enum InvitationStatus {
   FAIL = 'FAIL'
 }
 
+export enum ScopeFilterItems {
+  ALL = 'ALL',
+  ACCOUNT_ONLY = 'ACCOUNT_ONLY',
+  ORG_ONLY = 'ORG_ONLY',
+  ORG_WITH_PROJECTS = 'ORG_WITH_PROJECTS',
+  PROJECT_ONLY = 'PROJECT_ONLY'
+}
 interface HandleInvitationResponse {
   responseType: InvitationStatus
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
@@ -115,7 +130,7 @@ export const getPermissionRequestFromProps = (
 ): PermissionsRequest | undefined => {
   if (permission) {
     return {
-      ...pick(permission, ['resourceScope', 'resource', 'options']),
+      ...pick(permission, ['resourceScope', 'resource', 'options', 'attributeFilter']),
       permissions: [permission.permission]
     } as PermissionsRequest
   }
@@ -167,10 +182,6 @@ export const getScopeLevelManagedResourceGroup = (
   }
 }
 
-export const isAccountBasicRolePresent = (scope: Scope, flag: boolean): boolean => {
-  return flag && scope === Scope.ACCOUNT
-}
-
 export const isAccountBasicRole = (identifier: string): boolean => {
   return identifier === '_account_basic'
 }
@@ -179,13 +190,13 @@ export const getScopeBasedDefaultAssignment = (
   scope: Scope,
   getString: UseStringsReturn['getString'],
   isCommunity: boolean,
-  isBasicRolePresent: boolean
+  disableDefaultAssignment: boolean
 ): Assignment[] => {
-  if (isCommunity) {
+  if (isCommunity || disableDefaultAssignment) {
     return []
   } else {
     const resourceGroup: ResourceGroupOption = {
-      managedRoleAssignment: !isBasicRolePresent,
+      managedRoleAssignment: true,
       ...getScopeLevelManagedResourceGroup(scope, getString)
     }
     switch (scope) {
@@ -196,7 +207,7 @@ export const getScopeBasedDefaultAssignment = (
               label: getString('common.accViewer'),
               value: '_account_viewer',
               managed: true,
-              managedRoleAssignment: !isBasicRolePresent
+              managedRoleAssignment: true
             },
             resourceGroup
           }
@@ -237,8 +248,12 @@ export const isAssignmentFieldDisabled = (value: RoleOption | ResourceGroupOptio
   }
   return false
 }
-export const isDynamicResourceSelector = (value: string | string[]): boolean => {
+export const isDynamicResourceSelector = (value: ResourceSelectorValue): boolean => {
   return value === RbacResourceGroupTypes.DYNAMIC_RESOURCE_SELECTOR
+}
+
+export const isAtrributeFilterSelector = (value: ResourceSelectorValue): boolean => {
+  return Array.isArray((value as AttributeFilter)?.attributeValues)
 }
 
 export const isScopeResourceSelector = (value: string): boolean => {
@@ -250,24 +265,28 @@ export interface ErrorHandlerProps {
 }
 
 export const getAssignments = (roleBindings: RoleAssignmentMetadataDTO[]): Assignment[] => {
-  return (
-    roleBindings?.map(roleAssignment => {
-      return {
-        role: {
-          label: roleAssignment.roleName,
-          value: roleAssignment.roleIdentifier,
-          managed: roleAssignment.managedRole,
-          assignmentIdentifier: roleAssignment.identifier,
-          managedRoleAssignment: roleAssignment.managedRoleAssignment
-        },
-        resourceGroup: {
-          label: roleAssignment.resourceGroupName || '',
-          value: roleAssignment.resourceGroupIdentifier || '',
-          managedRoleAssignment: roleAssignment.managedRoleAssignment,
-          assignmentIdentifier: roleAssignment.identifier
-        }
+  return defaultTo(
+    roleBindings?.reduce((acc: Assignment[], roleAssignment) => {
+      if (!isAccountBasicRole(roleAssignment.roleIdentifier)) {
+        acc.push({
+          role: {
+            label: roleAssignment.roleName,
+            value: roleAssignment.roleIdentifier,
+            managed: roleAssignment.managedRole,
+            managedRoleAssignment: roleAssignment.managedRoleAssignment,
+            assignmentIdentifier: roleAssignment.identifier
+          },
+          resourceGroup: {
+            label: defaultTo(roleAssignment.resourceGroupName, ''),
+            value: defaultTo(roleAssignment.resourceGroupIdentifier, ''),
+            managedRoleAssignment: roleAssignment.managedRoleAssignment,
+            assignmentIdentifier: roleAssignment.identifier
+          }
+        })
       }
-    }) || []
+      return acc
+    }, []),
+    []
   )
 }
 
@@ -333,10 +352,6 @@ export function getTooltip({
   return {}
 }
 
-export const getUserName = (user: UserMetadataDTO): string => {
-  return defaultTo(user.name, user.email)
-}
-
 export const generateScopeList = (org: string, projects: ProjectSelectOption[], accountId: string): CDScope[] => {
   if (projects.length > 0) {
     return projects.map(project => ({
@@ -366,10 +381,12 @@ export const getUserGroupActionTooltipText = (
     orgIdentifier,
     projectIdentifier
   })
+  const parentScope = mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup))
+  const currentScope = mapfromScopetoPrincipalScope(scope)
   if (userGroupInherited) {
     const vars = {
-      parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup)),
-      childScope: mapfromScopetoPrincipalScope(scope)
+      parentScope: parentScope ? parentScope.charAt(0).toUpperCase() + parentScope.slice(1) : undefined,
+      childScope: currentScope ? currentScope.charAt(0).toUpperCase() + currentScope.slice(1) : undefined
     }
     return <String stringID="rbac.unableToEditInheritedMembershipDetailed" vars={vars} />
   }
@@ -390,10 +407,11 @@ export const getUserGroupMenuOptionText = (
   userGroupInherited?: boolean
 ): React.ReactElement | undefined => {
   const { externallyManaged } = userGroup
+  const parentScope = mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup))
   if (userGroupInherited) {
     const vars = {
       action: action.toLowerCase(),
-      parentScope: mapfromScopetoPrincipalScope(getScopeFromUserGroupDTO(userGroup))
+      parentScope: parentScope ? parentScope.charAt(0).toUpperCase() + parentScope.slice(1) : undefined
     }
     return <String stringID="rbac.manageInheritedGroupText" vars={vars} />
   }
@@ -471,5 +489,18 @@ export const getUserGroupQueryParams = (
       }
     default:
       return params
+  }
+}
+
+export const getDefaultSelectedFilter = (scope: Scope): ScopeFilterItems => {
+  switch (scope) {
+    case Scope.ACCOUNT:
+      return ScopeFilterItems.ACCOUNT_ONLY
+    case Scope.ORG:
+      return ScopeFilterItems.ORG_ONLY
+    case Scope.PROJECT:
+      return ScopeFilterItems.PROJECT_ONLY
+    default:
+      return ScopeFilterItems.ALL
   }
 }

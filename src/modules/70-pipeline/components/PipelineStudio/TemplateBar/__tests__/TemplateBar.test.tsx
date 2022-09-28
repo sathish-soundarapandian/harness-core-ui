@@ -7,14 +7,10 @@
 
 import React from 'react'
 import { act, fireEvent, getByText, queryByText, render, waitFor } from '@testing-library/react'
-import produce from 'immer'
-import { set } from 'lodash-es'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import * as useFeaturesMock from '@common/hooks/useFeatures'
-import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import pipelineContextMock from '@pipeline/components/PipelineStudio/RightDrawer/__tests__/stateMock'
 import type { ResponseTemplateResponse } from 'services/template-ng'
 import * as templateServices from 'services/template-ng'
 import { TemplateBar, TemplateBarProps } from '../TemplateBar'
@@ -200,14 +196,9 @@ describe('<TemplateBar /> tests', () => {
   })
 
   test('should hide change and remove option in read only mode', async () => {
-    const contextMock = produce(pipelineContextMock, draft => {
-      set(draft, 'isReadonly', true)
-    })
     const { container } = render(
       <TestWrapper>
-        <PipelineContext.Provider value={contextMock}>
-          <TemplateBar {...baseProps} />
-        </PipelineContext.Provider>
+        <TemplateBar {...baseProps} isReadonly />
       </TestWrapper>
     )
     const optionsBtn = container.querySelector('.bp3-icon-more') as HTMLElement

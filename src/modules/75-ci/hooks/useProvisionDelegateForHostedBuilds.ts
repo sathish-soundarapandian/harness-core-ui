@@ -7,18 +7,20 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ResponseSetupStatus, useGetDelegateInstallStatus, useProvisionResourcesForCI } from 'services/cd-ng'
+import { ResponseSetupStatus, useProvisionResourcesForCI } from 'services/cd-ng'
+import { DelegateGroupDetails, useGetDelegateGroupsNGV2 } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { Status } from '@common/utils/CIConstants'
 import {
   DELEGATE_INSTALLATION_REFETCH_DELAY,
   MAX_TIMEOUT_DELEGATE_INSTALLATION,
+  ProvisionedByHarnessDelegateGroupIdentifier,
   ProvisioningStatus
 } from '@ci/pages/get-started-with-ci/InfraProvisioningWizard/Constants'
 
 interface ProvisionDelegateForHostedBuildsReturns {
   initiateProvisioning: () => void
   delegateProvisioningStatus: ProvisioningStatus
+  fetchingDelegateDetails: boolean
 }
 
 export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHostedBuildsReturns {
@@ -29,11 +31,12 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
   )
   const { accountId } = useParams<AccountPathProps>()
 
-  const { refetch: fetchProvisioningStatus, data: provisioningStatus } = useGetDelegateInstallStatus({
-    queryParams: {
-      accountIdentifier: accountId
-    },
-    lazy: true
+  const {
+    data: delegateDetails,
+    refetch: fetchDelegateDetails,
+    loading: fetchingDelegateDetails
+  } = useGetDelegateGroupsNGV2({
+    queryParams: { accountId }
   })
 
   const { mutate: startProvisioning } = useProvisionResourcesForCI({
@@ -48,16 +51,20 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
   })
 
   useEffect(() => {
-    const { status, data } = provisioningStatus || {}
-    if (status === Status.SUCCESS && data === ProvisioningStatus[ProvisioningStatus.SUCCESS]) {
+    if (
+      !fetchingDelegateDetails &&
+      delegateDetails?.resource?.delegateGroupDetails?.find(
+        (item: DelegateGroupDetails) => item?.delegateGroupIdentifier === ProvisionedByHarnessDelegateGroupIdentifier
+      )?.activelyConnected
+    ) {
       setDelegateProvisioningStatus(ProvisioningStatus.SUCCESS)
       setStartPolling(false)
     }
-  }, [provisioningStatus])
+  }, [fetchingDelegateDetails, delegateDetails])
 
   useEffect(() => {
     if (startPolling) {
-      const timerId = setInterval(fetchProvisioningStatus, DELEGATE_INSTALLATION_REFETCH_DELAY)
+      const timerId = setInterval(fetchDelegateDetails, DELEGATE_INSTALLATION_REFETCH_DELAY)
       return () => clearInterval(timerId)
     }
   })
@@ -84,8 +91,7 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
             startProvisioningStatus === ProvisioningStatus[ProvisioningStatus.SUCCESS] &&
             startProvisioningData === ProvisioningStatus[ProvisioningStatus.SUCCESS]
           ) {
-            /* ?. added here for test cases */
-            fetchProvisioningStatus?.()
+            fetchDelegateDetails()
             setStartPolling(true)
           } else {
             setDelegateProvisioningStatus(ProvisioningStatus.FAILURE)
@@ -98,5 +104,5 @@ export function useProvisionDelegateForHostedBuilds(): ProvisionDelegateForHoste
     }
   }, [initProvisioning])
 
-  return { initiateProvisioning: () => setInitProvisioning(true), delegateProvisioningStatus }
+  return { initiateProvisioning: () => setInitProvisioning(true), delegateProvisioningStatus, fetchingDelegateDetails }
 }

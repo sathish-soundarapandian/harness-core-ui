@@ -13,7 +13,8 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   ButtonVariation,
-  SelectOption
+  SelectOption,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 
@@ -28,17 +29,17 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useHelmCmdFlags } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
-import type { CommandFlags, HelmVersionOptions } from '../ManifestInterface'
+import type { CommandFlags, HelmOCIVersionOptions, HelmVersionOptions } from '../ManifestInterface'
 
 import helmcss from './HelmWithGIT/HelmWithGIT.module.scss'
 import css from './ManifestWizardSteps.module.scss'
 interface HelmAdvancedStepProps {
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik: FormikValues
   isReadonly?: boolean
   deploymentType: string
-  helmVersion: HelmVersionOptions
+  helmVersion: HelmVersionOptions | HelmOCIVersionOptions
   helmStore: string
 }
 
@@ -68,6 +69,7 @@ function HelmAdvancedStepSection({
     if (!commandFlagOptions[helmVersion]?.length) {
       refetchCommandFlags()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [helmVersion])
 
   useDeepCompareEffect(() => {
@@ -131,9 +133,9 @@ function HelmAdvancedStepSection({
                       >
                         <FormInput.Select
                           name={`commandFlags[${index}].commandType`}
-                          label={index === 0 ? getString('pipeline.manifestType.helmCommandType') : ''}
+                          label={index === 0 ? getString('pipeline.fieldLabels.commandType') : ''}
                           items={commandFlagOptions[helmVersion]}
-                          placeholder={getString('pipeline.manifestType.helmCommandTypePlaceholder')}
+                          placeholder={getString('pipeline.fieldPlaceholders.commandType')}
                         />
                       </div>
                       <div

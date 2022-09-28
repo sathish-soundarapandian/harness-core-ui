@@ -45,14 +45,37 @@ export const usernameToken: ConnectorInfoDTO = {
     type: 'Account',
     url: 'https://dev.azure.com/azureRepoOrg',
     validationRepo: 'test',
-    validationProject: 'testProject',
     authentication: {
       type: 'Http',
       spec: {
         type: 'UsernameToken',
         spec: { username: 'dev', usernameRef: undefined, tokenRef }
       }
-    }
+    },
+    executeOnDelegate: true
+  }
+}
+
+export const hostedMock: ConnectorInfoDTO = {
+  name: 'AzureRepoWorking1',
+  identifier: 'asasas',
+  description: 'connector before demo',
+  orgIdentifier: undefined,
+  projectIdentifier: undefined,
+  tags: {},
+  type: 'AzureRepo',
+  spec: {
+    type: 'Account',
+    url: 'https://dev.azure.com/azureRepoOrg',
+    validationRepo: 'test',
+    authentication: {
+      type: 'Http',
+      spec: {
+        type: 'UsernameToken',
+        spec: { username: 'dev', usernameRef: undefined, tokenRef }
+      }
+    },
+    executeOnDelegate: false
   }
 }
 
@@ -69,7 +92,6 @@ export const usernameTokenWithAPIAccess: ConnectorInfoDTO = {
     type: 'Account',
     url: 'https://dev.azure.com/azureRepoOrg',
     validationRepo: 'test',
-    validationProject: 'testProject',
     authentication: {
       type: 'Http',
       spec: {
@@ -80,7 +102,8 @@ export const usernameTokenWithAPIAccess: ConnectorInfoDTO = {
     apiAccess: {
       type: 'Token',
       spec: { tokenRef }
-    }
+    },
+    executeOnDelegate: true
   }
 }
 

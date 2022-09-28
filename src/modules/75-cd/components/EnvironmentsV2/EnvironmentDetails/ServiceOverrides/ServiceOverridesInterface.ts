@@ -1,0 +1,22 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import type { ConfigFileWrapper, ManifestConfigWrapper } from 'services/cd-ng'
+
+export interface VariableOverride {
+  name?: string
+  type?: 'String' | 'Number' | 'Secret'
+  value?: string
+}
+
+export interface AddEditServiceOverrideFormProps {
+  serviceRef: string | null
+  environmentRef?: string
+  variables?: VariableOverride[]
+  manifests?: ManifestConfigWrapper[]
+  configFiles?: ConfigFileWrapper[]
+}

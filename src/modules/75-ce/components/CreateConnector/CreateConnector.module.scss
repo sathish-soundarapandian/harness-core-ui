@@ -41,16 +41,16 @@
     padding: var(--spacing-xxxlarge) !important;
     > h1 {
       font-size: 20px !important;
-      color: #1c1c28;
+      color: var(--grey-900);
       font-weight: 600 !important;
       margin-bottom: 10px;
     }
     > p {
       margin-bottom: 10px !important;
-      color: #1c1c28;
+      color: var(--grey-900);
     }
     .selectProviderLabel {
-      color: #627386;
+      color: var(--grey-500);
     }
     .nextButton {
       position: absolute;
@@ -61,7 +61,7 @@
   }
   .carouselSection {
     flex: 1;
-    background: rgba(#f3f3fa, 0.3) !important;
+    background: rgba(var(--grey-100), 0.3) !important;
     padding: var(--spacing-xxxlarge) !important;
 
     .featuresCarousel {
@@ -84,7 +84,7 @@
         .title {
           color: var(--grey-600);
           padding-bottom: 10px;
-          border-bottom: 1px solid #d9dae6;
+          border-bottom: 1px solid var(--grey-200);
         }
         .imgContainer {
           padding: 20px 0;
@@ -94,6 +94,15 @@
           }
         }
       }
+    }
+  }
+}
+
+.excludeSideNavOverlay {
+  :global {
+    .bp3-overlay-backdrop,
+    .bp3-overlay {
+      left: 270px;
     }
   }
 }

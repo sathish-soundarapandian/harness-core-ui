@@ -21,6 +21,7 @@ const AccountOverview: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { currentUserInfo } = useAppStore()
   const { NG_LICENSES_ENABLED, DISABLE_HARNESS_SM } = useFeatureFlags()
+
   const { accounts } = currentUserInfo
   const createdFromNG = accounts?.find(account => account.uuid === accountId)?.createdFromNG
   return (

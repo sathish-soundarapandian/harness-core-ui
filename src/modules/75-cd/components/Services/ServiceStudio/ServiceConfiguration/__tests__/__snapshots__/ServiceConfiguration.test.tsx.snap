@@ -1,0 +1,550 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Service Configuration handle switch from visual to yaml 1`] = `
+<div>
+  <div
+    class="serviceEntity"
+  >
+    <div
+      class="optionBtns"
+    >
+      <div
+        class="PillToggle--optionBtns"
+      >
+        <div
+          class="PillToggle--item"
+          data-name="toggle-option-one"
+          role="button"
+          tabindex="0"
+        >
+          VISUAL
+        </div>
+        <div
+          class="PillToggle--item PillToggle--selected"
+          data-name="toggle-option-two"
+          role="button"
+          tabindex="0"
+        >
+          YAML
+        </div>
+      </div>
+    </div>
+    <div
+      class="yamlBuilder"
+    >
+      dummy
+      <div
+        class="buttonsWrapper"
+      >
+        <span
+          class="Tag--main"
+        >
+          <span
+            class="bp3-tag"
+          >
+            <span
+              class="bp3-text-overflow-ellipsis bp3-fill"
+            >
+              common.readOnly
+            </span>
+          </span>
+        </span>
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            common.editYaml
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Service Configuration null renders correctly 1`] = `<div />`;
+
+exports[`Service Configuration renders correctly 1`] = `
+<div>
+  <div
+    class="serviceEntity"
+  >
+    <div
+      class="optionBtns"
+    >
+      <div
+        class="PillToggle--optionBtns"
+      >
+        <div
+          class="PillToggle--item PillToggle--selected"
+          data-name="toggle-option-one"
+          role="button"
+          tabindex="0"
+        >
+          VISUAL
+        </div>
+        <div
+          class="PillToggle--item"
+          data-name="toggle-option-two"
+          role="button"
+          tabindex="0"
+        >
+          YAML
+        </div>
+      </div>
+    </div>
+    <div
+      class="serviceStepBasicInfo nonModalView"
+    >
+      <div
+        class="OverlaySpinner--overlaySpinner"
+      >
+        <form
+          action="#"
+          class="FormikForm--main"
+        >
+          <div>
+            <div
+              class="bp3-card bp3-elevation-0 Card--card sectionCard"
+            >
+              <div
+                class="StyledProps--font StyledProps--main main nameIdDescriptionTags"
+              >
+                <div
+                  class="InputWithIdentifier--txtNameContainer TextInput--main"
+                >
+                  <div
+                    class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
+                  >
+                    <div
+                      class="Text--withDocsTooltip"
+                      data-tooltip-id="universalInputNameWithId"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        Id
+                      </p>
+                    </div>
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      :
+                    </p>
+                    <span
+                      class="bp3-popover-wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-editable-text bp3-disabled InputWithIdentifier--idValue"
+                        >
+                          <span
+                            class="bp3-editable-text-content"
+                            style="height: 1px; line-height: 1px; min-width: 0;"
+                          >
+                            Service_1
+                          </span>
+                        </div>
+                      </span>
+                    </span>
+                  </div>
+                  <div
+                    class="bp3-form-group"
+                    data-id="name-0"
+                  >
+                    <label
+                      class="bp3-label"
+                      for="name"
+                    >
+                      <span
+                        class="Tooltip--acenter"
+                        data-tooltip-id="service-entity_name"
+                      >
+                        name
+                      </span>
+                       
+                      <span
+                        class="bp3-text-muted"
+                      />
+                    </label>
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="name"
+                          type="text"
+                          value="Service 1"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="StyledProps--font StyledProps--main"
+                >
+                  <label
+                    class="Label--main bp3-label descriptionLabel"
+                  >
+                    optionalField
+                    <span
+                      class="bp3-icon StyledProps--main editOpen"
+                      data-icon="Edit"
+                      data-name="edit"
+                      data-testid="description-edit"
+                    >
+                      <svg
+                        height="12"
+                        viewBox="0 0 16 16"
+                        width="12"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                          opacity="0.3"
+                        />
+                      </svg>
+                    </span>
+                  </label>
+                </div>
+                <div
+                  class="StyledProps--font StyledProps--main"
+                >
+                  <label
+                    class="Label--main bp3-label descriptionLabel"
+                  >
+                    optionalField
+                    <span
+                      class="bp3-icon StyledProps--main editOpen"
+                      data-icon="Edit"
+                      data-name="edit"
+                      data-testid="tags-edit"
+                    >
+                      <svg
+                        height="12"
+                        viewBox="0 0 16 16"
+                        width="12"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                          opacity="0.3"
+                        />
+                      </svg>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div
+      class="contentSection nonModalView"
+    >
+      <div
+        class="tabHeading"
+        id="serviceDefinition"
+      >
+        cd.pipelineSteps.serviceTab.manifest.serviceDefinition
+      </div>
+      <div
+        class="bp3-card bp3-elevation-0 Card--card sectionCard"
+      >
+        <div
+          class="tabSubHeading ng-tooltip-native"
+          data-tooltip-id="stageOverviewDeploymentType"
+        >
+          deploymentTypeText
+        </div>
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--margin-top-medium"
+        >
+          <div
+            class="Layout--vertical StyledProps--main StyledProps--padding-right-huge StyledProps--margin-bottom-large"
+          >
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main cardListContainer"
+            >
+              <label
+                class="Thumbnail--squareCardContainer"
+              >
+                <div
+                  class="bp3-card bp3-elevation-0 Card--card Thumbnail--squareCard Card--selected"
+                >
+                  <span
+                    class="Card--corner"
+                  >
+                    <span
+                      class="Card--badge"
+                    />
+                    <span
+                      class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                      data-icon="main-tick"
+                    >
+                      <svg
+                        height="10"
+                        viewBox="0 0 11 8"
+                        width="10"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </span>
+                  </span>
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="service-kubernetes"
+                  >
+                    <svg
+                      height="26"
+                      viewBox="0 0 14 14"
+                      width="26"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7 .4c-.1 0-.2 0-.3.1L2 2.7c-.2.1-.4.3-.5.6l-1.2 5c-.1.2 0 .5.1.7l.1.1 3.2 4c.2.2.4.3.7.3h5.2c.3 0 .5-.1.7-.3l3.2-4c.2-.2.2-.5.2-.7l-1.2-5c-.1-.3-.2-.5-.5-.6L7.3.6c0-.1-.2-.2-.3-.2z"
+                        fill="#326ce5"
+                      />
+                      <path
+                        d="M7 2.1c-.2 0-.3.1-.3.3v.9c0 .1-.1.1-.1.1v.1c-.2 0-.3 0-.5.1-.7.2-1.4.5-1.8 1l-.1-.1H4c-.1-.1-.2-.2-.4-.3L3.4 4h-.1c-.1 0-.1-.1-.2-.1s-.2 0-.2.1c-.1.1-.1.3.1.4h.1c.1.1.2.1.2.1.2.1.3.2.4.3 0 0 .1.1.1.2l.1.1c-.5.7-.7 1.6-.6 2.5h-.1l-.1.1c-.1 0-.3.1-.5.1h-.4c-.2 0-.3.2-.2.3 0 .1.2.2.4.2h.1c.1 0 .2-.1.3-.1.2-.1.3-.1.5-.1.1 0 .1 0 .2.1h.1c.3.9.9 1.6 1.6 2l-.1.1v.2c-.1.1-.1.3-.3.5-.1.1-.1.1-.1.2v.1c-.1.2 0 .3.1.4s.3 0 .4-.2v-.1c0-.1.1-.2.1-.3.1-.2.1-.4.2-.5 0 0 .1 0 .1-.1l.1-.1c.6.2 1.4.3 2.1.2.2 0 .3-.1.5-.1l.1.1s.1 0 .1.1c.1.1.1.3.2.5 0 .1 0 .2.1.3v.1c.1.2.2.2.4.2.1-.1.2-.2.1-.4v-.1c0-.1-.1-.1-.1-.2-.1-.2-.2-.3-.2-.4V10.4c.8-.5 1.3-1.2 1.6-2h.1s.1-.1.2-.1.3.1.5.1c.1 0 .2.1.3.1h.1c.2 0 .3-.1.4-.2 0-.1-.1-.3-.2-.3h-.4c-.2 0-.4 0-.5-.1-.1 0-.1-.1-.1-.1h-.1c.1-.4 0-.9-.1-1.3s-.3-.9-.5-1.2l.1-.1c0-.1 0-.1.1-.2s.2-.2.4-.3c.1 0 .2-.1.2-.1h.1c.1-.1.2-.3.1-.4s-.3-.1-.4 0h-.1l-.2.2c-.1.1-.3.3-.4.3H10l-.1.1c-.6-.6-1.4-1-2.3-1.1v-.1l-.1-.1V3v-.4c-.2-.3-.3-.5-.5-.5zm-.3 2.2l-.1 1.5c0 .1-.1.2-.2.2h-.1l-1.2-.9c.4-.4.8-.6 1.4-.8zm.7 0c.6.1 1.2.4 1.7.8l-1.2.8c-.1.1-.3.1-.3 0l-.1-.1zM4.6 5.7l1.1 1c.1.1.1.2 0 .3l-.1.1-1.4.4c-.1-.7 0-1.3.4-1.8zm4.9 0c.2.3.3.6.4.9s.1.6.1.9l-1.4-.4c-.1 0-.2-.2-.2-.3s0-.1.1-.1zm-2.7 1h.4l.3.3-.1.4-.4.2-.4-.2-.1-.4zm1.4 1.2c.1 0 .1 0 0 0l1.5.2c-.2.6-.6 1.1-1.2 1.5l-.6-1.4c.1-.1.1-.2.3-.3zm-2.4 0c.1 0 .2.1.2.2v.2l-.6 1.4c-.5-.3-.9-.8-1.2-1.5zm1.2.6l.2.1.7 1.3c-.1 0-.2.1-.3.1-.5.1-1.1.1-1.6-.1l.7-1.3c.2 0 .2-.1.3-.1z"
+                        fill="#fff"
+                        stroke="#fff"
+                        stroke-width="0.25"
+                      />
+                    </svg>
+                  </span>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+                >
+                  pipeline.serviceDeploymentTypes.kubernetes
+                </p>
+                <input
+                  checked=""
+                  type="checkbox"
+                  value="Kubernetes"
+                />
+              </label>
+              <label
+                class="Thumbnail--squareCardContainer"
+              >
+                <div
+                  class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                  tabindex="0"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="service-helm"
+                  >
+                    <svg
+                      height="26"
+                      viewBox="0 0 14 14"
+                      width="26"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g
+                        fill="#277a9e"
+                      >
+                        <path
+                          d="M7.5 1.3c0 .2 0 .4-.1.6 0 .1 0 .2.1.2.7.1 1.4.3 2 .7.1.1.2 0 .2-.1.2-.5.5-.9.9-1.2.2-.1.3-.3.5-.1.2.1.1.4.1.6-.1.5-.4.9-.8 1.2-.2.1-.1.2 0 .3.3.2.5.5.7.8.1.1.1.2-.1.2-.2.1-.3.3-.5.3s-.2-.3-.3-.4c-1.7-2.1-5-2.1-6.7.2-.1.1-.2.2-.3 0-.5-.3-.5-.3-.2-.7.1-.2.3-.3.5-.5.1-.1.1-.2 0-.3-.3-.3-.6-.7-.7-1.2-.1-.1-.2-.4 0-.5s.4 0 .5.1c.5.3.7.7.9 1.1.1.1.1.2.3.1.6-.4 1.2-.6 1.9-.6.2 0 .2-.1.2-.2-.1-.5-.1-1 0-1.4.1-.2.2-.5.4-.5.3 0 .3.3.4.5s.1.5.1.8zM9.7 11.2c-.7.4-1.3.7-2.1.8-.2 0-.2.1-.1.2.1.5.1.9-.1 1.4-.1.2-.2.4-.4.4s-.3-.2-.3-.4c-.2-.4-.2-.9-.1-1.4 0-.2 0-.2-.2-.2-.7-.1-1.4-.3-1.9-.6-.2-.1-.2 0-.2.1-.2.4-.5.8-.8 1-.2.1-.3.3-.5.1-.2-.1-.1-.4-.1-.5.1-.4.4-.8.7-1.2.1-.1.1-.2 0-.3-.2-.2-.4-.4-.5-.6-.3-.1-.2-.1-.1-.2.2-.1.3-.3.5-.3s.3.2.4.4c1.8 1.9 4.8 1.8 6.4-.2.1-.2.2-.2.4-.1.5.3.5.3.1.8-.1.1-.3.2-.3.3s.2.2.3.3c.3.3.5.6.6 1v.3c0 .2-.1.3-.4.2s-.5-.4-.8-.6c-.2-.1-.3-.4-.5-.7zM12 7.4c.2-.7.5-1.3.7-1.9.1-.1.1-.2.3-.2h.7c.1 0 .1 0 .1.1v3.3c0 .1 0 .1-.1.1-.2 0-.5.1-.7 0s0-.4 0-.7V6.8c-.1.2-.2.5-.3.7-.1.3-.2.5-.3.8 0 .1-.1.2-.3.2-.1 0-.2 0-.3-.2l-.6-1.5v1.7c0 .2 0 .2-.2.2s-.5.1-.6-.1c-.1-.1 0-.4 0-.6V5.3c0-.2.1-.2.2-.2.3 0 .6-.1.7 0 .2.1.2.4.3.7 0 .7.2 1.1.4 1.6zM3.3 7.1v1.6c0 .2 0 .2-.2.2h-.6c-.2 0-.2-.1-.2-.2V7.6c0-.1 0-.2-.2-.2h-.8c-.1 0-.2.1-.2.2v1.1c0 .1 0 .2-.2.2H.3c-.1 0-.2 0-.2-.2V5.4c0-.1 0-.2.2-.2h.6c.1 0 .2 0 .2.2v1c0 .2 0 .2.2.2H2c.2 0 .2 0 .2-.2v-1c0-.1 0-.2.2-.2h.5c.2 0 .2 0 .2.2.2.7.2 1.2.2 1.7zM4.1 7.1V5.5c0-.2 0-.2.2-.2h1.9c.1 0 .2 0 .2.2 0 .6 0 .6-.6.6h-.6c-.1 0-.2 0-.2.2 0 .4 0 .4.4.4h.5c.3 0 .3.1.3.3 0 .5 0 .5-.5.5h-.2c-.5 0-.5 0-.5.5 0 .1 0 .2.2.2h1.1c.1 0 .2 0 .2.2 0 .6 0 .6-.6.6H4.4c-.2 0-.3 0-.3-.3V7.1zM7.2 7.1V5.5c0-.2 0-.3.2-.2.2 0 .5-.1.7.1.1.1 0 .4 0 .7V8c0 .2 0 .2.2.2h1c.1 0 .2 0 .2.2 0 .6 0 .6-.6.6H7.4c-.2 0-.2-.1-.2-.2V7.1z"
+                        />
+                      </g>
+                    </svg>
+                  </span>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+                >
+                  pipeline.nativeHelm
+                </p>
+                <input
+                  type="checkbox"
+                  value="NativeHelm"
+                />
+              </label>
+              <label
+                class="Thumbnail--squareCardContainer"
+              >
+                <div
+                  class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                  tabindex="0"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="service-serverless-aws"
+                  >
+                    <svg
+                      fill="none"
+                      height="26"
+                      viewBox="0 0 26 32"
+                      width="26"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1.87 32l8.225-7.405v-1.871l-6.98 6.308v-2.908l15.013-13.649v2.93l-1.495 1.332 1.184.747 1.597-1.425v-5.663l-3.497.486 3.135-5.274V.632L18.357 0 0 15.895v3.89l5.89-.999-4.022 6.836V32h.001zM17.767 3.172V5.22l-3.365 5.87-1.713.239 5.078-8.158zM1.234 18.23v-2.101l7.167-.982-1.505 2.18-5.662.903z"
+                        fill="#FD5750"
+                      />
+                      <g
+                        clip-path="url(#service-serverless-aws_svg__a)"
+                      >
+                        <path
+                          d="M15.263 22.822c0 .195.02.352.055.468.039.116.088.242.157.378a.239.239 0 01.035.121c0 .053-.03.105-.094.158l-.31.22a.227.227 0 01-.129.048c-.05 0-.099-.026-.148-.074a1.612 1.612 0 01-.178-.247 4.758 4.758 0 01-.153-.31c-.384.484-.868.725-1.45.725-.415 0-.745-.126-.987-.378s-.365-.588-.365-1.009c0-.447.148-.809.449-1.082.3-.273.7-.41 1.209-.41.168 0 .34.016.523.042.182.026.37.068.567.115v-.383c0-.4-.079-.678-.232-.84-.158-.164-.424-.242-.804-.242-.173 0-.35.02-.533.068-.182.047-.36.105-.533.178a1.378 1.378 0 01-.173.069.286.286 0 01-.079.015c-.069 0-.103-.052-.103-.162v-.258c0-.084.01-.147.034-.184a.372.372 0 01.139-.11c.172-.095.38-.174.621-.236.242-.069.499-.1.77-.1.587 0 1.017.142 1.293.425.271.284.41.715.41 1.293v1.702h.01zm-2.003.799c.163 0 .33-.031.508-.095.178-.063.336-.178.469-.336.079-.1.138-.21.168-.336.03-.126.049-.279.049-.457v-.221a3.887 3.887 0 00-.454-.09 3.498 3.498 0 00-.464-.03c-.33 0-.572.067-.735.21-.163.141-.242.34-.242.604 0 .247.06.43.183.557.118.13.291.194.518.194zm3.962.568c-.089 0-.148-.016-.187-.053-.04-.032-.074-.105-.104-.205l-1.16-4.062a.972.972 0 01-.044-.21c0-.084.04-.131.118-.131h.484c.094 0 .158.016.192.052.04.032.07.105.1.205l.828 3.479.77-3.479c.024-.105.054-.173.094-.205a.323.323 0 01.197-.052h.395c.093 0 .158.016.197.052.04.032.074.105.094.205l.78 3.52.853-3.52a.46.46 0 01.099-.205.307.307 0 01.192-.052h.459c.079 0 .123.042.123.131 0 .026-.005.053-.01.084a.786.786 0 01-.034.132l-1.19 4.061c-.029.105-.063.174-.103.205a.302.302 0 01-.187.053h-.425c-.093 0-.157-.016-.197-.053-.04-.037-.074-.105-.094-.21l-.765-3.39-.76 3.385c-.024.105-.054.173-.093.21-.04.037-.109.053-.198.053h-.424zm6.34.141c-.256 0-.513-.031-.76-.094a2.2 2.2 0 01-.567-.21.366.366 0 01-.153-.148.393.393 0 01-.03-.147v-.268c0-.11.04-.163.114-.163.03 0 .06.006.089.016.03.01.074.032.123.053.168.079.35.142.543.184.198.042.39.063.587.063.311 0 .553-.058.72-.174a.575.575 0 00.257-.499.53.53 0 00-.133-.368c-.089-.1-.256-.189-.498-.273l-.716-.236c-.36-.121-.626-.3-.79-.536a1.305 1.305 0 01-.246-.762c0-.22.044-.415.133-.584.09-.168.207-.315.355-.43.149-.121.316-.21.514-.274a2.03 2.03 0 01.621-.089 2.3 2.3 0 01.331.021c.113.016.217.037.32.058.1.026.193.053.282.084.089.032.158.063.207.095.07.042.119.084.148.13.03.043.045.1.045.174v.247c0 .11-.04.169-.114.169a.49.49 0 01-.187-.064 2.14 2.14 0 00-.948-.204c-.281 0-.503.047-.656.147-.153.1-.232.252-.232.467 0 .147.05.273.148.373.099.1.281.2.543.29l.7.236c.356.12.612.289.765.504.153.216.227.463.227.736 0 .226-.044.43-.128.61a1.4 1.4 0 01-.36.462 1.558 1.558 0 01-.548.294c-.222.074-.454.11-.705.11z"
+                          fill="#252F3E"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M24.495 26.884c-1.623 1.276-3.982 1.954-6.01 1.954-2.842 0-5.402-1.119-7.337-2.979-.153-.147-.015-.347.168-.231a14.109 14.109 0 007.342 2.075c1.801 0 3.78-.399 5.6-1.219.272-.131.504.19.237.4z"
+                          fill="#F90"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M25.171 26.064c-.207-.284-1.372-.137-1.9-.068-.157.02-.182-.126-.039-.237.928-.693 2.452-.494 2.63-.262.178.236-.05 1.86-.918 2.637-.133.121-.261.058-.202-.1.197-.52.636-1.691.43-1.97z"
+                          fill="#F90"
+                          fill-rule="evenodd"
+                        />
+                      </g>
+                      <defs>
+                        <clippath
+                          id="service-serverless-aws_svg__a"
+                        >
+                          <path
+                            d="M0 0h15v9.563H0z"
+                            fill="#fff"
+                            transform="translate(11 19.334)"
+                          />
+                        </clippath>
+                      </defs>
+                    </svg>
+                  </span>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+                >
+                  pipeline.serviceDeploymentTypes.serverlessAwsLambda
+                </p>
+                <input
+                  type="checkbox"
+                  value="ServerlessAwsLambda"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+        <label
+          class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main"
+        >
+          <input
+            name="gitOpsEnabled"
+            type="checkbox"
+          />
+          <span
+            class="bp3-control-indicator"
+          />
+          common.gitOps
+        </label>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Service Configuration test the rbac functionality to update readonly context value 1`] = `
+<div>
+  <div
+    class="serviceEntity"
+  >
+    <div
+      class="optionBtns"
+    >
+      <div
+        class="PillToggle--optionBtns"
+      >
+        <div
+          class="PillToggle--item"
+          data-name="toggle-option-one"
+          role="button"
+          tabindex="0"
+        >
+          VISUAL
+        </div>
+        <div
+          class="PillToggle--item PillToggle--selected"
+          data-name="toggle-option-two"
+          role="button"
+          tabindex="0"
+        >
+          YAML
+        </div>
+      </div>
+    </div>
+    <div
+      class="yamlBuilder"
+    >
+      dummy
+      <div
+        class="buttonsWrapper"
+      >
+        <span
+          class="Tag--main"
+        >
+          <span
+            class="bp3-tag"
+          >
+            <span
+              class="bp3-text-overflow-ellipsis bp3-fill"
+            >
+              common.readOnly
+            </span>
+          </span>
+        </span>
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            common.editYaml
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

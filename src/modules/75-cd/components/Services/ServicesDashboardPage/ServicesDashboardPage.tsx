@@ -6,8 +6,14 @@
  */
 
 import React from 'react'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { ServicesContent } from '../ServicesContent/ServicesContent'
 
 export const ServicesDashboardPage: React.FC = () => {
-  return <ServicesContent />
+  return (
+    <>
+      <HelpPanel referenceId="serviceListingPage" type={HelpPanelType.FLOATING_CONTAINER} />
+      <ServicesContent />
+    </>
+  )
 }

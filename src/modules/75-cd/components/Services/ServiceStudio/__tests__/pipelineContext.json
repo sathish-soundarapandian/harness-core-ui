@@ -1,0 +1,28 @@
+{
+  "state": {
+    "pipeline": {
+      "name": "Service 1",
+      "identifier": "Service_1",
+      "description": "Some Awesome Description",
+      "tags": null,
+      "stages": [
+        {
+          "stage": {
+            "name": "Stage Name",
+            "identifier": "stage_id",
+            "spec": {
+              "serviceConfig": {
+                "serviceDefinition": {
+                  "type": "Kubernetes",
+                  "spec": {}
+                },
+                "serviceRef": "Service_1"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "isReadOnly": false
+}

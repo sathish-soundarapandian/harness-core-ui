@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
 import {
@@ -22,7 +22,8 @@ import {
   FlexExpander,
   TextInput,
   PageError,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  ExpandingSearchInput
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
@@ -35,6 +36,7 @@ import {
   useTestSuiteSummary,
   useVgSearch,
   TestSuite,
+  TestSuites,
   TestReportSummary
 } from 'services/ti-service'
 import { CallGraphAPIResponse, TestsCallgraph } from './TestsCallgraph'
@@ -68,6 +70,25 @@ const getEntireExecutionSummary = (executionSummaryContent: TestSuite[]): any =>
     skipped_tests: a?.skipped_tests + b?.skipped_tests
   }))
 
+const getUngroupedExecutionSummary = ({
+  showFailedTestsOnly,
+  reportSummaryData,
+  testCaseSearchTerm,
+  executionSummary
+}: {
+  showFailedTestsOnly?: boolean
+  reportSummaryData?: TestReportSummary | null
+  testCaseSearchTerm?: string
+  executionSummary?: TestSuites
+}) => {
+  if (!showFailedTestsOnly && !testCaseSearchTerm && reportSummaryData) {
+    return reportSummaryData
+  } else if (executionSummary?.content) {
+    return getEntireExecutionSummary(executionSummary?.content)
+  }
+  return []
+}
+
 export function TestsExecution({
   stageId,
   stepId,
@@ -89,7 +110,9 @@ export function TestsExecution({
     buildIdentifier: string
   }>()
   const [sortBy, setSortBy] = useState<SortByKey>(SortByKey.FAILURE_RATE)
+  const [testCaseSearchTerm, setTestCaseSearchTerm] = useState<string>('')
   const [pageIndex, setPageIndex] = useState(0)
+  const searchRef = useRef<HTMLDivElement>(null)
   const queryParams = useMemo(() => {
     const optionalKeys = getOptionalQueryParamKeys({ stageId, stepId })
 
@@ -101,6 +124,7 @@ export function TestsExecution({
       buildId: String(context?.pipelineExecutionDetail?.pipelineExecutionSummary?.runSequence || ''),
       report: 'junit' as const,
       pageIndex,
+      testCaseSearchTerm,
       sort: sortBy,
       pageSize: PAGE_SIZE,
       order: 'DESC' as const,
@@ -115,7 +139,8 @@ export function TestsExecution({
     context?.pipelineExecutionDetail?.pipelineExecutionSummary?.pipelineIdentifier,
     context?.pipelineExecutionDetail?.pipelineExecutionSummary?.runSequence,
     pageIndex,
-    sortBy
+    sortBy,
+    testCaseSearchTerm
   ])
   const {
     data: executionSummary,
@@ -156,6 +181,23 @@ export function TestsExecution({
     },
     [isMounted, fetchExecutionSummary]
   )
+
+  const searchTestNames = () => {
+    const searchTerm = searchRef.current?.querySelector('[type="search"]')?.getAttribute('value') || ''
+    if (searchTerm) {
+      setTestCaseSearchTerm(searchTerm)
+    } else {
+      setTestCaseSearchTerm('')
+    }
+    refetchData({
+      ...queryParams,
+      sort: sortBy,
+      pageIndex,
+      testCaseSearchTerm: searchTerm,
+      status: showFailedTestsOnly ? 'failed' : undefined
+    })
+  }
+
   const [selectedCallGraphClass, setSelectedCallGraphClass] = useState<string>()
   const {
     data: callGraphData,
@@ -355,10 +397,30 @@ export function TestsExecution({
               }}
             />
             <Layout.Horizontal>
+              <Container ref={searchRef} flex className={css.expandSearchContainer}>
+                <ExpandingSearchInput
+                  alwaysExpanded
+                  width={200}
+                  placeholder={getString('pipeline.testsReports.searchByTestName')}
+                  onKeyPress={e => {
+                    if (e.key === 'Enter') {
+                      searchTestNames()
+                    }
+                  }}
+                />
+                <Button
+                  data-testid="search-btn"
+                  text={getString('search')}
+                  minimal
+                  disabled={loading}
+                  onClick={searchTestNames}
+                />
+              </Container>
               {showGroupedView ? (
                 <Layout.Horizontal spacing="small">
                   <Text style={{ alignSelf: 'center' }}>{getString('pipeline.testsReports.sortBy')}</Text>
                   <Select
+                    data-testid="sortBySelect"
                     className={css.sortBySelect}
                     items={sortByItems}
                     value={sortBySelectedItem}
@@ -380,6 +442,7 @@ export function TestsExecution({
               )}
               <Button
                 color={showGroupedView ? Color.PRIMARY_7 : Color.GREY_500}
+                data-testid="activeGroupedIcon"
                 className={cx(css.listIcons, showGroupedView && css.activeGroupedIcon)}
                 icon="th-list"
                 minimal
@@ -423,7 +486,7 @@ export function TestsExecution({
                   {showGroupedView ? (
                     executionSummary?.content?.map((summary, index) => (
                       <TestsExecutionItem
-                        key={(summary.name || '') + showFailedTestsOnly}
+                        key={(summary.name || '') + showFailedTestsOnly + testCaseSearchTerm}
                         buildIdentifier={String(
                           context?.pipelineExecutionDetail?.pipelineExecutionSummary?.runSequence || ''
                         )}
@@ -438,19 +501,21 @@ export function TestsExecution({
                         }}
                         onShowCallGraphForClass={showCallGraph ? onClassSelected : undefined}
                         isUngroupedList={false}
+                        testCaseSearchTerm={testCaseSearchTerm}
                       />
                     ))
                   ) : (
                     <TestsExecutionItem
-                      key={`${showFailedTestsOnly}`}
+                      key={`${showFailedTestsOnly}${testCaseSearchTerm}`}
                       buildIdentifier={String(
                         context?.pipelineExecutionDetail?.pipelineExecutionSummary?.runSequence || ''
                       )}
-                      executionSummary={
-                        !showFailedTestsOnly && reportSummaryData
-                          ? reportSummaryData
-                          : getEntireExecutionSummary(executionSummary?.content || [])
-                      }
+                      executionSummary={getUngroupedExecutionSummary({
+                        showFailedTestsOnly,
+                        reportSummaryData,
+                        testCaseSearchTerm,
+                        executionSummary
+                      })}
                       serviceToken={serviceToken}
                       status={showFailedTestsOnly ? 'failed' : undefined}
                       stageId={stageId}
@@ -458,6 +523,7 @@ export function TestsExecution({
                       expanded={true}
                       onShowCallGraphForClass={showCallGraph ? onClassSelected : undefined}
                       isUngroupedList={true}
+                      testCaseSearchTerm={testCaseSearchTerm}
                     />
                   )}
                 </Layout.Vertical>

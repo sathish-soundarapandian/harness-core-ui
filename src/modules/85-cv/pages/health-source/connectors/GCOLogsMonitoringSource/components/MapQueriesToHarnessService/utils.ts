@@ -7,21 +7,23 @@
 
 import type { FormikProps } from 'formik'
 import type { UseStringsReturn } from 'framework/strings'
-import { initialFormData, MapGCPLogsToServiceFieldNames } from './constants'
-import type { MapGCOLogsQueryToService } from './types'
+import { MapGCPLogsToServiceFieldNames } from './constants'
+import type { InitialFormDataInterface, MapGCOLogsQueryToService } from './types'
 
 type UpdateSelectedQueriesMap = {
   updatedMetric: string
   oldMetric: string
   mappedMetrics: Map<string, MapGCOLogsQueryToService>
   formikProps: FormikProps<MapGCOLogsQueryToService | undefined>
+  initialFormData: InitialFormDataInterface
 }
 
 export function updateSelectedMetricsMap({
   updatedMetric,
   oldMetric,
   mappedMetrics,
-  formikProps
+  formikProps,
+  initialFormData
 }: UpdateSelectedQueriesMap): any {
   const updatedMap = new Map(mappedMetrics)
 

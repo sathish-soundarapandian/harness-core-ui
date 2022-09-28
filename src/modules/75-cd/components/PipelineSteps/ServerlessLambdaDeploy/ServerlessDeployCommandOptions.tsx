@@ -13,6 +13,8 @@ import type { StepElementConfig } from 'services/cd-ng'
 import { MultiTypeExecutionCondition } from '@common/components/MultiTypeExecutionCondition/MultiTypeExecutionCondition'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
+
 import css from './ServerlessDeployCommandOptions.module.scss'
 
 interface ServerlessDeployCommandOptionsProps {
@@ -46,7 +48,7 @@ function ServerlessCommandFlagOperations(props: ServerlessCommandFlagOperationsP
         {getString('cd.serverlessDeployCommandOptions')}
       </Text>
       <Container padding={{ top: 'small' }}>
-        {stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm ? (
+        {isTemplatizedView(stepViewType) ? (
           <MultiTypeExecutionCondition
             path={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}spec.commandOptions`}
             allowableTypes={[MultiTypeInputType.FIXED]}

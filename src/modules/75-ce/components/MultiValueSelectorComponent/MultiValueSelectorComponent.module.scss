@@ -32,7 +32,7 @@
   }
 
   .createValueContainer {
-    padding: var(--spacing-small) var(--spacing-medium);
+    padding: var(--spacing-small) var(--spacing-medium) 0 var(--spacing-medium);
     border-radius: 2px;
     margin-bottom: var(--spacing-xsmall);
     cursor: pointer;
@@ -59,6 +59,10 @@
     &:hover {
       background-color: var(--primary-1);
     }
+  }
+
+  .noSearchResults {
+    padding: var(--spacing-small) var(--spacing-medium);
   }
 
   .fetchingMoreLoader {

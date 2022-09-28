@@ -20,7 +20,8 @@ import {
   Layout,
   MultiTypeInputType,
   Text,
-  StepWizard
+  StepWizard,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, Dialog, IOptionProps, IDialogProps } from '@blueprintjs/core'
@@ -51,7 +52,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 
 import { useStrings } from 'framework/strings'
 
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
@@ -69,7 +70,7 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
@@ -79,6 +80,8 @@ import StepArtifactoryAuthentication from '@connectors/components/CreateConnecto
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import {
   CommandTypes,
   onSubmitTFPlanData,
@@ -115,7 +118,7 @@ function TerraformPlanWidget(
 ): React.ReactElement {
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep, readonly = false, stepViewType } = props
   const { getString } = useStrings()
-  const { TF_MODULE_SOURCE_INHERIT_SSH, EXPORT_TF_PLAN_JSON_NG } = useFeatureFlags()
+  const { EXPORT_TF_PLAN_JSON_NG } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [connectorView, setConnectorView] = useState(false)
   const [selectedConnector, setSelectedConnector] = useState<ConnectorTypes | ''>('')
@@ -250,7 +253,7 @@ function TerraformPlanWidget(
           buildPayload={buildPayload}
           connectorInfo={undefined}
         />
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.stepThreeName')}
           connectorInfo={undefined}
           isStep={true}
@@ -288,9 +291,15 @@ function TerraformPlanWidget(
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
-          provisionerIdentifier: Yup.string()
-            .required(getString('pipelineSteps.provisionerIdentifierRequired'))
-            .nullable(),
+          provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return IdentifierSchemaWithOutName(getString, {
+                requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
+                regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
+              })
+            }
+            return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
+          }),
           configuration: Yup.object().shape({
             command: Yup.string().required(getString('pipelineSteps.commandRequired')),
             secretManagerRef: Yup.string().required(getString('cd.secretManagerRequired')).nullable()
@@ -339,6 +348,7 @@ function TerraformPlanWidget(
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
@@ -370,6 +380,7 @@ function TerraformPlanWidget(
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                     showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
@@ -464,6 +475,7 @@ function TerraformPlanWidget(
                             variableName="spec.configuration.workspace"
                             showRequiredField={false}
                             showDefaultField={false}
+                            allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                             showAdvanced={true}
                             onChange={value => {
                               /* istanbul ignore else */
@@ -535,7 +547,9 @@ function TerraformPlanWidget(
                           placeholder={getString('cd.enterTragets')}
                           multiTextInputProps={{
                             expressions,
-                            allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                              item => !isMultiTypeRuntime(item)
+                            ) as AllowedTypes
                           }}
                           multiTypeFieldSelectorProps={{
                             label: (
@@ -554,7 +568,9 @@ function TerraformPlanWidget(
                           name="spec.configuration.environmentVariables"
                           valueMultiTextInputProps={{
                             expressions,
-                            allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                              item => !isMultiTypeRuntime(item)
+                            ) as AllowedTypes
                           }}
                           multiTypeFieldSelectorProps={{
                             disableTypeSelection: true,
@@ -654,9 +670,7 @@ function TerraformPlanWidget(
                               ...data.spec?.configuration?.configFiles
                             }
 
-                            if (TF_MODULE_SOURCE_INHERIT_SSH) {
-                              configObject.moduleSource = data.spec?.configuration?.configFiles?.moduleSource
-                            }
+                            configObject.moduleSource = data.spec?.configuration?.configFiles?.moduleSource
 
                             if (prevStepData.identifier && prevStepData.identifier !== data?.identifier) {
                               configObject.store.spec.connectorRef = prevStepData?.identifier
@@ -705,6 +719,7 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
+  protected referenceId = 'terraformPlanStep'
   protected type = StepType.TerraformPlan
   protected defaultValues: TFPlanFormData = {
     identifier: '',
@@ -826,7 +841,7 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
       isNewStep
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <TerraformInputStep
           initialValues={this.getInitialValues(initialValues)}

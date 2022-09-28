@@ -32,7 +32,7 @@ interface ControlPosition {
   y: number
 }
 
-const DEFAULT_POSITION: ControlPosition = { x: 30, y: 60 }
+const DEFAULT_POSITION: ControlPosition = { x: 30, y: 120 }
 export interface PipelineGraphProps {
   data: PipelineGraphState[]
   fireEvent: (event: any) => void
@@ -49,6 +49,7 @@ export interface PipelineGraphProps {
   showEndNode?: boolean
   graphActionsLayout?: 'horizontal' | 'vertical'
   graphLinkClassname?: string
+  optimizeRender?: boolean
 }
 
 function PipelineGraph({
@@ -65,7 +66,8 @@ function PipelineGraph({
   createNodeTitle,
   showEndNode = true,
   graphActionsLayout = 'vertical',
-  graphLinkClassname
+  graphLinkClassname,
+  optimizeRender
 }: PipelineGraphProps): React.ReactElement {
   const [svgPath, setSvgPath] = useState<SVGPathRecord[]>([])
 
@@ -123,13 +125,20 @@ function PipelineGraph({
       readonly,
       scalingFactor: graphScale
     })
-    const SVGLinks = getSVGLinksFromPipeline(
-      state,
-      undefined,
-      undefined,
-      readonly ? uniqueNodeIds.endNode : uniqueNodeIds.createNode,
-      graphScale
-    )
+    let endNodeId: string | undefined
+    if (readonly && showEndNode) {
+      endNodeId = uniqueNodeIds.endNode
+    }
+    if (!readonly) {
+      endNodeId = uniqueNodeIds.createNode
+    }
+    const SVGLinks = getSVGLinksFromPipeline({
+      states: state,
+      parentElement: undefined,
+      resultArr: undefined,
+      endNodeId,
+      scalingFactor: graphScale
+    })
 
     return setSvgPath([...SVGLinks, ...terminalNodeLinks])
   }
@@ -173,7 +182,6 @@ function PipelineGraph({
     <GraphConfigStore.Provider
       value={{
         graphScale,
-
         showEndNode,
         parentSelector,
         loaderComponent,
@@ -220,6 +228,7 @@ function PipelineGraph({
                 parentSelector={parentSelector}
                 createNodeTitle={createNodeTitle}
                 showEndNode={showEndNode}
+                optimizeRender={optimizeRender}
               />
             </div>
           </div>

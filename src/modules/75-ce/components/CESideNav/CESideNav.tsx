@@ -133,8 +133,7 @@ const SideNavItems = () => {
   const { accountId } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const isAnomaliesEnabled = useFeatureFlag(FeatureFlag.CCM_ANOMALY_DETECTION_NG)
-  const isBusinessMappingEnabled = useFeatureFlag(FeatureFlag.BUSINESS_MAPPING)
+  const showCO = useFeatureFlag(FeatureFlag.CCM_COMMORCH)
 
   return (
     <Layout.Vertical spacing="small">
@@ -149,12 +148,10 @@ const SideNavItems = () => {
         />
         <SidebarLink label={getString('ce.budgets.sideNavText')} to={routes.toCEBudgets({ accountId })} />
 
-        {isAnomaliesEnabled && (
-          <SidebarLink
-            label={getString('ce.anomalyDetection.sideNavText')}
-            to={routes.toCEAnomalyDetection({ accountId })}
-          />
-        )}
+        <SidebarLink
+          label={getString('ce.anomalyDetection.sideNavText')}
+          to={routes.toCEAnomalyDetection({ accountId })}
+        />
         <SidebarLink
           onClick={() => {
             trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATIONS_NAV_CLICK, {})
@@ -162,25 +159,40 @@ const SideNavItems = () => {
           label={getString('ce.recommendation.sideNavText')}
           to={routes.toCERecommendations({ accountId })}
         />
+        {showCO && (
+          <SidebarLink
+            label={getString('ce.commitmentOrchestration.sideNavLabel')}
+            to={routes.toCommitmentOrchestration({ accountId })}
+          />
+        )}
         <SidebarLink
           onClick={() => {
             trackEvent(USER_JOURNEY_EVENTS.AS_NAV_CLICK, {})
           }}
           label={getString('ce.co.breadCrumb.rules')}
-          to={routes.toCECORules({ accountId })}
+          to={routes.toCECORules({ accountId, params: '' })}
+        />
+        <SidebarLink
+          onClick={() => {
+            trackEvent(USER_JOURNEY_EVENTS.BI_DASHBOARD_NAV_CLICK, {})
+          }}
+          label={getString('ce.biDashboard.sideNavText')}
+          to={routes.toCEDashboards({ accountId })}
         />
         <NavExpandable title={getString('common.setup')} route={routes.toCECOAccessPoints({ accountId })}>
           <Layout.Vertical spacing="small">
             <SidebarLink
+              label={getString('ce.cloudIntegration.sideNavText')}
+              to={routes.toCECloudIntegration({ accountId })}
+            />
+            <SidebarLink
               label={getString('ce.co.accessPoint.loadbalancers')}
               to={routes.toCECOAccessPoints({ accountId })}
             />
-            {isBusinessMappingEnabled ? (
-              <SidebarLink
-                label={getString('ce.businessMapping.sideNavText')}
-                to={routes.toBusinessMapping({ accountId })}
-              />
-            ) : null}
+            <SidebarLink
+              label={getString('ce.businessMapping.sideNavText')}
+              to={routes.toBusinessMapping({ accountId })}
+            />
           </Layout.Vertical>
         </NavExpandable>
       </React.Fragment>

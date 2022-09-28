@@ -56,8 +56,6 @@ describe.skip('Verify step add', () => {
       '/ng/api/environmentsV2?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
     ).as('environmentsV2')
 
-    cy.intercept('POST', '/authz/api/acl?routingId=accountId').as('aclCall')
-
     // service definition
     cy.get('input[name="serviceRef"]').click({ force: true })
     cy.contains('p', 'testService').click({ force: true })
@@ -260,7 +258,7 @@ describe.skip('Verify step add', () => {
     cy.wait('@savePipelineGetResponse')
     cy.wait('@stagesExecutionList')
 
-    cy.findByText('Specify Service').should('exist')
+    cy.findByText('Select Service').should('exist')
 
     cy.get('.MultiTypeInput--fixedValueInput input').should('exist')
 

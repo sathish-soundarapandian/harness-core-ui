@@ -6,10 +6,23 @@
  */
 
 .modal {
-  background-color: #0278d5;
+  background-color: var(--primary-7);
   .card {
     display: flex;
     flex-direction: column;
     align-items: center;
   }
+}
+
+.cardsWrapper {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  .card {
+    margin-left: 0px !important;
+    margin-right: var(--layout-spacing);
+    margin-bottom: var(--layout-spacing);
+  }
+}
+.white {
+  color: var(--white) !important;
 }

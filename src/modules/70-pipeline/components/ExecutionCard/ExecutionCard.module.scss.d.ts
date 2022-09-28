@@ -10,7 +10,9 @@ declare const styles: {
   readonly actions: string
   readonly card: string
   readonly cardLink: string
+  readonly compareSelection: string
   readonly content: string
+  readonly dateTimeStyle: string
   readonly duration: string
   readonly executionId: string
   readonly footer: string
@@ -27,6 +29,7 @@ declare const styles: {
   readonly modulesContainer: string
   readonly nameGroup: string
   readonly pipelineName: string
+  readonly popoverClass: string
   readonly singleExecutionTag: string
   readonly statusContainer: string
   readonly tags: string

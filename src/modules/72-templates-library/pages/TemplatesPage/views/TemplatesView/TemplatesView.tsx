@@ -26,7 +26,8 @@ export interface TemplatesViewProps {
 
 export default function TemplatesView(props: TemplatesViewProps & { view: Views }): React.ReactElement {
   const { view, ...rest } = props
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const content = React.useMemo(
     () => (view === Views.GRID ? <TemplatesGridView {...rest} /> : <TemplatesListView {...rest} />),

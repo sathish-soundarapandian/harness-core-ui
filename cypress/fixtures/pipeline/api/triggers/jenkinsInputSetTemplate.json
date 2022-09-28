@@ -1,0 +1,10 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "inputSetTemplateYaml": "pipeline:\n  identifier: \"testPipeline_Cypress\"\n  stages:\n  - stage:\n      identifier: \"jenkinsTrigger\"\n      type: \"Deployment\"\n      spec:\n        serviceConfig:\n          serviceDefinition:\n            type: \"ServerlessAwsLambda\"\n            spec:\n              artifacts:\n                primary:\n                  identifier: \"\"\n                  type: \"Jenkins\"\n                  spec:\n                    build: \"<+input>\"\n",
+    "modules": ["cd", "pms"],
+    "hasInputSets": false
+  },
+  "metaData": null,
+  "correlationId": "1bc631d9-9db3-4f0a-9266-774dd91fe57e"
+}

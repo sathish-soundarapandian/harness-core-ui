@@ -7,17 +7,12 @@
 import React from 'react'
 import { act } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
-import { ResponseDelegateStatus, ResponseSetupStatus, useGetDelegateInstallStatus } from 'services/cd-ng'
+import type { ResponseSetupStatus } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useProvisionDelegateForHostedBuilds } from '../useProvisionDelegateForHostedBuilds'
 import { ProvisioningStatus } from '../../pages/get-started-with-ci/InfraProvisioningWizard/Constants'
 
 jest.mock('services/cd-ng', () => ({
-  useGetDelegateInstallStatus: jest.fn().mockImplementation(() => {
-    return {
-      refetch: jest.fn()
-    }
-  }),
   useProvisionResourcesForCI: jest.fn().mockImplementation(() => {
     return {
       mutate: jest.fn(() =>
@@ -30,19 +25,25 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
+const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateGroupsNGV2: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return {
+      data: {
+        resource: {
+          delegateGroupDetails: [{ delegateGroupIdentifier: '_harness_kubernetes_delegate', activelyConnected: false }]
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  })
+}))
+
 describe('Test useProvisionDelegateForHostedBuilds', () => {
   test('Should update status properly when delegate provisioning is in progress', async () => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    useGetDelegateInstallStatus.mockResolvedValue({
-      refetch: jest.fn(() =>
-        Promise.resolve({
-          status: 'SUCCESS',
-          data: 'IN_PROGRESS'
-        } as ResponseDelegateStatus)
-      )
-    })
-
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper pathParams={{ accountId: 'accountId' }} defaultAppStoreValues={{}}>
         <>{children}</>

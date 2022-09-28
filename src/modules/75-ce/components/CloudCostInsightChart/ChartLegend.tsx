@@ -8,6 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Layout, Text } from '@wings-software/uicore'
 import type Highcharts from 'highcharts'
+import cx from 'classnames'
 
 import css from './ChartLegend.module.scss'
 
@@ -19,13 +20,13 @@ const ChartLegend: React.FC<ChartLegendProps> = ({ chartRefObj }) => {
   const [legendMap, setLegendMap] = useState<Record<string, boolean>>({})
 
   chartRefObj.series.forEach(chart => {
-    legendMap[chart.userOptions.name as string] = chart.visible
+    legendMap[(chart.userOptions as any).nodeId as string] = chart.visible
   })
 
   useEffect(() => {
     const newMap: Record<string, boolean> = {}
     chartRefObj.series.forEach(chart => {
-      newMap[chart.userOptions.name as string] = chart.visible
+      newMap[(chart.userOptions as any).nodeId as string] = chart.visible
     })
     setLegendMap(newMap)
   }, [chartRefObj])
@@ -47,9 +48,9 @@ const ChartLegend: React.FC<ChartLegendProps> = ({ chartRefObj }) => {
     //   })
     // } else {
     updatedLegend = { ...legendMap }
-    updatedLegend[chart.userOptions.name] = !updatedLegend[chart.userOptions.name]
+    updatedLegend[chart.userOptions.nodeId] = !updatedLegend[chart.userOptions.nodeId]
     chart.update({
-      visible: updatedLegend[chart.userOptions.name]
+      visible: updatedLegend[chart.userOptions.nodeId]
     })
     setLegendMap(updatedLegend)
     return
@@ -66,9 +67,8 @@ const ChartLegend: React.FC<ChartLegendProps> = ({ chartRefObj }) => {
 
   return (
     <Container
-      className={css.legendContainer}
+      className={cx(css.legendContainer, { [css.preferences]: chartRefObj.series.length > 12 })}
       padding={{
-        left: 'medium',
         top: 'small',
         bottom: 'small'
       }}
@@ -77,7 +77,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({ chartRefObj }) => {
         const chartColor: string = (chart as any).color
         return (
           <Layout.Horizontal
-            key={chart.userOptions.name}
+            key={chart.userOptions.id}
             spacing="small"
             style={{
               alignItems: 'center'
@@ -90,7 +90,7 @@ const ChartLegend: React.FC<ChartLegendProps> = ({ chartRefObj }) => {
               <div
                 className={css.colorBox}
                 style={
-                  legendMap[chart.userOptions.name as string]
+                  legendMap[(chart.userOptions as any).nodeId as string]
                     ? {
                         backgroundColor: chartColor
                       }

@@ -7,14 +7,11 @@
 
 import React from 'react'
 import { HelpPanelContextProvider, HelpPanelEnvironment } from '@harness/help-panel'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 const HelpPanelProvider: React.FC = props => {
-  const { HELP_PANEL } = useFeatureFlags()
-
   return (
     <HelpPanelContextProvider
-      accessToken={HELP_PANEL ? window.helpPanelAccessToken : undefined}
+      accessToken={window.helpPanelAccessToken}
       space={window.helpPanelSpace}
       environment={window.helpPanelEnvironment as HelpPanelEnvironment}
     >

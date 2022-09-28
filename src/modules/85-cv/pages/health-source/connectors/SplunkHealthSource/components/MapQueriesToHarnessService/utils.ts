@@ -5,10 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import type { UseStringsReturn } from 'framework/strings'
 import { initialFormData, MapSplunkToServiceFieldNames } from './constants'
-import type { MapSplunkQueryToService } from './types'
+import type { GetSplunkMappedMetricInterface, MapSplunkQueryToService } from './types'
 
 type UpdateSelectedQueriesMap = {
   updatedMetric: string
@@ -76,4 +77,31 @@ export function validateMappings(
   }
 
   return requiredFieldErrors
+}
+
+export const getSplunkMappedMetric = ({
+  sourceData,
+  isConnectorRuntimeOrExpression,
+  getString
+}: GetSplunkMappedMetricInterface): {
+  selectedMetric: string
+  mappedMetrics: Map<string, MapSplunkQueryToService>
+} => {
+  return {
+    selectedMetric:
+      (Array.from(sourceData?.mappedServicesAndEnvs?.keys() || [])?.[0] as string) ||
+      getString('cv.monitoringSources.splunk.splunkLogsQuery'),
+    mappedMetrics:
+      sourceData?.mappedServicesAndEnvs?.size > 0
+        ? sourceData?.mappedServicesAndEnvs
+        : new Map<string, MapSplunkQueryToService>([
+            [
+              getString('cv.monitoringSources.splunk.splunkLogsQuery'),
+              {
+                ...initialFormData,
+                serviceInstance: isConnectorRuntimeOrExpression ? RUNTIME_INPUT_VALUE : initialFormData.serviceInstance
+              }
+            ]
+          ])
+  }
 }

@@ -19,8 +19,8 @@ import { Page } from '@common/components'
 import TwoFactorAuthentication from '@user-profile/components/TwoFactorAuthentication/TwoFactorAuthentication'
 import useSwitchAccountModal from '@common/modals/SwitchAccount/useSwitchAccountModal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import { addHotJarSuppressionAttribute, isCommunityPlan } from '@common/utils/utils'
-import { AuthenticationMechanisms } from '@auth-settings/constants/utils'
+import { addHotJarSuppressionAttribute, useGetCommunity } from '@common/utils/utils'
+import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import UserOverView from './views/UserOverView'
 import css from './UserProfile.module.scss'
 
@@ -30,7 +30,7 @@ const UserProfilePage: React.FC = () => {
   const { openSwitchAccountModal } = useSwitchAccountModal({})
   const { openUserProfile } = useUserProfile({})
   const { currentUserInfo: user } = useAppStore()
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
 
   const { data: loginSettingsData, loading: fetchingAuthSettings } = useGetAuthenticationSettings({
     queryParams: {
@@ -48,7 +48,7 @@ const UserProfilePage: React.FC = () => {
 
   return (
     <>
-      <Page.Body filled className={css.userProfilePage}>
+      <Page.Body className={css.userProfilePage}>
         <Layout.Vertical className={css.details}>
           <Layout.Vertical margin={{ top: 'large' }}>
             <Avatar
@@ -74,7 +74,16 @@ const UserProfilePage: React.FC = () => {
               <Button
                 icon="Edit"
                 data-testid="editUserProfile"
+                disabled={user.externallyManaged}
                 variation={ButtonVariation.ICON}
+                tooltip={
+                  user.externallyManaged
+                    ? getString('rbac.manageSCIMText', {
+                        action: getString('edit').toLowerCase(),
+                        target: getString('common.userLabel').toLowerCase()
+                      })
+                    : getString('userProfile.editProfile')
+                }
                 onClick={() => openUserProfile(user)}
               />
             </Layout.Horizontal>

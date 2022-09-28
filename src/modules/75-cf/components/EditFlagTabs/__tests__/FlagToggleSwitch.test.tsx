@@ -26,11 +26,13 @@ const renderComponent = (props: Partial<FlagToggleSwitchProps> = {}): RenderResu
 
 describe('FlagToggleSwitch', () => {
   beforeEach(() => {
-    jest.spyOn(rbacHooksMock, 'usePermission').mockReturnValue([true])
+    jest.spyOn(rbacHooksMock, 'usePermission').mockReturnValue([true, true])
     jest.spyOn(useFeatureEnabled, 'default').mockReturnValue({
       enabledByPlanEnforcement: true,
       featureEnabled: true,
-      enabledByPermission: true
+      enabledByPermission: true,
+      canEdit: true,
+      canToggle: true
     })
   })
 
@@ -85,7 +87,9 @@ describe('FlagToggleSwitch', () => {
     jest.spyOn(useFeatureEnabled, 'default').mockReturnValue({
       enabledByPermission: true,
       enabledByPlanEnforcement: false,
-      featureEnabled: false
+      featureEnabled: false,
+      canEdit: true,
+      canToggle: true
     })
 
     renderComponent({

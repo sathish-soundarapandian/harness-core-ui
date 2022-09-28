@@ -10,6 +10,7 @@ import { Text } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Classes, Switch } from '@blueprintjs/core'
 import cx from 'classnames'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { FeatureFlagActivationStatus } from '@cf/utils/CFUtils'
 import { useStrings } from 'framework/strings'
 import type { FeatureState } from 'services/cf'
@@ -32,7 +33,7 @@ const FlagToggleSwitch = (props: FlagToggleSwitchProps): ReactElement => {
   const switchOff = (currentState || FeatureFlagActivationStatus.OFF) === FeatureFlagActivationStatus.OFF
 
   return (
-    <DisabledFeatureTooltip>
+    <DisabledFeatureTooltip permission={PermissionIdentifier.TOGGLE_FF_FEATUREFLAG}>
       <Switch
         labelElement={
           <Text inline font={{ variation: FontVariation.FORM_INPUT_TEXT }}>

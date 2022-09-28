@@ -233,6 +233,17 @@ describe('GCS Step', () => {
                   localName: 'step.gcs.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.gcs.identifier',
+                      localName: 'step.gcs.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-timeout': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.gcs.timeout',
@@ -285,6 +296,7 @@ describe('GCS Step', () => {
             },
             variablesData: {
               type: StepType.GCS,
+              __uuid: 'step-identifier',
               identifier: 'gcs',
               name: 'step-name',
               timeout: 'step-timeout',

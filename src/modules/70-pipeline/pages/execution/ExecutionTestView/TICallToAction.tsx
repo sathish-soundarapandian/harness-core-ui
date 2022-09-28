@@ -20,8 +20,8 @@ export interface TICallToActionProps {
   type?: string
 }
 
-const setUpTIDocs = 'https://ngdocs.harness.io/article/428cs02e6u'
-const aboutTIDocs = 'https://ngdocs.harness.io/article/vtu9k1dsfa-test-intelligence-concepts'
+const setUpTIDocs = 'https://docs.harness.io/article/428cs02e6u'
+const aboutTIDocs = 'https://docs.harness.io/article/vtu9k1dsfa-test-intelligence-concepts'
 
 export function TICallToAction(_props: TICallToActionProps): React.ReactElement {
   const { getString } = useStrings()
@@ -44,7 +44,7 @@ export function TICallToAction(_props: TICallToActionProps): React.ReactElement 
                   ? getString('pipeline.testsReports.tiCallToAction.utilizeTISubText')
                   : getString('pipeline.testsReports.tiCallToAction.upsellSubText')}
               </Text>
-              {canUseTI && <Text color={Color.GREY_500}>Support for .Net and Python coming soon!</Text>}
+              {canUseTI && <Text color={Color.GREY_500}>Support for Scala, Kotlin and Python coming soon!</Text>}
             </Container>
             <Layout.Horizontal spacing="medium" className={css.actionsContainer}>
               <a rel="noreferrer" target="_blank" href={canUseTI ? setUpTIDocs : aboutTIDocs}>

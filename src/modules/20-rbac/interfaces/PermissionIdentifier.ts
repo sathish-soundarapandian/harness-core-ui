@@ -37,6 +37,7 @@ export enum PermissionIdentifier {
   VIEW_ENVIRONMENT_GROUP = 'core_environmentgroup_view',
   EDIT_ENVIRONMENT_GROUP = 'core_environmentgroup_edit',
   DELETE_ENVIRONMENT_GROUP = 'core_environmentgroup_delete',
+  RUNTIMEACCESS_ENVIRONMENT_GROUP = 'core_environmentgroup_access',
   VIEW_USERGROUP = 'core_usergroup_view',
   MANAGE_USERGROUP = 'core_usergroup_manage',
   VIEW_USER = 'core_user_view',
@@ -67,6 +68,10 @@ export enum PermissionIdentifier {
   DELETE_VARIABLE = 'core_variable_delete',
   VIEW_VARIABLE = 'core_variable_view',
   ACCESS_VARIABLE = 'core_variable_access',
+  EDIT_FILE = 'core_file_edit',
+  DELETE_FILE = 'core_file_delete',
+  VIEW_FILE = 'core_file_view',
+  ACCESS_FILE = 'core_file_access',
 
   // FEATURE FLAG PERMISSIONS
   DELETE_FF_FEATUREFLAG = 'ff_featureflag_delete',
@@ -129,7 +134,52 @@ export enum PermissionIdentifier {
   DELETE_GITOPS_CERT = 'gitops_cert_delete',
 
   // Chaos Permissions
-  VIEW_CHAOSHUB = 'chaos_chaoshub_view',
-  EDIT_CHAOSHUB = 'chaos_chaoshub_edit',
-  DELETE_CHAOSHUB = 'chaos_chaoshub_delete'
+  VIEW_CHAOS_HUB = 'chaos_chaoshub_view',
+  EDIT_CHAOS_HUB = 'chaos_chaoshub_edit',
+  DELETE_CHAOS_HUB = 'chaos_chaoshub_delete',
+  VIEW_CHAOS_SCENARIO = 'chaos_chaosscenario_view',
+  EDIT_CHAOS_SCENARIO = 'chaos_chaosscenario_edit',
+  DELETE_CHAOS_SCENARIO = 'chaos_chaosscenario_delete',
+  VIEW_CHAOS_DELEGATE = 'chaos_chaosdelegate_view',
+  EDIT_CHAOS_DELEGATE = 'chaos_chaosdelegate_edit',
+  DELETE_CHAOS_DELEGATE = 'chaos_chaosdelegate_delete',
+  VIEW_CHAOS_GITOPS = 'chaos_chaosgitops_view',
+  EDIT_CHAOS_GITOPS = 'chaos_chaosgitops_edit',
+
+  // STO Permissions
+  VIEW_STO_ISSUE = 'sto_issue_view',
+  VIEW_STO_SCAN = 'sto_scan_view',
+  VIEW_STO_TESTTARGET = 'sto_testtarget_view',
+  EDIT_STO_TESTTARGET = 'sto_testtarget_edit',
+  VIEW_STO_EXEMPTION = 'sto_exemption_view',
+  CREATE_STO_EXEMPTION = 'sto_exemption_create',
+  APPROVE_STO_EXEMPTION = 'sto_exemption_approve',
+
+  // Default Settings
+  VIEW_CORE_SETTING = 'core_setting_view',
+  EDIT_CORE_SETTING = 'core_setting_edit',
+  // CCM Permissions
+  VIEW_CCM_OVERVIEW = 'ccm_overview_view',
+  VIEW_CCM_PERSPECTIVE_FOLDERS = 'ccm_folder_view',
+  EDIT_CCM_PERSPECTIVE_FOLDERS = 'ccm_folder_edit',
+  DELETE_CCM_PERSPECTIVE_FOLDERS = 'ccm_folder_delete',
+  VIEW_CCM_PERSPECTIVE = 'ccm_perspective_view',
+  EDIT_CCM_PERSPECTIVE = 'ccm_perspective_edit',
+  DELETE_CCM_PERSPECTIVE = 'ccm_perspective_delete',
+  VIEW_CCM_BUDGET = 'ccm_budget_view',
+  EDIT_CCM_BUDGET = 'ccm_budget_edit',
+  DELETE_CCM_BUDGET = 'ccm_budget_delete',
+  VIEW_CCM_COST_CATEGORY = 'ccm_costCategory_view',
+  EDIT_CCM_COST_CATEGORY = 'ccm_costCategory_edit',
+  DELETE_CCM_COST_CATEGORY = 'ccm_costCategory_delete',
+  VIEW_CCM_AUTOSTOPPING_RULE = 'ccm_autoStoppingRule_view',
+  EDIT_CCM_AUTOSTOPPING_RULE = 'ccm_autoStoppingRule_edit',
+  DELETE_CCM_AUTOSTOPPING_RULE = 'ccm_autoStoppingRule_delete',
+  VIEW_CCM_LOADBALANCER = 'ccm_loadBalancer_view',
+  EDIT_CCM_LOADBALANCER = 'ccm_loadBalancer_edit',
+  DELETE_CCM_LOADBALANCER = 'ccm_loadBalancer_delete',
+  // Billing Permissions
+  EDIT_LICENSE = 'core_license_edit',
+  DELETE_LICENSE = 'core_license_delete',
+  VIEW_LICENSE = 'core_license_view'
 }

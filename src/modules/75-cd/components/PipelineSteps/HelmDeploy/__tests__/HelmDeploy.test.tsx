@@ -33,7 +33,8 @@ describe('Test K8sBlueGreenDeployStep', () => {
           name: 'Test A',
           timeout: RUNTIME_INPUT_VALUE,
           spec: {
-            skipDryRun: RUNTIME_INPUT_VALUE
+            skipDryRun: RUNTIME_INPUT_VALUE,
+            ignoreReleaseHistFailStatus: RUNTIME_INPUT_VALUE
           }
         }}
         type={StepType.HelmDeploy}
@@ -53,7 +54,8 @@ describe('Test K8sBlueGreenDeployStep', () => {
           name: 'Test A',
           timeout: RUNTIME_INPUT_VALUE,
           spec: {
-            skipDryRun: RUNTIME_INPUT_VALUE
+            skipDryRun: RUNTIME_INPUT_VALUE,
+            ignoreReleaseHistFailStatus: RUNTIME_INPUT_VALUE
           }
         }}
         type={StepType.HelmDeploy}
@@ -66,14 +68,25 @@ describe('Test K8sBlueGreenDeployStep', () => {
   test('should render Variable view', () => {
     const { container } = render(
       <TestStepWidget
-        initialValues={{ type: 'HelmDeploy', name: 'Test A', timeout: '10m' }}
-        template={{ type: 'HelmDeploy', name: 'Test A', timeout: '10m' }}
+        initialValues={{
+          type: 'HelmDeploy',
+          name: 'Test A',
+          timeout: '10m',
+          spec: { ignoreReleaseHistFailStatus: false }
+        }}
+        template={{
+          type: 'HelmDeploy',
+          name: 'Test A',
+          timeout: '10m',
+          spec: { ignoreReleaseHistFailStatus: RUNTIME_INPUT_VALUE }
+        }}
         allValues={{
           type: 'HelmDeploy',
           name: 'Test A',
           timeout: '10m',
           spec: {
-            skipDryRun: true
+            skipDryRun: true,
+            ignoreReleaseHistFailStatus: RUNTIME_INPUT_VALUE
           }
         }}
         type={StepType.HelmDeploy}
@@ -92,7 +105,10 @@ describe('Test K8sBlueGreenDeployStep', () => {
             name: 'Test A',
             identifier: 'HelmDeploy',
             type: 'HelmDeploy',
-            timeout: '10m'
+            timeout: '10m',
+            spec: {
+              ignoreReleaseHistFailStatus: 'false'
+            }
           }
         }}
       />
@@ -114,7 +130,8 @@ describe('Test K8sBlueGreenDeployStep', () => {
           type: StepType.HelmDeploy,
           spec: {
             skipDryRun: false,
-            timeout: '10m'
+            timeout: '10m',
+            ignoreReleaseHistFailStatus: false
           }
         }}
         type={StepType.HelmDeploy}
@@ -137,6 +154,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
       type: StepType.HelmDeploy,
       spec: {
         skipDryRun: false,
+        ignoreReleaseHistFailStatus: false,
         timeout: '10m'
       }
     })

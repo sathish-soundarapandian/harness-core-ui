@@ -21,7 +21,8 @@ export interface TemplateDetailsDrawerProps {
 
 export const TemplateDetailsDrawer: React.FC<TemplateDetailsDrawerProps> = props => {
   const { onClose, template } = props
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const getTemplateDetails: React.ReactElement = React.useMemo(
     () => (template ? <TemplateDetails template={template} /> : <></>),

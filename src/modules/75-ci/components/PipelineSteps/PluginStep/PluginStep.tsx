@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -39,6 +39,7 @@ export interface PluginStepSpec {
       paths: MultiTypeListType
     }
   }
+  entrypoint?: MultiTypeListType
   settings?: MultiTypeMapType
   imagePullPolicy?: MultiTypeSelectOption
   runAsUser?: string
@@ -55,9 +56,10 @@ export interface PluginStepData {
 }
 
 export interface PluginStepSpecUI
-  extends Omit<PluginStepSpec, 'connectorRef' | 'reports' | 'settings' | 'pull' | 'resources'> {
+  extends Omit<PluginStepSpec, 'connectorRef' | 'reports' | 'entrypoint' | 'settings' | 'pull' | 'resources'> {
   connectorRef: MultiTypeConnectorRef
   reportPaths?: MultiTypeListUIType
+  entrypoint?: MultiTypeListUIType
   settings?: MultiTypeMapUIType
   // TODO: Right now we do not support Image Pull Policy but will do in the future
   // pull?: MultiTypeSelectOption
@@ -80,7 +82,7 @@ export interface PluginStepProps {
   stepViewType: StepViewType
   onUpdate?: (data: PluginStepData) => void
   onChange?: (data: PluginStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 
@@ -140,7 +142,7 @@ export class PluginStep extends PipelineStep<PluginStepData> {
       allowableTypes
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <PluginStepInputSet
           initialValues={initialValues}

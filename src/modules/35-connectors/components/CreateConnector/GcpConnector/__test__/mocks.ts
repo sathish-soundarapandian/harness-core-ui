@@ -17,7 +17,22 @@ export const encryptedKeyMock: ConnectorInfoDTO = {
   type: 'Gcp',
   spec: {
     delegateSelectors: ['dummyDelegateSelector'],
-    credential: { type: 'ManualConfig', spec: { secretKeyRef: 'account.s15656' } }
+    credential: { type: 'ManualConfig', spec: { secretKeyRef: 'account.s15656' } },
+    executeOnDelegate: true
+  }
+}
+
+export const hostedEncryptedKeyMock: ConnectorInfoDTO = {
+  name: 'devConnector',
+  identifier: 'devConnector',
+  description: 'devConnector description',
+  orgIdentifier: undefined,
+  projectIdentifier: undefined,
+  tags: {},
+  type: 'Gcp',
+  spec: {
+    credential: { type: 'ManualConfig', spec: { secretKeyRef: 'account.s15656' } },
+    executeOnDelegate: false
   }
 }
 

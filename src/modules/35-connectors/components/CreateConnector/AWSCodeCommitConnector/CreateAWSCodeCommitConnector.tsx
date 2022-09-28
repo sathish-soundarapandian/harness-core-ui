@@ -18,7 +18,7 @@ import { useStrings } from 'framework/strings'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { buildAWSCodeCommitPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import AWSCCAuthStep from './AWSCCAuthStep'
 import AWSCCDetailsStep from './AWSCCDetailsStep'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
@@ -37,11 +37,13 @@ export default function CreateAWSCodeCommitConnector(props: CreateConnectorModal
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
+        helpPanelReferenceId="CodeCommitConnectorOverviewId"
       />
       <AWSCCDetailsStep
         name={getString('details')}
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo as ConnectorInfoDTO}
+        helpPanelReferenceId="CodeCommitConnectorDetails"
       />
       <AWSCCAuthStep
         name={getString('credentials')}
@@ -50,6 +52,7 @@ export default function CreateAWSCodeCommitConnector(props: CreateConnectorModal
         connectorInfo={props.connectorInfo as ConnectorInfoDTO}
         onSuccess={props.onSuccess}
         setIsEditMode={props.setIsEditMode}
+        helpPanelReferenceId="CodeCommitConnectorCredentials"
       />
 
       <DelegateSelectorStep
@@ -61,8 +64,9 @@ export default function CreateAWSCodeCommitConnector(props: CreateConnectorModal
         onConnectorCreated={props.onSuccess}
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
+        helpPanelReferenceId="ConnectorDelegatesSetup"
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep
@@ -70,6 +74,7 @@ export default function CreateAWSCodeCommitConnector(props: CreateConnectorModal
         type={Connectors.AWS_CODECOMMIT}
         onClose={props.onClose}
         stepIndex={TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

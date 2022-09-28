@@ -26,6 +26,7 @@ import type { SelectOption } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Region, useAllRegions, ContainerServiceServiceMinimal, useAllResourcesOfAccount, Resource } from 'services/lw'
+import { Utils } from '@ce/common/Utils'
 import { useStrings } from 'framework/strings'
 import type { GatewayDetails } from '../COCreateGateway/models'
 import css from './CORdsSelector.module.scss'
@@ -96,7 +97,7 @@ const CORdsSelector: React.FC<CORdsSelectorProps> = props => {
         setAllDatabases(result)
         setDatabasesToShow(result)
       } catch (e) {
-        showError(e?.data?.message || e?.message)
+        showError(Utils.getASErrorMessage(e) || e?.data?.message || e?.message)
       }
     }
   }

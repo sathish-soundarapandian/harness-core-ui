@@ -1,10 +1,12 @@
 secrets: Secrets
 home: Home
 welcome: Welcome
+help: Help
 dashboards: Dashboards
 setup: Setup
 agent: Agent
 agents: Agents
+perModule: Per Module
 application: Application
 certificate: Certificate
 subscriptionId: Subscription Id
@@ -12,11 +14,20 @@ repositoryCertificates: Repository Certificates
 notEnabled: 'Not Enabled'
 apiStatus: 'API Status'
 gpgkey: 'GPG Key'
+warning: Warning
 gnupgKeys: GnuPG Keys
+featureComingSoon: This feature is coming soon.
 skip: Skip
 sync: Sync
+schedule: Schedule
+selectService: Select Service
+selectServices: Select Services
+inputVariables: Input Variables
+confirmAction: Confirm action
 accountSetup: Account Setup
 projectSetup: Project Setup
+additionalAttributes: Additional Attributes
+addAttribute: + Add Attribute
 orgSetup: Org Setup
 delegateForTask: '{{delegate}} for {{taskName}}'
 defineDelegateSelector: 'Define Delegate Selector'
@@ -33,6 +44,7 @@ pipeline: Pipeline
 templateStartLabel: Start with Template
 duplicateId: 'Duplicate Identifier'
 createPipeline: Create a Pipeline
+importFromGit: Import From Git
 production: Production
 addVariable: Add Variable
 advanced: '{{ $.advancedTitle }}'
@@ -50,11 +62,13 @@ readOnly: Read Only
 editYaml: Edit YAML
 provisioner: Provisioner
 templates: Templates
+refreshDelegateLogs: Refresh Delegate Logs
 comments: Comments
 updating: 'Updating {{entity}} {{name}}'
 creating: 'Creating {{entity}} {{name}}'
 successfullCreate: '{{entity}} {{name}} created successfully'
 successfullUpdate: '{{entity}} {{name}} updated successfully'
+dataSubmitSuccess: 'Data has been submitted successfully'
 entityType: Entity Type
 approve: Approve
 reject: Reject
@@ -63,6 +77,8 @@ remove: Remove
 member: Member
 showMore: Show More
 showLess: Show Less
+showSelected: Show Selected
+hideAll: Hide All
 moreInfo: More Info
 moreOptions: More options
 viewText: View
@@ -75,6 +91,11 @@ variables: Variables
 copyVariableName: Copy variable name
 copyFqn: Copy fully qualified name
 selectType: Select Type
+timeframe: Timeframe
+selectTimeFrame: Select Timeframe
+lastModified: 'Last Modified'
+servicePrefix: 'Service: {{ name }}'
+serviceInputs: Service inputs
 accountSetting:
   connector:
     loading: 'Loading settings...'
@@ -118,6 +139,7 @@ configureOptions:
   values: 'Values'
   enterTags: 'Enter values'
   askDuringExecution: Request input value when the stage/step is being executed
+  selectAllowedValuesPlaceholder: Select Allowed Values
   validationErrors:
     regExIsRequired: 'Regex value is required'
     defaultRegExValid: Default value should validate with regex provided
@@ -129,6 +151,7 @@ configureOptions:
   advancedHelp: 'With the advanced option, <br> you can type in JEXL expressions to return a list of values. <br> <a target="_blank">More information</a> <br> E.g. ${env.type} == “prod” ? aws1, aws2 : aws3, aws4'
 namespace: Namespace
 cluster: Cluster
+clusterName: Cluster Name
 clusters: Clusters
 releaseName: Release name
 stage: Stage
@@ -143,7 +166,8 @@ datePickerShortcuts:
   LastMonth: Last Month
   Last2Months: Last 2 Months
 validation:
-  namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
+  connectorRef: Connector is a required field
+  namePatternIsNotValid: 'Name can only contain alphanumerics, . _ and -'
   provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier should not contain special characters and spaces'
   provisionerIdentifierIsRequired: 'Provisioner Identifier is required'
   harnessFolderNamePatternIsNotValid: 'Harness Folder name can only contain alphanumerics, underscore, hyphen or a whitespace'
@@ -175,6 +199,7 @@ validation:
     required: Email is required
     format: Please input valid email address
   repositoryName: Repository Name is required
+  package: Package is required
   invalidYamlText: 'You have provided invalid or empty YAML. Please provide a valid YAML'
   environmentIsRequired: 'Environment is required'
   subscription: 'Subscription is required'
@@ -273,6 +298,12 @@ purpose:
   sto:
     continuous: Security Tests
     moduleSelectionSubHeading: Take your security tests to the next level using our Harness Security Tests
+    security: Security
+    tests: '{{$.tests}}'
+  errorTracking:
+    title: Error Tracking
+  scm:
+    name: Repos
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
 letsGetYouStarted: Let’s get you started
@@ -286,6 +317,7 @@ repo_provider:
   codecommit: CodeCommit
   awscodecommit: AWS Code Commit
   azureDev: Azure Devops
+  azureRepos: Azure Repos
 gitSync:
   branchFetchFailed: Branch fetch failed
   resourceLabel: '{{resource}} Name'
@@ -319,6 +351,8 @@ gitSync:
 
 git:
   branchName: 'Branch name'
+  selectBranchPlaceholder: Select or enter a branch name
+  selectRepositoryPlaceholder: Select or enter a repository name
   urlType: 'URL Type'
   connectionType: 'Connection Type'
   testRepository: 'Test Repository'
@@ -332,20 +366,19 @@ git:
   gitLabRepoUrl: 'GitLab Repository URL'
   bitbucketRepoUrl: 'Bitbucket Repository URL'
   azureReposRepoUrl: 'Azure Repos Repository URL'
-  gitHubUrlPlaceholder: 'https://www.github.com/account/'
+  gitHubUrlPlaceholder: 'https://github.com/account/'
   gitHubUrlPlaceholderSSH: 'git@github.com:account/'
-  gitLabUrlPlaceholder: 'https://www.gitlab.com/account/'
+  gitLabUrlPlaceholder: 'https://gitlab.com/account/'
   gitLabUrlPlaceholderSSH: 'git@gitlab.com:account/'
-  bitbucketUrlPlaceholder: 'https://www.bitbucket.com/account/'
-  bitbucketPlaceholderSSH: 'git@bitbucket.com:account/'
-  azureReposUrlPlaceholder: 'https://dev.azure.com/<organisationName>'
-  azureReposUrlPlaceholderRepoHttp: 'https://dev.azure.com/<organisationName>/<projectName>/<repositoryName>'
-  azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organisationName>'
-  azureReposPlaceholderRepoSSH: 'git@ssh.dev.azure.com:v3/<organisationName>/<projectName>/<repositoryName>'
+  bitbucketUrlPlaceholder: 'https://bitbucket.org/'
+  bitbucketPlaceholderSSH: 'git@bitbucket.org'
+  azureReposUrlPlaceholder: 'https://dev.azure.com/<organizationName>/<projectName>'
+  azureReposUrlPlaceholderRepoHttp: 'https://dev.azure.com/<organizationName>/<projectName>/_git/<repositoryName>'
+  azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organizationName>'
+  azureReposPlaceholderRepoSSH: 'git@ssh.dev.azure.com:v3/<organizationName>/<projectName>/<repositoryName>'
   enableAPIAccess: 'Enable API access (recommended)'
   APIAccessDescription: 'API Access is required for using “Git Experience”, for creation of Git based triggers, Webhooks management and updating Git statuses'
-  testRepositoryDescription: Please provide a repository to test the credentials. This is required just for checking connectivity. The connector will still be created at account level.
-  testProjectAndRepositoryDescription: Please provide a project and a repository to test the credentials. This is required just for checking connectivity. The connector will still be created at account level.
+  testRepositoryDescription: Please provide a repository to test the credentials. This is required just for checking connectivity. The connector will still be created at {{scope}} level.
   APIAuthentication: 'API Authentication'
   gitHubApp: 'GitHub App'
   installationId: 'GitHub Installation Id'
@@ -356,7 +389,6 @@ git:
   addUserCredentialLabel: Update in user profile
   saveResourceLabel: 'Save {{resource}} to Git'
   selectRepoLabel: Repository Display Name
-  projectNamePlaceholder: 'Example: MyProject'
   filePath: File Path
   folderPath: Folder Path
   commitMessage: Commit message
@@ -367,8 +399,8 @@ git:
   startPRLabel: Start a pull request to merge
   noBranchesFound: No branches found for configured git repository
   onlyDefaultBranchFound: Cannot find additional branches to raise a pull request.
-  inlineStoreLabel: Pipeline content is stored in Harness
-  remoteStoreLabel: Pipeline content is stored in a Git repository
+  inlineStoreLabel: '{{entityType}}  is stored in Harness'
+  remoteStoreLabel: '{{entityType}} content is stored in a Git repository'
   validation:
     filePath: '{{$.common.git.filePath}} is required'
     commitMessage: '{{$.common.git.commitMessage}} is required'
@@ -418,12 +450,12 @@ local: Local
 subscribed: Subscribed
 overSubscribed: Oversubscribed
 unlimited: Unlimited
+billing: Billing
 subscriptions:
   title: Subscriptions
   tabs:
     overview: Subscription Overview
     plans: Plans
-    billing: Billing
   overview:
     details: Subscription Details
     plan: Plan
@@ -463,6 +495,7 @@ subscriptions:
     monthlyUsers: Monthly Active Users
     activeDevelopers: Active Developers
     developers: Developers
+    developer: Developer
     cloudSpend: Total Cloud Spend
     ccmUsers: Active CCM Users
     ccmTooltip: Cloud Spend refers to the total spend (dollars) managed and optimized by Harness Cloud Cost Management.
@@ -636,6 +669,7 @@ policiesSets:
     validIdRegex: '{{$.common.validation.formatMustBeAlphanumeric}}'
   selectPolicySet: Select Policy Set
   addOrModifyPolicySet: Add/Modify Policy Set
+  evaluations: Policy Set Evaluations
 accountResourcesPage:
   line1: 'Account Resources are shared and available for use within any organization or projects within your account.'
   line2: 'For better isolation of resources, it is recommended that you create resources at the organization or project levels respectively.'
@@ -660,13 +694,20 @@ environmentCreated: Environment created successfully
 environmentUpdated: Environment updated successfully
 discard: Discard
 default: Default
+searchByNamePlaceholder: Search by name
 searchPlaceholder: Search by name or Id
 monthly: Monthly
+per: per
 perMonth: /month
+perMonthWithoutSlash: per Month
+perYearWithoutSlash: per year
+perYear: /year
 hourly: Hourly
 daily: Daily
 yearly: Yearly
 billed: Billed
+subtotal: Subtotal
+annually: annually
 plans:
   title: Upgrade to get the most out of Harness
   featureComparison: Show All Feature Comparison
@@ -690,12 +731,16 @@ module:
   ce: CCM
   cv: CV
   core: CORE
+  chaos: CHAOS
   pms: PMS
   templateService: TEMPLATESERVICE
   sto: STO
   governance: POLICY ENGINE
+templateServiceLabel: Template Service
 customPricing: for Custom Pricing
 specified: Specified
+byType: By Type
+types: Types
 file: File
 entityReferenceTitle: 'Create or Select an Existing {{compName}}'
 entityReferenceSubTitle: 'Choose {{compName}} based on the scope'
@@ -724,6 +769,7 @@ feature:
     planMessage: is supported in {{plan}} plan(s).
 repositoryName: Repository Name
 mostActiveServices: Most active services
+monitoredServices: Monitored Services
 allErrors: All Errors
 connectivityErrors: Connectivity Errors
 apply: '{{ $.filters.apply }}'
@@ -734,6 +780,8 @@ delete: Delete {{ name }}?
 suggestionsLabel: 'Suggestions:'
 refreshPage: refresh your page.
 files: Files
+scriptType: 'Script Type'
+script: 'Script'
 template:
   label: 'Template'
   saveAsNewTemplateHeading: Save as new Template
@@ -759,10 +807,12 @@ upgrade: Upgrade
 contactSupport: Contact Support
 or: Or
 startFreePlan: Start {{module}} Free Plan
+scriptRequired: Script is a required field
 exploreAllPlans: Explore all plans
 duration:
   month: 'Last month'
   3months: 'Last 3 months'
+  90Days: 'Last 90 days'
   6months: 'Last 6 months'
   year: 'Last 1 year'
 exploreSaaSPlans: Explore SaaS plans
@@ -774,7 +824,7 @@ smtp:
   smtpConnectivity: SMTP Connectivity Test
   port: Port
   enableSSL: Enable SSL
-  startTSL: Start TSL
+  startTLS: Start TLS
   fromAddress: From Address
   testConnection: Test Connection
   portRequired: Port is required
@@ -799,7 +849,6 @@ userLabel: User
 resourceLabel: Resource
 resourceTypeLabel: Resource Type
 moduleLabel: 'Module'
-timePstLabel: Time (PST)
 resourceGroupLabel: Resource Group
 roleAssignmentLabel: Role Assignment
 triggerLabel: Trigger
@@ -812,10 +861,18 @@ scope: '{{ $.delegate.Scope }}'
 community: Community
 resourceCenter:
   title: 'RESOURCE CENTER'
+  link: 'contact our support'
+  productUpdates:
+    title: Product Updates
+    whatsnew: 'What’s New'
+    earlyAcess: Early Access
   ticketmenu:
+    title: 'Contact us'
     tickets: 'My tickets'
     ticketsDesc: 'View and manage your tickets'
     submitDesc: 'Get help from our expert system'
+    submitTicket: Submit a ticket
+    viewTicket: View my ticket
   bottomlayout:
     desc: Other useful resources
     docs: Docs
@@ -855,7 +912,7 @@ deleteEnvironment:
 90days: 90 Days
 180days: 180 Days
 noexpiration: No Expiration
-subscriptionPlaceholder: 'Select or add Subscription Id'
+subscriptionPlaceholder: 'Select or specify Subscription Id'
 azureConnector: Azure Connector
 environmentList: Environment List
 environmentGroup:
@@ -886,10 +943,75 @@ editName: Edit {{name}}
 selectName: Select {{name}}
 override: Override
 plusNewName: + New {{name}}
+newName: New {{name}}
 fetchingBranches: Fetching branches
 download: Download
 gitOps: GitOps
 showHarnessManagedError: Harness Managed Resource cannot be edited
+contentRequired: Content is required
+defaultSettings: Default Settings
+freezeWindows: Freeze Windows
+oAuthLabel: OAuth
+import: Import
+importEntityFromGit: Import {{resourceType}} From Git
+environmentOverrides: Environment Overrides
+serviceOverrides: Service Overrides
+invalidIdentifiers: 'Identifier must not be one of the following values: {{identifiers}}'
+repositoryFormat: Repository Format
+hostLabel: Host
+useSSL: Use SSL
 
 # Chaos Module
 chaosText: Chaos
+
+zipCode: Postal / Zip Code
+countryOrRegion: Country or Region
+billingAddress: Billing Address
+city: City
+state: State
+nameOnCard: Name on card
+cardNumber: Card number
+perDeveloper: per developer
+triggerName: Trigger Name
+versionLabel: Version Label
+true: 'true'
+false: 'false'
+saving: 'Saving'
+executedBy: Executed By
+headerWithOptionalText: '{{header}} (Optional)'
+selectWorkload: Select Workload
+
+# Onboarding
+getStarted:
+  firstPipeline: 'Let’s get you started with your first Pipeline!'
+  buildPipeline: Build Pipeline
+  quicklyCreate: Quickly create a Pipeline using your own codebase and our intuitive visual editor.
+  selectArtifact: Select Artifact
+  selectInfra: Select Infrastructure
+  fetchingRepos: Please wait while we fetch repositories...
+  plsChoose: 'Please choose {{field}}'
+  fieldIsMissing: '{{field}} is missing'
+  authMethod: Select your Authentication method
+  accessTokenLabel: Access Token
+  codeRepoLabel: Code repository
+  codebaseHelptext: Harness will clone your codebase to your build infrastructure at Pipeline runtime.
+  searchRepo: Search Repository
+  learnMoreAboutPermissions: Learn more about the required permissions
+  verifyConnection: Verify connection before you can continue
+  appPassword: Application Password
+  apiUrlLabel: API URL
+  authMethodLabel: Authentication method
+  specificDelegate: Use from a specific harness Delegate
+selectYourRepo: Select your Repository
+stageName: 'Stage: {{ name }}'
+stepName: 'Step: {{ name }}'
+moduleTitles:
+  cf: Feature Flag
+  cd: Continuous Devlivery
+ignore: Ignore
+serviceDetails: Service Details
+serviceName: Service Name
+assignedAt: Assigned at
+assignedThrough: Assigned Through
+directly: Directly
+loadBalancer: Load Balancer

@@ -312,6 +312,10 @@ export interface TestCaseSummaryQueryParams {
    * Display results in ascending or descending order
    */
   order?: 'ASC' | 'DESC'
+  /**
+   * Display result searching for test case name within the test suite
+   */
+  testCaseSearchTerm?: string
 }
 
 export type TestCaseSummaryProps = Omit<GetProps<TestCases, Error, TestCaseSummaryQueryParams, void>, 'path'>
@@ -395,6 +399,10 @@ export interface TestSuiteSummaryQueryParams {
    * Display results in ascending or descending order
    */
   order?: 'ASC' | 'DESC'
+  /**
+   * Display result searching for test case name within the test suite
+   */
+  testCaseSearchTerm?: string
 }
 
 export type TestSuiteSummaryProps = Omit<GetProps<TestSuites, Error, TestSuiteSummaryQueryParams, void>, 'path'>

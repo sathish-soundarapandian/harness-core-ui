@@ -4,7 +4,11 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
+.loaderContainer {
+  --page-header-height: 128px;
+  position: relative;
+  height: calc(var(--page-min-height) - var(--page-header-height));
+}
 .header {
   padding: var(--spacing-large) var(--spacing-large) !important;
   border-bottom: 1px solid var(--grey-300);
@@ -21,8 +25,10 @@
   margin: var(--spacing-large);
 }
 .pageContainer {
+  --page-header-height: 128px;
   background: var(--grey-100) !important;
-  height: calc(100vh - 128px);
+  overflow: auto !important;
+  height: calc(var(--page-min-height) - var(--page-header-height)) !important;
 }
 .layout {
   justify-content: flex-end;

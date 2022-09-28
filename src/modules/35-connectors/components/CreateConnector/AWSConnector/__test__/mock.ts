@@ -24,7 +24,37 @@ export const mockConnector = {
           crossAccountAccess: { crossAccountRoleArn: 'mock URN', externalId: 'externalId' },
           type: 'ManualConfig',
           spec: { accessKey: 'mockAccessKey', secretKeyRef: 'account.mnfbjfjsecretKey' }
-        }
+        },
+        executeOnDelegate: true
+      }
+    },
+    createdAt: 1610964845475,
+    lastModifiedAt: 1610964845451,
+    status: null,
+    harnessManaged: false
+  },
+  metaData: null,
+  correlationId: '0b7963ac-ae8c-40fa-9af8-dce37bbfdd6e'
+}
+
+export const hostedMockConnector = {
+  status: 'SUCCESS',
+  data: {
+    connector: {
+      name: 'AWS test',
+      identifier: 'AWS_test',
+      description: 'dummy AWS description',
+      orgIdentifier: undefined,
+      projectIdentifier: undefined,
+      tags: {},
+      type: 'Aws',
+      spec: {
+        credential: {
+          crossAccountAccess: { crossAccountRoleArn: 'mock URN', externalId: 'externalId' },
+          type: 'ManualConfig',
+          spec: { accessKey: 'mockAccessKey', secretKeyRef: 'account.mnfbjfjsecretKey' }
+        },
+        executeOnDelegate: false
       }
     },
     createdAt: 1610964845475,
@@ -53,7 +83,8 @@ export const awsWithDelegate = {
           crossAccountAccess: null,
           type: 'InheritFromDelegate',
           spec: null
-        }
+        },
+        executeOnDelegate: true
       }
     },
     createdAt: 1613481338947,

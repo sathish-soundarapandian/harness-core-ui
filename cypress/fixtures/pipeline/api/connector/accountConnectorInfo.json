@@ -1,0 +1,54 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "connector": {
+      "name": "testConnector",
+      "identifier": "testConnector",
+      "description": "",
+      "orgIdentifier": null,
+      "projectIdentifier": null,
+      "tags": {},
+      "type": "Jenkins",
+      "spec": {
+        "jenkinsUrl": "https://jenkins.dev.harness.io",
+        "auth": {
+          "type": "UsernamePassword",
+          "spec": { "username": "harnessadmin", "usernameRef": null, "passwordRef": "account.accountJenkinsSecret" }
+        },
+        "delegateSelectors": ["temp-delegate-pr"]
+      }
+    },
+    "createdAt": 1656062296071,
+    "lastModifiedAt": 1656062296067,
+    "status": {
+      "status": "FAILURE",
+      "errorSummary": "Error Encountered (Task has expired. It wasn't picked up by any delegate or delegate did not have enough time to finish the execution.)",
+      "errors": [
+        {
+          "reason": "Unexpected Error",
+          "message": "Task has expired. It wasn't picked up by any delegate or delegate did not have enough time to finish the execution.",
+          "code": 450
+        }
+      ],
+      "testedAt": 1656062536587,
+      "lastTestedAt": 0,
+      "lastConnectedAt": 1656062512806
+    },
+    "activityDetails": { "lastActivityTime": 1656062296092 },
+    "harnessManaged": false,
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null,
+      "commitId": null,
+      "fileUrl": null
+    },
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "governanceMetadata": null
+  },
+  "metaData": null,
+  "correlationId": "a8e7dfb9-2c20-411b-9b5e-abe9db7e8721"
+}

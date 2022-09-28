@@ -209,7 +209,7 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
               </div>
             </div>
             <div
-              class="halfWidth"
+              class=""
             >
               <div
                 data-rbd-droppable-context-id="9"
@@ -293,7 +293,6 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <span
@@ -316,14 +315,13 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                             </svg>
                           </span>
                           <p
-                            class="StyledProps--font StyledProps--main"
-                            style="width: 12px;"
+                            class="StyledProps--font StyledProps--main text"
                           >
                             1.
                           </p>
                           <div
                             class="bp3-form-group"
-                            style="width: 275px;"
+                            style="width: 600px;"
                           >
                             
                             <div
@@ -412,6 +410,10 @@ exports[`Manifest Details tests expand advanced section - when type is k8smanife
                   </div>
                 </div>
               </div>
+            </div>
+            <div
+              class=""
+            >
               <div
                 data-rbd-droppable-context-id="10"
                 data-rbd-droppable-id="droppable"
@@ -897,7 +899,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
               </div>
             </div>
             <div
-              class="halfWidth"
+              class=""
             >
               <div
                 data-rbd-droppable-context-id="0"
@@ -981,7 +983,6 @@ exports[`Manifest Details tests initial rendering 1`] = `
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <span
@@ -1004,14 +1005,13 @@ exports[`Manifest Details tests initial rendering 1`] = `
                             </svg>
                           </span>
                           <p
-                            class="StyledProps--font StyledProps--main"
-                            style="width: 12px;"
+                            class="StyledProps--font StyledProps--main text"
                           >
                             1.
                           </p>
                           <div
                             class="bp3-form-group"
-                            style="width: 275px;"
+                            style="width: 600px;"
                           >
                             
                             <div
@@ -1380,7 +1380,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
               </div>
             </div>
             <div
-              class="halfWidth"
+              class=""
             >
               <div
                 data-rbd-droppable-context-id="4"
@@ -1464,7 +1464,6 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <span
@@ -1487,14 +1486,13 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                             </svg>
                           </span>
                           <p
-                            class="StyledProps--font StyledProps--main"
-                            style="width: 12px;"
+                            class="StyledProps--font StyledProps--main text"
                           >
                             1.
                           </p>
                           <div
                             class="bp3-form-group"
-                            style="width: 275px;"
+                            style="width: 600px;"
                           >
                             
                             <div
@@ -1863,7 +1861,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
               </div>
             </div>
             <div
-              class="halfWidth"
+              class=""
             >
               <div
                 data-rbd-droppable-context-id="3"
@@ -1947,7 +1945,6 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <span
@@ -1970,14 +1967,13 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                             </svg>
                           </span>
                           <p
-                            class="StyledProps--font StyledProps--main"
-                            style="width: 12px;"
+                            class="StyledProps--font StyledProps--main text"
                           >
                             1.
                           </p>
                           <div
                             class="bp3-form-group"
-                            style="width: 275px;"
+                            style="width: 600px;"
                           >
                             
                             <div
@@ -2346,7 +2342,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
               </div>
             </div>
             <div
-              class="halfWidth"
+              class=""
             >
               <div
                 data-rbd-droppable-context-id="5"
@@ -2430,7 +2426,6 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <span
@@ -2453,14 +2448,13 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                             </svg>
                           </span>
                           <p
-                            class="StyledProps--font StyledProps--main"
-                            style="width: 12px;"
+                            class="StyledProps--font StyledProps--main text"
                           >
                             1.
                           </p>
                           <div
                             class="bp3-form-group"
-                            style="width: 275px;"
+                            style="width: 600px;"
                           >
                             
                             <div
@@ -2829,7 +2823,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
               </div>
             </div>
             <div
-              class="halfWidth"
+              class=""
             >
               <div
                 data-rbd-droppable-context-id="1"
@@ -2913,7 +2907,6 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <span
@@ -2936,14 +2929,13 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                             </svg>
                           </span>
                           <p
-                            class="StyledProps--font StyledProps--main"
-                            style="width: 12px;"
+                            class="StyledProps--font StyledProps--main text"
                           >
                             1.
                           </p>
                           <div
                             class="bp3-form-group"
-                            style="width: 275px;"
+                            style="width: 600px;"
                           >
                             
                             <div
@@ -3312,7 +3304,7 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
               </div>
             </div>
             <div
-              class="halfWidth"
+              class=""
             >
               <div
                 data-rbd-droppable-context-id="6"
@@ -3396,7 +3388,6 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <span
@@ -3419,14 +3410,13 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                             </svg>
                           </span>
                           <p
-                            class="StyledProps--font StyledProps--main"
-                            style="width: 12px;"
+                            class="StyledProps--font StyledProps--main text"
                           >
                             1.
                           </p>
                           <div
                             class="bp3-form-group"
-                            style="width: 275px;"
+                            style="width: 600px;"
                           >
                             
                             <div
@@ -3795,7 +3785,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
               </div>
             </div>
             <div
-              class="halfWidth"
+              class=""
             >
               <div
                 data-rbd-droppable-context-id="7"
@@ -3879,7 +3869,6 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                       >
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-                          draggable="true"
                           style="align-items: baseline;"
                         >
                           <span
@@ -3902,14 +3891,13 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                             </svg>
                           </span>
                           <p
-                            class="StyledProps--font StyledProps--main"
-                            style="width: 12px;"
+                            class="StyledProps--font StyledProps--main text"
                           >
                             1.
                           </p>
                           <div
                             class="bp3-form-group"
-                            style="width: 275px;"
+                            style="width: 600px;"
                           >
                             
                             <div

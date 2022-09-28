@@ -11,23 +11,31 @@ import {
   Button,
   ButtonSize,
   ButtonVariation,
+  Color,
+  Container,
   ExpandingSearchInput,
   ExpandingSearchInputHandle,
-  Icon,
-  Text
-} from '@wings-software/uicore'
+  Icon
+} from '@harness/uicore'
 import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso'
 
+import { defaultTo } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
+import { ErrorList, extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import { String as StrTemplate, useStrings } from 'framework/strings'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { useGlobalEventListener } from '@common/hooks'
-import type { ConsoleViewStepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
+import type {
+  ConsoleViewStepDetailProps,
+  LogsContentProps,
+  RenderLogsInterface
+} from '@pipeline/factories/ExecutionFactory/types'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import type { ModulePathParams, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import { useLogsContent } from './useLogsContent'
 import { GroupedLogsWithRef as GroupedLogs } from './components/GroupedLogs'
 import { SingleSectionLogsWithRef as SingleSectionLogs } from './components/SingleSectionLogs'
@@ -101,20 +109,27 @@ function handleFullScreen(rootRef: React.MutableRefObject<HTMLDivElement | null>
 const isDocumentFullScreen = (elem: HTMLDivElement | null): boolean =>
   !!(document.fullscreenElement && document.fullscreenElement === elem)
 
-export interface LogsContentProps {
-  mode: 'step-details' | 'console-view'
-  toConsoleView?: string
-  errorMessage?: string
-  isWarning?: boolean
-}
-
 export enum SavedExecutionViewTypes {
   GRAPH = 'graph',
   LOG = 'log'
 }
 
+export const logsRenderer = ({ hasLogs, isSingleSectionLogs, virtuosoRef, state, actions }: RenderLogsInterface) => {
+  return hasLogs ? (
+    isSingleSectionLogs ? (
+      <SingleSectionLogs ref={virtuosoRef} state={state} actions={actions} />
+    ) : (
+      <GroupedLogs ref={virtuosoRef} state={state} actions={actions} />
+    )
+  ) : (
+    <pre className={css.container} {...addHotJarSuppressionAttribute()}>
+      <StrTemplate tagName="div" className={css.noLogs} stringID="common.logs.noLogsText" />
+    </pre>
+  )
+}
+
 export function LogsContent(props: LogsContentProps): React.ReactElement {
-  const { mode, toConsoleView = '', errorMessage, isWarning } = props
+  const { mode, toConsoleView = '', isWarning, renderLogs = logsRenderer } = props
   const pathParams = useParams<ExecutionPathProps & ModulePathParams>()
   const { pipelineStagesMap, selectedStageId, allNodeMap, selectedStepId, pipelineExecutionDetail, queryParams } =
     useExecutionContext()
@@ -195,9 +210,16 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
 
   const currentStepId = resolveCurrentStep(selectedStepId, queryParams)
   const currentStep = allNodeMap[currentStepId]
+  let errorObjects = extractInfo(defaultTo(currentStep?.failureInfo?.responseMessages, []))
+  let hasError = Array.isArray(errorObjects) && errorObjects.length > 0
+
+  if (!hasError && currentStep?.failureInfo?.message) {
+    errorObjects = [{ error: { message: currentStep.failureInfo.message } }]
+    hasError = true
+  }
 
   return (
-    <div ref={rootRef} className={cx(css.main, { [css.hasErrorMessage]: !!errorMessage })} data-mode={mode}>
+    <div ref={rootRef} className={cx(css.main, { [css.hasErrorMessage]: hasError })} data-mode={mode}>
       <div className={css.header}>
         <StrTemplate
           tagName="div"
@@ -249,24 +271,36 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
           ) : null}
         </div>
       </div>
-      {hasLogs ? (
-        isSingleSectionLogs ? (
-          <SingleSectionLogs ref={virtuosoRef} state={state} actions={actions} />
-        ) : (
-          <GroupedLogs ref={virtuosoRef} state={state} actions={actions} />
-        )
-      ) : (
-        <pre className={css.container} {...addHotJarSuppressionAttribute()}>
-          <StrTemplate tagName="div" className={css.noLogs} stringID="common.logs.noLogsText" />
-        </pre>
-      )}
-      {mode === 'console-view' && errorMessage ? (
-        <div className={cx(css.errorMessage, { [css.isWarning]: isWarning })}>
-          <StrTemplate className={css.summary} tagName="div" stringID="summary" />
-          <div className={css.error}>
-            <Icon name={isWarning ? 'warning-sign' : 'circle-cross'} />
-            <Text lineClamp={1}>{errorMessage}</Text>
-          </div>
+      {renderLogs({ hasLogs, isSingleSectionLogs, virtuosoRef, state, actions })}
+      {mode === 'console-view' && hasError ? (
+        <div className={cx(css.errorMsgs, { [css.isWarning]: isWarning })}>
+          {errorObjects.map((errorObject, index) => {
+            const { error = {}, explanations = [], hints = [] } = errorObject
+            return (
+              <div key={index} className={css.errorMsgContainer}>
+                <Container margin={{ bottom: 'medium' }}>
+                  <Icon className={css.errorIcon} name={isWarning ? 'warning-sign' : 'circle-cross'} />
+                  <LinkifyText
+                    content={error.message}
+                    textProps={{ font: { weight: 'bold' }, color: Color.RED_700 }}
+                    linkStyles={css.link}
+                  />
+                </Container>
+                <ErrorList
+                  items={explanations}
+                  header={getString('common.errorHandler.issueCouldBe')}
+                  icon={'info'}
+                  color={Color.WHITE}
+                />
+                <ErrorList
+                  items={hints}
+                  header={getString('common.errorHandler.tryTheseSuggestions')}
+                  icon={'lightbulb'}
+                  color={Color.WHITE}
+                />
+              </div>
+            )
+          })}
         </div>
       ) : null}
     </div>
@@ -312,11 +346,16 @@ export class LogsContentWithErrorBoundary extends React.Component<LogsContentPro
 }
 
 export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps): React.ReactElement {
-  const { errorMessage, isSkipped } = props
+  const { errorMessage, isSkipped, renderLogs } = props
 
   return (
     <div className={css.logViewer}>
-      <LogsContentWithErrorBoundary mode="console-view" errorMessage={errorMessage} isWarning={isSkipped} />
+      <LogsContentWithErrorBoundary
+        mode="console-view"
+        errorMessage={errorMessage}
+        isWarning={isSkipped}
+        renderLogs={renderLogs}
+      />
     </div>
   )
 }

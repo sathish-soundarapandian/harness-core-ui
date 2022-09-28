@@ -8,7 +8,7 @@
 import type { MutableRefObject } from 'react'
 import { defaultTo, isEmpty, noop } from 'lodash-es'
 import type { NodeModelListener, LinkModelListener, DiagramEngine } from '@projectstorm/react-diagrams-core'
-import type { StageElementWrapperConfig, PipelineInfoConfig } from 'services/cd-ng'
+import type { StageElementWrapperConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import type * as Diagram from '@pipeline/components/Diagram'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import {
@@ -62,7 +62,6 @@ export const getNodeListenersOld = (
 
   updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
   confirmMoveStage: () => void,
-  getTemplate: PipelineContextInterface['getTemplate'],
   stageMap: Map<string, StageState>,
   engine: DiagramEngine
 ): NodeModelListener => {
@@ -72,7 +71,9 @@ export const getNodeListenersOld = (
       pipelineView: { isSplitViewOpen },
       pipelineView,
       selectionState: { selectedStageId },
-      templateTypes
+      templateTypes,
+      gitDetails,
+      storeMetadata
     },
     contextType = 'Pipeline',
     stagesMap,
@@ -99,7 +100,8 @@ export const getNodeListenersOld = (
               stagesMap,
               contextType,
               templateTypes,
-              getTemplate
+              gitDetails,
+              storeMetadata
             },
             { useArrows: true, darkMode: false, fixedPosition: false }
           )
@@ -124,8 +126,9 @@ export const getNodeListenersOld = (
                 stagesMap,
                 renderPipelineStage,
                 contextType,
-                getTemplate,
-                templateTypes
+                templateTypes,
+                gitDetails,
+                storeMetadata
               },
               { useArrows: false, darkMode: false, fixedPosition: false }
             )
@@ -150,8 +153,9 @@ export const getNodeListenersOld = (
                   stagesMap,
                   renderPipelineStage,
                   contextType,
-                  getTemplate,
-                  templateTypes
+                  templateTypes,
+                  gitDetails,
+                  storeMetadata
                 },
                 { useArrows: false, darkMode: false, fixedPosition: false }
               )
@@ -181,8 +185,9 @@ export const getNodeListenersOld = (
                   stagesMap,
                   renderPipelineStage,
                   contextType,
-                  getTemplate,
-                  templateTypes
+                  templateTypes,
+                  gitDetails,
+                  storeMetadata
                 },
                 { useArrows: false, darkMode: false, fixedPosition: false }
               )
@@ -221,8 +226,9 @@ export const getNodeListenersOld = (
             stagesMap,
             renderPipelineStage,
             contextType,
-            getTemplate,
-            templateTypes
+            templateTypes,
+            gitDetails,
+            storeMetadata
           },
           { useArrows: false, darkMode: false, fixedPosition: false },
           eventTemp.callback
@@ -313,8 +319,9 @@ export const getNodeListenersOld = (
             stagesMap,
             renderPipelineStage,
             contextType,
-            getTemplate,
-            templateTypes
+            templateTypes,
+            gitDetails,
+            storeMetadata
           },
           { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' },
           noop,
@@ -347,11 +354,10 @@ export const getLinkListernersOld = (
   openSplitView: boolean,
   updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
   confirmMoveStage: () => void,
-  getTemplate: PipelineContextInterface['getTemplate'],
   stageMap: Map<string, StageState>
 ): LinkModelListener => {
   const {
-    state: { pipeline, templateTypes },
+    state: { pipeline, templateTypes, gitDetails, storeMetadata },
     contextType = 'Pipeline',
     stagesMap,
     renderPipelineStage,
@@ -371,8 +377,9 @@ export const getLinkListernersOld = (
             stagesMap,
             renderPipelineStage,
             contextType,
-            getTemplate,
-            templateTypes
+            templateTypes,
+            gitDetails,
+            storeMetadata
           },
           { useArrows: false, darkMode: false, fixedPosition: openSplitView }
         )

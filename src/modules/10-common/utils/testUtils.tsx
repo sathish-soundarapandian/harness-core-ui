@@ -13,7 +13,7 @@ import { createMemoryHistory } from 'history'
 import { Router, Route, Switch, useLocation, useHistory } from 'react-router-dom'
 import { ModalProvider } from '@harness/use-modal'
 import qs from 'qs'
-
+import { noop } from 'lodash-es'
 import { enableMapSet } from 'immer'
 import { AppStoreContext, AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
 import { LicenseStoreContext, LicenseStoreContextProps } from 'framework/LicenseStore/LicenseStoreContext'
@@ -30,6 +30,10 @@ import { PermissionsContext, PermissionsContextProps } from 'framework/rbac/Perm
 import { Editions } from '@common/constants/SubscriptionTypes'
 import type { FeatureFlag } from '@common/featureFlags'
 import { PreferenceStoreContext } from 'framework/PreferenceStore/PreferenceStoreContext'
+import {
+  TemplateSelectorContext,
+  TemplatesSelectorContextInterface
+} from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 
 export type UseGetMockData<TData, TError = undefined, TQueryParams = undefined, TPathParams = undefined> = Required<
   UseGetProps<TData, TError, TQueryParams, TPathParams>
@@ -61,6 +65,7 @@ export interface TestWrapperProps {
   defaultAppStoreValues?: Partial<AppStoreContextProps>
   defaultLicenseStoreValues?: Partial<LicenseStoreContextProps>
   defaultPermissionValues?: Partial<PermissionsContextProps>
+  defaultTemplateSelectorValues?: Partial<TemplatesSelectorContextInterface>
   defaultFeaturesValues?: Partial<FeaturesContextProps>
   defaultFeatureFlagValues?: Partial<Record<FeatureFlag, boolean>>
   projects?: Project[]
@@ -122,6 +127,7 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
     queryParams = {},
     defaultLicenseStoreValues,
     defaultPermissionValues,
+    defaultTemplateSelectorValues,
     defaultFeaturesValues,
     defaultFeatureFlagValues = {},
     stringsData = {},
@@ -149,9 +155,9 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
       <StringsContext.Provider value={{ data: stringsData as any, getString }}>
         <PreferenceStoreContext.Provider
           value={{
-            set: jest.fn(),
-            get: jest.fn(),
-            clear: jest.fn()
+            set: noop,
+            get: noop,
+            clear: noop
           }}
         >
           <AppStoreContext.Provider
@@ -211,18 +217,34 @@ export const TestWrapper: React.FC<TestWrapperProps> = props => {
                   }}
                 >
                   <ModalProvider>
-                    <RestfulProvider base="/">
-                      <BrowserView enable={props.enableBrowserView}>
-                        <Switch>
-                          <Route exact path={path}>
-                            {props.children}
-                          </Route>
-                          <Route>
-                            <CurrentLocation />
-                          </Route>
-                        </Switch>
-                      </BrowserView>
-                    </RestfulProvider>
+                    <TemplateSelectorContext.Provider
+                      value={{
+                        state: {
+                          isDrawerOpened: false,
+                          selectorData: {
+                            templateType: 'Step',
+                            onSubmit: jest.fn(),
+                            onCancel: jest.fn()
+                          }
+                        },
+                        openTemplateSelector: jest.fn(),
+                        closeTemplateSelector: jest.fn(),
+                        ...defaultTemplateSelectorValues
+                      }}
+                    >
+                      <RestfulProvider base="/">
+                        <BrowserView enable={props.enableBrowserView}>
+                          <Switch>
+                            <Route exact path={path}>
+                              {props.children}
+                            </Route>
+                            <Route>
+                              <CurrentLocation />
+                            </Route>
+                          </Switch>
+                        </BrowserView>
+                      </RestfulProvider>
+                    </TemplateSelectorContext.Provider>
                   </ModalProvider>
                 </FeaturesContext.Provider>
               </PermissionsContext.Provider>

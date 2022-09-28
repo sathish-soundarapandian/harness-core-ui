@@ -4,7 +4,6 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import React, { useLayoutEffect, useMemo, useRef, useState, useEffect, useCallback } from 'react'
 import { defaultTo } from 'lodash-es'
 import { Button, ButtonSize, ButtonVariation, Container, Layout } from '@wings-software/uicore'
@@ -45,7 +44,8 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
   resetFocus,
   maxSliderWidth,
   hideSlider,
-  onZoom
+  onZoom,
+  setDefaultSlider
 }) => {
   const { getString } = useStrings()
   const mainRef = useRef<HTMLDivElement>(null)
@@ -115,6 +115,32 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
     }
   }, [hideSlider, initialSliderWidth])
 
+  useEffect(() => {
+    if (setDefaultSlider) {
+      const offset = containerWidth - initialSliderWidth
+      setSliderAspects({
+        width: initialSliderWidth,
+        leftOffset: offset,
+        rightHandlePosition: initialSliderWidth - INITIAL_RIGHT_SLIDER_OFFSET,
+        leftHandlePosition: LEFT_SLIDER_OFFSET
+      })
+      const startX = Math.max(0, offset)
+      const endX = Math.min(containerWidth, initialSliderWidth + offset)
+      const startXPercentage = startX / containerWidth
+      const endXPercentage = endX / containerWidth
+      if (startXPercentage && endXPercentage) {
+        setTimeout(() => {
+          onSliderDragEnd?.({
+            startX,
+            endX,
+            startXPercentage,
+            endXPercentage
+          })
+        }, 500)
+      }
+    }
+  }, [containerWidth, setDefaultSlider, initialSliderWidth, onSliderDragEnd])
+
   const containerStyles = useMemo(
     () => ({ width: initialContainerWidth, left: leftContainerOffset }),
     [initialContainerWidth, leftContainerOffset]
@@ -169,7 +195,15 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
           }}
           onDrag={e => {
             const draggableEvent = e as MouseEvent
-            if (isLeftHandleWithinBounds({ draggableEvent, leftOffset, minSliderWidth, width, maxSliderWidth })) {
+            if (
+              isLeftHandleWithinBounds({
+                draggableEvent,
+                leftOffset,
+                minSliderWidth,
+                width,
+                maxSliderWidth
+              })
+            ) {
               setSliderAspects(currAspects => calculateSliderAspectsOnLeftHandleDrag(currAspects, draggableEvent))
             }
           }}

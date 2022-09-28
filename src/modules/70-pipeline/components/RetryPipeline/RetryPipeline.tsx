@@ -24,14 +24,13 @@ import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { parse } from 'yaml'
-import { isEmpty, pick } from 'lodash-es'
+import { get, isEmpty, pick, remove } from 'lodash-es'
 import type { FormikErrors } from 'formik'
 import { Classes, Dialog, Tooltip } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 
 import {
   getInputSetForPipelinePromise,
@@ -60,24 +59,30 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
-import type { StoreType } from '@common/constants/GitSyncTypes'
-import { getFeaturePropsForRunPipelineButton, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
-import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import {
+  clearRuntimeInput,
+  getFeaturePropsForRunPipelineButton,
+  mergeTemplateWithInputSetData
+} from '@pipeline/utils/runPipelineUtils'
+import type { InputSet, InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { getErrorsList } from '@pipeline/utils/errorUtils'
+import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import GitPopover from '../GitPopover/GitPopover'
 import SelectStagetoRetry from './SelectStagetoRetry'
-import { YamlBuilderMemo } from '../PipelineStudio/PipelineYamlView/PipelineYamlView'
 import factory from '../PipelineSteps/PipelineStepFactory'
 
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { StepViewType } from '../AbstractSteps/Step'
-import { clearRuntimeInput, getErrorsList, validatePipeline } from '../PipelineStudio/StepUtil'
-
+import { validatePipeline } from '../PipelineStudio/StepUtil'
 import SaveAsInputSet from '../RunPipelineModal/SaveAsInputSet'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
 import SelectExistingInputsOrProvideNew from '../RunPipelineModal/SelectExistingOrProvide'
@@ -101,14 +106,26 @@ function RetryPipeline({
   modules,
   onClose
 }: RetryPipelineProps): React.ReactElement {
-  const { isGitSyncEnabled } = useAppStore()
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingGitSimplification
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
   const { showSuccess, showWarning, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const history = useHistory()
 
-  const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, executionIdentifier, module } =
-    useParams<PipelineType<ExecutionPathProps>>()
+  const {
+    projectIdentifier,
+    orgIdentifier,
+    pipelineIdentifier,
+    accountId,
+    executionIdentifier,
+    module,
+    source = 'executions'
+  } = useParams<PipelineType<ExecutionPathProps>>()
 
   const { pipelineExecutionDetail } = useExecutionContext()
 
@@ -118,6 +135,7 @@ function RetryPipeline({
   const branch = pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch
   const connectorRef = pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef
   const storeType = pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
+  const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const { inputSetType, inputSetValue, inputSetLabel, inputSetRepoIdentifier, inputSetBranch } = useQueryParams<
     GitQueryParams & RunPipelineQueryParams
   >()
@@ -161,9 +179,11 @@ function RetryPipeline({
   const [triggerValidation, setTriggerValidation] = useState(false)
   const [listOfSelectedStages, setListOfSelectedStages] = useState<Array<string>>([])
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>()
+  const [invalidInputSetIds, setInvalidInputSetIds] = useState<Array<string>>([])
+  const [loadingSingleInputSet, setLoadingSingleInputSet] = useState<boolean>(false)
 
   const yamlTemplate = React.useMemo(() => {
-    return parse(inputSetTemplateYaml || '')?.pipeline
+    return parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline
   }, [inputSetTemplateYaml])
 
   /*------------------------------------------------API Calls------------------------------*/
@@ -176,7 +196,9 @@ function RetryPipeline({
       projectIdentifier,
       repoIdentifier,
       branch,
-      getTemplatesResolvedPipeline: true
+      getTemplatesResolvedPipeline: true,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     }
   })
 
@@ -277,12 +299,14 @@ function RetryPipeline({
       pipelineIdentifier: pipelineId,
       repoIdentifier,
       branch,
-      getDefaultFromOtherRepo: true
+      getDefaultFromOtherRepo: true,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoIdentifier
     }
   })
   /*------------------------------------------------API Calls------------------------------*/
 
-  const pipeline: PipelineInfoConfig | undefined = parse(pipelineResponse?.data?.yamlPipeline || '')?.pipeline
+  const pipeline: PipelineInfoConfig | undefined = parse<Pipeline>(pipelineResponse?.data?.yamlPipeline || '')?.pipeline
   const valuesPipelineRef = useRef<PipelineInfoConfig>()
   const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
     fileName: `retry-pipeline.yaml`,
@@ -311,10 +335,15 @@ function RetryPipeline({
   )
   const inputSets = inputSetResponse?.data?.content
 
+  const onReconcile = (inpSetId: string): void => {
+    remove(invalidInputSetIds, id => id === inpSetId)
+    setInvalidInputSetIds(invalidInputSetIds)
+  }
+
   React.useEffect(() => {
     const mergedPipelineYaml = pipelineResponse?.data?.resolvedTemplatesPipelineYaml
     if (mergedPipelineYaml) {
-      setResolvedPipeline(parse(mergedPipelineYaml)?.pipeline)
+      setResolvedPipeline(parse<Pipeline>(mergedPipelineYaml)?.pipeline)
     }
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
@@ -336,7 +365,7 @@ function RetryPipeline({
 
   useEffect(() => {
     if (inputSetYaml) {
-      const parsedYAML = parse(inputSetYaml)
+      const parsedYAML = parse<Pipeline>(inputSetYaml)
       setExistingProvide('provide')
       setCurrentPipeline(parsedYAML)
     }
@@ -359,7 +388,7 @@ function RetryPipeline({
             const data = await mergeInputSet({
               inputSetReferences: selectedInputSets.map(item => item.value as string)
             })
-            if (data?.data?.pipelineYaml) {
+            if (!data?.data?.errorResponse && data?.data?.pipelineYaml) {
               const inputSetPortion = parse(data.data.pipelineYaml) as {
                 pipeline: PipelineInfoConfig
               }
@@ -370,7 +399,10 @@ function RetryPipeline({
                 shouldUseDefaultValues: false
               })
               setCurrentPipeline(toBeUpdated)
+            } else if (data?.data?.errorResponse) {
+              setSelectedInputSets([])
             }
+            setInvalidInputSetIds(get(data?.data, 'inputSetErrorWrapper.invalidInputSetReferences', []))
           } catch (e) {
             showError(getRBACErrorMessage(e), undefined, 'pipeline.feth.inputSetTemplateYaml.error')
           }
@@ -389,9 +421,9 @@ function RetryPipeline({
               branch: selectedInputSets[0]?.gitDetails?.branch
             }
           })
-          if (data?.data?.inputSetYaml) {
+          if (data?.data && !isInputSetInvalid(data?.data) && data?.data?.inputSetYaml) {
             if (selectedInputSets[0].type === 'INPUT_SET') {
-              const inputSetPortion = pick(parse(data.data.inputSetYaml)?.inputSet, 'pipeline') as {
+              const inputSetPortion = pick(parse<InputSet>(data.data.inputSetYaml)?.inputSet, 'pipeline') as {
                 pipeline: PipelineInfoConfig
               }
               const toBeUpdated = mergeTemplateWithInputSetData({
@@ -402,9 +434,21 @@ function RetryPipeline({
               })
               setCurrentPipeline(toBeUpdated)
             }
+            setInvalidInputSetIds([])
+          } else if (data?.data && isInputSetInvalid(data?.data)) {
+            const invalidId: string = get(data, 'data.identifier', '')
+            setSelectedInputSets([])
+            setInvalidInputSetIds(isEmpty(invalidId) ? [] : [invalidId])
           }
         }
-        fetchData()
+        setLoadingSingleInputSet(true)
+        try {
+          fetchData()
+            .then(() => setLoadingSingleInputSet(false))
+            .catch(() => setLoadingSingleInputSet(false))
+        } catch (e) {
+          setLoadingSingleInputSet(false)
+        }
       } else if (!selectedInputSets?.length && !inputSetYaml?.length) {
         setCurrentPipeline(parsedTemplate)
       }
@@ -425,7 +469,7 @@ function RetryPipeline({
     ) {
       errors = validatePipeline({
         pipeline: { ...clearRuntimeInput(currentPipeline.pipeline) },
-        template: parse(inputSetTemplateYaml || '')?.pipeline,
+        template: parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline,
         originalPipeline: currentPipeline.pipeline,
         getString,
         viewType: StepViewType.DeploymentForm
@@ -465,7 +509,8 @@ function RetryPipeline({
                 projectIdentifier,
                 executionIdentifier: retryPipelineData?.planExecution?.uuid || '',
                 accountId,
-                module
+                module,
+                source
               })
             )
           }
@@ -576,11 +621,15 @@ function RetryPipeline({
   }, [isParallelStage, isAllStage, selectedStage])
 
   const renderPipelineInputSetForm = (): React.ReactElement | undefined => {
-    if (loadingUpdate) {
+    if (loadingUpdate || loadingSingleInputSet) {
       return (
         <PageSpinner
           className={css.inputSetsUpdatingSpinner}
-          message={getString('pipeline.inputSets.applyingInputSets')}
+          message={
+            loadingSingleInputSet
+              ? getString('pipeline.inputSets.applyingInputSet')
+              : getString('pipeline.inputSets.applyingInputSets')
+          }
         />
       )
     }
@@ -591,7 +640,7 @@ function RetryPipeline({
           {existingProvide === 'existing' ? <div className={css.divider} /> : null}
           <PipelineInputSetForm
             originalPipeline={resolvedPipeline}
-            template={parse(templateSource)?.pipeline}
+            template={parse<Pipeline>(templateSource)?.pipeline}
             readonly={false}
             path=""
             viewType={StepViewType.DeploymentForm}
@@ -648,7 +697,7 @@ function RetryPipeline({
               const validatedErrors =
                 (validatePipeline({
                   pipeline: values as PipelineInfoConfig,
-                  template: parse(inputSetTemplateYaml || '')?.pipeline,
+                  template: parse<Pipeline>(inputSetTemplateYaml || '')?.pipeline,
                   originalPipeline: pipeline,
                   getString,
                   viewType: StepViewType.DeploymentForm
@@ -680,13 +729,23 @@ function RetryPipeline({
                 >
                   {getString('pipeline.retryPipeline')}
                 </Heading>
-                {isGitSyncEnabled && (
-                  <GitSyncStoreProvider>
-                    <GitPopover
-                      data={pipelineResponse?.data?.gitDetails ?? {}}
-                      iconProps={{ margin: { left: 'small', top: 'xsmall' } }}
-                    />
-                  </GitSyncStoreProvider>
+                {isPipelineRemote ? (
+                  <GitRemoteDetails
+                    repoName={repoIdentifier}
+                    branch={branch}
+                    filePath={pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.filePath}
+                    fileUrl={pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.fileUrl}
+                    flags={{ readOnly: true }}
+                  />
+                ) : (
+                  isGitSyncEnabled && (
+                    <GitSyncStoreProvider>
+                      <GitPopover
+                        data={pipelineResponse?.data?.gitDetails ?? {}}
+                        iconProps={{ margin: { left: 'small', top: 'xsmall' } }}
+                      />
+                    </GitSyncStoreProvider>
+                  )
                 )}
                 <div className={css.optionBtns}>
                   <VisualYamlToggle
@@ -741,6 +800,11 @@ function RetryPipeline({
                                 setSelectedInputSets(inputsets)
                               }}
                               value={selectedInputSets}
+                              pipelineGitDetails={get(pipelineResponse, 'data.gitDetails')}
+                              invalidInputSetReferences={invalidInputSetIds}
+                              loadingMergeInputSets={loadingUpdate || loadingSingleInputSet}
+                              isRetryPipelineForm={true}
+                              onReconcile={onReconcile}
                             />
                           </GitSyncStoreProvider>
                         )}

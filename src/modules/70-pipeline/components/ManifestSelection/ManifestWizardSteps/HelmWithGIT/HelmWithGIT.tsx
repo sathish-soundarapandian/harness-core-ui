@@ -16,7 +16,8 @@ import {
   Text,
   StepProps,
   Accordion,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -40,7 +41,7 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
-import { getRepositoryName, handleCommandFlagsSubmitData } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName, handleCommandFlagsSubmitData } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from './HelmWithGIT.module.scss'
@@ -48,7 +49,7 @@ import helmcss from './HelmWithGIT.module.scss'
 interface HelmWithGITPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -85,7 +86,7 @@ function HelmWithGIT({
         : prevStepData?.url
       : null
 
-  const getInitialValues = React.useCallback((): HelmWithGITDataType => {
+  const getInitialValues = (): HelmWithGITDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -118,7 +119,7 @@ function HelmWithGIT({
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
       repoName: getRepositoryName(prevStepData, initialValues)
     }
-  }, [])
+  }
 
   const submitFormData = (formData: HelmWithGITDataType & { store?: string; connectorRef?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
@@ -340,7 +341,12 @@ function HelmWithGIT({
                   <FormInput.Select name="helmVersion" label={getString('helmVersion')} items={helmVersions} />
                 </div>
               </Layout.Horizontal>
-              <div className={helmcss.halfWidth}>
+              <div
+                className={cx({
+                  [helmcss.runtimeInput]:
+                    getMultiTypeFromValue(formik.values?.folderPath) === MultiTypeInputType.RUNTIME
+                })}
+              >
                 <DragnDropPaths
                   formik={formik}
                   expressions={expressions}
@@ -348,7 +354,21 @@ function HelmWithGIT({
                   fieldPath="valuesPaths"
                   pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                  dragDropFieldWidth={filePathWidth}
                 />
+                {getMultiTypeFromValue(formik.values.valuesPaths) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={formik.values.valuesPaths}
+                    type={getString('string')}
+                    variableName={'valuesPaths'}
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    onChange={val => formik?.setFieldValue('valuesPaths', val)}
+                    isReadonly={isReadonly}
+                  />
+                )}
               </div>
               <Accordion
                 activeId={isActiveAdvancedStep ? getString('advancedTitle') : ''}

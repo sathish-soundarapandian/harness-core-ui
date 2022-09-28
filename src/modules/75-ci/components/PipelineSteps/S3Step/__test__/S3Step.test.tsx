@@ -234,6 +234,17 @@ describe('S3 Step', () => {
                   localName: 'step.s3.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.s3.identifier',
+                      localName: 'step.s3.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-timeout': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.s3.timeout',
@@ -298,6 +309,7 @@ describe('S3 Step', () => {
             },
             variablesData: {
               type: StepType.S3,
+              __uuid: 'step-identifier',
               identifier: 's3',
               name: 'step-name',
               timeout: 'step-timeout',

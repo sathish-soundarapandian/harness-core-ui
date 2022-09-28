@@ -1,0 +1,85 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.addMarginTop {
+  margin-top: var(--spacing-medium) !important;
+}
+
+.addMarginBottom {
+  margin-bottom: var(--spacing-medium) !important;
+}
+
+.divider {
+  width: 100%;
+  margin-top: var(--spacing-3);
+  margin-bottom: var(--spacing-5);
+  border-top: 0.5px solid var(--grey-200);
+}
+
+.configPlaceHolder {
+  color: var(--primary-7) !important;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+}
+
+.scopeField {
+  display: flex;
+  justify-content: space-between;
+  width: 100% !important;
+  height: 32px;
+  background: var(--white);
+  border: 1px solid var(--grey-200);
+  border-radius: 4px;
+  align-items: center;
+  padding: 10px;
+}
+
+.templateLabel {
+  display: flex;
+  flex-direction: row;
+  align-self: flex-start;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--grey-600) !important;
+}
+
+.scopeSelect {
+  position: absolute;
+  right: 0;
+}
+
+.scopeDropdown {
+  width: 100%;
+  border: none;
+  background-color: unset;
+  font-size: var(--font-size-normal);
+  font-weight: 400 !important;
+  color: var(--grey-600) !important;
+}
+
+.inputWidth {
+  width: 350px;
+}
+
+.formikError {
+  color: var(--red-600) !important;
+}
+
+.scopeDropdown {
+  :global {
+    .bp3-input-group {
+      width: 384px !important;
+    }
+  }
+}
+
+.connectorConfigOptions {
+  margin-left: 0 !important;
+}

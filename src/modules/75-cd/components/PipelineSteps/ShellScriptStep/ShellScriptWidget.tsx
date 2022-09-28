@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Accordion, Formik, MultiTypeInputType } from '@wings-software/uicore'
+import { Accordion, AllowedTypes, Formik } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 
@@ -30,7 +30,7 @@ interface ShellScriptWidgetProps {
   initialValues: ShellScriptFormData
   onUpdate?: (data: ShellScriptFormData) => void
   onChange?: (data: ShellScriptFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   stepViewType?: StepViewType
   isNewStep?: boolean
@@ -56,7 +56,7 @@ export function ShellScriptWidget(
       shell: Yup.string().trim().required(getString('validation.scriptTypeRequired')),
       source: Yup.object().shape({
         spec: Yup.object().shape({
-          script: Yup.string().trim().required(getString('cd.scriptRequired'))
+          script: Yup.string().trim().required(getString('common.scriptRequired'))
         })
       }),
       environmentVariables: variableSchema(getString),
@@ -71,7 +71,9 @@ export function ShellScriptWidget(
       ...initialValues.spec,
       executionTarget: {
         ...initialValues.spec.executionTarget,
-        connectorRef: undefined
+        connectorRef:
+          (initialValues.spec.executionTarget?.connectorRef?.value as string) ||
+          initialValues.spec.executionTarget?.connectorRef?.toString()
       }
     }
   }

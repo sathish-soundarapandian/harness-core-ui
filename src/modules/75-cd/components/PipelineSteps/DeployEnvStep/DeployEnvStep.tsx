@@ -24,7 +24,9 @@ import {
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
   getErrorInfoFromErrorObject,
-  Container
+  Container,
+  PageSpinner,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import * as Yup from 'yup'
@@ -48,7 +50,7 @@ import {
   useGetYamlSchema
 } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import { NameIdDescriptionTags, PageSpinner } from '@common/components'
+import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -74,6 +76,7 @@ import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { getEnvironmentRefSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import { Category, EnvironmentActions, ExitModalActions } from '@common/constants/TrackingConstants'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import css from './DeployEnvStep.module.scss'
@@ -237,11 +240,10 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
     },
     [yamlHandler?.getLatestYaml, data]
   )
-  if (createLoading || updateLoading) {
-    return <PageSpinner />
-  }
+
   return (
     <>
+      {(createLoading || updateLoading) && <PageSpinner />}
       <Container className={css.yamlToggleEnv}>
         <Layout.Horizontal flex={{ justifyContent: flexStart }} padding={{ top: 'small' }}>
           <VisualYamlToggle
@@ -376,7 +378,7 @@ export interface DeployEnvironmentProps {
     path?: string
     readonly?: boolean
   }
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 interface DeployEnvironmentState {
@@ -913,7 +915,7 @@ export class DeployEnvironmentStep extends Step<DeployEnvData> {
   }
   renderStep(props: StepProps<DeployEnvData>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, readonly = false, allowableTypes } = props
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (isTemplatizedView(stepViewType)) {
       return (
         <DeployEnvironmentInputStepFormik
           initialValues={initialValues}

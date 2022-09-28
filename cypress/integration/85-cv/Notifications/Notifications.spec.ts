@@ -21,7 +21,13 @@ import {
   getMonitoredService,
   getMonitoredServiceResponse,
   createNotification,
-  createNotificationResponse
+  createNotificationResponse,
+  getServicesCall,
+  getEnvironmentsCall,
+  getServicesCallResponse,
+  getEnvironmentsCallResponse,
+  createMonitoredServiceNotificationResponse,
+  saveMonitoredServiceCall
 } from '../../../support/85-cv/slos/constants'
 
 describe('Create SLO with Notifications', () => {
@@ -100,10 +106,10 @@ describe('Create SLO with Notifications', () => {
     // Adding Notification
     cy.contains('span', 'New Notification Rule').click({ force: true })
 
-    cy.get('input[name="name"]').type('slo-notification')
+    cy.get('input[name="name"]').type('notification')
     cy.contains('span', 'Continue').click({ force: true })
 
-    cy.get('input[name="condition"]').click({ force: true })
+    cy.get('input[name="conditions.0.condition"]').click({ force: true })
     cy.contains('p', 'Error Budget Burn Rate is above').click({ force: true })
 
     cy.get('input[placeholder="%"]').type('5')
@@ -119,14 +125,66 @@ describe('Create SLO with Notifications', () => {
 
     cy.contains('span', 'Finish').click({ force: true })
 
-    cy.contains('p', 'slo-notification').should('be.visible')
+    cy.contains('p', 'notification').should('be.visible')
     cy.contains('p', 'SLO').should('be.visible')
     cy.contains('p', 'Slack').should('be.visible')
-    cy.contains('span', 'Notification slo-notification has been successfully created').should('be.visible')
+    cy.contains('span', 'Notification notification has been successfully created').should('be.visible')
 
     cy.contains('span', 'Save').click({ force: true })
 
     cy.wait('@saveSLO')
     cy.contains('span', 'SLO created successfully').should('be.visible')
+  })
+
+  it('should be able to create Notifications with Monitored Service', () => {
+    cy.intercept('GET', listSLOsCall, listSLOsCallResponse)
+    cy.intercept('POST', createNotification, createMonitoredServiceNotificationResponse)
+    cy.intercept('GET', getServicesCall, getServicesCallResponse)
+    cy.intercept('GET', getEnvironmentsCall, getEnvironmentsCallResponse)
+
+    // Going to Monitored service page
+    cy.contains('p', 'Monitored Services').click()
+    cy.contains('span', 'New Monitored Service').click()
+
+    cy.intercept('POST', saveMonitoredServiceCall, { statusCode: 200 }).as('saveMonitoredService')
+    cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse).as('updatedListSLOsCallResponse')
+
+    // Adding Notification
+    cy.contains('span', 'New Notification Rule').click({ force: true })
+
+    cy.get('input[name="name"]').eq(1).type('notification')
+    cy.contains('span', 'Continue').click({ force: true })
+
+    cy.get('input[name="conditions.0.condition"]').click({ force: true })
+    cy.contains('p', 'Health Score').click({ force: true })
+
+    cy.get('input[type="number"]').type('80')
+    cy.get('input[placeholder="min"]').type('60')
+    cy.contains('span', 'Continue').click({ force: true })
+
+    cy.get('[data-testid="notificationType"]').click({ force: true })
+    cy.contains('p', 'Slack').click({ force: true })
+
+    cy.get('input[name="webhookUrl"]').type(
+      'https://hooks.slack.com/services/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'
+    )
+
+    cy.contains('span', 'Finish').click({ force: true })
+
+    cy.contains('p', 'notification').should('be.visible')
+    cy.contains('p', 'Service Health').should('be.visible')
+    cy.contains('p', 'Slack').should('be.visible')
+    cy.contains('span', 'Notification notification has been successfully created').should('be.visible')
+
+    cy.get('input[placeholder="Select or create a service"]').click()
+    cy.contains('p', 'service-200').click({ force: true })
+
+    cy.get('input[placeholder="Select or create an environment"]').click()
+    cy.contains('p', 'env-1').click({ force: true })
+
+    cy.contains('span', 'Save').click({ force: true })
+
+    cy.wait('@saveMonitoredService')
+    cy.contains('span', 'Monitored Service created').should('be.visible')
   })
 })

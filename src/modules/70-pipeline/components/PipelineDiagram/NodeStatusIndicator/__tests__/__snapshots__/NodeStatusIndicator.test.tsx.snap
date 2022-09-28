@@ -1,0 +1,131 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Node Status Indicator Test Should render diagramnodes 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main stepCountWrapper"
+  >
+    <div
+      class="stepCount"
+      data-status="success"
+    >
+      <span
+        class="bp3-icon StyledProps--main"
+        data-icon="success-tick"
+      >
+        <svg
+          fill="none"
+          height="14"
+          viewBox="0 0 32 32"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M16 28.995c-7.18 0-13-5.82-13-13s5.82-13 13-13 13 5.82 13 13-5.82 13-13 13zm7.261-16.118a1 1 0 10-1.327-1.496l-6.82 6.049-3.242-3.206a1 1 0 10-1.406 1.422l3.909 3.864.665.659.701-.622 7.52-6.67z"
+            fill="#42AB45"
+            fill-rule="evenodd"
+          />
+          <path
+            clip-rule="evenodd"
+            d="M15.004 21.538l8.92-7.913a2 2 0 10-2.653-2.992l.663.748a1 1 0 111.327 1.496l-8.22 7.292-4.575-4.523a1 1 0 111.406-1.422l3.243 3.206 6.82-6.05-.664-.747-6.12 5.427-2.576-2.548a2 2 0 00-2.813 2.845l5.242 5.181zM16 27.995c-6.627 0-12-5.373-12-12 0-6.628 5.373-12 12-12 6.628 0 12 5.372 12 12 0 6.627-5.372 12-12 12zm-13-12c0 7.18 5.82 13 13 13s13-5.82 13-13-5.82-13-13-13-13 5.82-13 13z"
+            fill="#42AB45"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+      1
+    </div>
+    <div
+      class="stepCount"
+      data-status="running"
+    >
+      <span
+        class="bp3-icon StyledProps--main"
+        data-icon="loading"
+      >
+        <svg
+          height="14"
+          viewBox="0 0 10 8"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            fill="currentColor"
+            r="1"
+            transform="translate(2 4)"
+          >
+            <animatetransform
+              additive="sum"
+              attributeName="transform"
+              begin="0s"
+              dur="1s"
+              repeatCount="indefinite"
+              type="scale"
+              values="0; 1.25; 0"
+            />
+          </circle>
+          <circle
+            fill="currentColor"
+            r="1"
+            transform="translate(5 4)"
+          >
+            <animatetransform
+              additive="sum"
+              attributeName="transform"
+              begin="0.2s"
+              dur="1s"
+              repeatCount="indefinite"
+              type="scale"
+              values="0; 1.25; 0"
+            />
+          </circle>
+          <circle
+            fill="currentColor"
+            r="1"
+            transform="translate(8 4)"
+          >
+            <animatetransform
+              additive="sum"
+              attributeName="transform"
+              begin="0.4s"
+              dur="1s"
+              repeatCount="indefinite"
+              type="scale"
+              values="0; 1.25; 0"
+            />
+          </circle>
+        </svg>
+      </span>
+      1
+    </div>
+    <div
+      class="stepCount"
+      data-status="failed"
+    >
+      <span
+        class="bp3-icon StyledProps--main"
+        data-icon="execution-warning"
+        data-status="failed"
+      >
+        <svg
+          fill="currentColor"
+          height="16"
+          viewBox="0 0 19 15"
+          width="16"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            color="#fff"
+            d="M15.964 15H3.027C.702 15-.737 12.787.392 11.021L6.29 1.339c1.152-1.785 5.261-1.785 6.412 0l5.897 9.682C19.75 12.768 18.288 15 15.964 15z"
+          />
+          <path
+            d="M4.23 13.75h10.408c1.713 0 2.79-1.77 1.941-3.157l-5.22-8.53c-.848-1.417-3.002-1.417-3.85 0l-5.22 8.53c-.832 1.402.229 3.157 1.941 3.157zm5.22-1.894c-.456 0-.832-.354-.832-.785 0-.431.376-.786.832-.786.457 0 .832.354.816.801.016.416-.375.77-.816.77zm-.212-7.083c.392-.093.8.092.963.446.049.123.081.247.081.385-.016.385-.049.785-.081 1.17-.033.601-.082 1.217-.114 1.817-.017.2-.017.37-.017.57a.6.6 0 01-.62.57c-.342 0-.603-.231-.62-.554-.048-.94-.114-1.879-.163-2.818l-.049-.755a.82.82 0 01.62-.831z"
+          />
+        </svg>
+      </span>
+      1
+    </div>
+  </div>
+</div>
+`;

@@ -6,22 +6,25 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormInput } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormInput, AllowedTypes } from '@wings-software/uicore'
 import { isEmpty, isArray } from 'lodash-es'
 import cx from 'classnames'
 
 import { FieldArray } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import type { HttpStepFormData, HttpStepData, HttpStepHeaderConfig, HttpStepOutputVariable } from './types'
 import { httpStepType } from './HttpStepBase'
+
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './HttpStep.module.scss'
+
 export interface HttpInputSetStepProps {
   initialValues: HttpStepFormData
   onUpdate?: (data: HttpStepFormData) => void
@@ -29,7 +32,7 @@ export interface HttpInputSetStepProps {
   readonly?: boolean
   template?: HttpStepData
   path: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export default function HttpInputSetStep(props: HttpInputSetStepProps): React.ReactElement {
@@ -42,7 +45,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
     <React.Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${prefix}timeout`}
             multiTypeDurationProps={{
@@ -52,12 +55,14 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
               allowableTypes
             }}
             disabled={readonly}
+            fieldPath={'timeout'}
+            template={template}
           />
         </div>
       ) : null}
       {getMultiTypeFromValue(template?.spec?.url) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             label={getString('UrlLabel')}
             placeholder={getString('pipeline.utilitiesStep.url')}
             name={`${prefix}spec.url`}
@@ -67,15 +72,19 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
               allowableTypes
             }}
             disabled={readonly}
+            fieldPath={'spec.url'}
+            template={template}
           />
         </div>
       ) : null}
       {getMultiTypeFromValue(template?.spec?.method) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormInput.MultiTypeInput
+          <SelectInputSetView
             label={getString('methodLabel')}
             name={`${prefix}spec.method`}
-            useValue
+            useValue={true}
+            fieldPath={'spec.method'}
+            template={template}
             selectItems={httpStepType}
             multiTypeInputProps={{
               expressions,
@@ -189,7 +198,7 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
                             placeholder={getString('valueLabel')}
                             disabled={readonly}
                             multiTextInputProps={{
-                              allowableTypes: allowableTypes,
+                              allowableTypes,
                               expressions,
                               disabled: readonly
                             }}

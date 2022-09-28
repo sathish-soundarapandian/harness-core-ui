@@ -8,6 +8,16 @@
 .container {
   --pipeline-form-blue: #89b1cc;
   max-width: 1000px;
+
+  :global(.bp3-icon) {
+    &[data-icon='rolling'] {
+      > svg {
+        path:nth-child(1) {
+          fill: var(--primary-6) !important;
+        }
+      }
+    }
+  }
 }
 
 .header {
@@ -106,5 +116,14 @@
 .infraSection {
   > div:not([data-name*='100width']) {
     width: 50%;
+  }
+}
+
+.strategyContainer {
+  .editor {
+    border: 1px solid var(--grey-200);
+    border-radius: var(--spacing-2);
+    padding: var(--spacing-5);
+    background: var(--white);
   }
 }

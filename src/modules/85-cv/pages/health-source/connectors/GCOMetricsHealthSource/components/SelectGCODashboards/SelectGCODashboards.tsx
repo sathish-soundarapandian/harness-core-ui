@@ -12,8 +12,9 @@ import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupS
 import MetricsDashboardList from '@cv/components/MetricsDashboardList/MetricsDashboardList'
 import type { TableDashboardItem } from '@cv/components/MetricsDashboardList/MetricsDashboardList.type'
 import { getSelectedDashboards } from '../../GCOMetricsHealthSource.utils'
+import type { SelectGCODashboardsInterface } from './SelectGCODashboards.types'
 
-export function SelectGCODashboards(): JSX.Element {
+export function SelectGCODashboards({ isTemplate, expressions }: SelectGCODashboardsInterface): JSX.Element {
   const { sourceData } = useContext(SetupSourceTabsContext)
   const dashboardItemMapper: (dashboard: StackdriverDashboardDTO & { id?: string }) => TableDashboardItem = useCallback(
     dashboard => {
@@ -37,6 +38,8 @@ export function SelectGCODashboards(): JSX.Element {
       tableTitle={'cv.monitoringSources.gco.selectDashboardsPage.dashboardColumnName'}
       selectedDashboardList={selectedDashboards || []}
       tableItemMapper={dashboardItemMapper}
+      isTemplate={isTemplate}
+      expressions={expressions}
     />
   )
 }

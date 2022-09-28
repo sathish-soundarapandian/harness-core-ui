@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { debounce, defaultTo } from 'lodash-es'
 import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
@@ -19,6 +19,7 @@ import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { FireEventMethod, NodeType } from '../../../types'
 import { getPositionOfAddIcon } from '../../utils'
+import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 
 const CODE_ICON: IconName = 'command-echo'
@@ -42,6 +43,8 @@ interface PipelineStageNodeProps {
   nextNode: any
   allowAdd?: boolean
   selectedNodeId?: string
+  showMarkers?: boolean
+  matrixNodeName?: boolean
 }
 function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const { getString } = useStrings()
@@ -49,6 +52,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
 
+  const showMarkers = defaultTo(props?.showMarkers, true)
   const stageStatus = defaultTo(props?.status, props?.data?.stage?.status as ExecutionStatus)
   const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
     stageStatus as ExecutionStatus,
@@ -60,7 +64,9 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
     }
     setVisibilityOfAdd(visibility)
   }
-
+  const debounceHideVisibility = debounce(() => {
+    setVisibilityOfAdd(false)
+  }, 300)
   const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
   const isTemplateNode = props?.data?.isTemplateNode
   return (
@@ -69,7 +75,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         draggable: !props.readonly
       })}
       onMouseOver={() => setAddVisibility(true)}
-      onMouseLeave={() => setAddVisibility(false)}
+      onMouseLeave={debounceHideVisibility}
       onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         event.stopPropagation()
         if (props?.onClick) {
@@ -98,7 +104,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         event.stopPropagation()
 
         if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
-          setAddVisibility(false)
+          debounceHideVisibility()
         }
       }}
       onDrop={event => {
@@ -117,9 +123,11 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
         })
       }}
     >
-      <div className={cx(defaultCss.markerStart, defaultCss.stageMarkerLeft)}>
-        <SVGMarker />
-      </div>
+      {showMarkers && (
+        <div className={cx(defaultCss.markerStart, defaultCss.stageMarkerLeft)}>
+          <SVGMarker />
+        </div>
+      )}
       <div
         id={props.id}
         data-nodeid={props.id}
@@ -152,7 +160,7 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
           })
         }}
         onMouseLeave={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-          setAddVisibility(false)
+          debounceHideVisibility()
           event.stopPropagation()
           props?.fireEvent?.({
             type: Event.MouseLeaveNode,
@@ -241,9 +249,11 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
           withoutCurrentColor={true}
         />
       </div>
-      <div className={cx(defaultCss.markerEnd, defaultCss.stageMarkerRight)}>
-        <SVGMarker />
-      </div>
+      {showMarkers && (
+        <div className={cx(defaultCss.markerEnd, defaultCss.stageMarkerRight)}>
+          <SVGMarker />
+        </div>
+      )}
       {props.name && (
         <div className={cx(defaultCss.nodeNameText, defaultCss.stageName)}>
           <Text
@@ -252,8 +262,13 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
             lineClamp={2}
+            tooltipProps={{ popoverClassName: props?.matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {props.name}
+            {props?.matrixNodeName ? (
+              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as unknown as string} />
+            ) : (
+              props.name
+            )}
           </Text>
         </div>
       )}
@@ -269,10 +284,27 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
           </Text>
         </div>
       )}
+      {props.data?.loopingStrategyEnabled && (
+        <div className={defaultCss.loopingStrategy}>
+          <Text
+            tooltip={getString('pipeline.loopingStrategy.title')}
+            tooltipProps={{
+              isDark: true
+            }}
+          >
+            <Icon
+              size={16}
+              name={'looping'}
+              {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
+            />
+          </Text>
+        </div>
+      )}
       {allowAdd && CreateNode && !props.readonly && showAddNode && (
         <CreateNode
           onMouseOver={() => setAddVisibility(true)}
-          onMouseLeave={() => setAddVisibility(false)}
+          onMouseLeave={debounceHideVisibility}
+          onDragLeave={debounceHideVisibility}
           onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             event.stopPropagation()
             props?.fireEvent?.({

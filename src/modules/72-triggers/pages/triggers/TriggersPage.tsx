@@ -7,11 +7,12 @@
 
 import React, { useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { parse } from 'yaml'
 import routes from '@common/RouteDefinitions'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { useGetPipelineSummary } from 'services/pipeline-ng'
+import { useGetPipeline, useGetPipelineSummary } from 'services/pipeline-ng'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useQueryParams } from '@common/hooks'
 import TriggersList from './views/TriggersList'
@@ -30,7 +31,7 @@ const TriggersPage: React.FC = (): React.ReactElement => {
   const history = useHistory()
   const { repoIdentifier, branch, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
   const onNewTriggerClick = (val: TriggerDataInterface): void => {
-    const { triggerType, sourceRepo, manifestType, artifactType } = val
+    const { triggerType, sourceRepo, manifestType, artifactType, scheduleType } = val
     history.push(
       routes.toTriggersWizardPage({
         accountId,
@@ -42,6 +43,7 @@ const TriggersPage: React.FC = (): React.ReactElement => {
         sourceRepo,
         manifestType,
         artifactType,
+        scheduleType,
         module,
         repoIdentifier,
         connectorRef,
@@ -63,16 +65,29 @@ const TriggersPage: React.FC = (): React.ReactElement => {
       branch
     }
   })
+  const { data: pipelineResponse } = useGetPipeline({
+    pipelineIdentifier,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      getTemplatesResolvedPipeline: true,
+      branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
+    }
+  })
+  const resolvedPipeline = parse(pipelineResponse?.data?.yamlPipeline || '')
 
   useDocumentTitle([pipeline?.data?.name || getString('pipelines'), getString('common.triggersLabel')])
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
-  const { isGitSimplificationEnabled } = useAppStore()
+  const { supportingGitSimplification } = useAppStore()
   const isGitSyncEnabled = useMemo(() => !!pipeline?.data?.gitDetails?.branch, [pipeline])
   const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled && isGitSimplificationEnabled,
-    [isGitSyncEnabled, isGitSimplificationEnabled]
+    () => isGitSyncEnabled && supportingGitSimplification,
+    [isGitSyncEnabled, supportingGitSimplification]
   )
 
   return (
@@ -82,6 +97,7 @@ const TriggersPage: React.FC = (): React.ReactElement => {
       branch={branch}
       isPipelineInvalid={isPipelineInvalid}
       gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+      pipeline={resolvedPipeline}
     />
   )
 }

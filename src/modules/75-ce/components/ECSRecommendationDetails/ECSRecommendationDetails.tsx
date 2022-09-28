@@ -15,12 +15,22 @@ import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { useStrings } from 'framework/strings'
 
 import formatCost from '@ce/utils/formatCost'
-import { getTimePeriodString } from '@ce/utils/momentUtils'
+import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@ce/utils/momentUtils'
 import { convertNumberToFixedDecimalPlaces } from '@ce/utils/convertNumberToFixedDecimalPlaces'
-import { getECSMemValueInReadableForm, getRecommendationYaml } from '@ce/utils/formatResourceValue'
-import { addBufferToValue, calculateSavingsPercentage } from '@ce/utils/recommendationUtils'
+import {
+  getCPUValueInCPUFromExpression,
+  getECSMemValueInReadableForm,
+  getECSRecommendationYaml,
+  getECSMemValueFromExpression
+} from '@ce/utils/formatResourceValue'
+import {
+  addBufferWithoutPrecision,
+  calculateSavingsPercentage,
+  DAYS_IN_A_MONTH,
+  getECSFargateResourceValues
+} from '@ce/utils/recommendationUtils'
 import type { TimeRangeValue, HistogramData, ResourceDetails, CustomHighcharts, ECSResourceObject } from '@ce/types'
-import type { EcsRecommendationDto, RecommendationOverviewStats } from 'services/ce/services'
+import { EcsRecommendationDto, LaunchType, RecommendationOverviewStats } from 'services/ce/services'
 
 import requestLegend from '@ce/components/RecommendationDetails/images/request-legend.svg'
 import histogramImg from '@ce/components/RecommendationDetails/images/histogram.gif'
@@ -43,14 +53,12 @@ export type EcsRecommendationDtoWithCurrentResources = EcsRecommendationDto & {
 interface ECSRecommendationDetailsProps {
   recommendationStats: RecommendationOverviewStats
   timeRange: TimeRangeValue
-  timeRangeFilter: string[]
   recommendationDetails: EcsRecommendationDtoWithCurrentResources
   buffer: number
 }
 
 const ECSRecommendationDetails: React.FC<ECSRecommendationDetailsProps> = ({
   recommendationStats,
-  timeRangeFilter,
   recommendationDetails,
   timeRange,
   buffer
@@ -70,19 +78,78 @@ const ECSRecommendationDetails: React.FC<ECSRecommendationDetailsProps> = ({
 
   const [reRenderChart, setRerenderChart] = useState(false)
 
+  const currentCPUResource = getCPUValueInCPUFromExpression(recommendationDetails.currentResources.cpu || 1)
+  const currentMemResource = getECSMemValueFromExpression(recommendationDetails.currentResources.memory)
+
   const cpuHistogram = recommendationDetails.cpuHistogram as HistogramData
   const memoryHistogram = recommendationDetails.memoryHistogram as HistogramData
 
-  const cpuReqValue = Number(cpuHistogram.precomputed[cpuReqVal])
-  const memReqValue = Number(memoryHistogram.precomputed[memReqVal])
+  const { cpu: cpuCost, memory: memoryCost } = recommendationDetails?.lastDayCost || {}
+
+  const cpuReqValueWithBuffer = addBufferWithoutPrecision(Number(cpuHistogram.precomputed[cpuReqVal]), buffer)
+  const memReqValueWithBuffer = addBufferWithoutPrecision(Number(memoryHistogram.precomputed[memReqVal]), buffer)
+
+  const fargateResourceValues = getECSFargateResourceValues(cpuReqValueWithBuffer, memReqValueWithBuffer)
+
+  const isFargateRecommendation = recommendationDetails.launchType === LaunchType.Fargate
+
+  const { currentCPU: fargateCurrentCPU, currentMemoryGB: fargateCurrentMem } = fargateResourceValues
+
+  const cpuReqValue = isFargateRecommendation ? fargateCurrentCPU : cpuReqValueWithBuffer
+  const memReqValue = isFargateRecommendation ? fargateCurrentMem : memReqValueWithBuffer
+
+  const perfCPUReqValueWithBuffer = addBufferWithoutPrecision(Number(cpuHistogram.precomputed[95]), buffer)
+  const perfMemReqValueWithBuffer = addBufferWithoutPrecision(Number(memoryHistogram.precomputed[95]), buffer)
+
+  const { currentCPU: perfFargateCurrentCPU, currentMemoryGB: perfFargateCurrentMem } = getECSFargateResourceValues(
+    perfCPUReqValueWithBuffer,
+    perfMemReqValueWithBuffer
+  )
+
+  const perfCPUReqValue = isFargateRecommendation ? perfFargateCurrentCPU : perfCPUReqValueWithBuffer
+  const perfMemReqValue = isFargateRecommendation ? perfFargateCurrentMem : perfMemReqValueWithBuffer
+
+  const costOptimisedCPUReqValueWithBuffer = addBufferWithoutPrecision(Number(cpuHistogram.precomputed[50]), buffer)
+  const costOptimisedMemReqValueWithBuffer = addBufferWithoutPrecision(Number(memoryHistogram.precomputed[50]), buffer)
+
+  const { currentCPU: costFargateCurrentCPU, currentMemoryGB: costFargateCurrentMem } = getECSFargateResourceValues(
+    costOptimisedCPUReqValueWithBuffer,
+    costOptimisedMemReqValueWithBuffer
+  )
+
+  const costOptimisedCPUReqValue = isFargateRecommendation ? costFargateCurrentCPU : costOptimisedCPUReqValueWithBuffer
+  const costOptimisedMemReqValue = isFargateRecommendation ? costFargateCurrentMem : costOptimisedMemReqValueWithBuffer
+
+  const isLastDayCostDefined = cpuCost && memoryCost
+
+  const numCPUCost = Number(cpuCost)
+  const numMemCost = Number(memoryCost)
+
+  const currentSavings = isLastDayCostDefined
+    ? (((currentCPUResource - getCPUValueInCPUFromExpression(cpuReqValue)) / currentCPUResource) * numCPUCost +
+        ((currentMemResource - getECSMemValueFromExpression(memReqValue)) / currentMemResource) * numMemCost) *
+      DAYS_IN_A_MONTH
+    : -1
+
+  const performanceOptimizedSavings = isLastDayCostDefined
+    ? (((currentCPUResource - getCPUValueInCPUFromExpression(perfCPUReqValue)) / currentCPUResource) * numCPUCost +
+        ((currentMemResource - getECSMemValueFromExpression(perfMemReqValue)) / currentMemResource) * numMemCost) *
+      DAYS_IN_A_MONTH
+    : -1
+
+  const costOptimizedSavings = isLastDayCostDefined
+    ? (((currentCPUResource - getCPUValueInCPUFromExpression(costOptimisedCPUReqValue)) / currentCPUResource) *
+        numCPUCost +
+        ((currentMemResource - getECSMemValueFromExpression(costOptimisedMemReqValue)) / currentMemResource) *
+          numMemCost) *
+      DAYS_IN_A_MONTH
+    : -1
 
   const isCostOptimizedCustomized =
-    selectedRecommendation === RecommendationType.CostOptimized &&
-    (cpuReqVal !== PercentileValues.P50 || memReqVal !== PercentileValues.P50)
+    selectedRecommendation === RecommendationType.CostOptimized && currentSavings !== costOptimizedSavings
 
   const isPerfOptimizedCustomized =
-    selectedRecommendation === RecommendationType.PerformanceOptimized &&
-    (cpuReqVal !== PercentileValues.P95 || memReqVal !== PercentileValues.P95)
+    selectedRecommendation === RecommendationType.PerformanceOptimized && currentSavings !== performanceOptimizedSavings
 
   const cpuChartRef = useRef<CustomHighcharts>()
   const memoryChartRef = useRef<CustomHighcharts>()
@@ -124,7 +191,7 @@ const ECSRecommendationDetails: React.FC<ECSRecommendationDetailsProps> = ({
   const updateCPUChart: (val: number) => void = val => {
     const precomputed = cpuHistogram?.precomputed
 
-    setCPUReqVal(val)
+    setCPUReqVal(Math.max(val, 0))
     const value = precomputed[val]
 
     cpuChartRef.current?.series[0].update({
@@ -145,7 +212,7 @@ const ECSRecommendationDetails: React.FC<ECSRecommendationDetailsProps> = ({
   const updateMemoryChart: (val: number) => void = val => {
     const precomputed = memoryHistogram?.precomputed
 
-    const reqVal = val
+    const reqVal = Math.max(val, 0)
 
     setMemReqVal(reqVal)
 
@@ -171,24 +238,19 @@ const ECSRecommendationDetails: React.FC<ECSRecommendationDetailsProps> = ({
         <Layout.Horizontal padding={{ top: 'large' }}>
           <Container width="100%">
             <RecommendationDetailsSpendCard
-              withRecommendationAmount={formatCost(
-                recommendationStats?.totalMonthlyCost - recommendationStats?.totalMonthlySaving
-              )}
+              withRecommendationAmount={formatCost(recommendationStats?.totalMonthlyCost - currentSavings)}
               withoutRecommendationAmount={formatCost(recommendationStats?.totalMonthlyCost)}
               title={getString('ce.recommendation.listPage.monthlyPotentialCostText')}
-              spentBy={getTimePeriodString(timeRangeFilter[1], 'MMM DD')}
+              spentBy={getTimePeriodString(+DATE_RANGE_SHORTCUTS.THIS_MONTH[1], 'MMM DD')}
             />
           </Container>
           <Container width="100%">
             <RecommendationDetailsSavingsCard
-              amount={formatCost(recommendationStats?.totalMonthlySaving)}
+              amount={formatCost(currentSavings)}
               title={getString('ce.recommendation.listPage.monthlySavingsText')}
-              amountSubTitle={calculateSavingsPercentage(
-                recommendationStats?.totalMonthlySaving,
-                recommendationStats?.totalMonthlyCost
-              )}
-              subTitle={`${getTimePeriodString(timeRangeFilter[0], 'MMM DD')} - ${getTimePeriodString(
-                timeRangeFilter[1],
+              amountSubTitle={calculateSavingsPercentage(currentSavings, recommendationStats?.totalMonthlyCost)}
+              subTitle={`${getTimePeriodString(+DATE_RANGE_SHORTCUTS.THIS_MONTH[0], 'MMM DD')} - ${getTimePeriodString(
+                +DATE_RANGE_SHORTCUTS.THIS_MONTH[1],
                 'MMM DD'
               )}`}
             />
@@ -210,15 +272,15 @@ const ECSRecommendationDetails: React.FC<ECSRecommendationDetailsProps> = ({
           }}
           recommendedResources={{
             requests: {
-              memory: getECSMemValueInReadableForm(addBufferToValue(memoryHistogram.precomputed[memReqVal], buffer, 3)),
-              cpu: String(addBufferToValue(cpuHistogram.precomputed[cpuReqVal], buffer, 3) || 0)
+              memory: getECSMemValueInReadableForm(convertNumberToFixedDecimalPlaces(memReqValue, 3)),
+              cpu: String(convertNumberToFixedDecimalPlaces(cpuReqValue, 3))
             }
           }}
           copyRecommendation={
             /* istanbul ignore next */ () => {
-              const yamlVal = getRecommendationYaml(
-                addBufferToValue(cpuReqValue, buffer, 3),
-                addBufferToValue(memReqValue, buffer, 3)
+              const yamlVal = getECSRecommendationYaml(
+                convertNumberToFixedDecimalPlaces(cpuReqValue, 3),
+                convertNumberToFixedDecimalPlaces(memReqValue, 3)
               )
               copy(yamlVal)
             }

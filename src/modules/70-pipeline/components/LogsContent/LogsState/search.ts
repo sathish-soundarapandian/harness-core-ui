@@ -35,6 +35,7 @@ export function search(state: State, action: Action<ActionType.Search>): State {
           const searchIndices: Partial<Record<TextKeys, number[]>> = {}
           dataKeys.forEach(key => {
             const value = lineData.text[key]
+            /* istanbul ignore else */
             if (value) {
               const matches = value.match(searchRegex)
 

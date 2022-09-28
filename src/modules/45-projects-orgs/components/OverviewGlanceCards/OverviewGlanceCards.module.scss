@@ -5,6 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.container {
+  flex: 1;
+}
+
 .errorCard {
   height: 248px;
 
@@ -14,9 +18,14 @@
 }
 
 .loadingWrapper {
-  height: 248px;
-  width: 116px;
   display: flex !important;
   align-items: center;
   justify-content: center;
+}
+
+.glanceCards {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 16px;
+  width: 100%;
 }

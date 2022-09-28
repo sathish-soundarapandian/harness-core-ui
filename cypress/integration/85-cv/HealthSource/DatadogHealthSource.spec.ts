@@ -5,7 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
+  validations,
+  countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse
 } from '../../../support/85-cv/monitoredService/constants'
@@ -33,12 +36,9 @@ describe('Configure Datadog health source', () => {
     })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
-    cy.intercept(
-      'GET',
-      '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1',
-      { allServicesCount: 1, servicesAtRiskCount: 0 }
-    )
+    cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
     cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
   })
 
   it('Add new Datadog metric health source for a monitored service ', () => {
@@ -81,9 +81,9 @@ describe('Configure Datadog health source', () => {
     cy.wait('@getActiveMetrics')
 
     // Check for form validations
-    cy.contains('span', 'Group Name is required.').should('be.visible')
-    cy.contains('span', 'Metric is required.').should('be.visible')
-    cy.contains('span', 'One selection is required.').should('be.visible')
+    cy.contains('span', validations.groupName).should('be.visible')
+    cy.contains('span', validations.metric).should('be.visible')
+    cy.contains('span', validations.assign).should('be.visible')
 
     // Adding group name
     cy.addingGroupName('group-1')
@@ -103,7 +103,7 @@ describe('Configure Datadog health source', () => {
     cy.findByText('Monitored Service created').should('be.visible')
   })
 
-  it.skip('Add new Datadog logs health source for a monitored service ', () => {
+  it('Add new Datadog logs health source for a monitored service ', () => {
     cy.addNewMonitoredServiceWithServiceAndEnv()
     cy.populateDefineHealthSource(Connectors.DATADOG, connectorIdentifier, 'Data dog')
 
@@ -125,12 +125,12 @@ describe('Configure Datadog health source', () => {
 
     //triggering validations
     cy.findByRole('button', { name: /Submit/i }).click()
-    cy.contains('span', 'Query is required.').should('be.visible')
-    cy.contains('span', 'Service Instance is required.').should('be.visible')
+    cy.contains('span', validations.query).should('be.visible')
+    cy.contains('span', validations.serviceInstance).should('be.visible')
     cy.contains('p', 'Submit query to see records from Datadog Logs').should('be.visible')
 
     cy.fillField('query', 'source:browser')
-    cy.contains('span', 'Query is required.').should('not.exist')
+    cy.contains('span', validations.query).should('not.exist')
 
     //Fetching records
     cy.contains('span', 'Fetch records').click()
@@ -265,5 +265,192 @@ describe('Configure Datadog health source', () => {
     // Updating the monitored service with Datadog health source.
     cy.findByRole('button', { name: /Save/i }).click()
     cy.findByText('Monitored Service updated').should('be.visible')
+  })
+})
+
+describe('Datadog metric thresholds', () => {
+  beforeEach(() => {
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          {
+            uuid: null,
+            name: 'CVNG_METRIC_THRESHOLD',
+            enabled: true,
+            lastUpdatedAt: 0
+          }
+        ]
+      })
+    })
+
+    cy.on('uncaught:exception', () => {
+      return false
+    })
+    cy.login('test', 'test')
+    cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
+    cy.intercept(
+      'GET',
+      '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1',
+      { allServicesCount: 1, servicesAtRiskCount: 0 }
+    )
+    cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
+  })
+
+  it('should render metric thresholds only if any group is created with CV enabled', () => {
+    //intercepting calls
+    cy.intercept('GET', dataLogsIndexes.getDatadogLogsIndexes, dataLogsIndexes.getDatadogLogsIndexesResponse).as(
+      'getLogsIndexes'
+    )
+    cy.intercept('POST', datadogLogsSample.getDatadogLogsSample, datadogLogsSample.getDatadogLogsSampleResponse).as(
+      'getLogsSample'
+    )
+    cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', datadogLogsMonitoredService).as(
+      'monitoredServiceCall'
+    )
+
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+    cy.populateDefineHealthSource(Connectors.DATADOG, connectorIdentifier, 'Data dog')
+
+    // selecting feature
+    cy.selectFeature('Cloud Metrics')
+
+    cy.intercept('GET', dashboards.dashboardsAPI, dashboards.dashboardsResponse).as('dashboardsResponse')
+
+    cy.contains('span', 'Next').click()
+
+    cy.wait('@dashboardsResponse')
+    cy.contains('p', selectedDashboardName).click()
+
+    //intercepting calls
+    cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
+    cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
+    cy.intercept('GET', dashboardDetails.getDashboardDetails, dashboardDetails.getDashboardDetailsResponse).as(
+      'getDashboardDetails'
+    )
+
+    cy.findAllByRole('button', { name: /Next/i }).last().click()
+    cy.get('input[name="metricName"]').clear()
+
+    cy.fillField('metricName', 'Datadog metric')
+
+    cy.contains('span', 'Continuous Verification').click({ force: true })
+
+    cy.get('input[name="serviceInstance"]').scrollIntoView().click({ force: true })
+
+    cy.contains('p', 'host').click()
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').scrollIntoView().should('exist')
+  })
+
+  it.skip('should render metric thresholds and perform its features', () => {
+    //intercepting calls
+    cy.intercept('GET', dataLogsIndexes.getDatadogLogsIndexes, dataLogsIndexes.getDatadogLogsIndexesResponse).as(
+      'getLogsIndexes'
+    )
+    cy.intercept('POST', datadogLogsSample.getDatadogLogsSample, datadogLogsSample.getDatadogLogsSampleResponse).as(
+      'getLogsSample'
+    )
+    cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', datadogLogsMonitoredService).as(
+      'monitoredServiceCall'
+    )
+    cy.addNewMonitoredServiceWithServiceAndEnv()
+    cy.populateDefineHealthSource(Connectors.DATADOG, connectorIdentifier, 'Data dog')
+
+    // selecting feature
+    cy.selectFeature('Cloud Metrics')
+
+    cy.intercept('GET', dashboards.dashboardsAPI, dashboards.dashboardsResponse).as('dashboardsResponse')
+
+    cy.contains('span', 'Next').click()
+
+    cy.wait('@dashboardsResponse')
+    cy.contains('p', selectedDashboardName).click()
+
+    //intercepting calls
+    cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
+    cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
+    cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
+    cy.intercept('GET', dashboardDetails.getDashboardDetails, dashboardDetails.getDashboardDetailsResponse).as(
+      'getDashboardDetails'
+    )
+
+    cy.findAllByRole('button', { name: /Next/i }).last().click()
+
+    cy.fillField('metricName', 'Datadog metric')
+
+    cy.contains('span', 'Continuous Verification').click({ force: true })
+
+    cy.get('input[name="serviceInstance"]').click({ force: true })
+
+    cy.contains('p', 'host').should('exist')
+    cy.contains('p', 'host').click()
+
+    cy.contains('.Accordion--label', 'Advanced (Optional)').should('exist')
+
+    cy.findByTestId('AddThresholdButton').click()
+
+    cy.contains('div', 'Ignore Thresholds (1)').should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.metricType']").should('be.disabled')
+    cy.get("input[name='ignoreThresholds.0.metricType']").should('have.value', 'Custom')
+
+    // validations
+    cy.findByRole('button', { name: /Submit/i }).click()
+    cy.findAllByText('Required').should('have.length', 3)
+
+    cy.get("input[name='ignoreThresholds.0.metricName']").click()
+
+    cy.contains('p', 'Datadog metric').should('be.visible')
+    cy.contains('p', 'Datadog metric').click()
+
+    // testing criteria
+
+    cy.get("input[name='ignoreThresholds.0.criteria.type']").should('have.value', 'Absolute Value')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('exist')
+
+    // greater than should be smaller than lesser than value
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").type('12')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").type('1')
+
+    cy.get("input[name='ignoreThresholds.0.criteria.type']").click()
+    cy.contains('p', 'Percentage Deviation').should('be.visible')
+    cy.contains('p', 'Percentage Deviation').click()
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('not.exist')
+
+    cy.get("input[name='ignoreThresholds.0.criteria.criteriaPercentageType']").click()
+    cy.contains('p', 'Lesser than').should('be.visible')
+    cy.contains('p', 'Lesser than').click()
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.greaterThan']").should('not.exist')
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").should('exist')
+
+    cy.get("input[name='ignoreThresholds.0.criteria.spec.lessThan']").type('12')
+
+    // Fail fast thresholds
+    cy.contains('div', 'Fail-Fast Thresholds (0)').click()
+
+    cy.findByTestId('AddThresholdButton').click()
+
+    cy.get("input[name='failFastThresholds.0.metricName']").click()
+
+    cy.contains('p', 'Datadog metric').should('be.visible')
+    cy.contains('p', 'Datadog metric').click()
+
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").should('be.disabled')
+
+    cy.get("input[name='failFastThresholds.0.spec.action']").click()
+    cy.contains('p', 'Fail after multiple occurrences').click()
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").should('not.be.disabled')
+    cy.get("input[name='failFastThresholds.0.spec.spec.count']").type('4')
+
+    cy.get("input[name='failFastThresholds.0.criteria.spec.greaterThan']").type('21')
+    cy.get("input[name='failFastThresholds.0.criteria.spec.lessThan']").type('78')
   })
 })

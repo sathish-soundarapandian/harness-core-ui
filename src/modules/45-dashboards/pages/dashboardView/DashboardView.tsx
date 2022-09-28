@@ -10,9 +10,14 @@ import { useParams, useHistory } from 'react-router-dom'
 import { Breadcrumb, Layout } from '@harness/uicore'
 import routes from '@common/RouteDefinitions'
 import { Page } from '@common/exports'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useDashboardsContext } from '@dashboards/pages/DashboardsContext'
+import LookerEmbeddedDashboard from '@dashboards/components/LookerEmbeddedDashboard/LookerEmbeddedDashboard'
+import { SHARED_FOLDER_ID } from '@dashboards/constants'
+import { LookerEventType } from '@dashboards/constants/LookerEventType'
+import type { DashboardFiltersChangedEvent, LookerEvent, PageChangedEvent } from '@dashboards/types/LookerTypes.types'
 import {
   ErrorResponse,
   useCreateSignedUrl,
@@ -21,21 +26,20 @@ import {
 } from 'services/custom-dashboards'
 import css from './DashboardView.module.scss'
 
-const DASHBOARDS_ORIGIN = 'https://dashboards.harness.io'
 const DashboardViewPage: React.FC = () => {
   const { getString } = useStrings()
   const { includeBreadcrumbs } = useDashboardsContext()
 
   const { accountId, viewId, folderId } = useParams<AccountPathProps & { viewId: string; folderId: string }>()
-  const [embedUrl, setEmbedUrl] = React.useState('')
-  const [iframeState] = React.useState(0)
+  const [embedUrl, setEmbedUrl] = React.useState<string>()
+  const [dashboardFilters, setDashboardFilters] = useQueryParamsState<string | undefined>('filters', undefined)
+  const [dashboardLoading, setDashboardLoading] = React.useState<boolean>(false)
   const history = useHistory()
-  const query = location.href.split('?')[1]
 
-  const signedQueryUrl: string = useMemo(
-    () => `/embed/dashboards-next/${viewId}?embed_domain=${location.host}&${query}`,
-    [viewId, query]
-  )
+  const signedQueryUrl: string = useMemo(() => {
+    const filters = dashboardFilters ? `&${dashboardFilters}` : ''
+    return `/embed/dashboards-next/${viewId}?embed_domain=${location.host}${filters}`
+  }, [dashboardFilters, viewId])
 
   const {
     mutate: createSignedUrl,
@@ -43,27 +47,71 @@ const DashboardViewPage: React.FC = () => {
     error
   } = useCreateSignedUrl({ queryParams: { accountId, dashboardId: viewId, src: signedQueryUrl } })
 
-  const generateSignedUrl = async (): Promise<void> => {
-    const { resource } = await createSignedUrl()
-    setEmbedUrl(resource)
-  }
+  const responseMessages = useMemo(() => (error?.data as ErrorResponse)?.responseMessages, [error])
+
+  const loadingMessage = useMemo(() => {
+    const message = getString('common.loading')
+    return loading ? message.replace('...', '.') : undefined
+  }, [getString, loading])
+
+  const lookerDashboardFilterChangedEvent = React.useCallback(
+    (eventData: DashboardFiltersChangedEvent): void => {
+      setDashboardFilters(new URLSearchParams(eventData.dashboard.dashboard_filters).toString())
+    },
+    [setDashboardFilters]
+  )
+
+  const lookerPageChangedEvent = React.useCallback(
+    (eventData: PageChangedEvent): void => {
+      if (eventData.page?.url?.includes('embed/explore')) {
+        history.go(0)
+      }
+    },
+    [history]
+  )
+
+  const onLookerAction = React.useCallback(
+    (lookerEvent: LookerEvent): void => {
+      switch (lookerEvent.type) {
+        case LookerEventType.PAGE_CHANGED:
+          lookerPageChangedEvent(lookerEvent as PageChangedEvent)
+          break
+        case LookerEventType.DASHBOARD_FILTERS_CHANGED:
+          lookerDashboardFilterChangedEvent(lookerEvent as DashboardFiltersChangedEvent)
+          break
+        case LookerEventType.DASHBOARD_LOADED:
+        case LookerEventType.DASHBOARD_RUN_COMPLETE:
+          setDashboardLoading(false)
+          break
+      }
+    },
+    [lookerDashboardFilterChangedEvent, lookerPageChangedEvent]
+  )
 
   React.useEffect(() => {
+    const generateSignedUrl = async (): Promise<void> => {
+      const { resource } = (await createSignedUrl()) || {}
+      if (resource) {
+        setDashboardLoading(true)
+        setEmbedUrl(resource)
+      }
+    }
+
     generateSignedUrl()
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewId])
 
-  React.useEffect(() => {
-    window.addEventListener('message', function (event) {
-      if (event.origin === DASHBOARDS_ORIGIN) {
-        const onChangeData = JSON.parse(event.data)
-        if (onChangeData && onChangeData.type === 'page:changed' && onChangeData.page?.url?.includes('embed/explore')) {
-          history.go(0)
-        }
-      }
-    })
-  }, [])
+  const { data: folderDetail, refetch: fetchFolderDetail } = useGetFolderDetail({
+    lazy: true,
+    queryParams: { accountId, folderId }
+  })
 
-  const { data: folderDetail } = useGetFolderDetail({ queryParams: { accountId, folderId } })
+  React.useEffect(() => {
+    if (folderId !== SHARED_FOLDER_ID) {
+      fetchFolderDetail()
+    }
+  }, [accountId, fetchFolderDetail, folderId])
 
   const { data: dashboardDetail } = useGetDashboardDetail({ dashboard_id: viewId, queryParams: { accountId } })
 
@@ -79,27 +127,30 @@ const DashboardViewPage: React.FC = () => {
         label: folderDetail.resource
       })
     }
-    dashboardDetail &&
+    embedUrl &&
+      dashboardDetail &&
       links.push({
         url: routes.toViewCustomDashboard({ viewId, folderId, accountId }),
         label: dashboardDetail.title
       })
     includeBreadcrumbs(links)
-  }, [folderDetail, dashboardDetail, accountId, viewId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [folderDetail?.resource, dashboardDetail, accountId, viewId, embedUrl])
 
   return (
     <Page.Body
       className={css.pageContainer}
-      loading={loading}
-      error={(error?.data as ErrorResponse)?.responseMessages}
+      loading={loading || dashboardLoading}
+      loadingMessage={loadingMessage}
+      error={responseMessages}
       noData={{
-        when: () => embedUrl === '',
+        when: () => embedUrl === undefined,
         icon: 'dashboard',
         message: 'Dashboard not available'
       }}
     >
       <Layout.Vertical className={css.frame}>
-        <iframe src={embedUrl} key={iframeState} height="100%" width="100%" frameBorder="0" id="dashboard-render" />
+        {embedUrl && <LookerEmbeddedDashboard embedUrl={embedUrl} onLookerAction={onLookerAction} />}
       </Layout.Vertical>
     </Page.Body>
   )

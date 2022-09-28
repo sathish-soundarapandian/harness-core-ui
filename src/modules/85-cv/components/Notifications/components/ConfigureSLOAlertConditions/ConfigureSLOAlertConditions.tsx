@@ -28,7 +28,8 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   createNotificationRule,
   getInitialNotificationRules,
-  getUpdatedNotificationRules
+  getUpdatedNotificationRules,
+  validateNotificationConditions
 } from '@cv/components/Notifications/NotificationsContainer.utils'
 import {
   ConfigureSLOAlertConditionsProps,
@@ -99,9 +100,10 @@ export default function ConfigureSLOAlertConditions({
     return (
       <Container padding={{ top: 'medium' }} className={css.notificationRulesContainer}>
         {conditions.length
-          ? conditions.map(notificationRule => {
+          ? conditions.map((notificationRule, index) => {
               return (
                 <SLONotificationRuleRow
+                  index={index}
                   key={notificationRule?.id}
                   showDeleteNotificationsIcon={showDeleteNotificationsIcon}
                   notificationRule={notificationRule}
@@ -145,6 +147,9 @@ export default function ConfigureSLOAlertConditions({
       <Formik<NotificationConditions>
         initialValues={{ ...prevStepData, conditions: [createNotificationRule()] }}
         formName="notificationsOverview"
+        validate={values => {
+          return validateNotificationConditions(dataTillCurrentStep, values, getString)
+        }}
         onSubmit={() => {
           nextStep?.(dataTillCurrentStep)
         }}

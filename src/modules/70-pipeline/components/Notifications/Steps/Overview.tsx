@@ -17,13 +17,15 @@ import { NameSchema } from '@common/utils/Validation'
 interface OverviewProps {
   data?: NotificationRules
   existingNotificationNames?: string[]
+  isEdit?: boolean
 }
 
 function Overview({
   data,
   existingNotificationNames = [],
   nextStep,
-  prevStepData
+  prevStepData,
+  isEdit
 }: StepProps<NotificationRules> & OverviewProps): React.ReactElement {
   const { getString } = useStrings()
   return (
@@ -54,7 +56,7 @@ function Overview({
                 <FormInput.InputWithIdentifier
                   inputName="name"
                   inputLabel={getString('notifications.notificationName')}
-                  isIdentifierEditable={!data}
+                  isIdentifierEditable={!isEdit}
                 />
               </Container>
               <Button

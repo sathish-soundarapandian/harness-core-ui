@@ -6,15 +6,11 @@
  */
 
 import type { IconName } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
 import type { AddDrawerMapInterface } from '@common/components/AddDrawer/AddDrawer'
-// import { useGet } from 'restful-react'
-// import { get } from 'lodash-es'
-// import { getConfig } from 'services/config'
-// import { Failure, GetStepsQueryParams, ResponseStepCategory, UseGetStepsProps } from 'services/cd-ng'
-// import { Failure, GetStepsQueryParams, ResponseStepCategory, useGetSteps, UseGetStepsProps } from 'services/cd-ng'
-import type { StageElementWrapperConfig, StepCategory } from 'services/cd-ng'
+import type { ExecutionWrapperConfig, StageElementWrapperConfig, StepCategory } from 'services/pipeline-ng'
+import type { DependencyElement, IntegrationStageConfigImpl } from 'services/ci'
 import { deployStageSteps } from './mock'
-// import { buildStageSteps, deployStageSteps } from './mock'
 
 type iconMapOptions = {
   [key: string]: IconName
@@ -113,4 +109,72 @@ export const getCategoryItems = (_stageType: string, _selectedStage: StageElemen
   //     // const { data } = useGetSteps({ queryParams: { serviceDefinitionType } })
   //     // return data
   //   }
+}
+
+export const getDuplicateIdentifiers = (idMap: string[]): string[] => {
+  return idMap.filter((element, position, arr) => arr.indexOf(element) !== position)
+}
+
+interface StageStepsIdMap {
+  [key: string]: { steps: string[]; rollbackSteps: string[] }
+}
+
+const getStageStepsIdentifiers = (
+  stageStepsData: ExecutionWrapperConfig[] | DependencyElement[] | undefined
+): string[] => {
+  const idMap = [] as string[]
+  stageStepsData?.forEach((stepsData: ExecutionWrapperConfig | DependencyElement | undefined) => {
+    if ((stepsData as ExecutionWrapperConfig)?.step) {
+      idMap.push((stepsData as ExecutionWrapperConfig)?.step?.identifier as string)
+    } else if ((stepsData as ExecutionWrapperConfig)?.parallel) {
+      idMap.push(...getStageStepsIdentifiers((stepsData as ExecutionWrapperConfig)?.parallel))
+    } else if ((stepsData as ExecutionWrapperConfig)?.stepGroup) {
+      idMap.push((stepsData as ExecutionWrapperConfig)?.stepGroup?.identifier as string)
+      idMap.push(...getStageStepsIdentifiers((stepsData as ExecutionWrapperConfig)?.stepGroup?.steps))
+    } else {
+      idMap.push((stepsData as DependencyElement)?.identifier as string)
+    }
+  })
+  return idMap
+}
+
+export const getStageIdDetailsMapping = (stagesData: StageElementWrapperConfig[]): StageStepsIdMap => {
+  let stageStepsMapping = {} as StageStepsIdMap
+  stagesData?.forEach(stageData => {
+    if ((stageData as StageElementWrapperConfig)?.parallel) {
+      stageStepsMapping = {
+        ...stageStepsMapping,
+        ...getStageIdDetailsMapping(defaultTo((stageData as StageElementWrapperConfig).parallel, []))
+      }
+    } else if ((stageData as StageElementWrapperConfig)?.stage) {
+      const stageId = (stageData as StageElementWrapperConfig)?.stage?.identifier as string
+      const localStageSteps = { steps: [] as string[], rollbackSteps: [] as string[] }
+      // Execution CI serviceDependencies
+      localStageSteps.steps.push(
+        ...getStageStepsIdentifiers((stageData?.stage?.spec as IntegrationStageConfigImpl)?.serviceDependencies)
+      )
+      // Execution steps
+      localStageSteps.steps.push(
+        ...getStageStepsIdentifiers((stageData as StageElementWrapperConfig)?.stage?.spec?.execution?.steps)
+      )
+      // Execution rollback steps
+      localStageSteps.rollbackSteps.push(
+        ...getStageStepsIdentifiers((stageData as StageElementWrapperConfig)?.stage?.spec?.execution?.rollbackSteps)
+      )
+      // Saving stepsId against stage identifier
+      stageStepsMapping[stageId] = localStageSteps
+    }
+  })
+  return stageStepsMapping
+}
+
+export const getDuplicateStepIdentifierList = (stagesData: StageElementWrapperConfig[]): string[] => {
+  const duplicateStepIdentifiersList = [] as string[]
+  const stepsIdMap = getStageIdDetailsMapping(stagesData)
+  Object.values(stepsIdMap).forEach(stepIdMap => {
+    const duplicateSteps = getDuplicateIdentifiers(stepIdMap.steps)
+    const duplicateRollbackSteps = getDuplicateIdentifiers(stepIdMap.rollbackSteps)
+    duplicateStepIdentifiersList.push(...duplicateSteps, ...duplicateRollbackSteps)
+  })
+  return duplicateStepIdentifiersList
 }

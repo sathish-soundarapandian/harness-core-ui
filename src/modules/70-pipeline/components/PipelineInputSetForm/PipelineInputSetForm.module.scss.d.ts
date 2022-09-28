@@ -10,6 +10,7 @@ declare const styles: {
   readonly accordionSummary: string
   readonly conditionalExecutionTitle: string
   readonly container: string
+  readonly editor: string
   readonly header: string
   readonly infraSection: string
   readonly inputWidth: string
@@ -18,6 +19,7 @@ declare const styles: {
   readonly noMarginLeft: string
   readonly stagesTreeBulletCircle: string
   readonly stagesTreeBulletSquare: string
+  readonly strategyContainer: string
   readonly tabSubHeading: string
   readonly topAccordion: string
 }

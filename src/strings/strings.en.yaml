@@ -126,7 +126,7 @@ ticketingSystems: Ticketing Systems
 monitoringAndLoggingSystems: Monitoring and Logging Systems
 secretManagers: Secret Managers
 connection: Connection
-refrencedBy: Referenced by
+referencedBy: Referenced by
 activityHistoryLabel: Activity History
 connectionMode: Connection Mode
 credType: Credential Type
@@ -313,7 +313,6 @@ applications: Applications
 stageDetails: Stage Details
 stageOverview: Stage Overview
 stageNameLabel: Stage Name
-stageName: 'Stage: {{ name }}'
 tagsLabel: Tags
 tagLabel: Tag
 whatToDeploy: What would you like to deploy?
@@ -363,7 +362,6 @@ serviceAccount: Service Account
 usernamePassword: 'Username and Password'
 usernameToken: 'Username and Token'
 kerberos: 'Kerberos'
-secureToken: 'Secure Token'
 anonymous: 'Anonymous (no credentials required)'
 saveAndContinue: 'Save and Continue'
 errorWhileSaving: 'Error occurred when saving'
@@ -483,7 +481,7 @@ inputSets:
   inputSetSavedError: Error while saving Input Set
   searchInputSet: Search Input Set
   addInputSet: Add Input Set
-  saveAsInputSet: Save as Input Set
+  saveAsInputSet: Save as New Input Set
   confirmDeleteTitle: 'Delete {{type}}'
   overlayInputSet: Overlay Input Set
   inputFieldSummary: Input Field Summary
@@ -567,7 +565,6 @@ somethingWentWrong: Something went wrong
 saveChanges: Save Changes
 projectSelector:
   placeholder: 'Start typing to search'
-script: 'Script'
 inline: 'Inline'
 upload: Upload
 remote: 'Remote'
@@ -579,7 +576,6 @@ resourcePage:
   templates: '{{$.common.templates}}'
   fileStore: File Store
 stepType: 'Step Type'
-scriptType: 'Script Type'
 shellScriptStep: 'Shell Script'
 targetHost: 'Target Host'
 workingDirectory: 'Working Directory'
@@ -684,7 +680,7 @@ delegate:
     prerequisites_info1: 'You have access to your Kubernetes cluster and install Harness Delegates as YAML or Helm Chart'
     prerequisites_info2: 'If you are using Harness SaaS, your machine must be able to connect to the Harness SaaS URL: '
     prerequisites_info3: 'Your Kubernetes cluster has unallocated resources required to run the Harness Delegate workload'
-    prerequisites_worload: '{{label}} - {{ram}}GB memory, {{cpu}}CPU'
+    prerequisites_worload: '{{label}} - {{ram}} GB memory, {{cpu}} CPU'
     permissions_title: 'You need the following Kubernetes permissions to install the Delegate:'
     permissions_info1: 'Permission to create namespace (for the Harness Delegate namespace)'
     permissions_info2: 'Permission to create StatefulSets (for the Harness Delegate Pod to be created)'
@@ -771,9 +767,6 @@ pipelineSteps:
     stepName: Specify your Kubernetes Connector
     kubernetesConnector: Kubernetes Connector
   serviceTab:
-    artifactList:
-      addSidecar: + Add Sidecar
-      addPrimary: + Add Primary Artifact
     manifestList:
       manifestFormat: Manifest Format
       manifestType: Manifest Type
@@ -802,7 +795,6 @@ pipelineSteps:
   storeTypeRequired: 'Store Type is required.'
   addTerraformVarFile: 'Add Terraform Var File'
   connectorLabel: 'Container Registry'
-  hostLabel: Host
   hostPlaceholder: us.gcr.io
   projectIDLabel: Project Id
   cacheFromLabel: 'Cache From'
@@ -920,21 +912,19 @@ pipelineSteps:
       artifactServer: 'Artifact Server'
       branch: 'Branch'
     serviceSpecifications:
-      serviceDefinition: Service Definition
       useFromStageLabel: 'Use from Stage'
       deploymentTypes:
         artifacts: '{{ $.artifacts }}'
         manifests: '{{ $.manifests }}'
     infrastructure:
       infraDefinition: Infrastructure Definition
-      selectMethod: Select the best method for Harness to reach your Kubernetes Cluster.
+      selectMethod: Select the best method for Harness to reach your {{deploymentSpecificText}} Cluster.
       directConnection: Direct Connection
       viaCloudProvider: Via Cloud Provider
     provisioner:
       enableProvisionerLabel: Provision your target infrastructure dynamically during the execution of your Pipeline
   feature:
     create:
-      featureStageName: Feature Flag
       specifyEnvironment: Specify the Environment
       whatIsFor: What is your flag used for?
 

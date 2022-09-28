@@ -239,6 +239,98 @@ export const sourceDataUpdated = {
   ]
 }
 
+const metricDefinitionsTemplate = [
+  {
+    dashboardName: '',
+    dashboardPath: '',
+    metricName: 'test2',
+    metricTags: ['tag2'],
+    identifier: 'test2',
+    isManualQuery: true,
+    jsonMetricDefinition: '<+input>',
+    riskProfile: { thresholdTypes: [] },
+    sli: { enabled: true },
+    analysis: {
+      riskProfile: { thresholdTypes: [] },
+      liveMonitoring: { enabled: false },
+      deploymentVerification: { enabled: false }
+    }
+  },
+  {
+    dashboardName: '',
+    dashboardPath: '',
+    metricName: 'test1',
+    metricTags: ['tag1'],
+    identifier: 'test1',
+    isManualQuery: true,
+    jsonMetricDefinition: {},
+    riskProfile: { metricType: 'THROUGHPUT', category: 'Performance', thresholdTypes: ['ACT_WHEN_HIGHER'] },
+    sli: { enabled: false },
+    analysis: {
+      riskProfile: { category: 'Performance', metricType: 'THROUGHPUT', thresholdTypes: ['ACT_WHEN_HIGHER'] },
+      liveMonitoring: { enabled: true },
+      deploymentVerification: { enabled: false }
+    }
+  }
+]
+export const sourceDataTemplate = {
+  connectorRef: {
+    label: 'Google Cloud Provider ',
+    value: 'account.Google_Cloud_Provider',
+    scope: 'account',
+    live: true,
+    connector: {
+      name: 'Google Cloud Provider ',
+      identifier: 'Google_Cloud_Provider',
+      description: '',
+      orgIdentifier: null,
+      projectIdentifier: null,
+      tags: {},
+      type: 'Gcp',
+      spec: {
+        credential: {
+          type: 'ManualConfig',
+          spec: { secretKeyRef: 'account.cvng_gcp_identifier_BontGcw8zY_secretReferenceID' }
+        },
+        delegateSelectors: [],
+        executeOnDelegate: false
+      }
+    }
+  },
+  isEdit: true,
+  healthSourceList: [
+    {
+      type: 'Stackdriver',
+      identifier: 'Google_Cloud_Operations',
+      name: 'Google Cloud Operations 111',
+      spec: {
+        connectorRef: 'account.Google_Cloud_Provider',
+        feature: 'Cloud Metrics',
+        metricDefinitions: metricDefinitionsTemplate,
+        product: { label: 'Cloud Metrics', value: 'Cloud Metrics' }
+      }
+    }
+  ],
+  serviceRef: 'newRelic',
+  environmentRef: 'qa',
+  monitoredServiceRef: { name: 'MS_newrelic', identifier: 'MS_newrelic' },
+  existingMetricDetails: {
+    type: 'Stackdriver',
+    identifier: 'Google_Cloud_Operations',
+    name: 'Google Cloud Operations 111',
+    spec: {
+      connectorRef: 'account.Google_Cloud_Provider',
+      feature: 'Cloud Metrics',
+      metricDefinitions: metricDefinitionsTemplate
+    }
+  },
+  healthSourceName: 'Google Cloud Operations 111',
+  healthSourceIdentifier: 'Google_Cloud_Operations',
+  sourceType: 'Stackdriver',
+  product: { label: 'Cloud Metrics', value: 'Cloud Metrics' },
+  selectedDashboards: []
+}
+
 export const MockValidationResponse = {
   metaData: {},
   data: [

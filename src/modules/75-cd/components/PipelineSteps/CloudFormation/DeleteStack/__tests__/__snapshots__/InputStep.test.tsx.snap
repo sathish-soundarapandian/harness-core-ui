@@ -167,7 +167,7 @@ exports[`Test cloudformation delete stack input set should render all input vari
               >
                 <div
                   class="StyledProps--font StyledProps--main"
-                  style="margin-bottom: 5px;"
+                  data-test-id="connectorTooltip"
                 >
                   <span
                     class="Tooltip--acenter bp3-label"

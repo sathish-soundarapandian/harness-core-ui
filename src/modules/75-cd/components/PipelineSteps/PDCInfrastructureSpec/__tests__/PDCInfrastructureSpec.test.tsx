@@ -13,10 +13,11 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import * as CDNG from 'services/cd-ng'
 import type { ResponseMessage } from 'services/cd-ng'
-import { PDCInfrastructureSpec, PdcRegex, SshKeyRegex, parseAttributes } from '../PDCInfrastructureSpec'
+import { PDCInfrastructureSpec, PdcRegex, SshKeyRegex } from '../PDCInfrastructureSpec'
 import { ConnectorsResponse } from './mock/ConnectorsResponse.mock'
 import { ConnectorResponse } from './mock/ConnectorResponse.mock'
-import { mockListSecrets, mockSecret } from './mock/Secrets.mock'
+import { mockListSecrets } from './mock/Secrets.mock'
+import { parseAttributes } from '../PDCInfrastructureInterface'
 
 const getYaml = (): string => `pipeline:
     stages:
@@ -47,7 +48,6 @@ jest.mock('services/cd-ng', () => ({
     mutate: jest.fn(() => Promise.resolve({ data: { content: [{ hostname: '1.2.3.4' }] } }))
   })),
   useValidateHosts: jest.fn(() => ({ mutate: validateHosts })),
-  getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
   listSecretsV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockListSecrets))
 }))
 
@@ -82,10 +82,6 @@ const getInitialValuePreconfiguredWithHostFilters = () => ({
   hostFilters: ['5.5.5.5', '4.4.4.4']
 })
 
-const getEmptyInitialValues = () => ({
-  credentialsRef: ''
-})
-
 const checkForFormInit = async (container: HTMLElement) => {
   const form = container.querySelector('form')
   return await waitFor(() => {
@@ -114,12 +110,6 @@ const checkTestConnection = async (getByText: any) => {
   })
 }
 
-const submitForm = async (getByText: any) => {
-  await act(async () => {
-    fireEvent.click(getByText('Submit'))
-  })
-}
-
 const refreshHosts = async (getByText: any) => {
   await waitFor(() => {
     expect(getByText('common.refresh')).toBeDefined()
@@ -138,29 +128,16 @@ const clickOn = (getByText: any, textIdentifier: string) => {
 const clickOnPreconfiguredHostsOption = async (getByText: any) => {
   clickOn(getByText, 'cd.steps.pdcStep.preconfiguredHostsOption')
   await waitFor(() => {
-    expect(getByText('cd.steps.pdcStep.deployAllHostsOption')).toBeDefined()
+    expect(getByText('cd.steps.pdcStep.includeAllHosts')).toBeDefined()
   })
 }
 
 const clickOnDeploySpecificHostsOption = async (getByText: any) => {
-  clickOn(getByText, 'cd.steps.pdcStep.deploySpecificHostsOption')
+  clickOn(getByText, 'cd.steps.pdcStep.filterHostName')
 }
 
-const clickOnDeployAllHostsOption = async (getByText: any) => {
-  clickOn(getByText, 'cd.steps.pdcStep.deployAllHostsOption')
-}
-
-const updateConnector = async (container: any) => {
-  const connnectorRefInput = queryByAttribute('data-testid', container, /connectorRef/)
-  act(() => {
-    fireEvent.change(connnectorRefInput!, {
-      target: { value: { name: 'connectorName', identifier: 'connIdentifier' } }
-    })
-  })
-}
-
-const updateTextArea = async (container: any) => {
-  const hostsArea = container.querySelector('textarea')
+const updateHostsInput = async (container: any) => {
+  const hostsArea = queryByAttribute('name', container, 'hosts')
   act(() => {
     fireEvent.change(hostsArea!, { target: { value: 'localhost, 1.2.3.4' } })
   })
@@ -170,40 +147,34 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
     factory.registerStep(new PDCInfrastructureSpec())
   })
 
-  test('should call onUpdate if valid values entered - inputset', async () => {
+  test('test empty initial values', async () => {
     const onUpdateHandler = jest.fn()
-    const { getByText, container } = render(
+    const { container, getByText } = render(
       <TestStepWidget
-        initialValues={getInitialValuesNoPreconfigured()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialValuesNoPreconfigured()}
+        initialValues={{}}
         type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={onUpdateHandler}
       />
     )
     await checkForFormInit(container)
-    updateTextArea(container)
-    await submitForm(getByText)
-    expect(onUpdateHandler).toHaveBeenCalledWith(getInitialValuesNoPreconfigured())
+    await openPreviewHosts(getByText)
+    expect(getByText('1.2.3.4')).toBeDefined()
   })
 
-  test('should not call onUpdate if invalid values entered - inputset', async () => {
+  test('should call onUpdate if valid values entered - inputset', async () => {
     const onUpdateHandler = jest.fn()
-    const { getByText, container } = render(
+    const { container } = render(
       <TestStepWidget
-        initialValues={getEmptyInitialValues()}
-        template={getRuntimeInputsValues()}
-        allValues={getEmptyInitialValues()}
+        initialValues={getInitialValuesNoPreconfigured()}
         type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={onUpdateHandler}
       />
     )
     await checkForFormInit(container)
-    updateTextArea(container)
-    await submitForm(getByText)
-    expect(onUpdateHandler).not.toHaveBeenCalled()
+    updateHostsInput(container)
+    expect(container).toMatchSnapshot()
   })
 
   test('populate hosts, and open hosts table', async () => {
@@ -213,16 +184,23 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
         template={getRuntimeInputsValues()}
         allValues={getInitialValuesNoPreconfigured()}
         type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={jest.fn()}
       />
     )
 
     await checkForFormInit(container)
-    updateTextArea(container)
+    updateHostsInput(container)
     await openPreviewHosts(getByText)
-    expect(getByText('cd.steps.pdcStep.noHosts')).toBeDefined()
-    await submitForm(getByText)
+    expect(getByText('localhost')).toBeDefined()
+
+    //close previewHosts
+    const closeBtn = getByText('Close preview')
+    expect(closeBtn).toBeDefined()
+    fireEvent.click(closeBtn.closest('button') as HTMLButtonElement)
+
+    //preview visible again
+    await waitFor(() => expect(getByText('cd.steps.pdcStep.previewHosts')).toBeDefined())
   })
 
   test('switch to preconfigured manually', async () => {
@@ -232,62 +210,27 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
         template={getRuntimeInputsValues()}
         allValues={getInitialValuesNoPreconfigured()}
         type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={jest.fn()}
       />
     )
     await checkForFormInit(container)
-    updateTextArea(container)
+    updateHostsInput(container)
     await clickOnPreconfiguredHostsOption(getByText)
     await clickOnDeploySpecificHostsOption(getByText)
     await waitFor(() => {
       expect(getByPlaceholderText('cd.steps.pdcStep.specificHostsPlaceholder')).toBeDefined()
     })
-    await clickOnDeployAllHostsOption(getByText)
-    await updateConnector(container)
-    await submitForm(getByText)
+    const allHosts = getByText('cd.steps.pdcStep.includeAllHosts')
+    expect(allHosts).toBeDefined()
+    fireEvent.click(allHosts)
+    await waitFor(() => expect(container.querySelector("input[value='All']")).toBeChecked())
   })
 })
 
 describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
   beforeEach(() => {
     factory.registerStep(new PDCInfrastructureSpec())
-  })
-
-  test('should call onUpdate if valid values entered - inputset', async () => {
-    const onUpdateHandler = jest.fn()
-    const { getByText, container } = render(
-      <TestStepWidget
-        initialValues={getInitialValuesPreconfigured()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialValuesPreconfigured()}
-        type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
-        onUpdate={onUpdateHandler}
-      />
-    )
-
-    await checkForFormInit(container)
-    await submitForm(getByText)
-    expect(onUpdateHandler).toHaveBeenCalledWith(getInitialValuesPreconfigured())
-  })
-
-  test('should not call onUpdate if invalid values entered - inputset', async () => {
-    const onUpdateHandler = jest.fn()
-    const { getByText, container } = render(
-      <TestStepWidget
-        initialValues={getEmptyInitialValues()}
-        template={getRuntimeInputsValues()}
-        allValues={getEmptyInitialValues()}
-        type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
-        onUpdate={onUpdateHandler}
-      />
-    )
-    await checkForFormInit(container)
-    updateTextArea(container)
-    await submitForm(getByText)
-    expect(onUpdateHandler).not.toHaveBeenCalled()
   })
 
   test('populate hosts, test is deploy to all hosts, and open hosts table', async () => {
@@ -297,16 +240,14 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
         template={getRuntimeInputsValues()}
         allValues={getInitialValuesPreconfigured()}
         type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={jest.fn()}
       />
     )
 
     await checkForFormInit(container)
-    expect(container.querySelector('textarea')).toBe(null)
+    expect(container.querySelector('textarea')).not.toBe(null)
     await openPreviewHosts(getByText)
-    expect(getByText('cd.steps.pdcStep.noHosts')).toBeDefined()
-    await submitForm(getByText)
   })
 
   test('populate hosts, test is deploy to custom hosts, and open hosts table', async () => {
@@ -316,16 +257,21 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
         template={getRuntimeInputsValues()}
         allValues={getInitialValuesPreconfigured()}
         type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={jest.fn()}
       />
     )
     await checkForFormInit(container)
-    clickOn(getByText, 'cd.steps.pdcStep.deploySpecificHostsOption')
+    await clickOnPreconfiguredHostsOption(getByText)
+    const filterHost = getByText('cd.steps.pdcStep.filterHostName')
+    expect(filterHost).toBeDefined()
+    clickOn(getByText, 'cd.steps.pdcStep.filterHostName')
     await waitFor(() => {
       expect(getByPlaceholderText('cd.steps.pdcStep.specificHostsPlaceholder')).toBeDefined()
     })
     const customHostsTextArea = getByPlaceholderText('cd.steps.pdcStep.specificHostsPlaceholder')
+    expect(customHostsTextArea).toBeDefined()
+
     act(() => {
       fireEvent.change(customHostsTextArea, { target: { value: '1.1.1.1, 2.2.2.2' } })
     })
@@ -335,7 +281,6 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
     })
-    await submitForm(getByText)
   })
 
   test('test is deploy to custom hosts by attribute filter, and open hosts table', async () => {
@@ -345,7 +290,7 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
         template={getRuntimeInputsValues()}
         allValues={getInitialValuesPreconfiguredWithAttributes()}
         type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={jest.fn()}
       />
     )
@@ -357,7 +302,6 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
     })
-    await submitForm(getByText)
   })
 
   test('test is deploy to custom hosts by hosts filter, and open hosts table', async () => {
@@ -367,7 +311,7 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
         template={getRuntimeInputsValues()}
         allValues={getInitialValuePreconfiguredWithHostFilters()}
         type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={jest.fn()}
       />
     )
@@ -379,7 +323,6 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
     })
-    await submitForm(getByText)
   })
 
   test('populate hosts, test is deploy to all hosts, and open hosts table and test all connections - all success', async () => {
@@ -389,7 +332,7 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
         template={getRuntimeInputsValues()}
         allValues={getInitialValuesPreconfigured()}
         type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={jest.fn()}
       />
     )
@@ -399,8 +342,35 @@ describe('Test PDCInfrastructureSpec behavior - Preconfigured', () => {
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
     })
+    const selectAllCheckbox = queryByAttribute('data-testid', container, 'selectAll')
+    act(() => {
+      fireEvent.click(selectAllCheckbox!)
+    })
     await checkTestConnection(getByText)
-    await submitForm(getByText)
+  })
+
+  test('populate hosts, open hosts table, select some checkbox and test selected connections', async () => {
+    const { getByText, container } = render(
+      <TestStepWidget
+        initialValues={getInitialValuesPreconfigured()}
+        template={getRuntimeInputsValues()}
+        allValues={getInitialValuesPreconfigured()}
+        type={StepType.PDC}
+        stepViewType={StepViewType.Edit}
+        onUpdate={jest.fn()}
+      />
+    )
+    await checkForFormInit(container)
+    await openPreviewHosts(getByText)
+    refreshHosts(getByText)
+    await waitFor(() => {
+      expect(getByText('1.2.3.4')).toBeDefined()
+    })
+    const selectOneCheckbox = queryByAttribute('data-testid', container, 'select-host-1.2.3.4')
+    act(() => {
+      fireEvent.click(selectOneCheckbox!)
+    })
+    await checkTestConnection(getByText)
   })
 })
 
@@ -416,7 +386,7 @@ describe('test api rejections', () => {
         template={getRuntimeInputsValues()}
         allValues={getInitialValuesPreconfigured()}
         type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={jest.fn()}
       />
     )
@@ -426,54 +396,36 @@ describe('test api rejections', () => {
     await waitFor(() => {
       expect(getByText('1.2.3.4')).toBeDefined()
     })
+    const selectAllCheckbox = queryByAttribute('data-testid', container, 'selectAll')
+    act(() => {
+      fireEvent.click(selectAllCheckbox!)
+    })
     await checkTestConnection(getByText)
-    await submitForm(getByText)
-  })
-  test('getSecretV2Promise rejection', async () => {
-    jest
-      .spyOn(CDNG, 'getSecretV2Promise')
-      .mockImplementationOnce(() => Promise.reject({ data: { message: 'error...' } }))
-    const { getByText } = render(
-      <TestStepWidget
-        initialValues={getInitialValuesPreconfigured()}
-        template={getRuntimeInputsValues()}
-        allValues={getInitialValuesPreconfigured()}
-        type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
-        onUpdate={jest.fn()}
-      />
-    )
-    expect(CDNG.getSecretV2Promise).toBeCalled()
-    await submitForm(getByText)
   })
   test('useValidateHosts failure test', async () => {
     jest.spyOn(CDNG, 'useValidateHosts').mockImplementationOnce(validateHostsFailure)
-    const { getByText } = render(
+    render(
       <TestStepWidget
         initialValues={getInitialValuesPreconfigured()}
         template={getRuntimeInputsValues()}
         allValues={getInitialValuesPreconfigured()}
         type={StepType.PDC}
-        stepViewType={StepViewType.InputSet}
+        stepViewType={StepViewType.Edit}
         onUpdate={jest.fn()}
       />
     )
     expect(validateHostsFailure).toBeCalled()
-    await submitForm(getByText)
   })
 })
 
 describe('invocation map test', () => {
-  test('invocation map, empty yaml', () => {
-    const yaml = ''
-    const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
-    invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.getConnectorListV2Promise).not.toBeCalled()
-    invocationMap?.get(SshKeyRegex)?.(infraDefPath, yaml, accountIdParams)
-    expect(CDNG.listSecretsV2Promise).not.toBeCalled()
+  beforeEach(() => {
+    jest.spyOn(CDNG, 'listSecretsV2Promise').mockImplementationOnce(() => Promise.resolve(mockListSecrets as any))
+    jest
+      .spyOn(CDNG, 'getConnectorListV2Promise')
+      .mockImplementationOnce(() => Promise.resolve(ConnectorsResponse.data as any))
   })
-
-  test('invocation map, wrong yaml', () => {
+  test('invocation map, empty yaml', () => {
     const yaml = {} as string
     const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
     invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
@@ -482,14 +434,8 @@ describe('invocation map test', () => {
     expect(CDNG.listSecretsV2Promise).not.toBeCalled()
   })
 
-  test('invocation map should call template list', () => {
-    jest.spyOn(CDNG, 'listSecretsV2Promise').mockImplementationOnce(() => Promise.resolve(mockListSecrets as any))
-    jest
-      .spyOn(CDNG, 'getConnectorListV2Promise')
-      .mockImplementationOnce(() => Promise.resolve(ConnectorsResponse.data as any))
-
+  test('invocation map, with yaml', () => {
     const yaml = getYaml()
-
     const invocationMap = factory.getStep(StepType.PDC)?.getInvocationMap?.()
     invocationMap?.get(PdcRegex)?.(infraDefPath, yaml, accountIdParams)
     expect(CDNG.getConnectorListV2Promise).toBeCalled()
@@ -501,5 +447,106 @@ describe('invocation map test', () => {
 describe('test custom functions', () => {
   test('test parseAttributes fn', () => {
     expect(parseAttributes('hostType:DB\nregion:west')).toEqual({ hostType: 'DB', region: 'west' })
+  })
+})
+
+describe('test different stepViewType', () => {
+  beforeEach(() => {
+    factory.registerStep(new PDCInfrastructureSpec())
+  })
+  test('should render variable view', () => {
+    const { container } = render(
+      <TestStepWidget
+        initialValues={getInitialValuesNoPreconfigured()}
+        template={getRuntimeInputsValues()}
+        allValues={getInitialValuesNoPreconfigured()}
+        type={StepType.PDC}
+        stepViewType={StepViewType.InputVariable}
+      />
+    )
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('validateInputSet - render empty when default', () => {
+    const response = new PDCInfrastructureSpec().validateInputSet({
+      data: {
+        credentialsRef: 'account.cred',
+        hostFilter: {
+          type: 'All',
+          spec: {}
+        }
+      },
+      template: {
+        credentialsRef: 'account.cred',
+        hostFilter: {
+          type: 'All',
+          spec: {}
+        }
+      },
+      viewType: StepViewType.TriggerForm
+    })
+    expect(response).toMatchSnapshot()
+  })
+
+  test('render runtimeview when no Preconfigured', () => {
+    const { container } = render(
+      <TestStepWidget
+        initialValues={getInitialValuesNoPreconfigured()}
+        template={{
+          credentialsRef: RUNTIME_INPUT_VALUE,
+          hosts: RUNTIME_INPUT_VALUE
+        }}
+        allValues={getInitialValuesNoPreconfigured()}
+        type={StepType.PDC}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={jest.fn()}
+      />
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('render runtimeview when Preconfigured with attribute filter', () => {
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={getInitialValuesPreconfiguredWithAttributes()}
+        template={{
+          connectorRef: RUNTIME_INPUT_VALUE,
+          hostFilter: {
+            type: 'HostAttributes',
+            spec: {
+              value: RUNTIME_INPUT_VALUE
+            }
+          }
+        }}
+        allValues={getInitialValuesPreconfiguredWithAttributes()}
+        type={StepType.PDC}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={jest.fn()}
+      />
+    )
+    expect(getByText('cd.steps.pdcStep.specificAttributes')).toBeDefined()
+  })
+
+  test('render runtimeview when Preconfigured with host filter', () => {
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={getInitialValuePreconfiguredWithHostFilters()}
+        template={{
+          connectorRef: RUNTIME_INPUT_VALUE,
+          hostFilter: {
+            type: 'HostNames',
+            spec: {
+              value: RUNTIME_INPUT_VALUE
+            }
+          }
+        }}
+        allValues={getInitialValuePreconfiguredWithHostFilters()}
+        type={StepType.PDC}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={jest.fn()}
+      />
+    )
+    expect(getByText('cd.steps.pdcStep.specificHosts')).toBeDefined()
   })
 })

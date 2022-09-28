@@ -14,10 +14,13 @@ import {
   ExpressionAndRuntimeType,
   ButtonProps,
   ExpressionAndRuntimeTypeProps,
-  MultiTypeInputType,
-  Text
+  Text,
+  AllowedTypes,
+  HarnessDocTooltip,
+  FormikTooltipContext,
+  DataTooltipInterface
 } from '@wings-software/uicore'
-import { get, pick } from 'lodash-es'
+import { defaultTo, get, pick } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'
 import useCreateOrSelectSecretModal from '@secrets/modals/CreateOrSelectSecretModal/useCreateOrSelectSecretModal'
@@ -27,7 +30,17 @@ import { useStrings } from 'framework/strings'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { getReference } from '@common/utils/utils'
+import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
 import css from './MultiTypeSecretInput.module.scss'
+
+export function getMultiTypeSecretInputType(serviceType: string): SecretResponseWrapper['secret']['type'] {
+  switch (serviceType) {
+    case 'WinRm':
+      return 'WinRmCredentials'
+    default:
+      return 'SSHKey'
+  }
+}
 
 export interface MultiTypeSecretInputFixedTypeComponentProps
   extends FixedTypeComponentProps,
@@ -57,12 +70,14 @@ export interface MultiTypeSecretInputProps extends IFormGroupProps {
   name: string
   label?: string
   expressions?: string[]
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   type?: SecretResponseWrapper['secret']['type']
   onSuccess?: (secret: SecretReference) => void
   secretsListMockData?: ResponsePageSecretResponseWrapper
   isMultiType?: boolean
   small?: boolean
+  defaultValue?: string
+  tooltipProps?: DataTooltipInterface
 }
 
 export interface ConnectedMultiTypeSecretInputProps extends MultiTypeSecretInputProps {
@@ -81,10 +96,23 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     type,
     secretsListMockData,
     isMultiType = true,
+    defaultValue,
     ...restProps
   } = props
 
   const { openCreateSSHCredModal } = useCreateSSHCredModal({
+    onSuccess: data => {
+      const secret = {
+        ...pick(data, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'type']),
+        referenceString: getReference(getScopeFromDTO(data), data.identifier) as string
+      }
+      formik.setFieldValue(name, secret.referenceString)
+      /* istanbul ignore next */
+      onSuccess?.(secret)
+    }
+  })
+
+  const { openCreateWinRmCredModal } = useCreateWinRmCredModal({
     onSuccess: data => {
       const secret = {
         ...pick(data, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'type']),
@@ -105,11 +133,12 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
         onSuccess?.(secret)
       },
       secretsListMockData,
-      handleInlineSSHSecretCreation: () => openCreateSSHCredModal()
+      handleInlineSSHSecretCreation: () => openCreateSSHCredModal(),
+      handleInlineWinRmSecretCreation: () => openCreateWinRmCredModal()
     },
     [name, onSuccess]
   )
-  const value = get(formik.values, name)
+  const value = get(formik.values, name, defaultValue)
   const hasError = errorCheck(name, formik)
 
   const {
@@ -124,12 +153,18 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     formik.setFieldValue(name, val)
   }
 
+  const tooltipContext = React.useContext(FormikTooltipContext)
+  const dataTooltipId = defaultTo(
+    props.tooltipProps?.dataTooltipId,
+    tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : ''
+  )
+
   return (
     <FormGroup
       {...rest}
       className={cx({ [css.smallForm]: small })}
       labelFor={name}
-      label={label}
+      label={label ? <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} /> : label}
       intent={intent}
       helperText={helperText}
     >

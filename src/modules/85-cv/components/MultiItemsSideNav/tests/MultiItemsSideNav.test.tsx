@@ -9,7 +9,7 @@ import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { MultiItemsSideNav } from '../MultiItemsSideNav'
-import { getSelectedMetricIndex } from '../MultiItemsSideNav.utils'
+import { getFilteredGroupedCreatedMetric, getSelectedMetricIndex } from '../MultiItemsSideNav.utils'
 
 describe('Unit tests for Multi Items side nav', () => {
   const defaultMetricName = 'metric-1'
@@ -167,5 +167,34 @@ describe('Unit tests for Multi Items side nav', () => {
     expect(getSelectedMetricIndex(['Metric 101', 'Metric 102'], '', '')).toEqual(-1)
     expect(getSelectedMetricIndex([], 'Metric New', 'Metric 101')).toEqual(-1)
     expect(getSelectedMetricIndex([], 'Metric New', '')).toEqual(-1)
+  })
+
+  test('validate getFilteredGroupedCreatedMetric', () => {
+    const groupName = {
+      label: 'group 1',
+      value: 'group1'
+    }
+    const metric1 = {
+      groupName,
+      index: 0,
+      metricName: 'test metric 1'
+    }
+    const groupedTwoMetrics = {
+      'group 1': [
+        { ...metric1 },
+        {
+          groupName,
+          index: 0,
+          metricName: 'test metric 2'
+        }
+      ]
+    }
+    const groupedOneMetrics = {
+      'group 1': [{ ...metric1 }]
+    }
+    expect(getFilteredGroupedCreatedMetric({}, '')).toEqual({})
+    expect(getFilteredGroupedCreatedMetric(groupedTwoMetrics, '')).toEqual(groupedTwoMetrics)
+    expect(getFilteredGroupedCreatedMetric(groupedTwoMetrics, 'test')).toEqual(groupedTwoMetrics)
+    expect(getFilteredGroupedCreatedMetric(groupedTwoMetrics, 'metric 1')).toEqual(groupedOneMetrics)
   })
 })

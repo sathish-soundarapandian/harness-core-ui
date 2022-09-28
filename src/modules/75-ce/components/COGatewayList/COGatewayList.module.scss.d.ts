@@ -13,8 +13,12 @@ declare const styles: {
   readonly col1: string
   readonly col2: string
   readonly col3: string
+  readonly copyIcon: string
+  readonly copyTooltip: string
   readonly detailItemHeader: string
   readonly detailItemValue: string
+  readonly disable: string
+  readonly disableRule: string
   readonly disabled: string
   readonly downTag: string
   readonly fulFilmentIcon: string
@@ -22,11 +26,14 @@ declare const styles: {
   readonly headerLayout: string
   readonly layout: string
   readonly link: string
+  readonly loaderContainer: string
   readonly modeToggle: string
   readonly notAllowed: string
   readonly pageContainer: string
+  readonly pageSubHeader: string
   readonly refreshIconContainer: string
   readonly resourceCell: string
+  readonly ruleListRow: string
   readonly ruleToggle: string
   readonly savingsAmount: string
   readonly scheduleAccordion: string
@@ -34,6 +41,7 @@ declare const styles: {
   readonly search: string
   readonly serviceAccordionContainer: string
   readonly serviceDetailsItemContainer: string
+  readonly tableWrapper: string
   readonly upTag: string
 }
 export default styles

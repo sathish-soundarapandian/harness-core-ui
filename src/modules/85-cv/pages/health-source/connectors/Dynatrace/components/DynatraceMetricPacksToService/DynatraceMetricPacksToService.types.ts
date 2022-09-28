@@ -5,11 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { DynatraceMetricData } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.types'
+import type { FormikErrors } from 'formik'
+import type {
+  DynatraceFormDataInterface,
+  DynatraceMetricData
+} from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.types'
 
 export interface DynatraceMetricPacksToServiceProps {
   connectorIdentifier: string
   dynatraceMetricData: DynatraceMetricData
   setDynatraceMetricData: React.Dispatch<React.SetStateAction<DynatraceMetricData>>
   metricValues: DynatraceMetricData
+  isTemplate?: boolean
+  expressions?: string[]
+  metricErrors?: FormikErrors<DynatraceFormDataInterface & { dynatraceService?: string }>
+  isMetricThresholdEnabled: boolean
 }

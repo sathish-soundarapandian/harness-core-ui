@@ -39,7 +39,8 @@
       "name": "BigQuery",
       "id": "BigQuery",
       "cost": 6.3,
-      "costTrend": 62900
+      "costTrend": 62900,
+      "clusterName": "ClusterName"
     },
     {
       "name": "Cloud Storage",

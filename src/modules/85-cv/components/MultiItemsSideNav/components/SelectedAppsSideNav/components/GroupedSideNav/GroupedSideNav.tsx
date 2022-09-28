@@ -5,11 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Container, Icon, Text, CollapseList, CollapseListPanel } from '@wings-software/uicore'
+import React, { useCallback } from 'react'
+import { Container, Text, CollapseList, CollapseListPanel } from '@wings-software/uicore'
+import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
+import DeleteWithPrompt from '@cv/pages/health-source/common/DeleteWithPrompt/DeleteWithPrompt'
 import { useStrings } from 'framework/strings'
+import { isGivenMetricNameContainsThresholds } from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.utils'
+import type {
+  MetricThresholdType,
+  ThresholdsPropertyNames
+} from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.types'
 import type { GroupedMetric } from './GroupedSideNav.types'
 import css from '../../SelectedAppsSideNav.module.scss'
 
@@ -18,14 +25,39 @@ interface GroupedSideNavInterface {
   selectedItem?: string
   onRemoveItem?: (removedItem: string, index: number) => void
   groupedSelectedAppsList: [string, GroupedMetric[]][]
+  isMetricThresholdEnabled?: boolean
 }
 export default function GroupedSideNav({
   groupedSelectedAppsList,
   selectedItem,
   onRemoveItem,
-  onSelect
+  onSelect,
+  isMetricThresholdEnabled
 }: GroupedSideNavInterface): JSX.Element {
   const { getString } = useStrings()
+
+  const { values: formValues } = useFormikContext()
+
+  const getShowPromptOnDelete = (metricName?: string): boolean => {
+    return Boolean(
+      metricName &&
+        isMetricThresholdEnabled &&
+        isGivenMetricNameContainsThresholds(
+          formValues as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+          metricName
+        )
+    )
+  }
+
+  const handleOnDelete = useCallback(
+    (selectedMetric, index) => {
+      if (selectedMetric && onRemoveItem) {
+        onRemoveItem(selectedMetric, index as number)
+      }
+    },
+    [onRemoveItem]
+  )
+
   return (
     <>
       {groupedSelectedAppsList.map(groupItem => {
@@ -47,8 +79,7 @@ export default function GroupedSideNav({
                   </Text>
                 ),
                 collapsedIcon: 'main-chevron-right',
-                expandedIcon: 'main-chevron-down',
-                iconProps: { name: 'main-chevron-right', color: 'primary6' }
+                expandedIcon: 'main-chevron-down'
               }}
               key={label}
               className={css.collapsePanel}
@@ -72,14 +103,13 @@ export default function GroupedSideNav({
                       {selectedApp.metricName}
                     </Text>
                     {onRemoveItem && (
-                      <Icon
-                        name="main-delete"
-                        onClick={e => {
-                          e.stopPropagation()
-                          if (selectedApp.metricName) {
-                            onRemoveItem(selectedApp.metricName, selectedApp.index as number)
-                          }
-                        }}
+                      <DeleteWithPrompt
+                        itemName={selectedApp.metricName}
+                        index={selectedApp.index}
+                        onClick={handleOnDelete}
+                        popupTitleText={getString('common.warning')}
+                        contentText={getString('cv.metricThresholds.customMetricsDeletePromptContent')}
+                        showPromptOnDelete={getShowPromptOnDelete(selectedApp.metricName)}
                       />
                     )}
                   </Container>

@@ -29,3 +29,46 @@ export function useQueryParams<T = unknown>(options?: UseQueryParamsOptions<T>):
 
   return queryParams as unknown as T
 }
+
+/**
+ * By default, all values are parsed as strings by qs, except for arrays and objects
+ * This is optional decoder that automatically transforms to numbers, booleans and null
+ */
+type CustomQsDecoder = (customQsDecoderOptions?: {
+  parseNumbers?: boolean
+  parseBoolean?: boolean
+  ignoreNull?: boolean
+  ignoreEmptyString?: boolean
+}) => IParseOptions['decoder']
+
+export const queryParamDecodeAll: CustomQsDecoder =
+  ({ parseNumbers = true, parseBoolean = true, ignoreNull = true, ignoreEmptyString = true } = {}) =>
+  (value, decoder) => {
+    if (parseNumbers && /^(\d+|\d*\.\d+)$/.test(value)) {
+      return parseFloat(value)
+    }
+
+    if (ignoreEmptyString && value.length === 0) {
+      return
+    }
+
+    const keywords: Record<string, null | undefined> = {
+      null: ignoreNull ? undefined : null,
+      undefined: undefined
+    }
+
+    if (value in keywords) {
+      return keywords[value]
+    }
+
+    const booleanKeywords: Record<string, boolean> = {
+      true: true,
+      false: false
+    }
+
+    if (parseBoolean && value in booleanKeywords) {
+      return booleanKeywords[value]
+    }
+
+    return decoder(value)
+  }

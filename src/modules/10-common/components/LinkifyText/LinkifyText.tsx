@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Text, TextProps } from '@wings-software/uicore'
+import { tokenize } from 'linkifyjs'
 
 interface BrokenText {
   type: 'TEXT' | 'URL'
@@ -15,6 +16,7 @@ interface BrokenText {
 
 /**
  * adopted from https://github.com/nteract/ansi-to-react/blob/master/src/index.ts#L104
+ * @deprecated
  */
 export const breakOnLinks = (content = ''): BrokenText[] => {
   const LINK_REGEX = /(\s*|^)(https?:\/\/(?:www\.|(?!www))[^\s.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/g
@@ -44,21 +46,23 @@ export const breakOnLinks = (content = ''): BrokenText[] => {
 }
 
 export const LinkifyText: React.FC<{ content?: string; textProps?: TextProps; linkStyles?: string }> = props => {
-  const { content, textProps = {}, linkStyles = '' } = props
-  const textItems: BrokenText[] = breakOnLinks(content)
+  const { content = '', textProps = {}, linkStyles = '' } = props
+  const tokens = tokenize(content)
   return (
     <>
-      {textItems.map((textItem, index) => {
-        if (textItem.type === 'URL') {
+      {tokens.map((token, index) => {
+        const txt = token.toString()
+
+        if (token.isLink) {
           return (
-            <a key={index} href={textItem.content} target="_blank" rel="noreferrer" className={linkStyles}>
-              {textItem.content}
+            <a key={index} href={txt} target="_blank" rel="noreferrer" className={linkStyles}>
+              {txt}
             </a>
           )
         } else {
           return (
             <Text key={index} {...textProps} inline>
-              {textItem.content}
+              {txt}
             </Text>
           )
         }

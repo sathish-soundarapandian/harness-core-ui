@@ -12,9 +12,9 @@ declare const styles: {
   readonly checkbox: string
   readonly cogBtnTooltipContainer: string
   readonly dialog: string
+  readonly dialogContent: string
   readonly division: string
   readonly label: string
-  readonly radioGroup: string
   readonly validationOptions: string
 }
 export default styles

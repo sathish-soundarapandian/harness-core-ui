@@ -33,6 +33,7 @@ jest.mock('services/cd-ng', () => ({
     mutate: jest.fn(),
     refetch: jest.fn()
   }),
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useListGitSync: () => ({
     data: [],
     refetch: jest.fn()

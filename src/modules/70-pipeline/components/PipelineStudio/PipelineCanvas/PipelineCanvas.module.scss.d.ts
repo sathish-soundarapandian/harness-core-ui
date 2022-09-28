@@ -12,6 +12,7 @@ declare const styles: {
   readonly branchName: string
   readonly branchSelector: string
   readonly breadcrumbsMenu: string
+  readonly builderContainer: string
   readonly content: string
   readonly crossIcon: string
   readonly dialog: string
@@ -36,9 +37,9 @@ declare const styles: {
   readonly runPipelineDialog: string
   readonly saveButton: string
   readonly savePublishContainer: string
-  readonly tagRender: string
   readonly tagsContainer: string
   readonly titleBar: string
+  readonly unsavedChanges: string
   readonly visualYamlToggle: string
 }
 export default styles

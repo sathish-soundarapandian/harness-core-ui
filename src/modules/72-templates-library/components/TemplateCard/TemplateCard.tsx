@@ -12,16 +12,18 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { Position } from '@blueprintjs/core'
 import { TimeAgoPopover } from '@common/components'
-import { getIconForTemplate, templateColorStyleMap } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
+import { getIconForTemplate } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
 import { TemplateTags } from '@templates-library/components/TemplateTags/TemplateTags'
 import { useStrings } from 'framework/strings'
 import { getRepoDetailsByIndentifier } from '@common/utils/gitSyncUtils'
 import type { NGTemplateInfoConfig, TemplateSummaryResponse } from 'services/template-ng'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { TemplateListCardContextMenu } from '@templates-library/pages/TemplatesPage/views/TemplateListCardContextMenu/TemplateListCardContextMenu'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
+import { ScopeBadge } from '@common/components/ScopeBadge/ScopeBadge'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { TemplateColor } from './TemplateColor/TemplateColor'
 import css from './TemplateCard.module.scss'
 
@@ -38,22 +40,30 @@ export interface TemplateCardProps {
 export function TemplateCard(props: TemplateCardProps): JSX.Element {
   const { getString } = useStrings()
   const { template, onSelect, isSelected, onPreview, onOpenEdit, onOpenSettings, onDelete } = props
-
-  const { isGitSyncEnabled } = useAppStore()
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()
+  const isTemplateRemote = (template as NGTemplateInfoConfigWithGitDetails)?.storeType === StoreType.REMOTE
 
   const templateEntityType =
     (template as TemplateSummaryResponse)?.templateEntityType || (template as NGTemplateInfoConfig)?.type
-  const style = templateColorStyleMap[templateEntityType]
+  const templateEntityLabel = defaultTo(templateFactory.getTemplateLabel(templateEntityType), '')
+  const style = templateFactory.getTemplateColorMap(templateEntityType)
   const showMenu = !onPreview && !onOpenEdit && !onOpenSettings && !onDelete
+  const repoName =
+    (template as TemplateSummaryResponse)?.gitDetails?.repoName ||
+    (template as NGTemplateInfoConfigWithGitDetails)?.repo
   const repoIdentifier =
     (template as TemplateSummaryResponse)?.gitDetails?.repoIdentifier ||
     (template as NGTemplateInfoConfigWithGitDetails)?.repo
-  const branch =
-    (template as TemplateSummaryResponse)?.gitDetails?.branch ||
-    (template as NGTemplateInfoConfigWithGitDetails)?.branch
+
+  const branch = isTemplateRemote
+    ? ''
+    : (template as TemplateSummaryResponse)?.gitDetails?.branch ||
+      (template as NGTemplateInfoConfigWithGitDetails)?.branch
 
   const templateIcon = getIconForTemplate(getString, template)
+
+  const gitSyncRepoName = (!loadingRepos && getRepoDetailsByIndentifier(repoIdentifier, gitSyncRepos)?.name) || ''
+  const repoLabel = isTemplateRemote ? repoName : gitSyncRepoName
 
   return (
     <Container className={cx(css.container, { [css.bordered]: !!onSelect }, { [css.selected]: !!isSelected })}>
@@ -99,34 +109,41 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
             {getString('idLabel', { id: template.identifier })}
           </Text>
         </Container>
+        <Container>
+          <ScopeBadge data={template} />
+        </Container>
         {!!template.tags && !isEmpty(template.tags) && <TemplateTags tags={template.tags} />}
         <Container height={1} background={Color.GREY_100} />
-        {isGitSyncEnabled && !!repoIdentifier && !!branch && (
+        {(!isEmpty(repoLabel) || !isEmpty(branch)) && (
           <>
             <Container className={css.infoContainer}>
-              <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
-                <Text className={css.label} font="small" width={80} color={Color.GREY_700}>
-                  {getString('pipeline.gitRepo')}
-                </Text>
-                <Layout.Horizontal style={{ alignItems: 'center' }} spacing={'small'}>
-                  <Icon name="repository" size={10} color={Color.GREY_600} />
-                  <Text font={{ size: 'small' }} color={Color.BLACK} title={repoIdentifier} lineClamp={1} width={40}>
-                    {(!loadingRepos && getRepoDetailsByIndentifier(repoIdentifier, gitSyncRepos)?.name) || ''}
+              {!isEmpty(repoLabel) && (
+                <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+                  <Text className={css.label} font="small" width={80} color={Color.GREY_700}>
+                    {getString('pipeline.gitRepo')}
                   </Text>
+                  <Layout.Horizontal style={{ alignItems: 'center' }} spacing={'small'}>
+                    <Icon name="repository" size={10} color={Color.GREY_600} />
+                    <Text font={{ size: 'small' }} color={Color.BLACK} title={repoIdentifier} lineClamp={1} width={40}>
+                      {repoLabel}
+                    </Text>
+                  </Layout.Horizontal>
                 </Layout.Horizontal>
-              </Layout.Horizontal>
+              )}
 
-              <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
-                <Text className={css.label} font="small" width={80} color={Color.GREY_700}>
-                  {getString('pipelineSteps.deploy.inputSet.branch')}
-                </Text>
-                <Layout.Horizontal style={{ alignItems: 'center' }} spacing={'small'}>
-                  <Icon name="git-new-branch" size={10} color={Color.GREY_500} />
-                  <Text font={{ size: 'small' }} color={Color.BLACK} title={branch} lineClamp={1} width={40}>
-                    {branch}
+              {!isEmpty(branch) && (
+                <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+                  <Text className={css.label} font="small" width={80} color={Color.GREY_700}>
+                    {getString('pipelineSteps.deploy.inputSet.branch')}
                   </Text>
+                  <Layout.Horizontal style={{ alignItems: 'center' }} spacing={'small'}>
+                    <Icon name="git-new-branch" size={10} color={Color.GREY_500} />
+                    <Text font={{ size: 'small' }} color={Color.BLACK} title={branch} lineClamp={1} width={40}>
+                      {branch}
+                    </Text>
+                  </Layout.Horizontal>
                 </Layout.Horizontal>
-              </Layout.Horizontal>
+              )}
             </Container>
             <Container height={1} background={Color.GREY_100} />
           </>
@@ -152,10 +169,10 @@ export function TemplateCard(props: TemplateCardProps): JSX.Element {
         )}
         <Container flex={{ justifyContent: 'center' }} padding={{ top: 'medium' }}>
           <TemplateColor
-            fill={style.fill as string}
-            stroke={style.stroke as string}
-            textColor={style.color as string}
-            title={templateEntityType.toUpperCase()}
+            fill={style?.fill as string}
+            stroke={style?.stroke as string}
+            textColor={style?.color as string}
+            title={templateEntityLabel.toUpperCase()}
           />
         </Container>
       </Card>

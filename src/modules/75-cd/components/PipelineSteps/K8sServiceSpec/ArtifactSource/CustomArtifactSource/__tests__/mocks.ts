@@ -19,7 +19,38 @@ export const artifacts = {
   ],
   primary: {
     spec: {
-      version: '<+input>'
+      version: '<+input>',
+      delegateSelectors: '<+input>',
+      inputs: [
+        {
+          name: 'variable1',
+          type: 'String',
+          value: '<+input>'
+        }
+      ],
+      scripts: {
+        fetchAllArtifacts: {
+          artifactsArrayPath: '<+input>',
+          attributes: [
+            {
+              name: 'variable',
+              type: 'String',
+              value: '<+input>'
+            }
+          ],
+          versionPath: '<+input>',
+          spec: {
+            shell: 'BASH',
+            source: {
+              spec: {
+                script: '<+input>'
+              },
+              type: '<+input>',
+              timeout: '<+input>'
+            }
+          }
+        }
+      }
     },
     type: 'CustomArtifact'
   }
@@ -40,7 +71,38 @@ export const template = {
     ],
     primary: {
       spec: {
-        version: '<+input>'
+        version: '<+input>',
+        delegateSelectors: '<+input>',
+        inputs: [
+          {
+            name: 'variable1',
+            type: 'String',
+            value: '<+input>'
+          }
+        ],
+        scripts: {
+          fetchAllArtifacts: {
+            artifactsArrayPath: '<+input>',
+            attributes: [
+              {
+                name: 'variable',
+                type: 'String',
+                value: '<+input>'
+              }
+            ],
+            versionPath: '<+input>',
+            spec: {
+              shell: 'BASH',
+              source: {
+                spec: {
+                  script: '<+input>'
+                },
+                type: '<+input>',
+                timeout: '<+input>'
+              }
+            }
+          }
+        }
       },
       type: 'CustomArtifact'
     }

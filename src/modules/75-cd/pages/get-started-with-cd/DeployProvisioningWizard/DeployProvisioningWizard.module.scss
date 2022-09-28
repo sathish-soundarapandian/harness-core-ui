@@ -1,0 +1,217 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.header {
+  height: 10%;
+  width: 100%;
+  padding-left: 60px !important;
+  padding-top: var(--spacing-huge) !important;
+  padding-bottom: var(--spacing-medium) !important;
+  background-color: var(--primary-1) !important;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
+}
+
+.containerPadding {
+  padding-top: var(--spacing-xxlarge) !important;
+  padding-bottom: 56px !important;
+}
+.footer {
+  border-top: 1px solid var(--grey-200);
+  position: absolute;
+  top: 90%;
+}
+
+.artifactTypeCard {
+  height: 170px;
+  width: 270px;
+  border-radius: 8px;
+  background: var(--white);
+  margin-right: var(--spacing-large);
+  box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.039), 0px 8px 16px rgba(96, 97, 112, 0.16);
+}
+
+.selectedCard {
+  background: var(--primary-1);
+}
+
+.text {
+  padding-top: var(--spacing-xxlarge) !important;
+}
+.text1 {
+  padding-top: var(--spacing-xxxlarge) !important;
+}
+
+.formInput {
+  width: 320px;
+}
+
+.workloadTypeCard {
+  height: 72px;
+  width: 72px;
+  margin-right: var(--spacing-large);
+  box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04), 0px 8px 16px rgba(96, 97, 112, 0.16);
+}
+
+.workloadTypeIcon {
+  padding: var(--spacing-xsmall) !important;
+}
+
+.serviceDeploymentTypeCard {
+  height: 80px;
+  width: 80px;
+  margin-right: var(--spacing-large);
+}
+
+.serviceDeploymentTypeIcon {
+  margin-top: var(--spacing-xsmall) !important;
+}
+
+.icons {
+  display: flex;
+}
+
+.borderBottom {
+  margin-top: 90px !important;
+  width: 818px;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.authMethodBtn {
+  border: 1px solid var(--grey-100) !important;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
+}
+
+.main {
+  overflow-y: scroll;
+}
+
+.artifactSections {
+  padding-top: var(--spacing-xxlarge);
+  margin-bottom: var(--spacing-xlarge);
+}
+
+.repoborderBottom {
+  width: 100%;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.alignIcon {
+  margin-left: 100px !important;
+}
+
+.repoCard {
+  height: 80px;
+  width: 80px;
+  margin-right: var(--spacing-large);
+  margin-bottom: var(--spacing-large);
+}
+
+.learnMore {
+  padding: 0 !important;
+}
+
+.testConnectionBtn {
+  width: fit-content;
+  margin-bottom: var(--spacing-medium) !important;
+}
+
+.repositories {
+  max-height: 63vh;
+  height: fit-content;
+  width: 676px;
+}
+
+.repositoryTable {
+  height: fit-content;
+  max-height: 30vh;
+  overflow-y: scroll;
+  border-radius: 8px;
+  border: 1px solid var(--grey-200);
+  > div {
+    max-height: 100%;
+    > div {
+      padding: 0 !important;
+    }
+  }
+}
+
+.repositoryRow {
+  height: 51px;
+  padding: var(--spacing-medium) var(--spacing-xlarge) !important;
+}
+
+.repositoryRow:hover {
+  background-color: var(--primary-1);
+  cursor: pointer;
+}
+
+.repositorySearch {
+  [class*='bp3-input'] {
+    height: 42px;
+    width: 675px;
+    border-radius: 6px;
+    padding-left: var(--spacing-xxxlarge) !important;
+  }
+}
+
+.accordionPadding {
+  padding-top: var(--spacing-medium);
+  padding-bottom: var(--spacing-small);
+}
+
+.accordion {
+  max-height: 430px;
+  :global(.Accordion--chevron) {
+    margin-left: auto;
+    color: var(--grey-700);
+  }
+  :global(.Accordion--panel) {
+    border-bottom: 1px solid var(--grey-200);
+    padding-top: var(--spacing-medium);
+    padding-bottom: var(--spacing-small);
+  }
+  :global(.Accordion--summary) {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
+.accordionStatus {
+  padding-left: var(--spacing-small) !important;
+}
+
+.credentialsButton {
+  width: 300px;
+  display: flex;
+  border: 1px solid var(--grey-100) !important;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16) !important;
+}
+
+.authHeaderRow {
+  margin-top: var(--spacing-medium);
+  width: 42%;
+  display: flex;
+  justify-content: space-between;
+}
+.authTitle {
+  font-size: var(font-size-normal);
+  color: var(--black-600);
+}
+
+.authFormField {
+  width: 320px;
+  margin-top: 20px;
+}
+.noDelegateWarning {
+  max-width: 480px;
+}
+.provisioningSuccessful {
+  width: fit-content !important;
+  background-color: var(--green-50) !important;
+  border-radius: 4px;
+}

@@ -15,12 +15,14 @@ import {
   CreateConnectorModalProps,
   TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { buildAzurePayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import AzureAuthentication from './StepAuth/AzureAuthentication'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 
 function CreateAzureConnector(props: React.PropsWithChildren<CreateConnectorModalProps>): React.ReactElement {
   const { getString } = useStrings()
@@ -30,7 +32,9 @@ function CreateAzureConnector(props: React.PropsWithChildren<CreateConnectorModa
     'connectorInfo',
     'accountId',
     'orgIdentifier',
-    'projectIdentifier'
+    'projectIdentifier',
+    'connectivityMode',
+    'setConnectivityMode'
   ])
   return (
     <StepWizard
@@ -51,16 +55,32 @@ function CreateAzureConnector(props: React.PropsWithChildren<CreateConnectorModa
         identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
         {...commonProps}
       />
-      <DelegateSelectorStep
-        name={getString('delegate.DelegateselectionLabel')}
+      <ConnectivityModeStep
+        name={getString('connectors.selectConnectivityMode')}
+        type={Connectors.AZURE}
+        gitDetails={props.gitDetails}
+        connectorInfo={props.connectorInfo}
         isEditMode={props.isEditMode}
         setIsEditMode={props.setIsEditMode}
         buildPayload={buildAzurePayload}
+        connectivityMode={props.connectivityMode}
+        setConnectivityMode={props.setConnectivityMode}
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
-        connectorInfo={props.connectorInfo}
       />
-      <VerifyOutOfClusterDelegate
+      {props.connectivityMode === ConnectivityModeType.Delegate ? (
+        <DelegateSelectorStep
+          name={getString('delegate.DelegateselectionLabel')}
+          isEditMode={props.isEditMode}
+          setIsEditMode={props.setIsEditMode}
+          buildPayload={buildAzurePayload}
+          hideModal={props.onClose}
+          onConnectorCreated={props.onSuccess}
+          connectorInfo={props.connectorInfo}
+          gitDetails={props.gitDetails}
+        />
+      ) : null}
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep={true}

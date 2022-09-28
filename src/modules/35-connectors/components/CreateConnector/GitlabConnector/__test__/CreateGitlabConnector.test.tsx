@@ -13,9 +13,21 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, clickSubmit, fillAtForm } from '@common/utils/JestFormHelper'
 
 import { GitConnectionType } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
+import routes from '@common/RouteDefinitions'
 import CreateGitlabConnector from '../CreateGitlabConnector'
-import { mockResponse, mockSecret, sshAuthWithAPIAccessToken, usernamePassword, backButtonMock } from './gitlabMocks'
+import {
+  mockResponse,
+  mockSecret,
+  sshAuthWithAPIAccessToken,
+  usernamePassword,
+  backButtonMock,
+  hostedMock
+} from './gitlabMocks'
 import { backButtonTest } from '../../commonTest'
+
+const testPath = routes.toConnectors({ accountId: ':accountId' })
+const testPathParams = { accountId: 'dummy' }
 
 const commonProps = {
   accountId: 'dummy',
@@ -42,15 +54,26 @@ jest.mock('services/cd-ng', () => ({
   getSecretV2Promise: jest.fn().mockImplementation(() => Promise.resolve(mockSecret)),
   useGetTestConnectionResult: jest.fn().mockImplementation(() => jest.fn()),
   useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
 }))
 
 describe('Create Gitlab connector Wizard', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('Creating gitlab step one', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <CreateGitlabConnector {...commonProps} isEditMode={false} connectorInfo={undefined} mock={mockResponse} />
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateGitlabConnector
+          {...commonProps}
+          isEditMode={false}
+          connectorInfo={undefined}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
+        />
       </TestWrapper>
     )
     // fill step 1
@@ -63,8 +86,14 @@ describe('Create Gitlab connector Wizard', () => {
 
   test('Creating gitlab step one and step two for HTTPS', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <CreateGitlabConnector {...commonProps} isEditMode={false} connectorInfo={undefined} mock={mockResponse} />
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateGitlabConnector
+          {...commonProps}
+          isEditMode={false}
+          connectorInfo={undefined}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
+        />
       </TestWrapper>
     )
 
@@ -100,8 +129,14 @@ describe('Create Gitlab connector Wizard', () => {
 
   test('Creating gitlab step two for SSH key', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <CreateGitlabConnector {...commonProps} isEditMode={false} connectorInfo={undefined} mock={mockResponse} />
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateGitlabConnector
+          {...commonProps}
+          isEditMode={false}
+          connectorInfo={undefined}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
+        />
       </TestWrapper>
     )
 
@@ -144,12 +179,13 @@ describe('Create Gitlab connector Wizard', () => {
   test('should be able to edit ssh with API access', async () => {
     updateConnector.mockReset()
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateGitlabConnector
           {...commonProps}
           isEditMode={true}
           connectorInfo={sshAuthWithAPIAccessToken}
           mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
         />
       </TestWrapper>
     )
@@ -174,6 +210,10 @@ describe('Create Gitlab connector Wizard', () => {
       clickSubmit(container)
     })
 
+    await act(async () => {
+      clickSubmit(container)
+    })
+
     expect(updateConnector).toBeCalledTimes(1)
     expect(updateConnector).toBeCalledWith(
       {
@@ -186,12 +226,58 @@ describe('Create Gitlab connector Wizard', () => {
   test('should be able to edit  usernamePassword without API access', async () => {
     updateConnector.mockReset()
     const { container } = render(
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <CreateGitlabConnector
           {...commonProps}
           isEditMode={true}
           connectorInfo={usernamePassword}
           mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
+        />
+      </TestWrapper>
+    )
+    await act(async () => {
+      clickSubmit(container)
+    })
+    await act(async () => {
+      clickSubmit(container)
+    })
+    // step 2
+    expect(queryByText(container, 'common.git.enableAPIAccess')).toBeTruthy()
+    expect(container).toMatchSnapshot()
+
+    //updating connector
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    await act(async () => {
+      clickSubmit(container)
+    })
+
+    expect(updateConnector).toBeCalledTimes(1)
+    expect(updateConnector).toBeCalledWith(
+      {
+        connector: usernamePassword
+      },
+      { queryParams: {} }
+    )
+  })
+
+  test('should render edit form for hosted', async () => {
+    updateConnector.mockReset()
+    const { container } = render(
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateGitlabConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={hostedMock}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Manager}
         />
       </TestWrapper>
     )
@@ -217,7 +303,7 @@ describe('Create Gitlab connector Wizard', () => {
     expect(updateConnector).toBeCalledTimes(1)
     expect(updateConnector).toBeCalledWith(
       {
-        connector: usernamePassword
+        connector: hostedMock
       },
       { queryParams: {} }
     )
@@ -225,8 +311,14 @@ describe('Create Gitlab connector Wizard', () => {
 
   backButtonTest({
     Element: (
-      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
-        <CreateGitlabConnector {...commonProps} isEditMode={true} connectorInfo={backButtonMock} mock={mockResponse} />
+      <TestWrapper path={testPath} pathParams={testPathParams}>
+        <CreateGitlabConnector
+          {...commonProps}
+          isEditMode={true}
+          connectorInfo={backButtonMock}
+          mock={mockResponse}
+          connectivityMode={ConnectivityModeType.Delegate}
+        />
       </TestWrapper>
     ),
     backButtonSelector: '[data-name="commonGitBackButton"]',

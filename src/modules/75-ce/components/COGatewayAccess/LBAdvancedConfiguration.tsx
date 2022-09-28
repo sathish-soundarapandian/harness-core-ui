@@ -47,6 +47,7 @@ const LBAdvancedConfiguration: React.FC<LBAdvancedConfigurationProps> = props =>
   const isK8sRule = Utils.isK8sRule(props.gatewayDetails)
   const isAzureProvider = Utils.isProviderAzure(props.gatewayDetails.provider)
   const isGcpProvider = Utils.isProviderGcp(props.gatewayDetails.provider)
+  const isAwsProvider = Utils.isProviderAws(props.gatewayDetails.provider)
 
   const [activeConfigTabId, setActiveConfigTabId] = useState<string | undefined>(props.activeStepDetails?.tabId)
   const [routingRecords, setRoutingRecords] = useState<PortConfig[]>(props.gatewayDetails.routing.ports)
@@ -112,7 +113,7 @@ const LBAdvancedConfiguration: React.FC<LBAdvancedConfigurationProps> = props =>
         handleSaveRoutingRecords(result.response)
       }
     } catch (e) {
-      showError(e.data?.message || e.message, undefined, 'ce.creaetap.result.error')
+      showError(Utils.getASErrorMessage(e) || e.data?.message || e.message, undefined, 'ce.creaetap.result.error')
     } finally {
       setShowRoutingTable(true)
     }
@@ -160,7 +161,11 @@ const LBAdvancedConfiguration: React.FC<LBAdvancedConfigurationProps> = props =>
                         style={{ alignSelf: 'center', marginTop: '10px' }}
                       />
                     ) : (
-                      <CORoutingTable routingRecords={routingRecords} setRoutingRecords={setRoutingRecords} />
+                      <CORoutingTable
+                        routingRecords={routingRecords}
+                        setRoutingRecords={setRoutingRecords}
+                        isAwsConfig={isAwsProvider}
+                      />
                     )}
                   </Layout.Vertical>
                 </>

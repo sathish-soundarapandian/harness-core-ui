@@ -28,7 +28,8 @@ import {
 import { TemplateYaml } from '@pipeline/components/PipelineStudio/TemplateYaml/TemplateYaml'
 import type { TemplateLinkConfig } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
-import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import css from './TemplateBar.module.scss'
 
 interface TemplateMenuItem {
@@ -40,14 +41,22 @@ interface TemplateMenuItem {
 
 export interface TemplateBarProps {
   templateLinkConfig: TemplateLinkConfig
-  onOpenTemplateSelector: (selectedTemplate: TemplateSummaryResponse) => void
-  onRemoveTemplate: () => Promise<void>
+  onOpenTemplateSelector?: (selectedTemplate: TemplateSummaryResponse) => void
+  onRemoveTemplate?: () => Promise<void>
   className?: string
+  isReadonly?: boolean
+  storeMetadata?: StoreMetadata
 }
 
 export function TemplateBar(props: TemplateBarProps): JSX.Element {
-  const { isReadonly } = usePipelineContext()
-  const { templateLinkConfig, onOpenTemplateSelector, onRemoveTemplate, className = '' } = props
+  const {
+    templateLinkConfig,
+    onOpenTemplateSelector,
+    onRemoveTemplate,
+    className = '',
+    isReadonly,
+    storeMetadata
+  } = props
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
   const { module, ...params } = useParams<PipelineType<ProjectPathProps>>()
@@ -66,9 +75,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     queryParams: {
       ...getScopeBasedProjectPathParams(params, scope),
       versionLabel: defaultTo(templateLinkConfig.versionLabel, ''),
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
+      ...getGitQueryParamsWithParentScope(storeMetadata, params, repoIdentifier, branch)
     }
   })
 
@@ -79,7 +86,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
 
   const onChangeTemplate = () => {
     if (selectedTemplate) {
-      onOpenTemplateSelector(selectedTemplate)
+      onOpenTemplateSelector?.(selectedTemplate)
     }
   }
 
@@ -101,7 +108,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
     confirmButtonText: getString('confirm'),
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
-        await onRemoveTemplate()
+        await onRemoveTemplate?.()
       }
     }
   })
@@ -139,29 +146,47 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
         backdropClassName={css.templateYamlPreviewDialogBackdrop}
       >
         <Container className={css.templateYamlPreviewContainer}>
-          <TemplateYaml templateYaml={defaultTo(selectedTemplate?.yaml, '')} withoutHeader />
+          <TemplateYaml
+            templateYaml={defaultTo(selectedTemplate?.yaml, '')}
+            withoutHeader
+            overrideEditorOptions={{
+              scrollbar: {
+                useShadows: false,
+                handleMouseWheel: true
+              },
+              scrollBeyondLastLine: true
+            }}
+          />
         </Container>
       </Dialog>
     ),
     [selectedTemplate?.yaml]
   )
 
+  const menuItems = [
+    ...(onOpenTemplateSelector
+      ? [
+          {
+            icon: 'command-switch',
+            label: getString('pipeline.changeTemplateLabel'),
+            onClick: onChangeTemplate
+          }
+        ]
+      : []),
+    ...(onRemoveTemplate
+      ? [
+          {
+            icon: 'main-trash',
+            label: getString('pipeline.removeTemplateLabel'),
+            onClick: openRemoveTemplateDialog
+          }
+        ]
+      : [])
+  ]
+
   const getItems = (): TemplateMenuItem[] => {
     return [
-      ...(!readyOnly
-        ? ([
-            {
-              icon: 'command-switch',
-              label: getString('pipeline.changeTemplateLabel'),
-              onClick: onChangeTemplate
-            },
-            {
-              icon: 'main-trash',
-              label: getString('pipeline.removeTemplateLabel'),
-              onClick: openRemoveTemplateDialog
-            }
-          ] as TemplateMenuItem[])
-        : []),
+      ...(!readyOnly ? (menuItems as TemplateMenuItem[]) : []),
       {
         icon: 'main-share',
         label: getString('pipeline.openTemplateInNewTabLabel'),

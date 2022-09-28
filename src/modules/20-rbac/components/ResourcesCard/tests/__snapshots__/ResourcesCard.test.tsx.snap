@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Resource Card it should render attribute selection option if required methods are provided 1`] = `
+<div
+  class="bp3-dialog Dialog--dialog dialog"
+>
+  <div
+    class="bp3-dialog-header"
+  >
+    <h4
+      class="bp3-heading"
+    >
+      add environment common.types
+    </h4>
+  </div>
+  <span
+    class="bp3-icon StyledProps--main Dialog--close"
+    data-icon="Stroke"
+  >
+    <svg
+      fill="none"
+      height="15"
+      width="15"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 .8l6 6 6-6-12 12 6-6 6 6"
+        stroke="#8F90A6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  <div
+    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+  >
+    <div
+      class="Layout--vertical StyledProps--main StyledProps--padding-xsmall"
+    >
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <div
+          class="StyledProps--font StyledProps--main modal"
+        />
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+        >
+          <button
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              rbac.addResourceModal.modalCtaLabelPlural
+            </span>
+          </button>
+          <button
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              cancel
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer />
+</div>
+`;

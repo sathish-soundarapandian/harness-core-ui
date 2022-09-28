@@ -8,7 +8,16 @@
 import React, { FC, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
-import { Button, ButtonVariation, Dialog, Formik, FormikForm, Layout, SelectOption, useToaster } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Formik,
+  FormikForm,
+  Layout,
+  SelectOption,
+  useToaster,
+  ModalDialog
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { Clause, Segment, usePatchSegment } from 'services/cf'
 import targetToSelectOption from '@cf/utils/targetToSelectOption'
@@ -17,8 +26,6 @@ import { getErrorMessage } from '@cf/utils/CFUtils'
 import SpecifyIndividualTargets from './SpecifyIndividualTargets'
 import TargetBasedOnConditions from './TargetBasedOnConditions'
 import { getRulesInstructions, getTargetInstructions } from './getInstructions'
-
-import css from './EditTargetGroupCriteriaDialog.module.scss'
 
 export interface EditTargetGroupCriteriaDialogProps {
   hideModal: () => void
@@ -71,6 +78,8 @@ const EditTargetGroupCriteriaDialog: FC<EditTargetGroupCriteriaDialogProps> = ({
         ...getRulesInstructions(targetGroup?.rules || [], values.rules)
       ]
 
+      instructions.sort(({ kind: aKind }, { kind: bKind }) => (aKind > bKind ? -1 : 1))
+
       patch.segment.addAllInstructions(instructions)
 
       patch.segment
@@ -109,9 +118,10 @@ const EditTargetGroupCriteriaDialog: FC<EditTargetGroupCriteriaDialogProps> = ({
         rules: targetGroup.rules || []
       }}
     >
-      {({ submitForm, values }) => (
-        <Dialog
-          className={css.dialog}
+      {({ submitForm, values, setFieldValue }) => (
+        <ModalDialog
+          width={835}
+          height={580}
           isOpen
           enforceFocus={false}
           title={getString('cf.segmentDetail.targetGroupCriteria')}
@@ -133,12 +143,12 @@ const EditTargetGroupCriteriaDialog: FC<EditTargetGroupCriteriaDialogProps> = ({
           }
         >
           <FormikForm>
-            <Layout.Vertical spacing="small" className={css.body} padding="xsmall">
+            <Layout.Vertical spacing="small">
               <SpecifyIndividualTargets targetGroup={targetGroup} />
-              <TargetBasedOnConditions targetGroup={targetGroup} values={values} />
+              <TargetBasedOnConditions targetGroup={targetGroup} values={values} setFieldValue={setFieldValue} />
             </Layout.Vertical>
           </FormikForm>
-        </Dialog>
+        </ModalDialog>
       )}
     </Formik>
   )

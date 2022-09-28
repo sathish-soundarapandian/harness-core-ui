@@ -29,27 +29,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import NoResults from '@ce/images/no-results.svg'
 import EmptyView from '@ce/images/empty-state.svg'
 import AnomaliesError from '@ce/images/anomalies-error.svg'
+import { getResourceIcon } from '@ce/utils/iconsUtils'
 import css from '../../pages/anomalies-overview/AnomaliesOverviewPage.module.scss'
-
-const getResourceIcon = (cloudProvider: string) => {
-  switch (cloudProvider) {
-    case 'CLUSTER':
-      return 'service-kubernetes'
-
-    case 'AWS':
-      return 'service-aws'
-
-    case 'AZURE':
-      return 'service-azure'
-
-    case 'GCP':
-      return 'gcp'
-
-    /* istanbul ignore next */
-    default:
-      return 'harness'
-  }
-}
 
 interface SortByObjInterface {
   sort?: sortType

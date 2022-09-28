@@ -7,11 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly addResourceBtn: string
-  readonly limitAccessCell: string
-  readonly radioBtn: string
+  readonly radioBtnCtr: string
+  readonly radioBtnLabel: string
+  readonly radioBtnSet: string
   readonly resourceFields: string
-  readonly resourceName: string
   readonly selectedResourceGroupCardDetails: string
   readonly staticResource: string
 }

@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useMemo } from 'react'
+import get from 'lodash-es/get'
 import {
   Layout,
   Button,
@@ -15,7 +16,8 @@ import {
   Container,
   ButtonVariation,
   HarnessDocTooltip,
-  FormInput
+  FormInput,
+  Radio
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
@@ -24,6 +26,10 @@ import UploadJSON from '../components/UploadJSON'
 
 import css from '../CreatePdcConnector.module.scss'
 
+enum SelectionType {
+  MANUAL = 'MANUAL',
+  JSON = 'JSON'
+}
 interface PdcDetailsProps {
   name: string
   isEditMode: boolean
@@ -33,6 +39,7 @@ interface PdcDetailsProps {
 
 export interface uploadHostItem {
   hostname: string
+  attributes?: string
 }
 interface StepConfigureProps {
   closeModal?: () => void
@@ -45,7 +52,10 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
   const { prevStepData, nextStep } = props
   const { getString } = useStrings()
 
-  const [hostsJSON, setHostsJSON] = useState([] as uploadHostItem[])
+  const [hostsJSON, setHostsJSON] = useState(prevStepData?.spec?.hosts || ([] as uploadHostItem[]))
+  const [selectionType, setSelectionType] = useState<SelectionType>(
+    get(prevStepData, 'spec.hosts', []).length > 0 ? SelectionType.JSON : SelectionType.MANUAL
+  )
 
   const handleSubmit = (formData: ConnectorConfigDTO) => {
     const data = { ...formData }
@@ -58,9 +68,18 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
   const initialFormValues = useMemo(() => {
     const hosts = prevStepData?.hosts || prevStepData?.spec?.hosts
     return {
-      hosts: typeof hosts === 'string' ? hosts : hosts?.map?.((host: any) => host.hostname).join('\n')
+      hosts:
+        typeof hosts === 'string'
+          ? hosts
+          : (hosts?.map?.((host: any) => host.hostname).join('\n') as string | string[]),
+      hostsJson: JSON.stringify(hosts, undefined, 4)
     }
   }, [])
+
+  const onSelectionTypeChange = (type: SelectionType): void => {
+    setHostsJSON([])
+    setSelectionType(type)
+  }
 
   return (
     <Layout.Vertical spacing="medium" className={css.secondStep}>
@@ -70,8 +89,31 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
       <Formik initialValues={initialFormValues} formName="pdcDetailsForm" onSubmit={handleSubmit}>
         {formikProps => (
           <>
+            <Container className={css.selectionWrapper}>
+              <Text margin={{ top: 'medium', bottom: 'medium' }}>{getString('connectors.pdc.selectLabel')}</Text>
+              <Layout.Horizontal spacing="xxlarge">
+                <Radio
+                  label={getString('connectors.pdc.manuallyHosts')}
+                  inline={true}
+                  value={SelectionType.MANUAL}
+                  checked={selectionType === SelectionType.MANUAL}
+                  onChange={e => {
+                    onSelectionTypeChange(e.currentTarget.value as SelectionType)
+                  }}
+                />
+                <Radio
+                  label={getString('connectors.pdc.uploadJson')}
+                  inline={true}
+                  value={SelectionType.JSON}
+                  checked={selectionType === SelectionType.JSON}
+                  onChange={e => {
+                    onSelectionTypeChange(e.currentTarget.value as SelectionType)
+                  }}
+                />
+              </Layout.Horizontal>
+            </Container>
             <Container className={css.clusterWrapper}>
-              <Layout.Horizontal className={css.hostContainer} spacing="xxlarge">
+              {selectionType === SelectionType.MANUAL && (
                 <div className={css.manualHostContainer}>
                   <FormInput.TextArea
                     className={css.textInput}
@@ -84,14 +126,16 @@ const PdcDetails: React.FC<StepProps<StepConfigureProps> & Partial<PdcDetailsPro
                     }
                   />
                 </div>
-                <span>{getString('common.orCaps')}</span>
+              )}
+              {selectionType === SelectionType.JSON && (
                 <UploadJSON
                   setJsonValue={json => {
                     setHostsJSON(json)
-                    formikProps.setFieldValue('hosts', json.map(hostItem => hostItem.hostname).join('\n'))
                   }}
+                  formikProps={formikProps}
+                  previousHosts={prevStepData?.spec?.hosts}
                 />
-              </Layout.Horizontal>
+              )}
             </Container>
             <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">
               <Button

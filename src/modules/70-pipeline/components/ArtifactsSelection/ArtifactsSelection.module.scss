@@ -20,10 +20,6 @@
     color: var(--primary-7) !important;
   }
 
-  .locationField {
-    display: flex;
-    align-items: center;
-  }
   .connectorNameField {
     display: flex;
     align-items: center;
@@ -85,6 +81,14 @@
     border-bottom: solid 1px var(--grey-100);
     padding-bottom: var(--spacing-medium);
     text-transform: uppercase;
+  }
+}
+.sidecarList {
+  width: 100%;
+  .primaryArtifactRef {
+    border: 1px solid var(--grey-100);
+    padding: var(--spacing-xsmall) var(--spacing-large);
+    background-color: var(--form-bg);
   }
 }
 

@@ -11,7 +11,6 @@ import type { TableProps } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-// import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
 import { PageSpinner } from '@common/components'
 import ServiceDetailsEmptyState from '@cd/icons/ServiceDetailsEmptyState.svg'
 import css from '@cd/components/DashboardList/DashboardList.module.scss'
@@ -21,6 +20,7 @@ const PAGE_SIZE = 10
 export interface DashboardListProps<T extends Record<string, any>> {
   HeaderCustomPrimary?: (props: { total: number }) => React.ReactElement
   HeaderCustomSecondary?: (props: { onChange: (val: string) => void }) => React.ReactElement
+  SortList: JSX.Element
   columns: TableProps<T>['columns']
   loading: boolean
   error: boolean
@@ -33,14 +33,13 @@ const HeaderFilterComponent: React.FC<{ onChange: (val: string) => void }> = pro
   const { getString } = useStrings()
   const { onChange = noop } = props
   return (
-    <Layout.Horizontal margin={{ left: 'small' }}>
-      <ExpandingSearchInput flip width={232} placeholder={getString('search')} throttle={200} onChange={onChange} />
-      {/* <FilterSelector<any>
-        onFilterBtnClick={noop}
-        onFilterSelect={noop}
-        fieldToLabelMapping={new Map<string, string>()}
-        filterWithValidFields={{}}
-      /> */}
+    <Layout.Horizontal>
+      <ExpandingSearchInput
+        placeholder={getString('search')}
+        throttle={200}
+        onChange={onChange}
+        className={css.searchIconStyle}
+      />
     </Layout.Horizontal>
   )
 }
@@ -62,6 +61,7 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
   const {
     HeaderCustomPrimary = () => <></>,
     HeaderCustomSecondary = HeaderFilterComponent,
+    SortList,
     columns,
     loading,
     error,
@@ -132,7 +132,10 @@ export const DashboardList = <T extends Record<string, any>>(props: DashboardLis
         className={css.listHeader}
       >
         <HeaderCustomPrimary total={filteredData.length} />
-        <HeaderCustomSecondary onChange={onSearchChange} />
+        <Layout.Horizontal>
+          <HeaderCustomSecondary onChange={onSearchChange} />
+          {SortList}
+        </Layout.Horizontal>
       </Layout.Horizontal>
       {getComponent()}
     </Layout.Vertical>

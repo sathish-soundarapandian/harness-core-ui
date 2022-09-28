@@ -39,11 +39,13 @@ export interface MetricDashboardWidgetNavProps<T> {
   addManualQueryTitle: StringKeys
   dashboardWidgetMapper: (dashboardId: string, item: T) => MetricWidget
   dashboardDetailsRequest: UseGetReturn<any, any, any>
+  onDeleteManualMetric?: (id?: string) => void
 }
 
 export interface TreeNodeLabelProps {
   width: number
   label: string | JSX.Element
+  onDelete?: (id?: string) => void
 }
 
 export type NodeDataType = {

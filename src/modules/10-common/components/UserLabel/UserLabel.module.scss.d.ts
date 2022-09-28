@@ -9,6 +9,7 @@
 declare const styles: {
   readonly profilePicture: string
   readonly rightSection: string
+  readonly userDetails: string
   readonly userLabel: string
   readonly wrapper: string
 }

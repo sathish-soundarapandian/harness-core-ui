@@ -14,6 +14,8 @@ const mockFeature: Feature = {
   defaultOnVariation: 'true',
   description: '',
   envProperties: {
+    pipelineConfigured: false,
+    pipelineDetails: undefined,
     defaultServe: { variation: 'false' },
     environment: 'testnonprod',
     modifiedAt: 1635333973373,
@@ -39,21 +41,25 @@ const mockFeature: Feature = {
   permanent: false,
   prerequisites: [
     {
-      feature: 'Bool_2',
+      feature: 'Test_Paging_Flag',
       variations: ['false']
     },
     {
-      feature: 'Multivar_1',
-      variations: ['adminOnly']
+      feature: 'X_Flag_11',
+      variations: ['false']
     },
     {
-      feature: 'Test_Bool_1',
+      feature: 'X_Flag_10',
       variations: ['true']
     }
   ],
   project: 'chrisgit2',
   results: undefined,
   status: { lastAccess: -6795364578871, status: 'never-requested' },
+  services: [
+    { name: 'My Service 1', identifier: 'service1Id' },
+    { name: 'My Service 2', identifier: 'service2Id' }
+  ],
   tags: [],
   variations: [
     { identifier: 'true', name: 'True', value: 'true' },

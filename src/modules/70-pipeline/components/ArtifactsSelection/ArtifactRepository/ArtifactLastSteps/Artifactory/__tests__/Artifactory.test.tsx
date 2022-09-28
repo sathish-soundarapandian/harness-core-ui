@@ -14,19 +14,35 @@ import { TagTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterf
 import * as pipelineng from 'services/cd-ng'
 import Artifactory from '../Artifactory'
 import {
+  azureWebAppDeploymentTypeProps,
+  dockerArtifactoryInitialValues,
+  genericArtifactoryInitialValues,
   emptyRepoMockData,
   props,
   repoMock,
   serverlessDeploymentTypeProps,
   useGetRepositoriesDetailsForArtifactoryError,
-  useGetRepositoriesDetailsForArtifactoryFailure
+  useGetRepositoriesDetailsForArtifactoryFailure,
+  sshDeploymentTypeProps,
+  winRmDeploymentTypeProps
 } from './mock'
 
 jest.mock('services/cd-ng', () => ({
+  ...jest.requireActual('services/cd-ng'),
   useGetBuildDetailsForArtifactoryArtifact: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   }),
-  useGetRepositoriesDetailsForArtifactory: jest.fn()
+  useGetRepositoriesDetailsForArtifactory: jest.fn().mockReturnValue({
+    data: {
+      repositories: {
+        iistest: 'iistest',
+        'harness-nuget': 'harness-nuget'
+      }
+    },
+    refetch: jest.fn(),
+    error: null,
+    loading: false
+  })
 }))
 
 const initialValues = {
@@ -67,6 +83,8 @@ describe('Nexus Artifact tests', () => {
         <Artifactory key={'key'} initialValues={initialValues} {...props} />
       </TestWrapper>
     )
+
+    expect(container.querySelector('input[name="repositoryFormat"]')!).toBeNull()
     expect(container).toMatchSnapshot()
   })
 
@@ -208,6 +226,8 @@ describe('Serverless artifact', () => {
         <Artifactory key={'key'} initialValues={initialValues} {...serverlessDeploymentTypeProps} />
       </TestWrapper>
     )
+
+    expect(container.querySelector('input[name="repositoryFormat"]')!).toBeNull()
     expect(container).toMatchSnapshot()
   })
 
@@ -305,5 +325,144 @@ describe('Serverless artifact', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+})
+
+describe('Azure web app artifact', () => {
+  test(`renders Generic Artifactory view by default`, () => {
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={genericArtifactoryInitialValues} {...azureWebAppDeploymentTypeProps} />
+      </TestWrapper>
+    )
+
+    const repositoryFormat = getByPlaceholderText('- Select -')
+    expect(repositoryFormat!).toBeDefined()
+    expect(repositoryFormat!).toHaveAttribute('value', 'Generic')
+
+    const artifactDirectory = container.querySelector('input[name="artifactDirectory"]')
+    expect(artifactDirectory!).toBeDefined()
+
+    const repositoryUrl = container.querySelector('input[name="repositoryUrl"]')
+    expect(repositoryUrl!).toBeNull()
+  })
+
+  test(`renders Docker Artifactory view`, () => {
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={dockerArtifactoryInitialValues} {...azureWebAppDeploymentTypeProps} />
+      </TestWrapper>
+    )
+
+    const repositoryFormat = getByPlaceholderText('- Select -')
+    expect(repositoryFormat!).toBeDefined()
+
+    const artifactDirectory = container.querySelector('input[name="artifactDirectory"]')
+    expect(artifactDirectory!).toBeNull()
+
+    const repositoryUrl = container.querySelector('input[name="repositoryUrl"]')
+    expect(repositoryUrl!).toBeDefined()
+  })
+})
+
+describe('SSH artifactory artifact', () => {
+  beforeEach(() => {
+    jest.spyOn(pipelineng, 'useGetRepositoriesDetailsForArtifactory').getMockImplementation()
+  })
+
+  test(`renders Generic Artifactory view by default`, () => {
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={genericArtifactoryInitialValues} {...sshDeploymentTypeProps} />
+      </TestWrapper>
+    )
+
+    const repositoryFormat = getByPlaceholderText('- Select -')
+    expect(repositoryFormat!).toBeDefined()
+    expect(repositoryFormat!).toHaveAttribute('value', 'Generic')
+
+    const artifactDirectory = container.querySelector('input[name="artifactDirectory"]')
+    expect(artifactDirectory!).toBeDefined()
+
+    const repositoryUrl = container.querySelector('input[name="repositoryUrl"]')
+    expect(repositoryUrl!).toBeNull()
+
+    const repository = container.querySelector('input[name="repository"]')
+    expect(repository).toHaveAttribute('placeholder', 'Search...')
+
+    userEvent.click(repository!)
+
+    expect(pipelineng.useGetRepositoriesDetailsForArtifactory).toBeCalled()
+  })
+
+  test(`renders Docker Artifactory view`, () => {
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={dockerArtifactoryInitialValues} {...sshDeploymentTypeProps} />
+      </TestWrapper>
+    )
+
+    const repositoryFormat = getByPlaceholderText('- Select -')
+    expect(repositoryFormat!).toBeDefined()
+
+    const artifactDirectory = container.querySelector('input[name="artifactDirectory"]')
+    expect(artifactDirectory!).toBeNull()
+
+    const repositoryUrl = container.querySelector('input[name="repositoryUrl"]')
+    expect(repositoryUrl!).toBeDefined()
+
+    const repository = container.querySelector('input[name="repository"]')
+    expect(repository?.parentElement).toHaveClass('MultiTypeInput--input')
+  })
+})
+
+describe('WinRm artifactory artifact', () => {
+  beforeEach(() => {
+    jest.spyOn(pipelineng, 'useGetRepositoriesDetailsForArtifactory').getMockImplementation()
+  })
+
+  test(`renders Generic Artifactory view by default`, async () => {
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={genericArtifactoryInitialValues} {...winRmDeploymentTypeProps} />
+      </TestWrapper>
+    )
+
+    const repositoryFormat = getByPlaceholderText('- Select -')
+    expect(repositoryFormat!).toBeDefined()
+    expect(repositoryFormat!).toHaveAttribute('value', 'Generic')
+
+    const artifactDirectory = container.querySelector('input[name="artifactDirectory"]')
+    expect(artifactDirectory!).toBeDefined()
+
+    const repositoryUrl = container.querySelector('input[name="repositoryUrl"]')
+    expect(repositoryUrl!).toBeNull()
+
+    const repository = container.querySelector('input[name="repository"]')
+    expect(repository).toHaveAttribute('placeholder', 'Search...')
+
+    userEvent.click(repository!)
+
+    expect(pipelineng.useGetRepositoriesDetailsForArtifactory).toBeCalled()
+  })
+
+  test(`renders Docker Artifactory view`, async () => {
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={dockerArtifactoryInitialValues} {...winRmDeploymentTypeProps} />
+      </TestWrapper>
+    )
+
+    const repositoryFormat = getByPlaceholderText('- Select -')
+    expect(repositoryFormat!).toBeDefined()
+
+    const artifactDirectory = container.querySelector('input[name="artifactDirectory"]')
+    expect(artifactDirectory!).toBeNull()
+
+    const repositoryUrl = container.querySelector('input[name="repositoryUrl"]')
+    expect(repositoryUrl!).toBeDefined()
+
+    const repository = container.querySelector('input[name="repository"]')
+    expect(repository?.parentElement).toHaveClass('MultiTypeInput--input')
   })
 })

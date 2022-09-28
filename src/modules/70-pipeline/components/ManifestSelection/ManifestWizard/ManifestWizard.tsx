@@ -6,16 +6,15 @@
  */
 
 import React from 'react'
-import { Text, Icon, StepWizard, StepProps, MultiTypeInputType } from '@wings-software/uicore'
+import { Text, Icon, StepWizard, StepProps, AllowedTypes } from '@wings-software/uicore'
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { isServerlessManifestType } from '@pipeline/utils/stageHelpers'
 import { ManifestRepoTypes } from '../ManifestWizardSteps/ManifestRepoTypes'
 import ManifestStore from '../ManifestWizardSteps/ManifestStore'
-import { manifestTypeLabels } from '../Manifesthelper'
+import { ManifestDataType, manifestTypeLabels } from '../Manifesthelper'
 import type { ManifestStepInitData, ManifestStores, ManifestTypes } from '../ManifestInterface'
 import css from './ManifestWizard.module.scss'
 
@@ -25,25 +24,38 @@ interface StepChangeData<SharedObject> {
   prevStepData: SharedObject
 }
 
-interface ManifestWizardStepsProps {
+interface ManifestWizardStepsProps<T, U> {
   handleConnectorViewChange: (isConnectorView: boolean) => void
-  handleStoreChange: (store?: ManifestStores) => void
   initialValues: ManifestStepInitData
-  types: Array<ManifestTypes>
-  manifestStoreTypes: Array<ManifestStores>
-  labels: ConnectorRefLabelType
   selectedManifest: ManifestTypes | null
+  labels: ConnectorRefLabelType
   newConnectorView: boolean
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   newConnectorSteps?: any
   lastSteps: Array<React.ReactElement<StepProps<ConnectorConfigDTO>>> | null
-  changeManifestType: (data: ManifestTypes | null) => void
   iconsProps: IconProps
   isReadonly: boolean
+  handleStoreChange: (store?: T) => void
+  manifestStoreTypes: ManifestStores[]
+  changeManifestType: (data: U | null) => void
+  types: ManifestTypes[]
 }
 
-export function ManifestWizard({
+const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null) => {
+  return !!(
+    selectedManifest &&
+    [
+      ManifestDataType.ServerlessAwsLambda,
+      ManifestDataType.EcsTaskDefinition,
+      ManifestDataType.EcsServiceDefinition,
+      ManifestDataType.EcsScalingPolicyDefinition,
+      ManifestDataType.EcsScalableTargetDefinition
+    ].includes(selectedManifest)
+  )
+}
+
+export function ManifestWizard<T, U>({
   handleConnectorViewChange,
   handleStoreChange,
   initialValues,
@@ -59,13 +71,21 @@ export function ManifestWizard({
   changeManifestType,
   iconsProps,
   isReadonly
-}: ManifestWizardStepsProps): React.ReactElement {
+}: ManifestWizardStepsProps<T, U>): React.ReactElement {
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
     if (arg?.prevStep && arg?.nextStep && arg.prevStep > arg.nextStep && arg.nextStep <= 2) {
       handleConnectorViewChange(false)
       handleStoreChange()
     }
+  }
+  /* istanbul ignore next */
+  const changeManifestTypeRef = (arg: ManifestTypes | null): void => {
+    changeManifestType?.(arg as unknown as U)
+  }
+  /* istanbul ignore next */
+  const handleStoreChangeRef = (arg: ManifestStores): void => {
+    handleStoreChange?.(arg as unknown as T)
   }
 
   const renderSubtitle = (): JSX.Element => {
@@ -91,14 +111,14 @@ export function ManifestWizard({
       className={css.manifestWizard}
       subtitle={renderSubtitle()}
       onStepChange={onStepChange}
-      initialStep={isServerlessManifestType(selectedManifest) ? 2 : undefined}
+      initialStep={showManifestStoreStepDirectly(selectedManifest) ? 2 : undefined}
     >
       <ManifestRepoTypes
         manifestTypes={types}
         name={getString('pipeline.manifestType.manifestRepoType')}
         stepName={labels.firstStepName}
         selectedManifest={selectedManifest}
-        changeManifestType={changeManifestType}
+        changeManifestType={changeManifestTypeRef}
         initialValues={initialValues}
       />
       <ManifestStore
@@ -109,7 +129,7 @@ export function ManifestWizard({
         isReadonly={isReadonly}
         manifestStoreTypes={manifestStoreTypes}
         handleConnectorViewChange={() => handleConnectorViewChange(true)}
-        handleStoreChange={handleStoreChange}
+        handleStoreChange={handleStoreChangeRef}
         initialValues={initialValues}
       />
       {newConnectorView ? newConnectorSteps : null}

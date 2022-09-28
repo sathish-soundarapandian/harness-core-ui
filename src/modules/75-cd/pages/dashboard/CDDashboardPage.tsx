@@ -5,19 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Dialog, PageHeader, PageSpinner } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, get } from 'lodash-es'
+import { get } from 'lodash-es'
 import moment from 'moment'
 import { useModalHook } from '@harness/use-modal'
 import type { IDialogProps } from '@blueprintjs/core'
+import qs from 'qs'
 import routes from '@common/RouteDefinitions'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import CardRailView from '@pipeline/components/Dashboards/CardRailView/CardRailView'
-import { useGetWorkloads, useGetDeployments, CDPipelineModuleInfo, ExecutionStatusInfo } from 'services/cd-ng'
+import { useGetWorkloads, useGetDeployments, ExecutionStatusInfo, ServiceDeploymentInfo } from 'services/cd-ng'
 import type { CIBuildCommit, CIWebhookInfoDTO } from 'services/ci'
 import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import {
@@ -38,21 +39,28 @@ import {
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
 import { useLocalStorage, useMutateAsGet, useQueryParams } from '@common/hooks'
-import { validTimeFormat } from '@common/factories/LandingDashboardContext'
-import PipelineDeploymentList, {
-  processQueryParams
-} from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'
-
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
-import type { QueryParams } from '@pipeline/pages/pipeline-deployment-list/types'
+import { DashboardSelected } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
+import {
+  ExecutionListFilterContextProvider,
+  ProcessedExecutionListPageQueryParams,
+  queryParamOptions
+} from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
+import { OverviewExecutionListEmpty } from '@pipeline/pages/execution-list/ExecutionListEmpty/OverviewExecutionListEmpty'
 import DeploymentsHealthCards from './DeploymentsHealthCards'
 import DeploymentExecutionsChart from './DeploymentExecutionsChart'
 import WorkloadCard from './DeploymentCards/WorkloadCard'
 import bgImage from './images/CD-OverviewImageBG-compressed.png'
+import { getFormattedTimeRange, convertStringToDateTimeRange } from './dashboardUtils'
 import styles from './CDDashboardPage.module.scss'
 
-const NoDataOverviewPage = (): JSX.Element => {
+export interface CDModuleInfoProps {
+  serviceIdentifier: ServiceDeploymentInfo[]
+  envIdentifiers: string[]
+}
+
+const NoDataOverviewPage: React.FC<{ onHide: () => void }> = ({ onHide }) => {
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
   const runPipelineDialogProps: IDialogProps = {
@@ -81,14 +89,21 @@ const NoDataOverviewPage = (): JSX.Element => {
         margin: 16
       }}
     >
-      <PipelineDeploymentList onRunPipeline={openModal} isCDOverview />
+      <ExecutionListFilterContextProvider>
+        <OverviewExecutionListEmpty onRunPipeline={openModal} onHide={onHide} />
+      </ExecutionListFilterContextProvider>
     </div>
   )
 }
 
-export function executionStatusInfoToExecutionSummary(info: ExecutionStatusInfo): PipelineExecutionSummary {
-  const cd: CDPipelineModuleInfo = {
-    serviceIdentifiers: info.serviceInfoList?.map(({ serviceName }) => defaultTo(serviceName, '')).filter(svc => !!svc)
+/** TODO: fix types after BE merge */
+export function executionStatusInfoToExecutionSummary(
+  info: ExecutionStatusInfo,
+  caller: string
+): PipelineExecutionSummary {
+  const cd = {
+    serviceIdentifiers: info.serviceInfoList,
+    envIdentifiers: info.environmentInfoList
   }
 
   const branch = get(info, 'gitInfo.targetBranch')
@@ -119,6 +134,7 @@ export function executionStatusInfoToExecutionSummary(info: ExecutionStatusInfo)
       cd: cd as any,
       ci: (branch ? { ciExecutionInfoDTO, branch } : undefined) as any
     },
+    modules: [caller],
     executionTriggerInfo: {
       triggeredBy: {
         identifier: info.author?.name
@@ -130,7 +146,7 @@ export function executionStatusInfoToExecutionSummary(info: ExecutionStatusInfo)
 
 export const CDDashboardPage: React.FC = () => {
   const { getString } = useStrings()
-  const queryParams = useQueryParams<QueryParams>({ processQueryParams })
+  const queryParams = useQueryParams<ProcessedExecutionListPageQueryParams>(queryParamOptions)
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
   const [timeRange, setTimeRange] = useLocalStorage<TimeRangeSelectorProps>(
@@ -141,19 +157,21 @@ export const CDDashboardPage: React.FC = () => {
     },
     window.sessionStorage
   )
-  const resultTimeRange = validTimeFormat(timeRange)
-  timeRange.range[0] = resultTimeRange.range[0]
-  timeRange.range[1] = resultTimeRange.range[1]
+  const resultTimeRange = convertStringToDateTimeRange(timeRange)
 
   const history = useHistory()
 
   useDocumentTitle([getString('deploymentsText'), getString('overview')])
 
+  const [startTime, endTime] = getFormattedTimeRange(resultTimeRange)
+
   const { data, loading, error, refetch } = useGetDeployments({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
-      orgIdentifier
+      orgIdentifier,
+      startTime,
+      endTime
     }
   })
 
@@ -182,8 +200,8 @@ export const CDDashboardPage: React.FC = () => {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      startTime: timeRange?.range[0]?.getTime() || 0,
-      endTime: timeRange?.range[1]?.getTime() || 0
+      startTime,
+      endTime
     }
   })
 
@@ -195,8 +213,18 @@ export const CDDashboardPage: React.FC = () => {
 
   const pipelineExecutionSummary = pipelineExecution?.data || {}
 
+  const [showOverviewDialog, setShowOverviewDialog] = useState(!pipelineExecutionSummary?.content?.length)
+
+  useEffect(() => {
+    setShowOverviewDialog(!pipelineExecutionSummary?.content?.length)
+  }, [pipelineExecutionSummary])
+
   if (loadingWorkloads || pipelineLoading) {
-    return <PageSpinner />
+    return (
+      <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
+        <PageSpinner />
+      </div>
+    )
   }
 
   return (
@@ -206,19 +234,23 @@ export const CDDashboardPage: React.FC = () => {
         breadcrumbs={<NGBreadcrumbs links={[]} />}
         toolbar={
           <>
-            <TimeRangeSelector timeRange={timeRange?.range} setTimeRange={setTimeRange} minimal />
+            <TimeRangeSelector timeRange={resultTimeRange?.range} setTimeRange={setTimeRange} minimal />
           </>
         }
       ></PageHeader>
       <Page.Body className={styles.content} loading={(loading && !refetchingDeployments) || loadingWorkloads}>
-        {!pipelineExecutionSummary?.content?.length ? (
-          <NoDataOverviewPage />
+        {showOverviewDialog ? (
+          <NoDataOverviewPage onHide={() => setShowOverviewDialog(false)} />
         ) : (
-          <DeploymentsTimeRangeContext.Provider value={{ timeRange, setTimeRange }}>
+          <DeploymentsTimeRangeContext.Provider value={{ timeRange: resultTimeRange, setTimeRange }}>
             <Container className={styles.page} padding="large">
-              <DeploymentsHealthCards range={timeRange} setRange={setTimeRange} title="Deployments Health" />
+              <DeploymentsHealthCards range={resultTimeRange} setRange={setTimeRange} title="Deployments Health" />
               <Container className={styles.executionsWrapper}>
-                <DeploymentExecutionsChart range={timeRange} setRange={setTimeRange} title="Deployments" />
+                <DeploymentExecutionsChart
+                  range={resultTimeRange}
+                  setRange={setTimeRange}
+                  title={getString('executionsText')}
+                />
               </Container>
               <CardRailView contentType="WORKLOAD" isLoading={loadingWorkloads}>
                 {workloadsData?.data?.workloadDeploymentInfoList?.map(workload => (
@@ -238,17 +270,17 @@ export const CDDashboardPage: React.FC = () => {
                 contentType="FAILED_DEPLOYMENT"
                 isLoading={loading && !refetchingDeployments}
                 onShowAll={() =>
-                  history.push(
-                    routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'cd' }) +
-                      `?filters=${JSON.stringify({ status: Object.keys(FailedStatus) })}`
-                  )
+                  history.push({
+                    pathname: routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'cd' }),
+                    search: qs.stringify({ filters: { status: Object.keys(FailedStatus) } })
+                  })
                 }
               >
                 {data?.data?.failure?.map(d => (
                   <ExecutionCard
                     variant={CardVariant.Minimal}
-                    key={d.pipelineIdentifier}
-                    pipelineExecution={executionStatusInfoToExecutionSummary(d)}
+                    key={d.planExecutionId}
+                    pipelineExecution={executionStatusInfoToExecutionSummary(d, DashboardSelected.OVERVIEW)}
                   />
                 ))}
               </CardRailView>
@@ -256,17 +288,17 @@ export const CDDashboardPage: React.FC = () => {
                 contentType="ACTIVE_DEPLOYMENT"
                 isLoading={loading && !refetchingDeployments}
                 onShowAll={() =>
-                  history.push(
-                    routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'cd' }) +
-                      `?filters=${JSON.stringify({ status: Object.keys(ActiveStatus) })}`
-                  )
+                  history.push({
+                    pathname: routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'cd' }),
+                    search: qs.stringify({ filters: { status: Object.keys(ActiveStatus) } })
+                  })
                 }
               >
                 {activeDeployments.map(d => (
                   <ExecutionCard
                     variant={CardVariant.Minimal}
-                    key={d.pipelineIdentifier}
-                    pipelineExecution={executionStatusInfoToExecutionSummary(d)}
+                    key={d.planExecutionId}
+                    pipelineExecution={executionStatusInfoToExecutionSummary(d, DashboardSelected.OVERVIEW)}
                   />
                 ))}
               </CardRailView>

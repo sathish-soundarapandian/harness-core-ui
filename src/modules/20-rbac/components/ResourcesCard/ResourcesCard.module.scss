@@ -5,9 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.resourceName {
-  border-left: solid black 1px;
-}
 .selectedResourceGroupCardDetails {
   width: 100%;
   box-shadow: var(--card-shadow);
@@ -20,21 +17,31 @@
   column-gap: var(--spacing-xxlarge);
 }
 
-.radioBtn {
-  padding-left: 100px !important;
-}
-
-.limitAccessCell {
-  justify-self: end;
-}
-// making text alignt to left of button
-.addResourceBtn {
-  justify-content: flex-start !important;
+.radioBtnLabel {
+  color: var(--grey-700) !important;
 }
 
 .staticResource {
   border-bottom: 1px solid var(--grey-300);
   &:last-child {
     border: 0px;
+  }
+}
+
+.radioBtnSet {
+  flex-basis: 315px !important;
+}
+
+.radioBtnCtr {
+  &:nth-child(1),
+  &:nth-child(4) {
+    flex-grow: 1;
+  }
+  &:nth-child(2) {
+    flex-grow: 3;
+    flex-basis: 30% !important;
+  }
+  &:nth-child(3) {
+    flex-grow: 3;
   }
 }

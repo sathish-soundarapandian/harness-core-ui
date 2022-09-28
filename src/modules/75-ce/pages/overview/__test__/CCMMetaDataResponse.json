@@ -14,6 +14,7 @@
       "defaultAwsPerspectiveId": "quBogQWFTCSqpUq5xPxLLA",
       "defaultGcpPerspectiveId": "8MbIXei5TdCapSxlwru4UQ",
       "defaultClusterPerspectiveId": "XondUCZ7RbyBx147-CyXzA",
+      "showCostOverview": true,
       "__typename": "CCMMetaData"
     }
   }

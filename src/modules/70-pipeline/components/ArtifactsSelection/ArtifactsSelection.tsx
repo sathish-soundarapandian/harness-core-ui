@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { shouldShowError, StepWizard, useToaster } from '@harness/uicore'
+import { shouldShowError, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
@@ -18,52 +18,30 @@ import set from 'lodash-es/set'
 
 import { Dialog, IDialogProps, Classes } from '@blueprintjs/core'
 import type { IconProps } from '@harness/icons'
-import { defaultTo, isEmpty, merge } from 'lodash-es'
+import { merge } from 'lodash-es'
 import {
   useGetConnectorListV2,
   PageConnectorResponse,
-  ConnectorInfoDTO,
   SidecarArtifactWrapper,
   PrimaryArtifact,
   StageElementConfig,
   ArtifactConfig,
   SidecarArtifact,
-  useGetServiceV2,
-  ServiceResponseDTO,
-  NGServiceConfig
+  ServiceDefinition
 } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getIdentifierFromValue, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { useStrings } from 'framework/strings'
-import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import StepDockerAuthentication from '@connectors/components/CreateConnector/DockerConnector/StepAuth/StepDockerAuthentication'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
-import GcrAuthentication from '@connectors/components/CreateConnector/GcrConnector/StepAuth/GcrAuthentication'
-import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
-import {
-  buildArtifactoryPayload,
-  buildAWSPayload,
-  buildAzurePayload,
-  buildDockerPayload,
-  buildGcpPayload,
-  buildNexusPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
-import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ArtifactActions } from '@common/constants/TrackingConstants'
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
-import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
-import StepNexusAuthentication from '@connectors/components/CreateConnector/NexusConnector/StepAuth/StepNexusAuthentication'
-import StepArtifactoryAuthentication from '@connectors/components/CreateConnector/ArtifactoryConnector/StepAuth/StepArtifactoryAuthentication'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import AzureAuthentication from '@connectors/components/CreateConnector/AzureConnector/StepAuth/AzureAuthentication'
-import { yamlParse } from '@common/utils/YamlHelperMethods'
+import { useCache } from '@common/hooks/useCache'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import { DockerRegistryArtifact } from './ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
@@ -74,34 +52,51 @@ import type {
   InitialArtifactDataType,
   ConnectorRefLabelType,
   ArtifactType,
-  ImagePathProps
+  ImagePathProps,
+  ImagePathTypes,
+  AmazonS3InitialValuesType,
+  JenkinsArtifactType,
+  GoogleArtifactRegistryInitialValuesType,
+  CustomArtifactSource,
+  GithubPackageRegistryInitialValuesType,
+  Nexus2InitialValuesType
 } from './ArtifactInterface'
 import {
-  ArtifactToConnectorMap,
   ENABLED_ARTIFACT_TYPES,
   ArtifactIconByType,
   ArtifactTitleIdByType,
   allowedArtifactTypes,
-  ModalViewFor
+  ModalViewFor,
+  isAllowedCustomArtifactDeploymentTypes,
+  isSidecarAllowed
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
+import { Nexus3Artifact } from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
 import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
-import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
+import {
+  CustomArtifact,
+  CustomArtifactOptionalConfiguration
+} from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
 import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
+import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
+import { JenkinsArtifact } from './ArtifactRepository/ArtifactLastSteps/JenkinsArtifact/JenkinsArtifact'
+import { GoogleArtifactRegistry } from './ArtifactRepository/ArtifactLastSteps/GoogleArtifactRegistry/GoogleArtifactRegistry'
+import { GithubPackageRegistry } from './ArtifactRepository/ArtifactLastSteps/GithubPackageRegistry/GithubPackageRegistry'
+import { Nexus2Artifact } from './ArtifactRepository/ArtifactLastSteps/Nexus2Artifact/Nexus2Artifact'
 import css from './ArtifactsSelection.module.scss'
 
 export default function ArtifactsSelection({
   isPropagating = false,
   deploymentType,
-  readonly: isReadOnlyServiceMode
+  isReadonlyServiceMode,
+  readonly
 }: ArtifactsSelectionProps): React.ReactElement | null {
   const {
     state: {
+      pipeline,
       selectionState: { selectedStageId }
     },
-    isReadonly,
     getStageFromPipeline,
     updateStage,
     allowableTypes
@@ -120,36 +115,41 @@ export default function ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const stepWizardTitle = getString('connectors.createNewConnector')
-  const { NG_NEXUS_ARTIFACTORY, CUSTOM_ARTIFACT_NG, NG_AZURE } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, GITHUB_PACKAGES, AZURE_WEBAPP_NG_S3_ARTIFACTS } =
+    useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+  const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
+  const { getCache } = useCache([getServiceCacheId])
 
   useEffect(() => {
     if (
-      NG_NEXUS_ARTIFACTORY &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Nexus3Registry) &&
-      !isServerlessDeploymentType(deploymentType)
-    ) {
-      allowedArtifactTypes[deploymentType].push(
-        ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-        ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry
-      )
-    }
-
-    if (
       CUSTOM_ARTIFACT_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.CustomArtifact) &&
-      !isServerlessDeploymentType(deploymentType)
+      isAllowedCustomArtifactDeploymentTypes(deploymentType)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
+    if (
+      deploymentType === 'Kubernetes' &&
+      GITHUB_PACKAGES &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
+    }
+    if (
+      ['Kubernetes', 'CustomDeployment'].includes(deploymentType) &&
+      NG_GOOGLE_ARTIFACT_REGISTRY &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
+    ) {
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
+    }
 
     if (
-      NG_AZURE &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.Acr) &&
-      !isServerlessDeploymentType(deploymentType)
+      deploymentType === 'AzureWebApp' &&
+      AZURE_WEBAPP_NG_S3_ARTIFACTS &&
+      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonS3)
     ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.Acr)
+      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AmazonS3)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
@@ -175,37 +175,9 @@ export default function ArtifactsSelection({
     queryParams: defaultQueryParams
   })
 
-  /*************************************Service Entity Related code********************************************************/
-  // This is temporary code to fetch the artifact data from service api. It will be replaced once caching is implemented for service entity
-  const {
-    data: selectedServiceResponse,
-    refetch: refetchServiceData,
-    loading: serviceLoading
-  } = useGetServiceV2({
-    serviceIdentifier: (stage?.stage?.spec as any)?.service?.serviceRef,
-    queryParams: { accountIdentifier: accountId, orgIdentifier: orgIdentifier, projectIdentifier: projectIdentifier },
-    lazy: true
-  })
-
-  useEffect(() => {
-    if (!isReadonly && isReadOnlyServiceMode) {
-      refetchServiceData()
-    }
-  }, [isReadOnlyServiceMode, (stage?.stage?.spec as any)?.service?.serviceRef])
-
-  /*************************************Service Entity Related code********************************************************/
-
-  const getServiceData = useCallback(() => {
-    const serviceData = selectedServiceResponse?.data?.service as ServiceResponseDTO
-    if (!isEmpty(serviceData?.yaml)) {
-      const parsedYaml = yamlParse<NGServiceConfig>(defaultTo(serviceData.yaml, ''))
-      return parsedYaml.service?.serviceDefinition
-    }
-  }, [selectedServiceResponse?.data?.service])
-
   const getArtifactsPath = useCallback((): any => {
-    if (!isReadonly && isReadOnlyServiceMode) {
-      const serviceData = getServiceData()
+    if (isReadonlyServiceMode) {
+      const serviceData = getCache(getServiceCacheId) as ServiceDefinition
       return serviceData?.spec?.artifacts
     }
 
@@ -213,11 +185,11 @@ export default function ArtifactsSelection({
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.artifacts', [])
     }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts', {})
-  }, [getServiceData, isPropagating, isReadOnlyServiceMode, isReadonly, stage])
+  }, [isPropagating, isReadonlyServiceMode, stage])
 
   const getPrimaryArtifactPath = useCallback((): PrimaryArtifact => {
-    if (!isReadonly && isReadOnlyServiceMode) {
-      const serviceData = getServiceData()
+    if (isReadonlyServiceMode) {
+      const serviceData = getCache(getServiceCacheId)
       return get(serviceData, 'spec.artifacts.primary', null)
     }
     if (isPropagating) {
@@ -225,18 +197,18 @@ export default function ArtifactsSelection({
     }
 
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary', null)
-  }, [getServiceData, isPropagating, isReadonly, isReadOnlyServiceMode, stage])
+  }, [isPropagating, isReadonlyServiceMode, stage])
 
   const getSidecarPath = useCallback((): SidecarArtifactWrapper[] => {
-    if (!isReadonly && isReadOnlyServiceMode) {
-      const serviceData = getServiceData()
+    if (isReadonlyServiceMode) {
+      const serviceData = getCache(getServiceCacheId)
       return get(serviceData, 'spec.artifacts.sidecars', null) || []
     }
     if (isPropagating) {
       return get(stage, 'stage.spec.serviceConfig.stageOverrides.artifacts.sidecars', [])
     }
     return get(stage, 'stage.spec.serviceConfig.serviceDefinition.spec.artifacts.sidecars', [])
-  }, [getServiceData, isPropagating, isReadonly, isReadOnlyServiceMode, stage])
+  }, [isPropagating, isReadonlyServiceMode, stage])
 
   const artifacts = getArtifactsPath()
 
@@ -443,7 +415,7 @@ export default function ArtifactsSelection({
     refetchConnectorList()
   }
 
-  const editArtifact = (viewType: number, type: ArtifactType, index?: number): void => {
+  const editArtifact = (viewType: number, type?: ArtifactType, index?: number): void => {
     setModalContext(viewType)
     setConnectorView(false)
     setSelectedArtifact(type as ArtifactType)
@@ -497,10 +469,32 @@ export default function ArtifactsSelection({
     }
   }, [selectedArtifact])
 
-  const artifactLastStepProps = useCallback((): ImagePathProps => {
+  const getLastStepName = () => {
+    switch (selectedArtifact) {
+      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
+        return {
+          key: getString('pipeline.artifactsSelection.artifactDetails'),
+          name: getString('pipeline.artifactsSelection.artifactDetails')
+        }
+      default:
+        return {
+          key: getString('connectors.stepFourName'),
+          name: getString('connectors.stepFourName')
+        }
+    }
+  }
+
+  const artifactLastStepProps = useCallback((): ImagePathProps<
+    ImagePathTypes &
+      AmazonS3InitialValuesType &
+      JenkinsArtifactType &
+      GoogleArtifactRegistryInitialValuesType &
+      CustomArtifactSource &
+      GithubPackageRegistryInitialValuesType &
+      Nexus2InitialValuesType
+  > => {
     return {
-      key: getString('connectors.stepFourName'),
-      name: getString('connectors.stepFourName'),
+      ...getLastStepName(),
       context,
       expressions,
       allowableTypes,
@@ -509,17 +503,18 @@ export default function ArtifactsSelection({
         addArtifact(data)
       },
       artifactIdentifiers: sideCarArtifact?.map((item: SidecarArtifactWrapper) => item.sidecar?.identifier as string),
-      isReadonly: isReadOnlyServiceMode,
+      isReadonly: readonly,
       selectedArtifact,
       selectedDeploymentType: deploymentType
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     addArtifact,
     allowableTypes,
     context,
     expressions,
     getLastStepInitialData,
-    isReadOnlyServiceMode,
+    readonly,
     selectedArtifact,
     sideCarArtifact,
     getString
@@ -548,94 +543,24 @@ export default function ArtifactsSelection({
     projectIdentifier,
     connectorInfo: undefined
   }
+  const connectivityStepProps = {
+    gitDetails: { repoIdentifier, branch, getDefaultFromOtherRepo: true },
+    isEditMode,
+    setIsEditMode,
+    connectorInfo: undefined
+  }
   const delegateStepProps = {
     name: getString('delegate.DelegateselectionLabel'),
     isEditMode,
     setIsEditMode,
     connectorInfo: undefined
   }
-  const verifyOutofClusterDelegateProps = {
+  const ConnectorTestConnectionProps = {
     name: getString('connectors.stepThreeName'),
     connectorInfo: undefined,
     isStep: true,
     isLastStep: false
   }
-  const getNewConnectorSteps = useCallback((): JSX.Element => {
-    switch (selectedArtifact) {
-      case ENABLED_ARTIFACT_TYPES.DockerRegistry:
-        return (
-          <StepWizard title={stepWizardTitle}>
-            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
-            <StepDockerAuthentication name={getString('details')} {...authenticationStepProps} />
-            <DelegateSelectorStep buildPayload={buildDockerPayload} {...delegateStepProps} />
-            <VerifyOutOfClusterDelegate
-              type={ArtifactToConnectorMap[selectedArtifact]}
-              {...verifyOutofClusterDelegateProps}
-            />
-          </StepWizard>
-        )
-      case ENABLED_ARTIFACT_TYPES.Gcr:
-        return (
-          <StepWizard title={stepWizardTitle}>
-            <ConnectorDetailsStep type={'Gcr' as unknown as ConnectorInfoDTO['type']} {...connectorDetailStepProps} />
-            <GcrAuthentication name={getString('details')} {...authenticationStepProps} />
-            <DelegateSelectorStep {...delegateStepProps} buildPayload={buildGcpPayload} />
-            <VerifyOutOfClusterDelegate {...verifyOutofClusterDelegateProps} type={'Gcr'} />
-          </StepWizard>
-        )
-      case ENABLED_ARTIFACT_TYPES.Ecr:
-        return (
-          <StepWizard iconProps={{ size: 37 }} title={stepWizardTitle}>
-            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
-            <StepAWSAuthentication name={getString('credentials')} {...authenticationStepProps} />
-            <DelegateSelectorStep {...delegateStepProps} buildPayload={buildAWSPayload} />
-            <VerifyOutOfClusterDelegate
-              {...verifyOutofClusterDelegateProps}
-              type={ArtifactToConnectorMap[selectedArtifact]}
-            />
-          </StepWizard>
-        )
-      case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
-        return (
-          <StepWizard title={stepWizardTitle}>
-            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
-            <StepNexusAuthentication name={getString('details')} {...authenticationStepProps} />
-            <DelegateSelectorStep {...delegateStepProps} buildPayload={buildNexusPayload} />
-            <VerifyOutOfClusterDelegate
-              {...verifyOutofClusterDelegateProps}
-              type={ArtifactToConnectorMap[selectedArtifact]}
-            />
-          </StepWizard>
-        )
-      case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
-        return (
-          <StepWizard title={stepWizardTitle}>
-            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
-            <StepArtifactoryAuthentication name={getString('details')} {...authenticationStepProps} />
-            <DelegateSelectorStep {...delegateStepProps} buildPayload={buildArtifactoryPayload} />
-            <VerifyOutOfClusterDelegate
-              {...verifyOutofClusterDelegateProps}
-              type={ArtifactToConnectorMap[selectedArtifact]}
-            />
-          </StepWizard>
-        )
-      case ENABLED_ARTIFACT_TYPES.Acr:
-        return (
-          <StepWizard title={stepWizardTitle}>
-            <ConnectorDetailsStep type={ArtifactToConnectorMap[selectedArtifact]} {...connectorDetailStepProps} />
-            <AzureAuthentication name={getString('details')} {...authenticationStepProps} />
-            <DelegateSelectorStep buildPayload={buildAzurePayload} {...delegateStepProps} />
-            <VerifyOutOfClusterDelegate
-              type={ArtifactToConnectorMap[selectedArtifact]}
-              {...verifyOutofClusterDelegateProps}
-            />
-          </StepWizard>
-        )
-
-      default:
-        return <></>
-    }
-  }, [connectorView, selectedArtifact, isEditMode])
 
   const getLastSteps = useCallback((): JSX.Element => {
     switch (selectedArtifact) {
@@ -644,16 +569,41 @@ export default function ArtifactsSelection({
       case ENABLED_ARTIFACT_TYPES.Ecr:
         return <ECRArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
-        return <NexusArtifact {...artifactLastStepProps()} />
+        return <Nexus3Artifact {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
+        return <Nexus2Artifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return <Artifactory {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.AmazonS3:
+        return <AmazonS3 {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.CustomArtifact:
         return <CustomArtifact {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.Acr:
         return <ACRArtifact {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return <JenkinsArtifact {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+        return <GoogleArtifactRegistry {...artifactLastStepProps()} />
+      case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
+        return <GithubPackageRegistry {...artifactLastStepProps()} />
       case ENABLED_ARTIFACT_TYPES.DockerRegistry:
       default:
         return <DockerRegistryArtifact {...artifactLastStepProps()} />
+    }
+  }, [artifactLastStepProps, selectedArtifact])
+
+  const getOptionalConfigurationSteps = useCallback((): JSX.Element | null => {
+    switch (selectedArtifact) {
+      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
+        return (
+          <CustomArtifactOptionalConfiguration
+            {...artifactLastStepProps()}
+            name={'Optional Configuration'}
+            key={'Optional_Configuration'}
+          />
+        )
+      default:
+        return null
     }
   }, [artifactLastStepProps, selectedArtifact])
 
@@ -676,21 +626,24 @@ export default function ArtifactsSelection({
           expressions={expressions}
           allowableTypes={allowableTypes}
           lastSteps={getLastSteps()}
+          getOptionalConfigurationSteps={getOptionalConfigurationSteps()}
           labels={getLabels()}
-          isReadonly={isReadOnlyServiceMode}
+          isReadonly={readonly}
           selectedArtifact={selectedArtifact}
           changeArtifactType={changeArtifactType}
           newConnectorView={connectorView}
-          newConnectorSteps={getNewConnectorSteps()}
+          newConnectorProps={{
+            auth: authenticationStepProps,
+            connector: connectorDetailStepProps,
+            connectivity: connectivityStepProps,
+            delegate: delegateStepProps,
+            verify: ConnectorTestConnectionProps
+          }}
           handleViewChange={handleConnectorViewChange}
           showConnectorStep={showConnectorStep(selectedArtifact as ArtifactType)}
         />
       </div>
     )
-  }
-
-  if (serviceLoading) {
-    return null
   }
 
   return (
@@ -705,8 +658,8 @@ export default function ArtifactsSelection({
       fetchedConnectorResponse={fetchedConnectorResponse}
       accountId={accountId}
       refetchConnectors={refetchConnectorList}
-      isReadonly={isReadOnlyServiceMode}
-      allowSidecar={!isServerlessDeploymentType(deploymentType)}
+      isReadonly={readonly}
+      isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
     />
   )
 }

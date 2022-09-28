@@ -15,7 +15,7 @@ import { Accordion, Button, Container, Layout, Popover, Text } from '@wings-soft
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
   ConnectorCheckResponse,
   PipelineInputResponse,
@@ -519,7 +519,8 @@ export function PreFlightCheckModal({
 
   const { showError } = useToaster()
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const processResponseError = (error?: { message?: string }) => {
     showError(error?.message ? error?.message : getString('somethingWentWrong'), undefined, 'pipeline.preflight.error')
     onCloseButtonClick()

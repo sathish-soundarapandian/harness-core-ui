@@ -11,8 +11,8 @@ import { connect, FormikErrors, yupToFormErrors } from 'formik'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
-import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import type { StringsMap } from 'stringTypes'
 import ServiceNowApprovalStepModeWithRef from '@pipeline/components/PipelineSteps/Steps/ServiceNowApproval/ServiceNowApprovalStepMode'
@@ -28,7 +28,7 @@ import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { getConnectorListV2Promise, getServiceNowTicketTypesPromise } from 'services/cd-ng'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
-import { flatObject } from '../Common/ApprovalCommons'
+import { getSanitizedflatObjectForVariablesView } from '../Common/ApprovalCommons'
 import { PipelineStep } from '../../PipelineStep'
 import { StepType } from '../../PipelineStepInterface'
 
@@ -57,6 +57,7 @@ export class ServiceNowApproval extends PipelineStep<ServiceNowApprovalData> {
   protected stepName = 'ServiceNow Approval'
   protected stepIcon: IconName = 'servicenow-approve'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServiceNowApproval'
+  protected referenceId = 'serviceNowApprovalStep'
   // initialValues on mount
   protected defaultValues: ServiceNowApprovalData = {
     identifier: '',
@@ -235,9 +236,10 @@ export class ServiceNowApproval extends PipelineStep<ServiceNowApprovalData> {
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <SnowApprovalDeploymentModeWithFormik
+          formik={formikRef}
           stepViewType={stepViewType}
           initialValues={initialValues}
           allowableTypes={allowableTypes}
@@ -249,7 +251,7 @@ export class ServiceNowApproval extends PipelineStep<ServiceNowApprovalData> {
       const customStepPropsTyped = customStepProps as SnowApprovalVariableListModeProps
       return (
         <VariablesListTable
-          data={flatObject(customStepPropsTyped.variablesData)}
+          data={getSanitizedflatObjectForVariablesView(customStepPropsTyped.variablesData)}
           originalData={initialValues as Record<string, any>}
           metadataMap={customStepPropsTyped.metadataMap}
           className={pipelineVariablesCss.variablePaddingL3}

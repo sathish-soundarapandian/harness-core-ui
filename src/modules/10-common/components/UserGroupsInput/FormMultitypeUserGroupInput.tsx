@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { get } from 'lodash-es'
 import type { FormikContextType } from 'formik'
 import {
@@ -17,6 +17,8 @@ import {
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ExpressionsListInput } from '@common/components/ExpressionsListInput/ExpressionsListInput'
 import UserGroupsInput, { FormikUserGroupsInput } from './UserGroupsInput'
+import { InpuSetFunction, parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
+import { getIdentifierFromValue } from '../EntityReference/EntityReference'
 
 export interface FormMultiTypeUserGroupInputProps
   extends Omit<ExpressionAndRuntimeTypeProps, 'fixedTypeComponent' | 'fixedTypeComponentProps'> {
@@ -24,17 +26,29 @@ export interface FormMultiTypeUserGroupInputProps
   tooltipProps?: DataTooltipInterface
   formik?: FormikContextType<any>
   expressions?: string[]
+  templateProps?: {
+    isTemplatizedView: true
+    templateValue: string
+  }
 }
 
 export type Extended = FormikUserGroupsInput & FormMultiTypeUserGroupInputProps
 
 export const FormMultiTypeUserGroupInput: React.FC<Extended> = props => {
-  const { disabled, children, label, tooltipProps, formik, name, expressions, allowableTypes } = props
+  const { disabled, children, label, tooltipProps, formik, name, expressions, allowableTypes, templateProps } = props
 
   const value = get(formik?.values, name)
 
   // Don't show formError if type is fixed, as that is handled inside UserGroupInput.tsx
   const [multiType, setMultiType] = useState<MultiTypeInputType>(getMultiTypeFromValue(value, allowableTypes, true))
+
+  const identifierFilter = useMemo(() => {
+    if (!templateProps?.isTemplatizedView || !templateProps.templateValue) return []
+    return (
+      parseInput(templateProps.templateValue)?.[InpuSetFunction.ALLOWED_VALUES]?.values?.map(getIdentifierFromValue) ??
+      []
+    )
+  }, [templateProps?.isTemplatizedView, templateProps?.templateValue])
 
   return (
     <MultiTypeFieldSelector
@@ -52,7 +66,13 @@ export const FormMultiTypeUserGroupInput: React.FC<Extended> = props => {
       )}
       style={{ flexGrow: 1, marginBottom: 0 }}
     >
-      <UserGroupsInput label="" tooltipProps={tooltipProps} name={name} disabled={disabled}>
+      <UserGroupsInput
+        label=""
+        tooltipProps={tooltipProps}
+        name={name}
+        disabled={disabled}
+        identifierFilter={identifierFilter}
+      >
         {children}
       </UserGroupsInput>
     </MultiTypeFieldSelector>

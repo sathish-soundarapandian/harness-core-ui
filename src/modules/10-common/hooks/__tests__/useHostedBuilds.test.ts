@@ -6,6 +6,7 @@
  */
 
 import * as licenseStoreContextMock from 'framework/LicenseStore/LicenseStoreContext'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { useHostedBuilds } from '../useHostedBuild'
 
 // tc1 CI edition = FREE, licenseType = TRIAL, status = ACTIVE
@@ -17,6 +18,12 @@ import { useHostedBuilds } from '../useHostedBuild'
 // tc7 CI edition = COMMUNITY, no licenseType, status = ACTIVE
 // tc8 CI no edition, licenseType = PAID, status = ACTIVE
 // tc9 CI edition = FREE, licenseType = TRIAL, status = EXPIRED
+// tc10 FF HOSTED_BUILDS is true
+// tc11 FF HOSTED_BUILDS is false
+
+jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+  HOSTED_BUILDS: false
+})
 
 describe('Test useHostedBuilds', () => {
   test('tc1', () => {
@@ -87,6 +94,22 @@ describe('Test useHostedBuilds', () => {
     jest.spyOn(licenseStoreContextMock, 'useLicenseStore').mockReturnValue({
       licenseInformation: { CI: { edition: 'FREE', licenseType: 'TRIAL', status: 'EXPIRED' } }
     } as any)
+    expect(useHostedBuilds().enabledHostedBuildsForFreeUsers).toBe(false)
+    expect(useHostedBuilds().enabledHostedBuilds).toBe(false)
+  })
+
+  test('tc10', () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      HOSTED_BUILDS: true
+    })
+    expect(useHostedBuilds().enabledHostedBuildsForFreeUsers).toBe(true)
+    expect(useHostedBuilds().enabledHostedBuilds).toBe(false)
+  })
+
+  test('tc11', () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      HOSTED_BUILDS: false
+    })
     expect(useHostedBuilds().enabledHostedBuildsForFreeUsers).toBe(false)
     expect(useHostedBuilds().enabledHostedBuilds).toBe(false)
   })

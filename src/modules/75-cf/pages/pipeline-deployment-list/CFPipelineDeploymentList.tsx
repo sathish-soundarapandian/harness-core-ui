@@ -7,11 +7,11 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import PipelineDeploymentList from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
 import { useGetPipelineSummary } from 'services/pipeline-ng'
+import { ExecutionList } from '@pipeline/pages/execution-list/ExecutionList'
 
 export default function CFPipelineDeploymentList(): React.ReactElement {
   const { pipelineIdentifier, orgIdentifier, projectIdentifier, accountId, module } =
@@ -50,5 +50,5 @@ export default function CFPipelineDeploymentList(): React.ReactElement {
 
   const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
 
-  return <PipelineDeploymentList onRunPipeline={onRunPipeline} isPipelineInvalid={isPipelineInvalid} />
+  return <ExecutionList onRunPipeline={onRunPipeline} isPipelineInvalid={isPipelineInvalid} />
 }

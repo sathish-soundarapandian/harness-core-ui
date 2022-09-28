@@ -6,40 +6,24 @@
  */
 
 import React, { CSSProperties } from 'react'
-import {
-  Button,
-  Text,
-  SelectOption,
-  MultiSelectOption,
-  Popover,
-  Container,
-  useToggleOpen,
-  Dialog
-} from '@harness/uicore'
+import { Button, Text, Popover, Container, useToggleOpen, Dialog } from '@harness/uicore'
 import { Classes, Position, PopoverInteractionKind } from '@blueprintjs/core'
 import cx from 'classnames'
 
 import { useStrings } from 'framework/strings'
 
-import ConfigureOptionsDialog from './ConfigureOptionsDialog'
-
+import ConfigureOptionsDialog, { ConfigureOptionsDialogProps } from './ConfigureOptionsDialog'
+import { ALLOWED_VALUES_TYPE } from './constants'
+import { VALIDATORS } from './validators'
 import css from './ConfigureOptions.module.scss'
 
-export interface ConfigureOptionsProps {
-  value: string
-  isRequired?: boolean
-  defaultValue?: string | number
-  variableName: string
-  type: string | JSX.Element
+export interface ConfigureOptionsProps extends Omit<ConfigureOptionsDialogProps, 'closeModal' | 'isOpen'> {
   onChange?: (value: string, defaultValue?: string | number, isRequired?: boolean) => void
-  showDefaultField?: boolean
-  showRequiredField?: boolean
-  showAdvanced?: boolean
   className?: string
-  fetchValues?: (done: (response: SelectOption[] | MultiSelectOption[]) => void) => void
   style?: CSSProperties
-  isReadonly?: boolean
 }
+
+export { ALLOWED_VALUES_TYPE, VALIDATORS }
 
 export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
   const {
@@ -52,7 +36,10 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
     type,
     showRequiredField = false,
     showAdvanced = false,
-    fetchValues,
+    hideExecutionTimeField = false,
+    allowedValuesType,
+    allowedValuesValidator,
+    getAllowedValuesCustomComponent,
     className,
     isReadonly = false
   } = props
@@ -96,6 +83,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
         title={getString('common.configureOptions.configureOptions')}
         enforceFocus={false}
         className={cx(css.dialog, Classes.DIALOG, 'padded-dialog')}
+        chidrenClassName={css.dialogContent}
         onClose={() => closeModal()}
         lazy
       >
@@ -108,9 +96,12 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
           type={type}
           showDefaultField={showDefaultField}
           defaultValue={defaultValue}
+          hideExecutionTimeField={hideExecutionTimeField}
           showRequiredField={showRequiredField}
           showAdvanced={showAdvanced}
-          fetchValues={fetchValues}
+          allowedValuesType={allowedValuesType}
+          allowedValuesValidator={allowedValuesValidator}
+          getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
         />
       </Dialog>
     </React.Fragment>

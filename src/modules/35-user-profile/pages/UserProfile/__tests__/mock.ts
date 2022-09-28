@@ -7,8 +7,8 @@
 
 import type { AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
 import type { ResponseBoolean, ResponseListSourceCodeManagerDTO } from 'services/cd-ng'
-import { AuthenticationMechanisms } from '@auth-settings/constants/utils'
 import { loginSettings } from '@auth-settings/pages/Configuration/__test__/mock'
+import { AuthenticationMechanisms } from '@rbac/utils/utils'
 
 export const userMockData = {
   status: 'SUCCESS',

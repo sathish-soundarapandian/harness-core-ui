@@ -39,7 +39,7 @@ $ git clone git@github.com:harness/harness-core-ui.git
 $ cd harness-core-ui
 ```
 
-4. Add config to make Harness Github Package Registry accessible
+4. Add config to make Harness Github Package Registry accessible. Before running this step, make sure your github personal access token is authorized for both "wings-software" and "harness", step is here: https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-saml-single-sign-on/authorizing-a-personal-access-token-for-use-with-saml-single-sign-on
 
 ```
 $ yarn setup-github-registry
@@ -47,7 +47,13 @@ $ yarn setup-github-registry
 
 > Note: This is only needed if this is the first UI project you are installing on your machine
 
-5. Install/Update/Refresh dependencies
+5. Create self-assigned certificate before running the app
+
+```
+$ yarn generate-certificate
+```
+
+6. Install/Update/Refresh dependencies
 
 ```
 $ yarn
@@ -57,13 +63,19 @@ $ yarn
 
 > Note: This is a shorthand for the command `yarn install`. Read more here: https://classic.yarnpkg.com/en/docs/usage
 
-6. Compile/Build the code **and** start the web-server in watch mode
+7. Compile/Build the code **and** start the web-server in watch mode
 
 ```
 $ yarn dev
 ```
 
 > Note: This will start the local server in watch mode with hot reloading. Any code changes will trigger fast patch rebuilds and refresh the page in the browser.
+
+8. View in the browser
+
+```
+https://localhost:8181
+```
 
 </details>
 
@@ -105,7 +117,7 @@ See [src/services/README.md](https://github.com/harness/harness-core-ui/blob/mas
 You can configure the application to use remote environments such as `uat.harness.io`, `qa.harness.io` or `qb.harness.io` to allow local UI development without the need to run backend services. To achieve this, two environment variables are available.
 
 | Variable            | Default value                   | Description                                                                  |
-|---------------------|---------------------------------|------------------------------------------------------------------------------|
+| ------------------- | ------------------------------- | ---------------------------------------------------------------------------- |
 | `BASE_URL`          | `https://qa.harness.io/gateway` | Location of backend services to access                                       |
 | `TARGET_LOCALHOST`  | `true`                          | Whether to use local backend services. Set to `false` to use remote services |
 | `DISABLE_TYPECHECK` | `false`                         | Whether to disable the `ForkTsCheckerWebpackPlugin` for local development    |
@@ -130,18 +142,26 @@ Run unit tests
 $ yarn test
 ```
 
+### Enabling Feature Flags in local
+
+To enable a Feature-Flag in local development mode, just add an entry to `.env` by prefixing the feature flag name with `FF_` and setting its value to `true` and (re)start your development server.
+
+For example, if you want to enable a feature flag named `MY_FETAURE_FLAG`. Just add an entry `FF_MY_FEATURE_FLAG=true` in `.env` file.
+
+> Note: This will only work when `NODE_ENV=development` is set.
+
 ### Hotfix Process
 
-1. Find out which release branch you need to hotfix. You can do that checking the currently deployed version in the environment you want to hotfix. For eg. For UAT environment, you can hit https://uat.harness.io/ng/static/version.json to get the currently deployed version. (eg. `0.53.4`)
+1. Find out which release branch you need to hotfix. You can do that checking the currently deployed version in the environment you want to hotfix. For eg. For prod environment, you can hit https://app.harness.io/ng/static/version.json to get the currently deployed version. (eg. `0.53.4`)
 2. Create a branch from the corresponding release branch (eg. `release/0.53.x`) which you want to hotfix
 3. Commit your changes on your branch
-4. Bump up the patch version in `package.json` (eg. 0.53.0 -> 0.53.1)
+4. Bump up the patch version in `package.json` (eg. 0.53.4 -> 0.53.5)
 5. Raise PR with these changes
-6. When this PR gets merged, this [Workflow](https://uat.harness.io/ng/#/account/sjmVqavzTuS1segZNyZqbA/ci/orgs/default/projects/uiprchecks/pipelines/build_release_branch/executions) will create a new build for you automatically
+6. When this PR gets merged, this [Pipeline](https://stage.harness.io/ng/#/account/wFHXHD0RRQWoO8tIZT5YVw/ci/orgs/Harness/projects/RELEASEBUILDS/pipelines/nextGenUI_release_build/executions) will create a new build for you automatically
 7. Please inform Ops/QE team to deploy your new build, especially in QA, UAT or prod environment.
-8. Make sure to raise a PR with the same changes (minus the version bump) for `master` branch too. Otherwise your changes will get overriden with next deployment.
+8. Make sure to raise a PR with the same changes (minus the version bump) for `develop` branch too. Otherwise your changes will get overriden with next deployment.
 
-## For wndows environment setup only
+## For windows environment setup only
 
 #### Download Git bash for windows
 

@@ -143,6 +143,7 @@ export class DiagramFactory {
     showEndNode?: boolean
     graphActionsLayout?: 'horizontal' | 'vertical'
     graphLinkClassname?: string
+    optimizeRender?: boolean
   }> {
     function PipelineStudioHOC(
       this: DiagramFactory,
@@ -158,6 +159,7 @@ export class DiagramFactory {
         createNodeTitle?: string
         showEndNode?: boolean
         graphActionsLayout?: 'horizontal' | 'vertical'
+        optimizeRender?: boolean
         graphLinkClassname?: string
       }
     ): React.ReactElement {

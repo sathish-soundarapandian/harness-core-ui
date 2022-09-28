@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
@@ -46,10 +46,16 @@ const getPipelineContext = (): PipelineContextInterface => ({
     isInitialized: true,
     isLoading: false,
     isUpdated: true,
-    templateTypes: {}
+    templateTypes: {},
+    templateServiceData: {},
+    resolvedCustomDeploymentDetailsByRef: {}
   },
   contextType: PipelineContextType.Pipeline,
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   setSchemaErrorView: jest.fn(),
   updatePipelineStoreMetadata: jest.fn(),
   updateGitDetails: jest.fn(),
@@ -76,11 +82,11 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
   setTemplateTypes: jest.fn(),
-  getTemplate: jest.fn()
+  setTemplateServiceData: jest.fn()
 })
 
 describe('StepWidget tests', () => {
-  test(`renders DeployStageSpecifications without crashing `, () => {
+  test('it renders StageOverview', () => {
     const { container } = render(
       <TestWrapper>
         <PipelineContext.Provider value={getPipelineContext()}>

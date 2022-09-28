@@ -76,6 +76,7 @@ describe('Plugin Step', () => {
           image: RUNTIME_INPUT_VALUE,
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
+          entrypoint: RUNTIME_INPUT_VALUE,
           // TODO: Right now we do not support Image Pull Policy but will do in the future
           // pull: RUNTIME_INPUT_VALUE,
           resources: {
@@ -114,6 +115,7 @@ describe('Plugin Step', () => {
           connectorRef: 'account.connectorRef',
           image: 'image',
           privileged: false,
+          entrypoint: ['a/b/c'],
           settings: {
             key1: 'value1',
             key2: 'value2',
@@ -169,6 +171,7 @@ describe('Plugin Step', () => {
           image: RUNTIME_INPUT_VALUE,
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
+          entrypoint: RUNTIME_INPUT_VALUE,
           // TODO: Right now we do not support Image Pull Policy but will do in the future
           // pull: RUNTIME_INPUT_VALUE,
           resources: {
@@ -191,6 +194,7 @@ describe('Plugin Step', () => {
           image: RUNTIME_INPUT_VALUE,
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
+          entrypoint: RUNTIME_INPUT_VALUE,
           // TODO: Right now we do not support Image Pull Policy but will do in the future
           // pull: RUNTIME_INPUT_VALUE,
           resources: {
@@ -234,6 +238,7 @@ describe('Plugin Step', () => {
           connectorRef: 'account.connectorRef',
           image: 'image',
           privileged: false,
+          entrypoint: ['a/b/c'],
           settings: {
             key1: 'value1',
             key2: 'value2',
@@ -281,6 +286,7 @@ describe('Plugin Step', () => {
               connectorRef: 'account.connectorRef',
               image: 'image',
               privileged: false,
+              entrypoint: ['a/b/c'],
               settings: {
                 key1: 'value1',
                 key2: 'value2',
@@ -303,6 +309,17 @@ describe('Plugin Step', () => {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.plugin.name',
                   localName: 'step.plugin.name'
+                }
+              },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.plugin.identifier',
+                      localName: 'step.plugin.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
                 }
               },
               'step-description': {
@@ -335,6 +352,12 @@ describe('Plugin Step', () => {
                   localName: 'step.plugin.spec.settings'
                 }
               },
+              'step-entrypoint': {
+                yamlProperties: {
+                  fqn: 'pipeline.stages.qaStage.execution.steps.plugin.spec.entrypoint',
+                  localName: 'step.plugin.spec.entrypoint'
+                }
+              },
               // TODO: Right now we do not support Image Pull Policy but will do in the future
               // 'step-pull': {
               //   yamlProperties: {
@@ -357,6 +380,7 @@ describe('Plugin Step', () => {
             },
             variablesData: {
               type: StepType.Plugin,
+              __uuid: 'step-identifier',
               identifier: 'plugin',
               name: 'step-name',
               description: 'step-description',
@@ -366,6 +390,7 @@ describe('Plugin Step', () => {
                 image: 'step-image',
                 privileged: 'step-privileged',
                 settings: 'step-settings',
+                entryPoint: 'step-entryPoint',
                 // TODO: Right now we do not support Image Pull Policy but will do in the future
                 // pull: 'step-pull',
                 resources: {

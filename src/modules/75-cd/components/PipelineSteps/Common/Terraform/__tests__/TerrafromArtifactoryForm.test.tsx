@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { render, fireEvent } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 
@@ -17,7 +17,11 @@ const props = {
   previousStep: jest.fn(),
   isConfig: true,
   isTerraformPlan: true,
-  allowableTypes: [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
+  allowableTypes: [
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION,
+    MultiTypeInputType.FIXED
+  ] as AllowedTypesWithRunTime[]
 }
 
 const repoMock = {

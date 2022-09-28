@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import type { MonacoEditorProps } from 'react-monaco-editor'
 import { Dialog, Classes } from '@blueprintjs/core'
+import cx from 'classnames'
 import { FormikProps, connect } from 'formik'
 import { get } from 'lodash-es'
 import { Button } from '@wings-software/uicore'
-import type { languages, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
+import type { languages, IDisposable, editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import { useStrings } from 'framework/strings'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -31,6 +32,8 @@ export interface ShellScriptMonacoProps {
   name: string
   disabled?: boolean
   expressions?: string[]
+  className?: string
+  editorOptions?: editor.IEditorConstructionOptions
 }
 
 export interface ConnectedShellScriptMonacoProps extends ShellScriptMonacoProps {
@@ -40,8 +43,9 @@ export interface ConnectedShellScriptMonacoProps extends ShellScriptMonacoProps 
 const VAR_REGEX = /.*<\+.*?/
 
 export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React.ReactElement {
-  const { scriptType, formik, name, disabled, expressions, title } = props
-  const [isFullScreen, setFullScreen] = React.useState(false)
+  const { scriptType, formik, name, disabled, expressions, title, className, editorOptions } = props
+  const [isFullScreen, setFullScreen] = useState(false)
+  const [lineCount, setLineCount] = useState(0)
   const { getString } = useStrings()
   const value = get(formik.values, name) || ''
 
@@ -54,6 +58,7 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
         .map(label => ({
           label,
           insertText: label + '>',
+          documentation: `<+${label}}>`,
           kind: 13
         }))
 
@@ -86,9 +91,16 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
     }
   }, [expressions])
 
+  const getHeight = (): number => {
+    if (lineCount <= 5) {
+      return 80
+    }
+    return 200
+  }
+
   const editor = (
     <div
-      className={css.monacoWrapper}
+      className={cx(css.monacoWrapper, !isFullScreen && className)}
       onKeyDown={event => {
         if (event.key === 'Enter') {
           event.stopPropagation()
@@ -96,10 +108,11 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
       }}
     >
       <MonacoEditor
-        height={isFullScreen ? '70vh' : 300}
+        height={isFullScreen ? '70vh' : getHeight()}
         value={value}
         name={name}
         language={langMap[scriptType] as string}
+        setLineCount={setLineCount}
         options={
           {
             fontFamily: "'Roboto Mono', monospace",
@@ -108,7 +121,8 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
               enabled: false
             },
             readOnly: disabled,
-            scrollBeyondLastLine: false
+            scrollBeyondLastLine: false,
+            ...editorOptions
           } as MonacoEditorProps['options']
         }
         onChange={txt => formik.setFieldValue(name, txt)}
@@ -134,7 +148,7 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
         isCloseButtonShown
         canOutsideClickClose={false}
         onClose={() => setFullScreen(false)}
-        title={title ? title : `${getString('script')} (${scriptType})`}
+        title={title ? title : `${getString('common.script')} (${scriptType})`}
         className={css.monacoDialog}
       >
         <div className={Classes.DIALOG_BODY}>{editor}</div>

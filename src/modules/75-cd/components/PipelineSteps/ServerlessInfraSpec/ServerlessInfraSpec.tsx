@@ -14,7 +14,8 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  Icon
+  Icon,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { debounce, noop, defaultTo } from 'lodash-es'
@@ -34,6 +35,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ServerlessInfraTypes } from '@pipeline/utils/stageHelpers'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { getValidationSchema, getValidationSchemaWithRegion } from '../PipelineStepsUtil'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ServerlessInfraSpec.module.scss'
@@ -46,7 +48,7 @@ export interface ServerlessSpecEditableProps {
   template?: ServerlessInfraTypes
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: ServerlessInfraTypes
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   hasRegion?: boolean
   formInfo: {
     formName: string
@@ -284,7 +286,7 @@ export const ServerlessInputForm: React.FC<ServerlessSpecEditableProps & { path:
       )}
       {getMultiTypeFromValue(template?.region) === MultiTypeInputType.RUNTIME && hasRegion && (
         <div className={cx(stepCss.formGroup, stepCss.md, css.regionInputWrapper)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.region`}
             disabled={readonly}
             placeholder={getString('cd.steps.serverless.regionPlaceholder')}
@@ -293,12 +295,14 @@ export const ServerlessInputForm: React.FC<ServerlessSpecEditableProps & { path:
               expressions,
               allowableTypes
             }}
+            template={template}
+            fieldPath={'region'}
           />
         </div>
       )}
       {getMultiTypeFromValue(template?.stage) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.stage`}
             label={getString('common.stage')}
             disabled={readonly}
@@ -307,6 +311,8 @@ export const ServerlessInputForm: React.FC<ServerlessSpecEditableProps & { path:
               expressions
             }}
             placeholder={getString('cd.steps.serverless.stagePlaceholder')}
+            template={template}
+            fieldPath={'stage'}
           />
         </div>
       )}

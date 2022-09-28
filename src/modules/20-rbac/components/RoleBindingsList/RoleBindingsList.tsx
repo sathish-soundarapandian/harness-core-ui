@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { Tag, Popover, PopoverInteractionKind } from '@blueprintjs/core'
 import { Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
@@ -16,6 +16,7 @@ import type { RoleAssignmentMetadataDTO, RoleBinding } from 'services/cd-ng'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { isAccountBasicRole } from '@rbac/utils/utils'
+import type { Scope } from 'services/rbac'
 import css from './RoleBindingsList.module.scss'
 
 interface RoleBindingsListProps {
@@ -24,8 +25,51 @@ interface RoleBindingsListProps {
   showNoData?: boolean
 }
 
-const RoleBindingTag = ({ roleAssignment }: { roleAssignment: RoleBinding }): React.ReactElement => {
+export const RoleBindingTag = ({
+  roleAssignment,
+  roleScope
+}: {
+  roleAssignment: RoleBinding
+  roleScope?: Scope
+}): React.ReactElement => {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
+  const getRoleDetailsLink = (): string => {
+    if (roleScope) {
+      return routes.toRoleDetails({
+        accountId: defaultTo(roleScope?.accountIdentifier, accountId),
+        orgIdentifier: roleScope.orgIdentifier,
+        projectIdentifier: roleScope?.projectIdentifier,
+        module: roleScope.projectIdentifier && module ? module : undefined,
+        roleIdentifier: roleAssignment.roleIdentifier
+      })
+    }
+    return routes.toRoleDetails({
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      roleIdentifier: roleAssignment.roleIdentifier
+    })
+  }
+
+  const getResourceGroupLink = (): string => {
+    if (roleScope) {
+      return routes.toResourceGroupDetails({
+        accountId: defaultTo(roleScope?.accountIdentifier, accountId),
+        orgIdentifier: roleScope.orgIdentifier,
+        projectIdentifier: roleScope?.projectIdentifier,
+        module: roleScope.projectIdentifier && module ? module : undefined,
+        resourceGroupIdentifier: roleAssignment.resourceGroupIdentifier
+      })
+    }
+    return routes.toResourceGroupDetails({
+      accountId,
+      orgIdentifier,
+      projectIdentifier,
+      module,
+      resourceGroupIdentifier: roleAssignment.resourceGroupIdentifier
+    })
+  }
   return (
     <Tag
       className={roleAssignment.managedRole ? css.harnesstag : css.customtag}
@@ -33,29 +77,11 @@ const RoleBindingTag = ({ roleAssignment }: { roleAssignment: RoleBinding }): Re
         e.stopPropagation()
       }}
     >
-      <Link
-        to={routes.toRoleDetails({
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          module,
-          roleIdentifier: roleAssignment.roleIdentifier
-        })}
-        className={css.link}
-      >
+      <Link to={getRoleDetailsLink()} className={css.link}>
         {roleAssignment.roleName}
       </Link>
       {` - `}
-      <Link
-        to={routes.toResourceGroupDetails({
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          module,
-          resourceGroupIdentifier: roleAssignment.resourceGroupIdentifier
-        })}
-        className={css.link}
-      >
+      <Link to={getResourceGroupLink()} className={css.link}>
         {roleAssignment.resourceGroupName}
       </Link>
     </Tag>

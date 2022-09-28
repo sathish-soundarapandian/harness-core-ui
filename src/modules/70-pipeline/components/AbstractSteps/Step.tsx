@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import type { FormikErrors, FormikProps } from 'formik'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import type { UseStringsReturn } from 'framework/strings'
@@ -20,7 +20,8 @@ export enum StepViewType {
   TriggerForm = 'TriggerForm',
   StageVariable = 'StageVariable',
   Edit = 'Edit',
-  Template = 'Template'
+  Template = 'Template',
+  TemplateUsage = 'TemplateUsage'
 }
 
 export interface InputSetData<T> {
@@ -56,7 +57,7 @@ export interface StepProps<T, U = unknown> {
   readonly?: boolean
   formikRef?: StepFormikFowardRef<T>
   customStepProps?: U
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export function setFormikRef<T = unknown, U = unknown>(ref: StepFormikFowardRef<T>, formik: FormikProps<U>): void {
@@ -72,14 +73,17 @@ export function setFormikRef<T = unknown, U = unknown>(ref: StepFormikFowardRef<
 export abstract class Step<T> {
   protected abstract type: StepType
   protected abstract defaultValues: T
+  protected referenceId?: string
   protected abstract stepIcon: IconName
   protected stepIconColor?: string
   protected stepIconSize?: number
   protected abstract stepName: string
   protected stepDescription: keyof StringsMap | undefined
+  protected stepAdditionalInfo?: keyof StringsMap
   protected _hasStepVariables = false
   protected _hasDelegateSelectionVisible = false
   protected isHarnessSpecific = false
+  protected isStepNonDeletable = false // If true, the step can not be deleted from pipeline execution tab view
   protected invocationMap?: Map<
     RegExp,
     (path: string, yaml: string, params: Record<string, unknown>) => Promise<CompletionItemInterface[]>
@@ -100,6 +104,14 @@ export abstract class Step<T> {
     return this.isHarnessSpecific
   }
 
+  getIsNonDeletable(): boolean {
+    return this.isStepNonDeletable
+  }
+
+  getReferenceId(): string | undefined {
+    return this.referenceId
+  }
+
   getIconName(): IconName {
     return this.stepIcon
   }
@@ -114,6 +126,10 @@ export abstract class Step<T> {
 
   getDescription(): keyof StringsMap | undefined {
     return this.stepDescription
+  }
+
+  getAdditionalInfo(): keyof StringsMap | undefined {
+    return this.stepAdditionalInfo
   }
 
   getStepName(): string {

@@ -53,6 +53,13 @@ describe('Test PdcDetails component with spec.hosts', () => {
       </TestWrapper>
     )
 
+    const radioButtonElement = getByText('connectors.pdc.uploadJson')
+    fireEvent.click(radioButtonElement)
+
+    await waitFor(() => {
+      expect(getByText('connectors.pdc.hostsUpload1')).toBeDefined()
+    })
+
     const fileName = 'values.json'
     const str = JSON.stringify(fileValues)
     const blob = new Blob([str])
@@ -77,10 +84,9 @@ describe('Test PdcDetails component with spec.hosts', () => {
 
       const dropEvent = Object.assign(createEvent.drop(input!), eventData)
       fireEvent(input!, dropEvent)
-    })
 
-    await waitFor(() => {
-      expect(getByText(fileName)).toBeDefined()
+      const areaJson = waitFor(() => getAllByText(container, 'JSON content')[0])
+      expect(areaJson).toBeDefined()
     })
 
     act(async () => {

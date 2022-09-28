@@ -72,7 +72,7 @@ export const AnomalyAlertDialog: React.FC<AlertDialogProps> = ({
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
 
-  const [{ data: perspectiveData }] = useFetchPerspectiveListQuery()
+  const [{ data: perspectiveData }] = useFetchPerspectiveListQuery({ requestPolicy: 'cache-and-network' })
 
   /* istanbul ignore next */
   const perspectiveList = (perspectiveData?.perspectives?.customerViews || []) as QlceView[]

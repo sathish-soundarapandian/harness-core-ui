@@ -36,7 +36,7 @@
     word-break: break-word;
   }
 
-  &.stepAddIcon {
+  &:global(.stepAddIcon) {
     height: 64px;
     width: 64px;
   }

@@ -19,7 +19,8 @@ import {
   IconName,
   ButtonVariation,
   FormikForm,
-  ButtonSize
+  ButtonSize,
+  AllowedTypes
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -34,28 +35,32 @@ import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { ManifestStepInitData, ManifestStores } from '../ManifestInterface'
+import type { ManifestStepInitData, ManifestStores, ManifestStoreWithoutConnector } from '../ManifestInterface'
 import {
+  isConnectorStoreType,
+  doesStorehasConnector,
   ManifestIconByType,
-  ManifestStoreMap,
   ManifestStoreTitle,
   ManifestToConnectorLabelMap,
-  ManifestToConnectorMap
+  ManifestToConnectorMap,
+  ManifestStoreMap
 } from '../Manifesthelper'
 import css from './ManifestWizardSteps.module.scss'
+import style from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
 
 interface ManifestStorePropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isReadonly: boolean
   manifestStoreTypes: Array<ManifestStores>
   initialValues: ManifestStepInitData
   handleConnectorViewChange: () => void
   handleStoreChange: (store: ManifestStores) => void
 }
-type ManifestStoreExcludingInheritFromManifest = Exclude<ManifestStores, 'InheritFromManifest'>
 
 function ManifestStore({
   handleConnectorViewChange,
@@ -73,17 +78,18 @@ function ManifestStore({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const [isLoadingConnectors, setIsLoadingConnectors] = React.useState<boolean>(true)
+  const isCustomRemoteEnabled = useFeatureFlag(FeatureFlag.NG_CUSTOM_REMOTE_MANIFEST)
+
+  const [isLoadingConnectors, setIsLoadingConnectors] = useState<boolean>(true)
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
 
   function isValidConnectorStore(): boolean {
-    return !!selectedStore && selectedStore !== ManifestStoreMap.InheritFromManifest
+    return !!selectedStore && !doesStorehasConnector(selectedStore)
   }
 
   const newConnectorLabel = `${getString('newLabel')} ${
-    isValidConnectorStore() &&
-    getString(ManifestToConnectorLabelMap[selectedStore as ManifestStoreExcludingInheritFromManifest])
+    isValidConnectorStore() && getString(ManifestToConnectorLabelMap[selectedStore as ManifestStoreWithoutConnector])
   } ${getString('connector')}`
 
   const [canCreate] = usePermission({
@@ -98,7 +104,7 @@ function ManifestStore({
   }
 
   function shouldGotoNextStep(connectorRefValue: ConnectorSelectedValue | string): boolean {
-    if (selectedStore === ManifestStoreMap.InheritFromManifest) {
+    if (doesStorehasConnector(selectedStore)) {
       return true
     }
     return (
@@ -109,7 +115,10 @@ function ManifestStore({
         !isEmpty(connectorRefValue))
     )
   }
-  const handleOptionSelection = (formikData: any, storeSelected: ManifestStoreExcludingInheritFromManifest): void => {
+  const handleOptionSelection = (
+    formikData: ManifestStepInitData,
+    storeSelected: ManifestStoreWithoutConnector
+  ): void => {
     if (
       getMultiTypeFromValue(formikData.connectorRef) !== MultiTypeInputType.FIXED &&
       formikData.store !== storeSelected
@@ -124,25 +133,28 @@ function ManifestStore({
 
   const getInitialValues = useCallback((): ManifestStepInitData => {
     const initValues = { ...initialValues }
-
-    if (prevStepData?.connectorRef) {
-      initValues.connectorRef = prevStepData?.connectorRef
+    if (prevStepData) {
+      if (prevStepData?.connectorRef) {
+        initValues.connectorRef = prevStepData?.connectorRef
+      }
       handleStoreChange(selectedStore)
     }
     if (selectedStore !== initValues.store) {
       initValues.connectorRef = ''
     }
     return { ...initValues, store: selectedStore }
-  }, [selectedStore])
+  }, [handleStoreChange, initialValues, prevStepData, selectedStore])
 
   const supportedManifestStores = useMemo(
     () =>
-      manifestStoreTypes.map(store => ({
-        label: getString(ManifestStoreTitle[store]),
-        icon: ManifestIconByType[store] as IconName,
-        value: store
-      })),
-    [manifestStoreTypes]
+      manifestStoreTypes
+        .filter(store => store !== ManifestStoreMap.CustomRemote || isCustomRemoteEnabled)
+        .map(store => ({
+          label: getString(ManifestStoreTitle[store]),
+          icon: ManifestIconByType[store] as IconName,
+          value: store
+        })),
+    [manifestStoreTypes, isCustomRemoteEnabled, getString]
   )
 
   return (
@@ -156,7 +168,7 @@ function ManifestStore({
         formName="manifestStore"
         validationSchema={Yup.object().shape({
           connectorRef: Yup.mixed().when('store', {
-            is: !ManifestStoreMap.InheritFromManifest,
+            is: isConnectorStoreType(),
             then: Yup.mixed().required(
               `${ManifestToConnectorMap[selectedStore]} ${getString(
                 'pipelineSteps.build.create.connectorRequiredError'
@@ -178,17 +190,18 @@ function ManifestStore({
               <Layout.Vertical>
                 <Layout.Horizontal spacing="large">
                   <ThumbnailSelect
-                    className={css.thumbnailSelect}
+                    className={style.thumbnailSelect}
                     name={'store'}
                     items={supportedManifestStores}
                     isReadonly={isReadonly}
                     onChange={storeSelected => {
-                      handleOptionSelection(formik?.values, storeSelected as ManifestStoreExcludingInheritFromManifest)
+                      handleOptionSelection(formik?.values, storeSelected as ManifestStoreWithoutConnector)
                     }}
+                    layoutProps={{ className: style.wrapping }}
                   />
                 </Layout.Horizontal>
 
-                {!isEmpty(formik.values.store) && selectedStore !== ManifestStoreMap.InheritFromManifest ? (
+                {!isEmpty(formik.values.store) && !doesStorehasConnector(selectedStore) ? (
                   <Layout.Horizontal
                     spacing={'medium'}
                     flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
@@ -201,10 +214,10 @@ function ManifestStore({
                       }}
                       name="connectorRef"
                       label={`${getString(
-                        ManifestToConnectorLabelMap[formik.values.store as ManifestStoreExcludingInheritFromManifest]
+                        ManifestToConnectorLabelMap[formik.values.store as ManifestStoreWithoutConnector]
                       )} ${getString('connector')}`}
                       placeholder={`${getString('select')} ${getString(
-                        ManifestToConnectorLabelMap[formik.values.store as ManifestStoreExcludingInheritFromManifest]
+                        ManifestToConnectorLabelMap[formik.values.store as ManifestStoreWithoutConnector]
                       )} ${getString('connector')}`}
                       accountIdentifier={accountId}
                       projectIdentifier={projectIdentifier}

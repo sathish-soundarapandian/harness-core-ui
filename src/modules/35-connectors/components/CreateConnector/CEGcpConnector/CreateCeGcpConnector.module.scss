@@ -170,6 +170,25 @@
       padding: var(--spacing-large) 0 0 0;
     }
   }
+
+  .existingCURTable {
+    overflow: scroll;
+    max-height: 250px;
+    line-height: 18px;
+    width: 100%;
+    padding-top: var(--spacing-small);
+    table {
+      width: 100%;
+      background: var(--white);
+    }
+    thead {
+      background: var(--grey-100);
+      font-size: var(--font-size-small) !important;
+    }
+    tr {
+      font-size: var(--font-size-small) !important;
+    }
+  }
 }
 
 .extention {
@@ -206,4 +225,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.defaultCard {
+  box-shadow: none;
+  background-color: var(--grey-50);
+  opacity: 80%;
+  cursor: not-allowed !important;
+  &:hover {
+    box-shadow: none !important;
+  }
+  :global {
+    .Card--badge {
+      opacity: 50%;
+    }
+  }
 }

@@ -13,7 +13,10 @@ declare const styles: {
   readonly applyChanges: string
   readonly discard: string
   readonly fullScreen: string
+  readonly helpPanel: string
+  readonly helpPanelContainer: string
   readonly main: string
+  readonly showHelpPanel: string
   readonly showRighDrawer: string
   readonly stepConfig: string
   readonly title: string

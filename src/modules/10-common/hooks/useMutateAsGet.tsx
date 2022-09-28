@@ -13,6 +13,7 @@ import type { Cancelable, DebounceSettings } from 'lodash' // only type imports
 import { debounce, identity } from 'lodash-es'
 
 import { shouldShowError } from '@harness/uicore'
+import { unstable_batchedUpdates } from 'react-dom'
 import { useDeepCompareEffect } from './useDeepCompareEffect'
 
 const isCancellable = <T extends (...args: any[]) => any>(func: T): func is T & Cancelable => {
@@ -71,17 +72,20 @@ async function _fetchData<TData, TError, TQueryParams, TRequestBody, TPathParams
       pathParams: props.pathParams
     })
     if (data) {
-      setInitLoading(false)
-      setData(data)
-      setError(null)
+      unstable_batchedUpdates(() => {
+        setInitLoading(false)
+        setData(data)
+        setError(null)
+      })
     }
   } catch (e) {
-    if (shouldShowError(e)) {
-      setData(null)
-      setError(e)
-    }
-
-    setInitLoading(false)
+    unstable_batchedUpdates(() => {
+      setInitLoading(false)
+      if (shouldShowError(e)) {
+        setData(null)
+        setError(e)
+      }
+    })
   }
 }
 
@@ -121,16 +125,20 @@ export function useMutateAsGet<
     if (!props.lazy && !props.mock) {
       try {
         fetchData(mutate, props, setInitLoading, setData, setError)?.then(identity, e => {
+          unstable_batchedUpdates(() => {
+            setInitLoading(false)
+            if (shouldShowError(e)) {
+              setError(e)
+            }
+          })
+        })
+      } catch (e) {
+        unstable_batchedUpdates(() => {
+          setInitLoading(false)
           if (shouldShowError(e)) {
             setError(e)
           }
-          setInitLoading(false)
         })
-      } catch (e) {
-        if (shouldShowError(e)) {
-          setError(e)
-        }
-        setInitLoading(false)
       }
     }
 

@@ -8,6 +8,11 @@
 import type { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
+import type { UseStringsReturn } from 'framework/strings'
+import type {
+  GetTemplateProps,
+  GetTemplateResponse
+} from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type {
   ConnectorInfoDTO,
   ConnectorConnectivityDetails,
@@ -53,12 +58,14 @@ export interface CreateConnectorModalProps {
   setIsEditMode: (val: boolean) => void
   connectorInfo: ConnectorInfoDTO | void
   gitDetails?: IGitContextFormProps
+  status?: ConnectorConnectivityDetails
   connectivityMode?: ConnectivityModeType
   setConnectivityMode?: (val: ConnectivityModeType) => void
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
   mock?: ResponseBoolean
+  getTemplate?: (data: GetTemplateProps) => Promise<GetTemplateResponse>
 }
 
 export const Connectors: ConnectorType = {
@@ -83,6 +90,7 @@ export const Connectors: ConnectorType = {
   ARTIFACTORY: 'Artifactory',
   CEAWS: 'CEAws',
   HttpHelmRepo: 'HttpHelmRepo',
+  OciHelmRepo: 'OciHelmRepo',
   Jira: 'Jira',
   NEW_RELIC: 'NewRelic',
   AWS_KMS: 'AwsKms',
@@ -101,7 +109,9 @@ export const Connectors: ConnectorType = {
   ERROR_TRACKING: 'ErrorTracking',
   AZURE: 'Azure',
   AWSSECRETMANAGER: 'AwsSecretManager',
-  JENKINS: 'Jenkins'
+  JENKINS: 'Jenkins',
+  CUSTOM_SECRET_MANAGER: 'CustomSecretManager',
+  ELK: 'ELK'
 }
 
 export const ConnectorInfoText = {
@@ -156,7 +166,8 @@ export const ActivityType: ActivityType = {
 export const connectorUrlType = {
   ACCOUNT: 'Account',
   REPO: 'Repo',
-  REGION: 'Region'
+  REGION: 'Region',
+  PROJECT: 'Project'
 }
 
 export const CONNECTOR_CREDENTIALS_STEP_IDENTIFIER = 'CONNECTOR_CREDENTIALS_STEP_IDENTIFIER'
@@ -168,14 +179,45 @@ export const SECRET_MANAGER_TESTCONNECTION_STEP_INDEX = 2
 export const connectorHelperUrls = {
   ceAwsLaunchConsole: 'https://console.aws.amazon.com/billing/home?#/reports',
   ceAwscostUsageReportSteps:
-    'https://ngdocs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#step_2_cost_and_usage_report',
+    'https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#step_2_cost_and_usage_report',
   ceAwsNoAccount:
     'https://newdocs.helpdocs.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#review_aws_access_permissions',
   ceAwsRoleARNsteps:
-    'https://ngdocs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#step_4_create_cross_account_role',
+    'https://docs.harness.io/article/80vbt5jv0q-set-up-cost-visibility-for-aws#step_4_create_cross_account_role',
   ceAzureLaunchConsole: 'https://portal.azure.com/#blade/Microsoft_Azure_CostManagement/Menu/exports',
   ceAzureBillingExport:
-    'https://ngdocs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_2_azure_billing_exports'
+    'https://docs.harness.io/article/v682mz6qfd-set-up-cost-visibility-for-azure#step_2_azure_billing_exports'
+}
+
+interface GetElkAuthTypeReturn {
+  label: string
+  value: string
+}
+
+export const getELKAuthType = (getString: UseStringsReturn['getString']): GetElkAuthTypeReturn[] => [
+  {
+    label: getString('usernamePassword'),
+    value: ElkAuthType.USERNAME_PASSWORD
+  },
+  {
+    label: getString('common.apikey'),
+    value: ElkAuthType.API_CLIENT_TOKEN
+  },
+  {
+    label: getString('connectors.elk.noAuthentication'),
+    value: ElkAuthType.NONE
+  }
+]
+
+export const ELKConnectorFields = {
+  USERNAME: 'username',
+  PASSWORD: 'password'
+}
+
+export const ElkAuthType = {
+  USERNAME_PASSWORD: 'UsernamePassword',
+  API_CLIENT_TOKEN: 'ApiClientToken',
+  NONE: 'None'
 }
 
 export const CONNECTOR_MODAL_MIN_WIDTH = 1175

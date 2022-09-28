@@ -6,12 +6,19 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor, act } from '@testing-library/react'
 import { Container, Button } from '@wings-software/uicore'
 import * as dbHook from '@cv/hooks/IndexedDBHook/IndexedDBHook'
 import { TestWrapper } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
+import * as cvServices from 'services/cv'
+import { yamlResponse } from '@cv/pages/monitored-service/CVMonitoredService/__test__/CVMonitoredService.mock'
+import { MonitoredServiceContext } from '@cv/pages/monitored-service/MonitoredServiceContext'
+import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { cvModuleParams } from '@cv/RouteDestinations'
+import { editParams } from '@cv/utils/routeUtils'
 import * as configUtils from '../Configurations.utils'
-import Configurations from '../Configurations'
+import Configurations, { ConfigurationsWithRef } from '../Configurations'
 import { cachedData, editModeData } from '../components/Service/__tests__/Service.mock'
 
 jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironment', () => ({
@@ -75,6 +82,9 @@ jest.mock('services/cv', () => ({
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
   useUpdateNotificationRuleData: jest
     .fn()
+    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
+  useGetMonitoredServiceList: jest
+    .fn()
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
 }))
 
@@ -87,7 +97,7 @@ describe('Unit tests for Configuration', () => {
       } as any,
       isInitializingDB: false
     })
-    const { container, getByText } = render(
+    const { container, getByText, queryByText } = render(
       <TestWrapper>
         <Configurations />
       </TestWrapper>
@@ -95,11 +105,21 @@ describe('Unit tests for Configuration', () => {
     // name
     await waitFor(() => expect(container.querySelector('input[value="Application"]')).toBeTruthy())
     expect(getByText('CD 101')).not.toBeNull()
-    fireEvent.click(
-      container.querySelector(`[class*="monitoredService"] .bp3-input-action [data-icon="chevron-down"]`)!
-    )
+    act(() => {
+      fireEvent.click(
+        container.querySelector(`[class*="monitoredService"] .bp3-input-action [data-icon="chevron-down"]`)!
+      )
+    })
     await waitFor(() => expect(container.querySelector('[class*="menuItemLabel"]')).not.toBeNull())
-    fireEvent.click(getByText('Infrastructure'))
+    act(() => {
+      fireEvent.click(getByText('Infrastructure'))
+    })
+    waitFor(() => expect(document.body.querySelector('[class*="ConfirmationDialog"]')).toBeDefined())
+    waitFor(() => expect(document.body.querySelectorAll('[class*="ConfirmationDialog"] button')[0]).toBeDefined())
+    act(() => {
+      fireEvent.click(document.body.querySelectorAll('[class*="ConfirmationDialog"] button')[0])
+    })
+    await waitFor(() => expect(queryByText('CD 101')).not.toBeInTheDocument())
     await waitFor(() => expect(getByText('cv.healthSource.noData')).not.toBeNull())
     expect(document.title).toBe('cv.srmTitle | cv.monitoredServices.title | harness')
   })
@@ -156,5 +176,194 @@ describe('Unit tests for Configuration', () => {
         getByText('[{"field":"metricDefinitions","message":"same identifier is used by multiple entities"}]')
       ).toBeInTheDocument()
     )
+  })
+
+  test('should fail saving monitored service', async () => {
+    jest.spyOn(dbHook, 'useIndexedDBHook').mockReturnValue({
+      dbInstance: {
+        put: jest.fn(),
+        get: jest.fn().mockReturnValue(Promise.resolve({ currentData: {} })),
+        clear: jest.fn()
+      } as any,
+      isInitializingDB: false
+    })
+
+    const { getByText, queryByText } = render(
+      <TestWrapper>
+        <Configurations />
+      </TestWrapper>
+    )
+
+    act(() => {
+      fireEvent.click(getByText('save'))
+    })
+    await waitFor(() => expect(queryByText('unsavedChanges')).not.toBeInTheDocument())
+  })
+
+  test('should save monitored service', async () => {
+    const testPath = routes.toCVAddMonitoringServicesEdit({
+      ...accountPathProps,
+      ...projectPathProps,
+      ...editParams,
+      ...cvModuleParams
+    })
+
+    const pathParams = {
+      orgIdentifier: 'orgIdentifier',
+      projectIdentifier: 'projectIdentifier',
+      accountId: 'accountId',
+      identifier: 'identifier',
+      module: 'cv'
+    }
+
+    jest.spyOn(dbHook, 'useIndexedDBHook').mockReturnValue({
+      dbInstance: {
+        put: jest.fn(),
+        get: jest.fn().mockReturnValue(Promise.resolve({ currentData: cachedData })),
+        clear: jest.fn()
+      } as any,
+      isInitializingDB: false
+    })
+
+    const { getByText, queryByText } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <Configurations />
+      </TestWrapper>
+    )
+
+    act(() => {
+      fireEvent.click(getByText('save'))
+    })
+    await waitFor(() => expect(queryByText('unsavedChanges')).not.toBeInTheDocument())
+  })
+  test('should switch tabs and discard changes', async () => {
+    const testPath = routes.toCVAddMonitoringServicesEdit({
+      ...accountPathProps,
+      ...projectPathProps,
+      ...editParams,
+      ...cvModuleParams
+    })
+
+    const pathParams = {
+      orgIdentifier: 'orgIdentifier',
+      projectIdentifier: 'projectIdentifier',
+      accountId: 'accountId',
+      identifier: 'identifier',
+      module: 'cv'
+    }
+
+    jest.spyOn(dbHook, 'useIndexedDBHook').mockReturnValue({
+      dbInstance: {
+        put: jest.fn(),
+        get: jest.fn().mockReturnValue(Promise.resolve({ currentData: cachedData })),
+        clear: jest.fn()
+      } as any,
+      isInitializingDB: false
+    })
+
+    const { getByText, queryByText } = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <Configurations />
+      </TestWrapper>
+    )
+    act(() => {
+      fireEvent.click(getByText('pipelines-studio.dependenciesGroupTitle'))
+    })
+    await waitFor(() => expect(getByText('cv.Dependency.serviceList')).toBeInTheDocument())
+    act(() => {
+      fireEvent.click(getByText('service'))
+    })
+    await waitFor(() => expect(getByText('cv.healthSource.defineYourSource')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('unsavedChanges')).toBeInTheDocument())
+    act(() => {
+      fireEvent.click(getByText('common.discard'))
+    })
+    await waitFor(() => expect(queryByText('unsavedChanges')).not.toBeInTheDocument())
+  })
+
+  test('should render default change source in MS Template', async () => {
+    jest.spyOn(dbHook, 'useIndexedDBHook').mockReturnValue({
+      dbInstance: {
+        put: jest.fn(),
+        get: jest.fn().mockReturnValue(Promise.resolve({ currentData: {} }))
+      } as any,
+      isInitializingDB: false
+    })
+    jest.spyOn(cvServices, 'useGetMonitoredServiceYamlTemplate').mockImplementation(
+      () =>
+        ({
+          data: yamlResponse,
+          refetch: jest.fn()
+        } as any)
+    )
+    const updateTemplate = jest.fn()
+    render(
+      <TestWrapper>
+        <MonitoredServiceContext.Provider value={{ isTemplate: true }}>
+          <ConfigurationsWithRef
+            updateTemplate={updateTemplate}
+            templateValue={{
+              identifier: '',
+              orgIdentifier: 'orgIdentifier',
+              projectIdentifier: 'projectIdentifier',
+              name: 'tempalteMS',
+              type: 'MonitoredService',
+              versionLabel: ' -1',
+              spec: {
+                sources: { changeSources: [], healthSources: [] }
+              }
+            }}
+          />
+        </MonitoredServiceContext.Provider>
+      </TestWrapper>
+    )
+    await waitFor(() => expect(updateTemplate).toHaveBeenCalled())
+  })
+
+  test('should fail useGetMonitoredService', () => {
+    jest.spyOn(dbHook, 'useIndexedDBHook').mockReturnValue({
+      dbInstance: {
+        put: jest.fn(),
+        get: jest.fn().mockReturnValue(Promise.resolve({ currentData: {} })),
+        clear: jest.fn()
+      } as any,
+      isInitializingDB: false
+    })
+    const testPath = routes.toCVAddMonitoringServicesEdit({
+      ...accountPathProps,
+      ...projectPathProps,
+      ...editParams,
+      ...cvModuleParams
+    })
+    const pathParams = {
+      orgIdentifier: 'orgIdentifier',
+      projectIdentifier: 'projectIdentifier',
+      accountId: 'accountId',
+      identifier: 'identifier',
+      module: 'cv'
+    }
+    jest
+      .spyOn(cvServices, 'useGetMonitoredService')
+      .mockImplementation(
+        () => ({ loading: false, error: { message: 'api failed' }, data: null, refetch: jest.fn() } as any)
+      )
+    jest
+      .spyOn(cvServices, 'useGetMonitoredServiceYamlTemplate')
+      .mockImplementation(
+        () => ({ loading: false, error: { message: 'api failed' }, data: null, refetch: jest.fn() } as any)
+      )
+    const editModeContainer = render(
+      <TestWrapper path={testPath} pathParams={pathParams}>
+        <Configurations />
+      </TestWrapper>
+    )
+    expect(editModeContainer.getByText('api failed')).toBeInTheDocument()
+
+    const createModeContainer = render(
+      <TestWrapper>
+        <Configurations />
+      </TestWrapper>
+    )
+    expect(createModeContainer.getAllByText('api failed')[1]).toBeInTheDocument()
   })
 })

@@ -1,0 +1,10 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    { "name": "booleankey", "options": ["true", "false"], "defaultValue": "true", "description": "" },
+    { "name": "name", "options": [], "defaultValue": "test name", "description": "" },
+    { "name": "test", "options": [], "defaultValue": "123", "description": "" }
+  ],
+  "metaData": null,
+  "correlationId": "2e57ff80-38e8-46c2-9d1b-bc03ce3b8053"
+}

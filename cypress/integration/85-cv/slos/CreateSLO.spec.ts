@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { validations } from '../../../support/85-cv/monitoredService/constants'
 import {
   getSLOMetrics,
   getUserJourneysCall,
@@ -12,7 +13,6 @@ import {
   listMonitoredServicesCallResponse,
   listSLOMetricsCallResponse,
   listSLOsCall,
-  listSLOsCallResponse,
   listUserJourneysCallResponse,
   updatedListSLOsCallResponse,
   getServiceLevelObjective,
@@ -25,7 +25,6 @@ import {
   getServiceLevelObjectiveResponse,
   getSLODashboardWidgetsAfterEdit,
   updateSLO,
-  listRiskCountDataEmptyResponse,
   getMonitoredService,
   getMonitoredServiceResponse,
   listSLOsCallWithCVNGProd,
@@ -33,7 +32,9 @@ import {
   getTwoSLODashboardWidgets,
   getTwoSLOsRiskCountResponse,
   getSLODetails,
-  responseSLODashboardDetail
+  responseSLODashboardDetail,
+  listMonitoredServicesForSLOs,
+  listMonitoredServicesCallResponseForSLOs
 } from '../../../support/85-cv/slos/constants'
 
 describe('Create SLO', () => {
@@ -45,21 +46,19 @@ describe('Create SLO', () => {
     })
     cy.login('test', 'test')
 
-    cy.visitChangeIntelligence()
+    cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse).as('updatedListSLOsCallResponse')
+    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
+    cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
+    cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
+    cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
+    cy.intercept('GET', listMonitoredServicesForSLOs, listMonitoredServicesCallResponseForSLOs)
+    cy.intercept('GET', getSLOMetrics, listSLOMetricsCallResponse)
+
+    cy.visitChangeIntelligenceForSLOs()
   })
 
   it('should be able to create SLO by filling all the details.', () => {
-    cy.intercept('GET', listSLOsCall, listSLOsCallResponse)
-    cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
-    cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
-    cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
-    cy.intercept('GET', getSLOMetrics, listSLOMetricsCallResponse)
-    cy.intercept('GET', getSLORiskCount, listRiskCountDataEmptyResponse)
-
-    // Verifying NO SLOs state.
     cy.contains('p', 'SLOs').click()
-    cy.contains('h2', 'You don’t have any SLO created yet').should('be.visible')
-
     cy.contains('span', 'Create SLO').click()
 
     // Filling details Under Name tab for SLO creation
@@ -115,26 +114,20 @@ describe('Create SLO', () => {
 
     cy.wait('@updatedListSLOsCallResponse')
 
-    cy.contains('p', 'cvng_prod').should('be.visible')
-    cy.contains('p', 'Latency').should('be.visible')
-    cy.contains('p', 'appd_cvng_prod').should('be.visible')
-    cy.contains('p', 'Rolling').should('be.visible')
-    cy.contains('p', '7 days').should('be.visible')
+    cy.contains('p', 'SLO-1').should('be.visible')
+    cy.contains('p', 'cvng').should('be.visible')
+    cy.contains('p', 'prod').should('be.visible')
+    cy.contains('p', '100.00%').should('be.visible')
+    cy.contains('p', '99%').should('be.visible')
+    cy.contains('p', '138.44%').should('be.visible')
   })
 
   it('should render all the edit steps and update the SLO', () => {
-    cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
-    cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
-    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
-    cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
-    cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
-    cy.intercept('GET', getSLOMetrics, listSLOMetricsCallResponse)
     cy.intercept('GET', getServiceLevelObjective, errorResponse).as('getServiceLevelObjective')
     cy.intercept('GET', getSLODetails, responseSLODashboardDetail)
 
     cy.contains('p', 'SLOs').click()
-    cy.get('[data-icon="Options"]').click()
-    cy.get('[icon="edit"]').click()
+    cy.get('[data-icon="Edit"]').click()
 
     cy.contains('p', 'Oops, something went wrong on our end. Please contact Harness Support.').should('be.visible')
 
@@ -185,14 +178,9 @@ describe('Create SLO', () => {
     cy.contains('span', 'SLO updated successfully').should('be.visible')
 
     cy.wait('@getSLODashboardWidgetsAfterEdit')
-    cy.contains('p', 'SLO recalculation in progress').should('be.visible')
   })
 
-  it.skip('should validate all form field errors and default values', () => {
-    cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
-    cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
-    cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
-    cy.intercept('GET', getSLOMetrics, listSLOMetricsCallResponse)
+  it('should validate all form field errors and default values', () => {
     cy.intercept('POST', getSliGraph, errorResponse)
 
     cy.contains('p', 'SLOs').click()
@@ -215,7 +203,6 @@ describe('Create SLO', () => {
 
     cy.get('input[name="monitoredServiceRef"]').click()
     cy.contains('p', 'cvng_prod').click({ force: true })
-    cy.contains('span', 'Monitored Service is required').should('not.exist')
 
     cy.contains('span', 'Continue').click({ force: true })
     cy.contains('h2', 'Configure SLI queries').scrollIntoView()
@@ -229,7 +216,6 @@ describe('Create SLO', () => {
     cy.get('input[name="validRequestMetric"]').should('be.disabled')
     cy.get('input[name="healthSourceRef"]').click()
     cy.contains('p', 'appd_cvng_prod').click({ force: true })
-    cy.contains('span', 'Health Source is required').should('not.exist')
     cy.get('input[name="goodRequestMetric"]').should('be.enabled')
     cy.get('input[name="validRequestMetric"]').should('be.enabled')
 
@@ -248,7 +234,7 @@ describe('Create SLO', () => {
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
     cy.get('input[name="validRequestMetric"]').click()
     cy.contains('p', 'number_of_slow_calls').click({ force: true })
-    cy.findAllByText('Metric is required').should('have.length', 0)
+    cy.findAllByText(validations.metric).should('have.length', 0)
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
     cy.findAllByText('Required').should('have.length', 2)
@@ -293,10 +279,10 @@ describe('Create SLO', () => {
     cy.contains('p', 'Good').click({ force: true })
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
-    cy.findAllByText('Metric is required').should('have.length', 1)
+    cy.findAllByText(validations.metric).should('have.length', 1)
     cy.get('input[name="goodRequestMetric"]').click()
     cy.contains('p', 'number_of_slow_calls').click({ force: true })
-    cy.findAllByText('Metric is required').should('have.length', 0)
+    cy.findAllByText(validations.metric).should('have.length', 0)
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
     cy.contains('span', 'Metric for good/bad and valid requests should be different').should('be.visible')
@@ -365,7 +351,6 @@ describe('Create SLO', () => {
 
     cy.intercept('POST', saveSLO, { statusCode: 200 }).as('saveSLO')
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
-    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
 
     cy.contains('span', 'Save').click({ force: true })
 
@@ -374,16 +359,9 @@ describe('Create SLO', () => {
   })
 
   it('should throw duplication error for the same SLO identifier', () => {
-    cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
-    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
-    cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
-    cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
-    cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
-    cy.intercept('GET', getSLOMetrics, listSLOMetricsCallResponse)
-
     cy.contains('p', 'SLOs').click()
 
-    cy.contains('h2', 'SLO-1').should('be.visible')
+    cy.contains('p', 'SLO-1').should('be.visible')
 
     cy.contains('span', 'Create SLO').click()
 
@@ -428,9 +406,6 @@ describe('Create SLO', () => {
   })
 
   it('should be able to edit the SLO in monitored service details page', () => {
-    cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
-    cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
-    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse).as('getListMonitoredServices')
     cy.intercept('GET', getSLODetails, responseSLODashboardDetail)
 
@@ -438,16 +413,13 @@ describe('Create SLO', () => {
     cy.intercept('GET', listSLOsCallWithCVNGProd, updatedListSLOsCallResponse)
     cy.intercept('GET', getSLORiskCountWithCVNGProd, getSLORiskCountResponse)
     cy.intercept('GET', getServiceLevelObjective, getServiceLevelObjectiveResponse)
-    cy.intercept('GET', getSLOMetrics, listSLOMetricsCallResponse)
 
-    cy.contains('p', 'SLOs').click()
     cy.contains('p', 'prod').click()
 
     cy.wait('@getMonitoredService')
     cy.get('div[data-tab-id="SLOs"]').click()
 
-    cy.get('[data-icon="Options"]').click()
-    cy.get('[icon="edit"]').click()
+    cy.get('[data-icon="Edit"]').click({ force: true })
 
     cy.wait('@getListMonitoredServices')
     cy.get('input[name="User Journey"]').should('have.value', 'new-one')
@@ -468,13 +440,12 @@ describe('Create SLO', () => {
 
     cy.wait('@getMonitoredService')
     cy.wait('@getSLODashboardWidgetsAfterEdit')
-    cy.contains('p', 'SLO recalculation in progress').should('be.visible')
   })
 
   it('should be able to create new SLO in monitored service details page', () => {
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
-    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
+
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
 
@@ -536,17 +507,11 @@ describe('Create SLO', () => {
   })
 
   it('should be able to add new Health Source while editing a SLO and back button should redirect to the SLOs in MS service page', () => {
-    cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
-    cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
-    cy.intercept('GET', getSLORiskCount, getSLORiskCountResponse)
-    cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
     cy.intercept('GET', getSLODetails, responseSLODashboardDetail)
-
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse).as('getMonitoredService')
     cy.intercept('GET', listSLOsCallWithCVNGProd, updatedListSLOsCallResponse)
     cy.intercept('GET', getSLORiskCountWithCVNGProd, getSLORiskCountResponse)
     cy.intercept('GET', getServiceLevelObjective, getServiceLevelObjectiveResponse).as
-    cy.intercept('GET', getSLOMetrics, listSLOMetricsCallResponse)
 
     cy.contains('p', 'SLOs').click()
     cy.contains('p', 'prod').click()
@@ -554,8 +519,7 @@ describe('Create SLO', () => {
     cy.wait('@getMonitoredService')
     cy.get('div[data-tab-id="SLOs"]').click()
 
-    cy.get('[data-icon="Options"]').click()
-    cy.get('[icon="edit"]').click()
+    cy.get('[data-icon="Edit"]').click({ force: true })
 
     cy.get('input[name="User Journey"]').should('have.value', 'new-one')
 

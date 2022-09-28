@@ -6,11 +6,15 @@
  */
 
 import type { SelectOption } from '@wings-software/uicore'
-import type { MetricPackDTO } from 'services/cv'
+import type { GroupedMetric } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
+import type { TimeSeriesMetricPackDTO } from 'services/cv'
+import type { CustomMappedMetric, CustomSelectedAndMappedMetrics } from '../../common/CustomMetric/CustomMetric.types'
+import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { HealthSourceTypes } from '../../types'
 
 export type MapNewRelicMetric = {
   metricName: string
+  metricIdentifier?: string
   groupName: SelectOption
   query: string
   metricValue: string
@@ -43,7 +47,7 @@ export interface NewRelicData {
   type: HealthSourceTypes
   applicationName: string
   applicationId: string
-  metricPacks?: MetricPackDTO[]
+  metricPacks?: TimeSeriesMetricPackDTO[]
   mappedServicesAndEnvs: Map<string, MapNewRelicMetric>
 }
 export interface InitNewRelicCustomFormInterface {
@@ -60,4 +64,39 @@ export interface InitNewRelicCustomFormInterface {
   continuousVerification: boolean
   serviceInstanceMetricPath?: string
   riskCategory?: string
+  metricIdentifier?: string
 }
+
+export interface NonCustomMetricFields {
+  newRelicApplication:
+    | string
+    | {
+        label: string
+        value: string
+      }
+  metricPacks?: TimeSeriesMetricPackDTO[]
+  metricData: { [key: string]: boolean }
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
+}
+
+export interface PersistCustomMetricInterface {
+  mappedMetrics: Map<string, CustomMappedMetric>
+  selectedMetric: string
+  nonCustomFeilds: NonCustomMetricFields
+  formikValues: any
+  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
+}
+
+export interface GroupedCreatedMetrics {
+  [Key: string]: GroupedMetric[]
+}
+
+export interface MetricThresholdCommonProps {
+  formikValues: any
+  groupedCreatedMetrics: GroupedCreatedMetrics
+  metricPacks: TimeSeriesMetricPackDTO[]
+  setThresholdState: React.Dispatch<React.SetStateAction<NonCustomMetricFields>>
+}
+
+export type NewRelicMetricThresholdContextType = MetricThresholdCommonProps

@@ -6,6 +6,7 @@
  */
 
 import type { HealthSourceTypes } from '@cv/pages/health-source/types'
+import type { UseStringsReturn } from 'framework/strings'
 import type { HealthSourceSpec } from 'services/cv'
 import type { SplunkHealthSourceInfo } from '../../SplunkHealthSource.types'
 
@@ -13,6 +14,8 @@ export interface SplunkQueryBuilderProps {
   onSubmit: (data: SplunkHealthSourceInfo) => Promise<void>
   onPrevious: () => void
   data: SplunkHealthSourceInfo
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export type MapSplunkQueryToService = {
@@ -26,6 +29,7 @@ export interface SplunkQueryDefinition {
   name: string
   query: string
   serviceInstanceIdentifier?: string
+  identifier?: string
 }
 
 export type SplunkHealthSourceSpec = HealthSourceSpec & {
@@ -38,4 +42,10 @@ export interface SplunkHealthSourcePayload {
   type: HealthSourceTypes.Splunk
   identifier: string
   spec: SplunkHealthSourceSpec
+}
+
+export interface GetSplunkMappedMetricInterface {
+  sourceData: SplunkHealthSourceInfo
+  isConnectorRuntimeOrExpression?: boolean
+  getString: UseStringsReturn['getString']
 }

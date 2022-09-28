@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useEffect, FormEvent, useMemo } from 'react'
 import {
   IconName,
   Layout,
@@ -15,25 +15,24 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  Select,
   Button,
   ButtonSize,
   ButtonVariation,
   Table,
-  Text
-} from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+  AllowedTypes,
+  Checkbox
+} from '@harness/uicore'
+import type { ObjectSchema } from 'yup'
 import type { Column } from 'react-table'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { parse } from 'yaml'
-import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
-import { debounce, noop, isEmpty, set, get } from 'lodash-es'
+import { debounce, noop, set, get, isEmpty, defaultTo, isString, isArray } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import { useStrings, UseStringsReturn } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import {
   PdcInfrastructure,
   getConnectorListV2Promise,
@@ -43,98 +42,71 @@ import {
   HostValidationDTO,
   HostDTO,
   ConnectorResponse,
-  SecretResponseWrapper
+  SecretResponseWrapper,
+  HostAttributesFilter,
+  HostNamesFilter,
+  ErrorDetail
 } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
-import { Scope } from '@common/interfaces/SecretsInterface'
-import { SecretReferenceInterface, setSecretField } from '@secrets/utils/SecretField'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Connectors } from '@connectors/constants'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
-import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
-import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
-import SSHSecretInput from '@secrets/components/SSHSecretInput/SSHSecretInput'
+import { DelegateSelectors } from '@common/components/DelegateSelectors/DelegateSelectors'
+import { FormMultiTypeTextAreaField } from '@common/components'
+import MultiTypeSecretInput, {
+  getMultiTypeSecretInputType
+} from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import ConnectivityStatus from './connectivityStatus/ConnectivityStatus'
-
+import { getAttributeFilters, getHostNames, PDCInfrastructureSpecInputForm } from './PDCInfrastructureSpecInputForm'
+import {
+  getValidationSchemaAll,
+  getValidationSchemaNoPreconfiguredHosts,
+  getValidationSchemaHostFilters,
+  getValidationSchemaAttributeFilters,
+  HostScope,
+  parseAttributes,
+  parseHosts,
+  PDCInfrastructureUI,
+  PDCInfrastructureYAML,
+  PreconfiguredHosts,
+  PdcInfraTemplate
+} from './PDCInfrastructureInterface'
+import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import css from './PDCInfrastructureSpec.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
 
-type PdcInfrastructureTemplate = { [key in keyof PdcInfrastructure]: string }
-
 const PdcType = 'Pdc'
-
-function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
-  return Yup.object().shape({
-    sshKey: Yup.object().required(getString('validation.password'))
-  })
-}
-interface GcpInfrastructureSpecEditableProps {
+interface PDCInfrastructureSpecEditableProps {
   initialValues: PdcInfrastructure
   allValues?: PdcInfrastructure
   onUpdate?: (data: PdcInfrastructure) => void
   stepViewType?: StepViewType
   readonly?: boolean
-  template?: PdcInfrastructureTemplate
+  template?: PdcInfraTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: PdcInfrastructure
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
-interface PDCInfrastructureUI {
-  hostsType: number
-  allowSimultaneousDeployments: boolean
-  attributeFilters?: string
-  hosts: string
-  connectorRef?: string
-  delegateSelectors?: string[] | undefined
-  hostFilters: string
-  sshKey: SecretReferenceInterface | void
-  credentialsRef: string
-}
-
-const PreconfiguredHosts = {
-  TRUE: 'true',
-  FALSE: 'false'
-}
-
-const HostScope = {
-  ALL: 'allHosts',
-  SPECIFIC: 'specificHosts'
-}
-
-const SpecificHostOption = {
-  HOST_NAME: 'hostName',
-  ATTRIBUTES: 'attributes'
-}
-
-const parseByComma = (data: string) =>
-  data
-    ?.replace(/,/g, '\n')
-    .split('\n')
-    .filter(part => part.length)
-    .map(part => part.trim()) || []
-
-const parseHosts = (hosts: string) => parseByComma(hosts)
-
-export const parseAttributes = (attributes: string) =>
-  parseByComma(attributes).reduce((prev, current) => {
-    const [key, value] = current.split(':')
-    if (key && value) {
-      set(prev, key, value)
-    }
-    return prev
-  }, {})
-
-const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps> = ({
+const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps> = ({
   initialValues,
   onUpdate,
-  readonly
+  readonly,
+  allowableTypes
 }): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -142,24 +114,23 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     accountId: string
   }>()
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
+  const { expressions } = useVariablesExpression()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { showError } = useToaster()
   const [showPreviewHostBtn, setShowPreviewHostBtn] = useState(true)
   const [formikInitialValues, setFormikInitialValues] = useState<PDCInfrastructureUI>()
+
   const [isPreconfiguredHosts, setIsPreconfiguredHosts] = useState(
-    initialValues.connectorRef ? PreconfiguredHosts.TRUE : PreconfiguredHosts.FALSE
+    initialValues.hosts ? PreconfiguredHosts.FALSE : PreconfiguredHosts.TRUE
   )
-  const [hostsScope, setHostsScope] = useState(
-    initialValues.attributeFilters || initialValues.hostFilters ? HostScope.SPECIFIC : HostScope.ALL
-  )
-  const [hostSpecifics, setHostSpecifics] = useState(
-    initialValues.attributeFilters ? SpecificHostOption.ATTRIBUTES : SpecificHostOption.HOST_NAME
-  )
+  const [hostsScope, setHostsScope] = useState(defaultTo(initialValues.hostFilter?.type, 'All'))
 
   //table states
   const [detailHosts, setDetailHosts] = useState<HostValidationDTO[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState([])
+  const [hostsToTest, setHostsToTest] = useState<any[]>([])
 
   const { mutate: getFilteredHosts } = useFilterHostsByConnector({
     queryParams: {
@@ -184,40 +155,71 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     const setInitial = async () => {
       const values = {
         ...initialValues,
-        connectorRef: initialValues.connectorRef,
-        hosts: initialValues.hosts ? initialValues.hosts.join('\n') : '',
-        hostFilters: initialValues.hostFilters ? initialValues.hostFilters.join('\n') : '',
-        attributeFilters: initialValues.attributeFilters
-          ? Object.entries(initialValues.attributeFilters)
-              .map(group => `${group[0]}:${group[1]}`)
-              .join('\n')
-          : ''
+        hosts: isArray(initialValues.hosts) ? initialValues.hosts.join(', ') : defaultTo(initialValues.hosts, ''),
+        hostFilters: getHostNames(initialValues),
+        attributeFilters: getAttributeFilters(initialValues)
       }
-      try {
-        const secretData = await setSecretField(initialValues.credentialsRef, {
-          accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier
-        })
-        set(values, 'sshKey', secretData)
-      } catch (e) {
-        /* istanbul ignore next */
-        showError(e.data?.message || e.message)
-      }
+      set(values, 'sshKey', initialValues.credentialsRef)
       setFormikInitialValues(values as PDCInfrastructureUI)
     }
     setInitial()
   }, [])
 
-  const formikRef = React.useRef<FormikProps<PDCInfrastructureUI> | null>(null)
+  const formikRef = React.useRef<FormikProps<unknown> | null>(null)
 
-  const hostSpecificyOptions = useMemo(
-    () => [
-      { value: SpecificHostOption.HOST_NAME, label: getString('cd.steps.pdcStep.hostNameOption') },
-      { value: SpecificHostOption.ATTRIBUTES, label: getString('cd.steps.pdcStep.hostAttributesOption') }
-    ],
-    []
-  )
+  const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
+
+  React.useEffect(() => {
+    subscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
+    return () => unSubscribeForm({ tab: DeployTabs.INFRASTRUCTURE, form: formikRef })
+  }, [subscribeForm, unSubscribeForm])
+
+  useEffect(() => {
+    const data: Partial<PDCInfrastructureYAML> = {}
+    if (isPreconfiguredHosts === PreconfiguredHosts.TRUE) {
+      data.hosts = undefined
+      data.connectorRef = get(initialValues, 'connectorRef', '')
+    } else {
+      data.hosts = get(initialValues, 'hosts', '')
+      data.connectorRef = undefined
+    }
+    data.hostFilter = {
+      type: 'All',
+      spec: {} //todoremoveempty
+    }
+    formikRef.current?.setValues({ ...initialValues, ...data })
+  }, [isPreconfiguredHosts])
+
+  useEffect(() => {
+    const data: Partial<PDCInfrastructureYAML> = {}
+    if (hostsScope === HostScope.ALL) {
+      data.hostFilter = {
+        type: hostsScope,
+        spec: {} //todoremoveempty
+      }
+    } else if (hostsScope === HostScope.HOST_ATTRIBUTES) {
+      data.hostFilter = {
+        type: hostsScope,
+        spec: {
+          value:
+            getMultiTypeFromValue(getAttributeFilters(initialValues)) === MultiTypeInputType.FIXED
+              ? parseAttributes(getAttributeFilters(initialValues))
+              : getAttributeFilters(initialValues)
+        } as HostAttributesFilter
+      }
+    } else {
+      data.hostFilter = {
+        type: hostsScope,
+        spec: {
+          value:
+            getMultiTypeFromValue(getHostNames(initialValues)) === MultiTypeInputType.FIXED
+              ? parseHosts(getHostNames(initialValues))
+              : getHostNames(initialValues)
+        } as HostNamesFilter
+      }
+    }
+    formikRef.current?.setValues({ ...initialValues, ...data })
+  }, [hostsScope])
 
   const fetchHosts = async () => {
     const formikValues = get(formikRef.current, 'values', {}) as PDCInfrastructureUI
@@ -226,13 +228,11 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       return new Promise(resolve => resolve(parseHosts(formikValues.hosts)))
     }
     let filterData = {}
-    if (hostsScope === HostScope.SPECIFIC) {
-      if (hostSpecifics === SpecificHostOption.HOST_NAME) {
-        filterData = { type: 'HOST_NAMES', filter: formikValues.hostFilters }
-      } else {
-        /* istanbul ignore next */
-        filterData = { type: 'HOST_ATTRIBUTES', filter: formikValues.attributeFilters }
-      }
+    if (hostsScope === HostScope.HOST_NAME) {
+      filterData = { type: HostScope.HOST_NAME, filter: formikValues.hostFilters }
+    } else if (hostsScope === HostScope.HOST_ATTRIBUTES) {
+      /* istanbul ignore next */
+      filterData = { type: HostScope.HOST_ATTRIBUTES, filter: formikValues.attributeFilters }
     }
     const identifier =
       typeof formikValues.connectorRef === 'string'
@@ -245,98 +245,148 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
   const getHosts = () => {
     setIsLoading(true)
     setErrors([])
+    setHostsToTest([])
     const getData = async () => {
-      const hosts = (await fetchHosts()) as []
-      setDetailHosts(
-        hosts?.map((host: string) => ({
-          host,
-          error: undefined
-        }))
-      )
-      setIsLoading(false)
+      try {
+        const hosts = (await fetchHosts()) as []
+        setDetailHosts(
+          hosts?.map((host: string) => ({
+            host,
+            parsedHost: host.split(':')[0],
+            error: undefined
+          }))
+        )
+      } catch (e) {
+        /* istanbul ignore next */
+        showError(e.data?.message || e.message)
+      } finally {
+        setIsLoading(false)
+      }
     }
     getData()
   }
 
-  const columns: Column<HostValidationDTO>[] = [
-    {
-      Header: getString('cd.steps.pdcStep.no').toUpperCase(),
-      accessor: 'host',
-      id: 'no',
-      width: '6',
-      Cell: ({ row }) => row.index + 1
-    },
-    {
-      Header: getString('pipelineSteps.hostLabel').toUpperCase(),
-      accessor: 'host',
-      id: 'host',
-      width: '20%',
-      Cell: ({ row }) => row.original.host
-    },
-    {
-      Header: '',
-      accessor: 'status',
-      id: 'status',
-      width: '12%',
-      Cell: ({ row }) => (
-        <ConnectivityStatus
-          identifier={
-            get(formikRef.current, 'values.credentialsRef', '') ||
-            get(formikRef.current, 'values.sshKey.identifier', '')
-          }
-          tags={get(formikRef.current, 'values.delegateSelectors', [])}
-          host={get(row.original, 'host', '')}
-          status={row.original.status}
-        />
-      )
-    },
-    {
-      Header: '',
-      accessor: 'status',
-      id: 'action',
-      width: '22%',
-      Cell: ({ row }) => {
-        /* istanbul ignore next */
-        return row.original.status === 'FAILED' ? (
+  const onCheckboxSelect = (event: FormEvent<HTMLInputElement>, item: HostValidationDTO) => {
+    const identifier = item.host
+    if ((event.target as any).checked && identifier) {
+      setHostsToTest([...defaultTo(hostsToTest, []), item])
+    } else {
+      setHostsToTest([...hostsToTest.filter((selectedHost: HostValidationDTO) => selectedHost.host !== identifier)])
+    }
+  }
+
+  const columns: Column<HostValidationDTO>[] = useMemo(
+    () => [
+      {
+        Header: getString('cd.steps.pdcStep.no').toUpperCase(),
+        accessor: 'host',
+        id: 'no',
+        width: '6',
+        Cell: ({ row }) => row.index + 1
+      },
+      {
+        Header: getString('common.hostLabel').toUpperCase(),
+        accessor: 'host',
+        id: 'host',
+        width: '40%',
+        Cell: ({ row }) => row.original.host
+      },
+      {
+        Header: '',
+        accessor: 'status',
+        id: 'status',
+        width: '20%',
+        Cell: ({ row }) => (
+          <ConnectivityStatus
+            identifier={get(formikRef.current, 'values.credentialsRef', '')}
+            tags={get(formikRef.current, 'values.delegateSelectors', [])}
+            error={row.original.error as ErrorDetail}
+            host={get(row.original, 'host', '')}
+            status={row.original.status}
+            resetError={(status: string) => {
+              set(row.original, 'status', defaultTo(status, 'UNKNOWN'))
+              if (!isEmpty(errors)) {
+                setErrors([])
+              }
+            }}
+          />
+        )
+      },
+      {
+        Header: (
+          <Checkbox
+            data-testid={'selectAll'}
+            onClick={(event: FormEvent<HTMLInputElement>) => {
+              if ((event.target as any).checked) {
+                setHostsToTest(detailHosts)
+              } else {
+                setHostsToTest([])
+              }
+            }}
+          />
+        ),
+        id: 'selectHosts',
+        width: '20%',
+        Cell: ({ row, column }: any) => (
+          <Checkbox
+            data-testid={`select-host-${get(row, 'original.host', '')}`}
+            onClick={event => column.onCheckboxSelect(event, get(row, 'original', ''))}
+            checked={column.hostsToTest.some(
+              (selectedHost: HostValidationDTO) => selectedHost?.host === get(row, 'original.host', '')
+            )}
+          />
+        ),
+        onCheckboxSelect,
+        hostsToTest
+      },
+      {
+        Header: (
           <Button
-            onClick={() => testConnection(get(row.original, 'host', ''))}
+            onClick={() => testConnection()}
             size={ButtonSize.SMALL}
             variation={ButtonVariation.SECONDARY}
+            disabled={hostsToTest.length === 0 || !get(formikRef, 'current.values.credentialsRef', '')}
           >
-            {getString('retry')}
+            {getString('common.smtp.testConnection')}
           </Button>
-        ) : null
+        ),
+        id: 'testConnection',
+        width: '20%'
       }
-    },
-    {
-      Header: '',
-      accessor: 'error',
-      id: 'error',
-      width: '40%',
-      Cell: ({ row }) => (
-        <Text font={{ size: 'small' }} color={Color.RED_400}>
-          {get(row.original, 'error.message', '')}
-        </Text>
-      )
-    }
-  ]
+    ],
+    [getString]
+  )
 
-  const testConnection = async (testHost?: string) => {
+  const testConnection = async () => {
     setErrors([])
     try {
-      const validationHosts = testHost ? [testHost] : detailHosts.map(host => get(host, 'host', ''))
-      const hostResults = await validateHosts({
-        hosts: validationHosts,
-        tags: get(formikRef, 'current.values.delegateSelectors', [])
-      })
+      const hostResults = await validateHosts(
+        {
+          hosts: hostsToTest.map(host => get(host, 'host', '')),
+          tags: get(formikRef, 'current.values.delegateSelectors', [])
+        },
+        {
+          queryParams: {
+            accountIdentifier: accountId,
+            projectIdentifier,
+            orgIdentifier,
+            identifier: get(formikRef, 'current.values.credentialsRef', '')
+          }
+        }
+      )
       if (hostResults.status === 'SUCCESS') {
         const tempMap: any = {}
         detailHosts.forEach(hostItem => {
-          tempMap[get(hostItem, 'host', '')] = hostItem
+          tempMap[get(hostItem, 'parsedHost', '')] = hostItem
         }, {})
+
         get(hostResults, 'data', []).forEach((hostRes: HostValidationDTO) => {
-          tempMap[get(hostRes, 'host', '')] = hostRes
+          tempMap[get(hostRes, 'host', '')] = {
+            ...hostRes,
+            host: tempMap[get(hostRes, 'host', '')].host
+          }
         })
+
         setDetailHosts(Object.values(tempMap) as [])
       } else {
         /* istanbul ignore next */
@@ -352,6 +402,41 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
     }
   }
 
+  const isPreviewDisable = (value: PDCInfrastructureUI): boolean => {
+    if (isEmpty(value)) return false
+    if (getMultiTypeFromValue(value.credentialsRef) !== MultiTypeInputType.FIXED) return true
+    if (isPreconfiguredHosts === PreconfiguredHosts.FALSE) {
+      return isString(value.hosts) && getMultiTypeFromValue(value.hosts) !== MultiTypeInputType.FIXED
+    } else {
+      let returnBool = getMultiTypeFromValue(value.connectorRef) !== MultiTypeInputType.FIXED
+      if (hostsScope === HostScope.HOST_NAME) {
+        returnBool =
+          returnBool ||
+          (isString(value.hostFilters) && getMultiTypeFromValue(value.hostFilters) !== MultiTypeInputType.FIXED)
+      } else if (hostsScope === HostScope.HOST_ATTRIBUTES) {
+        returnBool =
+          returnBool ||
+          (isString(value.attributeFilters) &&
+            getMultiTypeFromValue(value.attributeFilters) !== MultiTypeInputType.FIXED)
+      }
+      return returnBool
+    }
+  }
+
+  const getValidations = (isPreconfigured: string, hostScope: string): ObjectSchema<object | undefined> => {
+    let validationSchema = getValidationSchemaNoPreconfiguredHosts(getString)
+    if (isPreconfigured === PreconfiguredHosts.TRUE) {
+      if (hostScope === HostScope.HOST_NAME) {
+        validationSchema = getValidationSchemaHostFilters(getString)
+      } else if (hostScope === HostScope.HOST_ATTRIBUTES) {
+        validationSchema = getValidationSchemaAttributeFilters(getString)
+      } else {
+        validationSchema = getValidationSchemaAll(getString)
+      }
+    }
+    return validationSchema
+  }
+
   return (
     <Layout.Vertical spacing="medium">
       {formikInitialValues && (
@@ -361,6 +446,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
             selectedValue={isPreconfiguredHosts}
             onChange={(e: any) => {
               setIsPreconfiguredHosts(e.target.value)
+              setShowPreviewHostBtn(true)
             }}
           >
             <Radio value={PreconfiguredHosts.FALSE} label={getString('cd.steps.pdcStep.specifyHostsOption')} />
@@ -370,24 +456,40 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
           <Formik<PDCInfrastructureUI>
             formName="pdcInfra"
             initialValues={formikInitialValues}
-            validationSchema={getValidationSchema(getString) as Partial<PDCInfrastructureUI>}
+            validationSchema={getValidations(isPreconfiguredHosts, hostsScope)}
             validate={value => {
-              const data: Partial<PdcInfrastructure> = {
+              const data: Partial<PDCInfrastructureYAML> = {
                 allowSimultaneousDeployments: value.allowSimultaneousDeployments,
                 delegateSelectors: value.delegateSelectors,
-                sshKey: value.sshKey
+                sshKey: value.sshKey,
+                credentialsRef: (value.credentialsRef || value.sshKey) as string
               }
               if (isPreconfiguredHosts === PreconfiguredHosts.FALSE) {
-                data.hosts = parseHosts(value.hosts)
+                data.hosts =
+                  getMultiTypeFromValue(value.hosts) === MultiTypeInputType.FIXED
+                    ? parseHosts(value.hosts)
+                    : value.hosts
+                data.hostFilter = {
+                  type: 'All',
+                  spec: {} //todoremoveempty
+                }
               } else {
                 data.connectorRef = value.connectorRef
-                if (hostsScope === HostScope.SPECIFIC) {
-                  if (hostSpecifics === SpecificHostOption.HOST_NAME) {
-                    data.hostFilters = parseHosts(value.hostFilters || '')
-                  } else {
-                    /* istanbul ignore next */
-                    data.attributeFilters = parseAttributes(value.attributeFilters || '')
-                  }
+                data.hostFilter = {
+                  type: hostsScope as 'All' | 'HostNames' | 'HostAttributes',
+                  spec:
+                    hostsScope !== HostScope.ALL
+                      ? ({
+                          value:
+                            hostsScope === HostScope.HOST_NAME
+                              ? getMultiTypeFromValue(value.hostFilters) === MultiTypeInputType.FIXED
+                                ? parseHosts(value.hostFilters || '')
+                                : value.hostFilters
+                              : getMultiTypeFromValue(value.attributeFilters) === MultiTypeInputType.FIXED
+                              ? parseAttributes(value.attributeFilters || '')
+                              : value.attributeFilters
+                        } as HostNamesFilter | HostAttributesFilter)
+                      : {} //todoremoveempty
                 }
               }
               delayedOnUpdate(data)
@@ -396,46 +498,46 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
           >
             {formik => {
               window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.INFRASTRUCTURE }))
-              formikRef.current = formik
+              formikRef.current = formik as FormikProps<unknown> | null
               return (
                 <FormikForm>
                   <Layout.Vertical className={css.formRow} spacing="medium" margin={{ bottom: 'large' }}>
                     {isPreconfiguredHosts === PreconfiguredHosts.FALSE ? (
-                      <FormInput.TextArea
+                      <FormMultiTypeTextAreaField
+                        key="hosts"
                         name="hosts"
-                        label={'Hosts'}
                         className={`${css.hostsTextArea} ${css.inputWidth}`}
-                        tooltipProps={{
-                          dataTooltipId: 'pdcHosts'
+                        label={getString('connectors.pdc.hosts')}
+                        multiTypeTextArea={{
+                          expressions,
+                          allowableTypes
                         }}
                       />
                     ) : (
                       <Layout.Vertical>
-                        <ConnectorReferenceField
+                        <FormMultiTypeConnectorField
                           error={get(formik, 'errors.connectorRef', undefined)}
                           name="connectorRef"
-                          type={['Pdc']}
-                          selected={formik.values.connectorRef}
                           label={getString('connector')}
-                          width={366}
                           placeholder={getString('connectors.selectConnector')}
+                          disabled={readonly}
                           accountIdentifier={accountId}
                           projectIdentifier={projectIdentifier}
                           orgIdentifier={orgIdentifier}
-                          onChange={
-                            /* istanbul ignore next */ (value, scope) => {
-                              /* istanbul ignore next */
-                              formik.setFieldValue('connectorRef', {
-                                label: value.name || '',
-                                value: `${scope !== Scope.PROJECT ? `${scope}.` : ''}${value.identifier}`,
-                                scope: scope,
-                                live: value?.status?.status === 'SUCCESS',
-                                connector: value
-                              })
+                          type={Connectors.PDC}
+                          width={433}
+                          selected={formik.values.connectorRef}
+                          setRefValue
+                          multiTypeProps={{ allowableTypes, expressions }}
+                          gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                          onChange={(value, _valueType, connectorRefType) => {
+                            if (isMultiTypeRuntime(connectorRefType)) {
+                              formikRef.current?.setFieldValue('connectorRef', value)
                             }
-                          }
+                            setShowPreviewHostBtn(true)
+                          }}
                         />
-                        <Layout.Horizontal className={css.hostSpecificContainer}>
+                        <Layout.Vertical spacing="small">
                           <RadioGroup
                             className={css.specifyHostsRadioGroup}
                             selectedValue={hostsScope}
@@ -447,117 +549,127 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                               }
                             }}
                           >
-                            <Radio value={HostScope.ALL} label={getString('cd.steps.pdcStep.deployAllHostsOption')} />
+                            <Radio value={HostScope.ALL} label={getString('cd.steps.pdcStep.includeAllHosts')} />
+                            <Radio value={HostScope.HOST_NAME} label={getString('cd.steps.pdcStep.filterHostName')} />
                             <Radio
-                              value={HostScope.SPECIFIC}
-                              label={getString('cd.steps.pdcStep.deploySpecificHostsOption')}
+                              value={HostScope.HOST_ATTRIBUTES}
+                              label={getString('cd.steps.pdcStep.filterHostAttributes')}
                             />
                           </RadioGroup>
-                          <Select
-                            disabled={hostsScope !== HostScope.SPECIFIC}
-                            className={css.hostSelect}
-                            value={hostSpecificyOptions.find(option => option.value === hostSpecifics)}
-                            onChange={option => {
-                              /* istanbul ignore next */
-                              const value = option.value.toString()
-                              /* istanbul ignore next */
-                              if (value === SpecificHostOption.HOST_NAME) {
-                                /* istanbul ignore next */
-                                formik.setFieldValue('attributeFilters', '')
-                              } else {
-                                /* istanbul ignore next */
-                                formik.setFieldValue('hostFilters', '')
-                              }
-                              /* istanbul ignore next */
-                              setHostSpecifics(value)
-                            }}
-                            items={hostSpecificyOptions}
-                          ></Select>
-                        </Layout.Horizontal>
+                        </Layout.Vertical>
                         <Layout.Vertical spacing="medium">
-                          {isPreconfiguredHosts === PreconfiguredHosts.FALSE ? (
-                            <FormInput.TextArea
-                              name="hosts"
-                              label={'Hosts'}
-                              placeholder={getString('cd.steps.pdcStep.hostsPlaceholder')}
-                              className={`${css.hostsTextArea} ${css.inputWidth}`}
-                              tooltipProps={{
-                                dataTooltipId: 'pdcHosts'
-                              }}
-                            />
-                          ) : hostsScope === HostScope.ALL ? null : hostSpecifics === SpecificHostOption.HOST_NAME ? (
-                            <FormInput.TextArea
+                          {hostsScope === HostScope.HOST_NAME ? (
+                            <FormMultiTypeTextAreaField
+                              key="hostFilters"
                               name="hostFilters"
-                              label={'Specific Hosts'}
+                              label={getString('cd.steps.pdcStep.specificHosts')}
                               placeholder={getString('cd.steps.pdcStep.specificHostsPlaceholder')}
                               className={`${css.hostsTextArea} ${css.inputWidth}`}
                               tooltipProps={{
                                 dataTooltipId: 'pdcSpecificHosts'
                               }}
+                              multiTypeTextArea={{
+                                expressions,
+                                allowableTypes
+                              }}
                             />
-                          ) : (
-                            <FormInput.TextArea
+                          ) : hostsScope === HostScope.HOST_ATTRIBUTES ? (
+                            <FormMultiTypeTextAreaField
+                              key="attributeFilters"
                               name="attributeFilters"
-                              label={'Specific Attributes'}
+                              label={getString('cd.steps.pdcStep.specificAttributes')}
                               placeholder={getString('cd.steps.pdcStep.attributesPlaceholder')}
                               className={`${css.hostsTextArea} ${css.inputWidth}`}
                               tooltipProps={{
                                 dataTooltipId: 'pdcSpecificAttributes'
                               }}
+                              multiTypeTextArea={{
+                                expressions,
+                                allowableTypes
+                              }}
                             />
-                          )}
+                          ) : null}
                         </Layout.Vertical>
                       </Layout.Vertical>
                     )}
-                    <div className={css.inputWidth}>
-                      <SSHSecretInput name={'sshKey'} label={getString('cd.steps.common.specifyCredentials')} />
-                    </div>
-                    <div className={css.inputWidth}>
-                      <DelegateSelectorPanel isReadonly={false} formikProps={formik as any} />
+                    <div className={css.credRefWidth}>
+                      <MultiTypeSecretInput
+                        name="credentialsRef"
+                        type={getMultiTypeSecretInputType(defaultTo(formikInitialValues.serviceType, 'SSHKey'))}
+                        expressions={expressions}
+                        allowableTypes={allowableTypes}
+                        label={getString('cd.steps.common.specifyCredentials')}
+                        onSuccess={secret => {
+                          if (secret) {
+                            formikRef.current?.setFieldValue('credentialsRef', secret.referenceString)
+                          }
+                        }}
+                      />
                     </div>
                     {showPreviewHostBtn ? (
                       <Button
                         onClick={() => {
                           setShowPreviewHostBtn(false)
+                          getHosts()
                         }}
                         size={ButtonSize.SMALL}
                         variation={ButtonVariation.SECONDARY}
                         width={140}
+                        style={{ marginTop: 0 }}
+                        disabled={isPreviewDisable(formik.values)}
                       >
                         {getString('cd.steps.pdcStep.previewHosts')}
                       </Button>
                     ) : (
                       <Layout.Vertical>
-                        <Layout.Horizontal spacing="normal" flex={{ justifyContent: 'space-between' }}>
-                          <Layout.Horizontal flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
-                            <Label className={'bp3-label ' + css.previewHostsLabel}>Preview Hosts</Label>
-                            <Button
-                              rightIcon="refresh"
-                              iconProps={{ size: 16 }}
-                              onClick={() => getHosts()}
-                              style={{ border: 'none !important' }}
-                              size={ButtonSize.SMALL}
-                              variation={ButtonVariation.SECONDARY}
-                            >
-                              {getString('common.refresh')}
-                            </Button>
-                          </Layout.Horizontal>
-                          <Layout.Horizontal flex={{ alignItems: 'center' }} margin={{ bottom: 'small' }}>
-                            <Button
-                              onClick={() => testConnection()}
-                              size={ButtonSize.SMALL}
-                              variation={ButtonVariation.SECONDARY}
-                              disabled={
-                                detailHosts.length === 0 ||
-                                !(
-                                  get(formikRef.current, 'values.credentialsRef', '') ||
-                                  get(formikRef.current, 'values.sshKey.identifier', '')
-                                )
-                              }
-                            >
-                              {getString('common.smtp.testConnection')}
-                            </Button>
-                          </Layout.Horizontal>
+                        <Layout.Horizontal
+                          flex={{ alignItems: 'center' }}
+                          margin={{ bottom: 'small' }}
+                          spacing="small"
+                          className={css.hostsControls}
+                        >
+                          <Label className={'bp3-label ' + css.previewHostsLabel}>Preview Hosts</Label>
+                          <Button
+                            intent="primary"
+                            icon="refresh"
+                            iconProps={{ size: 12, margin: { right: 8 } }}
+                            onClick={() => getHosts()}
+                            size={ButtonSize.SMALL}
+                            variation={ButtonVariation.LINK}
+                          >
+                            {getString('common.refresh')}
+                          </Button>
+                          <Button
+                            intent="none"
+                            icon="main-close"
+                            iconProps={{ size: 12, margin: { right: 8 } }}
+                            onClick={() => setShowPreviewHostBtn(true)}
+                            size={ButtonSize.SMALL}
+                            variation={ButtonVariation.LINK}
+                          >
+                            Close preview
+                          </Button>
+                        </Layout.Horizontal>
+                        <Layout.Horizontal
+                          flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+                          spacing="medium"
+                          margin={{ bottom: 'small', top: 'small' }}
+                        >
+                          {isPreconfiguredHosts === PreconfiguredHosts.FALSE ? (
+                            <div className={css.inputWidth}>
+                              <Label className={'bp3-label'} style={{ marginBottom: 'small' }}>
+                                {getString('delegate.DelegateSelector')}
+                              </Label>
+                              <DelegateSelectors
+                                accountId={accountId}
+                                projectIdentifier={projectIdentifier}
+                                orgIdentifier={orgIdentifier}
+                                onTagInputChange={delegateSelectors => {
+                                  formikRef.current?.setFieldValue('delegateSelectors', delegateSelectors)
+                                }}
+                              />
+                            </div>
+                          ) : null}
                         </Layout.Horizontal>
                         {/* istanbul ignore next */}
                         {errors.length > 0 && <ErrorHandler responseMessages={errors} />}
@@ -575,10 +687,11 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                       </Layout.Vertical>
                     )}
                   </Layout.Vertical>
-
-                  <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }} className={css.lastRow}>
+                  <Layout.Vertical spacing="medium">
+                    <hr />
+                  </Layout.Vertical>
+                  <Layout.Vertical className={css.simultaneousDeployment}>
                     <FormInput.CheckBox
-                      className={css.simultaneousDeployment}
                       tooltipProps={{
                         dataTooltipId: 'pdcInfraAllowSimultaneousDeployments'
                       }}
@@ -586,7 +699,7 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
                       label={getString('cd.allowSimultaneousDeployments')}
                       disabled={readonly}
                     />
-                  </Layout.Horizontal>
+                  </Layout.Vertical>
                 </FormikForm>
               )
             }}
@@ -595,6 +708,34 @@ const GcpInfrastructureSpecEditable: React.FC<GcpInfrastructureSpecEditableProps
       )}
     </Layout.Vertical>
   )
+}
+
+interface PDCInfrastructureSpecEditableProps {
+  initialValues: PdcInfrastructure
+  allValues?: PdcInfrastructure
+  onUpdate?: (data: PdcInfrastructure) => void
+  stepViewType?: StepViewType
+  readonly?: boolean
+  template?: PdcInfraTemplate
+  metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
+  variablesData: PdcInfrastructure
+  allowableTypes: AllowedTypes
+}
+
+const PDCInfrastructureSpecVariablesForm: React.FC<PDCInfrastructureSpecEditableProps> = ({
+  metadataMap,
+  variablesData,
+  initialValues
+}) => {
+  const infraVariables = variablesData?.infrastructureDefinition?.spec
+  return infraVariables ? (
+    /* istanbul ignore next */ <VariablesListTable
+      data={infraVariables}
+      originalData={initialValues?.infrastructureDefinition?.spec || initialValues}
+      metadataMap={metadataMap}
+      className={pipelineVariableCss.variablePaddingL1}
+    />
+  ) : null
 }
 
 interface PDCInfrastructureSpecStep extends PdcInfrastructure {
@@ -609,8 +750,11 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
   protected type = StepType.PDC
   /* istanbul ignore next */
   protected defaultValues: PdcInfrastructure = {
-    connectorRef: '',
-    credentialsRef: ''
+    credentialsRef: '',
+    hostFilter: {
+      type: 'All',
+      spec: {} //todoremoveempty
+    }
   }
 
   /* istanbul ignore next */
@@ -721,27 +865,83 @@ export class PDCInfrastructureSpec extends PipelineStep<PDCInfrastructureSpecSte
     getString,
     viewType
   }: ValidateInputSetProps<PdcInfrastructure>): FormikErrors<PdcInfrastructure> {
-    const errors: Partial<PdcInfrastructureTemplate> = {}
+    const errors: Partial<PdcInfraTemplate> = {}
     /* istanbul ignore else */
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     if (
-      isEmpty(data.credentialsRef) &&
+      !data.credentialsRef &&
       isRequired &&
       getMultiTypeFromValue(get(template, 'credentialsRef', undefined)) === MultiTypeInputType.RUNTIME
     ) {
-      errors.credentialsRef = getString?.('fieldRequired', { field: getString('connector') })
+      errors.credentialsRef = getString?.('fieldRequired', { field: getString('cd.credentialsRef') })
     }
-    return errors
+    if (
+      isEmpty(data.connectorRef) &&
+      isRequired &&
+      getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME
+    ) {
+      errors.connectorRef = getString?.('common.validation.fieldIsRequired', { name: getString('connector') })
+    }
+    if (isEmpty(data.hosts) && isRequired && getMultiTypeFromValue(template?.hosts) === MultiTypeInputType.RUNTIME) {
+      errors.hosts = getString?.('common.validation.fieldIsRequired', { name: getString('cd.hosts') })
+    }
+    if (
+      data.hostFilter?.type === HostScope.HOST_NAME &&
+      isEmpty((data.hostFilter.spec as HostNamesFilter)?.value) &&
+      isRequired &&
+      getMultiTypeFromValue((template?.hostFilter?.spec as HostNamesFilter)?.value) === MultiTypeInputType.RUNTIME
+    ) {
+      errors.hostFilters = getString?.('common.validation.fieldIsRequired', { name: getString('cd.hostFilters') })
+    }
+    if (
+      data.hostFilter?.type === HostScope.HOST_ATTRIBUTES &&
+      isEmpty((data.hostFilter.spec as HostAttributesFilter)?.value) &&
+      isRequired &&
+      getMultiTypeFromValue((template?.hostFilter?.spec as HostAttributesFilter)?.value as any) ===
+        MultiTypeInputType.RUNTIME
+    ) {
+      errors.attributeFilters = getString?.('common.validation.fieldIsRequired', {
+        name: getString('cd.attributeFilters')
+      })
+    }
+    return errors as any
   }
 
   renderStep(props: StepProps<PdcInfrastructure>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes } = props
+    const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes, inputSetData } = props
+
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <PDCInfrastructureSpecInputForm
+          {...(customStepProps as PDCInfrastructureSpecEditableProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+          stepViewType={stepViewType}
+          readonly={readonly}
+          template={inputSetData?.template as PdcInfraTemplate}
+          allValues={inputSetData?.allValues}
+          allowableTypes={allowableTypes}
+          path={inputSetData?.path || ''}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <PDCInfrastructureSpecVariablesForm
+          onUpdate={onUpdate}
+          stepViewType={stepViewType}
+          template={inputSetData?.template as PdcInfraTemplate}
+          {...(customStepProps as PDCInfrastructureSpecEditableProps)}
+          initialValues={initialValues}
+        />
+      )
+    }
+
     return (
-      <GcpInfrastructureSpecEditable
+      <PDCInfrastructureSpecEditable
         onUpdate={onUpdate}
         readonly={readonly}
         stepViewType={stepViewType}
-        {...(customStepProps as GcpInfrastructureSpecEditableProps)}
+        {...(customStepProps as PDCInfrastructureSpecEditableProps)}
         initialValues={initialValues}
         allowableTypes={allowableTypes}
       />

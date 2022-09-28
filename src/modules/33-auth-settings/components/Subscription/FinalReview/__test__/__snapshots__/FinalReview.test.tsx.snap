@@ -1,0 +1,299 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FinalReview render 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameSuccess"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength StyledProps--color StyledProps--color-primary7"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--barSuccess MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameSuccess"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength StyledProps--color StyledProps--color-primary7"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--barSuccess MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameSuccess"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength StyledProps--color StyledProps--color-primary7"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"
+          />
+        </div>
+        <div
+          class="MultiStepProgressIndicator--statusBar"
+        >
+          <div
+            class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--barSuccess MultiStepProgressIndicator--fullBar"
+          />
+        </div>
+      </div>
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex"
+      >
+        <div
+          class="Layout--vertical StyledProps--main StyledProps--flex"
+        >
+          <div
+            class="MultiStepProgressIndicator--dotNameFailed"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main MultiStepProgressIndicator--textmaxlength"
+              style="--text-line-clamp: 1;"
+            />
+          </div>
+          <div
+            class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotOutLine MultiStepProgressIndicator--spacing"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--vertical Layout--layout-spacing-large StyledProps--main body StyledProps--padding-top-large StyledProps--padding-bottom-large"
+    >
+      <div
+        class="bp3-card bp3-elevation-0 Card--card"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h5 StyledProps--padding-bottom-large"
+          >
+            common.subscriptions.overview.details
+          </p>
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--flex-alignItems-baseline StyledProps--padding-bottom-small"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+            >
+              authSettings.finalReview.upgradeToPlan
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900 StyledProps--font-weight-semi-bold"
+            >
+               Team common.subscriptions.overview.plan
+            </p>
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-link"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                edit
+              </span>
+            </button>
+          </div>
+          <ul
+            class="ul"
+          >
+            <li
+              class="li"
+            >
+              <p
+                class="StyledProps--font StyledProps--main"
+              >
+                Item 1
+              </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div
+        class="bp3-card bp3-elevation-0 Card--card"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--flex-alignItems-baseline StyledProps--padding-bottom-large"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+            >
+              authSettings.billingInfo.billingContact
+            </p>
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-link"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                edit
+              </span>
+            </button>
+          </div>
+          <div
+            class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              Jane Doe
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              jane.doe@test.com
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              billing address, dallas, TX, 79809, US
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bp3-card bp3-elevation-0 Card--card"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-start StyledProps--flex-alignItems-baseline StyledProps--padding-bottom-large"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+            >
+              authSettings.billingInfo.paymentMethod
+            </p>
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-link"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                edit
+              </span>
+            </button>
+          </div>
+          <div
+            class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              visa ending in 1234
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+            >
+              Expires Jan 30 2023
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
+      >
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-secondary"
+          type="button"
+        >
+          <span
+            class="bp3-icon bp3-icon-chevron-left StyledProps--main"
+            icon="chevron-left"
+          >
+            <svg
+              data-icon="chevron-left"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                chevron-left
+              </desc>
+              <path
+                d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-button-text"
+          >
+            back
+          </span>
+        </button>
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            authSettings.finalReview.subscribeNPay
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

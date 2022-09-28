@@ -5,14 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { set } from 'lodash-es'
 import type { IconName } from '@harness/uicore'
 import type { BitbucketPRSpec, GithubPRSpec, GitlabPRSpec } from 'services/pipeline-ng'
-import type { ConnectorInfoDTO, UserRepoResponse } from 'services/cd-ng'
+import type { ConnectorInfoDTO, SecretDTOV2, UserRepoResponse } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 import { Connectors } from '@connectors/constants'
 import type { SelectBuildLocationForwardRef } from './SelectBuildLocation'
 
 export interface InfraProvisioningWizardProps {
+  precursorData?: {
+    preSelectedGitConnector?: ConnectorInfoDTO
+    connectorsEligibleForPreSelection?: ConnectorInfoDTO[]
+    secretForPreSelectedConnector?: SecretDTOV2
+  }
   lastConfiguredWizardStepId?: InfraProvisiongWizardStepId
 }
 
@@ -43,7 +49,7 @@ export interface WizardStep {
   stepRender: React.ReactElement
   onClickNext?: () => void
   onClickBack?: () => void
-  stepFooterLabel?: keyof StringsMap
+  stepFooterLabel?: string
 }
 
 export enum ProvisioningStatus {
@@ -113,19 +119,54 @@ export enum StepStatus {
 export interface GitProvider {
   icon: IconName
   label: keyof StringsMap
-  type: ConnectorInfoDTO['type']
+  type: GitProviderCardSelectOptionTypes
   disabled?: boolean
 }
 
+export enum NonGitOption {
+  OTHER = 'Other'
+}
+
+export type GitProviderCardSelectOptionTypes = ConnectorInfoDTO['type'] | NonGitOption
+
+export const OtherProviderOption: GitProvider = {
+  icon: 'gitops-application',
+  label: 'common.other',
+  type: NonGitOption.OTHER
+}
+
+export const GitProviderIcons: Map<ConnectorInfoDTO['type'], IconName> = new Map([
+  [Connectors.GITHUB, 'github'],
+  [Connectors.GITLAB, 'gitlab'],
+  [Connectors.BITBUCKET, 'bitbucket-blue'],
+  [Connectors.GIT, 'service-github']
+])
+
 export const AllSaaSGitProviders: GitProvider[] = [
-  { icon: 'github', label: 'common.repo_provider.githubLabel', type: Connectors.GITHUB },
-  { icon: 'gitlab', label: 'common.repo_provider.gitlabLabel', type: Connectors.GITLAB },
-  { icon: 'bitbucket-blue', label: 'pipeline.manifestType.bitBucketLabel', type: Connectors.BITBUCKET }
+  {
+    icon: GitProviderIcons.get(Connectors.GITHUB) as IconName,
+    label: 'common.repo_provider.githubLabel',
+    type: Connectors.GITHUB
+  },
+  {
+    icon: GitProviderIcons.get(Connectors.GITLAB) as IconName,
+    label: 'common.repo_provider.gitlabLabel',
+    type: Connectors.GITLAB
+  },
+  {
+    icon: GitProviderIcons.get(Connectors.BITBUCKET) as IconName,
+    label: 'common.repo_provider.bitbucketLabel',
+    type: Connectors.BITBUCKET
+  }
 ]
 
 export const AllOnPremGitProviders: GitProvider[] = [
   ...AllSaaSGitProviders,
-  { icon: 'service-github', label: 'ci.getStartedWithCI.genericGit', type: Connectors.GIT }
+  {
+    icon: GitProviderIcons.get(Connectors.GIT) as IconName,
+    label: 'ci.getStartedWithCI.genericGit',
+    type: Connectors.GIT
+  }
 ]
 
 export enum GitAuthenticationMethod {
@@ -163,57 +204,87 @@ const DOCKER_REGISTRY_CONNECTOR_REF = 'harnessImage'
 
 export const KUBERNETES_HOSTED_INFRA_ID = 'k8s-hosted-infra'
 
-export const DEFAULT_PIPELINE_PAYLOAD = {
-  pipeline: {
-    name: '',
-    identifier: '',
-    projectIdentifier: '',
-    orgIdentifier: '',
-    properties: {
-      ci: {
-        codebase: {
-          connectorRef: 'connectorRef',
-          repoName: '',
-          build: '<+input>'
-        }
-      }
-    },
-    stages: [
-      {
-        stage: {
-          name: DEFAULT_STAGE_ID,
-          identifier: DEFAULT_STAGE_ID,
-          type: 'CI',
-          spec: {
-            cloneCodebase: true,
-            infrastructure: {
-              type: 'KubernetesHosted',
-              spec: {
-                identifier: KUBERNETES_HOSTED_INFRA_ID
-              }
-            },
-            execution: {
-              steps: [
-                {
-                  step: {
-                    type: 'Run',
-                    name: 'Echo Welcome Message',
-                    identifier: 'Run',
-                    spec: {
-                      connectorRef: ACCOUNT_SCOPE_PREFIX.concat(DOCKER_REGISTRY_CONNECTOR_REF),
-                      image: 'alpine',
-                      shell: 'Sh',
-                      command: 'echo "Welcome to Harness CI" '
+const CodebaseProperties = {
+  ci: {
+    codebase: {
+      connectorRef: 'connectorRef',
+      repoName: '',
+      build: '<+input>'
+    }
+  }
+}
+
+export const getPipelinePayloadWithoutCodebase = (): Record<string, any> => {
+  return {
+    pipeline: {
+      name: '',
+      identifier: '',
+      projectIdentifier: '',
+      orgIdentifier: '',
+      stages: [
+        {
+          stage: {
+            name: DEFAULT_STAGE_ID,
+            identifier: DEFAULT_STAGE_ID,
+            type: 'CI',
+            spec: {
+              cloneCodebase: false,
+              infrastructure: {
+                type: 'KubernetesHosted',
+                spec: {
+                  identifier: KUBERNETES_HOSTED_INFRA_ID
+                }
+              },
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      type: 'Run',
+                      name: 'Echo Welcome Message',
+                      identifier: 'Run',
+                      spec: {
+                        connectorRef: ACCOUNT_SCOPE_PREFIX.concat(DOCKER_REGISTRY_CONNECTOR_REF),
+                        image: 'alpine',
+                        shell: 'Sh',
+                        command: 'echo "Welcome to Harness CI"'
+                      }
                     }
                   }
-                }
-              ]
+                ]
+              }
             }
           }
         }
-      }
-    ]
+      ]
+    }
   }
+}
+
+export const getPipelinePayloadWithCodebase = (): Record<string, any> => {
+  const originalPipeline = getPipelinePayloadWithoutCodebase()
+  return set(
+    set(originalPipeline, 'pipeline.properties', CodebaseProperties),
+    'pipeline.stages.0.stage.spec.cloneCodebase',
+    true
+  )
+}
+
+export const getCloudPipelinePayloadWithoutCodebase = (): Record<string, any> => {
+  const originalPipeline = getPipelinePayloadWithoutCodebase()
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.infrastructure', undefined)
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.execution.steps.0.step.spec.image', undefined)
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.platform', { os: 'Linux', arch: 'Amd64' })
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.runtime', { type: 'Cloud', spec: {} })
+  return originalPipeline
+}
+
+export const getCloudPipelinePayloadWithCodebase = (): Record<string, any> => {
+  const originalPipeline = getCloudPipelinePayloadWithoutCodebase()
+  return set(
+    set(originalPipeline, 'pipeline.properties', CodebaseProperties),
+    'pipeline.stages.0.stage.spec.cloneCodebase',
+    true
+  )
 }
 
 export const getFullRepoName = (repository: UserRepoResponse): string => {
@@ -221,13 +292,19 @@ export const getFullRepoName = (repository: UserRepoResponse): string => {
   return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
 }
 
-export const DELEGATE_INSTALLATION_REFETCH_DELAY = 10000
-export const MAX_TIMEOUT_DELEGATE_INSTALLATION = 1000 * 60 * 10 // ten minutes
-
-export const OAUTH_REDIRECT_URL_PREFIX = `${location.protocol}//${location.host}/gateway/`
+export const DELEGATE_INSTALLATION_REFETCH_DELAY = 20 * 1000 // 20 secs
+export const MAX_TIMEOUT_DELEGATE_INSTALLATION = 1000 * 60 * 10 // 10 minutes
 
 export const BitbucketPRTriggerActions: BitbucketPRSpec['actions'] = ['Create', 'Update']
 
 export const GitHubPRTriggerActions: GithubPRSpec['actions'] = ['Reopen', 'Synchronize', 'Open']
 
 export const GitlabPRTriggerActions: GitlabPRSpec['actions'] = ['Reopen', 'Sync', 'Open']
+
+export const AccessTokenPermissionsDocLinks: Map<ConnectorInfoDTO['type'], string> = new Map([
+  [Connectors.GITHUB, 'https://docs.harness.io/article/jd77qvieuw#step_3_credentials'],
+  [Connectors.GITLAB, 'https://docs.harness.io/article/5abnoghjgo#password_personal_access_token'],
+  [Connectors.BITBUCKET, 'https://docs.harness.io/article/iz5tucdwyu#personal_access_token']
+])
+
+export const ProvisionedByHarnessDelegateGroupIdentifier = '_harness_kubernetes_delegate' // unique group identifier of delegate installed and managed by Harness for Hosted by Harness infra offering

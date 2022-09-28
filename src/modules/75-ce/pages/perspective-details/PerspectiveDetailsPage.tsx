@@ -12,6 +12,7 @@ import qs from 'qs'
 import cx from 'classnames'
 import { Button, Container, Text, PageHeader, PageBody, Icon, useToaster } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
+import { Popover, PopoverInteractionKind, Position, Switch } from '@blueprintjs/core'
 import routes from '@common/RouteDefinitions'
 import {
   PerspectiveAnomalyData,
@@ -32,7 +33,8 @@ import {
   ViewChartType,
   ViewType,
   QlceViewAggregateOperation,
-  useFetchPerspectiveTotalCountQuery
+  QlceViewPreferencesInput,
+  QlceViewFilterWrapperInput
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
 import PerspectiveGrid from '@ce/components/PerspectiveGrid/PerspectiveGrid'
@@ -50,7 +52,8 @@ import {
   highlightNode,
   resetNodeState,
   clusterInfoUtil,
-  getQueryFiltersFromPerspectiveResponse
+  getQueryFiltersFromPerspectiveResponse,
+  UnallocatedCostClusterFields
 } from '@ce/utils/perspectiveUtils'
 import { AGGREGATE_FUNCTION, getGridColumnsByGroupBy } from '@ce/components/PerspectiveGrid/Columns'
 import { getGMTStartDateTime, getGMTEndDateTime, DEFAULT_TIME_RANGE } from '@ce/utils/momentUtils'
@@ -63,15 +66,18 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PAGE_NAMES } from '@ce/TrackingEventsConstants'
 import { useDownloadPerspectiveGridAsCsv } from '@ce/components/PerspectiveGrid/useDownloadPerspectiveGridAsCsv'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useDeepCompareEffect, useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { PerspectiveQueryParams, TimeRangeFilterType } from '@ce/types'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { getToolTip } from '@ce/components/PerspectiveViews/PerspectiveMenuItems'
 import css from './PerspectiveDetailsPage.module.scss'
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 15
 interface PerspectiveParams {
   perspectiveId: string
   perspectiveName: string
@@ -107,6 +113,16 @@ const PerspectiveHeader: React.FC<{ title: string; viewType: string }> = ({ titl
         label: getString('ce.perspectives.sideNavText')
       }
     ],
+    []
+  )
+
+  const [canEdit] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CCM_PERSPECTIVE
+      },
+      permissions: [PermissionIdentifier.EDIT_CCM_PERSPECTIVE]
+    },
     []
   )
 
@@ -161,7 +177,14 @@ const PerspectiveHeader: React.FC<{ title: string; viewType: string }> = ({ titl
       content={getHeaderContent()}
       toolbar={
         <Button
-          disabled={isDefaultPerspective}
+          disabled={isDefaultPerspective || !canEdit}
+          tooltip={getToolTip(
+            canEdit,
+            PermissionIdentifier.EDIT_CCM_PERSPECTIVE,
+            ResourceType.CCM_PERSPECTIVE,
+            isDefaultPerspective,
+            getString('ce.perspectives.editDefaultPerspective')
+          )}
           text={getString('edit')}
           icon="edit"
           intent="primary"
@@ -176,7 +199,6 @@ const PerspectiveDetailsPage: React.FC = () => {
   const history = useHistory()
   const { perspectiveId, accountId, perspectiveName } = useParams<PerspectiveParams>()
   const { getString } = useStrings()
-  const isAnomaliesEnabled = useFeatureFlag(FeatureFlag.CCM_ANOMALY_DETECTION_NG)
   const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
 
@@ -219,6 +241,8 @@ const PerspectiveDetailsPage: React.FC = () => {
   const chartRef = useRef<Highcharts.Chart>()
 
   const perspectiveData = perspectiveRes?.data
+
+  const isPageReady = !loading && perspectiveData
 
   const { isClusterOnly, hasClusterAsSource } = clusterInfoUtil(perspectiveData?.dataSources)
 
@@ -266,20 +290,40 @@ const PerspectiveDetailsPage: React.FC = () => {
         showError(getRBACErrorMessage(error))
       }
     }
-    if (isAnomaliesEnabled) {
-      fetchAnomaliesCount()
+    fetchAnomaliesCount()
+  }, [timeRange.from, timeRange.to, filters, groupBy])
+
+  useDeepCompareEffect(() => {
+    if (isPageReady) {
+      executePerspectiveGridQuery({
+        requestPolicy: 'network-only'
+      })
+      executePerspectiveChartQuery({
+        requestPolicy: 'network-only'
+      })
     }
-  }, [isAnomaliesEnabled, timeRange.from, timeRange.to, filters, groupBy])
+  }, [groupBy])
 
   const setFilterUsingChartClick: (value: string) => void = value => {
-    setFilters([
-      ...filters,
-      {
-        field: { ...groupBy },
-        operator: QlceViewFilterOperator.In,
-        values: [value]
-      }
-    ])
+    if (value.split('No ')[1] === groupBy.fieldName) {
+      setFilters([
+        ...filters,
+        {
+          field: { ...groupBy },
+          operator: QlceViewFilterOperator.Null,
+          values: [' ']
+        }
+      ])
+    } else {
+      setFilters([
+        ...filters,
+        {
+          field: { ...groupBy },
+          operator: QlceViewFilterOperator.In,
+          values: [value]
+        }
+      ])
+    }
   }
 
   const queryFilters = useMemo(
@@ -290,13 +334,28 @@ const PerspectiveDetailsPage: React.FC = () => {
     ],
     [perspectiveId, timeRange, filters]
   )
+  const [preferences, setPreferences] = useState<QlceViewPreferencesInput>({
+    includeOthers: false,
+    includeUnallocatedCost: false
+  })
 
-  const [chartResult] = useFetchPerspectiveTimeSeriesQuery({
+  useEffect(() => {
+    if (perspectiveData?.viewPreferences) {
+      setPreferences({
+        includeOthers: Boolean(perspectiveData?.viewPreferences?.includeOthers),
+        includeUnallocatedCost: Boolean(perspectiveData?.viewPreferences?.includeUnallocatedCost)
+      })
+    }
+  }, [perspectiveData])
+
+  const [chartResult, executePerspectiveChartQuery] = useFetchPerspectiveTimeSeriesQuery({
     variables: {
       filters: queryFilters,
       limit: 12,
-      groupBy: [getTimeRangeFilter(aggregation), getGroupByFilter(groupBy)]
-    }
+      groupBy: [getTimeRangeFilter(aggregation), getGroupByFilter(groupBy)],
+      preferences
+    },
+    pause: !isPageReady
   })
 
   const [summaryResult] = useFetchPerspectiveDetailsSummaryWithBudgetQuery({
@@ -307,8 +366,10 @@ const PerspectiveDetailsPage: React.FC = () => {
         { operationType: QlceViewAggregateOperation.Max, columnName: 'startTime' },
         { operationType: QlceViewAggregateOperation.Min, columnName: 'startTime' }
       ],
-      filters: queryFilters
-    }
+      filters: queryFilters,
+      groupBy: [getGroupByFilter(groupBy)]
+    },
+    pause: !isPageReady
   })
 
   const getAggregationFunc = () => {
@@ -324,43 +385,49 @@ const PerspectiveDetailsPage: React.FC = () => {
     return af
   }
 
-  const [gridResults] = useFetchperspectiveGridQuery({
+  const [gridSearchParam, setGridSearchParam] = useState('')
+
+  const gridSearchFilter = useMemo(() => {
+    if (gridSearchParam) {
+      return {
+        idFilter: {
+          field: groupBy,
+          operator: QlceViewFilterOperator.Search,
+          values: [gridSearchParam]
+        }
+      } as QlceViewFilterWrapperInput
+    }
+    return undefined
+  }, [groupBy, gridSearchParam])
+
+  const [gridResults, executePerspectiveGridQuery] = useFetchperspectiveGridQuery({
     variables: {
       aggregateFunction: getAggregationFunc(),
-      filters: queryFilters,
+      filters: gridSearchFilter ? [...queryFilters, gridSearchFilter] : queryFilters,
       isClusterOnly: isClusterOnly,
       limit: PAGE_SIZE,
       offset: gridPageOffset,
       groupBy: [getGroupByFilter(groupBy)]
-    }
-  })
-
-  const [perspectiveTotalCountResult] = useFetchPerspectiveTotalCountQuery({
-    variables: {
-      filters: queryFilters,
-      groupBy: [getGroupByFilter(groupBy)],
-      isClusterQuery: isClusterOnly
-    }
+    },
+    pause: !isPageReady
   })
 
   const { data: chartData, fetching: chartFetching } = chartResult
   const { data: gridData, fetching: gridFetching } = gridResults
 
   const { data: summaryData, fetching: summaryFetching } = summaryResult
-  const { data: { perspectiveTotalCount } = {} } = perspectiveTotalCountResult
 
   const persName = perspectiveData?.name || perspectiveName
+
+  useDocumentTitle([getString('ce.perspectives.sideNavText'), persName], true)
 
   const [openDownloadCSVModal] = useDownloadPerspectiveGridAsCsv({
     perspectiveName: persName,
     selectedColumnsToDownload: getGridColumnsByGroupBy(groupBy, isClusterOnly),
-    perspectiveTotalCount: perspectiveTotalCount || 0,
     variables: {
       aggregateFunction: getAggregationFunc(),
       filters: queryFilters,
       isClusterOnly: isClusterOnly,
-      limit: PAGE_SIZE,
-      offset: gridPageOffset,
       groupBy: [getGroupByFilter(groupBy)]
     }
   })
@@ -392,6 +459,19 @@ const PerspectiveDetailsPage: React.FC = () => {
     })
   }
 
+  const goToServiceDetails = (clusterName: string, serviceName: string) => {
+    history.push({
+      pathname: routes.toCEPerspectiveServiceDetails({
+        accountId,
+        perspectiveId,
+        perspectiveName: persName,
+        clusterName,
+        serviceName
+      }),
+      search: `?${qs.stringify({ timeRange: JSON.stringify(timeRange) })}`
+    })
+  }
+
   const isChartGridEmpty =
     chartData?.perspectiveTimeSeriesStats?.stats?.length === 0 &&
     gridData?.perspectiveGrid?.data?.length === 0 &&
@@ -405,7 +485,7 @@ const PerspectiveDetailsPage: React.FC = () => {
     <>
       <PerspectiveHeader title={persName} viewType={perspectiveData?.viewType || ViewType.Default} />
 
-      <PageBody loading={loading}>
+      <PageBody loading={loading} className={css.pageCtn}>
         <PersepectiveExplorerFilters
           featureEnabled={!isFreeEdition}
           setFilters={setFilters}
@@ -422,6 +502,7 @@ const PerspectiveDetailsPage: React.FC = () => {
           forecastedCostData={summaryData?.perspectiveForecastCost as any}
           isDefaultPerspective={!!(perspectiveData?.viewType === ViewType.Default)}
           hasClusterAsSource={hasClusterAsSource}
+          filters={queryFilters}
         />
         <Container
           margin="xlarge"
@@ -435,6 +516,15 @@ const PerspectiveDetailsPage: React.FC = () => {
               groupBy={groupBy}
               setGroupBy={setGroupBy}
               timeFilter={getTimeFilters(getGMTStartDateTime(timeRange.from), getGMTEndDateTime(timeRange.to))}
+              preferencesDropDown={
+                <PreferencesDropDown
+                  preferences={preferences}
+                  setPreferences={setPreferences}
+                  showIncludeUnallocated={
+                    isClusterOnly && (Object.values(UnallocatedCostClusterFields) as string[]).includes(groupBy.fieldId)
+                  }
+                />
+              }
             />
             {!isChartGridEmpty && (
               <CloudCostInsightChart
@@ -448,6 +538,7 @@ const PerspectiveDetailsPage: React.FC = () => {
                 aggregation={aggregation}
                 xAxisPointCount={chartData?.perspectiveTimeSeriesStats?.stats?.length || DAYS_FOR_TICK_INTERVAL + 1}
                 anomaliesCountData={anomaliesCountData}
+                groupBy={groupBy}
               />
             )}
           </Container>
@@ -475,6 +566,7 @@ const PerspectiveDetailsPage: React.FC = () => {
           <PerspectiveGrid
             goToWorkloadDetails={goToWorkloadDetails}
             goToNodeDetails={goToNodeDetails}
+            goToServiceDetails={goToServiceDetails}
             isClusterOnly={isClusterOnly}
             gridData={gridData?.perspectiveGrid?.data as any}
             gridFetching={gridFetching}
@@ -493,7 +585,7 @@ const PerspectiveDetailsPage: React.FC = () => {
             }
             setColumnSequence={colSeq => setColumnSequence(colSeq)}
             groupBy={groupBy}
-            totalItemCount={perspectiveTotalCount || 0}
+            totalItemCount={gridData?.perspectiveTotalCount || 0}
             gridPageIndex={gridPageIndex}
             pageSize={PAGE_SIZE}
             fetchData={(pageIndex, pageSize) => {
@@ -502,6 +594,13 @@ const PerspectiveDetailsPage: React.FC = () => {
             }}
             allowExportAsCSV={true}
             openDownloadCSVModal={openDownloadCSVModal}
+            setGridSearchParam={text => {
+              setPageIndex(0)
+              setGridPageOffset(0)
+              setGridSearchParam(text)
+            }}
+            gridSearchParam={gridSearchParam}
+            isPerspectiveDetailsPage
           />
         </Container>
       </PageBody>
@@ -510,3 +609,70 @@ const PerspectiveDetailsPage: React.FC = () => {
 }
 
 export default PerspectiveDetailsPage
+
+const PreferencesDropDown: React.FC<{
+  preferences: QlceViewPreferencesInput
+  setPreferences: React.Dispatch<React.SetStateAction<QlceViewPreferencesInput>>
+  showIncludeUnallocated: boolean
+}> = ({ preferences, setPreferences, showIncludeUnallocated }) => {
+  const { getString } = useStrings()
+
+  return (
+    <Popover
+      interactionKind={PopoverInteractionKind.CLICK}
+      targetClassName={css.popoverTarget}
+      popoverClassName={css.preferencesPopover}
+      content={
+        <Container className={css.preferenceMenu}>
+          <Switch
+            large
+            checked={Boolean(preferences.includeOthers)}
+            labelElement={
+              <Text
+                font={{ variation: FontVariation.SMALL_SEMI }}
+                color={Color.GREY_1000}
+                tooltipProps={{ dataTooltipId: 'includeOthers' }}
+              >
+                {getString('ce.perspectives.createPerspective.preferences.includeOthers')}
+              </Text>
+            }
+            className={css.labelCtn}
+            onChange={event => {
+              setPreferences(prevPref => ({ ...prevPref, includeOthers: event.currentTarget.checked }))
+            }}
+          />
+          {showIncludeUnallocated ? (
+            <>
+              <Switch
+                large
+                checked={Boolean(preferences.includeUnallocatedCost)}
+                labelElement={
+                  <Text
+                    font={{ variation: FontVariation.SMALL_SEMI }}
+                    color={Color.GREY_1000}
+                    tooltipProps={{ dataTooltipId: 'includeUnallocated' }}
+                  >
+                    {getString('ce.perspectives.createPerspective.preferences.includeUnallocated')}
+                  </Text>
+                }
+                className={css.labelCtn}
+                onChange={event => {
+                  setPreferences(prevPref => ({ ...prevPref, includeUnallocatedCost: event.currentTarget.checked }))
+                }}
+              />
+            </>
+          ) : null}
+        </Container>
+      }
+      minimal
+      position={Position.BOTTOM_RIGHT}
+    >
+      <Container className={css.preferencesContainer}>
+        <Text color={Color.GREY_800} font={{ variation: FontVariation.SMALL_SEMI }}>
+          {getString('preferences')}
+        </Text>
+        <Icon name="chevron-down" />
+      </Container>
+    </Popover>
+  )
+}

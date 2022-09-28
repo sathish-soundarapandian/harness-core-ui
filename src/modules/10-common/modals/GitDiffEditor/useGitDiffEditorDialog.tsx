@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { omit } from 'lodash-es'
+import { omit, pick, defaultTo } from 'lodash-es'
 import { parse } from 'yaml'
 import { Button, Layout, Icon, Text, ModalErrorHandlerBinding, ModalErrorHandler } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
@@ -17,7 +17,8 @@ import { useStrings } from 'framework/strings'
 import { PageSpinner } from '@common/components'
 import { GitDiffEditor } from '@common/components/GitDiffEditor/GitDiffEditor'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
-import { EntityGitDetails, useGetFileContent } from 'services/cd-ng'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { EntityGitDetails, useGetFileByBranch, useGetFileContent } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { sanitize } from '@common/utils/JSONUtils'
 
@@ -30,11 +31,18 @@ export interface UseGitDiffEditorDialogProps<T> {
 }
 
 export interface GitData extends SaveToGitFormInterface {
-  resolvedConflictCommitId: string
+  lastCommitId?: string
+  resolvedConflictCommitId?: string
+  isV2?: boolean
 }
 
 export interface UseGitDiffEditorDialogReturn<T> {
-  openGitDiffDialog: (entity: T, gitDetails?: GitData, _modalProps?: IDialogProps) => void
+  openGitDiffDialog: (
+    entity: T,
+    gitDetails?: GitData,
+    storeMetadata?: StoreMetadata,
+    _modalProps?: IDialogProps
+  ) => void
   hideGitDiffDialog: () => void
 }
 
@@ -85,15 +93,41 @@ export function useGitDiffEditorDialog<T>(props: UseGitDiffEditorDialogProps<T>)
     lazy: true
   })
 
+  const {
+    data: dataV2,
+    loading: loadingV2,
+    refetch: fetchRemoteFileContentByBranch,
+    error: errorV2
+  } = useGetFileByBranch({
+    queryParams: {
+      ...commonParams,
+      connectorRef: '',
+      repoName: '',
+      branch: '',
+      filePath: ''
+    },
+    lazy: true
+  })
+
   React.useEffect(() => {
+    const fileContent = gitDetails?.isV2 ? dataV2?.data?.fileContent : data?.data?.content
     try {
-      if (data?.data?.content) {
-        setRemoteVersion(yamlStringify(sanitize(parse(data.data.content)), FORMATTING_OPTIONS))
+      if (fileContent) {
+        setRemoteVersion(
+          yamlStringify(
+            sanitize(parse(fileContent), {
+              removeEmptyString: false,
+              removeEmptyArray: false,
+              removeEmptyObject: false
+            }),
+            FORMATTING_OPTIONS
+          )
+        )
       }
     } catch (e) {
       //ignore error
     }
-  }, [data?.data?.content])
+  }, [data?.data?.content, dataV2?.data?.fileContent])
 
   React.useEffect(() => {
     if (showGitDiff) {
@@ -104,9 +138,8 @@ export function useGitDiffEditorDialog<T>(props: UseGitDiffEditorDialogProps<T>)
         style: Object.assign(omit(style, 'minHeight'), { width: 'calc(100vw - 100px)', height: 'calc(100vh - 100px)' })
       }
       setModalProps(expandedModalProps)
-      if (error?.message) {
-        modalErrorHandler?.showDanger(error.message || '')
-      }
+      const remoteFetchError = gitDetails?.isV2 ? error?.message : errorV2?.message
+      modalErrorHandler?.showDanger(defaultTo(remoteFetchError, ''))
     }
   }, [showGitDiff, error?.message])
 
@@ -117,11 +150,12 @@ export function useGitDiffEditorDialog<T>(props: UseGitDiffEditorDialogProps<T>)
       setShowGitDiff(false)
       setModalProps(defaultModalProps)
     }
+
     return (
       <Dialog {...modalProps}>
         <ModalErrorHandler bind={setModalErrorHandler} />
         <Button minimal icon="cross" iconProps={{ size: 18 }} className={css.crossIcon} onClick={closeHandler} />
-        {!error && loading ? (
+        {!(error || errorV2) && (loading || loadingV2) ? (
           <PageSpinner />
         ) : showGitDiff ? (
           <GitDiffEditor
@@ -129,7 +163,14 @@ export function useGitDiffEditorDialog<T>(props: UseGitDiffEditorDialogProps<T>)
             local={{ branch: getString('common.local'), content: entityAsYaml || '' }}
             onSave={_data => {
               try {
-                onSuccess(parse(_data) as T, data?.data?.objectId, gitDetails)
+                let objectId = data?.data?.objectId
+                if (gitDetails?.isV2) {
+                  objectId = dataV2?.data?.blobId
+                  gitDetails.resolvedConflictCommitId = dataV2?.data?.commitId
+                  delete gitDetails?.isV2
+                }
+
+                onSuccess(parse(_data) as T, objectId, gitDetails)
                 hideModal()
               } catch (e) {
                 //ignore e
@@ -164,19 +205,39 @@ export function useGitDiffEditorDialog<T>(props: UseGitDiffEditorDialogProps<T>)
     )
   }, [showGitDiff, modalProps, remoteVersion])
   return {
-    openGitDiffDialog: (_entity: T, _gitDetails?: GitData, _modalProps?: IDialogProps) => {
+    openGitDiffDialog: (
+      _entity: T,
+      _gitDetails?: GitData,
+      _storeMetadata?: StoreMetadata,
+      _modalProps?: IDialogProps
+    ) => {
       const { repoIdentifier = '', filePath = '', rootFolder = '', branch = '' } = _gitDetails || {}
-      fetchRemoteFileContent({
-        queryParams: {
-          ...commonParams,
-          yamlGitConfigIdentifier: repoIdentifier,
-          filePath: rootFolder?.concat(filePath) || '',
-          branch,
-          commitId: _gitDetails?.resolvedConflictCommitId
-        }
-      })
+
+      _gitDetails?.isV2
+        ? fetchRemoteFileContentByBranch({
+            queryParams: {
+              ...commonParams,
+              filePath: defaultTo(_storeMetadata?.filePath, ''),
+              branch,
+              ...pick(_storeMetadata, ['connectorRef', 'repoName'])
+            }
+          })
+        : fetchRemoteFileContent({
+            queryParams: {
+              ...commonParams,
+              yamlGitConfigIdentifier: repoIdentifier,
+              filePath: rootFolder?.concat(filePath) || '',
+              branch,
+              commitId: _gitDetails?.resolvedConflictCommitId
+            }
+          })
       try {
-        setEntityAsYaml(yamlStringify(sanitize(_entity), FORMATTING_OPTIONS))
+        setEntityAsYaml(
+          yamlStringify(
+            sanitize(_entity, { removeEmptyString: false, removeEmptyArray: false, removeEmptyObject: false }),
+            FORMATTING_OPTIONS
+          )
+        )
       } catch (e) {
         //ignore error
       }

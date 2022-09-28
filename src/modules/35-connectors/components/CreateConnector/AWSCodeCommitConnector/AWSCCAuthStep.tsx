@@ -38,11 +38,12 @@ import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/Rout
 import { useToaster } from '@common/exports'
 import { setSecretField } from '@secrets/utils/SecretField'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { FeatureFlag } from '@common/featureFlags'
-import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
+import { useConnectorWizard } from '../../CreateConnectorWizard/ConnectorWizardContext'
 import css from '../commonSteps/ConnectorCommonStyles.module.scss'
 
 interface AWSCCAuthStepProps extends StepProps<ConnectorConfigDTO> {
@@ -50,6 +51,7 @@ interface AWSCCAuthStepProps extends StepProps<ConnectorConfigDTO> {
   connectorInfo?: ConnectorInfoDTO
   onSuccess?: (data?: ConnectorRequestBody) => void | Promise<void>
   setIsEditMode: (val: boolean) => void
+  helpPanelReferenceId?: string
 }
 
 export default function AWSCCAuthStep(props: AWSCCAuthStepProps) {
@@ -66,10 +68,12 @@ export default function AWSCCAuthStep(props: AWSCCAuthStepProps) {
   })
   const { mutate: createConnector } = useCreateConnector({ queryParams: { accountIdentifier: accountId } })
   const { mutate: updateConnector } = useUpdateConnector({ queryParams: { accountIdentifier: accountId } })
-  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
-    errorOutOnGovernanceWarning: false,
-    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
+
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
   })
+
   useEffect(() => {
     ;(async () => {
       if (props.isEditMode) {
@@ -103,13 +107,17 @@ export default function AWSCCAuthStep(props: AWSCCAuthStepProps) {
       if (!props.isEditMode) {
         props.setIsEditMode(true)
       }
-      const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
-      if (canGoToNextStep) {
+      const onSucessCreateOrUpdateNextStep = () => {
         props.isEditMode
           ? showSuccess(getString('connectors.successfullUpdate', { name: formData.name }))
           : showSuccess(getString('connectors.successfullCreate', { name: formData.name }))
         props.onSuccess?.(response.data)
         props.nextStep?.({ ...props.prevStepData, ...formData })
+      }
+      if (response.data?.governanceMetadata) {
+        conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSucessCreateOrUpdateNextStep)
+      } else {
+        onSucessCreateOrUpdateNextStep()
       }
     } catch (e) {
       modalErrorHandler?.showDanger(getRBACErrorMessage(e))

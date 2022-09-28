@@ -9,7 +9,9 @@
 declare const styles: {
   readonly dataCard: string
   readonly executionCardContainer: string
+  readonly overide: string
   readonly pipelineExecutionsEmptyStateContainer: string
   readonly pipelineExecutionsEmptyStateImage: string
+  readonly searchIconStyle: string
 }
 export default styles

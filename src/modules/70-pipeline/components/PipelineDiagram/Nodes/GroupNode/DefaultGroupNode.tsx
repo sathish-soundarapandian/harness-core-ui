@@ -7,7 +7,7 @@
 
 import React, { CSSProperties } from 'react'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { debounce, defaultTo } from 'lodash-es'
 import { Icon, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
@@ -34,6 +34,9 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
     }
     setVisibilityOfAdd(visibility)
   }
+  const debounceHideVisibility = debounce(() => {
+    setVisibilityOfAdd(false)
+  }, 300)
   React.useEffect(() => {
     const currentNode = nodeRef.current
     const onMouseOver = (_e: MouseEvent): void => {
@@ -41,7 +44,7 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
     }
     const onMouseLeave = (_e: MouseEvent): void => {
       setTimeout(() => {
-        setAddVisibility(false)
+        debounceHideVisibility()
       }, 100)
     }
 
@@ -90,7 +93,7 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
       }}
       onDragLeave={event => {
         if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
-          setAddVisibility(false)
+          debounceHideVisibility()
         }
       }}
       onDrop={event => {

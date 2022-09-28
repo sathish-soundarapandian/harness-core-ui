@@ -21,7 +21,7 @@ exports[`GCR Step Edit View should render properly for AWS VMs build infra 1`] =
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="ciGcrStep_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -126,7 +126,7 @@ exports[`GCR Step Edit View should render properly for AWS VMs build infra 1`] =
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -235,7 +235,7 @@ exports[`GCR Step Edit View should render properly for AWS VMs build infra 1`] =
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                pipelineSteps.hostLabel
+                common.hostLabel
               </p>
             </div>
             <div

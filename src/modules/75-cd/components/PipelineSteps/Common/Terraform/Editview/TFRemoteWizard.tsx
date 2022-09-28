@@ -6,6 +6,7 @@
  */
 
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
@@ -20,17 +21,19 @@ import {
 } from '@wings-software/uicore'
 import React from 'react'
 import { Color } from '@harness/design-system'
-import { unset, map, defaultTo } from 'lodash-es'
+import { unset, map, defaultTo, get } from 'lodash-es'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { v4 as uuid } from 'uuid'
-import { FieldArray, FieldArrayRenderProps, Form } from 'formik'
+import { FieldArray, Form } from 'formik'
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { Connector, PathInterface, RemoteVar, TerraformStoreTypes } from '../TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -40,7 +43,7 @@ interface TFRemoteProps {
   onSubmitCallBack: (data: RemoteVar) => void
   isEditMode: boolean
   isReadonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
   previousStep,
@@ -98,50 +101,6 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
     { label: getString('gitFetchTypes.fromBranch'), value: getString('pipelineSteps.deploy.inputSet.branch') },
     { label: getString('gitFetchTypes.fromCommit'), value: getString('pipelineSteps.commitIdValue') }
   ]
-  /* istanbul ignore next */
-  const onDragStart = React.useCallback((event: React.DragEvent<HTMLDivElement>, index: number) => {
-    event.dataTransfer.setData('data', index.toString())
-    event.currentTarget.classList.add(css.dragging)
-  }, [])
-  /* istanbul ignore next */
-  const onDragEnd = React.useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    /* istanbul ignore next */
-    event.currentTarget.classList.remove(css.dragging)
-  }, [])
-  /* istanbul ignore next */
-  const onDragLeave = React.useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    event.currentTarget.classList.remove(css.dragOver)
-  }, [])
-
-  const onDragOver = React.useCallback((event: React.DragEvent<HTMLDivElement>) => {
-    /* istanbul ignore next */
-    if (event.preventDefault) {
-      event.preventDefault()
-    }
-    /* istanbul ignore next */
-    event.currentTarget.classList.add(css.dragOver)
-    /* istanbul ignore next */
-    event.dataTransfer.dropEffect = 'move'
-  }, [])
-
-  const onDrop = React.useCallback(
-    (event: React.DragEvent<HTMLDivElement>, arrayHelpers: FieldArrayRenderProps, droppedIndex: number) => {
-      /* istanbul ignore next */
-      if (event.preventDefault) {
-        event.preventDefault()
-      }
-      const data = event.dataTransfer.getData('data')
-      /* istanbul ignore next */
-      if (data) {
-        const index = parseInt(data, 10)
-        /* istanbul ignore next */
-        arrayHelpers.swap(index, droppedIndex)
-      }
-      /* istanbul ignore next */
-      event.currentTarget.classList.remove(css.dragOver)
-    },
-    []
-  )
 
   return (
     <Layout.Vertical spacing="xxlarge" padding="small" className={css.tfVarStore}>
@@ -165,7 +124,7 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
               spec: {
                 store: {
                   /* istanbul ignore next */
-                  type: payload.connectorRef?.connector?.type || prevStepData?.selectedType,
+                  type: prevStepData?.selectedType,
                   spec: {
                     ...payload.varFile.spec?.store?.spec,
                     connectorRef: payload.connectorRef
@@ -326,74 +285,97 @@ export const TFRemoteWizard: React.FC<StepProps<any> & TFRemoteProps> = ({
                   </div>
                 )}
                 <div className={cx(stepCss.formGroup)}>
-                  <MultiTypeFieldSelector
-                    name="varFile.spec.store.spec.paths"
-                    label={getString('filePaths')}
-                    style={{ width: 370 }}
-                    allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                  <DragDropContext
+                    onDragEnd={(result: DropResult) => {
+                      if (!result.destination) {
+                        return
+                      }
+                      const res = Array.from(get(formik.values, 'varFile.spec.store.spec.paths'))
+                      const [removed] = res.splice(result.source.index, 1)
+                      res.splice(result.destination.index, 0, removed)
+                      formik.setFieldValue('varFile.spec.store.spec.paths', res)
+                    }}
                   >
-                    <FieldArray
-                      name="varFile.spec.store.spec.paths"
-                      render={arrayHelpers => {
-                        const paths = defaultTo(formik.values?.varFile?.spec?.store?.spec?.paths, [{ path: '' }])
-                        return (
-                          <div>
-                            {map(paths, (path: PathInterface, index: number) => (
-                              <Layout.Horizontal
-                                key={`${path}-${index}`}
-                                flex={{ distribution: 'space-between' }}
-                                style={{ alignItems: 'end' }}
-                              >
-                                <Layout.Horizontal
-                                  spacing="medium"
-                                  style={{ alignItems: 'baseline' }}
-                                  className={css.tfContainer}
-                                  key={`${path}-${index}`}
-                                  draggable={true}
-                                  onDragEnd={onDragEnd}
-                                  onDragOver={onDragOver}
-                                  onDragLeave={onDragLeave}
-                                  /* istanbul ignore next */
-                                  onDragStart={event => {
-                                    /* istanbul ignore next */
-                                    onDragStart(event, index)
-                                  }}
-                                  /* istanbul ignore next */
-                                  onDrop={event => onDrop(event, arrayHelpers, index)}
-                                >
-                                  <Icon name="drag-handle-vertical" className={css.drag} />
-                                  <Text width={12}>{`${index + 1}.`}</Text>
-                                  <FormInput.MultiTextInput
-                                    name={`varFile.spec.store.spec.paths[${index}].path`}
-                                    label=""
-                                    multiTextInputProps={{
-                                      expressions,
-                                      allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
-                                    }}
-                                    style={{ width: 320 }}
-                                  />
-                                  <Button
-                                    minimal
-                                    icon="main-trash"
-                                    data-testid={`remove-header-${index}`}
-                                    onClick={() => arrayHelpers.remove(index)}
-                                  />
-                                </Layout.Horizontal>
-                              </Layout.Horizontal>
-                            ))}
-                            <Button
-                              icon="plus"
-                              variation={ButtonVariation.LINK}
-                              data-testid="add-header"
-                              onClick={() => arrayHelpers.push({ path: '' })}
-                            >
-                              {getString('cd.addTFVarFileLabel')}
-                            </Button>
-                          </div>
-                        )
-                      }}
-                    />
-                  </MultiTypeFieldSelector>
+                    <Droppable droppableId="droppable">
+                      {(provided, _snapshot) => (
+                        <div {...provided.droppableProps} ref={provided.innerRef}>
+                          <MultiTypeFieldSelector
+                            name="varFile.spec.store.spec.paths"
+                            label={getString('filePaths')}
+                            style={{ width: 370 }}
+                            defaultValueToReset={[{ path: '', uuid: '' }]}
+                            allowedTypes={
+                              (allowableTypes as MultiTypeInputType[]).filter(
+                                item => item !== MultiTypeInputType.EXPRESSION
+                              ) as AllowedTypes
+                            }
+                          >
+                            <FieldArray
+                              name="varFile.spec.store.spec.paths"
+                              render={arrayHelpers => {
+                                const paths = defaultTo(formik.values?.varFile?.spec?.store?.spec?.paths, [
+                                  { path: '', uuid: uuid() }
+                                ])
+                                return (
+                                  <div>
+                                    {map(paths, (_, index: number) => (
+                                      <Draggable key={index} draggableId={`${index}`} index={index}>
+                                        {(providedDrag, snapshot) => (
+                                          <Layout.Horizontal
+                                            flex={{ distribution: 'space-between', alignItems: 'flex-start' }}
+                                            key={index}
+                                            ref={providedDrag.innerRef}
+                                            {...providedDrag.draggableProps}
+                                            {...providedDrag.dragHandleProps}
+                                          >
+                                            <Layout.Horizontal
+                                              spacing="medium"
+                                              style={{ alignItems: 'baseline' }}
+                                              className={cx({ [css.dragging]: snapshot.isDragging })}
+                                            >
+                                              <Icon name="drag-handle-vertical" className={css.drag} />
+                                              <Text width={12}>{`${index + 1}.`}</Text>
+                                              <FormInput.MultiTextInput
+                                                name={`varFile.spec.store.spec.paths[${index}].path`}
+                                                label=""
+                                                multiTextInputProps={{
+                                                  expressions,
+                                                  allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                                    item => !isMultiTypeRuntime(item)
+                                                  ) as AllowedTypes
+                                                }}
+                                                style={{ width: 320 }}
+                                              />
+                                              <Button
+                                                minimal
+                                                icon="main-trash"
+                                                data-testid={`remove-header-${index}`}
+                                                onClick={() => arrayHelpers.remove(index)}
+                                              />
+                                            </Layout.Horizontal>
+                                          </Layout.Horizontal>
+                                        )}
+                                      </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                    <Button
+                                      icon="plus"
+                                      variation={ButtonVariation.LINK}
+                                      data-testid="add-header"
+                                      onClick={() => arrayHelpers.push({ path: '' })}
+                                    >
+                                      {getString('cd.addTFVarFileLabel')}
+                                    </Button>
+                                  </div>
+                                )
+                              }}
+                            />
+                          </MultiTypeFieldSelector>
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+
                   {getMultiTypeFromValue(formik.values?.varFile?.spec?.store?.spec?.paths) ===
                     MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions

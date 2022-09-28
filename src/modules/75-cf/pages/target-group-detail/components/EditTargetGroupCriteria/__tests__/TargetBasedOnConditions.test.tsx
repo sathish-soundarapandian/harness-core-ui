@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 /* eslint-disable react/display-name */
 import React from 'react'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
@@ -36,7 +43,13 @@ const renderComponent = (props: Partial<TargetBasedOnConditionsProps> = {}): Ren
       queryParams={{ environment: 'env' }}
     >
       <Formik formName="test" onSubmit={jest.fn()} initialValues={props.values || { rules: [] }}>
-        {({ values }) => <TargetBasedOnConditions targetGroup={{ environment: 'env' } as Segment} values={values} />}
+        {({ values, setFieldValue }) => (
+          <TargetBasedOnConditions
+            targetGroup={{ environment: 'env' } as Segment}
+            values={values}
+            setFieldValue={setFieldValue}
+          />
+        )}
       </Formik>
     </TestWrapper>
   )
@@ -94,7 +107,7 @@ describe('TargetBasedOnConditions', () => {
     renderComponent({ values: { rules } })
 
     expect(screen.getByTestId('rule-rows')).toBeInTheDocument()
-    expect(screen.getByTestId('rule-rows').children).toHaveLength(rules.length * 2)
+    expect(screen.getByTestId('rule-rows').children).toHaveLength(rules.length * 3)
     expect(screen.getAllByRole('button', { name: 'cf.segmentDetail.removeRule' })).toHaveLength(rules.length)
   })
 
@@ -116,7 +129,7 @@ describe('TargetBasedOnConditions', () => {
     userEvent.click(btnEl)
 
     await waitFor(() => {
-      expect(screen.getByTestId('rule-rows').children).toHaveLength((rules.length - 1) * 2)
+      expect(screen.getByTestId('rule-rows').children).toHaveLength((rules.length - 1) * 3)
       expect(screen.getAllByRole('button', { name: 'cf.segmentDetail.removeRule' })).toHaveLength(rules.length - 1)
     })
   })
@@ -130,8 +143,28 @@ describe('TargetBasedOnConditions', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('rule-rows')).toBeInTheDocument()
-      expect(screen.getByTestId('rule-rows').children).toHaveLength(2)
+      expect(screen.getByTestId('rule-rows').children).toHaveLength(3)
       expect(screen.getAllByRole('button', { name: 'cf.segmentDetail.removeRule' })).toHaveLength(1)
     })
+  })
+
+  test('it should display the OR indicator when there are more than 1 conditions', async () => {
+    renderComponent()
+
+    expect(screen.queryAllByText('common.or')).toHaveLength(0)
+
+    const addRowBtn = screen.getByRole('button', { name: 'plus cf.segmentDetail.addRule' })
+
+    userEvent.click(addRowBtn)
+    expect(screen.queryAllByText('common.or')).toHaveLength(0)
+
+    userEvent.click(addRowBtn)
+    await waitFor(() => expect(screen.queryAllByText('common.or')).toHaveLength(0))
+
+    userEvent.click(addRowBtn)
+    await waitFor(() => expect(screen.queryAllByText('common.or')).toHaveLength(1))
+
+    userEvent.click(addRowBtn)
+    await waitFor(() => expect(screen.queryAllByText('common.or')).toHaveLength(2))
   })
 })

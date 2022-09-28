@@ -7,7 +7,17 @@
 
 import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { SelectOption, FormInput, MultiTypeInputType, FormError, MultiTypeInput, Label } from '@wings-software/uicore'
+import {
+  SelectOption,
+  FormInput,
+  MultiTypeInputType,
+  FormError,
+  MultiTypeInput,
+  Text,
+  RUNTIME_INPUT_VALUE,
+  AllowedTypes
+} from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { getPlaceholder, getTypeOfInput, setAppDynamicsApplication } from '../../AppDHealthSource.utils'
@@ -22,8 +32,9 @@ interface AppDApplicationsInterface {
   refetchTier: any
   setCustomFieldAndValidation: any
   isTemplate?: boolean
+  expressions?: string[]
   applicationError?: string
-  allowedTypes?: MultiTypeInputType[]
+  allowedTypes?: AllowedTypes
 }
 
 export default function AppDApplications({
@@ -34,6 +45,7 @@ export default function AppDApplications({
   refetchTier,
   setCustomFieldAndValidation,
   isTemplate,
+  expressions,
   allowedTypes,
   applicationError
 }: AppDApplicationsInterface): JSX.Element {
@@ -66,9 +78,12 @@ export default function AppDApplications({
 
   return isTemplate ? (
     <>
-      <Label>{getString('cv.healthSource.connectors.AppDynamics.applicationLabel')}</Label>
+      <Text color={Color.BLACK} margin={{ bottom: 'small' }}>
+        {getString('cv.healthSource.connectors.AppDynamics.applicationLabel')}
+      </Text>
       <MultiTypeInput
         key={inputType}
+        data-testid="appdApplication"
         name={'appdApplication'}
         placeholder={getPlaceholder(
           applicationLoading,
@@ -82,14 +97,14 @@ export default function AppDApplications({
         allowableTypes={allowedTypes}
         value={setAppDynamicsApplication(formikAppDynamicsValue, applicationOptions, inputType)}
         style={{ width: '300px' }}
-        expressions={[]}
+        expressions={expressions}
         onChange={(item, _valueType, multiType) => {
           if (inputType !== multiType) {
             setInputType(multiType)
           }
           const selectedItem = item as string | SelectOption
           const selectedValue = typeof selectedItem === 'string' ? selectedItem : selectedItem?.label?.toString()
-          if (selectedValue && selectedValue !== '<+input>' && !/^</.test(selectedValue)) {
+          if (selectedValue && selectedValue !== RUNTIME_INPUT_VALUE && !/^</.test(selectedValue)) {
             refetchTier({
               queryParams: {
                 appName: selectedValue,
@@ -100,7 +115,7 @@ export default function AppDApplications({
           setCustomFieldAndValidation(selectedValue, true)
         }}
       />
-      {applicationError && <FormError name={'appdApplication'} errorMessage={applicationError} />}
+      {applicationError && <FormError name="appdApplication" errorMessage={applicationError} />}
     </>
   ) : (
     <FormInput.Select

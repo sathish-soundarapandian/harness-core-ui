@@ -18,7 +18,8 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   Icon,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import React, { useEffect, useState } from 'react'
@@ -32,6 +33,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import {
   formatInitialValues,
   terraformArtifactorySchema,
@@ -84,7 +86,7 @@ interface TFArtifactoryProps {
   onSubmitCallBack: (data: any, prevStepData?: any) => void
   isConfig: boolean
   isTerraformPlan: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = ({
@@ -236,7 +238,9 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                       placeholder={getString('cd.selectRepository')}
                       multiTextInputProps={{
                         expressions,
-                        allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                        allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                          item => !isMultiTypeRuntime(item)
+                        ) as AllowedTypes
                       }}
                     />
                   )}
@@ -260,7 +264,11 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                   <MultiTypeFieldSelector
                     name={tfArtifactoryFormInputNames(isConfig).artifactPaths}
                     style={{ width: 370 }}
-                    allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                    allowedTypes={
+                      (allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.EXPRESSION
+                      ) as AllowedTypes
+                    }
                     label={
                       <Text flex={{ inline: true }}>
                         {getString(isConfig ? 'pipeline.artifactPathLabel' : 'cd.artifactPaths')}
@@ -274,7 +282,9 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                         label=""
                         multiTextInputProps={{
                           expressions,
-                          allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                          allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                            item => !isMultiTypeRuntime(item)
+                          ) as AllowedTypes
                         }}
                       />
                     ) : (
@@ -310,9 +320,9 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
                                       label=""
                                       multiTextInputProps={{
                                         expressions,
-                                        allowableTypes: allowableTypes.filter(
-                                          item => item !== MultiTypeInputType.RUNTIME
-                                        )
+                                        allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                          item => !isMultiTypeRuntime(item)
+                                        ) as AllowedTypes
                                       }}
                                       style={{ width: 320 }}
                                     />

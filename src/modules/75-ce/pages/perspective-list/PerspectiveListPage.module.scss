@@ -17,6 +17,19 @@
   }
 }
 
+.pageContainer {
+  --page-header-height: 138px;
+  .bodyWrapper {
+    height: calc(var(--page-min-height) - var(--page-header-height));
+
+    .listContainer {
+      flex: 1;
+      height: 100%;
+      overflow: scroll;
+    }
+  }
+}
+
 .limitWarningTooltipCtn {
   max-width: 250px;
 }
@@ -45,17 +58,4 @@
     border-radius: 10px;
     cursor: pointer;
   }
-}
-
-.excludeSideNavOverlay {
-  :global {
-    .bp3-overlay-backdrop,
-    .bp3-overlay {
-      left: 270px;
-    }
-  }
-}
-
-.bodyWrapper {
-  height: calc(100vh - 73px);
 }

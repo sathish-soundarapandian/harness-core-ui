@@ -239,6 +239,17 @@ describe('Save Cache S3 Step', () => {
                   localName: 'step.saveCacheS3.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.saveCacheS3.identifier',
+                      localName: 'step.saveCacheS3.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-timeout': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.saveCacheS3.timeout',
@@ -321,6 +332,7 @@ describe('Save Cache S3 Step', () => {
             },
             variablesData: {
               type: StepType.SaveCacheS3,
+              __uuid: 'step-identifier',
               identifier: 'saveCacheS3',
               name: 'step-name',
               timeout: 'step-timeout',

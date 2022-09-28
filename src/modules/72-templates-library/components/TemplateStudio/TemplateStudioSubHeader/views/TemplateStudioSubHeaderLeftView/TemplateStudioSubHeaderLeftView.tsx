@@ -11,27 +11,28 @@ import {
   ButtonSize,
   ButtonVariation,
   Container,
-  DropDown,
   Icon,
   Layout,
   SelectOption,
   Text,
-  VisualYamlSelectedView as SelectedView,
-  useConfirmationDialog
+  useConfirmationDialog,
+  VisualYamlSelectedView as SelectedView
 } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color } from '@harness/design-system'
-import { useParams, useHistory } from 'react-router-dom'
-import { defaultTo, isEmpty, isNil, merge } from 'lodash-es'
-import { Dialog } from '@blueprintjs/core'
+import { useHistory, useParams } from 'react-router-dom'
+import { isEmpty, isNil } from 'lodash-es'
+import { Dialog, Spinner } from '@blueprintjs/core'
+import classNames from 'classnames'
 import {
   Fields,
   ModalProps,
   PromiseExtraArgs,
-  TemplateConfigModal
+  Intent,
+  TemplateConfigModalWithRef
 } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { TagsPopover, useToaster } from '@common/components'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import type {
   GitQueryParams,
@@ -41,24 +42,19 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import routes from '@common/RouteDefinitions'
-import { useUpdateStableTemplate, NGTemplateInfoConfig } from 'services/template-ng'
+import { NGTemplateInfoConfig, useUpdateStableTemplate } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
 import type { UseSaveSuccessResponse } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import StudioGitPopover from '@pipeline/components/PipelineStudio/StudioGitPopover'
+import { VersionsDropDown } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
 import css from './TemplateStudioSubHeaderLeftView.module.scss'
-
-interface TemplateWithGitContextFormProps extends NGTemplateInfoConfig {
-  repo?: string
-  branch?: string
-}
 
 export interface TemplateStudioSubHeaderLeftViewProps {
   onGitBranchChange?: (selectedFilter: GitFilterScope) => void
@@ -67,16 +63,28 @@ export interface TemplateStudioSubHeaderLeftViewProps {
 export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLeftViewProps) => JSX.Element = ({
   onGitBranchChange
 }) => {
-  const { state, updateTemplate, deleteTemplateCache, fetchTemplate, view, isReadonly, setLoading, updateGitDetails } =
-    React.useContext(TemplateContext)
-  const { template, versions, stableVersion, isUpdated, gitDetails } = state
-  const { accountId, projectIdentifier, orgIdentifier, module, templateType, templateIdentifier } = useParams<
+  const {
+    state,
+    updateTemplate,
+    deleteTemplateCache,
+    fetchTemplate,
+    view,
+    isReadonly,
+    updateGitDetails,
+    updateStoreMetadata
+  } = React.useContext(TemplateContext)
+  const { template, versions, stableVersion, isUpdated, gitDetails, storeMetadata, templateYamlError } = state
+  const { accountId, projectIdentifier, orgIdentifier, module, templateIdentifier } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
   const { updateQueryParams } = useUpdateQueryParams<TemplateStudioQueryParams>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { isGitSyncEnabled } = React.useContext(AppStoreContext)
-  const iconColor = templateFactory.getTemplateColor(templateType) || Color.BLACK
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingTemplatesGitx
+  } = React.useContext(AppStoreContext)
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [modalProps, setModalProps] = React.useState<ModalProps>()
   const isYaml = view === SelectedView.YAML
   const history = useHistory()
@@ -98,74 +106,62 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
     requestOptions: { headers: { 'content-type': 'application/json' } }
   })
 
-  const [showConfigModal, hideConfigModal] = useModalHook(
-    () => (
-      <Dialog enforceFocus={false} isOpen={true} className={css.createTemplateDialog}>
-        {modalProps && (
-          <TemplateConfigModal
-            initialValues={merge(template, {
-              repo: defaultTo(gitDetails.repoIdentifier, ''),
-              branch: defaultTo(gitDetails.branch, '')
-            })}
-            onClose={onCloseCreate}
-            modalProps={modalProps}
-            showGitFields={true}
-            gitDetails={gitDetails as IGitContextFormProps}
-          />
-        )}
-      </Dialog>
-    ),
-    [template, modalProps]
-  )
+  const navigateToTemplatesListPage = React.useCallback(() => {
+    history.push(routes.toTemplates({ orgIdentifier, projectIdentifier, accountId, module }))
+  }, [history, routes.toTemplates, orgIdentifier, projectIdentifier, accountId, module])
 
-  const onCloseCreate = React.useCallback(() => {
-    if (template.identifier === DefaultNewTemplateId) {
-      history.push(routes.toTemplates({ orgIdentifier, projectIdentifier, accountId, module }))
+  const [showConfigModal, hideConfigModal] = useModalHook(() => {
+    const onCloseCreate = () => {
+      if (template.identifier === DefaultNewTemplateId) {
+        navigateToTemplatesListPage()
+      }
+      hideConfigModal()
     }
-    hideConfigModal()
-  }, [
-    accountId,
-    hideConfigModal,
-    history,
-    module,
-    orgIdentifier,
-    template.identifier,
-    projectIdentifier,
-    routes.toTemplates
-  ])
+
+    return (
+      <Dialog
+        enforceFocus={false}
+        isOpen={true}
+        className={classNames(css.createTemplateDialog, {
+          [css.gitCreateTemplateDialog]: supportingTemplatesGitx
+        })}
+      >
+        {modalProps && <TemplateConfigModalWithRef {...modalProps} onClose={onCloseCreate} />}
+      </Dialog>
+    )
+  }, [template.identifier, navigateToTemplatesListPage, modalProps])
 
   const onSubmit = React.useCallback(
     async (data: NGTemplateInfoConfig, extraInfo: PromiseExtraArgs): Promise<UseSaveSuccessResponse> => {
-      let { updatedGitDetails } = extraInfo
+      const { updatedGitDetails } = extraInfo
       template.name = data.name
       template.description = data.description
       template.identifier = data.identifier
       template.tags = data.tags ?? {}
       template.versionLabel = data.versionLabel
-      delete (template as TemplateWithGitContextFormProps).repo
-      delete (template as TemplateWithGitContextFormProps).branch
+      template.orgIdentifier = data.orgIdentifier
+      template.projectIdentifier = data.projectIdentifier
 
       try {
         await updateTemplate(template)
-        if (updatedGitDetails) {
-          if (gitDetails?.objectId) {
-            updatedGitDetails = { ...gitDetails, ...updatedGitDetails }
-          }
-          updateGitDetails(updatedGitDetails).then(() => {
-            if (updatedGitDetails) {
-              updateQueryParams(
-                { repoIdentifier: updatedGitDetails.repoIdentifier, branch: updatedGitDetails.branch },
-                { skipNulls: true }
-              )
-            }
+
+        if (extraInfo.storeMetadata) {
+          updateStoreMetadata(extraInfo.storeMetadata, updatedGitDetails)
+        } else {
+          updateGitDetails(isEmpty(updatedGitDetails) ? {} : { ...gitDetails, ...updatedGitDetails }).then(() => {
+            updateQueryParams(
+              { repoIdentifier: updatedGitDetails?.repoIdentifier, branch: updatedGitDetails?.branch },
+              { skipNulls: true }
+            )
           })
         }
+
         return { status: 'SUCCESS' }
       } catch (error) {
         return { status: 'ERROR' }
       }
     },
-    [template]
+    [template, gitDetails]
   )
 
   const goToTemplateVersion = async (versionLabel: string): Promise<void> => {
@@ -206,19 +202,12 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
       await fetchTemplate({ forceFetch: true, forceUpdate: true })
     } catch (error) {
       showError(
-        getRBACErrorMessage(error) || getString('common.template.updateTemplate.errorWhileUpdating'),
+        getRBACErrorMessage(error as RBACError) || getString('common.template.updateTemplate.errorWhileUpdating'),
         undefined,
         'template.save.template.error'
       )
-      setLoading(false)
     }
   }
-
-  React.useEffect(() => {
-    if (updateStableTemplateLoading) {
-      setLoading(true)
-    }
-  }, [updateStableTemplateLoading])
 
   React.useEffect(() => {
     const newVersionOption: SelectOption[] = versions.map(item => {
@@ -235,8 +224,15 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
     if (template.identifier === DefaultNewTemplateId && !isEmpty(template.type)) {
       hideConfigModal()
       setModalProps({
-        title: getString('templatesLibrary.createNewModal.heading', { entity: template.type }),
-        promise: onSubmit
+        initialValues: template,
+        promise: onSubmit,
+        title: getString('templatesLibrary.createNewModal.heading', {
+          entity: templateFactory.getTemplateLabel(template.type)
+        }),
+        intent: Intent.START,
+        allowScopeChange: true,
+        storeMetadata,
+        gitDetails
       })
       showConfigModal()
     }
@@ -247,7 +243,7 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
       <Layout.Horizontal spacing={'medium'} padding={{ right: 'medium' }} flex={{ alignItems: 'center' }}>
         <Container>
           <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
-            <Icon color={iconColor} name="template-library" size={20} />
+            <Icon name="template-library" size={20} />
             <Text
               className={css.templateName}
               color={Color.GREY_700}
@@ -257,8 +253,9 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
               {template.name}
             </Text>
             {!isNil(template?.tags) && !isEmpty(template?.tags) && <TagsPopover tags={template.tags} />}
-            {isGitSyncEnabled && onGitBranchChange && (
+            {(isGitSyncEnabled || supportingTemplatesGitx) && onGitBranchChange && (
               <StudioGitPopover
+                connectorRef={storeMetadata?.connectorRef}
                 gitDetails={gitDetails}
                 identifier={templateIdentifier}
                 isReadonly={isReadonly}
@@ -277,13 +274,16 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
                 withoutCurrentColor
                 onClick={() => {
                   setModalProps({
-                    title: getString('templatesLibrary.createNewModal.editHeading', { entity: template.type }),
+                    initialValues: template,
                     promise: onSubmit,
-                    onSuccess: () => {
-                      hideConfigModal()
-                    },
+                    ...(templateIdentifier !== DefaultNewTemplateId && { gitDetails }),
+                    title: getString('templatesLibrary.createNewModal.editHeading', { entity: template.type }),
+                    intent: templateIdentifier === DefaultNewTemplateId ? Intent.START : Intent.EDIT,
                     disabledFields:
-                      templateIdentifier === DefaultNewTemplateId ? [] : [Fields.VersionLabel, Fields.Identifier]
+                      templateIdentifier === DefaultNewTemplateId ? [] : [Fields.VersionLabel, Fields.Identifier],
+                    allowScopeChange: templateIdentifier === DefaultNewTemplateId,
+                    storeMetadata,
+                    gitDetails
                   })
                   showConfigModal()
                 }}
@@ -298,21 +298,31 @@ export const TemplateStudioSubHeaderLeftView: (props: TemplateStudioSubHeaderLef
           </Layout.Horizontal>
         </Container>
         {templateIdentifier !== DefaultNewTemplateId && (
-          <DropDown
+          <VersionsDropDown
             onChange={item => goToTemplateVersion(item.value.toString())}
             items={versionOptions}
             value={template.versionLabel}
-            filterable={false}
             className={css.versionDropDown}
+            stableVersion={stableVersion}
+            popoverClassName={css.dropdown}
           />
         )}
-        {template.versionLabel !== stableVersion && !isUpdated && !isReadonly && (
-          <Button
-            onClick={openConfirmationDialog}
-            variation={ButtonVariation.LINK}
-            size={ButtonSize.SMALL}
-            text={getString('common.setAsStable')}
-          />
+        {updateStableTemplateLoading ? (
+          <Container padding={{ right: 'large', left: 'large' }}>
+            <Spinner size={Spinner.SIZE_SMALL} />
+          </Container>
+        ) : (
+          template.versionLabel !== stableVersion &&
+          !isUpdated &&
+          !templateYamlError && (
+            <Button
+              onClick={openConfirmationDialog}
+              variation={ButtonVariation.LINK}
+              size={ButtonSize.SMALL}
+              disabled={isReadonly}
+              text={getString('common.setAsStable')}
+            />
+          )
         )}
       </Layout.Horizontal>
     </Container>

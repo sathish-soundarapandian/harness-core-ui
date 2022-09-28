@@ -28,12 +28,12 @@ import type { DatadogMetricInfo } from '@cv/pages/health-source/connectors/Datad
 
 describe('Validate DatadogMetricsHealthSource Utils', () => {
   test('validate health source data to DatadogSetupSource mapping', () => {
-    expect(mapDatadogMetricHealthSourceToDatadogMetricSetupSource(DatadogMetricsMockHealthSourceData)).toEqual(
+    expect(mapDatadogMetricHealthSourceToDatadogMetricSetupSource(DatadogMetricsMockHealthSourceData, false)).toEqual(
       DatadogMetricsSetupSource
     )
   })
   test('validate DatadogSetupSource to HealthSource mapping', () => {
-    expect(mapDatadogMetricSetupSourceToDatadogHealthSource(DatadogMetricsSetupSource)).toEqual(
+    expect(mapDatadogMetricSetupSourceToDatadogHealthSource(DatadogMetricsSetupSource, false)).toEqual(
       DatadogMetricsHealthSourceMock
     )
   })
@@ -59,7 +59,9 @@ describe('Validate DatadogMetricsHealthSource Utils', () => {
   test('should detect identifier duplicates', () => {
     const metricWithSameIdentifierToCheck = {
       ...DatadogMetricsSetupSource.metricDefinition.get('mock_metric_path'),
-      metricPath: 'mock_metric_path_changed'
+      metricPath: 'mock_metric_path_changed',
+      ignoreThresholds: [],
+      failFastThresholds: []
     }
     DatadogMetricsSetupSource.metricDefinition.set('mock_metric_path_changed', metricWithSameIdentifierToCheck)
     expect(getIsAllIDsUnique(DatadogMetricsSetupSource.metricDefinition, metricWithSameIdentifierToCheck!)).toEqual(
@@ -71,7 +73,9 @@ describe('Validate DatadogMetricsHealthSource Utils', () => {
     const metricWithDiffIdentifierToCheck = {
       ...DatadogMetricsSetupSource.metricDefinition.get('mock_metric_path'),
       identifier: 'unique_identifier',
-      metricPath: 'mock_metric_path_changed'
+      metricPath: 'mock_metric_path_changed',
+      ignoreThresholds: [],
+      failFastThresholds: []
     }
     DatadogMetricsSetupSource.metricDefinition.set('mock_metric_path_changed', metricWithDiffIdentifierToCheck)
     expect(getIsAllIDsUnique(DatadogMetricsSetupSource.metricDefinition, metricWithDiffIdentifierToCheck)).toEqual(true)
@@ -92,12 +96,14 @@ describe('Validate DatadogMetricsHealthSource Utils', () => {
       query: '', // pass empty query for validation
       metricName: '',
       metric: '',
-      groupName: { label: '', value: '' }
+      groupName: { label: '', value: '' },
+      ignoreThresholds: [],
+      failFastThresholds: []
     }
     const allSelectedMetrics = DatadogMetricsSetupSource.metricDefinition
     allSelectedMetrics.set('mock_metric_path_changed', metricToCheck)
     // should give us error for empty query
-    expect(validate(metricToCheck, allSelectedMetrics, getStringMock)).toEqual({
+    expect(validate(metricToCheck, allSelectedMetrics, getStringMock, false)).toEqual({
       ...METRIC_VALIDATION_RESULT,
       query: 'query not valid',
       sli: 'SLI, CV or HealthScore must be selected',

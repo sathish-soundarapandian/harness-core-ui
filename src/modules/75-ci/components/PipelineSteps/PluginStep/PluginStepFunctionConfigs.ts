@@ -38,6 +38,10 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.ReportPaths
   },
   {
+    name: 'spec.entrypoint',
+    type: TransformValuesTypes.List
+  },
+  {
     name: 'spec.settings',
     type: TransformValuesTypes.Map
   },
@@ -97,6 +101,11 @@ export const editViewValidateFieldsConfig = [
     type: ValidationFieldTypes.Map
   },
   {
+    label: 'entryPointLabel',
+    name: 'spec.entrypoint',
+    type: ValidationFieldTypes.List
+  },
+  {
     label: 'pipeline.stepCommonFields.runAsUser',
     name: 'spec.runAsUser',
     type: ValidationFieldTypes.Numeric
@@ -138,6 +147,10 @@ export function getInputSetViewValidateFieldsConfig(
     {
       name: 'spec.settings',
       type: ValidationFieldTypes.Map
+    },
+    {
+      name: 'spec.entrypoint',
+      type: ValidationFieldTypes.List
     },
     {
       name: 'spec.imagePullPolicy',

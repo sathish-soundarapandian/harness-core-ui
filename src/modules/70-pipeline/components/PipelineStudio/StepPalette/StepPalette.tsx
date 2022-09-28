@@ -98,6 +98,7 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
         toShow.push(...(stepCat?.stepCategories || []))
       }
     })
+
     if (toShow) {
       setStepsCategories(toShow)
       setOriginalCategories(toShow)

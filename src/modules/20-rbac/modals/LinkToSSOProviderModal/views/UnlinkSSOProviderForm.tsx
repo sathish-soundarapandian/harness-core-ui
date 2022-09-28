@@ -61,10 +61,10 @@ const UnlinkSSOProviderForm: React.FC<UnlinkSSOProviderModalData> = props => {
     try {
       const created = await unlinkSsoGroup({ headers: { 'content-type': 'application/json' } } as any)
       if (created) {
-        showSuccess(getString('rbac.userGroupPage.successMessage', { name: userGroupData.ssoGroupName }))
+        showSuccess(getString('rbac.userGroupPage.unlinkSuccessMessage', { name: userGroupData.ssoGroupName }))
         onSubmit?.()
       }
-    } catch (err) {
+    } /* istanbul ignore next */ catch (err) {
       if (shouldShowError(err)) {
         modalErrorHandler?.showDanger(getRBACErrorMessage(err))
       }

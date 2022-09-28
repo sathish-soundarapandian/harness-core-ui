@@ -1,0 +1,288 @@
+// /*
+//  * Copyright 2021 Harness Inc. All rights reserved.
+//  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+//  * that can be found in the licenses directory at the root of this repository, also available at
+//  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+//  */
+
+.active {
+  background: rgb(4, 120, 213) !important;
+  color: var(--white) !important;
+}
+
+.docker {
+  border-radius: 20px !important;
+  margin-left: 20px !important;
+  color: var(--black);
+}
+
+.kubernetes {
+  border-radius: 20px !important;
+  color: var(--black);
+}
+
+.dangerColor {
+  color: 'rgba(207, 35, 24, 1)' !important;
+  padding-top: 4px !important;
+}
+
+.textPadding {
+  padding: 10px !important;
+}
+
+.danger {
+  background-color: rgb(252, 237, 236) !important;
+  height: auto;
+  width: 100% !important;
+  padding-left: 10px !important;
+}
+.success {
+  background-color: rgba(228, 247, 225, 1) !important;
+  height: auto;
+  width: 100% !important;
+  padding-left: 10px !important;
+}
+
+.buildImg {
+  padding: 10px;
+  height: 100px;
+  width: 100px;
+}
+
+.marginTop {
+  margin-top: 30px !important;
+}
+.page {
+  height: var(--page-min-height);
+}
+.checkItemsWrapper {
+  align-items: center !important;
+  padding: 0px var(--spacing-xxxlarge) !important;
+  margin-left: -37px !important;
+}
+
+.checkIcon {
+  margin-right: var(--spacing-xxsmall) !important;
+}
+
+.collapseDiv div {
+  border-top: none;
+  padding: 0;
+}
+
+.downloadButton {
+  padding: var(--spacing-small) !important;
+  border: 1px solid rgb(4, 120, 213) !important;
+  margin-right: 30px !important;
+  border-radius: 5px;
+}
+.previewButton {
+  padding: var(--spacing-small) !important;
+  border: none;
+}
+
+.spacing {
+  padding-bottom: 30px !important;
+}
+
+.verificationField {
+  box-shadow: 0px 0px 5px rgba(40, 41, 61, 0.0348285);
+  background: rgb(239, 251, 255) !important;
+  border-radius: 4px !important;
+  height: 40px !important;
+}
+.dangerDialog {
+  box-shadow: 0px 0px 5px rgba(40, 41, 61, 0.0348285);
+  height: 84px;
+  width: 550px;
+  background: rgb(227, 73, 73) !important;
+}
+.successDialog {
+  box-shadow: 0px 0px 5px rgba(40, 41, 61, 0.0348285);
+  height: 84px;
+  width: 550px;
+  background: rgb(121, 229, 121) !important;
+}
+.panelLeft {
+  margin-right: 41px !important;
+}
+.titleYAMLVerification {
+  color: rgb(34, 39, 45) !important;
+  font-weight: 600 !important;
+}
+.descriptionVerificationWrapper {
+  padding: 10px 0px !important;
+}
+.verificationFieldWrapper {
+  align-items: center !important;
+  padding: 10px 0px !important;
+}
+
+.borderBottom {
+  margin-top: 30px !important;
+  margin-bottom: 40px !important;
+  width: 100%;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.borderTop {
+  margin-top: 40px !important;
+  width: 100%;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.secondaryHeader {
+  padding-bottom: 15px !important;
+}
+
+.containerPadding {
+  padding-top: var(--spacing-xxlarge) !important;
+  padding-bottom: 56px !important;
+}
+
+.subHeading {
+  padding-bottom: 24px !important;
+  letter-spacing: 0.2px;
+}
+
+.progressContainer {
+  align-content: center;
+  position: relative;
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 2rem;
+  color: rgb(255, 255, 255);
+  background: rgb(93, 92, 176);
+}
+.progress {
+  position: relative;
+  padding-left: 41px !important;
+  margin: 2rem 0 0;
+  list-style: none;
+}
+.progress__item {
+  position: relative;
+  min-height: 75px;
+  counter-increment: list;
+  padding-left: 0.5rem;
+  justify-content: center;
+  align-content: center;
+}
+.progress__item:before {
+  content: '';
+  position: absolute;
+  left: -1.7rem;
+  top: 25px;
+  height: 97%;
+  width: 1px;
+  border-left: 1px solid rgb(217, 218, 229);
+}
+.progress__item:after {
+  content: counter(list);
+  position: absolute;
+  top: -2px;
+  left: -2.5rem;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: transparent;
+  color: rgb(255, 255, 255);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5rem;
+  text-align: center;
+  border: 1px solid rgb(10, 25, 48);
+}
+.progress__item:last-child:before {
+  border: none;
+}
+.progress__item.progress__item--active:after {
+  background: var(--black);
+  color: var(--white);
+  font-weight: bold;
+}
+.progress__title {
+  padding: 0.4rem 0 0.5rem;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.progress__info {
+  font-size: 13px;
+}
+
+.iconPadding {
+  margin-right: 15px !important;
+}
+
+.spinner {
+  width: 100%;
+  height: 100%;
+
+  > div {
+    position: relative !important;
+  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.troubleShoot {
+  :first-child {
+    padding-left: 0px !important;
+  }
+  .podCmndVerification {
+    padding-left: 10px !important;
+  }
+}
+
+.successPadding {
+  padding: 20px 10px 10px 10px !important;
+}
+
+.bodyClass {
+  height: calc(92% - 200px);
+  overflow-y: auto;
+}
+.footer {
+  display: flex;
+  border-top: 1px solid var(--grey-200);
+  position: absolute;
+  top: 90%;
+  align-items: center;
+  width: 40%;
+}
+
+.borderBottomClass {
+  margin-top: 20px !important;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.marginBottomClass {
+  margin-bottom: 20px !important;
+}
+
+.marginTopClass {
+  margin-top: 30px;
+  border-bottom: 1px solid var(--grey-200);
+}
+
+.createPipelineBtn {
+  margin-left: 20px !important;
+}
+
+.tabs {
+  position: absolute;
+  top: 157px;
+}
+
+.hover {
+  cursor: pointer;
+}
+
+.hover:hover {
+  text-decoration: underline;
+}

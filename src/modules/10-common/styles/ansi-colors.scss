@@ -26,11 +26,17 @@ $colors: (
 
 @each $key, $val in $colors {
   .ansi-#{$key}-fg {
-    color: $val !important;
+    &,
+    & * {
+      color: $val !important;
+    }
   }
 
   .ansi-#{$key}-bg {
-    background-color: $val !important;
+    &,
+    & * {
+      background-color: $val !important;
+    }
   }
 }
 

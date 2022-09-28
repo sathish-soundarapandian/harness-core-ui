@@ -21,7 +21,11 @@ import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { Callout } from '@blueprintjs/core'
 import LandingDashboardFactory from '@common/factories/LandingDashboardFactory'
-import { LandingDashboardContextProvider, useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
+import {
+  LandingDashboardContextProvider,
+  TimeRangeToDays,
+  useLandingDashboardContext
+} from '@common/factories/LandingDashboardContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
@@ -49,11 +53,12 @@ const LandingDashboardPage: React.FC = () => {
   const name = currentUserInfo.name || currentUserInfo.email
 
   const { selectedTimeRange } = useLandingDashboardContext()
+  const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
   const { data, loading, error, refetch } = useGetCounts({
     queryParams: {
       accountIdentifier: accountId,
-      startTime: selectedTimeRange.range[0]?.getTime() || 0,
-      endTime: selectedTimeRange.range[1]?.getTime() || 0
+      startTime: range[0],
+      endTime: range[1]
     }
   })
 
@@ -61,15 +66,19 @@ const LandingDashboardPage: React.FC = () => {
     refetch({
       queryParams: {
         accountIdentifier: accountId,
-        startTime: selectedTimeRange.range[0]?.getTime() || 0,
-        endTime: selectedTimeRange.range[1]?.getTime() || 0
+        startTime: Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000,
+        endTime: Date.now()
       }
     })
 
   if (View.Welcome === view) {
     return <LandingDashboardWelcomeView setView={setView} />
   } else if (loading) {
-    return <PageSpinner />
+    return (
+      <PageBody>
+        <PageSpinner />
+      </PageBody>
+    )
   } else {
     const projetCount = data?.data?.response?.projectsCountDetail?.count
     return data && projetCount ? (
@@ -117,7 +126,9 @@ const LandingDashboardPage: React.FC = () => {
         </PageBody>
       </LandingDashboardContextProvider>
     ) : (error || data?.data?.executionStatus) !== 'SUCCESS' ? (
-      <PageError message={data?.data?.executionMessage} onClick={retry} />
+      <PageBody>
+        <PageError message={data?.data?.executionMessage} onClick={retry} />
+      </PageBody>
     ) : (
       <LandingDashboardWelcomeView setView={setView} />
     )

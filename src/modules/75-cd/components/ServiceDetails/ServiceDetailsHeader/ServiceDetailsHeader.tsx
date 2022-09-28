@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useImperativeHandle } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
@@ -17,15 +17,19 @@ import { useGetServiceHeaderInfo } from 'services/cd-ng'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import type { ModulePathParams, ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import type { ServiceHeaderRefetchRef } from '@cd/components/Services/ServiceStudio/ServiceStudio'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
 import css from '@cd/components/ServiceDetails/ServiceDetailsHeader/ServiceDetailsHeader.module.scss'
 
-export const ServiceDetailsHeader: React.FC = () => {
+export const ServiceDetailsHeader = (
+  _props: unknown,
+  ref: React.ForwardedRef<ServiceHeaderRefetchRef>
+): JSX.Element => {
   const { accountId, orgIdentifier, projectIdentifier, serviceId, module } = useParams<
     ProjectPathProps & ModulePathParams & ServicePathProps
   >()
   const { getString } = useStrings()
-  const { loading, error, data } = useGetServiceHeaderInfo({
+  const { loading, error, data, refetch } = useGetServiceHeaderInfo({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
@@ -33,6 +37,13 @@ export const ServiceDetailsHeader: React.FC = () => {
       serviceId
     }
   })
+
+  //handler for attaching refetch function to the parent ref
+  useImperativeHandle(ref, () => ({
+    refetchData() {
+      refetch()
+    }
+  }))
 
   useDocumentTitle([data?.data?.name || getString('services')])
 
@@ -109,3 +120,5 @@ export const ServiceDetailsHeader: React.FC = () => {
     />
   )
 }
+
+export const ServiceDetailHeaderRef = React.forwardRef(ServiceDetailsHeader)

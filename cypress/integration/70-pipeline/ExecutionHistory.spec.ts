@@ -1,6 +1,14 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import {
   accountId,
   executionHistoryRoute,
+  executionMetadata,
   orgIdentifier,
   pipelineExecutionCall,
   pipelineExecutionSummaryAPI,
@@ -18,7 +26,7 @@ describe('Pipeline Execution History', () => {
       return false
     })
     cy.initializeRoute()
-    cy.visit(executionHistoryRoute, {
+    cy.visit(`${executionHistoryRoute}?listview=true`, {
       timeout: 30000
     })
   })
@@ -39,19 +47,18 @@ describe('Pipeline Execution History', () => {
 
   // Toolbar
   it('interacts with page subheader toolbar', () => {
-    // Fixtures
-    cy.intercept(pipelineSummaryCallAPI, {
-      fixture: 'pipeline/api/executionHistory/executionSummary.json'
-    }).as('executionSummary')
-
     cy.intercept(pipelineExecutionSummaryAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
     }).as('executionSummary')
     cy.visitPageAssertion()
     // Check Run button in header
-    cy.get('.PageSubHeader--container').within(() => {
-      cy.findByText('Run').click()
-    })
+    cy.wait('@executionSummary')
+
+    cy.get('.PageSubHeader--container')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Run').click()
+      })
     cy.get('.RunPipelineForm-module_footer_BfhlT2').within(() => {
       cy.findByText('Run Pipeline').should('exist')
       cy.findByText('Cancel').should('exist')
@@ -60,17 +67,13 @@ describe('Pipeline Execution History', () => {
 
     // Check my deployments
     cy.get('.PageSubHeader--container').within(() => {
-      cy.get('input[type=checkbox]').should('not.be.checked')
       cy.findByText('My Deployments').click()
-      cy.get('input[type=checkbox]').should('be.checked')
       cy.url().should('contain', 'myDeployments=true')
       cy.findByText('My Deployments').click()
       cy.url().should('not.contain', 'myDeployments=true')
-    })
 
-    // Check status
-    cy.get('.PageSubHeader--container').within(() => {
-      cy.findByText('Status').click()
+      cy.wait('@executionSummary')
+      cy.get('[data-testid="status-select"]').click()
     })
 
     cy.get('.bp3-menu > :nth-child(1)')
@@ -79,63 +82,12 @@ describe('Pipeline Execution History', () => {
       .url({ decode: true })
       .should('contain', 'status[0]=Aborted')
 
-    cy.get('.bp3-menu > :nth-child(2)')
-      .should('contain', 'Expired')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[1]=Expired')
-
     cy.get('.bp3-menu > :nth-child(3)')
       .should('contain', 'Failed')
       .click()
       .url({ decode: true })
-      .should('contain', 'status[2]=Failed')
-
-    cy.get('.bp3-menu > :nth-child(4)')
-      .should('contain', 'Running')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[3]=Running')
-
-    cy.get('.bp3-menu > :nth-child(5)')
-      .should('contain', 'Success')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[4]=Success')
-
-    cy.get('.bp3-menu > :nth-child(6)')
-      .should('contain', 'Approval Rejected')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[5]=ApprovalRejected')
-
-    cy.get('.MultiSelectDropDown--counter').should('contain', 6)
-
-    cy.get('.bp3-menu > :nth-child(7)')
-      .should('contain', 'Paused')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[6]=Paused')
-
-    cy.get('.bp3-menu > :nth-child(8)')
-      .should('contain', 'Waiting on approval')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[7]=ApprovalWaiting')
-
-    cy.get('.bp3-menu > :nth-child(9)')
-      .should('contain', 'Waiting on intervention')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[8]=InterventionWaiting')
-
-    cy.get('.bp3-menu > :nth-child(10)')
-      .should('contain', 'Waiting for resources')
-      .click()
-      .url({ decode: true })
-      .should('contain', 'status[9]=ResourceWaiting')
-
-    cy.get('.MultiSelectDropDown--counter').should('contain', 10)
+      .should('contain', 'status[1]=Failed')
+    cy.get('.MultiSelectDropDown--counter').should('contain', 2)
     cy.get('body').click(0, 0)
 
     // Check search
@@ -153,7 +105,7 @@ describe('Pipeline Execution History', () => {
     }).as('pipelineHealth')
 
     cy.visitPageAssertion()
-    cy.get('[class*=PipelineDeploymentList-module_healthAndExecutions] > :nth-child(1)').within(() => {
+    cy.findByTestId('health-and-executions').within(() => {
       cy.findByText('Pipeline health').should('exist')
       cy.findByText('Last 30 days').click()
       cy.findByText('Last 60 days').click({ force: true })
@@ -190,7 +142,7 @@ describe('Pipeline Execution History', () => {
     }).as('pipelineExecution')
 
     cy.visitPageAssertion()
-    cy.get('[class*=PipelineDeploymentList-module_healthAndExecutions] > :nth-child(2)').within(() => {
+    cy.findByTestId('health-and-executions').within(() => {
       cy.findByText('Executions').should('exist')
       cy.findByText('# of executions').should('exist')
       cy.findByText('Date').should('exist')
@@ -208,7 +160,7 @@ describe('Pipeline Execution History', () => {
   })
 
   // Execution List
-  it('loads successful, aborted and failed pipelines', () => {
+  it.skip('loads successful, aborted and failed pipelines', () => {
     // Fixtures
     cy.intercept('GET', pipelineSummaryCallAPI, {
       fixture: 'pipeline/api/executionHistory/executionSummary.json'
@@ -227,7 +179,7 @@ describe('Pipeline Execution History', () => {
       cy.findByText('Duration: 11s').should('exist')
       cy.findByText('John Doe').should('exist')
 
-      cy.get('[class^=ExecutionActions]').click()
+      cy.get('[class^=ExecutionActions]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('not.exist')
     cy.get('body').type('{esc}')
@@ -244,7 +196,7 @@ describe('Pipeline Execution History', () => {
       cy.findByText('Duration: 8s').should('exist')
       cy.findByText('John Doe').should('exist')
 
-      cy.get('[class^=ExecutionActions]').click()
+      cy.get('[class^=ExecutionActions]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('exist')
     cy.get('body').type('{esc}')
@@ -263,7 +215,7 @@ describe('Pipeline Execution History', () => {
       cy.findByText('Services deployed (1)').should('exist')
       cy.findByText('Environments (1)').should('exist')
 
-      cy.get('[class^=ExecutionActions]').click()
+      cy.get('[class^=ExecutionActions]').click({ force: true })
     })
     cy.findByText('Retry Failed Pipeline').should('exist')
     cy.get('body').type('{esc}')
@@ -273,5 +225,35 @@ describe('Pipeline Execution History', () => {
       `account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/og6igi2RRcWUVLPqUUeAHQ/pipeline`
     )
     cy.go('back')
+  })
+
+  it('Compare various executions', () => {
+    cy.intercept('GET', pipelineSummaryCallAPI, {
+      fixture: 'pipeline/api/executionHistory/executionSummary.json'
+    }).as('executionSummary')
+    cy.intercept('POST', pipelineExecutionSummaryAPI, {
+      fixture: 'pipeline/api/executionHistory/executionSummary.json'
+    }).as('executionListSummary')
+    cy.intercept('GET', executionMetadata, {
+      fixture: 'pipeline/api/pipelineExecution/executionMetadata.json'
+    }).as('executionMetadata')
+
+    cy.visitPageAssertion()
+    cy.wait('@executionListSummary')
+    cy.findAllByRole('button', {
+      name: /execution menu actions/i
+    })
+      .first()
+      .click()
+    cy.findByText('Compare Executions').click()
+    cy.findByRole('button', {
+      name: /compare/i
+    }).should('be.disabled')
+    cy.findAllByRole('checkbox').eq(1).click({ force: true })
+    cy.findByRole('button', {
+      name: /compare/i
+    }).click()
+    cy.wait('@executionMetadata')
+    cy.findAllByRole('heading', { name: 'testPipeline_Cypress' }).should('have.length', 2)
   })
 })

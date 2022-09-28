@@ -16,6 +16,8 @@ interface UseFeatureEnabledReturn {
   enabledByPermission: boolean
   enabledByPlanEnforcement: boolean
   featureEnabled: boolean
+  canEdit: boolean
+  canToggle: boolean
 }
 
 const useFeatureEnabled = (): UseFeatureEnabledReturn => {
@@ -27,21 +29,25 @@ const useFeatureEnabled = (): UseFeatureEnabledReturn => {
     }
   })
 
-  const [hasPermission] = usePermission(
+  const [canEdit, canToggle] = usePermission(
     {
       resource: {
         resourceType: ResourceType.ENVIRONMENT,
         resourceIdentifier: activeEnvironment
       },
-      permissions: [PermissionIdentifier.TOGGLE_FF_FEATUREFLAG]
+      permissions: [PermissionIdentifier.EDIT_FF_FEATUREFLAG, PermissionIdentifier.TOGGLE_FF_FEATUREFLAG]
     },
     [activeEnvironment]
   )
 
+  const hasPermission = canEdit || canToggle
+
   return {
     enabledByPermission: hasPermission,
     enabledByPlanEnforcement,
-    featureEnabled: hasPermission && enabledByPlanEnforcement
+    featureEnabled: hasPermission && enabledByPlanEnforcement,
+    canEdit,
+    canToggle
   }
 }
 

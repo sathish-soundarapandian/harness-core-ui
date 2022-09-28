@@ -15,10 +15,11 @@ import {
   Intent
 } from '@harness/uicore'
 import { get, isEqual, set } from 'lodash-es'
+import produce from 'immer'
 
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
-import type { PipelineInfoConfig, StageElementWrapperConfig, StageElementConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementWrapperConfig, StageElementConfig } from 'services/pipeline-ng'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import {
   PipelineVariablesContextProvider,
@@ -29,6 +30,7 @@ import PipelineCard, {
   PipelineCardProps
 } from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/PipelineCard'
 import StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import VariableAccordionSummary from './VariableAccordionSummary'
@@ -155,7 +157,7 @@ export function PipelineVariablesWithRef(
                   <PipelineCardPanel
                     variablePipeline={variablesPipeline}
                     originalPipeline={originalPipeline}
-                    pipeline={pipeline}
+                    pipeline={pipelineAsState}
                     stepsFactory={stepsFactory}
                     updatePipeline={updatePipeline}
                     metadataMap={metadataMap}
@@ -181,11 +183,7 @@ export function PipelineVariablesWithRef(
   )
 }
 
-export interface PipelineCardPanelProps extends PipelineCardProps {
-  originalPipeline: PipelineInfoConfig
-}
-
-export function PipelineCardPanel(props: PipelineCardPanelProps): React.ReactElement {
+export function PipelineCardPanel(props: PipelineCardProps): React.ReactElement {
   const {
     variablePipeline,
     pipeline,
@@ -215,12 +213,14 @@ export function PipelineCardPanel(props: PipelineCardPanelProps): React.ReactEle
 
   const updateStage = React.useCallback(
     async (values: StageElementConfig) => {
-      if (pipeline.stages) {
-        set(pipeline, 'stages', updateStages(values, pipeline.stages))
-        updatePipeline(pipeline)
-      }
+      const newPipeline = produce<PipelineInfoConfig>(pipeline, draft => {
+        if (draft.stages) {
+          set(draft, 'stages', updateStages(values, draft.stages))
+        }
+      })
+      updatePipeline(newPipeline)
     },
-    [pipeline, updatePipeline]
+    [pipeline, updatePipeline, updateStages]
   )
 
   const stagesCards: JSX.Element[] = []
@@ -273,6 +273,7 @@ export function PipelineCardPanel(props: PipelineCardPanelProps): React.ReactEle
     <>
       <PipelineCard
         variablePipeline={variablePipeline}
+        originalPipeline={originalPipeline}
         pipeline={pipeline}
         stepsFactory={stepsFactory}
         updatePipeline={updatePipeline}
@@ -287,12 +288,16 @@ export function PipelineCardPanel(props: PipelineCardPanelProps): React.ReactEle
 }
 
 function PipelineVariablesWrapperWithRef(
-  props: { pipeline?: PipelineInfoConfig },
+  props: { pipeline?: PipelineInfoConfig; storeMetadata?: StoreMetadata },
   ref: React.ForwardedRef<PipelineVariablesRef>
 ): React.ReactElement {
   return (
     <NestedAccordionProvider>
-      <PipelineVariablesContextProvider pipeline={props.pipeline} enablePipelineTemplatesResolution>
+      <PipelineVariablesContextProvider
+        pipeline={props.pipeline}
+        enablePipelineTemplatesResolution
+        storeMetadata={props.storeMetadata}
+      >
         <PipelineVariables ref={ref} />
       </PipelineVariablesContextProvider>
     </NestedAccordionProvider>

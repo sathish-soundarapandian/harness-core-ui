@@ -5,18 +5,24 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, isEmpty } from 'lodash-es'
-import type { SelectOption } from '@wings-software/uicore'
+import { cloneDeep, isEmpty, isEqual } from 'lodash-es'
+import { RUNTIME_INPUT_VALUE, SelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
-import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
+import type {
+  RowData,
+  SourceDataInterface,
+  UpdatedHealthSource
+} from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import type { DynatraceHealthSourceSpec, DynatraceServiceDTO } from 'services/cv'
 import type {
   DynatraceFormDataInterface,
   DynatraceMetricData,
   DynatraceMetricInfo,
-  InitDynatraceCustomMetricInterface
+  InitDynatraceCustomMetricInterface,
+  PersistCustomMetricInterface,
+  PersistFuntionNotEqualHelperProps
 } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.types'
-import type { StringKeys } from 'framework/strings'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import { DynatraceProductNames } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 import {
   DynatraceHealthSourceFieldNames,
@@ -29,22 +35,38 @@ import {
   validateMetricPackData
 } from '@cv/pages/health-source/common/utils/HealthSource.utils'
 import { validateCommonCustomMetricFields } from '@cv/pages/health-source/common/CustomMetric/CustomMetric.utils'
+import {
+  getFilteredMetricThresholdValues,
+  getMetricPacksForPayload,
+  validateCommonFieldsForMetricThreshold
+} from '../../common/MetricThresholds/MetricThresholds.utils'
+import {
+  MetricThresholdPropertyName,
+  MetricThresholdTypes
+} from '../../common/MetricThresholds/MetricThresholds.constants'
+import type { CustomSelectedAndMappedMetrics } from '../../common/CustomMetric/CustomMetric.types'
 
-export const mapDynatraceMetricDataToHealthSource = (dynatraceMetricData: DynatraceMetricData): UpdatedHealthSource => {
+export const mapDynatraceMetricDataToHealthSource = (
+  dynatraceMetricData: DynatraceMetricData,
+  isMetricThresholdEnabled: boolean
+): UpdatedHealthSource => {
+  const dynatraceMetricDataSelectedServiceValue =
+    typeof dynatraceMetricData.selectedService !== 'string'
+      ? dynatraceMetricData?.selectedService?.value
+      : dynatraceMetricData.selectedService
+  const dynatraceMetricDataSelectedServiceLabel =
+    typeof dynatraceMetricData.selectedService !== 'string'
+      ? dynatraceMetricData.selectedService.label
+      : dynatraceMetricData.selectedService
   const specPayload: DynatraceHealthSourceSpec = {
-    connectorRef: dynatraceMetricData.connectorRef,
-    serviceId: dynatraceMetricData.selectedService.value as string,
-    serviceName: dynatraceMetricData.selectedService.label as string,
+    connectorRef:
+      typeof dynatraceMetricData?.connectorRef === 'string'
+        ? dynatraceMetricData?.connectorRef
+        : dynatraceMetricData?.connectorRef?.value,
+    serviceId: dynatraceMetricDataSelectedServiceValue as string,
+    serviceName: dynatraceMetricDataSelectedServiceLabel as string,
     feature: DynatraceProductNames.APM,
-    metricPacks: Object.entries(dynatraceMetricData.metricData)
-      .map(item => {
-        return item[1]
-          ? {
-              identifier: item[0]
-            }
-          : {}
-      })
-      .filter(item => !isEmpty(item)),
+    metricPacks: getMetricPacksForPayload(dynatraceMetricData, isMetricThresholdEnabled),
     metricDefinitions: [],
     serviceMethodIds: dynatraceMetricData.serviceMethods
   }
@@ -60,25 +82,34 @@ export const mapDynatraceMetricDataToHealthSource = (dynatraceMetricData: Dynatr
     spec: specPayload
   }
 }
-export const mapHealthSourceToDynatraceMetricData = (sourceData: any): DynatraceMetricData => {
-  const healthSource: UpdatedHealthSource = sourceData.healthSourceList.find(
+export const mapHealthSourceToDynatraceMetricData = (
+  sourceData: SourceDataInterface,
+  isMetricThresholdEnabled: boolean
+): DynatraceMetricData => {
+  const healthSource: UpdatedHealthSource = (sourceData.healthSourceList as RowData[]).find(
     (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
-  )
+  ) as UpdatedHealthSource
   const dynatraceHealthSourceSpec = (healthSource?.spec as DynatraceHealthSourceSpec) || {}
   const { serviceName = '', serviceId = '', serviceMethodIds, metricPacks } = dynatraceHealthSourceSpec
-
+  const isServiceNameFixed = getMultiTypeFromValue(serviceName) === MultiTypeInputType.FIXED
   const metricDefinitions = dynatraceHealthSourceSpec.metricDefinitions || []
   const dynatraceMetricData: DynatraceMetricData = {
-    product: sourceData.product,
-    healthSourceName: sourceData.healthSourceName,
-    healthSourceIdentifier: sourceData.healthSourceIdentifier,
-    connectorRef: sourceData.connectorRef,
+    product: sourceData.product as SelectOption,
+    healthSourceName: sourceData.healthSourceName as string,
+    healthSourceIdentifier: sourceData.healthSourceIdentifier as string,
+    connectorRef: sourceData.connectorRef as string | { value?: string | undefined },
     isEdit: sourceData.isEdit,
-    selectedService: { label: serviceName, value: serviceId },
+    selectedService: isServiceNameFixed ? { label: serviceName, value: serviceId } : serviceName,
     metricPacks,
     metricData: convertMetricPackToMetricData(metricPacks),
     serviceMethods: serviceMethodIds,
-    customMetrics: new Map()
+    customMetrics: new Map(),
+    ignoreThresholds: isMetricThresholdEnabled
+      ? getFilteredMetricThresholdValues(MetricThresholdTypes.IgnoreThreshold, metricPacks)
+      : [],
+    failFastThresholds: isMetricThresholdEnabled
+      ? getFilteredMetricThresholdValues(MetricThresholdTypes.FailImmediately, metricPacks)
+      : []
   }
 
   for (const metricDefinition of metricDefinitions) {
@@ -98,7 +129,10 @@ export const mapDynatraceDataToDynatraceForm = (
   selectedMetric: string,
   showCustomMetric: boolean
 ): DynatraceFormDataInterface => {
-  const metricIdentifier = selectedMetric.split(' ').join('_')
+  const currentMetricValue = mappedMetrics.get(selectedMetric)
+  const metricIdentifier = !currentMetricValue?.identifier
+    ? selectedMetric?.split(' ')?.join('_')
+    : currentMetricValue?.identifier
   return {
     ...dynatraceMetricData,
     ...mappedMetrics.get(selectedMetric),
@@ -118,19 +152,48 @@ export function mapServiceListToOptions(services: DynatraceServiceDTO[]): Select
   })
 }
 
+const validateMetricThresholds = (
+  errors: Record<string, string>,
+  values: any,
+  getString: UseStringsReturn['getString']
+): void => {
+  // ignoreThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.IgnoreThreshold,
+    errors,
+    values[MetricThresholdPropertyName.IgnoreThreshold],
+    getString,
+    true
+  )
+
+  // failFastThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.FailFastThresholds,
+    errors,
+    values[MetricThresholdPropertyName.FailFastThresholds],
+    getString,
+    true
+  )
+}
+
 export const validateMapping = (
   dynatraceMetricData: DynatraceFormDataInterface,
   createdMetrics: string[],
   selectedMetricIndex: number,
   getString: (key: StringKeys) => string,
-  mappedMetrics: Map<string, DynatraceMetricInfo>
+  mappedMetrics: Map<string, DynatraceMetricInfo>,
+  isMetricThresholdEnabled: boolean
 ): ((key: string) => string) => {
   let errors = {} as any
 
   if (!dynatraceMetricData.showCustomMetric) {
     errors = validateMetricPackData(dynatraceMetricData.metricData, getString, errors)
   }
-  if (!dynatraceMetricData.selectedService.value || dynatraceMetricData.selectedService.value === 'loading') {
+  const metricDataSelectedService =
+    typeof dynatraceMetricData.selectedService !== 'string'
+      ? dynatraceMetricData?.selectedService?.value
+      : dynatraceMetricData.selectedService
+  if (!metricDataSelectedService || metricDataSelectedService === 'loading') {
     errors[DynatraceHealthSourceFieldNames.DYNATRACE_SELECTED_SERVICE] = getString(
       'cv.healthSource.connectors.Dynatrace.validations.selectedService'
     )
@@ -146,6 +209,11 @@ export const validateMapping = (
       mappedMetrics
     )
   }
+
+  if (isMetricThresholdEnabled) {
+    validateMetricThresholds(errors, dynatraceMetricData, getString)
+  }
+
   return errors
 }
 
@@ -158,8 +226,8 @@ export const validateDynatraceCustomMetricFields = (
   mappedMetrics?: Map<string, DynatraceMetricInfo>
 ): ((key: string) => string) => {
   const errorsToReturn = cloneDeep(errors)
-
-  if (!values.metricSelector) {
+  const isMetricSelectorFixed = getMultiTypeFromValue(values.metricSelector) === MultiTypeInputType.FIXED
+  if (!values.metricSelector && isMetricSelectorFixed) {
     if (values.isManualQuery) {
       errorsToReturn[DynatraceHealthSourceFieldNames.METRIC_SELECTOR] = getString(
         'cv.monitoringSources.gco.manualInputQueryModal.validation.query'
@@ -169,7 +237,7 @@ export const validateDynatraceCustomMetricFields = (
         'cv.monitoringSources.metricValidation'
       )
     }
-  } else if (!values.metricSelector.includes(QUERY_CONTAINS_SERVICE_VALIDATION_PARAM)) {
+  } else if (isMetricSelectorFixed && !values?.metricSelector?.includes(QUERY_CONTAINS_SERVICE_VALIDATION_PARAM)) {
     errorsToReturn[DynatraceHealthSourceFieldNames.METRIC_SELECTOR] = `${getString(
       'cv.monitoringSources.datadog.validation.queryContains'
     )}${QUERY_CONTAINS_SERVICE_VALIDATION_PARAM}`
@@ -189,30 +257,8 @@ export const onSubmitDynatraceData = (
   formik: FormikProps<DynatraceFormDataInterface>,
   mappedMetrics: Map<string, DynatraceMetricInfo>,
   selectedMetric: string,
-  selectedMetricIndex: number,
-  createdMetrics: string[],
-  getString: (key: StringKeys) => string,
   onSubmit: (healthSourcePayload: DynatraceMetricData) => void
 ): void => {
-  formik.setTouched({
-    ...formik.touched,
-    [DynatraceHealthSourceFieldNames.DYNATRACE_SELECTED_SERVICE]: true,
-    [DynatraceHealthSourceFieldNames.METRIC_DATA]: { Performance: true },
-    [DynatraceHealthSourceFieldNames.METRIC_NAME]: true,
-    [DynatraceHealthSourceFieldNames.IDENTIFIER]: true,
-    [DynatraceHealthSourceFieldNames.METRIC_SELECTOR]: true,
-    [DynatraceHealthSourceFieldNames.ACTIVE_METRIC_SELECTOR]: true,
-    [DynatraceHealthSourceFieldNames.GROUP_NAME]: true,
-    [DynatraceHealthSourceFieldNames.SLI]: true,
-    [DynatraceHealthSourceFieldNames.CONTINUOUS_VERIFICATION]: true,
-    [DynatraceHealthSourceFieldNames.LOWER_BASELINE_DEVIATION]: true,
-    [DynatraceHealthSourceFieldNames.RISK_CATEGORY]: true
-  })
-  const errors = validateMapping(formik.values, createdMetrics, selectedMetricIndex, getString, mappedMetrics)
-  if (Object.keys(errors).length > 0) {
-    formik.validateForm()
-    return
-  }
   const updatedMetric = formik.values
   if (updatedMetric.metricName) {
     mappedMetrics.set(selectedMetric, updatedMetric)
@@ -233,5 +279,109 @@ export const defaultDynatraceCustomMetric = (
     metricName: getString('cv.healthSource.connectors.Dynatrace.defaultMetricName'),
     isNew: true,
     groupName: { label: '', value: '' }
+  }
+}
+
+export const setApplicationIfConnectorIsInput = (
+  isConnectorRuntimeOrExpression: boolean,
+  dynatraceMetricFormData: any,
+  setDynatraceMetricData: (data: any) => void,
+  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
+): void => {
+  if (isConnectorRuntimeOrExpression) {
+    let selectedService = dynatraceMetricFormData?.selectedService
+    let metricSelector = dynatraceMetricFormData?.metricSelector
+    if (
+      dynatraceMetricFormData.selectedService === undefined ||
+      getMultiTypeFromValue(dynatraceMetricFormData.selectedService) === MultiTypeInputType.FIXED
+    ) {
+      selectedService = RUNTIME_INPUT_VALUE
+    }
+    if (
+      dynatraceMetricFormData.selectedService === undefined ||
+      getMultiTypeFromValue(dynatraceMetricFormData.selectedService) === MultiTypeInputType.FIXED
+    ) {
+      dynatraceMetricFormData.customMetrics.set(dynatraceMetricFormData.metricName, {
+        ...dynatraceMetricFormData.customMetrics.get(dynatraceMetricFormData.metricName),
+        metricSelector: RUNTIME_INPUT_VALUE
+      })
+      metricSelector = RUNTIME_INPUT_VALUE
+    }
+    setDynatraceMetricData({
+      ...dynatraceMetricFormData,
+      selectedService,
+      metricSelector,
+      serviceMethods: []
+    })
+    setMappedMetrics({
+      selectedMetric: dynatraceMetricFormData.metricName,
+      mappedMetrics: dynatraceMetricFormData.customMetrics
+    })
+  }
+}
+
+function getIsStateAndFormValuesAreNotEqual({
+  areAllFilled,
+  selectedMetric,
+  metricName,
+  nonCustomMetricValuesFromState,
+  nonCustomValuesFromSelectedMetric
+}: PersistFuntionNotEqualHelperProps): boolean {
+  return (
+    areAllFilled &&
+    selectedMetric === metricName &&
+    !isEqual(nonCustomMetricValuesFromState, nonCustomValuesFromSelectedMetric)
+  )
+}
+
+// Temproary fix to persist data
+export const persistCustomMetric = ({
+  mappedMetrics,
+  selectedMetric,
+  dynatraceMetricData,
+  formikValues,
+  setMappedMetrics
+}: PersistCustomMetricInterface): void => {
+  const mapValue = mappedMetrics.get(selectedMetric) as unknown as DynatraceMetricData
+  if (!isEmpty(mapValue)) {
+    const { selectedService, metricPacks, metricData, ignoreThresholds, failFastThresholds } = mapValue
+    const nonCustomValuesFromSelectedMetric = {
+      selectedService,
+      metricPacks,
+      metricData,
+      ignoreThresholds,
+      failFastThresholds
+    }
+
+    const nonCustomMetricValuesFromState = {
+      selectedService: dynatraceMetricData?.selectedService,
+      metricPacks: dynatraceMetricData?.metricPacks,
+      metricData: dynatraceMetricData?.metricData,
+      ignoreThresholds: dynatraceMetricData?.ignoreThresholds,
+      failFastThresholds: dynatraceMetricData?.failFastThresholds
+    }
+
+    const areAllFilled = Boolean(
+      nonCustomValuesFromSelectedMetric.selectedService && nonCustomValuesFromSelectedMetric.metricData
+    )
+    if (
+      getIsStateAndFormValuesAreNotEqual({
+        areAllFilled,
+        selectedMetric,
+        metricName: formikValues?.metricName,
+        nonCustomMetricValuesFromState,
+        nonCustomValuesFromSelectedMetric
+      })
+    ) {
+      const clonedMappedMetrics = cloneDeep(mappedMetrics)
+      clonedMappedMetrics.forEach((data, key) => {
+        if (selectedMetric === data.metricName) {
+          clonedMappedMetrics.set(selectedMetric, { ...formikValues, ...nonCustomMetricValuesFromState })
+        } else {
+          clonedMappedMetrics.set(key, { ...data, ...nonCustomMetricValuesFromState })
+        }
+      })
+      setMappedMetrics({ selectedMetric: selectedMetric, mappedMetrics: clonedMappedMetrics })
+    }
   }
 }

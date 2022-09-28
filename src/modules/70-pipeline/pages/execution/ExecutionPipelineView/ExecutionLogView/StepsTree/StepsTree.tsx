@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { Icon, Text, IconName } from '@wings-software/uicore'
+import { Text } from '@wings-software/uicore'
 import cx from 'classnames'
-import { get, mapKeys, omit, defaultTo } from 'lodash-es'
+import { get, omit, defaultTo } from 'lodash-es'
 
 import type { ExecutionNode, InterruptEffectDTO } from 'services/pipeline-ng'
 import { String, useStrings } from 'framework/strings'
@@ -17,27 +17,21 @@ import type {
   ExecutionPipelineNode
 } from '@pipeline/components/ExecutionStageDiagram/ExecutionPipelineModel'
 import { Duration } from '@common/components'
-import { ExecutionStatusIconMap } from '@pipeline/utils/executionUtils'
 import {
   isExecutionRunning,
   isExecutionSuccess,
   isExecutionNotStarted,
   isExecutionQueued,
-  ExecutionStatusEnum
+  ExecutionStatusEnum,
+  ExecutionStatus
 } from '@pipeline/utils/statusHelpers'
+import { getStepsTreeStatus } from '@pipeline/utils/executionUtils'
+import { StatusIcon } from './StatusIcon'
 
 import css from './StepsTree.module.scss'
 
 function getRetryInterrupts(step: ExecutionPipelineNode<ExecutionNode>): InterruptEffectDTO[] {
   return defaultTo(step?.item?.data?.interruptHistories, []).filter(row => row.interruptType === 'RETRY')
-}
-
-const IconMap: Record<string, IconName> = {
-  ...mapKeys(ExecutionStatusIconMap, (_value, key) => key.toLowerCase()),
-  running: 'spinner',
-  asyncwaiting: 'spinner',
-  timedwaiting: 'spinner',
-  taskwaiting: 'spinner'
 }
 
 export interface StepsTreeProps {
@@ -71,7 +65,8 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
     <ul className={css.root}>
       {nodes.map((step, i) => {
         if (step.item) {
-          const statusLower = step.item.status.toLowerCase()
+          const status = getStepsTreeStatus({ step, allNodeMap }) || step.item.status
+          const statusLower = status.toLowerCase()
           const retryInterrupts = getRetryInterrupts(step)
 
           if (retryInterrupts.length > 0) {
@@ -110,7 +105,7 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
             return (
               <li key={step.item.identifier} className={css.item} data-type="retry-item">
                 <div className={css.step} data-status={statusLower}>
-                  <Icon className={css.icon} name={IconMap[statusLower]} />
+                  <StatusIcon className={css.icon} status={status as ExecutionStatus} />
                   <Text lineClamp={1} className={css.name}>
                     {step.item.name}
                   </Text>
@@ -133,7 +128,7 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
                 data-status={statusLower}
                 onClick={() => handleStepSelect(step.item?.identifier as string, step.item?.status, step.item?.retryId)}
               >
-                <Icon className={css.icon} name={IconMap[statusLower]} />
+                <StatusIcon className={css.icon} status={status as ExecutionStatus} />
                 <Text lineClamp={1} className={css.name}>
                   {step.item.name}
                 </Text>
@@ -150,12 +145,13 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
         }
 
         if (step.group) {
-          const statusLower = step.group.status.toLowerCase()
+          const status = getStepsTreeStatus({ step, allNodeMap }) || step.group.status
+          const statusLower = status.toLowerCase()
 
           return (
             <li className={css.item} key={step.group.identifier} data-type="group">
               <div className={css.step} data-status={statusLower}>
-                <Icon className={css.icon} name={IconMap[statusLower]} />
+                <StatusIcon className={css.icon} status={status as ExecutionStatus} />
                 <div className={css.nameWrapper}>
                   {isRoot ? null : <div className={css.groupIcon} />}
                   {step.group.name ? (
@@ -183,22 +179,26 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
         /* istanbul ignore else */
         if (step.parallel) {
           // here assumption is that parallel steps cannot have nested parallel steps
-          const isRunning = step.parallel.some(pStep =>
-            isExecutionRunning(defaultTo(pStep.item?.status, pStep.group?.status))
-          )
+          const isRunning =
+            step.parallel.some(pStep => isExecutionRunning(defaultTo(pStep.item?.status, pStep.group?.status))) ||
+            step.parallel.some(pStep =>
+              isExecutionRunning(
+                getStepsTreeStatus({
+                  step: pStep,
+                  allNodeMap
+                }) as ExecutionStatus
+              )
+            )
           const isSuccess = step.parallel.every(pStep =>
             isExecutionSuccess(defaultTo(pStep.item?.status, pStep.group?.status))
           )
 
-          let icon: IconName = IconMap.notstarted
-          let statusLower = ''
+          let status = ''
 
           if (isRunning) {
-            icon = IconMap.running
-            statusLower = 'running'
+            status = ExecutionStatusEnum.Running
           } else if (isSuccess) {
-            icon = IconMap.success
-            statusLower = 'success'
+            status = ExecutionStatusEnum.Success
           } else {
             // find first non success state
             const nonSuccessStep = step.parallel.find(
@@ -207,20 +207,14 @@ export function StepsTree(props: StepsTreeProps): React.ReactElement {
 
             /* istanbul ignore else */
             if (nonSuccessStep) {
-              const status = defaultTo(nonSuccessStep.item?.status, nonSuccessStep.group?.status)?.toLowerCase()
-
-              /* istanbul ignore else */
-              if (status) {
-                statusLower = status
-                icon = IconMap[status]
-              }
+              status = defaultTo(defaultTo(nonSuccessStep.item?.status, nonSuccessStep.group?.status), '')
             }
           }
 
           return (
             <li className={css.item} key={i} data-type="parallel">
-              <div className={css.step} data-status={statusLower}>
-                <Icon className={css.icon} name={icon} />
+              <div className={css.step} data-status={status.toLowerCase()}>
+                <StatusIcon className={css.icon} status={status as ExecutionStatus} />
                 <div className={css.nameWrapper}>
                   {isRoot ? null : <div className={css.parallelIcon} />}
                   <String className={css.name} stringID="parallelSteps" />

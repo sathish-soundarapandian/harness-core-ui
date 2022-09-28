@@ -23,7 +23,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   SelectOption,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
@@ -51,7 +52,7 @@ import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 interface HelmWithHttpPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -532,6 +533,7 @@ function HelmWithS3({
                   fieldPath="valuesPaths"
                   pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                 />
               </div>
 

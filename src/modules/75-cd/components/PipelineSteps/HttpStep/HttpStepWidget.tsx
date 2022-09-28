@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Accordion, Formik, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { Accordion, AllowedTypes, Formik, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
@@ -31,7 +31,7 @@ export interface HttpStepWidgetProps {
   onChange?: (data: HttpStepFormData) => void
   stepViewType?: StepViewType
   readonly: boolean
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
 }
 
 export function HttpStepWidget(

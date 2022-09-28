@@ -11,17 +11,29 @@ import type { MonacoDiffEditor } from 'react-monaco-editor'
 import type { PermissionsContextProps } from 'framework/rbac/PermissionsContext'
 import type { LicenseStoreContextProps } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
+import type { UseLogoutReturn } from 'framework/utils/SessionUtils'
 import type { NGBreadcrumbsProps } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
+import type { PermissionsRequest } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ButtonProps } from '@rbac/components/Button/Button'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
+import type { RBACTooltipProps } from '@rbac/components/RBACTooltip/RBACTooltip'
 import type { Title, UseDocumentTitleReturn } from '@common/hooks/useDocumentTitle'
 import type { ExtendedMonacoEditorProps } from '@common/components/MonacoEditor/MonacoEditor'
 import type { ExtendedMonacoDiffEditorProps } from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
+import type { PageParams, TelemetryReturnType } from '@common/hooks/useTelemetry'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types'
 import type { STOAppCustomProps } from '@pipeline/interfaces/STOApp'
+import type { CCMUIAppCustomProps } from '@ce/interface/CCMUIApp.types'
+import type { ChaosCustomMicroFrontendProps } from '@chaos/interfaces/Chaos.types'
+import type { RbacErrorReturn } from '@rbac/utils/useRBACError/useRBACError'
+import type {
+  UseCreateConnectorModalReturn,
+  UseCreateConnectorModalProps
+} from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import type { LevelUpBannerProps } from '@common/components/FeatureWarning/LevelUpBanner'
 
 export interface Scope {
   accountId?: string
@@ -38,10 +50,17 @@ export interface CommonComponents {
   MonacoDiffEditor: React.ForwardRefExoticComponent<
     ExtendedMonacoDiffEditorProps & React.RefAttributes<MonacoDiffEditor>
   >
+  RBACTooltip?: React.FC<RBACTooltipProps>
+  LevelUpBanner?: React.FC<LevelUpBannerProps>
 }
 
 export interface Hooks {
-  useDocumentTitle(title: Title): UseDocumentTitleReturn
+  useDocumentTitle(title: Title, accountLevel?: boolean): UseDocumentTitleReturn
+  useTelemetry?: (pageParams: PageParams) => TelemetryReturnType
+  useLogout?: () => UseLogoutReturn
+  useRBACError?: () => RbacErrorReturn
+  usePermission?: (permissionsRequest?: PermissionsRequest, deps?: Array<any>) => Array<boolean>
+  useCreateConnectorModal?: (props: UseCreateConnectorModalProps) => UseCreateConnectorModalReturn
 }
 
 /**
@@ -60,7 +79,7 @@ export interface ChildAppProps {
   scope: Scope
   components: CommonComponents
   hooks: Hooks
-  on401: () => void
+  on401?: () => void
   children?: React.ReactNode
 }
 
@@ -76,5 +95,7 @@ export {
   ResourceType,
   PermissionIdentifier,
   GitOpsCustomMicroFrontendProps,
-  STOAppCustomProps
+  STOAppCustomProps,
+  CCMUIAppCustomProps,
+  ChaosCustomMicroFrontendProps
 }

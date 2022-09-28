@@ -28,13 +28,13 @@ export default function CFSideNav(): React.ReactElement {
   const params = useParams<PipelinePathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
   const history = useHistory()
-  const { updateAppStore } = useAppStore()
+  const { updateAppStore, isGitSimplificationEnabled } = useAppStore()
   const { withActiveEnvironment } = useActiveEnvironment()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const events = useFeatureFlagTelemetry()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
-  const { FF_GITSYNC, FF_PIPELINE, OPA_FF_GOVERNANCE, NG_TEMPLATES } = useFeatureFlags()
+  const { FF_GITSYNC, FF_PIPELINE, OPA_FF_GOVERNANCE } = useFeatureFlags()
 
   /* istanbul ignore next */
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
@@ -92,7 +92,7 @@ export default function CFSideNav(): React.ReactElement {
                 to={routes.toAccessControl({ ...params, module: 'cf' })}
                 label={getString('accessControl')}
               />
-              {FF_GITSYNC && (
+              {FF_GITSYNC && !isGitSimplificationEnabled && (
                 <>
                   <SidebarLink
                     label={getString('connectorsLabel')}
@@ -105,12 +105,7 @@ export default function CFSideNav(): React.ReactElement {
                   />
                 </>
               )}
-              {NG_TEMPLATES && (
-                <SidebarLink
-                  label={getString('common.templates')}
-                  to={routes.toTemplates({ ...params, module: 'cf' })}
-                />
-              )}
+              <SidebarLink label={getString('common.templates')} to={routes.toTemplates({ ...params, module: 'cf' })} />
               {canUsePolicyEngine && OPA_FF_GOVERNANCE && (
                 <SidebarLink
                   label={getString('common.governance')}

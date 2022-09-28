@@ -21,11 +21,17 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    margin: var(--spacing-small) var(--spacing-large) 0 0;
+    margin: 0 var(--spacing-large) 0 var(--spacing-medium);
 
     & > span {
       padding: 5px;
     }
+  }
+}
+
+.search {
+  & > input {
+    border-radius: 8px !important;
   }
 }
 
@@ -38,9 +44,4 @@
   .columnInfo {
     margin: var(--spacing-xsmall) var(--spacing-large) var(--spacing-xsmall) 0;
   }
-}
-
-.exportCsvBtn {
-  cursor: pointer;
-  padding-left: var(--spacing-medium) !important;
 }

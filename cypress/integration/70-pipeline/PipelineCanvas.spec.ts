@@ -32,9 +32,10 @@ import {
   jiraApprovalStageYamlSnippet,
   snowApprovalStageYamlSnippet,
   serverlessLambdaYamlSnippet,
-  yamlSnippet,
-  executionStratergies,
-  pageHeaderClassName
+  strategiesYamlSnippets,
+  executionStrategies,
+  pageHeaderClassName,
+  pipelineSaveCallWithStoreType
 } from '../../support/70-pipeline/constants'
 import { connectorsListAPI } from '../../support/35-connectors/constants'
 import { getIdentifierFromName } from '../../utils/stringHelpers'
@@ -67,10 +68,14 @@ describe('GIT SYNC DISABLED', () => {
     cy.contains('span', 'Create a Pipeline').should('be.visible')
   })
 
-  it.skip('should display the error returned by pipeline save API', () => {
-    cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' }).as('pipelineSaveCall')
+  it('should display the error returned by pipeline save API', () => {
+    cy.intercept('POST', pipelineSaveCallWithStoreType, { fixture: 'pipeline/api/pipelines.post' }).as(
+      'pipelineSaveCallWithStoreType'
+    )
+    cy.intercept('GET', strategiesYamlSnippets, { fixture: 'ng/api/pipelines/kubernetesYamlSnippet' }).as(
+      'kubernetesYamlSnippet'
+    )
 
-    cy.wait('@cdFailureStrategiesYaml')
     cy.contains('span', 'New Service').click()
     cy.fillName('testService')
     cy.get('[data-id="service-save"]').click()
@@ -79,7 +84,12 @@ describe('GIT SYNC DISABLED', () => {
 
     cy.get('[value="testService"]').should('be.visible')
 
-    cy.contains('span', '+ Add Variable').click()
+    // Select Kubernetes as deployment type
+    cy.contains('p', 'Kubernetes').click()
+    cy.findByDisplayValue('Kubernetes').should('be.checked')
+    cy.wait('@kubernetesYamlSnippet')
+
+    cy.contains('span', 'Add Variable').click()
     cy.fillName('testVariable')
     cy.findByTestId('addVariableSave').click()
 
@@ -101,13 +111,12 @@ describe('GIT SYNC DISABLED', () => {
     // Enable YAML editing
     cy.contains('span', 'Edit YAML').click({ force: true })
 
-    cy.get('[data-name="toggle-option-one"]').click()
+    cy.contains('span', 'Enable').should('be.visible').click()
 
     // try to save the pipleine, the mock data has error
     cy.contains('span', 'Save').click({ force: true })
 
-    cy.wait('@pipelineSaveCall')
-    cy.wait('@cdFailureStrategiesYaml')
+    cy.wait('@pipelineSaveCallWithStoreType')
     cy.wait(500)
     cy.contains(
       'span',
@@ -115,10 +124,12 @@ describe('GIT SYNC DISABLED', () => {
     ).should('be.visible')
   })
 
-  it.skip('should display the success message if pipeline save is success', () => {
-    cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.postsuccess' }).as('pipelineSaveCall')
+  it('should display the success message if pipeline save is success', () => {
+    cy.intercept('POST', pipelineSaveCallWithStoreType, { fixture: 'pipeline/api/pipelines.postsuccess' }).as(
+      'pipelineSaveCallWithStoreType'
+    )
     cy.contains('span', 'Save').click({ force: true })
-    cy.wait('@pipelineSaveCall')
+    cy.wait('@pipelineSaveCallWithStoreType')
     cy.wait(500)
     cy.contains('span', 'Pipeline published successfully').should('be.visible')
   })
@@ -259,7 +270,6 @@ describe('Execution Stages', () => {
       return false
     })
     cy.initializeRoute()
-
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post' })
     cy.intercept('POST', stepLibrary, { fixture: 'ng/api/stepLibrary' }).as('stepLibrary')
@@ -316,8 +326,8 @@ describe('Execution Stages', () => {
     cy.get('*[class^="ExecutionGraph-module_canvas"]')
       .should('be.visible')
       .within(() => {
-        cy.get('span[data-icon="zoom-out"]').click()
-        cy.get('p[data-name="node-name"]').contains('Add step').click({ force: true })
+        cy.get('span[data-icon="zoom-out"]').click({ force: true })
+        cy.get('p[data-name="node-name"]').contains('Add Step').click({ force: true })
         cy.wait(1000)
         cy.get('[class*="ExecutionGraph-module_add-step-popover"]', { withinSubject: null })
           .should('be.visible')
@@ -408,7 +418,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     yamlValidations('stage1', 'region1')
   })
 
-  it(`runtime values to region, stage in infrastructure tab`, () => {
+  it.skip(`runtime values to region, stage in infrastructure tab`, () => {
     cy.visit(pipelineStudioRoute, { timeout: 30000 })
     cy.visitPageAssertion()
     cy.get(`div[data-testid="pipeline-studio"]`, {
@@ -449,31 +459,31 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
+    cy.wait('@pipelineDetails')
 
     // Select Stage
     cy.contains('p', 'Stage 1').click()
-    cy.wait(1000)
     cy.wait('@servicesCall')
-    cy.wait('@cdFailureStrategiesYaml')
     cy.wait('@stepLibrary')
-    cy.wait(1000)
 
     // Select Serverless Lambda as deployment type
     cy.contains('p', 'Serverless Lambda').click()
     cy.wait('@serverlessYamlSnippet')
+    cy.wait('@stepLibrary')
 
-    // Got to Execution tab, Serverless Aws Lambda Deploy should be added by default
+    // Go to Execution tab, Serverless Aws Lambda Deploy should be added by default
     // Switching between Rollback and Execution should work as expected
-    cy.contains('span', 'Execution').click()
-    cy.contains('p', 'Serverless Aws Lambda Deploy')
-    cy.contains('p', 'Rollback').click()
-    cy.contains('p', 'Serverless Aws Lambda Rollback')
-    cy.contains('p', 'Execution').click()
-    cy.contains('p', 'Serverless Aws Lambda Deploy')
+    cy.contains('span', 'Execution').click({ force: true })
+    cy.contains('p', 'Serverless Aws Lambda Deploy').should('be.visible')
+    cy.contains('p', 'Rollback').click({ force: true })
+    cy.contains('p', 'Serverless Aws Lambda Rollback').should('be.visible')
+    cy.contains('p', 'Execution').click({ force: true })
+    cy.contains('p', 'Serverless Aws Lambda Deploy').should('be.visible')
 
     // Add another Serverless Lambda Deploy Step
-    cy.contains('p', 'Add step').click()
-    cy.contains('span', 'Add Step').parent().click()
+    cy.contains('p', 'Add Step').click({ force: true })
+    cy.findByTestId('addStepPipeline').click()
+    cy.wait('@stepLibrary')
     cy.contains('section', 'Serverless Lambda Deploy').click()
     cy.contains('p', 'Serverless Lambda Deploy Step').should('be.visible')
     cy.get('input[name="name"]').type('Serverless Deploy Step 2')
@@ -483,8 +493,9 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('p', 'Serverless Deploy Step 2').should('be.visible')
 
     // Add Serverless Lambda Rollback Step
-    cy.contains('p', 'Add step').click()
-    cy.contains('span', 'Add Step').parent().click()
+    cy.contains('p', 'Add Step').click({ force: true })
+    cy.findByTestId('addStepPipeline').click()
+    cy.wait('@stepLibrary')
     cy.contains('section', 'Serverless Lambda Rollback').click()
     cy.contains('p', 'Serverless Lambda Rollback Step').should('be.visible')
     cy.get('input[name="name"]').type('Serverless Rollback Step 1')
@@ -501,9 +512,11 @@ describe('ServerlessAwsLambda as deployment type', () => {
       fixture: 'pipeline/api/pipelines/failureStrategiesYaml'
     }).as('cdFailureStrategiesYaml')
     cy.intercept('POST', connectorsListAPI, { fixture: 'ng/api/connectors' }).as('connectorsList')
-    cy.intercept('GET', yamlSnippet, { fixture: 'ng/api/pipelines/kubernetesYamlSnippet' }).as('kubernetesYamlSnippet')
-    cy.intercept('GET', executionStratergies, { fixture: 'pipeline/api/pipelines/strategies.json' }).as(
-      'executionStratergies'
+    cy.intercept('GET', strategiesYamlSnippets, { fixture: 'ng/api/pipelines/kubernetesYamlSnippet' }).as(
+      'kubernetesYamlSnippet'
+    )
+    cy.intercept('GET', executionStrategies, { fixture: 'pipeline/api/pipelines/strategies.json' }).as(
+      'executionStrategies'
     )
 
     // Visit Pipeline Studio
@@ -517,18 +530,18 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('p', 'Stage 1').click()
     cy.wait(1000)
     cy.wait('@servicesCall')
-    cy.wait('@cdFailureStrategiesYaml')
     cy.wait('@stepLibrary')
     cy.wait(1000)
 
     // Select Kubernetes as deployment type
     cy.contains('p', 'Kubernetes').click()
+    cy.findByDisplayValue('Kubernetes').should('be.checked')
+    cy.wait('@kubernetesYamlSnippet')
 
     // Got to Execution tab, 4 diff Execution Strategies should appear
     // Use Rolling strategy and check if respective step is added
     cy.contains('span', 'Execution').click()
-    cy.wait('@executionStratergies')
-    cy.wait('@kubernetesYamlSnippet')
+    cy.wait(1000)
     cy.contains('section', 'Rolling').should('be.visible')
     cy.contains('section', 'Blue Green').should('be.visible')
     cy.contains('section', 'Canary').should('be.visible')
@@ -571,9 +584,12 @@ describe('Input Sets', () => {
     cy.get('.NoDataCard--buttonContainer').contains('span', '+ New Input Set').click()
     // Input Flow - Service
     cy.wait(1000)
+    cy.get('[class*=menuList]').within(() => {
+      cy.contains('div', 'Input Set').click()
+    })
     cy.wait('@servicesCallV2').wait(1000)
     cy.fillField('name', 'testService')
-    cy.findByText('Specify Service').should('exist')
+    cy.findByText('Select Service').should('exist')
     cy.get('input[name="pipeline.stages[0].stage.spec.serviceConfig.serviceRef"]').click()
     cy.contains('p', 'testService').click({ force: true })
 
@@ -674,7 +690,7 @@ describe('Add stage view with disabled licences', () => {
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
 
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
-      const disabledLicenses = ['NG_TEMPLATES', 'SECURITY_STAGE', 'CING_ENABLED']
+      const disabledLicenses = ['SECURITY_STAGE', 'CING_ENABLED']
 
       const updatedFeatureFlagsList = featureFlagsData.resource.reduce((acc, currentFlagData) => {
         if (disabledLicenses.includes(currentFlagData.name)) {
@@ -712,8 +728,6 @@ describe('Add stage view with disabled licences', () => {
     cy.findByTestId('stage-Approval').should('be.visible')
     cy.findByTestId('stage-Custom').should('be.visible')
 
-    cy.get('[data-icon="template-library"]').should('not.exist')
-    cy.contains('span', 'Use template').should('not.exist')
     cy.findByTestId('stage-CI').should('not.exist')
     cy.findByTestId('stage-SecurityTests').should('not.exist')
   })

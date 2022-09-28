@@ -9,7 +9,7 @@
   flex: 1;
   min-width: 0;
   .chartWrapper {
-    box-shadow: 0px 0.5px 2px 0px #60617029;
+    box-shadow: 0px 0.5px 2px 0px rgba(96, 97, 112, 0.16);
     border-radius: 4px;
     overflow: hidden;
   }
@@ -28,13 +28,12 @@
 }
 
 .emptyView {
-  width: 866px;
-  height: 219px;
-  background: #ffffff !important;
+  height: 215px;
+  background: var(--grey-0) !important;
   display: flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  box-shadow: 0px 0.5px 2px 0px rgba(96, 97, 112, 0.16);
   border-radius: 4px;
   .emptyViewItem {
     background-color: var(--grey-100);
@@ -54,4 +53,8 @@
 
 .marginBottom4 {
   margin-bottom: var(--spacing-4) !important;
+}
+
+.marginBottom2 {
+  margin-bottom: var(--spacing-2) !important;
 }

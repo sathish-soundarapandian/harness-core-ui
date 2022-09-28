@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -14,6 +14,7 @@ import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
   Accordion,
+  AllowedTypes,
   Button,
   FormError,
   Formik,
@@ -42,7 +43,9 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useQueryParams } from '@common/hooks'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import type { JiraProjectSelectOption } from '../JiraApproval/types'
 import { getGenuineValue } from '../JiraApproval/helper'
 import type { JiraCreateFieldType } from '../JiraCreate/types'
@@ -113,8 +116,8 @@ function FormContent({
     } else if (connectorRefFixedValue !== undefined) {
       // Undefined check is needed so that form is not set to dirty as soon as we open
       // This means we've cleared the value or marked runtime/expression
-      // Flush the selected additional fields, and move everything to key value fields
-      formik.setFieldValue('spec.selectedFields', [])
+      // Flush the selected optional fields, and move everything to key value fields
+      formik.setFieldValue('spec.selectedOptionalFields', [])
     }
   }, [connectorRefFixedValue])
 
@@ -158,16 +161,16 @@ function FormContent({
           selectedProjectKey={selectedProjectKey}
           selectedIssueTypeKey={selectedIssueTypeKey}
           projectOptions={projectOptions}
-          selectedFields={formik.values.spec.selectedFields}
+          selectedFields={formik.values.spec.selectedOptionalFields}
           jiraType={jiraType}
           addSelectedFields={(fieldsToBeAdded: JiraFieldNG[], selectedProjectKeyInForm, selectedIssueTypeKeyInForm) => {
             setSelectedProjectKey(selectedProjectKeyInForm)
             setSelectedIssueTypeKey(selectedIssueTypeKeyInForm)
             formik.setFieldValue(
-              'spec.selectedFields',
+              'spec.selectedOptionalFields',
               getSelectedFieldsToBeAddedInForm(
                 fieldsToBeAdded,
-                formik.values.spec.selectedFields,
+                formik.values.spec.selectedOptionalFields,
                 formik.values.spec.fields
               )
             )
@@ -176,7 +179,7 @@ function FormContent({
           provideFieldList={(fields: JiraCreateFieldType[]) => {
             formik.setFieldValue(
               'spec.fields',
-              getKVFieldsToBeAddedInForm(fields, formik.values.spec.fields, formik.values.spec.selectedFields)
+              getKVFieldsToBeAddedInForm(fields, formik.values.spec.fields, formik.values.spec.selectedOptionalFields)
             )
             hideDynamicFieldsModal()
           }}
@@ -185,7 +188,7 @@ function FormContent({
         />
       </Dialog>
     )
-  }, [projectOptions, connectorRefFixedValue, formik.values.spec.selectedFields, formik.values.spec.fields])
+  }, [projectOptions, connectorRefFixedValue, formik.values.spec.selectedOptionalFields, formik.values.spec.fields])
 
   function AddFieldsButton(): React.ReactElement {
     return (
@@ -242,6 +245,7 @@ function FormContent({
             showAdvanced={true}
             onChange={value => formik.setFieldValue('timeout', value)}
             isReadonly={readonly}
+            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
           />
         )}
       </div>
@@ -259,6 +263,7 @@ function FormContent({
           orgIdentifier={orgIdentifier}
           multiTypeProps={{ expressions, allowableTypes }}
           type="Jira"
+          setRefValue
           enableConfigureOptions={false}
           selected={formik?.values?.spec.connectorRef as string}
           disabled={isApprovalStepFieldDisabled(readonly)}
@@ -332,7 +337,9 @@ function FormContent({
                   disabled={isApprovalStepFieldDisabled(readonly)}
                 />
                 {getMultiTypeFromValue(formik.values.spec.transitionTo?.status) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
+                  <SelectConfigureOptions
+                    options={statusOptions}
+                    loading={fetchingStatuses}
                     value={formik.values.spec.transitionTo?.status as string}
                     type="String"
                     variableName="spec.transitionTo.status"
@@ -389,16 +396,17 @@ function FormContent({
                 )}
               </div>
               <JiraFieldsRenderer
-                selectedFields={formik.values.spec.selectedFields}
+                selectedFields={formik.values.spec.selectedOptionalFields}
                 readonly={readonly}
                 onDelete={(index, selectedField) => {
-                  const selectedFieldsAfterRemoval = formik.values.spec.selectedFields?.filter(
+                  const selectedFieldsAfterRemoval = formik.values.spec.selectedOptionalFields?.filter(
                     (_unused, i) => i !== index
                   )
                   formik.setFieldValue('spec.selectedFields', selectedFieldsAfterRemoval)
                   const customFields = formik.values.spec.fields?.filter(field => field.name !== selectedField.name)
                   formik.setFieldValue('spec.fields', customFields)
                 }}
+                connectorRef={defaultTo(connectorRefFixedValue, '')}
               />
 
               {!isEmpty(formik.values.spec.fields) ? (
@@ -423,7 +431,9 @@ function FormContent({
                               label=""
                               placeholder={getString('common.valuePlaceholder')}
                               multiTextInputProps={{
-                                allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                  item => !isMultiTypeRuntime(item)
+                                ) as AllowedTypes,
                                 expressions
                               }}
                               disabled={isApprovalStepFieldDisabled(readonly)}

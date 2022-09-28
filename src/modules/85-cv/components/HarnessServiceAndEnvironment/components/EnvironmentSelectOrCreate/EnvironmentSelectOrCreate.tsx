@@ -69,7 +69,7 @@ export function EnvironmentSelectOrCreate({
   }
 
   return (
-    <Container onClick={e => e.stopPropagation()}>
+    <Container data-testid="environment" onClick={e => e.stopPropagation()}>
       {isMultiType ? (
         <MultiTypeInput
           name={'environmentRef'}

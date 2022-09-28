@@ -9,7 +9,6 @@ import React from 'react'
 import { Formik, FormikForm } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import { get } from 'lodash-es'
-import type { K8sDirectInfraYaml } from 'services/ci'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -25,6 +24,7 @@ import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidate
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import { CIStepOptionalConfig } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { useGetPropagatedStageById } from '@ci/components/PipelineSteps/CIStep/StepUtils'
+import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './ZeroNorthStepFunctionConfigs'
 import type { ZeroNorthStepProps, ZeroNorthStepData, ZeroNorthStepDataUI } from './ZeroNorthStep'
 
@@ -42,7 +42,9 @@ export const ZeroNorthStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type') as K8sDirectInfraYaml['type']
+  const buildInfrastructureType =
+    (get(currentStage, 'stage.spec.infrastructure.type') as CIBuildInfrastructureType) ||
+    (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
 
   return (
     <Formik

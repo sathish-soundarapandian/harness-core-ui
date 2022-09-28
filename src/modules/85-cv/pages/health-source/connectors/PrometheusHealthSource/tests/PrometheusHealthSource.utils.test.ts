@@ -6,7 +6,9 @@
  */
 
 import type { StringKeys } from 'framework/strings'
-import { validateAssginComponent } from '../PrometheusHealthSource.utils'
+import type { PrometheusSetupSource } from '../PrometheusHealthSource.constants'
+import { transformPrometheusSetupSourceToHealthSource, validateAssginComponent } from '../PrometheusHealthSource.utils'
+import { expectedResultPrometheusPayload, sourceDataPrometheusPayload } from './PrometheusHealthSource.mock'
 
 function getString(key: StringKeys): StringKeys {
   return key
@@ -40,6 +42,23 @@ describe('Validate Prometheus Utils', () => {
     expect(error).toEqual({
       lowerBaselineDeviation: 'cv.monitoringSources.prometheus.validation.deviation',
       riskCategory: 'cv.monitoringSources.gco.mapMetricsToServicesPage.validation.riskCategory'
+    })
+  })
+
+  test('prometheus payload with metric thresholds', () => {
+    expect(
+      transformPrometheusSetupSourceToHealthSource(sourceDataPrometheusPayload as PrometheusSetupSource, true)
+    ).toEqual(expectedResultPrometheusPayload)
+  })
+
+  test('prometheus payload without metric thresholds', () => {
+    expect(
+      transformPrometheusSetupSourceToHealthSource(sourceDataPrometheusPayload as PrometheusSetupSource, false)
+    ).toEqual({
+      identifier: 'test',
+      name: 'test',
+      spec: { connectorRef: 'testprometheus2', feature: 'apm', metricDefinitions: [], metricPacks: [] },
+      type: 'Prometheus'
     })
   })
 })

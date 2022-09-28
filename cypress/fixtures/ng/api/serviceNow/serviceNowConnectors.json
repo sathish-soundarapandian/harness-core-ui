@@ -1,0 +1,57 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 1,
+    "pageItemCount": 1,
+    "pageSize": 10,
+    "content": [
+      {
+        "connector": {
+          "name": "service_now_connector",
+          "identifier": "service_now_connector",
+          "description": "",
+          "orgIdentifier": null,
+          "projectIdentifier": null,
+          "tags": {},
+          "type": "ServiceNow",
+          "spec": {
+            "serviceNowUrl": "https://ven03171.service-now.com",
+            "username": "admin",
+            "usernameRef": null,
+            "passwordRef": "account.service_now_secret",
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1646393016982,
+        "lastModifiedAt": 1646393141965,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1646652316534,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1646652316534
+        },
+        "activityDetails": { "lastActivityTime": 1646393145561 },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null
+        },
+        "entityValidityDetails": { "valid": true, "invalidYaml": null },
+        "governanceMetadata": null
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "6d225211-9ce3-4811-afe6-399e0d9cc0eb"
+}

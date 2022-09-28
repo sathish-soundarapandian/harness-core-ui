@@ -14,12 +14,14 @@ declare const styles: {
   readonly cdGenerationSwitcher: string
   readonly cdGenerationSwitcherSelected: string
   readonly comingSoonBanner: string
+  readonly comingSoonLayout: string
   readonly currentGenSupported: string
   readonly cursorPointer: string
   readonly learnMore: string
   readonly left: string
   readonly newText: string
   readonly paddingNone: string
+  readonly templateBar: string
   readonly tooltipContainer: string
   readonly tooltipIcon: string
 }

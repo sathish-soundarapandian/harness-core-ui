@@ -14,12 +14,17 @@ import {
   FormikTooltipContext,
   DataTooltipInterface,
   HarnessDocTooltip,
-  FormInput
+  FormInput,
+  EXECUTION_TIME_INPUT_VALUE,
+  AllowedTypes,
+  AllowedTypesWithExecutionTime
 } from '@wings-software/uicore'
 import { IFormGroupProps, Intent, FormGroup } from '@blueprintjs/core'
+import cx from 'classnames'
 import { FormikContextType, connect } from 'formik'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import MultiTypeSelectorButton from '../MultiTypeSelectorButton/MultiTypeSelectorButton'
 
 import css from './MultiTypeFieldSelctor.module.scss'
@@ -33,7 +38,7 @@ export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'labe
   disableTypeSelection?: boolean
   skipRenderValueInExpressionLabel?: boolean
   expressionRender?(): React.ReactNode
-  allowedTypes?: MultiTypeInputType[]
+  allowedTypes?: AllowedTypes
   isOptional?: boolean
   optionalLabel?: string
   tooltipProps?: DataTooltipInterface
@@ -88,13 +93,22 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
   function handleChange(newType: MultiTypeInputType): void {
     setType(newType)
     onTypeChange?.(newType)
-    if (newType === type) return
-    formik.setFieldValue(name, newType === MultiTypeInputType.RUNTIME ? RUNTIME_INPUT_VALUE : defaultValueToReset)
+
+    if (newType === type) {
+      return
+    }
+
+    const runtimeValue =
+      Array.isArray(allowedTypes) &&
+      (allowedTypes as AllowedTypesWithExecutionTime[]).includes(MultiTypeInputType.EXECUTION_TIME)
+        ? EXECUTION_TIME_INPUT_VALUE
+        : RUNTIME_INPUT_VALUE
+    formik.setFieldValue(name, isMultiTypeRuntime(newType) ? runtimeValue : defaultValueToReset)
   }
 
   if (
-    type === MultiTypeInputType.RUNTIME &&
-    getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions) !== MultiTypeInputType.RUNTIME
+    isMultiTypeRuntime(type) &&
+    !isMultiTypeRuntime(getMultiTypeFromValue(value, allowedTypes, supportListOfExpressions))
   ) {
     return null
   }
@@ -102,7 +116,7 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
   return (
     <FormGroup
       {...rest}
-      className={type === MultiTypeInputType.RUNTIME ? css.formGroup : ''}
+      className={cx({ [css.formGroup]: isMultiTypeRuntime(type) })}
       labelFor={name}
       helperText={helperText}
       intent={intent}
@@ -125,7 +139,7 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
         children
       ) : type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function' ? (
         expressionRender()
-      ) : type === MultiTypeInputType.RUNTIME && typeof value === 'string' ? (
+      ) : isMultiTypeRuntime(type) && typeof value === 'string' ? (
         <FormInput.Text className={css.runtimeDisabled} name={name} disabled label="" />
       ) : null}
     </FormGroup>

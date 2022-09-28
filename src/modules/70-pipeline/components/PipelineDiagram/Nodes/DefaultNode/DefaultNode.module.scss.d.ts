@@ -25,6 +25,7 @@ declare const styles: {
   readonly iconGroup: string
   readonly inComplete: string
   readonly left: string
+  readonly loopingStrategy: string
   readonly marginBottom: string
   readonly markerEnd: string
   readonly markerStart: string
@@ -49,7 +50,6 @@ declare const styles: {
   readonly stageMarkerRight: string
   readonly stageName: string
   readonly stageRow: string
-  readonly stepAddIcon: string
   readonly stepAddNode: string
   readonly stepGroupAddIcon: string
   readonly stepGroupLeft: string

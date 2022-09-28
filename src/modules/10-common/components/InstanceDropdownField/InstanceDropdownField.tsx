@@ -7,6 +7,7 @@
 
 import React from 'react'
 import {
+  AllowedTypes,
   Button,
   FormikTooltipContext,
   getMultiTypeFromValue,
@@ -118,7 +119,7 @@ interface InstanceDropdownFieldProps extends Omit<IFormGroupProps, 'label' | 'pl
   value: InstanceFieldValue
   label: string | JSX.Element
   expressions: string[]
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   disabledType?: boolean
   readonly?: boolean
   name: string
@@ -219,7 +220,18 @@ export interface FormInstanceDropdownFieldProps extends Omit<InstanceDropdownFie
 }
 
 const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (props): JSX.Element => {
-  const { label, textProps, formik, name, onChange, readonly, ...restProps } = props
+  const {
+    label,
+    textProps,
+    formik,
+    name,
+    onChange = valueObj => {
+      /* istanbul ignore next */
+      props.formik.setFieldValue(props.name, { ...valueObj })
+    },
+    readonly,
+    ...restProps
+  } = props
   const hasError = errorCheck(`${name}.type`, formik)
 
   const {
@@ -242,10 +254,7 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
       intent={intent}
       helperText={helperText}
       readonly={readonly}
-      onChange={valueObj => {
-        /* istanbul ignore next */
-        formik.setFieldValue(name, { ...valueObj })
-      }}
+      onChange={onChange}
       {...rest}
     />
   )

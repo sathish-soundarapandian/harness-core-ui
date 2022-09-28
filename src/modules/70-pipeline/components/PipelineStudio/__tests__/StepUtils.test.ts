@@ -9,8 +9,8 @@ import isMatch from 'lodash-es/isMatch'
 import has from 'lodash-es/has'
 import { get } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { PipelineInfoConfig } from 'services/cd-ng'
-import { validateCICodebase, getErrorsList, validatePipeline } from '../StepUtil'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import { validateCICodebase, validatePipeline } from '../StepUtil'
 import {
   pipelineTemplateWithRuntimeInput,
   pipelineWithNoBuildInfo,
@@ -20,7 +20,8 @@ import {
   templateWithRuntimeTimeout,
   pipelineTemplateOriginalPipeline,
   pipelineTemplateTemplate,
-  pipelineTemplateResolvedPipeline
+  pipelineTemplateResolvedPipeline,
+  pipelineWithPRBuild
 } from './mock'
 
 jest.mock('@common/utils/YamlUtils', () => ({
@@ -40,7 +41,12 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
-      viewType: StepViewType.InputSet
+      viewType: StepViewType.InputSet,
+      selectedStageData: {
+        selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
+        selectedStageItems: [{ label: 'S1', value: 'S1' }],
+        allStagesSelected: false
+      }
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: {} } } } })).toBeTruthy()
   })
@@ -56,7 +62,12 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
-      viewType: StepViewType.InputSet
+      viewType: StepViewType.InputSet,
+      selectedStageData: {
+        selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
+        selectedStageItems: [{ label: 'S1', value: 'S1' }],
+        allStagesSelected: false
+      }
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: {} } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.type')).toBeTruthy()
@@ -69,7 +80,12 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
-      viewType: StepViewType.InputSet
+      viewType: StepViewType.InputSet,
+      selectedStageData: {
+        selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
+        selectedStageItems: [{ label: 'S1', value: 'S1' }],
+        allStagesSelected: false
+      }
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.spec.branch')).toBeTruthy()
@@ -82,11 +98,30 @@ describe('Test StepUtils', () => {
       // eslint-disable-next-line
       // @ts-ignore
       template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
-      viewType: StepViewType.InputSet
+      viewType: StepViewType.InputSet,
+      selectedStageData: {
+        selectedStages: [{ stageIdentifier: 'S1', stageName: 'S1', message: 'test', stagesRequired: [] }],
+        selectedStageItems: [{ label: 'S1', value: 'S1' }],
+        allStagesSelected: false
+      }
     })
     expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
     expect(has(errors, 'properties.ci.codebase.build.spec.tag')).toBeTruthy()
   })
+
+  test('Test validateCICodebase method for pipeline with PR build', () => {
+    const errors = validateCICodebase({
+      pipeline: pipelineWithPRBuild as PipelineInfoConfig,
+      originalPipeline: pipelineWithPRBuild as PipelineInfoConfig,
+      // eslint-disable-next-line
+      // @ts-ignore
+      template: pipelineTemplateWithRuntimeInput as PipelineInfoConfig,
+      viewType: StepViewType.InputSet
+    })
+    expect(isMatch(errors, { properties: { ci: { codebase: { build: { spec: {} } } } } })).toBeTruthy()
+    expect(has(errors, 'properties.ci.codebase.build.spec.number')).toBeTruthy()
+  })
+
   test('Test validateCodebase method for pipeline with deployment stage', () => {
     const errors = validatePipeline({
       pipeline: pipelineWithDeploymentStage as PipelineInfoConfig,
@@ -99,25 +134,6 @@ describe('Test StepUtils', () => {
     expect(isMatch(errors, { timeout: 'Invalid syntax provided' })).toBeTruthy()
   })
 
-  test('Test getErrorsList method', () => {
-    const errors = {
-      properties: { ci: { codebase: 'CI Codebase is a required field' } },
-      stages: [
-        {
-          stage: {
-            spec: {
-              execution: {
-                steps: [{ step: { spec: { image: 'Image is a required field', type: 'Type is a required field' } } }]
-              }
-            }
-          }
-        }
-      ]
-    }
-    const { errorStrings, errorCount } = getErrorsList(errors)
-    expect(errorStrings.length).toBe(3)
-    expect(errorCount).toBe(3)
-  })
   test('Test requires Connector and RepoName only when all CI Codebase fields are runtime inputs', () => {
     const errors = validatePipeline({
       pipeline: {

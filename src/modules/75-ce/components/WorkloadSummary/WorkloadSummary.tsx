@@ -141,7 +141,8 @@ const WorkloadSummary: (props: WorkloadSummaryProps) => JSX.Element = ({
 
   const detailsText = {
     [CCM_PAGE_TYPE.Workload]: getString('ce.perspectives.workloadDetails.workloadDetailsText'),
-    [CCM_PAGE_TYPE.Node]: getString('ce.perspectives.nodeDetails.nodeDetailsText')
+    [CCM_PAGE_TYPE.Node]: getString('ce.perspectives.nodeDetails.nodeDetailsText'),
+    [CCM_PAGE_TYPE.Service]: getString('ce.serviceDetails.title')
   }
 
   return (

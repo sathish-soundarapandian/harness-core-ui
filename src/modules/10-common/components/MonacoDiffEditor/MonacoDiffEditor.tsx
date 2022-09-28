@@ -21,21 +21,25 @@ export interface ExtendedMonacoDiffEditorProps extends MonacoDiffEditorProps {
 
 export type Monaco = Parameters<DiffEditorWillMount>[0]
 
-const MonacoDiffEditor = (props: ExtendedMonacoDiffEditorProps, ref: ReactMonacoEditorRef) => {
+const MonacoDiffEditor = (props: ExtendedMonacoDiffEditorProps, ref: ReactMonacoEditorRef): React.ReactElement => {
   const monacoRef = React.useRef<Monaco | null>(null)
 
   React.useEffect(() => {
-    const remeasureFonts = () => {
-      monacoRef?.current?.editor?.remeasureFonts()
-    }
+    try {
+      const remeasureFonts = (): void => {
+        monacoRef?.current?.editor?.remeasureFonts()
+      }
 
-    // TODO: font name should be a global (for all)
-    const loaded = (document as any).fonts?.check?.('1em Roboto Mono')
+      // TODO: font name should be a global (for all)
+      const loaded = document.fonts.check('1em Roboto Mono')
 
-    if (loaded) {
-      remeasureFonts()
-    } else {
-      ;(document as any).fonts?.ready?.then?.(remeasureFonts)
+      if (loaded) {
+        remeasureFonts()
+      } else {
+        document.fonts.ready.then(remeasureFonts)
+      }
+    } catch (_e) {
+      // do  nothing
     }
   }, [])
 

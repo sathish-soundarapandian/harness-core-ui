@@ -13,6 +13,7 @@ declare const styles: {
   readonly groupbyFilter: string
   readonly header: string
   readonly noResultsContainer: string
+  readonly permissionErrorWrapper: string
   readonly rowGap8: string
   readonly searchFilterWrapper: string
   readonly searchInput: string

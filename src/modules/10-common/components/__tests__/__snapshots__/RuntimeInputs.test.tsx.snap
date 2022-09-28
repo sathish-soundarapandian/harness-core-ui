@@ -76,12 +76,16 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
             class="bp3-label"
             for="radioValue"
           >
-            <span
-              class="Tooltip--acenter"
+            <div
+              class="Text--withDocsTooltip"
               data-tooltip-id="runtimeInputsTest_radioValue"
             >
-              RadioGroup
-            </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+              >
+                RadioGroup
+              </p>
+            </div>
              
             <span
               class="bp3-text-muted"
@@ -318,12 +322,16 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
             class="bp3-label"
             for="radioValue"
           >
-            <span
-              class="Tooltip--acenter"
+            <div
+              class="Text--withDocsTooltip"
               data-tooltip-id="runtimeInputsTest_radioValue"
             >
-              RadioGroup
-            </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+              >
+                RadioGroup
+              </p>
+            </div>
              
             <span
               class="bp3-text-muted"
@@ -540,12 +548,16 @@ exports[`RuntimeInput Tests for checkbox, RadioGroup and Text Area should render
             class="bp3-label"
             for="radioValue"
           >
-            <span
-              class="Tooltip--acenter"
+            <div
+              class="Text--withDocsTooltip"
               data-tooltip-id="runtimeInputsTest_radioValue"
             >
-              RadioGroup
-            </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
+              >
+                RadioGroup
+              </p>
+            </div>
              
             <span
               class="bp3-text-muted"

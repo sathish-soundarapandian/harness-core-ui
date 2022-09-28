@@ -12,8 +12,7 @@ import { Layout, Button, ButtonVariation, ButtonSize, Text } from '@wings-softwa
 import { useToggleOpen, ConfirmationDialog, Intent } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import NotificationTable, { NotificationRulesItem } from '@pipeline/components/Notifications/NotificationTable'
-import type { NotificationRules } from 'services/pipeline-ng'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { NotificationRules, PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { Actions } from '@pipeline/components/Notifications/NotificationUtils'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
@@ -37,7 +36,7 @@ export interface PipelineNotificationsRef {
 
 export const PipelineNotifications = React.forwardRef(PipelineNotificationsWithRef)
 
-function NotificationsHeader(props: NotificationsHeaderProps) {
+function NotificationsHeader(props: NotificationsHeaderProps): React.ReactElement {
   const { applyChanges, discardChanges, pipeline, isPipelineUpdated, isReadonly } = props
   const { getString } = useStrings()
   return (
@@ -99,20 +98,20 @@ function PipelineNotificationsWithRef(
     return Promise.resolve()
   }
 
-  const closeDrawer = () => {
+  const closeDrawer = (): void => {
     updatePipelineView({ ...pipelineView, isDrawerOpened: false, drawerData: { type: DrawerTypes.AddStep } })
   }
 
-  const applyChanges = async () => {
+  const applyChanges = async (): Promise<void> => {
     await updatePipelineInContext(pipelineAsState)
     closeDrawer()
   }
 
-  const discardChanges = () => {
+  const discardChanges = (): void => {
     closeDrawer()
   }
 
-  const onRequestClose = () => {
+  const onRequestClose = (): void => {
     if (!isEqual(pipeline, pipelineAsState)) {
       openConfirmationDialog()
       return
@@ -121,7 +120,7 @@ function PipelineNotificationsWithRef(
     closeDrawer()
   }
 
-  const handleConfirmation = (isConfirmed: boolean) => {
+  const handleConfirmation = (isConfirmed: boolean): void => {
     if (isConfirmed) {
       applyChanges()
       closeConfirmationDialog()

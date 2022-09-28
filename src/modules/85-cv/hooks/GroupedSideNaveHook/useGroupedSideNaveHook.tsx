@@ -28,15 +28,15 @@ interface UseGroupedSideNaveHookInterface {
 export default function useGroupedSideNaveHook(props: UseGroupedSideNaveHookInterface) {
   const { getString } = useStrings()
   const { defaultCustomMetricName, initCustomMetricData, mappedServicesAndEnvs } = props
-  const [{ selectedMetric, mappedMetrics }, setMappedMetrics] = useState<CustomSelectedAndMappedMetrics>(
+  const [{ selectedMetric, mappedMetrics }, setMappedMetrics] = useState<CustomSelectedAndMappedMetrics>(() =>
     initializeSelectedMetricsMap(defaultCustomMetricName, initCustomMetricData, mappedServicesAndEnvs)
   )
 
-  const [{ createdMetrics, selectedMetricIndex }, setCreatedMetrics] = useState<CreatedMetricsWithSelectedIndex>(
+  const [{ createdMetrics, selectedMetricIndex }, setCreatedMetrics] = useState<CreatedMetricsWithSelectedIndex>(() =>
     initializeCreatedMetrics(defaultCustomMetricName, selectedMetric, mappedMetrics)
   )
 
-  const [groupedCreatedMetrics, setGroupedCreatedMetrics] = useState<GroupedCreatedMetrics>(
+  const [groupedCreatedMetrics, setGroupedCreatedMetrics] = useState<GroupedCreatedMetrics>(() =>
     initGroupedCreatedMetrics(mappedMetrics, getString)
   )
 

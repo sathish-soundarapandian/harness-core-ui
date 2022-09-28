@@ -10,7 +10,7 @@ import { Intent, TextArea } from '@blueprintjs/core'
 import { Text, useConfirmationDialog } from '@wings-software/uicore'
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
-import type { PipelineDTO } from '../pipelines/views/PipelineListView'
+import type { PipelineDTO } from '@pipeline/components/PipelineModalListView/RunPipelineListView'
 import type { InputSetLocal } from '../inputSet-list/InputSetListView'
 
 const useGetEntityText = (entityType: string): string => {

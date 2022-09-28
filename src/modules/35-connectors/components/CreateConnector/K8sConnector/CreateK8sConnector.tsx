@@ -8,7 +8,7 @@
 import React from 'react'
 import { StepWizard } from '@wings-software/uicore'
 import { pick } from 'lodash-es'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import {
   Connectors,
   CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
@@ -67,7 +67,7 @@ const CreateK8sConnector: React.FC<CreateConnectorModalProps> = props => {
         hideModal={props.onClose}
         helpPanelReferenceId="ConnectorDelegatesSetup"
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep

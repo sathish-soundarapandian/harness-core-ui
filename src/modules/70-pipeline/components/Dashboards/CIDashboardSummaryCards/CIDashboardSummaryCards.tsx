@@ -24,13 +24,12 @@ import styles from './CIDashboardSummaryCards.module.scss'
 
 export interface SummaryCardProps {
   title: string | JSX.Element
-  text?: any
+  text?: string | number | JSX.Element
   subContent?: React.ReactNode
   rate?: number
   rateDuration?: number
   isLoading?: boolean
-  neutralColor?: boolean
-  primaryChartOptions?: any
+  invertColor?: boolean
 }
 
 export default function CIDashboardSummaryCards(props: { timeRange?: TimeRangeSelectorProps }) {
@@ -114,26 +113,27 @@ export function SummaryCard({
   rate,
   rateDuration,
   isLoading,
-  neutralColor
+  invertColor = false
 }: SummaryCardProps) {
   const isEmpty = typeof text === 'undefined'
   let rateFormatted
   let isIncrease = false
   let isDecrease = false
   if (typeof rate !== 'undefined') {
-    isIncrease = rate >= 0
+    isIncrease = rate > 0
     isDecrease = rate < 0
     rateFormatted = `${Math.abs(roundNumber(rate!)!)}%`
   } else if (typeof rateDuration === 'number') {
-    isIncrease = rateDuration >= 0
+    isIncrease = rateDuration > 0
     isDecrease = rateDuration < 0
     rateFormatted = formatDuration(rateDuration)
   }
+  const iconName = isIncrease ? 'caret-up' : 'caret-down'
   return (
     <Container
       className={classnames(styles.card, {
-        [styles.variantIncrease]: isIncrease && !neutralColor,
-        [styles.variantDecrease]: isDecrease && !neutralColor
+        [styles.variantIncrease]: (isIncrease && !invertColor) || (isDecrease && invertColor),
+        [styles.variantDecrease]: (isIncrease && invertColor) || (isDecrease && !invertColor)
       })}
     >
       <Container className={styles.cardHeader}>{title}</Container>
@@ -151,13 +151,7 @@ export function SummaryCard({
         {!isEmpty && !isLoading && (
           <Container className={styles.diffContent}>
             {/* <HighchartsReact highcharts={Highcharts} options={primaryChartOptions} /> */}
-            <Icon
-              size={14}
-              name={isIncrease ? 'caret-up' : 'caret-down'}
-              style={{
-                color: isIncrease ? 'var(--green-600)' : 'var(--ci-color-red-500)'
-              }}
-            />
+            {(isIncrease || isDecrease) && <Icon size={14} name={iconName} />}
             <Text>{rateFormatted}</Text>
           </Container>
         )}

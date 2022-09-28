@@ -7,9 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly cancel: string
-  readonly footer: string
-  readonly runtimeInputs: string
   readonly selectArtifactModal: string
 }
 export default styles

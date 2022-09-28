@@ -7,23 +7,40 @@
 
 import React, { useCallback, useMemo, useState } from 'react'
 import cx from 'classnames'
-import { useHistory, useParams } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
 import ReactTimeago from 'react-timeago'
-import { Button, Layout, Popover, TagsPopover, Text, useConfirmationDialog, useToaster, Dialog } from '@harness/uicore'
-import { Color, Intent } from '@harness/design-system'
+import {
+  Button,
+  Layout,
+  Popover,
+  TagsPopover,
+  Text,
+  useConfirmationDialog,
+  useToaster,
+  Dialog,
+  Icon
+} from '@harness/uicore'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import { defaultTo, pick } from 'lodash-es'
 import type { TableProps } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import routes from '@common/RouteDefinitions'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  ExecutionPathProps,
+  ModulePathParams,
+  PipelinePathProps,
+  PipelineType,
+  ProjectPathProps
+} from '@common/interfaces/RouteInterfaces'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { DashboardList } from '@cd/components/DashboardList/DashboardList'
 import type { DashboardListProps } from '@cd/components/DashboardList/DashboardList'
 import type { ChangeValue } from '@cd/components/Services/DeploymentsWidget/DeploymentsWidget'
 import { useStrings } from 'framework/strings'
 import { Ticker } from '@common/components/Ticker/Ticker'
+import { SortOption } from '@common/components/SortOption/SortOption'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 import { getFixed, INVALID_CHANGE_RATE, numberFormatter } from '@cd/components/Services/common'
 import { ServiceDetailsDTO, useDeleteServiceV2 } from 'services/cd-ng'
@@ -31,8 +48,12 @@ import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/Deployme
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
+import { isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
+import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
+import { mapToExecutionStatus } from '@pipeline/components/Dashboards/shared'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
@@ -61,6 +82,9 @@ export interface ServiceListItem {
     id: string
     timestamp: number
     status: string
+    serviceId: string
+    executionId: string
+    planExecutionId?: string
   }
 }
 
@@ -69,6 +93,9 @@ export interface ServicesListProps {
   error: boolean
   data: ServiceDetailsDTO[]
   refetch: () => void
+  setSavedSortOption: (value: string[] | undefined) => void
+  setSort: React.Dispatch<React.SetStateAction<string[]>>
+  sort: string[]
 }
 
 const transformServiceDetailsData = (data: ServiceDetailsDTO[]): ServiceListItem[] => {
@@ -99,7 +126,10 @@ const transformServiceDetailsData = (data: ServiceDetailsDTO[]): ServiceListItem
       name: defaultTo(item.lastPipelineExecuted?.name, ''),
       id: defaultTo(item.lastPipelineExecuted?.pipelineExecutionId, ''),
       timestamp: defaultTo(item.lastPipelineExecuted?.lastExecutedAt, 0),
-      status: defaultTo(item.lastPipelineExecuted?.status, '')
+      status: defaultTo(item.lastPipelineExecuted?.status, ''),
+      executionId: defaultTo(item.lastPipelineExecuted?.identifier, ''),
+      serviceId: defaultTo(item.serviceIdentifier, ''),
+      planExecutionId: defaultTo(item.lastPipelineExecuted?.planExecutionId, '')
     }
   }))
 }
@@ -126,7 +156,7 @@ const RenderServiceName: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
 
 const RenderType: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
   const { deploymentTypeList } = row.original
-  return <DeploymentTypeIcons deploymentTypes={deploymentTypeList} />
+  return <DeploymentTypeIcons deploymentTypes={deploymentTypeList} size={20} />
 }
 
 const TickerCard: React.FC<{ item: ChangeValue & { name: string } }> = props => {
@@ -216,75 +246,85 @@ const RenderServiceInstances: Renderer<CellProps<ServiceListItem>> = ({ row }) =
 
 const RenderLastDeployment: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
   const {
-    lastDeployment: { id, name, timestamp }
+    lastDeployment: { id, name, timestamp, executionId, planExecutionId, status }
   } = row.original
   const { getString } = useStrings()
-  if (!id) {
-    return <></>
-  }
-  return (
-    <Layout.Vertical margin={{ right: 'large' }} flex={{ alignItems: 'flex-start' }}>
-      <Layout.Horizontal
-        margin={{ bottom: 'xsmall' }}
-        flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
-        width="100%"
-      >
-        <Text
-          font={{ weight: 'semi-bold' }}
-          color={Color.GREY_700}
-          margin={{ right: 'xsmall' }}
-          className={css.lastDeploymentText}
-        >
-          {name}
-        </Text>
-        <Text font={{ size: 'small' }} color={Color.GREY_500} className={css.lastDeploymentText}>{`(${getString(
-          'cd.serviceDashboard.executionId',
-          {
-            id
-          }
-        )})`}</Text>
-      </Layout.Horizontal>
-      {timestamp ? (
-        <ReactTimeago
-          date={timestamp}
-          component={val => (
-            <Text font={{ size: 'small' }} color={Color.GREY_500}>
-              {val.children}
-            </Text>
-          )}
-        />
-      ) : (
-        <></>
-      )}
-    </Layout.Vertical>
-  )
-}
+  const { showError } = useToaster()
 
-const RenderLastDeploymentStatus: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
-  const {
-    lastDeployment: { id, status }
-  } = row.original
-  const { getString } = useStrings()
+  const { orgIdentifier, projectIdentifier, accountId, module, pipelineIdentifier } =
+    useParams<PipelineType<PipelinePathProps>>()
+  const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
+
+  const disabled = isExecutionNotStarted(status)
+
+  function handleClick(): void {
+    if (!disabled && id && planExecutionId) {
+      const route = routes.toExecutionPipelineView({
+        orgIdentifier,
+        pipelineIdentifier: executionId,
+        executionIdentifier: planExecutionId,
+        projectIdentifier,
+        accountId,
+        module,
+        source
+      })
+
+      const baseUrl = window.location.href.split('#')[0]
+      window.open(`${baseUrl}#${route}`)
+    } else {
+      showError(getString('cd.serviceDashboard.noLastDeployment'))
+    }
+  }
+
   if (!id) {
     return <></>
   }
-  const [statusBackgroundColor, statusText] =
-    status?.toLocaleLowerCase() === DeploymentStatus.SUCCESS
-      ? [Color.GREEN_600, getString('success')]
-      : status?.toLocaleLowerCase() === DeploymentStatus.FAILED
-      ? [Color.RED_600, getString('failed')]
-      : [Color.YELLOW_600, status]
   return (
-    <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
-      <Text
-        background={statusBackgroundColor}
-        color={Color.WHITE}
-        font={{ weight: 'semi-bold', size: 'xsmall' }}
-        className={css.statusText}
-        lineClamp={1}
-      >
-        {statusText?.toLocaleUpperCase()}
-      </Text>
+    <Layout.Horizontal className={css.lastDeployment}>
+      <Layout.Vertical margin={{ right: 'large' }} flex={{ alignItems: 'flex-start' }}>
+        <Layout.Horizontal
+          margin={{ bottom: 'xsmall' }}
+          flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+          width="100%"
+        >
+          <Text
+            data-testid={id}
+            font={{ variation: FontVariation.BODY2 }}
+            color={Color.PRIMARY_7}
+            margin={{ right: 'xsmall' }}
+            className={css.lastDeploymentText}
+            lineClamp={1}
+            onClick={e => {
+              e.stopPropagation()
+              handleClick()
+            }}
+          >
+            {name}
+          </Text>
+        </Layout.Horizontal>
+        {timestamp && (
+          <ReactTimeago
+            date={timestamp}
+            component={val => (
+              <Text font={{ size: 'small' }} color={Color.GREY_500}>
+                {' '}
+                {val.children}{' '}
+              </Text>
+            )}
+          />
+        )}
+      </Layout.Vertical>
+      <Layout.Horizontal flex>
+        <ExecutionStatusLabel status={mapToExecutionStatus(status.toUpperCase())} />
+        {isExecutionIgnoreFailed(mapToExecutionStatus(status.toUpperCase())) ? (
+          <Text
+            icon={'warning-sign'}
+            intent={Intent.WARNING}
+            tooltip={getString('pipeline.execution.ignoreFailedWarningText')}
+            tooltipProps={{ position: Position.LEFT }}
+          />
+        ) : null}
+      </Layout.Horizontal>
     </Layout.Horizontal>
   )
 }
@@ -298,7 +338,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
-  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
   const { mutate: deleteService } = useDeleteServiceV2({
     queryParams: {
@@ -390,7 +430,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
     e.stopPropagation()
     setMenuOpen(false)
-    if (NG_SVC_ENV_REDESIGN) {
+    if (isSvcEnvEntityEnabled) {
       history.push({
         pathname: routes.toServiceStudio({
           accountId,
@@ -412,6 +452,14 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
     openDialog()
   }
 
+  const openInNewTab = routes.toServiceStudio({
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    serviceId: data.identifier,
+    module
+  })
+
   return (
     <Layout.Horizontal>
       <Popover
@@ -431,6 +479,15 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
           }}
         />
         <Menu style={{ minWidth: 'unset' }}>
+          <Link
+            className={cx('bp3-menu-item', css.openNewTabStyle)}
+            target="_blank"
+            to={openInNewTab}
+            onClick={e => e.stopPropagation()}
+          >
+            <Icon name="launch" style={{ marginRight: '5px' }} />
+            {getString('pipeline.openInNewTab')}
+          </Link>
           <RbacMenuItem
             icon="edit"
             text={getString('edit')}
@@ -462,7 +519,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
 }
 
 export const ServicesList: React.FC<ServicesListProps> = props => {
-  const { loading, data, error, refetch } = props
+  const { loading, data, error, refetch, setSavedSortOption, setSort, sort } = props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
@@ -479,13 +536,14 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [data]
   )
+
   const columns: TableProps<ServiceListItem>['columns'] = useMemo(
     () => {
       return [
         {
           Header: getString('service').toLocaleUpperCase(),
           id: 'service',
-          width: '15%',
+          width: '20%',
           Cell: RenderServiceName
         },
         {
@@ -515,20 +573,14 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('cd.serviceDashboard.frequency').toLocaleUpperCase(),
           id: 'frequency',
-          width: '10%',
+          width: '13%',
           Cell: getRenderTickerCard('frequency')
         },
         {
-          Header: getString('cd.serviceDashboard.lastDeployment').toLocaleUpperCase(),
+          Header: getString('cd.serviceDashboard.lastPipelineExecution').toLocaleUpperCase(),
           id: 'lastDeployment',
-          width: '22%',
+          width: '19%',
           Cell: RenderLastDeployment
-        },
-        {
-          Header: '',
-          id: 'status',
-          width: '5%',
-          Cell: RenderLastDeploymentStatus
         },
         {
           Header: '',
@@ -559,7 +611,8 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
     data: transformServiceDetailsData(data),
     refetch,
     HeaderCustomPrimary: ServiceListHeaderCustomPrimary,
-    onRowClick: goToServiceDetails
+    onRowClick: goToServiceDetails,
+    SortList: SortOption({ setSavedSortOption, setSort, sort })
   }
   return <DashboardList<ServiceListItem> {...dashboardListProps} />
 }

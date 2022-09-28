@@ -27,7 +27,7 @@ import routes from '@common/RouteDefinitions'
 import { getViewFilterForId, getTimeFilters, GROUP_BY_POD, getTimeRangeFilter } from '@ce/utils/perspectiveUtils'
 import CloudCostInsightChart from '@ce/components/CloudCostInsightChart/CloudCostInsightChart'
 import { CCM_CHART_TYPES } from '@ce/constants'
-import PerspectiveTimeRangePicker from '@ce/components/PerspectiveTimeRangePicker/PerspectiveTimeRangePicker'
+import TimeRangePicker from '@ce/common/TimeRangePicker/TimeRangePicker'
 import { DAYS_FOR_TICK_INTERVAL } from '@ce/components/CloudCostInsightChart/Chart'
 import {
   CE_DATE_FORMAT_INTERNAL,
@@ -43,6 +43,7 @@ import WorkloadSummary from '@ce/components/WorkloadSummary/WorkloadSummary'
 import EmptyView from '@ce/images/empty-state.svg'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { Aggregation, AggregationFunctionMapping } from './constants'
 import css from './WorkloadDetailsPage.module.scss'
 
@@ -70,6 +71,8 @@ const WorkloadDetailsPage: () => JSX.Element = () => {
   const { getString } = useStrings()
   const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeFilterType>('timeRange', DEFAULT_TIME_RANGE)
   const [chartDataAggregation, setChartDataAggregation] = useState<Aggregation>(Aggregation.TimeWeighted)
+
+  useDocumentTitle([getString('ce.perspectives.workloadDetails.workloadDetailsText'), workloadName], true)
 
   const isDateRangeInLast7Days = useMemo(() => {
     const last7DaysRange = DATE_RANGE_SHORTCUTS['LAST_7_DAYS']
@@ -214,10 +217,10 @@ const WorkloadDetailsPage: () => JSX.Element = () => {
           />
         }
       />
-      <Page.Body>
+      <Page.Body className={css.pageCtn}>
         <Container flex background="white" padding="small">
           <FlexExpander />
-          <PerspectiveTimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
+          <TimeRangePicker timeRange={timeRange} setTimeRange={setTimeRange} />
         </Container>
         <Container padding="large">
           <WorkloadSummary

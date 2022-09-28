@@ -9,6 +9,7 @@
 declare const styles: {
   readonly main: string
   readonly metaContainer: string
+  readonly popover: string
   readonly singleExecutionTag: string
   readonly trigger: string
   readonly userLabelContainer: string

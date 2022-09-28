@@ -83,7 +83,7 @@ const FixedScheduleAccordion: React.FC<FixedScheduleAccordionProps> = props => {
         })
       )
     } catch (e) {
-      showError(e.data?.message || e.data)
+      showError(Utils.getASErrorMessage(e) || e.data?.message || e.data)
     }
     setSelectedSchedule(undefined)
     fetchAllSchedules()
@@ -119,7 +119,7 @@ const FixedScheduleAccordion: React.FC<FixedScheduleAccordionProps> = props => {
       )
       fetchAllSchedules()
     } catch (e) {
-      showError(e.data?.message || e.data)
+      showError(Utils.getASErrorMessage(e) || e.data?.message || e.data)
     }
   }
 

@@ -29,6 +29,9 @@ export const getAnomalyFormValuesFromFilterProperties = (
     k8sClusterNames,
     k8sNamespaces,
     k8sWorkloadNames,
+    azureResourceGroups,
+    azureMeterCategories,
+    azureSubscriptionGuids,
     minActualAmount,
     minAnomalousSpend
   } = filterProperties
@@ -60,6 +63,15 @@ export const getAnomalyFormValuesFromFilterProperties = (
   if (k8sWorkloadNames) {
     formValues.k8sWorkloadNames = getMultiSelectOptions(k8sWorkloadNames)
   }
+  if (azureResourceGroups) {
+    formValues.azureResourceGroups = getMultiSelectOptions(azureResourceGroups)
+  }
+  if (azureMeterCategories) {
+    formValues.azureMeterCategories = getMultiSelectOptions(azureMeterCategories)
+  }
+  if (azureSubscriptionGuids) {
+    formValues.azureSubscriptionGuids = getMultiSelectOptions(azureSubscriptionGuids)
+  }
 
   if (minActualAmount) {
     formValues.minActualAmount = +minActualAmount
@@ -75,55 +87,13 @@ export const getAnomalyFormValuesFromFilterProperties = (
 export const getAnomalyFilterPropertiesFromForm = (formData: AnomaliesFilterFormType): AnomalyFilterProperties => {
   const filterProperties: AnomalyFilterProperties = { filterType: 'Anomaly' }
 
-  const {
-    awsAccounts,
-    awsServices,
-    awsUsageTypes,
-    gcpProducts,
-    gcpProjects,
-    gcpSKUDescriptions,
-    k8sClusterNames,
-    k8sNamespaces,
-    k8sWorkloadNames,
-    minActualAmount,
-    minAnomalousSpend
-  } = formData
-
-  if (awsAccounts) {
-    filterProperties.awsAccounts = getValueFromOption(awsAccounts)
-  }
-  if (awsServices) {
-    filterProperties.awsServices = getValueFromOption(awsServices)
-  }
-  if (awsUsageTypes) {
-    filterProperties.awsUsageTypes = getValueFromOption(awsUsageTypes)
-  }
-  if (gcpProducts) {
-    filterProperties.gcpProducts = getValueFromOption(gcpProducts)
-  }
-  if (gcpProjects) {
-    filterProperties.gcpProjects = getValueFromOption(gcpProjects)
-  }
-  if (gcpSKUDescriptions) {
-    filterProperties.gcpSKUDescriptions = getValueFromOption(gcpSKUDescriptions)
-  }
-  if (k8sClusterNames) {
-    filterProperties.k8sClusterNames = getValueFromOption(k8sClusterNames)
-  }
-  if (k8sNamespaces) {
-    filterProperties.k8sNamespaces = getValueFromOption(k8sNamespaces)
-  }
-  if (k8sWorkloadNames) {
-    filterProperties.k8sWorkloadNames = getValueFromOption(k8sWorkloadNames)
-  }
-
-  if (minActualAmount) {
-    filterProperties.minActualAmount = +minActualAmount
-  }
-
-  if (minAnomalousSpend) {
-    filterProperties.minAnomalousSpend = +minAnomalousSpend
-  }
+  Object.entries(formData).forEach(([key, value]) => {
+    if (key === 'minActualAmount' || key === 'minAnomalousSpend') {
+      filterProperties[key] = +value
+    } else {
+      ;(filterProperties as any)[key] = getValueFromOption(value)
+    }
+  })
 
   return filterProperties
 }

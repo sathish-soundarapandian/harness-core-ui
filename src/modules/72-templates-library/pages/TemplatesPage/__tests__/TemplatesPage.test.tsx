@@ -16,12 +16,22 @@ import type { TemplatesViewProps } from '@templates-library/pages/TemplatesPage/
 import type { GitFiltersProps } from '@common/components/GitFilters/GitFilters'
 import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import * as hooks from '@common/hooks/useMutateAsGet'
+import * as Feature from '@common/hooks/useFeatures'
+import * as FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
 import routes from '@common/RouteDefinitions'
 import { pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
 import {
   mockApiErrorResponse,
   mockApiFetchingResponse
 } from '@templates-library/components/TemplateActivityLog/__tests__/TemplateActivityLogTestHelper'
+import { StageTemplate } from '@templates-library/components/Templates/StageTemplate/StageTemplate'
+import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { ExecutionTemplate } from '@templates-library/components/Templates/ExecutionTemplate/ExecutionTemplate'
+import { InfrastructureTemplate } from '@templates-library/components/Templates/InfrastructureTemplate/InfrastructureTemplate'
+import { PipelineTemplate } from '@templates-library/components/Templates/PipelineTemplate/PipelineTemplate'
+import { ServiceTemplate } from '@templates-library/components/Templates/ServiceTemplate/ServiceTemplate'
+import { StepGroupTemplate } from '@templates-library/components/Templates/StepGroupTemplate/StepGroupTemplate'
 
 const templateListCallMock = jest
   .spyOn(hooks, 'useMutateAsGet')
@@ -105,6 +115,15 @@ const mockEmptySuccessResponse = {
 
 describe('<TemplatesPage /> tests', () => {
   beforeEach(() => jest.clearAllMocks())
+  beforeAll(() => {
+    templateFactory.registerTemplate(new StepTemplate())
+    templateFactory.registerTemplate(new StageTemplate())
+    templateFactory.registerTemplate(new PipelineTemplate())
+    templateFactory.registerTemplate(new ServiceTemplate())
+    templateFactory.registerTemplate(new InfrastructureTemplate())
+    templateFactory.registerTemplate(new StepGroupTemplate())
+    templateFactory.registerTemplate(new ExecutionTemplate())
+  })
 
   test('should match snapshot', async () => {
     const { container } = render(
@@ -137,7 +156,7 @@ describe('<TemplatesPage /> tests', () => {
     await waitFor(() => popover)
 
     const menuItems = popover.querySelectorAll('[class*="menuItem"]')
-    expect(menuItems?.length).toBe(2)
+    expect(menuItems?.length).toBeGreaterThan(2)
 
     act(() => {
       fireEvent.click(menuItems[1])
@@ -277,5 +296,20 @@ describe('<TemplatesPage /> tests', () => {
         queryParams: defaultQueryParams
       })
     )
+  })
+
+  test('should render feature banner correctly', () => {
+    const FeatureWarningBannerMock = jest.spyOn(FeatureWarningBanner, 'default')
+    jest.spyOn(Feature, 'useFeature').mockReturnValue({
+      enabled: false
+    })
+
+    render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <TemplatesPage />
+      </TestWrapper>
+    )
+
+    expect(FeatureWarningBannerMock).toBeCalledWith(expect.objectContaining({ featureName: 'TEMPLATE_SERVICE' }), {})
   })
 })

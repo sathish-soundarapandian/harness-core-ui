@@ -16,7 +16,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
         >
           <div
             class="Text--withDocsTooltip"
-            data-tooltip-id="cloudFormationDeleteStack_identifier"
+            data-tooltip-id="universalInputNameWithId"
           >
             <p
               class="StyledProps--font StyledProps--main"
@@ -84,7 +84,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="cloudFormationDeleteStack_name"
+              data-tooltip-id="cloudFormationDeleteStack-_name"
             >
               name
             </span>
@@ -123,7 +123,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_timeout"
+            data-tooltip-id="cloudFormationDeleteStack-_timeout"
           >
             pipelineSteps.timeoutLabel
           </span>
@@ -197,7 +197,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.type"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.type"
           >
             pipelineSteps.configurationType
           </span>
@@ -265,11 +265,11 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.connectorRef"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.connectorRef"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
@@ -388,7 +388,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.region"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.region"
           >
             regionLabel
           </span>
@@ -481,7 +481,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
       </div>
     </div>
     <div
-      class="Layout--vertical StyledProps--main addMarginBottom"
+      class="Layout--horizontal StyledProps--main"
     >
       <div
         class="bp3-form-group"
@@ -492,7 +492,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.roleArn"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.roleArn"
           >
             connectors.awsKms.roleArnLabel (optional)
           </span>
@@ -596,7 +596,7 @@ exports[`Test Cloudformation delete stack should be able to edit inline config 1
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.stackName"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.stackName"
           >
             cd.cloudFormation.stackName
           </span>
@@ -674,7 +674,7 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
         >
           <div
             class="Text--withDocsTooltip"
-            data-tooltip-id="cloudFormationDeleteStack_identifier"
+            data-tooltip-id="universalInputNameWithId"
           >
             <p
               class="StyledProps--font StyledProps--main"
@@ -740,7 +740,7 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="cloudFormationDeleteStack_name"
+              data-tooltip-id="cloudFormationDeleteStack-_name"
             >
               name
             </span>
@@ -810,7 +810,7 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_timeout"
+            data-tooltip-id="cloudFormationDeleteStack-_timeout"
           >
             pipelineSteps.timeoutLabel
           </span>
@@ -915,7 +915,7 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.type"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.type"
           >
             pipelineSteps.configurationType
           </span>
@@ -983,11 +983,11 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.connectorRef"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.connectorRef"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
@@ -1122,7 +1122,7 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.region"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.region"
           >
             regionLabel
           </span>
@@ -1246,7 +1246,7 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
       </div>
     </div>
     <div
-      class="Layout--vertical StyledProps--main addMarginBottom"
+      class="Layout--horizontal StyledProps--main"
     >
       <div
         class="bp3-form-group"
@@ -1257,7 +1257,7 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.roleArn"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.roleArn"
           >
             connectors.awsKms.roleArnLabel (optional)
           </span>
@@ -1361,7 +1361,7 @@ exports[`Test Cloudformation delete stack should error form for inline config 1`
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.stackName"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.stackName"
           >
             cd.cloudFormation.stackName
           </span>
@@ -1470,7 +1470,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs 1`] =
         >
           <div
             class="Text--withDocsTooltip"
-            data-tooltip-id="cloudFormationDeleteStack_identifier"
+            data-tooltip-id="universalInputNameWithId"
           >
             <p
               class="StyledProps--font StyledProps--main"
@@ -1538,7 +1538,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs 1`] =
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="cloudFormationDeleteStack_name"
+              data-tooltip-id="cloudFormationDeleteStack-_name"
             >
               name
             </span>
@@ -1577,7 +1577,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs 1`] =
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_timeout"
+            data-tooltip-id="cloudFormationDeleteStack-_timeout"
           >
             pipelineSteps.timeoutLabel
           </span>
@@ -1651,7 +1651,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs 1`] =
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.type"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.type"
           >
             pipelineSteps.configurationType
           </span>
@@ -1711,7 +1711,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs 1`] =
       </div>
     </div>
     <div
-      class="formGroup"
+      class="formGroup sm"
     >
       <div
         class="bp3-form-group inputWidth"
@@ -1722,7 +1722,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs 1`] =
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.provisionerIdentifier"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.provisionerIdentifier"
           >
             pipelineSteps.provisionerIdentifier
           </span>
@@ -1800,7 +1800,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs and e
         >
           <div
             class="Text--withDocsTooltip"
-            data-tooltip-id="cloudFormationDeleteStack_identifier"
+            data-tooltip-id="universalInputNameWithId"
           >
             <p
               class="StyledProps--font StyledProps--main"
@@ -1866,7 +1866,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs and e
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="cloudFormationDeleteStack_name"
+              data-tooltip-id="cloudFormationDeleteStack-_name"
             >
               name
             </span>
@@ -1936,7 +1936,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs and e
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_timeout"
+            data-tooltip-id="cloudFormationDeleteStack-_timeout"
           >
             pipelineSteps.timeoutLabel
           </span>
@@ -1999,6 +1999,40 @@ exports[`Test Cloudformation delete stack should render all runtime inputs and e
           </div>
         </div>
       </div>
+      <span
+        class="bp3-popover-wrapper bp3-dark"
+      >
+        <span
+          class="bp3-popover-target"
+        >
+          <button
+            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
+            id="configureOptions_timeout"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="bp3-icon bp3-icon-cog StyledProps--main"
+              icon="cog"
+            >
+              <svg
+                data-icon="cog"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <desc>
+                  cog
+                </desc>
+                <path
+                  d="M15.19 6.39h-1.85c-.11-.37-.27-.71-.45-1.04l1.36-1.36c.31-.31.31-.82 0-1.13l-1.13-1.13a.803.803 0 00-1.13 0l-1.36 1.36c-.33-.17-.67-.33-1.04-.44V.79c0-.44-.36-.8-.8-.8h-1.6c-.44 0-.8.36-.8.8v1.86c-.39.12-.75.28-1.1.47l-1.3-1.3c-.3-.3-.79-.3-1.09 0L1.82 2.91c-.3.3-.3.79 0 1.09l1.3 1.3c-.2.34-.36.7-.48 1.09H.79c-.44 0-.8.36-.8.8v1.6c0 .44.36.8.8.8h1.85c.11.37.27.71.45 1.04l-1.36 1.36c-.31.31-.31.82 0 1.13l1.13 1.13c.31.31.82.31 1.13 0l1.36-1.36c.33.18.67.33 1.04.44v1.86c0 .44.36.8.8.8h1.6c.44 0 .8-.36.8-.8v-1.86c.39-.12.75-.28 1.1-.47l1.3 1.3c.3.3.79.3 1.09 0l1.09-1.09c.3-.3.3-.79 0-1.09l-1.3-1.3c.19-.35.36-.71.48-1.1h1.85c.44 0 .8-.36.8-.8v-1.6a.816.816 0 00-.81-.79zm-7.2 4.6c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </button>
+        </span>
+      </span>
     </div>
     <div
       class="divider"
@@ -2015,7 +2049,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs and e
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.type"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.type"
           >
             pipelineSteps.configurationType
           </span>
@@ -2075,7 +2109,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs and e
       </div>
     </div>
     <div
-      class="formGroup"
+      class="formGroup sm"
     >
       <div
         class="bp3-form-group bp3-intent-danger inputWidth"
@@ -2086,7 +2120,7 @@ exports[`Test Cloudformation delete stack should render all runtime inputs and e
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.provisionerIdentifier"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.provisionerIdentifier"
           >
             pipelineSteps.provisionerIdentifier
           </span>
@@ -2195,7 +2229,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
         >
           <div
             class="Text--withDocsTooltip"
-            data-tooltip-id="cloudFormationDeleteStack_identifier"
+            data-tooltip-id="universalInputNameWithId"
           >
             <p
               class="StyledProps--font StyledProps--main"
@@ -2263,7 +2297,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="cloudFormationDeleteStack_name"
+              data-tooltip-id="cloudFormationDeleteStack-_name"
             >
               name
             </span>
@@ -2302,7 +2336,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_timeout"
+            data-tooltip-id="cloudFormationDeleteStack-_timeout"
           >
             pipelineSteps.timeoutLabel
           </span>
@@ -2376,7 +2410,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.type"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.type"
           >
             pipelineSteps.configurationType
           </span>
@@ -2444,11 +2478,11 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.connectorRef"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.connectorRef"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
@@ -2567,7 +2601,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.region"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.region"
           >
             regionLabel
           </span>
@@ -2660,7 +2694,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
       </div>
     </div>
     <div
-      class="Layout--vertical StyledProps--main addMarginBottom"
+      class="Layout--horizontal StyledProps--main"
     >
       <div
         class="bp3-form-group"
@@ -2671,7 +2705,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.roleArn"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.roleArn"
           >
             connectors.awsKms.roleArnLabel (optional)
           </span>
@@ -2775,7 +2809,7 @@ exports[`Test Cloudformation delete stack should render delete stack view - inli
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.stackName"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.stackName"
           >
             cd.cloudFormation.stackName
           </span>
@@ -2853,7 +2887,7 @@ exports[`Test Cloudformation delete stack should render edit view as new step 1`
         >
           <div
             class="Text--withDocsTooltip"
-            data-tooltip-id="cloudFormationDeleteStack_identifier"
+            data-tooltip-id="universalInputNameWithId"
           >
             <p
               class="StyledProps--font StyledProps--main"
@@ -2919,7 +2953,7 @@ exports[`Test Cloudformation delete stack should render edit view as new step 1`
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="cloudFormationDeleteStack_name"
+              data-tooltip-id="cloudFormationDeleteStack-_name"
             >
               name
             </span>
@@ -2958,7 +2992,7 @@ exports[`Test Cloudformation delete stack should render edit view as new step 1`
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_timeout"
+            data-tooltip-id="cloudFormationDeleteStack-_timeout"
           >
             pipelineSteps.timeoutLabel
           </span>
@@ -3032,7 +3066,7 @@ exports[`Test Cloudformation delete stack should render edit view as new step 1`
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.type"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.type"
           >
             pipelineSteps.configurationType
           </span>
@@ -3092,7 +3126,7 @@ exports[`Test Cloudformation delete stack should render edit view as new step 1`
       </div>
     </div>
     <div
-      class="formGroup"
+      class="formGroup sm"
     >
       <div
         class="bp3-form-group inputWidth"
@@ -3103,7 +3137,7 @@ exports[`Test Cloudformation delete stack should render edit view as new step 1`
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.provisionerIdentifier"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.provisionerIdentifier"
           >
             pipelineSteps.provisionerIdentifier
           </span>
@@ -3216,7 +3250,7 @@ exports[`Test Cloudformation delete stack should render when inherit from create
         >
           <div
             class="Text--withDocsTooltip"
-            data-tooltip-id="cloudFormationDeleteStack_identifier"
+            data-tooltip-id="universalInputNameWithId"
           >
             <p
               class="StyledProps--font StyledProps--main"
@@ -3284,7 +3318,7 @@ exports[`Test Cloudformation delete stack should render when inherit from create
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="cloudFormationDeleteStack_name"
+              data-tooltip-id="cloudFormationDeleteStack-_name"
             >
               name
             </span>
@@ -3323,7 +3357,7 @@ exports[`Test Cloudformation delete stack should render when inherit from create
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_timeout"
+            data-tooltip-id="cloudFormationDeleteStack-_timeout"
           >
             pipelineSteps.timeoutLabel
           </span>
@@ -3397,7 +3431,7 @@ exports[`Test Cloudformation delete stack should render when inherit from create
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.type"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.type"
           >
             pipelineSteps.configurationType
           </span>
@@ -3457,7 +3491,7 @@ exports[`Test Cloudformation delete stack should render when inherit from create
       </div>
     </div>
     <div
-      class="formGroup"
+      class="formGroup sm"
     >
       <div
         class="bp3-form-group inputWidth"
@@ -3468,7 +3502,7 @@ exports[`Test Cloudformation delete stack should render when inherit from create
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.provisionerIdentifier"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.provisionerIdentifier"
           >
             pipelineSteps.provisionerIdentifier
           </span>
@@ -3546,7 +3580,7 @@ exports[`Test Cloudformation delete stack should show error when inherited from 
         >
           <div
             class="Text--withDocsTooltip"
-            data-tooltip-id="cloudFormationDeleteStack_identifier"
+            data-tooltip-id="universalInputNameWithId"
           >
             <p
               class="StyledProps--font StyledProps--main"
@@ -3614,7 +3648,7 @@ exports[`Test Cloudformation delete stack should show error when inherited from 
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="cloudFormationDeleteStack_name"
+              data-tooltip-id="cloudFormationDeleteStack-_name"
             >
               name
             </span>
@@ -3653,7 +3687,7 @@ exports[`Test Cloudformation delete stack should show error when inherited from 
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_timeout"
+            data-tooltip-id="cloudFormationDeleteStack-_timeout"
           >
             pipelineSteps.timeoutLabel
           </span>
@@ -3727,7 +3761,7 @@ exports[`Test Cloudformation delete stack should show error when inherited from 
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.type"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.type"
           >
             pipelineSteps.configurationType
           </span>
@@ -3787,7 +3821,7 @@ exports[`Test Cloudformation delete stack should show error when inherited from 
       </div>
     </div>
     <div
-      class="formGroup"
+      class="formGroup sm"
     >
       <div
         class="bp3-form-group bp3-intent-danger inputWidth"
@@ -3798,7 +3832,7 @@ exports[`Test Cloudformation delete stack should show error when inherited from 
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.provisionerIdentifier"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.provisionerIdentifier"
           >
             pipelineSteps.provisionerIdentifier
           </span>
@@ -3907,7 +3941,7 @@ exports[`Test Cloudformation delete stack should submit form for inherited from 
         >
           <div
             class="Text--withDocsTooltip"
-            data-tooltip-id="cloudFormationDeleteStack_identifier"
+            data-tooltip-id="universalInputNameWithId"
           >
             <p
               class="StyledProps--font StyledProps--main"
@@ -3975,7 +4009,7 @@ exports[`Test Cloudformation delete stack should submit form for inherited from 
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="cloudFormationDeleteStack_name"
+              data-tooltip-id="cloudFormationDeleteStack-_name"
             >
               name
             </span>
@@ -4014,7 +4048,7 @@ exports[`Test Cloudformation delete stack should submit form for inherited from 
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_timeout"
+            data-tooltip-id="cloudFormationDeleteStack-_timeout"
           >
             pipelineSteps.timeoutLabel
           </span>
@@ -4088,7 +4122,7 @@ exports[`Test Cloudformation delete stack should submit form for inherited from 
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.type"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.type"
           >
             pipelineSteps.configurationType
           </span>
@@ -4148,7 +4182,7 @@ exports[`Test Cloudformation delete stack should submit form for inherited from 
       </div>
     </div>
     <div
-      class="formGroup"
+      class="formGroup sm"
     >
       <div
         class="bp3-form-group inputWidth"
@@ -4159,7 +4193,7 @@ exports[`Test Cloudformation delete stack should submit form for inherited from 
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.provisionerIdentifier"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.provisionerIdentifier"
           >
             pipelineSteps.provisionerIdentifier
           </span>
@@ -4237,7 +4271,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
         >
           <div
             class="Text--withDocsTooltip"
-            data-tooltip-id="cloudFormationDeleteStack_identifier"
+            data-tooltip-id="universalInputNameWithId"
           >
             <p
               class="StyledProps--font StyledProps--main"
@@ -4305,7 +4339,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
           >
             <span
               class="Tooltip--acenter"
-              data-tooltip-id="cloudFormationDeleteStack_name"
+              data-tooltip-id="cloudFormationDeleteStack-_name"
             >
               name
             </span>
@@ -4344,7 +4378,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_timeout"
+            data-tooltip-id="cloudFormationDeleteStack-_timeout"
           >
             pipelineSteps.timeoutLabel
           </span>
@@ -4418,7 +4452,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.type"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.type"
           >
             pipelineSteps.configurationType
           </span>
@@ -4486,11 +4520,11 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
       >
         <div
           class="StyledProps--font StyledProps--main"
-          style="margin-bottom: 5px;"
+          data-test-id="connectorTooltip"
         >
           <span
             class="Tooltip--acenter bp3-label"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.connectorRef"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.connectorRef"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey900"
@@ -4609,7 +4643,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.region"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.region"
           >
             regionLabel
           </span>
@@ -4702,7 +4736,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
       </div>
     </div>
     <div
-      class="Layout--vertical StyledProps--main addMarginBottom"
+      class="Layout--horizontal StyledProps--main"
     >
       <div
         class="bp3-form-group"
@@ -4713,7 +4747,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.roleArn"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.roleArn"
           >
             connectors.awsKms.roleArnLabel (optional)
           </span>
@@ -4817,7 +4851,7 @@ exports[`Test Cloudformation delete stack should submit form for inline config 1
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="cloudFormationDeleteStack_spec.configuration.spec.stackName"
+            data-tooltip-id="cloudFormationDeleteStack-_spec.configuration.spec.stackName"
           >
             cd.cloudFormation.stackName
           </span>

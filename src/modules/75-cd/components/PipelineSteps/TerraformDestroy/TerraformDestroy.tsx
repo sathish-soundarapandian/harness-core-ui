@@ -41,6 +41,7 @@ export class TerraformDestroy extends PipelineStep<TFDestroyData> {
     this._hasDelegateSelectionVisible = true
   }
   protected type = StepType.TerraformDestroy
+  protected referenceId = 'terraformDestroyStep'
   protected defaultValues: TFDestroyData = {
     identifier: '',
     timeout: '10m',
@@ -145,7 +146,7 @@ export class TerraformDestroy extends PipelineStep<TFDestroyData> {
       isNewStep
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <TerraformInputStep
           initialValues={initialValues}

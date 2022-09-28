@@ -16,7 +16,8 @@ import {
   Container,
   FormError,
   FormikTooltipContext,
-  useToaster
+  useToaster,
+  ButtonVariation
 } from '@wings-software/uicore'
 import { connect, FormikContextType } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
@@ -47,6 +48,7 @@ import {
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RbacButton from '@rbac/components/Button/Button'
 import {
   ConnectorReferenceFieldProps,
   getReferenceFieldProps,
@@ -76,6 +78,8 @@ export interface MultiTypeConnectorFieldProps extends Omit<ConnectorReferenceFie
   multitypeInputValue?: MultiTypeInputType
   connectorLabelClass?: string
   onLoadingFinish?: () => void
+  setConnector?: any
+  mini?: boolean
 }
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
   status: ConnectorResponse['status']
@@ -105,6 +109,8 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     multitypeInputValue,
     connectorLabelClass: connectorLabelClassFromProps = '',
     createNewLabel,
+    setConnector,
+    mini,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -114,7 +120,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     disabled,
     ...rest
   } = restProps
-  const selected = get(formik?.values, name, '')
+  const selected = get(formik?.values, name, '') ?? ''
   const [selectedValue, setSelectedValue] = React.useState(selected)
   const [inlineSelection, setInlineSelection] = React.useState<InlineSelectionInterface>({
     selected: false,
@@ -209,6 +215,15 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selected])
+  React.useEffect(() => {
+    if (typeof selectedValue !== 'string' && selectedValue && (selectedValue as ConnectorSelectedValue).connector) {
+      if (isConnectorEdited) {
+        getConnectorStatus()
+      } else {
+        setConnectorStatus((selectedValue as ConnectorSelectedValue).live)
+      }
+    }
+  }, [selectedValue])
 
   React.useEffect(() => {
     if (typeof selected === 'string' && getMultiTypeFromValue(selected) === MultiTypeInputType.FIXED && !loading) {
@@ -229,6 +244,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         }
         setSelectedValue(value)
         props?.onLoadingFinish?.()
+        setConnector?.(connectorData?.data)
       } else if (error) {
         if (!setRefValue) {
           formik?.setFieldValue(name, '')
@@ -310,24 +326,13 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     }
   }
 
-  const [canUpdateSelectedConnector] = usePermission(
-    {
-      resource: {
-        resourceType: ResourceType.CONNECTOR,
-        resourceIdentifier: selectedValue?.connector?.identifier || ''
-      },
-      permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
-    },
-    []
-  )
-
   if (typeof type === 'string' && typeof selectedValue === 'object') {
     optionalReferenceSelectProps.editRenderer = getEditRenderer(
       selectedValue,
       openConnectorModal,
       selectedValue?.connector?.type || type,
       getString,
-      canUpdateSelectedConnector
+      { accountIdentifier, projectIdentifier, orgIdentifier }
     )
   } else if (Array.isArray(type) && typeof selectedValue === 'object') {
     optionalReferenceSelectProps.editRenderer = getEditRenderer(
@@ -335,35 +340,35 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
       openConnectorModal,
       selectedValue?.connector?.type,
       getString,
-      canUpdateSelectedConnector
+      { accountIdentifier, projectIdentifier, orgIdentifier }
     )
   }
   const [pagedConnectorData, setPagedConnectorData] = useState<ResponsePageConnectorResponse>({})
   const [page, setPage] = useState(0)
-
+  const getReferenceFieldPropsValues = getReferenceFieldProps({
+    defaultScope,
+    gitScope,
+    accountIdentifier,
+    projectIdentifier,
+    orgIdentifier,
+    type,
+    category,
+    name,
+    selected,
+    width,
+    placeholder: placeHolderLocal,
+    label,
+    getString,
+    openConnectorModal,
+    setPagedConnectorData
+  })
   const component = (
     <FormGroup {...rest} labelFor={name} helperText={helperText} intent={intent} style={{ marginBottom: 0 }}>
       <MultiTypeReferenceInput<ConnectorReferenceDTO>
         name={name}
         disabled={isDisabled}
         referenceSelectProps={{
-          ...getReferenceFieldProps({
-            defaultScope,
-            gitScope,
-            accountIdentifier,
-            projectIdentifier,
-            orgIdentifier,
-            type,
-            category,
-            name,
-            selected,
-            width,
-            placeholder: placeHolderLocal,
-            label,
-            getString,
-            openConnectorModal,
-            setPagedConnectorData
-          }),
+          ...getReferenceFieldPropsValues,
           // Only Github will have collapse view and not others.
           // Other connectors will need to onboard this and add details in collapsed view.
           // Please update the details in RenderConnectorDetails inside ConnectorReferenceField.
@@ -380,7 +385,24 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
           ...optionalReferenceSelectProps,
           disabled: isDisabled,
           hideModal: inlineSelection.selected && inlineSelection.inlineModalClosed,
-          createNewLabel: createNewLabel || getString('newConnector')
+          createNewLabel: createNewLabel || getString('newConnector'),
+          createNewBtnComponent: (
+            <RbacButton
+              variation={ButtonVariation.SECONDARY}
+              onClick={() => {
+                optionalReferenceSelectProps.createNewHandler?.()
+              }}
+              text={`+ ${createNewLabel || getString('newConnector')}`}
+              margin={{ right: 'small' }}
+              permission={{
+                permission: PermissionIdentifier.UPDATE_CONNECTOR,
+                resource: {
+                  resourceType: ResourceType.CONNECTOR
+                },
+                resourceScope: { accountIdentifier, orgIdentifier, projectIdentifier }
+              }}
+            ></RbacButton>
+          )
         }}
         onChange={(val, valueType, type1) => {
           if (val && type1 === MultiTypeInputType.FIXED) {
@@ -415,8 +437,13 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
   )
 
   return (
-    <div style={style} className={cx(css.connectorLabel, connectorLabelClassFromProps)}>
-      <Container style={{ marginBottom: 5 }}>
+    <div
+      style={style}
+      className={cx(css.connectorLabel, connectorLabelClassFromProps, {
+        [css.mini]: mini
+      })}
+    >
+      <Container data-test-id="connectorTooltip">
         <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} className={Classes.LABEL} />
       </Container>
       {enableConfigureOptions ? (

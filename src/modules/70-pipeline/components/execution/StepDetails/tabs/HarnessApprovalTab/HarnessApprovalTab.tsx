@@ -10,6 +10,7 @@ import { Button, FormInput, Layout, TextInput, Text } from '@wings-software/uico
 import { Formik } from 'formik'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
+import { useParams } from 'react-router-dom'
 import {
   useAddHarnessApprovalActivity,
   ApprovalInstanceResponse,
@@ -21,6 +22,7 @@ import { String, useStrings } from 'framework/strings'
 import { Duration } from '@common/exports'
 import { isApprovalWaiting } from '@pipeline/utils/approvalUtils'
 import { StepDetails } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { HarnessApprover } from './HarnessApprover/HarnessApprover'
 import css from './HarnessApprovalTab.module.scss'
 
@@ -37,12 +39,31 @@ export interface HarnessApprovalTabProps {
   updateState(data: ApprovalData): void
   authData: ResponseHarnessApprovalInstanceAuthorization | null
   stepParameters?: { [key: string]: { [key: string]: any } }
+  showBannerInfo?: boolean
+  showInputsHeader?: boolean
+  approvalBoxClassName?: string
+  startTs?: number
+  endTs?: number
 }
 
 export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactElement {
-  const { approvalData, approvalInstanceId, isWaiting, updateState, authData } = props
-
-  const { mutate: submitApproval, loading: submitting } = useAddHarnessApprovalActivity({ approvalInstanceId })
+  const {
+    approvalData,
+    approvalInstanceId,
+    isWaiting,
+    updateState,
+    startTs,
+    endTs,
+    authData,
+    showBannerInfo = true,
+    showInputsHeader = true,
+    approvalBoxClassName = ''
+  } = props
+  const { accountId } = useParams<AccountPathProps>()
+  const { mutate: submitApproval, loading: submitting } = useAddHarnessApprovalActivity({
+    approvalInstanceId,
+    queryParams: { accountIdentifier: accountId }
+  })
   const action = React.useRef<HarnessApprovalActivityRequest['action']>('APPROVE')
   const isCurrentUserAuthorized = !!authData?.data?.authorized
   const currentUserUnAuthorizedReason = authData?.data?.reason
@@ -57,53 +78,55 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
 
   return (
     <React.Fragment>
-      {isWaitingAll ? (
-        <React.Fragment>
-          <div className={css.info} data-type="harness">
-            <div className={css.infoHeader}>
-              <String
-                tagName="div"
-                className={css.statusMsg}
-                stringID="pipeline.approvalStep.execution.statusMsg"
-                vars={{
-                  count: approvalData?.details?.approvalActivities?.length || 0,
-                  total: approvalData?.details?.approvers?.minimumCount || 1
-                }}
-              />
-              {isWaiting ? (
-                <div className={css.timer}>
-                  <Duration
-                    className={css.duration}
-                    durationText=""
-                    icon="hourglass"
-                    startTime={approvalData?.deadline}
-                    iconProps={{ size: 12 }}
-                  />
-                  <String stringID="pipeline.timeRemainingSuffix" />
-                </div>
-              ) : null}
+      {showBannerInfo ? (
+        isWaitingAll ? (
+          <React.Fragment>
+            <div className={css.info} data-type="harness">
+              <div className={css.infoHeader}>
+                <String
+                  tagName="div"
+                  className={css.statusMsg}
+                  stringID="pipeline.approvalStep.execution.statusMsg"
+                  vars={{
+                    count: approvalData?.details?.approvalActivities?.length || 0,
+                    total: approvalData?.details?.approvers?.minimumCount || 1
+                  }}
+                />
+                {isWaiting ? (
+                  <div className={css.timer}>
+                    <Duration
+                      className={css.duration}
+                      durationText=""
+                      icon="hourglass"
+                      startTime={approvalData?.deadline}
+                      iconProps={{ size: 12 }}
+                    />
+                    <String stringID="pipeline.timeRemainingSuffix" />
+                  </div>
+                ) : null}
+              </div>
+              <Text
+                intent="warning"
+                font={{ align: 'left' }}
+                style={{ wordBreak: 'break-word' }}
+                lineClamp={3}
+                width={500}
+              >
+                {approvalData?.details?.approvalMessage}
+              </Text>
             </div>
-            <Text
-              intent="warning"
-              font={{ align: 'left' }}
-              style={{ wordBreak: 'break-word' }}
-              lineClamp={3}
-              width={500}
-            >
-              {approvalData?.details?.approvalMessage}
-            </Text>
-          </div>
-        </React.Fragment>
-      ) : (
-        <StepDetails
-          step={{
-            startTs: approvalData?.createdAt,
-            endTs: approvalData?.lastModifiedAt,
-            stepParameters: props.stepParameters
-          }}
-        />
-      )}
-      <div className={cx(css.harnessApproval, { [css.completed]: !isWaitingAll })}>
+          </React.Fragment>
+        ) : (
+          <StepDetails
+            step={{
+              startTs: startTs,
+              endTs: endTs,
+              stepParameters: props.stepParameters
+            }}
+          />
+        )
+      ) : null}
+      <div className={cx(css.harnessApproval, approvalBoxClassName, { [css.completed]: !isWaitingAll })}>
         {Array.isArray(approvalData?.details?.approvalActivities) &&
         (approvalData?.details?.approvalActivities?.length || 0) > 0 ? (
           <React.Fragment>
@@ -145,11 +168,13 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
                 <div className={css.inputs}>
                   {Array.isArray(values.approverInputs) && values.approverInputs.length > 0 ? (
                     <React.Fragment>
-                      <String
-                        tagName="div"
-                        className={css.heading}
-                        stringID="pipeline.approvalStep.execution.inputsTitle"
-                      />
+                      {showInputsHeader ? (
+                        <String
+                          tagName="div"
+                          className={css.heading}
+                          stringID="pipeline.approvalStep.execution.inputsTitle"
+                        />
+                      ) : null}
                       <div className={cx(css.formRow, css.labels)}>
                         <String stringID="variableNameLabel" />
                         <String stringID="common.configureOptions.defaultValue" />

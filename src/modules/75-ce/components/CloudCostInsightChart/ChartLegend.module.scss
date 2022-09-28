@@ -6,10 +6,15 @@
  */
 
 .legendContainer {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-column-gap: var(--spacing-large);
   grid-row-gap: var(--spacing-small);
+
+  &.preferences {
+    grid-template-columns: repeat(7, 1fr);
+  }
 
   .legendText {
     cursor: pointer;

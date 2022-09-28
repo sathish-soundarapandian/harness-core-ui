@@ -1,0 +1,223 @@
+{
+  "name": "Pipeline",
+  "identifier": "Pipeline",
+  "projectIdentifier": "defaultproject",
+  "orgIdentifier": "default",
+  "tags": {},
+  "stages": [
+    {
+      "parallel": [
+        {
+          "stage": {
+            "name": "Stage",
+            "identifier": "Stage",
+            "description": "",
+            "type": "Deployment",
+            "spec": {
+              "deploymentType": "Kubernetes",
+              "service": {
+                "serviceRef": "sample_service"
+              },
+              "environment": {
+                "environmentRef": "testEnv",
+                "deployToAll": false
+              },
+              "execution": {
+                "steps": [
+                  {
+                    "step": {
+                      "type": "K8sRollingRollback",
+                      "name": "Rolling Rollback1",
+                      "identifier": "Rolling_Rollback1",
+                      "spec": {
+                        "skipDryRun": false
+                      },
+                      "timeout": "10m"
+                    }
+                  },
+                  {
+                    "parallel": [
+                      {
+                        "step": {
+                          "type": "K8sRollingRollback",
+                          "name": "Rolling Rollback2",
+                          "identifier": "Rolling_Rollback1",
+                          "spec": {
+                            "skipDryRun": false
+                          },
+                          "timeout": "10m"
+                        }
+                      },
+                      {
+                        "step": {
+                          "type": "K8sRollingRollback",
+                          "name": "Rolling Rollback3",
+                          "identifier": "Rolling_Rollback3",
+                          "spec": {
+                            "skipDryRun": false
+                          },
+                          "timeout": "10m"
+                        }
+                      }
+                    ]
+                  },
+
+                  {
+                    "stepGroup": {
+                      "name": "Rolling_Rollback13",
+                      "identifier": "Rolling_Rollback13",
+                      "steps": [
+                        {
+                          "step": {
+                            "type": "K8sRollingRollback",
+                            "name": "Rolling_Rollback14",
+                            "identifier": "Rolling_Rollback14",
+                            "spec": {
+                              "skipDryRun": false
+                            },
+                            "timeout": "10m"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "rollbackSteps": [
+                  {
+                    "parallel": [
+                      {
+                        "step": {
+                          "type": "K8sRollingRollback",
+                          "name": "test",
+                          "identifier": "test",
+                          "spec": {
+                            "skipDryRun": false
+                          },
+                          "timeout": "10m"
+                        }
+                      },
+                      {
+                        "step": {
+                          "type": "K8sRollingRollback",
+                          "name": "test1",
+                          "identifier": "test",
+                          "spec": {
+                            "skipDryRun": false
+                          },
+                          "timeout": "10m"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "tags": {},
+            "failureStrategies": [
+              {
+                "onFailure": {
+                  "errors": ["AllErrors"],
+                  "action": {
+                    "type": "StageRollback"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "stage": {
+            "name": "buildStage",
+            "identifier": "erwt",
+            "type": "CI",
+            "spec": {
+              "cloneCodebase": false,
+              "infrastructure": {
+                "type": "KubernetesDirect",
+                "spec": {
+                  "connectorRef": "<+input>",
+                  "namespace": "<+input>",
+                  "automountServiceAccountToken": true,
+                  "nodeSelector": {},
+                  "harnessImageConnectorRef": "<+input>",
+                  "os": "<+input>"
+                }
+              },
+              "serviceDependencies": [
+                {
+                  "identifier": "Rolling_Rollback15",
+                  "name": "Rolling_Rollback15",
+                  "type": "Service",
+                  "description": "ds",
+                  "spec": {
+                    "connectorRef": "<+input>",
+                    "image": "<+input>"
+                  }
+                },
+                {
+                  "identifier": "Rolling_Rollback16",
+                  "name": "Rolling_Rollback16",
+                  "type": "Service",
+                  "description": "ds",
+                  "spec": {
+                    "connectorRef": "<+input>",
+                    "image": "<+input>"
+                  }
+                }
+              ],
+              "execution": {
+                "steps": [
+                  {
+                    "step": {
+                      "type": "Plugin",
+                      "name": "Rolling_Rollback17",
+                      "identifier": "Rolling_Rollback17",
+                      "spec": {
+                        "connectorRef": "<+input>",
+                        "image": "<+input>"
+                      },
+                      "description": "ds"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "stage": {
+        "name": "test",
+        "identifier": "test",
+        "description": "",
+        "type": "Approval",
+        "spec": {
+          "execution": {
+            "steps": [
+              {
+                "step": {
+                  "name": "Rolling_Rollback18",
+                  "identifier": "Rolling_Rollback1",
+                  "type": "HarnessApproval",
+                  "timeout": "1d",
+                  "spec": {
+                    "approvalMessage": "Please review the following information\nand approve the pipeline progression",
+                    "includePipelineExecutionHistory": true,
+                    "approvers": {
+                      "minimumCount": 1,
+                      "disallowPipelineExecutor": false,
+                      "userGroups": "<+input>"
+                    },
+                    "approverInputs": []
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "tags": {}
+      }
+    }
+  ]
+}

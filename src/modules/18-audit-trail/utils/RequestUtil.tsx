@@ -20,7 +20,7 @@ export const actionToLabelMap: Record<AuditEventDTO['action'], StringKeys> = {
   UPDATE: 'auditTrail.actions.updated',
   RESTORE: 'auditTrail.actions.restored',
   DELETE: 'deleted',
-  UPSERT: 'auditTrail.actions.updated',
+  UPSERT: 'auditTrail.actions.upserted',
   INVITE: 'auditTrail.actions.invited',
   RESEND_INVITE: 'auditTrail.actions.invite_resent',
   REVOKE_INVITE: 'auditTrail.actions.invite_revoked',
@@ -32,7 +32,8 @@ export const actionToLabelMap: Record<AuditEventDTO['action'], StringKeys> = {
   REVOKE_TOKEN: 'auditTrail.actions.revoke_token',
   LOGIN: 'auditTrail.actions.login',
   LOGIN2FA: 'auditTrail.actions.login2fa',
-  UNSUCCESSFUL_LOGIN: 'auditTrail.actions.unsuccessfullLogin'
+  UNSUCCESSFUL_LOGIN: 'auditTrail.actions.unsuccessfullLogin',
+  ERROR_BUDGET_RESET: 'cv.resetErrorBudget'
 }
 
 export const moduleToLabelMap: Record<AuditEventDTO['module'], StringKeys> = {
@@ -42,6 +43,7 @@ export const moduleToLabelMap: Record<AuditEventDTO['module'], StringKeys> = {
   CV: 'common.module.cv',
   CI: 'common.module.ci',
   CORE: 'common.module.core',
+  CHAOS: 'common.module.chaos',
   PMS: 'common.module.pms',
   TEMPLATESERVICE: 'common.module.templateService',
   STO: 'common.module.sto',
@@ -60,6 +62,8 @@ export const getModuleNameFromAuditModule = (auditModule: AuditEventDTO['module'
       return 'ce'
     case 'CV':
       return 'cv'
+    case 'CHAOS':
+      return 'chaos'
   }
   return undefined
 }
@@ -99,16 +103,20 @@ export const moduleInfoMap: Record<AuditEventDTO['module'], ModuleInfo> = {
     icon: { name: 'nav-settings' }
   },
   TEMPLATESERVICE: {
-    moduleLabel: 'common.module.templateService',
+    moduleLabel: 'common.templateServiceLabel',
     icon: { name: 'nav-settings' }
   },
   STO: {
     moduleLabel: 'common.module.sto',
-    icon: { name: 'nav-settings' }
+    icon: { name: 'sto-grey' }
   },
   GOVERNANCE: {
     moduleLabel: 'common.module.governance',
     icon: { name: 'governance' }
+  },
+  CHAOS: {
+    moduleLabel: 'common.module.chaos',
+    icon: { name: 'chaos-main' }
   }
 }
 

@@ -39,7 +39,7 @@ import {
   ConnectorCardInterface,
   getCompleteGitPath,
   getHarnessFolderPathWithSuffix,
-  gitCards,
+  gitCards as supportedProviders,
   getRepoUrl
 } from '@gitsync/common/gitSyncUtils'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
@@ -48,8 +48,6 @@ import { HARNESS_FOLDER_NAME_PLACEHOLDER, HARNESS_FOLDER_SUFFIX } from '@gitsync
 import { getScopeFromDTO, ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
 import SCMCheck from '@common/components/SCMCheck/SCMCheck'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import RepoBranchSelect from './RepoBranchSelect'
@@ -120,8 +118,6 @@ export const gitSyncFormDefaultInitialData = {
 
 const GitSyncRepoForm: React.FC<ModalConfigureProps & GitSyncRepoFormProps> = props => {
   const { accountId, projectIdentifier, orgIdentifier, isNewUser, onClose } = props
-
-  const bitBucketSupported = useFeatureFlag(FeatureFlag.GIT_SYNC_WITH_BITBUCKET)
   const [needSCM, setNeedSCM] = React.useState<boolean>(isNewUser)
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
   const [connectorIdentifierRef, setConnectorIdentifierRef] = useState<string>('')
@@ -137,8 +133,6 @@ const GitSyncRepoForm: React.FC<ModalConfigureProps & GitSyncRepoFormProps> = pr
   const { mutate: createGitSyncRepo, loading: creatingGitSync } = usePostGitSync({
     queryParams: { accountIdentifier: accountId }
   })
-
-  const supportedProviders = bitBucketSupported ? gitCards : gitCards.filter(card => card.type !== Connectors.BITBUCKET)
 
   const [connectorType, setConnectorType] = useState(defaultInitialFormData.gitConnectorType)
 

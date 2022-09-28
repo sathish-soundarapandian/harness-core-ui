@@ -69,14 +69,14 @@ const SmtpDetails: React.FC = () => {
     if (smtpData) {
       return [
         { label: getString('name'), value: smtpData?.name || emtpyString },
-        { label: getString('pipelineSteps.hostLabel'), value: smtpData?.value?.host || emtpyString },
+        { label: getString('common.hostLabel'), value: smtpData?.value?.host || emtpyString },
         { label: getString('common.smtp.port'), value: smtpData?.value?.port || emtpyString },
         {
           label: '',
           value: (
             <>
               <Checkbox label={getString('common.smtp.enableSSL')} checked={smtpData?.value?.useSSL} />
-              <Checkbox label={getString('common.smtp.startTSL')} checked={smtpData?.value?.startTLS} />
+              <Checkbox label={getString('common.smtp.startTLS')} checked={smtpData?.value?.startTLS} />
             </>
           )
         },

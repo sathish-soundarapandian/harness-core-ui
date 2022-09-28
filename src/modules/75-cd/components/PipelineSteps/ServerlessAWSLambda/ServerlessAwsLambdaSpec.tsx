@@ -158,7 +158,7 @@ export class ServerlessAwsLambdaSpec extends PipelineStep<ServerlessAwsLambdaInf
 
   renderStep(props: StepProps<ServerlessAwsLambdaInfrastructure>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, customStepProps, readonly, allowableTypes } = props
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <ServerlessInputForm
           {...(customStepProps as ServerlessSpecEditableProps)}

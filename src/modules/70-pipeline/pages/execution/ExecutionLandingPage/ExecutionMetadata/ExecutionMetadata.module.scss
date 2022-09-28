@@ -24,6 +24,10 @@
   color: var(--primary-8);
   font-weight: bold;
   border: solid 1px var(--primary-2);
+
+  > span {
+    display: inline-flex !important;
+  }
 }
 .userLabelContainer {
   display: flex;
@@ -35,4 +39,13 @@
   display: flex;
   gap: var(--spacing-small);
   width: 100%;
+}
+
+.popover {
+  :global {
+    .bp3-popover-content {
+      max-height: 400px;
+      overflow: scroll;
+    }
+  }
 }

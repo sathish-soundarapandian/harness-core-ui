@@ -7,6 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly instanceStatusIndicator: string
+  readonly disabledLabel: string
+  readonly loadingLabel: string
+  readonly runningLabel: string
+  readonly stateLabel: string
+  readonly stoppedLabel: string
 }
 export default styles

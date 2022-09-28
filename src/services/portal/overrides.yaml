@@ -24,6 +24,7 @@ allowpaths:
   - '/delegate-profiles/{delegateProfileId}.get'
   - '/setup/delegates/kubernetes-delegates'
   - '/setup/delegates/delegate-selectors-up-the-hierarchy'
+  - '/setup/delegates/delegate-selectors-up-the-hierarchy-v2'
   - '/setup/delegates/v2/up-the-hierarchy'
   - '/users/user.get'
   - '/users/set-default-account/{accountId}'
@@ -54,6 +55,8 @@ allowpaths:
   - '/delegates-verification/initialized'
   - '/delegates-verification/initializedV2'
   - '/awshelper/aws-regions'
+  - '/sso/ldap/iterations'
+  - '/users/userAccounts'
 operationIdOverrides:
   /setup/delegates.get: getDelegates
   /setup/delegates/status.get: getDelegatesStatus
@@ -79,6 +82,7 @@ operationIdOverrides:
   /delegate-profiles/v2.get: getDelegateProfilesV2
   /setup/delegates/kubernetes-delegates.get: getKubernetesDelegateNames
   /setup/delegates/delegate-selectors-up-the-hierarchy.get: getDelegateSelectorsUpTheHierarchy
+  /setup/delegates/delegate-selectors-up-the-hierarchy-v2.get: getDelegateSelectorsUpTheHierarchyV2
   /setup/delegates/v2/up-the-hierarchy.get: getDelegatesUpTheHierarchy
   /users/user.get: getUser
   /users/{userId}/logout: logout
@@ -103,3 +107,5 @@ operationIdOverrides:
   /delegates-verification/initialized: verifyDelegateInitialization
   /delegates-verification/initializedV2: verifyDelegateInitializationV2
   /awshelper/aws-regions: getAwsRegions
+  /sso/ldap/iterations: getCronExpressionIterations
+  /users/userAccounts: getUserAccounts

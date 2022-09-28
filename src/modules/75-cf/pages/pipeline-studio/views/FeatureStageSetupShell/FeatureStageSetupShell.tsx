@@ -19,7 +19,7 @@ import css from './FeatureStageSetupShell.module.scss'
 export default function FeatureStageSetupShell(): JSX.Element {
   const { getString } = useStrings()
   const overviewTitle = getString('overview')
-  const rolloutTitle = getString('cf.pipeline.rollloutStrategy.title')
+  const rolloutTitle = getString('cf.pipeline.rolloutStrategy.title')
   const advancedTitle = getString('cf.pipeline.advanced.title')
   const stageNames: string[] = [overviewTitle, rolloutTitle, advancedTitle]
   const [selectedTabId, setSelectedTabId] = React.useState<string>(rolloutTitle)
@@ -37,10 +37,11 @@ export default function FeatureStageSetupShell(): JSX.Element {
   } = usePipelineContext()
 
   React.useEffect(() => {
-    if (stageNames.indexOf(selectedStageId) !== -1) {
+    if (stageNames.includes(selectedStageId)) {
       setSelectedTabId(selectedStageId)
     }
-  }, [selectedStageId, pipeline, isSplitViewOpen, stageNames])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedStageId, pipeline, isSplitViewOpen])
 
   const handleTabChange = (data: string): void => {
     setSelectedTabId(data)
@@ -68,18 +69,9 @@ export default function FeatureStageSetupShell(): JSX.Element {
   }, [pipeline, selectedStageId, getStageFromPipeline, updatePipeline])
 
   const navBtns = (
-    <Layout.Horizontal spacing="medium" padding="medium" className={css.footer}>
-      {/* <Button
-        text={getString('previous')}
-        icon="chevron-left"
-        disabled={selectedTabId === overviewTitle}
-        onClick={() => {
-          updatePipeline(pipeline)
-          setSelectedTabId(selectedTabId === advancedTitle ? rolloutTitle : overviewTitle)
-        }}
-      /> */}
+    <Layout.Horizontal spacing="medium" padding="medium" margin={{ top: 'xxlarge' }}>
       <Button
-        text={selectedTabId === advancedTitle ? getString('save') : getString('continue')}
+        text={selectedTabId === advancedTitle ? getString('save') : getString('next')}
         intent="primary"
         rightIcon="chevron-right"
         onClick={() => {
@@ -106,6 +98,7 @@ export default function FeatureStageSetupShell(): JSX.Element {
         <Tab
           id={overviewTitle}
           panel={<StageOverview>{navBtns}</StageOverview>}
+          panelClassName={css.tabPanel}
           title={
             <span className={css.tab}>
               <Icon name="cf-main" height={20} size={20} />
@@ -123,6 +116,7 @@ export default function FeatureStageSetupShell(): JSX.Element {
           }
           className={cx(css.fullHeight, css.stepGroup)}
           panel={<RolloutStrategy selectedStageId={selectedStageId} />}
+          panelClassName={css.tabPanel}
         />
         <Tab
           id={advancedTitle}
@@ -134,6 +128,7 @@ export default function FeatureStageSetupShell(): JSX.Element {
             </span>
           }
           panel={<StageAdvancedSettings>{navBtns}</StageAdvancedSettings>}
+          panelClassName={css.tabPanel}
         />
       </Tabs>
     </section>

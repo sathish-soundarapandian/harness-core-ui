@@ -5,22 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty } from 'lodash-es'
-import type {
-  DatadogAggregationType,
-  DatadogMetricInfo,
-  DatadogMetricSetupSource
-} from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.type'
+import { cloneDeep, isEmpty, isEqual } from 'lodash-es'
+import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+
 import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import type {
   DatadogDashboardDetail,
   DatadogDashboardDTO,
   DatadogMetricHealthDefinition,
   DatadogMetricHealthSourceSpec,
+  PrometheusHealthSourceSpec,
   RiskProfile
 } from 'services/cv'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
-import type { StringKeys } from 'framework/strings'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import { OVERALL } from '@cv/pages/health-source/connectors/GCOMetricsHealthSource/GCOMetricsHealthSource.constants'
 import type {
   MetricDashboardItem,
@@ -37,13 +35,32 @@ import {
   defaultServiceInstaceValue,
   QUERY_CONTAINS_VALIDATION_PARAM
 } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.constants'
+import type {
+  DatadogAggregationType,
+  DatadogMetricInfo,
+  DatadogMetricSetupSource,
+  PersistMappedMetricsType
+} from './DatadogMetricsHealthSource.type'
+import {
+  getFilteredMetricThresholdValues,
+  validateCommonFieldsForMetricThreshold
+} from '../../common/MetricThresholds/MetricThresholds.utils'
+import {
+  MetricThresholdPropertyName,
+  MetricThresholdTypes,
+  MetricTypeValues
+} from '../../common/MetricThresholds/MetricThresholds.constants'
+import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 
 export const DatadogProduct = {
   CLOUD_METRICS: 'Datadog Cloud Metrics',
   CLOUD_LOGS: 'Datadog Cloud Logs'
 }
 
-export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(sourceData: any): DatadogMetricSetupSource {
+export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(
+  sourceData: any,
+  isMetricThresholdEnabled: boolean
+): DatadogMetricSetupSource {
   const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
   )
@@ -54,8 +71,10 @@ export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(sourceDat
     isEdit: sourceData.isEdit,
     healthSourceName: sourceData.healthSourceName,
     healthSourceIdentifier: sourceData.healthSourceIdentifier,
-    connectorRef: sourceData.connectorRef,
-    product: sourceData.product
+    connectorRef: sourceData.connectorRef?.value || sourceData.connectorRef,
+    product: sourceData.product,
+    ignoreThresholds: [],
+    failFastThresholds: []
   }
 
   if (!healthSource) {
@@ -108,28 +127,54 @@ export function mapDatadogMetricHealthSourceToDatadogMetricSetupSource(sourceDat
       ),
       query: metricDefinition.query,
       groupingQuery: metricDefinition.groupingQuery,
-      serviceInstanceIdentifierTag: metricDefinition.serviceInstanceIdentifierTag,
+      serviceInstanceIdentifierTag: metricDefinition?.analysis?.deploymentVerification?.serviceInstanceFieldName,
       serviceInstance: metricDefinition.serviceInstanceIdentifierTag,
       continuousVerification: metricDefinition?.analysis?.deploymentVerification?.enabled,
       healthScore: Boolean(metricDefinition?.analysis?.liveMonitoring?.enabled),
-      sli: Boolean(metricDefinition.sli?.enabled)
+      sli: Boolean(metricDefinition.sli?.enabled),
+      // Update spec type from swagger
+      ignoreThresholds: [],
+      failFastThresholds: []
     })
+  }
+
+  if (isMetricThresholdEnabled) {
+    setupSource.ignoreThresholds = getFilteredMetricThresholdValues(
+      MetricThresholdTypes.IgnoreThreshold,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+    )
+
+    setupSource.failFastThresholds = getFilteredMetricThresholdValues(
+      MetricThresholdTypes.FailImmediately,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+    )
   }
 
   return setupSource
 }
 
+export const getServiceInstanceByValueType = (metricInfo: {
+  serviceInstanceIdentifierTag?: string | SelectOption
+}): string => {
+  return typeof metricInfo.serviceInstanceIdentifierTag === 'string'
+    ? metricInfo.serviceInstanceIdentifierTag || ''
+    : (metricInfo.serviceInstanceIdentifierTag?.value as string) || ''
+}
+
 export function mapDatadogMetricSetupSourceToDatadogHealthSource(
-  setupSource: DatadogMetricSetupSource
+  setupSource: DatadogMetricSetupSource,
+  isMetricThresholdEnabled: boolean
 ): UpdatedHealthSource {
   const healthSource: UpdatedHealthSource = {
     type: HealthSourceTypes.DatadogMetrics as UpdatedHealthSource['type'],
     identifier: setupSource.healthSourceIdentifier,
     name: setupSource.healthSourceName,
     spec: {
-      connectorRef: setupSource.connectorRef,
+      connectorRef:
+        typeof setupSource.connectorRef === 'string' ? setupSource.connectorRef : setupSource.connectorRef?.value,
       feature: DatadogProduct.CLOUD_METRICS,
-      metricDefinitions: []
+      metricDefinitions: [],
+      metricPacks: []
     }
   }
   for (const selectedMetricInfo of setupSource.metricDefinition) {
@@ -166,7 +211,6 @@ export function mapDatadogMetricSetupSourceToDatadogHealthSource(
       aggregation: metricInfo.aggregator,
       isManualQuery: metricInfo.isManualQuery,
       isCustomCreatedMetric: metricInfo.isCustomCreatedMetric,
-      serviceInstanceIdentifierTag: metricInfo.serviceInstanceIdentifierTag,
       groupingQuery: metricInfo.groupingQuery,
       query: metricInfo.query,
       sli: { enabled: Boolean(metricInfo.sli) },
@@ -175,10 +219,18 @@ export function mapDatadogMetricSetupSourceToDatadogHealthSource(
         liveMonitoring: { enabled: metricInfo?.healthScore || false },
         deploymentVerification: {
           enabled: metricInfo?.continuousVerification || false,
-          serviceInstanceFieldName: metricInfo?.serviceInstanceIdentifierTag || ''
+          serviceInstanceFieldName: getServiceInstanceByValueType(metricInfo)
         }
       }
     } as DatadogMetricHealthDefinition)
+  }
+
+  if (isMetricThresholdEnabled) {
+    // Needs to be updated with Datadog's spec once the swagger is ready
+    ;(healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks?.push({
+      identifier: MetricTypeValues.Custom,
+      metricThresholds: [...setupSource.ignoreThresholds, ...setupSource.failFastThresholds]
+    })
   }
 
   return healthSource
@@ -209,7 +261,10 @@ export function validateFormMappings(
 
   if (!values?.query?.length) {
     errors.query = getString('cv.monitoringSources.gco.manualInputQueryModal.validation.query')
-  } else if (!values?.query?.includes(QUERY_CONTAINS_VALIDATION_PARAM)) {
+  } else if (
+    getMultiTypeFromValue(values?.query) === MultiTypeInputType.FIXED &&
+    !values?.query?.includes(QUERY_CONTAINS_VALIDATION_PARAM)
+  ) {
     errors.query = `${getString(
       'cv.monitoringSources.datadog.validation.queryContains'
     )}${QUERY_CONTAINS_VALIDATION_PARAM}`
@@ -257,7 +312,7 @@ export function validateFormMappings(
   if (!values.metricName?.length) {
     errors[DatadogMetricsHealthSourceFieldNames.METRIC_NAME] = getString('cv.monitoringSources.metricNameValidation')
   }
-  if (!values.metric?.length) {
+  if (!values.metric?.length && getMultiTypeFromValue(values.query) === MultiTypeInputType.FIXED) {
     errors[DatadogMetricsHealthSourceFieldNames.METRIC] = getString('cv.monitoringSources.metricValidation')
   }
   if (!values.groupName?.label?.length) {
@@ -269,12 +324,41 @@ export function validateFormMappings(
   return errors
 }
 
+const validateMetricThresholds = (
+  errors: Record<string, string>,
+  values: DatadogMetricInfo,
+  getString: UseStringsReturn['getString']
+): void => {
+  // ignoreThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.IgnoreThreshold,
+    errors,
+    values[MetricThresholdPropertyName.IgnoreThreshold] as MetricThresholdType[],
+    getString,
+    false
+  )
+
+  // failFastThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.FailFastThresholds,
+    errors,
+    values[MetricThresholdPropertyName.FailFastThresholds] as MetricThresholdType[],
+    getString,
+    false
+  )
+}
+
 export function validate(
   values: DatadogMetricInfo,
   selectedMetrics: Map<string, DatadogMetricInfo>,
-  getString: (key: StringKeys) => string
+  getString: (key: StringKeys) => string,
+  isMetricThresholdEnabled: boolean
 ): { [key: string]: string } | undefined {
   const errors = validateFormMappings(values, selectedMetrics, getString)
+
+  if (isMetricThresholdEnabled) {
+    validateMetricThresholds(errors, values, getString)
+  }
 
   if (selectedMetrics.size === 1) {
     return errors
@@ -293,6 +377,7 @@ export function validate(
   if (!isEmpty(errors)) {
     errors[OVERALL] = getString('cv.monitoringSources.gco.mapMetricsToServicesPage.validation.mainSetupValidation')
   }
+
   return errors
 }
 
@@ -343,7 +428,8 @@ function generateMetricPath(dashboardId: string, dashboardDetail: DatadogDashboa
 export function mapSelectedWidgetDataToDatadogMetricInfo(
   selectedWidgetMetricData: SelectedWidgetMetricData,
   query: string,
-  activeMetrics: string[]
+  activeMetrics: string[],
+  isTemplate = false
 ): DatadogMetricInfo {
   const queryExtractor = DatadogMetricsQueryExtractor(query, activeMetrics || [])
   const queryBuilder = DatadogMetricsQueryBuilder(
@@ -360,6 +446,7 @@ export function mapSelectedWidgetDataToDatadogMetricInfo(
     aggregator: queryExtractor.aggregation,
     metricTags: queryExtractor.metricTags,
     query: queryBuilder.query || query,
+    isManualQuery: isTemplate,
     isCustomCreatedMetric: selectedWidgetMetricData.query === MANUAL_INPUT_QUERY,
     groupName: selectedWidgetMetricData?.dashboardTitle
       ? {
@@ -368,7 +455,9 @@ export function mapSelectedWidgetDataToDatadogMetricInfo(
         }
       : undefined,
     metricPath: selectedWidgetMetricData.id,
-    isNew: true
+    isNew: true,
+    ignoreThresholds: [],
+    failFastThresholds: []
   }
 }
 
@@ -394,4 +483,35 @@ export const getServiceIntance = (tagKeys?: string[]): string[] => {
     serviceInstanceList = [defaultServiceInstaceValue]
   }
   return serviceInstanceList
+}
+
+export const persistCustomMetric = ({
+  mappedMetrics,
+  selectedMetricId,
+  metricThresholds,
+  formikValues,
+  setMappedMetrics
+}: PersistMappedMetricsType): void => {
+  const mapValue = mappedMetrics.get(selectedMetricId || '') as DatadogMetricInfo
+  if (!isEmpty(mapValue)) {
+    const nonCustomValuesFromSelectedMetric = {
+      ignoreThresholds: mapValue?.ignoreThresholds,
+      failFastThresholds: mapValue?.failFastThresholds
+    }
+
+    if (
+      selectedMetricId === formikValues?.metricPath &&
+      !isEqual(metricThresholds, nonCustomValuesFromSelectedMetric)
+    ) {
+      const clonedMappedMetrics = cloneDeep(mappedMetrics)
+      clonedMappedMetrics.forEach((data, key) => {
+        if (selectedMetricId === data.metricPath) {
+          clonedMappedMetrics.set(selectedMetricId as string, { ...formikValues, ...metricThresholds })
+        } else {
+          clonedMappedMetrics.set(key, { ...data, ...metricThresholds })
+        }
+      })
+      setMappedMetrics(clonedMappedMetrics)
+    }
+  }
 }

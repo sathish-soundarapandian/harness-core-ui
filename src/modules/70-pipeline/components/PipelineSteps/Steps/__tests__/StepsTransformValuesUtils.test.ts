@@ -107,6 +107,13 @@ const formValues = {
         cpu: 1
       }
     }
+  },
+  strategy: {
+    matrix: {
+      browser: ['chrome', 'safari'],
+      os: ['macos', 'windows', 'linux']
+    },
+    maxConcurrency: 2
   }
 }
 
@@ -154,6 +161,13 @@ const initialValues = {
     pull: pullOptions[1],
     limitMemory: '128Mi',
     limitCPU: 1
+  },
+  strategy: {
+    matrix: {
+      browser: ['chrome', 'safari'],
+      os: ['macos', 'windows', 'linux']
+    },
+    maxConcurrency: 2
   }
 }
 

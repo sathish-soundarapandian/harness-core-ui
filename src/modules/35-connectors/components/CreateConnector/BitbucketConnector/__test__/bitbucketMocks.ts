@@ -26,7 +26,31 @@ export const usernamePassword: ConnectorInfoDTO = {
       }
     },
     type: 'Account',
-    validationRepo: 'test'
+    validationRepo: 'test',
+    executeOnDelegate: true
+  }
+}
+
+export const hostedMock: ConnectorInfoDTO = {
+  name: 'BitbucketWorking',
+  identifier: 'BitbucketWorking',
+  description: 'Bitbucket description',
+  orgIdentifier: undefined,
+  projectIdentifier: undefined,
+  tags: {},
+  type: 'Bitbucket',
+  spec: {
+    url: 'https://github.com/dev',
+    authentication: {
+      type: 'Http',
+      spec: {
+        type: 'UsernamePassword',
+        spec: { username: 'dev', usernameRef: undefined, passwordRef: 'account.githubPassword' }
+      }
+    },
+    type: 'Account',
+    validationRepo: 'test',
+    executeOnDelegate: false
   }
 }
 
@@ -76,7 +100,8 @@ export const usernameTokenWithAPIAccess: ConnectorInfoDTO = {
       spec: { username: 'dev', usernameRef: undefined, tokenRef: 'account.githubPassword' }
     },
     type: 'Account',
-    validationRepo: 'test'
+    validationRepo: 'test',
+    executeOnDelegate: true
   }
 }
 

@@ -14,54 +14,6 @@ exports[`GitSyncForm test Rendering GitSyncForm for while create and filling for
           class="StyledProps--font StyledProps--main gitSyncForm StyledProps--padding-top-large"
         >
           <div
-            class="bp3-form-group"
-            data-id="remoteType-0"
-          >
-            <div
-              class="bp3-form-content"
-            >
-              <div
-                class="StyledProps--main"
-              >
-                
-                <div
-                  class="RadioButtonGroup--inline"
-                >
-                  <label
-                    class="RadioButton--radio StyledProps--main"
-                  >
-                    <input
-                      class="RadioButton--input"
-                      disabled=""
-                      name="remoteType"
-                      type="radio"
-                      value="import"
-                    />
-                    <span
-                      class="RadioButton--radioIcon"
-                    />
-                    gitsync.gitSyncForm.useExistingYaml
-                  </label>
-                  <label
-                    class="RadioButton--radio StyledProps--main"
-                  >
-                    <input
-                      checked=""
-                      class="RadioButton--input"
-                      name="remoteType"
-                      type="radio"
-                      value="create"
-                    />
-                    <span
-                      class="RadioButton--radioIcon"
-                    />
-                    gitsync.gitSyncForm.createNewYaml
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
             class="Layout--horizontal StyledProps--main"
           >
             <div
@@ -69,7 +21,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while create and filling for
             >
               <div
                 class="bp3-form-group"
-                data-id="null-1"
+                data-id="null-0"
               >
                 <label
                   class="bp3-label"
@@ -181,7 +133,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while create and filling for
               >
                 <div
                   class="bp3-form-group"
-                  data-id="repo-2"
+                  data-id="repo-1"
                 >
                   <label
                     class="bp3-label"
@@ -214,7 +166,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while create and filling for
                             autocomplete="off"
                             class="bp3-input"
                             name="repo"
-                            placeholder="- select -"
+                            placeholder="- common.git.selectRepositoryPlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
                             value=""
@@ -253,7 +205,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while create and filling for
               >
                 <div
                   class="bp3-form-group branchSelector"
-                  data-id="branch-3"
+                  data-id="branch-2"
                 >
                   <label
                     class="bp3-label"
@@ -286,7 +238,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while create and filling for
                             autocomplete="off"
                             class="bp3-input"
                             name="branch"
-                            placeholder="- select -"
+                            placeholder="- common.git.selectBranchPlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
                             value=""
@@ -322,7 +274,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while create and filling for
               </div>
               <div
                 class="bp3-form-group"
-                data-id="filePath-4"
+                data-id="filePath-3"
               >
                 <label
                   class="bp3-label"
@@ -379,55 +331,6 @@ exports[`GitSyncForm test Rendering GitSyncForm for while edit : all field shoul
           class="StyledProps--font StyledProps--main gitSyncForm StyledProps--padding-top-large"
         >
           <div
-            class="bp3-form-group"
-            data-id="remoteType-0"
-          >
-            <div
-              class="bp3-form-content"
-            >
-              <div
-                class="StyledProps--main"
-              >
-                
-                <div
-                  class="RadioButtonGroup--inline"
-                >
-                  <label
-                    class="RadioButton--radio StyledProps--main"
-                  >
-                    <input
-                      class="RadioButton--input"
-                      disabled=""
-                      name="remoteType"
-                      type="radio"
-                      value="import"
-                    />
-                    <span
-                      class="RadioButton--radioIcon"
-                    />
-                    gitsync.gitSyncForm.useExistingYaml
-                  </label>
-                  <label
-                    class="RadioButton--radio StyledProps--main"
-                  >
-                    <input
-                      checked=""
-                      class="RadioButton--input"
-                      disabled=""
-                      name="remoteType"
-                      type="radio"
-                      value="create"
-                    />
-                    <span
-                      class="RadioButton--radioIcon"
-                    />
-                    gitsync.gitSyncForm.createNewYaml
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
             class="Layout--horizontal StyledProps--main"
           >
             <div
@@ -435,7 +338,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while edit : all field shoul
             >
               <div
                 class="bp3-form-group"
-                data-id="null-1"
+                data-id="null-0"
               >
                 <label
                   class="bp3-label"
@@ -549,7 +452,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while edit : all field shoul
               >
                 <div
                   class="bp3-form-group bp3-disabled"
-                  data-id="repo-2"
+                  data-id="repo-1"
                 >
                   <label
                     class="bp3-label"
@@ -583,7 +486,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while edit : all field shoul
                             class="bp3-input"
                             disabled=""
                             name="repo"
-                            placeholder="- select -"
+                            placeholder="- common.git.selectRepositoryPlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
                             value="test-repo"
@@ -622,7 +525,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while edit : all field shoul
               >
                 <div
                   class="bp3-form-group bp3-disabled branchSelector"
-                  data-id="branch-3"
+                  data-id="branch-2"
                 >
                   <label
                     class="bp3-label"
@@ -656,7 +559,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while edit : all field shoul
                             class="bp3-input"
                             disabled=""
                             name="branch"
-                            placeholder="- select -"
+                            placeholder="- common.git.selectBranchPlaceholder -"
                             style="padding-right: 0px;"
                             type="text"
                             value="dev"
@@ -692,7 +595,7 @@ exports[`GitSyncForm test Rendering GitSyncForm for while edit : all field shoul
               </div>
               <div
                 class="bp3-form-group bp3-disabled"
-                data-id="filePath-4"
+                data-id="filePath-3"
               >
                 <label
                   class="bp3-label"

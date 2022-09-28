@@ -59,4 +59,27 @@ describe('Validate SelectHealthSourceServices', () => {
     expect(container.querySelector('span[data-tooltip-id="mapPrometheus_serviceInstance"]')).not.toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
+
+  test('should render SLI if showOnlySLI prop is passed', () => {
+    const { container } = render(
+      <TestWrapper>
+        <Formik initialValues={{ sli: true }} onSubmit={jest.fn()} formName="runtimeInputsTest">
+          <SelectHealthSourceServices
+            values={{ sli: true }}
+            labelNamesResponse={labelNamesResponse as any}
+            metricPackResponse={metricPackResponse as any}
+            showOnlySLI
+            hideCV
+            hideSLIAndHealthScore
+            hideServiceIdentifier
+          />
+        </Formik>
+      </TestWrapper>
+    )
+    expect(container.querySelector('input[name="sli"')).toBeInTheDocument()
+    expect(container.querySelector('input[name="healthScore"')).not.toBeInTheDocument()
+    expect(container.querySelector('input[name="continuousVerification"')).not.toBeInTheDocument()
+    expect(container.querySelector('label[for="riskCategory"]')).not.toBeInTheDocument()
+    expect(container.querySelector('span[data-tooltip-id="mapPrometheus_serviceInstance"]')).not.toBeInTheDocument()
+  })
 })

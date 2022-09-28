@@ -13,7 +13,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   SelectOption,
-  MultiSelectOption
+  MultiSelectOption,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
@@ -33,7 +34,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions, VALIDATORS } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import { getInstanceDropdownSchema } from '@common/components/InstanceDropdownField/InstanceDropdownField'
@@ -42,6 +43,8 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StringsMap } from 'stringTypes'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -65,7 +68,7 @@ interface K8sScaleProps {
   initialValues: K8sScaleData
   onUpdate?: (data: K8sScaleData) => void
   onChange?: (data: K8sScaleData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
   template?: K8sScaleData
@@ -132,6 +135,8 @@ function K8ScaleDeployWidget(props: K8sScaleProps, formikRef: StepFormikFowardRe
                   />
                   {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
+                      allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+                      allowedValuesValidator={VALIDATORS[ALLOWED_VALUES_TYPE.TIME]({ minimum: '10s' })}
                       value={values.timeout as string}
                       type="String"
                       variableName="step.timeout"
@@ -191,6 +196,7 @@ function K8ScaleDeployWidget(props: K8sScaleProps, formikRef: StepFormikFowardRe
                   />
                   {getMultiTypeFromValue(values.spec.workload) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
+                      allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                       value={values.spec.workload as string}
                       type="String"
                       variableName={getString('pipelineSteps.workload').toLowerCase()}
@@ -230,8 +236,10 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
     <>
       {getMultiTypeFromValue(template?.spec?.workload) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
-            name="spec.workload"
+          <TextFieldInputSetView
+            template={template}
+            fieldPath={'spec.workload'}
+            name={`${prefix}spec.workload`}
             placeholder={getString('pipeline.kubernetesStep.workload')}
             label={getString('pipelineSteps.workload')}
             disabled={readonly}
@@ -245,7 +253,9 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
       )}
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
+            template={template}
+            fieldPath={'timeout'}
             multiTypeDurationProps={{
               enableConfigureOptions: false,
               allowableTypes,
@@ -319,7 +329,7 @@ export class K8sScaleStep extends PipelineStep<K8sScaleData> {
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <K8ScaleInputStep
           initialValues={initialValues}
@@ -356,7 +366,7 @@ export class K8sScaleStep extends PipelineStep<K8sScaleData> {
 
   protected type = StepType.K8sScale
   protected stepName = 'K8s Scale'
-
+  protected referenceId = 'K8sScaleStep'
   protected stepIcon: IconName = 'swap-vertical'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sScale'
   protected isHarnessSpecific = true

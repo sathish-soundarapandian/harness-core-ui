@@ -1,0 +1,100 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.rowItem {
+  padding: var(--spacing-medium) 0;
+  border-bottom: solid 1px var(--grey-100);
+  span.type {
+    color: var(--grey-900) !important;
+    font-weight: 900;
+    display: grid;
+    grid-template-columns: 1fr 10px;
+  }
+  font-size: 14px !important;
+  > p {
+    cursor: pointer;
+    color: var(--primary-7) !important;
+  }
+
+  .connectorNameField {
+    display: flex;
+    align-items: center;
+
+    .connectorName {
+      display: inline-flex;
+      color: var(--grey-500);
+      margin-right: var(--spacing-small);
+      max-width: 236px;
+      text-overflow: ellipsis;
+    }
+  }
+}
+.addArtifact {
+  padding: 0px !important;
+}
+.artifactId {
+  color: var(--pipeline-color-dark-grey);
+}
+.paddingVertical {
+  padding: var(--spacing-medium) 0;
+}
+
+.sideCarBtn {
+  width: 150px;
+}
+
+.modal {
+  [class*='bp3-dialog-header'] button {
+    z-index: 2;
+  }
+}
+
+.connectorDialog {
+  width: fit-content;
+  min-width: 960px;
+  height: 600px;
+  border-left: 0;
+  padding-bottom: 0;
+  position: relative;
+  overflow: hidden;
+  .crossButton {
+    position: absolute;
+    right: var(--spacing-small);
+    top: var(--spacing-small);
+  }
+}
+
+.editForm {
+  margin-top: -50px !important;
+  width: calc(100% - 35px) !important;
+}
+.artifactList {
+  display: grid;
+  grid-template-columns: 200px 300px 200px 80px;
+  align-items: center;
+  padding-left: var(--spacing-small);
+  &.list-header {
+    border-bottom: solid 1px var(--grey-100);
+    padding-bottom: var(--spacing-medium);
+    text-transform: uppercase;
+  }
+}
+.sidecarList {
+  width: 100%;
+  .primaryArtifactRef {
+    border: 1px solid var(--grey-100);
+    padding: var(--spacing-xsmall) var(--spacing-large);
+    background-color: var(--form-bg);
+  }
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+.borderRadius {
+  border-radius: 4px;
+}

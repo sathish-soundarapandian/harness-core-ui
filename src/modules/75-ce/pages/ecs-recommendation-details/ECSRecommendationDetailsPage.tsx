@@ -6,8 +6,21 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { Card, Page, PageBody, Text, Layout, Popover, Container, Icon } from '@wings-software/uicore'
+import { useHistory, useParams } from 'react-router-dom'
+import {
+  Card,
+  Page,
+  PageBody,
+  Text,
+  Layout,
+  Popover,
+  Container,
+  Icon,
+  FlexExpander,
+  Button,
+  ButtonVariation,
+  ButtonSize
+} from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Position, Menu, MenuItem } from '@blueprintjs/core'
 import { defaultTo, isEmpty } from 'lodash-es'
@@ -15,9 +28,15 @@ import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { TimeRangeValue, TimeRange, TimeRangeType } from '@ce/types'
 import { ViewTimeRange } from '@ce/components/RecommendationDetails/constants'
-import { ResourceType, useFetchRecommendationQuery, RecommendationOverviewStats } from 'services/ce/services'
+import {
+  ResourceType,
+  useFetchRecommendationQuery,
+  RecommendationOverviewStats,
+  LaunchType
+} from 'services/ce/services'
 import { GET_DATE_RANGE } from '@ce/utils/momentUtils'
 import routes from '@common/RouteDefinitions'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useStrings } from 'framework/strings'
 import ECSRecommendationDetails, {
   EcsRecommendationDtoWithCurrentResources
@@ -29,12 +48,16 @@ import css from './ECSRecommendationDetailsPage.module.scss'
 
 const ECSRecommendationDetailsPage: React.FC = () => {
   const { getString } = useStrings()
+  const history = useHistory()
 
   const { recommendation, accountId, recommendationName } = useParams<{
     recommendation: string
     recommendationName: string
     accountId: string
   }>()
+
+  useDocumentTitle([getString('ce.recommendation.sideNavText'), recommendationName], true)
+
   const [timeRange, setTimeRange] = useQueryParamsState<TimeRangeValue>('timeRange', {
     value: TimeRangeType.LAST_7,
     label: TimeRange.LAST_7
@@ -61,6 +84,18 @@ const ECSRecommendationDetailsPage: React.FC = () => {
   const isRecomDetailsEmpty =
     isEmpty(recommendationDetails) ||
     Object.values(recommendationDetails).every(val => val === 'ECSRecommendationDTO' || val === null)
+
+  const goToServiceDetails = (): void => {
+    history.push(
+      routes.toCERecommendationServiceDetails({
+        accountId,
+        recommendation,
+        recommendationName,
+        clusterName: defaultTo(recommendationDetails.clusterName, ''),
+        serviceName: defaultTo(recommendationDetails.serviceName, '')
+      })
+    )
+  }
 
   return (
     <>
@@ -121,13 +156,14 @@ const ECSRecommendationDetailsPage: React.FC = () => {
                 recommendationStats={recommendationStats}
                 recommendationDetails={recommendationDetails}
                 timeRange={timeRange}
-                timeRangeFilter={timeRangeFilter}
                 buffer={buffer}
               />
               <Container padding="xlarge">
                 <ECSRecommendationMetadata
                   clusterName={defaultTo(recommendationDetails.clusterName, '')}
                   serviceName={defaultTo(recommendationDetails.serviceName, '')}
+                  launchType={recommendationDetails.launchType}
+                  goToServiceDetails={goToServiceDetails}
                 />
                 <Text font={{ variation: FontVariation.H5 }} margin={{ top: 'xxlarge', bottom: 'medium' }}>
                   {getString('ce.recommendation.detailsPage.tuneRecommendations')}
@@ -148,16 +184,29 @@ export default ECSRecommendationDetailsPage
 interface ECSRecommendationMetadataProps {
   clusterName: string
   serviceName: string
+  launchType: LaunchType | null
+  goToServiceDetails: () => void
 }
 
-const ECSRecommendationMetadata: React.FC<ECSRecommendationMetadataProps> = ({ clusterName, serviceName }) => {
+const ECSRecommendationMetadata: React.FC<ECSRecommendationMetadataProps> = ({
+  clusterName,
+  serviceName,
+  launchType,
+  goToServiceDetails
+}) => {
   const { getString } = useStrings()
 
   return (
     <Container>
-      <Text font={{ variation: FontVariation.H5 }} margin={{ bottom: 'medium' }}>
-        {getString('ce.recommendation.detailsPage.ecsServiceDetails')}
-      </Text>
+      <Layout.Horizontal>
+        <Text font={{ variation: FontVariation.H5 }} margin={{ bottom: 'medium' }}>
+          {getString('ce.recommendation.detailsPage.ecsServiceDetails')}
+        </Text>
+        <FlexExpander />
+        <Button variation={ButtonVariation.SECONDARY} size={ButtonSize.SMALL} onClick={goToServiceDetails}>
+          {getString('ce.recommendation.detailsPage.viewMoreDetailsText')}
+        </Button>
+      </Layout.Horizontal>
       <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500}>
         {getString('common.cluster')}
       </Text>
@@ -170,6 +219,16 @@ const ECSRecommendationMetadata: React.FC<ECSRecommendationMetadataProps> = ({ c
       <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_800}>
         {serviceName}
       </Text>
+      {launchType ? (
+        <>
+          <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500} margin={{ top: 'medium' }}>
+            {getString('ce.serviceDetails.launchType')}
+          </Text>
+          <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_800}>
+            {launchType}
+          </Text>
+        </>
+      ) : null}
     </Container>
   )
 }

@@ -7,7 +7,7 @@
 
 import type { FormikProps } from 'formik'
 import type { GetDataError } from 'restful-react'
-import type { MultiSelectOption, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, MultiSelectOption } from '@wings-software/uicore'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { Failure, ResponsePageUserGroupDTO, StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -35,7 +35,7 @@ export interface HarnessApprovalDeploymentModeProps {
   stepViewType: StepViewType
   initialValues: HarnessApprovalData
   onUpdate?: (data: HarnessApprovalData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   inputSetData?: InputSetData<HarnessApprovalData>
   readonly?: boolean
   formik?: any
@@ -47,7 +47,7 @@ export interface HarnessApprovalStepModeProps {
   initialValues: HarnessApprovalData
   onUpdate?: (data: HarnessApprovalData) => void
   onChange?: (data: HarnessApprovalData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
 }
 
@@ -65,7 +65,7 @@ export interface APIStateInterface {
 export interface HarnessApprovalFormContentProps {
   formik: FormikProps<HarnessApprovalData>
   stepViewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isNewStep?: boolean
   readonly?: boolean
 }

@@ -146,6 +146,7 @@ export const getReRunCICodebaseInputSetInitialValues = ({ codebase }: { codebase
 })
 
 export const getCICodebaseInputSetFormProps = ({ formik, isTemplate }: { formik: any; isTemplate?: boolean }): any => ({
+  shouldRender: true,
   path: isTemplate ? 'template.templateInputs' : '',
   formik,
   template: isTemplate
@@ -507,6 +508,7 @@ export const getCICodebaseParallelStageInitialValues = () => ({
 })
 
 export const getCICodebaseParallelTemplateProps = ({ formik }: { formik: any }): any => ({
+  shouldRender: true,
   path: 'template.templateInputs',
   formik,
   template: {

@@ -31,13 +31,13 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { getConnectorName, getConnectorValue } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import type { K8SDirectServiceStep } from '@pipeline/factories/ArtifactTriggerInputFactory/types'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import {
-  K8sServiceSpecVariablesForm,
+  GenericServiceSpecVariablesForm,
   K8sServiceSpecVariablesFormProps
-} from '../K8sServiceSpec/K8sServiceSpecVariablesForm'
-import { KubernetesServiceSpecInputSetMode } from '../K8sServiceSpec/KubernetesServiceSpecInputSetMode'
-import KubernetesServiceSpecEditable from '../K8sServiceSpec/K8sServiceSpecForms/KubernetesServiceSpecEditable'
-import { getYamlData } from '../K8sServiceSpec/ArtifactSource/artifactSourceUtils'
+} from '../Common/GenericServiceSpec/GenericServiceSpecVariablesForm'
+import { GenericServiceSpecInputSetMode } from '../Common/GenericServiceSpec/GenericServiceSpecInputSetMode'
+import GenericServiceSpecEditable from '../Common/GenericServiceSpec/GenericServiceSpecEditable'
 
 const logger = loggerFor(ModuleName.CD)
 const tagExists = (value: unknown): boolean => typeof value === 'number' || !isEmpty(value)
@@ -141,7 +141,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
             includeAllConnectorsAvailableAtScope: true
           },
           body: {
-            types: [ArtifactToConnectorMap.ArtifactoryRegistry],
+            types: [ArtifactToConnectorMap.ArtifactoryRegistry, ArtifactToConnectorMap.Ecr],
             filterType: 'Connector'
           }
         }).then(this.returnConnectorListFromResponse)
@@ -184,7 +184,9 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
             pipelineIdentifier: pipelineObj.identifier,
             fqnPath: path
           },
-          body: yamlStringify(getYamlData(pipelineObj))
+          body: yamlStringify({
+            pipeline: pipelineObj
+          })
         }).then(response => {
           return (
             response?.data?.buildDetailsList?.map(buildDetails => ({
@@ -309,7 +311,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
 
     if (stepViewType === StepViewType.InputVariable) {
       return (
-        <K8sServiceSpecVariablesForm
+        <GenericServiceSpecVariablesForm
           {...(customStepProps as K8sServiceSpecVariablesFormProps)}
           initialValues={initialValues}
           stepsFactory={factory}
@@ -319,9 +321,9 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
       )
     }
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (isTemplatizedView(stepViewType)) {
       return (
-        <KubernetesServiceSpecInputSetMode
+        <GenericServiceSpecInputSetMode
           {...(customStepProps as K8sServiceSpecVariablesFormProps)}
           initialValues={initialValues}
           onUpdate={onUpdate}
@@ -336,7 +338,7 @@ export class ServerlessAwsLambdaServiceSpec extends Step<ServiceSpec> {
     }
 
     return (
-      <KubernetesServiceSpecEditable
+      <GenericServiceSpecEditable
         {...(customStepProps as K8sServiceSpecVariablesFormProps)}
         factory={factory}
         initialValues={initialValues}

@@ -6,8 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Layout, Icon, Text } from '@wings-software/uicore'
-import { Intent, Color } from '@harness/design-system'
+import { Container, Icon, Layout, Text } from '@wings-software/uicore'
+import { Color, Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import EnvironmentDialog from '@cf/components/CreateEnvironmentDialog/EnvironmentDialog'
 import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
@@ -20,7 +20,7 @@ import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import { PlatformEntry, PlatformEntryType } from '@cf/components/LanguageSelection/LanguageSelection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
-
+import css from './SelectEnvironmentView.module.scss'
 export interface SelectEnvironmentViewProps {
   language: PlatformEntry
   apiKey: ApiKey | undefined
@@ -98,7 +98,7 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = props
 
       {!!environments?.length && environment && (
         <Container>
-          <Text margin={{ top: 'large', bottom: 'medium' }} style={{ color: '#6B6D85', lineHeight: '20px' }}>
+          <Text margin={{ top: 'large', bottom: 'medium' }} className={css.sdkLabel}>
             {getString(
               apiKey
                 ? serverSide
@@ -108,21 +108,13 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = props
             )}
           </Text>
 
-          <Layout.Horizontal spacing="small" style={{ alignItems: 'baseline' }}>
+          <Layout.Horizontal spacing="small" className={css.onboardingLayout}>
             {apiKey && (
               <>
-                <Text style={{ fontWeight: 600 }}>
+                <Text className={css.secret}>
                   {getString(serverSide ? 'cf.onboarding.secret' : 'cf.onboarding.clientKey')}
                 </Text>
-                <IdentifierText
-                  allowCopy
-                  identifier={apiKey.apiKey}
-                  style={{
-                    padding: 'var(--spacing-small) var(--spacing-medium)',
-                    background: '#F3F3FA',
-                    border: 'none'
-                  }}
-                />
+                <IdentifierText allowCopy identifier={apiKey.apiKey} className={css.idText} />
               </>
             )}
             <AddKeyDialog
@@ -141,7 +133,7 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = props
                 intent: Intent.NONE,
                 minimal: false,
                 style: { color: 'var(--blue-500)' },
-                text: getString('cf.onboarding.sdkButtonLabel')
+                text: getString('cf.environments.apiKeys.addKeyTitle')
               }}
             />
           </Layout.Horizontal>

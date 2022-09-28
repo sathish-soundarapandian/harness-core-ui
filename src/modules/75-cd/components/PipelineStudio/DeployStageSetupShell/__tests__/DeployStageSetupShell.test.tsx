@@ -18,9 +18,13 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import DeployStageSetupShell from '../DeployStageSetupShell'
-import overridePipelineContext from './overrideSetPipeline.json'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import { DeployServiceStep } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
+import { GenericServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpec'
+import { DeployEnvironmentStep } from '@cd/components/PipelineSteps/DeployEnvStep/DeployEnvStep'
 import { envs, services } from './mocks'
+import overridePipelineContext from './overrideSetPipeline.json'
+import DeployStageSetupShell from '../DeployStageSetupShell'
 
 const context: PipelineContextInterface = {
   ...overridePipelineContext,
@@ -32,8 +36,14 @@ const context: PipelineContextInterface = {
         type: StageType.DEPLOY,
         description: '',
         spec: {
+          serviceConfig: {
+            serviceDefinition: {
+              type: 'Kubernetes'
+            }
+          },
           execution: {}
-        }
+        },
+        failureStrategies: {}
       }
     }
   }),
@@ -69,7 +79,12 @@ jest.mock('services/cd-ng', () => ({
     },
     loading: false
   }),
-  useGetExecutionStrategyYaml: jest.fn().mockReturnValue({})
+  useGetExecutionStrategyYaml: jest.fn().mockReturnValue({ refetch: jest.fn() }),
+  useGetRuntimeInputsServiceEntity: jest.fn().mockReturnValue({}),
+  useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
 }))
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -83,6 +98,11 @@ window.IntersectionObserver = jest.fn().mockImplementation(intersectionObserverM
 window.HTMLElement.prototype.scrollTo = jest.fn()
 
 describe('DeployStageSetupShell tests', () => {
+  beforeAll(() => {
+    factory.registerStep(new DeployServiceStep())
+    factory.registerStep(new GenericServiceSpec())
+    factory.registerStep(new DeployEnvironmentStep())
+  })
   test('opens services tab by default', async () => {
     const { container, findByTestId } = render(
       <TestWrapper>
@@ -115,9 +135,11 @@ describe('DeployStageSetupShell tests', () => {
     const { container, findByTestId } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="test">
-          <StageErrorContext.Provider value={errorContextProvider}>
-            <DeployStageSetupShell />
-          </StageErrorContext.Provider>
+          <PipelineContext.Provider value={context}>
+            <StageErrorContext.Provider value={errorContextProvider}>
+              <DeployStageSetupShell />
+            </StageErrorContext.Provider>
+          </PipelineContext.Provider>
         </Formik>
       </TestWrapper>
     )
@@ -146,9 +168,11 @@ describe('DeployStageSetupShell tests', () => {
     const { container, findByTestId } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="test">
-          <StageErrorContext.Provider value={errorContextProvider}>
-            <DeployStageSetupShell />
-          </StageErrorContext.Provider>
+          <PipelineContext.Provider value={context}>
+            <StageErrorContext.Provider value={errorContextProvider}>
+              <DeployStageSetupShell />
+            </StageErrorContext.Provider>
+          </PipelineContext.Provider>
         </Formik>
       </TestWrapper>
     )
@@ -179,9 +203,11 @@ describe('DeployStageSetupShell tests', () => {
     const { findByTestId } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="test">
-          <StageErrorContext.Provider value={errorContextProvider}>
-            <DeployStageSetupShell />
-          </StageErrorContext.Provider>
+          <PipelineContext.Provider value={context}>
+            <StageErrorContext.Provider value={errorContextProvider}>
+              <DeployStageSetupShell />
+            </StageErrorContext.Provider>
+          </PipelineContext.Provider>
         </Formik>
       </TestWrapper>
     )
@@ -201,8 +227,7 @@ describe('DeployStageSetupShell tests', () => {
     await waitFor(() => expect(executionIcon).toBeInTheDocument)
 
     const advancedTab = await findByTestId('advanced')
-    const advancedIcon = await advancedTab.querySelector('[data-icon="tick"]')
-    await waitFor(() => expect(advancedIcon).toBeInTheDocument())
+    await waitFor(() => expect(advancedTab).toBeInTheDocument())
   })
 
   test('Should selectedTab be Execution', async () => {

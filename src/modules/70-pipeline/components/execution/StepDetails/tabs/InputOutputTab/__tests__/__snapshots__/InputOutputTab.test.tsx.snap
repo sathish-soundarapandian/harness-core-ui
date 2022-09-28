@@ -119,7 +119,11 @@ exports[`<ExecutionStepInputOutputTab /> tests input snapshot test 1`] = `
                       <div
                         class="text"
                       >
-                        KubernetesDirect
+                        <span
+                          class="StyledProps--font StyledProps--main StyledProps--inline"
+                        >
+                          KubernetesDirect
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -189,7 +193,11 @@ exports[`<ExecutionStepInputOutputTab /> tests input snapshot test 1`] = `
                             <div
                               class="text"
                             >
-                              account.KubernetesConnectorForAutomationTestasd
+                              <span
+                                class="StyledProps--font StyledProps--main StyledProps--inline"
+                              >
+                                account.KubernetesConnectorForAutomationTestasd
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -220,7 +228,11 @@ exports[`<ExecutionStepInputOutputTab /> tests input snapshot test 1`] = `
                             <div
                               class="text"
                             >
-                              ng-testing
+                              <span
+                                class="StyledProps--font StyledProps--main StyledProps--inline"
+                              >
+                                ng-testing
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -251,7 +263,11 @@ exports[`<ExecutionStepInputOutputTab /> tests input snapshot test 1`] = `
                             <div
                               class="text"
                             >
-                              release-pipeline-1
+                              <span
+                                class="StyledProps--font StyledProps--main StyledProps--inline"
+                              >
+                                release-pipeline-1
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -282,7 +298,11 @@ exports[`<ExecutionStepInputOutputTab /> tests input snapshot test 1`] = `
                             <div
                               class="text"
                             >
-                              6
+                              <span
+                                class="StyledProps--font StyledProps--main StyledProps--inline"
+                              >
+                                6
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -313,7 +333,11 @@ exports[`<ExecutionStepInputOutputTab /> tests input snapshot test 1`] = `
                             <div
                               class="text"
                             >
-                              true
+                              <span
+                                class="StyledProps--font StyledProps--main StyledProps--inline"
+                              >
+                                true
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -389,7 +413,11 @@ exports[`<ExecutionStepInputOutputTab /> tests input snapshot test 1`] = `
                       <div
                         class="text"
                       >
-                        env1
+                        <span
+                          class="StyledProps--font StyledProps--main StyledProps--inline"
+                        >
+                          env1
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -420,7 +448,11 @@ exports[`<ExecutionStepInputOutputTab /> tests input snapshot test 1`] = `
                       <div
                         class="text"
                       >
-                        env
+                        <span
+                          class="StyledProps--font StyledProps--main StyledProps--inline"
+                        >
+                          env
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -451,7 +483,11 @@ exports[`<ExecutionStepInputOutputTab /> tests input snapshot test 1`] = `
                       <div
                         class="text"
                       >
-                        Production
+                        <span
+                          class="StyledProps--font StyledProps--main StyledProps--inline"
+                        >
+                          Production
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -546,7 +582,11 @@ exports[`<ExecutionStepInputOutputTab /> tests output snapshot test 1`] = `
                 <div
                   class="text"
                 >
-                  environmentOutcome
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    environmentOutcome
+                  </span>
                 </div>
               </div>
             </div>
@@ -577,7 +617,11 @@ exports[`<ExecutionStepInputOutputTab /> tests output snapshot test 1`] = `
                 <div
                   class="text"
                 >
-                  env1
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    env1
+                  </span>
                 </div>
               </div>
             </div>
@@ -608,7 +652,11 @@ exports[`<ExecutionStepInputOutputTab /> tests output snapshot test 1`] = `
                 <div
                   class="text"
                 >
-                  env
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    env
+                  </span>
                 </div>
               </div>
             </div>
@@ -639,7 +687,11 @@ exports[`<ExecutionStepInputOutputTab /> tests output snapshot test 1`] = `
                 <div
                   class="text"
                 >
-                  Production
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    Production
+                  </span>
                 </div>
               </div>
             </div>
@@ -712,7 +764,11 @@ exports[`<ExecutionStepInputOutputTab /> tests output snapshot test 1`] = `
                 <div
                   class="text"
                 >
-                  KubernetesDirect
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    KubernetesDirect
+                  </span>
                 </div>
               </div>
             </div>
@@ -743,7 +799,11 @@ exports[`<ExecutionStepInputOutputTab /> tests output snapshot test 1`] = `
                 <div
                   class="text"
                 >
-                  account.KubernetesConnectorForAutomationTestasd
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    account.KubernetesConnectorForAutomationTestasd
+                  </span>
                 </div>
               </div>
             </div>
@@ -774,7 +834,11 @@ exports[`<ExecutionStepInputOutputTab /> tests output snapshot test 1`] = `
                 <div
                   class="text"
                 >
-                  ng-testing
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    ng-testing
+                  </span>
                 </div>
               </div>
             </div>
@@ -805,7 +869,11 @@ exports[`<ExecutionStepInputOutputTab /> tests output snapshot test 1`] = `
                 <div
                   class="text"
                 >
-                  release-pipeline-1
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    release-pipeline-1
+                  </span>
                 </div>
               </div>
             </div>
@@ -836,7 +904,11 @@ exports[`<ExecutionStepInputOutputTab /> tests output snapshot test 1`] = `
                 <div
                   class="text"
                 >
-                  KubernetesDirect
+                  <span
+                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                  >
+                    KubernetesDirect
+                  </span>
                 </div>
               </div>
             </div>

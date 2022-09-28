@@ -22,9 +22,12 @@ oneLogin: OneLogin
 samlProviderAddedSuccessfully: SAML provider added successfully
 samlProviderUpdatedSuccessfully: SAML provider updated successfully
 authorizationEnabledFor: 'Authorization enabled for: '
+authorizationEnabled: Authorization is enabled
 authorizationNotEnabled: Authorization not enabled
 plusSAMLProvider: + SAML Provider
 loginViaSAML: Login via SAML
+loginViaLDAP: Login via LDAP
+loginViaSAMLorLDAP: Login via SAML / LDAP
 accountOrOAuthLogin: Login via a Harness Account or Public OAuth Providers
 usePublicOAuth: Use Public OAuth Providers
 useHarnessUsernameAndPassword: Use Harness username and password
@@ -78,8 +81,11 @@ lockoutPolicyUpdated: Lockout policy has been updated successfully
 lockoutPolicyDisabled: Lockout policy has been disabled successfully
 SAMLProvider: SAML Provider
 deleteSamlProvider: Delete SAML provider
-deleteSamlProviderDescription: 'Do you want to delete the SAML Provider:'
+deleteLdapProvider: Delete LDAP provider
+deleteSamlProviderDescription: 'Do you want to delete the SAML Provider: <strong> {{displayName}} </strong> ?'
+deleteLdapProviderDescription: 'Do you want to delete the LDAP Provider: <strong> {{displayName}} </strong> ?'
 samlProviderDeleted: SAML provider has been deleted successfully
+ldapProviderDeleted: LDAP provider has been deleted successfully
 enableSamlProvider: Enable SAML Provider
 enableSamlProviderDescription: Before you change the SSO provider to SAML, please use the Test button to ensure your settings are correct.
 samlLoginEnabled: SAML login enabled successfully
@@ -141,3 +147,149 @@ cdCommunityPlan:
     item3: 'External Approvals & Secrets Management'
     item4: Multiple Projects & Organizations
     item5: Template Library & Custom Dashboards
+
+autoRenewal: Auto renewal on {{date}}
+salesTax: Plus sales tax
+unitPrice: Unit Price
+recomendation: Recomendation
+priceBreakdown: Subscription Price Breakdown
+costCalculator:
+  tax: Tax
+  using: Using
+  currentSubscribed: Currently Subscribed
+  maus: MAUs
+  comparePlans: Compare plans
+  next: 'Next: Billing information'
+  switchTooltip: Switch to Yearly subscription to enable premium support
+  premiumSupport: Premium Support
+  premSupport:
+    title: Add Premium Support
+    onCallSupport: 24/7 on call support
+    includedByDefault: Standard included by default
+  developer:
+    title: How many developers will use Feature Flags?
+    developer: Who is a developer?
+    developerDefinition: A Developer is an active Feature Flags user with create/edit/delete permissions on Feature Flags, Targets, or Segments.
+  mau:
+    title: How many Monthly Active Users will view Feature Flags?
+    mau: Who is a Monthly Active User?
+    mauDefinition: '"MAUs" refers to the Monthly Active Users viewing your Feature Flags'
+    perkMau: 'per {{quantity}}K / month'
+    kMauFree: (first 100k included free)
+    permMau: 'per {{quantity}}M / month'
+    mMauFree: '(first {{minValue}} included free)'
+billing:
+  totalDuetoday: 'Total due today: '
+  next: 'Next: Payment Method'
+paymentMethod:
+  next: 'Next: Final Review'
+finalReview:
+  premiumSupport: Premium 24x7
+  ofTotalSpend: (20% of total spend)
+  subscribeNPay: Subscribe and Pay
+  upgradeToPlan: Upgrading to
+success:
+  woohoo: Woo-Hoo!
+  title: Bravo. You’re all set.
+  msg: Your {{time}} {{module}} subscription is successfully set up.
+choosePlan: Choose a plan
+ffPlans:
+  team: Team
+pricePreview:
+  title: Price preview
+  calculatedNextStep: Calculated in final review
+  discount: ' (2 months free)'
+ldap:
+  authChangeSuccessful: Authentication mechanism changed to LDAP successfuly
+  ldapTestSuccessful: LDAP connection test successful
+  verifyAndEnableConfig: Verify and Enable LDAP Configuration
+  addLdap: + LDAP Provider
+  connectionSettings: Connection Settings
+  userQueries: User Queries
+  groupQueries: Group Queries
+  scheduledSyncs: Scheduled Syncs
+  baseDN: Base DN
+  baseDNRequired: Base DN is required
+  searchFilter: Search Filter
+  searchFilterRequired: Search Filter is required
+  nameAttributes: Name Attribute
+  nameAttributesRequired: Name Attribute is required
+  emailAttributes: Email Attribute
+  emailAttributesRequired: Email Attribute is required
+  descriptionAttributes: Description Attribute
+  descriptionAttributesRequired: Description Attribute is required
+  groupMembershipAttributes: Group Membership Attribute
+  groupMembershipAttributesRequired: Group Membership Attribute is required
+  userQueryTitle: User Query {{index}}
+  groupQueryTitle: Group Query {{index}}
+  setScopeForUserQuery: Set the scope of any searches for LDAP users
+  setScopeForGroupQuery: Set the scope of any searches for LDAP user groups
+  newUserQuery: New User Query
+  newGroupQuery: New Group Query
+  queryTestSuccessful: Query test successful
+  queryTestFail: Query test failed
+  addUserQueryHeading: Add a User Query
+  addUserQueryDescription: With user queries, you are setting the scope within which any searches for LDAP users will be performed by Harness.
+  addGroupQueryHeading: Add a Group Query
+  addGroupQueryDescription: With group queries, you are setting the scope within which any searches for LDAP users will be performed by Harness.
+  editLdapConfiguration: Edit LDAP configuration
+  syncUserGroups: Synchronize User Groups
+  syncUserGroupsResult:
+    success: User Groups synchronization initiated
+    fail: User Groups synchronization failed
+  connSettings:
+    hostAddress: Enter host address
+    maximumReferralHops: Max Referral Hops
+    enableReferrals: Enable Referrals
+    connectionTimeout: Connection Timeout
+    responseTime: Response Time
+    recursiveSearch: Recursive Membership Search
+    bindDN: Bind DN
+    bindDNPlaceholder: Enter Distinguished Name
+    passwordPlaceholder: Enter Password
+    portNumber:
+      required: '{{ $.common.smtp.portRequired }}'
+      number: 'Port must be a number'
+    validateHost:
+      required: 'Hostname or IP is required'
+      number: 'Hostname or IP must be a number'
+    validateReferralHops:
+      required: 'Referral Hops is required'
+      number: 'Referral Hops must be a number'
+    validateConnectionTimeout:
+      required: 'Connection timeout is required'
+      number: 'Connection timeout must be a number'
+    validateResponseTime:
+      required: 'Response timeout is required'
+      number: 'Response timeout should be a number'
+    validateBindDN: 'Bind Distinguished Name is required'
+  updateStepFailMessage: 'Update failed'
+  discardChanges: 'Discard changes'
+billingInfo:
+  address: Address
+  billingContact: '{{$.common.billing}} Contact'
+  paymentMethod: Payment Method
+  paymentMethods: Payment Methods
+  billingAdmin: '{{$.common.billing}} Admin'
+  saveCardWarning: By providing your card information, you allow Harness Inc. to charge your card for future payments in accordance with our Terms of Use.
+  emailWarning: This billing email will recieve billing notifications. Change this in Billing.
+  nobills: There are no Team / Enterprise subscriptions in your Account
+  firstSubscription: Let’s get started with your first subscription.
+  explorePlans: Explore Plans
+  addCC: Add a credit card
+  priceBreakdown: Price breakdown
+  nextBillingDate: 'Next billing date is on {{billingDate}}'
+  monthlyTotal: 'Monthly Total: '
+  annualTotal: 'Annual Total: '
+  endingIn: ending in
+  expires: Expires
+  updateCard: Update Card
+  monthlySubscriptions: Monthly Subscriptions
+  annualSubscriptions: Annual Subscriptions
+  selectPaymentMethod: Select Payment Method
+  formikErrors:
+    city: City is required
+    state: State is required
+    address: Address is required
+    zipCode: Zip is required
+    company: Company Name is required

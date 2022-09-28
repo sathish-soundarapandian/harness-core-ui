@@ -36,6 +36,7 @@ import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import TextReference, { ValueType, TextReferenceInterface } from '@secrets/components/TextReference/TextReference'
+import { URLValidationSchema } from '@common/utils/Validation'
 import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './Stepk8ClusterDetails.module.scss'
@@ -255,7 +256,7 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
       .nullable()
       .when('delegateType', {
         is: delegateType => delegateType === DelegateTypes.DELEGATE_OUT_CLUSTER,
-        then: Yup.string().required(getString('validation.masterUrl'))
+        then: URLValidationSchema({ requiredMessage: getString('validation.masterUrl') })
       }),
     delegateType: Yup.string().required(
       getString('connectors.chooseMethodForConnection', { name: getString('connectors.k8sConnection') })
@@ -340,12 +341,17 @@ const Stepk8ClusterDetails: React.FC<StepProps<Stepk8ClusterDetailsProps> & K8Cl
     }
   }, [loadingConnectorSecrets])
 
-  const handleSubmit = (formData: ConnectorConfigDTO) => {
+  const handleSubmit = (formData: ConnectorConfigDTO): void => {
     trackEvent(ConnectorActions.DetailsStepSubmit, {
       category: Category.CONNECTOR,
       connector_type: Connectors.K8
     })
-    nextStep?.({ ...props.connectorInfo, ...prevStepData, ...formData } as Stepk8ClusterDetailsProps)
+    nextStep?.({
+      ...props.connectorInfo,
+      ...prevStepData,
+      ...formData,
+      ...(typeof formData.masterUrl === 'string' && { masterUrl: formData.masterUrl.trim() })
+    } as Stepk8ClusterDetailsProps)
   }
   useConnectorWizard({ helpPanel: { referenceId: 'KubernetesConnectorDetails', contentWidth: 1100 } })
   const { trackEvent } = useTelemetry()

@@ -5,6 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.gatewayDetailsContainer {
+  overflow: scroll;
+  max-height: var(--page-min-height);
+  background-color: var(--white);
+}
+
 .footer {
   position: fixed;
   bottom: 5px;
@@ -24,7 +30,7 @@
 
   /* Gray 1 */
 
-  color: #333333;
+  color: var(--grey-700);
 
   /* Inside Auto Layout */
 
@@ -57,7 +63,7 @@
     margin: 0;
   }
   .bp3-tab[aria-selected='true'] {
-    color: black !important;
+    color: var(--grey-1000) !important;
   }
   .bp3-tab[aria-selected='false'] {
     color: var(--grey-800);
@@ -65,7 +71,7 @@
   .bp3-tab-list {
     position: relative !important;
     top: auto;
-    background: white !important;
+    background: var(--white) !important;
     // border-bottom: none !important;
     margin-bottom: var(--spacing-small);
   }

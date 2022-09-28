@@ -10,6 +10,8 @@ import { queryByText, render, fireEvent, getByText, waitFor, getAllByText } from
 import { TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import SavedFilterData from '@ce/pages/recommendationList/__test__/FiltersData.json'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
+import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 
 import RecommendationFilters from '../RecommendationFilters'
 import {
@@ -67,7 +69,11 @@ const params = {
 }
 
 const defaultProps = {
-  applyFilters: jest.fn()
+  applyFilters: jest.fn(),
+  appliedFilter: {
+    identifier: getIdentifierFromName(UNSAVED_FILTER),
+    filterProperties: {}
+  }
 }
 
 const findDrawerContainer = (): HTMLElement | null => document.querySelector('.bp3-drawer')
@@ -96,7 +102,10 @@ describe('Test Cases for RecommendationFilters Component', () => {
     fireEvent.click(filterDropdown!)
     const listItem = document.body.getElementsByClassName('DropDown--menuItem')[0]
     fireEvent.click(listItem)
-    expect(applyFiltersMock).toBeCalledWith(SavedFilterData.data.content[0].filterProperties)
+    expect(applyFiltersMock).toBeCalledWith({
+      identifier: SavedFilterData.data.content[0].identifier,
+      filterProperties: SavedFilterData.data.content[0].filterProperties
+    })
   })
 
   test('Should be able to select / create / update / delete filters', () => {

@@ -10,7 +10,6 @@ import { FormGroup, IFormGroupProps, Intent, PopoverInteractionKind } from '@blu
 import {
   Layout,
   Icon,
-  Button,
   Text,
   Tag,
   getMultiTypeFromValue,
@@ -26,7 +25,7 @@ import {
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, merge } from 'lodash-es'
 import {
   Failure,
   ConnectorInfoDTO,
@@ -56,7 +55,6 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { String, useStrings, UseStringsReturn } from 'framework/strings'
 import { ReferenceSelect, ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
-import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ResourceScope } from '@rbac/interfaces/ResourceScope'
@@ -122,6 +120,7 @@ export interface ConnectorReferenceFieldProps extends Omit<IFormGroupProps, 'lab
   category?: GetConnectorListQueryParams['category']
   error?: string
   tooltipProps?: DataTooltipInterface
+  connectorFilterProperties?: ConnectorFilterProperties
 }
 
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
@@ -134,7 +133,7 @@ export function getEditRenderer(
   openConnectorModal: UseCreateConnectorModalReturn['openConnectorModal'],
   type: ConnectorInfoDTO['type'],
   getString: UseStringsReturn['getString'],
-  canUpdate = true
+  resourceScope: ResourceScope
 ): JSX.Element {
   const detailSchema = getConnectorSelectorSchema(selected, getString)
   return (
@@ -157,21 +156,25 @@ export function getEditRenderer(
               <String stringID="idLabel" vars={{ id: selected?.connector?.identifier }} />
             </Text>
           </Layout.Vertical>
-          {canUpdate ? (
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              text={<String stringID="edit" />}
-              onClick={e => {
-                e.stopPropagation()
-                openConnectorModal(true, type, {
-                  connectorInfo: selected?.connector,
-                  gitDetails: selected?.connector?.gitDetails
-                })
-              }}
-            />
-          ) : (
-            <></>
-          )}
+          <RbacButton
+            variation={ButtonVariation.SECONDARY}
+            text={<String stringID="edit" />}
+            onClick={e => {
+              e.stopPropagation()
+              openConnectorModal(true, type, {
+                connectorInfo: selected?.connector,
+                gitDetails: selected?.connector?.gitDetails
+              })
+            }}
+            permission={{
+              permission: PermissionIdentifier.UPDATE_CONNECTOR,
+              resource: {
+                resourceType: ResourceType.CONNECTOR,
+                resourceIdentifier: selected?.connector?.identifier
+              },
+              resourceScope
+            }}
+          />
         </Layout.Horizontal>
         <Layout.Vertical margin={{ top: 'medium', bottom: 'medium' }}>
           {detailSchema.map((item, key) => {
@@ -431,7 +434,8 @@ export function getReferenceFieldProps({
   placeholder,
   getString,
   openConnectorModal,
-  setPagedConnectorData
+  setPagedConnectorData,
+  connectorFilterProperties
 }: GetReferenceFieldMethodProps): Omit<
   ReferenceSelectProps<ConnectorReferenceDTO>,
   'onChange' | 'onCancel' | 'pagination'
@@ -467,13 +471,16 @@ export function getReferenceFieldProps({
               pageIndex: page,
               pageSize: 10
             },
-            body: {
-              ...(!category && { types: type }),
-              category,
-              filterType: 'Connector',
-              projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
-              orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
-            } as ConnectorFilterProperties
+            body: merge(
+              {
+                ...(!category && { types: type }),
+                category,
+                filterType: 'Connector',
+                projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
+                orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
+              },
+              connectorFilterProperties
+            ) as ConnectorFilterProperties
           })
         : getConnectorListPromise({
             queryParams: {
@@ -603,6 +610,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     category,
     error,
     disabled,
+    connectorFilterProperties,
     ...rest
   } = props
 
@@ -635,6 +643,7 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     types: Array.isArray(type) ? type : [type],
     onSuccess: (data?: ConnectorConfigDTO) => {
       if (data) {
+        setIsConnectorEdited(true)
         props.onChange?.({ ...data.connector, status: data.status }, Scope.PROJECT)
         setInlineSelection({
           selected: true,
@@ -648,16 +657,6 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
       })
     }
   })
-
-  const [canUpdate] = usePermission(
-    {
-      resource: {
-        resourceType: ResourceType.CONNECTOR
-      },
-      permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
-    },
-    []
-  )
 
   const [selectedValue, setSelectedValue] = React.useState(selected)
 
@@ -782,24 +781,13 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
     }
   }
 
-  const [canUpdateSelectedConnector] = usePermission(
-    {
-      resource: {
-        resourceType: ResourceType.CONNECTOR,
-        resourceIdentifier: (selectedValue as ConnectorSelectedValue)?.connector?.identifier || ''
-      },
-      permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
-    },
-    []
-  )
-
   if (typeof type === 'string' && typeof selectedValue === 'object' && selectedValue) {
     optionalReferenceSelectProps.editRenderer = getEditRenderer(
       selectedValue as ConnectorSelectedValue,
       openConnectorModal,
       (selectedValue as ConnectorSelectedValue)?.connector?.type || type,
       getString,
-      canUpdateSelectedConnector
+      { accountIdentifier, projectIdentifier, orgIdentifier }
     )
   } else if (Array.isArray(type) && typeof selectedValue === 'object' && selectedValue) {
     optionalReferenceSelectProps.editRenderer = getEditRenderer(
@@ -807,14 +795,31 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
       openConnectorModal,
       (selectedValue as ConnectorSelectedValue)?.connector?.type || type[0],
       getString,
-      canUpdateSelectedConnector
+      { accountIdentifier, projectIdentifier, orgIdentifier }
     )
   }
 
   const tooltipContext = React.useContext(FormikTooltipContext)
   const dataTooltipId =
     props.tooltipProps?.dataTooltipId || (tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : '')
-
+  const getReferenceFieldPropsValues = getReferenceFieldProps({
+    defaultScope,
+    gitScope,
+    accountIdentifier,
+    projectIdentifier,
+    orgIdentifier,
+    type,
+    name,
+    selected: selectedValue,
+    width,
+    placeholder: placeHolderLocal,
+    label,
+    getString,
+    category,
+    openConnectorModal,
+    setPagedConnectorData,
+    connectorFilterProperties
+  })
   return (
     <FormGroup
       {...rest}
@@ -826,25 +831,8 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
         onChange={(connector, scope) => {
           props.onChange?.(connector, scope)
         }}
-        {...getReferenceFieldProps({
-          defaultScope,
-          gitScope,
-          accountIdentifier,
-          projectIdentifier,
-          orgIdentifier,
-          type,
-          name,
-          selected: selectedValue,
-          width,
-          placeholder: placeHolderLocal,
-          label,
-          getString,
-          category,
-          openConnectorModal,
-          setPagedConnectorData
-        })}
+        {...getReferenceFieldPropsValues}
         hideModal={inlineSelection.selected && inlineSelection.inlineModalClosed}
-        isNewConnectorLabelVisible={canUpdate}
         selectedRenderer={getSelectedRenderer(
           selectedValue as ConnectorSelectedValue,
           !!connectorStatus,
@@ -862,6 +850,23 @@ export const ConnectorReferenceField: React.FC<ConnectorReferenceFieldProps> = p
           gotoPage: pageIndex => setPage(pageIndex)
         }}
         disableCollapse={!(type === 'Github')}
+        createNewBtnComponent={
+          <RbacButton
+            variation={ButtonVariation.SECONDARY}
+            onClick={() => {
+              optionalReferenceSelectProps.createNewHandler?.()
+            }}
+            text={`+ ${getReferenceFieldPropsValues.createNewLabel}`}
+            margin={{ right: 'small' }}
+            permission={{
+              permission: PermissionIdentifier.UPDATE_CONNECTOR,
+              resource: {
+                resourceType: ResourceType.CONNECTOR
+              },
+              resourceScope: { accountIdentifier, orgIdentifier, projectIdentifier }
+            }}
+          ></RbacButton>
+        }
       />
     </FormGroup>
   )

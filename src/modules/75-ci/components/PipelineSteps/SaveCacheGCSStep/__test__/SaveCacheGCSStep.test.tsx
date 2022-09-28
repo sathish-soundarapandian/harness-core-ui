@@ -231,6 +231,17 @@ describe('Save Cache GCS Step', () => {
                   localName: 'step.saveCacheGCS.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.saveCacheGCS.identifier',
+                      localName: 'step.saveCacheGCS.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-timeout': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.saveCacheGCS.timeout',
@@ -295,6 +306,7 @@ describe('Save Cache GCS Step', () => {
             },
             variablesData: {
               type: StepType.SaveCacheGCS,
+              __uuid: 'step-identifier',
               identifier: 'saveCacheGCS',
               name: 'step-name',
               timeout: 'step-timeout',

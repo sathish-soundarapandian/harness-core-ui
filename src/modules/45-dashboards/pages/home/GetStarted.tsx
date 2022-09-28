@@ -20,7 +20,7 @@ interface DrawerProps {
 export const GetStarted: React.FC<DrawerProps> = props => {
   const { getString } = useStrings()
 
-  const renderEmbeddedVideo = (src: string, title: string) => (
+  const renderEmbeddedVideo = (src: string, title: string): React.ReactElement => (
     <iframe allowFullScreen frameBorder={0} height="250" src={src} scrolling="no" title={title} width="470" />
   )
 

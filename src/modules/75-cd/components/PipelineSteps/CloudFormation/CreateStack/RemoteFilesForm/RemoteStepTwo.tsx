@@ -20,12 +20,14 @@ import {
   Formik,
   MultiTypeInputType,
   getMultiTypeFromValue,
+  AllowedTypes as MultiTypeAllowedTypes,
   FormInput,
   Icon
 } from '@harness/uicore'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import { FormatFilePaths, AllowedTypes, StepTwoTitle, RemoteFileStorePath } from '../../CloudFormationHelper'
 import { onDragStart, onDragEnd, onDragLeave, onDragOver, onDrop } from '../../DragHelper'
 import { ParameterRepoDetails } from './ParameterRepoDetails'
@@ -33,7 +35,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../../CloudFormation.module.scss'
 
 interface StepTwoProps {
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: MultiTypeAllowedTypes
   initialValues: any
   onSubmit: (values: any, prevStepData: any) => void
   index?: number
@@ -145,13 +147,22 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                   </div>
                 )}
                 {connector !== S3 && (
-                  <ParameterRepoDetails allowableTypes={allowableTypes} index={index} values={values} />
+                  <ParameterRepoDetails
+                    allowableTypes={allowableTypes}
+                    index={index}
+                    values={values}
+                    prevStepData={prevStepData}
+                  />
                 )}
                 <div className={cx(stepCss.md)}>
                   <MultiTypeFieldSelector
                     name={name}
                     style={{ width: 370 }}
-                    allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                    allowedTypes={
+                      (allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.EXPRESSION
+                      ) as MultiTypeAllowedTypes
+                    }
                     label={<Text flex={{ inline: true }}>{templateTitle}</Text>}
                   >
                     {!isNumber(index) ? (
@@ -160,7 +171,9 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                         label=""
                         multiTextInputProps={{
                           expressions,
-                          allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                          allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                            item => !isMultiTypeRuntime(item)
+                          ) as MultiTypeAllowedTypes
                         }}
                       />
                     ) : (
@@ -199,7 +212,9 @@ const StepTwo: React.FC<StepProps<any> & StepTwoProps> = ({
                                     label=""
                                     multiTextInputProps={{
                                       expressions,
-                                      allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME)
+                                      allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                        item => !isMultiTypeRuntime(item)
+                                      ) as MultiTypeAllowedTypes
                                     }}
                                     style={{ width: 320 }}
                                   />

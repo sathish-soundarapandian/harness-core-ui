@@ -8,17 +8,22 @@
 import type { SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import type { HealthSourceSpec } from 'services/cv'
-import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
+import type {
+  SourceDataInterface,
+  UpdatedHealthSource
+} from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 
 export interface DatadogLogsHealthSourceProps {
-  data: any
+  data: SourceDataInterface & DatadogLogsSetupSource
   onSubmit: (formdata: DatadogLogsSetupSource, updatedHealthSource: UpdatedHealthSource) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export type DatadogLogsInfo = {
   metricName: string
-  serviceInstanceIdentifierTag?: string
-  indexes?: SelectOption[]
+  serviceInstanceIdentifierTag?: string | SelectOption
+  indexes?: SelectOption[] | string
   query: string
 }
 
@@ -28,7 +33,7 @@ export interface DatadogLogsSetupSource {
   healthSourceIdentifier: string
   healthSourceName: string
   product: SelectOption
-  connectorRef?: string
+  connectorRef?: string | { value: string }
 }
 
 export type SelectedAndMappedMetrics = {
@@ -41,13 +46,15 @@ export type UpdateSelectedMetricsMap = {
   oldMetric: string
   mappedMetrics: Map<string, DatadogLogsInfo>
   formikProps: FormikProps<DatadogLogsInfo | undefined>
+  isConnectorRuntimeOrExpression?: boolean
 }
 
 export interface DatadogLogsQueryDefinition {
   name: string
   query: string
   serviceInstanceIdentifier?: string
-  indexes: string[]
+  indexes: string[] | string
+  identifier?: string
 }
 
 export type DatadogLogsHealthSpec = HealthSourceSpec & {

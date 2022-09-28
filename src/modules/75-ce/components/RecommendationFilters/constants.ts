@@ -18,11 +18,11 @@ export function getFiltersLabelName(getString: UseStringsReturn['getString']): R
 
 export function getLabelMappingForFilters(getString: UseStringsReturn['getString']): Record<string, string> {
   return {
-    clusterName: getString('ce.recommendation.listPage.filters.clusterName'),
+    clusterName: getString('common.clusterName'),
     name: getString('ce.recommendation.listPage.filters.name'),
     resourceType: getString('common.resourceTypeLabel'),
     namespace: getString('ce.recommendation.listPage.filters.namespace'),
-    clusterNames: getString('ce.recommendation.listPage.filters.clusterName'),
+    clusterNames: getString('common.clusterName'),
     names: getString('ce.recommendation.listPage.filters.name'),
     resourceTypes: getString('common.resourceTypeLabel'),
     namespaces: getString('ce.recommendation.listPage.filters.namespace')

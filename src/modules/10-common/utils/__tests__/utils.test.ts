@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { formatCount } from '@common/utils/utils'
+import { formatCount, getPREnvNameFromURL } from '@common/utils/utils'
 
 describe('Test common/utils.ts', () => {
   test('Test formatCount method', () => {
@@ -25,5 +25,31 @@ describe('Test common/utils.ts', () => {
     expect(formatCount(1200000)).toBe('1M')
     expect(formatCount(1999999)).toBe('2M')
     expect(formatCount(1600000)).toBe('2M')
+  })
+
+  test('Test getPREnvNameFromURL method', () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    delete global.window.location
+    global.window = Object.create(window)
+    global.window.location = {
+      ...window.location,
+      protocol: 'https',
+      hostname: 'pr.harness.io',
+      href: 'https://pr.harness.io/ci-1234'
+    }
+    expect(getPREnvNameFromURL('https://pr.harness.io/ci-1234/ng/')).toBe('ci-1234')
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    delete global.window.location
+    global.window = Object.create(window)
+    global.window.location = {
+      ...window.location,
+      protocol: 'https',
+      hostname: 'app.harness.io',
+      href: 'https://app.harness.io/auth/#/signin'
+    }
+    expect(getPREnvNameFromURL('https://app.harness.io/auth/#/signin')).toBe('')
   })
 })

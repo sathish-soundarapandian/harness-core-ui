@@ -9,7 +9,7 @@ import React from 'react'
 import { render, RenderResult, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import type { DashboardModel } from 'services/custom-dashboards'
-import { DashboardType } from '@dashboards/types/DashboardTypes'
+import { DashboardType } from '@dashboards/types/DashboardTypes.types'
 import type { StringKeys } from 'framework/strings'
 import DashboardTags, { DashboardTagProps } from '../DashboardTags'
 
@@ -73,7 +73,7 @@ describe('DashboardTags', () => {
     expect(screen.getByText(expectedText)).toBeInTheDocument()
   })
 
-  test('it should display a Cloud Cost tag when Dashboard Tag is CI', async () => {
+  test('it should display a Builds tag when Dashboard Tag is CI', async () => {
     const mockDashboard: DashboardModel = {
       ...defaultTestDashboard,
       data_source: ['CI']
@@ -84,7 +84,7 @@ describe('DashboardTags', () => {
     expect(screen.getByText(expectedText)).toBeInTheDocument()
   })
 
-  test('it should display a Cloud Cost tag when Dashboard Tag is CD', async () => {
+  test('it should display a Deployments tag when Dashboard Tag is CD', async () => {
     const mockDashboard: DashboardModel = {
       ...defaultTestDashboard,
       data_source: ['CD']
@@ -95,7 +95,18 @@ describe('DashboardTags', () => {
     expect(screen.getByText(expectedText)).toBeInTheDocument()
   })
 
-  test('it should display a Cloud Cost tag when Dashboard Tag is CF', async () => {
+  test('it should display a Deployments tag when Dashboard Tag is CG_CD', async () => {
+    const mockDashboard: DashboardModel = {
+      ...defaultTestDashboard,
+      data_source: ['CG_CD']
+    }
+    renderComponent({ dashboard: mockDashboard })
+
+    const expectedText: StringKeys = 'deploymentsText'
+    expect(screen.getByText(expectedText)).toBeInTheDocument()
+  })
+
+  test('it should display a Feature Flags tag when Dashboard Tag is CF', async () => {
     const mockDashboard: DashboardModel = {
       ...defaultTestDashboard,
       data_source: ['CF']
@@ -105,14 +116,15 @@ describe('DashboardTags', () => {
     const expectedText: StringKeys = 'common.purpose.cf.continuous'
     expect(screen.getByText(expectedText)).toBeInTheDocument()
   })
-  test('it should display a Cloud Cost tag when Dashboard Tag is CG', async () => {
+
+  test('it should display a Security Test tag when Dashboard Tag is STO', async () => {
     const mockDashboard: DashboardModel = {
       ...defaultTestDashboard,
-      data_source: ['CG_CD']
+      data_source: ['STO']
     }
     renderComponent({ dashboard: mockDashboard })
 
-    const expectedText: StringKeys = 'dashboards.modules.cgDeployments'
+    const expectedText: StringKeys = 'common.purpose.sto.continuous'
     expect(screen.getByText(expectedText)).toBeInTheDocument()
   })
 })

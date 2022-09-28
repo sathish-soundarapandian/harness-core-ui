@@ -8,6 +8,10 @@
 import type { IconName } from '@harness/uicore'
 import type { IState } from '@ce/components/NodeRecommendation/constants'
 import type { RecommendClusterRequest } from 'services/ce/recommenderService'
+import { ResourceType } from 'services/ce/services'
+import routes from '@common/RouteDefinitions'
+
+export const DAYS_IN_A_MONTH = 30
 
 export const getProviderIcon = (provider: string): IconName => {
   const iconMapping: Record<string, IconName> = {
@@ -21,6 +25,9 @@ export const getProviderIcon = (provider: string): IconName => {
 
 export const addBufferToValue = (value: number, bufferPercentage: number, precision?: number): number =>
   +(((100 + bufferPercentage) / 100) * value).toFixed(precision || 2)
+
+export const addBufferWithoutPrecision = (value: number, bufferPercentage: number): number =>
+  +(((100 + bufferPercentage) / 100) * value)
 
 export const calculateSavingsPercentage = (savings: number, totalCost: number): string =>
   `(${Math.floor((savings / totalCost) * 100)}%)`
@@ -116,3 +123,70 @@ export const getInstanceFamiliesFromState = (state: IState): InstanceFamilies =>
   excludeSeries: state.excludeSeries,
   excludeTypes: state.excludeTypes
 })
+
+export type RouteFn = (
+  params: {
+    recommendation: string
+    recommendationName: string
+  } & {
+    accountId: string
+  }
+) => string
+
+export const resourceTypeToRoute: Record<ResourceType, RouteFn> = {
+  [ResourceType.Workload]: routes.toCERecommendationDetails,
+  [ResourceType.NodePool]: routes.toCENodeRecommendationDetails,
+  [ResourceType.EcsService]: routes.toCEECSRecommendationDetails
+}
+
+/**
+ * AWS only allows these as valid combinations for CPU and Memory
+ *
+ * Record<CPU Value, Allowed Memory Values>
+ */
+export const FargateResourceValues: Record<number, number[]> = {
+  256: [0.5, 1.0, 2.0],
+  512: [1, 4],
+  1024: [2, 8],
+  2048: [4, 16],
+  4096: [8, 30]
+}
+
+/**
+ *
+ * @param cpuMilliUnits Requested CPU Value
+ * @param memoryBytes Requested Memory Value
+ * @returns Values of CPU and Memory Allowed by AWS
+ */
+export const getECSFargateResourceValues = (
+  cpuMilliUnits: number,
+  memoryBytes: number
+): { currentCPU: number; currentMemoryGB: number } => {
+  const cpuCores = cpuMilliUnits
+  const memoryGb = memoryBytes / 1024 // Convert MB to GB
+
+  const allowedCPUValues = Object.keys(FargateResourceValues) as unknown as number[]
+
+  for (const currentCPU of allowedCPUValues) {
+    const memoryValuesForCurrentCPU = FargateResourceValues[currentCPU]
+
+    if (currentCPU < cpuCores || memoryValuesForCurrentCPU[memoryValuesForCurrentCPU.length - 1] < memoryGb) {
+      continue
+    }
+
+    for (const currentMemoryGB of memoryValuesForCurrentCPU) {
+      if (currentMemoryGB >= memoryGb) {
+        return {
+          currentCPU: currentCPU,
+          currentMemoryGB: currentMemoryGB * 1024 // Convert back to MB
+        }
+      }
+    }
+  }
+
+  // Return the Highest Values if Limits are Exceeded
+  return {
+    currentCPU: 4096,
+    currentMemoryGB: 30720 // 30 GB in MB
+  }
+}

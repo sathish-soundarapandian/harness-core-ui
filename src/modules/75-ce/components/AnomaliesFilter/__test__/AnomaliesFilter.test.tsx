@@ -11,6 +11,8 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 
 import type { CcmMetaData } from 'services/ce/services'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
+import { UNSAVED_FILTER } from '@common/components/Filter/utils/FilterUtils'
 import CCMMetaDataResponse from '@ce/pages/anomalies-overview/__test__/CCMMetaDataResponse.json'
 import AnomaliesFilter from '../AnomaliesFilter'
 import SavedFilterData from './SavedFilterData.json'
@@ -72,7 +74,11 @@ const defaultProps = {
   },
   setTimeRange: jest.fn(),
   applyFilters: jest.fn(),
-  ccmMetaData: CCMMetaDataResponse.data.ccmMetaData as CcmMetaData
+  ccmMetaData: CCMMetaDataResponse.data.ccmMetaData as CcmMetaData,
+  appliedFilter: {
+    identifier: getIdentifierFromName(UNSAVED_FILTER),
+    filterProperties: {}
+  }
 }
 
 const findDrawerContainer = (): HTMLElement | null => document.querySelector('.bp3-drawer')
@@ -101,7 +107,10 @@ describe('Test Cases for AnomaliesFilter Component', () => {
     fireEvent.click(filterDropdown!)
     const listItem = document.body.getElementsByClassName('DropDown--menuItem')[0]
     fireEvent.click(listItem)
-    expect(applyFiltersMock).toBeCalledWith(SavedFilterData.data.content[0].filterProperties)
+    expect(applyFiltersMock).toBeCalledWith({
+      identifier: SavedFilterData.data.content[0].identifier,
+      filterProperties: SavedFilterData.data.content[0].filterProperties
+    })
   })
 
   test('Should be able to select / create / update / delete filters', () => {

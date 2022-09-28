@@ -15,7 +15,7 @@ import { Experiences } from '@common/constants/Utils'
 import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import type { DeploymentTypeItem } from './DeploymentInterface'
+import type { DeploymentTypeItem } from '@cd/utils/deploymentUtils'
 import css from './DeployServiceSpecifications.module.scss'
 
 interface PropsInterface {
@@ -98,7 +98,7 @@ export const CDFirstGenTrial: React.FC<PropsInterface> = ({ selectedDeploymentTy
             </Button>
             <Text padding={{ top: 'xxxlarge' }}>
               {
-                <a href="https://ngdocs.harness.io/article/1fjmm4by22" rel="noreferrer" target="_blank">
+                <a href="https://docs.harness.io/article/1fjmm4by22" rel="noreferrer" target="_blank">
                   {getString('cd.cdSwitchToFirstGen.learnMoreAboutCD1stGen')}
                 </a>
               }

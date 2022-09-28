@@ -1,0 +1,60 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.container {
+  padding: var(--spacing-xlarge) !important;
+  overflow: auto;
+  align-items: flex-start !important;
+}
+
+.successLabel {
+  padding: var(--spacing-xsmall) var(--spacing-small) var(--spacing-xsmall) var(--spacing-small) !important;
+  background-color: var(--grey-100) !important;
+  border-radius: var(--spacing-xsmall) !important;
+}
+
+.setUpLabel {
+  padding-top: var(--spacing-xlarge) !important;
+  padding-bottom: var(--spacing-xlarge) !important;
+  font-weight: 600 !important;
+  font-size: var(--font-size-medium) !important;
+  line-height: var(--spacing-xxlarge) !important;
+  color: var(--grey-800) !important;
+}
+
+.selectLanguage {
+  font-weight: 600;
+  font-size: var(--font-size-normal);
+  color: var(--grey-800);
+}
+
+.languageSelectionContainer {
+  padding: var(--spacing-large) !important;
+  background-color: var(--grey-50) !important;
+}
+
+.selectEnvironment {
+  font-weight: 600;
+  font-size: var(--font-size-normal);
+  color: var(--grey-800);
+}
+
+.environmentContainer {
+  padding: var(--spacing-large) !important;
+  background-color: var(--grey-50) !important;
+}
+
+.setUpYourCode {
+  font-weight: 600;
+  font-size: var(--font-size-normal);
+  color: var(--grey-800);
+}
+
+.setUpYourCodeContainer {
+  padding: var(--spacing-large) !important;
+  padding-top: 0 !important;
+}

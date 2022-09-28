@@ -16,6 +16,7 @@ import type { FilterStatsDTO } from 'services/ce'
 import type { CcmMetaData } from 'services/ce/services'
 import {
   awsFilterKeys,
+  azureFilterKeys,
   filterKeyToKeyMapping,
   filterKeyToLabelMapping,
   gcpFilterKeys,
@@ -25,17 +26,13 @@ import type { AnomaliesFilterFormType } from './FilterDrawer'
 
 import css from './AnomalyFilterForm.module.scss'
 
-interface RecommendationFilterFormProps {
+interface AnomaliesFilterFormProps {
   formikProps?: FormikProps<AnomaliesFilterFormType>
   fetchedFilterValues: FilterStatsDTO[]
   ccmMetaData: CcmMetaData
 }
 
-const RecommendationFilterForm: React.FC<RecommendationFilterFormProps> = ({
-  fetchedFilterValues,
-  formikProps,
-  ccmMetaData
-}) => {
+const AnomaliesFilterForm: React.FC<AnomaliesFilterFormProps> = ({ fetchedFilterValues, formikProps, ccmMetaData }) => {
   const { getString } = useStrings()
 
   const getItemsFromFilterValues = useCallback(
@@ -70,6 +67,7 @@ const RecommendationFilterForm: React.FC<RecommendationFilterFormProps> = ({
   const { state: isAwsCardVisible, toggle: toggleAwsCard } = useBooleanStatus()
   const { state: isGcpCardVisible, toggle: toggleGcpCard } = useBooleanStatus()
   const { state: isK8sCardVisible, toggle: toggleK8sCard } = useBooleanStatus()
+  const { state: isAzureCardVisible, toggle: toggleAzureCard } = useBooleanStatus()
 
   return (
     <Container className={css.anomalyFilterForm}>
@@ -119,11 +117,21 @@ const RecommendationFilterForm: React.FC<RecommendationFilterFormProps> = ({
           getSelectedFiltersCount={getSelectedFiltersCount}
         />
       ) : null}
+      {ccmMetaData.defaultAzurePerspectiveId ? (
+        <CloudProviderFilterCard
+          visible={isAzureCardVisible}
+          toggleCard={toggleAzureCard}
+          filterKeys={azureFilterKeys}
+          getItemsFromFilterValues={getItemsFromFilterValues}
+          header={getString('ce.anomalyDetection.filters.azureFilters')}
+          getSelectedFiltersCount={getSelectedFiltersCount}
+        />
+      ) : null}
     </Container>
   )
 }
 
-export default RecommendationFilterForm
+export default AnomaliesFilterForm
 
 interface CloudProviderFilterCardProps {
   visible: boolean

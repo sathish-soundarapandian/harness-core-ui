@@ -5,17 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import type { AllowedTypes, SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 
-import type { GetDataError } from 'restful-react'
+import type { UseGetReturn } from 'restful-react'
 import type {
   ResponseListServiceNowTicketTypeDTO,
   StepElementConfig,
-  UseGetServiceNowIssueCreateMetadataProps,
-  UseGetServiceNowTicketTypesProps,
   Failure,
-  ResponseListServiceNowFieldNG
+  ResponseListServiceNowFieldNG,
+  GetServiceNowTicketTypesQueryParams,
+  GetServiceNowIssueCreateMetadataQueryParams
 } from 'services/cd-ng'
 import type { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { getDefaultCriterias } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
@@ -29,6 +29,10 @@ export interface ServiceNowApprovalData extends StepElementConfig {
     ticketNumber: string
     approvalCriteria: ApprovalRejectionCriteria
     rejectionCriteria: ApprovalRejectionCriteria
+    changeWindow?: {
+      startField: string
+      endField: string
+    }
   }
 }
 export interface ServiceNowTicketTypeSelectOption extends SelectOption {
@@ -46,7 +50,7 @@ export interface SnowApprovalVariableListModeProps {
 export interface SnowApprovalDeploymentModeProps {
   stepViewType: StepViewType
   initialValues: ServiceNowApprovalData
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   onUpdate?: (data: ServiceNowApprovalData) => void
   inputSetData?: InputSetData<ServiceNowApprovalData>
   formik?: any
@@ -55,7 +59,7 @@ export interface SnowApprovalDeploymentModeProps {
 export interface ServiceNowApprovalStepModeProps {
   stepViewType: StepViewType
   initialValues: ServiceNowApprovalData
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   onUpdate?: (data: ServiceNowApprovalData) => void
   onChange?: (data: ServiceNowApprovalData) => void
   isNewStep?: boolean
@@ -64,19 +68,23 @@ export interface ServiceNowApprovalStepModeProps {
 export interface ServiceNowFormContentInterface {
   formik: FormikProps<ServiceNowApprovalData>
   stepViewType: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   isNewStep?: boolean
   readonly?: boolean
-  refetchServiceNowTicketTypes: (props: UseGetServiceNowTicketTypesProps) => Promise<void>
-  serviceNowTicketTypesFetchError?: GetDataError<Failure | Error> | null
-  fetchingServiceNowTicketTypes: boolean
-  serviceNowTicketTypesResponse: ResponseListServiceNowTicketTypeDTO | null
-  refetchServiceNowMetadata: (props: UseGetServiceNowIssueCreateMetadataProps) => Promise<void>
-  serviceNowMetadataFetchError?: GetDataError<Failure | Error> | null
-  fetchingServiceNowMetadata: boolean
-  serviceNowMetadataResponse: ResponseListServiceNowFieldNG | null
+  getServiceNowTicketTypesQuery: UseGetReturn<
+    ResponseListServiceNowTicketTypeDTO,
+    Failure | Error,
+    GetServiceNowTicketTypesQueryParams,
+    unknown
+  >
+  getServiceNowIssueCreateMetadataQuery: UseGetReturn<
+    ResponseListServiceNowFieldNG,
+    Failure | Error,
+    GetServiceNowIssueCreateMetadataQueryParams,
+    unknown
+  >
 }
-export const resetForm = (formik: FormikProps<ServiceNowApprovalData>, parent: string) => {
+export const resetForm = (formik: FormikProps<ServiceNowApprovalData>, parent: string): void => {
   if (parent === 'connectorRef') {
     formik.setFieldValue('spec.ticketType', '')
     formik.setFieldValue('spec.ticketNumber', '')

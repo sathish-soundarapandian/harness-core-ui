@@ -12,35 +12,6 @@
   height: 100%;
 }
 
-.stepsContainer {
-  height: 100%;
-  overflow: auto;
-}
-
-.stageSelector {
-  width: 100%;
-  display: block;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-
-  :global(.bp3-popover-target) {
-    width: 100%;
-    display: block;
-  }
-
-  :global(.bp3-button) {
-    width: 100%;
-    justify-content: space-between;
-    height: 48px !important;
-    padding: var(--spacing-xsmall) var(--spacing-large) !important;
-  }
-}
-
-.stageSelectionMenu {
-  width: 280px;
-}
-
 .stageTree {
   padding: 0 var(--spacing-large);
 }

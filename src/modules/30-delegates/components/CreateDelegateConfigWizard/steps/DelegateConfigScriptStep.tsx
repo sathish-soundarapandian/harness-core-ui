@@ -59,7 +59,7 @@ const DelegateConfigScopeStep: React.FC<DelegateConfigScopeStepProps> = ({ previ
         <Heading level={2} color={Color.GREY_800} margin={{ bottom: 'xxlarge' }}>
           {getString('delegates.newDelegateConfigWizard.scriptTitle')}
         </Heading>
-        <Text>{getString('script')}</Text>
+        <Text>{getString('common.script')}</Text>
         <textarea className={css.scriptTextarea} onChange={event => setScript(event.target.value)} value={script} />
       </Container>
       <Layout.Horizontal spacing="xsmall">

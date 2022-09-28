@@ -15,7 +15,7 @@ import { useStrings } from 'framework/strings'
 import type { ResourceConstraintDetail } from 'services/pipeline-ng'
 import type { CDStageModuleInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
 
 export interface ResourceConstraintTooltipProps {
@@ -43,7 +43,7 @@ const getnoOfExecutionsBeforePipeline = (
   return noOfExecutionsBeforePipeline
 }
 export default function ResourceConstraintTooltip(props: ResourceConstraintTooltipProps): React.ReactElement {
-  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<PipelineType<ProjectPathProps>>()
+  const { projectIdentifier, orgIdentifier, accountId, module, source } = useParams<PipelineType<ExecutionPathProps>>()
   const { getString } = useStrings()
   const noOfExecutionsBeforePipeline = getnoOfExecutionsBeforePipeline(
     props?.data?.executionList,
@@ -72,6 +72,9 @@ export default function ResourceConstraintTooltip(props: ResourceConstraintToolt
                 ? getString('pipeline.resourceConstraints.serverlessInfraEntity')
                 : getString('pipeline.resourceConstraints.k8sNamespaceText')
             })}
+            <a href="https://docs.harness.io/article/jrzwrdpvm2" target="_blank" rel="noopener noreferrer">
+              {getString('learnMore')}
+            </a>
           </Text>
           {props?.data?.executionList?.map((pipeline: ResourceConstraintDetail, index: number) => (
             <Container key={`${pipeline.pipelineIdentifier}-${index}`}>
@@ -82,7 +85,8 @@ export default function ResourceConstraintTooltip(props: ResourceConstraintToolt
                   orgIdentifier,
                   module,
                   accountId,
-                  executionIdentifier: pipeline?.planExecutionId || ''
+                  executionIdentifier: pipeline?.planExecutionId || '',
+                  source
                 })}
               >
                 <Layout.Horizontal>

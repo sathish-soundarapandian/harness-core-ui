@@ -4,7 +4,6 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { render, RenderResult, screen, waitFor } from '@testing-library/react'
@@ -111,7 +110,7 @@ describe('Test cases for TimeRangeFilter', () => {
       )
     })
 
-    expect(screen.queryByText('reset')).not.toBeInTheDocument()
+    expect(screen.queryByText('reset')).toBeInTheDocument()
 
     userEvent.click(screen.getByText('1 Hour'))
     expect(screen.getByText('reset')).toBeInTheDocument()
@@ -244,7 +243,8 @@ describe('Test cases for TimeRangeFilter', () => {
   test('it should handle time slider zoom', async () => {
     renderComponent()
 
-    expect(screen.queryByText('reset')).not.toBeInTheDocument()
+    expect(screen.getByText('reset')).toBeInTheDocument()
+    userEvent.click(screen.getByText('reset'))
 
     expect(screen.getByTestId('timeline-slider-container')).toBeInTheDocument()
     userEvent.click(screen.getByTestId('timeline-slider-container'))

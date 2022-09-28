@@ -16,6 +16,7 @@ import { useLogsContent } from '../useLogsContent'
 import { getDefaultReducerState } from '../LogsState/utils'
 import type { UseActionCreatorReturn } from '../LogsState/actions'
 import { testReducerState } from './mocks'
+import responseMessages from './reponseMessages.json'
 
 jest.mock('../components/GroupedLogs', () => ({
   GroupedLogsWithRef: React.forwardRef(() => <div>Grouped logs</div>)
@@ -42,6 +43,7 @@ const execContextValues: ExecutionContextParams = {
   pipelineStagesMap: new Map(),
   selectedStageId: '',
   selectedStepId: '',
+  selectedStageExecutionId: '',
   loading: false,
   isDataLoadedForSelectedStage: false,
   queryParams: {},
@@ -51,7 +53,8 @@ const execContextValues: ExecutionContextParams = {
   addNewNodeToMap: jest.fn(),
   setStepsGraphCanvasState: jest.fn(),
   setSelectedStepId: jest.fn(),
-  setSelectedStageId: jest.fn()
+  setSelectedStageId: jest.fn(),
+  setSelectedStageExecutionId: jest.fn()
 }
 
 jest.mock('services/logs', () => ({
@@ -97,7 +100,16 @@ describe('<LogsContent /> tests', () => {
   test('console-view error message test', () => {
     const { container } = render(
       <TestWrapper>
-        <LogsContent mode="console-view" errorMessage="This is an error message" />
+        <ExecutionContext.Provider
+          value={{
+            ...execContextValues,
+            selectedStepId: 'SELECTED_STEP',
+            selectedStageId: 'SELECTED_STAGE',
+            allNodeMap: { SELECTED_STEP: { failureInfo: { responseMessages } } } as any
+          }}
+        >
+          <LogsContent mode="console-view" />
+        </ExecutionContext.Provider>
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -106,7 +118,16 @@ describe('<LogsContent /> tests', () => {
   test('console-view warning message test', () => {
     const { container } = render(
       <TestWrapper>
-        <LogsContent mode="console-view" errorMessage="This is a warning message" isWarning />
+        <ExecutionContext.Provider
+          value={{
+            ...execContextValues,
+            selectedStepId: 'SELECTED_STEP',
+            selectedStageId: 'SELECTED_STAGE',
+            allNodeMap: { SELECTED_STEP: { failureInfo: { responseMessages } } } as any
+          }}
+        >
+          <LogsContent mode="console-view" isWarning />
+        </ExecutionContext.Provider>
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

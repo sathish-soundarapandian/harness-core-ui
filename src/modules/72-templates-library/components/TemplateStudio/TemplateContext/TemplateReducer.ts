@@ -11,6 +11,7 @@ import type { GetDataError } from 'restful-react'
 import type {
   EntityGitDetails,
   EntityValidityDetails,
+  Error as TemplateError,
   ErrorNodeSummary,
   NGTemplateInfoConfig
 } from 'services/template-ng'
@@ -19,15 +20,17 @@ import {
   DrawerTypes,
   TemplateActions
 } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
-import type { Failure, StepElementConfig } from 'services/cd-ng'
+import type { Failure } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { DefaultNewTemplateId, DefaultNewVersionLabel, DefaultTemplate } from 'framework/Templates/templates'
+import type { StepData } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export interface DrawerData extends Omit<IDrawerProps, 'isOpen'> {
   type: DrawerTypes
   data?: {
     paletteData?: {
-      onSelection?: (stepOrGroup: StepElementConfig) => void
+      onSelection?: (step: StepData) => void
     }
   }
 }
@@ -53,10 +56,12 @@ export interface TemplateReducerState {
   isBETemplateUpdated: boolean
   isUpdated: boolean
   gitDetails: EntityGitDetails
+  storeMetadata?: StoreMetadata
   entityValidityDetails: EntityValidityDetails
   templateYaml: string
   templateError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
+  templateYamlError?: TemplateError
 }
 
 export const initialState: TemplateReducerState = {
@@ -70,7 +75,7 @@ export const initialState: TemplateReducerState = {
     isDrawerOpened: false,
     isYamlEditable: false,
     drawerData: {
-      type: DrawerTypes.AddStep
+      type: DrawerTypes.TemplateVariables
     }
   },
   isLoading: false,
@@ -79,6 +84,7 @@ export const initialState: TemplateReducerState = {
   isUpdated: false,
   isInitialized: false,
   gitDetails: {},
+  storeMetadata: {},
   entityValidityDetails: {},
   templateYaml: ''
 }
@@ -101,12 +107,6 @@ export const TemplateReducer = (state: TemplateReducerState, data: ActionReturnT
         ...state,
         yamlHandler: data.response?.yamlHandler
       }
-    case TemplateActions.Loading: {
-      return {
-        ...state,
-        isLoading: !!response?.isLoading
-      }
-    }
     case TemplateActions.UpdateTemplateView:
       return {
         ...state,

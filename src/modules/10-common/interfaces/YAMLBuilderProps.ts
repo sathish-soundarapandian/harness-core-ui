@@ -33,7 +33,7 @@ export interface YamlBuilderProps {
   existingJSON?: Record<string, any>
   existingYaml?: string
   entityType: GetYamlSchemaQueryParams['entityType']
-  bind?: (dynamicPopoverHandler: YamlBuilderHandlerBinding) => void
+  bind?: (dynamicPopoverHandler?: YamlBuilderHandlerBinding) => void
   invocationMap?: Map<RegExp, InvocationMapFunction>
   isReadOnlyMode?: boolean
   isEditModeSupported?: boolean
@@ -41,7 +41,7 @@ export interface YamlBuilderProps {
   hideErrorMesageOnReadOnlyMode?: boolean
   onExpressionTrigger?: (yamlPath: string, currentExpression: string) => Promise<CompletionItemInterface[]>
   schema?: Record<string, string | any>
-  onEnableEditMode?: () => void
+  onEnableEditMode?: (didConfirm?: boolean) => void
   theme?: Theme
   yamlSanityConfig?: YamlSanityConfig
   /* Snippet section related props */
@@ -52,7 +52,8 @@ export interface YamlBuilderProps {
   snippetFetchResponse?: SnippetFetchResponse
   onChange?: (isEditorDirty: boolean) => void
   onErrorCallback?: (error: Record<string, any>) => void
-  renderCustomHeader?: () => React.ReactElement
+  renderCustomHeader?: () => React.ReactElement | null
+  openDialogProp?: () => void
 }
 
 export interface CompletionItemInterface {

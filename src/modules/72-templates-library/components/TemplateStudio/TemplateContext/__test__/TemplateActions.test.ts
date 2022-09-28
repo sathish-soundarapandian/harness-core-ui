@@ -45,7 +45,7 @@ describe('TemplateActions test', () => {
       isDrawerOpened: false,
       isYamlEditable: true,
       drawerData: {
-        type: DrawerTypes.AddStep
+        type: DrawerTypes.TemplateVariables
       }
     }
     const newState = TemplateReducer(initialState, {
@@ -60,11 +60,6 @@ describe('TemplateActions test', () => {
       response: { template: stageTemplateMock, isUpdated: false }
     })
     expect(newState).toEqual({ ...initialState, template: stageTemplateMock, isUpdated: false })
-  })
-
-  test('TemplateActions Loading', () => {
-    const newState = TemplateReducer(initialState, { ...TemplateContextActions.loading({ isLoading: true }) })
-    expect(newState).toEqual({ ...initialState, isLoading: true })
   })
 
   test('TemplateActions Fetching', () => {

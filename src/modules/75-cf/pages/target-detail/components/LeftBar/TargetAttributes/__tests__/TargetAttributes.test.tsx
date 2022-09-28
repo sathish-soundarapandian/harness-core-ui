@@ -55,9 +55,9 @@ describe('TabAttributes', () => {
     renderComponent({ target: merge(mockTarget, { attributes }) })
 
     expect(screen.getByText('Boolean TRUE')).toBeInTheDocument()
-    expect(screen.getByText('cf.shared.true')).toBeInTheDocument()
+    expect(screen.getByText('common.true')).toBeInTheDocument()
 
     expect(screen.getByText('Boolean FALSE')).toBeInTheDocument()
-    expect(screen.getByText('cf.shared.false')).toBeInTheDocument()
+    expect(screen.getByText('common.false')).toBeInTheDocument()
   })
 })

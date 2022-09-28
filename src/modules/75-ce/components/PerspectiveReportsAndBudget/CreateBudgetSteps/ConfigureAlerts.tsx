@@ -19,18 +19,21 @@ import {
   FormikForm,
   ModalErrorHandlerBinding,
   ModalErrorHandler,
-  FlexExpander
+  FlexExpander,
+  IconName,
+  Select,
+  ButtonVariation
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { TagInput } from '@blueprintjs/core'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
+import { EmailSchemaWithoutRequired, URLValidationSchemaWithoutRequired } from '@common/utils/Validation'
 import { useCreateBudget, Budget, AlertThreshold, useUpdateBudget } from 'services/ce'
-import { EmailSchema } from '@common/utils/Validation'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import type { BudgetStepData } from '../types'
+import { BudgetAlertChannels, BudgetStepData } from '../types'
 import css from '../PerspectiveCreateBudget.module.scss'
 interface Props {
   name: string
@@ -43,15 +46,27 @@ interface Props {
 }
 
 interface ThresholdForm {
-  alertThresholds: AlertThreshold[]
+  alertThresholds: AlertThresholdWithNotifcationChannel[]
 }
 
-const makeNewThresold = (): AlertThreshold => {
+interface AlertChannelOption {
+  label: string
+  value: BudgetAlertChannels
+  icon: {
+    name: IconName
+  }
+}
+
+type AlertThresholdWithNotifcationChannel = AlertThreshold & { notificationChannel: BudgetAlertChannels }
+
+const makeNewThresold = (): AlertThresholdWithNotifcationChannel => {
   return {
     percentage: undefined,
     basedOn: 'ACTUAL_COST',
     userGroupIds: [],
-    emailAddresses: []
+    notificationChannel: BudgetAlertChannels.EMAIL,
+    emailAddresses: [],
+    slackWebhooks: []
   }
 }
 
@@ -86,7 +101,14 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
   }, [])
 
   const getInitialValues = () => {
-    return { alertThresholds: budget?.alertThresholds || [makeNewThresold()] }
+    return {
+      alertThresholds: budget?.alertThresholds?.map(alert => ({
+        ...alert,
+        notificationChannel: alert.slackWebhooks?.length ? BudgetAlertChannels.SLACK : BudgetAlertChannels.EMAIL,
+        emailAddresses: alert.emailAddresses || [],
+        slackWebhooks: alert.slackWebhooks || []
+      })) || [makeNewThresold()]
+    }
   }
 
   const handleSubmit = async ({ alertThresholds }: ThresholdForm) => {
@@ -106,12 +128,14 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
         basedOn: alt.basedOn,
         emailAddresses: alt.emailAddresses,
         percentage: alt.percentage,
-        userGroupIds: alt.userGroupIds
+        userGroupIds: alt.userGroupIds,
+        slackWebhooks: alt.slackWebhooks
       }
     })
 
     /* istanbul ignore next */
-    const emptyThresholds = (t: AlertThreshold) => (t.emailAddresses?.length || 0) > 0 && t.percentage
+    const emptyThresholds = (t: AlertThreshold) =>
+      (t.emailAddresses?.length || t.slackWebhooks?.length || 0) > 0 && t.percentage
     const payload = {
       accountId,
       name: budgetName,
@@ -140,18 +164,30 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
     }
   }
 
+  const validationSchema = Yup.object().shape({
+    alertThresholds: Yup.array(
+      Yup.object({
+        emailAddresses: Yup.array().when('notificationChannel', {
+          is: BudgetAlertChannels.EMAIL,
+          then: Yup.array().of(EmailSchemaWithoutRequired()).required(getString('common.validation.email.required'))
+        }),
+        slackWebhooks: Yup.array().when('notificationChannel', {
+          is: BudgetAlertChannels.SLACK,
+          then: Yup.array()
+            .of(URLValidationSchemaWithoutRequired())
+            .required(getString('common.validation.urlIsRequired'))
+            .nullable()
+        })
+      })
+    )
+  })
+
   return (
     <Container>
       <Formik<ThresholdForm>
         formName="alertThresholds"
         initialValues={getInitialValues()}
-        validationSchema={Yup.object().shape({
-          alertThresholds: Yup.array(
-            Yup.object({
-              emailAddresses: EmailSchema()
-            })
-          )
-        })}
+        validationSchema={validationSchema}
         onSubmit={data => {
           handleSubmit(data)
         }}
@@ -200,7 +236,7 @@ const ConfigureAlerts: React.FC<StepProps<BudgetStepData> & Props> = props => {
                   <Button
                     intent="primary"
                     rightIcon={'chevron-right'}
-                    disabled={loading}
+                    disabled={loading || !formikProps.isValid}
                     onClick={() => {
                       setTimeout(() => {
                         formikProps.submitForm()
@@ -252,6 +288,12 @@ const Thresholds = (props: ThresholdsProps): JSX.Element => {
           handleEmailChange={values => {
             formikProps.setFieldValue(`alertThresholds.${idx}.emailAddresses`, values)
           }}
+          handleSlackWebhookChange={values => {
+            formikProps.setFieldValue(`alertThresholds.${idx}.slackWebhooks`, values)
+          }}
+          handleNotificationChannelChange={value => {
+            formikProps.setFieldValue(`alertThresholds.${idx}.notificationChannel`, value)
+          }}
           onDelete={() => {
             if (alerts.length > 1) {
               arrayHelpers.remove(idx)
@@ -266,8 +308,7 @@ const Thresholds = (props: ThresholdsProps): JSX.Element => {
     return (
       <Container margin="medium">
         <Button
-          withoutBoxShadow={true}
-          className={css.addNewAlertBtn}
+          variation={ButtonVariation.SECONDARY}
           text={getString('ce.perspectives.budgets.configureAlerts.createAlert')}
           onClick={() => {
             arrayHelpers.push(makeNewThresold())
@@ -304,14 +345,24 @@ const Thresholds = (props: ThresholdsProps): JSX.Element => {
 
 interface ThresholdProps {
   handleEmailChange: (value: React.ReactNode) => void
-  value: AlertThreshold
+  handleSlackWebhookChange: (value: React.ReactNode) => void
+  handleNotificationChannelChange: (value: BudgetAlertChannels) => void
+  value: AlertThresholdWithNotifcationChannel
   onDelete: () => void
   index: number
   formikProps: FormikProps<ThresholdForm>
 }
 
 const Threshold = (props: ThresholdProps): JSX.Element => {
-  const { value, index: idx, onDelete, handleEmailChange, formikProps } = props
+  const {
+    value,
+    index: idx,
+    onDelete,
+    handleEmailChange,
+    handleSlackWebhookChange,
+    handleNotificationChannelChange,
+    formikProps
+  } = props
   const { getString } = useStrings()
   const BASED_ON_OPTIONS = useMemo(() => {
     return [
@@ -326,27 +377,82 @@ const Threshold = (props: ThresholdProps): JSX.Element => {
     ]
   }, [])
 
+  const alertChannelOptions: AlertChannelOption[] = useMemo(
+    () => [
+      {
+        label: getString('email'),
+        value: BudgetAlertChannels.EMAIL,
+        icon: { name: 'email-inline' }
+      },
+      {
+        label: getString('notifications.slackwebhookUrl'),
+        value: BudgetAlertChannels.SLACK,
+        icon: { name: 'service-slack' }
+      }
+    ],
+    []
+  )
+
+  const isSlackChannel = value.notificationChannel === BudgetAlertChannels.SLACK
+
+  const handleOnChange = (values: React.ReactNode[]): void => {
+    if (isSlackChannel) {
+      handleSlackWebhookChange(values)
+    } else {
+      handleEmailChange(values)
+    }
+    clearInput()
+  }
+
+  const clearInput = () => {
+    if (isSlackChannel) {
+      handleEmailChange([])
+    } else {
+      handleSlackWebhookChange([])
+    }
+  }
+
   return (
     <div className={css.threshold}>
       <FormInput.Select
         value={BASED_ON_OPTIONS.find(op => op.value === value.basedOn)}
         items={BASED_ON_OPTIONS}
         name={`alertThresholds.${idx}.basedOn`}
+        usePortal
+        selectProps={{ popoverClassName: css.selectDropdown }}
       />
       <Text className={css.pushdown7}>exceeds</Text>
-      <FormInput.Text name={`alertThresholds.${idx}.percentage`} inputGroup={{ type: 'number' }} />
+      <FormInput.Text
+        name={`alertThresholds.${idx}.percentage`}
+        inputGroup={{ type: 'number' }}
+        placeholder={getString('ce.perspectives.budgets.configureAlerts.enterPercent')}
+      />
       <Container>
-        <TagInput
-          addOnBlur
-          className={css.tagInput}
-          tagProps={{ className: css.tag }}
-          placeholder={getString('ce.perspectives.reports.emailPlaceholder')}
-          onChange={values => handleEmailChange(values)}
-          // onAdd={values => {}}
-          values={value.emailAddresses || []}
-        />
-        <Text font={{ variation: FontVariation.FORM_MESSAGE_DANGER }}>
-          {((formikProps.errors.alertThresholds || [])[idx] as any)?.emailAddresses}
+        <Container className={css.sendAlertTo}>
+          <Select
+            usePortal
+            items={alertChannelOptions}
+            allowCreatingNewItems={false}
+            value={alertChannelOptions[isSlackChannel ? 1 : 0]}
+            onChange={item => {
+              handleNotificationChannelChange(item.value as BudgetAlertChannels)
+              clearInput()
+            }}
+            className={css.alertChannelsInput}
+            name={`alertThresholds.${idx}.notificationChannel`}
+            popoverClassName={css.selectDropdown}
+          />
+          <TagInput
+            addOnBlur
+            className={css.tagInput}
+            tagProps={{ className: css.tag }}
+            placeholder={getString('ce.perspectives.budgets.configureAlerts.emailPlaceholder')}
+            onChange={handleOnChange}
+            values={isSlackChannel ? value.slackWebhooks : value.emailAddresses}
+          />
+        </Container>
+        <Text color={Color.RED_600} margin={{ top: 'small', left: 'small' }}>
+          {(formikProps.errors.alertThresholds?.[idx] as any)?.[isSlackChannel ? 'slackWebhooks' : 'emailAddresses']}
         </Text>
       </Container>
       <Icon

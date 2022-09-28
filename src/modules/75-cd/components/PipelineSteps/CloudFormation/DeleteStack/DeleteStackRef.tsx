@@ -19,28 +19,39 @@ import {
   Text,
   MultiSelectOption
 } from '@harness/uicore'
-import { map, isEmpty } from 'lodash-es'
+import { map, isEmpty, defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { IdentifierSchemaWithOutName, NameSchema, ConnectorRefSchema } from '@common/utils/Validation'
+import { IdentifierSchemaWithOutName, ConnectorRefSchema } from '@common/utils/Validation'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions, ALLOWED_VALUES_TYPE, VALIDATORS } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useListAwsRegions } from 'services/portal'
 import { useGetIamRolesForAws } from 'services/cd-ng'
+import { useQueryParams } from '@common/hooks'
+import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { Connectors } from '@connectors/constants'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { DeleteStackTypes, CloudFormationDeleteStackProps } from '../CloudFormationInterfaces.types'
 import { isRuntime } from '../CloudFormationHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../CloudFormation.module.scss'
 
 export const CloudFormationDeleteStack = (
-  { allowableTypes, isNewStep, readonly = false, initialValues, onUpdate, onChange }: CloudFormationDeleteStackProps,
+  {
+    allowableTypes,
+    isNewStep,
+    readonly = false,
+    initialValues,
+    onUpdate,
+    onChange,
+    stepViewType
+  }: CloudFormationDeleteStackProps,
   formikRef: StepFormikFowardRef
 ): JSX.Element => {
   const { getString } = useStrings()
@@ -49,6 +60,9 @@ export const CloudFormationDeleteStack = (
   const [regions, setRegions] = useState<MultiSelectOption[]>([])
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])
   const [awsRef, setAwsRef] = useState<string>('')
+  const [regionsRef, setRegionsRef] = useState<string>(initialValues?.spec?.configuration?.spec?.region)
+  const query = useQueryParams()
+  const sectionId = (query as any).sectionId || ''
 
   const { data: regionData, loading: regionLoading } = useListAwsRegions({
     queryParams: {
@@ -75,7 +89,8 @@ export const CloudFormationDeleteStack = (
       accountIdentifier: accountId,
       orgIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      awsConnectorRef: awsRef
+      awsConnectorRef: awsRef,
+      region: regionsRef
     }
   })
 
@@ -88,11 +103,17 @@ export const CloudFormationDeleteStack = (
       }
       setAwsRoles(roles)
     }
-
-    if (!roleData && !isEmpty(awsRef)) {
+  }, [roleData])
+  useEffect(() => {
+    if (
+      !isEmpty(awsRef) &&
+      getMultiTypeFromValue(awsRef) === MultiTypeInputType.FIXED &&
+      !isEmpty(regionsRef) &&
+      getMultiTypeFromValue(regionsRef) === MultiTypeInputType.FIXED
+    ) {
       refetch()
     }
-  }, [roleData, awsRef])
+  }, [awsRef, refetch, regionsRef])
 
   useEffect(() => {
     /* istanbul ignore next */
@@ -105,7 +126,7 @@ export const CloudFormationDeleteStack = (
     <Formik
       enableReinitialize={true}
       initialValues={initialValues}
-      formName="cloudFormationDeleteStack"
+      formName={`cloudFormationDeleteStack-${sectionId}`}
       validate={values => {
         const payload = {
           ...values
@@ -121,7 +142,7 @@ export const CloudFormationDeleteStack = (
         onUpdate?.(payload)
       }}
       validationSchema={Yup.object().shape({
-        name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
+        ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
           configuration: Yup.object().shape({
@@ -163,17 +184,20 @@ export const CloudFormationDeleteStack = (
         const stackName = config?.spec?.stackName
         const stepType = config?.type
         const awsConnector = config?.spec?.connectorRef
+        const region = config?.spec?.region
         return (
           <>
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.InputWithIdentifier
-                inputLabel={getString('name')}
-                isIdentifierEditable={isNewStep}
-                inputGroupProps={{
-                  disabled: readonly
-                }}
-              />
-            </div>
+            {stepViewType !== StepViewType.Template && (
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormInput.InputWithIdentifier
+                  inputLabel={getString('name')}
+                  isIdentifierEditable={isNewStep}
+                  inputGroupProps={{
+                    disabled: readonly
+                  }}
+                />
+              </div>
+            )}
             <div className={cx(stepCss.formGroup, stepCss.sm)}>
               <FormMultiTypeDurationField
                 name="timeout"
@@ -181,6 +205,20 @@ export const CloudFormationDeleteStack = (
                 multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
                 disabled={readonly}
               />
+              {getMultiTypeFromValue(formik.values.timeout) === MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  value={defaultTo(formik.values.timeout, '')}
+                  type="String"
+                  variableName="timeout"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  showAdvanced={true}
+                  onChange={value => formik.setFieldValue('timeout', value)}
+                  isReadonly={readonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+                  allowedValuesValidator={VALIDATORS[ALLOWED_VALUES_TYPE.TIME]({ minimum: '10s' })}
+                />
+              )}
             </div>
             <div className={css.divider} />
             <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -196,7 +234,7 @@ export const CloudFormationDeleteStack = (
               />
             </div>
             {stepType === DeleteStackTypes.Inherited && (
-              <div className={stepCss.formGroup}>
+              <div className={cx(stepCss.formGroup, stepCss.sm)}>
                 <FormInput.MultiTextInput
                   name="spec.configuration.spec.provisionerIdentifier"
                   label={getString('pipelineSteps.provisionerIdentifier')}
@@ -206,16 +244,16 @@ export const CloudFormationDeleteStack = (
                 />
                 {
                   /* istanbul ignore next */
-                  isRuntime(provisionerIdentifier) && (
+                  getMultiTypeFromValue(provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
                     <ConfigureOptions
-                      value={provisionerIdentifier as string}
+                      value={defaultTo(provisionerIdentifier, '')}
                       type="String"
                       variableName="spec.configuration.spec.provisionerIdentifier"
                       showRequiredField={false}
                       showDefaultField={false}
                       showAdvanced={true}
                       isReadonly={readonly}
-                      className={css.inputWidth}
+                      onChange={value => formik.setFieldValue('spec.configuration.spec.provisionerIdentifier', value)}
                     />
                   )
                 }
@@ -238,14 +276,27 @@ export const CloudFormationDeleteStack = (
                       multiTypeProps={{ expressions, allowableTypes }}
                       disabled={readonly}
                       width={300}
-                      setRefValue
                       onChange={(value: any, _unused, _multiType) => {
-                        /* istanbul ignore next */
-                        if (value?.record?.identifier !== awsConnector) {
-                          setAwsRef(value?.record?.identifier as string)
+                        const scope = value?.scope
+                        let newConnectorRef: string
+                        if (scope === 'org' || scope === 'account') {
+                          newConnectorRef = `${scope}.${value?.record?.identifier}`
+                        } else if (getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME) {
+                          newConnectorRef = value
+                        } else {
+                          newConnectorRef = value?.record?.identifier
                         }
                         /* istanbul ignore next */
-                        setFieldValue('spec.configuration.spec.connectorRef', value?.record?.identifier || value)
+                        if (value?.record?.identifier !== awsConnector) {
+                          setAwsRef(newConnectorRef)
+                          formik?.values?.spec.configuration.spec.roleArn &&
+                            getMultiTypeFromValue(formik?.values?.spec.configuration.spec.roleArn) ===
+                              MultiTypeInputType.FIXED &&
+                            setFieldValue('spec.configuration.spec.roleArn', '')
+                          setAwsRoles([])
+                        }
+                        /* istanbul ignore next */
+                        setFieldValue('spec.configuration.connectorRef', newConnectorRef)
                       }}
                     />
                   </div>
@@ -257,6 +308,16 @@ export const CloudFormationDeleteStack = (
                       useValue
                       placeholder={regionLoading ? getString('loading') : getString('select')}
                       multiTypeInputProps={{
+                        onChange: value => {
+                          if ((value as any).value !== region) {
+                            setRegionsRef((value as any).value as string)
+                            formik?.values?.spec.configuration.spec.roleArn &&
+                              getMultiTypeFromValue(formik?.values?.spec.configuration.spec.roleArn) ===
+                                MultiTypeInputType.FIXED &&
+                              setFieldValue('spec.configuration.spec.roleArn', '')
+                            setAwsRoles([])
+                          }
+                        },
                         selectProps: {
                           allowCreatingNewItems: false,
                           items: regions || []
@@ -267,8 +328,23 @@ export const CloudFormationDeleteStack = (
                       }}
                       selectItems={regions || []}
                     />
+                    {getMultiTypeFromValue(formik.values?.spec?.configuration?.spec?.region) ===
+                      MultiTypeInputType.RUNTIME && (
+                      <SelectConfigureOptions
+                        value={defaultTo(formik.values?.spec?.configuration?.spec?.region, '')}
+                        options={regions}
+                        loading={false}
+                        type="String"
+                        variableName="spec.configuration.spec.region"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        isReadonly={readonly}
+                        onChange={value => formik.setFieldValue('spec.configuration.spec.region', value)}
+                      />
+                    )}
                   </Layout.Horizontal>
-                  <Layout.Vertical className={css.addMarginBottom}>
+                  <Layout.Horizontal>
                     <FormInput.MultiTypeInput
                       label={getString('connectors.awsKms.roleArnLabel')}
                       name="spec.configuration.spec.roleArn"
@@ -283,12 +359,29 @@ export const CloudFormationDeleteStack = (
                         allowableTypes,
                         width: 300
                       }}
-                      disabled={readonly}
+                      disabled={readonly || rolesLoading}
                       selectItems={awsRoles || []}
                       useValue
                       isOptional
                     />
-                  </Layout.Vertical>
+                    {getMultiTypeFromValue(formik.values?.spec?.configuration?.spec?.roleArn) ===
+                      MultiTypeInputType.RUNTIME && (
+                      <div className={css.configureButtonroleArn}>
+                        <SelectConfigureOptions
+                          value={defaultTo(formik.values?.spec?.configuration?.spec?.roleArn, '')}
+                          options={awsRoles}
+                          loading={false}
+                          type="String"
+                          variableName="spec.configuration.spec.roleArn"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          isReadonly={readonly}
+                          onChange={value => formik.setFieldValue('spec.configuration.spec.roleArn', value)}
+                        />
+                      </div>
+                    )}
+                  </Layout.Horizontal>
                   <div className={cx(stepCss.formGroup)}>
                     <FormInput.MultiTextInput
                       name="spec.configuration.spec.stackName"
@@ -308,7 +401,8 @@ export const CloudFormationDeleteStack = (
                           showDefaultField={false}
                           showAdvanced={true}
                           isReadonly={readonly}
-                          className={css.inputWidth}
+                          className={css.configureButton}
+                          onChange={value => formik.setFieldValue('spec.configuration.spec.stackName', value)}
                         />
                       )
                     }

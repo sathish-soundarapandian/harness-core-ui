@@ -15,7 +15,8 @@ import {
   MultiTypeInputType,
   Text,
   StepProps,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -41,7 +42,7 @@ import {
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 
-import { getRepositoryName } from '../ManifestUtils'
+import { filePathWidth, getRepositoryName } from '../ManifestUtils'
 import templateCss from './OpenShiftParam.module.scss'
 import css from '../ManifestWizardSteps.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -49,7 +50,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface OpenshiftTemplateWithGITPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -82,7 +83,7 @@ function OpenShiftParamWithGit({
         : prevStepData?.url
       : null
 
-  const getInitialValues = React.useCallback((): OpenShiftParamDataType => {
+  const getInitialValues = (): OpenShiftParamDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -105,7 +106,7 @@ function OpenShiftParamWithGit({
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
       repoName: getRepositoryName(prevStepData, initialValues)
     }
-  }, [])
+  }
 
   const submitFormData = (formData: OpenShiftParamDataType & { store?: string; connectorRef?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
@@ -276,20 +277,20 @@ function OpenShiftParamWithGit({
                   [css.folderRunTimeInput]: getMultiTypeFromValue(formik.values?.paths) === MultiTypeInputType.RUNTIME
                 })}
               >
-                <div className={templateCss.halfWidth}>
-                  <DragnDropPaths
-                    formik={formik}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                    pathLabel={getString('pipelineSteps.paths')}
-                    fieldPath="paths"
-                    placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-                  />
-                </div>
+                <DragnDropPaths
+                  formik={formik}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  pathLabel={getString('pipelineSteps.paths')}
+                  fieldPath="paths"
+                  placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                  dragDropFieldWidth={filePathWidth}
+                />
                 {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
                     value={formik.values.paths}
-                    type={getString('list')}
+                    type={getString('string')}
                     variableName={'paths'}
                     showRequiredField={false}
                     showDefaultField={false}

@@ -10,7 +10,7 @@ exports[`ServiceNow Approval tests Basic snapshot - deploymentform mode: service
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -266,6 +266,204 @@ exports[`ServiceNow Approval tests Basic snapshot - deploymentform mode: service
         </div>
       </div>
     </div>
+    <div
+      class="bp3-form-group deploymentViewMedium"
+    >
+      <label
+        class="bp3-label"
+        for="spec.changeWindow.startField"
+      >
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepTestUtilForm_spec.changeWindow.startField"
+        >
+          pipeline.serviceNowApprovalStep.windowStart
+        </span>
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+        >
+          <div
+            class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+          >
+            <div
+              class="bp3-popover-target"
+            >
+              <div
+                class="bp3-input-group"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  name="spec.changeWindow.startField"
+                  placeholder="select pipeline.serviceNowApprovalStep.windowStart"
+                  style="padding-right: 0px;"
+                  type="text"
+                  value=""
+                />
+                <span
+                  class="bp3-input-action"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                    icon="chevron-down"
+                  >
+                    <svg
+                      data-icon="chevron-down"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                    >
+                      <desc>
+                        chevron-down
+                      </desc>
+                      <path
+                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <span
+            class="bp3-popover-wrapper MultiTypeInput--wrapper"
+          >
+            <span
+              class="bp3-popover-target"
+            >
+              <button
+                class="MultiTypeInput--btn MultiTypeInput--FIXED"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="fixed-input"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 9 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bp3-form-group deploymentViewMedium"
+    >
+      <label
+        class="bp3-label"
+        for="spec.changeWindow.endField"
+      >
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepTestUtilForm_spec.changeWindow.endField"
+        >
+          pipeline.serviceNowApprovalStep.windowEnd
+        </span>
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+        >
+          <div
+            class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+          >
+            <div
+              class="bp3-popover-target"
+            >
+              <div
+                class="bp3-input-group"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  name="spec.changeWindow.endField"
+                  placeholder="select pipeline.serviceNowApprovalStep.windowEnd"
+                  style="padding-right: 0px;"
+                  type="text"
+                  value=""
+                />
+                <span
+                  class="bp3-input-action"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                    icon="chevron-down"
+                  >
+                    <svg
+                      data-icon="chevron-down"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                    >
+                      <desc>
+                        chevron-down
+                      </desc>
+                      <path
+                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <span
+            class="bp3-popover-wrapper MultiTypeInput--wrapper"
+          >
+            <span
+              class="bp3-popover-target"
+            >
+              <button
+                class="MultiTypeInput--btn MultiTypeInput--FIXED"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="fixed-input"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 9 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
     <p
       class="StyledProps--font StyledProps--main"
     >
@@ -299,7 +497,7 @@ exports[`ServiceNow Approval tests Basic snapshot - input variable view: service
       <span
         class="nameSection"
       >
-        name
+        identifier
       </span>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
@@ -308,25 +506,6 @@ exports[`ServiceNow Approval tests Basic snapshot - input variable view: service
         <span
           class=""
         />
-      </p>
-    </div>
-    <div
-      class="variableListRow variable-list-row"
-    >
-      <span
-        class="nameSection"
-      >
-        timeout
-      </span>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
-        style="--text-line-clamp: 1;"
-      >
-        <span
-          class=""
-        >
-          1d
-        </span>
       </p>
     </div>
     <div
@@ -421,7 +600,7 @@ exports[`ServiceNow Approval tests Basic snapshot - inputset mode: input set wit
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -739,6 +918,204 @@ exports[`ServiceNow Approval tests Basic snapshot - inputset mode: input set wit
         </div>
       </div>
     </div>
+    <div
+      class="bp3-form-group deploymentViewMedium"
+    >
+      <label
+        class="bp3-label"
+        for="spec.changeWindow.startField"
+      >
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepTestUtilForm_spec.changeWindow.startField"
+        >
+          pipeline.serviceNowApprovalStep.windowStart
+        </span>
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+        >
+          <div
+            class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+          >
+            <div
+              class="bp3-popover-target"
+            >
+              <div
+                class="bp3-input-group"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  name="spec.changeWindow.startField"
+                  placeholder="select pipeline.serviceNowApprovalStep.windowStart"
+                  style="padding-right: 0px;"
+                  type="text"
+                  value=""
+                />
+                <span
+                  class="bp3-input-action"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                    icon="chevron-down"
+                  >
+                    <svg
+                      data-icon="chevron-down"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                    >
+                      <desc>
+                        chevron-down
+                      </desc>
+                      <path
+                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <span
+            class="bp3-popover-wrapper MultiTypeInput--wrapper"
+          >
+            <span
+              class="bp3-popover-target"
+            >
+              <button
+                class="MultiTypeInput--btn MultiTypeInput--FIXED"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="fixed-input"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 9 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bp3-form-group deploymentViewMedium"
+    >
+      <label
+        class="bp3-label"
+        for="spec.changeWindow.endField"
+      >
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepTestUtilForm_spec.changeWindow.endField"
+        >
+          pipeline.serviceNowApprovalStep.windowEnd
+        </span>
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+        >
+          <div
+            class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+          >
+            <div
+              class="bp3-popover-target"
+            >
+              <div
+                class="bp3-input-group"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  name="spec.changeWindow.endField"
+                  placeholder="select pipeline.serviceNowApprovalStep.windowEnd"
+                  style="padding-right: 0px;"
+                  type="text"
+                  value=""
+                />
+                <span
+                  class="bp3-input-action"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                    icon="chevron-down"
+                  >
+                    <svg
+                      data-icon="chevron-down"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                    >
+                      <desc>
+                        chevron-down
+                      </desc>
+                      <path
+                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <span
+            class="bp3-popover-wrapper MultiTypeInput--wrapper"
+          >
+            <span
+              class="bp3-popover-target"
+            >
+              <button
+                class="MultiTypeInput--btn MultiTypeInput--FIXED"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="fixed-input"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 9 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
     <p
       class="StyledProps--font StyledProps--main"
     >
@@ -787,7 +1164,7 @@ exports[`ServiceNow Approval tests Edit stage - readonly: edit stage view readon
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="serviceNowApproval_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -960,7 +1337,7 @@ exports[`ServiceNow Approval tests Edit stage - readonly: edit stage view readon
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -1408,7 +1785,7 @@ exports[`ServiceNow Approval tests Open a saved serviceNow approval step - edit 
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="serviceNowApproval_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -1586,7 +1963,7 @@ exports[`ServiceNow Approval tests Open a saved serviceNow approval step - edit 
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -2015,6 +2392,7 @@ exports[`ServiceNow Approval tests Open a saved serviceNow approval step - edit 
                 >
                   <div
                     class="bp3-form-group"
+                    data-id="spec.approvalCriteria.spec.conditions[0].key-5"
                   >
                     <div
                       class="bp3-form-content"
@@ -2035,7 +2413,7 @@ exports[`ServiceNow Approval tests Open a saved serviceNow approval step - edit 
                               placeholder="- pipeline.keyPlaceholder -"
                               style="padding-right: 0px;"
                               type="text"
-                              value=""
+                              value="State"
                             />
                             <span
                               class="bp3-input-action"
@@ -2088,7 +2466,7 @@ exports[`ServiceNow Approval tests Open a saved serviceNow approval step - edit 
                               placeholder="- pipeline.operatorPlaceholder -"
                               style="padding-right: 0px;"
                               type="text"
-                              value=""
+                              value="in"
                             />
                             <span
                               class="bp3-input-action"
@@ -2209,6 +2587,7 @@ exports[`ServiceNow Approval tests Open a saved serviceNow approval step - edit 
                 >
                   <div
                     class="bp3-form-group"
+                    data-id="spec.approvalCriteria.spec.conditions[1].key-8"
                   >
                     <div
                       class="bp3-form-content"
@@ -2483,7 +2862,7 @@ exports[`ServiceNow Approval tests deploymentform mode - readonly: serviceNow-ap
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -2707,6 +3086,204 @@ exports[`ServiceNow Approval tests deploymentform mode - readonly: serviceNow-ap
               type="text"
               value=""
             />
+          </div>
+          <span
+            class="bp3-popover-wrapper MultiTypeInput--wrapper"
+          >
+            <span
+              class="bp3-popover-target"
+            >
+              <button
+                class="MultiTypeInput--btn MultiTypeInput--FIXED"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="fixed-input"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 9 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bp3-form-group deploymentViewMedium"
+    >
+      <label
+        class="bp3-label"
+        for="spec.changeWindow.startField"
+      >
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepTestUtilForm_spec.changeWindow.startField"
+        >
+          pipeline.serviceNowApprovalStep.windowStart
+        </span>
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+        >
+          <div
+            class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+          >
+            <div
+              class="bp3-popover-target"
+            >
+              <div
+                class="bp3-input-group"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  name="spec.changeWindow.startField"
+                  placeholder="select pipeline.serviceNowApprovalStep.windowStart"
+                  style="padding-right: 0px;"
+                  type="text"
+                  value=""
+                />
+                <span
+                  class="bp3-input-action"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                    icon="chevron-down"
+                  >
+                    <svg
+                      data-icon="chevron-down"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                    >
+                      <desc>
+                        chevron-down
+                      </desc>
+                      <path
+                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <span
+            class="bp3-popover-wrapper MultiTypeInput--wrapper"
+          >
+            <span
+              class="bp3-popover-target"
+            >
+              <button
+                class="MultiTypeInput--btn MultiTypeInput--FIXED"
+              >
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="fixed-input"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 9 9"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bp3-form-group deploymentViewMedium"
+    >
+      <label
+        class="bp3-label"
+        for="spec.changeWindow.endField"
+      >
+        <span
+          class="Tooltip--acenter"
+          data-tooltip-id="stepTestUtilForm_spec.changeWindow.endField"
+        >
+          pipeline.serviceNowApprovalStep.windowEnd
+        </span>
+         
+        <span
+          class="bp3-text-muted"
+        />
+      </label>
+      <div
+        class="bp3-form-content"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+        >
+          <div
+            class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+          >
+            <div
+              class="bp3-popover-target"
+            >
+              <div
+                class="bp3-input-group"
+              >
+                <input
+                  autocomplete="off"
+                  class="bp3-input"
+                  name="spec.changeWindow.endField"
+                  placeholder="select pipeline.serviceNowApprovalStep.windowEnd"
+                  style="padding-right: 0px;"
+                  type="text"
+                  value=""
+                />
+                <span
+                  class="bp3-input-action"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                    icon="chevron-down"
+                  >
+                    <svg
+                      data-icon="chevron-down"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      width="14"
+                    >
+                      <desc>
+                        chevron-down
+                      </desc>
+                      <path
+                        d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </span>
+              </div>
+            </div>
           </div>
           <span
             class="bp3-popover-wrapper MultiTypeInput--wrapper"

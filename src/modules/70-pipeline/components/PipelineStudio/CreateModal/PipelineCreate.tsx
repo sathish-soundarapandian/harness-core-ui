@@ -5,59 +5,39 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { noop, omit } from 'lodash-es'
+import { omit, pick } from 'lodash-es'
 import produce from 'immer'
 import * as Yup from 'yup'
-import {
-  Container,
-  Formik,
-  FormikForm,
-  Button,
-  ButtonVariation,
-  Text,
-  IconName,
-  CardSelect,
-  Layout,
-  Icon
-} from '@wings-software/uicore'
-import { Color, FontVariation } from '@wings-software/design-system'
+import { Container, Formik, FormikForm, Button, ButtonVariation, Text } from '@wings-software/uicore'
+import { FontVariation } from '@wings-software/design-system'
 import { Divider } from '@blueprintjs/core'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
 import { useStrings } from 'framework/strings'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
-import type { PipelineInfoConfig } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { NameIdDescriptionTags } from '@common/components'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import GitContextForm, { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
-import type { EntityGitDetails } from 'services/pipeline-ng'
+import type { EntityGitDetails, PipelineInfoConfig } from 'services/pipeline-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, PipelineActions } from '@common/constants/TrackingConstants'
-import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import { yamlPathRegex } from '@common/utils/StringUtils'
+import { InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
+import RbacButton from '@rbac/components/Button/Button'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import css from './PipelineCreate.module.scss'
 
 const logger = loggerFor(ModuleName.CD)
 
-interface CardInterface {
-  type: string
-  title: string
-  info: string
-  icon: IconName
-  size: number
-  disabled?: boolean
-}
 interface UseTemplate {
   useTemplate?: boolean
 }
@@ -65,17 +45,8 @@ interface UseTemplate {
 interface PipelineInfoConfigWithGitDetails extends PipelineInfoConfig {
   repo?: string
   branch: string
-  connectorRef?:
-    | string
-    | {
-        label?: string
-        value?: string
-        scope?: string
-        live?: boolean
-        connector?: any
-      }
+  connectorRef?: string
   storeType?: string
-  remoteType?: string
   importYaml?: string
   filePath?: string
 }
@@ -104,7 +75,6 @@ export default function CreatePipelines({
     repo: '',
     branch: '',
     storeType: StoreType.INLINE,
-    remoteType: 'create',
     stages: [],
     connectorRef: ''
   },
@@ -113,13 +83,12 @@ export default function CreatePipelines({
 }: PipelineCreateProps): JSX.Element {
   const { getString } = useStrings()
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
-  const { storeType: storeTypeParam = 'INLINE' } = useQueryParams<GitQueryParams>()
+  const { storeType: storeTypeParam = StoreType.INLINE } = useQueryParams<GitQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams()
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
+  const { isGitSyncEnabled, gitSyncEnabledOnlyForFF, supportingGitSimplification } = useAppStore()
+  const oldGitSyncEnabled = isGitSyncEnabled && !gitSyncEnabledOnlyForFF
   const { trackEvent } = useTelemetry()
-  const templatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
-  const pipelineTemplatesFeatureFlagEnabled = useFeatureFlag(FeatureFlag.NG_PIPELINE_TEMPLATE)
-  const isPipelineTemplateEnabled = templatesFeatureFlagEnabled && pipelineTemplatesFeatureFlagEnabled
+
   const newInitialValues = React.useMemo(() => {
     return produce(initialValues, draft => {
       if (draft.identifier === DefaultNewPipelineId) {
@@ -128,60 +97,35 @@ export default function CreatePipelines({
     })
   }, [initialValues])
 
-  const PipelineModeCards: CardInterface[] = [
-    {
-      type: StoreType.INLINE,
-      title: getString('inline'),
-      info: getString('common.git.inlineStoreLabel'),
-      icon: 'repository',
-      size: 16,
-      disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === StoreType.REMOTE
-    },
-    {
-      type: StoreType.REMOTE,
-      title: getString('remote'),
-      info: getString('common.git.remoteStoreLabel'),
-      icon: 'remote-setup',
-      size: 20,
-      disabled: pipelineIdentifier !== DefaultNewPipelineId && storeTypeParam === 'INLINE'
+  const getGitValidationSchema = () => {
+    if (supportingGitSimplification && storeTypeParam === StoreType.REMOTE) {
+      return gitSyncFormSchema(getString)
+    } else if (oldGitSyncEnabled) {
+      return {
+        repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+        branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
+      }
+    } else {
+      return {}
     }
-  ]
-
-  const [storeType, setStoreType] = useState<CardInterface | undefined>(() =>
-    PipelineModeCards.find(card => card.type === storeTypeParam)
-  )
+  }
 
   const validationSchema = React.useMemo(
     () =>
       Yup.object().shape({
         name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
         identifier: IdentifierSchema(),
-        ...(isGitSimplificationEnabled && storeType?.type === StoreType.REMOTE
-          ? {
-              repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-              branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
-              connectorRef: Yup.string().trim().required(getString('validation.sshConnectorRequired')),
-              filePath: Yup.string()
-                .trim()
-                .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
-                .matches(yamlPathRegex, getString('gitsync.gitSyncForm.yamlPathInvalid'))
-            }
-          : isGitSyncEnabled
-          ? {
-              repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-              branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
-            }
-          : {})
+        ...getGitValidationSchema()
       }),
-    [getString, isGitSimplificationEnabled, isGitSyncEnabled, storeType?.type]
+    [getString, supportingGitSimplification, oldGitSyncEnabled, storeTypeParam]
   )
 
   const isEdit = React.useMemo(
     () =>
-      isGitSimplificationEnabled
+      supportingGitSimplification
         ? pipelineIdentifier !== DefaultNewPipelineId
         : initialValues.identifier !== DefaultNewPipelineId,
-    [initialValues.identifier, isGitSimplificationEnabled, pipelineIdentifier]
+    [initialValues.identifier, supportingGitSimplification, pipelineIdentifier]
   )
 
   useEffect(() => {
@@ -192,24 +136,21 @@ export default function CreatePipelines({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit])
 
-  useEffect(() => {
-    !!storeType?.type && updateQueryParams({ storeType: storeType?.type })
-  }, [storeType])
-
   const handleSubmit = (values: CreatePipelinesValue): void => {
     logger.info(JSON.stringify(values))
     const formGitDetails =
-      isGitSimplificationEnabled && values.storeType === 'REMOTE'
+      supportingGitSimplification && values.storeType === StoreType.REMOTE
         ? { repoName: values.repo, branch: values.branch, filePath: values.filePath }
         : values.repo && values.repo.trim().length > 0
         ? { repoIdentifier: values.repo, branch: values.branch }
         : undefined
 
     afterSave?.(
-      omit(values, 'storeType', 'remoteType', 'connectorRef', 'repo', 'branch', 'filePath', 'useTemplate'),
+      omit(values, 'storeType', 'connectorRef', 'repo', 'branch', 'filePath', 'useTemplate'),
       {
         storeType: values.storeType as StoreMetadata['storeType'],
-        connectorRef: typeof values.connectorRef !== 'string' ? values.connectorRef?.value : ''
+        connectorRef:
+          typeof values.connectorRef !== 'string' ? (values.connectorRef as any)?.value : values.connectorRef
       },
       formGitDetails,
       values.useTemplate
@@ -233,67 +174,48 @@ export default function CreatePipelines({
               }}
               tooltipProps={{ dataTooltipId: 'pipelineCreate' }}
             />
-            {isGitSyncEnabled && (
+            {oldGitSyncEnabled && (
               <GitSyncStoreProvider>
                 <GitContextForm formikProps={formikProps as any} gitDetails={gitDetails} />
               </GitSyncStoreProvider>
             )}
 
-            {isGitSimplificationEnabled ? (
+            {supportingGitSimplification ? (
               <>
                 <Divider />
                 <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
                   {getString('pipeline.createPipeline.choosePipelineSetupHeader')}
                 </Text>
-                <CardSelect
-                  data={PipelineModeCards}
-                  cornerSelected
+                <InlineRemoteSelect
                   className={css.pipelineCardWrapper}
-                  renderItem={(item: CardInterface) => (
-                    <Layout.Horizontal flex spacing={'small'}>
-                      <Icon
-                        name={item.icon}
-                        size={item.size}
-                        color={storeType?.type === item.type ? Color.PRIMARY_7 : Color.GREY_600}
-                      />
-                      <Container>
-                        <Text
-                          font={{ variation: FontVariation.FORM_TITLE }}
-                          color={storeType?.type === item.type ? Color.PRIMARY_7 : Color.GREY_800}
-                        >
-                          {item.title}
-                        </Text>
-                        <Text>{item.info}</Text>
-                      </Container>
-                    </Layout.Horizontal>
-                  )}
-                  selected={storeType}
-                  onChange={(item: CardInterface) => {
+                  selected={storeTypeParam}
+                  getCardDisabledStatus={(current, selected) =>
+                    pipelineIdentifier !== DefaultNewPipelineId && current !== selected
+                  }
+                  onChange={item => {
                     if (pipelineIdentifier === DefaultNewPipelineId) {
                       formikProps?.setFieldValue('storeType', item.type)
-                      formikProps?.setFieldValue('remoteType', item.type === StoreType.REMOTE ? 'create' : '')
-                      setStoreType(item)
+                      updateQueryParams({ storeType: item.type })
                     }
                   }}
                 />
               </>
             ) : null}
-            {storeType?.type === StoreType.REMOTE ? (
+            {storeTypeParam === StoreType.REMOTE ? (
               <GitSyncForm
                 formikProps={formikProps as any}
-                handleSubmit={noop}
                 isEdit={isEdit}
-                showRemoteTypeSelection={!isEdit}
+                initialValues={pick(newInitialValues, 'repo', 'branch', 'filePath', 'connectorRef')}
               />
             ) : null}
 
-            {isGitSimplificationEnabled ? (
-              <Divider className={cx({ [css.gitSimplificationDivider]: storeType?.type === StoreType.INLINE })} />
+            {supportingGitSimplification ? (
+              <Divider className={cx({ [css.gitSimplificationDivider]: storeTypeParam === StoreType.INLINE })} />
             ) : null}
 
-            {!isEdit && isPipelineTemplateEnabled && (
+            {!isEdit && (
               <Container padding={{ top: 'large' }}>
-                <Button
+                <RbacButton
                   text={getString('common.templateStartLabel')}
                   icon={'template-library'}
                   iconProps={{
@@ -305,6 +227,11 @@ export default function CreatePipelines({
                     window.requestAnimationFrame(() => {
                       formikProps.submitForm()
                     })
+                  }}
+                  featuresProps={{
+                    featuresRequest: {
+                      featureNames: [FeatureIdentifier.TEMPLATE_SERVICE]
+                    }
                   }}
                 />
               </Container>

@@ -39,3 +39,17 @@
     color: var(--grey-350);
   }
 }
+
+.fixedItemMultiType {
+  :global {
+    .Layout--horizontal {
+      .bp3-form-group {
+        flex: 1 1 auto;
+        position: relative;
+        button {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

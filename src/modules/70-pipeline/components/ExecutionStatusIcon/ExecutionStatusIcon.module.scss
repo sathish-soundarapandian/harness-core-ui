@@ -1,0 +1,53 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.statusIcon {
+  --execution-status-color: var(--grey-700);
+  color: var(--execution-status-color) !important;
+  height: 18px;
+
+  &.failed,
+  &.errored,
+  &.rejected,
+  &.suspended,
+  &.approvalrejected {
+    --execution-status-color: var(--red-900);
+  }
+
+  &.skipped,
+  &.queued,
+  &.aborted,
+  &.discontinuing,
+  &.expired,
+  &.notstarted {
+    --execution-status-color: var(--grey-700);
+  }
+
+  &.success,
+  &.ignorefailed {
+    --execution-status-color: var(--green-800);
+  }
+
+  &.running,
+  &.asyncwaiting,
+  &.taskwaiting,
+  &.timedwaiting {
+    --execution-status-color: var(--primary-7);
+  }
+
+  &.resourcewaiting,
+  &.approvalwaiting,
+  &.interventionwaiting,
+  &.inputwaiting {
+    --execution-status-color: var(--red-600);
+  }
+
+  &.pausing,
+  &.paused {
+    --execution-status-color: var(--primary-7);
+  }
+}

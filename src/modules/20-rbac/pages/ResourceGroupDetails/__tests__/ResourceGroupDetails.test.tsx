@@ -68,7 +68,6 @@ describe('Resource Groups Page', () => {
       <TestWrapper
         path={routes.toResourceGroupDetails({ ...accountPathProps, ...resourceGroupPathProps })}
         pathParams={{ accountId: 'dummy', resourceGroupIdentifier: 'dummyResourceGroupIdentifier' }}
-        defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
       >
         <ResourceGroupDetails />
       </TestWrapper>
@@ -89,7 +88,7 @@ describe('Resource Groups Page', () => {
     act(() => {
       fireEvent.click(connector!)
     })
-    expect(getAllByText('rbac.resourceGroup.all')[0]).toBeTruthy()
+    expect(getAllByText('rbac.resourceGroup.all')[1]).toBeTruthy()
     await act(async () => {
       fireEvent.click(getByText(container, 'save'))
     })
@@ -105,7 +104,17 @@ describe('Resource Groups Page', () => {
       ],
       resourceFilter: {
         includeAllResources: false,
-        resources: [{ resourceType: 'SECRET' }, { resourceType: 'CONNECTOR' }]
+        resources: [
+          { resourceType: 'SECRET' },
+          {
+            resourceType: 'ENVIRONMENT',
+            attributeFilter: {
+              attributeName: 'type',
+              attributeValues: ['Production']
+            }
+          },
+          { resourceType: 'CONNECTOR' }
+        ]
       },
       tags: {},
       description: '',
@@ -147,7 +156,17 @@ describe('Resource Groups Page', () => {
       ],
       resourceFilter: {
         includeAllResources: false,
-        resources: [{ resourceType: 'SECRET' }, { resourceType: 'CONNECTOR' }]
+        resources: [
+          { resourceType: 'SECRET' },
+          {
+            resourceType: 'ENVIRONMENT',
+            attributeFilter: {
+              attributeName: 'type',
+              attributeValues: ['Production']
+            }
+          },
+          { resourceType: 'CONNECTOR' }
+        ]
       },
       tags: {},
       description: '',
@@ -161,29 +180,31 @@ describe('Resource Groups Page', () => {
       fireEvent.click(scope)
     })
 
-    let form = findDialogContainer()
-    expect(form).toBeTruthy()
-
-    const customScope = getByText(form!, 'rbac.scopeItems.specificOrgsAndProjects')
+    const dropdown = findPopoverContainer()
+    const customScope = getByText(dropdown!, 'rbac.scopeItems.specificOrgsAndProjects')
     act(() => {
       fireEvent.click(customScope)
     })
 
+    const editScope = getByText(container, 'edit')
+    act(() => {
+      fireEvent.click(editScope)
+    })
+
+    let form = findDialogContainer()
+    expect(form).toBeTruthy()
     const includeCurrentScope = getByText(form!, 'rbac.resourceScope.includeAccResources')
     act(() => {
       fireEvent.click(includeCurrentScope)
     })
 
-    const addOrgs = getByText(form!, 'rbac.resourceScope.selectOrgsandProjects')
-    act(() => {
-      fireEvent.click(addOrgs)
-    })
-
     const selectOrg = getByText(form!, 'Select')
-    act(() => {
+    await act(async () => {
       fireEvent.click(selectOrg)
     })
-    const popover = findPopoverContainer()
+
+    const popover = (document.querySelectorAll('.bp3-popover-content')?.[1] ||
+      document.querySelectorAll('.bp3-popover-content')?.[0]) as HTMLElement
     expect(popover).toBeTruthy()
 
     const defaultOrg = getByText(popover!, 'default')
@@ -191,9 +212,27 @@ describe('Resource Groups Page', () => {
       fireEvent.click(defaultOrg)
     })
 
-    const includeProjects = getByText(form!, 'rbac.resourceScope.includeProjResources')
+    const specifiedProjects = getByText(form!, 'common.specified')
     act(() => {
-      fireEvent.click(includeProjects)
+      fireEvent.click(specifiedProjects)
+    })
+    const addProjects = getByText(form!, 'plusNumber')
+    await act(async () => {
+      fireEvent.click(addProjects)
+    })
+
+    const projectForm = document.querySelectorAll('.bp3-dialog')?.[1] as HTMLElement
+    expect(projectForm).toBeTruthy()
+
+    const project1 = getByText(projectForm, 'TestCiproject')
+    act(() => {
+      fireEvent.click(project1)
+    })
+
+    const submit = getByText(projectForm, 'add 1 projectsText')
+
+    act(() => {
+      fireEvent.click(submit)
     })
 
     act(() => {
@@ -234,13 +273,11 @@ test('Account Scope Resource Group Details', async () => {
         accountId: 'dummy',
         resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
       }}
-      defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
     >
       <ResourceGroupDetails />
     </TestWrapper>
   )
-
-  let scope = getByText(container, 'rbac.scopeItems.specificOrgsAndProjects')
+  const scope = getByText(container, 'edit')
   act(() => {
     fireEvent.click(scope)
   })
@@ -259,13 +296,6 @@ test('Account Scope Resource Group Details', async () => {
   })
   form = findDialogContainer()
   expect(form).toBeFalsy()
-
-  scope = getByText(container, 'rbac.scopeItems.specificOrgsAndProjects')
-  act(() => {
-    fireEvent.click(scope)
-  })
-  form = findDialogContainer()
-  expect(form).toBeTruthy()
 })
 
 test('Org Scope Resource Group Details', async () => {
@@ -280,13 +310,12 @@ test('Org Scope Resource Group Details', async () => {
         orgIdentifier: 'testOrg',
         resourceGroupIdentifier: 'dummyResourceGroupIdentifier'
       }}
-      defaultFeatureFlagValues={{ CUSTOM_RESOURCEGROUP_SCOPE: true }}
     >
       <ResourceGroupDetails />
     </TestWrapper>
   )
 
-  const scope = getByText(container, 'rbac.scopeItems.specificProjects')
+  const scope = getByText(container, 'edit')
   act(() => {
     fireEvent.click(scope)
   })

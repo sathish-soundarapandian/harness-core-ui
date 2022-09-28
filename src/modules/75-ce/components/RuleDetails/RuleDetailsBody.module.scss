@@ -1,0 +1,159 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.ruleDetailsBody {
+  padding: var(--spacing-xlarge) !important;
+
+  .col1 {
+    flex: 3;
+    flex-shrink: 0;
+    padding: 0 var(--spacing-huge) 0 var(--spacing-large) !important;
+  }
+  .col2 {
+    flex: 2;
+    flex-shrink: 0;
+    padding: 0 var(--spacing-large) !important;
+  }
+  .colDivider {
+    width: 1px;
+    height: 600px;
+    background: var(--grey-200);
+  }
+
+  .costWidget {
+    width: 220px;
+    padding: var(--spacing-small) var(--spacing-medium);
+    border-radius: 8px;
+    background: var(--grey-100);
+    .costText {
+      color: var(--grey-600);
+    }
+    &.savings-widget {
+      background: rgba(211, 252, 254, 0.5);
+      .costText {
+        color: var(--teal-800);
+      }
+    }
+    &.spend-widget {
+      background: var(--purple-50);
+      .costText {
+        color: var(--purple-800);
+      }
+    }
+  }
+
+  .tabRowContainer {
+    box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
+    border-radius: 4px;
+    padding: var(--spacing-large);
+  }
+
+  .sshStepIndicator {
+    flex-shrink: 0;
+  }
+  .sshStepText {
+    flex-shrink: 1;
+  }
+
+  .sshTabs {
+    color: inherit;
+    :global {
+      .bp3-tab-indicator-wrapper {
+        display: none;
+      }
+      .bp3-tab-list {
+        .bp3-tab {
+          padding: 3px var(--spacing-5);
+          border-radius: 25px;
+          &[aria-expanded='true'] {
+            background-color: var(--primary-9) !important;
+            color: var(--white);
+          }
+          &:hover {
+            &:not([aria-expanded='true']) {
+              background-color: var(--grey-100) !important;
+            }
+            &[aria-expanded='true'] {
+              color: var(--white) !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .link {
+    color: var(--primary-7) !important;
+    cursor: pointer;
+    &.disabledLink {
+      color: var(--grey-500) !important;
+    }
+  }
+
+  .detailRow {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+  }
+
+  .vmsTableContainer {
+    max-height: 204px;
+    overflow: auto;
+    margin-top: var(--spacing-medium) !important;
+    .vmsTable {
+      table-layout: fixed;
+      width: 100%;
+      border: 1px solid var(--grey-200);
+      border-collapse: collapse;
+      thead {
+        background-color: var(--primary-1);
+        tr {
+          th {
+            border: 1px solid var(--primary-3);
+          }
+        }
+      }
+    }
+  }
+
+  .copyBtn {
+    min-height: auto !important;
+    height: auto !important;
+    line-height: inherit !important;
+    padding: 0 !important;
+    svg {
+      color: var(--primary-7);
+    }
+  }
+
+  .dependenciesAccordion {
+    background: var(--primary-1);
+    padding: 0 var(--spacing-medium);
+    border-radius: 5px;
+    table {
+      table-layout: fixed;
+      width: 100%;
+      border: 1px solid var(--grey-200);
+      border-collapse: collapse;
+      tbody {
+        tr {
+          background: var(--white);
+        }
+      }
+    }
+  }
+
+  .toggleInput {
+    width: fit-content;
+  }
+
+  .logsContainer {
+    pre {
+      max-height: 400px;
+      overflow: scroll;
+    }
+  }
+}

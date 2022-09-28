@@ -18,6 +18,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FAIL_COLORS, SUCCESS_COLORS } from '@dashboards/constants'
 import { PageSpinner } from '@common/components'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
+import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import css from '@cd/components/Services/MostActiveServicesWidget/MostActiveServicesWidget.module.scss'
 
 interface MostActiveServicesWidgetData {
@@ -125,14 +126,15 @@ export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = prop
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
   const { timeRange } = useContext(DeploymentsTimeRangeContext)
+  const [startTime, endTime] = getFormattedTimeRange(timeRange)
 
   const queryParams: GetWorkloadsQueryParams = useMemo(() => {
     return {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      startTime: timeRange?.range[0]?.getTime() || 0,
-      endTime: timeRange?.range[1]?.getTime() || 0,
+      startTime,
+      endTime,
       environmentType: environmentTypes[selectedEnvironmentType]
     }
   }, [accountId, orgIdentifier, projectIdentifier, timeRange, environmentTypes, selectedEnvironmentType])

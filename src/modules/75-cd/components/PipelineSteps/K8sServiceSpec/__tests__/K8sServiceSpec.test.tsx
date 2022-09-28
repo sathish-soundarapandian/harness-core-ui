@@ -17,7 +17,7 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
-import { KubernetesServiceSpec } from '../K8sServiceSpec'
+import { GenericServiceSpec } from '../K8sServiceSpec'
 import PipelineMock from './mock.json'
 import TemplateMock from './template.mock.json'
 import connectorListJSON from './connectorList.json'
@@ -431,7 +431,7 @@ class StepFactory extends AbstractStepFactory {
 }
 
 const factory = new StepFactory()
-factory.registerStep(new KubernetesServiceSpec())
+factory.registerStep(new GenericServiceSpec())
 
 describe('StepWidget tests', () => {
   test(`renders ServiceStep for Service Tab `, () => {
@@ -655,7 +655,7 @@ const artifactTagListDockerPath =
 
 describe('Autocomplete fields test', () => {
   test('Test connectorRef Manifest', async () => {
-    const step = new KubernetesServiceSpec() as any
+    const step = new GenericServiceSpec() as any
     let list: CompletionItemInterface[]
     list = await step.getManifestConnectorsListForYaml(connectorRefPath, getYaml(), getParams())
     expect(list).toHaveLength(1)
@@ -664,7 +664,7 @@ describe('Autocomplete fields test', () => {
     expect(list).toHaveLength(0)
   })
   test('Test connectorRef ArtifactsPrimaryConnectors', async () => {
-    const step = new KubernetesServiceSpec() as any
+    const step = new GenericServiceSpec() as any
     let list: CompletionItemInterface[]
     list = await step.getArtifactsPrimaryConnectorsListForYaml(connectorArtifactPrimaryRefPath, getYaml(), getParams())
     expect(list).toHaveLength(1)
@@ -673,7 +673,7 @@ describe('Autocomplete fields test', () => {
     expect(list).toHaveLength(0)
   })
   test('Test connectorRef ArtifactsSidecarConnectors', async () => {
-    const step = new KubernetesServiceSpec() as any
+    const step = new GenericServiceSpec() as any
     let list: CompletionItemInterface[]
     list = await step.getArtifactsSidecarConnectorsListForYaml(connectorArtifactSidecarRefPath, getYaml(), getParams())
     expect(list).toHaveLength(1)
@@ -682,7 +682,7 @@ describe('Autocomplete fields test', () => {
     expect(list).toHaveLength(0)
   })
   test('Test connectorRef ArtifactsTagsList', async () => {
-    const step = new KubernetesServiceSpec() as any
+    const step = new GenericServiceSpec() as any
     let list: CompletionItemInterface[]
 
     //GCR

@@ -7,9 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly basicImageContainer: string
-  readonly h2: string
-  readonly stepImageContainer: string
-  readonly stepsImage: string
+  readonly mainContentContainer: string
 }
 export default styles

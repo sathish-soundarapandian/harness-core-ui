@@ -12,7 +12,9 @@ declare const styles: {
   readonly cdCustomIcon: string
   readonly chartContainer: string
   readonly chartWrap: string
+  readonly childCard: string
   readonly content: string
+  readonly ctn: string
   readonly emptyView: string
   readonly emptyViewCard: string
   readonly emptyViewItem: string
@@ -22,12 +24,16 @@ declare const styles: {
   readonly healthCardTitle: string
   readonly healthCards: string
   readonly hoverService: string
+  readonly labelStyles: string
+  readonly layoutParent: string
+  readonly listStyles: string
   readonly page: string
   readonly rangeSelectorHeader: string
   readonly separator: string
   readonly serviceTag: string
   readonly textAndRate: string
   readonly topDepPiechart: string
+  readonly totalCard: string
   readonly totalDepCard: string
 }
 export default styles

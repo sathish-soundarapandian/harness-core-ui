@@ -23,6 +23,7 @@ export interface ExecutionContextParams {
   isPipelineInvalid?: boolean
   selectedStageId: string
   selectedStepId: string
+  selectedStageExecutionId: string
   loading: boolean
   isDataLoadedForSelectedStage: boolean
   queryParams: ExecutionPageQueryParams
@@ -34,6 +35,7 @@ export interface ExecutionContextParams {
   stepsGraphCanvasState?: GraphCanvasState
   setSelectedStepId: (step: string) => void
   setSelectedStageId: (stage: string) => void
+  setSelectedStageExecutionId: (stage: string) => void
   setIsPipelineInvalid?: (flag: boolean) => void
 }
 
@@ -44,6 +46,7 @@ export const ExecutionContext = createContext<ExecutionContextParams>({
   isPipelineInvalid: false,
   selectedStageId: '',
   selectedStepId: '',
+  selectedStageExecutionId: '',
   loading: false,
   isDataLoadedForSelectedStage: false,
   queryParams: {},
@@ -55,6 +58,7 @@ export const ExecutionContext = createContext<ExecutionContextParams>({
   stepsGraphCanvasState: { offsetX: 0, offsetY: 0, zoom: 100 },
   setSelectedStepId: () => void 0,
   setSelectedStageId: () => void 0,
+  setSelectedStageExecutionId: () => void 0,
   setIsPipelineInvalid: () => void 0
 })
 

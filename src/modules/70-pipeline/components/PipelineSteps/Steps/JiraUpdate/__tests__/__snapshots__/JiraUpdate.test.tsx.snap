@@ -10,11 +10,11 @@ exports[`Jira Update tests Basic snapshot - deploymentform mode: jira-update-dep
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
-          data-tooltip-id="stepTestUtilForm_spec.conectorRef"
+          data-tooltip-id="stepTestUtilForm_spec.connectorRef"
         >
           pipeline.jiraApprovalStep.connectorRef
         </span>
@@ -35,7 +35,7 @@ exports[`Jira Update tests Basic snapshot - deploymentform mode: jira-update-dep
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-                data-testid="cr-field-spec.conectorRef"
+                data-testid="cr-field-spec.connectorRef"
                 style="width: 385px;"
                 type="button"
               >
@@ -367,7 +367,7 @@ exports[`Jira Update tests Basic snapshot - input variable view: jira-update-inp
       <span
         class="nameSection"
       >
-        name
+        identifier
       </span>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
@@ -376,25 +376,6 @@ exports[`Jira Update tests Basic snapshot - input variable view: jira-update-inp
         <span
           class=""
         />
-      </p>
-    </div>
-    <div
-      class="variableListRow variable-list-row"
-    >
-      <span
-        class="nameSection"
-      >
-        timeout
-      </span>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
-        style="--text-line-clamp: 1;"
-      >
-        <span
-          class=""
-        >
-          1d
-        </span>
       </p>
     </div>
     <div
@@ -472,11 +453,11 @@ exports[`Jira Update tests Basic snapshot - inputset mode: input set with errors
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
-          data-tooltip-id="stepTestUtilForm_spec.conectorRef"
+          data-tooltip-id="stepTestUtilForm_spec.connectorRef"
         >
           pipeline.jiraApprovalStep.connectorRef
         </span>
@@ -485,7 +466,7 @@ exports[`Jira Update tests Basic snapshot - inputset mode: input set with errors
         style="display: flex; align-items: center;"
       >
         <div
-          class="bp3-form-group"
+          class="bp3-form-group bp3-intent-danger"
           style="margin-bottom: 0px;"
         >
           <div
@@ -497,7 +478,7 @@ exports[`Jira Update tests Basic snapshot - inputset mode: input set with errors
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-                data-testid="cr-field-spec.conectorRef"
+                data-testid="cr-field-spec.connectorRef"
                 style="width: 385px;"
                 type="button"
               >
@@ -558,6 +539,37 @@ exports[`Jira Update tests Basic snapshot - inputset mode: input set with errors
                   </button>
                 </span>
               </span>
+            </div>
+            <div
+              class="bp3-form-helper-text"
+            >
+              <div
+                class="FormError--errorDiv"
+                data-name="spec.connectorRef"
+              >
+                <span
+                  class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+                  data-icon="circle-cross"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 13 13"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="FormError--error"
+                >
+                  pipeline.jiraApprovalStep.validations.connectorRef
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -875,7 +887,7 @@ exports[`Jira Update tests Edit stage - readony view: editstage-readonly 1`] = `
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="jiraUpdate_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -1048,7 +1060,7 @@ exports[`Jira Update tests Edit stage - readony view: editstage-readonly 1`] = `
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -1080,62 +1092,11 @@ exports[`Jira Update tests Edit stage - readony view: editstage-readonly 1`] = `
                     <span
                       class="bp3-button-text"
                     >
-                      <div
-                        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main selectWrapper StyledProps--flex StyledProps--flex-distribution-space-between"
+                      <span
+                        class="placeholder"
                       >
-                        <span
-                          class="bp3-popover-wrapper"
-                        >
-                          <span
-                            class="bp3-popover-target Text--targetClass"
-                          >
-                            <p
-                              class="StyledProps--font StyledProps--main label StyledProps--color StyledProps--color-grey800"
-                              tabindex="0"
-                            >
-                              c1
-                            </p>
-                          </span>
-                        </span>
-                        <div
-                          class="rightStatus"
-                        >
-                          <span
-                            class="bp3-icon bp3-icon-full-circle StyledProps--main status redStatus"
-                            data-testid="crf-status"
-                            icon="full-circle"
-                          >
-                            <svg
-                              data-icon="full-circle"
-                              height="6"
-                              viewBox="0 0 16 16"
-                              width="6"
-                            >
-                              <desc>
-                                full-circle
-                              </desc>
-                              <path
-                                d="M8 0a8 8 0 100 16A8 8 0 108 0z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
-                          </span>
-                          <span
-                            class="Tag--main"
-                          >
-                            <span
-                              class="bp3-tag bp3-minimal"
-                              id="tag"
-                            >
-                              <span
-                                class="bp3-text-overflow-ellipsis bp3-fill"
-                              >
-                                project
-                              </span>
-                            </span>
-                          </span>
-                        </div>
-                      </div>
+                        connectors.selectConnector
+                      </span>
                     </span>
                     <span
                       class="bp3-icon bp3-icon-chevron-down StyledProps--main"
@@ -1306,11 +1267,11 @@ exports[`Jira Update tests deploymentform readonly mode: jira-update-deploymentf
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
-          data-tooltip-id="stepTestUtilForm_spec.conectorRef"
+          data-tooltip-id="stepTestUtilForm_spec.connectorRef"
         >
           pipeline.jiraApprovalStep.connectorRef
         </span>
@@ -1331,7 +1292,7 @@ exports[`Jira Update tests deploymentform readonly mode: jira-update-deploymentf
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
-                data-testid="cr-field-spec.conectorRef"
+                data-testid="cr-field-spec.connectorRef"
                 style="width: 385px;"
                 type="button"
               >

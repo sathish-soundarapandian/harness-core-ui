@@ -8,9 +8,21 @@
 import React, { useState } from 'react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { FormikForm, FormInput, Button, Layout, Icon, Text, Heading, ButtonProps } from '@wings-software/uicore'
+import {
+  FormikForm,
+  FormInput,
+  Button,
+  Layout,
+  Icon,
+  Text,
+  Heading,
+  ButtonProps,
+  MultiTypeInputType,
+  getMultiTypeFromValue
+} from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
+import { isEmpty } from 'lodash-es'
 import { useToaster } from '@common/components'
 import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
 import { useStrings } from 'framework/strings'
@@ -28,6 +40,7 @@ interface ConfigurePagerDutyNotificationsProps {
   onBack?: () => void
   submitButtonText?: string
   config?: PagerDutyNotificationConfiguration
+  expressions?: string[]
 }
 
 interface PagerDutyNotificationData {
@@ -85,6 +98,9 @@ export const TestPagerDutyNotifications: React.FC<{
 
 const ConfigurePagerDutyNotifications: React.FC<ConfigurePagerDutyNotificationsProps> = props => {
   const { getString } = useStrings()
+  const [selectedInputType, setSelectedInputType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(props.config?.key)
+  )
 
   const handleSubmit = (formData: PagerDutyNotificationData): void => {
     props.onSuccess({
@@ -107,7 +123,12 @@ const ConfigurePagerDutyNotifications: React.FC<ConfigurePagerDutyNotificationsP
         <Formik
           onSubmit={handleSubmit}
           validationSchema={Yup.object().shape({
-            key: Yup.string().trim().required(getString('notifications.validationPDKey'))
+            key: Yup.string()
+              .trim()
+              .when('userGroups', {
+                is: val => isEmpty(val),
+                then: Yup.string().trim().required(getString('notifications.validationPDKey'))
+              })
           })}
           initialValues={{
             key: '',
@@ -118,9 +139,25 @@ const ConfigurePagerDutyNotifications: React.FC<ConfigurePagerDutyNotificationsP
           {formik => {
             return (
               <FormikForm>
-                <FormInput.Text name={'key'} label={getString('notifications.labelPDKey')} />
+                {props.expressions ? (
+                  <FormInput.MultiTextInput
+                    name={'key'}
+                    label={getString('notifications.labelPDKey')}
+                    multiTextInputProps={{
+                      expressions: props.expressions,
+                      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                      onTypeChange: setSelectedInputType
+                    }}
+                  />
+                ) : (
+                  <FormInput.Text name={'key'} label={getString('notifications.labelPDKey')} />
+                )}
+
                 <Layout.Horizontal margin={{ bottom: 'xxlarge' }} style={{ alignItems: 'center' }}>
-                  <TestPagerDutyNotifications data={formik.values} />
+                  <TestPagerDutyNotifications
+                    data={formik.values}
+                    buttonProps={{ disabled: selectedInputType === MultiTypeInputType.EXPRESSION }}
+                  />
                 </Layout.Horizontal>
                 <UserGroupsInput name="userGroups" label={getString('notifications.labelSlackUserGroups')} />
                 {props.isStep ? (

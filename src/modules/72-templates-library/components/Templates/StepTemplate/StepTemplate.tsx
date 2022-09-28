@@ -6,26 +6,31 @@
  */
 
 import React from 'react'
-import { Color } from '@harness/design-system'
+import type { IconName } from '@wings-software/uicore'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import { Template, TemplateProps } from '@templates-library/components/AbstractTemplate/Template'
+import { Template } from '@templates-library/components/AbstractTemplate/Template'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
-import type { NGTemplateInfoConfig } from 'services/template-ng'
 import { StepTemplateCanvasWithRef } from '@templates-library/components/TemplateStudio/StepTemplateCanvas/StepTemplateCanvas'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { TemplateInputs, TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
 
-export class StepTemplate extends Template<NGTemplateInfoConfig> {
+export class StepTemplate extends Template {
+  protected label = 'Step'
   protected type = TemplateType.Step
-  protected name = 'Step Template'
-  protected color = Color.PURPLE_700
+  protected icon: IconName = 'disable'
+  protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
+  protected colorMap = {
+    color: '#592BAA',
+    stroke: '#E1D0FF',
+    fill: '#EADEFF'
+  }
+  protected isRemoteEnabled = true
 
-  protected defaultValues: NGTemplateInfoConfig = {
-    name: 'Template name',
-    identifier: 'Template_name',
-    versionLabel: '',
-    type: 'Step'
+  renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
+    return <StepTemplateCanvasWithRef ref={formikRef} />
   }
 
-  renderTemplateCanvas(props: TemplateProps<NGTemplateInfoConfig>): JSX.Element {
-    return <StepTemplateCanvasWithRef ref={props.formikRef as TemplateFormRef<unknown> | undefined} />
+  renderTemplateInputsForm({ template, storeMetadata }: TemplateInputsProps & { accountId: string }): JSX.Element {
+    return <TemplateInputs template={template} storeMetadata={storeMetadata} />
   }
 }

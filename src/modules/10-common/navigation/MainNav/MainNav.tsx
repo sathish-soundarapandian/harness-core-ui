@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useLayoutEffect } from 'react'
 import cx from 'classnames'
 import { NavLink as Link, useParams } from 'react-router-dom'
 import type { NavLinkProps } from 'react-router-dom'
@@ -35,12 +35,26 @@ export default function L1Nav(): React.ReactElement {
     CENG_ENABLED,
     CFNG_ENABLED,
     CHAOS_ENABLED,
+    SCM_ENABLED,
     SECURITY,
     RESOURCE_CENTER_ENABLED,
     NG_DASHBOARDS
   } = useFeatureFlags()
 
   const { currentUserInfo: user } = useAppStore()
+
+  useLayoutEffect(() => {
+    // main nav consists of two UL sections with classname "css.navList"
+    const items = Array.from(document.querySelectorAll(`.${css.navList}`))
+    // add the real height of both sections
+    // real height is needed because number of items can change based on feature flags, license etc
+    const minNavHeight = items.reduce((previousValue, listitem) => {
+      return previousValue + listitem.getBoundingClientRect().height
+    }, 0)
+    // set the CSS variable defined in src/modules/10-common/layouts/layouts.module.scss
+    const root = document.querySelector(':root') as HTMLElement
+    root.style.setProperty('--main-nav-height', `${minNavHeight}px`)
+  })
 
   return (
     <nav className={css.main}>
@@ -60,23 +74,6 @@ export default function L1Nav(): React.ReactElement {
             </Layout.Vertical>
           </Link>
         </li>
-        {CHAOS_ENABLED && (
-          <li className={css.navItem}>
-            <Link {...commonLinkProps} to={paths.toChaos(params)}>
-              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                <Icon name="command-stop" size={30} />
-                <Text
-                  font={{ weight: 'semi-bold', align: 'center' }}
-                  padding={{ bottom: 'xsmall' }}
-                  color={Color.WHITE}
-                  className={css.text}
-                >
-                  <String stringID="common.chaosText" />
-                </Text>
-              </Layout.Vertical>
-            </Link>
-          </li>
-        )}
         {CDNG_ENABLED && (
           <li className={css.navItem}>
             <Link {...commonLinkProps} to={paths.toCD(params)}>
@@ -162,6 +159,23 @@ export default function L1Nav(): React.ReactElement {
             </Link>
           </li>
         )}
+        {SCM_ENABLED && (
+          <li className={css.navItem}>
+            <Link {...commonLinkProps} to={paths.toSCM(params)}>
+              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                <Icon name="gitops-green" size={30} />
+                <Text
+                  font={{ weight: 'semi-bold', align: 'center' }}
+                  padding={{ bottom: 'xsmall' }}
+                  color={Color.WHITE}
+                  className={css.text}
+                >
+                  <String stringID="common.purpose.scm.name" />
+                </Text>
+              </Layout.Vertical>
+            </Link>
+          </li>
+        )}
         {SECURITY && (
           <li className={css.navItem}>
             <Link {...commonLinkProps} to={paths.toSTO(params)}>
@@ -179,12 +193,28 @@ export default function L1Nav(): React.ReactElement {
             </Link>
           </li>
         )}
+        {CHAOS_ENABLED && (
+          <li className={css.navItem}>
+            <Link {...commonLinkProps} to={paths.toChaos(params)}>
+              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                <Icon name="chaos-main" size={30} />
+                <Text
+                  font={{ weight: 'semi-bold', align: 'center' }}
+                  padding={{ bottom: 'xsmall' }}
+                  color={Color.WHITE}
+                  className={css.text}
+                >
+                  <String stringID="common.chaosText" />
+                </Text>
+              </Layout.Vertical>
+            </Link>
+          </li>
+        )}
       </ul>
-
       <ul className={css.navList}>
         {RESOURCE_CENTER_ENABLED && (
           <li className={css.navItem}>
-            <ResourceCenter />
+            <ResourceCenter link={false} />
           </li>
         )}
         {NG_DASHBOARDS && (

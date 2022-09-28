@@ -1,4 +1,4 @@
-import { monitoredServiceListCall } from '../../../support/85-cv/monitoredService/constants'
+import { countOfServiceAPI, monitoredServiceListCall } from '../../../support/85-cv/monitoredService/constants'
 import {
   heatlhScore,
   heatlhScoreTimeLine,
@@ -20,14 +20,10 @@ describe('Load service health dashboard', () => {
     })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListData)
-    cy.intercept(
-      'GET',
-      '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1',
-      { allServicesCount: 1, servicesAtRiskCount: 0 }
-    )
+    cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
     cy.visitChangeIntelligence()
   })
-  it.skip('Load dashboard', () => {
+  it('Load dashboard', () => {
     cy.intercept('GET', '/cv/api/monitored-service/appd_prod?*', monitoredServiceData).as('monitoredServiceCall')
     cy.intercept('GET', heatlhScore.url, heatlhScore.data).as('heatlhScoreCall')
     cy.intercept('GET', heatlhScoreTimeLine.url, heatlhScoreTimeLine.data).as('heatlhScoreTimeLineCall')
@@ -38,7 +34,7 @@ describe('Load service health dashboard', () => {
     cy.intercept('GET', serviceScreenLogsRadarClusterURL, serviceScreenLogsRadarClusterData).as(
       'serviceScreenLogsRadarClusterCall'
     )
-
+    cy.contains('p', 'Monitored Services').click({ force: true })
     cy.contains('div', 'appd').click()
     cy.wait('@monitoredServiceCall')
     cy.contains('div', 'Service Health').click()

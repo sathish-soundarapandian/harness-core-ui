@@ -6,10 +6,13 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { FieldArray, Select, TextInput } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
+import { FieldArray, Select, Text, TextInput } from '@wings-software/uicore'
+import { FontVariation } from '@harness/design-system'
 import { Formik } from 'formik'
 import type { Field } from '@wings-software/uicore/dist/components/FieldArray/FieldArray'
 import type { HealthCheck } from 'services/lw'
+import { useStrings } from 'framework/strings'
 import css from './COGatewayConfig.module.scss'
 
 interface SelectItem {
@@ -62,6 +65,7 @@ interface COHealthCheckTableProps {
   updatePattern: (pattern: HealthCheck) => void
 }
 const COHealthCheckTable: React.FC<COHealthCheckTableProps> = props => {
+  const { getString } = useStrings()
   const [healthCheckPattern, setHealthCheckPattern] = useState<HealthCheck[]>(props.pattern ? [props.pattern] : [])
 
   useEffect(() => {
@@ -91,7 +95,7 @@ const COHealthCheckTable: React.FC<COHealthCheckTableProps> = props => {
   const fields: Field[] = [
     {
       name: 'protocol',
-      label: 'PROTOCOL',
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('ce.common.protocol')}</Text>,
       renderer: (value, _rowIndex, handleChange) => (
         <Select
           className={css.selectCell}
@@ -103,26 +107,41 @@ const COHealthCheckTable: React.FC<COHealthCheckTableProps> = props => {
     },
     {
       name: 'path',
-      label: 'PATH',
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.path')}</Text>,
       renderer: getTextInputEl
     },
     {
       name: 'port',
-      label: 'PORT',
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('common.smtp.port')}</Text>,
+      renderer: getNumericInput
+    },
+    {
+      name: 'interval',
+      label: <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('ce.common.interval')}</Text>,
       renderer: getNumericInput
     },
     {
       name: 'timeout',
-      label: 'TIMEOUT',
+      label: (
+        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+          {getString('ce.co.autoStoppingRule.setupAccess.healthCheckTimeoutLabel')}
+        </Text>
+      ),
       renderer: getNumericInput
     },
     {
       name: 'status',
-      label: 'STATUS (from-to)',
+      label: (
+        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+          {getString('ce.co.autoStoppingRule.setupAccess.healthCheckStatusLabel')}
+        </Text>
+      ),
       renderer: (value, _rowIndex, handleChange) => (
         <StatusRangeInput
-          status_code_from={value?.split('-').map(Number)?.[0] || 200}
-          status_code_to={value?.split('-').map(Number)?.[1] || 299}
+          status_code_from={
+            value?.split('-').map(Number)?.[0] || defaultTo(healthCheckPattern[0]?.status_code_from, 200)
+          }
+          status_code_to={value?.split('-').map(Number)?.[1] || defaultTo(healthCheckPattern[0]?.status_code_to, 299)}
           onChange={
             val => handleChange(val)
             // value => {

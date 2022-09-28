@@ -7,42 +7,51 @@
 
 import React, { useEffect, useState, Suspense } from 'react'
 
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { RestfulProvider } from 'restful-react'
 import { FocusStyleManager } from '@blueprintjs/core'
-import { TooltipContextProvider, PageSpinner, useToaster } from '@wings-software/uicore'
+import {
+  TooltipContextProvider,
+  PageSpinner,
+  useToaster,
+  MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY
+} from '@wings-software/uicore'
 import { tooltipDictionary } from '@wings-software/ng-tooltip'
+import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
 
 import { AppStoreProvider } from 'framework/AppStore/AppStoreContext'
-import { PreferenceStoreProvider } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { PreferenceStoreProvider, PREFERENCES_TOP_LEVEL_KEY } from 'framework/PreferenceStore/PreferenceStoreContext'
 
 import { LicenseStoreProvider } from 'framework/LicenseStore/LicenseStoreContext'
 // eslint-disable-next-line aliased-module-imports
 import RouteDestinationsWithoutAuth from 'modules/RouteDestinationsWithoutAuth'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { StringsContextProvider } from 'framework/strings/StringsContextProvider'
-import { getLoginPageURL } from 'framework/utils/SessionUtils'
+import { useLogout } from 'framework/utils/SessionUtils'
 import { NGTooltipEditorPortal } from 'framework/tooltip/TooltipEditor'
 import SecureStorage from 'framework/utils/SecureStorage'
 import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
 import { useRefreshToken } from 'services/portal'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-
-import './App.scss'
-import routes from '@common/RouteDefinitions'
-import { returnUrlParams } from '@common/utils/routeUtils'
+import { REFERER_URL } from '@common/utils/utils'
 import { PermissionsProvider } from 'framework/rbac/PermissionsContext'
 import { FeaturesProvider } from 'framework/featureStore/FeaturesContext'
 import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
 import { useGlobalEventListener } from '@common/hooks'
-import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
 import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
+import './App.scss'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
+const TOO_MANY_REQUESTS_MESSAGE = 'Too many requests received, please try again later'
+
 FocusStyleManager.onlyShowFocusOnTabs()
+SecureStorage.registerCleanupException(PREFERENCES_TOP_LEVEL_KEY)
+SecureStorage.registerCleanupException(MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY)
+SecureStorage.registerCleanupException(HELP_PANEL_STORAGE_KEY)
+SecureStorage.registerCleanupException(REFERER_URL)
 
 // set up Immer
 setAutoFreeze(false)
@@ -56,7 +65,7 @@ interface AppProps {
 const Harness = (window.Harness = window.Harness || {})
 const PREVIEW_TOOLTIP_DATASET_KEY = 'previewTooltipDataset'
 
-const getRequestOptions = (): Partial<RequestInit> => {
+export const getRequestOptions = (): Partial<RequestInit> => {
   const token = SessionToken.getToken()
   const headers: RequestInit['headers'] = {}
 
@@ -73,7 +82,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   // always use accountId from URL, and not from local storage
   // if user lands on /, they'll first get redirected to a path with accountId
   const { accountId } = useParams<AccountPathProps>()
-  const history = useHistory()
+  const { forceLogout } = useLogout()
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -93,12 +102,9 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   useEffect(() => {
     const token = SessionToken.getToken()
     if (!token) {
-      history.push({
-        pathname: routes.toRedirect(),
-        search: returnUrlParams(getLoginPageURL({ returnUrl: window.location.href }))
-      })
+      forceLogout()
     }
-  }, [history])
+  }, [forceLogout])
 
   useEffect(() => {
     if (refreshTokenResponse?.resource) {
@@ -123,28 +129,10 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   Harness.openTooltipEditor = () => setShowTooltipEditor(true)
 
   const globalResponseHandler = (response: Response): void => {
-    const token = SessionToken.getToken()
     if (!response.ok) {
       switch (response.status) {
         case 401: {
-          if (token) {
-            const lastTokenSetTime = SessionToken.getLastTokenSetTime() as number
-            window.bugsnagClient?.notify?.(
-              new Error('Logout with token'),
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              function (event: any) {
-                event.severity = 'error'
-                event.setUser(username)
-                event.addMetadata('401 Details', {
-                  url: response.url,
-                  status: response.status,
-                  accountId,
-                  lastTokenSetTime
-                })
-              }
-            )
-          }
-          global401HandlerUtils(history)
+          forceLogout()
           return
         }
         case 400: {
@@ -157,7 +145,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
               )
               if (notWhiteListedMessage) {
                 showError(notWhiteListedMessage.message)
-                global401HandlerUtils(history)
+                forceLogout()
               }
             })
             .catch(() => {
@@ -174,6 +162,15 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
                   })
                 }
               )
+            })
+          return
+        }
+        case 429: {
+          response
+            .clone()
+            .json()
+            .then(res => {
+              showError(res.message || TOO_MANY_REQUESTS_MESSAGE)
             })
         }
       }

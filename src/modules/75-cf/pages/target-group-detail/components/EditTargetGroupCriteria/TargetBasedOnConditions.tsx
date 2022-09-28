@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, useMemo } from 'react'
+import React, { FC, Fragment, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, ButtonVariation, Heading, PageError, SelectOption } from '@wings-software/uicore'
+import { Button, ButtonVariation, Heading, PageError, SelectOption, Tag } from '@harness/uicore'
 import { FieldArray } from 'formik'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -22,9 +22,10 @@ import sectionCss from './Section.module.scss'
 export interface TargetBasedOnConditionsProps {
   targetGroup: Segment
   values: { rules: Clause[] }
+  setFieldValue: (name: string, value: [string]) => void
 }
 
-const TargetBasedOnConditions: FC<TargetBasedOnConditionsProps> = ({ targetGroup, values }) => {
+const TargetBasedOnConditions: FC<TargetBasedOnConditionsProps> = ({ targetGroup, values, setFieldValue }) => {
   const { getString } = useStrings()
 
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
@@ -78,12 +79,22 @@ const TargetBasedOnConditions: FC<TargetBasedOnConditionsProps> = ({ targetGroup
                 {values.rules.length > 0 && (
                   <div className={css.rows} data-testid="rule-rows">
                     {values.rules.map((_, index) => (
-                      <RuleRow
-                        key={index}
-                        namePrefix={`${arrayHelpers.name}[${index}]`}
-                        targetAttributeItems={targetAttributeItems}
-                        onDelete={() => arrayHelpers.remove(index)}
-                      />
+                      <Fragment key={index}>
+                        {!index ? (
+                          <span />
+                        ) : (
+                          <Tag minimal className={css.orTag}>
+                            {getString('common.or')}
+                          </Tag>
+                        )}
+                        <RuleRow
+                          namePrefix={`${arrayHelpers.name}[${index}]`}
+                          targetAttributeItems={targetAttributeItems}
+                          onDelete={() => arrayHelpers.remove(index)}
+                          selectedOp={values.rules[index].op}
+                          setFieldValue={setFieldValue}
+                        />
+                      </Fragment>
                     ))}
                   </div>
                 )}

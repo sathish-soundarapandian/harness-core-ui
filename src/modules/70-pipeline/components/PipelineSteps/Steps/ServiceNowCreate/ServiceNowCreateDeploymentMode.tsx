@@ -17,7 +17,6 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type {
@@ -36,6 +35,7 @@ import {
   getInitialValueForSelectedField,
   setServiceNowFieldAllowedValuesOptions
 } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/helper'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { getGenuineValue } from '../ServiceNowApproval/helper'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 
@@ -153,7 +153,7 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
   return (
     <React.Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <FormMultiTypeDurationField
+        <TimeoutFieldInputSetView
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
@@ -164,6 +164,8 @@ function FormContent(formContentProps: ServiceNowCreateDeploymentModeFormContent
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
           disabled={isApprovalStepFieldDisabled(readonly)}
+          template={template}
+          fieldPath={'timeout'}
         />
       ) : null}
 

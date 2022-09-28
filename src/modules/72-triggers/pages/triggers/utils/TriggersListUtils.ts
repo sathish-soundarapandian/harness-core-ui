@@ -8,6 +8,7 @@
 import type { IconName } from '@wings-software/uicore'
 // temporary mock data
 import { parse } from 'yaml'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type { AddDrawerMapInterface } from '@common/components/AddDrawer/AddDrawer'
 import type { StringKeys } from 'framework/strings'
 import {
@@ -22,10 +23,14 @@ import {
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerTypes, AWS_CODECOMMIT, AwsCodeCommit } from './TriggersWizardPageUtils'
 
-export const GitSourceProviders: Record<string, { value: string; iconName: IconName }> = {
+export const GitSourceProviders: Record<
+  string,
+  { value: ConnectorInfoDTO['type'] | 'AwsCodeCommit' | 'Custom'; iconName: IconName }
+> = {
   GITHUB: { value: 'Github', iconName: 'github' },
   GITLAB: { value: 'Gitlab', iconName: 'service-gotlab' },
   BITBUCKET: { value: 'Bitbucket', iconName: 'bitbucket-selected' },
+  AZURE_REPO: { value: 'AzureRepo', iconName: 'service-azure' },
   AWS_CODECOMMIT: { value: 'AwsCodeCommit', iconName: 'service-aws-code-deploy' },
   CUSTOM: { value: 'Custom', iconName: 'build' }
 }
@@ -65,12 +70,16 @@ export const getTriggerIcon = ({
         return ArtifactIconByType.DockerRegistry
       case ENABLED_ARTIFACT_TYPES.Acr:
         return ArtifactIconByType.Acr
+      case ENABLED_ARTIFACT_TYPES.AmazonS3:
+        return ArtifactIconByType.AmazonS3
+      case ENABLED_ARTIFACT_TYPES.Jenkins:
+        return ArtifactIconByType.Jenkins
     }
   }
   return 'yaml-builder-trigger'
 }
 
-const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapInterface => ({
+const triggerDrawerMap = (getString: (key: StringKeys) => string, isNewService: boolean): AddDrawerMapInterface => ({
   drawerLabel: getString('common.triggersLabel'),
   showAllLabel: getString('triggers.showAllTriggers'),
   categories: [
@@ -94,6 +103,11 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
           iconName: GitSourceProviders.BITBUCKET.iconName
         },
         {
+          itemLabel: getString('common.repo_provider.azureRepos'),
+          value: GitSourceProviders.AZURE_REPO.value,
+          iconName: GitSourceProviders.AZURE_REPO.iconName
+        },
+        {
           itemLabel: getString('common.repo_provider.awscodecommit'),
           value: GitSourceProviders.AWS_CODECOMMIT.value,
           iconName: GitSourceProviders.AWS_CODECOMMIT.iconName
@@ -105,6 +119,14 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
         }
       ]
     },
+    ...(isNewService
+      ? [
+          {
+            categoryLabel: getString('common.comingSoon'),
+            categoryValue: 'ArtifactComingSoon'
+          }
+        ]
+      : []),
     {
       categoryLabel: getString('pipeline.artifactTriggerConfigPanel.artifact'),
       categoryValue: 'Artifact',
@@ -112,42 +134,67 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Gcr]),
           value: ENABLED_ARTIFACT_TYPES.Gcr,
-          iconName: ArtifactIconByType.Gcr
+          iconName: ArtifactIconByType.Gcr,
+          disabled: isNewService
         },
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Ecr]),
           value: ENABLED_ARTIFACT_TYPES.Ecr,
-          iconName: ArtifactIconByType.Ecr
+          iconName: ArtifactIconByType.Ecr,
+          disabled: isNewService
         },
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.DockerRegistry]),
           value: ENABLED_ARTIFACT_TYPES.DockerRegistry,
-          iconName: ArtifactIconByType.DockerRegistry
+          iconName: ArtifactIconByType.DockerRegistry,
+          disabled: isNewService
         },
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry]),
           value: ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-          iconName: ArtifactIconByType.ArtifactoryRegistry
+          iconName: ArtifactIconByType.ArtifactoryRegistry,
+          disabled: isNewService
         },
         {
           itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr]),
           value: ENABLED_ARTIFACT_TYPES.Acr,
-          iconName: ArtifactIconByType.Acr
-        }
-      ]
-    },
-    {
-      categoryLabel: getString('common.comingSoon'),
-      categoryValue: 'ArtifactComingSoon',
-      items: [
+          iconName: ArtifactIconByType.Acr,
+          disabled: isNewService
+        },
         {
-          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
-          value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-          iconName: ArtifactIconByType.Nexus3Registry,
-          disabled: true
-        }
+          itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonS3]),
+          value: ENABLED_ARTIFACT_TYPES.AmazonS3,
+          iconName: ArtifactIconByType.AmazonS3 as IconName,
+          disabled: isNewService
+        },
+        ...(isNewService
+          ? [
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
+                value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+                iconName: ArtifactIconByType.Nexus3Registry as IconName,
+                disabled: true
+              }
+            ]
+          : [])
       ]
     },
+    ...(!isNewService
+      ? [
+          {
+            categoryLabel: getString('common.comingSoon'),
+            categoryValue: 'ArtifactComingSoon',
+            items: [
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
+                value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+                iconName: ArtifactIconByType.Nexus3Registry as IconName,
+                disabled: true
+              }
+            ]
+          }
+        ]
+      : []),
     {
       categoryLabel: getString('manifestsText'),
       categoryValue: 'Manifest',
@@ -155,7 +202,8 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string): AddDrawerMapI
         {
           itemLabel: getString(manifestTypeLabels.HelmChart),
           value: ManifestDataType.HelmChart,
-          iconName: manifestTypeIcons.HelmChart
+          iconName: manifestTypeIcons.HelmChart,
+          disabled: isNewService
         }
       ]
     },
@@ -177,12 +225,15 @@ export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { 
   { label: getString('common.repo_provider.githubLabel'), value: GitSourceProviders.GITHUB.value },
   { label: getString('common.repo_provider.gitlabLabel'), value: GitSourceProviders.GITLAB.value },
   { label: getString('common.repo_provider.bitbucketLabel'), value: GitSourceProviders.BITBUCKET.value },
+  { label: getString('common.repo_provider.azureRepos'), value: GitSourceProviders.AZURE_REPO.value },
   { label: getString('common.repo_provider.codecommit'), value: GitSourceProviders.AWS_CODECOMMIT.value },
   { label: getString('common.repo_provider.customLabel'), value: GitSourceProviders.CUSTOM.value }
 ]
 
-export const getCategoryItems = (getString: (key: StringKeys) => string): AddDrawerMapInterface =>
-  triggerDrawerMap(getString)
+export const getCategoryItems = (
+  getString: (key: StringKeys) => string,
+  isNewService: boolean
+): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService)
 
 export interface ItemInterface {
   itemLabel: string
@@ -198,6 +249,7 @@ export interface TriggerDataInterface {
   sourceRepo?: string
   manifestType?: string
   artifactType?: string
+  scheduleType?: string
 }
 
 export const getEnabledStatusTriggerValues = ({

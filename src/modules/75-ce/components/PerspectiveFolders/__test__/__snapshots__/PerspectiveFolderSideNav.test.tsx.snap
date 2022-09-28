@@ -1,15 +1,45 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Test cases for perspective folder side nav Should render side nav item 1`] = `
+<div>
+  <li
+    class="link active"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+    >
+      <p
+        class="StyledProps--font Text--lineclamp StyledProps--main css.sidenavText activeFolder StyledProps--font-variation-body"
+        style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
+      >
+        <span
+          class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-primary7"
+          data-icon="main-folder"
+        >
+          <svg
+            height="16"
+            viewBox="0 0 14 11"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 10.3c0 .4.3.7.7.7h12.6c.4 0 .7-.3.7-.7V3.4H0zm13.3-8.9H6.6L5.4.2C5.3.1 5.1 0 4.9 0H.7C.3 0 0 .3 0 .7v2.1h14v-.7c0-.4-.3-.7-.7-.7z"
+              fill="#4d5969"
+            />
+          </svg>
+        </span>
+        
+      </p>
+    </div>
+  </li>
+</div>
+`;
+
 exports[`Test cases for perspective folder side nav Should render the folders list as side nav 1`] = `
 <div>
   <div
     class="Layout--vertical Layout--layout-spacing-small StyledProps--main sidenavWrapper"
   >
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-variation-h6 StyledProps--padding-top-xlarge StyledProps--padding-left-xxlarge"
-    >
-      ce.perspectives.folders.heading
-    </p>
     <ul
       class="foldersList"
     >
@@ -20,41 +50,11 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
             style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
-              data-icon="main-folder"
-            >
-              <svg
-                height="16"
-                viewBox="0 0 14 11"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 10.3c0 .4.3.7.7.7h12.6c.4 0 .7-.3.7-.7V3.4H0zm13.3-8.9H6.6L5.4.2C5.3.1 5.1 0 4.9 0H.7C.3 0 0 .3 0 .7v2.1h14v-.7c0-.4-.3-.7-.7-.7z"
-                  fill="#4d5969"
-                />
-              </svg>
-            </span>
-            Default Folder
-          </p>
-        </div>
-      </li>
-      <li
-        class="link"
-      >
-        <div
-          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
-        >
-          <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
-            style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
-          >
-            <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
               data-icon="harness-with-color"
             >
               <svg
@@ -74,6 +74,37 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           </p>
         </div>
       </li>
+      <li
+        class="link active"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        >
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText activeFolder StyledProps--font-variation-body"
+            style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
+          >
+            <span
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-primary7"
+              data-icon="dashboard"
+            >
+              <svg
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M8.656 2H14v4H8.656zm0 12V7.344H14V14zM2 14v-4h5.344v4zm0-5.344V2h5.344v6.656z"
+                  fill="#fff"
+                  opacity="0.691"
+                />
+              </svg>
+            </span>
+            ce.perspectives.folders.allPerspective
+          </p>
+        </div>
+      </li>
     </ul>
     <div
       class="StyledProps--font StyledProps--main customFoldersNav"
@@ -83,6 +114,38 @@ exports[`Test cases for perspective folder side nav Should render the folders li
       >
         ce.perspectives.folders.customFolders
       </p>
+      <div
+        class="bp3-input-group ui-search-box ExpandingSearchInput--main searchInput ExpandingSearchInput--flip  ExpandingSearchInput--light"
+        data-name=""
+      >
+        <span
+          class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+          data-icon="thinner-search"
+        >
+          <svg
+            fill="none"
+            height="14"
+            viewBox="0 0 16 16"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+        <input
+          class="bp3-input  ExpandingSearchInput--filter"
+          dir="auto"
+          placeholder="search"
+          style="padding-right: 0px;"
+          type="search"
+          value=""
+        />
+      </div>
       <button
         class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
         style="justify-content: flex-start; padding-left: 0px;"
@@ -124,11 +187,11 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
             style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
               data-icon="main-folder"
             >
               <svg
@@ -145,32 +208,6 @@ exports[`Test cases for perspective folder side nav Should render the folders li
             </span>
             Abhijeet-Test
           </p>
-          <span
-            class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-primary6"
-            data-icon="main-trash"
-            data-testid="deleteFolder"
-          >
-            <svg
-              height="16"
-              viewBox="0 0 16 20"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clip-rule="evenodd"
-                d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                fill="currentColor"
-                fill-rule="evenodd"
-              />
-              <path
-                clip-rule="evenodd"
-                d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                fill="currentColor"
-                fill-rule="evenodd"
-                opacity="0.3"
-              />
-            </svg>
-          </span>
         </div>
       </li>
       <li
@@ -180,11 +217,11 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
             style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
               data-icon="main-folder"
             >
               <svg
@@ -201,32 +238,6 @@ exports[`Test cases for perspective folder side nav Should render the folders li
             </span>
             Default Folder
           </p>
-          <span
-            class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-primary6"
-            data-icon="main-trash"
-            data-testid="deleteFolder"
-          >
-            <svg
-              height="16"
-              viewBox="0 0 16 20"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clip-rule="evenodd"
-                d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                fill="currentColor"
-                fill-rule="evenodd"
-              />
-              <path
-                clip-rule="evenodd"
-                d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                fill="currentColor"
-                fill-rule="evenodd"
-                opacity="0.3"
-              />
-            </svg>
-          </span>
         </div>
       </li>
       <li
@@ -236,11 +247,41 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
             style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
+              data-icon="main-folder"
+            >
+              <svg
+                height="16"
+                viewBox="0 0 14 11"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 10.3c0 .4.3.7.7.7h12.6c.4 0 .7-.3.7-.7V3.4H0zm13.3-8.9H6.6L5.4.2C5.3.1 5.1 0 4.9 0H.7C.3 0 0 .3 0 .7v2.1h14v-.7c0-.4-.3-.7-.7-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
+            Default Folder
+          </p>
+        </div>
+      </li>
+      <li
+        class="link"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+        >
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
+            style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
+          >
+            <span
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
               data-icon="main-folder"
             >
               <svg
@@ -257,32 +298,6 @@ exports[`Test cases for perspective folder side nav Should render the folders li
             </span>
             Move here
           </p>
-          <span
-            class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-primary6"
-            data-icon="main-trash"
-            data-testid="deleteFolder"
-          >
-            <svg
-              height="16"
-              viewBox="0 0 16 20"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clip-rule="evenodd"
-                d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                fill="currentColor"
-                fill-rule="evenodd"
-              />
-              <path
-                clip-rule="evenodd"
-                d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                fill="currentColor"
-                fill-rule="evenodd"
-                opacity="0.3"
-              />
-            </svg>
-          </span>
         </div>
       </li>
       <li
@@ -292,11 +307,11 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
             style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
               data-icon="main-folder"
             >
               <svg
@@ -313,32 +328,6 @@ exports[`Test cases for perspective folder side nav Should render the folders li
             </span>
             Test
           </p>
-          <span
-            class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-primary6"
-            data-icon="main-trash"
-            data-testid="deleteFolder"
-          >
-            <svg
-              height="16"
-              viewBox="0 0 16 20"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clip-rule="evenodd"
-                d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                fill="currentColor"
-                fill-rule="evenodd"
-              />
-              <path
-                clip-rule="evenodd"
-                d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                fill="currentColor"
-                fill-rule="evenodd"
-                opacity="0.3"
-              />
-            </svg>
-          </span>
         </div>
       </li>
       <li
@@ -348,11 +337,11 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
             style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
               data-icon="main-folder"
             >
               <svg
@@ -369,32 +358,6 @@ exports[`Test cases for perspective folder side nav Should render the folders li
             </span>
             Test123
           </p>
-          <span
-            class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-primary6"
-            data-icon="main-trash"
-            data-testid="deleteFolder"
-          >
-            <svg
-              height="16"
-              viewBox="0 0 16 20"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clip-rule="evenodd"
-                d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                fill="currentColor"
-                fill-rule="evenodd"
-              />
-              <path
-                clip-rule="evenodd"
-                d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                fill="currentColor"
-                fill-rule="evenodd"
-                opacity="0.3"
-              />
-            </svg>
-          </span>
         </div>
       </li>
       <li
@@ -404,11 +367,11 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
             style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
               data-icon="main-folder"
             >
               <svg
@@ -425,32 +388,6 @@ exports[`Test cases for perspective folder side nav Should render the folders li
             </span>
             adfnlajdgblj
           </p>
-          <span
-            class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-primary6"
-            data-icon="main-trash"
-            data-testid="deleteFolder"
-          >
-            <svg
-              height="16"
-              viewBox="0 0 16 20"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clip-rule="evenodd"
-                d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                fill="currentColor"
-                fill-rule="evenodd"
-              />
-              <path
-                clip-rule="evenodd"
-                d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                fill="currentColor"
-                fill-rule="evenodd"
-                opacity="0.3"
-              />
-            </svg>
-          </span>
         </div>
       </li>
       <li
@@ -460,11 +397,11 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
             style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
               data-icon="main-folder"
             >
               <svg
@@ -481,32 +418,6 @@ exports[`Test cases for perspective folder side nav Should render the folders li
             </span>
             sv-test-folder-1
           </p>
-          <span
-            class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-primary6"
-            data-icon="main-trash"
-            data-testid="deleteFolder"
-          >
-            <svg
-              height="16"
-              viewBox="0 0 16 20"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clip-rule="evenodd"
-                d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                fill="currentColor"
-                fill-rule="evenodd"
-              />
-              <path
-                clip-rule="evenodd"
-                d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                fill="currentColor"
-                fill-rule="evenodd"
-                opacity="0.3"
-              />
-            </svg>
-          </span>
         </div>
       </li>
       <li
@@ -516,11 +427,11 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
             style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
               data-icon="main-folder"
             >
               <svg
@@ -537,32 +448,6 @@ exports[`Test cases for perspective folder side nav Should render the folders li
             </span>
             sv-test-folder-2
           </p>
-          <span
-            class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-primary6"
-            data-icon="main-trash"
-            data-testid="deleteFolder"
-          >
-            <svg
-              height="16"
-              viewBox="0 0 16 20"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clip-rule="evenodd"
-                d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                fill="currentColor"
-                fill-rule="evenodd"
-              />
-              <path
-                clip-rule="evenodd"
-                d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                fill="currentColor"
-                fill-rule="evenodd"
-                opacity="0.3"
-              />
-            </svg>
-          </span>
         </div>
       </li>
       <li
@@ -572,11 +457,11 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
             style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
               data-icon="main-folder"
             >
               <svg
@@ -593,32 +478,6 @@ exports[`Test cases for perspective folder side nav Should render the folders li
             </span>
             test1123
           </p>
-          <span
-            class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-primary6"
-            data-icon="main-trash"
-            data-testid="deleteFolder"
-          >
-            <svg
-              height="16"
-              viewBox="0 0 16 20"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clip-rule="evenodd"
-                d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                fill="currentColor"
-                fill-rule="evenodd"
-              />
-              <path
-                clip-rule="evenodd"
-                d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                fill="currentColor"
-                fill-rule="evenodd"
-                opacity="0.3"
-              />
-            </svg>
-          </span>
         </div>
       </li>
       <li
@@ -628,11 +487,11 @@ exports[`Test cases for perspective folder side nav Should render the folders li
           class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
         >
           <p
-            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body StyledProps--color StyledProps--color-grey700"
+            class="StyledProps--font Text--lineclamp StyledProps--main sidenavText StyledProps--font-variation-body"
             style="max-width: 200px; --text-line-clamp: 1; display: flex; align-items: center;"
           >
             <span
-              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-xsmall"
+              class="bp3-icon StyledProps--main Text--icon StyledProps--padding-right-small StyledProps--color StyledProps--color-grey600"
               data-icon="main-folder"
             >
               <svg
@@ -649,32 +508,6 @@ exports[`Test cases for perspective folder side nav Should render the folders li
             </span>
             testSahil
           </p>
-          <span
-            class="bp3-icon StyledProps--main icon StyledProps--color StyledProps--color-primary6"
-            data-icon="main-trash"
-            data-testid="deleteFolder"
-          >
-            <svg
-              height="16"
-              viewBox="0 0 16 20"
-              width="16"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                clip-rule="evenodd"
-                d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
-                fill="currentColor"
-                fill-rule="evenodd"
-              />
-              <path
-                clip-rule="evenodd"
-                d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
-                fill="currentColor"
-                fill-rule="evenodd"
-                opacity="0.3"
-              />
-            </svg>
-          </span>
         </div>
       </li>
     </ul>

@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -17,10 +17,11 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { JiraApprovalDeploymentModeProps } from './types'
 import css from './JiraApproval.module.scss'
@@ -38,8 +39,8 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
   const { expressions } = useVariablesExpression()
   return (
     <React.Fragment>
-      {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <FormMultiTypeDurationField
+      {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
+        <TimeoutFieldInputSetView
           name={`${prefix}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
@@ -50,8 +51,10 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
           disabled={isApprovalStepFieldDisabled(readonly)}
+          fieldPath="timeout"
+          template={template}
         />
-      ) : null}
+      )}
 
       {getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME ? (
         <FormMultiTypeConnectorField
@@ -75,7 +78,7 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.issueKey) === MultiTypeInputType.RUNTIME ? (
-        <FormInput.MultiTextInput
+        <TextFieldInputSetView
           label={getString('pipeline.jiraApprovalStep.issueKey')}
           name={`${prefix}spec.issueKey`}
           multiTextInputProps={{
@@ -84,6 +87,8 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
             allowableTypes
           }}
           className={css.deploymentViewMedium}
+          fieldPath="spec.issueKey"
+          template={template}
         />
       ) : null}
 

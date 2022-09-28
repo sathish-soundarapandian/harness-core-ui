@@ -7,7 +7,7 @@
 
 import fs from 'fs'
 import path from 'path'
-import yaml from 'yaml'
+import yaml from 'js-yaml'
 import _ from 'lodash'
 
 import { getLayers } from './utils/HarnessModulesUtils.cjs'
@@ -17,7 +17,7 @@ const layers = await getLayers()
 const flattenedLayers = _.flatten(layers)
 const modulesPath = path.resolve(process.cwd(), 'src/modules')
 const eslintConfigPath = path.resolve(process.cwd(), '.eslintrc.yml')
-const eslintConfig = yaml.parse(fs.readFileSync(eslintConfigPath, 'utf8'))
+const eslintConfig = yaml.load(fs.readFileSync(eslintConfigPath, 'utf8'))
 
 const noRestrictedImports = eslintConfig.rules['no-restricted-imports']
 
@@ -27,27 +27,54 @@ for (const { dirName, moduleName } of flattenedLayers) {
   const restrictedLayers = layers.slice(layerIndex)
   const restrictedDirs = _.flatten(restrictedLayers).filter(mod => dirName !== mod.dirName)
 
-  const config = {}
-
-  if (fs.existsSync(path.join(modulePath, 'custom.eslintrc.yml'))) {
-    config.extends = ['./custom.eslintrc.yml']
+  const config = {
+    rules: {
+      'no-restricted-imports': [
+        noRestrictedImports[0],
+        {
+          patterns: [
+            ...noRestrictedImports[1].patterns,
+            ...restrictedDirs.map(mod => `modules/${mod.dirName}/*`),
+            ...restrictedDirs.map(mod => `@${mod.moduleName}/*`)
+          ],
+          paths: [...noRestrictedImports[1].paths]
+        }
+      ]
+    }
   }
 
-  config.rules = {
-    'no-restricted-imports': [
-      noRestrictedImports[0],
-      {
-        patterns: [
-          ...noRestrictedImports[1].patterns,
-          ...restrictedDirs.map(mod => `modules/${mod.dirName}/*`),
-          ...restrictedDirs.map(mod => `@${mod.moduleName}/*`)
-        ],
-        paths: [...noRestrictedImports[1].paths]
-      }
-    ]
+  const customConfigFile = path.join(modulePath, 'custom.eslintrc.yml')
+
+  if (fs.existsSync(customConfigFile)) {
+    const customConfig = yaml.load(fs.readFileSync(customConfigFile), 'utf8')
+    console.log('customConfig', customConfig)
+
+    if (customConfig.rules) {
+      Object.entries(customConfig.rules).forEach(([rule, ruleConfig]) => {
+        console.log('rule', rule)
+        if (rule === 'no-restricted-imports') {
+          const patterns = _.get(ruleConfig, '[1].patterns')
+          const paths = _.get(ruleConfig, '[1].paths')
+
+          if (patterns) {
+            config.rules[rule][1].patterns.push(...patterns)
+          }
+
+          if (paths) {
+            config.rules[rule][1].paths.push(...paths)
+          }
+        } else {
+          config.rules[rule] = ruleConfig
+        }
+      })
+    }
+
+    if (customConfig.overrides) {
+      config.overrides = customConfig.overrides
+    }
   }
 
-  let content = yaml.stringify(config)
+  let content = yaml.dump(config, { noRefs: true, lineWidth: -1 })
   content = await runPrettier(content, 'yaml')
 
   await fs.promises.writeFile(path.join(modulePath, '.eslintrc.yml'), content, 'utf8')

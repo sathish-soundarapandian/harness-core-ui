@@ -18,6 +18,10 @@ jest.mock('services/portal', () => ({
   useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return []
+  }),
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
   })
 }))
 const props = {
@@ -78,7 +82,8 @@ const props = {
     when: { condition: '<+input>' }
   },
   path: 'stages[1].stage',
-  delegateSelectors: '<+input>'
+  delegateSelectors: '<+input>',
+  skipInstances: '<+input>'
 } as any
 
 describe('StageAdvancedInputSetForm tests', () => {

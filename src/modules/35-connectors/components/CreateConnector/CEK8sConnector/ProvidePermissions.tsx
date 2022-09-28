@@ -30,8 +30,8 @@ import { CE_K8S_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import { useMutateAsGet } from '@common/hooks'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { FeatureFlag } from '@common/featureFlags'
-import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import CopyCodeSection from './components/CopyCodeSection'
@@ -68,11 +68,9 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
   const { mutate: updateConnector } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
-  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
-    errorOutOnGovernanceWarning: false,
-    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
-  })
-  const { data: permissionsYaml } = useMutateAsGet(useCloudCostK8sClusterSetup, {
+
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
+  const { data: permissionsYaml, loading: yamlLoading } = useMutateAsGet(useCloudCostK8sClusterSetup, {
     queryParams: {
       accountIdentifier: accountId
     },
@@ -110,10 +108,14 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
         } as ConnectorInfoDTO
       }
       const response = props.isEditMode ? await updateConnector(connector) : await createConnector(connector)
-      const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
-      if (canGoToNextStep) {
+      const nextSteps = () => {
         props.onSuccess?.(response?.data as ConnectorRequestBody)
         props.nextStep?.({ ...props.prevStepData } as ConnectorInfoDTO)
+      }
+      if (response.data?.governanceMetadata) {
+        conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, nextSteps)
+      } else {
+        nextSteps()
       }
     } catch (e) {
       modalErrorHandler?.showDanger(getRBACErrorMessage(e))
@@ -136,7 +138,7 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
       <Text icon={'info'} iconProps={{ color: Color.PRIMARY_7 }} color={Color.PRIMARY_7}>
         {getString('connectors.ceK8.providePermissionsStep.info')}
         <a
-          href="https://ngdocs.harness.io/article/ltt65r6k39-set-up-cost-visibility-for-kubernetes#prerequisites"
+          href="https://docs.harness.io/article/ltt65r6k39-set-up-cost-visibility-for-kubernetes#prerequisites"
           target="_blank"
           rel="noreferrer"
         >
@@ -168,6 +170,7 @@ const ProvidePermissions: React.FC<StepProps<StepSecretManagerProps> & ProvidePe
             onClick={handleDownload}
             text={getString('connectors.ceK8.providePermissionsStep.downloadYamlBtnText')}
             className={css.stepBtn}
+            disabled={yamlLoading}
           />
         )}
         {isDownloadComplete && (

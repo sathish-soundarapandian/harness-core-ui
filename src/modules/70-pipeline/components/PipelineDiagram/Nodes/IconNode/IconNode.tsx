@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react'
-import { isEmpty } from 'lodash-es'
+import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import cx from 'classnames'
 import { Text, IconName, Icon, Button, ButtonVariation } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
@@ -14,26 +14,32 @@ import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
 import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../types'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon } from '../utils'
+import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './IconNode.module.scss'
 
 interface IconNodeProps extends BaseReactComponentProps {
   isInComplete?: boolean
   graphType?: PipelineGraphType
+  matrixNodeName?: boolean
 }
 export function IconNode(props: IconNodeProps): React.ReactElement {
   const allowAdd = props.allowAdd ?? false
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
   const CreateNode: React.FC<BaseReactComponentProps> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
 
+  const matrixNodeName = defaultTo(props?.matrixNodeName, props?.data?.matrixNodeName)
   const setAddVisibility = (visibility: boolean): void => {
     if (!allowAdd) {
       return
     }
     setVisibilityOfAdd(visibility)
   }
+  const debounceHideVisibility = debounce(() => {
+    setVisibilityOfAdd(false)
+  }, 300)
   const isSelectedNode = (): boolean => props.isSelected || props.id === props?.selectedNodeId
-  const onDropEvent = (event: React.DragEvent) => {
+  const onDropEvent = (event: React.DragEvent): void => {
     event.stopPropagation()
 
     props?.fireEvent?.({
@@ -62,7 +68,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
         event.stopPropagation()
 
         if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
-          setAddVisibility(false)
+          debounceHideVisibility()
         }
       }}
       onClick={event => {
@@ -166,15 +172,20 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
             lineClamp={2}
+            tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {props.name}
+            {defaultTo(matrixNodeName, props?.data?.matrixNodeName) ? (
+              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as string} />
+            ) : (
+              props.name
+            )}
           </Text>
         </div>
       )}
       {allowAdd && !props.readonly && CreateNode ? (
         <CreateNode
           onMouseOver={() => setAddVisibility(true)}
-          onMouseLeave={() => setAddVisibility(false)}
+          onMouseLeave={debounceHideVisibility}
           onDragOver={() => setAddVisibility(true)}
           onDrop={onDropEvent}
           onClick={(event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -219,7 +230,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
             cssDefault.addNodeIcon,
             cssDefault.left,
             {
-              [cssDefault.stepAddIcon]: props.data.graphType === PipelineGraphType.STEP_GRAPH
+              ['stepAddIcon']: props.data.graphType === PipelineGraphType.STEP_GRAPH
             },
             {
               [cssDefault.stageAddIcon]: props.data.graphType === PipelineGraphType.STAGE_GRAPH
@@ -228,7 +239,8 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
         />
       )}
       {(props?.nextNode?.nodeType === NodeType.StepGroupNode || (!props?.nextNode && props?.parentIdentifier)) &&
-        !props.isParallelNode && (
+        !props.isParallelNode &&
+        !props.readonly && (
           <AddLinkNode<IconNodeProps>
             nextNode={props?.nextNode}
             style={{ right: getPositionOfAddIcon(props, true) }}
@@ -244,7 +256,7 @@ export function IconNode(props: IconNodeProps): React.ReactElement {
               cssDefault.addNodeIcon,
               cssDefault.right,
               {
-                [cssDefault.stepAddIcon]: props.data.graphType === PipelineGraphType.STEP_GRAPH
+                ['stepAddIcon']: props.data.graphType === PipelineGraphType.STEP_GRAPH
               },
               {
                 [cssDefault.stageAddIcon]: props.data.graphType === PipelineGraphType.STAGE_GRAPH

@@ -5,15 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import moment from 'moment'
 import { RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import type { UseStringsReturn } from 'framework/strings'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { RegExAllowedInputExpression } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
+import { StageType } from '@pipeline/utils/stageHelpers'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { Connectors, connectorUrlType } from '@connectors/constants'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ConnectorRefWidth } from './constants'
 
@@ -24,8 +29,8 @@ export function getShortCommitId(commitId: string): string {
 const cloneCodebaseKeyRef = 'stage.spec.cloneCodebase'
 
 export enum CodebaseTypes {
-  branch = 'branch',
-  tag = 'tag',
+  BRANCH = 'branch',
+  TAG = 'tag',
   PR = 'PR'
 }
 
@@ -73,15 +78,12 @@ export const getAllowedValuesFromTemplate = (template: Record<string, any>, fiel
     return []
   }
   const value = get(template, fieldPath, '')
-  const items: SelectOption[] = []
-  if (RegExAllowedInputExpression.test(value as string)) {
-    // This separates out "<+input>.allowedValues(a, b, c)" to ["<+input>", ["a", "b", "c"]]
-    const match = (value as string).match(RegExAllowedInputExpression)
-    if (match && match?.length > 1) {
-      const allowedValues = match[1]
-      items.push(...allowedValues.split(',').map(item => ({ label: item, value: item })))
-    }
-  }
+  const parsedInput = parseInput(value)
+  const items: SelectOption[] = defaultTo(parsedInput?.allowedValues?.values, []).map(item => ({
+    label: item,
+    value: item
+  }))
+
   return items
 }
 
@@ -104,7 +106,8 @@ export const shouldRenderRunTimeInputViewWithAllowedValues = (
     return false
   }
   const allowedValues = get(template, fieldPath, '')
-  return shouldRenderRunTimeInputView(allowedValues) && RegExAllowedInputExpression.test(allowedValues)
+  const parsedInput = parseInput(allowedValues)
+  return shouldRenderRunTimeInputView(allowedValues) && !!parsedInput?.allowedValues?.values
 }
 
 export const getConnectorRefWidth = (viewType: StepViewType | string): number =>
@@ -141,3 +144,58 @@ export const getPipelineWithoutCodebaseInputs = (values: { [key: string]: any })
     return newValues
   }
 }
+
+export const getCodebaseRepoNameFromConnector = (
+  codebaseConnector: ConnectorInfoDTO,
+  getString: UseStringsReturn['getString']
+): string => {
+  let repoName = ''
+  const connectorGitScope = get(codebaseConnector, 'spec.type', '')
+  if (connectorGitScope === connectorUrlType.REPO) {
+    const repoURL: string = get(codebaseConnector, 'spec.url')
+    const gitProviderURL = getGitUrl(getString, get(codebaseConnector, 'type'))
+    repoName = gitProviderURL ? extractRepoNameFromUrl(repoURL.split(gitProviderURL)?.[1]) : ''
+  } else if (connectorGitScope === connectorUrlType.ACCOUNT || connectorGitScope === connectorUrlType.PROJECT) {
+    repoName = get(codebaseConnector, 'spec.validationRepo', '')
+  }
+  return repoName
+}
+
+const extractRepoNameFromUrl = (repoURL: string): string => {
+  if (!repoURL) {
+    return ''
+  }
+  const tokens = repoURL.split('/')
+  return tokens.length > 0 ? tokens[tokens.length - 1] : ''
+}
+
+export const getGitUrl = (
+  getString: UseStringsReturn['getString'],
+  connectorType?: ConnectorInfoDTO['type']
+): string => {
+  if (!connectorType) {
+    return ''
+  }
+  switch (connectorType) {
+    case Connectors.GITHUB:
+      return getString('connectors.gitProviderURLs.github')
+    case Connectors.BITBUCKET:
+      return getString('connectors.gitProviderURLs.bitbucket')
+    case Connectors.GITLAB:
+      return getString('connectors.gitProviderURLs.gitlab')
+    case Connectors.AZURE_REPO:
+      return getString('connectors.gitProviderURLs.azureRepos')
+    default:
+      return ''
+  }
+}
+
+export const getIsFailureStrategyDisabled = ({
+  stageType,
+  stepType
+}: {
+  stageType?: StageType
+  stepType?: StepType
+}): boolean => stageType === StageType.BUILD && stepType === StepType.Background
+
+export const GIT_EXTENSION = '.git'

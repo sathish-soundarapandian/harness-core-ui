@@ -16,7 +16,8 @@ import {
   ButtonProps,
   Formik,
   ButtonVariation,
-  getErrorInfoFromErrorObject
+  getErrorInfoFromErrorObject,
+  MultiTypeInputType
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -47,6 +48,7 @@ interface ConfigureMSTeamsNotificationsProps {
   onBack?: (config?: MSTeamsNotificationConfiguration) => void
   submitButtonText?: string
   config?: MSTeamsNotificationConfiguration
+  expressions?: string[]
 }
 
 export const TestMSTeamsNotifications: React.FC<{
@@ -107,10 +109,13 @@ interface TeamsUrlListInputProps {
   name: string
   label: string
   formik?: FormikContextType<any>
+  expressions?: string[]
+  onTypeChange?: (typeMap: Record<string, string>) => void
 }
 
 function TeamsUrlListInputInternal(props: TeamsUrlListInputProps) {
-  const { name, label, formik } = props
+  const [urlTypeMap, setUrlTypeMap] = useState<Record<string, string>>({})
+  const { name, label, formik, expressions } = props
   const { getString } = useStrings()
 
   const value = get(formik?.values, name)
@@ -129,13 +134,34 @@ function TeamsUrlListInputInternal(props: TeamsUrlListInputProps) {
         deleteIconProps={{
           size: 18
         }}
-        listItemRenderer={(_, index: number) => (
-          <FormInput.Text
-            name={`${name}.${index}`}
-            placeholder={getString('notifications.enterMicrosoftTeamsUrl')}
-            className={css.urlInput}
-          />
-        )}
+        listItemRenderer={(_, index: number) =>
+          expressions ? (
+            <FormInput.MultiTextInput
+              name={`${name}.${index}`}
+              placeholder={getString('notifications.enterMicrosoftTeamsUrl')}
+              label=""
+              className={css.urlInput}
+              multiTextInputProps={{
+                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                expressions,
+                onTypeChange: type => {
+                  const map = {
+                    ...urlTypeMap,
+                    [`${name}.${index}`]: type
+                  }
+                  setUrlTypeMap(map)
+                  props.onTypeChange?.(map)
+                }
+              }}
+            />
+          ) : (
+            <FormInput.Text
+              name={`${name}.${index}`}
+              placeholder={getString('notifications.enterMicrosoftTeamsUrl')}
+              className={css.urlInput}
+            />
+          )
+        }
       />
     </FormGroup>
   )
@@ -144,6 +170,7 @@ function TeamsUrlListInputInternal(props: TeamsUrlListInputProps) {
 const TeamsUrlListInput = connect(TeamsUrlListInputInternal)
 
 const ConfigureMSTeamsNotifications: React.FC<ConfigureMSTeamsNotificationsProps> = props => {
+  const [disableTestConnection, setDisableTestConnection] = useState<boolean>(false)
   const { getString } = useStrings()
 
   const handleSubmit = (formData: MSTeamsNotificationConfiguration): void => {
@@ -156,7 +183,7 @@ const ConfigureMSTeamsNotifications: React.FC<ConfigureMSTeamsNotificationsProps
         <Text>{getString('notifications.helpMSTeams')}</Text>
 
         <a
-          href="https://ngdocs.harness.io/article/xcb28vgn82-send-notifications-to-microsoft-teams"
+          href="https://docs.harness.io/article/xcb28vgn82-send-notifications-to-microsoft-teams"
           rel="noreferrer"
           target="_blank"
         >
@@ -165,12 +192,11 @@ const ConfigureMSTeamsNotifications: React.FC<ConfigureMSTeamsNotificationsProps
         <Formik<MSTeamsNotificationConfiguration>
           onSubmit={handleSubmit}
           formName="configureMSTeamsNotifications"
-          validationSchema={Yup.object({
-            msTeamKeys: Yup.array().of(
-              Yup.string()
-                .url(getString('notifications.errors.invalidUrl'))
-                .required(getString('notifications.errors.msTeamUrlRequired'))
-            )
+          validationSchema={Yup.object().shape({
+            msTeamKeys: Yup.array().when('userGroups', {
+              is: val => isEmpty(val),
+              then: Yup.array().of(Yup.string().required(getString('notifications.errors.msTeamUrlRequired')))
+            })
           })}
           initialValues={{
             msTeamKeys: [],
@@ -182,9 +208,20 @@ const ConfigureMSTeamsNotifications: React.FC<ConfigureMSTeamsNotificationsProps
           {formik => {
             return (
               <FormikForm>
-                <TeamsUrlListInput name={'msTeamKeys'} label={getString('notifications.labelMSTeam')} />
+                <TeamsUrlListInput
+                  name={'msTeamKeys'}
+                  label={getString('notifications.labelMSTeam')}
+                  expressions={props.expressions}
+                  onTypeChange={map => {
+                    setDisableTestConnection(Object.values(map).includes(MultiTypeInputType.EXPRESSION))
+                  }}
+                />
                 <Layout.Horizontal margin={{ bottom: 'xxlarge' }} style={{ alignItems: 'center' }}>
-                  <TestMSTeamsNotifications data={formik.values} errors={formik.errors} />
+                  <TestMSTeamsNotifications
+                    data={formik.values}
+                    errors={formik.errors}
+                    buttonProps={{ disabled: disableTestConnection }}
+                  />
                 </Layout.Horizontal>
                 <UserGroupsInput name="userGroups" label={getString('notifications.labelMSTeamsUserGroups')} />
                 {props.isStep ? (

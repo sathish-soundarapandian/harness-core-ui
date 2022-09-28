@@ -14,19 +14,24 @@ export const delegateExecutionId = 'delegate-executionId'
 export const stageNodeId = 'nodeId'
 export const pageHeaderClassName = '.PageHeader--container'
 export const activeTabClassName = '.TabNavigation--active'
+export const serviceName = 'testServiceV2'
 const connectorRef = 'connector'
+const connectorName = 'testConnector'
+const anotherConnectorName = 'testConnector2'
 const repositoryType = 'generic'
 const artifactPath = '/'
 const repository = 'lambda'
 const serverlessLambdaServiceDefinitionType = 'ServerlessAwsLambda'
 const strategyType = 'Basic'
+const parentJob = 'alex-pipeline-test'
 
 // APIs
-export const pipelineListAPI = `/pipeline/api/pipelines/list?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&module=cd&orgIdentifier=${orgIdentifier}&page=0&sort=lastUpdatedAt%2CDESC&size=20`
+export const pipelineListAPI = `/pipeline/api/pipelines/list?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&page=0&sort=lastUpdatedAt%2CDESC&size=20`
 export const pipelineSummaryAPI = `/pipeline/api/pipelines/summary/appdtest?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const pipelineDetailsAPI = `/pipeline/api/pipelines/appdtest?accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
-export const pipelineExecutionSummaryAPI = `/pipeline/api/pipelines/execution/summary?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&module=cd&size=20&pipelineIdentifier=*&page=0&myDeployments=false`
-export const executionSummaryApi = `/pipeline/api/pipelines/execution/summary?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&module=cd&size=20&page=0&myDeployments=false`
+export const executionSummaryAPI = `/pipeline/api/pipelines/execution/summary?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&page=0&size=20&sort=startTs%2CDESC&module=cd`
+export const pipelineExecutionSummaryAPI = `/pipeline/api/pipelines/execution/summary?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&pipelineIdentifier=*&*`
+export const executionMetadata = `/pipeline/api/pipelines/execution/*/metadata?routingId=${accountId}&accountIdentifier=${accountId}`
 export const pipelineExecutionAPI = `/pipeline/api/pipelines/execution/v2/C9mgNjxSS7-B-qQek27iuA?routingId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&accountIdentifier=${accountId}`
 export const pipelineExecutionForNodeAPI = `/pipeline/api/pipelines/execution/v2/C9mgNjxSS7-B-qQek27iuA?routingId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&accountIdentifier=${accountId}&stageNodeId=g_LkakmWRPm-wC6rfC2ufg`
 export const servicesCallV2 = `/ng/api/servicesV2/list/access?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
@@ -36,10 +41,13 @@ export const pipelineVariablesCall = `/pipeline/api/pipelines/v2/variables?routi
 
 export const gitSyncEnabledCall = `/ng/api/git-sync/git-sync-enabled?accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const pipelineSaveCall = `/pipeline/api/pipelines?accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}`
+export const pipelineSaveCallWithStoreType = `/pipeline/api/pipelines?accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&storeType=INLINE`
 export const gitSyncMetaCall = `/ng/api/git-sync?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const gitSyncBranchCall = `/ng/api/git-sync-branch/listBranchesWithStatus?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&yamlGitConfigIdentifier=&page=0&size=20&searchTerm=`
-export const executionStratergies = `ng/api/pipelines/configuration/strategies?routingId=${accountId}`
-export const yamlSnippet = `ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=${accountId}&serviceDefinitionType=Kubernetes&strategyType=Rolling`
+export const executionStrategies = `ng/api/pipelines/configuration/strategies?routingId=${accountId}`
+export const strategiesYamlSnippets = 'ng/api/pipelines/configuration/strategies/yaml-snippets*'
+export const azureStrategiesYamlSnippets =
+  'ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=accountId&serviceDefinitionType=AzureWebApp&strategyType=Rolling'
 export const approvalStageYamlSnippet = `/pipeline/api/approvals/stage-yaml-snippet?routingId=${accountId}&approvalType=HarnessApproval`
 export const jiraApprovalStageYamlSnippet = `/pipeline/api/approvals/stage-yaml-snippet?routingId=${accountId}&approvalType=JiraApproval`
 export const snowApprovalStageYamlSnippet = `/pipeline/api/approvals/stage-yaml-snippet?routingId=${accountId}&approvalType=SERVICENOW_APPROVAL`
@@ -51,7 +59,7 @@ export const inputSetsCall = `/pipeline/api/inputSets?routingId=${accountId}&acc
 export const pipelineDetailsWithRoutingIdCall = `/pipeline/api/pipelines/testPipeline_Cypress?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&getTemplatesResolvedPipeline=true`
 export const pipelineInputSetTemplate = `template/api/templates/applyTemplates?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&pipelineIdentifier=${pipelineIdentifier}&projectIdentifier=${projectId}&getDefaultFromOtherRepo=true`
 export const environmentsCall = `/ng/api/environmentsV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&page=0&size=10`
-export const servicesCall = `/ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&size=10&page=0`
+export const servicesCall = `/ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&size=10&page=0&sort=lastModifiedAt%2CDESC`
 export const executePipeline = `/pipeline/api/pipeline/execute/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&moduleType=cd`
 export const serviceStepAPI = `/pipeline/api/pipelines/execution/v2/${executionId}?routingId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&accountIdentifier=${accountId}`
 export const serviceStepStageID = `/pipeline/api/pipelines/execution/v2/${executionId}?routingId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&accountIdentifier=${accountId}&stageNodeId=${stageNodeId}`
@@ -63,6 +71,7 @@ export const inputSetListAPI = `pipeline/api/inputSets?routingId=${accountId}&ac
 export const featureFlagsCall = `/api/users/feature-flags/accountId?routingId=${accountId}`
 export const cdFailureStrategiesYaml = `/ng/api/pipelines/configuration/cd-stage-yaml-snippet?routingId=${accountId}`
 export const servicesUpsertCall = `/ng/api/servicesV2/upsert?routingId=${accountId}&accountIdentifier=${accountId}`
+export const serviceCreationCall = `/ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}`
 export const envUpsertCall = `/ng/api/environmentsV2/upsert?routingId=${accountId}&accountIdentifier=${accountId}`
 export const connectorList = `/ng/api/connectors/connector?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const serverlessRepositoriesDetails = `/ng/api/artifacts/artifactory/repositoriesDetails?routingId=${accountId}&connectorRef=${connectorRef}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&repositoryType=${repositoryType}`
@@ -72,17 +81,40 @@ export const pipelineExecutionCall = `/pipeline/api/dashboard/pipelineExecution?
 export const abortPipelineCall = `pipeline/api/pipeline/execute/interrupt/${executionId}?routingId=${accountId}&orgIdentifier=${orgIdentifier}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&interruptType=AbortAll`
 export const serverlessLambdaYamlSnippet = `/ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=${accountId}&serviceDefinitionType=${serverlessLambdaServiceDefinitionType}&strategyType=${strategyType}`
 export const servicesV2 = `/ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
+export const postServiceCall = `ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}`
+export const jobDetailsCall = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}`
+export const jobDetailsCallAfterConnectorChange = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}`
+export const jobDetailsForParentJob = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}&parentJobName=${parentJob}`
+export const jobParametersList = `/ng/api/artifacts/jenkins/job/AutomationQA/details?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}`
+export const pipelineDetailsAPIRoute = `/pipeline/api/pipelines/PipelineTest?accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
+export const templatesListCall = `/template/api/templates/list?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&templateListType=LastUpdated&searchTerm=&page=0&sort=lastUpdatedAt%2CDESC&size=20`
+export const templateReferencesCall = `/ng/api/entitySetupUsage/v2?routingId=${accountId}&accountIdentifier=${accountId}&referredEntityFQN=accountId%2Fdefault%2Fproject1%2FCypress_Template_Example_1%2FVersion1%2F&referredEntityType=Template&pageIndex=0&pageSize=4`
+export const templatesListCallWithListType = `/template/api/templates/list?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&module=cd&templateListType=All`
+export const inputSetsTemplateCallWithCypressProject = `/pipeline/api/inputSets/template?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&pipelineIdentifier=${pipelineIdentifier}&projectIdentifier=${projectId}`
+export const inputSetTemplate = `/pipeline/api/pipelines/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&getTemplatesResolvedPipeline=true`
+export const runPipelineTemplateCall = `/pipeline/api/inputSets/template?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&pipelineIdentifier=${pipelineIdentifier}`
+export const s3bucketData = `/ng/api/buckets/s3/getBucketsV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&connectorRef=${connectorName}`
+export const triggersList = `/pipeline/api/triggers?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&targetIdentifier=${pipelineIdentifier}&searchTerm=`
+export const stagesExecutionList = `pipeline/execute/stagesExecutionList?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&pipelineIdentifier=${pipelineIdentifier}`
+export const getArtifactPaths = `/ng/api/artifacts/jenkins/job/AutomationQA/paths?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}`
+export const azureSubscriptions = `/ng/api/azure/subscriptions?routingId=${accountId}&connectorRef=${connectorRef}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
+export const azureResourceGroups = `/ng/api/azure/subscriptions/1111-1111-1111-1111-1111/resourceGroups?routingId=${accountId}&connectorRef=${connectorRef}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
+export const stepTemplateSchemaEndpoint = `/template/api/templates/schema/templateSchema?routingId=${accountId}&templateEntityType=Step&entityType=ShellScript&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&accountIdentifier=${accountId}&scope=project`
 
 // Routes
+
+export const updatedPipelineExecutionEndpoint = `/pipeline/api/pipeline/execute/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&moduleType=cd&notifyOnlyUser=false`
 export const executionListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/deployments`
 export const pipelinesExecutionDelegateRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/executions/${delegateExecutionId}/pipeline`
 export const executionHistoryRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/executions`
 export const pipelineStudioRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/pipeline-studio/?stageId=j&sectionId=SERVICE`
+export const newPipelineRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/pipelines/-1/pipeline-studio/`
 export const inputSetsRoute = `#/account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/input-sets`
 export const environmentRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/environment`
 export const servicesRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/services`
 export const pipelinesRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines`
 export const triggersRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
+export const templatesListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/templates`
 
 export interface ValidObject {
   resourceName: StepResourceObject[]
@@ -339,11 +371,163 @@ export const stepsData = {
 }
 
 export const triggersListData = {
-  Webhook: ['GitHub', 'GitLab', 'BitBucket', 'AWS Code Commit', 'Custom'],
-  Artifact: ['GCR', 'ECR', 'Docker Registry', 'Artifactory'],
+  Webhook: ['GitHub', 'GitLab', 'BitBucket', 'Azure Repos', 'AWS Code Commit', 'Custom'],
+  Artifact: ['GCR', 'ECR', 'Docker Registry', 'Artifactory', 'Amazon S3', 'ACR'],
   Manifest: ['Helm Chart'],
   Scheduled: ['Cron']
 }
 
 export const invalidYAMLErrorMsgOnEmptyStageSave =
   'Invalid yaml: $.pipeline.stages[0].stage.spec.execution: is missing but it is required\n$.pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition: is missing but it is required\n$.pipeline.stages[0].stage.tags: is not defined in the schema and the schema does not allow additional properties\n$.pipeline.stages[0].stage.spec.infrastructure.useFromStage: is missing but it is required\n$.pipeline.stages[0].stage.type: is not defined in the schema and the schema does not allow additional properties\n$.pipeline.stages[0].stage.spec: is not defined in the schema and the schema does not allow additional properties\n$.pipeline.stages[0].stage.spec.infrastructure.environmentRef: is missing but it is required\n$.pipeline.stages[0].stage.spec.infrastructure.environment: is missing but it is required\n$.pipeline.stages[0].stage.type: does not have a value in the enumeration [CI, Approval, FeatureFlag]'
+
+export const afterSaveServiceResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: "testServiceV2"\n  identifier: "testServiceV2"\n  tags: {}\n'
+    },
+    createdAt: 1662015990367,
+    lastModifiedAt: 1662015990367
+  },
+  metaData: null,
+  correlationId: '8fd410f5-f323-4405-aa4e-822a90ebb2e6'
+}
+
+export const afterSaveServiceNameResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: "testServiceV2"\n  identifier: "testServiceV2"\n  tags: {}\n'
+    },
+    createdAt: 1662015990367,
+    lastModifiedAt: 1662015990367
+  },
+  metaData: null,
+  correlationId: '800b0d74-d639-4056-b279-8f2990b2aef1'
+}
+export const afterFinalSaveServiceNameResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: testServiceV2\n  identifier: testServiceV2\n  tags: {}\n  serviceDefinition:\n    spec:\n      artifacts:\n        primary:\n          spec:\n            connectorRef: <+input>\n            artifactDirectory: <+input>\n            artifactPath: <+input>\n            repository: <+input>\n            repositoryFormat: generic\n          type: ArtifactoryRegistry\n      configFiles:\n        - configFile:\n            identifier: testConfigFileIdentifier\n            spec:\n              store:\n                type: Harness\n                spec:\n                  files: <+input>\n    type: Ssh\n'
+    },
+    createdAt: 1662360916500,
+    lastModifiedAt: 1662364088534
+  },
+  metaData: null,
+  correlationId: 'acbab7ab-7322-4ded-a1cb-1a0d55ba4059'
+}
+export const afterFinalServiceNameWinrmResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: testServiceV2\n  identifier: testServiceV2\n  tags: {}\n  serviceDefinition:\n    spec:\n      artifacts:\n        primary:\n          spec:\n            connectorRef: <+input>\n            artifactDirectory: <+input>\n            artifactPath: <+input>\n            repository: <+input>\n            repositoryFormat: generic\n          type: ArtifactoryRegistry\n      configFiles:\n        - configFile:\n            identifier: testConfigFileIdentifier\n            spec:\n              store:\n                type: Harness\n                spec:\n                  files: <+input>\n    type: WinRm\n'
+    },
+    createdAt: 1662360916500,
+    lastModifiedAt: 1662364088534
+  },
+  metaData: null,
+  correlationId: 'acbab7ab-7322-4ded-a1cb-1a0d55ba4059'
+}
+
+export const afterSaveServiceHeaderResponse = {
+  status: 'SUCCESS',
+  data: {
+    name: serviceName,
+    identifier: serviceName,
+    description: null,
+    deploymentTypes: [],
+    createdAt: 1662015990367,
+    lastModifiedAt: 1662015990367
+  },
+  metaData: null,
+  correlationId: '980e9edf-fa13-484a-bd7e-f5b1e79aaaa9'
+}
+
+export const finalSaveServiceResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: testServiceV2\n  identifier: testServiceV2\n  tags: {}\n  serviceDefinition:\n    spec:\n      manifests:\n        - manifest:\n            identifier: testManifestName\n            type: K8sManifest\n            spec:\n              store:\n                type: Github\n                spec:\n                  connectorRef: <+input>\n                  gitFetchType: Branch\n                  paths:\n                    - root/bin/\n                  repoName: <+input>\n                  branch: master\n              skipResourceVersioning: false\n    type: Kubernetes\n  gitOpsEnabled: false\n'
+    },
+    createdAt: 1662099973244,
+    lastModifiedAt: 1662100039989
+  },
+  metaData: null,
+  correlationId: 'c1b8dcd8-37d5-490e-8a41-3feb5ccb54d5'
+}
+export const finalSaveServiceNameResponse = {
+  status: 'SUCCESS',
+  data: {
+    service: {
+      accountId: 'accountId',
+      identifier: serviceName,
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: serviceName,
+      description: null,
+      deleted: false,
+      tags: {},
+      yaml: 'service:\n  name: testServiceV2\n  identifier: testServiceV2\n  tags: {}\n  serviceDefinition:\n    spec:\n      manifests:\n        - manifest:\n            identifier: testManifestName\n            type: K8sManifest\n            spec:\n              store:\n                type: Github\n                spec:\n                  connectorRef: <+input>\n                  gitFetchType: Branch\n                  paths:\n                    - root/bin/\n                  repoName: <+input>\n                  branch: master\n              skipResourceVersioning: false\n      artifacts:\n        primary:\n          spec:\n            connectorRef: <+input>\n            imagePath: <+input>\n            tag: <+input>\n          type: DockerRegistry\n    type: Kubernetes\n  gitOpsEnabled: false\n'
+    },
+    createdAt: 1662099973244,
+    lastModifiedAt: 1662101517118
+  },
+  metaData: null,
+  correlationId: 'c2d087e6-f449-417d-9ca3-fb2d13daab46'
+}
+
+export const afterFinalSaveConnectorsListResponse = {
+  status: 'SUCCESS',
+  data: {
+    totalPages: 0,
+    totalItems: 0,
+    pageItemCount: 0,
+    pageSize: 10,
+    content: [],
+    pageIndex: 0,
+    empty: true
+  },
+  metaData: null,
+  correlationId: 'cea537e0-859e-43ee-93fd-224f3259c6c2'
+}

@@ -71,7 +71,7 @@ export const environmentistCall =
   '/cv/api/monitored-service/environments?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1'
 
 export const monitoredServiceListCall =
-  '/cv/api/monitored-service?routingId=accountId&offset=0&pageSize=10&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&servicesAtRiskFilter=false'
+  '/cv/api/monitored-service?routingId=accountId&offset=0&pageSize=10&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&filter=&servicesAtRiskFilter=false'
 
 export const monitoredServiceListResponse = {
   status: 'SUCCESS',
@@ -685,4 +685,18 @@ export const newRelicServiceResponse = {
   },
   metaData: null,
   correlationId: 'af75987e-8e87-408b-b921-8d2ec73af1a2'
+}
+
+export const countOfServiceAPI =
+  '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1'
+
+export const validations = {
+  groupName: 'Group Name is required',
+  metricPack: 'Please select atleast one metric pack',
+  assign: 'One selection is required.',
+  query: 'Query is required.',
+  metric: 'Metric is required',
+  serviceInstance: 'Service Instance is required',
+  serviceInstanceIdentifier: 'Service Instance Identifier is required.',
+  riskCategory: 'Risk Category is required.'
 }

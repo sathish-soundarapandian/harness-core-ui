@@ -6,11 +6,18 @@
  */
 
 import React from 'react'
-
+import cx from 'classnames'
+import { Container } from '@wings-software/uicore'
 import type { ApprovalInstanceResponse, JiraApprovalInstanceDetails } from 'services/pipeline-ng'
 import { Duration } from '@common/exports'
 import { ApprovalStatus } from '@pipeline/utils/approvalUtils'
 import { String } from 'framework/strings'
+import type { StepExecutionTimeInfo } from '@pipeline/components/execution/StepDetails/views/BaseApprovalView/BaseApprovalView'
+import { StepDetails } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
+import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
+import { JiraCriteria } from './JiraCriteria/JiraCriteria'
+import headerCss from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionGraphView/ExecutionStageDetailsHeader/ExecutionStageDetailsHeader.module.scss'
+import css from './JiraApprovalTab.module.scss'
 
 export type ApprovalData =
   | (ApprovalInstanceResponse & {
@@ -18,24 +25,21 @@ export type ApprovalData =
     })
   | null
 
-export interface JiraApprovalTabProps {
-  approvalData: ApprovalData
+export interface JiraApprovalTabProps extends StepExecutionTimeInfo {
+  approvalData: ApprovalInstanceResponse
   isWaiting: boolean
 }
 
-import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
-import { JiraCriteria } from './JiraCriteria/JiraCriteria'
-import headerCss from '@pipeline/pages/execution/ExecutionPipelineView/ExecutionGraphView/ExecutionStageDetailsHeader/ExecutionStageDetailsHeader.module.scss'
-import css from './JiraApprovalTab.module.scss'
-
 export function JiraApprovalTab(props: JiraApprovalTabProps): React.ReactElement {
-  const { approvalData, isWaiting } = props
+  const { isWaiting, startTs, endTs, stepParameters } = props
+  const approvalData = props.approvalData as ApprovalData
   const wasApproved = !isWaiting && approvalData?.status === ApprovalStatus.APPROVED
   const wasRejected =
     !isWaiting && (approvalData?.status === ApprovalStatus.REJECTED || approvalData?.status === ApprovalStatus.EXPIRED)
   const wasFailed = !isWaiting && approvalData?.status === ApprovalStatus.FAILED
   const jiraKey = approvalData?.details.issue.key
   const jiraUrl = approvalData?.details.issue.url
+  const shouldShowExecutionTimeInfo = !isWaiting && approvalData?.status !== ApprovalStatus.WAITING
 
   return (
     <React.Fragment>
@@ -97,7 +101,12 @@ export function JiraApprovalTab(props: JiraApprovalTabProps): React.ReactElement
           ) : null}
         </div>
       )}
-      <div className={css.jiraApproval}>
+      {shouldShowExecutionTimeInfo && (
+        <Container className={css.stepDetailsContainer} padding={{ top: 'large' }}>
+          <StepDetails step={{ startTs, endTs, stepParameters }} />
+        </Container>
+      )}
+      <div className={cx(css.jiraApproval, { [css.applyTopPadding]: !shouldShowExecutionTimeInfo })}>
         {approvalData?.details?.approvalCriteria ? (
           <JiraCriteria type="approval" criteria={approvalData.details.approvalCriteria} />
         ) : null}

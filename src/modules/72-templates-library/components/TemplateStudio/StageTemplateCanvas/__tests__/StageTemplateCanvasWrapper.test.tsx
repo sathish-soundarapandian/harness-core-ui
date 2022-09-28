@@ -18,7 +18,7 @@ import { StageTemplateCanvasWrapperWithRef } from '../StageTemplateCanvasWrapper
 
 jest.mock('@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateCanvas', () => ({
   ...jest.requireActual('@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateCanvas'),
-  StageTemplateCanvasWithRef: () => {
+  StageTemplateCanvas: () => {
     const {
       state: { pipeline },
       updatePipeline

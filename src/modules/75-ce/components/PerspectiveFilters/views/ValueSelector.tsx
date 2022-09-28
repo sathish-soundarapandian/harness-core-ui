@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Container, Layout, Text, Icon, TextInput } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon, TextInput, ExpandingSearchInput } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import { RadioGroup, Radio } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -24,6 +24,7 @@ import type { ProviderType } from '../FilterPill'
 import css from './views.module.scss'
 
 const LIMIT = 100
+const LABEL_LIMIT = 1000
 
 interface OperatorSelectorProps {
   operator: QlceViewFilterOperator
@@ -111,6 +112,9 @@ interface NameSelectorProps {
 }
 
 const NameSelector: React.FC<NameSelectorProps> = ({ fetching, nameList, setService }) => {
+  const [searchText, setSearchText] = useState('')
+  const { getString } = useStrings()
+
   if (fetching) {
     return (
       <Container className={cx(css.namesContainer, css.spinner)}>
@@ -118,24 +122,41 @@ const NameSelector: React.FC<NameSelectorProps> = ({ fetching, nameList, setServ
       </Container>
     )
   }
+
+  const filteredNameList = nameList.filter(val => val.toLowerCase().includes(searchText.toLowerCase()))
+
   return (
-    <Container className={css.namesContainer}>
-      {nameList.map(name => (
-        <Text
-          className={css.labelNames}
-          onClick={() => {
-            setService({
-              id: 'labels.value',
-              name: name
-            })
-          }}
-          padding="small"
-          key={name}
-        >
-          {name}
-        </Text>
-      ))}
-    </Container>
+    <section className={css.namesContainer}>
+      <ExpandingSearchInput
+        throttle={0}
+        autoFocus
+        alwaysExpanded
+        placeholder={getString('ce.perspectives.createPerspective.filters.searchValue')}
+        onChange={setSearchText}
+        className={css.search}
+      />
+
+      <section className={css.itemsList}>
+        {filteredNameList.map(name => (
+          <Text
+            className={css.labelNames}
+            onClick={() => {
+              setService({
+                id: 'labels.value',
+                name: name
+              })
+            }}
+            padding="small"
+            key={name}
+          >
+            {name}
+          </Text>
+        ))}
+        {!filteredNameList.length ? (
+          <div className={css.noResults}>{getString('common.filters.noResultsFound')}</div>
+        ) : null}
+      </section>
+    </section>
   )
 }
 
@@ -200,7 +221,7 @@ const ValueSelector: React.FC<ValueSelectorProps> = ({
         } as QlceViewFilterWrapperInput
       ],
       offset: (pageInfo.page - 1) * LIMIT,
-      limit: LIMIT
+      limit: isLabelOrTag ? LABEL_LIMIT : LIMIT
     }
   })
 
@@ -209,7 +230,7 @@ const ValueSelector: React.FC<ValueSelectorProps> = ({
   const valuesList = (data?.perspectiveFilters?.values || []).filter(x => x) as string[]
 
   useEffect(() => {
-    if (data?.perspectiveFilters?.values) {
+    if (data?.perspectiveFilters?.values && !fetching && service?.name) {
       const moreItemsPresent = data.perspectiveFilters.values.length === LIMIT
       const filteredVal = data.perspectiveFilters.values.filter(e => e) as string[]
       setPageInfo(prevInfo => ({
@@ -218,7 +239,7 @@ const ValueSelector: React.FC<ValueSelectorProps> = ({
         filtersValuesData: [...prevInfo.filtersValuesData, ...filteredVal]
       }))
     }
-  }, [data?.perspectiveFilters?.values])
+  }, [data?.perspectiveFilters?.values, service?.name, fetching])
 
   const onInputChange: (val: string) => void = val => {
     setPageInfo({

@@ -132,17 +132,17 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
             summary
           </div>
           <div
-            aria-controls="bp3-tab-panel_serviceDetailsTab_refrencedByTab"
+            aria-controls="bp3-tab-panel_serviceDetailsTab_referencedByTab"
             aria-disabled="false"
             aria-expanded="false"
             aria-selected="false"
             class="bp3-tab"
-            data-tab-id="refrencedByTab"
-            id="bp3-tab-title_serviceDetailsTab_refrencedByTab"
+            data-tab-id="referencedByTab"
+            id="bp3-tab-title_serviceDetailsTab_referencedByTab"
             role="tab"
             tabindex="0"
           >
-            refrencedBy
+            referencedBy
           </div>
         </div>
         <div
@@ -152,10 +152,7 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
           id="bp3-tab-panel_serviceDetailsTab_summaryTab"
           role="tabpanel"
         >
-          <div
-            class="StyledProps--font StyledProps--main PageBody--pageBody"
-            data-name="page-body"
-          >
+          <div>
             <div
               class="StyledProps--font StyledProps--main timeRangeContainer StyledProps--flex"
             >
@@ -173,7 +170,7 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
                     <span
                       class="bp3-button-text"
                     >
-                      common.duration.month
+                      common.subscriptions.usage.last30days
                     </span>
                     <span
                       class="bp3-icon bp3-icon-caret-down StyledProps--main"
@@ -252,7 +249,7 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
                             role="tab"
                             tabindex="0"
                           >
-                            deploymentsText
+                            pipeline.dashboards.activeDeployments
                           </div>
                         </div>
                         <div
@@ -322,9 +319,6 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
                                 </p>
                               </div>
                             </div>
-                            <div
-                              class="Layout--horizontal StyledProps--main"
-                            />
                             <div
                               class="Layout--horizontal StyledProps--main"
                             />
@@ -432,12 +426,11 @@ exports[`ServiceStudio should render ServiceStudio 1`] = `
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey600"
                       >
-                        cd.serviceDashboard.totalPipelines: 0
+                        cd.serviceDashboard.totalDeployments: 0
                       </p>
                       <div
-                        class="bp3-input-group ui-search-box ExpandingSearchInput--main  ExpandingSearchInput--flip  ExpandingSearchInput--light"
+                        class="bp3-input-group ui-search-box ExpandingSearchInput--main searchIconStyle   ExpandingSearchInput--light"
                         data-name=""
-                        style="max-width: 200px;"
                       >
                         <span
                           class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"

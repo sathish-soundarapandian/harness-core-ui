@@ -10,8 +10,7 @@ import type { AdditionalInfo } from 'services/cv'
 export const VerificationJobType: { [key: string]: AdditionalInfo['type'] } = {
   TEST: 'TEST',
   CANARY: 'CANARY',
-  BLUE_GREEN: 'BLUE_GREEN',
-  HEALTH: 'HEALTH'
+  BLUE_GREEN: 'BLUE_GREEN'
 }
 
 export enum HealthSourcesType {

@@ -162,7 +162,7 @@ exports[`ProviderCard snapshot test should open menu, edit and confirmation afte
     class="Layout--horizontal StyledProps--main ConfirmationDialog--header StyledProps--padding-left-xsmall"
   >
     <span
-      class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+      class="bp3-icon StyledProps--main StyledProps--margin-right-small StyledProps--intent-danger"
       data-icon="danger-icon"
     >
       <svg

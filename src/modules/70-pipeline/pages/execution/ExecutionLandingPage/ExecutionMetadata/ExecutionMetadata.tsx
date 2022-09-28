@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
-import { Text, Icon, Tag } from '@wings-software/uicore'
-import { useStrings } from 'framework/strings'
+import { Text, Icon, Tag, Popover } from '@wings-software/uicore'
+import { HTMLTable, Position } from '@blueprintjs/core'
+import { defaultTo } from 'lodash-es'
+import { useStrings, String } from 'framework/strings'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { hasCDStage, hasCIStage, StageType } from '@pipeline/utils/stageHelpers'
 import factory from '@pipeline/factories/ExecutionFactory'
@@ -15,6 +17,9 @@ import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { UserLabel } from '@common/components/UserLabel/UserLabel'
 
 import css from './ExecutionMetadata.module.scss'
+
+// stage executed name limit, exceeding this we will show a popover
+const LIMIT = 3
 
 function ExecutionMetadataTrigger(): React.ReactElement {
   const { getString } = useStrings()
@@ -67,12 +72,53 @@ export default function ExecutionMetadata(): React.ReactElement {
   const cdData = factory.getSummary(StageType.DEPLOY)
 
   const renderSingleStageExecutionInfo = (): React.ReactElement | null => {
-    return pipelineExecutionSummary?.stagesExecuted?.length ? (
-      <Tag className={css.singleExecutionTag}>{`${getString('pipeline.singleStageExecution')}   ${
-        !!pipelineExecutionSummary.stagesExecutedNames &&
-        Object.values(pipelineExecutionSummary.stagesExecutedNames).join(', ')
-      }`}</Tag>
+    const countLen = defaultTo(pipelineExecutionSummary?.stagesExecuted?.length, 0)
+
+    const popoverTable = (
+      <HTMLTable small style={{ fontSize: 'small' }}>
+        <thead>
+          <th>{getString('pipeline.selectiveStageExecution').toLocaleUpperCase()}</th>
+        </thead>
+        <tbody>
+          {!!pipelineExecutionSummary?.stagesExecutedNames &&
+            Object.values(pipelineExecutionSummary.stagesExecutedNames).map(
+              (value, i) =>
+                i >= 3 && (
+                  <tr key={i}>
+                    <td>{value}</td>
+                  </tr>
+                )
+            )}
+        </tbody>
+      </HTMLTable>
+    )
+    const popover = (
+      <Popover
+        wrapperTagName="div"
+        targetTagName="div"
+        interactionKind="hover"
+        position={Position.BOTTOM}
+        popoverClassName={css.popover}
+      >
+        <String
+          tagName="div"
+          style={{ paddingLeft: 'var(--spacing-3)' }}
+          stringID={'common.plusNumberNoSpace'}
+          vars={{ number: Math.abs(countLen - LIMIT) }}
+        />
+        {popoverTable}
+      </Popover>
+    )
+    const visible = countLen ? (
+      <Tag className={css.singleExecutionTag}>
+        {`${getString('pipeline.singleStageExecution')}   ${
+          !!pipelineExecutionSummary?.stagesExecutedNames &&
+          Object.values(pipelineExecutionSummary.stagesExecutedNames).slice(0, LIMIT).join(', ')
+        }`}
+        {popover}
+      </Tag>
     ) : null
+    return visible
   }
   return (
     <div className={css.main}>

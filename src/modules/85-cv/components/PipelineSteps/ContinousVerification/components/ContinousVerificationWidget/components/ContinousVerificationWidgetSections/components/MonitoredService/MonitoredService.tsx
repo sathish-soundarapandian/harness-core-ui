@@ -7,6 +7,7 @@
 
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import cx from 'classnames'
+import { defaultTo } from 'lodash-es'
 import { ButtonVariation, Container, FormInput, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -26,8 +27,15 @@ import Card from '@cv/components/Card/Card'
 import VerifyStepHealthSourceTable from '@cv/pages/health-source/HealthSourceTable/VerifyStepHealthSourceTable'
 import type { RowData } from '@cv/pages/health-source/HealthSourceDrawer/HealthSourceDrawerContent.types'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { resetFormik } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
 import type { MonitoredServiceProps } from './MonitoredService.types'
-import { getNewSpecs, getServiceIdentifier, isAnExpression } from './MonitoredService.utils'
+import {
+  getEnvironmentIdentifierFromStage,
+  getNewSpecs,
+  getServiceIdentifierFromStage,
+  isAnExpression,
+  isFirstTimeOpenForDefaultMonitoredSvc
+} from './MonitoredService.utils'
 import { MONITORED_SERVICE_EXPRESSION } from './MonitoredService.constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './MonitoredService.module.scss'
@@ -51,12 +59,13 @@ export default function MonitoredService({
     getStageFromPipeline
   } = usePipelineContext()
   const selectedStage = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId as string)?.stage
-  const environmentIdentifier =
-    selectedStage?.stage?.spec?.infrastructure?.environment?.identifier ||
-    selectedStage?.stage?.spec?.infrastructure?.environmentRef ||
-    ''
+
+  const environmentIdentifier = useMemo(() => {
+    return getEnvironmentIdentifierFromStage(selectedStage)
+  }, [selectedStage])
+
   const serviceIdentifier = useMemo(() => {
-    return getServiceIdentifier(selectedStage, pipeline)
+    return getServiceIdentifierFromStage(selectedStage, pipeline)
   }, [pipeline, selectedStage])
 
   const createServiceQueryParams = useMemo(
@@ -109,22 +118,24 @@ export default function MonitoredService({
         name: monitoredServiceData?.name as string
       })
     }
-    const formNewValues = { ...formValues, spec: newSpecs }
-    formik.resetForm({ values: formNewValues })
+
+    if (isFirstTimeOpenForDefaultMonitoredSvc(formValues, monitoredServiceData)) {
+      resetFormik(formValues, newSpecs, formik)
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monitoredServiceData, error, loading, environmentIdentifier, serviceIdentifier])
 
   const createMonitoredService = useCallback(async () => {
     const createdMonitoredService = await createDefaultMonitoredService()
+    const { name = '', identifier = '', sources } = createdMonitoredService?.resource?.monitoredService || {}
     const newSpecs = {
       ...formValues.spec,
-      monitoredServiceRef: createdMonitoredService?.resource?.monitoredService?.identifier
+      monitoredServiceRef: identifier
     }
     setFieldValue('spec', newSpecs)
-    setMonitoredService({
-      identifier: createdMonitoredService?.resource?.monitoredService?.identifier as string,
-      name: createdMonitoredService?.resource?.monitoredService?.name as string
-    })
+    setHealthSourcesList(sources?.healthSources as RowData[])
+    setMonitoredService({ identifier, name })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formValues.spec])
 
@@ -167,39 +178,45 @@ export default function MonitoredService({
     return (
       <>
         <Card>
-          <div className={cx(stepCss.formGroup)}>
-            <Container className={css.monitoredService}>
-              <FormInput.Text
-                name={'spec.monitoredServiceRef'}
-                label={getString('connectors.cdng.monitoredService.label')}
-                disabled
-              />
-              {serviceIdentifier !== RUNTIME_INPUT_VALUE &&
-              environmentIdentifier !== RUNTIME_INPUT_VALUE &&
-              formValues?.spec?.monitoredServiceRef !== MONITORED_SERVICE_EXPRESSION ? (
-                <div className={css.monitoredServiceText}>
-                  {`
+          <>
+            <div className={cx(stepCss.formGroup)}>
+              <Container className={css.monitoredService}>
+                <FormInput.Text
+                  name={'spec.monitoredServiceRef'}
+                  label={getString('connectors.cdng.monitoredService.label')}
+                  disabled
+                />
+                {serviceIdentifier !== RUNTIME_INPUT_VALUE &&
+                environmentIdentifier !== RUNTIME_INPUT_VALUE &&
+                formValues?.spec?.monitoredServiceRef !== MONITORED_SERVICE_EXPRESSION ? (
+                  <div className={css.monitoredServiceText}>
+                    {`
                     ${getString('connectors.cdng.monitoredService.monitoredServiceText')}
                     ${serviceIdentifier} ${getString('and').toLocaleLowerCase()} ${environmentIdentifier}
                   `}
-                </div>
-              ) : null}
-            </Container>
-          </div>
+                  </div>
+                ) : null}
+              </Container>
+            </div>
+
+            {formValues?.spec?.monitoredServiceRef !== RUNTIME_INPUT_VALUE &&
+            formValues?.spec?.monitoredServiceRef !== MONITORED_SERVICE_EXPRESSION ? (
+              <>
+                <hr className={css.division} />
+                <VerifyStepHealthSourceTable
+                  serviceIdentifier={serviceIdentifier}
+                  envIdentifier={environmentIdentifier}
+                  healthSourcesList={healthSourcesList}
+                  monitoredServiceData={monitoredServiceData as MonitoredServiceDTO}
+                  monitoredServiceRef={monitoredService}
+                  onSuccess={onSuccess}
+                  isRunTimeInput={false}
+                  changeSourcesList={defaultTo(monitoredServiceData?.sources?.changeSources, []) as ChangeSourceDTO[]}
+                />
+              </>
+            ) : null}
+          </>
         </Card>
-        {formValues?.spec?.monitoredServiceRef !== RUNTIME_INPUT_VALUE &&
-        formValues?.spec?.monitoredServiceRef !== MONITORED_SERVICE_EXPRESSION ? (
-          <VerifyStepHealthSourceTable
-            serviceIdentifier={serviceIdentifier}
-            envIdentifier={environmentIdentifier}
-            healthSourcesList={healthSourcesList}
-            monitoredServiceData={monitoredServiceData as MonitoredServiceDTO}
-            monitoredServiceRef={monitoredService}
-            onSuccess={onSuccess}
-            isRunTimeInput={false}
-            changeSourcesList={monitoredServiceData?.sources?.changeSources as ChangeSourceDTO[]}
-          />
-        ) : null}
       </>
     )
   } else {

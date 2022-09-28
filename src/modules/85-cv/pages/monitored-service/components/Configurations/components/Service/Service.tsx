@@ -41,6 +41,7 @@ function Service(
     serviceTabformRef,
     onChangeMonitoredServiceType,
     isTemplate,
+    expressions,
     updateTemplate
   }: {
     value: MonitoredServiceForm
@@ -52,6 +53,7 @@ function Service(
     onChangeMonitoredServiceType: (updatedValues: MonitoredServiceForm) => void
     isTemplate?: boolean
     updateTemplate?: (template: MonitoredServiceForm) => void
+    expressions?: string[]
   },
   formikRef?: TemplateFormRef
 ): JSX.Element {
@@ -154,6 +156,20 @@ function Service(
         }
         const onSuccessChangeSource = (data: ChangeSourceDTO[]): void => {
           updateChangeSource(data, formik)
+          formik.setFieldValue('sources', {
+            ...formik.values?.sources,
+            changeSources: data
+          })
+          onSave({
+            formik: {
+              ...formik,
+              values: {
+                ...(formik?.values || {}),
+                sources: { ...(formik?.values?.sources || {}), changeSources: data }
+              }
+            },
+            onSuccess
+          })
           hideDrawer()
         }
         if (isTemplate && formik.dirty) {
@@ -214,12 +230,27 @@ function Service(
                   healthSourceListFromAPI={initialValues.sources?.healthSources}
                   serviceFormFormik={formik}
                   isTemplate={isTemplate}
+                  expressions={expressions}
+                  onSave={data => {
+                    onSave({
+                      formik: {
+                        ...formik,
+                        values: {
+                          ...(formik?.values || {}),
+                          sources: { ...formik.values?.sources, healthSources: data }
+                        }
+                      },
+                      onSuccess
+                    })
+                  }}
                 />
-                <MonitoredServiceNotificationsContainer
-                  setFieldValue={formik?.setFieldValue}
-                  notificationRuleRefs={formik?.values?.notificationRuleRefs}
-                  identifier={identifier}
-                />
+                {!isTemplate && (
+                  <MonitoredServiceNotificationsContainer
+                    setFieldValue={formik?.setFieldValue}
+                    notificationRuleRefs={formik?.values?.notificationRuleRefs}
+                    identifier={identifier}
+                  />
+                )}
               </>
             )}
           </div>

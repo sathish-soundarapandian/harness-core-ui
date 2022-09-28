@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React from 'react'
 import {
   Accordion,
   Layout,
@@ -16,7 +16,8 @@ import {
   MultiTypeInputType,
   Text,
   StepProps,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -40,13 +41,13 @@ import {
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 
-import { getRepositoryName } from '../ManifestUtils'
-import css from '../K8sValuesManifest/ManifestDetails.module.scss'
+import { filePathWidth, getRepositoryName } from '../ManifestUtils'
+import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface ServerlessAwsLambdaManifestPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   selectedManifest: ManifestTypes | null
   handleSubmit: (data: ManifestConfigWrapper) => void
@@ -82,7 +83,7 @@ function ServerlessAwsLambdaManifest({
         : prevStepData?.url
       : null
 
-  const getInitialValues = useCallback((): ServerlessManifestDataType => {
+  const getInitialValues = (): ServerlessManifestDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -106,7 +107,7 @@ function ServerlessAwsLambdaManifest({
       repoName: getRepositoryName(prevStepData, initialValues),
       configOverridePath: undefined
     }
-  }, [])
+  }
 
   const submitFormData = (formData: ServerlessManifestDataType & { store?: string; connectorRef?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
@@ -288,7 +289,11 @@ function ServerlessAwsLambdaManifest({
                       </div>
                     )}
                   </Layout.Horizontal>
-                  <div className={css.halfWidth}>
+                  <div
+                    className={cx({
+                      [css.runtimeInput]: getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
                     <DragnDropPaths
                       formik={formik}
                       expressions={expressions}
@@ -297,7 +302,21 @@ function ServerlessAwsLambdaManifest({
                       fieldPath="paths"
                       pathLabel={getString('common.git.folderPath')}
                       placeholder={getString('pipeline.manifestType.folderPathPlaceholder')}
+                      defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                      dragDropFieldWidth={filePathWidth}
                     />
+                    {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        value={formik.values.paths}
+                        type={getString('string')}
+                        variableName={'paths'}
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={val => formik?.setFieldValue('paths', val)}
+                        isReadonly={isReadonly}
+                      />
+                    )}
                   </div>
                   <Accordion className={css.advancedStepOpen}>
                     <Accordion.Panel

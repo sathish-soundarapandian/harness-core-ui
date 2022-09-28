@@ -16,7 +16,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 import type { StringsMap } from 'stringTypes'
 import { PipelineStep } from '../../PipelineStep'
 import { StepType } from '../../PipelineStepInterface'
-import { flatObject } from '../Common/ApprovalCommons'
+import { getSanitizedflatObjectForVariablesView } from '../Common/ApprovalCommons'
 import type { JiraUpdateData, JiraUpdateVariableListModeProps } from './types'
 import { processFormData, processInitialValues } from './helper'
 import JiraUpdateStepModeWithRef from './JiraUpdateStepMode'
@@ -31,6 +31,7 @@ export class JiraUpdate extends PipelineStep<JiraUpdateData> {
     this._hasDelegateSelectionVisible = true
   }
 
+  protected referenceId = 'jiraUpdateStep'
   protected isHarnessSpecific = true
   protected type = StepType.JiraUpdate
   protected stepName = 'Jira Update'
@@ -106,7 +107,7 @@ export class JiraUpdate extends PipelineStep<JiraUpdateData> {
     return errors
   }
 
-  processFormData(values: JiraUpdateData) {
+  processFormData(values: JiraUpdateData): JiraUpdateData {
     return processFormData(values)
   }
 
@@ -124,7 +125,7 @@ export class JiraUpdate extends PipelineStep<JiraUpdateData> {
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <JiraUpdateDeploymentModeWithFormik
           stepViewType={stepViewType}
@@ -138,7 +139,7 @@ export class JiraUpdate extends PipelineStep<JiraUpdateData> {
       const customStepPropsTyped = customStepProps as JiraUpdateVariableListModeProps
       return (
         <VariablesListTable
-          data={flatObject(customStepPropsTyped.variablesData)}
+          data={getSanitizedflatObjectForVariablesView(customStepPropsTyped.variablesData)}
           originalData={initialValues as Record<string, any>}
           metadataMap={customStepPropsTyped.metadataMap}
           className={pipelineVariablesCss.variablePaddingL3}

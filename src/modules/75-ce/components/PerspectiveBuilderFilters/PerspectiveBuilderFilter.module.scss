@@ -127,7 +127,10 @@ global {
 }
 
 .conditionInput {
-  height: 34px;
+  :global(.bp3-input) {
+    height: 34px;
+    border: 1px solid var(--grey-300);
+  }
 }
 
 .tagInput {

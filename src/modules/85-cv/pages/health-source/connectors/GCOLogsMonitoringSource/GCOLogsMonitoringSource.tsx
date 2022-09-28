@@ -18,10 +18,12 @@ import { createGCOLogsHealthSourcePayload } from './GCOLogsMonitoringSource.util
 interface GCOLogsMonitoringSourceProps {
   data: any
   onSubmit: (formdata: GCOMonitoringSourceInfo, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 export default function GCOLogsMonitoringSource(props: GCOLogsMonitoringSourceProps): JSX.Element {
-  const { data: sourceData, onSubmit } = props
+  const { data: sourceData, onSubmit, isTemplate, expressions } = props
   const allParams = useParams<ProjectPathProps & { identifier: string }>()
   const { onPrevious } = useContext(SetupSourceTabsContext)
   const requiredParams = omit(allParams, 'identifier')
@@ -40,6 +42,8 @@ export default function GCOLogsMonitoringSource(props: GCOLogsMonitoringSourcePr
       data={buildGCOMonitoringSourceInfo(requiredParams, sourceData)}
       onSubmit={handleOnSubmit}
       onPrevious={() => onPrevious(sourceData)}
+      isTemplate={isTemplate}
+      expressions={expressions}
     />
   )
 }

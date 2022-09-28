@@ -34,7 +34,6 @@ import { useToaster } from '@common/components'
 import { CopyText } from '@common/components/CopyText/CopyText'
 import { useUploadSamlMetaData, useUpdateSamlMetaData, SAMLSettings } from 'services/cd-ng'
 import { getSamlEndpoint } from '@auth-settings/constants/utils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   createFormData,
@@ -75,7 +74,6 @@ const SAMLProviderForm: React.FC<Props> = ({ onSubmit, onCancel, samlProvider })
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { showSuccess } = useToaster()
-  const { AZURE_SAML_150_GROUPS_SUPPORT } = useFeatureFlags()
   const { accountId } = useParams<AccountPathProps>()
   const [initialValues, setInitialValues] = React.useState<FormValues>(defaultInitialData)
   const [initialLoading, setIntitalLoading] = React.useState<boolean>(!!samlProvider)
@@ -271,7 +269,7 @@ const SAMLProviderForm: React.FC<Props> = ({ onSubmit, onCancel, samlProvider })
                             name="groupMembershipAttr"
                             label={getString('authSettings.groupAttributeName')}
                           />
-                          {Providers.AZURE === values?.samlProviderType && AZURE_SAML_150_GROUPS_SUPPORT && (
+                          {Providers.AZURE === values?.samlProviderType && (
                             <>
                               <Checkbox
                                 name="clientIdAndSecret"

@@ -21,18 +21,34 @@ export interface RbacResourceModalProps {
 export interface RbacResourceRendererProps {
   identifiers: string[]
   resourceScope: ResourceScope
-  onResourceSelectionChange: (resourceType: ResourceType, isAdd: boolean, identifiers?: string[] | undefined) => void
+  onResourceSelectionChange: (
+    resourceType: ResourceType,
+    isAdd: boolean,
+    identifiers?: string[] | undefined,
+    attributeFilter?: string[]
+  ) => void
   resourceType: ResourceType
+  /** If identifiers are to be classified as attributes or static resources */
+  isAtrributeFilterEnabled?: boolean
+}
+
+export interface RbacAttributeModalProps {
+  selectedData: string[]
+  onSelectChange: (items: string[]) => void
+  resourceScope: ResourceScope
 }
 export interface ResourceHandler {
   icon: IconName
   label: keyof StringsMap
+  labelSingular?: keyof StringsMap
   labelOverride?: keyof StringsMap | undefined
   permissionLabels?: {
     [key in PermissionIdentifier]?: string | React.ReactElement
   }
   addResourceModalBody?: (props: RbacResourceModalProps) => React.ReactElement
+  addAttributeModalBody?: (props: RbacAttributeModalProps) => React.ReactElement
   staticResourceRenderer?: (props: RbacResourceRendererProps) => React.ReactElement
+  attributeRenderer?: (props: RbacResourceRendererProps) => React.ReactElement
   category?: ResourceCategory
 }
 

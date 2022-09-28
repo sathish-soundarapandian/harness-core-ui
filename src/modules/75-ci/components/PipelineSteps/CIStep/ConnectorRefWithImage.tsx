@@ -88,7 +88,7 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
                   {showOptionalSublabel ? getOptionalSubLabel(getString) : null}
                 </Layout.Horizontal>
               }
-              type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
+              type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER, Connectors.AZURE]}
               width={385}
               name={`${prefix}spec.connectorRef`}
               placeholder={getString('select')}

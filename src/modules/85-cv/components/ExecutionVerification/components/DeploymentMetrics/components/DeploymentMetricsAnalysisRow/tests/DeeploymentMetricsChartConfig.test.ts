@@ -37,9 +37,9 @@ describe('DeploymentMetricsChartConfig', () => {
     const tooltipResult = tooltip?.formatter?.call({ points: [{ point: { index: 1 } }] }, null)
 
     expect(tooltipResult).toMatch(/pipeline.verification.testHost:<\/span> harness-deployment-canary-56b5cc7c5b-9rpq7/)
-    expect(tooltipResult).toMatch(/valueLabel:<\/span> 386.67/)
+    expect(tooltipResult).toMatch(/valueLabel:<\/span> 386.667/)
     expect(tooltipResult).toMatch(/pipeline.verification.controlHost:<\/span> control host name/)
-    expect(tooltipResult).toMatch(/valueLabel:<\/span> 10/)
+    expect(tooltipResult).toMatch(/valueLabel:<\/span> 10.000/)
   })
 
   test('it should give correct tooltip data when different length of data is passed', () => {

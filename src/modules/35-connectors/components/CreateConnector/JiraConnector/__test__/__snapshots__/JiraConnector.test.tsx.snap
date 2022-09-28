@@ -150,6 +150,7 @@ exports[`Create Jira Connector  Wizard Should render form 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+          data-cy="connector-overview-heading"
         >
           overview
         </p>
@@ -179,7 +180,7 @@ exports[`Create Jira Connector  Wizard Should render form 1`] = `
                       >
                         <div
                           class="Text--withDocsTooltip"
-                          data-tooltip-id="connectorDetailsStepFormJira_identifier"
+                          data-tooltip-id="universalInputNameWithId"
                         >
                           <p
                             class="StyledProps--font StyledProps--main"

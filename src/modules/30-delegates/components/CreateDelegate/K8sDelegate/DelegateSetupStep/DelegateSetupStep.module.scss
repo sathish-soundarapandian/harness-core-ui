@@ -57,7 +57,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: orange;
+  color: rgb(255, 165, 0);
   width: 75%;
   margin-left: 130px !important;
   margin-top: 5px !important;
@@ -67,7 +67,7 @@
 .workloadSeparator:after {
   content: '';
   width: 25%;
-  border-bottom: 1px solid orange;
+  border-bottom: 1px solid rgb(255, 165, 0);
 }
 
 .formGroup {
@@ -111,14 +111,14 @@
   font-weight: 500 !important;
   font-size: 8px !important;
   line-height: 10px !important;
-  color: #6b6d85 !important;
+  color: var(--grey-500) !important;
 }
 .footerContent {
   font-size: 10px !important;
   line-height: 12px !important;
   letter-spacing: 0.375px !important;
 
-  color: #000000 !important;
+  color: var(--grey-1000) !important;
 }
 .profileSelect {
   :global {
@@ -133,21 +133,21 @@
 }
 
 .small {
-  background: #b1beff;
+  background: var(--blue-200);
 
-  color: #0278d5;
+  color: var(--primary-7);
 }
 .extraSmall {
-  background: #cdf4fe;
-  color: #39478f;
+  background: var(--primary-2);
+  color: var(--blue-800);
 }
 .medium {
-  background: #cfb4ff;
-  color: #4d0b8f;
+  background: var(--purple-200);
+  color: var(--purple-900);
 }
 
 .large {
-  background: #39478f;
+  background: var(--blue-800);
   color: var(--grey-50);
 }
 
@@ -173,7 +173,7 @@
 
 .submitBtn {
   margin-left: var(--spacing-medium);
-  background: #0278d5 !important;
+  background: var(--primary-7) !important;
   /* Light / Elevation 01 */
 
   box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16) !important;
@@ -234,4 +234,11 @@
   button {
     margin-top: 21px !important;
   }
+}
+
+.runAsRootCheckbox {
+  background-color: var(--grey-100) !important;
+  width: 38% !important;
+  padding-top: 8px !important;
+  padding-left: 6px !important;
 }

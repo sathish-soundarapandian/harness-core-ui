@@ -11,7 +11,7 @@ import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 
 import type { ConnectorInfoDTO, EntityGitDetails } from 'services/cd-ng'
-import VerifyOutOfClusterDelegate from '../VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '../ConnectorTestConnection/ConnectorTestConnection'
 import css from './useTestConnectionModal.module.scss'
 
 export interface UseTestConnectionModalProps {
@@ -52,7 +52,7 @@ const useTestConnectionModal = (props: UseTestConnectionModalProps): UseTestConn
     () => (
       <Dialog {...modalProps}>
         <Container height={'100%'} padding="xxlarge">
-          <VerifyOutOfClusterDelegate
+          <ConnectorTestConnection
             connectorInfo={testDetails.connector}
             gitDetails={testDetails.gitDetails}
             isStep={false}

@@ -12,6 +12,7 @@ declare const styles: {
   readonly repoDetails: string
   readonly separator: string
   readonly tooltip: string
+  readonly transparent: string
   readonly wrapper: string
 }
 export default styles

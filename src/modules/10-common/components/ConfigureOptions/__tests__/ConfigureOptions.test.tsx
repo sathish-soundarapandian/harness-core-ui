@@ -18,7 +18,6 @@ import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { ConfigureOptions, ConfigureOptionsProps } from '../ConfigureOptions'
 
 const onChange = jest.fn()
-const fetchValuesCalled = jest.fn()
 
 const getProps = (
   value: string,
@@ -36,11 +35,7 @@ const getProps = (
   type,
   showDefaultField,
   showAdvanced,
-  onChange,
-  fetchValues: jest.fn().mockImplementation(args => {
-    fetchValuesCalled(args)
-    return Promise.resolve({})
-  })
+  onChange
 })
 
 describe('Test ConfigureOptions', () => {
@@ -265,7 +260,7 @@ describe('Test ConfigureOptions', () => {
     onChange.mockReset()
     const { container } = render(
       <TestWrapper>
-        <ConfigureOptions {...getProps(RUNTIME_INPUT_VALUE, 'test', 'var-test')} fetchValues={undefined} />
+        <ConfigureOptions {...getProps(RUNTIME_INPUT_VALUE, 'test', 'var-test')} />
       </TestWrapper>
     )
     const btn = container.querySelector('#configureOptions_var-test')
@@ -295,5 +290,23 @@ describe('Test ConfigureOptions', () => {
     fireEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
     expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.executionInput()`, '', true)
+  })
+
+  test('default value via function', async () => {
+    onChange.mockReset()
+    const { container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ NG_EXECUTION_INPUT: true }}>
+        <ConfigureOptions {...getProps(`${RUNTIME_INPUT_VALUE}.default(123)`, 'Number', 'var-test')} />
+      </TestWrapper>
+    )
+    const btn = container.querySelector('#configureOptions_var-test')
+    fireEvent.click(btn as Element)
+    const dialog = findDialogContainer() as HTMLElement
+    await waitFor(() => getByTextBody(dialog, 'var-test'))
+    expect(dialog).toMatchSnapshot()
+    const submitBtn = getByTextBody(dialog, 'submit')
+    fireEvent.click(submitBtn)
+    await waitFor(() => expect(onChange).toBeCalledTimes(1))
+    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.default(123)`, 123, true)
   })
 })

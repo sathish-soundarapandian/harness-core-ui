@@ -1,0 +1,14 @@
+{
+  "correlationId": "",
+  "status": "SUCCESS",
+  "metaData": null,
+  "data": [
+    {
+      "fields": {
+        "fieldName": { "displayValue": "value", "value": "value" }
+      },
+      "name": "field1",
+      "sys_id": "field1"
+    }
+  ]
+}

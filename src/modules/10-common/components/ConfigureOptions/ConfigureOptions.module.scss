@@ -8,6 +8,11 @@
 .dialog {
   width: 535px;
 
+  .dialogContent {
+    overflow-x: hidden;
+    padding: 0 2px !important;
+  }
+
   :global(.bp3-heading) {
     text-transform: capitalize;
   }
@@ -28,16 +33,8 @@
     padding: var(--spacing-medium) 0;
   }
 
-  .radioGroup {
-    & :global(.RadioButtonGroup--inline) {
-      align-items: center;
-      column-gap: var(--spacing-6);
-    }
-  }
-
   .allowed-options {
     position: relative;
-    overflow: hidden;
     padding-right: 5px;
 
     .advanced-btn {

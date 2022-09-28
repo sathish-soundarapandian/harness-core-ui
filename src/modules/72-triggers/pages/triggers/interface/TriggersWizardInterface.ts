@@ -5,8 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { ConnectorInfoDTO, PipelineInfoConfig } from 'services/cd-ng'
-import type { GetActionsListQueryParams, NGTriggerConfigV2, NGTriggerSourceV2 } from 'services/pipeline-ng'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
+import type {
+  ArtifactTriggerConfig,
+  GetActionsListQueryParams,
+  ManifestTriggerConfig,
+  NGTriggerConfigV2,
+  NGTriggerSourceV2,
+  PipelineInfoConfig,
+  WebhookTriggerConfigV2
+} from 'services/pipeline-ng'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
 
 export interface ConnectorRefInterface {
@@ -48,6 +57,7 @@ export interface FlatOnEditValuesInterface {
   tags?: {
     [key: string]: string
   }
+  source?: NGTriggerSourceV2
   pipeline: PipelineInfoConfig
   triggerType: NGTriggerSourceV2['type']
   manifestType?: string
@@ -64,7 +74,6 @@ export interface FlatOnEditValuesInterface {
   event?: string
   actions?: string[]
   anyAction?: boolean // required for onEdit to show checked
-  secureToken?: string
   sourceBranchOperator?: string
   sourceBranchValue?: string
   targetBranchOperator?: string
@@ -93,6 +102,7 @@ export interface FlatOnEditValuesInterface {
   buildOperator?: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
+  pollInterval?: string
 }
 
 export interface FlatValidWebhookFormikValuesInterface {
@@ -113,7 +123,6 @@ export interface FlatValidWebhookFormikValuesInterface {
   autoAbortPreviousExecutions: boolean
   event?: string
   actions?: string[]
-  secureToken?: string
   sourceBranchOperator?: string
   sourceBranchValue?: string
   targetBranchOperator?: string
@@ -127,6 +136,7 @@ export interface FlatValidWebhookFormikValuesInterface {
   jexlCondition?: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
+  pollInterval?: string
 }
 
 export interface FlatValidScheduleFormikValuesInterface {
@@ -160,15 +170,16 @@ export interface FlatValidArtifactFormikValuesInterface {
   pipeline: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
 }
-export interface TriggerTypeSourceInterface {
-  triggerType: NGTriggerSourceV2['type']
-  sourceRepo?: string
-  manifestType?: string
-  artifactType?: string
-}
 
 export interface TriggerConfigDTO extends Omit<NGTriggerConfigV2, 'identifier'> {
   identifier?: string
+}
+
+export interface TriggerGitQueryParams extends GitQueryParams {
+  triggerType?: NGTriggerSourceV2['type']
+  sourceRepo?: WebhookTriggerConfigV2['type']
+  manifestType?: ManifestTriggerConfig['type']
+  artifactType?: ArtifactTriggerConfig['type']
 }
 
 export interface artifactManifestData {
@@ -190,6 +201,7 @@ export interface artifactTableDetails {
   location?: string
   chartVersion?: string
   tag?: string
+  storeType?: string
 }
 
 export interface artifactTableItem {

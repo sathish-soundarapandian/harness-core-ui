@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { MapGCPLogsToServiceFieldNames } from '../constants'
+import { initialFormData, MapGCPLogsToServiceFieldNames } from '../constants'
 import { validateMappings, updateSelectedMetricsMap } from '../utils'
 
 function mockGetString(name: string): string {
@@ -75,7 +75,8 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             }
           ]
         ]),
-        formikProps: { values: { metricName: 'metric', query: '' } } as any
+        formikProps: { values: { metricName: 'metric', query: '' } } as any,
+        initialFormData
       })
     ).toEqual({
       mappedMetrics: new Map([
@@ -117,7 +118,8 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             }
           ]
         ]),
-        formikProps: { values: { metricName: 'metric', query: '' } } as any
+        formikProps: { values: { metricName: 'metric', query: '' } } as any,
+        initialFormData
       })
     ).toEqual({
       mappedMetrics: new Map([
@@ -164,7 +166,8 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             messageIdentifier: 'message-identifier',
             recordCount: 0
           }
-        } as any
+        } as any,
+        initialFormData
       })
     ).toEqual({
       mappedMetrics: new Map([

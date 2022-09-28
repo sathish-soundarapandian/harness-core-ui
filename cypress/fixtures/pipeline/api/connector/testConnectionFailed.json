@@ -1,0 +1,24 @@
+{
+  "status": "ERROR",
+  "code": "GENERAL_ERROR",
+  "message": "Unexpected error occurred while submitting task.",
+  "correlationId": "e0faa4c7-b05a-4884-ad0e-bddc406af1cf",
+  "detailedMessage": null,
+  "responseMessages": [
+    {
+      "code": "GENERAL_ERROR",
+      "level": "ERROR",
+      "message": "Unexpected error occurred while submitting task.",
+      "exception": null,
+      "failureTypes": []
+    },
+    {
+      "code": "GENERAL_ERROR",
+      "level": "ERROR",
+      "message": "INTERNAL: No eligible delegate(s) in account to execute task. No matching selector(s)",
+      "exception": null,
+      "failureTypes": []
+    }
+  ],
+  "metadata": null
+}

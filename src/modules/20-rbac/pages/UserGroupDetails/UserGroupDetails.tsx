@@ -20,7 +20,6 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { PageSpinner } from '@common/components'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { useQueryParams } from '@common/hooks'
 import type { PrincipalScope } from '@common/interfaces/SecretsInterface'
@@ -39,7 +38,8 @@ import MemberList from '@rbac/pages/UserGroupDetails/views/MemberList'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import NotificationList from '@rbac/components/NotificationList/NotificationList'
-import { isCommunityPlan } from '@common/utils/utils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useGetCommunity } from '@common/utils/utils'
 import UserGroupRefScopeList from '@rbac/components/UserGroupRefScopeList/UserGroupRefScopeList'
 import css from './UserGroupDetails.module.scss'
 
@@ -48,7 +48,7 @@ const UserGroupDetails: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, module, userGroupIdentifier } =
     useParams<PipelineType<ProjectPathProps & { userGroupIdentifier: string }>>()
   const { parentScope } = useQueryParams<{ parentScope: PrincipalScope }>()
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
   const history = useHistory()
 
   const { data, loading, error, refetch } = useGetUserGroupAggregate({
@@ -72,16 +72,17 @@ const UserGroupDetails: React.FC = () => {
     onSuccess: refetch
   })
 
+  const { getRBACErrorMessage } = useRBACError()
+
   const userGroupAggregateResponse: UserGroupAggregateDTO | undefined = data?.data
   const userGroup = userGroupAggregateResponse?.userGroupDTO
-  const { INHERITED_USER_GROUP } = useFeatureFlags()
 
   useDocumentTitle([userGroup?.name || '', getString('common.userGroups')])
 
   const userGroupInherited = isUserGroupInherited(accountId, orgIdentifier, projectIdentifier, userGroup)
 
   if (loading) return <PageSpinner />
-  if (error) return <PageError message={(error.data as Error)?.message || error.message} onClick={() => refetch()} />
+  if (error) return <PageError message={getRBACErrorMessage(error)} onClick={() => refetch()} />
   if (!userGroup) return <></>
   const membersBtnTooltipText = getUserGroupActionTooltipText(
     accountId,
@@ -100,7 +101,7 @@ const UserGroupDetails: React.FC = () => {
     userGroupInherited
   )
   const ssoBtnTooltipText = ssoBtnTooltip ? <Text padding="medium">{ssoBtnTooltip}</Text> : undefined
-  const shouldRenderScopeList = !userGroupInherited && INHERITED_USER_GROUP
+  const shouldRenderScopeList = !userGroupInherited
   return (
     <>
       <Page.Header
@@ -115,12 +116,13 @@ const UserGroupDetails: React.FC = () => {
             ]}
           />
         }
+        className={css.header}
         title={
           <Layout.Vertical spacing="xsmall">
             <Text color={Color.BLACK} font="medium">
               {userGroup.name}
             </Text>
-            {userGroup.description && <Text>{userGroup.description}</Text>}
+            {userGroup.description && <Text lineClamp={1}>{userGroup.description}</Text>}
             {userGroup.tags && (
               <Layout.Horizontal padding={{ top: 'small' }}>
                 <TagsRenderer tags={userGroup.tags || /* istanbul ignore next */ {}} length={6} />
@@ -182,7 +184,9 @@ const UserGroupDetails: React.FC = () => {
               {userGroup.ssoLinked ? (
                 <Layout.Horizontal className={css.truncatedText} flex={{ alignItems: 'center' }} spacing="xsmall">
                   <Text icon={'link'} iconProps={{ color: Color.BLUE_500, size: 10 }} color={Color.BLACK}>
-                    {getString('rbac.userDetails.linkToSSOProviderModal.saml')}
+                    {userGroup.linkedSsoType === 'SAML'
+                      ? getString('rbac.userDetails.linkToSSOProviderModal.saml')
+                      : getString('rbac.userDetails.linkToSSOProviderModal.ldap')}
                   </Text>
                   <Text lineClamp={1} width={70}>
                     {userGroup.linkedSsoDisplayName}
@@ -194,37 +198,43 @@ const UserGroupDetails: React.FC = () => {
                 </Layout.Horizontal>
               ) : null}
             </Layout.Horizontal>
-            <Layout.Horizontal className={cx({ [css.buttonPadding]: userGroup.ssoLinked })}>
-              <ManagePrincipalButton
-                disabled={userGroup.externallyManaged || userGroupInherited}
-                text={
-                  userGroup.ssoLinked
-                    ? getString('rbac.userDetails.linkToSSOProviderModal.delinkLabel')
-                    : getString('rbac.userDetails.linkToSSOProviderModal.linkLabel')
-                }
-                icon={userGroup.ssoLinked ? 'cross' : 'link'}
-                variation={ButtonVariation.LINK}
-                onClick={() => {
-                  openLinkToSSOProviderModal(userGroup)
-                }}
-                tooltip={ssoBtnTooltipText}
-                resourceType={ResourceType.USERGROUP}
-                resourceIdentifier={userGroupIdentifier}
-              />
-              <ManagePrincipalButton
-                disabled={userGroup.ssoLinked || userGroup.externallyManaged || userGroupInherited}
-                tooltip={membersBtnTooltipTextFormatted}
-                text={getString('common.plusNumber', { number: getString('members') })}
-                variation={ButtonVariation.LINK}
-                onClick={() => {
-                  openUserGroupModal(userGroup, true)
-                }}
-                resourceType={ResourceType.USERGROUP}
-                resourceIdentifier={userGroupIdentifier}
-              />
-            </Layout.Horizontal>
+            {userGroup.harnessManaged ? null : (
+              <Layout.Horizontal className={cx({ [css.buttonPadding]: userGroup.ssoLinked })}>
+                <ManagePrincipalButton
+                  disabled={userGroup.externallyManaged || userGroupInherited}
+                  text={
+                    userGroup.ssoLinked
+                      ? getString('rbac.userDetails.linkToSSOProviderModal.delinkLabel')
+                      : getString('rbac.userDetails.linkToSSOProviderModal.linkLabel')
+                  }
+                  icon={userGroup.ssoLinked ? 'cross' : 'link'}
+                  variation={ButtonVariation.LINK}
+                  onClick={() => {
+                    openLinkToSSOProviderModal(userGroup)
+                  }}
+                  tooltip={ssoBtnTooltipText}
+                  resourceType={ResourceType.USERGROUP}
+                  resourceIdentifier={userGroupIdentifier}
+                />
+                <ManagePrincipalButton
+                  disabled={userGroup.ssoLinked || userGroup.externallyManaged || userGroupInherited}
+                  tooltip={membersBtnTooltipTextFormatted}
+                  text={getString('common.plusNumber', { number: getString('members') })}
+                  variation={ButtonVariation.LINK}
+                  onClick={() => {
+                    openUserGroupModal(userGroup, true)
+                  }}
+                  resourceType={ResourceType.USERGROUP}
+                  resourceIdentifier={userGroupIdentifier}
+                />
+              </Layout.Horizontal>
+            )}
           </Layout.Horizontal>
-          <MemberList ssoLinked={userGroup.ssoLinked} userGroupInherited={userGroupInherited} />
+          <MemberList
+            ssoLinked={userGroup.ssoLinked}
+            userGroupInherited={userGroupInherited}
+            managed={userGroup.harnessManaged}
+          />
         </Container>
         <Container width="50%" className={css.detailsContainer}>
           {!isCommunity && (
@@ -272,9 +282,7 @@ const UserGroupDetails: React.FC = () => {
                   ? getString('rbac.inheritedScope.orgScopeTitle')
                   : getString('rbac.inheritedScope.accountScopeTitle')}
               </Text>
-              <UserGroupRefScopeList
-                {...{ accountId, orgIdentifier, projectIdentifier, userGroupIdentifier, parentScope }}
-              />
+              <UserGroupRefScopeList {...{ userGroupIdentifier, parentScope }} />
             </Layout.Vertical>
           )}
         </Container>

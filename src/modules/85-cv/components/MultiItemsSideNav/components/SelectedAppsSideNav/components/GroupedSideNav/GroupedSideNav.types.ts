@@ -11,6 +11,7 @@ export interface GroupedMetric {
   groupName?: SelectOption
   metricName?: string
   index?: number
+  continuousVerification?: boolean
 }
 
 export interface GroupedCreatedMetrics {

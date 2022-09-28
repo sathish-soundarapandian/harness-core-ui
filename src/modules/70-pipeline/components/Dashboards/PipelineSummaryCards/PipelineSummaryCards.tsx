@@ -51,7 +51,7 @@ export default function PipelineSummaryCards() {
           text={data?.data?.executions?.total?.count}
           rate={data?.data?.executions?.total?.rate}
           isLoading={loading}
-          neutralColor
+          invertColor={true}
         />
         <SummaryCard
           title={
@@ -62,6 +62,7 @@ export default function PipelineSummaryCards() {
           text={isUndefined(successRate) ? undefined : successRate + '%'}
           rate={data?.data?.executions?.success?.rate}
           isLoading={loading}
+          invertColor={true}
         />
         <SummaryCard
           title={

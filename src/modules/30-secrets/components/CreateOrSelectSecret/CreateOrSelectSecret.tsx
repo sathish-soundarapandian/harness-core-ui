@@ -36,6 +36,7 @@ export interface CreateOrSelectSecretProps {
   connectorTypeContext?: ConnectorInfoDTO['type']
   onCancel?: () => void
   handleInlineSSHSecretCreation: () => void
+  handleInlineWinRmSecretCreation: () => void
   secretType?: SelectOption
   setSecretType?: (val: SelectOption) => void
 }
@@ -47,6 +48,7 @@ const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
   connectorTypeContext,
   onCancel,
   handleInlineSSHSecretCreation,
+  handleInlineWinRmSecretCreation,
   secretType,
   setSecretType
 }) => {
@@ -68,6 +70,7 @@ const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
         mock={secretsListMockData}
         connectorTypeContext={connectorTypeContext}
         handleInlineSSHSecretCreation={handleInlineSSHSecretCreation}
+        handleInlineWinRmSecretCreation={handleInlineWinRmSecretCreation}
         secretType={secretType}
         setSecretType={setSecretType}
       />

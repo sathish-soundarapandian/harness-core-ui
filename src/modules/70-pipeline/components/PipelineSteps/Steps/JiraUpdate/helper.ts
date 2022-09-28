@@ -11,7 +11,7 @@ import type { JiraUpdateData } from './types'
 
 export const processFieldsForSubmit = (values: JiraUpdateData): JiraCreateFieldType[] => {
   const toReturn: JiraCreateFieldType[] = []
-  values.spec.selectedFields?.forEach((field: JiraFieldNGWithValue) => {
+  values.spec.selectedOptionalFields?.forEach((field: JiraFieldNGWithValue) => {
     const name = field.name
     const value =
       typeof field.value === 'string' || typeof field.value === 'number'
@@ -37,10 +37,7 @@ export const processFormData = (values: JiraUpdateData): JiraUpdateData => {
   return {
     ...values,
     spec: {
-      connectorRef:
-        getMultiTypeFromValue(values.spec.connectorRef as SelectOption) === MultiTypeInputType.FIXED
-          ? (values.spec.connectorRef as SelectOption)?.value?.toString()
-          : values.spec.connectorRef,
+      connectorRef: values.spec.connectorRef,
       issueKey: values.spec.issueKey,
       transitionTo:
         values.spec.transitionTo?.transitionName || values.spec.transitionTo?.status

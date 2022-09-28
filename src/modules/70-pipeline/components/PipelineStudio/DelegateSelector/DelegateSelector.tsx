@@ -9,7 +9,7 @@ import React from 'react'
 import { Formik, FormikProps } from 'formik'
 
 import { debounce } from 'lodash-es'
-import type { StageElementWrapperConfig } from 'services/cd-ng'
+import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 export interface DelegateSelectorProps {

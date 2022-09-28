@@ -34,7 +34,8 @@ export default function PipelineModalListView({ onClose, mockData }: PipelineMod
   const [page, setPage] = useState(0)
   const [searchParam, setSearchParam] = React.useState('')
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [gitFilter, setGitFilter] = useState<GitFilterScope | null>(null)
 
   const { projectIdentifier, orgIdentifier, accountId, module } = useParams<

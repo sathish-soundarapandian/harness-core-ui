@@ -310,7 +310,7 @@ exports[`Test SLOTargetAndBudgetPolicy component should render SLOTargetAndBudge
           </div>
         </div>
         <div
-          class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-xxlarge"
+          class="Layout--vertical StyledProps--main tooltipStyle notificationsContainer StyledProps--margin-medium"
         >
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"

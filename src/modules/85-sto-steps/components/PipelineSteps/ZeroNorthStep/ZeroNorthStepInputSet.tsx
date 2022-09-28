@@ -7,18 +7,21 @@
 
 import React from 'react'
 import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@wings-software/uicore'
+import { connect } from 'formik'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import { CIStepOptionalConfig } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
+import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
 import type { ZeroNorthStepProps } from './ZeroNorthStep'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const ZeroNorthStepInputSet: React.FC<ZeroNorthStepProps> = ({
+export const ZeroNorthStepInputSetBasic: React.FC<ZeroNorthStepProps> = ({
   template,
   path,
   readonly,
   stepViewType,
-  allowableTypes
+  allowableTypes,
+  formik
 }) => {
   return (
     <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
@@ -36,13 +39,16 @@ export const ZeroNorthStepInputSet: React.FC<ZeroNorthStepProps> = ({
       <CIStepOptionalConfig
         readonly={readonly}
         enableFields={{
-          ...(getMultiTypeFromValue(template?.spec?.settings as string) === MultiTypeInputType.RUNTIME && {
+          ...(shouldRenderRunTimeInputView(template?.spec?.settings) && {
             'spec.settings': {}
           })
         }}
         allowableTypes={allowableTypes}
         stepViewType={stepViewType}
         path={path || ''}
+        formik={formik}
+        isInputSetView={true}
+        template={template}
       />
       <StepCommonFieldsInputSet
         path={path}
@@ -54,3 +60,6 @@ export const ZeroNorthStepInputSet: React.FC<ZeroNorthStepProps> = ({
     </FormikForm>
   )
 }
+
+const ZeroNorthStepInputSet = connect(ZeroNorthStepInputSetBasic)
+export { ZeroNorthStepInputSet }

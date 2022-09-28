@@ -300,7 +300,7 @@ exports[`Create CE K8s Connector Wizard Proceed with following steps 1`] = `
                           >
                             <div
                               class="Text--withDocsTooltip"
-                              data-tooltip-id="overViewStepForm_identifier"
+                              data-tooltip-id="universalInputNameWithId"
                             >
                               <p
                                 class="StyledProps--font StyledProps--main"
@@ -1125,7 +1125,7 @@ exports[`Create CE K8s Connector Wizard Proceed with following steps 3`] = `
               </span>
               connectors.ceK8.providePermissionsStep.info
               <a
-                href="https://ngdocs.harness.io/article/ltt65r6k39-set-up-cost-visibility-for-kubernetes#prerequisites"
+                href="https://docs.harness.io/article/ltt65r6k39-set-up-cost-visibility-for-kubernetes#prerequisites"
                 rel="noreferrer"
                 target="_blank"
               >
@@ -1620,7 +1620,7 @@ exports[`Create CE K8s Connector Wizard Step One 1`] = `
                           >
                             <div
                               class="Text--withDocsTooltip"
-                              data-tooltip-id="overViewStepForm_identifier"
+                              data-tooltip-id="universalInputNameWithId"
                             >
                               <p
                                 class="StyledProps--font StyledProps--main"
