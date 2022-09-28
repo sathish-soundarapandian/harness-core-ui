@@ -61,7 +61,7 @@ export function buildElkHealthSourceInfo(params: ProjectPathProps, data: any): E
   }
 }
 
-const getMappedServicesAndEnvs = (data: any): Map<string, MapElkQueryToService> => {
+export const getMappedServicesAndEnvs = (data: any): Map<string, MapElkQueryToService> => {
   const currentHealthSource = data?.healthSourceList?.find((el: any) => el?.identifier === data?.healthSourceIdentifier)
   const mappedQueries = currentHealthSource?.spec?.queries
   if (currentHealthSource && !isEmpty(mappedQueries)) {

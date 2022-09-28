@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { getMappedServicesAndEnvs } from '../ElkHealthSource.utils'
+
 const mappedServicesAndEnvs = new Map()
 
 mappedServicesAndEnvs.set('ELK Logs Query', {
@@ -19,39 +21,22 @@ export const params = {
   projectIdentifier: 'Demo'
 }
 
-export const setupSource = {
-  accountId: 'kmpySmUISimoRrJL6NL73w',
-  orgIdentifier: 'default',
-  projectIdentifier: 'Demo',
-  name: 'Elk dev 12',
-  identifier: 'Elk_dev',
-  connectorRef: 'Elk_Conn',
-  isEdit: true,
-  product: 'Elk Cloud Logs',
-  type: 'ELKLog' as any,
-  mappedServicesAndEnvs,
-  identify_timestamp: undefined,
-  logIndexes: undefined,
-  messageIdentifier: undefined,
-  timeStampFormat: undefined
-}
-
 export const ElkPayload = {
   type: 'ELKLog',
-  identifier: 'Elk_dev',
-  name: 'Elk dev 12',
+  identifier: 'elk1',
+  name: 'elk1',
   spec: {
-    connectorRef: 'Elk_Conn',
+    connectorRef: 'ddsfdsfdf',
     feature: 'ELK Logs',
     queries: [
       {
         name: 'ELK Logs Query',
-        query: 'error OR failed OR severe OR ( sourcetype=access_* ( 404 OR 500 OR 503 ) )',
-        serviceInstanceIdentifier: '_sourcetype',
-        index: undefined,
-        messageIdentifier: undefined,
-        timeStampFormat: undefined,
-        timeStampIdentifier: undefined
+        query: '*',
+        serviceInstanceIdentifier: '_source.space.description',
+        index: '.kibana_1',
+        messageIdentifier: '_type',
+        timeStampFormat: 'yyyy MMM dd HH:mm:ss.SSS zzz',
+        timeStampIdentifier: '_source.space.name'
       }
     ]
   }
@@ -154,6 +139,21 @@ export const data = {
     label: 'ELK Logs',
     value: 'ELK Logs'
   }
+}
+
+export const setupSource = {
+  accountId: 'kmpySmUISimoRrJL6NL73w',
+  orgIdentifier: 'default',
+  projectIdentifier: 'Demo',
+  name: 'elk1',
+  connectorRef: 'ddsfdsfdf',
+  identifier: 'elk1',
+  isEdit: true,
+  product: 'ELK Logs',
+  type: 'ELKLog' as any,
+  mappedServicesAndEnvs: getMappedServicesAndEnvs(data),
+  messageIdentifier: undefined,
+  timeStampFormat: undefined
 }
 
 export const mockedElkSampleData = [
