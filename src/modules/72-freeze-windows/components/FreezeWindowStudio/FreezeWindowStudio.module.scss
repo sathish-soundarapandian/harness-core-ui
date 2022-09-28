@@ -104,6 +104,6 @@
 }
 
 .addNewRuleButton {
-  margin-top: var(--spacing-large);
-  margin-left: -(var(--spacing-large)); // padding left of Add Button
+  margin-top: var(--spacing-large) !important;
+  margin-left: -20px; // padding left of Add Button
 }
