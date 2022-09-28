@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addNewRuleButton: string
   readonly buttonsWrapper: string
   readonly canvasContainer: string
   readonly canvasWrapper: string

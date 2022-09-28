@@ -189,23 +189,34 @@ const ConfigsSection = ({ entityConfigs, getString, updateFreeze, resources }: C
     setInitialValues(getInitialValuesForConfigSection(entityConfigs))
   }, [])
   return (
-    <Formik initialValues={initialValues} onSubmit={noop} formName="freezeWindowStudioConfigForm">
-      {formikProps =>
-        entityConfigs.map((config: EntityConfig, index: number) => (
-          <ConfigRenderer
-            key={index}
-            config={config}
-            isEdit={index === 0}
-            getString={getString}
-            index={index}
-            updateFreeze={updateFreeze}
-            formikProps={formikProps}
-            entityConfigs={entityConfigs}
-            resources={resources}
-          />
-        ))
-      }
-    </Formik>
+    <>
+      <Formik initialValues={initialValues} onSubmit={noop} formName="freezeWindowStudioConfigForm">
+        {formikProps =>
+          entityConfigs.map((config: EntityConfig, index: number) => (
+            <ConfigRenderer
+              key={index}
+              config={config}
+              isEdit={index === 0}
+              getString={getString}
+              index={index}
+              updateFreeze={updateFreeze}
+              formikProps={formikProps}
+              entityConfigs={entityConfigs}
+              resources={resources}
+            />
+          ))
+        }
+      </Formik>
+      <Button
+        minimal
+        withoutBoxShadow
+        intent="primary"
+        text="Add rule"
+        icon="plus"
+        onClick={() => console.log('Hello World')}
+        className={css.addNewRuleButton}
+      />
+    </>
   )
 }
 
