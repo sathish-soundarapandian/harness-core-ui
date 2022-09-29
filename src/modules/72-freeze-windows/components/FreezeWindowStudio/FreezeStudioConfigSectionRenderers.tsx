@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
-import { SelectOption } from '@wings-software/uicore'
+import type { SelectOption } from '@wings-software/uicore'
 import { FormInput } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
+import type { EntityType } from '@freeze-windows/types'
 
 export enum FIELD_KEYS {
   EnvType = 'EnvType',
@@ -36,7 +37,6 @@ const All = 'All'
 const Equals = 'Equals'
 const NotEquals = 'NotEquals'
 export enum EnvironmentType {
-  All = 'All', // BE YAML Mapping
   PROD = 'PROD',
   NON_PROD = 'NON_PROD'
 }
@@ -51,7 +51,7 @@ interface EnvTypeRendererProps {
 }
 export const EnvironmentTypeRenderer = ({ getString, name }: EnvTypeRendererProps) => {
   const [envTypes] = React.useState<SelectOption[]>([
-    { label: getString('common.allEnvironments'), value: EnvironmentType.All },
+    { label: getString('common.allEnvironments'), value: All },
     { label: getString('production'), value: EnvironmentType.PROD },
     { label: getString('common.preProduction'), value: EnvironmentType.NON_PROD }
   ])
@@ -59,7 +59,12 @@ export const EnvironmentTypeRenderer = ({ getString, name }: EnvTypeRendererProp
   return <FormInput.Select name={name} items={envTypes} label={getString('envType')} style={{ width: '400px' }} />
 }
 
-export const ServiceFieldRenderer = ({ getString, isDisabled, name }) => {
+interface ServiceFieldRendererPropsInterface {
+  getString: UseStringsReturn['getString']
+  isDisabled: boolean
+  name: string
+}
+export const ServiceFieldRenderer: React.FC<ServiceFieldRendererPropsInterface> = ({ getString, isDisabled, name }) => {
   const [disabledItems] = React.useState<SelectOption[]>([{ label: getString('common.allServices'), value: All }])
   if (isDisabled) {
     return (
@@ -75,28 +80,41 @@ export const ServiceFieldRenderer = ({ getString, isDisabled, name }) => {
   return <div>null</div>
 }
 
-const getOrgNameKeys = namePrefix => {
+const getOrgNameKeys = (namePrefix: string) => {
   const orgFieldName = `${namePrefix}.${FIELD_KEYS.Org}`
   const orgCheckBoxName = `${namePrefix}.${FIELD_KEYS.ExcludeOrgCheckbox}`
   const excludeOrgName = `${namePrefix}.${FIELD_KEYS.ExcludeOrg}`
   return { orgFieldName, orgCheckBoxName, excludeOrgName }
 }
 
-const getProjNameKeys = namePrefix => {
+const getProjNameKeys = (namePrefix: string) => {
   const projFieldName = `${namePrefix}.${FIELD_KEYS.Proj}`
   const projCheckBoxName = `${namePrefix}.${FIELD_KEYS.ExcludeProjCheckbox}`
   const excludeProjName = `${namePrefix}.${FIELD_KEYS.ExcludeProj}`
   return { projFieldName, projCheckBoxName, excludeProjName }
 }
 
-export const Organizationfield = ({ getString, namePrefix, organizations, values, setFieldValue }) => {
+interface OrganizationfieldPropsInterface {
+  getString: UseStringsReturn['getString']
+  namePrefix: string
+  organizations: SelectOption[]
+  values: any
+  setFieldValue: any
+}
+export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
+  getString,
+  namePrefix,
+  organizations,
+  values,
+  setFieldValue
+}) => {
   const orgValue = values[FIELD_KEYS.Org]
   const excludeOrgValue = values[FIELD_KEYS.ExcludeOrgCheckbox]
   const isCheckBoxEnabled = orgValue === All
   const { orgFieldName, orgCheckBoxName, excludeOrgName } = getOrgNameKeys(namePrefix)
   const { projFieldName, projCheckBoxName, excludeProjName } = getProjNameKeys(namePrefix)
 
-  const [allOrgs, setAllOrgs] = React.useState([])
+  const [allOrgs, setAllOrgs] = React.useState<SelectOption[]>([])
   React.useEffect(() => {
     if (organizations.length) {
       setAllOrgs([{ label: 'All Organizations', value: All }, ...organizations])
@@ -137,7 +155,20 @@ export const Organizationfield = ({ getString, namePrefix, organizations, values
   )
 }
 
-export const ProjectField = ({ getString, namePrefix, projects, values, setFieldValue }) => {
+interface ProjectFieldPropsInterface {
+  getString: UseStringsReturn['getString']
+  namePrefix: string
+  projects: SelectOption[]
+  values: any
+  setFieldValue: any
+}
+export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
+  getString,
+  namePrefix,
+  projects,
+  values,
+  setFieldValue
+}) => {
   // If one organization, show projects, else show all projects
   const orgValue = values[FIELD_KEYS.Org]
   const isOrgValueAll = orgValue === All
@@ -145,7 +176,7 @@ export const ProjectField = ({ getString, namePrefix, projects, values, setField
   const excludeProjValue = values[FIELD_KEYS.ExcludeProjCheckbox]
   const isCheckBoxEnabled = projValue === All
   const { projFieldName, projCheckBoxName, excludeProjName } = getProjNameKeys(namePrefix)
-  const [allProj, setAllProj] = React.useState([])
+  const [allProj, setAllProj] = React.useState<SelectOption[]>([])
 
   React.useEffect(() => {
     if (isOrgValueAll) {
@@ -190,7 +221,7 @@ export const ProjectField = ({ getString, namePrefix, projects, values, setField
   )
 }
 
-const renderKeyValue = (key, value) => {
+const renderKeyValue = (key: string, value?: string) => {
   return (
     <div>
       <span>{key}</span>: <span>{value}</span>
@@ -198,30 +229,38 @@ const renderKeyValue = (key, value) => {
   )
 }
 
-export const OrgFieldViewMode = ({ data, getString }) => {
+interface OrgFieldViewModePropsInterface {
+  data?: EntityType
+  getString: UseStringsReturn['getString']
+}
+export const OrgFieldViewMode: React.FC<OrgFieldViewModePropsInterface> = ({ data, getString }) => {
   if (!data) return null
   const { filterType, entityRefs } = data
   let value = 'All Organizations'
   if (filterType === All) {
     value = 'All Organizations'
   } else if (filterType === Equals) {
-    value = entityRefs.join(', ')
+    value = (entityRefs as string[])?.join(', ')
   } else if (filterType === NotEquals) {
-    value = `All Organizations except ${entityRefs.join(', ')}`
+    value = `All Organizations except ${entityRefs?.join(', ')}`
   }
   return renderKeyValue(getString('orgLabel'), value)
 }
 
-export const ProjectFieldViewMode = ({ data, getString }) => {
+interface ProjectFieldViewModePropsInterface {
+  data?: EntityType
+  getString: UseStringsReturn['getString']
+}
+export const ProjectFieldViewMode: React.FC<ProjectFieldViewModePropsInterface> = ({ data, getString }) => {
   if (!data) return null
   const { filterType, entityRefs } = data
   let value = 'All Projects'
   if (filterType === All) {
     value = 'All Projects'
   } else if (filterType === Equals) {
-    value = entityRefs.join(', ')
+    value = (entityRefs as string[])?.join(', ')
   } else if (filterType === NotEquals) {
-    value = `All Projects except ${entityRefs.join(', ')}`
+    value = `All Projects except ${entityRefs?.join(', ')}`
   }
   return renderKeyValue(getString('projectsText'), value)
 }

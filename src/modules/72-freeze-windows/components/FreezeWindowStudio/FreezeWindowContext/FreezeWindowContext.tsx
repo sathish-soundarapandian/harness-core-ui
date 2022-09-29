@@ -8,29 +8,12 @@
 import React from 'react'
 import noop from 'lodash-es/noop'
 import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { useParams } from 'react-router-dom'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindowContextActions } from './FreezeWidowActions'
 import { initialState, FreezeWindowReducerState, FreezeReducer } from './FreezeWindowReducer'
-import { useParams } from 'react-router-dom'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-
-// interface Freeze {
-//   // todo: use from BE swagger
-//   description?: string
-//   identifier: string
-//   name: string
-//   orgIdentifier?: string
-//   projectIdentifier?: string
-//   spec?: any
-// }
-//
-// interface FreezePayload {
-//   identifier: string
-//   freeze?: Freeze
-//   originalFreeze?: Freeze
-//   isUpdated: boolean
-// }
 
 export enum FreezeWindowLevels {
   ACCOUNT = 'ACCOUNT',
@@ -57,10 +40,10 @@ export const FreezeWindowContext = React.createContext<FreezeWindowContextInterf
   setYamlHandler: noop,
   updateYamlView: noop,
   updateFreeze: noop,
-  freezeWindowLevel: FreezeWindowLevels.ACCOUNT
+  freezeWindowLevel: FreezeWindowLevels.ORG
 })
 
-const getFreezeWindowLevel = ({ accountId, projectIdentifier, orgIdentifier }) => {
+const getFreezeWindowLevel = ({ projectIdentifier, orgIdentifier }: ProjectPathProps) => {
   if (projectIdentifier) return FreezeWindowLevels.PROJECT
   if (orgIdentifier) return FreezeWindowLevels.ORG
   return FreezeWindowLevels.ACCOUNT
@@ -73,7 +56,7 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
     isInvalidYAML ? SelectedView.YAML : SelectedView.VISUAL
   )
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>()
+  const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>(FreezeWindowLevels.ORG)
 
   React.useEffect(() => {
     setFreezeWindowLevel(getFreezeWindowLevel({ accountId, projectIdentifier, orgIdentifier }))

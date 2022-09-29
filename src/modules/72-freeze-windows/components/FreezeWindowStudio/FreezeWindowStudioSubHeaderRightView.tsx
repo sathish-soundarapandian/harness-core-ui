@@ -15,7 +15,7 @@ import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStud
 export const FreezeWindowStudioSubHeaderRightView = () => {
   const { getString } = useStrings()
   const {
-    state: { yamlHandler, freezeObj } // freeze,
+    state: { freezeObj } // freeze,
   } = React.useContext(FreezeWindowContext)
   const { mutate: createFreeze } = useCreateFreeze({
     // loading

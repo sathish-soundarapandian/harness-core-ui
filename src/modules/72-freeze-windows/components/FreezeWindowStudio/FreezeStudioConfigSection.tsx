@@ -22,8 +22,13 @@ import {
 import { Color } from '@harness/design-system'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
-import type { EntityConfig } from '@freeze-windows/types'
-import { getInitialValuesForConfigSection, convertValuesToYamlObj, getFieldsVisibility } from './FreezeWindowStudioUtil'
+import type { EntityConfig, ResourcesInterface, EntityType } from '@freeze-windows/types'
+import {
+  getInitialValuesForConfigSection,
+  convertValuesToYamlObj,
+  getFieldsVisibility,
+  FieldVisibility
+} from './FreezeWindowStudioUtil'
 import {
   ServiceFieldRenderer,
   EnvironmentTypeRenderer,
@@ -35,28 +40,24 @@ import {
 } from './FreezeStudioConfigSectionRenderers'
 import css from './FreezeWindowStudio.module.scss'
 
-interface FreezeStudioConfigSectionProps {
-  isReadOnly: boolean
-  onBack: () => void
-  onNext: () => void
-}
-
-interface ConfigRendererProps {
-  entityConfigs: EntityConfig[]
+interface ConfigViewModeRendererProps {
   config: EntityConfig
-  isEdit: boolean
   getString: UseStringsReturn['getString']
-  index: number
-  updateFreeze: (freeze: any) => void
-  formikProps: any
+  setEditView: () => void
+  deleteConfig: () => void
 }
 
-const ConfigViewModeRenderer = ({ config, getString, setEditView, deleteConfig }) => {
+const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
+  config,
+  getString,
+  setEditView,
+  deleteConfig
+}) => {
   const { name, entities } = config || {}
   const entitiesMap =
-    entities?.reduce((accum, item) => {
+    entities?.reduce((accum: any, item: EntityType) => {
       if (item?.type) {
-        accum[item.type] = item
+        accum[item.type] = item as EntityType
       }
       return accum
     }, {}) || {}
@@ -75,7 +76,17 @@ const ConfigViewModeRenderer = ({ config, getString, setEditView, deleteConfig }
   )
 }
 
-const ConfigEditModeRenderer = ({
+interface ConfigEditModeRendererProps {
+  index: number
+  getString: UseStringsReturn['getString']
+  formikProps: any
+  resources: ResourcesInterface
+  saveEntity: any
+  setVisualView: () => void
+  fieldsVisibility: any
+}
+
+const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
   index,
   getString,
   formikProps,
@@ -130,6 +141,18 @@ const ConfigEditModeRenderer = ({
   )
 }
 
+interface ConfigRendererProps {
+  config: EntityConfig
+  isEdit: boolean
+  getString: UseStringsReturn['getString']
+  index: number
+  updateFreeze: (freeze: any) => void
+  formikProps: any
+  entityConfigs: EntityConfig[]
+  resources: ResourcesInterface
+  fieldsVisibility: FieldVisibility
+}
+
 const ConfigRenderer = ({
   config,
   isEdit,
@@ -160,7 +183,7 @@ const ConfigRenderer = ({
   }, [])
 
   const deleteConfig = () => {
-    const updatedEntityConfigs = entityConfigs.filter((config, i) => index !== i)
+    const updatedEntityConfigs = entityConfigs.filter((_, i) => index !== i)
     updateFreeze({ entityConfigs: updatedEntityConfigs })
   }
 
@@ -186,7 +209,6 @@ const ConfigRenderer = ({
           getString={getString}
           setEditView={setEditViewMode}
           deleteConfig={deleteConfig}
-          fieldsVisibility={fieldsVisibility}
         />
       )}
     </Container>
@@ -197,6 +219,8 @@ interface ConfigsSectionProps {
   entityConfigs: EntityConfig[]
   getString: UseStringsReturn['getString']
   updateFreeze: (freeze: any) => void
+  resources: ResourcesInterface
+  fieldsVisibility: FieldVisibility
 }
 const ConfigsSection = ({
   entityConfigs,
@@ -235,11 +259,17 @@ const ConfigsSection = ({
         intent="primary"
         text="Add rule"
         icon="plus"
-        onClick={() => console.log('Hello World')}
+        // onClick={() => console.log('Hello World')}
         className={css.addNewRuleButton}
       />
     </>
   )
+}
+
+interface FreezeStudioConfigSectionProps {
+  onBack: () => void
+  onNext: () => void
+  resources: ResourcesInterface
 }
 
 export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps> = ({ onNext, onBack, resources }) => {
@@ -250,7 +280,7 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
     freezeWindowLevel
   } = React.useContext(FreezeWindowContext)
 
-  const fieldsVisibility = React.useMemo(() => {
+  const fieldsVisibility: FieldVisibility = React.useMemo(() => {
     return getFieldsVisibility(freezeWindowLevel)
   }, [freezeWindowLevel])
   // console.log('freezeWindowLevel', freezeWindowLevel)
