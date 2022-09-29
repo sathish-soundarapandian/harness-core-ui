@@ -135,6 +135,18 @@
     flex-direction: column;
     min-height: 470px;
     justify-content: space-between;
+    .fileTypeLabel {
+      margin-bottom: var(--spacing-large);
+    }
+    .filesLabel {
+      margin-bottom: 0px !important;
+    }
+    :global {
+      label {
+        color: var(--grey-600) !important;
+        font-weight: 500;
+      }
+    }
   }
   .configFilesForm {
     min-height: 470px;
@@ -172,9 +184,7 @@
 .identifierField {
   width: 340px;
   margin-bottom: var(--spacing-xlarge);
-  margin-top: var(--spacing-xlarge);
 }
 .selectFileType {
-  margin-top: var(--spacing-large);
   margin-bottom: var(--spacing-xxlarge);
 }

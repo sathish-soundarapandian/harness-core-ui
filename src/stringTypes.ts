@@ -3554,6 +3554,7 @@ export interface StringsMap {
   'pipeline.manifestToConnectorLabelMap.AWSLabel': string
   'pipeline.manifestType.InheritFromManifest': string
   'pipeline.manifestType.addManifestLabel': string
+  'pipeline.manifestType.addValuesYamlPath': string
   'pipeline.manifestType.attachPath': string
   'pipeline.manifestType.basePath': string
   'pipeline.manifestType.basePathPlaceholder': string

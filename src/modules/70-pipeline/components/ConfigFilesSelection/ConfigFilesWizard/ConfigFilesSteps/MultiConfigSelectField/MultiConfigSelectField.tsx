@@ -17,7 +17,8 @@ import {
   EXPRESSION_INPUT_PLACEHOLDER,
   Layout,
   Icon,
-  AllowedTypes
+  AllowedTypes,
+  Color
 } from '@harness/uicore'
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 
@@ -64,6 +65,7 @@ export interface MultiTypeMapProps {
   allowableTypes?: AllowedTypes
   fileUsage?: FileUsage
   addFileLabel?: string
+  isAttachment?: boolean
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -85,6 +87,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     allowableTypes,
     fileUsage,
     addFileLabel,
+    isAttachment = false,
     ...restProps
   } = props
 
@@ -242,6 +245,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                             data-testid={`remove-${name}-[${index}]`}
                                             onClick={() => remove(index)}
                                             disabled={disabled || values.length <= 1}
+                                            color={disabled ? Color.GREY_600 : Color.PRIMARY_7}
                                           />
                                         </div>
                                       </div>
@@ -262,7 +266,8 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                             push('')
                           }}
                           disabled={disabled || isRunTime}
-                          style={{ padding: 0, marginTop: 24 }}
+                          style={{ padding: 0 }}
+                          margin={{ top: 'xlarge', bottom: isAttachment ? 'xxxlarge' : 'medium' }}
                         />
                       )}
                     </>
