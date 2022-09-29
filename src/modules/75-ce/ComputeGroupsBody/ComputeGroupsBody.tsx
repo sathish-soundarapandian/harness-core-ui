@@ -10,12 +10,13 @@ import { Container, Page } from '@harness/uicore'
 import CGTopPanel from './CGTopPanel'
 import CGDataRow from './CGDataRow'
 import ClusterTable from './ClusterTable'
+import css from './ComputeGroupsBody.module.scss'
 
 const ComputeGroupsBody: React.FC = () => {
   return (
-    <Page.Body>
+    <Page.Body className={css.cgBodyContainer}>
       <CGTopPanel />
-      <Container>
+      <Container className={css.bodyWidgetsContainer}>
         <CGDataRow />
         <ClusterTable />
       </Container>

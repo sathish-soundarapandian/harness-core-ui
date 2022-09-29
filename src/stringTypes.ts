@@ -5665,6 +5665,7 @@ export interface StringsMap {
   'ce.computeGroups.table.headers.managedBy': string
   'ce.computeGroups.table.headers.memory': string
   'ce.computeGroups.table.headers.name': string
+  'ce.computeGroups.totalNodes': string
   'ce.computeGroups.totalSpotSavings': string
   'ce.connector.AWS.crossAccountRole.arn': string
   'ce.connector.AWS.crossAccountRole.externalID': string

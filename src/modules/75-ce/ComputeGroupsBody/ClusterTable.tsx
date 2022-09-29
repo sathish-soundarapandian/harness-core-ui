@@ -26,19 +26,19 @@ interface ClusterRow {
   status: string
 }
 
-const data = [
-  {
-    name: 'myK8sCluster',
-    id: 'ID',
-    region: 'us-east-1',
-    nodeCount: 7,
-    cpu: 11.82,
-    memory: 6.37,
-    spend: 27.83,
-    managedBy: [],
-    status: 'enabled'
-  }
-]
+const clusterData = {
+  name: 'myK8sCluster',
+  id: 'ID',
+  region: 'us-east-1',
+  nodeCount: 7,
+  cpu: 11.82,
+  memory: 6.37,
+  spend: 27.83,
+  managedBy: [],
+  status: 'enabled'
+}
+
+const data = [clusterData, clusterData, clusterData]
 
 const NameIdCell = (tableProps: CellProps<ClusterRow>) => {
   return (

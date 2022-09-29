@@ -8,11 +8,12 @@
 import React from 'react'
 import { Button, ButtonVariation, Container, ExpandingSearchInput, Layout } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import css from './ComputeGroupsBody.module.scss'
 
 const CGTopPanel: React.FC = () => {
   const { getString } = useStrings()
   return (
-    <Container>
+    <Container padding={{ top: 'large', bottom: 'large', left: 'xlarge', right: 'xlarge' }} className={css.filterPanel}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
         <Button variation={ButtonVariation.PRIMARY} icon="plus">
           {getString('ce.computeGroups.addNewClusterCtaText')}

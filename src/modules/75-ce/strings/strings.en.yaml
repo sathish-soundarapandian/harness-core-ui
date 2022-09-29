@@ -1355,3 +1355,4 @@ computeGroups:
       name: Cluster name & id
       memory: Memory(GIB)
       managedBy: Managed by
+  totalNodes: Total Nodes
