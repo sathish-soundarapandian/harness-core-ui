@@ -348,7 +348,7 @@ newRelic:
 elk:
   elkConnectorDetails: 'ELK Connector Details'
   testConnectionStepValidation: 'Validating ELK authentication and permissions'
-  elkLabel: Elk
+  elkLabel: ELK
   apiId: API ID
   noAuthentication: No Authentication
   validation:

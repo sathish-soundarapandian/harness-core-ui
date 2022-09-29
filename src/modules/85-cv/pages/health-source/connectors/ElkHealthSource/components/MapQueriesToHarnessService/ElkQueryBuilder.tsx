@@ -7,6 +7,7 @@
 
 import React, { useState } from 'react'
 import { Formik, FormikForm, Utils, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { defaultTo } from 'lodash-es'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
 import { useStrings } from 'framework/strings'
@@ -20,19 +21,18 @@ import css from './ElkQueryBuilder.module.scss'
 export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
   const { getString } = useStrings()
   const { onSubmit, data: sourceData, onPrevious, isTemplate, expressions } = props
-
   const connectorIdentifier =
-    typeof sourceData?.connectorRef === 'string' ? sourceData?.connectorRef : sourceData?.connectorRef?.value
+    typeof sourceData.connectorRef === 'string' ? sourceData.connectorRef : sourceData.connectorRef?.value
 
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
 
   const [{ selectedMetric, mappedMetrics }, setMappedMetrics] = useState<{
     selectedMetric: string
     mappedMetrics: Map<string, MapElkQueryToService>
-  }>(getElkMappedMetric({ sourceData, isConnectorRuntimeOrExpression, getString }))
+  }>(getElkMappedMetric({ sourceData, isConnectorRuntimeOrExpression }))
 
   const [{ createdMetrics, selectedMetricIndex }, setCreatedMetrics] = useState({
-    createdMetrics: Array.from(mappedMetrics.keys()) || [`getString('cv.monitoringSources.Elk.ElkLogsQuery')`],
+    createdMetrics: defaultTo(Array.from(mappedMetrics.keys()), [getString('cv.monitoringSources.elk.elkLogsQuery')]),
     selectedMetricIndex: Array.from(mappedMetrics.keys()).findIndex(metric => metric === selectedMetric)
   })
 
@@ -43,6 +43,7 @@ export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       onSubmit={async updatedSource => {
+        /* istanbul ignore else */
         if (updatedSource) {
           mappedMetrics.set(selectedMetric, updatedSource)
         }
@@ -50,7 +51,8 @@ export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
         await onSubmit({ ...sourceData, mappedServicesAndEnvs: new Map(mappedMetrics) })
       }}
       formName="mapElk"
-      initialValues={mappedMetrics.get(selectedMetric || '')}
+      //defaultTo({ ...formikProps.values }, { metricName: updatedMetric }) as MapElkQueryToService
+      initialValues={mappedMetrics.get(defaultTo(selectedMetric, ''))}
       key={rerenderKey}
       isInitialValid={(args: any) => {
         return (
@@ -90,7 +92,9 @@ export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
                       if (formikProps.values?.metricName !== removedMetric) {
                         updatedMap.set(
                           updatedMetric,
-                          { ...(formikProps.values as MapElkQueryToService) } || { metricName: updatedMetric }
+                          //{ ...(formikProps.values as MapElkQueryToService) } || { metricName: updatedMetric }
+                          defaultTo({ ...formikProps.values }, { metricName: updatedMetric }) as MapElkQueryToService
+                          //return defaultTo(serviceRef?.current?.getErrors(), {})
                         )
                       } else {
                         setRerenderKey(Utils.randomId())

@@ -394,6 +394,8 @@ monitoringSources:
       groupName: Group Name is required.
       uniqueName: '{{existingName}} already exists. Provide a unique name.'
       recordCount: Current query yields too many records. Please change query to yield one record.
+  elk:
+    elkLogsQuery: ELK Logs Query
   splunk:
     splunkLogsQuery: SPLUNK Logs Query
     splunkMetric: Splunk Metrics
