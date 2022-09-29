@@ -5638,6 +5638,7 @@ export interface StringsMap {
   'ce.common.collapse': string
   'ce.common.containerService': string
   'ce.common.copied': string
+  'ce.common.cpu': string
   'ce.common.database': string
   'ce.common.detailsCtaLabel': string
   'ce.common.disabled': string
@@ -5659,6 +5660,12 @@ export interface StringsMap {
   'ce.common.targetProtocol': string
   'ce.common.toggleLabel': string
   'ce.common.totalCount': string
+  'ce.computeGroups.addNewClusterCtaText': string
+  'ce.computeGroups.sideNavText': string
+  'ce.computeGroups.table.headers.managedBy': string
+  'ce.computeGroups.table.headers.memory': string
+  'ce.computeGroups.table.headers.name': string
+  'ce.computeGroups.totalSpotSavings': string
   'ce.connector.AWS.crossAccountRole.arn': string
   'ce.connector.AWS.crossAccountRole.externalID': string
   'ce.connector.AWS.crossAccountRole.instructionLabel': string

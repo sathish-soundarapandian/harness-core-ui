@@ -29,6 +29,7 @@ common:
   redirectUrl: 'Redirect url'
   serverName: 'Server name'
   pathMatch: 'Path match'
+  cpu: '{{ $.delegate.delegateCPU }}'
 allRegions: 'All Regions'
 enforcementMessage:
   exceededSpendLimit: You have exceeded your cloud spend subscription limit. Consider increasing your limits to manage higher cloud spend.
@@ -1345,3 +1346,12 @@ cloudIntegration:
 serviceDetails:
   title: '{{ $.common.serviceDetails }}'
   launchType: Launch Type
+computeGroups:
+  sideNavText: Compute Groups
+  addNewClusterCtaText: Add new cluster
+  totalSpotSavings: Total spot savings
+  table:
+    headers:
+      name: Cluster name & id
+      memory: Memory(GIB)
+      managedBy: Managed by

@@ -201,6 +201,13 @@ const SideNavItems = () => {
             trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.BI_DASHBOARD_FEATURE })
           }}
         />
+        <SidebarLink
+          onClick={() => {
+            // trackEvent(USER_JOURNEY_EVENTS.BI_DASHBOARD_NAV_CLICK, {})
+          }}
+          label={getString('ce.computeGroups.sideNavText')}
+          to={routes.toComputeGroups({ accountId })}
+        />
         <NavExpandable title={getString('common.setup')} route={routes.toCECOAccessPoints({ accountId })}>
           <Layout.Vertical spacing="small">
             <SidebarLink
