@@ -139,7 +139,7 @@ describe('test ElkHealthsource', () => {
   })
 
   test('connector ref as an object', () => {
-    const { getByText } = render(
+    render(
       <TestWrapper>
         <ElkQueryBuilder
           onSubmit={jest.fn()}
