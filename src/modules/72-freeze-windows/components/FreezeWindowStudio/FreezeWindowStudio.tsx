@@ -7,15 +7,15 @@
 
 import React from 'react'
 import { useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import { isValidYaml } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
+import { useFreezeStudioData } from '@freeze-windows/components/FreezeWindowStudio/useFreezeStudioData'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindowStudioHeader } from './FreezeWindowStudioHeader'
 import { FreezeWindowStudioSubHeader } from './FreezeWindowStudioSubHeader'
 import { FreezeWindowStudioBody } from './FreezeWindowStudioBody'
-import { useFreezeStudioData } from '@freeze-windows/components/FreezeWindowStudio/useFreezeStudioData'
-import { useParams } from 'react-router-dom'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 export const FreezeWindowStudio = () => {
   const {
