@@ -43,7 +43,6 @@ type delTroubleshoterProps = {
 enum InstanceStatus {
   EXPIRED = 'Expired',
   EXPIRINGIN = 'Expiring',
-  UPGRADEREQUIRED = 'Upgrade Required',
   LATEST = 'latest'
 }
 
@@ -282,9 +281,9 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
 
   const statusBackgroundColor = status === InstanceStatus.EXPIRED ? Color.RED_500 : ''
   const [autoUpgradeColor, autoUpgradeText] =
-    delegate?.upgraderLastUpdated === 0 && delegate?.immutable && !delegate?.autoUpgrade
-      ? [Color.ORANGE_400, 'Upgrade Required']
-      : delegate?.autoUpgrade
+    delegate?.autoUpgrade === 'SYNCHRONIZING'
+      ? [Color.ORANGE_400, 'SYNCHRONIZING']
+      : delegate?.autoUpgrade === 'ON'
       ? [Color.GREEN_600, 'AUTO UPGRADE: ON']
       : [Color.GREY_300, 'AUTO UPGRADE: OFF']
   const color: Color = isConnected ? Color.GREEN_600 : Color.GREY_400
@@ -373,7 +372,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                   background={statusBackgroundColor}
                   color={status === InstanceStatus.EXPIRED ? Color.WHITE : ''}
                   font={{
-                    size: status === InstanceStatus.EXPIRED ? 'xsmall' : 'normal'
+                    size: status === InstanceStatus.EXPIRED ? 'small' : 'normal'
                   }}
                   className={css.statusText}
                   lineClamp={1}
@@ -389,7 +388,6 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                       : moment(delegate.delegateGroupExpirationTime).fromNow()}
                   </div>
                 ) : (
-                  // <ReactTimeago date={delegate.delegateGroupExpirationTime} live />
                   ''
                 )}
               </>
@@ -485,7 +483,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                           lineClamp={1}
                           color={status === InstanceStatus.EXPIRED ? Color.WHITE : ''}
                           font={{
-                            size: status === InstanceStatus.EXPIRED ? 'xsmall' : 'normal'
+                            size: status === InstanceStatus.EXPIRED ? 'small' : 'normal'
                           }}
                         >
                           {instanceStatus}
