@@ -382,4 +382,3 @@ export const sourceData = {
   type: 'ELKLog',
   mappedServicesAndEnvs: new Map()
 }
-
