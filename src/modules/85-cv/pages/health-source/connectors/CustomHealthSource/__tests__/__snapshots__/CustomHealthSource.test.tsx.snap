@@ -481,6 +481,9 @@ exports[`Verify CustomHealthSource should render CustomHealthSource 1`] = `
             </span>
           </button>
         </div>
+        <div
+          class="StyledProps--font StyledProps--main spaceProvider"
+        />
       </div>
     </form>
   </div>

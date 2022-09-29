@@ -638,6 +638,7 @@ export interface AddUsersResponse {
       | 'USER_ADDED_SUCCESSFULLY'
       | 'USER_ALREADY_ADDED'
       | 'USER_ALREADY_INVITED'
+      | 'USER_INVITE_NOT_REQUIRED'
       | 'FAIL'
   }
 }
@@ -20588,6 +20589,60 @@ export const clustersPromise = (
     signal
   )
 
+export interface ElasticLoadBalancersQueryParams {
+  awsConnectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  region?: string
+  envId?: string
+  infraDefinitionId?: string
+}
+
+export type ElasticLoadBalancersProps = Omit<
+  GetProps<ResponseListString, Failure | Error, ElasticLoadBalancersQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get elastic load balancers
+ */
+export const ElasticLoadBalancers = (props: ElasticLoadBalancersProps) => (
+  <Get<ResponseListString, Failure | Error, ElasticLoadBalancersQueryParams, void>
+    path={`/aws/aws-helper/elastic-load-balancers`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseElasticLoadBalancersProps = Omit<
+  UseGetProps<ResponseListString, Failure | Error, ElasticLoadBalancersQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get elastic load balancers
+ */
+export const useElasticLoadBalancers = (props: UseElasticLoadBalancersProps) =>
+  useGet<ResponseListString, Failure | Error, ElasticLoadBalancersQueryParams, void>(
+    `/aws/aws-helper/elastic-load-balancers`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get elastic load balancers
+ */
+export const elasticLoadBalancersPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, ElasticLoadBalancersQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, ElasticLoadBalancersQueryParams, void>(
+    getConfig('ng/api'),
+    `/aws/aws-helper/elastic-load-balancers`,
+    props,
+    signal
+  )
+
 export interface FilterHostsQueryParams {
   awsConnectorRef: string
   accountIdentifier: string
@@ -20684,6 +20739,117 @@ export const getIamRolesForAwsPromise = (
   getUsingFetch<ResponseMapStringString, Failure | Error, GetIamRolesForAwsQueryParams, void>(
     getConfig('ng/api'),
     `/aws/aws-helper/iam-roles`,
+    props,
+    signal
+  )
+
+export interface ListenerRulesQueryParams {
+  awsConnectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  region?: string
+  elasticLoadBalancer: string
+  listenerArn: string
+  envId?: string
+  infraDefinitionId?: string
+}
+
+export type ListenerRulesProps = Omit<
+  GetProps<ResponseListString, Failure | Error, ListenerRulesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get elastic load balancer listener rules
+ */
+export const ListenerRules = (props: ListenerRulesProps) => (
+  <Get<ResponseListString, Failure | Error, ListenerRulesQueryParams, void>
+    path={`/aws/aws-helper/listener-rules-arns`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseListenerRulesProps = Omit<
+  UseGetProps<ResponseListString, Failure | Error, ListenerRulesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get elastic load balancer listener rules
+ */
+export const useListenerRules = (props: UseListenerRulesProps) =>
+  useGet<ResponseListString, Failure | Error, ListenerRulesQueryParams, void>(`/aws/aws-helper/listener-rules-arns`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get elastic load balancer listener rules
+ */
+export const listenerRulesPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, ListenerRulesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, ListenerRulesQueryParams, void>(
+    getConfig('ng/api'),
+    `/aws/aws-helper/listener-rules-arns`,
+    props,
+    signal
+  )
+
+export interface ListenersQueryParams {
+  awsConnectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  region?: string
+  elasticLoadBalancer: string
+  envId?: string
+  infraDefinitionId?: string
+}
+
+export type ListenersProps = Omit<
+  GetProps<ResponseMapStringString, Failure | Error, ListenersQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get elastic load balancer listeners
+ */
+export const Listeners = (props: ListenersProps) => (
+  <Get<ResponseMapStringString, Failure | Error, ListenersQueryParams, void>
+    path={`/aws/aws-helper/listeners`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseListenersProps = Omit<
+  UseGetProps<ResponseMapStringString, Failure | Error, ListenersQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get elastic load balancer listeners
+ */
+export const useListeners = (props: UseListenersProps) =>
+  useGet<ResponseMapStringString, Failure | Error, ListenersQueryParams, void>(`/aws/aws-helper/listeners`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get elastic load balancer listeners
+ */
+export const listenersPromise = (
+  props: GetUsingFetchProps<ResponseMapStringString, Failure | Error, ListenersQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseMapStringString, Failure | Error, ListenersQueryParams, void>(
+    getConfig('ng/api'),
+    `/aws/aws-helper/listeners`,
     props,
     signal
   )

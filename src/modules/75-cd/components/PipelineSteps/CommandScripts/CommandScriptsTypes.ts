@@ -17,12 +17,17 @@ import type {
   CommandUnitWrapper,
   StepElementConfig,
   StepSpecType,
-  HarnessFileStoreSource
+  HarnessFileStoreSource,
+  DownloadArtifactCommandUnitSpec
 } from 'services/cd-ng'
 
 // Copy Command Unit type
 export interface CopyCommandUnit extends CommandUnitWrapper {
   spec: CopyCommandUnitSpec
+}
+
+export interface DownloadArtifactCommandUnit extends CommandUnitWrapper {
+  spec: DownloadArtifactCommandUnitSpec
 }
 
 // Script Command Unit
@@ -37,7 +42,7 @@ export interface CustomScriptCommandUnit extends CommandUnitWrapper {
 }
 
 // Overall Command Unit Type
-export type CommandUnitType = CopyCommandUnit | CustomScriptCommandUnit
+export type CommandUnitType = CopyCommandUnit | DownloadArtifactCommandUnit | CustomScriptCommandUnit
 
 export interface CommandScriptStepVariable {
   value: number | string
@@ -80,12 +85,14 @@ export const scriptInputType: SelectOption[] = [
 
 export enum CommandType {
   Copy = 'Copy',
-  Script = 'Script'
+  Script = 'Script',
+  DownloadArtifact = 'DownloadArtifact'
 }
 
 export const commandTypeOptions: SelectOption[] = [
   { label: 'Copy', value: 'Copy' },
-  { label: 'Script', value: 'Script' }
+  { label: 'Script', value: 'Script' },
+  { label: 'Download Artifact', value: 'DownloadArtifact' }
 ]
 
 export const sourceTypeOptions: RadioButtonProps[] = [

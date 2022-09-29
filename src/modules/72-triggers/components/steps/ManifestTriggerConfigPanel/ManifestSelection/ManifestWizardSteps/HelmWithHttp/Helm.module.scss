@@ -1,0 +1,101 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.HelmGitForm {
+  height: 100%;
+  min-height: 400px;
+  margin-top: 30px;
+  .folderPath {
+    display: flex;
+    width: 45%;
+    justify-content: flex-start;
+    align-items: center;
+    :global {
+      .bp3-form-group {
+        min-width: 310px;
+      }
+    }
+  }
+  .helmAdvancedSteps {
+    margin-bottom: 50px !important;
+
+    .commandFlags {
+      margin-top: var(--spacing-large);
+    }
+
+    .commandType {
+      width: 240px;
+      margin-right: var(--spacing-xxlarge);
+      :global {
+        .bp3-label {
+          margin: var(--spacing-small) 0px;
+        }
+      }
+    }
+    .commandFlagType {
+      margin-top: 31px;
+    }
+
+    .helmCommandFlags {
+      :global(.bp3-popover-wrapper) {
+        margin-left: 0 !important;
+      }
+    }
+  }
+  .delBtn {
+    margin-top: var(--spacing-medium) !important;
+  }
+  .runtimeInput {
+    align-items: center;
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+  }
+  .advancedStepOpen {
+    min-height: 400px;
+  }
+  .skipResourceSection {
+    min-height: 200px;
+  }
+}
+.halfWidth {
+  width: 45%;
+}
+.repoNameSection {
+  margin-bottom: var(--spacing-medium);
+}
+.reponameField {
+  margin-bottom: var(--spacing-small);
+}
+.repoName {
+  display: grid;
+  grid-template-columns: 1fr 35px;
+  width: 50%;
+  align-items: center;
+}
+
+.checkbox {
+  margin-bottom: 0 !important;
+}
+
+.tooltip {
+  > * {
+    width: 60%;
+    margin-left: var(--spacing-medium);
+  }
+}
+
+.skipversionTooltip {
+  > * {
+    width: 60%;
+    margin-left: var(--spacing-medium);
+    margin-top: 8px !important;
+  }
+}
+
+.tooltipContent {
+  width: 300px;
+}

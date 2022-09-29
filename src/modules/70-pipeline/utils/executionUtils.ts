@@ -867,9 +867,8 @@ export const getChildNodeDataForMatrix = (
   if (isNodeTypeMatrixOrFor(parentNode?.nodeType)) {
     parentNode?.edgeLayoutList?.currentNodeChildren?.forEach(item => {
       const nodeDataItem = layoutNodeMap[item]
-      const matrixNodeName =
-        nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues &&
-        `(${Object.values(nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(', ')}): `
+      const matrixNodeName = nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues
+
       childData.push({
         id: nodeDataItem.nodeExecutionId as string, // matrix node nodeExecId(unique) + stageNodeId (nodeUUID) commo
         stageNodeId: nodeDataItem?.nodeUuid as string,
@@ -958,9 +957,7 @@ export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSumma
         const childData: PipelineGraphState[] = []
         currentNodeChildren.forEach(item => {
           const nodeDataItem = layoutNodeMap[item]
-          const matrixNodeName =
-            nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues &&
-            `(${Object.values(nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(' ')}): `
+          const matrixNodeName = nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues
           childData.push({
             id: nodeDataItem.nodeExecutionId as string,
             stageNodeId: nodeDataItem?.nodeUuid as string,

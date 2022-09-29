@@ -25,7 +25,7 @@ export function ExecutionStageList({ row }: { row: Row<PipelineExecutionSummary>
       {elements?.map(stage => {
         return (
           <Fragment key={stage.identifier}>
-            <ExecutionStage stage={stage} isSelectiveStage={!!data?.stagesExecuted?.length} />
+            <ExecutionStage stage={stage} isSelectiveStage={!!data?.stagesExecuted?.length} row={row} />
             {stage.type === 'MATRIX' && (
               <div className={css.matrixStageList}>
                 <div className={css.matrixLabel}>
@@ -40,6 +40,7 @@ export function ExecutionStageList({ row }: { row: Row<PipelineExecutionSummary>
                     key={loopStage.identifier}
                     isSelectiveStage={!!data?.stagesExecuted?.length}
                     isMatrixStage
+                    row={row}
                   />
                 ))}
               </div>

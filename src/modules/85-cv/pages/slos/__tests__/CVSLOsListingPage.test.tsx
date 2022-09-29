@@ -7,7 +7,7 @@
 
 import React from 'react'
 import userEvent from '@testing-library/user-event'
-import { render, waitFor, screen } from '@testing-library/react'
+import { render, waitFor, screen, fireEvent } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvServices from 'services/cv'
@@ -19,7 +19,8 @@ import {
   errorMessage,
   dashboardWidgetsResponse,
   dashboardWidgetsContent,
-  userJourneyResponse
+  userJourneyResponse,
+  mockSLODashboardWidgetsData
 } from './CVSLOsListingPage.mock'
 
 jest.mock('@cv/pages/slos/SLOCard/SLOCardContent.tsx', () => ({
@@ -55,7 +56,7 @@ describe('CVSLOsListingPage', () => {
     } as any)
 
     useGetSLODashboardWidgets = jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
-      data: {},
+      data: mockSLODashboardWidgetsData,
       loading: false,
       error: null,
       refetch: refetchDashboardWidgets
@@ -91,6 +92,36 @@ describe('CVSLOsListingPage', () => {
       .mockReturnValue({ mutate: jest.fn(), loading: false, error: null } as any)
 
     jest.spyOn(cvServices, 'useResetErrorBudget').mockReturnValue({ mutate: jest.fn(), loading: false } as any)
+  })
+
+  test('Should render created SLOs and display all the fields for the created SLO', async () => {
+    const { getByText } = render(<ComponentWrapper />)
+    await waitFor(() => {
+      expect(getByText('SLO-4')).toBeInTheDocument()
+      expect(getByText('env_appd')).toBeInTheDocument()
+      expect(getByText('service_appd')).toBeInTheDocument()
+      expect(getByText('Tracks SLO error rate')).toBeInTheDocument()
+      expect(getByText('Journey-3')).toBeInTheDocument()
+      expect(getByText('12')).toBeInTheDocument()
+      expect(getByText('43 m')).toBeInTheDocument()
+      expect(getByText('100.00%')).toBeInTheDocument()
+      expect(getByText('97%')).toBeInTheDocument()
+      expect(getByText('HEALTHY')).toBeInTheDocument()
+    })
+  })
+
+  test('Should be able to search the SLO', async () => {
+    const { getByText, container } = render(<ComponentWrapper />)
+    await waitFor(async () => {
+      expect(getByText('SLO-4')).toBeInTheDocument()
+
+      const searchBox = container.querySelector('input[placeholder="cv.slos.searchSLO"]') as HTMLInputElement
+      fireEvent.change(searchBox, { target: { value: 'SLO1' } })
+
+      await waitFor(() => {
+        expect(searchBox.value).toEqual('SLO1')
+      })
+    })
   })
 
   test('Without monitoredServiceIdentifier it should render the page headers', () => {
@@ -234,8 +265,14 @@ describe('CVSLOsListingPage', () => {
   })
 
   test('it should render page body no data state only if dashboard widgets and selected user journey are empty', () => {
-    const { container } = render(<ComponentWrapper />)
+    useGetSLODashboardWidgets = jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
+      data: {},
+      loading: false,
+      error: null,
+      refetch: refetchDashboardWidgets
+    } as any)
 
+    const { container } = render(<ComponentWrapper />)
     expect(screen.getByText('cv.slos.noMatchingData')).toBeInTheDocument()
     expect(screen.queryByText('First Journey')).not.toBeInTheDocument()
     expect(container.querySelector('.TableV2--body [role="row"]')).not.toBeInTheDocument()
@@ -255,8 +292,13 @@ describe('CVSLOsListingPage', () => {
   })
 
   test('it should render page body no data state only if dashboard widgets and selected user journey are empty', () => {
+    useGetSLODashboardWidgets = jest.spyOn(cvServices, 'useGetSLOHealthListView').mockReturnValue({
+      data: {},
+      loading: false,
+      error: null,
+      refetch: refetchDashboardWidgets
+    } as any)
     render(<ComponentWrapper />)
-
     expect(screen.getByText('cv.slos.noMatchingData')).toBeInTheDocument()
   })
 

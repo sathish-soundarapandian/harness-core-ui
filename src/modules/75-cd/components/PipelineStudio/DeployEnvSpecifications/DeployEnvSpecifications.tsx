@@ -16,6 +16,10 @@ import { useStrings } from 'framework/strings'
 import type { StageElementConfig } from 'services/cd-ng'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useQueryParams } from '@common/hooks'
+import { FeatureFlag } from '@common/featureFlags'
+
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -24,10 +28,13 @@ import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/Depl
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+
 import { StageType } from '@pipeline/utils/stageHelpers'
-import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
+
+import ErrorsStripBinded from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
+
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export default function DeployEnvSpecifications(props: PropsWithChildren<unknown>): JSX.Element {
@@ -35,6 +42,11 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   const { getString } = useStrings()
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
+  // TODO: Remove this after checking backward compatibility of infras and clusters
+  const { isMultiInfraVisible } = useQueryParams<any>()
+
+  const isMultiInfra = useFeatureFlag(FeatureFlag.MULTI_SERVICE_INFRA)
+
   useEffect(() => {
     if (errorMap.size > 0) {
       submitFormsForTab(DeployTabs.ENVIRONMENT)
@@ -53,19 +65,20 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     updateStage
   } = usePipelineContext()
 
+  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(
     debounce(
       (changedStage?: StageElementConfig) =>
-        changedStage ? updateStage(changedStage) : /* instanbul ignore next */ Promise.resolve(),
+        changedStage ? updateStage(changedStage) : /* istanbul ignore next */ Promise.resolve(),
       300
     ),
     [updateStage]
   )
 
-  const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
-
   useEffect(() => {
+    // TODO: MULTI_SERVICE_INFRA add support
     if (
       isEmpty(stage?.stage?.spec?.environment) &&
       isEmpty(stage?.stage?.spec?.environmentGroup) &&
@@ -92,31 +105,35 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
         if (specObject) {
           if (value.environment) {
             specObject.environment = value.environment
+            delete specObject.environments
+            delete specObject.environmentGroup
+          } else if (value.environments) {
+            specObject.environments = value.environments
+            delete specObject.environment
             delete specObject.environmentGroup
           } else if (value.environmentGroup) {
             specObject.environmentGroup = value.environmentGroup
             delete specObject.environment
+            delete specObject.environments
           }
         }
       })
       debounceUpdateStage(stageData?.stage)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [stage, debounceUpdateStage, stage?.stage?.spec?.infrastructure?.infrastructureDefinition]
+    [stage, debounceUpdateStage]
   )
 
   return (
     <div className={stageCss.deployStage} key="1">
-      <DeployServiceErrors domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
+      <ErrorsStripBinded domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
       <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
-        <Text className={stageCss.tabHeading} id="environment" margin={{ bottom: 'small' }}>
-          {getString('environment')}
-        </Text>
-        <Card>
+        {isMultiInfra && isMultiInfraVisible === 'true' ? (
           <StepWidget
-            type={StepType.DeployInfrastructure}
+            type={StepType.DeployEnvironmentEntity}
             readonly={isReadonly}
             initialValues={{
+              // TODO: MULTI_SERVICE_INFRA add support
               gitOpsEnabled: get(stage, 'stage.spec.gitOpsEnabled', false),
               ...(get(stage, 'stage.spec.environment', false) && {
                 environment: get(stage, 'stage.spec.environment')
@@ -129,21 +146,61 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
               })
             }}
             allowableTypes={
-              (scope === Scope.PROJECT
-                ? (allowableTypes as MultiTypeInputType[]).filter(item => item !== MultiTypeInputType.EXPRESSION)
-                : (allowableTypes as MultiTypeInputType[]).filter(
-                    item => item !== MultiTypeInputType.FIXED && item !== MultiTypeInputType.EXPRESSION
-                  )) as AllowedTypes
+              [MultiTypeInputType.FIXED]
+              // (scope === Scope.PROJECT
+              //   ? (allowableTypes as MultiTypeInputType[]).filter(item => item !== MultiTypeInputType.EXPRESSION)
+              //   : (allowableTypes as MultiTypeInputType[]).filter(
+              //       item => item !== MultiTypeInputType.FIXED && item !== MultiTypeInputType.EXPRESSION
+              //     )) as AllowedTypes
             }
-            onUpdate={val => updateEnvStep(val)}
+            onUpdate={updateEnvStep}
             factory={factory}
             stepViewType={StepViewType.Edit}
             customStepProps={{
               getString: getString,
+              // TODO: is serviceRef required?
               serviceRef: stage?.stage?.spec?.service?.serviceRef
             }}
           />
-        </Card>
+        ) : (
+          <>
+            <Text className={stageCss.tabHeading} id="environment" margin={{ bottom: 'small' }}>
+              {getString('environment')}
+            </Text>
+            <Card>
+              <StepWidget
+                type={StepType.DeployInfrastructure}
+                readonly={isReadonly}
+                initialValues={{
+                  gitOpsEnabled: get(stage, 'stage.spec.gitOpsEnabled', false),
+                  ...(get(stage, 'stage.spec.environment', false) && {
+                    environment: get(stage, 'stage.spec.environment')
+                  }),
+                  ...(scope !== Scope.PROJECT && {
+                    environment: { environmentRef: RUNTIME_INPUT_VALUE }
+                  }),
+                  ...(get(stage, 'stage.spec.environmentGroup', false) && {
+                    environmentGroup: get(stage, 'stage.spec.environmentGroup')
+                  })
+                }}
+                allowableTypes={
+                  (scope === Scope.PROJECT
+                    ? (allowableTypes as MultiTypeInputType[]).filter(item => item !== MultiTypeInputType.EXPRESSION)
+                    : (allowableTypes as MultiTypeInputType[]).filter(
+                        item => item !== MultiTypeInputType.FIXED && item !== MultiTypeInputType.EXPRESSION
+                      )) as AllowedTypes
+                }
+                onUpdate={val => updateEnvStep(val)}
+                factory={factory}
+                stepViewType={StepViewType.Edit}
+                customStepProps={{
+                  getString: getString,
+                  serviceRef: stage?.stage?.spec?.service?.serviceRef
+                }}
+              />
+            </Card>
+          </>
+        )}
         <Container margin={{ top: 'xxlarge' }}>{props.children}</Container>
       </div>
     </div>

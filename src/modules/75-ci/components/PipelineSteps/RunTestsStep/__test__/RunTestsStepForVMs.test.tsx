@@ -48,9 +48,11 @@ describe('RunTests Step', () => {
       await waitFor(() => {
         fireEvent.click(dropdownSelects[0])
         const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
-        expect(menuItemLabels?.length).toEqual(2)
+        expect(menuItemLabels?.length).toEqual(4)
         expect(menuItemLabels?.[0].innerHTML).toEqual('ci.runTestsStep.csharp')
         expect(menuItemLabels?.[1].innerHTML).toEqual('ci.runTestsStep.java')
+        expect(menuItemLabels?.[2].innerHTML).toEqual('ci.runTestsStep.kotlin')
+        expect(menuItemLabels?.[3].innerHTML).toEqual('ci.runTestsStep.scala')
       })
 
       expect(getByText('common.shell')).toBeTruthy()

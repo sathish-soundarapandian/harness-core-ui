@@ -10,6 +10,7 @@ import type { StringKeys } from 'framework/strings'
 import { HealthSourceFieldNames } from '@cv/pages/health-source/common/utils/HealthSource.constants'
 import type { MetricPackDTO, RiskProfile } from 'services/cv'
 import type {
+  AssignComponentPayload,
   BaseHealthSourceMetricDefinition,
   BaseHealthSourceMetricInfo
 } from '@cv/pages/health-source/common/utils/HealthSource.types'
@@ -90,6 +91,38 @@ export function validateIdentifier<T extends BaseHealthSourceMetricInfo>(
   return errorsWithIdentifier
 }
 
+export function createPayloadForAssignComponent(baseMetricInfo: BaseHealthSourceMetricInfo): AssignComponentPayload {
+  const { riskCategory, lowerBaselineDeviation, higherBaselineDeviation, sli, continuousVerification, healthScore } =
+    baseMetricInfo
+  const [category, metricType] = riskCategory?.split('/') || []
+  const categoryData = (category ? { category } : {}) as { category?: RiskProfile['category'] }
+  const thresholdTypes: RiskProfile['thresholdTypes'] = []
+
+  if (lowerBaselineDeviation) {
+    thresholdTypes.push('ACT_WHEN_LOWER')
+  }
+  if (higherBaselineDeviation) {
+    thresholdTypes.push('ACT_WHEN_HIGHER')
+  }
+
+  const ifOnlySliIsSelected = Boolean(sli) && !(Boolean(healthScore) || Boolean(continuousVerification))
+
+  const riskProfile = {
+    ...categoryData,
+    metricType: metricType as RiskProfile['metricType'],
+    thresholdTypes
+  }
+
+  return {
+    sli: { enabled: Boolean(sli) },
+    analysis: {
+      riskProfile: ifOnlySliIsSelected ? {} : riskProfile,
+      liveMonitoring: { enabled: Boolean(healthScore) },
+      deploymentVerification: { enabled: Boolean(continuousVerification) }
+    }
+  }
+}
+
 export function mapCommonMetricInfoToCommonMetricDefinition(
   baseMetricInfo: BaseHealthSourceMetricInfo
 ): BaseHealthSourceMetricDefinition {
@@ -106,6 +139,7 @@ export function mapCommonMetricInfoToCommonMetricDefinition(
     isManualQuery
   } = baseMetricInfo
   const [category, metricType] = riskCategory?.split('/') || []
+  const categoryData = category ? { category } : {}
   const thresholdTypes: RiskProfile['thresholdTypes'] = []
 
   if (lowerBaselineDeviation) {
@@ -118,7 +152,7 @@ export function mapCommonMetricInfoToCommonMetricDefinition(
   const ifOnlySliIsSelected = Boolean(sli) && !(Boolean(healthScore) || Boolean(continuousVerification))
 
   const riskProfile: any = {
-    category: category,
+    ...categoryData,
     metricType: metricType,
     thresholdTypes
   }

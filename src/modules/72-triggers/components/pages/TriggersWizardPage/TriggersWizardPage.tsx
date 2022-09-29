@@ -23,7 +23,14 @@ import { parse } from '@common/utils/YamlHelperMethods'
 
 import factory from '@triggers/factory/TriggerFactory'
 import { TriggerWidget } from '@triggers/components/Triggers/TriggerWidget'
-import type { ScheduleType, SourceRepo, TriggerBaseType } from '@triggers/components/Triggers/TriggerInterface'
+import type {
+  ScheduleType,
+  SourceRepo,
+  TriggerBaseType,
+  TriggerArtifactType,
+  ManifestType,
+  TriggerSubType
+} from '@triggers/components/Triggers/TriggerInterface'
 
 export default function TriggersWizardPage(): JSX.Element {
   const {
@@ -33,8 +40,16 @@ export default function TriggersWizardPage(): JSX.Element {
     pipelineIdentifier,
     triggerIdentifier
   } = useParams<PipelinePathProps & TriggerPathProps>()
-  const { triggerType, sourceRepo, branch, scheduleType } = useQueryParams<TriggerQueryParams & GitQueryParams>()
-  const [type, setType] = useState<SourceRepo>((sourceRepo as SourceRepo) || (scheduleType as ScheduleType))
+  const { triggerType, sourceRepo, artifactType, manifestType, branch, scheduleType } = useQueryParams<
+    TriggerQueryParams & GitQueryParams
+  >()
+
+  const [type, setType] = useState<TriggerSubType>(
+    (sourceRepo as SourceRepo) ||
+      (scheduleType as ScheduleType) ||
+      (artifactType as TriggerArtifactType) ||
+      (manifestType as ManifestType)
+  )
   const [baseType, setBaseType] = useState<TriggerBaseType>(triggerType as TriggerBaseType)
 
   const { data: triggerResponse, loading: loadingTriggerData } = useGetTrigger({

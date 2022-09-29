@@ -198,8 +198,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     refetchTemplateInputSet()
   }
 
-  const isLoading =
-    pipelineLoading || templateInputSetLoading || loadingMergedTemplateInputs || (isEmpty(allValues) && !pipelineError)
+  const isLoading = pipelineLoading || templateInputSetLoading || loadingMergedTemplateInputs
 
   const error = defaultTo(templateInputSetError, pipelineError)
 

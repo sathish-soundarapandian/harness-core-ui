@@ -5,26 +5,73 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep } from 'lodash-es'
-import type { CustomHealthSourceMetricSpec, RiskProfile, MetricPackDTO, useGetMetricPacks } from 'services/cv'
+import { cloneDeep, isEmpty, isEqual } from 'lodash-es'
+import type {
+  CustomHealthSourceMetricSpec,
+  MetricPackDTO,
+  useGetMetricPacks,
+  PrometheusHealthSourceSpec,
+  TimeSeriesMetricPackDTO
+} from 'services/cv'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type {
   MapCustomHealthToService,
   CustomHealthSourceSetupSource,
-  onSubmitCustomHealthSourceInterface
+  onSubmitCustomHealthSourceInterface,
+  PersistMappedMetricsType
 } from './CustomHealthSource.types'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
-import { CustomHealthSourceFieldNames, defaultMetricName, INITFORMDATA } from './CustomHealthSource.constants'
+import { defaultMetricName, INITFORMDATA } from './CustomHealthSource.constants'
+import {
+  getFilteredMetricThresholdValues,
+  validateCommonFieldsForMetricThreshold
+} from '../../common/MetricThresholds/MetricThresholds.utils'
+import {
+  MetricThresholdPropertyName,
+  MetricThresholdTypes,
+  MetricTypeValues
+} from '../../common/MetricThresholds/MetricThresholds.constants'
+import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
+import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
+
+const validateMetricThresholds = (
+  errors: Record<string, string>,
+  values: MapCustomHealthToService,
+  getString: UseStringsReturn['getString']
+): void => {
+  // ignoreThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.IgnoreThreshold,
+    errors,
+    values[MetricThresholdPropertyName.IgnoreThreshold] as MetricThresholdType[],
+    getString,
+    false
+  )
+
+  // failFastThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.FailFastThresholds,
+    errors,
+    values[MetricThresholdPropertyName.FailFastThresholds] as MetricThresholdType[],
+    getString,
+    false
+  )
+}
 
 export function validateMappings(
   getString: UseStringsReturn['getString'],
   createdMetrics: string[],
   selectedMetricIndex: number,
-  values?: MapCustomHealthToService
+  values: MapCustomHealthToService,
+  isMetricThresholdEnabled?: boolean
 ): { [fieldName: string]: string } {
   let errors = {}
 
   errors = validateCustomMetricFields(values, createdMetrics, selectedMetricIndex, {}, getString)
+
+  if (isMetricThresholdEnabled) {
+    validateMetricThresholds(errors, values, getString)
+  }
 
   return errors
 }
@@ -161,7 +208,10 @@ const validateAssignComponent = (
   return _error
 }
 
-export function transformCustomHealthSourceToSetupSource(sourceData: any): CustomHealthSourceSetupSource {
+export function transformCustomHealthSourceToSetupSource(
+  sourceData: any,
+  isMetricThresholdEnabled: boolean
+): CustomHealthSourceSetupSource {
   const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
   )
@@ -195,12 +245,16 @@ export function transformCustomHealthSourceToSetupSource(sourceData: any): Custo
               placeholder: '',
               timestampFormat: 'SECONDS',
               customTimestampFormat: ''
-            }
+            },
+            ignoreThresholds: [],
+            failFastThresholds: []
           }
         ]
       ]),
       healthSourceName: sourceData.healthSourceName,
-      connectorRef: sourceData.connectorRef
+      connectorRef: sourceData.connectorRef,
+      ignoreThresholds: [],
+      failFastThresholds: []
     }
   }
 
@@ -209,7 +263,9 @@ export function transformCustomHealthSourceToSetupSource(sourceData: any): Custo
     mappedServicesAndEnvs: new Map(),
     healthSourceIdentifier: sourceData.healthSourceIdentifier,
     healthSourceName: sourceData.healthSourceName,
-    connectorRef: sourceData.connectorRef
+    connectorRef: sourceData.connectorRef,
+    ignoreThresholds: [],
+    failFastThresholds: []
   }
 
   for (const metricDefinition of (healthSource?.spec as CustomHealthSourceMetricSpec)?.metricDefinitions || []) {
@@ -252,20 +308,37 @@ export function transformCustomHealthSourceToSetupSource(sourceData: any): Custo
           placeholder: metricDefinition.requestDefinition?.endTimeInfo?.placeholder,
           timestampFormat: metricDefinition.requestDefinition?.endTimeInfo?.timestampFormat,
           customTimestampFormat: metricDefinition.requestDefinition?.endTimeInfo?.customTimestampFormat
-        }
+        },
+        ignoreThresholds: [],
+        failFastThresholds: []
       })
     }
+  }
+
+  // Update PrometheusHealthSourceSpec to CustomHealthSpec once after updating the swagger
+  if (isMetricThresholdEnabled) {
+    setupSource.ignoreThresholds = getFilteredMetricThresholdValues(
+      MetricThresholdTypes.IgnoreThreshold,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+    )
+
+    setupSource.failFastThresholds = getFilteredMetricThresholdValues(
+      MetricThresholdTypes.FailImmediately,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+    )
   }
 
   return setupSource
 }
 
 export function transformCustomSetupSourceToHealthSource(
-  setupSource: CustomHealthSourceSetupSource
+  setupSource: CustomHealthSourceSetupSource,
+  isMetricThresholdEnabled: boolean
 ): UpdatedHealthSource {
-  const spec: CustomHealthSourceMetricSpec = {
+  const spec: CustomHealthSourceMetricSpec & { metricPacks: TimeSeriesMetricPackDTO[] } = {
     connectorRef: setupSource?.connectorRef,
-    metricDefinitions: []
+    metricDefinitions: [],
+    metricPacks: []
   }
 
   const dsConfig: UpdatedHealthSource = {
@@ -302,14 +375,14 @@ export function transformCustomSetupSourceToHealthSource(
       continue
     }
 
-    const [category, metricType] = riskCategory?.split('/') || []
-    const thresholdTypes: RiskProfile['thresholdTypes'] = []
-    if (lowerBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_LOWER')
-    }
-    if (higherBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_HIGHER')
-    }
+    const assignComponentPayload = createPayloadForAssignComponent({
+      sli,
+      riskCategory,
+      healthScore,
+      continuousVerification,
+      lowerBaselineDeviation,
+      higherBaselineDeviation
+    })
 
     spec.metricDefinitions?.push({
       identifier: metricIdentifier,
@@ -329,19 +402,26 @@ export function transformCustomSetupSourceToHealthSource(
         serviceInstanceJsonPath: serviceInstanceIdentifier,
         timestampFormat: timestampFormat
       },
-      sli: { enabled: Boolean(sli) },
+      ...assignComponentPayload,
       analysis: {
-        riskProfile: {
-          category: category as RiskProfile['category'],
-          metricType: metricType as RiskProfile['metricType'],
-          thresholdTypes
-        },
-        liveMonitoring: { enabled: Boolean(healthScore) },
+        ...assignComponentPayload.analysis,
         deploymentVerification: {
-          enabled: Boolean(continuousVerification),
+          ...assignComponentPayload.analysis?.deploymentVerification,
           serviceInstanceMetricPath: serviceInstanceIdentifier
         }
       }
+    })
+  }
+
+  if (
+    isMetricThresholdEnabled &&
+    Array.isArray(setupSource?.ignoreThresholds) &&
+    Array.isArray(setupSource?.failFastThresholds)
+  ) {
+    // Needs to be updated with CustomHealth's spec once the swagger is ready
+    ;(dsConfig.spec as PrometheusHealthSourceSpec)?.metricPacks?.push({
+      identifier: MetricTypeValues.Custom,
+      metricThresholds: [...setupSource.ignoreThresholds, ...setupSource.failFastThresholds]
     })
   }
 
@@ -350,55 +430,29 @@ export function transformCustomSetupSourceToHealthSource(
 
 export const onSubmitCustomHealthSource = ({
   formikProps,
-  createdMetrics,
-  selectedMetricIndex,
   mappedMetrics,
   selectedMetric,
   onSubmit,
   sourceData,
   transformedSourceData,
-  getString
-}: onSubmitCustomHealthSourceInterface) => {
-  return async () => {
-    formikProps.setTouched({
-      ...formikProps.touched,
-      [CustomHealthSourceFieldNames.SLI]: true,
-      [CustomHealthSourceFieldNames.GROUP_NAME]: true,
-      [CustomHealthSourceFieldNames.METRIC_NAME]: true,
-      [CustomHealthSourceFieldNames.LOWER_BASELINE_DEVIATION]: true,
-      [CustomHealthSourceFieldNames.RISK_CATEGORY]: true,
-      [CustomHealthSourceFieldNames.BASE_URL]: true,
-      [CustomHealthSourceFieldNames.METRIC_VALUE]: true,
-      [CustomHealthSourceFieldNames.TIMESTAMP_FORMAT]: true,
-      [CustomHealthSourceFieldNames.TIMESTAMP_LOCATOR]: true,
-      [CustomHealthSourceFieldNames.PATH]: true,
-      [CustomHealthSourceFieldNames.QUERY_TYPE]: true,
-      [CustomHealthSourceFieldNames.REQUEST_METHOD]: true,
-      startTime: { placeholder: true, timestampFormat: true },
-      endTime: { placeholder: true, timestampFormat: true }
-    })
-    if (formikProps?.values) {
-      const errors = validateMappings(getString, createdMetrics, selectedMetricIndex, formikProps.values)
-      if (Object.keys(errors || {})?.length > 0) {
-        formikProps.validateForm()
-        return
-      }
-    } else {
-      return
-    }
-
-    const updatedMetric = formikProps.values
-    if (updatedMetric) {
-      mappedMetrics.set(selectedMetric, updatedMetric)
-    }
-    await onSubmit(
-      sourceData,
-      transformCustomSetupSourceToHealthSource({
-        ...transformedSourceData,
-        mappedServicesAndEnvs: mappedMetrics
-      } as CustomHealthSourceSetupSource)
-    )
+  isMetricThresholdEnabled,
+  metricThresholds
+}: onSubmitCustomHealthSourceInterface): void => {
+  const updatedMetric = formikProps.values
+  if (updatedMetric) {
+    mappedMetrics.set(selectedMetric, updatedMetric)
   }
+  onSubmit(
+    sourceData,
+    transformCustomSetupSourceToHealthSource(
+      {
+        ...transformedSourceData,
+        mappedServicesAndEnvs: mappedMetrics,
+        ...metricThresholds
+      } as CustomHealthSourceSetupSource,
+      isMetricThresholdEnabled
+    )
+  )
 }
 
 function getMetricPackDTO(
@@ -489,4 +543,33 @@ export function generateCustomMetricPack(): ReturnType<typeof useGetMetricPacks>
 
 export const getInitCustomMetricData = (baseURL: string) => {
   return { ...INITFORMDATA, baseURL }
+}
+
+export const persistCustomMetric = ({
+  mappedMetrics,
+  selectedMetric,
+  metricThresholds,
+  formikValues,
+  setMappedMetrics
+}: PersistMappedMetricsType): void => {
+  const mapValue = mappedMetrics.get(selectedMetric || '') as MapCustomHealthToService
+  if (!isEmpty(mapValue)) {
+    const nonCustomValuesFromSelectedMetric = {
+      ignoreThresholds: mapValue?.ignoreThresholds,
+      failFastThresholds: mapValue?.failFastThresholds
+    }
+
+    if (selectedMetric === formikValues?.metricName && !isEqual(metricThresholds, nonCustomValuesFromSelectedMetric)) {
+      const clonedMappedMetrics = cloneDeep(mappedMetrics)
+      clonedMappedMetrics.forEach((data, key) => {
+        if (selectedMetric === data.metricName) {
+          clonedMappedMetrics.set(selectedMetric as string, { ...formikValues, ...metricThresholds })
+        } else {
+          clonedMappedMetrics.set(key, { ...data, ...metricThresholds })
+        }
+      })
+
+      setMappedMetrics({ selectedMetric: selectedMetric, mappedMetrics: clonedMappedMetrics })
+    }
+  }
 }

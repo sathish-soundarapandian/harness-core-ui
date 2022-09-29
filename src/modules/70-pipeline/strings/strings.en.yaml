@@ -609,6 +609,8 @@ artifactTriggerConfigPanel:
   configureInput: 'Configure Input'
   listenOnNewArtifact: 'Listen on New {{artifact}}'
   plusSelect: '+ Select {{artifact}}'
+  defineArtifactSource: 'Define Artifact Source'
+  defineManifestSource: 'Define Manifest Source'
   selectAnArtifact: 'Select an Artifact Reference'
   selectAManifest: 'Select a Manifest Reference'
   configureArtifactRuntimeInputs: 'Configure {{artifact}} Runtime Inputs'
@@ -725,7 +727,7 @@ testsReports:
   tiCallToAction:
     header: Did you know you can save time using Test Intelligence?
     upsellSubText: 'Optimize your tests cycle and reduce build time by using machine learning based Test Intelligence.'
-    utilizeTISubText: 'Reduce test cycle time of your Java application by using machine learning based Test Intelligence.'
+    utilizeTISubText: 'Reduce test cycle time of your Java, .NET, Scala, Kotlin applications by using machine learning based Test Intelligence.'
     addRunTestsStep: Add 'Run Tests step' to your Pipeline
     requiresEnterprisePlan: Requires Enterprise Plan to access Test Intelligence
 uniqueIdentifier: Identifier must be unique
@@ -773,6 +775,8 @@ pipelineSteps:
   deployStageDescription: Deploy services, Serverless functions, or other workloads.
   featureStageDescription: Enable or disable functionality remotely without redeploying code.
   approvalStageDescription: Approve or reject changes during Pipeline progress.
+pipelineChaining:
+  selectPipeline: Select Pipeline
 aboutYourStage:
   stageNamePlaceholder: Enter Stage Name
 infraSpecifications:
@@ -1210,6 +1214,8 @@ serviceDeploymentTypes:
   azureFunctions: Azure Functions
   azureWebApp: Azure Web Apps
   customDeployment: Deployment Template
+  serverlessAwsType: Serverless Aws Lambda
+  customDeploy: Custom Deployment
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1374,6 +1380,7 @@ skipInstances:
 selectiveStageExecution: 'Selective stage execution'
 customDeployment:
   infraVariablesTitle: 'Define the variables to be used in your environment and infrastructure.'
+  seeOnlyTemplatesFor: See only templates for {{name}}
   hostObjectArrayPath: 'Host Object Array Path'
   hostAttributes: 'Host Attributes'
   newAttribute: 'New Attribute'
@@ -1387,4 +1394,3 @@ customDeployment:
     fetchScriptBodyRequired: 'Fetch Instances Script body is required'
   validations:
     nameUnique: Field Name should be unique
-loadBalancer: Load Balancer

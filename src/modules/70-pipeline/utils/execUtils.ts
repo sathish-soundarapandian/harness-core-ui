@@ -272,9 +272,7 @@ const processStepGroupSteps = ({
             isNestedGroup
           })
         : []
-      const matrixNodeName =
-        nodeData?.strategyMetadata?.matrixmetadata?.matrixvalues &&
-        `(${Object.values(nodeData?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(', ')}): `
+      const matrixNodeName = nodeData?.strategyMetadata?.matrixmetadata?.matrixvalues
 
       steps.push({
         step: {
@@ -579,9 +577,7 @@ ProcessGroupItemArgs): void => {
               rootNodes
             })
           : []
-        const matrixNodeName =
-          childStep?.strategyMetadata?.matrixmetadata?.matrixvalues &&
-          `(${Object.values(childStep?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(', ')}): `
+        const matrixNodeName = childStep?.strategyMetadata?.matrixmetadata?.matrixvalues
 
         steps.push({
           step: {

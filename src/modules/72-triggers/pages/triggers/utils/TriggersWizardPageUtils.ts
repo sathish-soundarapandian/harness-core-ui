@@ -13,7 +13,13 @@ import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import type { NGTriggerSourceV2, PipelineInfoConfig, NGVariable, NGTriggerConfigV2 } from 'services/pipeline-ng'
+import type {
+  NGTriggerSourceV2,
+  PipelineInfoConfig,
+  NGVariable,
+  NGTriggerConfigV2,
+  NGTriggerSpecV2
+} from 'services/pipeline-ng'
 import { connectorUrlType } from '@connectors/constants'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -126,7 +132,7 @@ const getTriggerTitle = ({
 export const clearNullUndefined = /* istanbul ignore next */ (data: TriggerConfigDTO): TriggerConfigDTO =>
   omitBy(omitBy(data, isUndefined), isNull)
 
-export const clearRuntimeInputValue = (template: PipelineInfoConfig): PipelineInfoConfig => {
+export const clearRuntimeInputValue = <T>(template: T): T => {
   return JSON.parse(
     JSON.stringify(template || {}).replace(/"<\+input>.?(?:allowedValues\((.*?)\)|regex\((.*?)\))?"/g, '""')
   )
@@ -2261,7 +2267,7 @@ export const getArtifactManifestTriggerYaml = ({
   }
 
   // clears any runtime inputs and set values in source->spec->spec
-  let artifactSourceSpec = clearRuntimeInputValue(
+  let artifactSourceSpec = clearRuntimeInputValue<NGTriggerSpecV2>(
     cloneDeep(
       parse(
         JSON.stringify({

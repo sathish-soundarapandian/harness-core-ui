@@ -1,0 +1,15 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "resourceGroups": [
+      { "resourceGroup": "NetworkWatcherRG" },
+      { "resourceGroup": "cloud-shell-storage-westeurope" },
+      { "resourceGroup": "cloud-shell-storage-centralindia" },
+      { "resourceGroup": "devAppServiceAPIResourceGroup" },
+      { "resourceGroup": "DefaultResourceGroup-CUS" },
+      { "resourceGroup": "demoptestusheer" }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "6b9eeb99-e130-4724-b0f4-73945ed0ff13"
+}

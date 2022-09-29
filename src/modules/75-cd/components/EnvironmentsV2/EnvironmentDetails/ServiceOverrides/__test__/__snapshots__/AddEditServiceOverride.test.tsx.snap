@@ -135,6 +135,32 @@ exports[`Add Edit Service Override Test add new service override 1`] = `
             >
               variableLabel
             </div>
+            <div
+              aria-controls="bp3-tab-panel_serviceOverrideTab_manifestoverride"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="manifestoverride"
+              id="bp3-tab-title_serviceOverrideTab_manifestoverride"
+              role="tab"
+              tabindex="0"
+            >
+              manifestsText
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_serviceOverrideTab_configoverride"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
+              data-tab-id="configoverride"
+              id="bp3-tab-title_serviceOverrideTab_configoverride"
+              role="tab"
+              tabindex="0"
+            >
+              cd.configFileStoreTitle
+            </div>
           </div>
           <div
             aria-hidden="false"

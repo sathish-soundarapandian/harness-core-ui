@@ -12,6 +12,8 @@ import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { CreateK8sDelegate } from '../CreateKubernetesDelegateWizard/CreateK8sDelegate'
 import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/CreateDockerDelegate'
 import { GoogleK8sService } from '../HelpTexts/GoogleK8sService'
@@ -32,6 +34,7 @@ export const DelegateSelectorWizard = ({ onClickBack }: DelegateTypeSelectorProp
   const history = useHistory()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
   const successRefHandler = useRef<(() => void) | null>(null)
+  const delegateName = useRef<string>()
 
   const onSuccessHandler = (): void => {
     setDisableBtn(false)
@@ -40,6 +43,7 @@ export const DelegateSelectorWizard = ({ onClickBack }: DelegateTypeSelectorProp
   const isHelpPanelVisible = (): void => {
     setHelpPanelVisible(true)
   }
+  const { trackEvent } = useTelemetry()
 
   const conditionalContent = (): JSX.Element => {
     switch (delegateType) {
@@ -49,10 +53,17 @@ export const DelegateSelectorWizard = ({ onClickBack }: DelegateTypeSelectorProp
             onSuccessHandler={onSuccessHandler}
             handleHelpPanel={isHelpPanelVisible}
             successRef={successRefHandler}
+            delegateNameRef={delegateName}
           />
         )
       case 'docker':
-        return <CreateDockerDelegate onSuccessHandler={onSuccessHandler} successRef={successRefHandler} />
+        return (
+          <CreateDockerDelegate
+            onSuccessHandler={onSuccessHandler}
+            successRef={successRefHandler}
+            delegateNameRef={delegateName}
+          />
+        )
       default:
         return <></>
     }
@@ -94,7 +105,16 @@ export const DelegateSelectorWizard = ({ onClickBack }: DelegateTypeSelectorProp
             text={getString('back')}
             icon="chevron-left"
             minimal
-            onClick={() => onClickBack()}
+            onClick={() => {
+              trackEvent(CDOnboardingActions.BackOnboardingDelgateCreation, {
+                category: Category.DELEGATE,
+                data: {
+                  delegateName: delegateName.current,
+                  delegateType: delegateType
+                }
+              })
+              onClickBack()
+            }}
           />
           <Button
             // eslint-disable-next-line strings-restrict-modules
@@ -105,6 +125,13 @@ export const DelegateSelectorWizard = ({ onClickBack }: DelegateTypeSelectorProp
             className={css.createPipelineBtn}
             onClick={() => {
               successRefHandler?.current?.()
+              trackEvent(CDOnboardingActions.delegateInstallWizardEnd, {
+                category: Category.DELEGATE,
+                data: {
+                  delegateName: delegateName.current,
+                  delegateType: delegateType
+                }
+              })
               history.push(
                 routes.toPipelineStudio({
                   accountId: accountId,

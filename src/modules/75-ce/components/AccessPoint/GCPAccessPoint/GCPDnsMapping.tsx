@@ -58,7 +58,7 @@ const GCPDnsMapping: React.FC<GCPDnsMappingProps> = ({ mode, handleSubmit, loadB
               />
               <Text color={Color.GREY_400} className={css.configInfo}>
                 {getString('ce.co.accessPoint.domainMappingDescription', {
-                  lb: getString('pipeline.loadBalancer')
+                  lb: getString('common.loadBalancer')
                 })}
               </Text>
               <Layout.Horizontal style={{ minHeight: 300, justifyContent: 'space-between' }}>

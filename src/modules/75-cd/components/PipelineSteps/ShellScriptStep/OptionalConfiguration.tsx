@@ -233,9 +233,7 @@ export default function OptionalConfiguration(props: {
                 type={formValues.spec.shell === 'PowerShell' ? 'WinRmCredentials' : 'SSHKey'}
                 name="spec.executionTarget.connectorRef"
                 label={
-                  formValues.spec.shell === 'PowerShell'
-                    ? getString('secrets.secret.winrmCredential')
-                    : getString('sshConnector')
+                  formValues.spec.shell === 'PowerShell' ? getString('secrets.typeWinRM') : getString('sshConnector')
                 }
                 expressions={expressions}
                 allowableTypes={allowableTypes}

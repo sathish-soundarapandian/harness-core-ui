@@ -14,8 +14,7 @@ import type {
   DatadogDashboardDTO,
   DatadogMetricHealthDefinition,
   DatadogMetricHealthSourceSpec,
-  PrometheusHealthSourceSpec,
-  RiskProfile
+  PrometheusHealthSourceSpec
 } from 'services/cv'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
@@ -51,6 +50,7 @@ import {
   MetricTypeValues
 } from '../../common/MetricThresholds/MetricThresholds.constants'
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
+import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
 
 export const DatadogProduct = {
   CLOUD_METRICS: 'Datadog Cloud Metrics',
@@ -183,21 +183,17 @@ export function mapDatadogMetricSetupSourceToDatadogHealthSource(
       continue
     }
 
-    const [category, metricType] = metricInfo.riskCategory?.split('/') || []
+    const { sli, riskCategory, healthScore, continuousVerification, lowerBaselineDeviation, higherBaselineDeviation } =
+      metricInfo
 
-    const thresholdTypes: RiskProfile['thresholdTypes'] = []
-    if (metricInfo.lowerBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_LOWER')
-    }
-    if (metricInfo.higherBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_HIGHER')
-    }
-
-    const riskProfile = {
-      metricType: metricType as RiskProfile['metricType'],
-      category: category?.length ? (category as RiskProfile['category']) : null,
-      thresholdTypes
-    }
+    const assignComponentPayload = createPayloadForAssignComponent({
+      sli,
+      riskCategory,
+      healthScore,
+      continuousVerification,
+      lowerBaselineDeviation,
+      higherBaselineDeviation
+    })
 
     const spec: DatadogMetricHealthSourceSpec = (healthSource.spec as DatadogMetricHealthSourceSpec) || {}
     spec.metricDefinitions?.push({
@@ -213,12 +209,11 @@ export function mapDatadogMetricSetupSourceToDatadogHealthSource(
       isCustomCreatedMetric: metricInfo.isCustomCreatedMetric,
       groupingQuery: metricInfo.groupingQuery,
       query: metricInfo.query,
-      sli: { enabled: Boolean(metricInfo.sli) },
+      ...assignComponentPayload,
       analysis: {
-        riskProfile,
-        liveMonitoring: { enabled: metricInfo?.healthScore || false },
+        ...assignComponentPayload.analysis,
         deploymentVerification: {
-          enabled: metricInfo?.continuousVerification || false,
+          ...assignComponentPayload.analysis?.deploymentVerification,
           serviceInstanceFieldName: getServiceInstanceByValueType(metricInfo)
         }
       }

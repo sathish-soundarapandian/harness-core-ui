@@ -59,6 +59,7 @@ validation:
   selectedArtifact: '{{artifact}} is required.'
   eventConditions: 'Each event condition requires values for Attribute, Operator, and Matches Value.'
   cronExpression: 'Valid cron expression is required.'
+  repositoryFormat: 'Repository Format is required.'
 toast:
   successfulCreate: 'Successfully created {{name}}.'
   successfulUpdate: 'Successfully updated {{name}}.'

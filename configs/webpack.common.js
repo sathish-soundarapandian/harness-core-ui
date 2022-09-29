@@ -32,9 +32,10 @@ const enableChaosUI = process.env.ENABLE_CHAOS === 'true'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableSCM = process.env.ENABLE_SCM === 'true'
+const enableFFUI = process.env.ENABLE_FF_UI === 'true'
 
 console.log('Common build flags')
-console.table({ enableGovernance, enableGitOpsUI, enableChaosUI, enableCCMUI, enableSTO, enableSCM })
+console.table({ enableGovernance, enableGitOpsUI, enableChaosUI, enableCCMUI, enableSTO, enableSCM, enableFFUI })
 
 const config = {
   context: CONTEXT,
@@ -52,7 +53,7 @@ const config = {
         type: 'javascript/auto'
       },
       {
-        test: /\.(j|t)sx?$/,
+        test: /\.[jt]sx?$/,
         exclude: /node_modules/,
         use: [
           {
@@ -181,7 +182,15 @@ const config = {
   plugins: [
     new ExternalRemotesPlugin(),
     new ModuleFederationPlugin(
-      moduleFederationConfig({ enableGovernance, enableGitOpsUI, enableSTO, enableChaosUI, enableCCMUI, enableSCM })
+      moduleFederationConfig({
+        enableGovernance,
+        enableGitOpsUI,
+        enableSTO,
+        enableChaosUI,
+        enableCCMUI,
+        enableSCM,
+        enableFFUI
+      })
     ),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
     new webpack.DefinePlugin({

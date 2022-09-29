@@ -44,7 +44,7 @@ export function TICallToAction(_props: TICallToActionProps): React.ReactElement 
                   ? getString('pipeline.testsReports.tiCallToAction.utilizeTISubText')
                   : getString('pipeline.testsReports.tiCallToAction.upsellSubText')}
               </Text>
-              {canUseTI && <Text color={Color.GREY_500}>Support for Scala, Kotlin and Python coming soon!</Text>}
+              {canUseTI && <Text color={Color.GREY_500}>Support for Python coming soon!</Text>}
             </Container>
             <Layout.Horizontal spacing="medium" className={css.actionsContainer}>
               <a rel="noreferrer" target="_blank" href={canUseTI ? setUpTIDocs : aboutTIDocs}>

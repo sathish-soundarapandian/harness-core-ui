@@ -13,7 +13,13 @@ import type { AllowedTypes } from '@harness/uicore'
 import { HideModal, useModalHook } from '@harness/use-modal'
 
 import { useStrings } from 'framework/strings'
-import { CommandType, CommandUnitType, CustomScriptCommandUnit, CopyCommandUnit } from '../CommandScriptsTypes'
+import {
+  CommandType,
+  CommandUnitType,
+  CustomScriptCommandUnit,
+  CopyCommandUnit,
+  DownloadArtifactCommandUnit
+} from '../CommandScriptsTypes'
 import { CommandEdit } from './CommandEdit'
 
 interface OpenCommandModalArgs {
@@ -57,8 +63,18 @@ export default function useCommands(props: UseImportResourceProps): UseImportRes
         }
       }
     }
-    const scriptCommandData = commandData as CustomScriptCommandUnit
 
+    if (commandData.type === CommandType.DownloadArtifact) {
+      const downloadArtifactCommandData = commandData as DownloadArtifactCommandUnit
+      return {
+        ...downloadArtifactCommandData,
+        spec: {
+          destinationPath: downloadArtifactCommandData.spec.destinationPath
+        }
+      }
+    }
+
+    const scriptCommandData = commandData as CustomScriptCommandUnit
     return {
       ...scriptCommandData,
       spec: {

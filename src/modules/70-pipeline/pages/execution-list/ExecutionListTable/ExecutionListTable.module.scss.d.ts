@@ -8,7 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly checkbox: string
-  readonly ci: string
   readonly divider: string
   readonly execution: string
   readonly icon: string
@@ -17,7 +16,9 @@ declare const styles: {
   readonly matrixStage: string
   readonly matrixStageList: string
   readonly menu: string
+  readonly prState: string
   readonly selectiveStageExecution: string
+  readonly separator: string
   readonly service: string
   readonly stage: string
   readonly stageInfo: string

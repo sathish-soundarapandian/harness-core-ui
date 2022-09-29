@@ -9,6 +9,7 @@
 declare const styles: {
   readonly container: string
   readonly linkedTemplateCheckbox: string
+  readonly linkedTemplateCheckboxLabel: string
   readonly mainContainer: string
   readonly searchBox: string
   readonly templatesContainer: string

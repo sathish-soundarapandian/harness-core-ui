@@ -345,7 +345,7 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
             { label: getString(ScopeTypeLabels(ScopeTypes.Tenant)), value: ScopeTypes.Tenant }
           ]}
           name="scope"
-          onChange={item => onSelectChange(item)}
+          onChange={item => scopeType?.value !== item?.value && onSelectChange(item)}
           selectProps={{
             allowCreatingNewItems: false
           }}

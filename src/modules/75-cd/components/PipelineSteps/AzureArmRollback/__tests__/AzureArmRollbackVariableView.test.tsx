@@ -10,109 +10,47 @@ import { render } from '@testing-library/react'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import { TestWrapper } from '@common/utils/testUtils'
-import type { RollbackVariableStepProps } from '../AzureArmRollback.types'
 import { AzureArmRollbackVariableStep } from '../AzureArmRollbackVariableView'
 
-const props = {
-  initialValues: {
-    type: StepType.AzureArmRollback,
-    name: 'rollback',
-    timeout: '10m',
-    identifier: 'rollback',
-    spec: {
-      provisionerIdentifier: 'test_id'
-    }
-  },
-  originalData: {
-    type: StepType.AzureArmRollback,
-    name: 'rollback',
-    timeout: '10m',
-    identifier: 'rollback',
-    spec: {
-      provisionerIdentifier: 'test_id'
-    }
-  },
-  stageIdentifier: 'qaStage',
-  onUpdate: jest.fn(),
-  metadataMap: {
-    'step-name': {
-      yamlProperties: {
-        fqn: 'pipeline.stages.qaStage.execution.steps.rollback.name',
-        localName: 'step.rollback.name'
-      }
-    },
-    'step-timeout': {
-      yamlProperties: {
-        fqn: 'pipeline.stages.qaStage.execution.steps.rollback.timeout',
-        localName: 'step.rollback.timeout'
-      }
-    },
-    'step-provisionerIdentifier': {
-      yamlProperties: {
-        fqn: 'pipeline.stages.qaStage.execution.steps.rollback.spec.provisionerIdentifier',
-        localName: 'step.rollback.spec.provisionerIdentifier'
-      }
-    }
-  },
-  stepType: StepType.AzureArmRollback
-} as RollbackVariableStepProps
+import metaData from './MetaData'
+import variablesData from './VariablesData'
 
-describe('Rollback stack Variable view ', () => {
-  test('initial render', () => {
-    const { container } = render(
+const renderComponent = (props: any) => {
+  return render(
+    <TestWrapper>
       <AzureArmRollbackVariableStep
-        initialValues={{
-          type: StepType.AzureArmRollback,
-          name: 'rollback',
-          identifier: 'rollback',
-          timeout: '10m',
-          spec: {
-            provisionerIdentifier: 'test_id'
-          }
-        }}
-        stepType={StepType.AzureArmRollback}
+        initialValues={props.initialValues}
         {...{
           stageIdentifier: 'qaStage',
           metadataMap: props.metadataMap,
           variablesData: props.variablesData
         }}
+        stepType={StepType.AzureArmRollback}
       />
-    )
-    expect(container).toMatchSnapshot()
-  })
+    </TestWrapper>
+  )
+}
 
-  test('initial render inline with no values', () => {
-    const { container } = render(
-      <TestWrapper>
-        <AzureArmRollbackVariableStep
-          initialValues={{
-            type: StepType.AzureArmRollback,
-            name: '',
-            timeout: '10m',
-            identifier: '',
-            spec: {
-              provisionerIdentifier: ''
-            }
-          }}
-          stepType={StepType.AzureArmRollback}
-          {...{
-            stageIdentifier: 'qaStage',
-            metadataMap: props.metadataMap,
-            variablesData: props.variablesData
-          }}
-        />
-      </TestWrapper>
-    )
-
-    expect(container).toMatchSnapshot()
-  })
-
+describe('Rollback stack Variable view ', () => {
   test('should render with inline config', () => {
-    const { container } = render(
-      <TestWrapper>
-        <AzureArmRollbackVariableStep {...props} />
-      </TestWrapper>
-    )
-    expect(container).toMatchSnapshot()
+    const data = {
+      initialValues: {
+        spec: {
+          provisionerIdentifier: 'aem'
+        },
+        name: 'roll',
+        identifier: 'roll',
+        timeout: '10m',
+        type: StepType.AzureArmRollback
+      },
+      variablesData: variablesData,
+      metadataMap: metaData
+    }
+    const { getByText } = renderComponent(data)
+    const provisionerIdentifier = getByText('provisionerIdentifier')
+    expect(provisionerIdentifier).toBeInTheDocument()
+
+    const aem = getByText('aem')
+    expect(aem).toBeInTheDocument()
   })
 })

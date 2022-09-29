@@ -1,0 +1,6 @@
+{
+  "status": "SUCCESS",
+  "data": "type: \"Application\"\nserviceRef: \"<+input>\"\nenvironmentRef: \"<+input>\"\nsources:\n  healthSources:\n  - identifier: \"AppD\"\n    type: \"AppDynamics\"\n    spec:\n      applicationName: \"<+input>\"\n      tierName: \"<+input>\"\n      metricDefinitions:\n      - identifier: \"appdMetric\"\n        completeMetricPath: \"<+input>\"\n        analysis:\n          deploymentVerification:\n            serviceInstanceMetricPath: \"<+input>\"\n      connectorRef: \"<+input>\"\n",
+  "metaData": null,
+  "correlationId": "f7213e92-0183-4046-92f9-d5b1103360ed"
+}

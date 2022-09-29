@@ -10,7 +10,7 @@ import { Container, Tab, Tabs, Layout } from '@wings-software/uicore'
 import { Expander } from '@blueprintjs/core'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
-import { isEmpty, noop, omit } from 'lodash-es'
+import { defaultTo, isEmpty, noop, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { HelpPanel, HelpPanelType, FloatingButton } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
@@ -65,7 +65,7 @@ export function StepCommands(
     hasStepGroupAncestor,
     withoutTabs,
     isNewStep = true,
-    stageType = StageType.DEPLOY,
+    selectedStage,
     stepViewType,
     className = '',
     viewType,
@@ -180,6 +180,9 @@ export function StepCommands(
         stepViewType={stepViewType}
         ref={stepRef}
         allowableTypes={allowableTypes}
+        customStepProps={{
+          selectedStage: selectedStage
+        }}
       />
     )
   }
@@ -254,7 +257,7 @@ export function StepCommands(
                     isStepGroup={isStepGroup}
                     hasStepGroupAncestor={hasStepGroupAncestor}
                     ref={advancedConfRef}
-                    stageType={stageType}
+                    stageType={defaultTo(selectedStage?.stage?.type, StageType.DEPLOY) as StageType}
                     stepType={stepType}
                   />
                 }

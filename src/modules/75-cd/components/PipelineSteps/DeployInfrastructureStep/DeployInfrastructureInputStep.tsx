@@ -77,11 +77,12 @@ function DeployInfrastructureInputStepInternal({
         validate={values => {
           onUpdate?.(
             produce(values, draft => {
-              if (
-                draft.infrastructureRef &&
-                getMultiTypeFromValue(draft.infrastructureRef) !== MultiTypeInputType.RUNTIME
-              ) {
-                set(draft, 'environment.infrastructureDefinitions[0].identifier', draft.infrastructureRef)
+              if (draft.infrastructureRef) {
+                if (getMultiTypeFromValue(draft.infrastructureRef) !== MultiTypeInputType.RUNTIME) {
+                  set(draft, 'environment.infrastructureDefinitions[0].identifier', draft.infrastructureRef)
+                } else {
+                  set(draft, 'environment.infrastructureDefinitions', RUNTIME_INPUT_VALUE)
+                }
                 delete draft.infrastructureRef
               }
 
@@ -191,6 +192,7 @@ function DeployInfrastructureInputStepInternal({
           {!gitOpsEnabled &&
             !infrastructureRef &&
             (initialValues.infrastructureRef ||
+              inputSetData?.allValues ||
               (inputSetData?.template?.environment?.infrastructureDefinitions as unknown as string) ===
                 RUNTIME_INPUT_VALUE) && (
               <Container margin={{ bottom: 'medium' }}>
@@ -198,7 +200,7 @@ function DeployInfrastructureInputStepInternal({
                   {getString('infrastructureText')}
                 </Text>
                 <DeployInfrastructures
-                  initialValues={initialValues}
+                  initialValues={initialValues || inputSetData?.allValues}
                   allowableTypes={allowableTypes}
                   environmentRef={initialValues.environment?.environmentRef || environmentRef}
                   path={inputSetData?.path}

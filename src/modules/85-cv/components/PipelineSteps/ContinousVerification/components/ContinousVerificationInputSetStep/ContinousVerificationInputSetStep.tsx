@@ -87,7 +87,7 @@ export function ContinousVerificationInputSetStep(
     return { serviceIdentifier: serviceIdentifierData, envIdentifier: envIdentifierData }
   }, [pipeline, formik])
 
-  const extendedDurationFlag = useFeatureFlag(FeatureFlag.ENABLE_VERIFY_STEP_LONG_DURATION)
+  const extendedDurationFlag = useFeatureFlag(FeatureFlag.SRM_ENABLE_VERIFY_STEP_LONG_DURATION)
   const durationList = getDurationOptions(extendedDurationFlag)
 
   const renderRunTimeMonitoredService = (): JSX.Element => {

@@ -25,16 +25,21 @@ import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { StringUtils } from '@common/exports'
 import { DelegateTypes } from '@delegates/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { Category, DelegateActions } from '@common/constants/TrackingConstants'
+import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import StepProcessing from '../CreateKubernetesDelegateWizard/StepProcessing'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
 export interface CreateDockerDelegateProps {
   onSuccessHandler: () => void
   successRef: React.MutableRefObject<(() => void) | null>
+  delegateNameRef: React.MutableRefObject<string | undefined>
 }
 
-export const CreateDockerDelegate = ({ onSuccessHandler, successRef }: CreateDockerDelegateProps): JSX.Element => {
+export const CreateDockerDelegate = ({
+  onSuccessHandler,
+  successRef,
+  delegateNameRef
+}: CreateDockerDelegateProps): JSX.Element => {
   const [yaml, setYaml] = React.useState<string>('')
   const [delegateName, setDelegateName] = React.useState<string>('')
   const [isYamlVisible, setYamlVisible] = React.useState<boolean>(false)
@@ -74,6 +79,14 @@ export const CreateDockerDelegate = ({ onSuccessHandler, successRef }: CreateDoc
       const delegateToken = get(delegateTokens, 'resource[0].name')
       const delegateName1 = `sample-${uuid()}-delegate`
       setDelegateName(delegateName1)
+      delegateNameRef.current = delegateName1
+      trackEvent(CDOnboardingActions.StartOnboardingDelegateCreation, {
+        category: Category.DELEGATE,
+        data: {
+          delegateName: delegateName1,
+          delegateType: delegateType
+        }
+      })
       const validateDockerDelegateNameResponse = await validateDockerDelegatePromise({
         queryParams: {
           accountId,
@@ -101,7 +114,8 @@ export const CreateDockerDelegate = ({ onSuccessHandler, successRef }: CreateDoc
           set(createParams, 'orgIdentifier', orgIdentifier)
         }
         set(createParams, 'delegateType', delegateType)
-        trackEvent(DelegateActions.SetupDelegate, {
+
+        trackEvent(CDOnboardingActions.SetupOnboardingDelegate, {
           category: Category.DELEGATE,
           data: createParams
         })
@@ -120,9 +134,9 @@ export const CreateDockerDelegate = ({ onSuccessHandler, successRef }: CreateDoc
           setYaml(dockerYaml)
           setLoader(false)
           onSuccessHandler()
-          trackEvent(DelegateActions.SaveCreateDelegate, {
+          trackEvent(CDOnboardingActions.SaveCreateOnboardingDelegate, {
             category: Category.DELEGATE,
-            ...createParams
+            data: { ...createParams, generatedYaml: dockerYaml }
           })
         }
       }
@@ -159,8 +173,11 @@ export const CreateDockerDelegate = ({ onSuccessHandler, successRef }: CreateDoc
                   text={getString('delegates.downloadYAMLFile')}
                   className={css.downloadButton}
                   onClick={() => {
-                    trackEvent(DelegateActions.DownloadYAML, {
-                      category: Category.DELEGATE
+                    trackEvent(CDOnboardingActions.DownloadOnboardingYAML, {
+                      category: Category.DELEGATE,
+                      data: {
+                        delegateName: delegateName
+                      }
                     })
                     onDownload()
                   }}

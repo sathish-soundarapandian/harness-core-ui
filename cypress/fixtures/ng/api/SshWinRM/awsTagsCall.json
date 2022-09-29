@@ -1,0 +1,15 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    "Owner",
+    "Description",
+    "kubernetes.io/cluster/openshift4x-59x6f",
+    "purpose",
+    "base64",
+    "project",
+    "aws:ec2launchtemplate:id",
+    "account"
+  ],
+  "metaData": null,
+  "correlationId": "0441357f-bea0-462a-8397-9aa82fea82d9"
+}

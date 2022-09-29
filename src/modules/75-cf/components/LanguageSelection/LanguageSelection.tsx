@@ -8,7 +8,6 @@
 import { Button, Layout, Text } from '@wings-software/uicore'
 import React, { useState } from 'react'
 import cx from 'classnames'
-import type { StringsMap } from 'stringTypes'
 import type { StringKeys } from 'framework/strings'
 
 import nodejs from '@cf/images/icons/nodejs.svg'
@@ -24,17 +23,6 @@ import css from './LanguageSelection.module.scss'
 export enum PlatformEntryType {
   CLIENT = 'client',
   SERVER = 'server'
-}
-
-export enum CodeSetupStringType {
-  HEADER = 'HEADER',
-  CODE = 'CODE',
-  TEXT = 'TEXT'
-}
-
-export interface CodeSetupDocEntry {
-  stringId: keyof StringsMap
-  stringType: CodeSetupStringType
 }
 
 export interface PlatformEntry {

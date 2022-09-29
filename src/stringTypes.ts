@@ -457,6 +457,7 @@ export interface StringsMap {
   'common.letsGetYouStarted': string
   'common.levelUp': string
   'common.link': string
+  'common.loadBalancer': string
   'common.loading': string
   'common.local': string
   'common.logs.delegateSelectionLogs': string
@@ -1184,6 +1185,7 @@ export interface StringsMap {
   'rbac.userDetails.userGroup.confirmDeleteText': string
   'rbac.userDetails.userGroup.deleteSuccessMessage': string
   'rbac.userDetails.userGroup.deleteTitle': string
+  'rbac.userDetails.userGroup.linkedSSOLdapUsersMessage': string
   'rbac.userGroupForm.addMemberSuccess': string
   'rbac.userGroupForm.createSuccess': string
   'rbac.userGroupForm.editSuccess': string
@@ -1452,7 +1454,6 @@ export interface StringsMap {
   'secrets.secret.validationIdentifier': string
   'secrets.secret.validationKms': string
   'secrets.secret.validationNameChars': string
-  'secrets.secret.winrmCredential': string
   'secrets.secretsTitle': string
   'secrets.selectSecret': string
   'secrets.sshAuthFormFields.labelFile': string
@@ -2352,7 +2353,6 @@ export interface StringsMap {
   'connectors.hashiCorpVault.k8sAuthEndpoint': string
   'connectors.hashiCorpVault.k8s_auth': string
   'connectors.hashiCorpVault.manuallyConfigureEngine': string
-  'connectors.hashiCorpVault.preventDefaultWhenReadOnly': string
   'connectors.hashiCorpVault.readOnly': string
   'connectors.hashiCorpVault.readOnlyVault': string
   'connectors.hashiCorpVault.renewal': string
@@ -2971,6 +2971,8 @@ export interface StringsMap {
   'pipeline.artifactTriggerConfigPanel.configureArtifactRuntimeInputs': string
   'pipeline.artifactTriggerConfigPanel.configureInput': string
   'pipeline.artifactTriggerConfigPanel.configureInputs': string
+  'pipeline.artifactTriggerConfigPanel.defineArtifactSource': string
+  'pipeline.artifactTriggerConfigPanel.defineManifestSource': string
   'pipeline.artifactTriggerConfigPanel.hasRuntimeInputs': string
   'pipeline.artifactTriggerConfigPanel.listenOnNewArtifact': string
   'pipeline.artifactTriggerConfigPanel.locationRepoPath': string
@@ -3169,6 +3171,7 @@ export interface StringsMap {
   'pipeline.customDeployment.infraVariablesTitle': string
   'pipeline.customDeployment.jsonPathRelativeLabel': string
   'pipeline.customDeployment.newAttribute': string
+  'pipeline.customDeployment.seeOnlyTemplatesFor': string
   'pipeline.customDeployment.validations.nameUnique': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.plural': string
   'pipeline.dashboardDeploymentsWidget.failed24Hrs.singular': string
@@ -3533,7 +3536,6 @@ export interface StringsMap {
   'pipeline.lastExecution': string
   'pipeline.lastSevenDays': string
   'pipeline.linuxOnly': string
-  'pipeline.loadBalancer': string
   'pipeline.logs.errorText': string
   'pipeline.logs.retry': string
   'pipeline.logs.sectionName': string
@@ -3700,6 +3702,7 @@ export interface StringsMap {
   'pipeline.phasesForm.phase': string
   'pipeline.phasesForm.phases': string
   'pipeline.phasesForm.useVerification': string
+  'pipeline.pipelineChaining.selectPipeline': string
   'pipeline.pipelineInputPanel.automaticallyExtractedFromText': string
   'pipeline.pipelineInputPanel.existing': string
   'pipeline.pipelineInputPanel.noRuntimeInputs': string
@@ -3803,11 +3806,13 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.awsSAM': string
   'pipeline.serviceDeploymentTypes.azureFunctions': string
   'pipeline.serviceDeploymentTypes.azureWebApp': string
+  'pipeline.serviceDeploymentTypes.customDeploy': string
   'pipeline.serviceDeploymentTypes.customDeployment': string
   'pipeline.serviceDeploymentTypes.deployDifferentLabel': string
   'pipeline.serviceDeploymentTypes.kubernetes': string
   'pipeline.serviceDeploymentTypes.pcf': string
   'pipeline.serviceDeploymentTypes.serverlessAwsLambda': string
+  'pipeline.serviceDeploymentTypes.serverlessAwsType': string
   'pipeline.serviceDeploymentTypes.serverlessAzureFunctions': string
   'pipeline.serviceDeploymentTypes.serverlessGoogleFunctions': string
   'pipeline.serviceDeploymentTypes.ssh': string
@@ -4275,6 +4280,7 @@ export interface StringsMap {
   'triggers.validation.operator': string
   'triggers.validation.payloadConditions': string
   'triggers.validation.repoName': string
+  'triggers.validation.repositoryFormat': string
   'triggers.validation.selectedArtifact': string
   'triggers.validation.triggerName': string
   'cd.GitOpsServerDelete': string
@@ -4555,6 +4561,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.environmentOrEnvGroupAsRuntime': string
   'cd.pipelineSteps.environmentTab.environmentOrEnvGroupIsRequired': string
   'cd.pipelineSteps.environmentTab.infrastructureIsRequired': string
+  'cd.pipelineSteps.environmentTab.multiEnvInfraToggleText': string
   'cd.pipelineSteps.environmentTab.newEnvironment': string
   'cd.pipelineSteps.environmentTab.plusNewEnvironment': string
   'cd.pipelineSteps.environmentTab.selectEnvironment': string
@@ -4695,7 +4702,6 @@ export interface StringsMap {
   'cd.steps.awsInfraStep.labels.autoScallingGroup': string
   'cd.steps.awsInfraStep.labels.connectionAttribute': string
   'cd.steps.awsInfraStep.labels.hostName': string
-  'cd.steps.awsInfraStep.labels.loadBalancer': string
   'cd.steps.awsInfraStep.labels.useAutoScallingGroup': string
   'cd.steps.awsInfraStep.labels.useAwsInstanceFilter': string
   'cd.steps.awsInfraStep.labels.vpcs': string
@@ -4744,6 +4750,7 @@ export interface StringsMap {
   'cd.steps.common.selectOrEnterClusterPlaceholder': string
   'cd.steps.common.specifyCredentials': string
   'cd.steps.common.undefinedType': string
+  'cd.steps.ecsBGCreateServiceStep.labels.elasticLoadBalancer': string
   'cd.steps.ecsBGCreateServiceStep.labels.prodListener': string
   'cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN': string
   'cd.steps.ecsBGCreateServiceStep.labels.stageListener': string
@@ -6648,9 +6655,12 @@ export interface StringsMap {
   'ci.runTestsStep.frameworkVersion': string
   'ci.runTestsStep.gradle': string
   'ci.runTestsStep.java': string
+  'ci.runTestsStep.kotlin': string
   'ci.runTestsStep.maven': string
   'ci.runTestsStep.nUnitConsole': string
   'ci.runTestsStep.namespaces': string
+  'ci.runTestsStep.sbt': string
+  'ci.runTestsStep.scala': string
   'ci.runTestsStep.sixPointZero': string
   'ci.runTestsStep.testReportPaths': string
   'ci.runTestsStep.validation.namespacesRequiredWhenCsharp': string

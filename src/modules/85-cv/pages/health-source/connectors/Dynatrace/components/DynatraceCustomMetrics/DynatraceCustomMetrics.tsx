@@ -70,7 +70,9 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
     }),
     [accountId, projectIdentifier, orgIdentifier, connectorIdentifier]
   )
-  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
+  const isConnectorRuntimeOrExpression =
+    getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED ||
+    getMultiTypeFromValue(selectedServiceId) !== MultiTypeInputType.FIXED
   const { mutate: querySampleData, loading, error } = useGetDynatraceSampleData({ queryParams: sampleDataQueryParams })
   const timeseriesDataErrorMessage = useMemo(() => {
     return getErrorMessage(error)
@@ -169,6 +171,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
                     <Text
                       data-testid={'data-undo-manual-query-action'}
                       intent="primary"
+                      margin={{ top: 'small', left: 'large' }}
                       onClick={() => formikSetField(DynatraceHealthSourceFieldNames.MANUAL_QUERY, false)}
                     >
                       {getString('cv.monitoringSources.prometheus.undoManualQuery')}
@@ -186,6 +189,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
                   />
                 )}
                 <QueryContent
+                  key={getMultiTypeFromValue(metricValues?.metricSelector)}
                   textAreaProps={{ readOnly: !metricValues.isManualQuery }}
                   onEditQuery={!metricValues.isManualQuery ? openDialog : undefined}
                   handleFetchRecords={handleFetchRecords}

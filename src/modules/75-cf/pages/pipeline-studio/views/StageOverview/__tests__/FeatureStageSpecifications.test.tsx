@@ -47,7 +47,8 @@ const getPipelineContext = (): PipelineContextInterface => ({
     isLoading: false,
     isUpdated: true,
     templateTypes: {},
-    templateServiceData: {}
+    templateServiceData: {},
+    resolvedCustomDeploymentDetailsByRef: {}
   },
   contextType: PipelineContextType.Pipeline,
   allowableTypes: [

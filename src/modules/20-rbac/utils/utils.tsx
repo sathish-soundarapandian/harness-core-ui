@@ -80,6 +80,7 @@ export enum InvitationStatus {
   USER_ADDED_SUCCESSFULLY = 'USER_ADDED_SUCCESSFULLY',
   USER_ALREADY_ADDED = 'USER_ALREADY_ADDED',
   USER_ALREADY_INVITED = 'USER_ALREADY_INVITED',
+  USER_INVITE_NOT_REQUIRED = 'USER_INVITE_NOT_REQUIRED',
   FAIL = 'FAIL'
 }
 
@@ -112,6 +113,7 @@ export const handleInvitationResponse = ({
       onSubmit?.()
       return showSuccess(getString('rbac.usersPage.invitationSuccess'))
     }
+    case InvitationStatus.USER_INVITE_NOT_REQUIRED:
     case InvitationStatus.USER_ADDED_SUCCESSFULLY: {
       onUserAdded?.()
       return showSuccess(getString('rbac.usersPage.userAddedSuccess'))

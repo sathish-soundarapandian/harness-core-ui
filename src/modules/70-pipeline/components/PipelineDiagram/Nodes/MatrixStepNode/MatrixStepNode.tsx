@@ -15,7 +15,7 @@ import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { useDeepCompareEffect } from '@common/hooks'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
-import { getPositionOfAddIcon } from '../utils'
+import { getPositionOfAddIcon, matrixNodeNameToJSON } from '../utils'
 import { Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import { NodeStatusIndicator } from '../../NodeStatusIndicator/NodeStatusIndicator'
@@ -281,6 +281,9 @@ export function MatrixStepNode(props: any): JSX.Element {
                         defaultNode
                       ) as React.FC<BaseReactComponentProps>
                       const matrixNodeName = defaultTo(node?.matrixNodeName, node?.data?.matrixNodeName)
+                      const formattedMatrixName = matrixNodeName
+                        ? `${matrixNodeNameToJSON(matrixNodeName)} ${node.name}`
+                        : node?.name
                       return (
                         <React.Fragment key={node.data?.identifier}>
                           {index < (showAllNodes ? stepGroupData?.length : COLLAPSED_MATRIX_NODE_LENGTH) ? (
@@ -308,12 +311,9 @@ export function MatrixStepNode(props: any): JSX.Element {
                               nextNode={node.nextNode}
                               updateGraphLinks={node.updateGraphLinks}
                               readonly={props.readonly}
-                              selectedNodeId={
-                                props?.selectedNodeId
-                                // || queryParams?.stageId
-                              }
+                              selectedNodeId={props?.selectedNodeId}
                               showMarkers={false}
-                              name={matrixNodeName ? `${matrixNodeName}${node?.name}` : node?.name}
+                              name={formattedMatrixName}
                             />
                           ) : null}
                         </React.Fragment>

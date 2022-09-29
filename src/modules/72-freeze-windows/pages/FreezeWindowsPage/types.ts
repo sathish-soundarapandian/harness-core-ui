@@ -5,6 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export interface FreezeListViewProps {
-  data: any
+import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { GetFreezeListQueryParams } from 'services/cd-ng'
+
+export type FreezeWindowListPagePathParams = Pick<
+  ProjectPathProps,
+  'accountId' | 'orgIdentifier' | 'projectIdentifier'
+> &
+  ModulePathParams
+
+export type FreezeWindowListPageQueryParams = Omit<
+  GetFreezeListQueryParams,
+  'accountIdentifier' | 'orgIdentifier' | 'projectIdentifier'
+>
+
+export interface SortBy {
+  sort: 'lastUpdatedAt' | 'name'
+  order: 'ASC' | 'DESC'
 }

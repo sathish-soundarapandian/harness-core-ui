@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { isEmpty } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -19,20 +19,28 @@ export function AzureBlueprintVariableView(props: any): React.ReactElement {
   return (
     <>
       <VariablesListTable
-        data={variablesData.spec}
-        originalData={initialValues.spec}
+        data={get(variablesData, 'spec')}
+        originalData={get(initialValues, 'spec')}
         metadataMap={metadataMap}
         className={pipelineVariableCss.variablePaddingL3}
       />
-      {!isEmpty(variablesData.spec?.configuration?.template) && (
-        <Text margin={{ left: 'xlarge' }}>{getString('cd.cloudFormation.templateFile')}</Text>
-      )}
       <VariablesListTable
-        data={variablesData.spec?.configuration?.template?.store?.spec}
-        originalData={initialValues.spec?.configuration?.template?.store?.spec}
+        data={get(variablesData, 'spec.configuration')}
+        originalData={get(initialValues, 'spec.configuration')}
         metadataMap={metadataMap}
         className={pipelineVariableCss.variablePaddingL3}
       />
+      {!isEmpty(get(variablesData, 'spec.configuration.template')) && (
+        <>
+          <Text margin={{ left: 'xlarge' }}>{getString('cd.cloudFormation.templateFile')}</Text>
+          <VariablesListTable
+            data={get(variablesData, 'spec.configuration.template.store.spec')}
+            originalData={get(initialValues, 'spec.configuration.template.store.spec')}
+            metadataMap={metadataMap}
+            className={pipelineVariableCss.variablePaddingL3}
+          />
+        </>
+      )}
     </>
   )
 }

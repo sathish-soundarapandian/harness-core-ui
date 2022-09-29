@@ -1,0 +1,123 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 9,
+    "pageItemCount": 9,
+    "pageSize": 10,
+    "content": [
+      {
+        "connector": {
+          "name": "artifactory-test",
+          "identifier": "artifactorytest",
+          "description": "",
+          "orgIdentifier": null,
+          "projectIdentifier": null,
+          "tags": {},
+          "type": "Artifactory",
+          "spec": {
+            "artifactoryServerUrl": "https://harness.jfrog.io/harness",
+            "auth": {
+              "type": "UsernamePassword",
+              "spec": {
+                "username": "automationuser",
+                "usernameRef": null,
+                "passwordRef": "account.harness_artifactory"
+              }
+            },
+            "delegateSelectors": [],
+            "executeOnDelegate": true
+          }
+        },
+        "createdAt": 1627898178504,
+        "lastModifiedAt": 1658863775855,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1658863784630,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1658863784630
+        },
+        "activityDetails": {
+          "lastActivityTime": 1658863775889
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "governanceMetadata": null
+      },
+      {
+        "connector": {
+          "name": "harness artfactory",
+          "identifier": "harness_artfactory",
+          "description": "",
+          "orgIdentifier": null,
+          "projectIdentifier": null,
+          "tags": {},
+          "type": "Artifactory",
+          "spec": {
+            "artifactoryServerUrl": "https://harness.jfrog.io/harness",
+            "auth": {
+              "type": "UsernamePassword",
+              "spec": {
+                "username": "account.harnessinternalreadusername",
+                "usernameRef": null,
+                "passwordRef": "account.harnessinternalread"
+              }
+            },
+            "delegateSelectors": [],
+            "executeOnDelegate": true
+          }
+        },
+        "createdAt": 1624173613318,
+        "lastModifiedAt": 1624174072691,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1624478326649,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1624478326649
+        },
+        "activityDetails": {
+          "lastActivityTime": 1624174072718
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "governanceMetadata": null
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "a333878c-39d7-4349-b7d5-afd4b92ec7a7"
+}

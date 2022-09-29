@@ -39,11 +39,7 @@ import {
   Nexus2InitialValuesType,
   RepositoryPortOrServer
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import {
-  k8sRepositoryFormatTypes,
-  nonK8sRepositoryFormatTypes,
-  RepositoryFormatTypes
-} from '@pipeline/utils/stageHelpers'
+import { k8sRepositoryFormatTypes, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor, repositoryPortOrServer } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -78,7 +74,6 @@ export function Nexus3Artifact({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
-  selectedDeploymentType,
   isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
@@ -282,8 +277,7 @@ export function Nexus3Artifact({
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed,
-      false,
-      selectedDeploymentType
+      false
     ) as Nexus2InitialValuesType
   }
   const submitFormData = (formData: Nexus2InitialValuesType & { connectorId?: string }): void => {
@@ -367,9 +361,7 @@ export function Nexus3Artifact({
                 <FormInput.Select
                   name="repositoryFormat"
                   label={getString('common.repositoryFormat')}
-                  items={
-                    selectedDeploymentType === 'Kubernetes' ? k8sRepositoryFormatTypes : nonK8sRepositoryFormatTypes
-                  }
+                  items={k8sRepositoryFormatTypes}
                   onChange={value => {
                     if (value.value === RepositoryFormatTypes.Maven) {
                       const optionalValues: { extension?: string; classifier?: string } = {}

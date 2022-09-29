@@ -51,7 +51,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
+import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
@@ -123,7 +123,7 @@ function DeployEnvironment({
     lazy: true
   })
 
-  const { template: getTemplate, updateTemplate } = useRunPipelineFormContext()
+  const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
 
   useEffect(() => {
     // once response has loaded
@@ -139,7 +139,7 @@ function DeployEnvironment({
         )
 
         if (path) {
-          updateTemplate(
+          updateStageFormTemplate(
             {
               environmentRef: RUNTIME_INPUT_VALUE,
               ...(parsedEnvironmentYaml?.environmentInputs && {
@@ -192,7 +192,7 @@ function DeployEnvironment({
         !serviceOverrideInputsResponse?.data?.inputSetTemplateYaml &&
         path
       ) {
-        const updatedTemplate = produce(getTemplate(path), (draft: EnvironmentYamlV2) => {
+        const updatedTemplate = produce(getStageFormTemplate(path), (draft: EnvironmentYamlV2) => {
           if (draft) {
             delete draft.environmentInputs
             delete draft.serviceOverrideInputs
@@ -224,7 +224,7 @@ function DeployEnvironment({
               gitOpsClusters: environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
             })
           })
-          updateTemplate(updatedTemplate, path)
+          updateStageFormTemplate(updatedTemplate, path)
         }
       }
     }

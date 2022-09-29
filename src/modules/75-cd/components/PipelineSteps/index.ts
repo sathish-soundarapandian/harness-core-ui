@@ -23,6 +23,7 @@ import { K8sCanaryDeleteStep } from './K8sCanaryDelete/K8sCanaryDeleteStep'
 import { K8sApplyStep } from './K8sApply/K8sApplyStep'
 import { K8sDeleteStep } from './K8sDelete/K8sDeleteStep'
 import { DeployEnvironmentStep } from './DeployEnvStep/DeployEnvStep'
+import { DeployEnvironmentEntityStep } from './DeployEnvironmentEntityStep/DeployEnvironmentEntityStep'
 import { DeployInfrastructureStep } from './DeployInfrastructureStep/DeployInfrastructureStep'
 import { DeployServiceStep } from './DeployServiceStep/DeployServiceStep'
 import { HelmDeploy } from './HelmDeploy/HelmDeploy'
@@ -94,6 +95,7 @@ factory.registerStep(new ServerlessAwsLambdaSpec())
 factory.registerStep(new ServerlessAzureSpec())
 factory.registerStep(new ServerlessGCPSpec())
 factory.registerStep(new DeployEnvironmentStep())
+factory.registerStep(new DeployEnvironmentEntityStep())
 factory.registerStep(new DeployInfrastructureStep())
 factory.registerStep(new DeployServiceStep())
 factory.registerStep(new DeployServiceEntityStep())

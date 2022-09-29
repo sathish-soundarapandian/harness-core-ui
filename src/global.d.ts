@@ -107,6 +107,11 @@ declare module 'chaos/MicroFrontendApp' {
   export default ChildApp
 }
 
+declare module 'ffui/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'errortracking/App' {
   const ChildApp: ChildAppComponent
   export default ChildApp

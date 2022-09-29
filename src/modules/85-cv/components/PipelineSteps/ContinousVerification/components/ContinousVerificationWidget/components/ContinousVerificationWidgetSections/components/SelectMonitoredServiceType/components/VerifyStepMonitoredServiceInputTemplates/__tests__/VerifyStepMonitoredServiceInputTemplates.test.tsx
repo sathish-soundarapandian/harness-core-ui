@@ -8,6 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+import * as formik from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as templateService from 'services/template-ng'
 import VerifyStepMonitoredServiceInputTemplates, {
@@ -71,6 +72,13 @@ const WrapperComponent = (props: VerifyStepMonitoredServiceInputTemplatesProps):
 }
 
 describe('Unit tests for VerifyStepMonitoredServiceInputTemplatesProps', () => {
+  const useFormikContextMock = jest.spyOn(formik, 'useFormikContext')
+
+  beforeEach(() => {
+    useFormikContextMock.mockReturnValue({
+      setFieldValue: jest.fn()
+    } as unknown as any)
+  })
   test('Verify if correct template inputs are rendered in the verify step', async () => {
     const props = {
       allowableTypes: [

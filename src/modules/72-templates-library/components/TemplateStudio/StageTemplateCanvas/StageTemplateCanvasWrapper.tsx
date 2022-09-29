@@ -57,7 +57,6 @@ const StageTemplateCanvasWrapper = () => {
     sanitize(processNode, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
     set(template, 'spec', processNode)
     await updateTemplate(template)
-    setPipeline(pipelineConfig)
   }
 
   return (

@@ -208,6 +208,7 @@ export function StepGroupNode(props: any): JSX.Element {
                 isNodeCollapsed={isNodeCollapsed}
                 parentIdentifier={props?.identifier}
                 hideLinks={props?.identifier === STATIC_SERVICE_GROUP_NAME}
+                setVisibilityOfAdd={setVisibilityOfAdd}
               />
             </div>
             {!props.readonly && props?.identifier !== STATIC_SERVICE_GROUP_NAME && (

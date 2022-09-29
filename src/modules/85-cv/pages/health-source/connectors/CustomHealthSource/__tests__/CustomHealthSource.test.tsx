@@ -6,12 +6,19 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvServices from 'services/cv'
 import * as cdServices from 'services/cd-ng'
+import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import { CustomHealthSource } from '../CustomHealthSource'
-import { sourceData } from './CustomHealthSource.mock'
+import {
+  emptyCustomMetricData,
+  sourceData,
+  sourceDataWithValidMetric,
+  sourceDataWithValidMetricPopupMock
+} from './CustomHealthSource.mock'
 
 jest.mock('@common/components/NameIdDescriptionTags/NameIdDescriptionTags', () => ({
   ...(jest.requireActual('@common/components/NameIdDescriptionTags/NameIdDescriptionTags') as any),
@@ -44,5 +51,92 @@ describe('Verify CustomHealthSource', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  describe('Metric thresholds', () => {
+    beforeAll(() => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+    })
+    test('should render metric thresholds', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      const onSubmit = jest.fn()
+      render(
+        <TestWrapper>
+          <CustomHealthSource data={sourceDataWithValidMetric} onSubmit={onSubmit} />
+        </TestWrapper>
+      )
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+      expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (1)')).toBeInTheDocument()
+      const addButton = screen.getByTestId('AddThresholdButton')
+
+      expect(addButton).toBeInTheDocument()
+
+      fireEvent.click(addButton)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (2)')).toBeInTheDocument()
+
+      expect(screen.getByText(/submit/)).toBeInTheDocument()
+
+      act(() => {
+        fireEvent.click(screen.getByText(/submit/))
+      })
+    })
+
+    test('should not render metric thresholds when feature flag is turned off', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
+      render(
+        <TestWrapper>
+          <CustomHealthSource data={sourceData} onSubmit={jest.fn()} />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
+
+    test('should not render metric thresholds when there is no custom metric', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      render(
+        <TestWrapper>
+          <CustomHealthSource data={emptyCustomMetricData} onSubmit={jest.fn()} />
+        </TestWrapper>
+      )
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
+
+    test('should prompt when custom metric having metric threshold is being deleted', async () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      const onSubmit = jest.fn()
+      const { container } = render(
+        <TestWrapper>
+          <CustomHealthSource data={sourceDataWithValidMetricPopupMock} onSubmit={onSubmit} />
+        </TestWrapper>
+      )
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+      expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (1)')).toBeInTheDocument()
+
+      const deleteButton = container.querySelectorAll('span[data-icon="main-delete"]')[1]
+
+      act(() => {
+        userEvent.click(deleteButton)
+      })
+
+      expect(document.body.querySelector('[class*="useConfirmationDialog"]')).toBeDefined()
+
+      const modalDeleteBtn = screen.queryAllByText('confirm')[0]
+      act(() => {
+        userEvent.click(modalDeleteBtn!)
+      })
+
+      await waitFor(() => {
+        expect(document.body.innerHTML).not.toContain('useConfirmationDialog')
+      })
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
+    })
   })
 })

@@ -104,9 +104,12 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
   )
 
   useEffect(() => {
-    if (!dynatraceMetricFormData.isEdit) {
-      setApplicationIfConnectorIsInput(isConnectorRuntimeOrExpression, dynatraceMetricFormData, setDynatraceMetricData)
-    }
+    setApplicationIfConnectorIsInput(
+      isConnectorRuntimeOrExpression,
+      dynatraceMetricFormData,
+      setDynatraceMetricData,
+      setMappedMetrics
+    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

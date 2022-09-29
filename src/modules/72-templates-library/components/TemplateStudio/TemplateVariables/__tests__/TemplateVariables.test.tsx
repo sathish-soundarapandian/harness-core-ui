@@ -59,7 +59,7 @@ describe('<TemplateVariables /> tests', () => {
     const PipelineCardPanelMock = jest.spyOn(PipelineVariables, 'PipelineCardPanel')
     render(
       <TestWrapper>
-        <TemplateContext.Provider value={getTemplateContextMock(TemplateType.Pipeline)}>
+        <TemplateContext.Provider value={{ ...getTemplateContextMock(TemplateType.Pipeline), isReadonly: true }}>
           <TemplateVariablesContext.Provider
             value={
               {
@@ -76,7 +76,11 @@ describe('<TemplateVariables /> tests', () => {
     )
 
     expect(PipelineCardPanelMock).toBeCalledWith(
-      expect.objectContaining({ pipeline: pipelineTemplateMock.spec, originalPipeline: pipelineTemplateMock.spec }),
+      expect.objectContaining({
+        pipeline: pipelineTemplateMock.spec,
+        originalPipeline: pipelineTemplateMock.spec,
+        readonly: true
+      }),
       expect.anything()
     )
   })
@@ -85,7 +89,7 @@ describe('<TemplateVariables /> tests', () => {
     const StepCardPanelMock = jest.spyOn(StepCard, 'StepCardPanel')
     render(
       <TestWrapper>
-        <TemplateContext.Provider value={getTemplateContextMock(TemplateType.Step)}>
+        <TemplateContext.Provider value={{ ...getTemplateContextMock(TemplateType.Step), isReadonly: true }}>
           <TemplateVariablesContext.Provider
             value={
               {
@@ -102,7 +106,7 @@ describe('<TemplateVariables /> tests', () => {
     )
 
     expect(StepCardPanelMock).toBeCalledWith(
-      expect.objectContaining({ originalStep: stepTemplateMock.spec }),
+      expect.objectContaining({ originalStep: stepTemplateMock.spec, readonly: true }),
       expect.anything()
     )
   })
@@ -111,7 +115,7 @@ describe('<TemplateVariables /> tests', () => {
     const StageCardMock = jest.spyOn(StageCard, 'default')
     render(
       <TestWrapper>
-        <TemplateContext.Provider value={getTemplateContextMock(TemplateType.Stage)}>
+        <TemplateContext.Provider value={{ ...getTemplateContextMock(TemplateType.Stage), isReadonly: true }}>
           <TemplateVariablesContext.Provider
             value={
               {
@@ -128,7 +132,10 @@ describe('<TemplateVariables /> tests', () => {
     )
 
     expect(StageCardMock).toBeCalledWith(
-      expect.objectContaining({ originalStage: { ...stageTemplateMock.spec, identifier: 'stage_name' } }),
+      expect.objectContaining({
+        originalStage: { ...stageTemplateMock.spec, identifier: 'stage_name' },
+        readonly: true
+      }),
       expect.anything()
     )
   })

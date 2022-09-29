@@ -490,6 +490,35 @@ exports[`Kustomize with Git/ Github/Gitlab/Bitbucket tests expand advanced secti
                     data-testid="advancedTitle-details"
                   >
                     <div
+                      class="Layout--vertical StyledProps--main StyledProps--margin-bottom-small"
+                    >
+                      <div
+                        class="bp3-form-group"
+                      >
+                        <div
+                          class="bp3-form-content"
+                        >
+                          <label
+                            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox StyledProps--main StyledProps--inline"
+                          >
+                            <input
+                              name="optimizedKustomizeManifestCollection"
+                              type="checkbox"
+                            />
+                            <span
+                              class="bp3-control-indicator"
+                            />
+                            <span
+                              class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
+                              data-tooltip-id="kustomizeGit_optimizedKustomizeManifestCollection"
+                            >
+                              pipeline.manifestType.optimizedKustomizeManifestCollection
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div
                       class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
                     >
                       <div

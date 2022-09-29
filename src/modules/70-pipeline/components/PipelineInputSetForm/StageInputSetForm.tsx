@@ -140,7 +140,8 @@ function StepFormInternal({
   readonly,
   viewType,
   path,
-  allowableTypes
+  allowableTypes,
+  customStepProps
 }: {
   template?: ExecutionWrapperConfig
   allValues?: ExecutionWrapperConfig
@@ -150,6 +151,10 @@ function StepFormInternal({
   viewType?: StepViewType
   path: string
   allowableTypes: AllowedTypes
+  customStepProps?: {
+    stageIdentifier: string
+    selectedStage?: DeploymentStageConfig
+  }
 }): JSX.Element {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -167,6 +172,18 @@ function StepFormInternal({
         type={(allValues?.step as StepElementConfig)?.type as StepType}
         onUpdate={onUpdate}
         stepViewType={viewType}
+        customStepProps={
+          customStepProps
+            ? {
+                ...customStepProps,
+                selectedStage: {
+                  stage: {
+                    spec: customStepProps?.selectedStage
+                  }
+                }
+              }
+            : null
+        }
       />
       {getMultiTypeFromValue((template?.step as StepElementConfig)?.spec?.delegateSelectors) ===
         MultiTypeInputType.RUNTIME && (
@@ -208,7 +225,8 @@ export function StepForm({
   viewType,
   path,
   allowableTypes,
-  hideTitle = false
+  hideTitle = false,
+  customStepProps
 }: {
   template?: ExecutionWrapperConfig
   allValues?: ExecutionWrapperConfig
@@ -219,6 +237,10 @@ export function StepForm({
   path: string
   allowableTypes: AllowedTypes
   hideTitle?: boolean
+  customStepProps?: {
+    stageIdentifier: string
+    selectedStage?: DeploymentStageConfig
+  }
 }): JSX.Element {
   const { getString } = useStrings()
   const isTemplateStep = (template?.step as unknown as TemplateStepNode)?.template
@@ -262,6 +284,7 @@ export function StepForm({
         viewType={viewType}
         allowableTypes={allowableTypes}
         onUpdate={onUpdate}
+        customStepProps={customStepProps}
       />
     </Layout.Vertical>
   )
@@ -289,9 +312,23 @@ function ExecutionWrapperInputSetForm(props: {
   viewType: StepViewType
   allowableTypes: AllowedTypes
   executionIdentifier?: string
+  customStepProps?: {
+    stageIdentifier: string
+    selectedStage?: DeploymentStageConfig
+  }
 }): JSX.Element {
-  const { stepsTemplate, allValues, values, path, formik, readonly, viewType, allowableTypes, executionIdentifier } =
-    props
+  const {
+    stepsTemplate,
+    allValues,
+    values,
+    path,
+    formik,
+    readonly,
+    viewType,
+    allowableTypes,
+    executionIdentifier,
+    customStepProps
+  } = props
   return (
     <>
       {stepsTemplate?.map((item, index) => {
@@ -308,6 +345,7 @@ function ExecutionWrapperInputSetForm(props: {
               readonly={readonly}
               viewType={viewType}
               allowableTypes={allowableTypes}
+              customStepProps={customStepProps}
               onUpdate={data => {
                 /* istanbul ignore next */
                 if (initialValues) {
@@ -353,6 +391,7 @@ function ExecutionWrapperInputSetForm(props: {
                   viewType={viewType}
                   path={`${path}[${index}].parallel[${indexp}].step`}
                   allowableTypes={allowableTypes}
+                  customStepProps={customStepProps}
                   onUpdate={data => {
                     if (initialValues) {
                       if (!initialValues.step) {
@@ -397,6 +436,7 @@ function ExecutionWrapperInputSetForm(props: {
                       values={initialValues?.stepGroup?.steps}
                       viewType={viewType}
                       allowableTypes={allowableTypes}
+                      customStepProps={customStepProps}
                     />
                   </CollapseForm>
                 </>
@@ -425,6 +465,7 @@ function ExecutionWrapperInputSetForm(props: {
                   values={initialValues?.stepGroup?.steps}
                   viewType={viewType}
                   allowableTypes={allowableTypes}
+                  customStepProps={customStepProps}
                 />
               </CollapseForm>
             </>
@@ -1565,6 +1606,10 @@ export function StageInputSetFormInternal({
                 readonly={readonly}
                 viewType={viewType}
                 allowableTypes={allowableTypes}
+                customStepProps={{
+                  stageIdentifier: stageIdentifier as string,
+                  selectedStage: deploymentStage
+                }}
               />
             )}
             {deploymentStageTemplate.infrastructure.infrastructureDefinition?.provisioner?.rollbackSteps && (
@@ -1580,6 +1625,10 @@ export function StageInputSetFormInternal({
                 readonly={readonly}
                 viewType={viewType}
                 allowableTypes={allowableTypes}
+                customStepProps={{
+                  stageIdentifier: stageIdentifier as string,
+                  selectedStage: deploymentStage
+                }}
               />
             )}
           </div>
@@ -1677,6 +1726,10 @@ export function StageInputSetFormInternal({
                 readonly={readonly}
                 viewType={viewType}
                 allowableTypes={allowableTypes}
+                customStepProps={{
+                  stageIdentifier: stageIdentifier as string,
+                  selectedStage: deploymentStage
+                }}
               />
             )}
             {deploymentStageTemplate.execution?.rollbackSteps && (
@@ -1690,6 +1743,10 @@ export function StageInputSetFormInternal({
                 readonly={readonly}
                 viewType={viewType}
                 allowableTypes={allowableTypes}
+                customStepProps={{
+                  stageIdentifier: stageIdentifier as string,
+                  selectedStage: deploymentStage
+                }}
               />
             )}
           </div>

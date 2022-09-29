@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, isNil, set } from 'lodash-es'
+import { cloneDeep, isNil, set, get, defaultTo } from 'lodash-es'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import type {
@@ -16,12 +16,15 @@ import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext
 import { addStepOrGroup } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { StepCategory, useGetStepsV2 } from 'services/pipeline-ng'
 import { createStepNodeFromTemplate } from '@pipeline/utils/templateUtils'
+import { useStrings } from 'framework/strings'
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useMutateAsGet } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import type { DeploymentStageConfig } from 'services/cd-ng'
+import { getLinkedTemplateFromResolvedCustomDeploymentDetails } from '@pipeline/utils/stageHelpers'
 
 interface AddStepTemplateReturnType {
   addTemplate: (event: ExecutionGraphAddStepEvent) => Promise<void>
@@ -40,7 +43,8 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
       pipelineView,
       selectionState: { selectedStageId = '' },
       gitDetails,
-      storeMetadata
+      storeMetadata,
+      resolvedCustomDeploymentDetailsByRef
     },
     updateStage,
     getStageFromPipeline,
@@ -48,6 +52,16 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
   } = pipelineContext
   const { getTemplate } = useTemplateSelector()
   const { stage: selectedStage } = getStageFromPipeline(selectedStageId)
+  const customDeploymentTemplateRef = defaultTo(
+    (selectedStage?.stage?.spec as DeploymentStageConfig)?.customDeploymentRef?.templateRef,
+    ''
+  )
+  const { getString } = useStrings()
+  const resolvedCustomDeploymentDetails = get(
+    resolvedCustomDeploymentDetailsByRef,
+    customDeploymentTemplateRef,
+    {}
+  ) as Record<string, string | string[]>
   const [allChildTypes, setAllChildTypes] = React.useState<string[]>([])
 
   const { data: stepsData } = useMutateAsGet(useGetStepsV2, {
@@ -85,7 +99,8 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
         templateType: 'Step',
         allChildTypes,
         gitDetails,
-        storeMetadata
+        storeMetadata,
+        ...getLinkedTemplateFromResolvedCustomDeploymentDetails({ resolvedCustomDeploymentDetails, getString })
       })
       const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))

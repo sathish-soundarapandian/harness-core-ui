@@ -46,8 +46,9 @@ export const DependencyBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
-
+  const buildInfrastructureType: CIBuildInfrastructureType =
+    get(currentStage, 'stage.spec.infrastructure.type') ||
+    (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
   return (
     <Formik<DependencyDataUI>
       initialValues={getInitialValuesInCorrectFormat<DependencyData, DependencyDataUI>(

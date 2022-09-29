@@ -21,7 +21,7 @@ import { isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { BaseReactComponentProps, NodeType, PipelineGraphState, PipelineGraphType } from '../../types'
-import { getPositionOfAddIcon } from '../utils'
+import { getPositionOfAddIcon, matrixNodeNameToJSON } from '../utils'
 import { getPipelineGraphData } from '../../PipelineGraph/PipelineGraphUtils'
 import MatrixNodeLabelWrapper from '../MatrixNodeLabelWrapper'
 import { NodeStatusIndicator } from '../../NodeStatusIndicator/NodeStatusIndicator'
@@ -63,7 +63,7 @@ const getCalculatedStyles = (data: PipelineGraphState[], parallelism: number, sh
     const finalWidth = nodeWidth * (parallelism === 0 ? 1 : Math.min(parallelism, (data || []).length))
     return {
       height: `${finalHeight}px`,
-      width: `${finalWidth}px`
+      width: `${finalWidth + 40}px`
     }
   } else {
     const updatedParallelism = Math.min(parallelism, MAX_ALLOWED_MATRIX_COLLAPSED_NODES)
@@ -296,6 +296,9 @@ export function MatrixNode(props: any): JSX.Element {
                         defaultNode
                       ) as React.FC<BaseReactComponentProps>
 
+                      const formattedMatrixName = node?.matrixNodeName
+                        ? `${matrixNodeNameToJSON(node.matrixNodeName)} ${node.name}`
+                        : node?.name
                       return (
                         <React.Fragment key={node.data?.identifier}>
                           {index < (showAllNodes ? state?.length : COLLAPSED_MATRIX_NODE_LENGTH) ? (
@@ -325,7 +328,7 @@ export function MatrixNode(props: any): JSX.Element {
                                   : queryParams?.stageExecId || props?.selectedNodeId
                               }
                               showMarkers={false}
-                              name={node?.matrixNodeName ? `${node?.matrixNodeName}${node?.name}` : node?.name}
+                              name={formattedMatrixName}
                             />
                           ) : null}
                         </React.Fragment>

@@ -27,7 +27,7 @@ import { useToaster } from '@common/components'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { PrincipalScope } from '@common/interfaces/SecretsInterface'
-import { getUserGroupQueryParams } from '@rbac/utils/utils'
+import { AuthenticationMechanisms, getUserGroupQueryParams } from '@rbac/utils/utils'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -37,6 +37,7 @@ interface MemberListProps {
   ssoLinked?: boolean
   userGroupInherited?: boolean
   managed?: boolean
+  linkedSSOType?: string | undefined
 }
 const RenderColumnUser: Renderer<CellProps<UserInfo>> = ({ row }) => {
   const data = row.original
@@ -181,7 +182,7 @@ const RenderColumnMenu: Renderer<CellProps<UserInfo>> = ({ row, column }) => {
   )
 }
 
-const MemberList: React.FC<MemberListProps> = ({ ssoLinked, userGroupInherited, managed }) => {
+const MemberList: React.FC<MemberListProps> = ({ ssoLinked, userGroupInherited, managed, linkedSSOType }) => {
   const { getString } = useStrings()
   const [page, setPage] = useState<number>(0)
   const { accountId, orgIdentifier, projectIdentifier, userGroupIdentifier } = useParams<
@@ -248,7 +249,16 @@ const MemberList: React.FC<MemberListProps> = ({ ssoLinked, userGroupInherited, 
         />
       </Container>
     )
-  return <NoDataCard icon="nav-project" message={getString('rbac.userDetails.noMembersMessage')} />
+  return (
+    <NoDataCard
+      icon="nav-project"
+      message={
+        linkedSSOType && linkedSSOType === AuthenticationMechanisms.LDAP
+          ? getString('rbac.userDetails.userGroup.linkedSSOLdapUsersMessage')
+          : getString('rbac.userDetails.noMembersMessage')
+      }
+    />
+  )
 }
 
 export default MemberList

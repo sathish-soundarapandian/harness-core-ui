@@ -266,13 +266,18 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
       history.push(routes.toDelegatesDetails(params))
     }
   }
-
+  const versionText = '763'
+  const showUpgradeRequired = delegate?.groupVersion
+    ? versionText.localeCompare(
+        delegate?.groupVersion ? delegate?.groupVersion?.split('.')?.[2]?.substring(0, 3) : ''
+      ) === 1
+    : null
   const currentTime = Date.now()
   const isConnected = delegate.activelyConnected
   const text = isConnected ? getString('connected') : getString('delegate.notConnected')
   const status =
     delegate?.delegateGroupExpirationTime !== undefined
-      ? delegate?.delegateGroupExpirationTime < 0
+      ? delegate?.delegateGroupExpirationTime < 0 || (!delegate?.immutable && showUpgradeRequired)
         ? InstanceStatus.UPGRADEREQUIRED
         : currentTime > delegate?.delegateGroupExpirationTime
         ? InstanceStatus.EXPIRED
@@ -286,7 +291,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
       ? Color.ORANGE_400
       : ''
   const [autoUpgradeColor, autoUpgradeText] =
-    delegate?.upgraderLastUpdated === 0 && delegate?.immutable
+    showUpgradeRequired || (delegate?.upgraderLastUpdated === 0 && delegate?.immutable && !delegate?.autoUpgrade)
       ? [Color.ORANGE_400, 'Upgrade Required']
       : delegate?.autoUpgrade
       ? [Color.GREEN_600, 'AUTO UPGRADE: ON']
@@ -368,15 +373,13 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
           {delegate?.delegateGroupExpirationTime !== undefined
             ? delegate.delegateGroupExpirationTime <= 0
               ? getString('na')
-              : delegate.delegateVersion
+              : delegate.groupVersion
             : null}
         </Layout.Horizontal>
 
         {USE_IMMUTABLE_DELEGATE ? (
           <Layout.Horizontal width={columnWidths.instanceStatus} className={css.paddingLeft}>
-            {!delegate?.immutable ? (
-              <Text>{getString('na')}</Text>
-            ) : (
+            {(!delegate?.immutable && delegate?.groupVersion ? showUpgradeRequired : null) || delegate?.immutable ? (
               <>
                 <Text
                   background={statusBackgroundColor}
@@ -395,6 +398,10 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                   ''
                 )}
               </>
+            ) : !delegate?.immutable ? (
+              <Text padding={{ left: 'small' }}>{getString('na')}</Text>
+            ) : (
+              <></>
             )}
           </Layout.Horizontal>
         ) : null}
@@ -484,9 +491,11 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                 </Layout.Horizontal>
                 {USE_IMMUTABLE_DELEGATE ? (
                   <Layout.Horizontal width={columnWidths.instanceStatus} className={css.instanceStatus}>
-                    {!delegate?.immutable ? (
-                      <Text>{getString('na')}</Text>
-                    ) : (
+                    {((instanceDetails?.version
+                      ? versionText.localeCompare(instanceDetails?.version?.split('.')?.[2]?.substring(0, 3)) === 1
+                      : null) &&
+                      !delegate?.immutable) ||
+                    delegate?.immutable ? (
                       <>
                         <Text
                           background={instanceStatusBackgroundColor}
@@ -505,6 +514,10 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                           ''
                         )}
                       </>
+                    ) : !delegate?.immutable ? (
+                      <Text padding={{ left: 'small' }}>{getString('na')}</Text>
+                    ) : (
+                      <></>
                     )}
                   </Layout.Horizontal>
                 ) : null}

@@ -28,6 +28,7 @@ export enum StepType {
   DeployServiceEntity = 'DeployServiceEntity',
   DeployService = 'DeployService',
   DeployEnvironment = 'DeployEnvironment',
+  DeployEnvironmentEntity = 'DeployEnvironmentEntity',
   DeployInfrastructure = 'DeployInfrastructure',
   KubernetesDirect = 'KubernetesDirect',
   K8sServiceSpec = 'K8sServiceSpec',

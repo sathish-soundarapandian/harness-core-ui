@@ -19,15 +19,14 @@ import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import type { ExecutionPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
-import executionFactory from '@pipeline/factories/ExecutionFactory'
-import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
-import { AUTO_TRIGGERS, CardVariant } from '@pipeline/utils/constants'
-import { hasCIStage, StageType } from '@pipeline/utils/stageHelpers'
+import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
+import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { usePermission } from '@rbac/hooks/usePermission'
@@ -35,8 +34,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
-import { getReadableDateTime } from '@common/utils/dateUtils'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
+import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
 import css from './ExecutionListTable.module.scss'
 
 export const getExecutionPipelineViewLink = (
@@ -317,29 +316,27 @@ export const TriggerInfoCell: CellType = ({ row }) => {
     return (
       <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
         <Icon name={icon} size={12} />
-        <Text font={{ size: 'small' }} color={Color.GREY_900} lineClamp={1}>
+        <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
           {getText(data.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
         </Text>
       </Layout.Horizontal>
     )
   }
 
-  const ciInfo = executionFactory.getCardInfo(StageType.BUILD)
-  const variant = CardVariant.Default
-  const showCI = !!(ciInfo && hasCIStage(data))
+  const showCI = hasCIStage(data)
+  const ciData = defaultTo(data?.moduleInfo?.ci, {})
+  const prOrCommitTitle =
+    ciData.ciExecutionInfoDTO?.pullRequest?.title || ciData.ciExecutionInfoDTO?.branch.commits[0]?.message
 
   return (
     showCI && (
       <Layout.Vertical spacing="small" className={css.triggerInfoCell}>
-        <div className={css.ci}>
-          {ciInfo?.component &&
-            React.createElement<ExecutionCardInfoProps>(ciInfo.component, {
-              data: defaultTo(data?.moduleInfo?.ci, {}),
-              nodeMap: defaultTo(data?.layoutNodeMap, {}),
-              startingNodeId: defaultTo(data?.startingNodeId, ''),
-              variant
-            })}
-        </div>
+        <CITriggerInfo {...(ciData as unknown as CITriggerInfoProps)} />
+        {prOrCommitTitle && (
+          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800} lineClamp={1}>
+            {prOrCommitTitle}
+          </Text>
+        )}
       </Layout.Vertical>
     )
   )

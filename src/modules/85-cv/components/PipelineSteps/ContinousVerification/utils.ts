@@ -278,3 +278,16 @@ export function getMetricDefinitionPath(path: string, hasQueries: boolean) {
 
 export const getDurationOptions = (enableVerifyStepLongDuration?: boolean): SelectOption[] =>
   enableVerifyStepLongDuration ? [...durationOptions, ...extendedDurationOptions] : durationOptions
+
+export const setCommaSeperatedList = (
+  value: string,
+  onChange: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
+  path: string
+) => {
+  let actualValue: string | string[] = value
+  const isFixedValue = getMultiTypeFromValue(value) === MultiTypeInputType.FIXED
+  if (isFixedValue) {
+    actualValue = value?.toString()?.split(',')
+  }
+  onChange?.(path, actualValue)
+}

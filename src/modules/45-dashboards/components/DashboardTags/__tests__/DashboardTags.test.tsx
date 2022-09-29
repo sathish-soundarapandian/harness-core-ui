@@ -95,6 +95,17 @@ describe('DashboardTags', () => {
     expect(screen.getByText(expectedText)).toBeInTheDocument()
   })
 
+  test('it should display a Deployments tag when Dashboard Tag is CG_CD', async () => {
+    const mockDashboard: DashboardModel = {
+      ...defaultTestDashboard,
+      data_source: ['CG_CD']
+    }
+    renderComponent({ dashboard: mockDashboard })
+
+    const expectedText: StringKeys = 'deploymentsText'
+    expect(screen.getByText(expectedText)).toBeInTheDocument()
+  })
+
   test('it should display a Feature Flags tag when Dashboard Tag is CF', async () => {
     const mockDashboard: DashboardModel = {
       ...defaultTestDashboard,

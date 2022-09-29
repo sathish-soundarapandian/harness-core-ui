@@ -16,7 +16,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
-import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
+import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import ExperimentalInput from '../K8sServiceSpecForms/ExperimentalInput'
 import type { K8SDirectServiceStep } from '../K8sServiceSpecInterface'
@@ -45,7 +45,7 @@ function PrimaryArtifactRef({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const { template: getTemplate, updateTemplate } = useRunPipelineFormContext()
+  const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
 
   const { data: artifactSourceResponse } = useGetArtifactSourceInputs({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
@@ -57,7 +57,7 @@ function PrimaryArtifactRef({
   )
 
   useEffect(() => {
-    const artifactSourceTemplate = getTemplate(`${path}.artifacts.primary.sources`)
+    const artifactSourceTemplate = getStageFormTemplate(`${path}.artifacts.primary.sources`)
     const serviceInputsFormikValue = get(formik?.values, `${path}.artifacts.primary.sources`)
     if (
       typeof artifactSourceTemplate === 'string' &&
@@ -71,7 +71,7 @@ function PrimaryArtifactRef({
       if (sourceIdentifierToSourceInputMap) {
         const idSourceMap = yamlParse(defaultTo(sourceIdentifierToSourceInputMap, ''))
         if (idSourceMap) {
-          updateTemplate([idSourceMap], `${path}.artifacts.primary.sources`)
+          updateStageFormTemplate([idSourceMap], `${path}.artifacts.primary.sources`)
         }
       }
     }
@@ -86,7 +86,7 @@ function PrimaryArtifactRef({
     if (sourceIdentifierToSourceInputMap) {
       const idSourceMap = yamlParse(defaultTo(sourceIdentifierToSourceInputMap, ''))
       if (idSourceMap) {
-        updateTemplate([idSourceMap], `${path}.artifacts.primary.sources`)
+        updateStageFormTemplate([idSourceMap], `${path}.artifacts.primary.sources`)
         formik?.setFieldValue(`${path}.artifacts.primary.sources`, [clearRuntimeInput(idSourceMap)])
       }
     }

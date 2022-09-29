@@ -1,0 +1,22 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "environment": {
+      "accountId": "accountId",
+      "orgIdentifier": "default",
+      "projectIdentifier": "projectId",
+      "identifier": "testCypress_Env",
+      "name": "testCypress_Env",
+      "description": "",
+      "color": "#0063F7",
+      "type": "PreProduction",
+      "deleted": false,
+      "tags": {},
+      "yaml": "environment:\n  name: testCypress_Env\n  identifier: testCypress_Env\n  description: \"\"\n  tags: {}\n  type: PreProduction\n  orgIdentifier: default\n  projectIdentifier: projectId\n"
+    },
+    "createdAt": 1664280401344,
+    "lastModifiedAt": 1664280401344
+  },
+  "metaData": null,
+  "correlationId": "1d3d5618-64bc-4953-ad40-777aa56958b1"
+}

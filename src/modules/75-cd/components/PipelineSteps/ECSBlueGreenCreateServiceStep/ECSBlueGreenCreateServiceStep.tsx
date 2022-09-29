@@ -17,9 +17,10 @@ import { StepViewType, StepProps, ValidateInputSetProps, InputSetData } from '@p
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
+import type { StageElementWrapper, DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
 import { ECSBlueGreenCreateServiceStepEditRef } from './ECSBlueGreenCreateServiceStepEdit'
-import { ECSBlueGreenCreateServiceStepInputSet } from './ECSBlueGreenCreateServiceStepInputSet'
+import { ECSBlueGreenCreateServiceStepInputSetMode } from './ECSBlueGreenCreateServiceStepInputSet'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 export interface ECSBlueGreenCreateServiceStepInitialValues extends StepElementConfig {
@@ -31,13 +32,12 @@ export interface ECSBlueGreenCreateServiceStepInitialValues extends StepElementC
     stageListenerRuleArn: string
   }
 }
-
-interface ECSBlueGreenCreateServiceVariableStepProps {
+export interface ECSBlueGreenCreateServiceCustomStepProps {
   initialValues: ECSBlueGreenCreateServiceStepInitialValues
-  stageIdentifier: string
-  onUpdate?(data: ECSBlueGreenCreateServiceStepInitialValues): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: ECSBlueGreenCreateServiceStepInitialValues
+  selectedStage: StageElementWrapper<DeploymentStageElementConfig>
+  stageIdentifier: string
 }
 
 export class ECSBlueGreenCreateServiceStep extends PipelineStep<ECSBlueGreenCreateServiceStepInitialValues> {
@@ -82,13 +82,15 @@ export class ECSBlueGreenCreateServiceStep extends PipelineStep<ECSBlueGreenCrea
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <ECSBlueGreenCreateServiceStepInputSet
+        <ECSBlueGreenCreateServiceStepInputSetMode
+          initialValues={initialValues}
           allowableTypes={allowableTypes}
           inputSetData={inputSetData as InputSetData<ECSBlueGreenCreateServiceStepInitialValues>}
+          customStepProps={customStepProps as ECSBlueGreenCreateServiceCustomStepProps}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
-      const { variablesData, metadataMap } = customStepProps as ECSBlueGreenCreateServiceVariableStepProps
+      const { variablesData, metadataMap } = customStepProps as ECSBlueGreenCreateServiceCustomStepProps
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
@@ -109,6 +111,7 @@ export class ECSBlueGreenCreateServiceStep extends PipelineStep<ECSBlueGreenCrea
         stepViewType={stepViewType}
         ref={formikRef}
         readonly={readonly}
+        customStepProps={customStepProps as ECSBlueGreenCreateServiceCustomStepProps}
       />
     )
   }
@@ -135,7 +138,9 @@ export class ECSBlueGreenCreateServiceStep extends PipelineStep<ECSBlueGreenCrea
       set(
         errors,
         'spec.loadBalancer',
-        getString?.('common.validation.fieldIsRequired', { name: getString('pipeline.loadBalancer') })
+        getString?.('common.validation.fieldIsRequired', {
+          name: getString('common.loadBalancer')
+        })
       )
     }
 

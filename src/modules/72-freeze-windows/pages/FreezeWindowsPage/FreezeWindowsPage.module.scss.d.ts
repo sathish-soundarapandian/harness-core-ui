@@ -7,10 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly dropdownPopover: string
-  readonly expandSearch: string
-  readonly freeeWindowsPageSubHeader: string
-  readonly freezeWindowsPageBody: string
-  readonly gitFilter: string
+  readonly freezeWindowsPageSubHeader: string
+  readonly main: string
 }
 export default styles

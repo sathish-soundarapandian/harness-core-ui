@@ -1014,3 +1014,4 @@ serviceName: Service Name
 assignedAt: Assigned at
 assignedThrough: Assigned Through
 directly: Directly
+loadBalancer: Load Balancer

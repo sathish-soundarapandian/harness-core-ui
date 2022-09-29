@@ -50,6 +50,7 @@ interface DrawSVGPathOptions {
   scalingFactor?: number
   dataProps?: KVPair
   isParentNodeStepGroup?: boolean
+  skipParallelRightPath?: boolean
 }
 /**
  * Direction of SVG Path (Only supported for straight horizontal lines)
@@ -123,10 +124,6 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
     }
   } else {
     //  child node is at bottom
-    const curveLeftToBottom = `Q${horizontalMid},${node1VerticalMid} ${horizontalMid},${node1VerticalMid + 20}`
-
-    const curveTopToRight = `Q${horizontalMid},${node2VerticalMid} ${horizontalMid + 20},${node2VerticalMid}`
-
     if (options?.isParallelNode) {
       const updatedStart = getScaledValue(node1.left, scalingFactor) - 45 // new start point
       const updatedNode1VerticalMid = node1VerticalMid - (options?.isParentNodeStepGroup ? 30 : 0)
@@ -137,15 +134,21 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
       const curveLBparallel = `Q${updatedStart + 20},${updatedNode1VerticalMid} ${updatedStart + 20},${
         updatedNode1VerticalMid + 20
       } `
-      const curveTRparallel = `Q${updatedStart + 20},${node2VerticalMid} ${updatedStart + 40},${node2VerticalMid}`
+      const curveBRparallel = `Q${updatedStart + 20},${node2VerticalMid} ${updatedStart + 40},${node2VerticalMid}`
 
-      const firstCurve = `M${parallelLinkStart}
+      const leftPath = `M${parallelLinkStart}
       ${curveLBparallel}
       L${updatedStart + 20},${node2VerticalMid - 20}
-      ${curveTRparallel}
+      ${curveBRparallel}
       L${getScaledValue(node1.left, scalingFactor)},${node2VerticalMid}`
 
-      let secondCurve = ''
+      if (options?.skipParallelRightPath) {
+        return {
+          [id1]: { pathData: leftPath, dataProps: options?.dataProps }
+        }
+      }
+
+      let rightPath = ''
       if (options?.nextNode && options?.parentNode) {
         const nextNode = getComputedPosition(options.nextNode, options?.parentElement)
         const parentNode = getComputedPosition(options.parentNode, options?.parentElement)
@@ -163,7 +166,7 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
         )
         const nextNodeVerticalMid = getScaledValue(nextNode.top + nextNode.height / 2, scalingFactor)
         const updatedNextNodeVerticalMid = nextNodeVerticalMid - (options?.isParentNodeStepGroup ? 10 : 0)
-        secondCurve = `M${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}
+        rightPath = `M${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}
         L${newRight + 10},${node2VerticalMid}
         Q${newRight + 25},${node2VerticalMid} ${newRight + 25},${node2VerticalMid - 20}
         L${newRight + 25},${nextNodeVerticalMid + 20}
@@ -172,7 +175,7 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
         },${updatedNextNodeVerticalMid}`
       } else {
         const updatedNode1VerticalMid1 = node1VerticalMid - (options?.isParentNodeStepGroup ? 10 : 0)
-        secondCurve = `M${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}
+        rightPath = `M${getScaledValue(node2.right, scalingFactor)},${node2VerticalMid}
         L${getScaledValue(node2.right, scalingFactor) + 10},${node2VerticalMid}
         Q${getScaledValue(node2.right, scalingFactor) + 25},${node2VerticalMid} ${
           getScaledValue(node2.right, scalingFactor) + 25
@@ -182,12 +185,15 @@ const getFinalSVGArrowPath = (id1 = '', id2 = '', options?: DrawSVGPathOptions):
           getScaledValue(node2.right, scalingFactor) + 40 + (options?.isParentNodeStepGroup ? 5 : 0)
         },${updatedNode1VerticalMid1}`
       }
-      finalSVGPath = firstCurve + secondCurve
+
       return {
-        [id1]: { pathData: firstCurve, dataProps: options?.dataProps },
-        [id2]: { pathData: secondCurve, dataProps: options?.dataProps }
+        [id1]: { pathData: leftPath, dataProps: options?.dataProps },
+        [id2]: { pathData: rightPath, dataProps: options?.dataProps }
       }
     } else {
+      const curveLeftToBottom = `Q${horizontalMid},${node1VerticalMid} ${horizontalMid},${node1VerticalMid + 20}`
+      const curveTopToRight = `Q${horizontalMid},${node2VerticalMid} ${horizontalMid + 20},${node2VerticalMid}`
+
       if (options?.direction === 'ltl') {
         const startPointLeft = `${node1.left},${node1VerticalMid}`
         const endPointLeft = `${node2.left},${node2VerticalMid}`
@@ -235,7 +241,7 @@ const getComputedPosition = (childId: string | HTMLElement, parentElement?: HTML
       top: getScaledValue(updatedTop, 1),
       right: getScaledValue(updatedRight, 1),
       bottom: updatedBottom,
-      width: childPos.height,
+      width: childPos.width,
       height: childPos.height,
       x: childPos.x,
       y: childPos.y
@@ -301,33 +307,45 @@ const setupDragEventListeners = (draggableParent: HTMLElement, overlay: HTMLElem
   }
 }
 
-const getSVGLinksFromPipeline = (
-  states?: PipelineGraphState[],
-  parentElement?: HTMLDivElement,
-  resultArr: SVGPathRecord[] = [],
-  endNodeId?: string,
+const getSVGLinksFromPipeline = ({
+  states,
+  parentElement,
+  resultArr = [],
+  endNodeId,
+  scalingFactor,
+  isStepGroup = false
+}: {
+  states?: PipelineGraphState[]
+  parentElement?: HTMLDivElement
+  resultArr?: SVGPathRecord[]
+  endNodeId?: string
   scalingFactor?: number
-): SVGPathRecord[] => {
+  isStepGroup?: boolean
+}): SVGPathRecord[] => {
   let prevElement: PipelineGraphState
 
   states?.forEach((state, index) => {
     if (state?.children?.length) {
       let nextNodeId = states?.[index + 1]?.id || endNodeId
+      const hasRightNode = !!nextNodeId
       if (!nextNodeId && ['StepGroup', 'STEP_GROUP'].includes(state?.type)) {
         // pass parentElementID (parent of children == parent stepGroup and not parallel top) if child sole node inside stepGroup
         const el = document.getElementById(state?.id)
         nextNodeId = el?.closest('.stepGroupNode')?.id
       }
-      getParallelNodeLinks(
-        state?.children,
-        state,
+      getParallelNodeLinks({
+        stages: state?.children,
+        firstStage: state,
         resultArr,
         parentElement,
-        nextNodeId,
-        state.id,
+        nextNode: nextNodeId,
+        parentNode: state.id,
         scalingFactor,
-        index === 0
-      )
+        isFirstSGChild: index === 0,
+        // skip computing the right path of the parallel nodes if there's no right node
+        // and when not inside step group
+        skipParallelRightPath: !hasRightNode && !isStepGroup
+      })
     }
     if (prevElement) {
       resultArr.push(
@@ -346,16 +364,27 @@ const getSVGLinksFromPipeline = (
   return resultArr
 }
 
-const getParallelNodeLinks = (
-  stages: PipelineGraphState[],
-  firstStage: PipelineGraphState | undefined,
-  resultArr: SVGPathRecord[] = [],
-  parentElement?: HTMLDivElement,
-  nextNode?: string,
-  parentNode?: string,
-  scalingFactor?: number,
+const getParallelNodeLinks = ({
+  stages,
+  firstStage,
+  resultArr = [],
+  parentElement,
+  nextNode,
+  parentNode,
+  scalingFactor,
+  skipParallelRightPath,
   isFirstSGChild = false
-): void => {
+}: {
+  stages: PipelineGraphState[]
+  firstStage: PipelineGraphState | undefined
+  resultArr: SVGPathRecord[]
+  parentElement?: HTMLDivElement
+  nextNode?: string
+  parentNode?: string
+  scalingFactor?: number
+  isFirstSGChild?: boolean
+  skipParallelRightPath?: boolean
+}): void => {
   stages?.forEach(stage => {
     const checkParentElementCollapsed =
       document.getElementById(firstStage?.id as string)?.dataset.collapsednode === 'true'
@@ -367,6 +396,7 @@ const getParallelNodeLinks = (
     resultArr.push(
       getFinalSVGArrowPath(firstStage?.id as string, stage?.id, {
         isParallelNode: true,
+        skipParallelRightPath,
         parentElement,
         nextNode,
         parentNode,

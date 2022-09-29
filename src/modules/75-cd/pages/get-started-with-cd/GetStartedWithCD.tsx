@@ -9,6 +9,8 @@ import React, { useState } from 'react'
 import { Text, FontVariation, Icon, Layout, Button, ButtonVariation, Container, ButtonSize } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import bgImageURL from '../home/images/cd.svg'
 import delegateImageURL from '../home/images/cd-delegates-banner.svg'
 import { DelegateSelectorWizard } from './DelegateSelectorWizard/DelegateSelectorWizard'
@@ -20,6 +22,8 @@ export default function GetStartedWithCI(): React.ReactElement {
   const closeWizard = (): void => {
     setShowWizard(false)
   }
+
+  const { trackEvent } = useTelemetry()
 
   return showWizard ? (
     <DelegateSelectorWizard onClickBack={closeWizard} />
@@ -59,8 +63,13 @@ export default function GetStartedWithCI(): React.ReactElement {
                     variation={ButtonVariation.PRIMARY}
                     size={ButtonSize.LARGE}
                     text={getString('cd.installDelegate')}
-                    onClick={() => setShowWizard(true)}
                     className={css.btn}
+                    onClick={() => {
+                      setShowWizard(true)
+                      trackEvent(CDOnboardingActions.delegateInstallWizardStart, {
+                        category: Category.DELEGATE
+                      })
+                    }}
                   />
                   <a
                     href="https://docs.harness.io/article/2k7lnc7lvl-delegates-overview"

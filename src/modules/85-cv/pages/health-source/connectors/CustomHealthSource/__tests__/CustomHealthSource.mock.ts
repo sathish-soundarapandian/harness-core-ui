@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { MapCustomHealthToService } from '../CustomHealthSource.types'
+
 const metricName = 'CustomHealth Metric 101'
 const jsonPath = '$.series.[*].pointlist.[*]'
 
@@ -31,7 +33,9 @@ const emptyMappedValue = {
     timestampFormat: 'SECONDS'
   },
   timestamp: '',
-  timestampFormat: ''
+  timestampFormat: '',
+  failFastThresholds: [],
+  ignoreThresholds: []
 }
 mappedMetric.set('CustomHealth Metric', emptyMappedValue)
 
@@ -40,7 +44,9 @@ export const transformedSetupSource = {
   healthSourceIdentifier: undefined,
   healthSourceName: undefined,
   isEdit: false,
-  mappedServicesAndEnvs: mappedMetric
+  mappedServicesAndEnvs: mappedMetric,
+  failFastThresholds: [],
+  ignoreThresholds: []
 }
 
 export const mappedValue = {
@@ -375,6 +381,27 @@ export const mockedHealthSourcePayload = {
           enabled: false
         }
       }
+    ],
+    metricPacks: [
+      {
+        identifier: 'Custom',
+        metricThresholds: [
+          {
+            criteria: { spec: { greaterThan: 15, lessThan: 122 }, type: 'Absolute' },
+            metricName: 'Prometheus Metric',
+            metricType: 'Custom',
+            spec: { action: 'Ignore' },
+            type: 'IgnoreThreshold'
+          },
+          {
+            criteria: { criteriaPercentageType: 'greaterThan', spec: { greaterThan: 1222 }, type: 'Percentage' },
+            metricName: 'Prometheus Metric',
+            metricType: 'Custom',
+            spec: { action: 'FailAfterOccurrence', spec: { count: 12 } },
+            type: 'FailImmediately'
+          }
+        ]
+      }
     ]
   },
   type: 'CustomHealthMetric'
@@ -497,6 +524,23 @@ export const sourceData = {
   product: {}
 }
 
+export const emptyCustomMetricData = {
+  ...sourceData,
+  healthSourceList: [
+    {
+      name: 'New Custom',
+      identifier: 'New_Custom',
+      type: 'Custom Health',
+      spec: {
+        connectorRef: 'customhealth',
+        metricDefinitions: []
+      },
+      service: 'todolist',
+      environment: 'production'
+    }
+  ]
+}
+
 export const mappedMetricValues = [
   {
     metricName: 'CustomHealth Metric',
@@ -552,7 +596,7 @@ export const mappedMetricWithValue = new Map()
 mappedMetricWithValue.set('CustomHealth Metric', mappedMetricValues[0])
 mappedMetricWithValue.set('CustomHealth Metric new', mappedMetricValues[1])
 
-export const formikValue = {
+export const formikValue: MapCustomHealthToService = {
   metricName: 'CustomHealth Metric',
   metricIdentifier: '',
   groupName: { label: 'Group 1', value: 'Group 1' },
@@ -574,7 +618,9 @@ export const formikValue = {
   timestampFormat: '',
   serviceInstancePath: '',
   startTime: { placeholder: 'start_time_seconds', timestampFormat: 'SECONDS' as any, customTimestampFormat: '' },
-  endTime: { placeholder: 'end_time_seconds', timestampFormat: 'SECONDS' as any, customTimestampFormat: '' }
+  endTime: { placeholder: 'end_time_seconds', timestampFormat: 'SECONDS' as any, customTimestampFormat: '' },
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const recordsData = {
@@ -659,4 +705,269 @@ export const chartData = {
   ],
   metaData: {},
   status: 'SUCCESS'
+}
+
+export const sourceDataWithValidMetric = {
+  connectorRef: 'org.customhsappdtestconnectorforautomation',
+  isEdit: true,
+  healthSourceList: [
+    {
+      type: 'CustomHealthMetric',
+      identifier: 'tstsss',
+      name: 'tstsss',
+      spec: {
+        connectorRef: 'org.customhsappdtestconnectorforautomation',
+        metricDefinitions: [
+          {
+            identifier: 'CustomHealth_Metric',
+            requestDefinition: {
+              urlPath:
+                'rest/applications/cv-app/metric-data?metric-path=Overall%20Application%20Performance%7C*%7CAverage%20Response%20Time%20%28ms%29&time-range-type=BETWEEN_TIMES&start-time=start_time&end-time=end_time&rollup=false&output=json',
+              method: 'GET',
+              requestBody: '',
+              startTimeInfo: {
+                placeholder: 'start_time',
+                timestampFormat: 'MILLISECONDS',
+                customTimestampFormat: ''
+              },
+              endTimeInfo: {
+                placeholder: 'end_time',
+                timestampFormat: 'MILLISECONDS',
+                customTimestampFormat: ''
+              }
+            },
+            queryType: 'HOST_BASED',
+            metricName: 'CustomHealth Metric',
+            groupName: 'G12',
+            metricResponseMapping: {
+              metricValueJsonPath: '$.[*].metricValues.[*].occurrences',
+              timestampJsonPath: '$.[*].metricValues.[*].min',
+              timestampFormat: ''
+            },
+            sli: {
+              enabled: false
+            },
+            analysis: {
+              riskProfile: {
+                category: 'Performance',
+                metricType: 'RESP_TIME',
+                thresholdTypes: ['ACT_WHEN_HIGHER']
+              },
+              liveMonitoring: {
+                enabled: false
+              },
+              deploymentVerification: {
+                enabled: true
+              }
+            }
+          }
+        ],
+        metricPacks: [
+          {
+            identifier: 'Custom',
+            metricThresholds: [
+              {
+                type: 'IgnoreThreshold',
+                spec: {
+                  action: 'Ignore'
+                },
+                criteria: {
+                  type: 'Absolute',
+                  spec: {
+                    greaterThan: 12
+                  }
+                },
+                metricType: 'Custom',
+                metricName: 'CustomHealth Metric'
+              },
+              {
+                type: 'FailImmediately',
+                spec: {
+                  action: 'FailAfterOccurrence',
+                  spec: {
+                    count: 12
+                  }
+                },
+                criteria: {
+                  type: 'Absolute',
+                  spec: {
+                    greaterThan: 2
+                  }
+                },
+                metricType: 'Custom',
+                metricName: 'CustomHealth Metric'
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  serviceRef: 'svctc5',
+  environmentRef: 'envtc5',
+  monitoredServiceRef: {
+    name: 'svctc5_envtc5',
+    identifier: 'svctc5_envtc5'
+  },
+  healthSourceName: 'tstsss',
+  healthSourceIdentifier: 'tstsss',
+  sourceType: 'CustomHealth',
+  product: {
+    label: 'Custom Health Metrics',
+    value: 'metrics'
+  }
+}
+
+export const sourceDataWithValidMetricPopupMock = {
+  connectorRef: 'org.customhsappdtestconnectorforautomation',
+  isEdit: true,
+  healthSourceList: [
+    {
+      type: 'CustomHealthMetric',
+      identifier: 'tstsss',
+      name: 'tstsss',
+      spec: {
+        connectorRef: 'org.customhsappdtestconnectorforautomation',
+        metricDefinitions: [
+          {
+            identifier: 'CustomHealth_Metric',
+            requestDefinition: {
+              urlPath:
+                'rest/applications/cv-app/metric-data?metric-path=Overall%20Application%20Performance%7C*%7CAverage%20Response%20Time%20%28ms%29&time-range-type=BETWEEN_TIMES&start-time=start_time&end-time=end_time&rollup=false&output=json',
+              method: 'GET',
+              requestBody: '',
+              startTimeInfo: {
+                placeholder: 'start_time',
+                timestampFormat: 'MILLISECONDS',
+                customTimestampFormat: ''
+              },
+              endTimeInfo: {
+                placeholder: 'end_time',
+                timestampFormat: 'MILLISECONDS',
+                customTimestampFormat: ''
+              }
+            },
+            queryType: 'HOST_BASED',
+            metricName: 'CustomHealth Metric',
+            groupName: 'G12',
+            metricResponseMapping: {
+              metricValueJsonPath: '$.[*].metricValues.[*].occurrences',
+              timestampJsonPath: '$.[*].metricValues.[*].min',
+              timestampFormat: ''
+            },
+            sli: {
+              enabled: false
+            },
+            analysis: {
+              riskProfile: {
+                category: 'Performance',
+                metricType: 'RESP_TIME',
+                thresholdTypes: ['ACT_WHEN_HIGHER']
+              },
+              liveMonitoring: {
+                enabled: false
+              },
+              deploymentVerification: {
+                enabled: true
+              }
+            }
+          },
+          {
+            identifier: 'CustomHealth_Metric_2',
+            requestDefinition: {
+              urlPath:
+                'rest/applications/cv-app/metric-data?metric-path=Overall%20Application%20Performance%7C*%7CAverage%20Response%20Time%20%28ms%29&time-range-type=BETWEEN_TIMES&start-time=start_time&end-time=end_time&rollup=false&output=json',
+              method: 'GET',
+              requestBody: '',
+              startTimeInfo: {
+                placeholder: 'start_time',
+                timestampFormat: 'MILLISECONDS',
+                customTimestampFormat: ''
+              },
+              endTimeInfo: {
+                placeholder: 'end_time',
+                timestampFormat: 'MILLISECONDS',
+                customTimestampFormat: ''
+              }
+            },
+            queryType: 'HOST_BASED',
+            metricName: 'CustomHealth Metric 2',
+            groupName: 'G12',
+            metricResponseMapping: {
+              metricValueJsonPath: '$.[*].metricValues.[*].occurrences',
+              timestampJsonPath: '$.[*].metricValues.[*].min',
+              timestampFormat: ''
+            },
+            sli: {
+              enabled: false
+            },
+            analysis: {
+              riskProfile: {
+                category: 'Performance',
+                metricType: 'RESP_TIME',
+                thresholdTypes: ['ACT_WHEN_HIGHER']
+              },
+              liveMonitoring: {
+                enabled: false
+              },
+              deploymentVerification: {
+                enabled: true
+              }
+            }
+          }
+        ],
+        metricPacks: [
+          {
+            identifier: 'Custom',
+            metricThresholds: [
+              {
+                type: 'IgnoreThreshold',
+                spec: {
+                  action: 'Ignore'
+                },
+                criteria: {
+                  type: 'Absolute',
+                  spec: {
+                    greaterThan: 12
+                  }
+                },
+                metricType: 'Custom',
+                metricName: 'CustomHealth Metric'
+              },
+              {
+                type: 'FailImmediately',
+                spec: {
+                  action: 'FailAfterOccurrence',
+                  spec: {
+                    count: 12
+                  }
+                },
+                criteria: {
+                  type: 'Absolute',
+                  spec: {
+                    greaterThan: 2
+                  }
+                },
+                metricType: 'Custom',
+                metricName: 'CustomHealth Metric'
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  serviceRef: 'svctc5',
+  environmentRef: 'envtc5',
+  monitoredServiceRef: {
+    name: 'svctc5_envtc5',
+    identifier: 'svctc5_envtc5'
+  },
+  healthSourceName: 'tstsss',
+  healthSourceIdentifier: 'tstsss',
+  sourceType: 'CustomHealth',
+  product: {
+    label: 'Custom Health Metrics',
+    value: 'metrics'
+  }
 }

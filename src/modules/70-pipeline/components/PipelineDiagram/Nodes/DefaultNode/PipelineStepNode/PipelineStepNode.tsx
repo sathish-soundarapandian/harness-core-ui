@@ -20,6 +20,7 @@ import SVGMarker from '../../SVGMarker'
 import { BaseReactComponentProps, NodeType } from '../../../types'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon } from '../../utils'
+import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 
 const CODE_ICON: IconName = 'command-echo'
@@ -28,6 +29,7 @@ const TEMPLATE_ICON: IconName = 'template-library'
 interface PipelineStepNodeProps extends BaseReactComponentProps {
   status: string
   isNodeCollapsed?: boolean
+  matrixNodeName?: boolean
 }
 
 function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
@@ -45,6 +47,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const showMarkers = defaultTo(props?.showMarkers, true)
 
+  const matrixNodeName = defaultTo(props?.matrixNodeName, props?.data?.matrixNodeName)
   const stepStatus = defaultTo(props?.status, props?.data?.step?.status as ExecutionStatus)
   const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
     stepStatus as ExecutionStatus,
@@ -295,8 +298,13 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
             lineClamp={2}
+            tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {props.name}
+            {defaultTo(matrixNodeName, props?.data?.matrixNodeName) ? (
+              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as string} />
+            ) : (
+              props.name
+            )}
           </Text>
         </div>
       )}

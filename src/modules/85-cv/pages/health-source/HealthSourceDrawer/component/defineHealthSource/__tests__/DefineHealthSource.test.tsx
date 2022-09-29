@@ -11,8 +11,6 @@ import routes from '@common/RouteDefinitions'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
-import { FeatureFlag } from '@common/featureFlags'
-import * as featureFlags from '@common/hooks/useFeatureFlag'
 import DefineHealthSource from '../DefineHealthSource'
 
 const createModeProps: TestWrapperProps = {
@@ -71,12 +69,6 @@ describe('DefineHealthSource', () => {
   })
 
   test('Click on custom health card', async () => {
-    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
-      if (flag === FeatureFlag.CHI_CUSTOM_HEALTH_LOGS) {
-        return true
-      }
-      return false
-    })
     const { getByText, container } = render(
       <TestWrapper {...createModeProps}>
         <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>

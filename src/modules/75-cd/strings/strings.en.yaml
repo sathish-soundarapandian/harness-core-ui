@@ -92,12 +92,12 @@ steps:
       useAwsInstanceFilter: Use AWS Instance Filter
       hostName: Host Name Convention
       vpcs: VPCs
-      loadBalancer: Load  Balancer
   ecsBGCreateServiceStep:
     sectionHeaders:
       configureProductionService: Configure your Production Service
       configureStageService: Configure your Stage Service
     labels:
+      elasticLoadBalancer: Elastic Load Balancer
       prodListener: Prod Listener
       prodListenerRuleARN: Prod Listener Rule ARN
       stageListener: Stage Listener
@@ -175,6 +175,7 @@ pipelineSteps:
     environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'
     environmentInEnvGroupIsRequired: 'Environment in Environment Group is required'
     clusterIsRequired: 'Clusters are required'
+    multiEnvInfraToggleText: 'Deploy to multiple Environments or Infrastructures'
   serviceTab:
     stageOverrides: Stage Overrides
     overrideChanges: Override artifacts, manifests, service variables for this stage

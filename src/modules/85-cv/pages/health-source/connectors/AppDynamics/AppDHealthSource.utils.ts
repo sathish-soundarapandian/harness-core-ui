@@ -14,8 +14,7 @@ import type {
   AppDMetricDefinitions,
   AppDynamicsHealthSourceSpec,
   AppdynamicsValidationResponse,
-  MetricPackDTO,
-  RiskProfile
+  MetricPackDTO
 } from 'services/cv'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import { isMultiTypeRuntime } from '@common/utils/utils'
@@ -42,6 +41,7 @@ import {
   getMetricPacksForPayload,
   validateCommonFieldsForMetricThreshold
 } from '../../common/MetricThresholds/MetricThresholds.utils'
+import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
 
 export const convertStringBasePathToObject = (baseFolder: string | BasePathData): BasePathData => {
   let basePathObj = {} as any
@@ -462,17 +462,14 @@ export const createAppDynamicsPayload = (
         formData.appDTier
       )
 
-      const [category, metricType] = riskCategory?.split('/') || []
-      const thresholdTypes: RiskProfile['thresholdTypes'] = []
-
-      if (lowerBaselineDeviation) {
-        thresholdTypes.push('ACT_WHEN_LOWER')
-      }
-      if (higherBaselineDeviation) {
-        thresholdTypes.push('ACT_WHEN_HIGHER')
-      }
-
-      const ifOnlySliIsSelected = Boolean(sli) && !(Boolean(healthScore) || Boolean(continuousVerification))
+      const assignComponentPayload = createPayloadForAssignComponent({
+        sli,
+        riskCategory,
+        healthScore,
+        continuousVerification,
+        lowerBaselineDeviation,
+        higherBaselineDeviation
+      })
 
       specPayload?.metricDefinitions?.push({
         identifier: metricIdentifier,
@@ -481,17 +478,13 @@ export const createAppDynamicsPayload = (
         metricPath: derivedMetricPath,
         completeMetricPath,
         groupName: groupName?.value as string,
-        sli: { enabled: Boolean(sli) },
+        ...assignComponentPayload,
         analysis: {
-          riskProfile: ifOnlySliIsSelected
-            ? {}
-            : {
-                category,
-                metricType,
-                thresholdTypes
-              },
-          liveMonitoring: { enabled: Boolean(healthScore) },
-          deploymentVerification: { enabled: Boolean(continuousVerification), serviceInstanceMetricPath }
+          ...assignComponentPayload.analysis,
+          deploymentVerification: {
+            ...assignComponentPayload.analysis?.deploymentVerification,
+            serviceInstanceMetricPath
+          }
         }
       })
     }

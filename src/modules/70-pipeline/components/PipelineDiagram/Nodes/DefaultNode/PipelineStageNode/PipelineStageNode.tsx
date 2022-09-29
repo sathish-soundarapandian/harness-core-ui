@@ -19,6 +19,7 @@ import SVGMarker from '../../SVGMarker'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { FireEventMethod, NodeType } from '../../../types'
 import { getPositionOfAddIcon } from '../../utils'
+import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 
 const CODE_ICON: IconName = 'command-echo'
@@ -43,6 +44,7 @@ interface PipelineStageNodeProps {
   allowAdd?: boolean
   selectedNodeId?: string
   showMarkers?: boolean
+  matrixNodeName?: boolean
 }
 function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
   const { getString } = useStrings()
@@ -260,8 +262,13 @@ function PipelineStageNode(props: PipelineStageNodeProps): JSX.Element {
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
             lineClamp={2}
+            tooltipProps={{ popoverClassName: props?.matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {props.name}
+            {props?.matrixNodeName ? (
+              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as unknown as string} />
+            ) : (
+              props.name
+            )}
           </Text>
         </div>
       )}

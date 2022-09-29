@@ -196,20 +196,3 @@ export const getSelectedFeature = (sourceData: any): any => {
 
   return selectedFeature ? { label: selectedFeature, value: selectedFeature } : { ...sourceData?.product }
 }
-
-export const modifyCustomHealthFeatureBasedOnFF = (
-  isCustomLogEnabled: boolean,
-  isCustomMetricEnabled: boolean,
-  customHealthOptions: SelectOption[]
-): SelectOption[] => {
-  const featureOptionForConnector = []
-  if (isCustomMetricEnabled) {
-    featureOptionForConnector.push(customHealthOptions[0])
-  }
-
-  if (isCustomLogEnabled) {
-    featureOptionForConnector.push(customHealthOptions[1])
-  }
-
-  return featureOptionForConnector
-}

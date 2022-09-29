@@ -43,6 +43,7 @@ interface StepGroupGraphProps {
   readonly?: boolean
   hideLinks?: boolean
   hideAdd?: boolean
+  setVisibilityOfAdd: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface LayoutStyles extends Pick<Dimension, 'height' | 'width'> {
@@ -177,11 +178,18 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
     if (props.hideLinks) {
       return
     }
-    /* direction is required to connect internal nodes to step group terminals */
-    const SVGLinks = getSVGLinksFromPipeline(state, undefined, undefined, undefined, graphScale)
+    const SVGLinks = getSVGLinksFromPipeline({
+      states: state,
+      parentElement: undefined,
+      resultArr: undefined,
+      endNodeId: undefined,
+      scalingFactor: graphScale,
+      isStepGroup: true
+    })
     const firstNodeIdentifier = state?.[0]?.id
     const lastNodeIdentifier = state?.[state?.length - 1]?.id
     const parentElement = graphRef.current?.querySelector('#tree-container') as HTMLDivElement
+    /* direction is required to connect internal nodes to step group terminals */
     const finalPaths = [
       ...SVGLinks,
       getFinalSVGArrowPath(props?.id, firstNodeIdentifier as string, {
@@ -208,6 +216,14 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
       data-stepGroup-name={props?.identifier}
       data-stepGroup-id={props?.id}
       ref={graphRef}
+      onMouseEnter={e => {
+        e.stopPropagation()
+        props.setVisibilityOfAdd?.(false)
+      }}
+      onMouseOut={e => {
+        e.stopPropagation()
+        props.setVisibilityOfAdd?.(false)
+      }}
     >
       <SVGComponent svgPath={svgPath} className={cx(css.stepGroupSvg)} />
       {props?.data?.length ? (

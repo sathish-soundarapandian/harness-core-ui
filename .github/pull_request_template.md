@@ -26,6 +26,7 @@ NA
 - Standards: `retrigger standards`
 - Build: `retrigger build`
 - Title Check: `retrigger titlecheck`
+- Feature Name Check: `trigger featurenamecheck`
 - Coverage: `retrigger coverage`
 - Rebase: `trigger rebase`
 - Cypress: `trigger cypress`

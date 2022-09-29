@@ -264,3 +264,15 @@ export enum CCMActions {
 export enum CIOnboardingActions {
   SelectGitProvider = 'Git Provider Selected'
 }
+
+export enum CDOnboardingActions {
+  delegateInstallWizardStart = 'delegate_install wizard_start',
+  delegateInstallWizardEnd = 'delegate_install wizard_end',
+  StartOnboardingDelegateCreation = 'Start Onboarding Delegate Creation',
+  SetupOnboardingDelegate = 'Setup Onboarding Delegate',
+  SaveCreateOnboardingDelegate = 'Save Create Onboarding Delegate',
+  BackOnboardingDelgateCreation = 'Back Onboarding Delegate Creation',
+  DownloadOnboardingYAML = 'Download Onboarding YAML File',
+  HeartbeatVerifiedOnboardingYAML = 'HeartBeat Verified Onboarding YAML',
+  HeartBeatFailedOnboardingYAML = 'HeartBeat Failed Onboarding YAML'
+}

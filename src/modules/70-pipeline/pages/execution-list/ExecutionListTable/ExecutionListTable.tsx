@@ -97,14 +97,14 @@ export function ExecutionListTable({
       {
         Header: 'status',
         accessor: 'status',
-        width: '8%',
+        width: '10%',
         Cell: StatusCell,
         serverSortProps: getServerSortProps('status')
       },
       {
         Header: '',
         accessor: 'moduleInfo',
-        width: '43%',
+        width: '41%',
         Cell: TriggerInfoCell,
         disableSortBy: true
       },
