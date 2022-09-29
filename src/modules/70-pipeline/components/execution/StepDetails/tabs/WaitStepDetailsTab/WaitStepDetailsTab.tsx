@@ -128,11 +128,11 @@ export function WaitStepDetailsTab(props: WaitStepDetailsTabProps): React.ReactE
       headers: { 'content-type': 'application/json' }
     })
   }
-  const status = step?.status === 'AsyncWaiting' ? true : false
+  const status = step?.status === 'WaitStepRunning' ? true : false
   return (
     <React.Fragment>
       <DurationMessage />
-      {step?.status === 'AsyncWaiting' ? (
+      {step?.status === 'WaitStepRunning' ? (
         <div className={css.manualInterventionTab}>
           <String tagName="div" className={css.title} stringID="common.PermissibleActions" />
           <div className={css.actionRow}>

@@ -45,7 +45,7 @@ const data = {
   startTs: 1664018358249,
   endTs: 1664018376256,
   stepType: 'Wait',
-  status: ExecutionStatusEnum.AsyncWaiting,
+  status: ExecutionStatusEnum.WaitStepRunning,
   failureInfo: {
     message: '',
     failureTypeList: [],
