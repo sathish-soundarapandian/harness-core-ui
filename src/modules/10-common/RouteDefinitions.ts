@@ -1779,13 +1779,13 @@ const routes = {
   ),
 
   // These RoutesDestinations are defined in the MicroFrontend
-  toChaosScenarios: withAccountId(
+  toChaosExperiments: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/scenarios`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments`
   ),
-  toChaosScenario: withAccountId(
+  toChaosExperiment: withAccountId(
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/scenarios/${identifier}`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${identifier}`
   ),
   toChaosHubs: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
@@ -1795,9 +1795,9 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs/${identifier}`
   ),
-  toChaosDelegates: withAccountId(
+  toChaosInfrastructures: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-delegates`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-delegate`
   )
 }
 

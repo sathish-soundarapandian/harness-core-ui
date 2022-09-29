@@ -6496,16 +6496,16 @@ export interface StringsMap {
   'cf.testTheFlag.testFlagTargetHeading': string
   'cf.testTheFlag.verify': string
   'cf.testTheFlag.verifyText': string
-  'chaos.chaosDelegate': string
   'chaos.chaosGitops': string
   'chaos.chaosHub': string
+  'chaos.chaosInfrastructure': string
   'chaos.chaosScenario': string
   'chaos.homepage.chaosHomePageTitle': string
   'chaos.homepage.learnMore': string
   'chaos.homepage.slogan': string
-  'chaos.navLabels.chaosDelegates': string
+  'chaos.navLabels.chaosExperiments': string
   'chaos.navLabels.chaosHubs': string
-  'chaos.navLabels.chaosScenarios': string
+  'chaos.navLabels.chaosInfrastructures': string
   'ci.advancedLabel': string
   'ci.annotations': string
   'ci.artifactoryConnectorLabel': string

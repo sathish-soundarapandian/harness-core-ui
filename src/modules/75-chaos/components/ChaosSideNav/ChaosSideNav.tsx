@@ -44,13 +44,13 @@ export default function ChaosSideNav(): React.ReactElement {
         <>
           <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module: 'chaos' })} />
           <SidebarLink
-            label={getString('chaos.navLabels.chaosScenarios')}
-            to={routes.toChaosScenarios({ ...params })}
+            label={getString('chaos.navLabels.chaosExperiments')}
+            to={routes.toChaosExperiments({ ...params })}
           />
           <SidebarLink label={getString('chaos.navLabels.chaosHubs')} to={routes.toChaosHubs({ ...params })} />
           <SidebarLink
-            label={getString('chaos.navLabels.chaosDelegates')}
-            to={routes.toChaosDelegates({ ...params })}
+            label={getString('chaos.navLabels.chaosInfrastructures')}
+            to={routes.toChaosInfrastructures({ ...params })}
           />
           <ProjectSetupMenu module="chaos" />
         </>
