@@ -33,6 +33,7 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
 import css from './DelegatesPage.module.scss'
+import moment from 'moment'
 
 type delTroubleshoterProps = {
   delegate: DelegateGroupDetails
@@ -41,8 +42,9 @@ type delTroubleshoterProps = {
 
 enum InstanceStatus {
   EXPIRED = 'Expired',
-  EXPIRINGIN = 'Expiring In',
-  UPGRADEREQUIRED = 'Upgrade Required'
+  EXPIRINGIN = 'Expiring',
+  UPGRADEREQUIRED = 'Upgrade Required',
+  LATEST = 'latest'
 }
 
 export const DelegateListingHeader = () => {
@@ -266,32 +268,21 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
       history.push(routes.toDelegatesDetails(params))
     }
   }
-  const versionText = '763'
-  const showUpgradeRequired = delegate?.groupVersion
-    ? versionText.localeCompare(
-        delegate?.groupVersion ? delegate?.groupVersion?.split('.')?.[2]?.substring(0, 3) : ''
-      ) === 1
-    : null
   const currentTime = Date.now()
   const isConnected = delegate.activelyConnected
   const text = isConnected ? getString('connected') : getString('delegate.notConnected')
   const status =
     delegate?.delegateGroupExpirationTime !== undefined
-      ? delegate?.delegateGroupExpirationTime < 0 || (!delegate?.immutable && showUpgradeRequired)
-        ? InstanceStatus.UPGRADEREQUIRED
+      ? !delegate?.immutable
+        ? InstanceStatus.LATEST
         : currentTime > delegate?.delegateGroupExpirationTime
         ? InstanceStatus.EXPIRED
         : InstanceStatus.EXPIRINGIN
       : null
 
-  const statusBackgroundColor =
-    status === InstanceStatus.EXPIRED
-      ? Color.RED_500
-      : status === InstanceStatus.EXPIRINGIN || status === InstanceStatus.UPGRADEREQUIRED
-      ? Color.ORANGE_400
-      : ''
+  const statusBackgroundColor = status === InstanceStatus.EXPIRED ? Color.RED_500 : ''
   const [autoUpgradeColor, autoUpgradeText] =
-    showUpgradeRequired || (delegate?.upgraderLastUpdated === 0 && delegate?.immutable && !delegate?.autoUpgrade)
+    delegate?.upgraderLastUpdated === 0 && delegate?.immutable && !delegate?.autoUpgrade
       ? [Color.ORANGE_400, 'Upgrade Required']
       : delegate?.autoUpgrade
       ? [Color.GREEN_600, 'AUTO UPGRADE: ON']
@@ -319,6 +310,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
         status: '15%',
         actions: '2%'
       }
+
   return (
     <Card elevation={2} interactive={true} onClick={onDelegateClick} className={css.delegateItemContainer}>
       <Layout.Horizontal className={css.delegateItemSubcontainer}>
@@ -375,30 +367,33 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
 
         {USE_IMMUTABLE_DELEGATE ? (
           <Layout.Horizontal width={columnWidths.instanceStatus} className={css.paddingLeft}>
-            {(!delegate?.immutable && delegate?.groupVersion ? showUpgradeRequired : null) || delegate?.immutable ? (
+            {
               <>
                 <Text
                   background={statusBackgroundColor}
-                  color={Color.WHITE}
-                  font={{ weight: 'semi-bold', size: 'xsmall' }}
+                  color={status === InstanceStatus.EXPIRED ? Color.WHITE : ''}
+                  font={{
+                    size: status === InstanceStatus.EXPIRED ? 'xsmall' : 'normal'
+                  }}
                   className={css.statusText}
                   lineClamp={1}
                 >
                   {status}
                 </Text>
-                {status === InstanceStatus.UPGRADEREQUIRED ? (
+                {status === InstanceStatus.LATEST ? (
                   ''
                 ) : delegate.delegateGroupExpirationTime ? (
-                  <ReactTimeago date={delegate.delegateGroupExpirationTime} live />
+                  <div style={{ paddingTop: '2px' }}>
+                    {delegate?.groupVersion?.startsWith('1.0')
+                      ? ''
+                      : moment(delegate.delegateGroupExpirationTime).fromNow()}
+                  </div>
                 ) : (
+                  // <ReactTimeago date={delegate.delegateGroupExpirationTime} live />
                   ''
                 )}
               </>
-            ) : !delegate?.immutable ? (
-              <Text padding={{ left: 'small' }}>{getString('na')}</Text>
-            ) : (
-              <></>
-            )}
+            }
           </Layout.Horizontal>
         ) : null}
 
@@ -454,8 +449,8 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
               ? getString('connected')
               : getString('delegate.notConnected')
             /*istanbul ignore next */
-            const instanceStatus = instanceDetails?.version?.startsWith('1.0')
-              ? InstanceStatus.UPGRADEREQUIRED
+            const instanceStatus = !delegate?.immutable
+              ? InstanceStatus.LATEST
               : instanceDetails?.delegateExpirationTime !== undefined
               ? currentTime > instanceDetails?.delegateExpirationTime
                 ? InstanceStatus.EXPIRED
@@ -463,12 +458,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
               : null
 
             /*istanbul ignore next */
-            const instanceStatusBackgroundColor =
-              instanceStatus === InstanceStatus.EXPIRED
-                ? Color.RED_500
-                : instanceStatus === InstanceStatus.EXPIRINGIN || instanceStatus === InstanceStatus.UPGRADEREQUIRED
-                ? Color.ORANGE_400
-                : ''
+            const instanceStatusBackgroundColor = instanceStatus === InstanceStatus.EXPIRED ? Color.RED_500 : ''
 
             /*istanbul ignore next */
             return (
@@ -487,34 +477,28 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                 </Layout.Horizontal>
                 {USE_IMMUTABLE_DELEGATE ? (
                   <Layout.Horizontal width={columnWidths.instanceStatus} className={css.instanceStatus}>
-                    {((instanceDetails?.version
-                      ? versionText.localeCompare(instanceDetails?.version?.split('.')?.[2]?.substring(0, 3)) === 1
-                      : null) &&
-                      !delegate?.immutable) ||
-                    delegate?.immutable ? (
+                    {
                       <>
                         <Text
                           background={instanceStatusBackgroundColor}
-                          color={Color.WHITE}
-                          font={{ weight: 'semi-bold', size: 'xsmall' }}
                           className={css.statusText}
                           lineClamp={1}
+                          color={status === InstanceStatus.EXPIRED ? Color.WHITE : ''}
+                          font={{
+                            size: status === InstanceStatus.EXPIRED ? 'xsmall' : 'normal'
+                          }}
                         >
                           {instanceStatus}
                         </Text>
-                        {instanceDetails.version?.startsWith('1.0') ? (
-                          ''
-                        ) : instanceDetails?.delegateExpirationTime ? (
-                          <ReactTimeago date={instanceDetails.delegateExpirationTime} live />
-                        ) : (
-                          ''
-                        )}
+                        <div style={{ paddingTop: '2px' }}>
+                          {instanceDetails.version?.startsWith('1.0')
+                            ? ''
+                            : instanceDetails?.delegateExpirationTime
+                            ? moment(instanceDetails?.delegateExpirationTime).fromNow()
+                            : ''}
+                        </div>
                       </>
-                    ) : !delegate?.immutable ? (
-                      <Text padding={{ left: 'small' }}>{getString('na')}</Text>
-                    ) : (
-                      <></>
-                    )}
+                    }
                   </Layout.Horizontal>
                 ) : null}
                 <Layout.Horizontal
