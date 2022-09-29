@@ -469,7 +469,7 @@ export default function DeployServiceEntityWidget({
                 {isFixed ? (
                   <ServiceEntitiesList
                     loading={loading || updatingData}
-                    servicesData={servicesData}
+                    servicesData={allServices.length > 0 ? servicesData : []}
                     gitOpsEnabled={gitOpsEnabled}
                     readonly={readonly}
                     onRemoveServiceFormList={removeSvcfromList}

@@ -130,7 +130,7 @@ export function DeployServiceEntityInputStep({
       const svcTemplate = servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
       return {
         serviceRef: svcId,
-        serviceInputs: svcTemplate ? clearRuntimeInput(svcTemplate) : {}
+        serviceInputs: svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
       }
     })
 
@@ -138,8 +138,14 @@ export function DeployServiceEntityInputStep({
       updateTemplate(newServicesTemplate, `${pathPrefix}values`)
       formik.setFieldValue(`${pathPrefix}values`, newServicesValues)
     } else {
-      updateTemplate(defaultTo(newServicesTemplate[0].serviceInputs, {}), `${pathPrefix}serviceInputs`)
-      formik.setFieldValue(`${pathPrefix}serviceInputs`, defaultTo(newServicesValues[0].serviceInputs, {}))
+      updateTemplate(
+        defaultTo(newServicesTemplate[0].serviceInputs, isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : {}),
+        `${pathPrefix}serviceInputs`
+      )
+      formik.setFieldValue(
+        `${pathPrefix}serviceInputs`,
+        defaultTo(newServicesValues[0].serviceInputs, isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : {})
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [servicesData, serviceIdentifiers])
