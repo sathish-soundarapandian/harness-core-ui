@@ -107,3 +107,13 @@
   margin-top: var(--spacing-large) !important;
   margin-left: -20px !important; // padding left of Add Button
 }
+
+.freezeNameContainer {
+  .freezeName {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: var(--grey-700) !important;
+    line-height: 28px !important;
+    margin-right: var(--spacing-small);
+  }
+}

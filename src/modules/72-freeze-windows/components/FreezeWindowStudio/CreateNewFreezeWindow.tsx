@@ -11,17 +11,23 @@ import { Button, ButtonVariation, Container, Formik, FormikForm, Layout } from '
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import { getInitialValues } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
 import css from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudio.module.scss'
-
-const EMPTY_OBJECT_READ_ONLY = {}
 
 interface CreateNewFreezeWindowProps {
   onClose: (identifier?: string) => void
   updateFreeze: (response: any) => void
+  freezeObj: any
 }
 
-export const CreateNewFreezeWindow: React.FC<CreateNewFreezeWindowProps> = ({ onClose, updateFreeze }) => {
+export const CreateNewFreezeWindow: React.FC<CreateNewFreezeWindowProps> = ({ onClose, updateFreeze, freezeObj }) => {
   const { getString } = useStrings()
+
+  const [initialValues, setInitialValues] = React.useState({ identifier: '' })
+
+  React.useEffect(() => {
+    setInitialValues(getInitialValues(freezeObj))
+  }, [freezeObj?.identifier])
 
   const onSubmit = (values: any) => {
     updateFreeze({ ...values })
@@ -32,7 +38,8 @@ export const CreateNewFreezeWindow: React.FC<CreateNewFreezeWindowProps> = ({ on
 
   return (
     <Formik
-      initialValues={EMPTY_OBJECT_READ_ONLY}
+      key={initialValues?.identifier as string}
+      initialValues={initialValues}
       onSubmit={onSubmit}
       formName="createNewFreezeWindow"
       validationSchema={Yup.object().shape({

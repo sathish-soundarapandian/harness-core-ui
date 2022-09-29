@@ -9,6 +9,8 @@ import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
 import {
+  Button,
+  ButtonVariation,
   Container,
   Layout,
   Text,
@@ -24,6 +26,7 @@ import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStud
 import { DefaultFreezeId } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowReducer'
 import { FreezeWindowStudioSubHeaderRightView } from './FreezeWindowStudioSubHeaderRightView'
 import { CreateNewFreezeWindow } from './CreateNewFreezeWindow'
+import css from './FreezeWindowStudio.module.scss'
 
 interface WindowPathProps {
   freezeIdentifier: string
@@ -40,7 +43,8 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
   const { getString } = useStrings()
   const {
     state: { freezeObj },
-    updateFreeze
+    updateFreeze,
+    isReadonly
   } = React.useContext(FreezeWindowContext)
   const freezeIdentifier = freezeObj.identifier
   const history = useHistory()
@@ -73,12 +77,14 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
         title={
           <Container padding={{ left: 'xlarge', top: 'xlarge' }}>
             <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_800}>
-              {getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
+              {freezeIdentifier === DefaultFreezeId
+                ? getString('freezeWindows.freezeWindowsPage.newFreezeWindow')
+                : getString('freezeWindows.freezeWindowsPage.editFreezeWindow')}
             </Text>
           </Container>
         }
       >
-        <CreateNewFreezeWindow onClose={onCloseCreate} updateFreeze={updateFreeze} />
+        <CreateNewFreezeWindow onClose={onCloseCreate} updateFreeze={updateFreeze} freezeObj={freezeObj} />
       </Dialog>
     )
   }, [freezeIdentifier])
@@ -98,7 +104,14 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
       background={Color.WHITE}
     >
       <Layout.Horizontal height={'100%'} flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>1</div>
+        <Layout.Horizontal className={css.freezeNameContainer} flex={{ alignItems: 'center' }}>
+          <Text lineClamp={1} className={css.freezeName}>
+            {freezeObj.name as string}
+          </Text>
+          {isYaml || isReadonly ? null : (
+            <Button variation={ButtonVariation.ICON} icon="Edit" onClick={showConfigModal} />
+          )}
+        </Layout.Horizontal>
         <Container>
           <VisualYamlToggle
             // className={css.visualYamlToggle}

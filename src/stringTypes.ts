@@ -4103,6 +4103,7 @@ export interface StringsMap {
   'freezeWindows.freezeStudio.excludeProjects': string
   'freezeWindows.freezeStudio.freezeConfiguration': string
   'freezeWindows.freezeStudio.freezeOverview': string
+  'freezeWindows.freezeWindowsPage.editFreezeWindow': string
   'freezeWindows.freezeWindowsPage.newFreezeWindow': string
   'freezeWindows.freezeWindowsPage.noFreezeWindows': string
   'templatesLibrary.addNewTemplate': string
