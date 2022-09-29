@@ -4,9 +4,9 @@ homepage:
   learnMore: Learn more about Chaos Engineering
 chaosHub: ChaosHub
 chaosScenario: Chaos Scenario
-chaosDelegate: Chaos Delegate
+chaosInfrastructure: Chaos Infrastructure
 chaosGitops: Chaos Gitops
 navLabels:
-  chaosScenarios: Chaos Scenarios
-  chaosHubs: ChaosHubs
-  chaosDelegates: Chaos Delegates
+  chaosExperiments: Chaos Experiments
+  chaosHubs: Chaos Hubs
+  chaosInfrastructures: Chaos Infrastructures

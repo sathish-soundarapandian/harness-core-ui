@@ -68,6 +68,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import SettingsList from '@default-settings/pages/SettingsList'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -115,7 +116,7 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_SCENARIO, {
   resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
 
-    return routes.toChaosScenario({
+    return routes.toChaosExperiment({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier,
@@ -128,12 +129,12 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_DELEGATE, {
   moduleIcon: {
     name: 'chaos-main'
   },
-  moduleLabel: 'chaos.chaosDelegate',
-  resourceLabel: 'chaos.chaosDelegate',
+  moduleLabel: 'chaos.chaosInfrastructure',
+  resourceLabel: 'chaos.chaosInfrastructure',
   resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
 
-    return routes.toChaosDelegates({
+    return routes.toChaosInfrastructures({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier
@@ -211,7 +212,7 @@ export default function ChaosRoutes(): React.ReactElement {
 
     RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_DELEGATE, {
       icon: 'chaos-main',
-      label: 'chaos.chaosDelegate',
+      label: 'chaos.chaosInfrastructure',
       category: ResourceCategory.CHAOS,
       permissionLabels: {
         [PermissionIdentifier.VIEW_CHAOS_DELEGATE]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -229,6 +230,12 @@ export default function ChaosRoutes(): React.ReactElement {
         [PermissionIdentifier.EDIT_CHAOS_GITOPS]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
       }
     })
+  }
+
+  const RedirectToDelegatesHome = (): React.ReactElement => {
+    const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
+    return <Redirect to={routes.toDelegateList({ accountId, projectIdentifier, orgIdentifier, module })} />
   }
 
   return (
@@ -341,6 +348,15 @@ export default function ChaosRoutes(): React.ReactElement {
           <SecretReferences />
         </SecretDetailsHomePage>
       </RouteWithLayout>
+
+      <RouteWithLayout
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toDelegates({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
+        exact
+      >
+        <RedirectToDelegatesHome />
+      </RouteWithLayout>
+
       <RouteWithLayout
         exact
         sidebarProps={ChaosSideNavProps}
@@ -520,6 +536,18 @@ export default function ChaosRoutes(): React.ReactElement {
         <AccessControlPage>
           <Roles />
         </AccessControlPage>
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toDefaultSettings({
+          ...accountPathProps,
+          ...projectPathProps,
+          ...chaosModuleParams
+        })}
+      >
+        <SettingsList />
       </RouteWithLayout>
 
       <RouteWithLayout

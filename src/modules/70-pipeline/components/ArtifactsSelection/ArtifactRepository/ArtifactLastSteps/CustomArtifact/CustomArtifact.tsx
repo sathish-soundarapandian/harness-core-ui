@@ -17,7 +17,8 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   MultiSelectOption,
-  SelectOption
+  SelectOption,
+  FormikForm
 } from '@harness/uicore'
 import { FieldArray, Form, FormikProps } from 'formik'
 import * as Yup from 'yup'
@@ -67,7 +68,7 @@ function FormContent({
   const scriptType: ScriptType =
     formik.values?.spec?.scripts.fetchAllArtifacts?.spec?.shell || (getString('common.bash') as ScriptType)
   return (
-    <Form>
+    <FormikForm>
       <div className={css.artifactForm}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -240,7 +241,7 @@ function FormContent({
         />
         <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('next')} rightIcon="chevron-right" />
       </Layout.Horizontal>
-    </Form>
+    </FormikForm>
   )
 }
 

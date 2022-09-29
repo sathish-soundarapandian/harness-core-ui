@@ -535,6 +535,48 @@ exports[`Load balancer advanced config remove health check data and add again wi
                 </div>
               </div>
             </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main dnsLinkContainer customExclusion"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                ce.co.autoStoppingRule.setupAccess.customExclusion.heading
+              </p>
+              <p>
+                ce.co.autoStoppingRule.setupAccess.customExclusion.description
+              </p>
+              <div
+                class="PillToggle--optionBtns toggle"
+              >
+                <div
+                  class="PillToggle--item PillToggle--selected"
+                  data-name="toggle-option-one"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.EXCLUDE
+                </div>
+                <div
+                  class="PillToggle--item"
+                  data-name="toggle-option-two"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.INCLUDE
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-testid="customItemsContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main addBtn StyledProps--color StyledProps--color-primary7"
+                >
+                  + add
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </form>
@@ -1025,6 +1067,48 @@ exports[`Load balancer advanced config remove health check data and add again wi
                 </div>
               </div>
             </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main dnsLinkContainer customExclusion"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                ce.co.autoStoppingRule.setupAccess.customExclusion.heading
+              </p>
+              <p>
+                ce.co.autoStoppingRule.setupAccess.customExclusion.description
+              </p>
+              <div
+                class="PillToggle--optionBtns toggle"
+              >
+                <div
+                  class="PillToggle--item PillToggle--selected"
+                  data-name="toggle-option-one"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.EXCLUDE
+                </div>
+                <div
+                  class="PillToggle--item"
+                  data-name="toggle-option-two"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.INCLUDE
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-testid="customItemsContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main addBtn StyledProps--color StyledProps--color-primary7"
+                >
+                  + add
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </form>
@@ -1299,6 +1383,48 @@ exports[`Load balancer advanced config show error 1`] = `
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main dnsLinkContainer customExclusion"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                ce.co.autoStoppingRule.setupAccess.customExclusion.heading
+              </p>
+              <p>
+                ce.co.autoStoppingRule.setupAccess.customExclusion.description
+              </p>
+              <div
+                class="PillToggle--optionBtns toggle"
+              >
+                <div
+                  class="PillToggle--item PillToggle--selected"
+                  data-name="toggle-option-one"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.EXCLUDE
+                </div>
+                <div
+                  class="PillToggle--item"
+                  data-name="toggle-option-two"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.INCLUDE
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-testid="customItemsContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main addBtn StyledProps--color StyledProps--color-primary7"
+                >
+                  + add
+                </p>
               </div>
             </div>
           </div>
@@ -1604,6 +1730,48 @@ exports[`Load balancer advanced config show routing table in case of empty selec
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main dnsLinkContainer customExclusion"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                ce.co.autoStoppingRule.setupAccess.customExclusion.heading
+              </p>
+              <p>
+                ce.co.autoStoppingRule.setupAccess.customExclusion.description
+              </p>
+              <div
+                class="PillToggle--optionBtns toggle"
+              >
+                <div
+                  class="PillToggle--item PillToggle--selected"
+                  data-name="toggle-option-one"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.EXCLUDE
+                </div>
+                <div
+                  class="PillToggle--item"
+                  data-name="toggle-option-two"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.INCLUDE
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-testid="customItemsContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main addBtn StyledProps--color StyledProps--color-primary7"
+                >
+                  + add
+                </p>
               </div>
             </div>
           </div>
@@ -1978,6 +2146,48 @@ exports[`Resource Access url selector tests hosted zone id is present 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main dnsLinkContainer customExclusion"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                ce.co.autoStoppingRule.setupAccess.customExclusion.heading
+              </p>
+              <p>
+                ce.co.autoStoppingRule.setupAccess.customExclusion.description
+              </p>
+              <div
+                class="PillToggle--optionBtns toggle"
+              >
+                <div
+                  class="PillToggle--item PillToggle--selected"
+                  data-name="toggle-option-one"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.EXCLUDE
+                </div>
+                <div
+                  class="PillToggle--item"
+                  data-name="toggle-option-two"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.INCLUDE
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-testid="customItemsContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main addBtn StyledProps--color StyledProps--color-primary7"
+                >
+                  + add
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </form>
@@ -2252,6 +2462,48 @@ exports[`Use DNS for Setup No Access Point is available 1`] = `
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main dnsLinkContainer customExclusion"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                ce.co.autoStoppingRule.setupAccess.customExclusion.heading
+              </p>
+              <p>
+                ce.co.autoStoppingRule.setupAccess.customExclusion.description
+              </p>
+              <div
+                class="PillToggle--optionBtns toggle"
+              >
+                <div
+                  class="PillToggle--item PillToggle--selected"
+                  data-name="toggle-option-one"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.EXCLUDE
+                </div>
+                <div
+                  class="PillToggle--item"
+                  data-name="toggle-option-two"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.INCLUDE
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-testid="customItemsContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main addBtn StyledProps--color StyledProps--color-primary7"
+                >
+                  + add
+                </p>
               </div>
             </div>
           </div>
@@ -2530,6 +2782,48 @@ exports[`Use DNS for Setup No hosted zone is available 1`] = `
                 </div>
               </div>
             </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main dnsLinkContainer customExclusion"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                ce.co.autoStoppingRule.setupAccess.customExclusion.heading
+              </p>
+              <p>
+                ce.co.autoStoppingRule.setupAccess.customExclusion.description
+              </p>
+              <div
+                class="PillToggle--optionBtns toggle"
+              >
+                <div
+                  class="PillToggle--item PillToggle--selected"
+                  data-name="toggle-option-one"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.EXCLUDE
+                </div>
+                <div
+                  class="PillToggle--item"
+                  data-name="toggle-option-two"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.INCLUDE
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-testid="customItemsContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main addBtn StyledProps--color StyledProps--color-primary7"
+                >
+                  + add
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </form>
@@ -2707,6 +3001,48 @@ exports[`Use DNS for Setup option for creating new ALB should not be available f
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main dnsLinkContainer customExclusion"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                ce.co.autoStoppingRule.setupAccess.customExclusion.heading
+              </p>
+              <p>
+                ce.co.autoStoppingRule.setupAccess.customExclusion.description
+              </p>
+              <div
+                class="PillToggle--optionBtns toggle"
+              >
+                <div
+                  class="PillToggle--item PillToggle--selected"
+                  data-name="toggle-option-one"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.EXCLUDE
+                </div>
+                <div
+                  class="PillToggle--item"
+                  data-name="toggle-option-two"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.INCLUDE
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-testid="customItemsContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main addBtn StyledProps--color StyledProps--color-primary7"
+                >
+                  + add
+                </p>
               </div>
             </div>
           </div>
@@ -2983,6 +3319,48 @@ exports[`Use DNS for Setup renders without crashing 1`] = `
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div
+              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main dnsLinkContainer customExclusion"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+              >
+                ce.co.autoStoppingRule.setupAccess.customExclusion.heading
+              </p>
+              <p>
+                ce.co.autoStoppingRule.setupAccess.customExclusion.description
+              </p>
+              <div
+                class="PillToggle--optionBtns toggle"
+              >
+                <div
+                  class="PillToggle--item PillToggle--selected"
+                  data-name="toggle-option-one"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.EXCLUDE
+                </div>
+                <div
+                  class="PillToggle--item"
+                  data-name="toggle-option-two"
+                  role="button"
+                  tabindex="0"
+                >
+                  CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.INCLUDE
+                </div>
+              </div>
+              <div
+                class="StyledProps--font StyledProps--main"
+                data-testid="customItemsContainer"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main addBtn StyledProps--color StyledProps--color-primary7"
+                >
+                  + add
+                </p>
               </div>
             </div>
           </div>

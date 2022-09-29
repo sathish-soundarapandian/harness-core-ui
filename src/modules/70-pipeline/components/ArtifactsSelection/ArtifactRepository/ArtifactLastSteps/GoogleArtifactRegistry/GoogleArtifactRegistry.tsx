@@ -16,10 +16,11 @@ import {
   MultiTypeInputType,
   SelectOption,
   getMultiTypeFromValue,
-  FormInput
+  FormInput,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
-import { Form, FormikProps } from 'formik'
+import type { FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { Menu } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
@@ -170,7 +171,7 @@ function FormComponent(
   }
 
   return (
-    <Form>
+    <FormikForm>
       <div className={css.artifactForm}>
         {isMultiArtifactSource && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -415,7 +416,7 @@ function FormComponent(
           rightIcon="chevron-right"
         />
       </Layout.Horizontal>
-    </Form>
+    </FormikForm>
   )
 }
 

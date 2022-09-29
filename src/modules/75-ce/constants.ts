@@ -223,6 +223,17 @@ export const moveFolderType = {
   EXISTING: 'EXISTING'
 }
 
+export enum CustomHandlerType {
+  exclude = 'exclude',
+  include = 'include'
+}
+
+export enum HandlerKind {
+  path = 'path',
+  ip = 'iprange',
+  header = 'header'
+}
+
 export const ruleServiceStatusLabelMap = new Map<
   string,
   { labelStringId: keyof StringsMap; intent: 'running' | 'stopped' | 'load'; icon?: IconName }

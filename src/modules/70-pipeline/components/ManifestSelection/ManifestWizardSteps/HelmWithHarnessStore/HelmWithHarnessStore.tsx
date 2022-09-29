@@ -12,6 +12,7 @@ import {
   Button,
   ButtonVariation,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   Layout,
@@ -21,7 +22,6 @@ import {
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { get } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
@@ -155,7 +155,7 @@ function HelmWithHarnessStore({
       >
         {formik => {
           return (
-            <Form>
+            <FormikForm>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
                 className={css.manifestForm}
@@ -252,7 +252,7 @@ function HelmWithHarnessStore({
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

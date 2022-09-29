@@ -16,12 +16,12 @@ import {
   Text,
   StepProps,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 
 import { get, isEmpty, set } from 'lodash-es'
@@ -186,7 +186,7 @@ function OpenShiftParamWithGit({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: OpenShiftParamDataType }) => (
-          <Form>
+          <FormikForm>
             <div className={templateCss.templateForm}>
               <FormInput.Text
                 name="identifier"
@@ -316,7 +316,7 @@ function OpenShiftParamWithGit({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

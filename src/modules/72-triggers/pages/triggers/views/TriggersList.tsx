@@ -54,7 +54,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
   const [searchParam, setSearchParam] = useState('')
   const { getString } = useStrings()
 
-  const { NG_SVC_ENV_REDESIGN = false, TRIGGERS_REFACTOR = false } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN = false, CD_TRIGGERS_REFACTOR = false } = useFeatureFlags()
   const isNewService = isNewServiceEnvEntity(
     NG_SVC_ENV_REDESIGN,
     pipeline?.stages?.[0]?.stage as DeploymentStageElementConfig
@@ -62,10 +62,10 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
 
   /*
    *  Show artifact and manifest selection only if:
-   *   1: TRIGGERS_REFACTOR is enabled
+   *   1: CD_TRIGGERS_REFACTOR is enabled
    *   2: If its not newService
    */
-  const hideArtifactManifestSelection = TRIGGERS_REFACTOR || !isNewService ? false : true
+  const hideArtifactManifestSelection = CD_TRIGGERS_REFACTOR || !isNewService ? false : true
 
   const {
     data: triggerListResponse,

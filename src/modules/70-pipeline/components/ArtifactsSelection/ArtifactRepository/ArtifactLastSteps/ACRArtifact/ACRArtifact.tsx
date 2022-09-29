@@ -17,10 +17,11 @@ import {
   StepProps,
   Text,
   ButtonVariation,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  FormikForm
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
-import { Form, FormikContextType, FormikProps } from 'formik'
+import type { FormikContextType, FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import { defaultTo, get, isEmpty, isNil, merge } from 'lodash-es'
@@ -485,7 +486,7 @@ export function ACRArtifact({
         {formik => {
           formikRef.current = formik
           return (
-            <Form>
+            <FormikForm>
               <div className={css.connectorForm}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -848,7 +849,7 @@ export function ACRArtifact({
                   rightIcon="chevron-right"
                 />
               </Layout.Horizontal>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

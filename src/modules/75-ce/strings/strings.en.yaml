@@ -324,7 +324,18 @@ co:
           info: 'Background tasks description of how it works in accessing gateways'
         ip:
           info: 'IP addresses if the instances managed by this AutoStopping Rule are currently accessed by an IP.'
-
+      customExclusion:
+        exclude: 'exclude'
+        include: 'include'
+        heading: 'Custom Exclusions / Inclusions'
+        description: 'You can specify to <span>exclude</span> or <span>include</span> certain types of HTTP/HTTPS traffic from being considered as activity and consequently warm-up AutoStopping Rules'
+        option1Label: 'Path-based match'
+        option2Label: 'Header-based match'
+        option3Label: 'Source IP based match'
+        option1Placeholder: 'Enter Path(s)'
+        option2Placeholder: 'Enter Header name'
+        option2ValuePlaceholder: 'Enter Header value'
+        option3Placeholder: 'Enter comma seperated IP address OR as xx.xxx.xx - xx for range'
     save: 'Save Rule'
     confirm:
       disableTitle: 'Disable Rule {{name}}'
@@ -535,6 +546,13 @@ co:
       managedVmTableHeaders:
         name: 'Name/ID'
         ip: 'Public/Private IP'
+    customTab:
+      includedPathHeader: 'Included Paths'
+      excludedPathHeader: 'Excluded Paths'
+      includedHeaders: 'Included Headers'
+      excludedHeaders: 'Excluded Headers'
+      includedIp: 'Included IP adressess'
+      excludedIp: 'Excluded IP adressess'
     sshTab:
       header: 'You can access VMs/Instances via SSH/RDP'
       cli: 'SSH/RDP via Harness CLI '

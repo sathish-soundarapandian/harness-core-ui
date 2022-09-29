@@ -16,12 +16,13 @@ import {
   StepProps,
   Text,
   ButtonVariation,
-  SelectOption
+  SelectOption,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
-import { Form, FormikValues } from 'formik'
+import type { FormikValues } from 'formik'
 import * as Yup from 'yup'
 import { defaultTo, memoize, merge } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -348,8 +349,8 @@ function Artifactory({
             resetTag(formik)
           }
           return (
-            <Form>
-              <div className={css.artifactForm}>
+            <FormikForm>
+              <div className={css.connectorForm}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 {showRepositoryFormatForAllowedTypes && (
@@ -621,7 +622,7 @@ function Artifactory({
                   rightIcon="chevron-right"
                 />
               </Layout.Horizontal>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

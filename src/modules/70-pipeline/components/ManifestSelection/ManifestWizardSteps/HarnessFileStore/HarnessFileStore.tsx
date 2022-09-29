@@ -12,6 +12,7 @@ import {
   Button,
   ButtonVariation,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   Layout,
@@ -20,7 +21,6 @@ import {
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { get, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
@@ -150,7 +150,7 @@ function HarnessFileStore({
       >
         {formik => {
           return (
-            <Form>
+            <FormikForm>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
                 className={css.manifestForm}
@@ -270,7 +270,7 @@ function HarnessFileStore({
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

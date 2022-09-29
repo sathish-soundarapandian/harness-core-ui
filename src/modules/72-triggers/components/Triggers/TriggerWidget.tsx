@@ -29,7 +29,7 @@ export function TriggerWidget<T>({
   isNewTrigger,
   triggerData
 }: TriggerWidgetProps<T>): JSX.Element {
-  const isTriggersRefactor = useFeatureFlag(FeatureFlag.TRIGGERS_REFACTOR)
+  const isTriggersRefactor = useFeatureFlag(FeatureFlag.CD_TRIGGERS_REFACTOR)
 
   // isTriggersRefactor check can be removed once triggers refactoring is complete.
   // Until then it gives us the freedom to selectively render only those triggers that have been refactored.

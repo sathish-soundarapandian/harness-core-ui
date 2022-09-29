@@ -15,9 +15,9 @@ import {
   ButtonVariation,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType
+  MultiTypeInputType,
+  FormikForm
 } from '@wings-software/uicore'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { merge, defaultTo } from 'lodash-es'
@@ -353,7 +353,7 @@ export function Nexus3Artifact({
         }}
       >
         {formik => (
-          <Form>
+          <FormikForm>
             <div className={css.artifactForm}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -672,7 +672,7 @@ export function Nexus3Artifact({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

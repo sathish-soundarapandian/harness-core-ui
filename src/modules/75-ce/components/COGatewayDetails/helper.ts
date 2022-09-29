@@ -5,11 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
-import { ASRuleTabs, GatewayKindType } from '@ce/constants'
+import { isEmpty as _isEmpty, defaultTo as _defaultTo, isEmpty, get } from 'lodash-es'
+import { ASRuleTabs, CustomHandlerType, GatewayKindType, HandlerKind } from '@ce/constants'
 import type { RoutingData, Service } from 'services/lw'
 import { Utils } from '@ce/common/Utils'
-import type { GatewayDetails } from '../COCreateGateway/models'
+import type { GatewayDetails, GatewayDetailsSourceFilters, Handler } from '../COCreateGateway/models'
 
 const tabs = [ASRuleTabs.CONFIGURATION, ASRuleTabs.SETUP_ACCESS, ASRuleTabs.REVIEW]
 
@@ -47,6 +47,12 @@ export const isPrimaryBtnDisable = (
     (selectedTabId === tabs[2] && (!validTabs.setupAccess || !validTabs.config))
   )
 }
+
+const getFilterValue = (handlers: Handler[], type: HandlerKind) =>
+  handlers
+    .filter(item => item.kind === type)
+    .map(item => item.value.split(',').map(v => v.trim()))
+    .reduce((acc, curr) => acc.concat(curr), [])
 
 /* istanbul ignore next */
 export const getServiceObjectFromgatewayDetails = (
@@ -104,6 +110,30 @@ export const getServiceObjectFromgatewayDetails = (
     }
   }
   routing.custom_domain_providers = gatewayDetails.routing.custom_domain_providers
+
+  // convert gatewayDetails source_filters to payload source_filters
+  const sourceFilters: GatewayDetailsSourceFilters = get(gatewayDetails, 'routing.source_filters')
+  if (!isEmpty(sourceFilters?.filters)) {
+    const pathFilters = getFilterValue(sourceFilters.filters, HandlerKind.path)
+    const ipFilters = getFilterValue(sourceFilters.filters, HandlerKind.ip)
+    const allFilters = []
+    if (!isEmpty(pathFilters)) {
+      allFilters.push({
+        kind: HandlerKind.path,
+        path: pathFilters
+      })
+    }
+    if (!isEmpty(ipFilters)) {
+      allFilters.push({
+        kind: HandlerKind.ip,
+        ipaddresses: ipFilters
+      })
+    }
+    routing.source_filters = {
+      type: sourceFilters.type === CustomHandlerType.include ? 'inclusion' : 'exclusion',
+      filters: allFilters
+    }
+  }
 
   const gateway: Service = {
     name: gatewayDetails.name,

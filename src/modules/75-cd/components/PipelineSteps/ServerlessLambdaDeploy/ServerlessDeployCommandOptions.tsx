@@ -8,13 +8,14 @@
 import React from 'react'
 import { isEmpty } from 'lodash-es'
 import { Accordion, Container, MultiTypeInputType, Text } from '@harness/uicore'
+
 import { useStrings } from 'framework/strings'
 import type { StepElementConfig } from 'services/cd-ng'
 import { MultiTypeExecutionCondition } from '@common/components/MultiTypeExecutionCondition/MultiTypeExecutionCondition'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { InputSetData, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
-
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ServerlessDeployCommandOptions.module.scss'
 
 interface ServerlessDeployCommandOptionsProps {
@@ -73,7 +74,7 @@ export function ServerlessDeployCommandOptions(props: ServerlessDeployCommandOpt
   const { getString } = useStrings()
 
   return (
-    <Accordion allowMultiOpen activeId={''}>
+    <Accordion className={stepCss.accordion}>
       <Accordion.Panel
         id={'commandOptions'}
         summary={getString('pipelineSteps.optionalConfiguration')}

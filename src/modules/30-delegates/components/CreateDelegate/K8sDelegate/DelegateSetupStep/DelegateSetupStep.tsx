@@ -281,7 +281,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                           formikProps={formikProps as unknown as FormikProps<FormikForSelectDelegateType>}
                         />
                       )}
-                      {profileOptions?.length > 0 && (
+                      {!USE_IMMUTABLE_DELEGATE && profileOptions?.length > 0 && (
                         <div className={`${css.formGroup} ${css.profileSelect}`}>
                           <FormInput.Select
                             items={profileOptions}
@@ -291,7 +291,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                         </div>
                       )}
 
-                      {formikProps.values.delegateConfigurationId && selectors && (
+                      {!USE_IMMUTABLE_DELEGATE && formikProps.values.delegateConfigurationId && selectors && (
                         <Container className={css.profileSelectors}>
                           <Text>{getString('delegate.tagsFromDelegateConfig')}</Text>
                           <div className={css.profileSelectorsItemsContainer}>

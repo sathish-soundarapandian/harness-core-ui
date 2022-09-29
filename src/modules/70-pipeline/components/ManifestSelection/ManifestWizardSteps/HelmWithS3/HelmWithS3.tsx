@@ -7,7 +7,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Form, FormikValues } from 'formik'
+import type { FormikValues } from 'formik'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { defaultTo, get, isEmpty, memoize, merge } from 'lodash-es'
@@ -24,7 +24,8 @@ import {
   MultiTypeInputType,
   SelectOption,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
@@ -370,7 +371,7 @@ function HelmWithS3({
         }}
       >
         {(formik: FormikValues) => (
-          <Form>
+          <FormikForm>
             <div className={helmcss.helmGitForm}>
               <Layout.Horizontal flex spacing="huge">
                 <div className={helmcss.halfWidth}>
@@ -575,7 +576,7 @@ function HelmWithS3({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

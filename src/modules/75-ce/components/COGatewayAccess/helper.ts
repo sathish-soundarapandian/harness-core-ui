@@ -28,6 +28,7 @@ import type {
   GatewayDetails,
   GetInitialAccessPointDetails,
   GetInitialAzureAccessPoint,
+  Handler,
   RuleCreationParams
 } from '../COCreateGateway/models'
 
@@ -87,6 +88,15 @@ export const getValidStatusForDnsLink = (
     )
   }
 
+  // check for custom exclusion/inclusion
+  const sourceFiltersList = get(gatewayDetails, 'routing.source_filters.filters', [])
+  if (
+    validStatus &&
+    !_isEmpty(sourceFiltersList) &&
+    !_isEmpty(sourceFiltersList.find((item: Handler) => _isEmpty(item.value)))
+  ) {
+    validStatus = false
+  }
   return validStatus
 }
 

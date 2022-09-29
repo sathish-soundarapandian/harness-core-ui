@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Form, FormikValues } from 'formik'
+import type { FormikValues } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, memoize, merge } from 'lodash-es'
 import * as Yup from 'yup'
@@ -17,6 +17,7 @@ import {
   ButtonVariation,
   FontVariation,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   Layout,
@@ -299,7 +300,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
         }}
       >
         {formik => (
-          <Form>
+          <FormikForm>
             <div className={css.connectorForm}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -448,7 +449,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

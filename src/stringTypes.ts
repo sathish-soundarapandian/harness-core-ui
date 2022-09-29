@@ -5192,6 +5192,17 @@ export interface StringsMap {
   'ce.co.autoStoppingRule.setupAccess.customDomain.mappingSubHeader': string
   'ce.co.autoStoppingRule.setupAccess.customDomain.noHostedZones': string
   'ce.co.autoStoppingRule.setupAccess.customDomain.overrideCustomDomainsInfoText': string
+  'ce.co.autoStoppingRule.setupAccess.customExclusion.description': string
+  'ce.co.autoStoppingRule.setupAccess.customExclusion.exclude': string
+  'ce.co.autoStoppingRule.setupAccess.customExclusion.heading': string
+  'ce.co.autoStoppingRule.setupAccess.customExclusion.include': string
+  'ce.co.autoStoppingRule.setupAccess.customExclusion.option1Label': string
+  'ce.co.autoStoppingRule.setupAccess.customExclusion.option1Placeholder': string
+  'ce.co.autoStoppingRule.setupAccess.customExclusion.option2Label': string
+  'ce.co.autoStoppingRule.setupAccess.customExclusion.option2Placeholder': string
+  'ce.co.autoStoppingRule.setupAccess.customExclusion.option2ValuePlaceholder': string
+  'ce.co.autoStoppingRule.setupAccess.customExclusion.option3Label': string
+  'ce.co.autoStoppingRule.setupAccess.customExclusion.option3Placeholder': string
   'ce.co.autoStoppingRule.setupAccess.erroredAccessPointSelectionText': string
   'ce.co.autoStoppingRule.setupAccess.healthCheckStatusLabel': string
   'ce.co.autoStoppingRule.setupAccess.healthCheckTimeoutLabel': string
@@ -5327,6 +5338,12 @@ export interface StringsMap {
   'ce.co.resourcesManagedDescription.k8s': string
   'ce.co.resourcesManagedDescription.rds': string
   'ce.co.ruleDetails.costGraphHeader': string
+  'ce.co.ruleDetails.customTab.excludedHeaders': string
+  'ce.co.ruleDetails.customTab.excludedIp': string
+  'ce.co.ruleDetails.customTab.excludedPathHeader': string
+  'ce.co.ruleDetails.customTab.includedHeaders': string
+  'ce.co.ruleDetails.customTab.includedIp': string
+  'ce.co.ruleDetails.customTab.includedPathHeader': string
   'ce.co.ruleDetails.detailsTab.label.delayInSec': string
   'ce.co.ruleDetails.detailsTab.label.dependantRule': string
   'ce.co.ruleDetails.detailsTab.label.ecsClusterName': string
@@ -6504,16 +6521,16 @@ export interface StringsMap {
   'cf.testTheFlag.testFlagTargetHeading': string
   'cf.testTheFlag.verify': string
   'cf.testTheFlag.verifyText': string
-  'chaos.chaosDelegate': string
   'chaos.chaosGitops': string
   'chaos.chaosHub': string
+  'chaos.chaosInfrastructure': string
   'chaos.chaosScenario': string
   'chaos.homepage.chaosHomePageTitle': string
   'chaos.homepage.learnMore': string
   'chaos.homepage.slogan': string
-  'chaos.navLabels.chaosDelegates': string
+  'chaos.navLabels.chaosExperiments': string
   'chaos.navLabels.chaosHubs': string
-  'chaos.navLabels.chaosScenarios': string
+  'chaos.navLabels.chaosInfrastructures': string
   'ci.advancedLabel': string
   'ci.annotations': string
   'ci.artifactoryConnectorLabel': string
