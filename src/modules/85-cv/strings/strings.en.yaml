@@ -42,7 +42,6 @@ allMetrics: All Metrics
 selectNamespace: Select Namespace
 riskTimeline: Risk Timeline
 perHeatMapCell: per heat map cell
-allServices: All Services
 servicesAtRisk: Services at Risk
 searchForAService: Search for a service
 trafficSplit: Traffic Split Percentage (optional)

@@ -6738,7 +6738,6 @@ export interface StringsMap {
   'cv.adjustTheErrorBudgetToContinueWithDeployments': string
   'cv.admin.activitySources.dialogDeleteTitle': string
   'cv.allMetrics': string
-  'cv.allServices': string
   'cv.analysisScreens.totalClusters': string
   'cv.andYouHave': string
   'cv.anomalous': string
