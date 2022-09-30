@@ -61,7 +61,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
 
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
-  const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
+  const isElkEnabled = true || useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
 
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []

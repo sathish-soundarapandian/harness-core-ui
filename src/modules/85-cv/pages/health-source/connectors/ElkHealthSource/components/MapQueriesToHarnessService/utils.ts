@@ -9,7 +9,7 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import type { UseStringsReturn } from 'framework/strings'
 import { initialFormData, MapElkToServiceFieldNames } from './constants'
-import type { GetElkMappedMetricInterface, MapElkQueryToService } from './types'
+import type { GetElkMappedMetricInterface, MapElkQueryToService } from './ElkQueryBuilder.types'
 
 type UpdateSelectedQueriesMap = {
   updatedMetric: string

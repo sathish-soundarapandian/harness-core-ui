@@ -15,7 +15,7 @@ import { QueryViewer } from '@cv/components/QueryViewer/QueryViewer'
 import Card from '@cv/components/Card/Card'
 
 import { ElkMetricNameAndHostIdentifier } from '../../ElkMetricNameAndHostIdentifier'
-import type { MapQueriesToHarnessServiceLayoutProps } from './types'
+import type { MapQueriesToHarnessServiceLayoutProps } from './MapQueriesToHarnessServiceLayout.types'
 import css from './MapQueriesToHarnessServiceLayout.module.scss'
 
 export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarnessServiceLayoutProps): JSX.Element {

@@ -8,7 +8,10 @@
 import { isEmpty } from 'lodash-es'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { HealthSourceTypes } from '../../types'
-import type { ElkHealthSourcePayload, MapElkQueryToService } from './components/MapQueriesToHarnessService/types'
+import type {
+  ElkHealthSourcePayload,
+  MapElkQueryToService
+} from './components/MapQueriesToHarnessService/ElkQueryBuilder.types'
 import type { ElkHealthSourceInfo } from './ElkHealthSource.types'
 import { ElkProduct } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 

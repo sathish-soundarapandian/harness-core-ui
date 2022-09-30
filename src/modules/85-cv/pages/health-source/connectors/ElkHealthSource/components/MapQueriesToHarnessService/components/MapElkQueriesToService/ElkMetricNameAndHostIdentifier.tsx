@@ -14,7 +14,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { InputWithDynamicModalForJsonMultiType } from '@cv/components/InputWithDynamicModalForJson/InputWithDynamicModalForJsonMultiType'
 import { MapElkToServiceFieldNames } from '@cv/pages/health-source/connectors/ElkHealthSource/components/MapQueriesToHarnessService/constants'
 
-import type { MapElkQueriesToServiceProps } from './types'
+import type { MapElkQueriesToServiceProps } from './MapElkQueriesToService.types'
 import css from './ElkMetricNameAndHostIdentifier.module.scss'
 
 export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProps): JSX.Element {

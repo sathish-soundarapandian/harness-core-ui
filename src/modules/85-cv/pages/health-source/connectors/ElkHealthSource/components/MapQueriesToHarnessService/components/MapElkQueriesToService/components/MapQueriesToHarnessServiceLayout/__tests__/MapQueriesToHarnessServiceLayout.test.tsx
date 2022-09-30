@@ -12,7 +12,7 @@ import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockedElkIndicesData } from '@cv/pages/health-source/connectors/ElkHealthSource/__tests__/ElkHealthSource.mock'
 import MapQueriesToHarnessServiceLayout from '../MapQueriesToHarnessServiceLayout'
-import type { MapQueriesToHarnessServiceLayoutProps } from '../types'
+import type { MapQueriesToHarnessServiceLayoutProps } from '../MapQueriesToHarnessServiceLayout.types'
 import { mockedELKSampleData } from './MapQueriesToHarnessServiceLayout.mocks'
 
 const WrapperComponent = (props: MapQueriesToHarnessServiceLayoutProps): JSX.Element => {

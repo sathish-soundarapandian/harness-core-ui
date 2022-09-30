@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MapElkQueryToService } from './types'
+import type { MapElkQueryToService } from './ElkQueryBuilder.types'
 
 export const MapElkToServiceFieldNames = {
   METRIC_NAME: 'metricName',

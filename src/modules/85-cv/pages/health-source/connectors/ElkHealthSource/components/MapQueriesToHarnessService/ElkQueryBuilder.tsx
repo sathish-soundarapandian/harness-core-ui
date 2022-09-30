@@ -15,7 +15,7 @@ import { MultiItemsSideNav } from '@cv/components/MultiItemsSideNav/MultiItemsSi
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import { updateSelectedMetricsMap, validateMappings, getElkMappedMetric } from './utils'
 import MapQueriesToHarnessServiceLayout from './components/MapElkQueriesToService/components/MapQueriesToHarnessServiceLayout/MapQueriesToHarnessServiceLayout'
-import type { MapElkQueryToService, ElkQueryBuilderProps } from './types'
+import type { MapElkQueryToService, ElkQueryBuilderProps } from './ElkQueryBuilder.types'
 import css from './ElkQueryBuilder.module.scss'
 
 export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
