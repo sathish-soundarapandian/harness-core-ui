@@ -61,9 +61,9 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
       .then(response => {
         setElkSampleData(response.data ?? [])
       })
-      .catch(error => {
-        showError(error)
-        setError(error)
+      .catch(err => {
+        showError(err)
+        setError(err)
         setElkSampleData([])
       })
       .finally(() => {

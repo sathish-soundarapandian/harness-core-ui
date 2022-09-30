@@ -26,12 +26,12 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
     // no values
     expect(validateMappings(mockGetString as any, [], 0)).toEqual({
       query: MapElkToServiceFieldNames.QUERY,
-      serviceInstance: 'Service Instance is required field',
-      timeStampFormat: 'TimeStamp Format is required field',
+      serviceInstance: '',
+      timeStampFormat: '',
       metricName: '',
-      identify_timestamp: 'Identify TimeStamp is required field',
-      logIndexes: 'Log Index is required field',
-      messageIdentifier: 'Message Identifier is required field'
+      identify_timestamp: '',
+      logIndexes: '',
+      messageIdentifier: ''
     })
 
     // some values
@@ -61,11 +61,11 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
     ).toEqual({
       //serviceInstance: MapElkToServiceFieldNames.SERVICE_INSTANCE,
       metricName: '',
-      identify_timestamp: 'Identify TimeStamp is required field',
-      logIndexes: 'Log Index is required field',
-      messageIdentifier: 'Message Identifier is required field',
-      serviceInstance: 'Service Instance is required field',
-      timeStampFormat: 'TimeStamp Format is required field'
+      identify_timestamp: '',
+      logIndexes: '',
+      messageIdentifier: '',
+      serviceInstance: '',
+      timeStampFormat: ''
     })
   })
 

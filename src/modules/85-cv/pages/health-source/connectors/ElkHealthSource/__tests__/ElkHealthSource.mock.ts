@@ -46,7 +46,7 @@ export const data = {
   connectorRef: 'ddsfdsfdf',
   isEdit: true,
   type: 'Elk',
-  mappedServicesAndEnv: 'mappedserandenv',
+  mappedServicesAndEnvs: new Map(),
   healthSourceList: [
     {
       name: 'elk_hs3',
@@ -119,10 +119,7 @@ export const data = {
   healthSourceName: 'elk1',
   healthSourceIdentifier: 'elk1',
   sourceType: 'ELKLog',
-  product: {
-    label: 'ELK Logs',
-    value: 'ELK Logs'
-  }
+  product: 'ElkLogs'
 }
 export const setupSource = {
   accountId: 'kmpySmUISimoRrJL6NL73w',
