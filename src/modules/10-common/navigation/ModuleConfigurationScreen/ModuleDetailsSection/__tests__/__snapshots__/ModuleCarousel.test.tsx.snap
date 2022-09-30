@@ -64,11 +64,7 @@ exports[`Module Carousel test render without data 1`] = `
             <div
               class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center"
               style="height: 100%;"
-            >
-              <div>
-                Lottie
-              </div>
-            </div>
+            />
           </div>
         </div>
       </div>

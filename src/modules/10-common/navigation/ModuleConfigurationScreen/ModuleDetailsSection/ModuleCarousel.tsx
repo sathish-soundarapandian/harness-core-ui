@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Lottie from 'react-lottie-player'
 import { Icon } from '@harness/icons'
 import { Container, Layout, Text, FontVariation, Color, Carousel } from '@harness/uicore'
@@ -13,7 +13,6 @@ import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import { MassagedModuleData, ModuleContentType } from '../useGetContentfulModules'
 import CarouselImageAndDescription from '../CarousellmageAndDescription/CarousellmageAndDescription'
 import LottieRenderer from '../LottieRenderer/LottieRenderer'
-import defaultLottie from './default_lottie.json'
 import css from './ModuleCarousel.module.scss'
 
 export interface ModuleCarouselProps {
@@ -31,8 +30,15 @@ const getComponentBasedOnType = (type: ModuleContentType): React.ComponentType<a
 
 const ModuleCarousel: React.FC<ModuleCarouselProps> = ({ module: selectedModule, data: massagedModuleData }) => {
   const { icon } = useNavModuleInfo(selectedModule)
+  const [defaultLottie, setDefaultLottie] = useState<object | undefined>()
 
   const { label, data = [] } = massagedModuleData || {}
+
+  useEffect(() => {
+    import('./default_lottie.json').then(json => {
+      setDefaultLottie(json)
+    })
+  }, [])
 
   return (
     <Container className={css.container} height="100%">
@@ -59,7 +65,7 @@ const ModuleCarousel: React.FC<ModuleCarouselProps> = ({ module: selectedModule,
             })
           ) : (
             <Container flex={{ justifyContent: 'center' }} height="100%">
-              <Lottie animationData={defaultLottie} play />
+              {defaultLottie && <Lottie animationData={defaultLottie} play />}
             </Container>
           )}
         </Carousel>
