@@ -25,10 +25,29 @@
     &.spacedContainer {
       margin: 0 var(--spacing-large);
     }
+
+    .flexSpace1 {
+      flex: 1;
+    }
+    .flexSpace2 {
+      flex: 2;
+    }
   }
 
   .dataRowContainer {
     display: grid;
     grid-template-columns: 1fr repeat(2, 2fr);
+  }
+
+  .legendMarker {
+    width: 5px;
+    height: auto;
+    border-radius: 3px;
+  }
+
+  .efficiencyScoreContainer {
+    background: var(--orange-50);
+    padding: var(--spacing-small);
+    margin-top: var(--spacing-medium);
   }
 }

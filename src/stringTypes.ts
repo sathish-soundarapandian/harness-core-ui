@@ -5661,6 +5661,7 @@ export interface StringsMap {
   'ce.common.toggleLabel': string
   'ce.common.totalCount': string
   'ce.computeGroups.addNewClusterCtaText': string
+  'ce.computeGroups.efficiencyScore': string
   'ce.computeGroups.sideNavText': string
   'ce.computeGroups.table.headers.managedBy': string
   'ce.computeGroups.table.headers.memory': string

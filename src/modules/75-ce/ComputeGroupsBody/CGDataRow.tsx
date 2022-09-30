@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
+import { Color, Container, FontVariation, Layout, Text, Utils } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
 import CEChart from '@ce/components/CEChart/CEChart'
@@ -45,16 +45,16 @@ interface LegendsProps {
 
 const Legends: React.FC<LegendsProps> = ({ data }) => {
   return (
-    <Layout.Vertical spacing="small">
+    <Layout.Vertical spacing="medium">
       {data.map(item => {
         return (
           <Container key={item.text}>
-            <Layout.Horizontal>
-              <Layout.Horizontal>
-                <span></span>
-                <Text>{item.text}</Text>
+            <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
+              <Layout.Horizontal spacing="small">
+                <span className={css.legendMarker} style={{ backgroundColor: Utils.getRealCSSColor(item.color) }} />
+                <Text color={Color.GREY_800}>{item.text}</Text>
               </Layout.Horizontal>
-              <Text>{formatCost(item.amount, { decimalPoints: 2 })}</Text>
+              <Text color={Color.GREY_800}>{formatCost(item.amount, { decimalPoints: 2 })}</Text>
             </Layout.Horizontal>
           </Container>
         )
@@ -92,9 +92,11 @@ const CGDataRow: React.FC = () => {
         </Layout.Vertical>
       </Container>
       <Container className={cx(css.infoContainer, css.spacedContainer)}>
-        <Text margin={{ bottom: 'medium' }}>{getString('ce.overview.cardtitles.clusterBreakdown')}</Text>
-        <Layout.Horizontal flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-          <Layout.Horizontal flex>
+        <Text margin={{ bottom: 'medium' }} font={{ variation: FontVariation.H6 }}>
+          {getString('ce.overview.cardtitles.clusterBreakdown')}
+        </Text>
+        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+          <Layout.Horizontal flex className={css.flexSpace1}>
             <CEChart
               options={{
                 ...getRadialChartOptions(
@@ -116,10 +118,8 @@ const CGDataRow: React.FC = () => {
                   ['#D9DAE5', '#CDF4FE', '#3DC7F6', '#0092E4'],
                   {
                     chart: { height: 160, width: 160 }
-                    // plotOptions: {
-                    //   pie: { size: '180%' }
-                    // }
-                  }
+                  },
+                  '70%'
                 ),
                 title: {
                   text: '10',
@@ -130,13 +130,17 @@ const CGDataRow: React.FC = () => {
               }}
             />
           </Layout.Horizontal>
-          <Legends data={MOCK_NODES_DATA} />
+          <Container className={css.flexSpace2}>
+            <Legends data={MOCK_NODES_DATA} />
+          </Container>
         </Layout.Horizontal>
       </Container>
       <Container className={cx(css.infoContainer, css.spacedContainer)}>
-        <Text margin={{ bottom: 'medium' }}>{getString('ce.overview.cardtitles.clusterBreakdown')}</Text>
-        <Layout.Horizontal flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-          <Layout.Horizontal flex>
+        <Text margin={{ bottom: 'medium' }} font={{ variation: FontVariation.H6 }}>
+          {getString('ce.overview.cardtitles.clusterBreakdown')}
+        </Text>
+        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
+          <Layout.Horizontal flex className={css.flexSpace1}>
             <CEChart
               options={{
                 ...getRadialChartOptions(
@@ -158,13 +162,11 @@ const CGDataRow: React.FC = () => {
                   ['#D9DAE5', '#CDF4FE', '#3DC7F6', '#0092E4'],
                   {
                     chart: { height: 160, width: 160 }
-                    // plotOptions: {
-                    //   pie: { size: '180%' }
-                    // }
-                  }
+                  },
+                  '70%'
                 ),
                 title: {
-                  text: '10',
+                  text: `${formatCost(2354.12, { decimalPoints: 2 })}`,
                   align: 'center',
                   verticalAlign: 'middle',
                   style: { fontSize: '15px', fontWeight: '700' }
@@ -172,7 +174,13 @@ const CGDataRow: React.FC = () => {
               }}
             />
           </Layout.Horizontal>
-          <Legends data={MOCK_NODES_DATA} />
+          <Container className={css.flexSpace2}>
+            <Legends data={MOCK_NODES_DATA} />
+            <Layout.Horizontal className={css.efficiencyScoreContainer} flex={{ justifyContent: 'space-between' }}>
+              <Text>{getString('ce.computeGroups.efficiencyScore')}</Text>
+              <Text color={Color.ORANGE_900}>44</Text>
+            </Layout.Horizontal>
+          </Container>
         </Layout.Horizontal>
       </Container>
     </Container>

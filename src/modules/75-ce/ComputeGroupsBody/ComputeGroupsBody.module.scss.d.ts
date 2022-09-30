@@ -10,8 +10,12 @@ declare const styles: {
   readonly bodyWidgetsContainer: string
   readonly cgBodyContainer: string
   readonly dataRowContainer: string
+  readonly efficiencyScoreContainer: string
   readonly filterPanel: string
+  readonly flexSpace1: string
+  readonly flexSpace2: string
   readonly infoContainer: string
+  readonly legendMarker: string
   readonly spacedContainer: string
 }
 export default styles

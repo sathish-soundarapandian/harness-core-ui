@@ -1356,3 +1356,4 @@ computeGroups:
       memory: Memory(GIB)
       managedBy: Managed by
   totalNodes: Total Nodes
+  efficiencyScore: Efficiency score
