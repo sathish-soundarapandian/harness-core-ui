@@ -27,8 +27,9 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
   const { getString } = useStrings()
   const { showError } = useToaster()
   const values = formikProps?.values
+  const { serviceInstance, identifyTimestamp, messageIdentifier } = values || {}
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
-
+  const [error, setError] = useState(null)
   const queryParams = useMemo(
     () => ({
       accountId,
@@ -53,6 +54,7 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
 
   const fetchElkRecords = useCallback(async () => {
     setLoading(true)
+    setError(null)
     await getSampleData({
       query
     })
@@ -61,13 +63,14 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
       })
       .catch(error => {
         showError(error)
+        setError(error)
         setElkSampleData([])
       })
       .finally(() => {
         setLoading(false)
       })
     setIsQueryExecuted(true)
-  }, [getSampleData, query, showError])
+  }, [query])
   const postFetchingRecords = useCallback(() => {
     // resetting values of service once fetch records button is clicked.
     onChange(MapElkToServiceFieldNames.SERVICE_INSTANCE, '')
@@ -85,9 +88,9 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
               summary={getString('cv.monitoringSources.mapQueriesToServices')}
               details={
                 <ElkMetricNameAndHostIdentifier
-                  serviceInstance={values?.serviceInstance}
-                  identifyTimeStamp={values?.identifyTimestamp}
-                  messageIdentifier={values?.messageIdentifier}
+                  serviceInstance={serviceInstance}
+                  identifyTimeStamp={identifyTimestamp}
+                  messageIdentifier={messageIdentifier}
                   sampleRecord={elkSampleData?.[0] || null}
                   isQueryExecuted={isQueryExecuted}
                   onChange={onChange}
@@ -108,9 +111,9 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
               fetchRecords={fetchElkRecords}
               postFetchingRecords={postFetchingRecords}
               loading={loading}
-              error={null}
+              error={error}
               query={formikProps?.values?.logIndexes ? query : ''}
-              queryNotExecutedMessage="Submit query to see records from ELK"
+              queryNotExecutedMessage={getString('cv.monitoringSources.elk.submitElkQuery')}
               dataTooltipId={'elkQuery'}
               isTemplate={isTemplate}
               expressions={expressions}

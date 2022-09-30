@@ -43,7 +43,6 @@ export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       onSubmit={async updatedSource => {
-        /* istanbul ignore else */
         if (updatedSource) {
           mappedMetrics.set(selectedMetric, updatedSource)
         }
@@ -51,7 +50,6 @@ export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
         await onSubmit({ ...sourceData, mappedServicesAndEnvs: new Map(mappedMetrics) })
       }}
       formName="mapElk"
-      //defaultTo({ ...formikProps.values }, { metricName: updatedMetric }) as MapElkQueryToService
       initialValues={mappedMetrics.get(defaultTo(selectedMetric, ''))}
       key={rerenderKey}
       isInitialValid={(args: any) => {
@@ -92,7 +90,6 @@ export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
                       if (formikProps.values?.metricName !== removedMetric) {
                         updatedMap.set(
                           updatedMetric,
-                          //{ ...(formikProps.values as MapElkQueryToService) } || { metricName: updatedMetric }
                           defaultTo({ ...formikProps.values }, { metricName: updatedMetric }) as MapElkQueryToService
                           //return defaultTo(serviceRef?.current?.getErrors(), {})
                         )

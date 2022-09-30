@@ -10,13 +10,13 @@ import { useParams } from 'react-router-dom'
 import { omit } from 'lodash-es'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
+import type { SourceDataInterface, UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { ElkQueryBuilder } from './components/MapQueriesToHarnessService/ElkQueryBuilder'
 import { buildElkHealthSourceInfo, createElkHealthSourcePayload } from './ElkHealthSource.utils'
 import type { ElkHealthSourceInfo } from './ElkHealthSource.types'
 
 interface ElkMonitoringSourceProps {
-  data: any
+  data: ElkHealthSourceInfo
   onSubmit: (formdata: ElkHealthSourceInfo, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
   isTemplate?: boolean
   expressions?: string[]

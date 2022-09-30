@@ -7120,6 +7120,20 @@ export interface StringsMap {
   'cv.monitoringSources.datadogLogs.logIndexesLabel': string
   'cv.monitoringSources.datadogLogs.submitQueryToSeeRecords': string
   'cv.monitoringSources.elk.elkLogsQuery': string
+  'cv.monitoringSources.elk.identifyTimeStampValidation': string
+  'cv.monitoringSources.elk.identifyTimeStampinputLabel': string
+  'cv.monitoringSources.elk.identifyTimeStampnoRecordInputLabel': string
+  'cv.monitoringSources.elk.identifyTimeStampnoRecordModalHeader': string
+  'cv.monitoringSources.elk.identifyTimeStamprecordsModalHeader': string
+  'cv.monitoringSources.elk.logIndexValidation': string
+  'cv.monitoringSources.elk.logIndexesInputLabel': string
+  'cv.monitoringSources.elk.messageIdentifierValidation': string
+  'cv.monitoringSources.elk.selectLogIndex': string
+  'cv.monitoringSources.elk.selectTimeStampFormat': string
+  'cv.monitoringSources.elk.serviceInstanceValidation': string
+  'cv.monitoringSources.elk.submitElkQuery': string
+  'cv.monitoringSources.elk.timeStampFormatInputLabel': string
+  'cv.monitoringSources.elk.timestampFormatValidation': string
   'cv.monitoringSources.envValidation': string
   'cv.monitoringSources.gco.addManualInputQuery': string
   'cv.monitoringSources.gco.connectToMonitoringSource': string

@@ -10,6 +10,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { HealthSourceTypes } from '../../types'
 import type { ElkHealthSourcePayload, MapElkQueryToService } from './components/MapQueriesToHarnessService/types'
 import type { ElkHealthSourceInfo } from './ElkHealthSource.types'
+import { ElkProduct } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 
 export function createElkHealthSourcePayload(setupSource: ElkHealthSourceInfo): ElkHealthSourcePayload {
   const ElkHealthSourcePayload: ElkHealthSourcePayload = {
@@ -20,7 +21,7 @@ export function createElkHealthSourcePayload(setupSource: ElkHealthSourceInfo): 
       connectorRef: (typeof setupSource.connectorRef === 'string'
         ? setupSource.connectorRef
         : setupSource.connectorRef?.value) as string,
-      feature: 'ELK Logs',
+      feature: ElkProduct.ELK_LOGS,
       queries: []
     }
   }
@@ -49,13 +50,14 @@ export function createElkHealthSourcePayload(setupSource: ElkHealthSourceInfo): 
 }
 
 export function buildElkHealthSourceInfo(params: ProjectPathProps, data: any): ElkHealthSourceInfo & ProjectPathProps {
+  const { healthSourceName, healthSourceIdentifier, connectorRef, isEdit, product } = data || {}
   return {
     ...params,
-    name: data?.healthSourceName,
-    identifier: data?.healthSourceIdentifier,
-    connectorRef: data?.connectorRef,
-    isEdit: data?.isEdit,
-    product: data?.product?.value,
+    name: healthSourceName,
+    identifier: healthSourceIdentifier,
+    connectorRef: connectorRef,
+    isEdit: isEdit,
+    product: product?.value,
     type: HealthSourceTypes.Elk,
     mappedServicesAndEnvs: getMappedServicesAndEnvs(data)
   }

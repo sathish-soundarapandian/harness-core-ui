@@ -58,19 +58,19 @@ export function validateMappings(
       [MapElkToServiceFieldNames.QUERY]: getString('cv.monitoringSources.gco.manualInputQueryModal.validation.query')
     }),
     ...(!values?.logIndexes && {
-      [MapElkToServiceFieldNames.LOG_INDEXES]: 'Log Index is required field'
+      [MapElkToServiceFieldNames.LOG_INDEXES]: getString('cv.monitoringSources.elk.logIndexValidation')
     }),
     ...(!values?.serviceInstance && {
-      [MapElkToServiceFieldNames.SERVICE_INSTANCE]: 'Service Instance is required field'
+      [MapElkToServiceFieldNames.SERVICE_INSTANCE]: getString('cv.monitoringSources.elk.serviceInstanceValidation')
     }),
     ...(!values?.identify_timestamp && {
-      [MapElkToServiceFieldNames.IDENTIFY_TIMESTAMP]: 'Identify TimeStamp is required field'
+      [MapElkToServiceFieldNames.IDENTIFY_TIMESTAMP]: getString('cv.monitoringSources.elk.identifyTimeStampValidation')
     }),
     ...(!values?.timeStampFormat && {
-      [MapElkToServiceFieldNames.TIMESTAMP_FORMAT]: 'TimeStamp Format is required field'
+      [MapElkToServiceFieldNames.TIMESTAMP_FORMAT]: getString('cv.monitoringSources.elk.timestampFormatValidation')
     }),
     ...(!values?.messageIdentifier && {
-      [MapElkToServiceFieldNames.MESSAGE_IDENTIFIER]: 'Message Identifier is required field'
+      [MapElkToServiceFieldNames.MESSAGE_IDENTIFIER]: getString('cv.monitoringSources.elk.messageIdentifierValidation')
     })
   }
 
@@ -93,8 +93,7 @@ export function validateMappings(
 export const getElkMappedMetric = ({
   sourceData,
   isConnectorRuntimeOrExpression
-}: //getString
-GetElkMappedMetricInterface): {
+}: GetElkMappedMetricInterface): {
   selectedMetric: string
   mappedMetrics: Map<string, MapElkQueryToService>
 } => {

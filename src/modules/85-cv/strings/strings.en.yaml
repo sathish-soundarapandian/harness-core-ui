@@ -396,6 +396,25 @@ monitoringSources:
       recordCount: Current query yields too many records. Please change query to yield one record.
   elk:
     elkLogsQuery: ELK Logs Query
+    identifyTimeStampnoRecordModalHeader: "New TimeStamp Identifier"
+    identifyTimeStampnoRecordInputLabel: "Add TimeStamp Identifier"
+    identifyTimeStamprecordsModalHeader: "Select Path for TimeStamp"
+    identifyTimeStampinputLabel: "Identify TimeStamp"
+
+    timeStampFormatInputLabel: "TimeStamp Format"
+    selectTimeStampFormat: "Select TimeStamp Format"
+
+    logIndexesInputLabel: "Log Indexes"
+    selectLogIndex: "Select Log Index"
+
+    logIndexValidation: 'Log Index is required field'
+    serviceInstanceValidation: 'Service Instance is required field'
+    identifyTimeStampValidation: 'Identify TimeStamp is required field'
+    timestampFormatValidation: 'TimeStamp Format is required field'
+    messageIdentifierValidation: 'Message Identifier is required field'
+    submitElkQuery: 'Submit query to see records from ELK'
+
+
   splunk:
     splunkLogsQuery: SPLUNK Logs Query
     splunkMetric: Splunk Metrics

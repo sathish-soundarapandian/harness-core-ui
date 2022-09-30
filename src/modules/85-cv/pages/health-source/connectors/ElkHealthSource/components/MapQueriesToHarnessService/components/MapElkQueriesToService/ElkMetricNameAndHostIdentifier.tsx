@@ -66,9 +66,9 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
       />
 
       <FormInput.Select
-        label="Log Indexes"
+        label={getString('cv.monitoringSources.elk.logIndexesInputLabel')}
         name={MapElkToServiceFieldNames.LOG_INDEXES}
-        placeholder="Select Log Index"
+        placeholder={getString('cv.monitoringSources.elk.selectLogIndex')}
         items={getIndexItems}
         selectProps={{ allowCreatingNewItems: true }}
       />
@@ -109,16 +109,16 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
             ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
             : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
         }
-        inputLabel="Identify TimeStamp"
-        noRecordModalHeader="New TimeStamp Identifier"
-        noRecordInputLabel="Add TimeStamp Identifier"
-        recordsModalHeader="Select Path for TimeStamp"
+        inputLabel={getString('cv.monitoringSources.elk.identifyTimeStampinputLabel')}
+        noRecordModalHeader={getString('cv.monitoringSources.elk.identifyTimeStampnoRecordModalHeader')}
+        noRecordInputLabel={getString('cv.monitoringSources.elk.identifyTimeStampnoRecordInputLabel')}
+        recordsModalHeader={getString('cv.monitoringSources.elk.identifyTimeStamprecordsModalHeader')}
       />
 
       <FormInput.Select
-        label="TimeStamp Format"
+        label={getString('cv.monitoringSources.elk.timeStampFormatInputLabel')}
         name={MapElkToServiceFieldNames.TIMESTAMP_FORMAT}
-        placeholder="Select TimeStamp Format"
+        placeholder={getString('cv.monitoringSources.elk.selectTimeStampFormat')}
         items={getTimeFormatItems}
       />
 
@@ -137,10 +137,10 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
             ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
             : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
         }
-        inputLabel="Identify Message"
+        inputLabel={getString('cv.monitoringSources.gcoLogs.messageIdentifier')}
         noRecordModalHeader={getString('cv.monitoringSources.gcoLogs.newGCOLogsMessageIdentifier')}
         noRecordInputLabel={getString('cv.monitoringSources.gcoLogs.gcoLogsMessageIdentifer')}
-        recordsModalHeader="Select Path for Message"
+        recordsModalHeader={getString('cv.monitoringSources.gcoLogs.selectPathForMessageIdentifier')}
       />
     </Container>
   )
