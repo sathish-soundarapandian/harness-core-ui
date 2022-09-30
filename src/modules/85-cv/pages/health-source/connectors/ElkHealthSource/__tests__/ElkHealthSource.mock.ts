@@ -45,6 +45,8 @@ export const ElkPayload = {
 export const data = {
   connectorRef: 'ddsfdsfdf',
   isEdit: true,
+  type: 'Elk',
+  mappedServicesAndEnv: 'mappedserandenv',
   healthSourceList: [
     {
       name: 'elk_hs3',
