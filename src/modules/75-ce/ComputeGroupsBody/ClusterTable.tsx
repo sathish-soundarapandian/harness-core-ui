@@ -8,11 +8,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useMemo, useState } from 'react'
 import type { CellProps, Column } from 'react-table'
+import { useHistory, useParams } from 'react-router'
 import { Button, Color, Container, Popover, TableV2, Text } from '@harness/uicore'
 import { PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { TableCell } from '@ce/components/COGatewayConfig/steps/ManageResources/common'
 import formatCost from '@ce/utils/formatCost'
+import routes from '@common/RouteDefinitions'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 interface ClusterRow {
   name: string
@@ -85,6 +88,8 @@ const RowMenu = () => {
 
 const ClusterTable: React.FC = () => {
   const { getString } = useStrings()
+  const history = useHistory()
+  const { accountId } = useParams<AccountPathProps>()
   const columns: Column<ClusterRow>[] = useMemo(
     () => [
       {
@@ -153,7 +158,11 @@ const ClusterTable: React.FC = () => {
   )
   return (
     <Container>
-      <TableV2 columns={columns} data={data} />
+      <TableV2
+        columns={columns}
+        data={data}
+        onRowClick={({ id }) => history.push(routes.toClusterDetailsPage({ accountId, id }))}
+      />
     </Container>
   )
 }
