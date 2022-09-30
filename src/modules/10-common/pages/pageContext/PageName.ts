@@ -103,6 +103,7 @@ export enum PAGE_NAME {
   CECommitmentOrchestrationPage = 'CECommitmentOrchestrationPage',
   CEComputeGroupsPage = 'CEComputeGroupsPage',
   CEClusterDetailsPage = 'CEClusterDetailsPage',
+  CEComputeGroupsSetupPage = 'CEComputeGroupsSetupPage',
   CECODashboardPage = 'CECODashboardPage',
   CECORuleDetailsPage = 'CECORuleDetailsPage',
   CECOCreateGatewayPage = 'CECOCreateGatewayPage',

@@ -1743,6 +1743,7 @@ const routes = {
   toCommitmentOrchestrationSetup: withAccountId(() => `/ce/commitment-orchestration/setup`),
   toComputeGroups: withAccountId(() => `/ce/compute-groups`),
   toClusterDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}`),
+  toComputeGroupsSetup: withAccountId(() => `/ce/compute-groups/setup/steps`),
   toCECloudIntegration: withAccountId(() => `/ce/cloud-integrations/`),
   toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
