@@ -72,6 +72,7 @@ import ServiceDetailsPage from './pages/service-details/ServiceDetailsPage'
 import AnomaliesFilter from './components/AnomaliesFilter/AnomaliesFilter'
 import GatewayListFilters from './components/COGatewayList/GatewayListFilters'
 import ComputeGroups from './pages/ComputeGroups/ComputeGroups'
+import CGClusterDetailsPage from './pages/CGClusterDetailsPage/CGClusterDetailsPage'
 
 RbacFactory.registerResourceCategory(ResourceCategory.CLOUD_COSTS, {
   icon: 'ccm-solid',
@@ -842,6 +843,15 @@ const CERoutes: React.FC = () => {
           pageName={PAGE_NAME.CEComputeGroupsPage}
         >
           <ComputeGroups />
+        </RouteWithLayout>
+        <RouteWithLayout
+          licenseRedirectData={licenseRedirectData}
+          sidebarProps={CESideNavProps}
+          path={routes.toClusterDetailsPage({ ...accountPathProps, id: ':id' })}
+          exact
+          pageName={PAGE_NAME.CEClusterDetailsPage}
+        >
+          <CGClusterDetailsPage />
         </RouteWithLayout>
         <Route path="*">
           <NotFoundPage />

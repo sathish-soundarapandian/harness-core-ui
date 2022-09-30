@@ -1742,6 +1742,7 @@ const routes = {
   toCommitmentOrchestration: withAccountId(() => `/ce/commitment-orchestration`),
   toCommitmentOrchestrationSetup: withAccountId(() => `/ce/commitment-orchestration/setup`),
   toComputeGroups: withAccountId(() => `/ce/compute-groups`),
+  toClusterDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}`),
   toCECloudIntegration: withAccountId(() => `/ce/cloud-integrations/`),
   toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
