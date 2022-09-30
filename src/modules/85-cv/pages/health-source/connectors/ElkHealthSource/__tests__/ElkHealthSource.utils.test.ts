@@ -11,14 +11,21 @@ import {
   buildElkHealthSourceInfo,
   getMappedServicesAndEnvs
 } from '../ElkHealthSource.utils'
-import { setupSource, ElkPayload, data, params, setupSource_noData } from './ElkHealthSource.mock'
+import {
+  setupSource,
+  ElkPayload,
+  data,
+  params,
+  setupSource_noData,
+  setupSourcewithoutProduct
+} from './ElkHealthSource.mock'
 
 describe('Test Util functions', () => {
   test('Test CreateElkHealthSourcePayload', () => {
     expect(createElkHealthSourcePayload(setupSource)).toEqual(ElkPayload)
   })
   test('Test buildElkHealthSourceInfo', () => {
-    expect(buildElkHealthSourceInfo(params, data)).toEqual(setupSource)
+    expect(buildElkHealthSourceInfo(params, data)).toEqual(setupSourcewithoutProduct)
   })
   test('Test buildElkHealthSourceInfo with no data', () => {
     expect(buildElkHealthSourceInfo(params, null)).toEqual(setupSource_noData)

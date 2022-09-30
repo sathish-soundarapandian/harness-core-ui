@@ -136,6 +136,21 @@ export const setupSource = {
   timeStampFormat: undefined
 }
 
+export const setupSourcewithoutProduct = {
+  accountId: 'kmpySmUISimoRrJL6NL73w',
+  orgIdentifier: 'default',
+  projectIdentifier: 'Demo',
+  name: 'elk1',
+  connectorRef: 'ddsfdsfdf',
+  identifier: 'elk1',
+  isEdit: true,
+  product: undefined,
+  type: 'ELKLog' as any,
+  mappedServicesAndEnvs: getMappedServicesAndEnvs(data),
+  messageIdentifier: undefined,
+  timeStampFormat: undefined
+}
+
 export const setupSource_noData = {
   accountId: 'kmpySmUISimoRrJL6NL73w',
   orgIdentifier: 'default',
