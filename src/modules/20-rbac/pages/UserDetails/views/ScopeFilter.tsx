@@ -110,11 +110,18 @@ const ProjectMultiSelect: React.FC<ProjectMultiSelectProps> = ({ accountIdentifi
 interface OrgSelectProps {
   accountIdentifier: string
   orgFilter?: string
-  onChange: (opt: SelectOption) => void
+  onChange: (opt: SelectOption, orgQuery: string) => void
   onError?: (error?: any) => void
+  orgQueryFromQueryParams?: string
 }
-const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onChange, onError }) => {
-  const [orgQuery, setOrgQuery] = useState<string>('')
+const OrgSelect: React.FC<OrgSelectProps> = ({
+  accountIdentifier,
+  orgFilter,
+  onChange,
+  onError,
+  orgQueryFromQueryParams = ''
+}) => {
+  const [orgQuery, setOrgQuery] = useState<string>(orgQueryFromQueryParams)
   const [loadingOrgs, setLoadingOrgs] = useState<boolean>(false)
   const { getString } = useStrings()
 
@@ -155,7 +162,10 @@ const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onC
       onQueryChange={query => {
         setOrgQuery(query)
       }}
-      onChange={onChange}
+      onChange={item => {
+        // debugger
+        onChange(item, orgQuery)
+      }}
       query={orgQuery}
     />
   )
@@ -169,9 +179,15 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
-  const { scopeForFilterParams } = useQueryParams<ScopeFilterParams>()
-  const [accountFilter, setAccountFilter] = useState(defaultTo(scopeForFilterParams, getDefaultSelectedFilter(scope)))
-  const [orgFilter, setOrgFilter] = useState<string | undefined>(orgIdentifier)
+  const {
+    scopeForFilterParams,
+    selectedOrg: selectOrgfromQueryParams,
+    orgQuery: orgQueryFromQueryParams
+  } = useQueryParams<ScopeFilterParams>()
+  const [accountFilter, setAccountFilter] = useState(
+    defaultTo(scopeForFilterParams as ScopeFilterItems, getDefaultSelectedFilter(scope))
+  )
+  const [orgFilter, setOrgFilter] = useState<string | undefined>(defaultTo(selectOrgfromQueryParams, orgIdentifier))
   const [orgFetchError, setOrgFetchError] = useState<boolean>(false)
   const { updateQueryParams } = useUpdateQueryParams<ScopeFilterParams>()
 
@@ -181,6 +197,18 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
     })
     setOrgFetchError(false)
     setAccountFilter(newScope)
+  }
+
+  const handleOrgChange = (item: SelectOption, orgQuery: string) => {
+    // debugger
+    const selectedOrg = item.value.toString()
+    updateQueryParams({
+      selectedOrg,
+      orgQuery
+    })
+    setOrgFetchError(false)
+    setOrgFilter(selectedOrg)
+    setScopeFilters(getScopeFilter(accountFilter, selectedOrg))
   }
 
   const getScopeDropDownItems = (): SelectOption[] => {
@@ -397,11 +425,8 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
             <OrgSelect
               accountIdentifier={accountId}
               orgFilter={orgFilter}
-              onChange={item => {
-                setOrgFetchError(false)
-                setOrgFilter(item.value.toString())
-                setScopeFilters(getScopeFilter(accountFilter, item.value.toString()))
-              }}
+              onChange={handleOrgChange}
+              orgQueryFromQueryParams={orgQueryFromQueryParams}
               onError={onOrgFetchError}
             />
           )}

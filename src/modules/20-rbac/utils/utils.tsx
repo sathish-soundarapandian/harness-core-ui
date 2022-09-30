@@ -94,6 +94,8 @@ export enum ScopeFilterItems {
 
 export interface ScopeFilterParams {
   scopeForFilterParams?: string
+  selectedOrg?: string
+  orgQuery?: string
 }
 
 interface HandleInvitationResponse {
