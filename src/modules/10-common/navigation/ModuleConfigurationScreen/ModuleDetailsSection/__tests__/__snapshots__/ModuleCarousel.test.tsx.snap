@@ -59,7 +59,7 @@ exports[`Module Carousel test render without data 1`] = `
           class="Carousel--carouselView"
         >
           <div
-            class="Carousel--carouselItem Carousel--active"
+            class="Carousel--carouselItem Carousel--active carouselSlide"
           >
             <div
               class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center"
