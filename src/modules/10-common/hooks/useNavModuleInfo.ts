@@ -32,6 +32,7 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.CF,
   ModuleName.CE,
   ModuleName.CV,
+  ModuleName.SCM,
   ModuleName.STO,
   ModuleName.CHAOS
 ]
