@@ -187,7 +187,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
 
   /* Different ways to trigger filter search */
 
-  let firstRender = useRef(true)
+  const firstRender = useRef(true)
   /* Through page browsing */
   useEffect(() => {
     /* Initial page load */
