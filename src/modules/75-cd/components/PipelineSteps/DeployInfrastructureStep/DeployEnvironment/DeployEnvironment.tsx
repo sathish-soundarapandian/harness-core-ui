@@ -53,6 +53,7 @@ import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
 
@@ -91,6 +92,7 @@ function DeployEnvironment({
   const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.environment?.environmentRef)
   )
+  const isStageFormTemplate = path?.startsWith(TEMPLATE_INPUT_PATH)
 
   const {
     data: environmentsResponse,
@@ -403,7 +405,7 @@ function DeployEnvironment({
           <Spinner size={20} />
         </Container>
       )}
-      {!path && environmentRefType === MultiTypeInputType.FIXED && (
+      {isStageFormTemplate && environmentRefType === MultiTypeInputType.FIXED && (
         <RbacButton
           margin={{ top: 'xlarge' }}
           size={ButtonSize.SMALL}

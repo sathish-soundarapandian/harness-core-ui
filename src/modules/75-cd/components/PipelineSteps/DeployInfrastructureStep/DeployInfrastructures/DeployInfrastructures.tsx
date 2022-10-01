@@ -55,6 +55,7 @@ import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { isEditInfrastructure } from '../utils'
 
 import css from './DeployInfrastructures.module.scss'
@@ -81,6 +82,7 @@ function DeployInfrastructures({
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { expressions } = useVariablesExpression()
+  const isStageFormTemplate = path?.startsWith(TEMPLATE_INPUT_PATH)
 
   const environmentIdentifier = useMemo(() => {
     return defaultTo(environmentRef || /* istanbul ignore next */ formik?.values?.environment?.environmentRef, '')
@@ -374,7 +376,7 @@ function DeployInfrastructures({
           <Spinner size={20} />
         </Container>
       )}
-      {!path && infrastructureRefType === MultiTypeInputType.FIXED && (
+      {isStageFormTemplate && infrastructureRefType === MultiTypeInputType.FIXED && (
         <RbacButton
           margin={{ top: 'xlarge' }}
           size={ButtonSize.SMALL}

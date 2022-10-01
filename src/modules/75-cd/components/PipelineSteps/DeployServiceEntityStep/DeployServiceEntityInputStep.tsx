@@ -8,23 +8,33 @@
 import React, { useMemo } from 'react'
 import {
   AllowedTypes,
+  ButtonSize,
+  ButtonVariation,
+  Dialog,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
   RUNTIME_INPUT_VALUE,
-  SelectOption
+  SelectOption,
+  useToggleOpen
 } from '@harness/uicore'
-import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
-import { Spinner } from '@blueprintjs/core'
+import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
+import { IDialogProps, Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
+import produce from 'immer'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { ServiceDefinition, ServiceYamlV2 } from 'services/cd-ng'
+import type { ServiceDefinition, ServiceYaml, ServiceYamlV2 } from 'services/cd-ng'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
+import ServiceEntityEditModal from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
+import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import type { DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
 import { useGetServicesData } from './useGetServicesData'
@@ -41,6 +51,17 @@ export interface DeployServiceEntityInputStepProps extends DeployServiceEntityCu
   allowableTypes: AllowedTypes
 }
 
+const DIALOG_PROPS: Omit<IDialogProps, 'isOpen'> = {
+  usePortal: true,
+  autoFocus: true,
+  canEscapeKeyClose: false,
+  canOutsideClickClose: false,
+  enforceFocus: false,
+  className: css.editServiceDialog,
+  lazy: true,
+  style: { width: 1114 }
+}
+
 export function DeployServiceEntityInputStep({
   initialValues,
   inputSetData,
@@ -53,6 +74,7 @@ export function DeployServiceEntityInputStep({
   const { updateStageFormTemplate } = useStageFormContext()
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
   const formik = useFormikContext()
+  const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
   const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
 
   const serviceValue = get(initialValues, `service.serviceRef`)
@@ -71,7 +93,14 @@ export function DeployServiceEntityInputStep({
     return []
   }, [serviceValue, servicesValue])
   const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
-  const { servicesData, servicesList, loadingServicesData, loadingServicesList, updatingData } = useGetServicesData({
+  const {
+    servicesData,
+    servicesList,
+    loadingServicesData,
+    loadingServicesList,
+    updatingData,
+    prependServiceToServiceList
+  } = useGetServicesData({
     gitOpsEnabled,
     deploymentType: deploymentType as ServiceDefinition['type'],
     serviceIdentifiers
@@ -172,33 +201,83 @@ export function DeployServiceEntityInputStep({
 
     formik.setFieldValue(`${pathPrefix}values`, newValues)
   }
+  function onServiceEntityCreate(newServiceInfo: ServiceYaml): void {
+    closeAddNewModal()
+
+    // prepend the new service in the list
+    prependServiceToServiceList(newServiceInfo)
+
+    // add the new service to selection
+    if (formik) {
+      const { values, setValues } = formik
+      if (get(values, `${pathPrefix}services`, undefined)) {
+        setValues(
+          produce(values, (draft: any) => {
+            const services = get(draft, `${pathPrefix}services`, undefined)
+            if (Array.isArray(services)) {
+              set(draft, `${pathPrefix}services`, [
+                ...services,
+                { label: newServiceInfo.name, value: newServiceInfo.identifier }
+              ])
+            }
+          })
+        )
+      } else {
+        setValues(
+          produce(values, (draft: any) => {
+            set(draft, `${pathPrefix}serviceRef`, newServiceInfo.identifier)
+          })
+        )
+      }
+    }
+    /* istanbul ignore else */
+  }
 
   const loading = loadingServicesList || loadingServicesData || updatingData
 
   return (
     <>
-      <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
+      <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-start' }}>
         {getMultiTypeFromValue(serviceTemplate) === MultiTypeInputType.RUNTIME ? (
-          <ExperimentalInput
-            tooltipProps={{ dataTooltipId: 'specifyYourService' }}
-            label={getString('cd.pipelineSteps.serviceTab.specifyYourService')}
-            name={`${pathPrefix}serviceRef`}
-            placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
-            selectItems={selectOptions}
-            useValue
-            multiTypeInputProps={{
-              expressions,
-              allowableTypes: allowableTypes,
-              selectProps: {
-                addClearBtn: true && !inputSetData?.readonly,
-                items: selectOptions
-              },
-              onChange: onServiceRefChange
-            }}
-            disabled={inputSetData?.readonly}
-            className={css.inputWidth}
-            formik={formik}
-          />
+          <>
+            <ExperimentalInput
+              tooltipProps={{ dataTooltipId: 'specifyYourService' }}
+              label={getString('cd.pipelineSteps.serviceTab.specifyYourService')}
+              name={`${pathPrefix}serviceRef`}
+              placeholder={getString('cd.pipelineSteps.serviceTab.selectService')}
+              selectItems={selectOptions}
+              useValue
+              multiTypeInputProps={{
+                expressions,
+                allowableTypes: allowableTypes,
+                selectProps: {
+                  addClearBtn: true && !inputSetData?.readonly,
+                  items: selectOptions
+                },
+                onChange: onServiceRefChange
+              }}
+              disabled={inputSetData?.readonly}
+              className={css.inputWidth}
+              formik={formik}
+            />
+            {isStageTemplateInputSetForm && getMultiTypeFromValue(serviceValue) === MultiTypeInputType.FIXED && (
+              <RbacButton
+                size={ButtonSize.SMALL}
+                text={serviceValue ? getString('edit') : getString('cd.pipelineSteps.serviceTab.plusNewService')}
+                variation={ButtonVariation.LINK}
+                data-testid="add-new-service"
+                disabled={inputSetData?.readonly}
+                className={css.addNewService}
+                permission={{
+                  permission: PermissionIdentifier.EDIT_SERVICE,
+                  resource: {
+                    resourceType: ResourceType.SERVICE
+                  }
+                }}
+                onClick={openAddNewModal}
+              />
+            )}
+          </>
         ) : null}
         {isMultiSvcTemplate ? (
           <FormMultiTypeMultiSelectDropDown
@@ -220,6 +299,15 @@ export function DeployServiceEntityInputStep({
           />
         ) : null}
         {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}
+        <Dialog isOpen={isAddNewModalOpen} onClose={closeAddNewModal} title={getString('newService')} {...DIALOG_PROPS}>
+          <ServiceEntityEditModal
+            selectedDeploymentType={deploymentType as ServiceDeploymentType}
+            gitOpsEnabled={gitOpsEnabled}
+            onCloseModal={closeAddNewModal}
+            onServiceCreate={onServiceEntityCreate}
+            isServiceCreateModalView={true}
+          />
+        </Dialog>
       </Layout.Horizontal>
     </>
   )
