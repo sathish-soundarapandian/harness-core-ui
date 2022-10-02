@@ -22,6 +22,7 @@ import {
 } from '@wings-software/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { Menu, MenuItem, Classes, Position } from '@blueprintjs/core'
+import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { useDeleteDelegateGroupByIdentifier, DelegateGroupDetails } from 'services/portal'
 import routes from '@common/RouteDefinitions'
@@ -33,7 +34,6 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { TagsViewer } from '@common/components/TagsViewer/TagsViewer'
 import css from './DelegatesPage.module.scss'
-import moment from 'moment'
 
 type delTroubleshoterProps = {
   delegate: DelegateGroupDetails
