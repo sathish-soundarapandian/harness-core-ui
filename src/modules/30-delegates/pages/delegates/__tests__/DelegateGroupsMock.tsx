@@ -74,7 +74,7 @@ export const delegateGroupsMock: any[] = [
     },
     lastHeartBeat: 1662461017905,
     connectivityStatus: 'connected',
-    activelyConnected: false,
+    activelyConnected: true,
     grpcActive: false,
     delegateInstanceDetails: [
       {
@@ -89,7 +89,7 @@ export const delegateGroupsMock: any[] = [
     ],
     groupVersion: '1.0.76600',
     tokenActive: true,
-    autoUpgrade: 'ON',
+    autoUpgrade: 'OFF',
     delegateGroupExpirationTime: 0,
     upgraderLastUpdated: 0,
     immutable: false
@@ -120,10 +120,10 @@ export const delegateGroupsMock: any[] = [
     ],
     groupVersion: '1.0.76200',
     tokenActive: true,
-    autoUpgrade: 'OFF',
+    autoUpgrade: 'ON',
     delegateGroupExpirationTime: 0,
     upgraderLastUpdated: 0,
-    immutable: false
+    immutable: true
   }
 ]
 
