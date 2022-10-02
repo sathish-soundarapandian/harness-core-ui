@@ -43,7 +43,8 @@ type delTroubleshoterProps = {
 enum InstanceStatus {
   EXPIRED = 'Expired',
   EXPIRINGIN = 'Expiring',
-  LATEST = 'latest'
+  LATEST = 'latest',
+  UPGRADE_REQUIRED = 'Upgrade Required'
 }
 
 export const DelegateListingHeader = () => {
@@ -274,18 +275,20 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
     delegate?.delegateGroupExpirationTime !== undefined
       ? !delegate?.immutable
         ? InstanceStatus.LATEST
+        : delegate?.immutable && delegate?.groupVersion?.startsWith('1.0')
+        ? InstanceStatus.UPGRADE_REQUIRED
         : currentTime > delegate?.delegateGroupExpirationTime
         ? InstanceStatus.EXPIRED
         : InstanceStatus.EXPIRINGIN
       : null
 
-  const statusBackgroundColor = status === InstanceStatus.EXPIRED ? Color.RED_500 : ''
-  const [autoUpgradeColor, autoUpgradeText] =
-    delegate?.autoUpgrade === 'SYNCHRONIZING'
-      ? [Color.ORANGE_400, 'SYNCHRONIZING']
-      : delegate?.autoUpgrade === 'ON'
-      ? [Color.GREEN_600, 'AUTO UPGRADE: ON']
-      : [Color.GREY_300, 'AUTO UPGRADE: OFF']
+  const [autoUpgradeColor, autoUpgradeText] = !delegate.activelyConnected
+    ? []
+    : delegate?.autoUpgrade === 'SYNCHRONIZING'
+    ? [Color.ORANGE_400, 'SYNCHRONIZING']
+    : delegate?.autoUpgrade === 'ON'
+    ? [Color.GREEN_600, 'AUTO UPGRADE: ON']
+    : [Color.GREY_300, 'AUTO UPGRADE: OFF']
   const color: Color = isConnected ? Color.GREEN_600 : Color.GREY_400
   const allSelectors = Object.keys(delegate.groupImplicitSelectors || {}).concat(delegate.groupCustomSelectors || [])
   const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
@@ -368,15 +371,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
           <Layout.Horizontal width={columnWidths.instanceStatus} className={css.paddingLeft}>
             {
               <>
-                <Text
-                  background={statusBackgroundColor}
-                  color={status === InstanceStatus.EXPIRED ? Color.WHITE : ''}
-                  font={{
-                    size: status === InstanceStatus.EXPIRED ? 'small' : 'normal'
-                  }}
-                  className={css.statusText}
-                  lineClamp={1}
-                >
+                <Text className={css.statusText} lineClamp={1}>
                   {status}
                 </Text>
                 {status === InstanceStatus.LATEST ? (
@@ -449,14 +444,13 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
             /*istanbul ignore next */
             const instanceStatus = !delegate?.immutable
               ? InstanceStatus.LATEST
+              : delegate?.immutable && instanceDetails?.version?.startsWith('1.0')
+              ? InstanceStatus.UPGRADE_REQUIRED
               : instanceDetails?.delegateExpirationTime !== undefined
               ? currentTime > instanceDetails?.delegateExpirationTime
                 ? InstanceStatus.EXPIRED
                 : InstanceStatus.EXPIRINGIN
               : null
-
-            /*istanbul ignore next */
-            const instanceStatusBackgroundColor = instanceStatus === InstanceStatus.EXPIRED ? Color.RED_500 : ''
 
             /*istanbul ignore next */
             return (
@@ -477,15 +471,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                   <Layout.Horizontal width={columnWidths.instanceStatus} className={css.instanceStatus}>
                     {
                       <>
-                        <Text
-                          background={instanceStatusBackgroundColor}
-                          className={css.statusText}
-                          lineClamp={1}
-                          color={status === InstanceStatus.EXPIRED ? Color.WHITE : ''}
-                          font={{
-                            size: status === InstanceStatus.EXPIRED ? 'small' : 'normal'
-                          }}
-                        >
+                        <Text className={css.statusText} lineClamp={1}>
                           {instanceStatus}
                         </Text>
                         <div style={{ paddingTop: '2px' }}>
