@@ -223,7 +223,10 @@ function TemplateStepWidget(
         onSubmit={values => {
           onUpdate?.(values)
         }}
-        initialValues={defaultTo(formValues, { name: '', identifier: '' } as TemplateStepNode)}
+        initialValues={defaultTo(formValues, {
+          name: initialValues.name,
+          identifier: initialValues.identifier
+        } as TemplateStepNode)}
         formName="templateStepWidget"
         validationSchema={Yup.object().shape({
           name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),

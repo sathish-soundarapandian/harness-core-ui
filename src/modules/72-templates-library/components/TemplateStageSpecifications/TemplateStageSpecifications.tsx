@@ -14,7 +14,7 @@ import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
 import { produce } from 'immer'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { Error, StageElementConfig } from 'services/cd-ng'
+import type { Error } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { PageSpinner } from '@common/components'
@@ -38,7 +38,7 @@ import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/Tem
 import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
-import type { TemplateLinkConfig } from 'services/pipeline-ng'
+import type { StageElementConfig, TemplateLinkConfig } from 'services/pipeline-ng'
 import css from './TemplateStageSpecifications.module.scss'
 
 declare global {
