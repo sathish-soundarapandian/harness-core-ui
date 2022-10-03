@@ -64,6 +64,11 @@ jest.mock('services/cd-ng', () => ({
   useGetOrganizationList: jest.fn().mockImplementation(() => {
     return { ...orgMockData, refetch: jest.fn(), error: null }
   }),
+  getOrganizationListPromise: jest.fn().mockImplementation(() => {
+    return new Promise(resolve => {
+      resolve({ data: orgMockData.data.data, refetch: jest.fn(), error: null })
+    })
+  }),
   useGetProjectList: jest.fn().mockImplementation(() => {
     return { data: { data: { content: projectMockData } }, refetch: jest.fn(), error: null }
   })
@@ -110,37 +115,37 @@ describe('UserDetails Test', () => {
     })
     expect(getAllByText('all').length).toBe(2)
   })
-  test('Change Scope to Org', () => {
+  test('Change Scope to Org', async () => {
     const scopeDropDown = getByText(container, 'rbac.scopeItems.accountOnly')
-    act(() => {
+    await act(() => {
       fireEvent.click(scopeDropDown)
     })
     const popover = findPopoverContainer()
     expect(popover).toBeTruthy()
     const orgOnly = getByText(popover!, 'rbac.scopeItems.orgOnly')
-    act(() => {
+    await act(() => {
       fireEvent.click(orgOnly)
     })
     expect(getAllByText('default').length).toBe(1)
   })
-  test('Change Scope to Org With Projects', () => {
+  test('Change Scope to Org With Projects', async () => {
     const scopeDropDown = getByText(container, 'rbac.scopeItems.accountOnly')
-    act(() => {
+    await act(() => {
       fireEvent.click(scopeDropDown)
     })
     const popover = findPopoverContainer()
     expect(popover).toBeTruthy()
     const orgWithProjects = getByText(popover!, 'rbac.scopeItems.orgWithProjects')
-    act(() => {
+    await act(() => {
       fireEvent.click(orgWithProjects)
     })
     expect(getAllByText('default').length).toBe(1)
     const select = getByText(container, 'rbac.scopeItems.allProjects')
-    act(() => {
+    await act(() => {
       fireEvent.click(select)
     })
     const project1 = getByText(container, 'Project 1')
-    act(() => {
+    await act(() => {
       fireEvent.click(project1)
     })
   })
