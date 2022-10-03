@@ -242,6 +242,12 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
   const handleOnManualMetricDelete = (metricIdToBeDeleted: string): void => {
     updatedData.delete(metricIdToBeDeleted)
     setUpdatedData(new Map(updatedData))
+    if (!updatedData.size) {
+      setSelectedMetric('')
+      setShouldShowChart(false)
+      setError(undefined)
+      setSampleData(transformSampleDataIntoHighchartOptions([]))
+    }
   }
 
   return (
