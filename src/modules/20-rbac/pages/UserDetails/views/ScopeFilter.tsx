@@ -110,7 +110,7 @@ interface OrgSelectProps {
   accountIdentifier: string
   orgFilter?: string
   onChange: (opt: SelectOption) => void
-  onError?: (error?: Error) => void
+  onError?: (error?: any) => void
 }
 const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onChange, onError }) => {
   const [orgQuery, setOrgQuery] = useState<string>('')
@@ -141,6 +141,8 @@ const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onC
       if (!orgsList) {
         onError?.()
       }
+    } catch (error) {
+      onError?.(error)
     } finally {
       setLoadingOrgs(false)
     }
