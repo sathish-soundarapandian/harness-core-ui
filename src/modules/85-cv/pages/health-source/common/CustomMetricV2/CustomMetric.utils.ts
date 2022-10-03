@@ -306,6 +306,7 @@ export const updateFormikValuesForPayload = (customMetrics: CommonCustomMetricsT
       ...customMetric,
       groupName: (customMetric.groupName as SelectOption)?.value as string,
       analysis: getAnalysisForPayload(customMetric.analysis),
+      sli: { enabled: Boolean(customMetric?.sli?.enabled) },
       riskProfile: getRiskProfileForPayload(customMetric.analysis)
     }
   })

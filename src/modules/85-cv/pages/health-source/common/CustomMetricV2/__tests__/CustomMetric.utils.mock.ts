@@ -16,6 +16,19 @@ export const customMetricMock: CommonCustomMetricsType = {
   expression: 'SELECT AVG(CPUUtilization) FROM SCHEMA("AWS/EC2", InstanceId)'
 }
 
+export const customMetricMockForPayload = {
+  ...customMetricMock,
+  groupName: { label: 'g2', value: 'g2' }
+}
+
+export const customMetricMockWithoutSLI = {
+  identifier: 'id_123',
+  metricName: 'myMetric',
+  analysis: {},
+  groupName: { label: 'g2', value: 'g2' },
+  expression: 'SELECT AVG(CPUUtilization) FROM SCHEMA("AWS/EC2", InstanceId)'
+}
+
 export const customMetricMock2: CommonCustomMetricsType = {
   ...customMetricMock,
   metricName: '2 new',
@@ -152,3 +165,27 @@ export const analysisFormikMock = {
   lowerBaselineDeviation: false,
   riskProfile: {}
 }
+
+export const payloadMock = [
+  {
+    analysis: {},
+    expression: 'SELECT AVG(CPUUtilization) FROM SCHEMA("AWS/EC2", InstanceId)',
+    groupName: 'g2',
+    identifier: 'cwmetric4',
+    metricName: 'cw-metric-4',
+    riskProfile: {},
+    sli: { enabled: false }
+  }
+]
+
+export const payloadMock2 = [
+  {
+    analysis: {},
+    expression: 'SELECT AVG(CPUUtilization) FROM SCHEMA("AWS/EC2", InstanceId)',
+    groupName: 'g2',
+    identifier: 'id_123',
+    metricName: 'myMetric',
+    riskProfile: {},
+    sli: { enabled: false }
+  }
+]

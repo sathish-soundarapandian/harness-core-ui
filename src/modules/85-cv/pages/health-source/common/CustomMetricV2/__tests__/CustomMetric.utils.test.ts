@@ -18,6 +18,7 @@ import {
   isDuplicateMetricName,
   isRiskProfileAndCategoryPresent,
   isRiskProfileAndCategoryPresentForFormik,
+  updateFormikValuesForPayload,
   updateResponseForFormik
 } from '../CustomMetric.utils'
 import {
@@ -26,10 +27,14 @@ import {
   customMetricFormikUpdatedExpected,
   customMetricMock,
   customMetricMock2,
+  customMetricMockForPayload,
+  customMetricMockWithoutSLI,
   invalidCustomMetricMock,
   invalidCustomMetricMock2,
   metricPack,
-  metricPackResponse
+  metricPackResponse,
+  payloadMock,
+  payloadMock2
 } from './CustomMetric.utils.mock'
 
 describe('CustomMetric.utils', () => {
@@ -249,5 +254,17 @@ describe('CustomMetric.utils', () => {
     const result = getAnalysisForFormik({ a: 1 } as unknown as AnalysisDTO)
 
     expect(result).toEqual(analysisFormikMock)
+  })
+
+  test('updateFormikValuesForPayload should return correct result, if values are passed not empty', () => {
+    const result = updateFormikValuesForPayload([customMetricMockForPayload as CommonCustomMetricsType])
+
+    expect(result).toEqual(payloadMock)
+  })
+
+  test('updateFormikValuesForPayload should send SLI, even if it not selected', () => {
+    const result = updateFormikValuesForPayload([customMetricMockWithoutSLI as CommonCustomMetricsType])
+
+    expect(result).toEqual(payloadMock2)
   })
 })
