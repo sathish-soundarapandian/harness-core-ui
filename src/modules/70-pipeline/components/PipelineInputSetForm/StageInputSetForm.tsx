@@ -594,7 +594,15 @@ export function StageInputSetFormInternal({
   )
 
   const renderMultiTypeMapInputSet = React.useCallback(
-    ({ fieldName, stringKey }: { fieldName: string; stringKey: keyof StringsMap }): React.ReactElement => (
+    ({
+      fieldName,
+      stringKey,
+      hasValuesAsRuntimeInput
+    }: {
+      fieldName: string
+      stringKey: keyof StringsMap
+      hasValuesAsRuntimeInput: boolean
+    }): React.ReactElement => (
       <MultiTypeMapInputSet
         appearance={'minimal'}
         cardStyle={{ width: '50%' }}
@@ -611,6 +619,7 @@ export function StageInputSetFormInternal({
         }}
         disabled={readonly}
         formik={formik}
+        hasValuesAsRuntimeInput={hasValuesAsRuntimeInput}
       />
     ),
     []
@@ -1287,13 +1296,15 @@ export function StageInputSetFormInternal({
             {(deploymentStageTemplate.infrastructure as any)?.spec?.labels &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.labels`,
-                stringKey: 'ci.labels'
+                stringKey: 'ci.labels',
+                hasValuesAsRuntimeInput: true
               })}
 
             {(deploymentStageTemplate.infrastructure as any)?.spec?.annotations &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.annotations`,
-                stringKey: 'ci.annotations'
+                stringKey: 'ci.annotations',
+                hasValuesAsRuntimeInput: true
               })}
 
             {hasContainerSecurityContextFields && (
@@ -1382,7 +1393,8 @@ export function StageInputSetFormInternal({
             {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml)?.spec?.nodeSelector &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.nodeSelector`,
-                stringKey: 'pipeline.buildInfra.nodeSelector'
+                stringKey: 'pipeline.buildInfra.nodeSelector',
+                hasValuesAsRuntimeInput: true
               })}
             {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml)?.spec?.tolerations && (
               <Container data-name="100width" className={cx(stepCss.formGroup, stepCss.bottomMargin3)}>

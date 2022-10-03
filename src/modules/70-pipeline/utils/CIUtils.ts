@@ -87,6 +87,19 @@ export const getAllowedValuesFromTemplate = (template: Record<string, any>, fiel
   return items
 }
 
+export const getHasValuesAsRuntimeInputFromTemplate = ({
+  template,
+  templateFieldName
+}: {
+  template?: Record<string, any>
+  templateFieldName?: string
+}): boolean => {
+  if (!template || !templateFieldName) {
+    return false
+  }
+  return Object.values(get(template, templateFieldName, {})).includes(RUNTIME_INPUT_VALUE)
+}
+
 export const shouldRenderRunTimeInputView = (value: any): boolean => {
   if (!value) {
     return false
