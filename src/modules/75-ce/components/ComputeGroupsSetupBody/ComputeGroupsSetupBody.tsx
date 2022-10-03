@@ -7,16 +7,29 @@
 
 import React from 'react'
 import { Container, Tabs } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
+import ScaleAndLimitPoliciesTab from './ScaleAndLimitPoliciesTab'
 
 const ComputeGroupsSetupBody: React.FC = () => {
+  const { getString } = useStrings()
   return (
     <Container>
       <Tabs
         id={'horizontalTabs'}
-        defaultSelectedTabId={'tab1'}
+        defaultSelectedTabId={'tab2'}
         tabList={[
-          { id: 'tab1', title: 'Tab 1 title', panel: <div>Tab 1 content</div>, iconProps: { name: 'gear' } },
-          { id: 'tab2', title: 'Tab 2 title', panel: <div>Tab 2 content</div>, iconProps: { name: 'gear' } },
+          {
+            id: 'tab1',
+            title: getString('ce.computeGroups.setup.spotInstancesTab.title'),
+            panel: <div>Tab 1 content</div>,
+            iconProps: { name: 'gear' }
+          },
+          {
+            id: 'tab2',
+            title: getString('ce.computeGroups.setup.scalingLimitPoliciesTab.title'),
+            panel: <ScaleAndLimitPoliciesTab />,
+            iconProps: { name: 'gear' }
+          },
           {
             id: 'tab3',
             title: 'Tab 3 title',

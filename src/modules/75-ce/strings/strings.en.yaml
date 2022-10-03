@@ -30,6 +30,8 @@ common:
   serverName: 'Server name'
   pathMatch: 'Path match'
   cpu: '{{ $.delegate.delegateCPU }}'
+  gib: GIB
+  storage: Storage
 allRegions: 'All Regions'
 enforcementMessage:
   exceededSpendLimit: You have exceeded your cloud spend subscription limit. Consider increasing your limits to manage higher cloud spend.
@@ -1357,3 +1359,38 @@ computeGroups:
       managedBy: Managed by
   totalNodes: Total Nodes
   efficiencyScore: Efficiency score
+  setup:
+    spotInstancesTab:
+      title: '1. Spot Instances'
+    scalingLimitPoliciesTab:
+      title: '2. Scaling and Limit Policies'
+      unSchedPodsSection:
+        header: Unscheduled Pods Policy
+        subHeader: Automatically adjust the size of this cluster to ensure that all pods have a place to run.
+        clusterHeadroomTitle: Cluster headroom
+        clusterHeadroomSubtitle: These settings add a capacity buffer based on total avallable capacity. They are considered every time a node is added
+        spotNodeSettingsLabel: Spot node settings
+        onDemandFallbackTitle: 'On-demand Fallback'
+        retryTimeLabel: Retry time
+        nodeConstraintsTitle: Node constraints
+        nodeConstraintsSubtitle: Specify the smallest and the largest node to be added. All supported nodes within set boundaries will be considered.
+        minCpuLabel: Min CPU
+        minMemoryLabel: Min Memory
+        maxCpuLabel: Max CPU
+        rootVolRatioTitle: Root volumne ratio
+        rootVolRatioSubtitle: Set the number of GiBs to be added for every CPU on the node. The root volume will have a minimum of 100GIB and will he furthe Increased based on the CPU to storage ratio value
+      nodeDeletionPolicySection:
+        header: Node Deletion Policy
+        subHeader: Automatically remove nodes from this cluster when they no longer have scheduled workloads.
+        ttlSettingsTitle: TTL setting
+        ttleSettingsSubtitle: Set the amount of time an empty node should remain in the cluster.
+        emptyNodeAliveLabel: 'Keep empty node alive for:'
+        binPackingTitle: Bin packing
+        singleReplicaTitle: Single replica applications
+      cpuLimitPolicySection:
+        header: CPU Limit Policy
+        subHeader: Keep the cluster CPU resources within the defined limit. The cluster cannot be scaled un above the max or below the min limits
+        cpuRangeTitle: Set CPU range
+        cpuRangeSubtitle: The cluster will not scale down below the min limit and will not scale above the max even if there are pending pods.
+        minCoreLabel: Min cores
+        maxCoreLabel: Max cores

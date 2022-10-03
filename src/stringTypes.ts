@@ -5644,6 +5644,7 @@ export interface StringsMap {
   'ce.common.disabled': string
   'ce.common.emissionUnitHTML': string
   'ce.common.expand': string
+  'ce.common.gib': string
   'ce.common.hoverErrorHeader': string
   'ce.common.hoverWarningHeader': string
   'ce.common.interval': string
@@ -5656,12 +5657,42 @@ export interface StringsMap {
   'ce.common.rule': string
   'ce.common.serverName': string
   'ce.common.spendTillDate': string
+  'ce.common.storage': string
   'ce.common.targetPort': string
   'ce.common.targetProtocol': string
   'ce.common.toggleLabel': string
   'ce.common.totalCount': string
   'ce.computeGroups.addNewClusterCtaText': string
   'ce.computeGroups.efficiencyScore': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.cpuRangeSubtitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.cpuRangeTitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.header': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.maxCoreLabel': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.minCoreLabel': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.subHeader': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.binPackingTitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.emptyNodeAliveLabel': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.header': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.singleReplicaTitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.subHeader': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.ttlSettingsTitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.ttleSettingsSubtitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.title': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.clusterHeadroomSubtitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.clusterHeadroomTitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.header': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.maxCpuLabel': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.minCpuLabel': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.minMemoryLabel': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.nodeConstraintsSubtitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.nodeConstraintsTitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.onDemandFallbackTitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.retryTimeLabel': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.rootVolRatioSubtitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.rootVolRatioTitle': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.spotNodeSettingsLabel': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.subHeader': string
+  'ce.computeGroups.setup.spotInstancesTab.title': string
   'ce.computeGroups.sideNavText': string
   'ce.computeGroups.table.headers.managedBy': string
   'ce.computeGroups.table.headers.memory': string
