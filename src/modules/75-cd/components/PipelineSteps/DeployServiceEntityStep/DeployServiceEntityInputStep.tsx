@@ -92,6 +92,7 @@ export function DeployServiceEntityInputStep({
 
     return []
   }, [serviceValue, servicesValue])
+
   const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
   const {
     servicesData,
@@ -99,7 +100,9 @@ export function DeployServiceEntityInputStep({
     loadingServicesData,
     loadingServicesList,
     updatingData,
-    prependServiceToServiceList
+    prependServiceToServiceList,
+    refetchListData,
+    refetchServicesData
   } = useGetServicesData({
     gitOpsEnabled,
     deploymentType: deploymentType as ServiceDefinition['type'],
@@ -232,6 +235,11 @@ export function DeployServiceEntityInputStep({
     }
     /* istanbul ignore else */
   }
+  function handleServiceEntityUpdate(): void {
+    closeAddNewModal()
+    refetchServicesData()
+    refetchListData()
+  }
 
   const loading = loadingServicesList || loadingServicesData || updatingData
 
@@ -304,8 +312,9 @@ export function DeployServiceEntityInputStep({
             selectedDeploymentType={deploymentType as ServiceDeploymentType}
             gitOpsEnabled={gitOpsEnabled}
             onCloseModal={closeAddNewModal}
-            onServiceCreate={onServiceEntityCreate}
-            isServiceCreateModalView={true}
+            onServiceCreate={serviceValue ? handleServiceEntityUpdate : onServiceEntityCreate}
+            isServiceCreateModalView={serviceValue ? false : true}
+            serviceResponse={servicesData?.[0]?.service}
           />
         </Dialog>
       </Layout.Horizontal>
