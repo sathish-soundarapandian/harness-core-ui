@@ -40,6 +40,7 @@ import {
   SRMNavItem,
   STONavItem
 } from './ModuleLinks'
+import ModulesContainer from './ModulesContainer/ModulesContainer'
 import css from './MainNav.module.scss'
 
 const commonLinkProps: Partial<NavLinkProps> = {
@@ -47,9 +48,7 @@ const commonLinkProps: Partial<NavLinkProps> = {
   className: cx(css.navLink)
 }
 
-const MAX_NUM_OF_MODULES_TO_SHOW = 3
-
-const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
+export const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
   [ModuleName.CD]: DeploymentsNavItem,
   [ModuleName.CI]: BuildsNavItem,
   [ModuleName.CF]: FeatureFlagsNavItem,
@@ -70,9 +69,6 @@ export default function L1Nav(): React.ReactElement {
   const moduleMap = useNavModuleInfoMap()
   const { preference: modulesPreferenceData, setPreference: setModuleConfigPreference } =
     usePreferenceStore<ModulesPreferenceStoreData>(PreferenceScope.USER, MODULES_CONFIG_PREFERENCE_STORE_KEY)
-
-  const { selectedModules = [] } = modulesPreferenceData || {}
-  const modulesListHeight = 92 * Math.min(MAX_NUM_OF_MODULES_TO_SHOW, selectedModules.length)
 
   useLayoutEffect(() => {
     // main nav consists of two UL sections with classname "css.navList"
@@ -119,16 +115,9 @@ export default function L1Nav(): React.ReactElement {
             </Link>
           </li>
           {NEW_LEFT_NAVBAR_SETTINGS ? (
-            <div className={css.modulesContainer} style={{ height: modulesListHeight }}>
-              {(modulesPreferenceData?.orderedModules || []).map(moduleName => {
-                const NavItem = moduleToNavItemsMap[moduleName]
-                const moduleInfo = moduleMap[moduleName]
-
-                return selectedModules.indexOf(moduleName) > -1 && moduleInfo.shouldVisible ? (
-                  <NavItem key={moduleName} />
-                ) : null
-              })}
-            </div>
+            <li>
+              <ModulesContainer />
+            </li>
           ) : (
             DEFAULT_MODULES_ORDER.map(moduleName => {
               const NavItem = moduleToNavItemsMap[moduleName]
