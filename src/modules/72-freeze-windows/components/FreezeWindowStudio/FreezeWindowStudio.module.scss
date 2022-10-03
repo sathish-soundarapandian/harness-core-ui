@@ -47,6 +47,11 @@
 .stepTabs {
   height: 100%;
   width: 100%;
+  :global(.bp3-tabs) {
+    height: 100%;
+    overflow: auto;
+    padding-bottom: var(--spacing-10);
+  }
   :global(.bp3-tab-list) {
     border-bottom: 1px solid var(--grey-300);
     background-color: var(--white);
@@ -68,6 +73,11 @@
 .sectionCard {
   width: 1024px;
   margin-top: var(--spacing-3);
+  .separator {
+    width: 100%;
+    border: 0.5px solid var(--grey-200);
+    margin: var(--spacing-medium) 0 !important;
+  }
 }
 
 .configFormContainer {
@@ -76,4 +86,99 @@
   &.isEditView {
     background-color: var(--primary-1) !important;
   }
+}
+
+.tickButton {
+  background-color: var(--grey-0) !important;
+  border: 1px solid var(--primary-7) !important;
+  :global {
+    svg {
+      fill: var(--primary-7) !important;
+    }
+  }
+}
+
+.crossButton {
+  background-color: var(--grey-0) !important;
+  border: 1px solid var(--red-500) !important;
+  :global {
+    svg {
+      fill: var(--red-500) !important;
+    }
+  }
+}
+
+.addNewRuleButton {
+  margin-top: var(--spacing-large) !important;
+  margin-left: -20px !important; // padding left of Add Button
+}
+
+.freezeToggler {
+  span {
+    width: 30px;
+    height: 16px;
+    outline: none !important;
+  }
+}
+
+.freezeNameContainer {
+  .freezeName {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    color: var(--grey-700) !important;
+    line-height: 28px !important;
+    margin-right: var(--spacing-small);
+    text-overflow: ellipsis;
+    max-width: 240px;
+    overflow: hidden;
+  }
+}
+
+.marginRight {
+  margin-right: var(--spacing-11);
+}
+
+.subHeader {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.visualYamlToggle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.badge {
+  background-color: var(--primary-2);
+  border-radius: 4px;
+  color: var(--grey-1000);
+  font-size: var(--font-size-small);
+  font-weight: 400;
+  height: 24px;
+  line-height: 20px;
+  padding: 2px var(--spacing-3);
+  margin-left: var(--spacing-3);
+}
+
+.viewRowNode {
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  line-height: 18px;
+  margin-bottom: var(--spacing-4);
+  &.marginSmaller {
+    margin-bottom: var(--spacing-2);
+  }
+}
+
+.scheduleTabSaveBtnContainer {
+  margin-top: var(--spacing-5);
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
 }

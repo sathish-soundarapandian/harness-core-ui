@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { FormInput, MultiTypeInputType } from '@harness/uicore'
+import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
@@ -16,8 +16,11 @@ import type { GitConfigDTO } from 'services/cd-ng'
 import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled, shouldDisplayRepositoryName } from '../ManifestSourceUtils'
+import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const ManifestGitStoreRuntimeFields = ({
@@ -35,7 +38,8 @@ const ManifestGitStoreRuntimeFields = ({
   repoIdentifier,
   branch,
   formik,
-  stageIdentifier
+  stageIdentifier,
+  stepViewType
 }: ManifestSourceRenderProps): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -91,49 +95,105 @@ const ManifestGitStoreRuntimeFields = ({
           />
         </div>
       )}
+      <div className={css.inputFieldLayout}>
+        {isFieldRuntime(`${manifestPath}.spec.store.spec.repoName`, template) && showRepoName && (
+          <div className={css.verticalSpacingInput}>
+            <FormInput.MultiTextInput
+              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.repoName`)}
+              name={`${path}.${manifestPath}.spec.store.spec.repoName`}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={getString('common.repositoryName')}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.repoName`)) ===
+          MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            className={css.configureOptions}
+            style={{ alignSelf: 'center' }}
+            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.repoName`)}
+            type="String"
+            variableName="repoName"
+            showRequiredField={false}
+            showDefaultField={true}
+            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+            showAdvanced={true}
+            onChange={value => {
+              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.repoName`, value)
+            }}
+          />
+        )}
+      </div>
 
-      {isFieldRuntime(`${manifestPath}.spec.store.spec.repoName`, template) && showRepoName && (
-        <div className={css.verticalSpacingInput}>
-          <FormInput.MultiTextInput
-            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.repoName`)}
-            name={`${path}.${manifestPath}.spec.store.spec.repoName`}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
+      <div className={css.inputFieldLayout}>
+        {isFieldRuntime(`${manifestPath}.spec.store.spec.branch`, template) && (
+          <div className={css.verticalSpacingInput}>
+            <TextFieldInputSetView
+              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
+              name={`${path}.${manifestPath}.spec.store.spec.branch`}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={getString('pipelineSteps.deploy.inputSet.branch')}
+              fieldPath={`${manifestPath}.spec.store.spec.branch`}
+              template={template}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.branch`)) ===
+          MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            className={css.configureOptions}
+            style={{ alignSelf: 'center' }}
+            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.branch`)}
+            type="String"
+            variableName="branch"
+            showRequiredField={false}
+            showDefaultField={true}
+            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+            showAdvanced={true}
+            onChange={value => {
+              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.branch`, value)
             }}
-            label={getString('common.repositoryName')}
           />
-        </div>
-      )}
-
-      {isFieldRuntime(`${manifestPath}.spec.store.spec.branch`, template) && (
-        <div className={css.verticalSpacingInput}>
-          <TextFieldInputSetView
-            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
-            name={`${path}.${manifestPath}.spec.store.spec.branch`}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
+        )}
+      </div>
+      <div className={css.inputFieldLayout}>
+        {isFieldRuntime(`${manifestPath}.spec.store.spec.commitId`, template) && (
+          <div className={css.verticalSpacingInput}>
+            <FormInput.MultiTextInput
+              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.commitId`)}
+              name={`${path}.${manifestPath}.spec.store.spec.commitId`}
+              multiTextInputProps={{
+                expressions,
+                allowableTypes
+              }}
+              label={getString('pipelineSteps.commitIdValue')}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.store.spec.commitId`)) ===
+          MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            className={css.configureOptions}
+            style={{ alignSelf: 'center' }}
+            value={get(formik?.values, `${path}.${manifestPath}.spec.store.spec.commitId`)}
+            type="String"
+            variableName="commitId"
+            showRequiredField={false}
+            showDefaultField={true}
+            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+            showAdvanced={true}
+            onChange={value => {
+              formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.commitId`, value)
             }}
-            label={getString('pipelineSteps.deploy.inputSet.branch')}
-            fieldPath={`${manifestPath}.spec.store.spec.branch`}
-            template={template}
           />
-        </div>
-      )}
-      {isFieldRuntime(`${manifestPath}.spec.store.spec.commitId`, template) && (
-        <div className={css.verticalSpacingInput}>
-          <FormInput.MultiTextInput
-            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.commitId`)}
-            name={`${path}.${manifestPath}.spec.store.spec.commitId`}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            label={getString('pipelineSteps.commitIdValue')}
-          />
-        </div>
-      )}
+        )}
+      </div>
     </>
   )
 }

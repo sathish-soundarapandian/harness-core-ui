@@ -52,7 +52,6 @@ import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ServiceManifestOverride from '../ServiceOverrides/ServiceManifestOverride/ServiceManifestOverride'
 import ServiceConfigFileOverride from '../ServiceOverrides/ServiceConfigFileOverride/ServiceConfigFileOverride'
@@ -119,7 +118,6 @@ export default function EnvironmentConfiguration({
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
   const history = useHistory()
   const { expressions } = useVariablesExpression()
-  const { NG_SERVICE_MANIFEST_OVERRIDE, NG_SERVICE_CONFIG_FILES_OVERRIDE } = useFeatureFlags()
   const { variables, overrides } = formikProps.values
 
   const [canEdit] = usePermission({
@@ -322,60 +320,56 @@ export default function EnvironmentConfiguration({
                 }
                 details={
                   <Layout.Vertical spacing="medium" margin={{ bottom: 'small' }}>
-                    {NG_SERVICE_MANIFEST_OVERRIDE && (
-                      <Card
-                        className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
-                        id="manifests"
+                    <Card
+                      className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                      id="manifests"
+                    >
+                      <Text
+                        color={Color.GREY_700}
+                        font={{ weight: 'bold' }}
+                        margin={{ bottom: 'small' }}
+                        data-tooltip-id="manifestsOverride"
                       >
-                        <Text
-                          color={Color.GREY_700}
-                          font={{ weight: 'bold' }}
-                          margin={{ bottom: 'small' }}
-                          data-tooltip-id="manifestsOverride"
-                        >
-                          {getString('manifests')}
-                          <HarnessDocTooltip useStandAlone={true} tooltipId="manifestsOverride" />
-                        </Text>
-                        <ServiceManifestOverride
-                          manifestOverrides={defaultTo(formikProps.values.overrides?.manifests, [])}
-                          handleManifestOverrideSubmit={(manifestObj, index) =>
-                            handleOverrideSubmit(manifestObj, index, 'manifests')
-                          }
-                          removeManifestConfig={index => removeOverrideConfig(index, 'manifests')}
-                          isReadonly={!canEdit}
-                          fromEnvConfigPage
-                          expressions={expressions}
-                          allowableTypes={allowableTypes}
-                        />
-                      </Card>
-                    )}
-                    {NG_SERVICE_CONFIG_FILES_OVERRIDE && (
-                      <Card
-                        className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
-                        id="configFiles"
+                        {getString('manifests')}
+                        <HarnessDocTooltip useStandAlone={true} tooltipId="manifestsOverride" />
+                      </Text>
+                      <ServiceManifestOverride
+                        manifestOverrides={defaultTo(formikProps.values.overrides?.manifests, [])}
+                        handleManifestOverrideSubmit={(manifestObj, index) =>
+                          handleOverrideSubmit(manifestObj, index, 'manifests')
+                        }
+                        removeManifestConfig={index => removeOverrideConfig(index, 'manifests')}
+                        isReadonly={!canEdit}
+                        fromEnvConfigPage
+                        expressions={expressions}
+                        allowableTypes={allowableTypes}
+                      />
+                    </Card>
+                    <Card
+                      className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                      id="configFiles"
+                    >
+                      <Text
+                        color={Color.GREY_700}
+                        font={{ weight: 'bold' }}
+                        margin={{ bottom: 'small' }}
+                        data-tooltip-id="filesOverride"
                       >
-                        <Text
-                          color={Color.GREY_700}
-                          font={{ weight: 'bold' }}
-                          margin={{ bottom: 'small' }}
-                          data-tooltip-id="filesOverride"
-                        >
-                          {getString('pipelineSteps.configFiles')}
-                          <HarnessDocTooltip useStandAlone={true} tooltipId="filesOverride" />
-                        </Text>
-                        <ServiceConfigFileOverride
-                          fileOverrides={defaultTo(formikProps.values.overrides?.configFiles, [])}
-                          allowableTypes={allowableTypes}
-                          handleConfigFileOverrideSubmit={(filesObj, index) =>
-                            handleOverrideSubmit(filesObj, index, 'configFiles')
-                          }
-                          handleServiceFileDelete={index => removeOverrideConfig(index, 'configFiles')}
-                          isReadonly={!canEdit}
-                          expressions={expressions}
-                          fromEnvConfigPage
-                        />
-                      </Card>
-                    )}
+                        {getString('pipelineSteps.configFiles')}
+                        <HarnessDocTooltip useStandAlone={true} tooltipId="filesOverride" />
+                      </Text>
+                      <ServiceConfigFileOverride
+                        fileOverrides={defaultTo(formikProps.values.overrides?.configFiles, [])}
+                        allowableTypes={allowableTypes}
+                        handleConfigFileOverrideSubmit={(filesObj, index) =>
+                          handleOverrideSubmit(filesObj, index, 'configFiles')
+                        }
+                        handleServiceFileDelete={index => removeOverrideConfig(index, 'configFiles')}
+                        isReadonly={!canEdit}
+                        expressions={expressions}
+                        fromEnvConfigPage
+                      />
+                    </Card>
                     <Card
                       className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
                       id="variables"

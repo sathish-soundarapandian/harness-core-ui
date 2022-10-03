@@ -16,9 +16,9 @@ import {
   ButtonVariation,
   PageHeader,
   VisualYamlSelectedView as SelectedView,
-  VisualYamlToggle,
   useConfirmationDialog,
-  useToaster
+  useToaster,
+  VisualYamlToggle
 } from '@wings-software/uicore'
 
 import {
@@ -41,12 +41,13 @@ import type { SecretIdentifiers } from '@secrets/components/CreateUpdateSecret/C
 import type { ModulePathParams, ProjectPathProps, SecretsPathProps } from '@common/interfaces/RouteInterfaces'
 import { getSnippetTags } from '@common/utils/SnippetUtils'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import RbacButton from '@rbac/components/Button/Button'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import ViewSecretDetails from './views/ViewSecretDetails'
+
 import './SecretDetails.module.scss'
 
 interface SecretDetailsProps {
@@ -296,36 +297,38 @@ const SecretDetails: React.FC<SecretDetailsProps> = props => {
     <>
       <PageHeader size="standard" title={getString('overview')} />
       <Container padding={{ top: 'large', left: 'huge', right: 'huge' }}>
-        <Container padding={{ bottom: 'large' }}>
-          {edit ? null : (
-            <Layout.Horizontal flex>
-              <VisualYamlToggle
-                selectedView={mode}
-                onChange={nextMode => {
-                  setMode(nextMode)
-                }}
-              />
-              <RbacButton
-                text={getString('editDetails')}
-                icon="edit"
-                onClick={handleEdit}
-                permission={{
-                  permission: PermissionIdentifier.UPDATE_SECRET,
-                  resource: {
-                    resourceType: ResourceType.SECRET,
-                    resourceIdentifier: secretData.secret.identifier
-                  }
-                }}
-                variation={ButtonVariation.PRIMARY}
-              />
-            </Layout.Horizontal>
-          )}
-        </Container>
         {mode === SelectedView.YAML ? (
-          <YAMLSecretDetails refetch={props.refetch} secretData={secretData} edit={edit} setEdit={setEdit} />
+          <>
+            <Container padding={{ bottom: 'large' }}>
+              {edit ? null : (
+                <Layout.Horizontal flex>
+                  <VisualYamlToggle
+                    selectedView={mode}
+                    onChange={nextMode => {
+                      setMode(nextMode)
+                    }}
+                  />
+                  <RbacButton
+                    text={getString('editDetails')}
+                    icon="edit"
+                    onClick={handleEdit}
+                    permission={{
+                      permission: PermissionIdentifier.UPDATE_SECRET,
+                      resource: {
+                        resourceType: ResourceType.SECRET,
+                        resourceIdentifier: secretData.secret.identifier
+                      }
+                    }}
+                    variation={ButtonVariation.PRIMARY}
+                  />
+                </Layout.Horizontal>
+              )}
+            </Container>
+            <YAMLSecretDetails refetch={props.refetch} secretData={secretData} edit={edit} setEdit={setEdit} />
+          </>
         ) : (
           //View in Visual Mode
-          <ViewSecretDetails secret={secretData} />
+          <ViewSecretDetails edit={edit} mode={mode} setMode={setMode} handleEdit={handleEdit} secret={secretData} />
         )}
       </Container>
     </>

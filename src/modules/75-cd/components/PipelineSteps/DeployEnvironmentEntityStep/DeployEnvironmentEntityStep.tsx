@@ -11,32 +11,38 @@ import type { IconName } from '@harness/uicore'
 
 import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
-import type { CustomStepProps } from '../DeployInfrastructureStep/utils'
-import DeployEnvironmentEntityWidget from './DeployEnvironmentEntityWidget'
 
-export class DeployEnvironmentEntityStep extends Step<DeployStageConfig> {
-  protected stepPaletteVisible = false
+import DeployEnvironmentEntityWidget from './DeployEnvironmentEntityWidget'
+import {
+  DeployEnvironmentEntityConfig,
+  DeployEnvironmentEntityCustomStepProps,
+  processFormValues,
+  processInitialValues
+} from './utils'
+
+export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityConfig> {
   protected type = StepType.DeployEnvironmentEntity
+  protected stepPaletteVisible = false
   protected stepName = 'Deploy Environment Entity'
   protected stepIcon: IconName = 'main-environments'
 
-  protected defaultValues: DeployStageConfig = {} as DeployStageConfig
+  protected defaultValues: DeployEnvironmentEntityConfig = {}
 
   constructor() {
     super()
   }
 
-  renderStep(props: StepProps<DeployStageConfig>): JSX.Element {
-    const { initialValues, onUpdate, readonly = false, allowableTypes, customStepProps } = props
+  renderStep(props: StepProps<DeployEnvironmentEntityConfig>): JSX.Element {
+    const { initialValues, readonly = false, allowableTypes, onUpdate, stepViewType, customStepProps } = props
 
     return (
       <DeployEnvironmentEntityWidget
-        initialValues={initialValues}
+        initialValues={processInitialValues(initialValues)}
         readonly={readonly}
-        onUpdate={onUpdate}
         allowableTypes={allowableTypes}
-        serviceRef={(customStepProps as CustomStepProps).serviceRef}
+        onUpdate={values => onUpdate?.(processFormValues(values, initialValues))}
+        stepViewType={stepViewType}
+        {...(customStepProps as DeployEnvironmentEntityCustomStepProps)}
       />
     )
   }

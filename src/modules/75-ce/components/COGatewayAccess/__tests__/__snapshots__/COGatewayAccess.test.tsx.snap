@@ -998,6 +998,48 @@ exports[`Testing COGatewayAccess DNS checkbox checks succesfully 1`] = `
                           </div>
                         </div>
                       </div>
+                      <div
+                        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main dnsLinkContainer customExclusion"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+                        >
+                          ce.co.autoStoppingRule.setupAccess.customExclusion.heading
+                        </p>
+                        <p>
+                          ce.co.autoStoppingRule.setupAccess.customExclusion.description
+                        </p>
+                        <div
+                          class="PillToggle--optionBtns toggle"
+                        >
+                          <div
+                            class="PillToggle--item PillToggle--selected"
+                            data-name="toggle-option-one"
+                            role="button"
+                            tabindex="0"
+                          >
+                            CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.EXCLUDE
+                          </div>
+                          <div
+                            class="PillToggle--item"
+                            data-name="toggle-option-two"
+                            role="button"
+                            tabindex="0"
+                          >
+                            CE.CO.AUTOSTOPPINGRULE.SETUPACCESS.CUSTOMEXCLUSION.INCLUDE
+                          </div>
+                        </div>
+                        <div
+                          class="StyledProps--font StyledProps--main"
+                          data-testid="customItemsContainer"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main addBtn StyledProps--color StyledProps--color-primary7"
+                          >
+                            + add
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </form>

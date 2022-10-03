@@ -17,9 +17,9 @@ import {
   MultiTypeInputType,
   Text,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
@@ -188,7 +188,7 @@ function HelmWithOCI({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: HelmWithOCIDataType }) => (
-          <Form>
+          <FormikForm>
             <div className={helmcss.helmGitForm}>
               <Layout.Horizontal flex spacing="huge">
                 <div className={helmcss.halfWidth}>
@@ -345,7 +345,7 @@ function HelmWithOCI({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

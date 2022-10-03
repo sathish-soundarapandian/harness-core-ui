@@ -31,7 +31,7 @@ exports[`Create WinRm Cred Wizard should render form 1`] = `
       <span
         class="StepWizard--title StepWizard--header"
       >
-        secrets.secret.winrmCredential
+        secrets.typeWinRM
       </span>
       <div
         class="StepWizard--navStep StepWizard--activeStep"
@@ -359,7 +359,7 @@ exports[`Create WinRm Cred Wizard should render form 2`] = `
       <span
         class="StepWizard--title StepWizard--header"
       >
-        secrets.secret.winrmCredential
+        secrets.typeWinRM
       </span>
       <div
         class="StepWizard--navStep StepWizard--completedStep"
@@ -875,7 +875,7 @@ exports[`Create WinRm Cred Wizard should render form 3`] = `
       <span
         class="StepWizard--title StepWizard--header"
       >
-        secrets.secret.winrmCredential
+        secrets.typeWinRM
       </span>
       <div
         class="StepWizard--navStep StepWizard--completedStep"

@@ -35,7 +35,7 @@ export const useGetManagementGroups = (error = false, loading = false) =>
   jest.spyOn(cdServices, 'useGetManagementGroups').mockReturnValue({
     loading,
     error: error && { message: 'useGetManagementGroups error' },
-    data: !error && { data: { managementGroups: [{ displayName: 'Easy name', id: 'abc-456' }] } },
+    data: !error && { data: { managementGroups: [{ displayName: 'Easy name', name: 'abc-456' }] } },
     refetch: jest.fn()
   } as any)
 

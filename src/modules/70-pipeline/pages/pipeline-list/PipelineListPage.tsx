@@ -283,7 +283,7 @@ export function PipelineListPage(): React.ReactElement {
                 onClick={() => fetchPipelines()}
                 minimal
                 tooltipProps={{ isDark: true }}
-                tooltip="refresh"
+                tooltip={getString('common.refresh')}
               />
             </div>
             <PipelineListTable

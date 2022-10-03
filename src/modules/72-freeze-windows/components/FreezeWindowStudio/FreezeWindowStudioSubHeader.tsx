@@ -9,9 +9,12 @@ import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Dialog } from '@blueprintjs/core'
 import {
+  Button,
+  ButtonVariation,
   Container,
   Layout,
   Text,
+  Toggle,
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle
 } from '@wings-software/uicore'
@@ -19,89 +22,102 @@ import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import { DefaultFreezeId } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowReducer'
+import type { WindowPathProps } from '@freeze-windows/types'
 import { FreezeWindowStudioSubHeaderRightView } from './FreezeWindowStudioSubHeaderRightView'
 import { CreateNewFreezeWindow } from './CreateNewFreezeWindow'
-
-interface WindowPathProps {
-  freezeIdentifier: string
-}
+import css from './FreezeWindowStudio.module.scss'
 
 interface FreezeWindowStudioSubHeaderProps {
   onViewChange(newView: SelectedView): boolean
 }
 
 export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderProps> = ({ onViewChange }) => {
-  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<
-    ProjectPathProps & ModulePathParams & WindowPathProps
+  const { accountId, projectIdentifier, orgIdentifier, module, windowIdentifier } = useParams<
+    ModulePathParams & WindowPathProps
   >()
   const { getString } = useStrings()
   const {
     state: { freezeObj },
-    updateFreeze
+    updateFreeze,
+    isReadonly
   } = React.useContext(FreezeWindowContext)
-  const freezeIdentifier = freezeObj.identifier
   const history = useHistory()
   const { view } = React.useContext(FreezeWindowContext)
   const isYaml = view === SelectedView.YAML
   const isVisualViewDisabled = false
-  const navigateToFreezeWindlows = React.useCallback(() => {
+  const navigateToFreezeWindows = React.useCallback(() => {
     history.push(routes.toFreezeWindows({ orgIdentifier, projectIdentifier, accountId, module }))
   }, [history, routes.toFreezeWindows, orgIdentifier, projectIdentifier, accountId, module])
 
   const [showConfigModal, hideConfigModal] = useModalHook(() => {
-    const onCloseCreate = (identifier = freezeIdentifier) => {
+    const onCloseCreate = (identifier = freezeObj.identifier) => {
       if (identifier === DefaultFreezeId) {
-        navigateToFreezeWindlows()
+        navigateToFreezeWindows()
       }
 
       hideConfigModal()
     }
 
-    // const onClose = React.useCallback(() => onCloseCreate(), [])
-
     return (
       <Dialog
         enforceFocus={false}
         isOpen={true}
-        // className={classNames(css.createTemplateDialog, {
-        //   [css.gitCreateTemplateDialog]: supportingTemplatesGitx
-        // })}
         onClose={() => onCloseCreate()}
         title={
           <Container padding={{ left: 'xlarge', top: 'xlarge' }}>
             <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_800}>
-              {getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
+              {freezeObj.identifier === DefaultFreezeId
+                ? getString('freezeWindows.freezeWindowsPage.newFreezeWindow')
+                : getString('freezeWindows.freezeWindowsPage.editFreezeWindow')}
             </Text>
           </Container>
         }
       >
-        <CreateNewFreezeWindow onClose={onCloseCreate} updateFreeze={updateFreeze} />
+        <CreateNewFreezeWindow onClose={onCloseCreate} updateFreeze={updateFreeze} freezeObj={freezeObj} />
       </Dialog>
     )
-  }, [freezeIdentifier])
+  }, [windowIdentifier, freezeObj.name, freezeObj.identifier])
 
   React.useEffect(() => {
-    if (freezeIdentifier === DefaultFreezeId) {
+    if (windowIdentifier === DefaultFreezeId) {
       hideConfigModal()
       showConfigModal()
     }
-  }, [freezeIdentifier, showConfigModal]) // freezeIdentifier
+  }, [windowIdentifier, showConfigModal])
 
   return (
     <Container
+      className={css.subHeader}
       height={49}
       padding={{ right: 'xlarge', left: 'xlarge' }}
       border={{ bottom: true, color: Color.GREY_200 }}
       background={Color.WHITE}
     >
       <Layout.Horizontal height={'100%'} flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>1</div>
+        <Layout.Horizontal className={css.freezeNameContainer} flex={{ alignItems: 'center' }}>
+          {isYaml || isReadonly ? null : (
+            <Toggle
+              className={css.freezeToggler}
+              checked={freezeObj?.status === 'Enabled'}
+              onToggle={checked => {
+                updateFreeze({ status: checked ? 'Enabled' : 'Disabled' })
+              }}
+            />
+          )}
+
+          <Text lineClamp={1} className={css.freezeName}>
+            {freezeObj.name as string}
+          </Text>
+          {isYaml || isReadonly ? null : (
+            <Button variation={ButtonVariation.ICON} icon="Edit" onClick={showConfigModal} />
+          )}
+        </Layout.Horizontal>
         <Container>
           <VisualYamlToggle
-            // className={css.visualYamlToggle}
+            className={css.visualYamlToggle}
             selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
             onChange={nextMode => {
               onViewChange(nextMode)

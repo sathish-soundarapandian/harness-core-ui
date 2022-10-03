@@ -1,0 +1,30 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "tags": [
+      { "tag": "-" },
+      { "tag": "City" },
+      { "tag": "CountryOrRegion" },
+      { "tag": "Datacenter" },
+      { "tag": "Dev" },
+      { "tag": "for" },
+      { "tag": "only" },
+      { "tag": "StateOrDistrict" },
+      { "tag": "team" },
+      { "tag": "testing" },
+      { "tag": "ms-resource-usage" },
+      { "tag": "vmTag" },
+      { "tag": "galleryImageDefinition" },
+      { "tag": "Env" },
+      { "tag": "Test" },
+      { "tag": "Name" },
+      { "tag": "Created" },
+      { "tag": "HARNESS_REVISION" },
+      { "tag": "tagName" },
+      { "tag": "purpose" },
+      { "tag": "Description" }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "70594515-6d4f-48b5-925c-221f0e3d595e"
+}

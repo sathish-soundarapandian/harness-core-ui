@@ -105,8 +105,8 @@ describe('Test DeploymentInfraWrapperWithRef', () => {
     // Title label assertions
     expect(() => getByText('common.variables')).toBeDefined()
     expect(() => getByText('pipeline.customDeployment.fetchInstancesScript')).toBeDefined()
-    expect(() => getByText('pipeline.customDeployment.hostObjectArrayPath')).toBeDefined()
-    expect(() => getByText('pipeline.customDeployment.hostAttributes')).toBeDefined()
+    expect(() => getByText('pipeline.customDeployment.instanceObjectArrayPath')).toBeDefined()
+    expect(() => getByText('pipeline.customDeployment.instanceAttributes')).toBeDefined()
 
     expect(container.querySelector('input[name="variables[0].name"]')).toHaveValue('clusterUrl')
     await waitFor(() => getByText('URL to connect to cluster'))

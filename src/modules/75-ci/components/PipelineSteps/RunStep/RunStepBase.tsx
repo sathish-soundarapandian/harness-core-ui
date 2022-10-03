@@ -79,7 +79,11 @@ export const RunStepBase = (
       validate={valuesToValidate => {
         /* If a user configures AWS VMs as an infra, the steps can be executed directly on the VMS or in a container on a VM. 
         For the latter case, even though Container Registry and Image are optional for AWS VMs infra, they both need to be specified for container to be spawned properly */
-        if ([CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType)) {
+        if (
+          [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+            buildInfrastructureType
+          )
+        ) {
           return validateConnectorRefAndImageDepdendency(
             get(valuesToValidate, 'spec.connectorRef', ''),
             get(valuesToValidate, 'spec.image', ''),
@@ -127,7 +131,11 @@ export const RunStepBase = (
                 description: {}
               }}
             />
-            {![CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType) ? (
+            {![
+              CIBuildInfrastructureType.VM,
+              CIBuildInfrastructureType.Cloud,
+              CIBuildInfrastructureType.Docker
+            ].includes(buildInfrastructureType) ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -215,9 +223,11 @@ export const RunStepBase = (
                 summary={getString('common.optionalConfig')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {[CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
-                      buildInfrastructureType
-                    ) ? (
+                    {[
+                      CIBuildInfrastructureType.VM,
+                      CIBuildInfrastructureType.Cloud,
+                      CIBuildInfrastructureType.Docker
+                    ].includes(buildInfrastructureType) ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}
@@ -232,7 +242,8 @@ export const RunStepBase = (
                           shouldHide: [
                             CIBuildInfrastructureType.Cloud,
                             CIBuildInfrastructureType.VM,
-                            CIBuildInfrastructureType.KubernetesHosted
+                            CIBuildInfrastructureType.KubernetesHosted,
+                            CIBuildInfrastructureType.Docker
                           ].includes(buildInfrastructureType)
                         },
                         'spec.reportPaths': {},

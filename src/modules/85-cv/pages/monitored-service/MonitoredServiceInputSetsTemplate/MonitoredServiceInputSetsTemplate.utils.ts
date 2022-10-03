@@ -10,7 +10,8 @@ import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
-import type { ConnectorInfoDTO, MonitoredServiceDTO } from 'services/cv'
+import type { MonitoredServiceDTO } from 'services/cv'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getValidationLabelByNameForTemplateInputs } from '../CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { MonitoredServiceInputSetInterface } from './MonitoredServiceInputSetsTemplate.types'
 import { GcoQueryKey } from './MonitoredServiceInputSetsTemplate.constants'
@@ -132,6 +133,17 @@ export const healthSourceTypeMapping = (type: ConnectorInfoDTO['type']): Connect
     case HealthSourceTypes.StackdriverLog as ConnectorInfoDTO['type']:
     case HealthSourceTypes.StackdriverMetrics as ConnectorInfoDTO['type']:
       return Connectors.GCP
+    case HealthSourceTypes.Elk as ConnectorInfoDTO['type']:
+      return Connectors.ELK
+    default:
+      return type
+  }
+}
+
+export const healthSourceTypeMappingForReferenceField = (type: ConnectorInfoDTO['type']): ConnectorInfoDTO['type'] => {
+  switch (type) {
+    case HealthSourceTypes.Elk as ConnectorInfoDTO['type']:
+      return Connectors.ELK
     default:
       return type
   }

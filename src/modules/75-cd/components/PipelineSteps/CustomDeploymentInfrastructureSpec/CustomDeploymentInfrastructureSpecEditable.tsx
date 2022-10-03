@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Text, Layout, FormInput, Formik, FormikForm } from '@wings-software/uicore'
+import { Text, Layout, FormInput, Formik, FormikForm, HarnessDocTooltip } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
@@ -26,7 +26,6 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CustomVariableEditableExtraProps } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
-import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
 import {
   CustomDeploymentInfrastructureSpecEditableProps,
   CustomDeploymentInfrastructureStep,
@@ -43,7 +42,6 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
 }): JSX.Element => {
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 300)).current
   const { getString } = useStrings()
-  const { connectorsList } = useGetConnectorsListHook()
   const formikRef = React.useRef<FormikProps<CustomDeploymentInfrastructureStep> | null>(null)
   const getInitialValues = (): CustomDeploymentInfrastructureStep => {
     return initialValues
@@ -88,11 +86,20 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
           return (
             <FormikForm>
               <Layout.Vertical flex={{ alignItems: 'flex-start' }} margin={{ bottom: 'medium' }} spacing="medium">
-                <Text font={{ variation: FontVariation.H6 }}>
-                  {isSvcEnvEnabled ? getString('common.variables') : ''}
+                <Text
+                  font={{ variation: FontVariation.H6 }}
+                  className="ng-tooltip-native"
+                  data-tooltip-id="updateInfraVariablesDT"
+                >
+                  {isSvcEnvEnabled && (
+                    <>
+                      {getString('common.variables')}
+                      <HarnessDocTooltip tooltipId="updateInfraVariablesDT" useStandAlone={true} />
+                    </>
+                  )}
                 </Text>
                 <Text font={{ variation: FontVariation.BODY2_SEMI }}>
-                  {isSvcEnvEnabled ? getString('pipeline.customDeployment.infraVariablesTitle') : ''}
+                  {isSvcEnvEnabled ? getString('pipeline.customDeployment.updateInfraVariablesTitle') : ''}
                 </Text>
               </Layout.Vertical>
 
@@ -119,7 +126,7 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
                     isDescriptionEnabled: true,
                     tabName: DeployTabs.INFRASTRUCTURE,
                     formName: 'addEditInfraVariableForm',
-                    allowedConnectorTypes: connectorsList
+                    isDrawerMode: true
                   }}
                 />
               </Layout.Horizontal>

@@ -175,3 +175,25 @@
 .serviceTooltipRowLabel {
   min-width: 60px !important;
 }
+
+.popoverTable {
+  font-size: var(--font-size-small) !important;
+
+  .executionCount {
+    cursor: pointer;
+  }
+}
+
+.popoverStyle {
+  :global {
+    .bp3-popover-content {
+      max-height: 500px;
+      overflow: scroll;
+    }
+  }
+}
+
+.orgStyle {
+  display: flex;
+  padding-top: var(--spacing-2) !important;
+}

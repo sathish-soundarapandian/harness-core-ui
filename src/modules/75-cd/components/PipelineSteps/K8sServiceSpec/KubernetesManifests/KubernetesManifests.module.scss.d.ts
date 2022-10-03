@@ -8,6 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly accordionSummary: string
+  readonly configureOptions: string
+  readonly inputFieldLayout: string
   readonly inputWidth: string
   readonly inputheader: string
   readonly layoutVerticalSpacing: string

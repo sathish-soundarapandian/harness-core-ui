@@ -14,6 +14,11 @@ export enum FreezeWindowActions {
   SetYamlHandler = 'SetYamlHandler'
 }
 
+export enum DrawerTypes {
+  ActivityLog = 'ActivityLog',
+  Notification = 'Notification'
+}
+
 export interface ActionResponse {
   isYamlEditable?: boolean
   isUpdated?: boolean

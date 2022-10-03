@@ -45,6 +45,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
     isDBInitialized: true,
     isInitialized: true,
     isLoading: false,
+    isIntermittentLoading: false,
     isUpdated: true,
     templateTypes: {},
     templateServiceData: {},
@@ -82,7 +83,8 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
   setTemplateTypes: jest.fn(),
-  setTemplateServiceData: jest.fn()
+  setTemplateServiceData: jest.fn(),
+  setIntermittentLoading: jest.fn()
 })
 
 describe('StepWidget tests', () => {

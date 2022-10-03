@@ -27,7 +27,7 @@ export const CITriggerInfo: FC<CITriggerInfoProps> = props => {
       {ciExecutionInfoDTO.pullRequest ? (
         <>
           <Element value={ciExecutionInfoDTO.pullRequest.sourceBranch} icon="git-branch" />
-          <Icon name="arrow-right" size={12} color={Color.GREY_400} padding={{ left: 'xsmall', right: 'xsmall' }} />
+          <Icon name="arrow-right" size={12} color={Color.GREY_400} />
           <Element value={ciExecutionInfoDTO.pullRequest.targetBranch} icon="git-branch" />
           <div className={css.separator} />
           <ElementWithLink
@@ -35,7 +35,7 @@ export const CITriggerInfo: FC<CITriggerInfoProps> = props => {
             link={ciExecutionInfoDTO.pullRequest.link}
             icon="git-pull"
           />
-          <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_700} className={css.prState}>
+          <Text font={{ variation: FontVariation.TINY_SEMI }} className={css.prState}>
             {ciExecutionInfoDTO?.pullRequest?.state}
           </Text>
         </>
@@ -78,9 +78,13 @@ const ElementWithLink: FC<{ value: string; link: string; icon: IconName }> = ({ 
 
 const Element: FC<{ value: string; icon: IconName }> = ({ value, icon }) => {
   return (
-    <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
+    <Layout.Horizontal
+      spacing="small"
+      flex={{ alignItems: 'center', justifyContent: 'start' }}
+      style={{ flexShrink: 1 }}
+    >
       <Icon name={icon} size={12} color={Color.GREY_600} />
-      <Text lineClamp={1} color={Color.GREY_800} font={{ variation: FontVariation.SMALL_SEMI }}>
+      <Text lineClamp={1} color={Color.GREY_800} font={{ variation: FontVariation.SMALL_SEMI }} title={value}>
         {value}
       </Text>
     </Layout.Horizontal>

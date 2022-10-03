@@ -34,15 +34,18 @@ import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { AllMultiTypeInputTypesForStep } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
-import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
+import {
+  healthSourceTypeMapping,
+  healthSourceTypeMappingForReferenceField
+} from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import { ConnectorRefFieldName, HEALTHSOURCE_LIST } from './DefineHealthSource.constant'
 import {
   getFeatureOption,
   getInitialValues,
-  modifyCustomHealthFeatureBasedOnFF,
   validate,
-  validateDuplicateIdentifier
+  validateDuplicateIdentifier,
+  getConnectorTypeName
 } from './DefineHealthSource.utils'
 import css from './DefineHealthSource.module.scss'
 
@@ -64,28 +67,26 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
 
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
-  const isDynatraceAPMEnabled = useFeatureFlag(FeatureFlag.DYNATRACE_APM_ENABLED)
-  const isCustomMetricEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH)
-  const isCustomLogEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH_LOGS)
   const isElkEnabled = useFeatureFlag(FeatureFlag.ELK_HEALTH_SOURCE)
+
+  const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
 
   const disabledByFF: string[] = useMemo(() => {
     const disabledConnectorsList = []
-    if (!isDynatraceAPMEnabled) {
-      disabledConnectorsList.push(HealthSourceTypes.Dynatrace)
-    }
+
     if (!isErrorTrackingEnabled) {
       disabledConnectorsList.push(HealthSourceTypes.ErrorTracking)
     }
-    if (!isCustomLogEnabled && !isCustomMetricEnabled) {
-      disabledConnectorsList.push(HealthSourceTypes.CustomHealth)
-    }
+
     if (!isElkEnabled) {
       disabledConnectorsList.push(HealthSourceTypes.Elk)
     }
 
+    if (!isCloudWatchEnabled) {
+      disabledConnectorsList.push(HealthSourceTypes.CloudWatch)
+    }
     return disabledConnectorsList
-  }, [isDynatraceAPMEnabled, isErrorTrackingEnabled, isCustomLogEnabled, isCustomMetricEnabled, isElkEnabled])
+  }, [isErrorTrackingEnabled, isElkEnabled, isCloudWatchEnabled])
 
   const initialValues = useMemo(() => {
     return getInitialValues(sourceData, getString)
@@ -138,7 +139,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         <FormConnectorReferenceField
           width={400}
           formik={formik}
-          type={formik?.values?.sourceType}
+          type={healthSourceTypeMappingForReferenceField(formik?.values?.sourceType)}
           name={ConnectorRefFieldName}
           label={
             <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>
@@ -192,10 +193,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         }}
       >
         {formik => {
-          let featureOption = getFeatureOption(formik?.values?.sourceType, getString, isSplunkMetricEnabled)
-          if (formik.values?.sourceType === HealthSourceTypes.CustomHealth) {
-            featureOption = modifyCustomHealthFeatureBasedOnFF(isCustomLogEnabled, isCustomMetricEnabled, featureOption)
-          }
+          const featureOption = getFeatureOption(formik?.values?.sourceType, getString, isSplunkMetricEnabled)
           return (
             <FormikForm className={css.formFullheight}>
               <CardWithOuterTitle title={getString('cv.healthSource.defineHealthSource')}>
@@ -219,8 +217,8 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                         >
                           {HEALTHSOURCE_LIST.filter(({ name }) => !disabledByFF.includes(name)).map(
                             ({ name, icon }) => {
-                              const connectorTypeName =
-                                name === HealthSourceTypes.GoogleCloudOperations ? Connectors.GCP : name
+                              const connectorTypeName = getConnectorTypeName(name)
+
                               return (
                                 <div key={name} className={cx(css.squareCardContainer, isEdit && css.disabled)}>
                                   <Card
@@ -231,18 +229,11 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                                     className={css.squareCard}
                                     onClick={() => {
                                       formik.setFieldValue('sourceType', connectorTypeName)
-                                      let featureOptionConnectorType = getFeatureOption(
+                                      const featureOptionConnectorType = getFeatureOption(
                                         connectorTypeName,
                                         getString,
                                         isSplunkMetricEnabled
                                       )
-                                      if (connectorTypeName === HealthSourceTypes.CustomHealth) {
-                                        featureOptionConnectorType = modifyCustomHealthFeatureBasedOnFF(
-                                          isCustomLogEnabled,
-                                          isCustomMetricEnabled,
-                                          featureOptionConnectorType
-                                        )
-                                      }
                                       formik.setFieldValue(
                                         'product',
                                         featureOptionConnectorType.length === 1 ? featureOptionConnectorType[0] : ''

@@ -571,8 +571,8 @@ conditionalExecution:
     success: Execute this {{entity}} if the {{parentEntity}} execution is successful thus far
     all: Always execute this {{entity}}
     failure: Execute this {{entity}} only if prior {{parentEntity}} or {{entity}} failed
-  condition: And execute this {{entity}} only if the following JEXL Condition evaluates to True
-  conditionLabel: Execute only if the following JEXL Condition evaluates to True
+  condition: And execute this {{entity}} only if the following JEXL Condition evaluates to true
+  conditionLabel: Execute only if the following JEXL Condition evaluates to true
   toolTip:
     stageTitle: Conditions for stage execution
     stepTitle: Conditions for step execution
@@ -609,6 +609,8 @@ artifactTriggerConfigPanel:
   configureInput: 'Configure Input'
   listenOnNewArtifact: 'Listen on New {{artifact}}'
   plusSelect: '+ Select {{artifact}}'
+  defineArtifactSource: 'Define Artifact Source'
+  defineManifestSource: 'Define Manifest Source'
   selectAnArtifact: 'Select an Artifact Reference'
   selectAManifest: 'Select a Manifest Reference'
   configureArtifactRuntimeInputs: 'Configure {{artifact}} Runtime Inputs'
@@ -724,8 +726,7 @@ testsReports:
   searchByTestName: Search by Test Name
   tiCallToAction:
     header: Did you know you can save time using Test Intelligence?
-    upsellSubText: 'Optimize your tests cycle and reduce build time by using machine learning based Test Intelligence.'
-    utilizeTISubText: 'Reduce test cycle time of your Java application by using machine learning based Test Intelligence.'
+    utilizeTISubText: 'Reduce test cycle time of your Java, .NET, Scala, Kotlin applications by using machine learning based Test Intelligence.'
     addRunTestsStep: Add 'Run Tests step' to your Pipeline
     requiresEnterprisePlan: Requires Enterprise Plan to access Test Intelligence
 uniqueIdentifier: Identifier must be unique
@@ -773,6 +774,8 @@ pipelineSteps:
   deployStageDescription: Deploy services, Serverless functions, or other workloads.
   featureStageDescription: Enable or disable functionality remotely without redeploying code.
   approvalStageDescription: Approve or reject changes during Pipeline progress.
+pipelineChaining:
+  selectPipeline: Select Pipeline
 aboutYourStage:
   stageNamePlaceholder: Enter Stage Name
 infraSpecifications:
@@ -982,6 +985,7 @@ failureTypetext: Select Failure Type
 stepDescription:
   HTTP: Run HTTP requests containing URLs, methods, headers, assertions, and variables.
   SHELLSCRIPT: Execute scripts in the shell session. The scripts can be executed on the pod/instance running a Harness Delegate or on a remote host in the infrastructure.
+  Wait: Suspend/Wait the execution for the given amount of time.
   Barrier: Synchronize multiple Pipelines to coordinate deployments systematically.
   Queue: Queue pipeline executions to prevent multiple stages or pipelines from requesting the same deployment resources simultaneously.
   K8sRollingRollback: Roll back the workloads deployed by the stage.
@@ -1210,6 +1214,8 @@ serviceDeploymentTypes:
   azureFunctions: Azure Functions
   azureWebApp: Azure Web Apps
   customDeployment: Deployment Template
+  serverlessAwsType: Serverless Aws Lambda
+  customDeploy: Custom Deployment
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1363,7 +1369,6 @@ draft: 'Draft'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
 warningForInvalidYAMLDiscard: Enabling this sets the YAML editor in read/write mode for the Pipelines you view. You can enable/disable this setting in any Pipeline.
-preProduction: 'Pre-Production'
 azureWebApp:
   strategy:
     basic: In a Basic deployment, a new Service/Artifact version is deployed to the deployment slot. Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
@@ -1373,10 +1378,11 @@ skipInstances:
   title: 'Skip instances with the same artifact version already deployed'
 selectiveStageExecution: 'Selective stage execution'
 customDeployment:
-  infraVariablesTitle: 'Define the variables to be used in your environment and infrastructure.'
+  infraVariablesTitle: 'Define the variables to be used in your infrastructure'
+  updateInfraVariablesTitle: ' Update values for variables defined as part of used template'
   seeOnlyTemplatesFor: See only templates for {{name}}
-  hostObjectArrayPath: 'Host Object Array Path'
-  hostAttributes: 'Host Attributes'
+  instanceObjectArrayPath: 'Instance Object Array Path'
+  instanceAttributes: 'Instance Attributes'
   newAttribute: 'New Attribute'
   fetchInstancesScript: 'Fetch Instance Script'
   fetchInstanceScriptHeader: 'Define your script inline or from File Store.'
@@ -1388,4 +1394,3 @@ customDeployment:
     fetchScriptBodyRequired: 'Fetch Instances Script body is required'
   validations:
     nameUnique: Field Name should be unique
-loadBalancer: Load Balancer

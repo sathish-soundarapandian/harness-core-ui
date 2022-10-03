@@ -114,7 +114,7 @@ exports[`ManifestSelection tests delete manifest list works correctly 1`] = `
                   </span>
                 </span>
                 <span
-                  class="bp3-icon bp3-icon-full-circle StyledProps--main StyledProps--color"
+                  class="bp3-icon bp3-icon-full-circle StyledProps--main StyledProps--color StyledProps--padding-left-small"
                   icon="full-circle"
                 >
                   <svg
@@ -468,7 +468,7 @@ exports[`ManifestSelection tests edit manifest list works correctly 1`] = `
                   </span>
                 </span>
                 <span
-                  class="bp3-icon bp3-icon-full-circle StyledProps--main StyledProps--color"
+                  class="bp3-icon bp3-icon-full-circle StyledProps--main StyledProps--color StyledProps--padding-left-small"
                   icon="full-circle"
                 >
                   <svg

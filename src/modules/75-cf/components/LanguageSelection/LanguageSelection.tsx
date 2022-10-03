@@ -100,6 +100,8 @@ export const LanguageSelection: React.FC<LanguageSelectionProps> = ({ selected, 
           <li key={name} className={css.item}>
             <Layout.Vertical spacing="small">
               <Button
+                data-testid="selectLanguageBtn"
+                aria-label={name}
                 noStyling
                 className={cx(css.button, selectedEntry?.name === name && css.selected)}
                 onClick={() => {

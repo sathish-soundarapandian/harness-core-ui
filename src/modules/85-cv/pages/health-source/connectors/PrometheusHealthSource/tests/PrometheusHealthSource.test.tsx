@@ -159,7 +159,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
               analysis: {
                 deploymentVerification: { enabled: false, serviceInstanceFieldName: 'serviceInstanceFieldName' },
                 liveMonitoring: { enabled: false },
-                riskProfile: { category: '', metricType: undefined, thresholdTypes: [] }
+                riskProfile: {}
               },
               envFilter: [{ labelName: 'namespace', labelValue: 'cv-demo' }],
               groupName: 'group1',

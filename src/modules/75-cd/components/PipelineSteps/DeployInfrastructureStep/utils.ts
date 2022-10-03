@@ -345,7 +345,7 @@ export function processInputSetInitialValues(
       ...(initialValues.environment?.serviceOverrideInputs && {
         serviceOverrideInputs: initialValues.environment?.serviceOverrideInputs
       }),
-      ...(initialValues.environment?.infrastructureDefinitions?.[0]?.identifier && {
+      ...(initialValues.environment?.infrastructureDefinitions && {
         infrastructureDefinitions: initialValues.environment?.infrastructureDefinitions
       }),
       ...(initialValues.environment?.gitOpsClusters?.[0]?.identifier && {
@@ -376,6 +376,7 @@ export function processInputSetInitialValues(
                 value: cluster.identifier
               }
             })
-    })
+    }),
+    isEnvInputLoaded: initialValues?.isEnvInputLoaded
   } as DeployStageConfig
 }

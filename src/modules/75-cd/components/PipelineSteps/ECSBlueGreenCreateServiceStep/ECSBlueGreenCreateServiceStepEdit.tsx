@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { defaultTo } from 'lodash-es'
+import React, { useState } from 'react'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import cx from 'classnames'
@@ -20,7 +20,7 @@ import {
   SelectOption
 } from '@wings-software/uicore'
 
-import { useClusters } from 'services/cd-ng'
+import { listenerRulesPromise, ResponseListString, useElasticLoadBalancers, useListeners } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -28,7 +28,10 @@ import { SelectConfigureOptions } from '@common/components/ConfigureOptions/Sele
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
-import type { ECSBlueGreenCreateServiceStepInitialValues } from './ECSBlueGreenCreateServiceStep'
+import type {
+  ECSBlueGreenCreateServiceStepInitialValues,
+  ECSBlueGreenCreateServiceCustomStepProps
+} from './ECSBlueGreenCreateServiceStep'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ECSBlueGreenCreateServiceStep.module.scss'
 
@@ -40,42 +43,192 @@ export interface ECSBlueGreenCreateServiceStepProps {
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
+  customStepProps: ECSBlueGreenCreateServiceCustomStepProps
 }
 
 const ECSBlueGreenCreateServiceStepEdit = (
   props: ECSBlueGreenCreateServiceStepProps,
   formikRef: StepFormikFowardRef<ECSBlueGreenCreateServiceStepInitialValues>
 ): React.ReactElement => {
-  const { initialValues, onUpdate, isNewStep = true, readonly, onChange, allowableTypes, stepViewType } = props
+  const {
+    initialValues,
+    onUpdate,
+    isNewStep = true,
+    readonly,
+    onChange,
+    allowableTypes,
+    stepViewType,
+    customStepProps
+  } = props
+  const { selectedStage } = customStepProps
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
+  const [prodListenerRules, setProdListenerRules] = useState<SelectOption[]>([])
+  const [prodListenerRulesLoading, setProdListenerRulesLoading] = useState<boolean>(false)
+  const [stageListenerRules, setStageListenerRules] = useState<SelectOption[]>([])
+  const [stageListenerRulesLoading, setStageListenerRulesLoading] = useState<boolean>(false)
 
-  // @TODO - this call is fake API call and we have mocked data as of now to test dropdowns
-  // The reason is real APIs for this step are not ready from BE side.
-  // Once APIs are ready this call will be replaced with the correct ones.
-  const { data: awsClusters, loading: loadingClusters } = useClusters({
+  const environmentRef = defaultTo(
+    selectedStage.stage?.spec?.environment?.environmentRef,
+    selectedStage.stage?.spec?.infrastructure?.environmentRef
+  )
+  const infrastructureRef = selectedStage.stage?.spec?.environment?.infrastructureDefinitions?.[0].identifier
+
+  const awsConnectorRef = selectedStage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.connectorRef
+  const region = selectedStage?.stage?.spec?.infrastructure?.infrastructureDefinition?.spec.region
+
+  const { data: loadBalancers, loading: loadingLoadBalancers } = useElasticLoadBalancers({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      awsConnectorRef: '',
-      region: ''
-    },
-    mock: {
-      loading: false,
-      data: {
-        data: ['abc', 'def']
-      }
+      awsConnectorRef,
+      region,
+      envId: environmentRef,
+      infraDefinitionId: infrastructureRef
     }
   })
-
-  const clusters: SelectOption[] = React.useMemo(() => {
-    return defaultTo(awsClusters?.data, []).map(cluster => ({
-      value: cluster,
-      label: cluster
+  const loadBalancerOptions: SelectOption[] = React.useMemo(() => {
+    return defaultTo(loadBalancers?.data, []).map(loadBalancer => ({
+      value: loadBalancer,
+      label: loadBalancer
     }))
-  }, [awsClusters?.data])
+  }, [loadBalancers?.data])
+
+  const {
+    data: listeners,
+    loading: loadingListeners,
+    refetch: refetchListeners
+  } = useListeners({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      envId: environmentRef,
+      infraDefinitionId: infrastructureRef,
+      awsConnectorRef,
+      region,
+      elasticLoadBalancer: initialValues.spec.loadBalancer
+    }
+  })
+  const listenerOptions: SelectOption[] = React.useMemo(() => {
+    const listenerData = defaultTo(listeners?.data, {})
+    return Object.keys(listenerData).map(listenerKey => ({
+      value: listenerData[listenerKey],
+      label: listenerKey
+    }))
+  }, [listeners?.data])
+
+  React.useEffect(() => {
+    if (!isEmpty(initialValues.spec.loadBalancer) && !isEmpty(initialValues.spec.prodListener)) {
+      fetchProdListenerRules(initialValues.spec.loadBalancer, initialValues.spec.prodListener)
+    }
+    if (!isEmpty(initialValues.spec.loadBalancer) && !isEmpty(initialValues.spec.stageListener)) {
+      fetchStageListenerRules(initialValues.spec.loadBalancer, initialValues.spec.stageListener)
+    }
+  }, [initialValues.spec.loadBalancer, initialValues.spec.prodListener, initialValues.spec.stageListener])
+
+  const fetchProdListenerRules = (selectedLoadBalancer: string, selectedListener: string) => {
+    if (
+      (awsConnectorRef && region && selectedLoadBalancer && selectedListener) ||
+      (environmentRef && infrastructureRef)
+    ) {
+      setProdListenerRulesLoading(true)
+      listenerRulesPromise({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          envId: environmentRef,
+          infraDefinitionId: infrastructureRef,
+          awsConnectorRef,
+          region,
+          elasticLoadBalancer: selectedLoadBalancer,
+          listenerArn: selectedListener
+        }
+      })
+        .then((response: ResponseListString) => {
+          const listenerRulesData = defaultTo(response?.data, [])
+          const listenerRulesOptions = listenerRulesData.map(listenerRule => ({
+            value: listenerRule,
+            label: listenerRule
+          }))
+          setProdListenerRules(listenerRulesOptions)
+        })
+        .catch(() => {
+          setProdListenerRules([])
+        })
+      setProdListenerRulesLoading(false)
+    }
+  }
+
+  const fetchStageListenerRules = (selectedLoadBalancer: string, selectedListener: string) => {
+    if (
+      (awsConnectorRef && region && selectedLoadBalancer && selectedListener) ||
+      (environmentRef && infrastructureRef)
+    ) {
+      setStageListenerRulesLoading(true)
+      listenerRulesPromise({
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          envId: environmentRef,
+          infraDefinitionId: infrastructureRef,
+          awsConnectorRef,
+          region,
+          elasticLoadBalancer: selectedLoadBalancer,
+          listenerArn: selectedListener
+        }
+      })
+        .then((response: ResponseListString) => {
+          const listenerRulesData = defaultTo(response?.data, [])
+          const listenerRulesOptions = listenerRulesData.map(listenerRule => ({
+            value: listenerRule,
+            label: listenerRule
+          }))
+          setStageListenerRules(listenerRulesOptions)
+        })
+        .catch(() => {
+          setStageListenerRules([])
+        })
+      setStageListenerRulesLoading(false)
+    }
+  }
+
+  const onLoadBalancerChange = (
+    selectedLoadBalancer: string,
+    formik: FormikProps<ECSBlueGreenCreateServiceStepInitialValues>
+  ) => {
+    refetchListeners({
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        envId: environmentRef,
+        infraDefinitionId: infrastructureRef,
+        awsConnectorRef,
+        region,
+        elasticLoadBalancer: selectedLoadBalancer
+      }
+    })
+    formik.setFieldValue('spec.loadBalancer', selectedLoadBalancer)
+    if (getMultiTypeFromValue(formik.values.spec.prodListener) !== MultiTypeInputType.FIXED) {
+      formik.setFieldValue('spec.prodListener', '')
+    }
+    if (getMultiTypeFromValue(formik.values.spec.prodListenerRuleArn) !== MultiTypeInputType.FIXED) {
+      formik.setFieldValue('spec.prodListenerRuleArn', '')
+    }
+    if (getMultiTypeFromValue(formik.values.spec.stageListener) !== MultiTypeInputType.FIXED) {
+      formik.setFieldValue('spec.stageListener', '')
+    }
+    if (getMultiTypeFromValue(formik.values.spec.stageListenerRuleArn) !== MultiTypeInputType.FIXED) {
+      formik.setFieldValue('spec.stageListenerRuleArn', '')
+    }
+    setProdListenerRules([])
+    setStageListenerRules([])
+  }
 
   return (
     <>
@@ -96,7 +249,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
           spec: Yup.object().shape({
             loadBalancer: Yup.string().required(
               getString('common.validation.fieldIsRequired', {
-                name: getString('pipeline.loadBalancer')
+                name: getString('common.loadBalancer')
               })
             ),
             prodListener: Yup.string().required(
@@ -139,20 +292,26 @@ const ECSBlueGreenCreateServiceStepEdit = (
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.MultiTypeInput
                   name="spec.loadBalancer"
-                  selectItems={clusters}
+                  selectItems={loadBalancerOptions}
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: clusters
+                      items: loadBalancerOptions
+                    },
+                    onChange: selectedValue => {
+                      const selectedValueString =
+                        typeof selectedValue === 'string'
+                          ? selectedValue
+                          : ((selectedValue as SelectOption)?.value as string)
+                      onLoadBalancerChange(selectedValueString, formik)
                     }
                   }}
-                  label={getString('pipeline.loadBalancer')}
-                  placeholder={loadingClusters ? getString('loading') : getString('select')}
-                  disabled={defaultTo(loadingClusters, readonly)}
+                  label={getString('cd.steps.ecsBGCreateServiceStep.labels.elasticLoadBalancer')}
+                  placeholder={loadingLoadBalancers ? getString('loading') : getString('select')}
                 />
                 {getMultiTypeFromValue(formik.values.spec.loadBalancer) === MultiTypeInputType.RUNTIME && (
                   <SelectConfigureOptions
-                    options={clusters}
+                    options={loadBalancerOptions}
                     value={formik.values.spec.loadBalancer as string}
                     type="String"
                     variableName="spec.loadBalancer"
@@ -160,7 +319,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                     showDefaultField={false}
                     showAdvanced={true}
                     onChange={value => {
-                      formik.setFieldValue('spec.loadBalancer', value)
+                      onLoadBalancerChange(value, formik)
                     }}
                     isReadonly={readonly}
                   />
@@ -174,20 +333,31 @@ const ECSBlueGreenCreateServiceStepEdit = (
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.MultiTypeInput
                   name="spec.prodListener"
-                  selectItems={clusters}
+                  selectItems={listenerOptions}
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: clusters
+                      items: listenerOptions
+                    },
+                    onChange: selectedValue => {
+                      const selectedValueString =
+                        typeof selectedValue === 'string'
+                          ? selectedValue
+                          : ((selectedValue as SelectOption).value as string)
+                      fetchProdListenerRules(formik.values.spec.loadBalancer, selectedValueString)
+                      formik.setFieldValue('spec.prodListener', selectedValueString)
+                      if (getMultiTypeFromValue(formik.values.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.prodListenerRuleArn', '')
+                      }
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')}
-                  placeholder={loadingClusters ? getString('loading') : getString('select')}
-                  disabled={defaultTo(loadingClusters, readonly)}
+                  placeholder={loadingListeners ? getString('loading') : getString('select')}
+                  disabled={defaultTo(loadingListeners, readonly)}
                 />
                 {getMultiTypeFromValue(formik.values.spec.prodListener) === MultiTypeInputType.RUNTIME && (
                   <SelectConfigureOptions
-                    options={clusters}
+                    options={listenerOptions}
                     value={formik.values.spec.prodListener as string}
                     type="String"
                     variableName="spec.prodListener"
@@ -195,7 +365,11 @@ const ECSBlueGreenCreateServiceStepEdit = (
                     showDefaultField={false}
                     showAdvanced={true}
                     onChange={value => {
+                      fetchProdListenerRules(formik.values.spec.loadBalancer, value)
                       formik.setFieldValue('spec.prodListener', value)
+                      if (getMultiTypeFromValue(formik.values.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.prodListenerRuleArn', '')
+                      }
                     }}
                     isReadonly={readonly}
                   />
@@ -204,20 +378,20 @@ const ECSBlueGreenCreateServiceStepEdit = (
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.MultiTypeInput
                   name="spec.prodListenerRuleArn"
-                  selectItems={clusters}
+                  selectItems={prodListenerRules}
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: clusters
+                      items: prodListenerRules
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')}
-                  placeholder={loadingClusters ? getString('loading') : getString('select')}
-                  disabled={defaultTo(loadingClusters, readonly)}
+                  placeholder={prodListenerRulesLoading ? getString('loading') : getString('select')}
+                  disabled={defaultTo(prodListenerRulesLoading, readonly)}
                 />
                 {getMultiTypeFromValue(formik.values.spec.prodListenerRuleArn) === MultiTypeInputType.RUNTIME && (
                   <SelectConfigureOptions
-                    options={clusters}
+                    options={prodListenerRules}
                     value={formik.values.spec.prodListenerRuleArn as string}
                     type="String"
                     variableName="spec.prodListenerRuleArn"
@@ -239,20 +413,31 @@ const ECSBlueGreenCreateServiceStepEdit = (
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.MultiTypeInput
                   name="spec.stageListener"
-                  selectItems={clusters}
+                  selectItems={listenerOptions}
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: clusters
+                      items: listenerOptions
+                    },
+                    onChange: selectedValue => {
+                      const selectedValueString =
+                        typeof selectedValue === 'string'
+                          ? selectedValue
+                          : ((selectedValue as SelectOption).value as string)
+                      fetchStageListenerRules(formik.values.spec.loadBalancer, selectedValueString)
+                      formik.setFieldValue('spec.stageListener', selectedValueString)
+                      if (getMultiTypeFromValue(formik.values.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.stageListenerRuleArn', '')
+                      }
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}
-                  placeholder={loadingClusters ? getString('loading') : getString('select')}
-                  disabled={defaultTo(loadingClusters, readonly)}
+                  placeholder={loadingListeners ? getString('loading') : getString('select')}
+                  disabled={defaultTo(loadingListeners, readonly)}
                 />
                 {getMultiTypeFromValue(formik.values.spec.stageListener) === MultiTypeInputType.RUNTIME && (
                   <SelectConfigureOptions
-                    options={clusters}
+                    options={listenerOptions}
                     value={formik.values.spec.stageListener as string}
                     type="String"
                     variableName="spec.stageListener"
@@ -260,7 +445,11 @@ const ECSBlueGreenCreateServiceStepEdit = (
                     showDefaultField={false}
                     showAdvanced={true}
                     onChange={value => {
+                      fetchProdListenerRules(formik.values.spec.loadBalancer, value)
                       formik.setFieldValue('spec.stageListener', value)
+                      if (getMultiTypeFromValue(formik.values.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
+                        formik.setFieldValue('spec.stageListenerRuleArn', '')
+                      }
                     }}
                     isReadonly={readonly}
                   />
@@ -269,20 +458,20 @@ const ECSBlueGreenCreateServiceStepEdit = (
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
                 <FormInput.MultiTypeInput
                   name="spec.stageListenerRuleArn"
-                  selectItems={clusters}
+                  selectItems={stageListenerRules}
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: clusters
+                      items: stageListenerRules
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')}
-                  placeholder={loadingClusters ? getString('loading') : getString('select')}
-                  disabled={defaultTo(loadingClusters, readonly)}
+                  placeholder={stageListenerRulesLoading ? getString('loading') : getString('select')}
+                  disabled={defaultTo(stageListenerRulesLoading, readonly)}
                 />
                 {getMultiTypeFromValue(formik.values.spec.stageListenerRuleArn) === MultiTypeInputType.RUNTIME && (
                   <SelectConfigureOptions
-                    options={clusters}
+                    options={stageListenerRules}
                     value={formik.values.spec.stageListenerRuleArn as string}
                     type="String"
                     variableName="spec.stageListenerRuleArn"

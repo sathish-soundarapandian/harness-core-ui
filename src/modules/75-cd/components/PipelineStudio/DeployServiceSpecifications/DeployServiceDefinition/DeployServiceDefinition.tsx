@@ -18,6 +18,7 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { getStageIndexFromPipeline } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
 import type { K8SDirectServiceStep } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecInterface'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   deleteServiceData,
@@ -174,13 +175,19 @@ function DeployServiceDefinition(): React.ReactElement {
   }
 
   const addOrUpdateTemplate = async (): Promise<void> => {
-    const { template } = await getTemplate({ templateType: 'CustomDeployment' })
+    const { template } = await getTemplate({
+      templateType: TemplateType.CustomDeployment,
+      allowedUsages: [TemplateUsage.USE]
+    })
     setCustomDeploymentData(getTemplateRefVersionLabelObject(template))
   }
 
   const onCustomDeploymentSelection = async (): Promise<void> => {
     try {
-      const { template } = await getTemplate({ templateType: 'CustomDeployment' })
+      const { template } = await getTemplate({
+        templateType: TemplateType.CustomDeployment,
+        allowedUsages: [TemplateUsage.USE]
+      })
       setCustomDeploymentData(getTemplateRefVersionLabelObject(template))
     } catch (_) {
       // Reset deployment data.. User cancelled template selection

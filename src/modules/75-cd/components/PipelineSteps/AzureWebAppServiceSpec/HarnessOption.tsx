@@ -40,6 +40,7 @@ export interface HarnessOptionPropsInterfrace {
   stepName: string
   formName: string
   expressions: string[]
+  hideEncrypted?: boolean
 }
 
 export function HarnessOption({
@@ -49,7 +50,8 @@ export function HarnessOption({
   formName,
   previousStep,
   prevStepData,
-  expressions
+  expressions,
+  hideEncrypted = false
 }: StepProps<ConnectorConfigDTO> & HarnessOptionPropsInterfrace): React.ReactElement {
   const { getString } = useStrings()
   const getHarnessStoreInitialValues = (): HarnessFileStore => {
@@ -173,7 +175,7 @@ export function HarnessOption({
                         value: fileTypes.FILE_STORE
                       },
                       { label: getString('encrypted'), value: fileTypes.ENCRYPTED }
-                    ]}
+                    ].filter(item => (hideEncrypted ? item.value === fileTypes.FILE_STORE : true))}
                   />
                   <MultiConfigSelectField
                     name="file"

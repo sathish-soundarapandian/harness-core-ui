@@ -8,8 +8,8 @@
 .commandFlagOptions {
   height: 20px;
   font-style: normal;
-  font-weight: 400;
-  line-height: 20px;
-  color: var(--gray-600);
-  font-size: var(--font-size-normal);
+  font-weight: 500 !important;
+  line-height: 20px !important;
+  color: var(--grey-600) !important;
+  font-size: var(--form-input-font-size) !important;
 }

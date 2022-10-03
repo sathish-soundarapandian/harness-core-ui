@@ -21,12 +21,12 @@ exports[`Chaos Sidenav Render render the chaos sidenav 1`] = `
     </a>
     <a
       class="link"
-      href="/account/dummyAccID/chaos/orgs/dummyOrgID/projects/dummyProjID/scenarios"
+      href="/account/dummyAccID/chaos/orgs/dummyOrgID/projects/dummyProjID/experiments"
     >
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        chaos.navLabels.chaosScenarios
+        chaos.navLabels.chaosExperiments
       </p>
     </a>
     <a
@@ -41,12 +41,12 @@ exports[`Chaos Sidenav Render render the chaos sidenav 1`] = `
     </a>
     <a
       class="link"
-      href="/account/dummyAccID/chaos/orgs/dummyOrgID/projects/dummyProjID/chaos-delegates"
+      href="/account/dummyAccID/chaos/orgs/dummyOrgID/projects/dummyProjID/chaos-delegate"
     >
       <p
         class="StyledProps--font StyledProps--main text"
       >
-        chaos.navLabels.chaosDelegates
+        chaos.navLabels.chaosInfrastructures
       </p>
     </a>
     <div>

@@ -80,7 +80,7 @@ describe('deploy environment or group initial values utils', () => {
           infrastructureDefinitions: RUNTIME_INPUT_VALUE as any
         }
       })
-    ).toEqual({ environment: { deployToAll: false, environmentRef: 'env_1' }, infrastructureRef: '<+input>' })
+    ).toEqual({ environment: { deployToAll: false, environmentRef: 'env_1' }, infrastructureRef: RUNTIME_INPUT_VALUE })
 
     expect(
       processNonGitOpsInitialValues({
@@ -136,7 +136,7 @@ describe('deploy environment or group initial values utils', () => {
         getString
       )
     ).toEqual({
-      clusterRef: '<+input>',
+      clusterRef: RUNTIME_INPUT_VALUE,
       deployToAll: true,
       environmentOrEnvGroupAsRuntime: 'Environment',
       environmentOrEnvGroupRef: 'env_2',
@@ -197,8 +197,8 @@ describe('deploy environment or group initial values utils', () => {
       clusterRef: undefined,
       deployToAll: true,
       environmentOrEnvGroupAsRuntime: 'Environment Group',
-      environmentOrEnvGroupRef: '<+input>',
-      environmentsInEnvGroup: '<+input>',
+      environmentOrEnvGroupRef: RUNTIME_INPUT_VALUE,
+      environmentsInEnvGroup: RUNTIME_INPUT_VALUE,
       isEnvGroup: true
     })
 
@@ -281,10 +281,10 @@ describe('deploy environment or group form values utils', () => {
     ).toEqual({
       environment: {
         deployToAll: false,
-        environmentInputs: '<+input>',
-        environmentRef: '<+input>',
-        infrastructureDefinitions: '<+input>',
-        serviceOverrideInputs: '<+input>'
+        environmentInputs: RUNTIME_INPUT_VALUE,
+        environmentRef: RUNTIME_INPUT_VALUE,
+        infrastructureDefinitions: RUNTIME_INPUT_VALUE,
+        serviceOverrideInputs: RUNTIME_INPUT_VALUE
       }
     })
 
@@ -298,7 +298,7 @@ describe('deploy environment or group form values utils', () => {
               {
                 name: 'test',
                 type: 'String',
-                value: '<+input>'
+                value: RUNTIME_INPUT_VALUE
               }
             ]
           },
@@ -307,7 +307,7 @@ describe('deploy environment or group form values utils', () => {
               {
                 name: 'test',
                 type: 'String',
-                value: '<+input>'
+                value: RUNTIME_INPUT_VALUE
               }
             ]
           }
@@ -317,10 +317,10 @@ describe('deploy environment or group form values utils', () => {
     ).toEqual({
       environment: {
         deployToAll: false,
-        environmentInputs: { variables: [{ name: 'test', type: 'String', value: '<+input>' }] },
+        environmentInputs: { variables: [{ name: 'test', type: 'String', value: RUNTIME_INPUT_VALUE }] },
         environmentRef: 'env_6',
-        infrastructureDefinitions: '<+input>',
-        serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: '<+input>' }] }
+        infrastructureDefinitions: RUNTIME_INPUT_VALUE,
+        serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: RUNTIME_INPUT_VALUE }] }
       }
     })
 
@@ -355,7 +355,7 @@ describe('deploy environment or group form values utils', () => {
                 identifier: 'infra_8',
                 type: 'KubernetesDirect',
                 spec: {
-                  namespace: '<+input>'
+                  namespace: RUNTIME_INPUT_VALUE
                 }
               }
             }
@@ -369,7 +369,7 @@ describe('deploy environment or group form values utils', () => {
         infrastructureDefinitions: [
           {
             identifier: 'infra_8',
-            inputs: { identifier: 'infra_8', spec: { namespace: '<+input>' }, type: 'KubernetesDirect' }
+            inputs: { identifier: 'infra_8', spec: { namespace: RUNTIME_INPUT_VALUE }, type: 'KubernetesDirect' }
           }
         ]
       }
@@ -390,11 +390,11 @@ describe('deploy environment or group form values utils', () => {
       )
     ).toEqual({
       environment: {
-        deployToAll: '<+input>',
-        environmentInputs: '<+input>',
-        environmentRef: '<+input>',
-        gitOpsClusters: '<+input>',
-        serviceOverrideInputs: '<+input>'
+        deployToAll: RUNTIME_INPUT_VALUE,
+        environmentInputs: RUNTIME_INPUT_VALUE,
+        environmentRef: RUNTIME_INPUT_VALUE,
+        gitOpsClusters: RUNTIME_INPUT_VALUE,
+        serviceOverrideInputs: RUNTIME_INPUT_VALUE
       }
     })
 
@@ -406,7 +406,9 @@ describe('deploy environment or group form values utils', () => {
         },
         getString
       )
-    ).toEqual({ environment: { deployToAll: '<+input>', environmentRef: 'env_9', gitOpsClusters: '<+input>' } })
+    ).toEqual({
+      environment: { deployToAll: RUNTIME_INPUT_VALUE, environmentRef: 'env_9', gitOpsClusters: RUNTIME_INPUT_VALUE }
+    })
 
     expect(
       processGitOpsEnvironmentFormValues(
@@ -420,7 +422,7 @@ describe('deploy environment or group form values utils', () => {
                 {
                   name: 'test',
                   type: 'String',
-                  value: '<+input>'
+                  value: RUNTIME_INPUT_VALUE
                 }
               ]
             },
@@ -429,7 +431,7 @@ describe('deploy environment or group form values utils', () => {
                 {
                   name: 'test',
                   type: 'String',
-                  value: '<+input>'
+                  value: RUNTIME_INPUT_VALUE
                 }
               ]
             }
@@ -446,9 +448,9 @@ describe('deploy environment or group form values utils', () => {
     ).toEqual({
       environment: {
         deployToAll: true,
-        environmentInputs: { variables: [{ name: 'test', type: 'String', value: '<+input>' }] },
+        environmentInputs: { variables: [{ name: 'test', type: 'String', value: RUNTIME_INPUT_VALUE }] },
         environmentRef: 'env_10',
-        serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: '<+input>' }] }
+        serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: RUNTIME_INPUT_VALUE }] }
       }
     })
 
@@ -480,7 +482,7 @@ describe('deploy environment or group form values utils', () => {
     })
 
     expect(processGitOpsEnvGroupFormValues({ environmentOrEnvGroupRef: RUNTIME_INPUT_VALUE }, getString)).toEqual({
-      environmentGroup: { deployToAll: true, envGroupRef: '<+input>' }
+      environmentGroup: { deployToAll: true, envGroupRef: RUNTIME_INPUT_VALUE }
     })
 
     expect(
@@ -494,7 +496,9 @@ describe('deploy environment or group form values utils', () => {
         },
         getString
       )
-    ).toEqual({ environmentGroup: { deployToAll: false, envGroupRef: 'env_group_2', environments: '<+input>' } })
+    ).toEqual({
+      environmentGroup: { deployToAll: false, envGroupRef: 'env_group_2', environments: RUNTIME_INPUT_VALUE }
+    })
 
     expect(
       processGitOpsEnvGroupFormValues(
@@ -631,8 +635,7 @@ describe('deploy environment or group input set initial values utils', () => {
                 }
               ]
             },
-            serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: 'test' }] },
-            infrastructureDefinitions: RUNTIME_INPUT_VALUE as any
+            serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: 'test' }] }
           }
         },
         getCustomStepProps()
@@ -643,7 +646,7 @@ describe('deploy environment or group input set initial values utils', () => {
         environmentRef: 'env_15',
         serviceOverrideInputs: { variables: [{ name: 'test', type: 'String', value: 'test' }] }
       },
-      infrastructureRef: '<+input>'
+      infrastructureRef: ''
     })
 
     expect(
@@ -738,7 +741,7 @@ describe('deploy environment or group input set initial values utils', () => {
         getCustomStepProps(true)
       )
     ).toEqual({
-      clusterRef: '<+input>',
+      clusterRef: RUNTIME_INPUT_VALUE,
       environment: {
         environmentInputs: { variables: [{ name: 'test1', type: 'String', value: 'test1' }] },
         environmentRef: 'env_18',

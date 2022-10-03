@@ -115,7 +115,7 @@ export const ScriptWizardStepTwo = ({
     const values = get(initialValues, `spec.configuration.template.store`, '')
     return (
       <HarnessOption
-        initialValues={values}
+        initialValues={values?.type === 'Harness' ? values : { spec: '' }}
         stepName={name}
         handleSubmit={
           /* istanbul ignore next */
@@ -133,6 +133,7 @@ export const ScriptWizardStepTwo = ({
         prevStepData={prevStepData}
         previousStep={previousStep}
         expressions={expressions}
+        hideEncrypted
       />
     )
   }

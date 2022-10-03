@@ -273,13 +273,20 @@ function CICodebaseInputSetFormInternal({
   const showSetContainerResources = isCpuLimitRuntimeInput || isMemoryLimitRuntimeInput
   const [isConnectorExpression, setIsConnectorExpression] = useState<boolean>(false)
   const containerWidth = viewTypeMetadata?.isTemplateDetailDrawer ? '100%' : '50%' // drawer view is much smaller 50% would cut out
-  const savedValues = useRef<Record<string, string>>({
-    branch: '',
-    tag: '',
-    PR: ''
-  })
+  const prefix = isEmpty(path) ? '' : `${path}.`
+  const buildTypeValue = get(formik?.values, `${prefix}properties.ci.codebase.build.type`)
+  const previousBuildTypeSpecValue = get(formik?.values, `${prefix}properties.ci.codebase.build.spec.${buildTypeValue}`)
+  const savedValues = useRef<Record<string, string>>(
+    Object.assign(
+      {
+        branch: '',
+        tag: '',
+        PR: ''
+      },
+      { [buildTypeValue]: previousBuildTypeSpecValue || '' }
+    )
+  )
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const formattedPath = isEmpty(path) ? '' : `${path}.`
@@ -384,7 +391,10 @@ function CICodebaseInputSetFormInternal({
             })
               .then((result: ResponseGitBranchesResponseDTO) => {
                 setIsFetchingBranches(false)
-                formik.setFieldValue(codeBaseInputFieldFormName.branch, result.data?.defaultBranch?.name || '')
+                const branchName = result.data?.defaultBranch?.name || ''
+                formik.setFieldValue(codeBaseInputFieldFormName.branch, branchName)
+                savedValues.current.branch = branchName as string
+
                 if (result.data?.defaultBranch?.name) {
                   setIsDefaultBranchSet(true)
                 }
@@ -599,7 +609,10 @@ function CICodebaseInputSetFormInternal({
           }}
           placeholder={triggerIdentifier && isNotScheduledTrigger ? placeholderValues[type] : ''}
           disabled={readonly || shouldDisableBranchTextInput}
-          onChange={() => setIsInputTouched(true)}
+          onChange={val => {
+            setIsInputTouched(true)
+            savedValues.current[type] = (val || '') as string
+          }}
           className={shouldDisableBranchTextInput ? css.width90 : css.width100}
         />
         {shouldDisableBranchTextInput ? <Icon name="steps-spinner" size={20} padding={{ top: 'xsmall' }} /> : null}

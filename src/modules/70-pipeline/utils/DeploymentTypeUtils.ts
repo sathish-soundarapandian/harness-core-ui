@@ -32,3 +32,15 @@ export const deploymentTypeIcon: Record<ServiceTypes, IconName> = {
   KubernetesGitOps: 'gitops-green', //type specific to gitops
   ECS: 'service-amazon-ecs'
 }
+
+// this is added for card names in execution strategies
+export const executionStrategyTypes: Record<ServiceDefinition['type'], StringKeys> = {
+  Kubernetes: 'kubernetesText',
+  NativeHelm: 'pipeline.nativeHelm',
+  Ssh: 'SSH',
+  WinRm: 'pipeline.serviceDeploymentTypes.winrm',
+  ServerlessAwsLambda: 'pipeline.serviceDeploymentTypes.serverlessAwsType',
+  AzureWebApp: 'pipeline.serviceDeploymentTypes.azureWebApp',
+  CustomDeployment: 'pipeline.serviceDeploymentTypes.customDeploy',
+  ECS: 'ce.common.containerService'
+}

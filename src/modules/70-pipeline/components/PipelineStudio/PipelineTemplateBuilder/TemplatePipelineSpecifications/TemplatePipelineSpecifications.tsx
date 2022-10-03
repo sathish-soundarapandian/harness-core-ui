@@ -47,7 +47,8 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     state: { pipeline, schemaErrors, gitDetails, storeMetadata },
     allowableTypes,
     updatePipeline,
-    isReadonly
+    isReadonly,
+    setIntermittentLoading
   } = usePipelineContext()
   const queryParams = useParams<ProjectPathProps>()
   const templateRef = getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, ''))
@@ -198,10 +199,23 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     refetchTemplateInputSet()
   }
 
-  const isLoading =
-    pipelineLoading || templateInputSetLoading || loadingMergedTemplateInputs || (isEmpty(allValues) && !pipelineError)
+  const isLoading = pipelineLoading || templateInputSetLoading || loadingMergedTemplateInputs
 
   const error = defaultTo(templateInputSetError, pipelineError)
+
+  /**
+   * This effect disables/enables Save button on Pipeline and Template Studio
+   * For gitx, template resolution takes a long time
+   * If user clicks on Save button before resolution, template exception occurs
+   */
+  React.useEffect(() => {
+    setIntermittentLoading(isLoading)
+
+    // cleanup
+    return () => {
+      setIntermittentLoading(false)
+    }
+  }, [isLoading, setIntermittentLoading])
 
   return (
     <Container className={css.contentSection} height={'100%'} background={Color.FORM_BG}>

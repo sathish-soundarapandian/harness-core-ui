@@ -5,156 +5,162 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
-  Color,
-  DropDown,
-  ExpandingSearchInput,
-  ExpandingSearchInputHandle,
-  HarnessDocTooltip,
-  Layout,
-  Page,
-  PageSpinner,
-  Text
-} from '@harness/uicore'
-import { noop } from 'lodash-es'
-import React from 'react'
+import { Color, Layout, Page, PageSpinner, Text, useToaster } from '@harness/uicore'
+import React, { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
+import { defaultTo } from 'lodash-es'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
-import { useUpdateQueryParams } from '@common/hooks'
+import { useUpdateQueryParams, useQueryParams, useMutateAsGet } from '@common/hooks'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { queryParamDecodeAll, useQueryParams } from '@common/hooks/useQueryParams'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
-import { FreezeWindowListTable } from '@freeze-windows/components/FreezeWindowList/FreezeWindowListTable'
-import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE, DEFAULT_PIPELINE_LIST_TABLE_SORT } from '@pipeline/utils/constants'
-import type { PartiallyRequired } from '@pipeline/utils/types'
 import { useStrings } from 'framework/strings'
-import { GetFreezeListQueryParams, useGetFreezeList } from 'services/cd-ng'
-import { NewFreezeWindowButton } from './views/NewFreezeWindowButton/NewFreezeWindowButton'
-import NoResultsView from './views/NoResultsView/NoResultsView'
-import css from './FreezeWindowsPage.module.scss'
+import {
+  GetFreezeListQueryParams,
+  useGetFreezeList,
+  useUpdateFreezeStatus,
+  UseUpdateFreezeStatusProps,
+  useDeleteManyFreezes
+} from 'services/cd-ng'
+import { NoResultsView } from '@freeze-windows/components/NoResultsView/NoResultsView'
+import { FreezeWindowListSubHeader } from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader'
+import { BulkActions } from '@freeze-windows/components/BulkActions/BulkActions'
+import type { FreezeListUrlQueryParams } from '@freeze-windows/types'
+import { FreezeWindowListHeader } from '@freeze-windows/components/FreezeWindowListHeader/FreezeWindowListHeader'
+import { FreezeWindowList } from '@freeze-windows/components/FreezeWindowList/FreezeWindowList'
+import { FreezeWindowListProvider, useFreezeWindowListContext } from '@freeze-windows/context/FreezeWindowListContext'
+import { getQueryParamOptions } from '@freeze-windows/utils/queryUtils'
+import type { FreezeWindowListColumnActions } from '@freeze-windows/components/FreezeWindowList/FreezeWindowListCells'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useConfirmFreezeDelete } from '@freeze-windows/hooks/useConfirmFreezeDelete'
+import css from '@freeze-windows/components/FreezeWindowListSubHeader/FreezeWindowListSubHeader.module.scss'
 
-type ProcessedFreezeListPageQueryParams = PartiallyRequired<GetFreezeListQueryParams, 'page' | 'size' | 'sort'>
-const queryParamOptions = {
-  parseArrays: true,
-  decoder: queryParamDecodeAll(),
-  processQueryParams(params: GetFreezeListQueryParams): ProcessedFreezeListPageQueryParams {
-    return {
-      ...params,
-      page: params.page ?? DEFAULT_PAGE_INDEX,
-      size: params.size ?? DEFAULT_PAGE_SIZE,
-      sort: params.sort ?? DEFAULT_PIPELINE_LIST_TABLE_SORT
-    }
-  }
-}
-
-export default function FreezeWindowsPage(): React.ReactElement {
+function _FreezeWindowsPage(): React.ReactElement {
   const { getString } = useStrings()
+  const { showSuccess, showWarning } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
   const { projectIdentifier = 'defaultproject', orgIdentifier = 'default', accountId } = useParams<ProjectPathProps>()
-  const searchRef = React.useRef<ExpandingSearchInputHandle>({} as ExpandingSearchInputHandle)
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountId })
-  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<GetFreezeListQueryParams>>()
-  const queryParams = useQueryParams<ProcessedFreezeListPageQueryParams>(queryParamOptions)
-  const { searchTerm, page, size, sort, status } = queryParams
+  const { replaceQueryParams } = useUpdateQueryParams<Partial<GetFreezeListQueryParams>>()
+  const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
+  const { searchTerm, page, size, sort, freezeStatus, startTime, endTime } = queryParams
+  const { selectedItems, clearSelectedItems } = useFreezeWindowListContext()
 
-  const resetFilter = (): void => {
-    replaceQueryParams({})
-  }
+  const resetFilter = () => replaceQueryParams({})
+  useDocumentTitle([getString('common.freezeWindows')])
 
-  const { data, error, loading, refetch } = useGetFreezeList({
+  const {
+    data,
+    error,
+    loading: freezeListLoading,
+    refetch,
+    initLoading
+  } = useMutateAsGet(useGetFreezeList, {
     queryParams: {
-      page,
-      size,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
+      page,
+      size
+    },
+    body: {
+      freezeStatus,
       searchTerm,
-      sort
+      sort,
+      startTime,
+      endTime
     }
   })
 
-  useDocumentTitle([getString('common.freezeWindows')])
+  const { mutate: updateFreezeStatus, loading: updateFreezeStatusLoading } = useUpdateFreezeStatus({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    }
+  } as UseUpdateFreezeStatusProps)
 
+  const { mutate: deleteFreeze, loading: deleteFreezeLoading } = useDeleteManyFreezes({
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  })
+
+  const handleDelete = async (freezeWindowId?: string) => {
+    try {
+      if (freezeWindowId) {
+        await deleteFreeze([freezeWindowId])
+      } else {
+        await deleteFreeze(selectedItems)
+      }
+      showSuccess(getString('freezeWindows.freezeWindowsPage.deleteSuccess'))
+    } catch (err: any) {
+      showWarning(defaultTo(getRBACErrorMessage(err), getString('freezeWindows.freezeWindowsPage.deleteFailure')))
+    }
+    clearSelectedItems()
+    refetch()
+  }
+
+  const handleFreezeToggle: FreezeWindowListColumnActions['onToggleFreezeRow'] = async ({ freezeWindowId, status }) => {
+    try {
+      if (freezeWindowId) {
+        await updateFreezeStatus([freezeWindowId], { queryParams: { status } } as UseUpdateFreezeStatusProps)
+      } else {
+        await updateFreezeStatus(selectedItems, { queryParams: { status } } as UseUpdateFreezeStatusProps)
+      }
+      showSuccess(getString('freezeWindows.freezeWindowsPage.updateStatusSuccess', { value: status }))
+
+      showSuccess(`${status} successfully`)
+    } catch (err: any) {
+      showWarning(
+        defaultTo(
+          getRBACErrorMessage(err),
+          getString('freezeWindows.freezeWindowsPage.updateStatusFailure', { value: status })
+        )
+      )
+    }
+    clearSelectedItems()
+    refetch()
+  }
+
+  const confirmFreezeDelete = useConfirmFreezeDelete(handleDelete)
+
+  const pageFreezeSummaryResponse = data?.data
   return (
-    <>
-      <Page.Header
-        title={
-          <div className="ng-tooltip-native">
-            <h2 data-tooltip-id="freezeWindowsPageHeading"> {getString('common.freezeWindows')}</h2>
-            <HarnessDocTooltip tooltipId="freezeWindowsPageHeading" useStandAlone={true} />
-          </div>
-        }
-        breadcrumbs={
-          <NGBreadcrumbs
-            links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })}
-          />
-        }
-      />
-
-      <Page.SubHeader className={css.freeeWindowsPageSubHeader}>
-        <Layout.Horizontal spacing={'medium'}>
-          <NewFreezeWindowButton />
-          <DropDown
-            value={status}
-            onChange={() => {
-              // todo
-            }}
-            items={[]}
-            filterable={false}
-            addClearBtn={true}
-            placeholder={getString('all')}
-            popoverClassName={css.dropdownPopover}
-          />
-        </Layout.Horizontal>
-        <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
-          <ExpandingSearchInput
-            alwaysExpanded
-            width={200}
-            placeholder={getString('search')}
-            onChange={text => {
-              updateQueryParams({ searchTerm: text ?? undefined, page: DEFAULT_PAGE_INDEX })
-            }}
-            defaultValue={searchTerm}
-            ref={searchRef}
-            className={css.expandSearch}
-          />
-        </Layout.Horizontal>
-      </Page.SubHeader>
-
-      <Page.Body
-        loading={loading}
-        error={error?.message}
-        className={css.freezeWindowsPageBody}
-        retryOnError={() => refetch()}
-      >
-        {loading ? (
+    <div className={css.main}>
+      <FreezeWindowListHeader />
+      <FreezeWindowListSubHeader />
+      <Page.Body error={error?.message} retryOnError={refetch}>
+        {initLoading ? (
           <PageSpinner />
-        ) : data?.data?.content?.length ? (
+        ) : pageFreezeSummaryResponse && pageFreezeSummaryResponse.content?.length ? (
           <>
-            <Text color={Color.GREY_800} font={{ weight: 'bold' }}>
-              {`${getString('total')}: ${data?.data?.totalItems}`}
-            </Text>
-            <FreezeWindowListTable
-              gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
-              data={data?.data}
-              onViewFreezeWindow={noop}
-              onDeleteFreezeWindow={noop}
-              getViewFreezeWindowLink={() => ''}
-              setSortBy={sortArray => {
-                updateQueryParams({ sort: sortArray })
-              }}
-              sortBy={sort}
+            {(freezeListLoading || deleteFreezeLoading || updateFreezeStatusLoading) && <PageSpinner />}
+            <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'start' }}>
+              <Text color={Color.GREY_800} font={{ weight: 'bold' }} padding="large">
+                {`${getString('total')}: ${data?.data?.totalItems}`}
+              </Text>
+              <BulkActions onDelete={confirmFreezeDelete} onToggleFreeze={handleFreezeToggle} />
+            </Layout.Horizontal>
+            <FreezeWindowList
+              data={pageFreezeSummaryResponse}
+              onDeleteRow={confirmFreezeDelete}
+              onToggleFreezeRow={handleFreezeToggle}
             />
           </>
         ) : (
           <NoResultsView
-            hasSearchParam={!!searchTerm} //  || !!quick filter
+            hasSearchParam={!!(searchTerm || freezeStatus || startTime || endTime)}
             onReset={resetFilter}
             text={getString('freezeWindows.freezeWindowsPage.noFreezeWindows', { scope })}
           />
         )}
       </Page.Body>
-    </>
+    </div>
+  )
+}
+
+export default function FreezeWindowsPage(): ReactElement {
+  return (
+    <FreezeWindowListProvider>
+      <_FreezeWindowsPage />
+    </FreezeWindowListProvider>
   )
 }

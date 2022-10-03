@@ -32,7 +32,7 @@ import css from './OrganizationDetailsPage.module.scss'
 const OrganizationDetailsPage: React.FC = () => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
   const { OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE } = useFeatureFlags()
-  const DEPLOYMENT_FREEZE = false
+  const NG_DEPLOYMENT_FREEZE = false
   const history = useHistory()
   const { getString } = useStrings()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
@@ -242,7 +242,7 @@ const OrganizationDetailsPage: React.FC = () => {
                     route: routes.toGovernance({ accountId, orgIdentifier }),
                     colorClass: css.governance
                   },
-                  ...(DEPLOYMENT_FREEZE ? deploymentFreezeCard : [])
+                  ...(NG_DEPLOYMENT_FREEZE ? deploymentFreezeCard : [])
                 ]}
               />
             </Layout.Vertical>

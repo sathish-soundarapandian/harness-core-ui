@@ -24,32 +24,28 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 
 const StageTemplateCanvasWrapper = () => {
   const {
-    state: { template, isLoading, isUpdated, gitDetails, storeMetadata },
+    state: { template, gitDetails, storeMetadata },
     updateTemplate,
     isReadonly,
-    renderPipelineStage
+    renderPipelineStage,
+    setIntermittentLoading
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  const createPipelineFromTemplate = () =>
-    produce({ ...DefaultPipeline }, draft => {
-      set(
-        draft,
-        'stages[0].stage',
-        merge({}, template.spec as StageElementConfig, {
-          name: DefaultNewStageName,
-          identifier: DefaultNewStageId
-        })
-      )
-    })
-
-  const [pipeline, setPipeline] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
-
-  React.useEffect(() => {
-    if (!isLoading && !isUpdated) {
-      setPipeline(createPipelineFromTemplate())
-    }
-  }, [isLoading, isUpdated])
+  const pipeline = React.useMemo(
+    () =>
+      produce({ ...DefaultPipeline }, draft => {
+        set(
+          draft,
+          'stages[0].stage',
+          merge({}, template.spec as StageElementConfig, {
+            name: DefaultNewStageName,
+            identifier: DefaultNewStageId
+          })
+        )
+      }),
+    [template.spec]
+  )
 
   const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig) => {
     const stage = get(pipelineConfig, 'stages[0].stage')
@@ -69,6 +65,7 @@ const StageTemplateCanvasWrapper = () => {
       contextType={PipelineContextType.StageTemplate}
       isReadOnly={isReadonly}
       renderPipelineStage={renderPipelineStage}
+      setIntermittentLoading={setIntermittentLoading}
     >
       <StageTemplateCanvas />
     </TemplatePipelineProvider>

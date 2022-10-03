@@ -32,4 +32,10 @@ describe('NoTargetsView', () => {
 
     await waitFor(() => expect(screen.getByRole('heading', { name: 'cf.targets.addTargetsLabel' })).toBeInTheDocument())
   })
+
+  test('it should show the onboarding link', async () => {
+    renderComponent()
+
+    expect(screen.getByRole('button', { name: 'cf.featureFlags.getStartedWithFF' })).toBeInTheDocument()
+  })
 })

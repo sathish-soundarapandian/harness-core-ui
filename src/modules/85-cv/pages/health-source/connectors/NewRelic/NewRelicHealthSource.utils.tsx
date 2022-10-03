@@ -64,7 +64,7 @@ export const validateMapping = (
   let errors = {} as any
 
   const metricValueList = Object.values(values?.metricData).filter(val => val)
-  if (!metricValueList.length) {
+  if (!metricValueList.length && !values?.showCustomMetric) {
     errors['metricData'] = getString('cv.monitoringSources.appD.validations.selectMetricPack')
   }
 

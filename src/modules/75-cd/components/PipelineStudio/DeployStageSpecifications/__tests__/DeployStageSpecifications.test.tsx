@@ -61,6 +61,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
     isDBInitialized: true,
     isInitialized: true,
     isLoading: false,
+    isIntermittentLoading: false,
     gitDetails: {},
     entityValidityDetails: {},
     isUpdated: true,
@@ -100,7 +101,8 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
   setTemplateTypes: jest.fn(),
-  setTemplateServiceData: jest.fn()
+  setTemplateServiceData: jest.fn(),
+  setIntermittentLoading: jest.fn()
 })
 
 jest.mock('../../DeployStage/EditStageView/EditStageView', () => ({

@@ -272,6 +272,7 @@ export const getPipelinePayloadWithCodebase = (): Record<string, any> => {
 export const getCloudPipelinePayloadWithoutCodebase = (): Record<string, any> => {
   const originalPipeline = getPipelinePayloadWithoutCodebase()
   set(originalPipeline, 'pipeline.stages.0.stage.spec.infrastructure', undefined)
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.execution.steps.0.step.spec.image', undefined)
   set(originalPipeline, 'pipeline.stages.0.stage.spec.platform', { os: 'Linux', arch: 'Amd64' })
   set(originalPipeline, 'pipeline.stages.0.stage.spec.runtime', { type: 'Cloud', spec: {} })
   return originalPipeline

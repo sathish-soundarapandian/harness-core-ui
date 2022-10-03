@@ -27,7 +27,7 @@ confirmAction: Confirm action
 accountSetup: Account Setup
 projectSetup: Project Setup
 additionalAttributes: Additional Attributes
-addAttribute: + Add Attribute
+addAttribute: Add Attribute
 orgSetup: Org Setup
 delegateForTask: '{{delegate}} for {{taskName}}'
 defineDelegateSelector: 'Define Delegate Selector'
@@ -45,7 +45,10 @@ templateStartLabel: Start with Template
 duplicateId: 'Duplicate Identifier'
 createPipeline: Create a Pipeline
 importFromGit: Import From Git
+allEnvironments: All Environments
+allServices: All Services
 production: Production
+preProduction: 'Pre-Production'
 addVariable: Add Variable
 advanced: '{{ $.advancedTitle }}'
 editVariable: Edit variable
@@ -1014,3 +1017,4 @@ serviceName: Service Name
 assignedAt: Assigned at
 assignedThrough: Assigned Through
 directly: Directly
+loadBalancer: Load Balancer

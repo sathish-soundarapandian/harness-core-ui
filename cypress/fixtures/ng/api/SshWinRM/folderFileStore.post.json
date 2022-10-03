@@ -1,0 +1,83 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "identifier": "Root",
+    "parentIdentifier": "",
+    "name": "/",
+    "type": "FOLDER",
+    "path": "/",
+    "lastModifiedAt": null,
+    "lastModifiedBy": null,
+    "children": [
+      {
+        "identifier": "vit",
+        "parentIdentifier": "Root",
+        "name": "vit",
+        "type": "FOLDER",
+        "path": "/vit",
+        "lastModifiedAt": 1663595414515,
+        "lastModifiedBy": {
+          "name": "autouser1@harness.io",
+          "email": "autouser1@harness.io"
+        },
+        "children": []
+      },
+      {
+        "identifier": "configyaml",
+        "parentIdentifier": "Root",
+        "name": "config.yaml",
+        "type": "FILE",
+        "path": "/config.yaml",
+        "lastModifiedAt": 1662990530013,
+        "lastModifiedBy": {
+          "name": "Test2",
+          "email": "test.test@harness.io"
+        },
+        "fileUsage": "CONFIG",
+        "description": null,
+        "tags": [],
+        "mimeType": "yaml",
+        "content": null,
+        "size": 174
+      },
+      {
+        "identifier": "appsettings1json",
+        "parentIdentifier": "Root",
+        "name": "app-settings1.json",
+        "type": "FILE",
+        "path": "/app-settings1.json",
+        "lastModifiedAt": 1662990501061,
+        "lastModifiedBy": {
+          "name": "test3",
+          "email": "test.test@harness.io"
+        },
+        "fileUsage": "CONFIG",
+        "description": "",
+        "tags": [],
+        "mimeType": "json",
+        "content": null,
+        "size": 0
+      },
+      {
+        "identifier": "TG_file_2",
+        "parentIdentifier": "Root",
+        "name": "TG_file_2",
+        "type": "FILE",
+        "path": "/TG_file_2",
+        "lastModifiedAt": 1662969960438,
+        "lastModifiedBy": {
+          "name": "test4",
+          "email": "test.test@harness.io"
+        },
+        "fileUsage": "CONFIG",
+        "description": null,
+        "tags": [],
+        "mimeType": "txt",
+        "content": null,
+        "size": 11
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "19e843b4-ed4a-4b14-8b12-c19fba4bd2a8"
+}

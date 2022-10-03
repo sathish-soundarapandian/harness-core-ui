@@ -23,7 +23,9 @@ export const defaultInitialValues = {
     ],
     instancesListPath: ''
   },
-  execution: {}
+  execution: {
+    stepTemplateRefs: []
+  }
 }
 
 export const defaultInitialValuesWithFileStore = {
@@ -46,7 +48,9 @@ export const defaultInitialValuesWithFileStore = {
     ],
     instancesListPath: ''
   },
-  execution: {}
+  execution: {
+    stepTemplateRefs: []
+  }
 }
 
 export const initialValues = {

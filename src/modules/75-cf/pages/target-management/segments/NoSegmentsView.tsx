@@ -9,9 +9,10 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Container } from '@harness/uicore'
 import { NoData } from '@cf/components/NoData/NoData'
+import GetStartedWithFF from '@cf/components/GetStartedWithFF/GetStartedWithFF'
 import { String, useStrings } from 'framework/strings'
+import imageURL from '@cf/images/segment.svg'
 import { NewSegmentButton } from './NewSegmentButton'
-import imageURL from '../../../images/segment.svg'
 
 export interface NoSegmentsViewProps {
   onNewSegmentCreated: (segmentIdentifier: string) => void
@@ -28,11 +29,13 @@ export const NoSegmentsView: React.FC<NoSegmentsViewProps> = ({ onNewSegmentCrea
         message={getString('cf.segments.noTargetGroupsForEnv')}
         description={<String useRichText stringID="cf.segments.noTargetGroupsDescription" />}
       >
+        <GetStartedWithFF />
         <NewSegmentButton
           accountIdentifier={accountIdentifier}
           orgIdentifier={orgIdentifier}
           projectIdentifier={projectIdentifier}
           onCreated={onNewSegmentCreated}
+          isLinkVariation
         />
       </NoData>
     </Container>

@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { RouteWithLayout } from '@common/router'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import CDSideNav from '@cd/components/CDSideNav/CDSideNav'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
@@ -19,8 +18,7 @@ import {
   DeployEnvironmentWidget,
   NewEditEnvironmentModal
 } from '@cd/components/PipelineSteps/DeployEnvStep/DeployEnvStep'
-import GitOpsServersPage from '@cd/pages/gitops/GitOpsServersHomePage'
-import GitOpsModalContainer from '@cd/pages/gitops/NativeArgo/GitOpsProvidersList'
+
 import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
@@ -42,18 +40,6 @@ const pipelineModuleParams: ModulePathParams = {
 }
 
 const GitOpsPage = (): React.ReactElement | null => {
-  const { ARGO_PHASE1 } = useFeatureFlags()
-
-  // In localhost when argo_phase1 is true
-  // we just need to show the microfrontend gitops
-  if (ARGO_PHASE1 && window.location.hostname !== 'localhost') {
-    return (
-      <GitOpsServersPage>
-        <GitOpsModalContainer />
-      </GitOpsServersPage>
-    )
-  }
-
   return (
     <ChildAppMounter<GitOpsCustomMicroFrontendProps>
       getLinkForAccountResources={getLinkForAccountResources}

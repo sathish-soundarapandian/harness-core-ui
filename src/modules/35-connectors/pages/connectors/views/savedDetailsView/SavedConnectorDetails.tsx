@@ -1007,7 +1007,7 @@ const getPDCConnectorHosts = (connector: ConnectorInfoDTO) => {
     ? [
         {
           label: 'connectors.pdc.hosts',
-          value: hosts.join(', ')
+          value: hosts.join(',\r\n')
         }
       ]
     : []

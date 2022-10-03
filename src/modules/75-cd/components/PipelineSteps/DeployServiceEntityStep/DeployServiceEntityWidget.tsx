@@ -40,6 +40,7 @@ import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -281,11 +282,19 @@ export default function DeployServiceEntityWidget({
         }
       })
     } else if (!isNil(values.service)) {
-      const isFixedService = getMultiTypeFromValue(values.service) === MultiTypeInputType.FIXED
+      const typeOfService = getMultiTypeFromValue(values.service)
+      let serviceInputs = undefined
+
+      if (typeOfService === MultiTypeInputType.FIXED) {
+        serviceInputs = get(values.serviceInputs, values.service)
+      } else if (isMultiTypeRuntime(typeOfService)) {
+        serviceInputs = RUNTIME_INPUT_VALUE
+      }
+
       onUpdate?.({
         service: {
           serviceRef: values.service,
-          serviceInputs: isFixedService ? get(values.serviceInputs, values.service) : RUNTIME_INPUT_VALUE
+          serviceInputs
         }
       })
     }
@@ -427,7 +436,8 @@ export default function DeployServiceEntityWidget({
                           width: 300,
                           expressions,
                           selectProps: { items: selectOptions },
-                          allowableTypes
+                          allowableTypes,
+                          defaultValueToReset: ''
                         }}
                         selectItems={selectOptions}
                       />
@@ -477,6 +487,7 @@ export default function DeployServiceEntityWidget({
                     stageIdentifier={stageIdentifier}
                     allowableTypes={allowableTypes}
                     onServiceEntityUpdate={onServiceEntityUpdate}
+                    isMultiSvc={isMultiSvc}
                   />
                 ) : null}
               </FormikForm>

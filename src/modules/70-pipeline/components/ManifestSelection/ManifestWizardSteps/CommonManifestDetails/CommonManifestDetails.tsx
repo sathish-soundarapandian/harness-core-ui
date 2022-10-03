@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { get, set, isEmpty } from 'lodash-es'
-import { Form, FormikProps } from 'formik'
+import type { FormikProps } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
 import {
@@ -19,7 +19,8 @@ import {
   Text,
   StepProps,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 
@@ -196,7 +197,7 @@ export function CommonManifestDetails({
       >
         {(formik: FormikProps<CommonManifestDataType>) => {
           return (
-            <Form>
+            <FormikForm>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
                 className={css.manifestForm}
@@ -237,7 +238,7 @@ export function CommonManifestDetails({
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

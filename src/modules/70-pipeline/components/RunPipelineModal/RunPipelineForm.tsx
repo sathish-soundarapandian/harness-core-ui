@@ -477,31 +477,23 @@ function RunPipelineFormBasic({
 
       try {
         let response
+        const finalYaml = isEmpty(valuesPipelineRef.current)
+          ? ''
+          : yamlStringify({ pipeline: omitBy(valuesPipelineRef.current, (_val, key) => key.startsWith('_')) })
+
         if (isEmpty(pipelineExecutionId)) {
           response = selectedStageData.allStagesSelected
-            ? await runPipeline(
-                !isEmpty(valuesPipelineRef.current)
-                  ? (yamlStringify({ pipeline: valuesPipelineRef.current }) as any)
-                  : ''
-              )
+            ? await runPipeline(finalYaml as any)
             : await runStage({
-                runtimeInputYaml: !isEmpty(valuesPipelineRef.current)
-                  ? (yamlStringify({ pipeline: valuesPipelineRef.current }) as any)
-                  : '',
+                runtimeInputYaml: finalYaml,
                 stageIdentifiers: stageIdentifiers,
                 expressionValues
               })
         } else {
           response = selectedStageData.allStagesSelected
-            ? await reRunPipeline(
-                !isEmpty(valuesPipelineRef.current)
-                  ? (yamlStringify({ pipeline: valuesPipelineRef.current }) as any)
-                  : ''
-              )
+            ? await reRunPipeline(finalYaml as any)
             : await reRunStages({
-                runtimeInputYaml: !isEmpty(valuesPipelineRef.current)
-                  ? (yamlStringify({ pipeline: valuesPipelineRef.current }) as any)
-                  : '',
+                runtimeInputYaml: finalYaml as any,
                 stageIdentifiers: stageIdentifiers,
                 expressionValues
               })

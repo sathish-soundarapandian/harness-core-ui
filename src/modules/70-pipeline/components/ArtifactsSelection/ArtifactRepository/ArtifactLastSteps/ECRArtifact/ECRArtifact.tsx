@@ -16,9 +16,9 @@ import {
   SelectOption,
   StepProps,
   Text,
-  ButtonVariation
+  ButtonVariation,
+  FormikForm
 } from '@wings-software/uicore'
-import { Form } from 'formik'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -203,7 +203,7 @@ export function ECRArtifact({
         enableReinitialize={true}
       >
         {formik => (
-          <Form>
+          <FormikForm>
             <div className={css.connectorForm}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -273,7 +273,7 @@ export function ECRArtifact({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

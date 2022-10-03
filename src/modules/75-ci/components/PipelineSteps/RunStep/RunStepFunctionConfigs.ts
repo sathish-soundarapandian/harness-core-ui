@@ -7,7 +7,7 @@
 
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 
 export const transformValuesFieldsConfig = [
   {
@@ -95,13 +95,21 @@ export const getEditViewValidateFieldsConfig = (
     name: 'spec.connectorRef',
     type: ValidationFieldTypes.Text,
     label: 'pipelineSteps.connectorLabel',
-    isRequired: buildInfrastructureType !== 'VM'
+    isRequired: ![
+      CIBuildInfrastructureType.VM,
+      CIBuildInfrastructureType.Cloud,
+      CIBuildInfrastructureType.Docker
+    ].includes(buildInfrastructureType)
   },
   {
     name: 'spec.image',
     type: ValidationFieldTypes.Text,
     label: 'imageLabel',
-    isRequired: buildInfrastructureType !== 'VM'
+    isRequired: ![
+      CIBuildInfrastructureType.VM,
+      CIBuildInfrastructureType.Cloud,
+      CIBuildInfrastructureType.Docker
+    ].includes(buildInfrastructureType)
   },
   {
     name: 'spec.shell',

@@ -7,10 +7,13 @@
 
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import type {
+  ArtifactTriggerConfig,
   GetActionsListQueryParams,
+  ManifestTriggerConfig,
   NGTriggerConfigV2,
   NGTriggerSourceV2,
-  PipelineInfoConfig
+  PipelineInfoConfig,
+  WebhookTriggerConfigV2
 } from 'services/pipeline-ng'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
@@ -54,6 +57,7 @@ export interface FlatOnEditValuesInterface {
   tags?: {
     [key: string]: string
   }
+  source?: NGTriggerSourceV2
   pipeline: PipelineInfoConfig
   triggerType: NGTriggerSourceV2['type']
   manifestType?: string
@@ -173,9 +177,9 @@ export interface TriggerConfigDTO extends Omit<NGTriggerConfigV2, 'identifier'> 
 
 export interface TriggerGitQueryParams extends GitQueryParams {
   triggerType?: NGTriggerSourceV2['type']
-  sourceRepo?: string
-  manifestType?: string
-  artifactType?: string
+  sourceRepo?: WebhookTriggerConfigV2['type']
+  manifestType?: ManifestTriggerConfig['type']
+  artifactType?: ArtifactTriggerConfig['type']
 }
 
 export interface artifactManifestData {

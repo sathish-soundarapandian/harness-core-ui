@@ -1,0 +1,108 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.dialog {
+  padding: var(--spacing-xlarge);
+  width: auto;
+  :global {
+    .bp3-dialog-header {
+      padding: 0;
+      margin-top: 0 !important;
+      margin-bottom: 10px !important;
+    }
+  }
+}
+
+.mainContainer {
+  width: 770px;
+  .selectInput {
+    width: 25%;
+  }
+  .searchBox {
+    width: 50%;
+    display: flex;
+    .search {
+      flex: 1;
+      margin-bottom: unset;
+      > div {
+        > span {
+          > svg {
+            margin-top: 1px;
+          }
+        }
+        > input {
+          background-color: var(--grey-50) !important;
+        }
+      }
+    }
+  }
+  .pipelineContainer {
+    height: 540px;
+  }
+}
+
+.noPipelineSection {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  .image {
+    width: 400px;
+    margin-bottom: 40px;
+  }
+  .noPipelineText {
+    font-size: 20px !important;
+    font-weight: bold !important;
+    line-height: 28px !important;
+    color: var(--grey-600) !important;
+  }
+}
+
+.table {
+  min-width: 700px;
+  margin-top: 20px;
+  overflow-y: scroll;
+  .tableRow {
+    cursor: pointer;
+    padding: var(--spacing-medium) var(--spacing-medium) var(--spacing-medium);
+    border-bottom: 1px solid var(--grey-200);
+    box-sizing: border-box;
+    &:hover {
+      background-color: var(--primary-1);
+      .iconCheck {
+        visibility: visible;
+      }
+    }
+  }
+  .selectedItem {
+    background-color: var(--primary-2) !important;
+    .iconChecked {
+      visibility: visible !important;
+      > svg {
+        > path {
+          stroke: var(--primary-7);
+        }
+      }
+    }
+  }
+  .iconCheck {
+    visibility: hidden;
+    margin-right: var(--spacing-xsmall);
+    cursor: pointer;
+    align-self: center;
+
+    > svg {
+      > path {
+        stroke-width: 1;
+        stroke: var(--grey-500);
+      }
+    }
+  }
+}

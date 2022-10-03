@@ -37,7 +37,7 @@ export const NoData: React.FC<NoDataProps> = ({
   ...props
 }) => {
   return (
-    <Layout.Vertical flex={{ justifyContent: 'center' }} spacing="xxxlarge" width={width || 540} {...props}>
+    <Layout.Vertical flex={{ justifyContent: 'center' }} spacing="xlarge" width={width || 540} {...props}>
       <img src={imageURL} width={imgWidth || 320} height={220} alt="" data-testid="nodata-image" />
 
       <Container>

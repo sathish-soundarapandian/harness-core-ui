@@ -143,7 +143,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.AUTOSTOPPINGRULE, {
 
 RbacFactory.registerResourceTypeHandler(ResourceType.LOADBALANCER, {
   icon: 'ccm-solid',
-  label: 'pipeline.loadBalancer',
+  label: 'common.loadBalancer',
   category: ResourceCategory.CLOUD_COSTS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CCM_LOADBALANCER]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -595,6 +595,15 @@ const CENonMFERoutes = (
     >
       <NodeDetailsPage />
     </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCEDashboards({ ...accountPathProps })}
+      exact
+      pageName={PAGE_NAME.CEDashboards}
+    >
+      <BIDashboard />
+    </RouteWithLayout>
   </>
 )
 
@@ -683,7 +692,8 @@ const CERoutes: React.FC = () => {
           perspectiveName: ':perspectiveName',
           clusterName: ':clusterName',
           nodeId: ':nodeId'
-        })
+        }),
+        routes.toCEDashboards({ ...accountPathProps })
       ]
     : []
 
@@ -770,15 +780,6 @@ const CERoutes: React.FC = () => {
           exact
         >
           <RedirectToNewNodeRecommendationDetailsRoute />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCEDashboards({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CEDashboards}
-        >
-          <BIDashboard />
         </RouteWithLayout>
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}

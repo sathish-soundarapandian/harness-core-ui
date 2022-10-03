@@ -21,7 +21,7 @@ import {
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './GCRStepFunctionConfigs'
 import type { GCRStepProps, GCRStepData, GCRStepDataUI } from './GCRStep'
 import { CIStep } from '../CIStep/CIStep'
@@ -121,13 +121,25 @@ export const GCRStepBase = (
                       stepViewType={stepViewType}
                       readonly={readonly}
                       enableFields={{
-                        'spec.optimize': { shouldHide: buildInfrastructureType === 'VM' },
+                        'spec.optimize': {
+                          shouldHide: [
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.Cloud,
+                            CIBuildInfrastructureType.Docker
+                          ].includes(buildInfrastructureType)
+                        },
                         'spec.dockerfile': {},
                         'spec.context': {},
                         'spec.labels': {},
                         'spec.buildArgs': {},
                         'spec.target': { tooltipId: 'target' },
-                        'spec.remoteCacheImage': { shouldHide: buildInfrastructureType === 'VM' }
+                        'spec.remoteCacheImage': {
+                          shouldHide: [
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.Cloud,
+                            CIBuildInfrastructureType.Docker
+                          ].includes(buildInfrastructureType)
+                        }
                       }}
                     />
                     <StepCommonFields disabled={readonly} buildInfrastructureType={buildInfrastructureType} />

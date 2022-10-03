@@ -251,12 +251,12 @@ exports[`<ExecutionLandingPage /> tests for CI loading state - snapshot test for
                  
                 
               </span>
-              <button
-                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary Button--size Button--small"
-                type="button"
+              <a
+                class="view"
+                href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
               >
                 <span
-                  class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                  class="bp3-icon StyledProps--main"
                   data-icon="main-view"
                 >
                   <svg
@@ -271,12 +271,10 @@ exports[`<ExecutionLandingPage /> tests for CI loading state - snapshot test for
                     />
                   </svg>
                 </span>
-                <span
-                  class="bp3-button-text"
-                >
+                <span>
                   common.viewText
                 </span>
-              </button>
+              </a>
               <div
                 class="Layout--horizontal StyledProps--main"
               >
@@ -861,12 +859,12 @@ exports[`<ExecutionLandingPage /> tests loading state - snapshot test 1`] = `
                  
                 
               </span>
-              <button
-                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary Button--size Button--small"
-                type="button"
+              <a
+                class="view"
+                href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
               >
                 <span
-                  class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                  class="bp3-icon StyledProps--main"
                   data-icon="main-view"
                 >
                   <svg
@@ -881,12 +879,10 @@ exports[`<ExecutionLandingPage /> tests loading state - snapshot test 1`] = `
                     />
                   </svg>
                 </span>
-                <span
-                  class="bp3-button-text"
-                >
+                <span>
                   common.viewText
                 </span>
-              </button>
+              </a>
               <div
                 class="Layout--horizontal StyledProps--main"
               >

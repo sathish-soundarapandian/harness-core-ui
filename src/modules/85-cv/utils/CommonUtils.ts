@@ -280,3 +280,7 @@ export const getDetailsLabel = (key: string, getString: UseStringsReturn['getStr
       return key
   }
 }
+
+export const getIsValidPrimitive = <T>(value: T): value is NonNullable<T> => {
+  return value !== undefined && value !== null
+}

@@ -675,6 +675,7 @@ export const getTemplateContextMock = (type: TemplateType): TemplateContextInter
         drawerData: { type: DrawerTypes.TemplateVariables, data: { paletteData: { onSelection: jest.fn() } } }
       },
       isLoading: false,
+      isIntermittentLoading: false,
       isBETemplateUpdated: false,
       isDBInitialized: true,
       isUpdated: false,
@@ -696,7 +697,8 @@ export const getTemplateContextMock = (type: TemplateType): TemplateContextInter
     updateTemplateView: jest.fn(),
     deleteTemplateCache: jest.fn(),
     updateGitDetails: () => new Promise<void>(() => undefined),
-    updateStoreMetadata: () => new Promise<void>(() => undefined)
+    updateStoreMetadata: () => new Promise<void>(() => undefined),
+    setIntermittentLoading: jest.fn()
   }
 
   switch (type) {

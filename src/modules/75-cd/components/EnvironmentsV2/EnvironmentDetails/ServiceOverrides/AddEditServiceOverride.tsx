@@ -42,7 +42,6 @@ import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { EnvironmentPathProps, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ServiceVariableOverride from './ServiceVariableOverride'
 import ServiceManifestOverride from './ServiceManifestOverride/ServiceManifestOverride'
 import { ServiceOverrideTab } from './ServiceOverridesUtils'
@@ -90,7 +89,6 @@ export default function AddEditServiceOverride({
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const formikRef = useRef<FormikProps<AddEditServiceOverrideFormProps>>()
-  const { NG_SERVICE_MANIFEST_OVERRIDE, NG_SERVICE_CONFIG_FILES_OVERRIDE } = useFeatureFlags()
   const allowableTypes: AllowedTypesWithRunTime[] = [
     MultiTypeInputType.FIXED,
     MultiTypeInputType.RUNTIME,
@@ -328,46 +326,40 @@ export default function AddEditServiceOverride({
                           />
                         }
                       />
-                      {NG_SERVICE_MANIFEST_OVERRIDE && (
-                        <Tab
-                          id={ServiceOverrideTab.MANIFEST}
-                          title={getString('manifestsText')}
-                          panel={
-                            <ServiceManifestOverride
-                              manifestOverrides={
-                                defaultTo(formikProps.values?.manifests, []) as ManifestConfigWrapper[]
-                              }
-                              handleManifestOverrideSubmit={(manifestObj, index) =>
-                                handleOverrideSubmit(manifestObj, index, 'manifests')
-                              }
-                              removeManifestConfig={index => onServiceOverrideDelete(index, 'manifests')}
-                              isReadonly={isReadonly}
-                              expressions={expressions}
-                              allowableTypes={allowableTypes}
-                            />
-                          }
-                        />
-                      )}
-                      {NG_SERVICE_CONFIG_FILES_OVERRIDE && (
-                        <Tab
-                          id={ServiceOverrideTab.CONFIG}
-                          title={getString('cd.configFileStoreTitle')}
-                          panel={
-                            <ServiceConfigFileOverride
-                              fileOverrides={defaultTo(formikProps.values?.configFiles, [])}
-                              selectedService={formikProps.values?.serviceRef as string}
-                              serviceList={services}
-                              allowableTypes={allowableTypes}
-                              handleConfigFileOverrideSubmit={(filesObj, index) =>
-                                handleOverrideSubmit(filesObj, index, 'configFiles')
-                              }
-                              handleServiceFileDelete={index => onServiceOverrideDelete(index, 'configFiles')}
-                              isReadonly={isReadonly}
-                              expressions={expressions}
-                            />
-                          }
-                        />
-                      )}
+                      <Tab
+                        id={ServiceOverrideTab.MANIFEST}
+                        title={getString('manifestsText')}
+                        panel={
+                          <ServiceManifestOverride
+                            manifestOverrides={defaultTo(formikProps.values?.manifests, []) as ManifestConfigWrapper[]}
+                            handleManifestOverrideSubmit={(manifestObj, index) =>
+                              handleOverrideSubmit(manifestObj, index, 'manifests')
+                            }
+                            removeManifestConfig={index => onServiceOverrideDelete(index, 'manifests')}
+                            isReadonly={isReadonly}
+                            expressions={expressions}
+                            allowableTypes={allowableTypes}
+                          />
+                        }
+                      />
+                      <Tab
+                        id={ServiceOverrideTab.CONFIG}
+                        title={getString('cd.configFileStoreTitle')}
+                        panel={
+                          <ServiceConfigFileOverride
+                            fileOverrides={defaultTo(formikProps.values?.configFiles, [])}
+                            selectedService={formikProps.values?.serviceRef as string}
+                            serviceList={services}
+                            allowableTypes={allowableTypes}
+                            handleConfigFileOverrideSubmit={(filesObj, index) =>
+                              handleOverrideSubmit(filesObj, index, 'configFiles')
+                            }
+                            handleServiceFileDelete={index => onServiceOverrideDelete(index, 'configFiles')}
+                            isReadonly={isReadonly}
+                            expressions={expressions}
+                          />
+                        }
+                      />
                     </Tabs>
                   </>
                 )}

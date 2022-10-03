@@ -75,7 +75,7 @@ describe('Template Schema Validation', () => {
     cy.get('div[data-testid="step-card-Shell Script"]').click({ force: true })
     cy.wait(1000)
 
-    cy.contains('div', 'YAML').click()
+    cy.get('[data-name="toggle-option-two"]').click({ force: true })
 
     cy.contains('span', 'Edit YAML').click()
 

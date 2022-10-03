@@ -127,12 +127,13 @@ clause:
     equalSensitive: 'equals (sensitive)'
     matchSegment: 'Match Target Group'
 featureFlags:
-  newFlag: New Flag
+  newFlag: New Feature Flag
   true: 'True'
   false: 'False'
   noFlagsInProject: There are no Flags in this Project
-  noFlagsDescription: A Feature Flag controls what you want to release, who receives it, and how it will be delivered.
+  flagsDescription: A Feature Flag controls what you want to release, who receives it, and how it will be delivered.
   noFlagsToGetStarted: To get started with Feature Flags, you can <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag" target="_blank" rel="noreferrer">create your first Flag</a>, <a href="https://docs.harness.io/category/rtce97j1wu-ff-sdks" target="_blank" rel="noreferrer">get started with our SDKs</a>, or <a href="https://docs.harness.io/category/iqgyied1c0-ff-getting-started" target="_blank" rel="noreferrer">read our getting started guide</a>.
+  getStartedWithFF: Get Started with Feature Flags
   typeOfFlag: Select the Type of Flag You Want to Create
   startVariation: Start by selecting the variation type that the flag will use
   booleanBtnText: This is a simple ON/OFF toggle
@@ -301,6 +302,8 @@ targets:
   upload: Upload a list of targets (CSV files only)
   enterName: 'Enter target name'
   enterValue: 'Enter target identifier'
+  addRow: Add row
+  removeRow: Remove row
   addTargetsLabel: Add Target(s)
   addTargets: + Add Target(s)
   noTargetFound: 'No target found in this environment. Click the button above to create target(s).'
@@ -618,12 +621,15 @@ onboarding:
   oneCreateAFlag: '1. Create a Flag'
   setUpApp: '2. Set Up Your Application'
   testYourFlag: '3. Test Your Flag'
-  letsStart: Let's start off by creating a simple flag
-  inputLabel: Give your flag a memorable name
-  successLabel: 'You have created <strong>{{name}}</strong> with Id: <strong>{{identifier}}</strong>'
+  letsGetStarted: Let's get started
+  createFlag: Create a Feature Flag
+  flagInputLabel: Select an existing Flag or type the name to create new one
+  selectOrCreateFlag: Select or Create a Flag
+  youCreated: You've created
+  youreUsing: You're using
   setupLabel: Set up your application and code to communicate with our platform.
   selectLanguage: Select your language
-  selectEnvironment: Select your environment
+  selectYourEnvironment: Select your Environment
   createEnv: Create an environment
   envCreated: Environment Created
   sdkKeyLabel: Please create an SDK key for your environment

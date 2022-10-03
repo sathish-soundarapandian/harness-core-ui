@@ -102,6 +102,7 @@ export const ScriptWizard = ({
         handleSubmit={onSubmit}
         isReadonly={isReadonly}
         isParam={isParam}
+        name={stepTwoName}
       />
     ),
     [initialValues, isParam]

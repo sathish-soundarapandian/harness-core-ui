@@ -9,7 +9,8 @@ import React from 'react'
 import { Button, ButtonVariation, Card, Icon, Text, Color, AllowedTypes, ButtonSize } from '@harness/uicore'
 import { Collapse } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, set } from 'lodash-es'
+import produce from 'immer'
 
 import { getStepTypeByDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { deploymentIconMap } from '@cd/utils/deploymentUtils'
@@ -19,6 +20,7 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ServiceSpec } from 'services/cd-ng'
+import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 
 import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import css from './ServiceEntitiesList.module.scss'
@@ -50,12 +52,25 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
   const { MULTI_SERVICE_INFRA } = useFeatureFlags()
   const formik = useFormikContext<FormState>()
   const serviceIdentifier = service.identifier
-  const template = serviceInputs?.serviceDefinition?.spec
+  const [template, setTemplate] = React.useState<any>(serviceInputs?.serviceDefinition?.spec)
+  const arifactsSpecPath = `serviceInputs.${serviceIdentifier}.serviceDefinition.spec`
 
   const type = service.serviceDefinition?.type as ServiceDeploymentType
 
   function toggle(): void {
     setShowInputs(s => !s)
+  }
+
+  function getStageFormTemplate<T>(path: string): T {
+    return get(template, path.replace(`${arifactsSpecPath}.`, ''))
+  }
+
+  function updateStageFormTemplate<T>(data: T, path: string): void {
+    setTemplate((value: any) =>
+      produce(value, (draft: any) => {
+        set(draft, path.replace(`${arifactsSpecPath}.`, ''), data)
+      })
+    )
   }
 
   return (
@@ -110,21 +125,25 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
               <Text color={Color.GREY_800} font={{ size: 'normal', weight: 'bold' }} margin={{ bottom: 'medium' }}>
                 {getString('common.serviceInputs')}
               </Text>
-              <StepWidget<ServiceSpec>
-                factory={factory}
-                initialValues={get(formik.values.serviceInputs, [serviceIdentifier, 'serviceDefinition', 'spec']) || {}}
-                allowableTypes={allowableTypes}
-                template={defaultTo(template, {})}
-                type={getStepTypeByDeploymentType(defaultTo(deploymentType, ''))}
-                stepViewType={StepViewType.DeploymentForm}
-                path={`serviceInputs.${serviceIdentifier}.serviceDefinition.spec`}
-                readonly={readonly}
-                customStepProps={{
-                  stageIdentifier,
-                  serviceIdentifier
-                  // allValues: deploymentStage?.service?.serviceInputs?.serviceDefinition?.spec
-                }}
-              />
+              <StageFormContextProvider
+                getStageFormTemplate={getStageFormTemplate}
+                updateStageFormTemplate={updateStageFormTemplate}
+              >
+                <StepWidget<ServiceSpec>
+                  factory={factory}
+                  initialValues={get(formik.values, arifactsSpecPath) || {}}
+                  allowableTypes={allowableTypes}
+                  template={defaultTo(template, {})}
+                  type={getStepTypeByDeploymentType(defaultTo(deploymentType, ''))}
+                  stepViewType={StepViewType.TemplateUsage}
+                  path={arifactsSpecPath}
+                  readonly={readonly}
+                  customStepProps={{
+                    stageIdentifier,
+                    serviceIdentifier
+                  }}
+                />
+              </StageFormContextProvider>
             </div>
           </Collapse>
         </>

@@ -76,7 +76,8 @@ import type {
   EmptyDirYaml,
   PersistentVolumeClaimYaml,
   HostPathYaml,
-  Platform
+  Platform,
+  Runtime
 } from 'services/ci'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
@@ -379,9 +380,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
-  const { CI_VM_INFRASTRUCTURE, CIE_HOSTED_VMS } = useFeatureFlags()
+  const { CI_VM_INFRASTRUCTURE, CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
-  const showThumbnailSelect = CI_VM_INFRASTRUCTURE || enabledHostedBuildsForFreeUsers
+  const showThumbnailSelect = CI_VM_INFRASTRUCTURE || CI_DOCKER_INFRASTRUCTURE || enabledHostedBuildsForFreeUsers
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
 
   const BuildInfraTypes: ThumbnailSelectProps['items'] = [
@@ -408,6 +409,15 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       icon: 'service-kubernetes',
       value: CIBuildInfrastructureType.KubernetesDirect
     },
+    ...(CI_DOCKER_INFRASTRUCTURE
+      ? [
+          {
+            label: getString('delegate.cardData.docker.name'),
+            icon: 'docker-step',
+            value: CIBuildInfrastructureType.Docker
+          } as Item
+        ]
+      : []),
     ...(CI_VM_INFRASTRUCTURE
       ? [
           {
@@ -647,7 +657,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     }
     if (stage?.stage?.spec?.runtime) {
       return {
-        buildInfraType: CIBuildInfrastructureType.Cloud,
+        buildInfraType: (stage?.stage?.spec?.runtime as Runtime)?.type as CIBuildInfrastructureType,
         os: (stage?.stage?.spec?.platform as Platform)?.os || OsTypes.Linux,
         arch: (stage?.stage?.spec?.platform as Platform)?.arch || ArchTypes.Amd64
       }
@@ -669,7 +679,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
 
   const handleValidate = (values: any): void => {
     if (stage) {
-      const _buildInfraType: CIBuildInfrastructureType = values.buildInfraType || BuildInfraTypes[0].value
+      const _buildInfraType: CIBuildInfrastructureType = values.buildInfraType || buildInfraType
       const errors: { [key: string]: string } = {}
       const stageData = produce(stage, draft => {
         if (currentMode === Modes.Propagate && values.useFromStage) {
@@ -688,13 +698,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             set(draft, 'stage.spec.platform', validationPropagatedStage?.stage?.spec?.platform)
             set(draft, 'stage.spec.runtime', validationPropagatedStage?.stage?.spec?.runtime)
           }
-        } else if (_buildInfraType === CIBuildInfrastructureType.Cloud) {
+        } else if ([CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(_buildInfraType)) {
           set(draft, 'stage.spec.platform', {
             os: values.os,
             arch: values.arch
           })
           set(draft, 'stage.spec.runtime', {
-            type: CIBuildInfrastructureType.Cloud,
+            type: _buildInfraType,
             spec: {}
           })
           set(draft, 'stage.spec.infrastructure', undefined)
@@ -1735,6 +1745,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             )
         })
       case CIBuildInfrastructureType.Cloud:
+      case CIBuildInfrastructureType.Docker:
         return yup.object().shape({
           os: yup
             .string()
@@ -2102,7 +2113,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                   propagatedStage,
                   getString
                 })}
-              {buildInfraType === CIBuildInfrastructureType.Cloud &&
+              {buildInfraType &&
+                [CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(buildInfraType) &&
                 renderUseFromStageCloud({
                   propagatedStage,
                   getString
@@ -2427,5 +2439,5 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     )
   }
 
-  return CIE_HOSTED_VMS ? renderNewInfraSection() : renderOldInfraSection()
+  return CIE_HOSTED_VMS || CI_DOCKER_INFRASTRUCTURE ? renderNewInfraSection() : renderOldInfraSection()
 }

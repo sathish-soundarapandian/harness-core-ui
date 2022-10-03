@@ -187,8 +187,7 @@ describe('BuildTests snapshot test', () => {
 
   test('should render TICallToAction without Upgrade Required', async () => {
     jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      NG_LICENSES_ENABLED: true,
-      TEST_INTELLIGENCE: true
+      NG_LICENSES_ENABLED: true
     })
 
     jest.spyOn(tiService, 'useReportsInfo').mockReturnValue({ data: InfoMock, refetch: jest.fn() } as any)
@@ -219,7 +218,7 @@ describe('BuildTests snapshot test', () => {
       </TestWrapper>
     )
     expect(document.querySelector('[class*="tiCallToActionWrapper"]')).not.toBeNull()
-    expect(queryByText(document.body, 'Support for Scala, Kotlin and Python coming soon!')).not.toBeNull()
+    expect(queryByText(document.body, 'Support for Python coming soon!')).not.toBeNull()
     expect(queryByText(document.body, 'common.findOutMore')).not.toBeNull()
     expect(queryByText(document.body, 'common.feature.upgradeRequired.title')).toBeNull()
   })

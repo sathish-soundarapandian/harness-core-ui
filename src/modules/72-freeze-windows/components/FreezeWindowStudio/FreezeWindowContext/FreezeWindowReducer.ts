@@ -14,11 +14,8 @@ export const DefaultFreezeId = '-1'
 export const DefaultFreeze = {
   name: '',
   identifier: DefaultFreezeId,
-  entityConfigs: [
-    { entity: { rule: 'Rule 1 - Weekend Freeze' } },
-    { entity: { rule: 'Rule 2 - Diwali Freeze' } },
-    { entity: { rule: 'Rule 3 - Black Friday' } }
-  ]
+  entityConfigs: [],
+  status: 'Enabled'
 }
 
 export interface FreezeWindowReducerState {

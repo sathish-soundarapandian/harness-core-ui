@@ -370,11 +370,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
         </Container>
 
         <Layout.Horizontal width={columnWidths.version} padding={{ left: USE_IMMUTABLE_DELEGATE ? 'xxlarge' : '' }}>
-          {delegate?.delegateGroupExpirationTime !== undefined
-            ? delegate.delegateGroupExpirationTime <= 0
-              ? getString('na')
-              : delegate.groupVersion
-            : null}
+          {delegate.groupVersion}
         </Layout.Horizontal>
 
         {USE_IMMUTABLE_DELEGATE ? (
@@ -487,7 +483,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                   className={css.marginLeft}
                   style={{ paddingLeft: !USE_IMMUTABLE_DELEGATE ? '6px' : '9px' }}
                 >
-                  <Text>{instanceDetails.version?.startsWith('1.0') ? getString('na') : instanceDetails.version}</Text>
+                  <Text>{instanceDetails.version}</Text>
                 </Layout.Horizontal>
                 {USE_IMMUTABLE_DELEGATE ? (
                   <Layout.Horizontal width={columnWidths.instanceStatus} className={css.instanceStatus}>

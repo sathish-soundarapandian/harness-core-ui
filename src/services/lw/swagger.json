@@ -3576,6 +3576,46 @@
         },
         "override_dns_record": {
           "type": "boolean"
+        },
+        "source_filters": {
+          "$ref": "#/definitions/SourceFilters"
+        }
+      }
+    },
+    "SourceFilters": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SourceFilterItem"
+          }
+        }
+      }
+    },
+    "SourceFilterItem": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "path": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cidr_range": {
+          "type": "string"
+        },
+        "ipaddresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

@@ -89,7 +89,7 @@ const COProviderSelector: React.FC<COProviderSelectorProps> = props => {
   }
 
   return (
-    <>
+    <Container className={css.providerScreenContainer}>
       <Breadcrumbs
         className={css.breadCrumb}
         links={[
@@ -164,7 +164,7 @@ const COProviderSelector: React.FC<COProviderSelectorProps> = props => {
           disabled={!(selectedCard && cloudAccountID)}
         />
       </Container>
-    </>
+    </Container>
   )
 }
 

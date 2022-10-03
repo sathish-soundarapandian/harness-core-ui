@@ -1,0 +1,22 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "infrastructure": {
+      "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+      "identifier": "testCypress_Infra",
+      "orgIdentifier": "default",
+      "projectIdentifier": "projectId",
+      "environmentRef": "testCypress_Env",
+      "name": "testCypress_Infra",
+      "description": "",
+      "tags": {},
+      "type": "Pdc",
+      "deploymentType": "Ssh",
+      "yaml": "infrastructureDefinition:\n  name: testCypress_Infra\n  identifier: testCypress_Infra\n  description: \"\"\n  tags: {}\n  orgIdentifier: default\n  projectIdentifier: projectId\n  environmentRef: testCypress_Env\n  deploymentType: Ssh\n  type: Pdc\n  spec:\n    credentialsRef: sshKey\n    hostFilter:\n      type: All\n      spec: {}\n    hosts:\n      - localhost\n  allowSimultaneousDeployments: false\n"
+    },
+    "createdAt": 1664286200394,
+    "lastModifiedAt": 1664286200394
+  },
+  "metaData": null,
+  "correlationId": "7cccff14-3441-4b6b-8de0-de1302ddf301"
+}

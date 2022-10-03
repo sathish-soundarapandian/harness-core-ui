@@ -57,7 +57,7 @@ createSSHCredWizard:
   verifyStepOne: 'Checking for Delegates'
   verifyStepTwo: 'Verifying Connection'
 createWinRmCredWizard:
-  titleDetails: 'WinRm Details'
+  titleDetails: 'WinRM Details'
   validateDomain: 'Domain is required'
   validatePassword: '{{$.validation.password}}'
 secret:
@@ -84,12 +84,11 @@ secret:
   configureSecret: 'Configure Secret'
   updateSuccess: 'Secret updated successfully'
   newSSHCredential: New SSH Credential
-  newWinRmCredential: New WinRm Credential
+  newWinRmCredential: New WinRM Credential
   newSecretText: New Secret Text
   newSecretFile: New Secret File
   secretNotFound: 'Secret not found'
   successMessage: Secret '{{name}}' {{action}} successfully
-  winrmCredential: WinRm Credential
 secretsTitle: 'Resources: Secrets'
 createSecret: Create a Secret
 policyEvaluations:

@@ -14,8 +14,8 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 
 import type { AbstractTriggerFactory } from '../../factory/AbstractTriggerFactory'
-import TriggerDetails from '../TriggerDetails/TriggerDetails'
 import type { TriggerProps } from './Trigger'
+import TriggerDetails from '../TriggerDetails/TriggerDetails'
 
 export interface TriggerWidgetProps<T> extends TriggerProps<T> {
   factory: AbstractTriggerFactory
@@ -29,11 +29,11 @@ export function TriggerWidget<T>({
   isNewTrigger,
   triggerData
 }: TriggerWidgetProps<T>): JSX.Element {
-  const isTriggersRefactor = useFeatureFlag(FeatureFlag.TRIGGERS_REFACTOR)
+  const isTriggersRefactor = useFeatureFlag(FeatureFlag.CD_TRIGGERS_REFACTOR)
 
   // isTriggersRefactor check can be removed once triggers refactoring is complete.
   // Until then it gives us the freedom to selectively render only those triggers that have been refactored.
-  const trigger = isTriggersRefactor && factory?.getTrigger<T>(type)
+  const trigger = isTriggersRefactor && factory.getTrigger<T>(type)
 
   if (!trigger) {
     return (
@@ -45,7 +45,7 @@ export function TriggerWidget<T>({
     const values = trigger.getDefaultValues(initialValues)
     return (
       <TriggerDetails>
-        {trigger?.renderTrigger({
+        {trigger.renderTrigger({
           type,
           baseType,
           initialValues: values,

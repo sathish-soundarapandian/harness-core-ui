@@ -6,7 +6,18 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Card, Text, Color, AllowedTypes, Container } from '@harness/uicore'
+import { defaultTo, isEmpty } from 'lodash-es'
+import {
+  Button,
+  ButtonVariation,
+  Card,
+  Text,
+  Color,
+  AllowedTypes,
+  Container,
+  Layout,
+  TagsPopover
+} from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 import type { NGEnvironmentInfoConfig } from 'services/cd-ng'
@@ -36,32 +47,41 @@ export function EnvironmentEntityCard(props: EnvironmentEntityCardProps): React.
 
   return (
     <Card className={css.card}>
-      <Container className={css.row}>
-        <Container>
-          <Text color={Color.PRIMARY_7} font="normal">
-            {environment.name}
+      <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
+        <Layout.Vertical>
+          <Layout.Horizontal
+            flex={{ justifyContent: 'flex-start', alignItems: 'flex-end' }}
+            spacing="small"
+            margin={{ bottom: 'xsmall' }}
+          >
+            <Text color={Color.PRIMARY_7}>{environment.name}</Text>
+            {!isEmpty(environment.tags) && (
+              <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(environment.tags, {})} />
+            )}
+          </Layout.Horizontal>
+
+          <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
+            {getString('common.ID')}: {environment.identifier}
           </Text>
-          <Text color={Color.GREY_500} font="small">
-            {getString('idLabel', { id: environment.identifier })}
-          </Text>
-        </Container>
+        </Layout.Vertical>
+
         <Container>
           <Button
             variation={ButtonVariation.ICON}
             icon="edit"
-            data-testid={`edit-service-${environment.identifier}`}
+            data-testid={`edit-environment-${environment.identifier}`}
             disabled={readonly}
             onClick={() => onEditClick({ environment, environmentInputs })}
           />
           <Button
             variation={ButtonVariation.ICON}
-            icon="trash"
+            icon="remove-minus"
             data-testid={`delete-environment-${environment.identifier}`}
             disabled={readonly}
             onClick={() => onDeleteClick({ environment, environmentInputs })}
           />
         </Container>
-      </Container>
+      </Layout.Horizontal>
     </Card>
   )
 }

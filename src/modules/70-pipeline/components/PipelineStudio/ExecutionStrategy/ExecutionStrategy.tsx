@@ -41,6 +41,7 @@ import {
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { parse } from '@common/utils/YamlHelperMethods'
+import { executionStrategyTypes } from '@pipeline/utils/DeploymentTypeUtils'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerTypes } from '../PipelineContext/PipelineActions'
 import Default from './resources/BlankCanvas.png'
@@ -336,7 +337,9 @@ function ExecutionStrategyRef(
                     <Icon name={iconMap[v] as IconName} size={40} border={false} />
                     <section className={css.strategyName}>{getStrategyNameByType(v)}</section>
                     <section className={css.strategyType}>
-                      {v !== 'Default' ? startCase(serviceDefinitionType()) : null}
+                      {v !== 'Default'
+                        ? defaultTo(getString(executionStrategyTypes[getServiceDefintionType]), getServiceDefintionType)
+                        : null}
                     </section>
                   </Card>
                 ))}

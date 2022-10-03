@@ -51,7 +51,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
+import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
@@ -87,6 +87,7 @@ function DeployEnvironment({
   const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
+  const [firstRender, setFirstRender] = React.useState<boolean>(true)
   const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.environment?.environmentRef)
   )
@@ -123,11 +124,11 @@ function DeployEnvironment({
     lazy: true
   })
 
-  const { template: getTemplate, updateTemplate } = useRunPipelineFormContext()
+  const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
 
   useEffect(() => {
     // once response has loaded
-    if (!environmentInputsLoading && !serviceOverrideInputsLoading) {
+    if (!environmentInputsLoading && !serviceOverrideInputsLoading && !firstRender) {
       // check for exisitence of environment and service override runtime inputs
       if (
         environmentInputsResponse?.data?.inputSetTemplateYaml ||
@@ -139,7 +140,7 @@ function DeployEnvironment({
         )
 
         if (path) {
-          updateTemplate(
+          updateStageFormTemplate(
             {
               environmentRef: RUNTIME_INPUT_VALUE,
               ...(parsedEnvironmentYaml?.environmentInputs && {
@@ -176,7 +177,7 @@ function DeployEnvironment({
           } else {
             set(values, `environment.infrastructureDefinitions`, '')
           }
-          formik?.setValues({ ...values })
+          formik?.setValues({ ...values, isEnvInputLoaded: true })
         } else {
           formik?.setValues({
             ...formik.values,
@@ -192,7 +193,7 @@ function DeployEnvironment({
         !serviceOverrideInputsResponse?.data?.inputSetTemplateYaml &&
         path
       ) {
-        const updatedTemplate = produce(getTemplate(path), (draft: EnvironmentYamlV2) => {
+        const updatedTemplate = produce(getStageFormTemplate(path), (draft: EnvironmentYamlV2) => {
           if (draft) {
             delete draft.environmentInputs
             delete draft.serviceOverrideInputs
@@ -213,20 +214,27 @@ function DeployEnvironment({
             unset(environmentValues, 'environmentInputs')
             unset(environmentValues, 'serviceOverrideInputs')
           }
-
-          formik?.setFieldValue('environment', {
-            ...environmentValues,
-            ...(!gitOpsEnabled && {
-              infrastructureDefinitions:
-                environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
-            }),
-            ...(gitOpsEnabled && {
-              gitOpsClusters: environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
-            })
-          })
-          updateTemplate(updatedTemplate, path)
+          formik?.setValues({
+            ...formik.values,
+            environment: {
+              ...environmentValues,
+              ...(!gitOpsEnabled && {
+                infrastructureDefinitions:
+                  environmentValues.environmentRef === RUNTIME_INPUT_VALUE
+                    ? RUNTIME_INPUT_VALUE
+                    : formik.values.environment?.infrastructureDefinitions || []
+              }),
+              ...(gitOpsEnabled && {
+                gitOpsClusters: environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
+              })
+            },
+            isEnvInputLoaded: true
+          } as any)
+          updateStageFormTemplate(updatedTemplate, path)
         }
       }
+    } else if (firstRender) {
+      setFirstRender(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentInputsLoading, serviceOverrideInputsLoading])
@@ -251,6 +259,8 @@ function DeployEnvironment({
           }
         })
       }
+    } else if (path && !firstRender) {
+      updateStageFormTemplate({ environmentRef: RUNTIME_INPUT_VALUE }, `${path}`)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEnvironment])

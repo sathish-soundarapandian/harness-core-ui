@@ -90,9 +90,9 @@ enableSamlProvider: Enable SAML Provider
 enableSamlProviderDescription: Before you change the SSO provider to SAML, please use the Test button to ensure your settings are correct.
 samlLoginEnabled: SAML login enabled successfully
 enableHarnessAccountOrOauthLogin: Enable Harness account or Oauth login
-changeLoginToHarnessAccountOrOauth: Do you want to change Login via SAML Provider to Harness Account or Public OAuth Providers?
+changeLoginToHarnessAccountOrOauth: Do you want to change Login via {{currentAuthMechanism}} Provider to Harness Account or Public OAuth Providers?
 accountOrOAuthLoginEnabledSuccessfully: '{{ $.authSettings.accountOrOAuthLogin }} enabled successfully'
-changeLoginToHarnessAccountOrOauthDescription: Some Users may not have set their Harness password. They will need to reset their password using this
+changeLoginToHarnessAccountOrOauthDescription: <strong> Note :</strong> Some Users may not have set their Harness password. They will need to reset their password using this <a href={{forgotPasswordURL}} target="_blank" rel="noreferrer">link</a>
 samlTestSuccessful: SAML test successful
 samlTestFailed: SAML test failed. Please check your credentials
 disableWhitelistedDomains: Disable email restrictions

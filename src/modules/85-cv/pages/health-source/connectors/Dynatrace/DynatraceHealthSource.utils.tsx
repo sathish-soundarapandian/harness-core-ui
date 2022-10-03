@@ -44,6 +44,7 @@ import {
   MetricThresholdPropertyName,
   MetricThresholdTypes
 } from '../../common/MetricThresholds/MetricThresholds.constants'
+import type { CustomSelectedAndMappedMetrics } from '../../common/CustomMetric/CustomMetric.types'
 
 export const mapDynatraceMetricDataToHealthSource = (
   dynatraceMetricData: DynatraceMetricData,
@@ -284,13 +285,37 @@ export const defaultDynatraceCustomMetric = (
 export const setApplicationIfConnectorIsInput = (
   isConnectorRuntimeOrExpression: boolean,
   dynatraceMetricFormData: any,
-  setDynatraceMetricData: (data: any) => void
+  setDynatraceMetricData: (data: any) => void,
+  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
 ): void => {
   if (isConnectorRuntimeOrExpression) {
+    let selectedService = dynatraceMetricFormData?.selectedService
+    let metricSelector = dynatraceMetricFormData?.metricSelector
+    if (
+      dynatraceMetricFormData.selectedService === undefined ||
+      getMultiTypeFromValue(dynatraceMetricFormData.selectedService) === MultiTypeInputType.FIXED
+    ) {
+      selectedService = RUNTIME_INPUT_VALUE
+    }
+    if (
+      dynatraceMetricFormData.selectedService === undefined ||
+      getMultiTypeFromValue(dynatraceMetricFormData.selectedService) === MultiTypeInputType.FIXED
+    ) {
+      dynatraceMetricFormData.customMetrics.set(dynatraceMetricFormData.metricName, {
+        ...dynatraceMetricFormData.customMetrics.get(dynatraceMetricFormData.metricName),
+        metricSelector: RUNTIME_INPUT_VALUE
+      })
+      metricSelector = RUNTIME_INPUT_VALUE
+    }
     setDynatraceMetricData({
       ...dynatraceMetricFormData,
-      selectedService: RUNTIME_INPUT_VALUE,
+      selectedService,
+      metricSelector,
       serviceMethods: []
+    })
+    setMappedMetrics({
+      selectedMetric: dynatraceMetricFormData.metricName,
+      mappedMetrics: dynatraceMetricFormData.customMetrics
     })
   }
 }

@@ -76,7 +76,10 @@ import {
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { Nexus3Artifact } from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
 import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
-import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
+import {
+  CustomArtifact,
+  CustomArtifactOptionalConfiguration
+} from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
 import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
 import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
@@ -545,6 +548,21 @@ export default function ServiceV2ArtifactsSelection({
     setIsEditMode(false)
   }, [])
 
+  const getOptionalConfigurationSteps = useCallback((): JSX.Element | null => {
+    switch (selectedArtifact) {
+      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
+        return (
+          <CustomArtifactOptionalConfiguration
+            {...artifactLastStepProps}
+            name={'Optional Configuration'}
+            key={'Optional_Configuration'}
+          />
+        )
+      default:
+        return null
+    }
+  }, [artifactLastStepProps, selectedArtifact])
+
   const renderExistingArtifact = (): JSX.Element => {
     return (
       <ArtifactWizard
@@ -558,6 +576,7 @@ export default function ServiceV2ArtifactsSelection({
         isReadonly={readonly}
         selectedArtifact={selectedArtifact}
         changeArtifactType={changeArtifactType}
+        getOptionalConfigurationSteps={getOptionalConfigurationSteps()}
         newConnectorView={connectorView}
         newConnectorProps={{
           auth: authenticationStepProps,

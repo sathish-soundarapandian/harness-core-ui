@@ -654,6 +654,7 @@ export interface CVConfig {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
   uuid?: string
   verificationTaskTags?: {
@@ -932,6 +933,7 @@ export interface ConnectorInfoDTO {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export interface ControlClusterSummary {
@@ -1015,7 +1017,7 @@ export type CustomSecretManager = ConnectorConfigDTO & {
   default?: boolean
   delegateSelectors?: string[]
   host?: string
-  onDelegate: boolean
+  onDelegate?: boolean
   template: TemplateLinkConfigForCustomSecretManager
   workingDirectory?: string
 }
@@ -1331,6 +1333,11 @@ export type ELKConnectorDTO = ConnectorConfigDTO & {
   passwordRef?: string
   url: string
   username?: string
+}
+
+export type ELKHealthSourceSpec = HealthSourceSpec & {
+  feature: string
+  queries: QueryDTO[]
 }
 
 export interface Edge {
@@ -1695,12 +1702,16 @@ export interface Error {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2105,12 +2116,16 @@ export interface Failure {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2167,6 +2182,12 @@ export type GcpKmsConnectorDTO = ConnectorConfigDTO & {
 
 export type GcpManualDetails = GcpCredentialSpec & {
   secretKeyRef: string
+}
+
+export type GcpSecretManager = ConnectorConfigDTO & {
+  credentialsRef: string
+  default?: boolean
+  delegateSelectors?: string[]
 }
 
 export interface GitAuthenticationDTO {
@@ -2400,6 +2421,7 @@ export interface HealthSource {
     | 'CustomHealthMetric'
     | 'CustomHealthLog'
     | 'SplunkMetric'
+    | 'ELKLog'
     | 'CloudWatchMetrics'
 }
 
@@ -2421,6 +2443,7 @@ export interface HealthSourceDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
@@ -2939,6 +2962,7 @@ export interface MetricPack {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
   identifier?: string
   lastUpdatedAt?: number
@@ -2966,6 +2990,7 @@ export interface MetricPackDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
   identifier?: string
   metrics?: MetricDefinitionDTO[]
@@ -3624,10 +3649,13 @@ export interface PrometheusSampleData {
 export type QuarterlyCalenderSpec = CalenderSpec & { [key: string]: any }
 
 export interface QueryDTO {
-  indexes: string[]
+  index: string
+  messageIdentifier: string
   name: string
   query: string
   serviceInstanceIdentifier: string
+  timeStampFormat: string
+  timeStampIdentifier: string
 }
 
 export type RatioSLIMetricSpec = SLIMetricSpec & {
@@ -4140,12 +4168,16 @@ export interface ResponseMessage {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4872,6 +4904,14 @@ export interface RestResponseUserJourneyResponse {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseVerificationJobInstance {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: VerificationJobInstance
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseVerifyStepDebugResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5072,6 +5112,11 @@ export interface SLORiskCountResponse {
 }
 
 export interface SLOTarget {
+  timeRangeFilters?: TimeRangeFilter[]
+  type?: 'Rolling' | 'Calender'
+}
+
+export interface SLOTargetDTO {
   sloTargetPercentage: number
   spec: SLOTargetSpec
   type?: 'Rolling' | 'Calender'
@@ -5206,7 +5251,7 @@ export interface ServiceLevelObjectiveDTO {
   tags?: {
     [key: string]: string
   }
-  target: SLOTarget
+  target: SLOTargetDTO
   type?: 'Availability' | 'Latency'
   userJourneyRef: string
 }
@@ -5477,6 +5522,7 @@ export interface TimeSeriesMetricDataDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
   environmentIdentifier?: string
   groupName?: string
@@ -5580,6 +5626,7 @@ export interface TimeSeriesThreshold {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   lastUpdatedAt?: number
@@ -5621,6 +5668,7 @@ export interface TimeSeriesThresholdDTO {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
   metricGroupName?: string
   metricName?: string
@@ -5680,6 +5728,7 @@ export interface TransactionMetricInfo {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
   nodeRiskCountDTO?: NodeRiskCountDTO
   nodes?: HostData[]
@@ -5774,6 +5823,7 @@ export interface VerificationJob {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
   )[]
   defaultJob?: boolean
@@ -6903,6 +6953,100 @@ export const getMonitoredServiceChangeTimelinePromise = (
     signal
   )
 
+export interface GetSampleDataForQueryQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier?: string
+  requestGuid?: string
+  region?: string
+  expression?: string
+  metricName?: string
+  metricIdentifier?: string
+}
+
+export type GetSampleDataForQueryProps = Omit<
+  GetProps<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>,
+  'path'
+>
+
+/**
+ * get sample data for given query
+ */
+export const GetSampleDataForQuery = (props: GetSampleDataForQueryProps) => (
+  <Get<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>
+    path={`/cloudwatch/metrics/fetch-sample-data`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSampleDataForQueryProps = Omit<
+  UseGetProps<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>,
+  'path'
+>
+
+/**
+ * get sample data for given query
+ */
+export const useGetSampleDataForQuery = (props: UseGetSampleDataForQueryProps) =>
+  useGet<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>(
+    `/cloudwatch/metrics/fetch-sample-data`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get sample data for given query
+ */
+export const getSampleDataForQueryPromise = (
+  props: GetUsingFetchProps<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>(
+    getConfig('cv/api'),
+    `/cloudwatch/metrics/fetch-sample-data`,
+    props,
+    signal
+  )
+
+export type GetRegionsProps = Omit<GetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * get regions
+ */
+export const GetRegions = (props: GetRegionsProps) => (
+  <Get<ResponseListString, Failure | Error, void, void>
+    path={`/cloudwatch/metrics/regions`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetRegionsProps = Omit<UseGetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * get regions
+ */
+export const useGetRegions = (props: UseGetRegionsProps) =>
+  useGet<ResponseListString, Failure | Error, void, void>(`/cloudwatch/metrics/regions`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * get regions
+ */
+export const getRegionsPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, void, void>(
+    getConfig('cv/api'),
+    `/cloudwatch/metrics/regions`,
+    props,
+    signal
+  )
+
 export interface FetchSampleDataQueryParams {
   accountId: string
   orgIdentifier: string
@@ -7939,6 +8083,123 @@ export const getDynatraceServicesPromise = (
     signal
   )
 
+export interface GetELKIndicesQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier?: string
+  tracingId: string
+}
+
+export type GetELKIndicesProps = Omit<GetProps<ResponseListString, unknown, GetELKIndicesQueryParams, void>, 'path'>
+
+/**
+ * gets indices in ELK
+ */
+export const GetELKIndices = (props: GetELKIndicesProps) => (
+  <Get<ResponseListString, unknown, GetELKIndicesQueryParams, void>
+    path={`/elk/indices`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetELKIndicesProps = Omit<
+  UseGetProps<ResponseListString, unknown, GetELKIndicesQueryParams, void>,
+  'path'
+>
+
+/**
+ * gets indices in ELK
+ */
+export const useGetELKIndices = (props: UseGetELKIndicesProps) =>
+  useGet<ResponseListString, unknown, GetELKIndicesQueryParams, void>(`/elk/indices`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * gets indices in ELK
+ */
+export const getELKIndicesPromise = (
+  props: GetUsingFetchProps<ResponseListString, unknown, GetELKIndicesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, unknown, GetELKIndicesQueryParams, void>(
+    getConfig('cv/api'),
+    `/elk/indices`,
+    props,
+    signal
+  )
+
+export interface GetELKLogSampleDataQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier: string
+  tracingId: string
+  index: string
+}
+
+export type GetELKLogSampleDataProps = Omit<
+  MutateProps<ResponseListLinkedHashMap, unknown, GetELKLogSampleDataQueryParams, LogSampleRequestDTORequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * get sample data for a query
+ */
+export const GetELKLogSampleData = (props: GetELKLogSampleDataProps) => (
+  <Mutate<ResponseListLinkedHashMap, unknown, GetELKLogSampleDataQueryParams, LogSampleRequestDTORequestBody, void>
+    verb="POST"
+    path={`/elk/sample-data`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetELKLogSampleDataProps = Omit<
+  UseMutateProps<
+    ResponseListLinkedHashMap,
+    unknown,
+    GetELKLogSampleDataQueryParams,
+    LogSampleRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * get sample data for a query
+ */
+export const useGetELKLogSampleData = (props: UseGetELKLogSampleDataProps) =>
+  useMutate<ResponseListLinkedHashMap, unknown, GetELKLogSampleDataQueryParams, LogSampleRequestDTORequestBody, void>(
+    'POST',
+    `/elk/sample-data`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get sample data for a query
+ */
+export const getELKLogSampleDataPromise = (
+  props: MutateUsingFetchProps<
+    ResponseListLinkedHashMap,
+    unknown,
+    GetELKLogSampleDataQueryParams,
+    LogSampleRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListLinkedHashMap,
+    unknown,
+    GetELKLogSampleDataQueryParams,
+    LogSampleRequestDTORequestBody,
+    void
+  >('POST', getConfig('cv/api'), `/elk/sample-data`, props, signal)
+
 export interface GetAllErrorTrackingClusterDataQueryParams {
   accountId: string
   orgIdentifier: string
@@ -8065,6 +8326,31 @@ export const getAllErrorTrackingDataPromise = (
     props,
     signal
   )
+
+export type GetTimeFormatProps = Omit<GetProps<ResponseListString, unknown, void, void>, 'path'>
+
+/**
+ * get time formats for Health Source
+ */
+export const GetTimeFormat = (props: GetTimeFormatProps) => (
+  <Get<ResponseListString, unknown, void, void> path={`/health/time-format`} base={getConfig('cv/api')} {...props} />
+)
+
+export type UseGetTimeFormatProps = Omit<UseGetProps<ResponseListString, unknown, void, void>, 'path'>
+
+/**
+ * get time formats for Health Source
+ */
+export const useGetTimeFormat = (props: UseGetTimeFormatProps) =>
+  useGet<ResponseListString, unknown, void, void>(`/health/time-format`, { base: getConfig('cv/api'), ...props })
+
+/**
+ * get time formats for Health Source
+ */
+export const getTimeFormatPromise = (
+  props: GetUsingFetchProps<ResponseListString, unknown, void, void>,
+  signal?: RequestInit['signal']
+) => getUsingFetch<ResponseListString, unknown, void, void>(getConfig('cv/api'), `/health/time-format`, props, signal)
 
 export interface GetNamespacesQueryParams {
   accountId: string
@@ -8393,6 +8679,7 @@ export interface GetMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
 }
 
@@ -8459,6 +8746,7 @@ export interface SaveMetricPacksQueryParams {
     | 'DYNATRACE'
     | 'CUSTOM_HEALTH_METRIC'
     | 'CUSTOM_HEALTH_LOG'
+    | 'ELK_LOG'
     | 'CLOUDWATCH_METRICS'
 }
 

@@ -42,3 +42,12 @@
 .listLabel {
   margin-bottom: var(--spacing-small);
 }
+.inputFieldLayout {
+  display: grid;
+  grid-template-columns: 400px 20px;
+  margin-top: var(--spacing-large);
+  .configureOptions {
+    position: relative;
+    top: 22px;
+  }
+}

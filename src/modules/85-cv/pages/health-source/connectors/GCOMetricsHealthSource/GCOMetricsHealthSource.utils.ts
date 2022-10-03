@@ -11,7 +11,6 @@ import type { IOptionProps } from '@blueprintjs/core'
 import { isNumber, isEmpty, defaultTo } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type {
-  RiskProfile,
   MetricPackDTO,
   TimeSeriesSampleDTO,
   StackdriverMetricHealthSourceSpec,
@@ -26,6 +25,7 @@ import { HealthSourceTypes } from '../../types'
 import { chartsConfig } from './GCOWidgetChartConfig'
 import { OVERALL } from './GCOMetricsHealthSource.constants'
 import { MANUAL_INPUT_QUERY } from './components/ManualInputQueryModal/ManualInputQueryModal'
+import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
 
 export const GCOProduct = {
   CLOUD_METRICS: 'Cloud Metrics',
@@ -152,15 +152,19 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(setupSource: GCOM
   for (const selectedMetricInfo of setupSource.metricDefinition) {
     const [selectedMetric, metricInfo] = selectedMetricInfo
     if (!selectedMetric || !metricInfo) continue
-    const [category, metricType] = metricInfo.riskCategory?.split('/') || []
 
-    const thresholdTypes: RiskProfile['thresholdTypes'] = []
-    if (metricInfo.lowerBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_LOWER')
-    }
-    if (metricInfo.higherBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_HIGHER')
-    }
+    const { sli, riskCategory, healthScore, continuousVerification, lowerBaselineDeviation, higherBaselineDeviation } =
+      metricInfo
+
+    const assignComponentPayload = createPayloadForAssignComponent({
+      sli,
+      riskCategory,
+      healthScore,
+      continuousVerification,
+      lowerBaselineDeviation,
+      higherBaselineDeviation
+    })
+
     const regexExpression = /^\{/
     const spec: StackdriverMetricHealthSourceSpec = healthSource.spec || []
     const isFixed = getMultiTypeFromValue(metricInfo.query) === MultiTypeInputType.FIXED
@@ -175,23 +179,10 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(setupSource: GCOM
       isManualQuery: metricInfo.isManualQuery,
       jsonMetricDefinition: shouldParseQuery ? JSON.parse(metricInfo.query || '') : metricInfo.query,
       riskProfile: {
-        metricType: metricType as RiskProfile['metricType'],
-        category: category as RiskProfile['category'],
-        thresholdTypes
+        ...assignComponentPayload.analysis?.riskProfile
       },
-      sli: { enabled: metricInfo?.sli || false },
       serviceInstanceField: metricInfo.continuousVerification ? metricInfo.serviceInstanceField : null,
-      analysis: {
-        riskProfile: {
-          category: category as RiskProfile['category'],
-          metricType: metricType,
-          thresholdTypes
-        },
-        liveMonitoring: { enabled: metricInfo.healthScore || false },
-        deploymentVerification: {
-          enabled: metricInfo.continuousVerification || false
-        }
-      }
+      ...assignComponentPayload
     } as StackdriverDefinition)
   }
 

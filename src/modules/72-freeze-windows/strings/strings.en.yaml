@@ -1,7 +1,23 @@
 freezeWindowsPage:
   noFreezeWindows: There are no freeze windows in your {{scope}}.
   newFreezeWindow: New Freeze Window
+  editFreezeWindow: Edit Freeze Window
+  confirmDeleteTitle: Delete Freeze Window
+  confirmDeleteText: Are you sure you want to delete the freeze window {{name}}?
+  deleteSuccess: Deleted freeze window(s) successfully
+  deleteFailure: Failed to delete freeze window(s)
+  updateStatusSuccess: Freeze Window(s) {{value}} successfully
+  updateStatusFailure: Failed to {{value}} Freeze Window(s)
+
 freezeStudio:
   freezeConfiguration: Freeze Configuration
   freezeOverview: Freeze Overview
+  freezeSchedule: Freeze Schedule
   defineResources: Define which resources you want to include in this freeze window
+  excludeOrgs: Exclude specific Organizations
+  excludeProjects: Exclude specific Projects
+  allOrganizations: All Organizations
+  excludeFollowingProject: Exclude the following Project
+  excludeFollowingProjects: Exclude the following Projects
+
+disableAllDeployments: Disable all deployments for this Account (all Projects)

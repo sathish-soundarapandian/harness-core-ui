@@ -6,8 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { Formik, Layout, Button, StepProps, Text, ButtonVariation } from '@wings-software/uicore'
-import { Form } from 'formik'
+import { Formik, Layout, Button, StepProps, Text, ButtonVariation, FormikForm } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
@@ -158,7 +157,7 @@ export function DockerRegistryArtifact({
         }}
       >
         {formik => (
-          <Form>
+          <FormikForm>
             <div className={css.connectorForm}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -192,7 +191,7 @@ export function DockerRegistryArtifact({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

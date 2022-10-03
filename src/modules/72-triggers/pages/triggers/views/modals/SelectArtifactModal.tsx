@@ -26,6 +26,7 @@ import {
   updatePipelineManifest,
   getFilteredStage
 } from '../../utils/TriggersWizardPageUtils'
+import type { artifactManifestData } from '../../interface/TriggersWizardInterface'
 import css from './SelectArtifactModal.module.scss'
 
 const getFormComponent = (isManifest: boolean) => {
@@ -119,8 +120,8 @@ const onSubmit = ({
   selectedArtifactId: string
   runtimeData: any
   formikProps: any
-}) => {
-  const orginalArtifact = filterArtifact({
+}): void => {
+  const originalArtifact = filterArtifact({
     runtimeData,
     stageId: selectedStageId,
     artifactId: getArtifactId(isManifest, selectedArtifactId),
@@ -135,7 +136,7 @@ const onSubmit = ({
   const filterFormStages = formikProps?.values?.stages?.filter((item: any) => item)
   // when stages is empty array, filteredArtifact will be empty object
   const formFilteredArtifact = isManifest ? getManifests(filterFormStages) : getArtifacts(filterFormStages)
-  const finalArtifact = mergeArtifactManifest(isManifest, orginalArtifact, formFilteredArtifact)
+  const finalArtifact = mergeArtifactManifest(isManifest, originalArtifact, formFilteredArtifact)
   if (finalArtifact?.spec?.chartVersion && isManifest) {
     // hardcode manifest chart version to default
     finalArtifact.spec.chartVersion = replaceTriggerDefaultBuild({
@@ -155,25 +156,26 @@ const onSubmit = ({
     })
   }
 
-  const { pipeline, selectedArtifact } = formikProps.values
+  const selectedArtifact = clearRuntimeInputValue<artifactManifestData>(finalArtifact)
+  const { pipeline } = formikProps.values
   const newPipelineObj = isManifest
     ? updatePipelineManifest({
         pipeline,
         stageIdentifier: selectedStageId,
         selectedArtifact,
-        newArtifact: clearRuntimeInputValue(finalArtifact)
+        newArtifact: selectedArtifact
       })
     : updatePipelineArtifact({
         pipeline,
         stageIdentifier: selectedStageId,
         selectedArtifact,
-        newArtifact: clearRuntimeInputValue(finalArtifact)
+        newArtifact: selectedArtifact
       })
 
   formikProps.setValues({
     ...formikProps.values,
     pipeline: newPipelineObj,
-    selectedArtifact: clearRuntimeInputValue(finalArtifact),
+    selectedArtifact,
     stageId: selectedStageId
   })
 }

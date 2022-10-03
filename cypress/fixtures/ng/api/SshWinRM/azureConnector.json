@@ -1,0 +1,74 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 1,
+    "totalItems": 3,
+    "pageItemCount": 3,
+    "pageSize": 10,
+    "content": [
+      {
+        "connector": {
+          "name": "testAzureConnector",
+          "identifier": "testAzureConnector",
+          "description": "",
+          "orgIdentifier": null,
+          "projectIdentifier": null,
+          "tags": {},
+          "type": "Azure",
+          "spec": {
+            "credential": {
+              "type": "ManualConfig",
+              "spec": {
+                "applicationId": "b65c813f-7290-42ad-b3db-c1741d3bb003",
+                "tenantId": "b229b2bb-5f33-4d22-bce0-730f6474e906",
+                "auth": {
+                  "type": "Secret",
+                  "spec": {
+                    "secretRef": "account.testAzureSecretKeyWOvoJD2n1e"
+                  }
+                }
+              }
+            },
+            "delegateSelectors": [],
+            "azureEnvironmentType": "AZURE",
+            "executeOnDelegate": true
+          }
+        },
+        "createdAt": 1663058162641,
+        "lastModifiedAt": 1663058162635,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1664347420616,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1664347420616
+        },
+        "activityDetails": {
+          "lastActivityTime": 1663058162667
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "governanceMetadata": null
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "661440df-dc3d-40a3-a114-8bb88432c800"
+}

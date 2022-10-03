@@ -8,6 +8,7 @@
 import { AllowedTypes, Card, Color, FormInput, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import {
   getFieldLabelForVerifyTemplate,
@@ -21,11 +22,13 @@ import type { TemplateInputs } from '@cv/components/PipelineSteps/ContinousVerif
 import {
   doesHealthSourceHasQueries,
   getMetricDefinitionPath,
-  getMetricDefinitions
+  getMetricDefinitions,
+  setCommaSeperatedList
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import {
   CONNECTOR_REF,
   IDENTIFIER,
+  INDEXES,
   METRIC_DEFINITIONS,
   NAME,
   QUERIES,
@@ -43,6 +46,7 @@ export default function MonitoredServiceInputTemplatesHealthSources(
   props: MonitoredServiceInputTemplatesHealthSourcesProps
 ): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<ProjectPathProps>>()
+  const { setFieldValue: onChange } = useFormikContext()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { allowableTypes, healthSources } = props
@@ -114,7 +118,26 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                           {item?.metricName}
                         </Text>
                         {metricDefinitionFields.map(input => {
-                          if (input.name !== IDENTIFIER && input.name !== NAME) {
+                          if (input.name === INDEXES) {
+                            return (
+                              <FormInput.MultiTextInput
+                                key={input.name}
+                                name={`spec.monitoredService.spec.templateInputs.${input.path}`}
+                                label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                                onChange={value =>
+                                  setCommaSeperatedList(
+                                    value as string,
+                                    onChange,
+                                    `spec.monitoredService.spec.templateInputs.${input.path}`
+                                  )
+                                }
+                                multiTextInputProps={{
+                                  expressions,
+                                  allowableTypes
+                                }}
+                              />
+                            )
+                          } else if (input.name !== IDENTIFIER && input.name !== NAME) {
                             return (
                               <FormInput.MultiTextInput
                                 key={input.name}

@@ -6,12 +6,17 @@
  */
 
 import React from 'react'
-import { act, render, fireEvent, waitFor } from '@testing-library/react'
+import { act, render, fireEvent, waitFor, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import CESideNav, { ProjectLevelFeedback } from '../CESideNav'
 
 jest.mock('@common/hooks/useFeatureFlag', () => ({
   useFeatureFlag: jest.fn(() => true)
+}))
+
+const trackEventMock = jest.fn()
+jest.mock('@common/hooks/useTelemetry', () => ({
+  useTelemetry: () => ({ identifyUser: jest.fn(), trackEvent: trackEventMock })
 }))
 
 const testpath = 'account/:accountId/ce/home'
@@ -91,5 +96,20 @@ describe('side nav tests', () => {
     const formCta = getByTestId('fillFeedbackCta')
     await waitFor(() => formCta)
     expect(formCta).toBeDefined()
+  })
+
+  test('It should fire telemetry event when side nav item clicked', () => {
+    render(
+      <TestWrapper path={testpath} pathParams={testparams}>
+        <CESideNav />
+      </TestWrapper>
+    )
+
+    const overviewLink = screen.getByText('overview')
+    expect(overviewLink).toBeInTheDocument()
+    act(() => {
+      fireEvent.click(overviewLink)
+    })
+    expect(trackEventMock).toHaveBeenCalled()
   })
 })

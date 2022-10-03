@@ -8,6 +8,15 @@
 import type { SelectOption } from '@harness/uicore'
 import type { useGetMetricPacks, useGetLabelNames } from 'services/cv'
 
+interface HealthSourceServicesFieldNames {
+  sli?: string
+  serviceHealth?: string
+  deploymentVerification?: string
+  riskProfileCategory?: string
+  higherBaselineDeviation?: string
+  lowerBaselineDeviation?: string
+}
+
 export type SelectHealthSourceServicesProps = {
   values: {
     sli: boolean
@@ -28,4 +37,6 @@ export type SelectHealthSourceServicesProps = {
   isConnectorRuntimeOrExpression?: boolean
   key?: string
   customServiceInstanceName?: string
+  fieldNames?: Partial<HealthSourceServicesFieldNames>
+  riskProfileCategoryName?: string
 }

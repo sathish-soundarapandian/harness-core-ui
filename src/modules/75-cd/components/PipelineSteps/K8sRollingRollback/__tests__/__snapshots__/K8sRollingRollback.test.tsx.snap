@@ -408,6 +408,38 @@ exports[`Test K8sRollingRollback Step on edit view update 1`] = `
           </div>
         </div>
       </div>
+      <div
+        class="Accordion--accordion accordion"
+      >
+        <div
+          class="Accordion--panel"
+          data-open="false"
+          data-testid="optional-config-panel"
+        >
+          <div
+            class="Accordion--summary"
+            data-testid="optional-config-summary"
+          >
+            <div
+              class="Accordion--label"
+            >
+              common.optionalConfig
+            </div>
+            <div
+              class="Accordion--chevron"
+            />
+          </div>
+          <div
+            class="bp3-collapse Accordion--collapse"
+          >
+            <div
+              aria-hidden="false"
+              class="bp3-collapse-body"
+              style="transform: translateY(-undefinedpx);"
+            />
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -602,6 +634,38 @@ exports[`Test K8sRollingRollback Step should render edit view 1`] = `
                     </span>
                   </span>
                 </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Accordion--accordion accordion"
+          >
+            <div
+              class="Accordion--panel"
+              data-open="false"
+              data-testid="optional-config-panel"
+            >
+              <div
+                class="Accordion--summary"
+                data-testid="optional-config-summary"
+              >
+                <div
+                  class="Accordion--label"
+                >
+                  common.optionalConfig
+                </div>
+                <div
+                  class="Accordion--chevron"
+                />
+              </div>
+              <div
+                class="bp3-collapse Accordion--collapse"
+              >
+                <div
+                  aria-hidden="false"
+                  class="bp3-collapse-body"
+                  style="transform: translateY(-undefinedpx);"
+                />
               </div>
             </div>
           </div>

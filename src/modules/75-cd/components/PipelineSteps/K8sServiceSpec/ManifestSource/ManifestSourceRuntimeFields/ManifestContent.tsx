@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Layout } from '@harness/uicore'
+import { getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { StringKeys, useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -19,11 +19,14 @@ import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { shouldAllowOnlyOneFilePath } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/CommonManifestDetails/utils'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from './ManifestGitStoreRuntimeFields'
 import CustomRemoteManifestRuntimeFields from './CustomRemoteManifestRuntimeFields'
 import ManifestCommonRuntimeFields from './ManifestCommonRuntimeFields'
+import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 interface ManifestRenderProps extends ManifestSourceRenderProps {
@@ -40,7 +43,8 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
     readonly,
     formik,
     stageIdentifier,
-    pathFieldlabel
+    pathFieldlabel,
+    stepViewType
   } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -112,21 +116,39 @@ export const ManifestContent = (props: ManifestRenderProps): React.ReactElement 
           )}
         </div>
       )}
-
-      {isFieldRuntime(`${manifestPath}.spec.skipResourceVersioning`, template) && (
-        <div className={css.verticalSpacingInput}>
-          <FormMultiTypeCheckboxField
-            disabled={isFieldDisabled(`${manifestPath}.spec.skipResourceVersioning`)}
-            name={`${path}.${manifestPath}.spec.skipResourceVersioning`}
-            label={getString('skipResourceVersion')}
-            setToFalseWhenEmpty={true}
-            multiTypeTextbox={{
-              expressions,
-              allowableTypes
+      <div className={css.inputFieldLayout}>
+        {isFieldRuntime(`${manifestPath}.spec.skipResourceVersioning`, template) && (
+          <div className={css.verticalSpacingInput}>
+            <FormMultiTypeCheckboxField
+              disabled={isFieldDisabled(`${manifestPath}.spec.skipResourceVersioning`)}
+              name={`${path}.${manifestPath}.spec.skipResourceVersioning`}
+              label={getString('skipResourceVersion')}
+              setToFalseWhenEmpty={true}
+              multiTypeTextbox={{
+                expressions,
+                allowableTypes
+              }}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.skipResourceVersioning`)) ===
+          MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            className={css.configureOptions}
+            style={{ alignSelf: 'center' }}
+            value={get(formik?.values, `${path}.${manifestPath}.spec.skipResourceVersioning`)}
+            type="String"
+            variableName="skipResourceVersioning"
+            showRequiredField={false}
+            showDefaultField={true}
+            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+            showAdvanced={true}
+            onChange={value => {
+              formik.setFieldValue(`${path}.${manifestPath}.spec.skipResourceVersioning`, value)
             }}
           />
-        </div>
-      )}
+        )}
+      </div>
     </Layout.Vertical>
   )
 }

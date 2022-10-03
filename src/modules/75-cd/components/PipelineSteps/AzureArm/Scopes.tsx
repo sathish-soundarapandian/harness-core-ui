@@ -177,7 +177,7 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
     ) {
       getResourceGroups()
     }
-  }, [scope?.spec?.subscription])
+  }, [scope?.spec?.subscription, connectorRef])
 
   useEffect(() => {
     if (!isEmpty(resourceGroupData)) {
@@ -210,7 +210,7 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
       getManagementGroups()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scopeType])
+  }, [scopeType, connectorRef])
 
   useEffect(() => {
     if (!isEmpty(managementGroupData?.data?.managementGroups)) {
@@ -296,7 +296,7 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
           useValue
           multiTypeInputProps={{
             selectProps: {
-              allowCreatingNewItems: false,
+              allowCreatingNewItems: true,
               items: items
             },
             expressions,
@@ -345,7 +345,7 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
             { label: getString(ScopeTypeLabels(ScopeTypes.Tenant)), value: ScopeTypes.Tenant }
           ]}
           name="scope"
-          onChange={item => onSelectChange(item)}
+          onChange={item => scopeType?.value !== item?.value && onSelectChange(item)}
           selectProps={{
             allowCreatingNewItems: false
           }}

@@ -73,7 +73,7 @@ function DragnDropPaths({
                 ) as AllowedTypes
               }
               name={fieldPath}
-              label={<Text>{pathLabel}</Text>}
+              label={<Text className={css.pathLabel}>{pathLabel}</Text>}
             >
               <FieldArray
                 name={fieldPath}

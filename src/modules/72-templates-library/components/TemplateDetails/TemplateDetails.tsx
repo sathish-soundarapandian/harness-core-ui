@@ -72,6 +72,7 @@ export interface TemplateDetailsProps {
   setTemplate?: (template: TemplateSummaryResponse) => void
   storeMetadata?: StoreMetadata
   isStandAlone?: boolean
+  disableVersionChange?: boolean
 }
 
 export enum TemplateTabs {
@@ -100,7 +101,7 @@ const getTemplateEntityIdentifier = ({ selectedTemplate, templates }: Params): s
 }
 
 export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
-  const { template, setTemplate, storeMetadata, isStandAlone = false } = props
+  const { template, setTemplate, storeMetadata, isStandAlone = false, disableVersionChange = false } = props
   const { getString } = useStrings()
   const history = useHistory()
   const [versionOptions, setVersionOptions] = React.useState<SelectOption[]>([])
@@ -443,6 +444,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                                   width={300}
                                   popoverClassName={css.dropdown}
                                   stableVersion={stableVersion}
+                                  disabled={disableVersionChange}
                                 />
                               </Layout.Vertical>
                             </Container>

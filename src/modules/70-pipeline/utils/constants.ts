@@ -85,7 +85,8 @@ export enum CIBuildInfrastructureType {
   VM = 'VM',
   KubernetesHosted = 'KubernetesHosted',
   Cloud = 'Cloud',
-  UseFromStage = 'UseFromStage'
+  UseFromStage = 'UseFromStage',
+  Docker = 'Docker'
 }
 
 export const DEFAULT_PAGE_INDEX = 0

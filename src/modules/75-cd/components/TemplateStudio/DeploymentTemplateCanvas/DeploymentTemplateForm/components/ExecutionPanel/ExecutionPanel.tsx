@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Classes, Icon, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { get, map, isEmpty } from 'lodash-es'
+import { get, isEmpty, map } from 'lodash-es'
 import cx from 'classnames'
 import { Button, ButtonVariation, Container, Layout, Popover, Text } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import type { DeploymentConfigStepTemplateRefDetails } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
+import { TemplateUsage } from '@templates-library/utils/templatesUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
@@ -85,7 +86,12 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
 
   const onUseTemplate = async (): Promise<void> => {
     try {
-      const { template } = await getTemplate({ templateType: 'Step', allChildTypes: ALLOWED_STEP_TEMPLATE_TYPES })
+      const { template } = await getTemplate({
+        templateType: 'Step',
+        allChildTypes: ALLOWED_STEP_TEMPLATE_TYPES,
+        disableVersionChange: true,
+        allowedUsages: [TemplateUsage.USE]
+      })
       const templateRef = getScopeBasedTemplateRef(template)
 
       const templateRefObj = {
@@ -131,8 +137,9 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
     <Container className={css.executionWidgetWrapper}>
       <CardWithOuterTitle
         title={getString('cd.deploymentSteps')}
-        className={css.deploymentStepsCard}
+        className={cx(css.deploymentStepsCard, 'ng-tooltip-native')}
         headerClassName={css.headerText}
+        dataTooltipId="deploymentStepsDT"
       >
         <Layout.Vertical spacing="medium" width={'100%'}>
           <Text color={Color.GREY_500} font={{ size: 'small', weight: 'semi-bold' }}>

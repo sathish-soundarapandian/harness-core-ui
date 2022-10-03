@@ -27,6 +27,17 @@ export function AzureArmVariableView({
         metadataMap={metadataMap}
         className={pipelineVariableCss.variablePaddingL3}
       />
+      {!isEmpty(get(variablesData, 'spec.configuration.scope.spec')) && (
+        <>
+          <Text margin={{ left: 'xlarge' }}>{getString('common.scope')}</Text>
+          <VariablesListTable
+            data={get(variablesData, 'spec.configuration.scope.spec')}
+            originalData={get(initialValues, 'spec.configuration.scope.spec')}
+            metadataMap={metadataMap}
+            className={pipelineVariableCss.variablePaddingL3}
+          />
+        </>
+      )}
       {!isEmpty(get(variablesData, 'spec.configuration.template')) && (
         <>
           <Text margin={{ left: 'xlarge' }}>{getString('cd.cloudFormation.templateFile')}</Text>
@@ -41,7 +52,7 @@ export function AzureArmVariableView({
 
       {!isEmpty(get(variablesData, 'spec.configuration.parameters')) && (
         <>
-          <Text>{getString('cd.cloudFormation.parameterFileDetails')}</Text>
+          <Text margin={{ left: 'xlarge' }}>{getString('cd.cloudFormation.parameterFileDetails')}</Text>
           <VariablesListTable
             data={get(variablesData, 'spec.configuration.parameters.store.spec')}
             originalData={get(initialValues, 'spec.configuration.parameters.store.spec')}

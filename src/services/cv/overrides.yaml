@@ -17,6 +17,9 @@ allowpaths:
   - /splunk/validation
   - /splunk/saved-searches
   - /splunk/sample-data
+  - /elk/sample-data
+  - /elk/indices
+  - /health/time-format
   - /splunk/metric-sample-data
   - /timeseries/metric-group-data
   - /timeseries/metric-template
@@ -160,6 +163,10 @@ allowpaths:
   - /monitored-service/{identifier}/notification-rules
   - /log-dashboard/logs-radar-chart-data
   - /log-dashboard/logs-radar-chart-cluster
+  - /cloudwatch/metrics/fetch-sample-data
+  - /cloudwatch/metrics/regions
+  - /cloudwatch/metrics/fetch-sample-data
+
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications
   /appdynamics/metric-data.post: getAppDynamicsMetricData

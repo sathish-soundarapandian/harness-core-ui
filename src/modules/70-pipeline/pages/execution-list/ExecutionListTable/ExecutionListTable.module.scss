@@ -151,3 +151,7 @@
   padding: var(--spacing-1) var(--spacing-2) !important;
   display: inline-block !important;
 }
+
+[role='cell'] {
+  padding-right: var(--spacing-small);
+}

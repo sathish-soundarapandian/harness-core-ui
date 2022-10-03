@@ -12,6 +12,7 @@ import React, { FC } from 'react'
 import type { CellProps } from 'react-table'
 import cx from 'classnames'
 import { Classes, Divider, PopoverInteractionKind } from '@blueprintjs/core'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { Duration } from '@common/components'
 import { ExecutionStatusIcon } from '@pipeline/components/ExecutionStatusIcon/ExecutionStatusIcon'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
@@ -20,6 +21,9 @@ import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import { LabeValue } from '@pipeline/pages/pipeline-list/PipelineListTable/PipelineListCells'
+import executionFactory from '@pipeline/factories/ExecutionFactory'
+import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
+import { CardVariant } from '@pipeline/utils/constants'
 import css from './ExecutionListTable.module.scss'
 
 export interface ExecutionStageProps {
@@ -38,13 +42,16 @@ const stageIconMap: Partial<Record<StageType, IconName>> = {
   [StageType.CUSTOM]: 'pipeline-custom'
 }
 
-export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStage, isMatrixStage }) => {
+export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStage, isMatrixStage, row }) => {
+  const pipelineExecution = row?.original
   const { getString } = useStrings()
   const iconName = stageIconMap[stage.type as StageType]
   const data: PipelineExecutionSummary = stage.data || {}
   const stageFailureMessage = data?.failureInfo?.message
   // TODO: others stages UX not available yet
   const cdStageInfo = (stage.data as PipelineExecutionSummary)?.moduleInfo?.cd || {}
+  const stoStageInfo = (stage.data as PipelineExecutionSummary)?.moduleInfo?.sto || {}
+  const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
 
   return (
     <div className={cx(css.stage, isMatrixStage && css.matrixStage)}>
@@ -59,6 +66,16 @@ export const ExecutionStage: FC<ExecutionStageProps> = ({ stage, isSelectiveStag
 
       <div className={css.stageInfo}>
         <CDExecutionStageSummary stageInfo={cdStageInfo} />
+
+        {stage.type === StageType.SECURITY &&
+          !isEmpty(stoStageInfo) &&
+          stoInfo &&
+          React.createElement<ExecutionCardInfoProps<PipelineExecutionSummary>>(stoInfo.component, {
+            data: defaultTo(pipelineExecution, {}),
+            nodeMap: defaultTo(pipelineExecution?.layoutNodeMap, {}),
+            startingNodeId: defaultTo(pipelineExecution?.startingNodeId, ''),
+            variant: CardVariant.Default
+          })}
 
         {isSelectiveStage && (
           <div className={css.selectiveStageExecution}>

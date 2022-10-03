@@ -21,7 +21,7 @@ import {
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './DockerHubStepFunctionConfigs'
 import type { DockerHubStepProps, DockerHubStepData, DockerHubStepDataUI } from './DockerHubStep'
 import { CIStep } from '../CIStep/CIStep'
@@ -119,13 +119,25 @@ export const DockerHubStepBase = (
                       stepViewType={stepViewType}
                       readonly={readonly}
                       enableFields={{
-                        'spec.optimize': { shouldHide: buildInfrastructureType === 'VM' },
+                        'spec.optimize': {
+                          shouldHide: [
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.Cloud,
+                            CIBuildInfrastructureType.Docker
+                          ].includes(buildInfrastructureType)
+                        },
                         'spec.dockerfile': {},
                         'spec.context': {},
                         'spec.labels': {},
                         'spec.buildArgs': {},
                         'spec.target': { tooltipId: 'target' },
-                        'spec.remoteCacheRepo': { shouldHide: buildInfrastructureType === 'VM' }
+                        'spec.remoteCacheRepo': {
+                          shouldHide: [
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.Cloud,
+                            CIBuildInfrastructureType.Docker
+                          ].includes(buildInfrastructureType)
+                        }
                       }}
                     />
                     <StepCommonFields disabled={readonly} buildInfrastructureType={buildInfrastructureType} />

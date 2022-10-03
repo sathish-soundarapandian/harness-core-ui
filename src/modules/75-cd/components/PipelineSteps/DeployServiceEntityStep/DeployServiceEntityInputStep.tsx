@@ -21,7 +21,7 @@ import { v4 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ServiceDefinition, ServiceYamlV2 } from 'services/cd-ng'
-import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
+import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -50,7 +50,7 @@ export function DeployServiceEntityInputStep({
 }: DeployServiceEntityInputStepProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { updateTemplate } = useRunPipelineFormContext()
+  const { updateStageFormTemplate } = useStageFormContext()
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
   const formik = useFormikContext()
   const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
@@ -108,10 +108,10 @@ export function DeployServiceEntityInputStep({
     // if no value is selected, clear the inputs and template
     if (serviceIdentifiers.length === 0) {
       if (isMultiSvcTemplate) {
-        updateTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}values`)
+        updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}values`)
         formik.setFieldValue(`${pathPrefix}values`, [])
       } else {
-        updateTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}serviceInputs`)
+        updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}serviceInputs`)
         formik.setFieldValue(`${pathPrefix}serviceInputs`, {})
       }
       return
@@ -130,16 +130,22 @@ export function DeployServiceEntityInputStep({
       const svcTemplate = servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
       return {
         serviceRef: svcId,
-        serviceInputs: svcTemplate ? clearRuntimeInput(svcTemplate) : {}
+        serviceInputs: svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
       }
     })
 
     if (isMultiSvcTemplate) {
-      updateTemplate(newServicesTemplate, `${pathPrefix}values`)
+      updateStageFormTemplate(newServicesTemplate, `${pathPrefix}values`)
       formik.setFieldValue(`${pathPrefix}values`, newServicesValues)
     } else {
-      updateTemplate(defaultTo(newServicesTemplate[0].serviceInputs, {}), `${pathPrefix}serviceInputs`)
-      formik.setFieldValue(`${pathPrefix}serviceInputs`, defaultTo(newServicesValues[0].serviceInputs, {}))
+      updateStageFormTemplate(
+        defaultTo(newServicesTemplate[0].serviceInputs, isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : {}),
+        `${pathPrefix}serviceInputs`
+      )
+      formik.setFieldValue(
+        `${pathPrefix}serviceInputs`,
+        defaultTo(newServicesValues[0].serviceInputs, isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : {})
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [servicesData, serviceIdentifiers])

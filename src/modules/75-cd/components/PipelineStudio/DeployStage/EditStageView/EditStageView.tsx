@@ -54,6 +54,7 @@ import type { StageElementConfig } from 'services/pipeline-ng'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
 import { createTemplate, getScopeBasedTemplateRef, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import { hasStageData, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -152,7 +153,10 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
   }, [])
 
   const getDeploymentTemplate = async () => {
-    const { template: deploymentTemplate } = await getTemplate({ templateType: 'CustomDeployment' })
+    const { template: deploymentTemplate } = await getTemplate({
+      templateType: TemplateType.CustomDeployment,
+      allowedUsages: [TemplateUsage.USE]
+    })
     const templateLinkConfigDetails = {
       templateRef: getScopeBasedTemplateRef(deploymentTemplate),
       versionLabel: deploymentTemplate.versionLabel

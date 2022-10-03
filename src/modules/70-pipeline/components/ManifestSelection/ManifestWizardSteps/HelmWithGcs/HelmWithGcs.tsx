@@ -18,11 +18,11 @@ import {
   Text,
   ButtonVariation,
   getErrorInfoFromErrorObject,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { get, isEmpty } from 'lodash-es'
@@ -209,7 +209,7 @@ function HelmWithGcs({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: HelmWithGcsDataType }) => (
-          <Form>
+          <FormikForm>
             <div className={helmcss.helmGitForm}>
               <Layout.Horizontal flex spacing="huge">
                 <div className={helmcss.halfWidth}>
@@ -455,7 +455,7 @@ function HelmWithGcs({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

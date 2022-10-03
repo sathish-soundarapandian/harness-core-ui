@@ -13,22 +13,28 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="infraVariablesTitleDT"
           >
-            common.variables
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              common.variables
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div
               class="Layout--vertical StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main labelText"
+              <span
+                class="StyledProps--font StyledProps--main labelText ng-tooltip-native StyledProps--inline"
+                data-tooltip-id="infraVariablesDT"
               >
                 pipeline.customDeployment.infraVariablesTitle
-              </p>
+              </span>
               <div
                 class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
               >
@@ -72,11 +78,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="fetchInstancesScriptTitleDT"
           >
-            pipeline.customDeployment.fetchInstancesScript
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.fetchInstancesScript
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -134,11 +145,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceObjectArrayPathDT"
           >
-            pipeline.customDeployment.hostObjectArrayPath
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceObjectArrayPath
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -178,11 +194,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
         <div
           class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceAttributesDT"
           >
-            pipeline.customDeployment.hostAttributes
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceAttributes
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -359,22 +380,28 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="infraVariablesTitleDT"
           >
-            common.variables
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              common.variables
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div
               class="Layout--vertical StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main labelText"
+              <span
+                class="StyledProps--font StyledProps--main labelText ng-tooltip-native StyledProps--inline"
+                data-tooltip-id="infraVariablesDT"
               >
                 pipeline.customDeployment.infraVariablesTitle
-              </p>
+              </span>
               <div
                 class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
               >
@@ -418,11 +445,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="fetchInstancesScriptTitleDT"
           >
-            pipeline.customDeployment.fetchInstancesScript
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.fetchInstancesScript
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -451,7 +483,8 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                           class="Layout--vertical StyledProps--main"
                         >
                           <label
-                            class="Label--main configLabel"
+                            class="Label--main configLabel ng-tooltip-native"
+                            data-tooltip-id="fetchInstanceScriptDT"
                           >
                             pipeline.customDeployment.fetchInstanceScriptHeader
                           </label>
@@ -700,11 +733,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceObjectArrayPathDT"
           >
-            pipeline.customDeployment.hostObjectArrayPath
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceObjectArrayPath
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -744,11 +782,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
         <div
           class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceAttributesDT"
           >
-            pipeline.customDeployment.hostAttributes
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceAttributes
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -925,22 +968,28 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="infraVariablesTitleDT"
           >
-            common.variables
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              common.variables
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div
               class="Layout--vertical StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main labelText"
+              <span
+                class="StyledProps--font StyledProps--main labelText ng-tooltip-native StyledProps--inline"
+                data-tooltip-id="infraVariablesDT"
               >
                 pipeline.customDeployment.infraVariablesTitle
-              </p>
+              </span>
               <div
                 class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
               >
@@ -1226,11 +1275,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="fetchInstancesScriptTitleDT"
           >
-            pipeline.customDeployment.fetchInstancesScript
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.fetchInstancesScript
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -1256,7 +1310,8 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                           class="Layout--vertical StyledProps--main"
                         >
                           <label
-                            class="Label--main configLabel"
+                            class="Label--main configLabel ng-tooltip-native"
+                            data-tooltip-id="fetchInstanceScriptDT"
                           >
                             pipeline.customDeployment.fetchInstanceScriptHeader
                           </label>
@@ -1357,11 +1412,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceObjectArrayPathDT"
           >
-            pipeline.customDeployment.hostObjectArrayPath
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceObjectArrayPath
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -1401,11 +1461,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
         <div
           class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceAttributesDT"
           >
-            pipeline.customDeployment.hostAttributes
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceAttributes
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -1582,22 +1647,28 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="infraVariablesTitleDT"
           >
-            common.variables
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              common.variables
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div
               class="Layout--vertical StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main labelText"
+              <span
+                class="StyledProps--font StyledProps--main labelText ng-tooltip-native StyledProps--inline"
+                data-tooltip-id="infraVariablesDT"
               >
                 pipeline.customDeployment.infraVariablesTitle
-              </p>
+              </span>
               <div
                 class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
               >
@@ -1883,11 +1954,16 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="fetchInstancesScriptTitleDT"
           >
-            pipeline.customDeployment.fetchInstancesScript
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.fetchInstancesScript
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -1913,7 +1989,8 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                           class="Layout--vertical StyledProps--main"
                         >
                           <label
-                            class="Label--main configLabel"
+                            class="Label--main configLabel ng-tooltip-native"
+                            data-tooltip-id="fetchInstanceScriptDT"
                           >
                             pipeline.customDeployment.fetchInstanceScriptHeader
                           </label>
@@ -2014,11 +2091,16 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceObjectArrayPathDT"
           >
-            pipeline.customDeployment.hostObjectArrayPath
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceObjectArrayPath
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -2058,11 +2140,16 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
         <div
           class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceAttributesDT"
           >
-            pipeline.customDeployment.hostAttributes
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceAttributes
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >

@@ -28,7 +28,7 @@ import {
   NameSchemaWithoutHook
 } from '@common/utils/Validation'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 
 export enum Types {
   Text,
@@ -491,7 +491,12 @@ export function generateSchemaFields(
           getString('fieldRequired', { field: getString(label as StringKeys) })
         )
         if (type === Types.Identifier) {
-          if (buildInfrastructureType === 'VM') {
+          if (
+            buildInfrastructureType &&
+            [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+              buildInfrastructureType
+            )
+          ) {
             validationRule = validationRule.matches(
               serviceDependencyIdRegex,
               getString('pipeline.ci.validations.serviceDependencyIdentifier', {

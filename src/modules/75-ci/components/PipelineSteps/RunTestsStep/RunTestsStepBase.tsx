@@ -84,7 +84,8 @@ const BuildTool = {
   MAVEN: 'Maven',
   GRADLE: 'Gradle',
   DOTNET: 'Dotnet',
-  NUNITCONSOLE: 'Nunitconsole'
+  NUNITCONSOLE: 'Nunitconsole',
+  SBT: 'SBT'
 }
 
 const ET_COMMANDS_START = '#ET-SETUP-BEGIN'
@@ -122,10 +123,18 @@ interface RadioButtonOption {
   label: string
   value: string
 }
-const getJavaBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+
+const getJavaKotlinBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
   { label: getString('ci.runTestsStep.bazel'), value: BuildTool.BAZEL },
   { label: getString('ci.runTestsStep.maven'), value: BuildTool.MAVEN },
   { label: getString('ci.runTestsStep.gradle'), value: BuildTool.GRADLE }
+]
+
+const getScalaBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('ci.runTestsStep.bazel'), value: BuildTool.BAZEL },
+  { label: getString('ci.runTestsStep.maven'), value: BuildTool.MAVEN },
+  { label: getString('ci.runTestsStep.gradle'), value: BuildTool.GRADLE },
+  { label: getString('ci.runTestsStep.sbt'), value: BuildTool.SBT }
 ]
 
 export const getBuildEnvironmentOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
@@ -149,22 +158,34 @@ export const getErrorTrackingOptions = (getString: UseStringsReturn['getString']
 
 const enum Language {
   Java = 'Java',
-  Csharp = 'Csharp'
+  Csharp = 'Csharp',
+  Kotlin = 'Kotlin',
+  Scala = 'Scala'
 }
 
 const getLanguageOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
   { label: getString('ci.runTestsStep.csharp'), value: Language.Csharp },
-  { label: getString('ci.runTestsStep.java'), value: Language.Java }
+  { label: getString('ci.runTestsStep.java'), value: Language.Java },
+  { label: getString('ci.runTestsStep.kotlin'), value: Language.Kotlin },
+  { label: getString('ci.runTestsStep.scala'), value: Language.Scala }
+]
+
+const getSubsetLanguageOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('ci.runTestsStep.java'), value: Language.Java },
+  { label: getString('ci.runTestsStep.kotlin'), value: Language.Kotlin },
+  { label: getString('ci.runTestsStep.scala'), value: Language.Scala }
 ]
 
 const getBuildToolOptions = (
   getString: UseStringsReturn['getString'],
   language?: string
 ): SelectOption[] | undefined => {
-  if (language === Language.Java) {
-    return getJavaBuildToolOptions(getString)
+  if (language === Language.Java || language === Language.Kotlin) {
+    return getJavaKotlinBuildToolOptions(getString)
   } else if (language === Language.Csharp) {
     return getCSharpBuildToolOptions(getString)
+  } else if (language === Language.Scala) {
+    return getScalaBuildToolOptions(getString)
   }
   return undefined
 }
@@ -444,7 +465,11 @@ export const RunTestsStepBase = (
       )}
       formName="ciRunTests"
       validate={valuesToValidate => {
-        if ([CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType)) {
+        if (
+          [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+            buildInfrastructureType
+          )
+        ) {
           return validateConnectorRefAndImageDepdendency(
             get(valuesToValidate, 'spec.connectorRef', ''),
             get(valuesToValidate, 'spec.image', ''),
@@ -502,7 +527,11 @@ export const RunTestsStepBase = (
                 description: {}
               }}
             />
-            {![CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType) ? (
+            {![
+              CIBuildInfrastructureType.VM,
+              CIBuildInfrastructureType.Cloud,
+              CIBuildInfrastructureType.Docker
+            ].includes(buildInfrastructureType) ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -511,9 +540,7 @@ export const RunTestsStepBase = (
                 fieldLabelKey: 'languageLabel',
                 tooltipId: 'runTestsLanguage',
                 selectFieldOptions:
-                  isQAEnvironment || TI_DOTNET
-                    ? getLanguageOptions(getString)
-                    : getLanguageOptions(getString).slice(1, 2),
+                  isQAEnvironment || TI_DOTNET ? getLanguageOptions(getString) : getSubsetLanguageOptions(getString),
                 onSelectChange: option => {
                   const newBuildToolOptions = getBuildToolOptions(getString, option?.value as string)
                   const newValues = { ...formik.values }
@@ -740,9 +767,11 @@ gradle.projectsEvaluated {
                 summary={getString('pipeline.additionalConfiguration')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {[CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
-                      buildInfrastructureType
-                    ) ? (
+                    {[
+                      CIBuildInfrastructureType.VM,
+                      CIBuildInfrastructureType.Cloud,
+                      CIBuildInfrastructureType.Docker
+                    ].includes(buildInfrastructureType) ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}

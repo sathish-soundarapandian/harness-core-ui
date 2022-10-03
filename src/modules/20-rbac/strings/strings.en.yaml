@@ -151,6 +151,7 @@ userDetails:
     addToGroup: Add to a new User Group
     addingToGroups: Adding Groups
     addSuccessMessage: User is successfully added to the UserGroups '{{Groups}}'.
+    linkedSSOLdapUsersMessage: User group is linked with LDAP group. Users will be populated once sync completes.
   linkToSSOProviderModal:
     linkLabel: Link to SSO Provider Group
     delinkLabel: Delink Group

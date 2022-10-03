@@ -17,11 +17,11 @@ import {
   StepProps,
   Accordion,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { get, isEmpty, set } from 'lodash-es'
@@ -223,7 +223,7 @@ function KustomizeWithGIT({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: KustomizeWithGITDataType }) => (
-          <Form>
+          <FormikForm>
             <div className={helmcss.helmGitForm}>
               <FormInput.Text
                 name="identifier"
@@ -504,7 +504,7 @@ function KustomizeWithGIT({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

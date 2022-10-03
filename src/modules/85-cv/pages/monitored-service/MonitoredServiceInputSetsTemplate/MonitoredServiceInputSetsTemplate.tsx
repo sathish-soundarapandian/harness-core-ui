@@ -27,7 +27,7 @@ import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useGetTemplateInputSetYaml } from 'services/template-ng'
 import { useSaveMonitoredServiceFromYaml } from 'services/cv'
-import { TemplateType } from '@templates-library/utils/templatesUtils'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
@@ -145,7 +145,10 @@ export default function MonitoredServiceInputSetsTemplate({
   }
 
   const onUseTemplate = async (): Promise<void> => {
-    const { template } = await getTemplate({ templateType: TemplateType.MonitoredService })
+    const { template } = await getTemplate({
+      templateType: TemplateType.MonitoredService,
+      allowedUsages: [TemplateUsage.USE]
+    })
     const {
       identifier: selectedTemplateIdentifier = '',
       versionLabel: selectedTemplateVersionLabel = '',

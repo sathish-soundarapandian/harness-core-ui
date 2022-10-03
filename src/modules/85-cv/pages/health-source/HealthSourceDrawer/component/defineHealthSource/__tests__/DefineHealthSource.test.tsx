@@ -6,13 +6,14 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act, waitFor } from '@testing-library/react'
+import { render, fireEvent, act, waitFor, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
+import * as featureFlags from '@common/hooks/useFeatureFlag'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import { FeatureFlag } from '@common/featureFlags'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
-import { FeatureFlag } from '@common/featureFlags'
-import * as featureFlags from '@common/hooks/useFeatureFlag'
 import DefineHealthSource from '../DefineHealthSource'
 
 const createModeProps: TestWrapperProps = {
@@ -71,12 +72,6 @@ describe('DefineHealthSource', () => {
   })
 
   test('Click on custom health card', async () => {
-    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
-      if (flag === FeatureFlag.CHI_CUSTOM_HEALTH_LOGS) {
-        return true
-      }
-      return false
-    })
     const { getByText, container } = render(
       <TestWrapper {...createModeProps}>
         <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
@@ -89,5 +84,48 @@ describe('DefineHealthSource', () => {
     fireEvent.click(container.querySelector('[data-icon="service-custom-connector"]')!)
     await waitFor(() => expect(container.querySelector('[class*="Card--badge"]')).not.toBeNull())
     expect(container.querySelector('input[placeholder="- cv.healthSource.featurePlaceholder -"]')).not.toBeNull()
+  })
+
+  test('Click on cloud watch card', async () => {
+    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
+      if (flag === FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS) {
+        return true
+      }
+      return false
+    })
+    const { getByText, container } = render(
+      <TestWrapper {...createModeProps}>
+        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+          <DefineHealthSource />
+        </SetupSourceTabs>
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(getByText('CloudWatch Metrics')).not.toBeNull())
+
+    act(() => {
+      userEvent.click(container.querySelector('[data-icon="service-aws"]')!)
+    })
+
+    await waitFor(() => expect(container.querySelector('[class*="Card--badge"]')).not.toBeNull())
+    expect(container.querySelector('input[placeholder="- cv.healthSource.featurePlaceholder -"]')).not.toBeNull()
+  })
+
+  test('should not render Cloud watch option, if feature flag is disabled', async () => {
+    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
+      if (flag === FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS) {
+        return false
+      }
+      return true
+    })
+    render(
+      <TestWrapper {...createModeProps}>
+        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+          <DefineHealthSource />
+        </SetupSourceTabs>
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(screen.queryByText('CloudWatch Metrics')).toBeNull())
   })
 })

@@ -356,7 +356,7 @@ export default function AppDMonitoredSource({
                     allowedTypes={getAllowedTypes(isConnectorRuntimeOrExpression)}
                     applicationOptions={applicationOptions}
                     applicationLoading={applicationLoading}
-                    applicationError={formik?.errors?.appdApplication}
+                    applicationError={formik.touched.appdApplication ? formik?.errors?.appdApplication : ''}
                     connectorIdentifier={connectorIdentifier}
                     formikAppDynamicsValue={formik?.values?.appdApplication}
                     refetchTier={refetchTier}
@@ -382,7 +382,7 @@ export default function AppDMonitoredSource({
                       tierLoading={tierLoading}
                       formikValues={formik?.values}
                       onValidate={onValidate}
-                      tierError={formik?.errors?.appDTier}
+                      tierError={formik.touched.appDTier ? formik?.errors?.appDTier : ''}
                       setAppDTierCustomField={setAppDTierCustomField}
                     />
                   </Container>

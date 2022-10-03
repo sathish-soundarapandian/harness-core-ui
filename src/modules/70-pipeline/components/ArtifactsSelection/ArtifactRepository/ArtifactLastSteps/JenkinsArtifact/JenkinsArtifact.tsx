@@ -17,9 +17,9 @@ import {
   SelectOption,
   getMultiTypeFromValue,
   FormInput,
-  MultiSelectOption
+  MultiSelectOption,
+  FormikForm
 } from '@wings-software/uicore'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { cloneDeep, defaultTo, isEqual } from 'lodash-es'
@@ -237,7 +237,7 @@ function FormComponent({
   }, [jobsResponse])
 
   return (
-    <Form>
+    <FormikForm>
       <div className={css.connectorForm}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -432,7 +432,7 @@ function FormComponent({
           rightIcon="chevron-right"
         />
       </Layout.Horizontal>
-    </Form>
+    </FormikForm>
   )
 }
 

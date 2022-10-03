@@ -140,20 +140,22 @@ const renderComponent = (): RenderResult =>
       pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
     >
       <ValidateYourFlagView
-        flagInfo={{
-          project: 'dummy',
-          name: 'test-flag',
-          identifier: 'test_flag',
-          kind: 'boolean',
-          archived: false,
-          variations: [
-            { identifier: 'true', name: 'True', value: 'true' },
-            { identifier: 'false', name: 'False', value: 'false' }
-          ],
-          defaultOnVariation: 'true',
-          defaultOffVariation: 'false',
-          permanent: false
-        }}
+        flagInfo={
+          {
+            project: 'dummy',
+            name: 'test-flag',
+            identifier: 'test_flag',
+            kind: 'boolean',
+            archived: false,
+            variations: [
+              { identifier: 'true', name: 'True', value: 'true' },
+              { identifier: 'false', name: 'False', value: 'false' }
+            ],
+            defaultOnVariation: 'true',
+            defaultOffVariation: 'false',
+            permanent: false
+          } as any
+        }
         language={SupportPlatforms[1]}
         apiKey={{
           name: 'xxx-xxx-xxx',

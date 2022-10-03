@@ -7,9 +7,14 @@
 
 import React from 'react'
 import { PipelineStage as CommonStage } from '@pipeline/components/PipelineStages/PipelineStage'
+import { PipelineStageMinimalMode } from './PipelineStageMinimalMode'
 
 export class PipelineStage extends CommonStage {
   render(): JSX.Element {
+    const { minimal, stageProps } = this.props
+    if (minimal) {
+      return <PipelineStageMinimalMode {...stageProps} />
+    }
     return <div />
   }
 }

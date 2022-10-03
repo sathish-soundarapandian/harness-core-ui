@@ -7,6 +7,9 @@
 
 .table {
   margin: var(--spacing-large);
+  [role='cell'] {
+    padding-right: var(--spacing-small);
+  }
 }
 
 .tableRow {

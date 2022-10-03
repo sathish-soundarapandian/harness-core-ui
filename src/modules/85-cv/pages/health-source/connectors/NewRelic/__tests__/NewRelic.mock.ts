@@ -620,11 +620,7 @@ export const newRelicExpectedPayload = {
           liveMonitoring: {
             enabled: false
           },
-          riskProfile: {
-            category: '',
-            metricType: undefined,
-            thresholdTypes: []
-          }
+          riskProfile: {}
         },
         groupName: 'Group 1',
         identifier: '9a895e7d-ab48-4eaa-a8e3-69c25872925e',

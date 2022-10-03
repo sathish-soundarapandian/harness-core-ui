@@ -7,10 +7,11 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, unset } from 'lodash-es'
 import { connect, FormikProps } from 'formik'
 import { parse } from 'yaml'
 import { Spinner } from '@blueprintjs/core'
+import produce from 'immer'
 
 import {
   AllowedTypes,
@@ -22,6 +23,7 @@ import {
   Layout,
   ModalDialog,
   MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
   SelectOption,
   useToaster
 } from '@harness/uicore'
@@ -32,6 +34,7 @@ import {
   DeploymentStageConfig,
   InfrastructureResponse,
   InfrastructureResponseDTO,
+  TemplateLinkConfig,
   useGetInfrastructureInputs,
   useGetInfrastructureList
 } from 'services/cd-ng'
@@ -48,10 +51,10 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
-import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
+import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
-import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { isEditInfrastructure } from '../utils'
 
 import css from './DeployInfrastructures.module.scss'
@@ -83,7 +86,7 @@ function DeployInfrastructures({
     return defaultTo(environmentRef || /* istanbul ignore next */ formik?.values?.environment?.environmentRef, '')
   }, [environmentRef, /* istanbul ignore next */ formik?.values?.environment?.environmentRef])
 
-  const { updateTemplate } = useRunPipelineFormContext()
+  const { updateStageFormTemplate } = useStageFormContext()
   const {
     state: {
       selectionState: { selectedStageId }
@@ -93,6 +96,13 @@ function DeployInfrastructures({
 
   const { stage } = getStageFromPipeline(selectedStageId || '')
   const { getTemplate } = useTemplateSelector()
+  const deploymentType = (stage?.stage?.spec as DeployStageConfig)?.deploymentType
+
+  const { templateRef: deploymentTemplateIdentifier, versionLabel } =
+    (get(stage, 'stage.spec.customDeploymentRef') as TemplateLinkConfig) || {}
+
+  const shouldAddCustomDeploymentData =
+    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier && versionLabel
 
   const {
     data: infrastructuresResponse,
@@ -104,7 +114,8 @@ function DeployInfrastructures({
       orgIdentifier,
       projectIdentifier,
       environmentIdentifier,
-      deploymentType: (stage?.stage?.spec as DeployStageConfig)?.deploymentType
+      deploymentType,
+      ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
     },
     lazy: getMultiTypeFromValue(environmentIdentifier) === MultiTypeInputType.RUNTIME
   })
@@ -120,37 +131,44 @@ function DeployInfrastructures({
   const [infrastructures, setInfrastructures] = useState<InfrastructureResponseDTO[]>()
   const [selectedInfrastructure, setSelectedInfrastructure] = useState<string | undefined>()
   const [infrastructuresSelectOptions, setInfrastructuresSelectOptions] = useState<SelectOption[]>()
+  const [firstRender, setFirstRender] = React.useState<boolean>(true)
   const [infrastructureRefType, setInfrastructureRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.infrastructureRef)
   )
 
   useEffect(() => {
-    if (!infrastructureInputsLoading) {
-      if (infrastructureInputsResponse?.data?.inputSetTemplateYaml) {
-        const parsedInfrastructureDefinitionYaml = parse(
-          defaultTo(infrastructureInputsResponse?.data?.inputSetTemplateYaml, '{}')
-        )
-
-        if (path) {
-          formik?.setFieldValue(
-            `${path}.infrastructureDefinitions[0]`,
-            clearRuntimeInput(parsedInfrastructureDefinitionYaml.infrastructureDefinitions[0])
-          )
-          updateTemplate(
-            parsedInfrastructureDefinitionYaml.infrastructureDefinitions[0],
-            `${path}.infrastructureDefinitions[0]`
-          )
+    if (!infrastructureInputsLoading && !firstRender) {
+      if (infrastructureInputsResponse?.status === 'SUCCESS') {
+        if (infrastructureInputsResponse?.data?.inputSetTemplateYaml) {
+          const parsedInfrastructureDefinitionYaml = parse(infrastructureInputsResponse?.data?.inputSetTemplateYaml)
+          if (path) {
+            const infraDefinitionObject = formik?.values?.environment?.infrastructureDefinitions?.[0]
+            formik?.setFieldValue(
+              `environment.infrastructureDefinitions[0]`,
+              typeof infraDefinitionObject !== 'string'
+                ? infraDefinitionObject
+                : clearRuntimeInput(parsedInfrastructureDefinitionYaml.infrastructureDefinitions[0])
+            )
+            updateStageFormTemplate(
+              parsedInfrastructureDefinitionYaml.infrastructureDefinitions[0],
+              `${path}.infrastructureDefinitions[0]`
+            )
+          } else {
+            formik?.setFieldValue('infrastructureInputs', parsedInfrastructureDefinitionYaml)
+          }
         } else {
-          formik?.setFieldValue('infrastructureInputs', parsedInfrastructureDefinitionYaml)
-        }
-      } else {
-        if (path) {
-          updateTemplate([], `${path}.infrastructureDefinitions`)
-          formik?.setFieldValue('environment.infrastructureDefinitions[0].inputs.spec', {})
+          if (path && selectedInfrastructure) {
+            updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${path}.infrastructureDefinitions`)
+            formik?.setValues(
+              produce(formik.values, draft => {
+                unset(draft, path.split('.')[0])
+              })
+            )
+          }
         }
       }
-    } else {
-      formik?.setFieldValue('infrastructureInputs', undefined)
+    } else if (firstRender) {
+      setFirstRender(false)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [infrastructureInputsLoading])
@@ -172,8 +190,14 @@ function DeployInfrastructures({
         }
       })
     } else {
-      formik?.setFieldValue('environment.infrastructureDefinitions[0].inputs.spec', {})
-      updateTemplate([], `${path}.infrastructureDefinitions`)
+      if (path && !firstRender) {
+        updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${path}.infrastructureDefinitions`)
+        formik?.setValues(
+          produce(formik.values, draft => {
+            unset(draft, `environment.infrastructureDefinitions`)
+          })
+        )
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedInfrastructure])

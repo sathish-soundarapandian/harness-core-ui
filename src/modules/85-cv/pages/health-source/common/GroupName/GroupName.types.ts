@@ -12,7 +12,9 @@ export interface GroupNameProps {
   groupNames?: SelectOption[]
   onChange: (name: string, value: SelectOption) => void
   item?: SelectOption
-  setGroupNames: Dispatch<SetStateAction<SelectOption[]>>
+  setGroupNames?: Dispatch<SetStateAction<SelectOption[]>>
+  fieldName?: string
+  allowAddGroup?: boolean
 }
 
 export type CreateGroupName = {

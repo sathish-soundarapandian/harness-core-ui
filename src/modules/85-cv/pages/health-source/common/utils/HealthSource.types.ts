@@ -18,6 +18,11 @@ export interface BaseHealthSourceMetricDefinition {
   sli?: Slidto
 }
 
+export interface AssignComponentPayload {
+  analysis?: AnalysisDTO
+  sli?: Slidto
+}
+
 export interface BaseHealthSourceMetricInfo {
   metricName?: string
   identifier?: string
@@ -30,4 +35,13 @@ export interface BaseHealthSourceMetricInfo {
   higherBaselineDeviation?: boolean
   isNew?: boolean
   isManualQuery?: boolean
+}
+
+export interface CommonSetupHealthSourceListType {
+  identifier: string
+}
+
+export interface RiskThresholdTypes {
+  lowerBaselineDeviation?: boolean
+  higherBaselineDeviation?: boolean
 }

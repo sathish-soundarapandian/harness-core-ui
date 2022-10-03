@@ -16,12 +16,12 @@ import {
   StepProps,
   Text,
   SelectOption,
-  ButtonVariation
+  ButtonVariation,
+  FormikForm
 } from '@wings-software/uicore'
 import { Menu } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { memoize, merge } from 'lodash-es'
 import { ConnectorConfigDTO, useGetBuildDetailsForGcr } from 'services/cd-ng'
@@ -190,7 +190,7 @@ export function GCRImagePath({
         }}
       >
         {formik => (
-          <Form>
+          <FormikForm>
             <div className={css.connectorForm}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -262,7 +262,7 @@ export function GCRImagePath({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

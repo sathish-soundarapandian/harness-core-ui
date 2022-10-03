@@ -12,7 +12,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { Classes, Switch } from '@blueprintjs/core'
 import { String, useStrings } from 'framework/strings'
 import type { PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
-import { ApiKey, FeatureFlagRequestRequestBody, useGetAllFeatures, GetAllFeaturesQueryParams } from 'services/cf'
+import { ApiKey, Feature, useGetAllFeatures, GetAllFeaturesQueryParams } from 'services/cf'
 import { useToggleFeatureFlag } from '@cf/hooks/useToggleFeatureFlag'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
@@ -22,7 +22,7 @@ const POLLING_INTERVAL_IN_MS = 30000
 const INITIAL_INTERVAL_IN_MS = 240000
 
 export interface TestYourFlagViewProps {
-  flagInfo: FeatureFlagRequestRequestBody
+  flagInfo: Feature
   language: PlatformEntry
   apiKey: ApiKey
   environmentIdentifier?: string

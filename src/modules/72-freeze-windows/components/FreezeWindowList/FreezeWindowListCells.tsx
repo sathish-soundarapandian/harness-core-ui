@@ -8,7 +8,7 @@
 
 import { Classes, Menu, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon } from '@harness/uicore'
+import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Checkbox, Switch } from '@harness/uicore'
 import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
@@ -16,9 +16,18 @@ import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { killEvent } from '@common/utils/eventUtils'
-import type { PageFreezeResponse } from 'services/cd-ng'
-import type { FreezeWindowListColumnActions } from './FreezeWindowListTable'
+import type { FreezeSummaryResponse, UpdateFreezeStatusQueryParams } from 'services/cd-ng'
+import { useCurrentActiveTime } from '@freeze-windows/hooks/useCurrentActiveTime'
 import css from './FreezeWindowList.module.scss'
+
+export interface FreezeWindowListColumnActions {
+  onRowSelectToggle: (data: { freezeWindowId: string; checked: boolean }) => void
+  onToggleFreezeRow: (data: { freezeWindowId?: string; status: UpdateFreezeStatusQueryParams['status'] }) => void
+  onDeleteRow: (freezeWindowId?: string) => void
+  onViewFreezeRow: (freezeWindow: FreezeSummaryResponse) => void
+  getViewFreezeRowLink: (freezeWindow: FreezeSummaryResponse) => string
+  selectedItems: string[]
+}
 
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D> & FreezeWindowListColumnActions
@@ -27,10 +36,10 @@ type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance
   value: CellValue<V>
 }
 
-type CellType = Renderer<CellTypeWithActions<PageFreezeResponse>>
+type CellType = Renderer<CellTypeWithActions<FreezeSummaryResponse>>
 
 export const FreezeNameCell: CellType = ({ row, column }) => {
-  const data = row.original as any // TODO: remove once BE ready with proper swagger
+  const data = row.original
   const { getString } = useStrings()
 
   return (
@@ -40,7 +49,7 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
         flex={{ alignItems: 'center', justifyContent: 'start' }}
         margin={{ bottom: 'small' }}
       >
-        <Link to={column.getViewFreezeWindowLink(data)}>
+        <Link to={column.getViewFreezeRowLink(data)}>
           <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
             {data.name}
           </Text>
@@ -48,7 +57,7 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
 
         {data.description && (
           <Popover className={Classes.DARK} position={Position.LEFT}>
-            <Icon name="description" size={24} color={Color.GREY_600} />
+            <Icon name="description" width={16} height={20} />
             <Layout.Vertical spacing="medium" padding="large" style={{ maxWidth: 400 }}>
               <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }}>
                 Description
@@ -63,7 +72,7 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
         {data.tags && Object.keys(data.tags || {}).length ? (
           <TagsPopover
             tags={data.tags}
-            iconProps={{ size: 12, color: Color.GREY_600 }}
+            iconProps={{ size: 14, color: Color.GREY_600 }}
             popoverProps={{ className: Classes.DARK }}
             className={css.tags}
           />
@@ -77,18 +86,21 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
   )
 }
 
-export const FreezeTimeCell: CellType = () => {
+export const FreezeTimeCell: CellType = ({ row }) => {
+  const data = row.original
+  const freezeWindow = data.freezeWindows?.[0]
   return (
     <Layout.Vertical spacing="small">
       <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
-        Every Saturday and Sunday
+        {freezeWindow?.recurrence?.type}
+        {freezeWindow?.recurrence?.spec?.until && ` until ${freezeWindow?.recurrence?.spec?.until}`}
       </Text>
       <Layout.Horizontal spacing="small">
         <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
-          12:00 am - 12:00 pm
+          {freezeWindow?.startTime} - {freezeWindow?.endTime}
         </Text>
         <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
-          (GMT+00:00)UTC
+          {freezeWindow?.timeZone}
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>
@@ -96,20 +108,24 @@ export const FreezeTimeCell: CellType = () => {
 }
 
 export const StatusCell: CellType = ({ row }) => {
-  const data = row.original as any
+  const { getString } = useStrings()
+  const data = row.original
+  const { startTime, endTime } = data.currentOrUpcomingActiveWindow || {}
+  const isActive = useCurrentActiveTime(startTime, endTime, data.status === 'Enabled')
+
   return (
     <Text
       font={{ variation: FontVariation.TINY_SEMI }}
-      color={data.status === 'ACTIVE' ? Color.PRIMARY_7 : Color.GREY_700}
-      className={cx(css.status, data.status === 'ACTIVE' ? css.active : css.inactive)}
+      color={isActive ? Color.PRIMARY_7 : Color.GREY_700}
+      className={cx(css.status, isActive ? css.active : css.inactive)}
     >
-      {data.status}
+      {isActive ? getString('active') : getString('inactive')}
     </Text>
   )
 }
 
 export const LastModifiedCell: CellType = ({ row }) => {
-  const data = row.original as any
+  const data = row.original
   return (
     <Text color={Color.GREY_900} font={{ size: 'small' }}>
       {getReadableDateTime(data.lastUpdatedAt)}
@@ -118,20 +134,62 @@ export const LastModifiedCell: CellType = ({ row }) => {
 }
 
 export const MenuCell: CellType = ({ row, column }) => {
-  const data = row.original as any
+  const data = row.original
 
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
       <Popover className={Classes.DARK} position={Position.LEFT}>
         <Button variation={ButtonVariation.ICON} icon="Options" aria-label="Freeze window menu actions" />
-        <Menu style={{ backgroundColor: 'unset' }}>
+        <Menu style={{ backgroundColor: 'unset', minWidth: 'unset' }}>
+          <Menu.Item className={css.link} text={<Link to={column.getViewFreezeRowLink(data)}>Edit</Link>} />
           <Menu.Item
-            className={css.link}
-            text={<Link to={column.getViewFreezeWindowLink(data)}>Edit Freeze Window</Link>}
+            text={data.status === 'Disabled' ? 'Enable' : 'Disable'}
+            onClick={() => {
+              column.onToggleFreezeRow({
+                freezeWindowId: data.identifier!,
+                status: data.status === 'Disabled' ? 'Enabled' : 'Disabled'
+              })
+            }}
           />
-          <Menu.Item text="Delete Freeze Window" onClick={() => column.onDeleteFreezeWindow(data)} />
+          <Menu.Item text="Delete" onClick={() => column.onDeleteRow(data.identifier!)} />
         </Menu>
       </Popover>
     </Layout.Horizontal>
+  )
+}
+
+export const RowSelectCell: CellType = ({ row, column }) => {
+  const data = row.original
+
+  return (
+    <div className={css.checkbox} onClick={killEvent}>
+      <Checkbox
+        large
+        checked={column.selectedItems.includes(data.identifier!)}
+        onChange={event => {
+          column.onRowSelectToggle({ freezeWindowId: data.identifier!, checked: event.currentTarget.checked })
+        }}
+      />
+    </div>
+  )
+}
+
+export const FreezeToggleCell: CellType = ({ row, column }) => {
+  const data = row.original
+
+  return (
+    <div onClick={killEvent}>
+      <Switch
+        large
+        checked={data.status === 'Enabled'}
+        labelElement=""
+        onChange={event =>
+          column.onToggleFreezeRow({
+            freezeWindowId: data.identifier!,
+            status: event.currentTarget.checked ? 'Enabled' : 'Disabled'
+          })
+        }
+      />
+    </div>
   )
 }

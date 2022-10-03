@@ -277,6 +277,8 @@ export interface PipelineContextInterface {
   setSelectedSectionId: (selectedSectionId: string | undefined) => void
   setSelection: (selectionState: PipelineSelectionState) => void
   getStagePathFromPipeline(stageId: string, prefix?: string, pipeline?: PipelineInfoConfig): string
+  /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
+  setIntermittentLoading: (isIntermittentLoading: boolean) => void
 }
 
 interface PipelinePayload {
@@ -538,7 +540,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           orgIdentifier: queryParams.orgIdentifier
         }),
         originalPipeline: defaultTo(
-          cloneDeep(data?.pipeline),
+          cloneDeep(data?.originalPipeline),
           cloneDeep({
             ...DefaultPipeline,
             projectIdentifier: queryParams.projectIdentifier,
@@ -915,7 +917,8 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   setSelectedStepId: (_selectedStepId: string | undefined) => undefined,
   setSelectedSectionId: (_selectedSectionId: string | undefined) => undefined,
   setSelection: (_selectedState: PipelineSelectionState | undefined) => undefined,
-  getStagePathFromPipeline: () => ''
+  getStagePathFromPipeline: () => '',
+  setIntermittentLoading: () => undefined
 })
 
 export interface PipelineProviderProps {
@@ -1154,6 +1157,10 @@ export function PipelineProvider({
     dispatch(PipelineContextActions.updateSchemaErrorsFlag({ schemaErrors: flag }))
   }, [])
 
+  const setIntermittentLoading = React.useCallback((isIntermittentLoading: boolean) => {
+    dispatch(PipelineContextActions.setIntermittentLoading({ isIntermittentLoading }))
+  }, [])
+
   const updateStage = React.useCallback(
     async (newStage: StageElementConfig) => {
       function _updateStages(stages: StageElementWrapperConfig[]): StageElementWrapperConfig[] {
@@ -1246,7 +1253,8 @@ export function PipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes,
-        setTemplateServiceData
+        setTemplateServiceData,
+        setIntermittentLoading
       }}
     >
       {children}

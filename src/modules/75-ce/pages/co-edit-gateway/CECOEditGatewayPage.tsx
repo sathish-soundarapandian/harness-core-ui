@@ -32,7 +32,7 @@ import { Utils } from '@ce/common/Utils'
 import { useStrings } from 'framework/strings'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useGetConnector } from 'services/cd-ng'
-import { resourceToInstanceObject } from './helper'
+import { getGatewayDetailsSourceFilterFromPayload, resourceToInstanceObject } from './helper'
 import css from './CECOEditGatewayPage.module.scss'
 
 export const CECOEditGatewayPage: React.FC = () => {
@@ -142,6 +142,9 @@ export const CECOEditGatewayPage: React.FC = () => {
     } else {
       const selectedResources = _defaultTo(resources?.response, [])
       selectedInstances = selectedResources.map(item => resourceToInstanceObject(providerType, item))
+    }
+    if (!_isEmpty(service.routing?.source_filters)) {
+      routing.source_filters = getGatewayDetailsSourceFilterFromPayload(_defaultTo(service.routing, {}))
     }
     const gwDetails: GatewayDetails = {
       id: service.id,

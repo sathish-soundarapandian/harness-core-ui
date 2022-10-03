@@ -8,8 +8,11 @@
 import React from 'react'
 import { Icon, Tab, Tabs } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import type { ResourcesInterface } from '@freeze-windows/types'
 import { FreezeStudioOverviewSection } from './FreezeStudioOverviewSection'
 import { FreezeStudioConfigSection } from './FreezeStudioConfigSection'
+import { FreezeWindowScheduleSection } from './FreezeWindowScheduleSection'
 import css from './FreezeWindowStudio.module.scss'
 
 enum FreezeWindowTabs {
@@ -18,11 +21,22 @@ enum FreezeWindowTabs {
   SCHEDULE = 'SCHEDULE'
 }
 
-export const FreezeWindowStudioVisualView = () => {
+export const FreezeWindowStudioVisualView = ({ resources }: { resources: ResourcesInterface }) => {
   const { getString } = useStrings()
-  const [selectedTabId, setSelectedTabId] = React.useState<FreezeWindowTabs>(FreezeWindowTabs.OVERVIEW)
+  const { updateQueryParams } = useUpdateQueryParams<{ sectionId?: string | null }>()
+  const { sectionId } = useQueryParams<{ sectionId?: string | null }>()
 
   const isReadOnly = false
+
+  React.useEffect(() => {
+    if (!sectionId) {
+      updateQueryParams({ sectionId: FreezeWindowTabs.OVERVIEW })
+    }
+  }, [])
+
+  const setSelectedTabId = (tabId: FreezeWindowTabs) => {
+    updateQueryParams({ sectionId: tabId })
+  }
 
   return (
     <section className={css.stepTabs}>
@@ -31,8 +45,8 @@ export const FreezeWindowStudioVisualView = () => {
         onChange={(tabId: FreezeWindowTabs) => {
           setSelectedTabId(tabId)
         }}
-        selectedTabId={selectedTabId}
-        data-tabId={selectedTabId}
+        selectedTabId={sectionId as FreezeWindowTabs}
+        data-tabId={sectionId}
       >
         <Tab
           id={FreezeWindowTabs.OVERVIEW}
@@ -53,9 +67,9 @@ export const FreezeWindowStudioVisualView = () => {
           id={FreezeWindowTabs.FREEZE_CONFIG}
           panel={
             <FreezeStudioConfigSection
-              isReadOnly={isReadOnly}
               onBack={() => setSelectedTabId(FreezeWindowTabs.OVERVIEW)}
               onNext={() => setSelectedTabId(FreezeWindowTabs.SCHEDULE)}
+              resources={resources}
             />
           }
           title={
@@ -67,7 +81,12 @@ export const FreezeWindowStudioVisualView = () => {
         />
         <Tab
           id={FreezeWindowTabs.SCHEDULE}
-          panel={<div>Schedule</div>}
+          panel={
+            <FreezeWindowScheduleSection
+              onBack={() => setSelectedTabId(FreezeWindowTabs.FREEZE_CONFIG)}
+              isReadOnly={isReadOnly}
+            />
+          }
           title={
             <span>
               <Icon name="waiting" height={20} size={20} className={css.tabIcon} />

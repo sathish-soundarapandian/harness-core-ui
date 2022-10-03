@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 
@@ -132,13 +132,21 @@ export const getEditViewValidateFieldsConfig = (
     name: 'spec.connectorRef',
     type: ValidationFieldTypes.Text,
     label: 'pipelineSteps.connectorLabel',
-    isRequired: buildInfrastructureType !== 'VM'
+    isRequired: ![
+      CIBuildInfrastructureType.Cloud,
+      CIBuildInfrastructureType.VM,
+      CIBuildInfrastructureType.Docker
+    ].includes(buildInfrastructureType)
   },
   {
     name: 'spec.image',
     type: ValidationFieldTypes.Text,
     label: 'imageLabel',
-    isRequired: buildInfrastructureType !== 'VM'
+    isRequired: ![
+      CIBuildInfrastructureType.Cloud,
+      CIBuildInfrastructureType.VM,
+      CIBuildInfrastructureType.Docker
+    ].includes(buildInfrastructureType)
   },
   {
     name: 'spec.language',

@@ -66,7 +66,7 @@ const DeleteAccessPoint = (props: DeleteAccessPointProps) => {
   const getTitle = (): string => {
     let str = getString('ce.co.accessPoint.loadbalancers')
     if (accessPoints.length == 1) {
-      str = getString('pipeline.loadBalancer')
+      str = getString('common.loadBalancer')
     }
     return getString('delete') + ' ' + accessPoints.length + ' ' + str
   }

@@ -37,6 +37,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
     showRequiredField = false,
     showAdvanced = false,
     hideExecutionTimeField = false,
+    isExecutionTimeFieldDisabled = false,
     allowedValuesType,
     allowedValuesValidator,
     getAllowedValuesCustomComponent,
@@ -97,6 +98,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): JSX.Element {
           showDefaultField={showDefaultField}
           defaultValue={defaultValue}
           hideExecutionTimeField={hideExecutionTimeField}
+          isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled}
           showRequiredField={showRequiredField}
           showAdvanced={showAdvanced}
           allowedValuesType={allowedValuesType}

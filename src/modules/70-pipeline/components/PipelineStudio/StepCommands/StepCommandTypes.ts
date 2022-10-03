@@ -11,13 +11,14 @@ import type {
   StepElementConfig,
   StepGroupElementConfig,
   StepWhenCondition,
-  FailureStrategyConfig
+  FailureStrategyConfig,
+  StageElementConfig
 } from 'services/cd-ng'
-import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { TemplateStepNode, TemplateLinkConfig, EntityGitDetails } from 'services/pipeline-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
 export enum AdvancedPanels {
   PreRequisites = 'preRequisites',
@@ -47,7 +48,7 @@ export interface StepCommandsProps {
   hasStepGroupAncestor?: boolean
   hiddenPanels?: AdvancedPanels[]
   withoutTabs?: boolean
-  stageType?: StageType
+  selectedStage?: StageElementWrapper<StageElementConfig>
   stepViewType?: StepViewType
   className?: string
   viewType?: StepCommandsViews

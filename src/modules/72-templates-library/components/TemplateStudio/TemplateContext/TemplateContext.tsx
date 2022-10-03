@@ -735,6 +735,8 @@ export interface TemplateContextInterface {
   updateGitDetails: (gitDetails: EntityGitDetails) => Promise<void>
   updateStoreMetadata: (storeMetadata: StoreMetadata, gitDetails?: EntityGitDetails) => Promise<void>
   renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
+  /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
+  setIntermittentLoading: (isIntermittentLoading: boolean) => void
 }
 
 const _deleteTemplateCache = async (
@@ -857,7 +859,9 @@ export const TemplateContext = React.createContext<TemplateContextInterface>({
   deleteTemplateCache: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
   updateGitDetails: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
   updateStoreMetadata: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
-  renderPipelineStage: () => <div />
+  renderPipelineStage: () => <div />,
+  /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
+  setIntermittentLoading: () => undefined
 })
 
 export const TemplateProvider: React.FC<{
@@ -987,6 +991,9 @@ export const TemplateProvider: React.FC<{
   const updateTemplateView = React.useCallback((data: TemplateViewData) => {
     dispatch(TemplateContextActions.updateTemplateView({ templateView: data }))
   }, [])
+  const setIntermittentLoading = React.useCallback((isIntermittentLoading: boolean) => {
+    dispatch(TemplateContextActions.setIntermittentLoading({ isIntermittentLoading }))
+  }, [])
 
   React.useEffect(() => {
     fetchTemplate({ forceFetch: true, forceUpdate: true })
@@ -1041,7 +1048,8 @@ export const TemplateProvider: React.FC<{
         setYamlHandler,
         updateGitDetails,
         updateStoreMetadata,
-        renderPipelineStage
+        renderPipelineStage,
+        setIntermittentLoading
       }}
     >
       {children}

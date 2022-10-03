@@ -66,7 +66,8 @@ function TemplateStepWidget(
   formikRef: StepFormikFowardRef<TemplateStepNode>
 ): React.ReactElement {
   const {
-    state: { storeMetadata }
+    state: { storeMetadata },
+    setIntermittentLoading
   } = usePipelineContext()
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes } = props
   const { getString } = useStrings()
@@ -182,6 +183,18 @@ function TemplateStepWidget(
   const isLoading = stepTemplateLoading || stepTemplateInputSetLoading || loadingMergedTemplateInputs
 
   const error = defaultTo(stepTemplateInputSetError, stepTemplateError)
+
+  /**
+   * This effect disables/enables "Apply Changes" button on Pipeline and Template Studio
+   */
+  React.useEffect(() => {
+    setIntermittentLoading(isLoading)
+
+    // cleanup
+    return () => {
+      setIntermittentLoading(false)
+    }
+  }, [isLoading, setIntermittentLoading])
 
   return (
     <div className={stepCss.stepPanel}>

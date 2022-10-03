@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Spinner } from '@blueprintjs/core'
-import { Text } from '@harness/uicore'
+import { Color, Text } from '@harness/uicore'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
 import SeverityPill from '@sto-steps/components/SeverityPill/SeverityPill'
 import { SeverityCode } from '@sto-steps/types'
@@ -58,7 +58,7 @@ export default function STOExecutionCardSummary(
       if (!issueCounts || error) {
         return (
           <div className={css.main}>
-            <Text icon="error" intent="danger" font={{ size: 'small' }}>
+            <Text icon="error" intent="danger" font={{ size: 'small' }} color={Color.RED_800} iconProps={{ size: 12 }}>
               {getString('stoSteps.failedToGetIssueCounts')}
             </Text>
           </div>

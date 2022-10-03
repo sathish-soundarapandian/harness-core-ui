@@ -33,7 +33,7 @@ harnessDocs: 'Check Harness Documentation'
 successVerification:
   applyYAMLTitleForHelm: 'Copy the downloaded yaml on a machine with helm version >= 3.2 installed and access to your kubernetes cluster.'
   addHelmRepoLabel: 'Add Harness helm repo'
-  addHelmRepoCmd: '$ helm repo add <repo-name> https://app.harness.io/storage/harness-download/harness-helm-charts/'
+  addHelmRepoCmd: '$ helm repo add harness https://app.harness.io/storage/harness-download/harness-helm-charts/'
   installHelmChartLabel: 'To install the helm chart use the below command'
   installHelmChartCmd: '$ helm install  --namespace <namespace> --create-namespace harness/harness-delegate-ng -f harness-delegate-values.yaml'
   checkingForHeartbeat: Checking for heartbeat

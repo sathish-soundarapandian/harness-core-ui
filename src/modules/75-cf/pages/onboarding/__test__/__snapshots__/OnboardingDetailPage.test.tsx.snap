@@ -1,468 +1,51 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`OnboardingDetailPage CreateAFlagView 1`] = `
-<div>
-  <div
-    class="StyledProps--font StyledProps--main"
-    style="height: 100%;"
-  >
-    <div
-      class="StyledProps--font StyledProps--main container"
-      style="overflow: auto; width: calc(100% - 765px); height: calc(100vh - 140px);"
-    >
-      <h2
-        class="StyledProps--font StyledProps--font-h2 StyledProps--main letsStartHeading"
-        level="2"
-      >
-        cf.onboarding.letsStart
-      </h2>
-      <div
-        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
-        style="width: 400px;"
-      >
-        <p
-          class="StyledProps--font StyledProps--main inputLabel StyledProps--color StyledProps--color-black"
-        >
-          cf.onboarding.inputLabel
-        </p>
-        <div
-          class="TextInput--main"
-        >
-          <div
-            class="bp3-input-group bp3-disabled"
-          >
-            <input
-              class="bp3-input"
-              disabled=""
-              type="text"
-              value="test-flag"
-            />
-          </div>
-        </div>
-      </div>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--margin-top-xxlarge"
-        style="display: flex; align-items: center;"
-      >
-        <span>
-          cf.onboarding.successLabel
-        </span>
-        <span
-          class="bp3-icon bp3-icon-tick StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-green500"
-          icon="tick"
-        >
-          <svg
-            data-icon="tick"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <desc>
-              tick
-            </desc>
-            <path
-              d="M14 3c-.28 0-.53.11-.71.29L6 10.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l8-8A1.003 1.003 0 0014 3z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-      </p>
-    </div>
-    <div
-      class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-      style="box-shadow: -8px 0 10px -5px rgb(96 97 112 / 16%); position: fixed; top: 90px; right: 0px; bottom: 60px; z-index: 0; width: 400px;"
-    >
-      <div
-        class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main"
-      >
-        <h2
-          class="StyledProps--font StyledProps--font-h2 StyledProps--main"
-          level="2"
-          style="font-weight: 500; color: rgb(34, 34, 42);"
-        >
-          cf.onboarding.simpliestFlag
-        </h2>
-        <img
-          src="test-file-stub"
-          style="align-self: center;"
-          width="300"
-        />
-        <div
-          class="StyledProps--font StyledProps--main"
-        >
-          <p
-            class="StyledProps--font StyledProps--main"
-            style="line-height: 20px; color: rgb(107, 109, 133);"
-          >
-            cf.onboarding.simpliestFlagDescription
-          </p>
-          <div
-            class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
-          >
-            <a
-              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--link"
-              href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_4_create_a_flag_type"
-              rel="noreferrer noopener"
-              role="button"
-              tabindex="0"
-              target="_blank"
-            >
-              <span
-                class="bp3-button-text"
-              >
-                cf.onboarding.otherTypes
-              </span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`OnboardingDetailPage OnboardingDetailPage empty state should be rendered properly 1`] = `
-<div>
-  <div
-    class="StyledProps--font StyledProps--main container StyledProps--background-white"
-    style="height: 100%;"
-  >
-    <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main containerLayout StyledProps--flex"
-      style="height: 40px;"
-    >
-      <a
-        href="/account/dummy/cf/orgs/dummy/projects/dummy/onboarding"
-      >
-        cf.shared.getStarted
-      </a>
-      <p
-        class="StyledProps--font StyledProps--main"
-      >
-        /
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main"
-      >
-        cf.shared.quickGuide
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main"
-      >
-        /
-      </p>
-      <span
-        style="flex-grow: 1;"
-      />
-    </div>
-    <div
-      class="StyledProps--font StyledProps--main"
-      style="height: calc(100% - 102px);"
-    >
-      <div
-        class="bp3-tabs Tabs--main Tabs--horizontal"
-      >
-        <div
-          class="bp3-tab-list"
-          role="tablist"
-        >
-          <div
-            class="bp3-tab-indicator-wrapper"
-            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
-          >
-            <div
-              class="bp3-tab-indicator"
-            />
-          </div>
-          <div
-            aria-controls="bp3-tab-panel_cf-onboarding_created-a-flag"
-            aria-disabled="false"
-            aria-expanded="true"
-            aria-selected="true"
-            class="bp3-tab"
-            data-tab-id="created-a-flag"
-            id="bp3-tab-title_cf-onboarding_created-a-flag"
-            role="tab"
-            tabindex="0"
-          >
-            <p
-              class="StyledProps--font StyledProps--main"
-            >
-              cf.onboarding.oneCreateAFlag
-            </p>
-          </div>
-          <span
-            class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
-            icon="chevron-right"
-            style="align-self: center; height: 20px;"
-          >
-            <svg
-              data-icon="chevron-right"
-              height="20"
-              viewBox="0 0 20 20"
-              width="20"
-            >
-              <desc>
-                chevron-right
-              </desc>
-              <path
-                d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-          <div
-            aria-controls="bp3-tab-panel_cf-onboarding_set-up-your-app"
-            aria-disabled="true"
-            aria-expanded="false"
-            aria-selected="false"
-            class="bp3-tab"
-            data-tab-id="set-up-your-app"
-            id="bp3-tab-title_cf-onboarding_set-up-your-app"
-            role="tab"
-          >
-            <p
-              class="StyledProps--font StyledProps--main"
-            >
-              cf.onboarding.setUpApp
-            </p>
-          </div>
-          <span
-            class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
-            icon="chevron-right"
-            style="align-self: center; height: 20px;"
-          >
-            <svg
-              data-icon="chevron-right"
-              height="20"
-              viewBox="0 0 20 20"
-              width="20"
-            >
-              <desc>
-                chevron-right
-              </desc>
-              <path
-                d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-          <div
-            aria-controls="bp3-tab-panel_cf-onboarding_test-your-flag"
-            aria-disabled="true"
-            aria-expanded="false"
-            aria-selected="false"
-            class="bp3-tab"
-            data-tab-id="test-your-flag"
-            id="bp3-tab-title_cf-onboarding_test-your-flag"
-            role="tab"
-          >
-            <p
-              class="StyledProps--font StyledProps--main"
-            >
-              cf.onboarding.testYourFlag
-            </p>
-          </div>
-        </div>
-        <div
-          aria-hidden="false"
-          aria-labelledby="bp3-tab-title_cf-onboarding_created-a-flag"
-          class="bp3-tab-panel"
-          id="bp3-tab-panel_cf-onboarding_created-a-flag"
-          role="tabpanel"
-        >
-          <div
-            class="StyledProps--font StyledProps--main"
-            style="height: 100%;"
-          >
-            <div
-              class="StyledProps--font StyledProps--main container"
-              style="overflow: auto; width: calc(100% - 765px); height: calc(100vh - 140px);"
-            >
-              <h2
-                class="StyledProps--font StyledProps--font-h2 StyledProps--main letsStartHeading"
-                level="2"
-              >
-                cf.onboarding.letsStart
-              </h2>
-              <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
-                style="width: 400px;"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main inputLabel StyledProps--color StyledProps--color-black"
-                >
-                  cf.onboarding.inputLabel
-                </p>
-                <div
-                  class="TextInput--main"
-                >
-                  <div
-                    class="bp3-input-group"
-                  >
-                    <input
-                      class="bp3-input"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-              style="box-shadow: -8px 0 10px -5px rgb(96 97 112 / 16%); position: fixed; top: 90px; right: 0px; bottom: 60px; z-index: 0; width: 400px;"
-            >
-              <div
-                class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main"
-              >
-                <h2
-                  class="StyledProps--font StyledProps--font-h2 StyledProps--main"
-                  level="2"
-                  style="font-weight: 500; color: rgb(34, 34, 42);"
-                >
-                  cf.onboarding.simpliestFlag
-                </h2>
-                <img
-                  src="test-file-stub"
-                  style="align-self: center;"
-                  width="300"
-                />
-                <div
-                  class="StyledProps--font StyledProps--main"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="line-height: 20px; color: rgb(107, 109, 133);"
-                  >
-                    cf.onboarding.simpliestFlagDescription
-                  </p>
-                  <div
-                    class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
-                  >
-                    <a
-                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--link"
-                      href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_4_create_a_flag_type"
-                      rel="noreferrer noopener"
-                      role="button"
-                      tabindex="0"
-                      target="_blank"
-                    >
-                      <span
-                        class="bp3-button-text"
-                      >
-                        cf.onboarding.otherTypes
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-      style="box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.1); align-items: center; position: fixed; left: 288px; bottom: 0px; right: 0px; height: 60px;"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon"
-        type="button"
-      >
-        <span
-          class="bp3-icon bp3-icon-chevron-left StyledProps--main StyledProps--padding-right-xsmall"
-          icon="chevron-left"
-        >
-          <svg
-            data-icon="chevron-left"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <desc>
-              chevron-left
-            </desc>
-            <path
-              d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-        <span
-          class="bp3-button-text"
-        >
-          previous
-        </span>
-      </button>
-      <button
-        class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
-        disabled=""
-        tabindex="-1"
-        type="button"
-      >
-        <span
-          class="bp3-button-text"
-        >
-          next
-        </span>
-        <span
-          class="bp3-icon bp3-icon-chevron-right StyledProps--main"
-          icon="chevron-right"
-        >
-          <svg
-            data-icon="chevron-right"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <desc>
-              chevron-right
-            </desc>
-            <path
-              d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-      </button>
-      <span
-        style="flex-grow: 1;"
-      />
-    </div>
-  </div>
-</div>
-`;
-
 exports[`OnboardingDetailPage SelectEnvironmentView should render data correctly 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main"
+    class="StyledProps--font StyledProps--main StyledProps--margin-top-large"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+      class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
     >
-      <span
-        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
-        data-icon="spinner"
+      <p
+        class="StyledProps--font StyledProps--main selectEnvironment"
       >
-        <svg
-          fill="none"
-          height="16"
-          viewBox="0 0 36 36"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
+        cf.onboarding.selectYourEnvironment
+      </p>
+      <div
+        class="StyledProps--font StyledProps--main environmentContainer"
+      >
+        <div
+          class="StyledProps--font StyledProps--main"
         >
-          <path
-            d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
-            stroke="currentColor"
-            stroke-dasharray="75,100"
-            stroke-linecap="round"
-            stroke-width="2.8"
-            style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
-          />
-        </svg>
-      </span>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
+              data-icon="spinner"
+            >
+              <svg
+                fill="none"
+                height="16"
+                viewBox="0 0 36 36"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+                  stroke="currentColor"
+                  stroke-dasharray="75,100"
+                  stroke-linecap="round"
+                  stroke-width="2.8"
+                  style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -471,32 +54,49 @@ exports[`OnboardingDetailPage SelectEnvironmentView should render data correctly
 exports[`OnboardingDetailPage SelectEnvironmentView should render loading correctly 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main"
+    class="StyledProps--font StyledProps--main StyledProps--margin-top-large"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+      class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
     >
-      <span
-        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
-        data-icon="spinner"
+      <p
+        class="StyledProps--font StyledProps--main selectEnvironment"
       >
-        <svg
-          fill="none"
-          height="16"
-          viewBox="0 0 36 36"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
+        cf.onboarding.selectYourEnvironment
+      </p>
+      <div
+        class="StyledProps--font StyledProps--main environmentContainer"
+      >
+        <div
+          class="StyledProps--font StyledProps--main"
         >
-          <path
-            d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
-            stroke="currentColor"
-            stroke-dasharray="75,100"
-            stroke-linecap="round"
-            stroke-width="2.8"
-            style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
-          />
-        </svg>
-      </span>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+          >
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
+              data-icon="spinner"
+            >
+              <svg
+                fill="none"
+                height="16"
+                viewBox="0 0 36 36"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+                  stroke="currentColor"
+                  stroke-dasharray="75,100"
+                  stroke-linecap="round"
+                  stroke-width="2.8"
+                  style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+                />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -512,13 +112,65 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
       class="StyledProps--font StyledProps--main container"
       style="width: calc(100% - 400px); height: calc(100vh - 140px);"
     >
-      <span
-        class="StyledProps--font StyledProps--main successLabel StyledProps--inline StyledProps--color StyledProps--color-black"
+      <div
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-grey600"
       >
-        <span>
-          cf.onboarding.successLabel
-        </span>
-      </span>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center StyledProps--padding-top-small StyledProps--padding-bottom-small"
+          data-testid="ffOnboardingSelectedFlag"
+        >
+          <span>
+            cf.onboarding.youreUsing
+          </span>
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-body StyledProps--color StyledProps--color-primary6"
+          >
+            test-flag
+          </div>
+          <span>
+            common.with
+          </span>
+          <div
+            class="StyledProps--font StyledProps--main identifierContainer"
+          >
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-small StyledProps--margin-right-xsmall"
+            >
+              idLabel
+            </span>
+            <span
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--inline StyledProps--font-variation-small"
+              style="--text-line-clamp: 1;"
+            >
+              test_flag
+            </span>
+            <button
+              class="copyButton"
+              title="clickToCopy"
+            >
+              <span
+                class="bp3-icon bp3-icon-duplicate StyledProps--main StyledProps--color StyledProps--color-grey350"
+                icon="duplicate"
+              >
+                <svg
+                  data-icon="duplicate"
+                  height="12"
+                  viewBox="0 0 16 16"
+                  width="12"
+                >
+                  <desc>
+                    duplicate
+                  </desc>
+                  <path
+                    d="M15 0H5c-.55 0-1 .45-1 1v2h2V2h8v7h-1v2h2c.55 0 1-.45 1-1V1c0-.55-.45-1-1-1zm-4 4H1c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V5c0-.55-.45-1-1-1zm-1 10H2V6h8v8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
       <h2
         class="StyledProps--font StyledProps--font-h2 StyledProps--main setUpLabel"
         level="2"
@@ -549,7 +201,9 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                 >
                   <button
+                    aria-label=".NET"
                     class="button"
+                    data-testid="selectLanguageBtn"
                   >
                     <img
                       alt=".NET"
@@ -573,7 +227,9 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                 >
                   <button
+                    aria-label="Android"
                     class="button selected"
+                    data-testid="selectLanguageBtn"
                   >
                     <img
                       alt="Android"
@@ -597,7 +253,9 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                 >
                   <button
+                    aria-label="Golang"
                     class="button"
+                    data-testid="selectLanguageBtn"
                   >
                     <img
                       alt="Golang"
@@ -621,7 +279,9 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                 >
                   <button
+                    aria-label="iOS"
                     class="button"
+                    data-testid="selectLanguageBtn"
                   >
                     <img
                       alt="iOS"
@@ -645,7 +305,9 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                 >
                   <button
+                    aria-label="Java"
                     class="button"
+                    data-testid="selectLanguageBtn"
                   >
                     <img
                       alt="Java"
@@ -669,7 +331,9 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                 >
                   <button
+                    aria-label="JavaScript"
                     class="button"
+                    data-testid="selectLanguageBtn"
                   >
                     <img
                       alt="JavaScript"
@@ -693,7 +357,9 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                 >
                   <button
+                    aria-label="NodeJS"
                     class="button"
+                    data-testid="selectLanguageBtn"
                   >
                     <img
                       alt="NodeJS"
@@ -717,7 +383,9 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
                   class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                 >
                   <button
+                    aria-label="Python"
                     class="button"
+                    data-testid="selectLanguageBtn"
                   >
                     <img
                       alt="Python"
@@ -747,7 +415,7 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
           <p
             class="StyledProps--font StyledProps--main selectEnvironment"
           >
-            cf.onboarding.selectEnvironment
+            cf.onboarding.selectYourEnvironment
           </p>
           <div
             class="StyledProps--font StyledProps--main environmentContainer"
@@ -874,346 +542,6 @@ exports[`OnboardingDetailPage SetUpYourApplicationView 1`] = `
           </a>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`OnboardingDetailPage Should be able to create a flag 1`] = `
-<div>
-  <div
-    class="StyledProps--font StyledProps--main container StyledProps--background-white"
-    style="height: 100%;"
-  >
-    <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main containerLayout StyledProps--flex"
-      style="height: 40px;"
-    >
-      <a
-        href="/account/dummy/cf/orgs/dummy/projects/dummy/onboarding"
-      >
-        cf.shared.getStarted
-      </a>
-      <p
-        class="StyledProps--font StyledProps--main"
-      >
-        /
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main"
-      >
-        cf.shared.quickGuide
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main"
-      >
-        /
-      </p>
-      <span
-        style="flex-grow: 1;"
-      />
-    </div>
-    <div
-      class="StyledProps--font StyledProps--main"
-      style="height: calc(100% - 102px);"
-    >
-      <div
-        class="bp3-tabs Tabs--main Tabs--horizontal"
-      >
-        <div
-          class="bp3-tab-list"
-          role="tablist"
-        >
-          <div
-            class="bp3-tab-indicator-wrapper"
-            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
-          >
-            <div
-              class="bp3-tab-indicator"
-            />
-          </div>
-          <div
-            aria-controls="bp3-tab-panel_cf-onboarding_created-a-flag"
-            aria-disabled="false"
-            aria-expanded="true"
-            aria-selected="true"
-            class="bp3-tab"
-            data-tab-id="created-a-flag"
-            id="bp3-tab-title_cf-onboarding_created-a-flag"
-            role="tab"
-            tabindex="0"
-          >
-            <p
-              class="StyledProps--font StyledProps--main"
-            >
-              cf.onboarding.oneCreateAFlag
-            </p>
-          </div>
-          <span
-            class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
-            icon="chevron-right"
-            style="align-self: center; height: 20px;"
-          >
-            <svg
-              data-icon="chevron-right"
-              height="20"
-              viewBox="0 0 20 20"
-              width="20"
-            >
-              <desc>
-                chevron-right
-              </desc>
-              <path
-                d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-          <div
-            aria-controls="bp3-tab-panel_cf-onboarding_set-up-your-app"
-            aria-disabled="true"
-            aria-expanded="false"
-            aria-selected="false"
-            class="bp3-tab"
-            data-tab-id="set-up-your-app"
-            id="bp3-tab-title_cf-onboarding_set-up-your-app"
-            role="tab"
-          >
-            <p
-              class="StyledProps--font StyledProps--main"
-            >
-              cf.onboarding.setUpApp
-            </p>
-          </div>
-          <span
-            class="bp3-icon bp3-icon-chevron-right StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small StyledProps--color StyledProps--color-grey400"
-            icon="chevron-right"
-            style="align-self: center; height: 20px;"
-          >
-            <svg
-              data-icon="chevron-right"
-              height="20"
-              viewBox="0 0 20 20"
-              width="20"
-            >
-              <desc>
-                chevron-right
-              </desc>
-              <path
-                d="M13.71 9.29l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                fill-rule="evenodd"
-              />
-            </svg>
-          </span>
-          <div
-            aria-controls="bp3-tab-panel_cf-onboarding_test-your-flag"
-            aria-disabled="false"
-            aria-expanded="false"
-            aria-selected="false"
-            class="bp3-tab"
-            data-tab-id="test-your-flag"
-            id="bp3-tab-title_cf-onboarding_test-your-flag"
-            role="tab"
-            tabindex="0"
-          >
-            <p
-              class="StyledProps--font StyledProps--main"
-            >
-              cf.onboarding.testYourFlag
-            </p>
-          </div>
-        </div>
-        <div
-          aria-hidden="false"
-          aria-labelledby="bp3-tab-title_cf-onboarding_created-a-flag"
-          class="bp3-tab-panel"
-          id="bp3-tab-panel_cf-onboarding_created-a-flag"
-          role="tabpanel"
-        >
-          <div
-            class="StyledProps--font StyledProps--main"
-            style="height: 100%;"
-          >
-            <div
-              class="StyledProps--font StyledProps--main container"
-              style="overflow: auto; width: calc(100% - 765px); height: calc(100vh - 140px);"
-            >
-              <h2
-                class="StyledProps--font StyledProps--font-h2 StyledProps--main letsStartHeading"
-                level="2"
-              >
-                cf.onboarding.letsStart
-              </h2>
-              <div
-                class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
-                style="width: 400px;"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main inputLabel StyledProps--color StyledProps--color-black"
-                >
-                  cf.onboarding.inputLabel
-                </p>
-                <div
-                  class="TextInput--main"
-                >
-                  <div
-                    class="bp3-input-group"
-                  >
-                    <input
-                      class="bp3-input"
-                      type="text"
-                      value="test-boolean-flag"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="StyledProps--font StyledProps--main StyledProps--padding-xxlarge"
-              style="box-shadow: -8px 0 10px -5px rgb(96 97 112 / 16%); position: fixed; top: 90px; right: 0px; bottom: 60px; z-index: 0; width: 400px;"
-            >
-              <div
-                class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main"
-              >
-                <h2
-                  class="StyledProps--font StyledProps--font-h2 StyledProps--main"
-                  level="2"
-                  style="font-weight: 500; color: rgb(34, 34, 42);"
-                >
-                  cf.onboarding.simpliestFlag
-                </h2>
-                <img
-                  src="test-file-stub"
-                  style="align-self: center;"
-                  width="300"
-                />
-                <div
-                  class="StyledProps--font StyledProps--main"
-                >
-                  <p
-                    class="StyledProps--font StyledProps--main"
-                    style="line-height: 20px; color: rgb(107, 109, 133);"
-                  >
-                    cf.onboarding.simpliestFlagDescription
-                  </p>
-                  <div
-                    class="StyledProps--font StyledProps--main StyledProps--margin-top-medium"
-                  >
-                    <a
-                      class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--link"
-                      href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_4_create_a_flag_type"
-                      rel="noreferrer noopener"
-                      role="button"
-                      tabindex="0"
-                      target="_blank"
-                    >
-                      <span
-                        class="bp3-button-text"
-                      >
-                        cf.onboarding.otherTypes
-                      </span>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
-      style="box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.1); align-items: center; position: fixed; left: 288px; bottom: 0px; right: 0px; height: 60px;"
-    >
-      <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon"
-        type="button"
-      >
-        <span
-          class="bp3-icon bp3-icon-chevron-left StyledProps--main StyledProps--padding-right-xsmall"
-          icon="chevron-left"
-        >
-          <svg
-            data-icon="chevron-left"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <desc>
-              chevron-left
-            </desc>
-            <path
-              d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-        <span
-          class="bp3-button-text"
-        >
-          previous
-        </span>
-      </button>
-      <button
-        class="bp3-button bp3-disabled bp3-loading Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
-        disabled=""
-        tabindex="-1"
-        type="button"
-      >
-        <div
-          class="bp3-spinner bp3-button-spinner"
-        >
-          <div
-            class="bp3-spinner-animation"
-          >
-            <svg
-              height="20"
-              stroke-width="16.00"
-              viewBox="-3.00 -3.00 106.00 106.00"
-              width="20"
-            >
-              <path
-                class="bp3-spinner-track"
-                d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
-              />
-              <path
-                class="bp3-spinner-head"
-                d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
-                pathLength="280"
-                stroke-dasharray="280 280"
-                stroke-dashoffset="210"
-              />
-            </svg>
-          </div>
-        </div>
-        <span
-          class="bp3-button-text"
-        >
-          next
-        </span>
-        <span
-          class="bp3-icon bp3-icon-chevron-right StyledProps--main"
-          icon="chevron-right"
-        >
-          <svg
-            data-icon="chevron-right"
-            height="16"
-            viewBox="0 0 16 16"
-            width="16"
-          >
-            <desc>
-              chevron-right
-            </desc>
-            <path
-              d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-              fill-rule="evenodd"
-            />
-          </svg>
-        </span>
-      </button>
-      <span
-        style="flex-grow: 1;"
-      />
     </div>
   </div>
 </div>

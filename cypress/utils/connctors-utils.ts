@@ -69,6 +69,8 @@ export const getConnectorIconByType = (type: string): string => {
     case Connectors.CE_GCP:
     case 'Gcr':
       return 'service-gcp'
+    case Connectors.AWS:
+      return 'service-aws'
     default:
       return 'placeholder'
   }

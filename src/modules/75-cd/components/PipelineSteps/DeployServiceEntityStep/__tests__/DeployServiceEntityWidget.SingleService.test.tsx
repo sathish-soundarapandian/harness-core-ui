@@ -258,4 +258,37 @@ describe('DeployServiceEntityWidget - single service tests', () => {
       expect(onUpdate).toHaveBeenLastCalledWith({ service: { serviceInputs: '<+input>', serviceRef: '<+input>' } })
     })
   })
+
+  test('user can make service as expression', async () => {
+    const onUpdate = jest.fn()
+    const { container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ NG_SVC_ENV_REDESIGN: true }}>
+        <DeployServiceEntityWidget
+          initialValues={{}}
+          allowableTypes={allowableTypes}
+          readonly={false}
+          stageIdentifier=""
+          onUpdate={onUpdate}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(container.querySelector('.bp3-spinner')).not.toBeInTheDocument())
+
+    const fixedIcon = container.querySelector('.MultiTypeInput--btn')!
+
+    act(() => {
+      userEvent.click(fixedIcon)
+    })
+
+    const expression = await findByTextGlobal(document.body, 'Expression')
+
+    act(() => {
+      userEvent.click(expression)
+    })
+
+    await waitFor(() => {
+      expect(onUpdate).toHaveBeenLastCalledWith({ service: { serviceRef: '' } })
+    })
+  })
 })

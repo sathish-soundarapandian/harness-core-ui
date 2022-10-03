@@ -170,7 +170,8 @@ describe('Unit tests for timeline slider', () => {
     expect(onSliderDragEnd).toBeCalledTimes(0)
   })
 
-  test('it should handle the left and right clicks on mask', () => {
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('it should handle the left and right clicks on mask', () => {
     const onSliderDragEnd = jest.fn()
 
     const { container } = render(

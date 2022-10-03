@@ -19,6 +19,7 @@ import * as Yup from 'yup'
 
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
+import { Accordion } from '@harness/uicore'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { K8sRollingStepInfo, StepElementConfig } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -132,15 +133,32 @@ function K8RolloutDeployWidget(
                   />
                 )}
               </div>
-              <div className={stepCss.divider} />
-              <div className={cx(stepCss.formGroup, stepCss.sm)}>
-                <FormMultiTypeCheckboxField
-                  multiTypeTextbox={{ expressions, allowableTypes }}
-                  name="spec.skipDryRun"
-                  label={getString('pipelineSteps.skipDryRun')}
-                  disabled={readonly}
+              <Accordion className={stepCss.accordion}>
+                <Accordion.Panel
+                  id="optional-config"
+                  summary={getString('common.optionalConfig')}
+                  details={
+                    <>
+                      <div className={cx(stepCss.formGroup, stepCss.sm)}>
+                        <FormMultiTypeCheckboxField
+                          multiTypeTextbox={{ expressions, allowableTypes }}
+                          name="spec.skipDryRun"
+                          label={getString('pipelineSteps.skipDryRun')}
+                          disabled={readonly}
+                        />
+                      </div>
+                      <div className={cx(stepCss.formGroup, stepCss.md)}>
+                        <FormMultiTypeCheckboxField
+                          multiTypeTextbox={{ expressions, allowableTypes }}
+                          name="spec.pruningEnabled"
+                          label={getString('cd.steps.common.enableKubernetesPruning')}
+                          disabled={readonly}
+                        />
+                      </div>
+                    </>
+                  }
                 />
-              </div>
+              </Accordion>
             </>
           )
         }}
@@ -180,6 +198,20 @@ const K8RolloutDeployInputStep: React.FC<K8RolloutDeployProps> = ({ inputSetData
             }}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipDryRun`}
             label={getString('pipelineSteps.skipDryRun')}
+            disabled={inputSetData?.readonly}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.pruningEnabled) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes
+            }}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.pruningEnabled`}
+            label={getString('cd.steps.common.enableKubernetesPruning')}
             disabled={inputSetData?.readonly}
             setToFalseWhenEmpty={true}
           />
@@ -315,7 +347,8 @@ export class K8RolloutDeployStep extends PipelineStep<K8RolloutDeployData> {
     type: StepType.K8sRollingDeploy,
     timeout: '10m',
     spec: {
-      skipDryRun: false
+      skipDryRun: false,
+      pruningEnabled: false
     }
   }
 }

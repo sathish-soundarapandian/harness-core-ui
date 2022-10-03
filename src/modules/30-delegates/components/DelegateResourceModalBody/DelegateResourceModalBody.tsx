@@ -5,15 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import type { Column } from 'react-table'
-import { Container, Layout, Text, Icon } from '@wings-software/uicore'
+import { Container, Layout, Text, Icon, shouldShowError, useToaster } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import ResourceHandlerTable from '@rbac/components/ResourceHandlerTable/ResourceHandlerTable'
-import { useGetDelegateGroupsV2, GetDelegatesStatusV2QueryParams, DelegateGroupDetails } from 'services/portal'
+import { DelegateGroupDetails, useGetDelegateGroupsNGV2WithFilter } from 'services/portal'
 import { PageSpinner } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 type ParsedColumnContent = DelegateGroupDetails & { identifier: string }
 
@@ -25,23 +26,46 @@ const DelegateResourceModalBody: React.FC<RbacResourceModalProps> = ({
 }) => {
   const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
   const { getString } = useStrings()
-  const queryParams: GetDelegatesStatusV2QueryParams = useMemo(
-    () =>
-      ({
-        searchTerm,
-        accountId: accountIdentifier,
-        orgId: orgIdentifier,
-        projectId: projectIdentifier,
-        module
-      } as GetDelegatesStatusV2QueryParams),
+  const { getRBACErrorMessage } = useRBACError()
+  const { showError } = useToaster()
+
+  const queryParams = useMemo(
+    () => ({
+      searchTerm,
+      accountId: accountIdentifier,
+      orgId: orgIdentifier,
+      projectId: projectIdentifier,
+      module
+    }),
     [accountIdentifier, searchTerm, orgIdentifier, projectIdentifier]
   )
-  const { data, loading } = useGetDelegateGroupsV2({ queryParams })
+  const { loading, mutate: fetchDelegates } = useGetDelegateGroupsNGV2WithFilter({ queryParams })
+  const [delegateDataContent, setDelegateDataContent] = useState<Array<DelegateGroupDetails>>([])
 
-  const delegateDataContent = data?.resource?.delegateGroupDetails?.map(dataContent => ({
-    identifier: dataContent.delegateGroupIdentifier,
-    ...dataContent
-  }))
+  const refetchDelegates = useCallback(async (): Promise<void> => {
+    try {
+      const delegateResponse = await fetchDelegates(
+        {
+          filterType: 'Delegate'
+        },
+        { queryParams: queryParams }
+      )
+      const delegateData = delegateResponse?.resource?.delegateGroupDetails?.map(dataContent => ({
+        identifier: dataContent.delegateGroupIdentifier,
+        ...dataContent
+      }))
+      if (delegateData) {
+        setDelegateDataContent(delegateData)
+      }
+    } catch (e) {
+      if (shouldShowError(e)) {
+        showError(getRBACErrorMessage(e))
+      }
+    }
+  }, [fetchDelegates])
+  useEffect(() => {
+    refetchDelegates()
+  }, [refetchDelegates, queryParams])
 
   const columns: Column<ParsedColumnContent>[] = useMemo(
     () => [

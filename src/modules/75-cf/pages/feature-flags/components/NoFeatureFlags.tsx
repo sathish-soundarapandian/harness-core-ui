@@ -12,6 +12,7 @@ import { NoData } from '@cf/components/NoData/NoData'
 import { useStrings, String } from 'framework/strings'
 import noFlagsImg from '@cf/images/Feature_Flags_Teepee.svg'
 import noResultsImg from '@cf/images/EmptySearchResults.svg'
+import GetStartedWithFF from '@cf/components/GetStartedWithFF/GetStartedWithFF'
 import css from './NoFeatureFlags.module.scss'
 
 export interface NoFeatureFlagsProps {
@@ -76,12 +77,13 @@ export const NoFeatureFlags: React.FC<NoFeatureFlagsProps> = ({
       return (
         <>
           <div className={css.noFlagsDescription}>
-            <String stringID="cf.featureFlags.noFlagsDescription" />
+            <String stringID="cf.featureFlags.flagsDescription" />
           </div>
           <div className={css.noFlagsToGetStarted}>
             <String useRichText stringID="cf.featureFlags.noFlagsToGetStarted" />
           </div>
-          <FlagDialog environment={environmentIdentifier} />
+          <GetStartedWithFF />
+          <FlagDialog environment={environmentIdentifier} isLinkVariation />
         </>
       )
     }

@@ -8,7 +8,6 @@
 import { cloneDeep, isEmpty, isEqual } from 'lodash-es'
 import type {
   CustomHealthSourceMetricSpec,
-  RiskProfile,
   MetricPackDTO,
   useGetMetricPacks,
   PrometheusHealthSourceSpec,
@@ -33,6 +32,7 @@ import {
   MetricTypeValues
 } from '../../common/MetricThresholds/MetricThresholds.constants'
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
+import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
 
 const validateMetricThresholds = (
   errors: Record<string, string>,
@@ -375,14 +375,14 @@ export function transformCustomSetupSourceToHealthSource(
       continue
     }
 
-    const [category, metricType] = riskCategory?.split('/') || []
-    const thresholdTypes: RiskProfile['thresholdTypes'] = []
-    if (lowerBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_LOWER')
-    }
-    if (higherBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_HIGHER')
-    }
+    const assignComponentPayload = createPayloadForAssignComponent({
+      sli,
+      riskCategory,
+      healthScore,
+      continuousVerification,
+      lowerBaselineDeviation,
+      higherBaselineDeviation
+    })
 
     spec.metricDefinitions?.push({
       identifier: metricIdentifier,
@@ -402,16 +402,11 @@ export function transformCustomSetupSourceToHealthSource(
         serviceInstanceJsonPath: serviceInstanceIdentifier,
         timestampFormat: timestampFormat
       },
-      sli: { enabled: Boolean(sli) },
+      ...assignComponentPayload,
       analysis: {
-        riskProfile: {
-          category: category as RiskProfile['category'],
-          metricType: metricType as RiskProfile['metricType'],
-          thresholdTypes
-        },
-        liveMonitoring: { enabled: Boolean(healthScore) },
+        ...assignComponentPayload.analysis,
         deploymentVerification: {
-          enabled: Boolean(continuousVerification),
+          ...assignComponentPayload.analysis?.deploymentVerification,
           serviceInstanceMetricPath: serviceInstanceIdentifier
         }
       }

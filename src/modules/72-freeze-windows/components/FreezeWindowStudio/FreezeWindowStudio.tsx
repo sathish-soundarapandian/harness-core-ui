@@ -6,13 +6,17 @@
  */
 
 import React from 'react'
-import { useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import { Page, useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
+import type { Error } from 'services/cd-ng'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import { isValidYaml } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
+import { useFreezeStudioData } from '@freeze-windows/components/FreezeWindowStudio/useFreezeStudioData'
+import { RightBar } from '@freeze-windows/components/RightBar/RightBar'
 import { FreezeWindowStudioHeader } from './FreezeWindowStudioHeader'
 import { FreezeWindowStudioSubHeader } from './FreezeWindowStudioSubHeader'
 import { FreezeWindowStudioBody } from './FreezeWindowStudioBody'
+import css from './FreezeWindowStudio.module.scss'
 
 export const FreezeWindowStudio = () => {
   const {
@@ -20,8 +24,13 @@ export const FreezeWindowStudio = () => {
     setView,
     updateYamlView,
     updateFreeze,
+    loadingFreezeObj,
+    freezeObjError,
+    refetchFreezeObj,
     state: { isYamlEditable, yamlHandler }
   } = React.useContext(FreezeWindowContext)
+
+  const resources = useFreezeStudioData()
 
   // isYamlError
   const [, setYamlError] = React.useState(false)
@@ -53,10 +62,17 @@ export const FreezeWindowStudio = () => {
   }
 
   return (
-    <div>
-      <FreezeWindowStudioHeader />
-      <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
-      <FreezeWindowStudioBody />
-    </div>
+    <Page.Body
+      loading={loadingFreezeObj}
+      error={(freezeObjError?.data as Error)?.message || freezeObjError?.message}
+      retryOnError={refetchFreezeObj}
+    >
+      <div className={css.marginRight}>
+        <FreezeWindowStudioHeader />
+        <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
+        <FreezeWindowStudioBody resources={resources} />
+      </div>
+      <RightBar />
+    </Page.Body>
   )
 }
