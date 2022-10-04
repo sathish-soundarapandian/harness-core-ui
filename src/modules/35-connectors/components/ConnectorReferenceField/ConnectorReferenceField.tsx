@@ -42,6 +42,7 @@ import {
 } from 'services/cd-ng'
 import {
   EntityReferenceResponse,
+  EntityReferenceScope,
   getIdentifierFromValue,
   getScopeFromValue,
   getScopeLabelfromScope
@@ -483,9 +484,12 @@ export function getReferenceFieldProps({
                     ...(!category && { types: type }),
                     category,
                     filterType: 'Connector',
-                    projectIdentifier: scope === Scope.PROJECT ? [projectIdentifier as string] : undefined,
+                    projectIdentifier:
+                      scope === EntityReferenceScope.PROJECT ? [projectIdentifier as string] : undefined,
                     orgIdentifier:
-                      scope === Scope.PROJECT || scope === Scope.ORG ? [orgIdentifier as string] : undefined
+                      scope === EntityReferenceScope.PROJECT || scope === EntityReferenceScope.ORG
+                        ? [orgIdentifier as string]
+                        : undefined
                   },
                   connectorFilterProperties
                 ) as ConnectorFilterProperties
@@ -503,8 +507,11 @@ export function getReferenceFieldProps({
                   searchTerm: search,
                   pageIndex: page,
                   pageSize: 10,
-                  projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-                  orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined
+                  projectIdentifier: scope === EntityReferenceScope.PROJECT ? projectIdentifier : undefined,
+                  orgIdentifier:
+                    scope === EntityReferenceScope.PROJECT || scope === EntityReferenceScope.ORG
+                      ? orgIdentifier
+                      : undefined
                 }
               },
               signal
@@ -552,8 +559,11 @@ export function getReferenceFieldProps({
         item,
         resourceScope: {
           accountIdentifier,
-          orgIdentifier: selectedScope === Scope.ORG || selectedScope === Scope.PROJECT ? orgIdentifier : undefined,
-          projectIdentifier: selectedScope === Scope.PROJECT ? projectIdentifier : undefined
+          orgIdentifier:
+            selectedScope === EntityReferenceScope.ORG || selectedScope === EntityReferenceScope.PROJECT
+              ? orgIdentifier
+              : undefined,
+          projectIdentifier: selectedScope === EntityReferenceScope.PROJECT ? projectIdentifier : undefined
         },
         openConnectorModal,
         type,
@@ -567,8 +577,11 @@ export function getReferenceFieldProps({
         item,
         resourceScope: {
           accountIdentifier,
-          orgIdentifier: selectedScope === Scope.ORG || selectedScope === Scope.PROJECT ? orgIdentifier : undefined,
-          projectIdentifier: selectedScope === Scope.PROJECT ? projectIdentifier : undefined
+          orgIdentifier:
+            selectedScope === EntityReferenceScope.ORG || selectedScope === EntityReferenceScope.PROJECT
+              ? orgIdentifier
+              : undefined,
+          projectIdentifier: selectedScope === EntityReferenceScope.PROJECT ? projectIdentifier : undefined
         },
         openConnectorModal,
         type,

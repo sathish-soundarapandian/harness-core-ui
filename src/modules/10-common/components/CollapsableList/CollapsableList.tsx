@@ -11,7 +11,6 @@ import cx from 'classnames'
 
 import type { IconProps } from '@harness/icons'
 import { Collapse, Pagination, PaginationProps } from '@wings-software/uicore'
-import type { Scope } from '@common/interfaces/SecretsInterface'
 
 import type { EntityReferenceResponse, EntityReferenceScope } from '../EntityReference/EntityReference'
 import type { ScopeAndIdentifier } from '../MultiSelectEntityReference/MultiSelectEntityReference'
@@ -26,16 +25,16 @@ export interface CollapsableTableProps<T> {
   data: EntityReferenceResponse<T>[]
   recordRender: (args: {
     item: EntityReferenceResponse<T>
-    selectedScope: EntityReferenceScope | Scope
+    selectedScope: EntityReferenceScope
     selected?: boolean
   }) => JSX.Element
   collapsedRecordRender?: (args: {
     item: EntityReferenceResponse<T>
-    selectedScope: EntityReferenceScope | Scope
+    selectedScope: EntityReferenceScope
     selected?: boolean
   }) => JSX.Element
   pagination: PaginationProps
-  selectedScope: EntityReferenceScope | Scope
+  selectedScope: EntityReferenceScope
   disableCollapse?: boolean
   isMultiSelect?: boolean
 }

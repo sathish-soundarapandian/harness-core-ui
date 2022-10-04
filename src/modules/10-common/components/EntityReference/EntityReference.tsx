@@ -132,7 +132,7 @@ export type EntityReferenceResponse<T> = {
 export interface EntityReferenceProps<T> {
   onSelect: (reference: T, scope: EntityReferenceScope | Scope) => void
   fetchRecords: (
-    scope: EntityReferenceScope | Scope,
+    scope: EntityReferenceScope,
     done: (records: EntityReferenceResponse<T>[]) => void,
     searchTerm: string,
     page: number,
@@ -140,12 +140,12 @@ export interface EntityReferenceProps<T> {
   ) => void
   recordRender: (args: {
     item: EntityReferenceResponse<T>
-    selectedScope: EntityReferenceScope | Scope
+    selectedScope: EntityReferenceScope
     selected?: boolean
   }) => JSX.Element
   collapsedRecordRender?: (args: {
     item: EntityReferenceResponse<T>
-    selectedScope: EntityReferenceScope | Scope
+    selectedScope: EntityReferenceScope
     selected?: boolean
   }) => JSX.Element
   recordClassName?: string
@@ -167,11 +167,7 @@ export interface EntityReferenceProps<T> {
   showAllTab?: boolean
 }
 
-function getDefaultScope(
-  orgIdentifier?: string,
-  projectIdentifier?: string,
-  showAllTab = false
-): EntityReferenceScope | Scope {
+function getDefaultScope(orgIdentifier?: string, projectIdentifier?: string, showAllTab = false): EntityReferenceScope {
   if (showAllTab && (projectIdentifier || orgIdentifier)) {
     return EntityReferenceScope.ALL
   } else if (projectIdentifier) {
@@ -222,8 +218,8 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
     showAllTab = false
   } = props
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const [selectedScope, setSelectedScope] = useState<EntityReferenceScope | Scope>(
-    defaultScope || getDefaultScope(orgIdentifier, projectIdentifier, showAllTab)
+  const [selectedScope, setSelectedScope] = useState<EntityReferenceScope>(
+    (defaultScope as EntityReferenceScope) || getDefaultScope(orgIdentifier, projectIdentifier, showAllTab)
   )
   const { accountId } = useParams<AccountPathProps>()
   const {
