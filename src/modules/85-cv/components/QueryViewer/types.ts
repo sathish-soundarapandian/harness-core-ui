@@ -38,6 +38,7 @@ export interface QueryViewerProps {
   isQueryExecuted?: boolean
   postFetchingRecords?: () => void
   fetchRecords: () => void
+  queryInputs?: Array<any>
   queryNotExecutedMessage?: string
   queryTextAreaProps?: TextAreaProps['textArea']
   staleRecordsWarning?: string

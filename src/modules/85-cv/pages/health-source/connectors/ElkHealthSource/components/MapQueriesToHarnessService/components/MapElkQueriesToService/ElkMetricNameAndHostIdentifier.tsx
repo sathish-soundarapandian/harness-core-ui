@@ -35,7 +35,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
   const { getString } = useStrings()
   const isAddingIdentifiersDisabled = !isQueryExecuted || loading
 
-  const { data: elkIndices } = useGetELKIndices({
+  const { data: elkIndices, loading: indicesLoading } = useGetELKIndices({
     queryParams: { projectIdentifier, orgIdentifier, accountId, connectorIdentifier, tracingId: '' }
   })
   const { data: elkTimeFormat } = useGetTimeFormat({})
@@ -58,6 +58,10 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
     [elkTimeFormat?.data]
   )
 
+  const handleSelectChange = () => {
+    onChange(MapElkToServiceFieldNames.IS_STALE_RECORD, true)
+  }
+
   return (
     <Container className={css.main}>
       <FormInput.Text
@@ -68,9 +72,11 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
       <FormInput.Select
         label={getString('cv.monitoringSources.elk.logIndexesInputLabel')}
         name={MapElkToServiceFieldNames.LOG_INDEXES}
-        placeholder={getString('cv.monitoringSources.elk.selectLogIndex')}
+        disabled={indicesLoading}
+        placeholder={indicesLoading ? getString('loading') : getString('cv.monitoringSources.elk.selectLogIndex')}
         items={getIndexItems}
         selectProps={{ allowCreatingNewItems: true }}
+        onChange={handleSelectChange}
       />
 
       <InputWithDynamicModalForJsonMultiType

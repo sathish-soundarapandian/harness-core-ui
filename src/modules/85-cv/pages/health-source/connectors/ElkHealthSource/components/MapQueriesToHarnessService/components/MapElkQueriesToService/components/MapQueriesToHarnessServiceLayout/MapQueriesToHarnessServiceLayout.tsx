@@ -41,23 +41,32 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
     [accountId, projectIdentifier, orgIdentifier, connectorIdentifier]
   )
 
-  const { mutate: getSampleData } = useGetELKLogSampleData({
-    queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      connectorIdentifier,
-      tracingId: queryParams?.tracingId,
-      index: formikProps?.values?.logIndexes
-    }
-  })
+  const { mutate: getSampleData } = useGetELKLogSampleData({})
 
-  const fetchElkRecords = useCallback(async () => {
+  const staleRecordsWarningMessage = useMemo(
+    () => (values?.isStaleRecord ? getString('cv.monitoringSources.splunk.staleRecordsWarning') : ''),
+    [values?.isStaleRecord]
+  )
+
+  const fetchElkRecords: () => void = useCallback(async () => {
     setLoading(true)
     setError(null)
-    await getSampleData({
-      query
-    })
+    console.log('formikProps?.values?.logIndexesssssssssssssss', formikProps)
+    await getSampleData(
+      {
+        query
+      },
+      {
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          connectorIdentifier,
+          tracingId: queryParams?.tracingId,
+          index: formikProps?.values?.logIndexes
+        }
+      }
+    )
       .then(response => {
         setElkSampleData(response.data ?? [])
       })
@@ -70,12 +79,23 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
         setLoading(false)
       })
     setIsQueryExecuted(true)
-  }, [query])
+  }, [
+    formikProps?.values?.logIndexes,
+    getSampleData,
+    query,
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    connectorIdentifier,
+    queryParams?.tracingId,
+    showError
+  ])
+
   const postFetchingRecords = useCallback(() => {
     // resetting values of service once fetch records button is clicked.
     onChange(MapElkToServiceFieldNames.SERVICE_INSTANCE, '')
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    //onChange(MapSplunkToServiceFieldNames.IS_STALE_RECORD, false)
+    onChange(MapElkToServiceFieldNames.IS_STALE_RECORD, false)
   }, [onChange])
 
   return (
@@ -109,10 +129,17 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
               className={css.validationContainer}
               records={elkSampleData}
               fetchRecords={fetchElkRecords}
+              queryInputs={[formikProps, query]}
               postFetchingRecords={postFetchingRecords}
               loading={loading}
               error={error}
               query={formikProps?.values?.logIndexes ? query : ''}
+              queryTextAreaProps={{
+                onChangeCapture: () => {
+                  onChange(MapElkToServiceFieldNames.IS_STALE_RECORD, true)
+                }
+              }}
+              staleRecordsWarning={staleRecordsWarningMessage}
               queryNotExecutedMessage={getString('cv.monitoringSources.elk.submitElkQuery')}
               dataTooltipId={'elkQuery'}
               isTemplate={isTemplate}

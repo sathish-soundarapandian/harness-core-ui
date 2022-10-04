@@ -14,7 +14,8 @@ export const MapElkToServiceFieldNames = {
   SERVICE_INSTANCE: 'serviceInstance',
   LOG_INDEXES: 'logIndexes',
   IDENTIFY_TIMESTAMP: 'identify_timestamp',
-  MESSAGE_IDENTIFIER: 'messageIdentifier'
+  MESSAGE_IDENTIFIER: 'messageIdentifier',
+  IS_STALE_RECORD: 'isStaleRecord'
 }
 
 export const initialFormData: MapElkQueryToService = {

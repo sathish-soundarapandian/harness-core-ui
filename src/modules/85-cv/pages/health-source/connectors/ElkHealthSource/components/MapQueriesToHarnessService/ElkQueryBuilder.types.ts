@@ -25,6 +25,7 @@ export type MapElkQueryToService = {
   query: string
   identify_timestamp: string
   messageIdentifier: string
+  isStaleRecord?: boolean
 }
 
 export interface ElkQueryDefinition {

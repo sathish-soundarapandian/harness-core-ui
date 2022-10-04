@@ -132,7 +132,8 @@ export function QueryViewer(props: QueryViewerProps): JSX.Element {
     dataTooltipId,
     isTemplate,
     expressions,
-    isConnectorRuntimeOrExpression
+    isConnectorRuntimeOrExpression,
+    queryInputs
   } = props
   const { getString } = useStrings()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -151,7 +152,7 @@ export function QueryViewer(props: QueryViewerProps): JSX.Element {
       postFetchingRecords()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query])
+  }, queryInputs || [query])
 
   return (
     <Container className={cx(css.main, className)}>
