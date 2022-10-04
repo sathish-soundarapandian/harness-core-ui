@@ -16,6 +16,7 @@ import useFixedScheduleEditor from '@ce/common/FixedSchedule/useFixedScheduleEdi
 interface FixedSchedulesProps {
   schedules: FixedScheduleClient[]
   addSchedules: (schedules: FixedScheduleClient[]) => void
+  hideDescription?: boolean
 }
 
 interface EditParams {
@@ -74,7 +75,9 @@ const FixedSchedules: React.FC<FixedSchedulesProps> = props => {
 
   return (
     <Layout.Vertical spacing="medium">
-      <Text>{getString('ce.co.autoStoppingRule.configuration.step4.tabs.schedules.description')}</Text>
+      {!props.hideDescription ? (
+        <Text>{getString('ce.co.autoStoppingRule.configuration.step4.tabs.schedules.description')}</Text>
+      ) : null}
       {!_isEmpty(props.schedules) && (
         <FixedSchedeulesList data={props.schedules} handleEdit={editSchedule} handleDelete={deleteSchedule} />
       )}

@@ -9,7 +9,9 @@
 declare const styles: {
   readonly cgSetupBodyContainer: string
   readonly collapsibleBody: string
+  readonly scheduleAutostoppingContainer: string
   readonly toggleHeader: string
   readonly toggleSectionContainer: string
+  readonly whiteCard: string
 }
 export default styles

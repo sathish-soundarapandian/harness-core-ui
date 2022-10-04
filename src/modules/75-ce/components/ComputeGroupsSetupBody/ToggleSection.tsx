@@ -13,11 +13,20 @@ import css from './ComputeGroupsSetupBody.module.scss'
 
 interface ToggleSectionProps {
   title: string
-  subTitle: string
+  subTitle?: string
   className?: string
+  mainContent?: React.ReactNode
+  secondaryContent?: React.ReactNode
 }
 
-const ToggleSection: React.FC<ToggleSectionProps> = ({ children, title, subTitle, className }) => {
+const ToggleSection: React.FC<ToggleSectionProps> = ({
+  children,
+  title,
+  subTitle,
+  className,
+  mainContent,
+  secondaryContent
+}) => {
   const [isOpen, toggleIsOpen] = useToggle(false)
   const [isEnabled, toggleIsEnabled] = useToggle(false)
   return (
@@ -36,12 +45,16 @@ const ToggleSection: React.FC<ToggleSectionProps> = ({ children, title, subTitle
           <Text font={{ variation: FontVariation.H4 }} color={Color.GREY_800}>
             {title}
           </Text>
-          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
-            {subTitle}
-          </Text>
+          {subTitle && (
+            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+              {subTitle}
+            </Text>
+          )}
+          {mainContent}
         </Layout.Vertical>
         <FlexExpander />
-        <Layout.Horizontal flex>
+        <Layout.Horizontal flex spacing={'large'}>
+          {secondaryContent}
           <Icon name="main-chevron-down" color={Color.PRIMARY_7} />
         </Layout.Horizontal>
       </Layout.Horizontal>

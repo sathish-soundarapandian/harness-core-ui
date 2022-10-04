@@ -9,6 +9,7 @@ import React from 'react'
 import { Container, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import ScaleAndLimitPoliciesTab from './ScaleAndLimitPoliciesTab/ScaleAndLimitPoliciesTab'
+import SchedulingAutostoppingTab from './SchedulingAutostoppingTab'
 import css from './ComputeGroupsSetupBody.module.scss'
 
 const ComputeGroupsSetupBody: React.FC = () => {
@@ -33,10 +34,9 @@ const ComputeGroupsSetupBody: React.FC = () => {
           },
           {
             id: 'tab3',
-            title: 'Tab 3 title',
-            panel: <div>Tab 3 content</div>,
-            iconProps: { name: 'gear' },
-            disabled: true
+            title: getString('ce.computeGroups.setup.schedulingTab.title'),
+            panel: <SchedulingAutostoppingTab />,
+            iconProps: { name: 'gear' }
           }
         ]}
       ></Tabs>

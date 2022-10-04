@@ -9,6 +9,7 @@
 declare const styles: {
   readonly instanceFamiliesTable: string
   readonly nodeDeletionPolicySection: string
+  readonly rowHeader: string
   readonly scaleLimitPoliciesTabContainer: string
   readonly ttlDropdownSelector: string
 }

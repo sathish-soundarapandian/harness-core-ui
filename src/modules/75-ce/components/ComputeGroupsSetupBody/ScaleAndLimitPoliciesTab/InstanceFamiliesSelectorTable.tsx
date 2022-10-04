@@ -52,7 +52,7 @@ const InstanceFamiliesSelectorTable: React.FC<InstanceFamiliesSelectorTableProps
       </tr>
       {Object.entries(modifiedGridData).map(([type, sizeMap]) => {
         return (
-          <tr key={type}>
+          <tr key={type} className={css.rowHeader}>
             <th scope="row">{type}</th>
             {sizes.map(size => {
               return (

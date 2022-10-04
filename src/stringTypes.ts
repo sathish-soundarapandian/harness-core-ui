@@ -5694,6 +5694,16 @@ export interface StringsMap {
   'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.rootVolRatioTitle': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.spotNodeSettingsLabel': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.subHeader': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.entireCluster': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.potentialSpendByPolicies': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.savingsPercentage': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.selectScopeLabel': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.setupHeader': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.specificWorkloads': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.specifyScheduleHeader': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.specifyScheduleSubheader': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.totalSpend': string
+  'ce.computeGroups.setup.schedulingTab.title': string
   'ce.computeGroups.setup.spotInstancesTab.title': string
   'ce.computeGroups.sideNavText': string
   'ce.computeGroups.table.headers.managedBy': string
