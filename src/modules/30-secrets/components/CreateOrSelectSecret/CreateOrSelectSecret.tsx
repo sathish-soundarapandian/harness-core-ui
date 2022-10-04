@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { pick } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 import SecretReference from '@secrets/components/SecretReference/SecretReference'
-import { getReference } from '@common/utils/utils'
+import { getReference, getScopeFromIdentifiers } from '@common/utils/utils'
 import type {
   SecretResponseWrapper,
   ResponsePageSecretResponseWrapper,
@@ -61,7 +61,10 @@ const CreateOrSelectSecret: React.FC<CreateOrSelectSecretProps> = ({
         onSelect={data => {
           onSuccess({
             ...pick(data, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'type']),
-            referenceString: getReference(data.scope, data.identifier) as string
+            referenceString: getReference(
+              getScopeFromIdentifiers(data.orgIdentifier, data.projectIdentifier),
+              data.identifier
+            ) as string
           })
         }}
         accountIdentifier={accountId}

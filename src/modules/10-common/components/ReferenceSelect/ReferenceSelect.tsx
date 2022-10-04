@@ -223,7 +223,7 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
             {...referenceProps}
             onSelect={(record, scope) => {
               setOpen(false)
-              onChange(record, scope)
+              onChange(record, scope as Scope)
             }}
             onMultiSelect={records => {
               setOpen(false)

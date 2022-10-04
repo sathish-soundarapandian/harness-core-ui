@@ -47,6 +47,7 @@ export interface StringsMap {
   'common.advanced': string
   'common.agent': string
   'common.agents': string
+  'common.all': string
   'common.allEnvironments': string
   'common.allErrors': string
   'common.allServices': string
@@ -1125,7 +1126,6 @@ export interface StringsMap {
   'rbac.planEnforcement.ff.teamEnterprisePlan.approachingLimit': string
   'rbac.planEnforcement.ff.teamEnterprisePlan.upgradeRequired': string
   'rbac.project': string
-  'rbac.resourceGroup.all': string
   'rbac.resourceGroup.builtInResourceGroup': string
   'rbac.resourceGroup.color': string
   'rbac.resourceGroup.confirmDelete': string

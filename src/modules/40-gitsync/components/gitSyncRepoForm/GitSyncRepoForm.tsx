@@ -34,7 +34,6 @@ import {
   ConnectorReferenceField,
   ConnectorSelectedValue
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   ConnectorCardInterface,
   getCompleteGitPath,
@@ -50,6 +49,7 @@ import SCMCheck from '@common/components/SCMCheck/SCMCheck'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import RepoBranchSelect from './RepoBranchSelect'
 import RepoTestConnection from './RepoTestConnection'
 import css from './GitSyncRepoForm.module.scss'

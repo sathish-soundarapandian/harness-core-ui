@@ -21,20 +21,24 @@ import {
   ConnectorInfoDTO
 } from 'services/cd-ng'
 import { EntityReference } from '@common/exports'
-import { EntityReferenceResponse, getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import { Scope } from '@common/interfaces/SecretsInterface'
+import {
+  EntityReferenceResponse,
+  EntityReferenceScope,
+  getScopeFromDTO
+} from '@common/components/EntityReference/EntityReference'
 import { useStrings } from 'framework/strings'
 import useCreateUpdateSecretModal from '@secrets/modals/CreateSecretModal/useCreateUpdateSecretModal'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 import SecretEmptyState from '../../pages/secrets/secrets-empty-state.png'
 import type { SecretFormData, SecretIdentifiers } from '../CreateUpdateSecret/CreateUpdateSecret'
 import css from './SecretReference.module.scss'
 
 const CustomSelect = Select.ofType<SelectOption>()
 export interface SecretRef extends SecretDTOV2 {
-  scope: Scope
+  scope: EntityReferenceScope | Scope
 }
 
 export const enum SecretTypeEnum {
@@ -53,7 +57,7 @@ export interface SecretReferenceProps extends SceretTypeDropDownProps {
   accountIdentifier: string
   projectIdentifier?: string
   orgIdentifier?: string
-  defaultScope?: Scope
+  defaultScope?: EntityReferenceScope
   type?: ListSecretsV2QueryParams['type']
   mock?: ResponsePageSecretResponseWrapper
   connectorTypeContext?: ConnectorInfoDTO['type']
@@ -65,7 +69,7 @@ export interface SecretReferenceProps extends SceretTypeDropDownProps {
 const fetchRecords = (
   pageIndex: number,
   setPagedSecretData: (data: ResponsePageSecretResponseWrapper) => void,
-  scope: Scope,
+  scope: EntityReferenceScope | Scope,
   search: string | undefined,
   done: (records: EntityReferenceResponse<SecretRef>[]) => void,
   type: ListSecretsV2QueryParams['type'],
@@ -92,11 +96,18 @@ const fetchRecords = (
       accountIdentifier,
       type,
       searchTerm: search?.trim(),
-      projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
-      orgIdentifier: scope === Scope.PROJECT || scope === Scope.ORG ? orgIdentifier : undefined,
+      projectIdentifier:
+        scope === EntityReferenceScope.PROJECT || scope === EntityReferenceScope.ALL ? projectIdentifier : undefined,
+      orgIdentifier:
+        [EntityReferenceScope.PROJECT, EntityReferenceScope.ORG, EntityReferenceScope.ALL].indexOf(
+          scope as EntityReferenceScope
+        ) > -1
+          ? orgIdentifier
+          : undefined,
       source_category: sourceCategory,
       pageIndex: pageIndex,
-      pageSize: 10
+      pageSize: 10,
+      includeAllSecretsAccessibleAtScope: scope === EntityReferenceScope.ALL
     },
     mock
   })
@@ -184,6 +195,7 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
           secret.scope = scope
           props.onSelect(secret)
         }}
+        showAllTab
         defaultScope={defaultScope}
         noDataCard={{
           image: SecretEmptyState,
@@ -284,8 +296,10 @@ const SecretReference: React.FC<SecretReferenceProps> = props => {
                     resourceScope: {
                       accountIdentifier,
                       orgIdentifier:
-                        selectedScope === Scope.ORG || selectedScope === Scope.PROJECT ? orgIdentifier : undefined,
-                      projectIdentifier: selectedScope === Scope.PROJECT ? projectIdentifier : undefined
+                        selectedScope === EntityReferenceScope.ORG || selectedScope === EntityReferenceScope.PROJECT
+                          ? orgIdentifier
+                          : undefined,
+                      projectIdentifier: selectedScope === EntityReferenceScope.PROJECT ? projectIdentifier : undefined
                     }
                   }}
                   text={<Icon size={16} name={'Edit'} color={Color.GREY_600} />}

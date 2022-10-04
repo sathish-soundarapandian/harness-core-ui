@@ -52,6 +52,15 @@ export const getReference = (scope?: Scope, identifier?: string): string | undef
   }
 }
 
+export const getScopeFromIdentifiers = (orgIdentifier?: string, projectIdentifier?: string): Scope => {
+  if (projectIdentifier) {
+    return Scope.PROJECT
+  } else if (orgIdentifier) {
+    return Scope.ORG
+  }
+  return Scope.ACCOUNT
+}
+
 export const setPageNumber = ({ setPage, pageItemsCount, page }: SetPageNumberProps): void => {
   if (pageItemsCount === 0 && page > 0) {
     setPage(page - 1)

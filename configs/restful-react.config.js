@@ -31,6 +31,7 @@ module.exports = {
     customProps: {
       base: `{getConfig("ng/api")}`
     },
+    file: 'src/services/cd-ng/swagger.json',
     customGenerator: arg => customGenerator(arg, "getConfig('ng/api')"),
     ...(process.env.cdng_schema_path
       ? { file: process.env.cdng_schema_path }

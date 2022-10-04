@@ -208,7 +208,6 @@ resourceGroup:
   limitAccess: 'To limit access to specific set of {{name}}, add them as a list.'
   resourceFilterSelection: In this scope, users get access to all resources within a resource type selected.
   selectResourceGroup: 'Select Resource Group'
-  all: 'All {{name}}'
   noResourceGroupTypes: 'No Resource Group types available'
   builtInResourceGroup: 'Built in resource-group'
   noResourceGroup: 'No Resource Group available'
