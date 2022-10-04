@@ -34,6 +34,9 @@
       "name": "license-util"
     },
     {
+      "name": "cenghealth"
+    },
+    {
       "name": "yaml"
     },
     {
@@ -78,114 +81,6 @@
   ],
   "schemes": ["https", "http"],
   "paths": {
-    "/anomaly/feedback": {
-      "put": {
-        "tags": ["anomaly"],
-        "summary": "Report Anomaly Feedback",
-        "description": "",
-        "operationId": "reportAnomalyFeedback",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "anomalyId",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/AnomalyFeedbackDTO"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseBoolean"
-            }
-          }
-        }
-      }
-    },
-    "/anomaly/summary": {
-      "post": {
-        "tags": ["anomaly"],
-        "summary": "Get Anomalies Summary",
-        "description": "",
-        "operationId": "getAnomaliesSummary",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/AnomalyFilterProperties"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListAnomalySummary"
-            }
-          }
-        }
-      }
-    },
-    "/anomaly/widgets": {
-      "post": {
-        "tags": ["anomaly"],
-        "summary": "Get Anomaly Widgets",
-        "description": "",
-        "operationId": "getAnomalyWidgetsData",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/AnomalyFilterProperties"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListAnomalyWidgetData"
-            }
-          }
-        }
-      }
-    },
     "/anomaly": {
       "post": {
         "tags": ["anomaly"],
@@ -292,6 +187,114 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseListPerspectiveAnomalyData"
+            }
+          }
+        }
+      }
+    },
+    "/anomaly/feedback": {
+      "put": {
+        "tags": ["anomaly"],
+        "summary": "Report Anomaly Feedback",
+        "description": "",
+        "operationId": "reportAnomalyFeedback",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "anomalyId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/AnomalyFeedbackDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseBoolean"
+            }
+          }
+        }
+      }
+    },
+    "/anomaly/summary": {
+      "post": {
+        "tags": ["anomaly"],
+        "summary": "Get Anomalies Summary",
+        "description": "",
+        "operationId": "getAnomaliesSummary",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/AnomalyFilterProperties"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListAnomalySummary"
+            }
+          }
+        }
+      }
+    },
+    "/anomaly/widgets": {
+      "post": {
+        "tags": ["anomaly"],
+        "summary": "Get Anomaly Widgets",
+        "description": "",
+        "operationId": "getAnomalyWidgetsData",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/AnomalyFilterProperties"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListAnomalyWidgetData"
             }
           }
         }
@@ -1117,6 +1120,25 @@
         }
       }
     },
+    "/cenghealth": {
+      "get": {
+        "tags": ["cenghealth"],
+        "summary": "Get CE-NG Manager version",
+        "description": "",
+        "operationId": "getCENGMicroserviceVersion",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseString"
+            }
+          }
+        }
+      }
+    },
     "/yaml/cloudCostK8sClusterSetup": {
       "post": {
         "tags": ["yaml"],
@@ -1291,26 +1313,19 @@
         }
       }
     },
-    "/connector/awsaccountconnectiondetail": {
+    "/connector/azureappclientid": {
       "get": {
         "tags": ["connector"],
-        "summary": "Get Aws account connection details",
+        "summary": "Get Azure application client Id",
         "description": "",
-        "operationId": "awsaccountconnectiondetail",
+        "operationId": "azureappclientid",
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResponseAwsAccountConnectionDetail"
+              "$ref": "#/definitions/ResponseString"
             }
           }
         }
@@ -1341,19 +1356,26 @@
         }
       }
     },
-    "/connector/azureappclientid": {
+    "/connector/awsaccountconnectiondetail": {
       "get": {
         "tags": ["connector"],
-        "summary": "Get Azure application client Id",
+        "summary": "Get Aws account connection details",
         "description": "",
-        "operationId": "azureappclientid",
+        "operationId": "awsaccountconnectiondetail",
         "produces": ["application/json"],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResponseString"
+              "$ref": "#/definitions/ResponseAwsAccountConnectionDetail"
             }
           }
         }
@@ -1563,58 +1585,6 @@
         }
       }
     },
-    "/costdetails/overview": {
-      "post": {
-        "tags": ["costdetails"],
-        "summary": "Returns an overview of the cost",
-        "description": "",
-        "operationId": "costdetailoverview",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "perspectiveId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "startTime",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "endTime",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/CostDetailsQueryParamsDTO"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseStatsInfo"
-            }
-          }
-        }
-      }
-    },
     "/costdetails/timeseriesformat": {
       "post": {
         "tags": ["costdetails"],
@@ -1662,6 +1632,58 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponsePerspectiveTimeSeriesData"
+            }
+          }
+        }
+      }
+    },
+    "/costdetails/overview": {
+      "post": {
+        "tags": ["costdetails"],
+        "summary": "Returns an overview of the cost",
+        "description": "",
+        "operationId": "costdetailoverview",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "perspectiveId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "startTime",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "endTime",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CostDetailsQueryParamsDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseStatsInfo"
             }
           }
         }
@@ -1830,6 +1852,64 @@
         }
       }
     },
+    "/perspectiveFolders": {
+      "get": {
+        "tags": ["perspectiveFolders"],
+        "summary": "Get folders for account",
+        "description": "",
+        "operationId": "getFolders",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListCEViewFolder"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["perspectiveFolders"],
+        "summary": "Update a folder",
+        "description": "",
+        "operationId": "updateFolder",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CEViewFolder"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseCEViewFolder"
+            }
+          }
+        }
+      }
+    },
     "/perspectiveFolders/{folderId}/perspectives": {
       "get": {
         "tags": ["perspectiveFolders"],
@@ -1891,64 +1971,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseListCEView"
-            }
-          }
-        }
-      }
-    },
-    "/perspectiveFolders": {
-      "get": {
-        "tags": ["perspectiveFolders"],
-        "summary": "Get folders for account",
-        "description": "",
-        "operationId": "getFolders",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListCEViewFolder"
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": ["perspectiveFolders"],
-        "summary": "Update a folder",
-        "description": "",
-        "operationId": "updateFolder",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/CEViewFolder"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseCEViewFolder"
             }
           }
         }
@@ -2158,6 +2180,32 @@
         }
       }
     },
+    "/perspective/getAllPerspectives": {
+      "get": {
+        "tags": ["perspective"],
+        "summary": "Get All perspectives",
+        "description": "",
+        "operationId": "getAllPerspectives",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListQLCEView"
+            }
+          }
+        }
+      }
+    },
     "/perspective/forecastCost": {
       "get": {
         "tags": ["perspective"],
@@ -2309,32 +2357,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseDouble"
-            }
-          }
-        }
-      }
-    },
-    "/perspective/getAllPerspectives": {
-      "get": {
-        "tags": ["perspective"],
-        "summary": "Get All perspectives",
-        "description": "",
-        "operationId": "getAllPerspectives",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListQLCEView"
             }
           }
         }
@@ -2618,6 +2640,13 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "bufferPercentage",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
           }
         ],
         "responses": {
@@ -2625,40 +2654,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseECSRecommendationDTO"
-            }
-          }
-        }
-      }
-    },
-    "/recommendation/overview/filter-values": {
-      "post": {
-        "tags": ["recommendationoverview"],
-        "summary": "Filter values available for Recommendations",
-        "description": "",
-        "operationId": "recommendationFilterValues",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "required": false,
-            "schema": {
-              "$ref": "#/definitions/FilterValuesDTO"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseListFilterStatsDTO"
             }
           }
         }
@@ -2693,6 +2688,40 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponseRecommendationOverviewStats"
+            }
+          }
+        }
+      }
+    },
+    "/recommendation/overview/filter-values": {
+      "post": {
+        "tags": ["recommendationoverview"],
+        "summary": "Filter values available for Recommendations",
+        "description": "",
+        "operationId": "recommendationFilterValues",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/FilterValuesDTO"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseListFilterStatsDTO"
             }
           }
         }
@@ -3150,51 +3179,6 @@
         }
       }
     },
-    "/usage/CD/serviceInstancesLicense": {
-      "get": {
-        "tags": ["usage"],
-        "summary": "Gets License Usage By Timestamp for Service Instances in CD Module",
-        "description": "",
-        "operationId": "getCDLicenseUsageForServiceInstances",
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "accountIdentifier",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "timestamp",
-            "in": "query",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ResponseServiceInstanceUsageDTO"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Failure"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
     "/usage/CD/servicesLicense": {
       "get": {
         "tags": ["usage"],
@@ -3239,9 +3223,179 @@
           }
         }
       }
+    },
+    "/usage/CD/serviceInstancesLicense": {
+      "get": {
+        "tags": ["usage"],
+        "summary": "Gets License Usage By Timestamp for Service Instances in CD Module",
+        "description": "",
+        "operationId": "getCDLicenseUsageForServiceInstances",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResponseServiceInstanceUsageDTO"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Failure"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "AnomalyData": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "time": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "anomalyRelativeTime": {
+          "type": "string"
+        },
+        "actualAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "expectedAmount": {
+          "type": "number",
+          "format": "double"
+        },
+        "anomalousSpend": {
+          "type": "number",
+          "format": "double"
+        },
+        "anomalousSpendPercentage": {
+          "type": "number",
+          "format": "double"
+        },
+        "resourceName": {
+          "type": "string"
+        },
+        "resourceInfo": {
+          "type": "string"
+        },
+        "entity": {
+          "$ref": "#/definitions/EntityInfo"
+        },
+        "details": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "statusRelativeTime": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "cloudProvider": {
+          "type": "string"
+        },
+        "anomalyScore": {
+          "type": "number",
+          "format": "double"
+        },
+        "userFeedback": {
+          "type": "string",
+          "enum": ["TRUE_ANOMALY", "FALSE_ANOMALY", "NOT_RESPONDED"]
+        }
+      }
+    },
+    "EntityInfo": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "clusterName": {
+          "type": "string"
+        },
+        "clusterId": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "workloadName": {
+          "type": "string"
+        },
+        "workloadType": {
+          "type": "string"
+        },
+        "gcpProjectId": {
+          "type": "string"
+        },
+        "gcpProduct": {
+          "type": "string"
+        },
+        "gcpSKUId": {
+          "type": "string"
+        },
+        "gcpSKUDescription": {
+          "type": "string"
+        },
+        "awsUsageAccountId": {
+          "type": "string"
+        },
+        "awsServiceCode": {
+          "type": "string"
+        },
+        "awsInstancetype": {
+          "type": "string"
+        },
+        "awsUsageType": {
+          "type": "string"
+        },
+        "azureSubscriptionGuid": {
+          "type": "string"
+        },
+        "azureResourceGroup": {
+          "type": "string"
+        },
+        "azureMeterCategory": {
+          "type": "string"
+        },
+        "azureServiceName": {
+          "type": "string"
+        },
+        "azureInstanceId": {
+          "type": "string"
+        }
+      }
+    },
     "Response": {
       "type": "object",
       "properties": {
@@ -3260,65 +3414,7 @@
         }
       }
     },
-    "ResponseBoolean": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "boolean"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "AnomalyFeedbackDTO": {
-      "type": "object",
-      "properties": {
-        "feedback": {
-          "type": "string",
-          "enum": ["TRUE_ANOMALY", "FALSE_ANOMALY", "NOT_RESPONDED"]
-        }
-      }
-    },
-    "AnomalySummary": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "count": {
-          "type": "number",
-          "format": "double"
-        },
-        "actualCost": {
-          "type": "number",
-          "format": "double"
-        },
-        "expectedCost": {
-          "type": "number",
-          "format": "double"
-        },
-        "anomalousCost": {
-          "type": "number",
-          "format": "double"
-        },
-        "costImpact": {
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
-    "ResponseListAnomalySummary": {
+    "ResponseListAnomalyData": {
       "type": "object",
       "properties": {
         "status": {
@@ -3328,7 +3424,7 @@
         "data": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/AnomalySummary"
+            "$ref": "#/definitions/AnomalyData"
           }
         },
         "metaData": {
@@ -3736,188 +3832,6 @@
         }
       }
     },
-    "AnomalyWidgetData": {
-      "type": "object",
-      "properties": {
-        "widgetDescription": {
-          "type": "string",
-          "enum": ["TOP_N_ANOMALIES", "TOTAL_COST_IMPACT", "ANOMALIES_BY_CLOUD_PROVIDERS", "ANOMALIES_BY_STATUS"]
-        },
-        "widgetData": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AnomalySummary"
-          }
-        }
-      }
-    },
-    "ResponseListAnomalyWidgetData": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AnomalyWidgetData"
-          }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "AnomalyData": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "time": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "anomalyRelativeTime": {
-          "type": "string"
-        },
-        "actualAmount": {
-          "type": "number",
-          "format": "double"
-        },
-        "expectedAmount": {
-          "type": "number",
-          "format": "double"
-        },
-        "anomalousSpend": {
-          "type": "number",
-          "format": "double"
-        },
-        "anomalousSpendPercentage": {
-          "type": "number",
-          "format": "double"
-        },
-        "resourceName": {
-          "type": "string"
-        },
-        "resourceInfo": {
-          "type": "string"
-        },
-        "entity": {
-          "$ref": "#/definitions/EntityInfo"
-        },
-        "details": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string"
-        },
-        "statusRelativeTime": {
-          "type": "string"
-        },
-        "comment": {
-          "type": "string"
-        },
-        "cloudProvider": {
-          "type": "string"
-        },
-        "anomalyScore": {
-          "type": "number",
-          "format": "double"
-        },
-        "userFeedback": {
-          "type": "string",
-          "enum": ["TRUE_ANOMALY", "FALSE_ANOMALY", "NOT_RESPONDED"]
-        }
-      }
-    },
-    "EntityInfo": {
-      "type": "object",
-      "properties": {
-        "field": {
-          "type": "string"
-        },
-        "clusterName": {
-          "type": "string"
-        },
-        "clusterId": {
-          "type": "string"
-        },
-        "namespace": {
-          "type": "string"
-        },
-        "workloadName": {
-          "type": "string"
-        },
-        "workloadType": {
-          "type": "string"
-        },
-        "gcpProjectId": {
-          "type": "string"
-        },
-        "gcpProduct": {
-          "type": "string"
-        },
-        "gcpSKUId": {
-          "type": "string"
-        },
-        "gcpSKUDescription": {
-          "type": "string"
-        },
-        "awsUsageAccountId": {
-          "type": "string"
-        },
-        "awsServiceCode": {
-          "type": "string"
-        },
-        "awsInstancetype": {
-          "type": "string"
-        },
-        "awsUsageType": {
-          "type": "string"
-        },
-        "azureSubscriptionGuid": {
-          "type": "string"
-        },
-        "azureResourceGroup": {
-          "type": "string"
-        },
-        "azureMeterCategory": {
-          "type": "string"
-        },
-        "azureServiceName": {
-          "type": "string"
-        },
-        "azureInstanceId": {
-          "type": "string"
-        }
-      }
-    },
-    "ResponseListAnomalyData": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AnomalyData"
-          }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
     "FilterStatsDTO": {
       "type": "object",
       "properties": {
@@ -4134,6 +4048,121 @@
         "resolution": {
           "type": "string",
           "enum": ["HOUR", "DAY", "MONTH", "WEEK", "QUARTER", "YEAR"]
+        }
+      }
+    },
+    "ResponseBoolean": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "boolean"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "AnomalyFeedbackDTO": {
+      "type": "object",
+      "properties": {
+        "feedback": {
+          "type": "string",
+          "enum": ["TRUE_ANOMALY", "FALSE_ANOMALY", "NOT_RESPONDED"]
+        }
+      }
+    },
+    "AnomalySummary": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "count": {
+          "type": "number",
+          "format": "double"
+        },
+        "actualCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "expectedCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "anomalousCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "costImpact": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "ResponseListAnomalySummary": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnomalySummary"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "AnomalyWidgetData": {
+      "type": "object",
+      "properties": {
+        "widgetDescription": {
+          "type": "string",
+          "enum": ["TOP_N_ANOMALIES", "TOTAL_COST_IMPACT", "ANOMALIES_BY_CLOUD_PROVIDERS", "ANOMALIES_BY_STATUS"]
+        },
+        "widgetData": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnomalySummary"
+          }
+        }
+      }
+    },
+    "ResponseListAnomalyWidgetData": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnomalyWidgetData"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
         }
       }
     },
@@ -4553,6 +4582,13 @@
         "unallocatedCost": {
           "$ref": "#/definitions/UnallocatedCost"
         },
+        "dataSources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["CLUSTER", "AWS", "GCP", "AZURE", "COMMON", "CUSTOM", "BUSINESS_MAPPING", "LABEL"]
+          }
+        },
         "createdAt": {
           "type": "integer",
           "format": "int64"
@@ -4939,12 +4975,16 @@
             "SCM_UNEXPECTED_ERROR",
             "DUPLICATE_FILE_IMPORT",
             "AZURE_APP_SERVICES_TASK_EXCEPTION",
+            "AZURE_ARM_TASK_EXCEPTION",
+            "AZURE_BP_TASK_EXCEPTION",
             "MEDIA_NOT_SUPPORTED",
             "AWS_ECS_ERROR",
             "AWS_APPLICATION_AUTO_SCALING",
             "AWS_ECS_SERVICE_NOT_ACTIVE",
             "AWS_ECS_CLIENT_ERROR",
-            "AWS_STS_ERROR"
+            "AWS_STS_ERROR",
+            "FREEZE_EXCEPTION",
+            "DELEGATE_TASK_EXPIRED"
           ]
         },
         "level": {
@@ -6528,7 +6568,8 @@
             "Jenkins",
             "OciHelmRepo",
             "CustomSecretManager",
-            "ELK"
+            "ELK",
+            "GcpSecretManager"
           ]
         },
         "spec": {
@@ -6652,7 +6693,7 @@
         },
         {
           "type": "object",
-          "required": ["onDelegate", "template"],
+          "required": ["template"],
           "properties": {
             "delegateSelectors": {
               "type": "array",
@@ -7049,6 +7090,32 @@
           "properties": {
             "secretKeyRef": {
               "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "GcpSecretManager": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["credentialsRef"],
+          "properties": {
+            "credentialsRef": {
+              "type": "string"
+            },
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "default": {
+              "type": "boolean"
             }
           }
         }
@@ -8395,12 +8462,12 @@
             "renewAppRoleToken": {
               "type": "boolean"
             },
+            "default": {
+              "type": "boolean"
+            },
             "accessType": {
               "type": "string",
               "enum": ["APP_ROLE", "TOKEN", "VAULT_AGENT", "AWS_IAM", "K8s_AUTH"]
-            },
-            "default": {
-              "type": "boolean"
             },
             "readOnly": {
               "type": "boolean"
@@ -9151,12 +9218,16 @@
             "SCM_UNEXPECTED_ERROR",
             "DUPLICATE_FILE_IMPORT",
             "AZURE_APP_SERVICES_TASK_EXCEPTION",
+            "AZURE_ARM_TASK_EXCEPTION",
+            "AZURE_BP_TASK_EXCEPTION",
             "MEDIA_NOT_SUPPORTED",
             "AWS_ECS_ERROR",
             "AWS_APPLICATION_AUTO_SCALING",
             "AWS_ECS_SERVICE_NOT_ACTIVE",
             "AWS_ECS_CLIENT_ERROR",
-            "AWS_STS_ERROR"
+            "AWS_STS_ERROR",
+            "FREEZE_EXCEPTION",
+            "DELEGATE_TASK_EXPIRED"
           ]
         },
         "message": {
@@ -9527,12 +9598,16 @@
             "SCM_UNEXPECTED_ERROR",
             "DUPLICATE_FILE_IMPORT",
             "AZURE_APP_SERVICES_TASK_EXCEPTION",
+            "AZURE_ARM_TASK_EXCEPTION",
+            "AZURE_BP_TASK_EXCEPTION",
             "MEDIA_NOT_SUPPORTED",
             "AWS_ECS_ERROR",
             "AWS_APPLICATION_AUTO_SCALING",
             "AWS_ECS_SERVICE_NOT_ACTIVE",
             "AWS_ECS_CLIENT_ERROR",
-            "AWS_STS_ERROR"
+            "AWS_STS_ERROR",
+            "FREEZE_EXCEPTION",
+            "DELEGATE_TASK_EXPIRED"
           ]
         },
         "message": {
@@ -10544,44 +10619,6 @@
         }
       }
     },
-    "ResponseStatsInfo": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/StatsInfo"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "StatsInfo": {
-      "type": "object",
-      "properties": {
-        "statsLabel": {
-          "type": "string"
-        },
-        "statsDescription": {
-          "type": "string"
-        },
-        "statsValue": {
-          "type": "string"
-        },
-        "statsTrend": {
-          "$ref": "#/definitions/Number"
-        },
-        "value": {
-          "$ref": "#/definitions/Number"
-        }
-      }
-    },
     "DataPoint": {
       "type": "object",
       "properties": {
@@ -10684,6 +10721,44 @@
         "time": {
           "type": "integer",
           "format": "int64"
+        }
+      }
+    },
+    "ResponseStatsInfo": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/StatsInfo"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "StatsInfo": {
+      "type": "object",
+      "properties": {
+        "statsLabel": {
+          "type": "string"
+        },
+        "statsDescription": {
+          "type": "string"
+        },
+        "statsValue": {
+          "type": "string"
+        },
+        "statsTrend": {
+          "$ref": "#/definitions/Number"
+        },
+        "value": {
+          "$ref": "#/definitions/Number"
         }
       }
     },
@@ -10864,6 +10939,91 @@
         }
       }
     },
+    "CEViewFolder": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+        "accountId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "pinned": {
+          "type": "boolean"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "viewType": {
+          "type": "string",
+          "enum": ["SAMPLE", "CUSTOMER", "DEFAULT"]
+        },
+        "createdAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lastUpdatedAt": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "createdBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        },
+        "lastUpdatedBy": {
+          "$ref": "#/definitions/EmbeddedUser"
+        }
+      }
+    },
+    "ResponseListCEViewFolder": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CEViewFolder"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseCEViewFolder": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/CEViewFolder"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
     "QLCEView": {
       "type": "object",
       "properties": {
@@ -10999,91 +11159,6 @@
           "items": {
             "type": "string"
           }
-        }
-      }
-    },
-    "CEViewFolder": {
-      "type": "object",
-      "properties": {
-        "uuid": {
-          "type": "string"
-        },
-        "accountId": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 80
-        },
-        "pinned": {
-          "type": "boolean"
-        },
-        "tags": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "description": {
-          "type": "string"
-        },
-        "viewType": {
-          "type": "string",
-          "enum": ["SAMPLE", "CUSTOMER", "DEFAULT"]
-        },
-        "createdAt": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "lastUpdatedAt": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "createdBy": {
-          "$ref": "#/definitions/EmbeddedUser"
-        },
-        "lastUpdatedBy": {
-          "$ref": "#/definitions/EmbeddedUser"
-        }
-      }
-    },
-    "ResponseCEViewFolder": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/CEViewFolder"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "ResponseListCEViewFolder": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/CEViewFolder"
-          }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
         }
       }
     },
@@ -11677,6 +11752,10 @@
         "serviceName": {
           "type": "string"
         },
+        "launchType": {
+          "type": "string",
+          "enum": ["EC2", "FARGATE", "EXTERNAL"]
+        },
         "current": {
           "type": "object",
           "additionalProperties": {
@@ -11712,6 +11791,37 @@
         },
         "data": {
           "$ref": "#/definitions/ECSRecommendationDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "RecommendationOverviewStats": {
+      "type": "object",
+      "properties": {
+        "totalMonthlyCost": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalMonthlySaving": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "ResponseRecommendationOverviewStats": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/RecommendationOverviewStats"
         },
         "metaData": {
           "type": "object"
@@ -11775,20 +11885,6 @@
         }
       }
     },
-    "FilterValuesDTO": {
-      "type": "object",
-      "properties": {
-        "columns": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "filter": {
-          "$ref": "#/definitions/CCMRecommendationFilterProperties"
-        }
-      }
-    },
     "K8sRecommendationFilterPropertiesDTO": {
       "type": "object",
       "properties": {
@@ -11825,34 +11921,17 @@
         }
       }
     },
-    "RecommendationOverviewStats": {
+    "FilterValuesDTO": {
       "type": "object",
       "properties": {
-        "totalMonthlyCost": {
-          "type": "number",
-          "format": "double"
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
-        "totalMonthlySaving": {
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
-    "ResponseRecommendationOverviewStats": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/RecommendationOverviewStats"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
+        "filter": {
+          "$ref": "#/definitions/CCMRecommendationFilterProperties"
         }
       }
     },
@@ -12139,49 +12218,6 @@
         }
       }
     },
-    "ResponseServiceInstanceUsageDTO": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/ServiceInstanceUsageDTO"
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "ServiceInstanceUsageDTO": {
-      "type": "object",
-      "properties": {
-        "accountIdentifier": {
-          "type": "string"
-        },
-        "module": {
-          "type": "string"
-        },
-        "timestamp": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "activeServices": {
-          "$ref": "#/definitions/UsageDataDTO"
-        },
-        "activeServiceInstances": {
-          "$ref": "#/definitions/UsageDataDTO"
-        },
-        "cdLicenseType": {
-          "type": "string",
-          "enum": ["SERVICES", "SERVICE_INSTANCES"]
-        }
-      }
-    },
     "ResponseServiceUsageDTO": {
       "type": "object",
       "properties": {
@@ -12225,6 +12261,49 @@
         },
         "serviceLicenses": {
           "$ref": "#/definitions/UsageDataDTO"
+        }
+      }
+    },
+    "ResponseServiceInstanceUsageDTO": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/ServiceInstanceUsageDTO"
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ServiceInstanceUsageDTO": {
+      "type": "object",
+      "properties": {
+        "accountIdentifier": {
+          "type": "string"
+        },
+        "module": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "activeServices": {
+          "$ref": "#/definitions/UsageDataDTO"
+        },
+        "activeServiceInstances": {
+          "$ref": "#/definitions/UsageDataDTO"
+        },
+        "cdLicenseType": {
+          "type": "string",
+          "enum": ["SERVICES", "SERVICE_INSTANCES"]
         }
       }
     }
