@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
-import { Checkbox, Container, FormInput, Layout, Text, useToggle } from '@harness/uicore'
+import { Checkbox, Color, Container, FontVariation, FormInput, Layout, Text, useToggle } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import ToggleSection from './ToggleSection'
+import ToggleSection from '../ToggleSection'
+import css from './ScaleAndLimitPoliciesTab.module.scss'
 
 interface FieldContainerWithCheckboxProps {
   title: string
@@ -22,7 +23,7 @@ interface FieldConfigProps {
 const ScaleAndLimitPoliciesTab: React.FC = () => {
   const { getString } = useStrings()
   return (
-    <Container>
+    <Container className={css.scaleLimitPoliciesTabContainer}>
       <ToggleSection
         title={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.header')}
         subTitle={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.subHeader')}
@@ -59,6 +60,7 @@ const ScaleAndLimitPoliciesTab: React.FC = () => {
       <ToggleSection
         title={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.header')}
         subTitle={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.subHeader')}
+        className={css.nodeDeletionPolicySection}
       >
         <TTLSettings />
       </ToggleSection>
@@ -75,9 +77,9 @@ const ScaleAndLimitPoliciesTab: React.FC = () => {
 const ClusterHeadroom: React.FC<FieldConfigProps> = ({ enable }) => {
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal>
+    <Layout.Horizontal spacing={'huge'}>
       <Container>
-        <Layout.Horizontal>
+        <Layout.Horizontal flex={{ alignItems: 'flex-end' }} spacing="large">
           <FormInput.Text
             name="defaultClusterCpu"
             placeholder={'% ' + getString('ce.common.cpu')}
@@ -92,7 +94,7 @@ const ClusterHeadroom: React.FC<FieldConfigProps> = ({ enable }) => {
         </Layout.Horizontal>
       </Container>
       <Container>
-        <Layout.Horizontal>
+        <Layout.Horizontal flex={{ alignItems: 'flex-end' }} spacing="large">
           <FormInput.Text
             name="spotClusterCpu"
             placeholder={'% ' + getString('ce.common.cpu')}
@@ -109,7 +111,7 @@ const ClusterHeadroom: React.FC<FieldConfigProps> = ({ enable }) => {
 const OnDemandFallback: React.FC<FieldConfigProps> = ({ enable }) => {
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal>
+    <Layout.Horizontal flex>
       <FormInput.MultiTypeInput
         label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.retryTimeLabel')}
         name="retryTime"
@@ -126,9 +128,9 @@ const OnDemandFallback: React.FC<FieldConfigProps> = ({ enable }) => {
 const NodeConstraints: React.FC<FieldConfigProps> = ({ enable }) => {
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal>
+    <Layout.Horizontal spacing={'huge'}>
       <Container>
-        <Layout.Horizontal>
+        <Layout.Horizontal flex={{ alignItems: 'flex-end' }} spacing="large">
           <FormInput.Text
             name="nodeMinCpu"
             placeholder={getString('ce.common.cpu')}
@@ -143,7 +145,7 @@ const NodeConstraints: React.FC<FieldConfigProps> = ({ enable }) => {
         </Layout.Horizontal>
       </Container>
       <Container>
-        <Layout.Horizontal>
+        <Layout.Horizontal flex={{ alignItems: 'flex-end' }} spacing="large">
           <FormInput.Text
             name="nodeMaxCpu"
             placeholder={getString('ce.common.cpu')}
@@ -164,9 +166,9 @@ const NodeConstraints: React.FC<FieldConfigProps> = ({ enable }) => {
 const RootVolumeRatio: React.FC<FieldConfigProps> = ({ enable }) => {
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal>
+    <Layout.Horizontal spacing="huge">
       <Container>
-        <Layout.Horizontal>
+        <Layout.Horizontal flex={{ alignItems: 'flex-end' }} spacing="large">
           <FormInput.Text
             name="nodeMinCpu"
             placeholder={getString('ce.common.cpu')}
@@ -188,20 +190,22 @@ const RootVolumeRatio: React.FC<FieldConfigProps> = ({ enable }) => {
 const TTLSettings: React.FC = () => {
   const { getString } = useStrings()
   return (
-    <Layout.Vertical>
-      <Text>
+    <Layout.Vertical flex={{ alignItems: 'flex-start' }} margin={{ left: 'xxlarge' }}>
+      <Text font={{ variation: FontVariation.LEAD }}>
         {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.ttlSettingsTitle')}
       </Text>
-      <Text>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
         {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.ttleSettingsSubtitle')}
       </Text>
-      <FormInput.Select
-        name="ttl"
-        items={[]}
-        label={getString(
-          'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.emptyNodeAliveLabel'
-        )}
-      />
+      <Container className={css.ttlDropdownSelector}>
+        <FormInput.Select
+          name="ttl"
+          items={[]}
+          label={getString(
+            'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.emptyNodeAliveLabel'
+          )}
+        />
+      </Container>
     </Layout.Vertical>
   )
 }
@@ -209,10 +213,14 @@ const TTLSettings: React.FC = () => {
 const CPURange: React.FC = () => {
   const { getString } = useStrings()
   return (
-    <Layout.Vertical>
-      <Text>{getString('ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.cpuRangeTitle')}</Text>
-      <Text>{getString('ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.cpuRangeSubtitle')}</Text>
-      <Layout.Horizontal>
+    <Layout.Vertical margin={{ left: 'xxlarge' }}>
+      <Text font={{ variation: FontVariation.LEAD }}>
+        {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.cpuRangeTitle')}
+      </Text>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+        {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.cpuRangeSubtitle')}
+      </Text>
+      <Layout.Horizontal spacing="large">
         <FormInput.Text
           name="minCores"
           label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.minCoreLabel')}
@@ -233,10 +241,14 @@ const FieldContainerWithCheckbox: React.FC<FieldContainerWithCheckboxProps> = ({
   return (
     <Layout.Horizontal>
       <Checkbox checked={enable} onChange={toggleEnable} />
-      <Layout.Vertical>
-        <Text>{title}</Text>
-        <Text>{subTitle}</Text>
-        {React.cloneElement(children as React.ReactElement<any>, { enable: true })}
+      <Layout.Vertical spacing={'small'}>
+        <Container>
+          <Text font={{ variation: FontVariation.LEAD }}>{title}</Text>
+          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+            {subTitle}
+          </Text>
+        </Container>
+        <Container>{React.cloneElement(children as React.ReactElement<any>, { enable: true })}</Container>
       </Layout.Vertical>
     </Layout.Horizontal>
   )

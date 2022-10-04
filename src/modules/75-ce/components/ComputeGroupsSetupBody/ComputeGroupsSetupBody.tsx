@@ -8,12 +8,13 @@
 import React from 'react'
 import { Container, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import ScaleAndLimitPoliciesTab from './ScaleAndLimitPoliciesTab'
+import ScaleAndLimitPoliciesTab from './ScaleAndLimitPoliciesTab/ScaleAndLimitPoliciesTab'
+import css from './ComputeGroupsSetupBody.module.scss'
 
 const ComputeGroupsSetupBody: React.FC = () => {
   const { getString } = useStrings()
   return (
-    <Container>
+    <Container className={css.cgSetupBodyContainer}>
       <Tabs
         id={'horizontalTabs'}
         defaultSelectedTabId={'tab2'}
