@@ -9,6 +9,7 @@ serviceDependenciesText: Service Dependencies
 stepLabel: '{{name}} (Id: {{identifier}})'
 numOfStage: 1 stage
 numOfStages: '{{n}} stages'
+
 enableVerificationTitle: Add Continuous Verification
 enableVerificationOptions: Enable Continuous Verification
 enableVerificationHelpText: Apply verification step to a deployment to detect regressions or anomalies, and to rollback failed deployments.
@@ -89,6 +90,9 @@ terraformStep:
   workspace: Enter Workspace
 kubernetesStep:
   workload: Enter Workload
+waitStep:
+  validation:
+    duration10SecMinimum: 'Minimum Duration is 10 seconds'
 approvalStep:
   message: 'Approval Message'
   approvers: 'Approver(s)'
@@ -406,6 +410,9 @@ failureStrategies:
     StageRollback: Rollback Stage
     ManualIntervention: Manual Intervention
     MarkAsSuccess: Mark As Success
+    MarkedAsSuccess: Marked As Success
+    MarkAsFail: Mark As Fail
+    MarkedAsFail: Marked As Fail
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors
@@ -470,6 +477,7 @@ createPipeline:
 selectOrCreateForm:
   description: '{{$.common.selectAVersion.description}}'
 execution:
+  elapsedTime: 'Elapsed time'
   stagesExecuted: Stages executed (most recent first)
   upcomingStagesPrefix: 'Upcoming stages: '
   stepTitlePrefix: 'Step: '

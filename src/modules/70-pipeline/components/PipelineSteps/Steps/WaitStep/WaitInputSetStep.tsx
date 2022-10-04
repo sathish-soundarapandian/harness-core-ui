@@ -32,7 +32,7 @@ export default function WaitInputSetStep(props: {
       {getMultiTypeFromValue(/* istanbul ignore next */ template?.spec?.duration) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.lg)}>
           <TimeoutFieldInputSetView
-            name={`${prefix}duration`}
+            name={`${prefix}spec.duration`}
             label={getString('pipeline.duration')}
             disabled={readonly}
             className={stepCss.duration}

@@ -3260,6 +3260,7 @@ export interface StringsMap {
   'pipeline.execution.currentExecution': string
   'pipeline.execution.dialogMessages.abortExecution': string
   'pipeline.execution.dialogMessages.abortTitle': string
+  'pipeline.execution.elapsedTime': string
   'pipeline.execution.ignoreFailedWarningText': string
   'pipeline.execution.iotab.noInputText': string
   'pipeline.execution.iotab.noOutputText': string
@@ -3365,7 +3366,10 @@ export interface StringsMap {
   'pipeline.failureStrategies.strategiesLabel.Abort': string
   'pipeline.failureStrategies.strategiesLabel.Ignore': string
   'pipeline.failureStrategies.strategiesLabel.ManualIntervention': string
+  'pipeline.failureStrategies.strategiesLabel.MarkAsFail': string
   'pipeline.failureStrategies.strategiesLabel.MarkAsSuccess': string
+  'pipeline.failureStrategies.strategiesLabel.MarkedAsFail': string
+  'pipeline.failureStrategies.strategiesLabel.MarkedAsSuccess': string
   'pipeline.failureStrategies.strategiesLabel.Retry': string
   'pipeline.failureStrategies.strategiesLabel.StageRollback': string
   'pipeline.failureStrategies.tabHasErrors': string
@@ -4098,6 +4102,7 @@ export interface StringsMap {
   'pipeline.viewExecution': string
   'pipeline.viewLatestExecution': string
   'pipeline.viewPipeline': string
+  'pipeline.waitStep.validation.duration10SecMinimum': string
   'pipeline.warningForInvalidYAMLDiscard': string
   'freezeWindows.disableAllDeployments': string
   'freezeWindows.freezeStudio.allOrganizations': string

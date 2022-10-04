@@ -596,7 +596,7 @@ function BootstrapDeployInfraDefinition({
     [deployInfraRemountCount, stage, updateStage]
   )
 
-  const refreshYAMLBuilder = React.useMemo(() => JSON.stringify(pipeline.stages), [pipeline.stages])
+  const refreshYAMLBuilder = React.useMemo(() => JSON.stringify({ ...stage, isYamlEditable }), [stage, isYamlEditable])
 
   return (
     <>
