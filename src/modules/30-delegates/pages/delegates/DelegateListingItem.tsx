@@ -42,7 +42,7 @@ type delTroubleshoterProps = {
 
 enum InstanceStatus {
   EXPIRED = 'Expired',
-  EXPIRINGIN = 'Expiring',
+  EXPIRING = 'Expiring',
   LATEST = 'latest',
   UPGRADE_REQUIRED = 'Upgrade Required'
 }
@@ -279,7 +279,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
         ? InstanceStatus.UPGRADE_REQUIRED
         : currentTime > delegate?.delegateGroupExpirationTime
         ? InstanceStatus.EXPIRED
-        : InstanceStatus.EXPIRINGIN
+        : InstanceStatus.EXPIRING
       : null
 
   const [autoUpgradeColor, autoUpgradeText] = !delegate.activelyConnected
@@ -369,24 +369,20 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
 
         {USE_IMMUTABLE_DELEGATE ? (
           <Layout.Horizontal width={columnWidths.instanceStatus} className={css.paddingLeft}>
-            {
-              <>
-                <Text className={css.statusText} lineClamp={1}>
-                  {status}
-                </Text>
-                {status === InstanceStatus.LATEST ? (
-                  ''
-                ) : delegate.delegateGroupExpirationTime ? (
-                  <div style={{ paddingTop: '2px' }}>
-                    {delegate?.groupVersion?.startsWith('1.0')
-                      ? ''
-                      : moment(delegate.delegateGroupExpirationTime).fromNow()}
-                  </div>
-                ) : (
-                  ''
-                )}
-              </>
-            }
+            <>
+              <Text className={css.statusText} lineClamp={1}>
+                {status}
+              </Text>
+              {status === InstanceStatus.LATEST ? (
+                ''
+              ) : delegate.delegateGroupExpirationTime ? (
+                <div style={{ paddingTop: '2px' }}>
+                  {!delegate?.groupVersion?.startsWith('1.0') && moment(delegate.delegateGroupExpirationTime).fromNow()}
+                </div>
+              ) : (
+                ''
+              )}
+            </>
           </Layout.Horizontal>
         ) : null}
 
@@ -449,7 +445,7 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
               : instanceDetails?.delegateExpirationTime !== undefined
               ? currentTime > instanceDetails?.delegateExpirationTime
                 ? InstanceStatus.EXPIRED
-                : InstanceStatus.EXPIRINGIN
+                : InstanceStatus.EXPIRING
               : null
 
             /*istanbul ignore next */
@@ -469,20 +465,15 @@ export const DelegateListingItem = ({ delegate, setOpenTroubleshoter }: delTroub
                 </Layout.Horizontal>
                 {USE_IMMUTABLE_DELEGATE ? (
                   <Layout.Horizontal width={columnWidths.instanceStatus} className={css.instanceStatus}>
-                    {
-                      <>
-                        <Text className={css.statusText} lineClamp={1}>
-                          {instanceStatus}
-                        </Text>
-                        <div style={{ paddingTop: '2px' }}>
-                          {instanceDetails.version?.startsWith('1.0')
-                            ? ''
-                            : instanceDetails?.delegateExpirationTime
-                            ? moment(instanceDetails?.delegateExpirationTime).fromNow()
-                            : ''}
-                        </div>
-                      </>
-                    }
+                    <>
+                      <Text className={css.statusText} lineClamp={1}>
+                        {instanceStatus}
+                      </Text>
+                      <div style={{ paddingTop: '2px' }}>
+                        {!instanceDetails.version?.startsWith('1.0') &&
+                          moment(instanceDetails?.delegateExpirationTime).fromNow()}
+                      </div>
+                    </>
                   </Layout.Horizontal>
                 ) : null}
                 <Layout.Horizontal
