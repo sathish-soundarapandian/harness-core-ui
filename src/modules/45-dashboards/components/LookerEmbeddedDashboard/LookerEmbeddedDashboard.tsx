@@ -8,8 +8,6 @@
 import React from 'react'
 import type { LookerEvent } from '@dashboards/types/LookerTypes.types'
 
-const DASHBOARDS_ORIGIN = 'https://dashboards.harness.io'
-
 export interface LookerEmbeddedDashboardProps {
   embedUrl: string
   onLookerAction: (dashboard: LookerEvent) => void
@@ -18,7 +16,7 @@ export interface LookerEmbeddedDashboardProps {
 const LookerEmbeddedDashboard: React.FC<LookerEmbeddedDashboardProps> = ({ embedUrl, onLookerAction }) => {
   React.useEffect(() => {
     const lookerEventHandler = (event: MessageEvent<string>): void => {
-      if (event.origin === DASHBOARDS_ORIGIN) onLookerAction(JSON.parse(event.data) as LookerEvent)
+      onLookerAction(JSON.parse(event.data) as LookerEvent)
     }
     window.addEventListener('message', lookerEventHandler)
     return () => window.removeEventListener('message', lookerEventHandler)
