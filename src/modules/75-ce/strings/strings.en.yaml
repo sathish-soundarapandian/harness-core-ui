@@ -1364,6 +1364,9 @@ computeGroups:
       title: '1. Spot Instances'
     scalingLimitPoliciesTab:
       title: '2. Scaling and Limit Policies'
+      instanceFamiliesSection:
+        header: Set Instance Family Preferences
+        subHeader: You can specify Preferred Instance Families for nodepools which otherwise is all families if not specfied. The alogrithm will orchestrate out of this pool of preferred instances.
       unSchedPodsSection:
         header: Unscheduled Pods Policy
         subHeader: Automatically adjust the size of this cluster to ensure that all pods have a place to run.

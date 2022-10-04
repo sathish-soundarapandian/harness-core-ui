@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly instanceFamiliesTable: string
   readonly nodeDeletionPolicySection: string
   readonly scaleLimitPoliciesTabContainer: string
   readonly ttlDropdownSelector: string

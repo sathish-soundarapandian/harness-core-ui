@@ -24,7 +24,13 @@ const ToggleSection: React.FC<ToggleSectionProps> = ({ children, title, subTitle
     <Layout.Vertical className={cx(css.toggleSectionContainer, className)}>
       <Layout.Horizontal onClick={toggleIsOpen} className={css.toggleHeader}>
         <Container>
-          <Toggle checked={isEnabled} onChange={toggleIsEnabled} />
+          <Toggle
+            checked={isEnabled}
+            onChange={e => {
+              e.stopPropagation()
+              toggleIsEnabled()
+            }}
+          />
         </Container>
         <Layout.Vertical spacing={'small'}>
           <Text font={{ variation: FontVariation.H4 }} color={Color.GREY_800}>

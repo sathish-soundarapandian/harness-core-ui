@@ -9,6 +9,7 @@ import React from 'react'
 import { Checkbox, Color, Container, FontVariation, FormInput, Layout, Text, useToggle } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import ToggleSection from '../ToggleSection'
+import InstanceFamiliesSelectorTable from './InstanceFamiliesSelectorTable'
 import css from './ScaleAndLimitPoliciesTab.module.scss'
 
 interface FieldContainerWithCheckboxProps {
@@ -24,6 +25,14 @@ const ScaleAndLimitPoliciesTab: React.FC = () => {
   const { getString } = useStrings()
   return (
     <Container className={css.scaleLimitPoliciesTabContainer}>
+      <ToggleSection
+        title={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.instanceFamiliesSection.header')}
+        subTitle={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.instanceFamiliesSection.subHeader')}
+      >
+        <Container>
+          <InstanceFamiliesSelectorTable />
+        </Container>
+      </ToggleSection>
       <ToggleSection
         title={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.header')}
         subTitle={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.subHeader')}

@@ -5670,6 +5670,8 @@ export interface StringsMap {
   'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.maxCoreLabel': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.minCoreLabel': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.subHeader': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.instanceFamiliesSection.header': string
+  'ce.computeGroups.setup.scalingLimitPoliciesTab.instanceFamiliesSection.subHeader': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.binPackingTitle': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.emptyNodeAliveLabel': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.header': string

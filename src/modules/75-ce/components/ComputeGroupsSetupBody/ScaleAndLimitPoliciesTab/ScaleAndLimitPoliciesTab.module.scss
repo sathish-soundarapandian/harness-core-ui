@@ -18,3 +18,14 @@
     }
   }
 }
+
+.instanceFamiliesTable {
+  th {
+    padding: var(--spacing-small) var(--spacing-medium);
+  }
+  tr:nth-child(2n),
+  th:nth-child(2n),
+  td:nth-child(2n) {
+    background: rgba(27, 46, 73, 0.02);
+  }
+}
