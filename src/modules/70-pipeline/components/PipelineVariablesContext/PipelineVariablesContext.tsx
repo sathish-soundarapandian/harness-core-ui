@@ -55,6 +55,8 @@ export interface PipelineVariablesData {
   setResolvedPipeline: (pipeline: PipelineInfoConfig) => void
   setSelectedInputSetsContext?: (inputSets?: InputSetValue[]) => void
   selectedInputSetsContext?: InputSetValue[]
+  createdNewInputSets?: Record<string, string>
+  setCreatedNewInputSets?: (inputSets: Record<string, string>) => void
 }
 export interface SearchMeta {
   searchText?: string
@@ -124,6 +126,8 @@ export function PipelineVariablesContextProvider(
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig>(originalPipeline)
   const [selectedInputSetsContext, setSelectedInputSetsContext] = React.useState<InputSetValue[]>()
+  // track input sets created on run pipeline modal
+  const [createdNewInputSets, setCreatedNewInputSets] = React.useState<Record<string, string>>({})
   const [{ searchText, searchResults, searchIndex, pipelineValues, pipelineFqns, pipelineMetaKeys }, setSearchMeta] =
     React.useState<SearchMeta>({
       searchText: '',
@@ -266,6 +270,8 @@ export function PipelineVariablesContextProvider(
         setPipeline: setOriginalPipeline,
         setResolvedPipeline,
         setSelectedInputSetsContext,
+        createdNewInputSets,
+        setCreatedNewInputSets,
         selectedInputSetsContext
       }}
     >

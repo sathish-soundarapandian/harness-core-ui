@@ -230,10 +230,14 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
   const isApplyingTemplate =
     isInputSetView && (pathnameParams.includes(PathnameParams.PIPELINE_STUDIO) || isTemplateStudio)
   const stepCss = stepViewType === StepViewType.DeploymentForm ? css.sm : css.lg
-  const { selectedInputSetsContext } = usePipelineVariables()
+  const { selectedInputSetsContext, createdNewInputSets } = usePipelineVariables()
+  const [registeredInputSets, setRegisteredInputSets] = React.useState<Record<string, string>>(
+    createdNewInputSets || {}
+  )
   const [registeredMaps, setRegisteredMaps] = React.useState<string[]>([])
   const [registeredPrefixes, setRegisteredPrefixes] = React.useState<string[]>([])
   const hasAppliedInputSet = typeof selectedInputSetsContext !== 'undefined' && selectedInputSetsContext?.length > 0
+  const [cachedMap, setCachedMap] = React.useState({})
 
   // All optional values that have a map structure should never be defaulted with ""
   // and instead set to {} once pipeline api completes
@@ -257,6 +261,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         // address race condition for maps w/ different prefixes (multiple steps)
         shouldUpdate = true
       }
+
       if (shouldUpdate) {
         formik.setValues({ ...newFormikValues })
         setRegisteredMaps(uniq([...registeredMaps, ...registeredMapFields]))
@@ -266,7 +271,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
   }, [formik?.values?.pipeline])
 
   React.useEffect(() => {
-    if (isPipelineStudio && formik?.values) {
+    if (isPipelineStudio && formik?.values?.stages) {
       const newFormikValues = { ...formik.values }
       let shouldUpdate = false
       const registeredMapFields: string[] = []
@@ -276,15 +281,26 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         if (get(newFormikValues, fieldNamePath) === '') {
           shouldUpdate = true
           set(newFormikValues, fieldNamePath, {})
+        } else if (!isEmpty(get(newFormikValues, fieldNamePath)) && !registeredMaps.includes(fieldNamePath)) {
+          // address race condition with maps
+          shouldUpdate = true
         }
       })
+      if (!registeredPrefixes.includes(prefix)) {
+        // address race condition for maps w/ different prefixes (multiple steps)
+        shouldUpdate = true
+      }
+      if (Object.keys(createdNewInputSets || {})?.length !== Object.keys(registeredInputSets).length) {
+        setRegisteredInputSets({ ...registeredInputSets, ...createdNewInputSets })
+        shouldUpdate = true
+      }
       if (shouldUpdate) {
         formik.setValues({ ...newFormikValues })
         setRegisteredMaps(uniq([...registeredMaps, ...registeredMapFields]))
         setRegisteredPrefixes(uniq([...registeredPrefixes, prefix]))
       }
     }
-  }, [])
+  }, [formik?.values?.stages, createdNewInputSets, registeredInputSets])
 
   const renderMultiTypeMap = React.useCallback(
     ({
@@ -380,6 +396,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           isApplyingTemplate={isApplyingTemplate}
           appliedInputSetValue={appliedInputSetValue}
           hasValuesAsRuntimeInput={getHasValuesAsRuntimeInputFromTemplate({ template, templateFieldName })}
+          cachedMap={cachedMap}
+          setCachedMap={setCachedMap}
         />
       </Container>
     ),

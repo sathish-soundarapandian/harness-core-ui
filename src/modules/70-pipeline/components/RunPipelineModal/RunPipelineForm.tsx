@@ -167,7 +167,12 @@ function RunPipelineFormBasic({
     selectedStages: [getAllStageData(getString)],
     selectedStageItems: [getAllStageItem(getString)]
   })
-  const { setPipeline: updatePipelineInVaribalesContext, setSelectedInputSetsContext } = usePipelineVariables()
+  const {
+    setPipeline: updatePipelineInVaribalesContext,
+    setSelectedInputSetsContext,
+    createdNewInputSets,
+    setCreatedNewInputSets
+  } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
 
@@ -698,6 +703,7 @@ function RunPipelineFormBasic({
   function handleInputSetSave(newId?: string): void {
     if (newId) {
       setSelectedInputSets([{ label: newId, value: newId, type: 'INPUT_SET' }])
+      setCreatedNewInputSets({ ...createdNewInputSets, [newId]: newId })
     }
     getTemplateFromPipeline()
   }
