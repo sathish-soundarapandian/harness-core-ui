@@ -116,7 +116,6 @@ const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onC
   const [orgQuery, setOrgQuery] = useState<string>('')
   const [loadingOrgs, setLoadingOrgs] = useState<boolean>(false)
   const { getString } = useStrings()
-  // const { showError } = useToaster()
 
   const orgsPromise = async (): Promise<SelectOption[]> => {
     setLoadingOrgs(true)
@@ -128,16 +127,13 @@ const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onC
           searchTerm: orgQuery
         }
       })
-      const orgsList = orgsData?.data?.content
-      organizations = defaultTo(
-        orgsList?.map(org => {
-          return {
-            label: org.organization.name,
-            value: org.organization.identifier
-          }
-        }) as SelectOption[],
-        []
-      )
+      const orgsList = defaultTo(orgsData?.data?.content, [])
+      organizations = orgsList?.map(org => {
+        return {
+          label: org.organization.name,
+          value: org.organization.identifier
+        }
+      }) as SelectOption[]
       if (!orgsList) {
         onError?.()
       }
