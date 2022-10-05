@@ -21,7 +21,8 @@ import {
   useToaster,
   Accordion,
   IconName,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  ButtonProps
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { FontVariation, Color } from '@harness/design-system'
@@ -214,6 +215,25 @@ export function ServiceOverrides(): React.ReactElement {
     }
   }
 
+  const getAddOverrideBtnProps = (overrideType: ServiceOverrideTab, serviceRef: string | undefined): ButtonProps => {
+    const addOverrideBtnProps = {
+      size: ButtonSize.SMALL,
+      variation: ButtonVariation.LINK,
+      className: css.addOverrideBtn,
+      onClick: () => {
+        setSelectedTab(overrideType)
+        setSelectedService(defaultTo(serviceRef, ''))
+        setIsEdit(false)
+        showModal()
+      },
+      icon: 'plus' as IconName,
+      text: getString('common.newName', { name: getString('common.override') }),
+      permission: rbacPermission,
+      margin: { top: 'medium' }
+    }
+    return addOverrideBtnProps
+  }
+
   return servicesLoading || serviceOverridesLoading ? (
     <ContainerSpinner />
   ) : (
@@ -245,7 +265,7 @@ export function ServiceOverrides(): React.ReactElement {
             const { serviceOverrides: { serviceRef, variables = [], manifests = [], configFiles = [] } = {} } = parse(
               defaultTo(serviceOverride.yaml, '{}')
             ) as NGServiceOverrideConfig
-            const isSingleOverride = variables.length + manifests.length === 1
+            const isSingleOverride = variables.length + manifests.length + configFiles.length === 1
             const serviceName = get(
               get(services, 'data.content', []).find(
                 (serviceObject: ServiceResponse) => serviceRef === serviceObject.service?.identifier
@@ -253,20 +273,6 @@ export function ServiceOverrides(): React.ReactElement {
               'service.name',
               serviceRef
             )
-            const addOverrideBtnProps = {
-              size: ButtonSize.SMALL,
-              variation: ButtonVariation.LINK,
-              className: css.addOverrideBtn,
-              onClick: () => {
-                setSelectedService(defaultTo(serviceRef, ''))
-                setIsEdit(false)
-                showModal()
-              },
-              icon: 'plus' as IconName,
-              text: getString('common.newName', { name: getString('common.override') }),
-              permission: rbacPermission,
-              margin: { top: 'medium' }
-            }
 
             return (
               <Accordion.Panel
@@ -308,7 +314,7 @@ export function ServiceOverrides(): React.ReactElement {
                             handleDeleteOverride('manifests', manifests, index, isSingleOverride, serviceRef)
                           }
                         />
-                        <RbacButton {...addOverrideBtnProps} />
+                        <RbacButton {...getAddOverrideBtnProps(ServiceOverrideTab.MANIFEST, serviceRef)} />
                       </Card>
                     )}
                     {!!configFiles.length && (
@@ -335,7 +341,7 @@ export function ServiceOverrides(): React.ReactElement {
                             handleDeleteOverride('configFiles', configFiles, index, isSingleOverride, serviceRef)
                           }
                         />
-                        <RbacButton {...addOverrideBtnProps} />
+                        <RbacButton {...getAddOverrideBtnProps(ServiceOverrideTab.CONFIG, serviceRef)} />
                       </Card>
                     )}
                     {!!variables.length && (
@@ -362,7 +368,7 @@ export function ServiceOverrides(): React.ReactElement {
                             handleDeleteOverride('variables', variables, index, isSingleOverride, serviceRef)
                           }
                         />
-                        <RbacButton {...addOverrideBtnProps} />
+                        <RbacButton {...getAddOverrideBtnProps(ServiceOverrideTab.VARIABLE, serviceRef)} />
                       </Card>
                     )}
                   </Layout.Vertical>
