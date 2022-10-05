@@ -5694,6 +5694,9 @@ export interface StringsMap {
   'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.rootVolRatioTitle': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.spotNodeSettingsLabel': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.subHeader': string
+  'ce.computeGroups.setup.schedulingTab.enableNote': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.autoStoppingEnabledLabel': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.costPerMonthHeader': string
   'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.entireCluster': string
   'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.potentialSpendByPolicies': string
   'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.savingsPercentage': string

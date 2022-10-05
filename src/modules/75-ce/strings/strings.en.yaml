@@ -1398,14 +1398,17 @@ computeGroups:
         minCoreLabel: Min cores
         maxCoreLabel: Max cores
     schedulingTab:
+      enableNote: Enable <b>Scheduling/AutoStopping</b>  to see detailed insights.
       title: '4. Scheduling/AutoStopping'
       setupSchedulingSection:
         setupHeader: Setup Scheduling/AutoStopping
         selectScopeLabel: '{{$.pipeline.queueStep.scopePlaceholder}}'
-        entireCluster: Entire cluster
-        specificWorkloads: Specific workloads
+        entireCluster: Entire cluster Scheduling
+        specificWorkloads: Specific workloads AutoStopping
         specifyScheduleHeader: Specify Fixed Schedule/s that applies to all Workloads
         specifyScheduleSubheader: Schedule fixed windows of up time and down time
         totalSpend: Total Spend
         potentialSpendByPolicies: Potential Savings by policies
         savingsPercentage: Savings Percentage
+        costPerMonthHeader: Cost/Mo
+        autoStoppingEnabledLabel: AutoStopping Enabled

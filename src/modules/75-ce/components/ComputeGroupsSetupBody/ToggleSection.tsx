@@ -17,6 +17,9 @@ interface ToggleSectionProps {
   className?: string
   mainContent?: React.ReactNode
   secondaryContent?: React.ReactNode
+  alwaysOpen?: boolean
+  hideCollapseIcon?: boolean
+  hideToggle?: boolean
 }
 
 const ToggleSection: React.FC<ToggleSectionProps> = ({
@@ -25,22 +28,34 @@ const ToggleSection: React.FC<ToggleSectionProps> = ({
   subTitle,
   className,
   mainContent,
-  secondaryContent
+  secondaryContent,
+  alwaysOpen,
+  hideCollapseIcon,
+  hideToggle = false
 }) => {
   const [isOpen, toggleIsOpen] = useToggle(false)
   const [isEnabled, toggleIsEnabled] = useToggle(false)
+  const openFlag = alwaysOpen !== undefined ? alwaysOpen : isOpen
+  const handleClick = () => {
+    if (!hideCollapseIcon) {
+      toggleIsOpen()
+    }
+  }
+
   return (
     <Layout.Vertical className={cx(css.toggleSectionContainer, className)}>
-      <Layout.Horizontal onClick={toggleIsOpen} className={css.toggleHeader}>
-        <Container>
-          <Toggle
-            checked={isEnabled}
-            onChange={e => {
-              e.stopPropagation()
-              toggleIsEnabled()
-            }}
-          />
-        </Container>
+      <Layout.Horizontal onClick={handleClick} className={css.toggleHeader}>
+        {!hideToggle && (
+          <Container>
+            <Toggle
+              checked={isEnabled}
+              onChange={e => {
+                e.stopPropagation()
+                toggleIsEnabled()
+              }}
+            />
+          </Container>
+        )}
         <Layout.Vertical spacing={'small'}>
           <Text font={{ variation: FontVariation.H4 }} color={Color.GREY_800}>
             {title}
@@ -55,10 +70,10 @@ const ToggleSection: React.FC<ToggleSectionProps> = ({
         <FlexExpander />
         <Layout.Horizontal flex spacing={'large'}>
           {secondaryContent}
-          <Icon name="main-chevron-down" color={Color.PRIMARY_7} />
+          {!hideCollapseIcon && <Icon name="main-chevron-down" color={Color.PRIMARY_7} />}
         </Layout.Horizontal>
       </Layout.Horizontal>
-      <Collapse isOpen={isOpen} className={isOpen ? css.collapsibleBody : undefined}>
+      <Collapse isOpen={openFlag} className={openFlag ? css.collapsibleBody : undefined}>
         {children}
       </Collapse>
     </Layout.Vertical>

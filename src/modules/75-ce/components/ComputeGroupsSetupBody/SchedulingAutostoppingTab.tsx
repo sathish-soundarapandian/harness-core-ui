@@ -5,11 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useState } from 'react'
-import { Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
+import React, { FormEvent, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { Button, ButtonVariation, Color, Container, FontVariation, Layout, TableV2, Text } from '@harness/uicore'
+import type { CellProps, Column } from 'react-table'
 import { Radio, RadioGroup } from '@blueprintjs/core'
-import { useStrings } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
+import CopyButton from '@ce/common/CopyButton'
+import routes from '@common/RouteDefinitions'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import ToggleSection from './ToggleSection'
 import FixedSchedules from '../COGatewayConfig/steps/AdvancedConfiguration/FixedSchedules'
 import type { FixedScheduleClient } from '../COCreateGateway/models'
@@ -17,12 +22,21 @@ import css from './ComputeGroupsSetupBody.module.scss'
 
 const SchedulingAutostoppingTab: React.FC = () => {
   const { getString } = useStrings()
-  const [selectedVal, setSelectedVal] = useState<string>()
-  const [schedules, setSchedules] = useState<FixedScheduleClient[]>([])
+  const [selectedVal, setSelectedVal] = useState<string>('none')
   return (
     <Container className={css.scheduleAutostoppingContainer}>
+      {selectedVal === 'none' && (
+        <Container className={css.noteContainer}>
+          <Text icon="info-messaging" iconProps={{ size: 28, margin: { right: 'medium' } }} color={Color.GREY_800}>
+            <String stringID="ce.computeGroups.setup.schedulingTab.enableNote" useRichText />
+          </Text>
+        </Container>
+      )}
       <ToggleSection
         title={getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.setupHeader')}
+        alwaysOpen={selectedVal !== 'none'}
+        hideCollapseIcon={true}
+        hideToggle={true}
         mainContent={
           <Layout.Vertical spacing={'medium'} margin={{ top: 'large' }}>
             <Text font={{ variation: FontVariation.LEAD }}>
@@ -32,6 +46,7 @@ const SchedulingAutostoppingTab: React.FC = () => {
               selectedValue={selectedVal}
               onChange={(e: FormEvent<HTMLInputElement>) => setSelectedVal(e.currentTarget.value)}
             >
+              <Radio label={getString('ce.anomalyDetection.filters.groupByNoneValue')} value="none" />
               <Radio
                 label={getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.entireCluster')}
                 value="all"
@@ -68,17 +83,125 @@ const SchedulingAutostoppingTab: React.FC = () => {
           </Layout.Horizontal>
         }
       >
-        <Layout.Vertical spacing={'medium'}>
-          <Text font={{ variation: FontVariation.H5 }}>
-            {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.specifyScheduleHeader')}
-          </Text>
-          <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
-            {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.specifyScheduleSubheader')}
-          </Text>
-          <FixedSchedules addSchedules={scheds => setSchedules(scheds)} schedules={schedules} hideDescription />
-        </Layout.Vertical>
+        {selectedVal === 'all' && <SchedulingForAllWorkloads />}
+        {selectedVal === 'specific' && <SpecificWorkloadsAutostopping />}
       </ToggleSection>
     </Container>
+  )
+}
+
+const SchedulingForAllWorkloads: React.FC = () => {
+  const { getString } = useStrings()
+  const [schedules, setSchedules] = useState<FixedScheduleClient[]>([])
+  return (
+    <Layout.Vertical spacing={'medium'}>
+      <Text font={{ variation: FontVariation.H5 }}>
+        {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.specifyScheduleHeader')}
+      </Text>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+        {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.specifyScheduleSubheader')}
+      </Text>
+      <FixedSchedules addSchedules={scheds => setSchedules(scheds)} schedules={schedules} hideDescription />
+    </Layout.Vertical>
+  )
+}
+
+const NameIdCell = (tableProps: CellProps<any>) => {
+  return (
+    <Container>
+      <Text>{tableProps.row.original.name}</Text>
+      <Layout.Horizontal spacing={'small'} flex={{ justifyContent: 'flex-start' }}>
+        <Text>{tableProps.row.original.id}</Text>
+        <CopyButton textToCopy={tableProps.row.original.id} />
+      </Layout.Horizontal>
+    </Container>
+  )
+}
+
+const AutoStoppingStatusCell = (tableProps: CellProps<any>) => {
+  const { accountId } = useParams<AccountPathProps>()
+  const { getString } = useStrings()
+  return (
+    <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
+      {tableProps.value ? (
+        <Text icon="command-artifact-check">
+          {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.autoStoppingEnabledLabel')}
+        </Text>
+      ) : (
+        <Button
+          text={getString('ce.cloudIntegration.enableAutoStopping')}
+          variation={ButtonVariation.SECONDARY}
+          icon="plus"
+          rightIcon="main-share"
+          onClick={() => {
+            window.open(
+              `${window.location.origin}${window.location.pathname}#${routes.toCECOCreateGateway({ accountId })}`,
+              '_blank'
+            )
+          }}
+        />
+      )}
+    </Layout.Vertical>
+  )
+}
+
+const SpecificWorkloadsAutostopping: React.FC = () => {
+  const { getString } = useStrings()
+  const data = [
+    {
+      name: 'Workload 1',
+      id: 'ID 1',
+      replicas: 4,
+      cost: 234,
+      status: true
+    },
+    {
+      name: 'Workload 2',
+      id: 'ID 2',
+      replicas: 3,
+      cost: 644,
+      status: false
+    }
+  ]
+  const columns: Column<any>[] = useMemo(
+    () => [
+      {
+        accessor: 'name',
+        Header: getString('ce.overview.workload'),
+        width: '25%',
+        Cell: NameIdCell
+        // serverSortProps: getServerSortProps({
+        //   enableServerSort: true,
+        //   accessor: 'name',
+        //   sortByObj: sortObj,
+        //   setSortByObj: handleSort
+        // })
+      },
+      {
+        accessor: 'replicas',
+        Header: getString('delegates.replicaText'),
+        width: '25%',
+        Cell: tableProps => <Text>{tableProps.value}</Text>
+      },
+      {
+        accessor: 'cost',
+        Header: getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.costPerMonthHeader'),
+        width: '25%',
+        Cell: tableProps => <Text>{formatCost(tableProps.value)}</Text>
+      },
+      {
+        accessor: 'status',
+        Header: getString('action'),
+        width: '25%',
+        Cell: AutoStoppingStatusCell
+      }
+    ],
+    []
+  )
+  return (
+    <Layout.Vertical spacing={'medium'}>
+      <TableV2 columns={columns} data={data} />
+    </Layout.Vertical>
   )
 }
 
