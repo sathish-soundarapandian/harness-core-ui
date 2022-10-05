@@ -5,14 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { FC } from 'react'
 import { Button, ButtonVariation } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
-export const NewFreezeWindowButton = () => {
+interface NewFreezeWindowButtonProps {
+  text?: string
+}
+
+export const NewFreezeWindowButton: FC<NewFreezeWindowButtonProps> = ({ text }) => {
   const { getString } = useStrings()
   const history = useHistory()
   const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
@@ -34,7 +38,7 @@ export const NewFreezeWindowButton = () => {
     <Button
       variation={ButtonVariation.PRIMARY}
       icon="plus"
-      text={getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
+      text={text || getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
       onClick={goToFreezeWindowStudio}
       // disabled={!canEdit || !templatesEnabled}
       // tooltip={tooltipBtn()}

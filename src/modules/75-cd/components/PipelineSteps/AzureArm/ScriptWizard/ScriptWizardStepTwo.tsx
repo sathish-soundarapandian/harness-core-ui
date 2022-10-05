@@ -15,7 +15,8 @@ import {
   MultiTypeInputType,
   Text,
   ButtonVariation,
-  AllowedTypes as MultiTypeAllowedTypes
+  AllowedTypes as MultiTypeAllowedTypes,
+  StepProps
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -48,7 +49,7 @@ interface StartupScriptWizardStepTwoProps {
   isParam: boolean
 }
 
-export const ScriptWizardStepTwo = ({
+export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardStepTwoProps> = ({
   stepName,
   expressions,
   allowableTypes,
@@ -58,7 +59,7 @@ export const ScriptWizardStepTwo = ({
   previousStep,
   isReadonly = false,
   isParam
-}: StartupScriptWizardStepTwoProps): React.ReactElement => {
+}) => {
   const { getString } = useStrings()
 
   /* istanbul ignore next */

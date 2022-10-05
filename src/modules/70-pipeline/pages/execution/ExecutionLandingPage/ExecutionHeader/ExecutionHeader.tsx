@@ -6,9 +6,9 @@
  */
 
 import React from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
-import { ButtonSize, ButtonVariation } from '@wings-software/uicore'
+import { Icon } from '@wings-software/uicore'
 import routes from '@common/RouteDefinitions'
 import { Duration } from '@common/components/Duration/Duration'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -20,7 +20,6 @@ import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import { String, useStrings } from 'framework/strings'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { usePermission } from '@rbac/hooks/usePermission'
-import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { StoreType } from '@common/constants/GitSyncTypes'
@@ -41,7 +40,6 @@ export function ExecutionHeader(): React.ReactElement {
   const { supportingGitSimplification } = useAppStore()
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
-  const history = useHistory()
   const [canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -127,37 +125,24 @@ export function ExecutionHeader(): React.ReactElement {
               canRetry={pipelineExecutionSummary.canRetry || false}
             />
           )}
-          <RbacButton
-            variation={ButtonVariation.SECONDARY}
-            size={ButtonSize.SMALL}
-            permission={{
-              resourceScope: { orgIdentifier, projectIdentifier, accountIdentifier: accountId },
-              resource: {
-                resourceType: ResourceType.PIPELINE,
-                resourceIdentifier: pipelineIdentifier as string
-              },
-              permission: PermissionIdentifier.VIEW_PIPELINE
-            }}
-            text={getString('common.viewText')}
-            icon="main-view"
-            onClick={ev => {
-              ev.stopPropagation()
-              history.push(
-                routes.toPipelineStudio({
-                  orgIdentifier,
-                  projectIdentifier,
-                  pipelineIdentifier,
-                  accountId,
-                  module,
-                  repoIdentifier: pipelineExecutionSummary?.gitDetails?.repoIdentifier,
-                  connectorRef: pipelineExecutionSummary?.connectorRef,
-                  repoName: pipelineExecutionSummary?.gitDetails?.repoName,
-                  branch: pipelineExecutionSummary?.gitDetails?.branch,
-                  storeType: pipelineExecutionSummary?.storeType as StoreType
-                })
-              )
-            }}
-          />
+          <Link
+            className={css.view}
+            to={routes.toPipelineStudio({
+              orgIdentifier,
+              projectIdentifier,
+              pipelineIdentifier,
+              accountId,
+              module,
+              repoIdentifier: pipelineExecutionSummary?.gitDetails?.repoIdentifier,
+              connectorRef: pipelineExecutionSummary?.connectorRef,
+              repoName: pipelineExecutionSummary?.gitDetails?.repoName,
+              branch: pipelineExecutionSummary?.gitDetails?.branch,
+              storeType: pipelineExecutionSummary?.storeType as StoreType
+            })}
+          >
+            <Icon name="main-view" />
+            <String stringID="common.viewText" />
+          </Link>
 
           <ExecutionActions
             executionStatus={pipelineExecutionSummary.status as ExecutionStatus}

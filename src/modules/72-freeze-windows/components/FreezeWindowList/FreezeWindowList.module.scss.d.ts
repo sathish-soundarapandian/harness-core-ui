@@ -12,6 +12,7 @@ declare const styles: {
   readonly inactive: string
   readonly link: string
   readonly status: string
+  readonly switch: string
   readonly table: string
   readonly tags: string
 }

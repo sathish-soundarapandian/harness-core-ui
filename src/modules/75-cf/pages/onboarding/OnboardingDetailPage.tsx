@@ -5,15 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useHistory, useParams } from 'react-router-dom'
 import { Button, Container, FlexExpander, Icon, Layout, Tab, Tabs, Text } from '@wings-software/uicore'
 import { Intent, Color } from '@harness/design-system'
-import { ApiKey, CreateFeatureFlagQueryParams, FeatureFlagRequestRequestBody, useCreateFeatureFlag } from 'services/cf'
+import type { ApiKey, Feature } from 'services/cf'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
-import { useToaster } from '@common/exports'
-import { getErrorMessage } from '@cf/utils/CFUtils'
 import type { PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
@@ -30,81 +28,52 @@ enum TabId {
 
 export const OnboardingDetailPage: React.FC = () => {
   const { getString } = useStrings()
-  const { showError } = useToaster()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const [selectedTabId, setSelectedTabId] = React.useState<string>(TabId.CREATE_A_FLAG)
-  const [flagName, setFlagName] = useState('')
   const [language, setLanguage] = useState<PlatformEntry>()
   const [apiKey, setApiKey] = useState<ApiKey>()
   const [environmentIdentifier, setEnvironmentIdentifier] = useState<string | undefined>()
   const [testDone, setTestDone] = useState(false)
-  const flagInfo: FeatureFlagRequestRequestBody = useMemo(
-    () => ({
-      project: projectIdentifier,
-      name: flagName,
-      identifier: flagName.toLowerCase().trim().replace(/\s|-/g, '_'),
-      kind: 'boolean',
-      archived: false,
-      variations: [
-        { identifier: 'true', name: 'True', value: 'true' },
-        { identifier: 'false', name: 'False', value: 'false' }
-      ],
-      defaultOnVariation: 'true',
-      defaultOffVariation: 'false',
-      permanent: false
-    }),
-    [projectIdentifier, flagName]
-  )
-  const [flagCreated, setFlagCreated] = useState(false)
+  const [selectedFlag, setSelectedFlag] = useState<Feature | undefined>()
   const history = useHistory()
-  const { mutate: createFeatureFlag, loading: isLoadingCreateFeatureFlag } = useCreateFeatureFlag({
-    queryParams: {
-      accountIdentifier,
-      orgIdentifier
-    } as CreateFeatureFlagQueryParams
-  })
 
   const switchTab = (tabId: string): void => setSelectedTabId(tabId)
+
   const onNext = (): void => {
     switch (selectedTabId) {
       case TabId.CREATE_A_FLAG:
-        if (!flagCreated) {
-          createFeatureFlag(flagInfo)
-            .then(() => {
-              setFlagCreated(true)
-              switchTab(TabId.SET_UP_APP)
-            })
-            .catch(error => showError(getErrorMessage(error), undefined, 'cf.create.ff.error'))
-        } else {
-          switchTab(TabId.SET_UP_APP)
-        }
-        break
+        switchTab(TabId.SET_UP_APP)
+        return
       case TabId.SET_UP_APP:
         setSelectedTabId(TabId.TEST_YOUR_FLAG)
-        break
+        return
       case TabId.TEST_YOUR_FLAG:
         history.push(routes.toCFOnboarding({ accountId: accountIdentifier, orgIdentifier, projectIdentifier }))
-        break
+        return
     }
   }
+
   const onPrevious = (): void => {
     switch (selectedTabId) {
       case TabId.CREATE_A_FLAG:
         history.push(routes.toCFOnboarding({ accountId: accountIdentifier, orgIdentifier, projectIdentifier }))
-        break
+        return
       case TabId.SET_UP_APP:
         setSelectedTabId(TabId.CREATE_A_FLAG)
-        break
+        return
       case TabId.TEST_YOUR_FLAG:
         setSelectedTabId(TabId.SET_UP_APP)
-        break
+        return
     }
   }
-  const disableNext = !flagName || (!!flagName && selectedTabId === TabId.SET_UP_APP && !apiKey)
+
+  const disableNext =
+    !selectedFlag?.identifier || (!!selectedFlag?.identifier && selectedTabId === TabId.SET_UP_APP && !apiKey)
   const { trackEvent } = useTelemetry()
+
   return (
     <Container height="100%" background={Color.WHITE} className={css.container}>
-      <Layout.Horizontal className={css.containerLayout} spacing="xsmall" flex height={40}>
+      <Layout.Horizontal padding="large" spacing="xsmall" flex height={40} data-testid="getStartedBreadcrumb">
         <Link to={routes.toCFOnboarding({ accountId: accountIdentifier, orgIdentifier, projectIdentifier })}>
           {getString('cf.shared.getStarted')}
         </Link>
@@ -123,11 +92,12 @@ export const OnboardingDetailPage: React.FC = () => {
         >
           <Tab
             id={TabId.CREATE_A_FLAG}
-            panel={
-              <CreateAFlagView flagInfo={flagInfo} setFlagName={setFlagName} isCreated={flagCreated} goNext={onNext} />
-            }
+            panel={<CreateAFlagView selectedFlag={selectedFlag} setSelectedFlag={setSelectedFlag} />}
             title={
-              <Text icon={flagCreated ? 'tick-circle' : undefined} iconProps={{ color: Color.GREEN_500, size: 14 }}>
+              <Text
+                icon={selectedFlag?.identifier ? 'tick-circle' : undefined}
+                iconProps={{ color: Color.GREEN_500, size: 14 }}
+              >
                 {getString('cf.onboarding.oneCreateAFlag')}
               </Text>
             }
@@ -147,18 +117,20 @@ export const OnboardingDetailPage: React.FC = () => {
                 {getString('cf.onboarding.setUpApp')}
               </Text>
             }
-            disabled={!flagCreated}
+            disabled={!selectedFlag?.identifier}
             panel={
-              <SetUpYourApplicationView
-                flagInfo={flagInfo}
-                language={language}
-                setLanguage={setLanguage}
-                apiKey={apiKey}
-                setApiKey={setApiKey}
-                setEnvironmentIdentifier={_environmentIdentifier => {
-                  setEnvironmentIdentifier(_environmentIdentifier)
-                }}
-              />
+              selectedFlag && (
+                <SetUpYourApplicationView
+                  flagInfo={selectedFlag}
+                  language={language}
+                  setLanguage={setLanguage}
+                  apiKey={apiKey}
+                  setApiKey={setApiKey}
+                  setEnvironmentIdentifier={_environmentIdentifier => {
+                    setEnvironmentIdentifier(_environmentIdentifier)
+                  }}
+                />
+              )
             }
           />
           <Icon
@@ -179,9 +151,10 @@ export const OnboardingDetailPage: React.FC = () => {
             }
             panel={
               language &&
-              apiKey && (
+              apiKey &&
+              selectedFlag && (
                 <ValidateYourFlagView
-                  flagInfo={flagInfo}
+                  flagInfo={selectedFlag}
                   language={language}
                   apiKey={apiKey}
                   testDone={testDone}
@@ -208,7 +181,7 @@ export const OnboardingDetailPage: React.FC = () => {
         }}
       >
         <Button
-          text={getString('previous')}
+          text={getString('back')}
           icon="chevron-left"
           onClick={() => {
             trackEvent(FeatureActions.GetStartedPrevious, {
@@ -218,13 +191,7 @@ export const OnboardingDetailPage: React.FC = () => {
           }}
         />
         <Button
-          text={getString(
-            selectedTabId === TabId.SET_UP_APP
-              ? 'verify'
-              : selectedTabId === TabId.TEST_YOUR_FLAG
-              ? 'cf.onboarding.backToStart'
-              : 'next'
-          )}
+          text={getString('next')}
           rightIcon={selectedTabId === TabId.TEST_YOUR_FLAG ? undefined : 'chevron-right'}
           intent={Intent.PRIMARY}
           disabled={disableNext}
@@ -244,7 +211,6 @@ export const OnboardingDetailPage: React.FC = () => {
             }
             onNext()
           }}
-          loading={isLoadingCreateFeatureFlag}
         />
         <FlexExpander />
       </Layout.Horizontal>

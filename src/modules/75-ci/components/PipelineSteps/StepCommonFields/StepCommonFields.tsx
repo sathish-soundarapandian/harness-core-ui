@@ -64,9 +64,11 @@ const StepCommonFields = ({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const isVMBuildInfraType = [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
-    buildInfrastructureType
-  )
+  const isVMBuildInfraType = [
+    CIBuildInfrastructureType.VM,
+    CIBuildInfrastructureType.Cloud,
+    CIBuildInfrastructureType.Docker
+  ].includes(buildInfrastructureType)
 
   return (
     <>

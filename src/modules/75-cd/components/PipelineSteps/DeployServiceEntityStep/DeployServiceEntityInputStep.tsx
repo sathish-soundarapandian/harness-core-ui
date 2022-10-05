@@ -23,6 +23,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { ServiceDefinition, ServiceYamlV2 } from 'services/cd-ng'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
@@ -46,7 +47,8 @@ export function DeployServiceEntityInputStep({
   inputSetData,
   allowableTypes,
   deploymentType,
-  gitOpsEnabled
+  gitOpsEnabled,
+  customDeploymentData
 }: DeployServiceEntityInputStepProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -54,6 +56,10 @@ export function DeployServiceEntityInputStep({
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
   const formik = useFormikContext()
   const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+
+  const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentData || {}
+  const shouldAddCustomDeploymentData =
+    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier
 
   const serviceValue = get(initialValues, `service.serviceRef`)
   const servicesValue: ServiceYamlV2[] = get(initialValues, `services.values`, [])
@@ -74,7 +80,8 @@ export function DeployServiceEntityInputStep({
   const { servicesData, servicesList, loadingServicesData, loadingServicesList, updatingData } = useGetServicesData({
     gitOpsEnabled,
     deploymentType: deploymentType as ServiceDefinition['type'],
-    serviceIdentifiers
+    serviceIdentifiers,
+    ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
   })
   const isMultiSvcTemplate =
     getMultiTypeFromValue(servicesTemplate as unknown as string) === MultiTypeInputType.RUNTIME ||
@@ -138,8 +145,14 @@ export function DeployServiceEntityInputStep({
       updateStageFormTemplate(newServicesTemplate, `${pathPrefix}values`)
       formik.setFieldValue(`${pathPrefix}values`, newServicesValues)
     } else {
-      updateStageFormTemplate(defaultTo(newServicesTemplate[0].serviceInputs, {}), `${pathPrefix}serviceInputs`)
-      formik.setFieldValue(`${pathPrefix}serviceInputs`, defaultTo(newServicesValues[0].serviceInputs, {}))
+      updateStageFormTemplate(
+        defaultTo(newServicesTemplate[0].serviceInputs, isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : {}),
+        `${pathPrefix}serviceInputs`
+      )
+      formik.setFieldValue(
+        `${pathPrefix}serviceInputs`,
+        defaultTo(newServicesValues[0].serviceInputs, isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : {})
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [servicesData, serviceIdentifiers])

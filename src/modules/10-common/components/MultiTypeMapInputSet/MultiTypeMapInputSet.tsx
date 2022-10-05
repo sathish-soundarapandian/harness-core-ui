@@ -56,6 +56,7 @@ export interface MultiTypeMapProps {
   restrictToSingleEntry?: boolean
   isApplyingTemplate?: boolean
   appliedInputSetValue?: Record<string, any>
+  hasValuesAsRuntimeInput?: boolean // doesn't support additional rows when fixed key/value expects value
 }
 
 function generateNewValue(): { id: string; key: string; value: string } {
@@ -83,6 +84,7 @@ export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactEleme
     restrictToSingleEntry,
     isApplyingTemplate,
     appliedInputSetValue,
+    hasValuesAsRuntimeInput,
     ...restProps
   } = props
 
@@ -244,7 +246,7 @@ export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactEleme
                       value={key}
                       intent={(touched || hasSubmitted) && error ? Intent.DANGER : Intent.NONE}
                       errorText={(touched || hasSubmitted) && keyError ? keyError : undefined}
-                      disabled={disabled}
+                      disabled={disabled || hasValuesAsRuntimeInput}
                       onChange={e => changeValue(index, 'key', (e.currentTarget as HTMLInputElement).value)}
                       data-testid={`key-${name}-[${index}]`}
                     />
@@ -268,7 +270,7 @@ export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactEleme
                         {...valueMultiTextInputProps}
                         style={{ flexShrink: 1 }}
                       />
-                      {!disabled && (
+                      {!disabled && !hasValuesAsRuntimeInput && (
                         <Button
                           icon="main-trash"
                           iconProps={{ size: 20 }}
@@ -283,7 +285,9 @@ export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactEleme
               )
             })}
 
-            {(restrictToSingleEntry && Array.isArray(value) && value?.length === 1) || disabled ? null : (
+            {(restrictToSingleEntry && Array.isArray(value) && value?.length === 1) ||
+            disabled ||
+            hasValuesAsRuntimeInput ? null : (
               <Button
                 intent="primary"
                 minimal

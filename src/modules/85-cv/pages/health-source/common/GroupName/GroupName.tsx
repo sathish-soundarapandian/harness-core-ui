@@ -6,18 +6,30 @@
  */
 
 import React from 'react'
-import { FormInput, Formik, FormikForm, Text, Container, Layout, Button } from '@wings-software/uicore'
+import { FormInput, Formik, FormikForm, Text, Container, Layout, Button, SelectOption } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { GroupNameProps, CreateGroupName } from './GroupName.types'
 import { validate } from './GroupName.utils'
-import { DialogProps } from './GroupName.constants'
+import { defaultGroupName, DialogProps } from './GroupName.constants'
 
 export function GroupName(props: GroupNameProps): JSX.Element {
-  const { groupNames = [], onChange, item, setGroupNames } = props
+  const { groupNames = [], onChange, item, setGroupNames, fieldName, allowAddGroup } = props
   const { getString } = useStrings()
   const addNewOption = { label: getString('cv.addNew'), value: '' }
+
+  const dropdownOptions: SelectOption[] = groupNames
+
+  // Adding "+ Add New" option based on  "allowAddGroup" prop
+  if (allowAddGroup) {
+    const isAddNewOptionPresent = groupNames.find(groupName => groupName.label === addNewOption.label)
+    if (!isAddNewOptionPresent) {
+      dropdownOptions.unshift(addNewOption)
+    }
+  }
+
+  const dropdownFieldName = fieldName ?? defaultGroupName
 
   const [openModal, hideModal] = useModalHook(
     () => (
@@ -28,9 +40,9 @@ export function GroupName(props: GroupNameProps): JSX.Element {
           formName="healthSourceGroupName"
           onSubmit={values => {
             const createdGroupName = { label: values.name, value: values.name }
-            setGroupNames(oldNames => [...oldNames, createdGroupName])
+            setGroupNames?.(oldNames => [...oldNames, createdGroupName])
             hideModal()
-            onChange('groupName', createdGroupName)
+            onChange(dropdownFieldName, createdGroupName)
           }}
         >
           <FormikForm>
@@ -54,14 +66,15 @@ export function GroupName(props: GroupNameProps): JSX.Element {
   return (
     <FormInput.Select
       value={item || { value: '', label: '' }}
-      name={'groupName'}
+      name={dropdownFieldName}
       label={getString('cv.monitoringSources.prometheus.groupName')}
-      items={groupNames || []}
+      items={dropdownOptions || []}
       onChange={selectedItem => {
         if (selectedItem?.label === addNewOption.label) {
           openModal()
+        } else {
+          onChange(dropdownFieldName, selectedItem)
         }
-        onChange('groupName', selectedItem)
       }}
     />
   )

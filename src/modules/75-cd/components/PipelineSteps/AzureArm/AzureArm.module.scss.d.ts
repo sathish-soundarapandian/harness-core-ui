@@ -13,7 +13,9 @@ declare const styles: {
   readonly configPlaceHolder: string
   readonly connectorConfigOptions: string
   readonly divider: string
+  readonly end: string
   readonly formikError: string
+  readonly fullWidth: string
   readonly inputWidth: string
   readonly scopeDropdown: string
   readonly scopeField: string

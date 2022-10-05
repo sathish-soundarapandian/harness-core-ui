@@ -19,6 +19,7 @@ declare const styles: {
   readonly tags: string
   readonly title: string
   readonly titleContainer: string
+  readonly view: string
   readonly viewLatest: string
 }
 export default styles

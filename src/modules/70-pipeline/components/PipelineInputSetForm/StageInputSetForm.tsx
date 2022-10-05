@@ -594,7 +594,15 @@ export function StageInputSetFormInternal({
   )
 
   const renderMultiTypeMapInputSet = React.useCallback(
-    ({ fieldName, stringKey }: { fieldName: string; stringKey: keyof StringsMap }): React.ReactElement => (
+    ({
+      fieldName,
+      stringKey,
+      hasValuesAsRuntimeInput
+    }: {
+      fieldName: string
+      stringKey: keyof StringsMap
+      hasValuesAsRuntimeInput: boolean
+    }): React.ReactElement => (
       <MultiTypeMapInputSet
         appearance={'minimal'}
         cardStyle={{ width: '50%' }}
@@ -611,6 +619,7 @@ export function StageInputSetFormInternal({
         }}
         disabled={readonly}
         formik={formik}
+        hasValuesAsRuntimeInput={hasValuesAsRuntimeInput}
       />
     ),
     []
@@ -890,7 +899,8 @@ export function StageInputSetFormInternal({
                   stageIdentifier,
                   deploymentType: deploymentStage?.deploymentType,
                   gitOpsEnabled: deploymentStage?.gitOpsEnabled,
-                  allValues: pick(deploymentStage, ['service'])
+                  allValues: pick(deploymentStage, ['service']),
+                  customDeploymentData: deploymentStage?.customDeploymentRef
                 }}
               />
             )}
@@ -954,7 +964,8 @@ export function StageInputSetFormInternal({
                   stageIdentifier,
                   deploymentType: deploymentStage?.deploymentType,
                   gitOpsEnabled: deploymentStage?.gitOpsEnabled,
-                  allValues: pick(deploymentStage, ['services'])
+                  allValues: pick(deploymentStage, ['services']),
+                  customDeploymentData: deploymentStage?.customDeploymentRef
                 }}
               />
             ) : null}
@@ -1044,7 +1055,10 @@ export function StageInputSetFormInternal({
               // load cluster runtime inputs
               clusterRef: deploymentStage.environment?.gitOpsClusters?.[0].identifier,
               // required for artifact manifest inputs
-              stageIdentifier
+              stageIdentifier,
+              // required for filtering infrastructures
+              deploymentType: deploymentStage?.deploymentType,
+              customDeploymentData: deploymentStage?.customDeploymentRef
             }}
             onUpdate={values => {
               if (deploymentStageInputSet?.environment) {
@@ -1072,7 +1086,8 @@ export function StageInputSetFormInternal({
                           initialValues={{
                             ...deploymentStageInputSet?.environment?.infrastructureDefinitions?.[index]?.inputs?.spec,
                             environmentRef: deploymentStage?.environment?.environmentRef,
-                            infrastructureRef: infrastructureDefinition.identifier
+                            infrastructureRef: infrastructureDefinition.identifier,
+                            deploymentType: deploymentStage?.deploymentType
                           }}
                           allowableTypes={allowableTypes}
                           allValues={{
@@ -1087,10 +1102,12 @@ export function StageInputSetFormInternal({
                           path={`${path}.environment.infrastructureDefinitions.${index}.inputs.spec`}
                           readonly={readonly}
                           stepViewType={viewType}
-                          customStepProps={getCustomStepProps(
-                            (deploymentStage?.deploymentType as StepType) || '',
-                            getString
-                          )}
+                          customStepProps={{
+                            ...getCustomStepProps((deploymentStage?.deploymentType as StepType) || '', getString),
+                            serviceRef: deploymentStage?.service?.serviceRef,
+                            environmentRef: deploymentStage?.environment?.environmentRef,
+                            infrastructureRef: deploymentStage?.environment?.infrastructureDefinitions?.[0].identifier
+                          }}
                           onUpdate={data => {
                             /* istanbul ignore next */
                             if (
@@ -1287,13 +1304,15 @@ export function StageInputSetFormInternal({
             {(deploymentStageTemplate.infrastructure as any)?.spec?.labels &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.labels`,
-                stringKey: 'ci.labels'
+                stringKey: 'ci.labels',
+                hasValuesAsRuntimeInput: true
               })}
 
             {(deploymentStageTemplate.infrastructure as any)?.spec?.annotations &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.annotations`,
-                stringKey: 'ci.annotations'
+                stringKey: 'ci.annotations',
+                hasValuesAsRuntimeInput: true
               })}
 
             {hasContainerSecurityContextFields && (
@@ -1382,7 +1401,8 @@ export function StageInputSetFormInternal({
             {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml)?.spec?.nodeSelector &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.nodeSelector`,
-                stringKey: 'pipeline.buildInfra.nodeSelector'
+                stringKey: 'pipeline.buildInfra.nodeSelector',
+                hasValuesAsRuntimeInput: true
               })}
             {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml)?.spec?.tolerations && (
               <Container data-name="100width" className={cx(stepCss.formGroup, stepCss.bottomMargin3)}>

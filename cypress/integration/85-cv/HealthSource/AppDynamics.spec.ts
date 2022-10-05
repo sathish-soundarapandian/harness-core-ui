@@ -23,7 +23,8 @@ import {
   basePathCall,
   basePathResponse,
   metricStructureCall,
-  metricStructureResponse
+  metricStructureResponse,
+  basePathCallWithoutTierAndApp
 } from '../../../support/85-cv/monitoredService/health-sources/AppDynamics/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
@@ -285,6 +286,41 @@ describe('Create empty monitored service', () => {
     // Creating the monitored service.
     cy.findByRole('button', { name: /Save/i }).click()
     cy.findByText('Monitored Service created').should('be.visible')
+  })
+
+  it('should delete values in AppDynamics healthsource edit mode', () => {
+    cy.intercept('GET', '/cv/api/monitored-service/service1_env1?*', dataforMS).as('monitoredServiceCall')
+    cy.intercept('GET', applicationCall, applicationsResponse).as('ApplicationCall')
+    cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
+    cy.intercept('GET', tiersCall, tiersResponse).as('TierCall')
+    cy.intercept('GET', basePathCall, basePathResponse).as('basePathCall')
+    cy.intercept('GET', metricStructureCall, metricStructureResponse).as('metricStructureCall')
+
+    cy.wait(2000)
+
+    cy.get('span[data-icon="Options"]').click()
+    cy.contains('div', 'Edit service').click()
+
+    cy.wait('@monitoredServiceCall')
+
+    cy.contains('div', 'AppD Edit Mode').click({ force: true })
+    cy.wait(1000)
+    cy.contains('span', 'Next').click({ force: true })
+
+    cy.wait('@ApplicationCall')
+    cy.wait('@MetricPackCall')
+    cy.wait(1000)
+
+    cy.get('input[name="appDTier"]').should('have.value', 'docker-tier')
+    cy.get('input[name="appdApplication"]').should('have.value', 'cv-app')
+
+    cy.intercept('GET', basePathCallWithoutTierAndApp, { ...basePathResponse, data: [] }).as('basePathCall')
+
+    cy.get('[class*="tierDropdown"] [icon="cross"]').click({ force: true })
+    cy.get('input[name="appDTier"]').should('have.value', '')
+    cy.get('[class*="applicationDropdown"] [icon="cross"]').click({ force: true })
+    cy.get('input[name="appdApplication"]').should('have.value', '')
+    cy.get('input[name="appDTier"]').should('not.exist')
   })
 
   it('should populate AppDynamics healthsource edit mode', () => {

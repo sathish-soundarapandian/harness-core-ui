@@ -23,7 +23,7 @@ import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { GroupName } from '@cv/pages/health-source/common/GroupName/GroupName'
+import GroupName from '@cv/components/GroupName/GroupName'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import { StackdriverDefinition, useGetLabelNames, useGetMetricNames, useGetMetricPacks } from 'services/cv'
@@ -32,6 +32,7 @@ import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescripti
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { PrometheusQueryBuilder } from './components/PrometheusQueryBuilder/PrometheusQueryBuilder'
 import {
   validateMappings,
@@ -44,7 +45,6 @@ import {
   MapPrometheusQueryToService,
   PrometheusSetupSource
 } from './PrometheusHealthSource.constants'
-import { initializeGroupNames } from '../../common/GroupName/GroupName.utils'
 import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { updateMultiSelectOption } from './components/PrometheusQueryBuilder/components/PrometheusFilterSelector/utils'
@@ -275,6 +275,9 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
                             onChange={formikProps.setFieldValue}
                             item={formikProps.values?.groupName}
                             setGroupNames={setPrometheusGroupName}
+                            label={getString('cv.monitoringSources.prometheus.groupName')}
+                            title={getString('cv.monitoringSources.prometheus.newPrometheusGroupName')}
+                            fieldName={'groupName'}
                           />
                         </>
                       }

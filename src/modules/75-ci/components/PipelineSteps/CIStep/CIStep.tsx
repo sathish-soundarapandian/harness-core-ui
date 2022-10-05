@@ -27,7 +27,10 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
-import { renderConnectorAndRepoName } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
+import {
+  renderConnectorAndRepoName,
+  runtimeInputGearWidth
+} from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
 import {
   AllMultiTypeInputTypesForInputSet,
   AllMultiTypeInputTypesForStep,
@@ -75,6 +78,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
     isRuntimeInput(formik?.values?.spec?.connectorRef) || isRuntimeInput(formik?.values?.spec?.repoName)
       ? css.bottomMargin2
       : css.bottomMargin5
+  const isTemplateConnectorRefPanel = isInputSetView && template?.spec?.connectorRef
   // build or build.type as runtime inherently has margin
   const buildCss =
     isRuntimeInput(formik?.values?.spec?.build) || isRuntimeInput(formik?.values?.spec?.build?.type)
@@ -277,7 +281,9 @@ export const CIStep: React.FC<CIStepProps> = props => {
             setFieldValue: formik.setFieldValue,
             connectorUrl: enableFields['spec.connectorAndRepo'].connectorUrl,
             connectionType: enableFields['spec.connectorAndRepo'].connectionType,
-            connectorWidth: enableFields['spec.connectorAndRepo'].connectorWidth,
+            connectorWidth: isTemplateConnectorRefPanel
+              ? enableFields['spec.connectorAndRepo'].connectorWidth - runtimeInputGearWidth
+              : enableFields['spec.connectorAndRepo'].connectorWidth,
             setConnectionType: enableFields['spec.connectorAndRepo'].setConnectionType,
             setConnectorUrl: enableFields['spec.connectorAndRepo'].setConnectorUrl,
             connector: enableFields['spec.connectorAndRepo'].connector,

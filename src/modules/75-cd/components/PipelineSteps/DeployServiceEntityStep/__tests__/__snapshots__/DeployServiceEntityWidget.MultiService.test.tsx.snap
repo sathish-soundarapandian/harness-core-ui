@@ -725,9 +725,6 @@ exports[`DeployServiceEntityWidget - multi services tests user can select multip
             cd.pipelineSteps.serviceTab.multiServicesText
           </label>
         </div>
-        <div
-          class="cardsContainer"
-        />
       </div>
     </form>
   </div>

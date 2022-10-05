@@ -63,7 +63,7 @@ export function DeploymentConfigRuntimeInputs(props: Props) {
         <Container className={css.hostObjectArrayPathInputContainer} margin={{ bottom: 'medium' }}>
           <div className={cx(stepCss.formGroup, stepCss.md)}>
             <FormInput.MultiTextInput
-              label={getString('pipeline.customDeployment.hostObjectArrayPath')}
+              label={getString('pipeline.customDeployment.instanceObjectArrayPath')}
               name={`${prefix}.infrastructure.instancesListPath`}
               multiTextInputProps={{
                 disabled: readonly,
@@ -77,7 +77,7 @@ export function DeploymentConfigRuntimeInputs(props: Props) {
       {template?.infrastructure?.instanceAttributes && (
         <Container margin={{ bottom: 'medium' }}>
           <Text font={{ size: 'normal' }} color={Color.GREY_600} padding={{ bottom: 'large' }}>
-            {getString('pipeline.customDeployment.hostAttributes')}
+            {getString('pipeline.customDeployment.instanceAttributes')}
           </Text>
           <div className={css.sectionContent}>
             <Layout.Vertical spacing="medium" width={'60%'}>

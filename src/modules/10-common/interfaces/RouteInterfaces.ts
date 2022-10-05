@@ -77,12 +77,14 @@ export type TemplateType =
   | ':templateType(Step)'
   | ':templateType(Stage)'
   | ':templateType(Pipeline)'
+  | ':templateType(CustomDeployment)'
   | ':templateType(Service)'
   | ':templateType(Infrastructure)'
   | ':templateType(StepGroup)'
   | ':templateType(Execution)'
   | ':templateType(MonitoredService)'
   | ':templateType(SecretManager)'
+  | ':templateType(ArtifactSource)'
   | ':templateType'
 
 export interface TemplateStudioPathProps extends ProjectPathProps {

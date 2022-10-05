@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { ButtonVariation, Container, FormInput, AllowedTypes, SelectOption, Text, Layout } from '@wings-software/uicore'
+import { AllowedTypes, ButtonVariation, Container, FormInput, Layout, SelectOption, Text } from '@wings-software/uicore'
 import cx from 'classnames'
 
 import type { FormikProps } from 'formik'
@@ -22,10 +22,11 @@ import type {
 } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import { TemplateUsage } from '@templates-library/utils/templatesUtils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
-import { monitoredServiceTypes, MONITORED_SERVICE_TYPE } from './SelectMonitoredServiceType.constants'
+import { MONITORED_SERVICE_TYPE, monitoredServiceTypes } from './SelectMonitoredServiceType.constants'
 import VerifyStepMonitoredServiceInputTemplates from './components/VerifyStepMonitoredServiceInputTemplates/VerifyStepMonitoredServiceInputTemplates'
 import {
   getInitialHealthSources,
@@ -88,7 +89,7 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
   })
 
   const onUseTemplate = async (): Promise<void> => {
-    const { template } = await getTemplate({ templateType: 'MonitoredService' })
+    const { template } = await getTemplate({ templateType: 'MonitoredService', allowedUsages: [TemplateUsage.USE] })
     const { versionLabel: latestVersionLabel = '', identifier = '' } = template || {}
     if (latestVersionLabel && identifier) {
       await fetchTemplateInputSet({

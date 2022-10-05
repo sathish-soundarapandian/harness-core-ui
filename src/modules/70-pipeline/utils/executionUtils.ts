@@ -148,7 +148,8 @@ export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
   InterventionWaiting: 'waiting',
   ApprovalWaiting: 'waiting',
   Pausing: 'pause',
-  InputWaiting: 'waiting'
+  InputWaiting: 'waiting',
+  WaitStepRunning: 'waiting'
 }
 
 /**

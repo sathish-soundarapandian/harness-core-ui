@@ -142,3 +142,7 @@ declare module 'stoV2/PipelineSecurityView' {
 }
 
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+
+declare type Mutable<T> = {
+  -readonly [K in keyof T]: T[K]
+}

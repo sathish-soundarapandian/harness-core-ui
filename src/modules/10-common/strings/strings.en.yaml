@@ -27,7 +27,7 @@ confirmAction: Confirm action
 accountSetup: Account Setup
 projectSetup: Project Setup
 additionalAttributes: Additional Attributes
-addAttribute: + Add Attribute
+addAttribute: Add Attribute
 orgSetup: Org Setup
 delegateForTask: '{{delegate}} for {{taskName}}'
 defineDelegateSelector: 'Define Delegate Selector'
@@ -45,7 +45,10 @@ templateStartLabel: Start with Template
 duplicateId: 'Duplicate Identifier'
 createPipeline: Create a Pipeline
 importFromGit: Import From Git
+allEnvironments: All Environments
+allServices: All Services
 production: Production
+preProduction: 'Pre-Production'
 addVariable: Add Variable
 advanced: '{{ $.advancedTitle }}'
 editVariable: Edit variable
@@ -565,7 +568,7 @@ clientId: Client Id
 filters:
   saveNewFilter: Save New Filter
   unsavedFilter: Unsaved Filter
-  noMatchingFilterData: No Results found matching the Filter criteria
+  noMatchingFilterData: No results found matching the filter criteria
   noResultsFound: No results found
   clearFilters: Clear Filters
   noFilterSaved: No Filter Saved

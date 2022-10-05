@@ -37,7 +37,8 @@ import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import {
   getAllowedValuesFromTemplate,
   shouldRenderRunTimeInputViewWithAllowedValues,
-  useGitScope
+  useGitScope,
+  getHasValuesAsRuntimeInputFromTemplate
 } from '@pipeline/utils/CIUtils'
 import { ConnectorRefWidth, sslVerifyOptions } from '@pipeline/utils/constants'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
@@ -247,7 +248,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         if (get(newFormikValues, fieldNamePath) === '') {
           shouldUpdate = true
           set(newFormikValues, fieldNamePath, {})
-        } else if (!isEmpty(get(newFormikValues, fieldNamePath)) && registeredMaps.includes(fieldNamePath)) {
+        } else if (!isEmpty(get(newFormikValues, fieldNamePath)) && !registeredMaps.includes(fieldNamePath)) {
           // address race condition with maps
           shouldUpdate = true
         }
@@ -340,7 +341,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       keyLabel,
       valueLabel,
       restrictToSingleEntry,
-      appliedInputSetValue
+      appliedInputSetValue,
+      templateFieldName
     }: {
       fieldName: string
       stringKey: keyof StringsMap
@@ -349,6 +351,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       valueLabel?: keyof StringsMap
       restrictToSingleEntry?: boolean
       appliedInputSetValue?: { [key: string]: string }
+      templateFieldName?: string
     }): React.ReactElement => (
       <Container className={cx(css.formGroup, css.bottomMargin5)}>
         <MultiTypeMapInputSet
@@ -376,6 +379,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           restrictToSingleEntry={restrictToSingleEntry}
           isApplyingTemplate={isApplyingTemplate}
           appliedInputSetValue={appliedInputSetValue}
+          hasValuesAsRuntimeInput={getHasValuesAsRuntimeInputFromTemplate({ template, templateFieldName })}
         />
       </Container>
     ),
@@ -621,6 +625,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         ? isInputSetView
           ? renderMultiTypeMapInputSet({
               fieldName: `${prefix}spec.settings`,
+              templateFieldName: 'spec.settings',
               stringKey: 'settingsLabel',
               tooltipId: 'pluginSettings',
               appliedInputSetValue: hasAppliedInputSet && get(formik?.values, `${prefix}spec.settings`)
@@ -683,6 +688,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         ? isInputSetView
           ? renderMultiTypeMapInputSet({
               fieldName: `${prefix}spec.envVariables`,
+              templateFieldName: 'spec.envVariables',
               stringKey: 'environmentVariables',
               appliedInputSetValue: hasAppliedInputSet && get(formik?.values, `${prefix}spec.envVariables`)
             })
@@ -744,6 +750,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         ? isInputSetView
           ? renderMultiTypeMapInputSet({
               fieldName: `${prefix}spec.portBindings`,
+              templateFieldName: 'spec.portBindings',
               stringKey: 'ci.portBindings',
               tooltipId: 'portBindings',
               keyLabel: 'ci.hostPort',
@@ -809,6 +816,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         ? isInputSetView
           ? renderMultiTypeMapInputSet({
               fieldName: `${prefix}spec.labels`,
+              templateFieldName: 'spec.labels',
               stringKey: 'pipelineSteps.labelsLabel',
               appliedInputSetValue: hasAppliedInputSet && get(formik?.values, `${prefix}spec.labels`)
             })
@@ -822,6 +830,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
         ? isInputSetView
           ? renderMultiTypeMapInputSet({
               fieldName: `${prefix}spec.buildArgs`,
+              templateFieldName: 'spec.buildArgs',
               stringKey: 'pipelineSteps.buildArgsLabel',
               appliedInputSetValue: hasAppliedInputSet && get(formik?.values, `${prefix}spec.buildArgs`)
             })

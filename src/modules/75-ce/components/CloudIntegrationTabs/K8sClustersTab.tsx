@@ -245,18 +245,16 @@ const FeaturesEnabledCell: CustomK8sCell = ({ row, column }) => {
             />
           )}
           <FlexExpander />
-          {!isConnectorStatusSuccess ? (
-            <Button
-              icon="repeat"
-              iconProps={{ size: 12 }}
-              variation={ButtonVariation.LINK}
-              text={getString('common.smtp.testConnection')}
-              size={ButtonSize.SMALL}
-              onClick={() => {
-                ;(column as any).openTestConnectionModal({ connector: ccmk8sConnector })
-              }}
-            />
-          ) : null}
+          <Button
+            icon="repeat"
+            iconProps={{ size: 12 }}
+            variation={ButtonVariation.LINK}
+            text={getString('common.smtp.testConnection')}
+            size={ButtonSize.SMALL}
+            onClick={() => {
+              ;(column as any).openTestConnectionModal({ connector: ccmk8sConnector })
+            }}
+          />
         </>
       )}
     </Layout.Horizontal>

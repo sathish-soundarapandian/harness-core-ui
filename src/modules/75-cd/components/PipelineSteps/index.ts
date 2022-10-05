@@ -73,6 +73,7 @@ import { DeployServiceEntityStep } from './DeployServiceEntityStep/DeployService
 import { AzureArmStep } from './AzureArm/AzureArm'
 import { CustomDeploymentServiceSpec } from './CustomDeploymentServiceSpec/CustomDeploymentServiceSpec'
 import { CustomDeploymentInfrastructureSpec } from './CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
+import { UpdateReleaseRepo } from '../UpdateReleaseRepo/UpdateReleaseRepo'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new HttpStep())
@@ -120,6 +121,7 @@ factory.registerStep(new CFCreateStack())
 factory.registerStep(new SshServiceSpec())
 factory.registerStep(new WinRmServiceSpec())
 factory.registerStep(new CreatePr())
+factory.registerStep(new UpdateReleaseRepo())
 factory.registerStep(new MergePR())
 factory.registerStep(new FetchInstanceScript())
 factory.registerStep(new AzureWebAppRollback())

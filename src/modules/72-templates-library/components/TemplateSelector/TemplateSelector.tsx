@@ -6,7 +6,6 @@
  */
 
 import React, { useState } from 'react'
-import { defaultTo } from 'lodash-es'
 import { Button, ButtonVariation, Container, Layout, useConfirmationDialog } from '@wings-software/uicore'
 import { Intent } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
@@ -20,14 +19,19 @@ import { TemplateSelectorLeftView } from '@templates-library/components/Template
 import { areTemplatesEqual, getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import { useTemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import { TemplateDetails } from '../TemplateDetails/TemplateDetails'
-import templateFactory from '../Templates/TemplatesFactory'
 import css from './TemplateSelector.module.scss'
 
 export const TemplateSelector: React.FC = (): JSX.Element => {
   const {
     state: { selectorData }
   } = useTemplateSelectorContext()
-  const { onSubmit, selectedTemplate: defaultTemplate, storeMetadata } = selectorData || {}
+  const {
+    onSubmit,
+    selectedTemplate: defaultTemplate,
+    storeMetadata,
+    disableVersionChange = false,
+    allowedUsages = [TemplateUsage.USE, TemplateUsage.COPY]
+  } = selectorData || {}
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
@@ -40,13 +44,14 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
           template={selectedTemplate}
           setTemplate={setSelectedTemplate}
           storeMetadata={storeMetadata}
+          disableVersionChange={disableVersionChange}
           isStandAlone
         />
       )
     } else {
       return <></>
     }
-  }, [selectedTemplate, storeMetadata])
+  }, [selectedTemplate, storeMetadata, disableVersionChange])
 
   const onUseTemplateConfirm = React.useCallback(
     (isCopied = false) => {
@@ -117,12 +122,8 @@ export const TemplateSelector: React.FC = (): JSX.Element => {
     }
   }, [defaultTemplate, openCopyTemplateDialog, onUseTemplateConfirm])
 
-  const allowedUsage = React.useMemo(
-    () => templateFactory.getTemplateAllowedUsage(defaultTo(selectedTemplate?.templateEntityType, '')) || [],
-    [selectedTemplate?.templateEntityType]
-  )
-  const showUseTemplate = React.useMemo(() => allowedUsage?.includes(TemplateUsage.USE), [allowedUsage])
-  const showCopyTemplate = React.useMemo(() => allowedUsage?.includes(TemplateUsage.COPY), [allowedUsage])
+  const showUseTemplate = React.useMemo(() => allowedUsages.includes(TemplateUsage.USE), [allowedUsages])
+  const showCopyTemplate = React.useMemo(() => allowedUsages.includes(TemplateUsage.COPY), [allowedUsages])
 
   return (
     <Container height={'100%'} className={css.container}>

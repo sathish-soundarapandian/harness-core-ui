@@ -22,6 +22,7 @@ import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { featureNames } from '@ce/constants'
 import css from './CESideNav.module.scss'
 
 const feedbackOptions = [
@@ -138,60 +139,96 @@ const SideNavItems = () => {
   return (
     <Layout.Vertical spacing="small">
       <React.Fragment>
-        <SidebarLink label={getString('overview')} to={routes.toCEOverview({ accountId })} />
         <SidebarLink
+          label={getString('overview')}
+          to={routes.toCEOverview({ accountId })}
           onClick={() => {
-            trackEvent(USER_JOURNEY_EVENTS.PERSPECTIVE_NAV_CLICK, {})
+            trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.OVERVIEW_FEATURE })
           }}
+        />
+        <SidebarLink
           label={getString('ce.perspectives.sideNavText')}
           to={routes.toCEPerspectives({ accountId })}
+          onClick={() => {
+            trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.PERSPECTIVES_FEATURE })
+          }}
         />
-        <SidebarLink label={getString('ce.budgets.sideNavText')} to={routes.toCEBudgets({ accountId })} />
-
+        <SidebarLink
+          label={getString('ce.budgets.sideNavText')}
+          to={routes.toCEBudgets({ accountId })}
+          onClick={() => {
+            trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.BUDGETS_FEATURE })
+          }}
+        />
         <SidebarLink
           label={getString('ce.anomalyDetection.sideNavText')}
           to={routes.toCEAnomalyDetection({ accountId })}
+          onClick={() => {
+            trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.ANOMALIES_FEATURE })
+          }}
         />
         <SidebarLink
-          onClick={() => {
-            trackEvent(USER_JOURNEY_EVENTS.RECOMMENDATIONS_NAV_CLICK, {})
-          }}
           label={getString('ce.recommendation.sideNavText')}
           to={routes.toCERecommendations({ accountId })}
+          onClick={() => {
+            trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, {
+              feature_name: featureNames.RECOMMENDATIONS_FEATURE
+            })
+          }}
         />
         {showCO && (
           <SidebarLink
             label={getString('ce.commitmentOrchestration.sideNavLabel')}
             to={routes.toCommitmentOrchestration({ accountId })}
+            onClick={() => {
+              trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, {
+                feature_name: featureNames.COMMITMENT_ORCHESTRATOR_FEATURE
+              })
+            }}
           />
         )}
         <SidebarLink
-          onClick={() => {
-            trackEvent(USER_JOURNEY_EVENTS.AS_NAV_CLICK, {})
-          }}
           label={getString('ce.co.breadCrumb.rules')}
           to={routes.toCECORules({ accountId, params: '' })}
+          onClick={() => {
+            trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.AUTOSTOPPING_FEATURE })
+          }}
         />
         <SidebarLink
-          onClick={() => {
-            trackEvent(USER_JOURNEY_EVENTS.BI_DASHBOARD_NAV_CLICK, {})
-          }}
           label={getString('ce.biDashboard.sideNavText')}
           to={routes.toCEDashboards({ accountId })}
+          onClick={() => {
+            trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.BI_DASHBOARD_FEATURE })
+          }}
         />
         <NavExpandable title={getString('common.setup')} route={routes.toCECOAccessPoints({ accountId })}>
           <Layout.Vertical spacing="small">
             <SidebarLink
               label={getString('ce.cloudIntegration.sideNavText')}
               to={routes.toCECloudIntegration({ accountId })}
+              onClick={() => {
+                trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, {
+                  feature_name: featureNames.CLOUD_INTEGRATION_FEATURE
+                })
+              }}
             />
             <SidebarLink
               label={getString('ce.co.accessPoint.loadbalancers')}
               to={routes.toCECOAccessPoints({ accountId })}
+              onClick={() => {
+                trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, {
+                  feature_name: featureNames.LOAD_BALANCER_FEATURE
+                })
+              }}
             />
             <SidebarLink
               label={getString('ce.businessMapping.sideNavText')}
               to={routes.toBusinessMapping({ accountId })}
+              onClick={() => {
+                trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, {
+                  feature_name: featureNames.COST_CATEGORY_FEATURE
+                })
+              }}
             />
           </Layout.Vertical>
         </NavExpandable>

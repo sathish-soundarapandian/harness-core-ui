@@ -41,7 +41,7 @@ import {
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
-import { replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
 import { useQueryParams } from '@common/hooks'
 import { stringify } from '@common/utils/YamlHelperMethods'
@@ -66,7 +66,8 @@ function TemplateStepWidget(
   formikRef: StepFormikFowardRef<TemplateStepNode>
 ): React.ReactElement {
   const {
-    state: { storeMetadata }
+    state: { storeMetadata },
+    setIntermittentLoading
   } = usePipelineContext()
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes } = props
   const { getString } = useStrings()
@@ -92,10 +93,6 @@ function TemplateStepWidget(
       ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
-
-  React.useEffect(() => {
-    setAllValues(undefined)
-  }, [stepTemplateRef, stepTemplateVersionLabel])
 
   React.useEffect(() => {
     setAllValues(parse(defaultTo(stepTemplateResponse?.data?.yaml, ''))?.template.spec)
@@ -159,6 +156,12 @@ function TemplateStepWidget(
     }
   }, [templateInputs])
 
+  React.useEffect(() => {
+    if (stepTemplateInputSetLoading) {
+      setAllValues(undefined)
+    }
+  }, [stepTemplateInputSetLoading])
+
   const validateForm = (values: TemplateStepNode) => {
     const errorsResponse = validateStep({
       step: values.template?.templateInputs as StepElementConfig,
@@ -182,6 +185,18 @@ function TemplateStepWidget(
   const isLoading = stepTemplateLoading || stepTemplateInputSetLoading || loadingMergedTemplateInputs
 
   const error = defaultTo(stepTemplateInputSetError, stepTemplateError)
+
+  /**
+   * This effect disables/enables "Apply Changes" button on Pipeline and Template Studio
+   */
+  React.useEffect(() => {
+    setIntermittentLoading(isLoading)
+
+    // cleanup
+    return () => {
+      setIntermittentLoading(false)
+    }
+  }, [isLoading, setIntermittentLoading])
 
   return (
     <div className={stepCss.stepPanel}>
@@ -212,11 +227,8 @@ function TemplateStepWidget(
               <Container className={css.inputsContainer}>
                 {isLoading && <PageSpinner />}
                 {!isLoading && error && (
-                  <Container height={300}>
-                    <PageError
-                      message={defaultTo((error?.data as Error)?.message, error?.message)}
-                      onClick={() => refetch()}
-                    />
+                  <Container height={isEmpty((error?.data as Error)?.responseMessages) ? 300 : 600}>
+                    <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
                   </Container>
                 )}
                 {!isLoading && !error && templateInputs && allValues && (

@@ -26,6 +26,8 @@ export interface QueryContentProps {
   isTemplate?: boolean
   expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean
+  fetchButtonText?: string
+  isFetchButtonDisabled?: boolean
 }
 
 export interface QueryViewerProps {
@@ -51,6 +53,7 @@ export interface QueryViewerProps {
   isTemplate?: boolean
   expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean
+  queryTextareaName?: string
 }
 
 export interface QueryViewDialogProps extends RecordsProps {

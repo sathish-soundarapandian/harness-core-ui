@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { isEmpty, get, defaultTo } from 'lodash-es'
+import { isEmpty, get, defaultTo, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -616,7 +616,7 @@ function FormContent({
 }
 
 function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormikFowardRef<JiraCreateData>) {
-  const { onUpdate, isNewStep, readonly, onChange, stepViewType, allowableTypes } = props
+  const { onUpdate, isNewStep, readonly, onChange, stepViewType, allowableTypes, unprocessedInitialValues } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
@@ -656,6 +656,15 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
     }
   })
 
+  // formik's dirty prop is computed by comparing initialValues and values,
+  // but this step needs a custom dirty prop as the type of submitted/initial values is different from values
+  const updateDirty = (ref: StepFormikFowardRef<JiraCreateData>): void => {
+    if (!ref || typeof ref === 'function') return
+
+    const formikProps = ref.current as Mutable<FormikProps<JiraCreateData>>
+    formikProps.dirty = !isEqual(unprocessedInitialValues, processFormData(formikProps.values))
+  }
+
   return (
     <Formik<JiraCreateData>
       onSubmit={values => {
@@ -683,6 +692,8 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
     >
       {(formik: FormikProps<JiraCreateData>) => {
         setFormikRef(formikRef, formik)
+        updateDirty(formikRef)
+
         return (
           <FormikForm>
             <FormContent

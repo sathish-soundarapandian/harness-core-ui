@@ -31,6 +31,7 @@ declare const styles: {
   readonly readonlyAccessTag: string
   readonly readonlyAccessText: string
   readonly rectangle: string
+  readonly remotePipelineName: string
   readonly repoDetails: string
   readonly repoName: string
   readonly runPipelineBtn: string
@@ -39,6 +40,7 @@ declare const styles: {
   readonly savePublishContainer: string
   readonly tagsContainer: string
   readonly titleBar: string
+  readonly titleSubheader: string
   readonly unsavedChanges: string
   readonly visualYamlToggle: string
 }

@@ -26,7 +26,7 @@ import { getConnectorName, getConnectorValue } from '@pipeline/components/Pipeli
 import { connectorTypes } from '@pipeline/utils/constants'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import { ECSInfraSpecInputSetMode, ECSInfraSpecInputFormProps } from './ECSInfraSpecInputForm'
+import { ECSInfraSpecInputSetMode } from './ECSInfraSpecInputForm'
 import { ECSInfraSpecEditable, ECSInfraSpecEditableProps } from './ECSInfraSpecEditable'
 
 const logger = loggerFor(ModuleName.CD)
@@ -43,9 +43,12 @@ interface ValidateFieldArg {
   errors: Partial<EcsInfrastructureTemplate>
 }
 
-interface ECSInfraSpecVariableProps {
+export interface ECSInfraSpecCustomStepProps {
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: EcsInfrastructure
+  serviceRef?: string
+  environmentRef?: string
+  infrastructureRef?: string
 }
 
 const AwsConnectorRegex = /^.+stage\.spec\.infrastructure\.infrastructureDefinition\.spec\.connectorRef$/
@@ -179,7 +182,6 @@ export class ECSInfraSpec extends PipelineStep<EcsInfrastructureStep> {
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <ECSInfraSpecInputSetMode
-          {...(customStepProps as ECSInfraSpecInputFormProps)}
           initialValues={initialValues}
           allValues={defaultTo(inputSetData?.allValues, {}) as EcsInfrastructure}
           onUpdate={onUpdate}
@@ -187,14 +189,15 @@ export class ECSInfraSpec extends PipelineStep<EcsInfrastructureStep> {
           template={inputSetData?.template}
           path={inputSetData?.path || ''}
           allowableTypes={allowableTypes}
+          customStepProps={customStepProps as ECSInfraSpecCustomStepProps}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
       return (
         <VariablesListTable
-          data={(customStepProps as ECSInfraSpecVariableProps)?.variablesData?.infrastructureDefinition?.spec}
+          data={(customStepProps as ECSInfraSpecCustomStepProps)?.variablesData?.infrastructureDefinition?.spec}
           originalData={initialValues.infrastructureDefinition?.spec || initialValues}
-          metadataMap={(customStepProps as ECSInfraSpecVariableProps).metadataMap}
+          metadataMap={(customStepProps as ECSInfraSpecCustomStepProps)?.metadataMap}
         />
       )
     }

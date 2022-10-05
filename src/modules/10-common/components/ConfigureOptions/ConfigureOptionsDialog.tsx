@@ -46,6 +46,7 @@ export interface ConfigureOptionsDialogProps {
   showDefaultField?: boolean
   showRequiredField?: boolean
   hideExecutionTimeField?: boolean
+  isExecutionTimeFieldDisabled?: boolean
   showAdvanced?: boolean
   isReadonly?: boolean
   allowedValuesType?: ALLOWED_VALUES_TYPE
@@ -69,6 +70,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
     variableName,
     type,
     hideExecutionTimeField = false,
+    isExecutionTimeFieldDisabled = false,
     showRequiredField = false,
     showAdvanced = false,
     isReadonly = false,
@@ -166,7 +168,7 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
                   className={css.checkbox}
                   label={getString('common.configureOptions.askDuringExecution')}
                   name="isExecutionInput"
-                  disabled={isReadonly}
+                  disabled={isReadonly || isExecutionTimeFieldDisabled}
                 />
               ) : null}
               <div className={css.validationOptions}>

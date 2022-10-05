@@ -28,25 +28,15 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
               <div
                 class="halfWidth"
               >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
+                >
+                  pipeline.manifestType.manifestIdentifier
+                </p>
                 <div
                   class="bp3-form-group"
                   data-id="identifier-0"
                 >
-                  <label
-                    class="bp3-label"
-                    for="identifier"
-                  >
-                    <span
-                      class="Tooltip--acenter"
-                      data-tooltip-id="harnessFileStore_identifier"
-                    >
-                      pipeline.manifestType.manifestIdentifier
-                    </span>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
                   <div
                     class="bp3-form-content"
                   >
@@ -90,7 +80,7 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                           data-tooltip-id="harnessFileStore_files"
                         >
                           <p
-                            class="StyledProps--font StyledProps--main"
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
                           >
                             fileFolderPathText
                           </p>
@@ -147,6 +137,7 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="4"
                           data-rbd-draggable-id="0"
+                          data-testid="files[0]"
                           draggable="false"
                           role="button"
                           tabindex="0"
@@ -227,9 +218,11 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                                           >
                                             <div
                                               class="Layout--vertical StyledProps--main"
+                                              data-testid="file-store-select"
                                             >
                                               <div
                                                 class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                                data-testid="container-fs"
                                               >
                                                 <p
                                                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-left-xsmall"
@@ -239,7 +232,7 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                                                    -
                                                 </p>
                                                 <div
-                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
                                                 >
                                                   <span
                                                     class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
@@ -267,36 +260,43 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                                         </div>
                                       </div>
                                       <div
-                                        class="bp3-popover-wrapper typeSelectorWrapper"
+                                        class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
                                         <div
-                                          class="bp3-popover-target typeSelector"
+                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
+                                        />
+                                        <div
+                                          class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
-                                          <button
-                                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                                            type="button"
+                                          <div
+                                            class="bp3-popover-target typeSelector"
                                           >
-                                            <span
-                                              class="bp3-button-text"
+                                            <button
+                                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                                              type="button"
                                             >
                                               <span
-                                                class="bp3-icon StyledProps--main icon fixed"
-                                                data-icon="fixed-input"
+                                                class="bp3-button-text"
                                               >
-                                                <svg
-                                                  height="12"
-                                                  viewBox="0 0 9 9"
-                                                  width="12"
-                                                  xmlns="http://www.w3.org/2000/svg"
+                                                <span
+                                                  class="bp3-icon StyledProps--main icon fixed"
+                                                  data-icon="fixed-input"
                                                 >
-                                                  <path
-                                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                                    fill="currentColor"
-                                                  />
-                                                </svg>
+                                                  <svg
+                                                    height="12"
+                                                    viewBox="0 0 9 9"
+                                                    width="12"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                  >
+                                                    <path
+                                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                                      fill="currentColor"
+                                                    />
+                                                  </svg>
+                                                </span>
                                               </span>
-                                            </span>
-                                          </button>
+                                            </button>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -341,9 +341,9 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                         </div>
                       </div>
                       <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                         data-testid="add-files"
-                        style="padding: 0px; margin-top: 24px;"
+                        style="padding: 0px;"
                         type="button"
                       >
                         <span
@@ -438,6 +438,7 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="5"
                           data-rbd-draggable-id="0"
+                          data-testid="paramsPaths[0]"
                           draggable="false"
                           role="button"
                           tabindex="0"
@@ -518,9 +519,11 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                                           >
                                             <div
                                               class="Layout--vertical StyledProps--main"
+                                              data-testid="file-store-select"
                                             >
                                               <div
                                                 class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                                data-testid="container-fs"
                                               >
                                                 <p
                                                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-left-xsmall"
@@ -530,7 +533,7 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                                                    -
                                                 </p>
                                                 <div
-                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
                                                 >
                                                   <span
                                                     class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
@@ -558,36 +561,43 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                                         </div>
                                       </div>
                                       <div
-                                        class="bp3-popover-wrapper typeSelectorWrapper"
+                                        class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
                                         <div
-                                          class="bp3-popover-target typeSelector"
+                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
+                                        />
+                                        <div
+                                          class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
-                                          <button
-                                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                                            type="button"
+                                          <div
+                                            class="bp3-popover-target typeSelector"
                                           >
-                                            <span
-                                              class="bp3-button-text"
+                                            <button
+                                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                                              type="button"
                                             >
                                               <span
-                                                class="bp3-icon StyledProps--main icon fixed"
-                                                data-icon="fixed-input"
+                                                class="bp3-button-text"
                                               >
-                                                <svg
-                                                  height="12"
-                                                  viewBox="0 0 9 9"
-                                                  width="12"
-                                                  xmlns="http://www.w3.org/2000/svg"
+                                                <span
+                                                  class="bp3-icon StyledProps--main icon fixed"
+                                                  data-icon="fixed-input"
                                                 >
-                                                  <path
-                                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                                    fill="currentColor"
-                                                  />
-                                                </svg>
+                                                  <svg
+                                                    height="12"
+                                                    viewBox="0 0 9 9"
+                                                    width="12"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                  >
+                                                    <path
+                                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                                      fill="currentColor"
+                                                    />
+                                                  </svg>
+                                                </span>
                                               </span>
-                                            </span>
-                                          </button>
+                                            </button>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -632,9 +642,9 @@ exports[`Harness File Store tests Params Path field is displayed when manifest i
                         </div>
                       </div>
                       <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                         data-testid="add-paramsPaths"
-                        style="padding: 0px; margin-top: 24px;"
+                        style="padding: 0px;"
                         type="button"
                       >
                         <span
@@ -779,25 +789,15 @@ exports[`Harness File Store tests initial rendering 1`] = `
               <div
                 class="halfWidth"
               >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
+                >
+                  pipeline.manifestType.manifestIdentifier
+                </p>
                 <div
                   class="bp3-form-group"
                   data-id="identifier-0"
                 >
-                  <label
-                    class="bp3-label"
-                    for="identifier"
-                  >
-                    <span
-                      class="Tooltip--acenter"
-                      data-tooltip-id="harnessFileStore_identifier"
-                    >
-                      pipeline.manifestType.manifestIdentifier
-                    </span>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
                   <div
                     class="bp3-form-content"
                   >
@@ -841,7 +841,7 @@ exports[`Harness File Store tests initial rendering 1`] = `
                           data-tooltip-id="harnessFileStore_files"
                         >
                           <p
-                            class="StyledProps--font StyledProps--main"
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
                           >
                             fileFolderPathText
                           </p>
@@ -898,6 +898,7 @@ exports[`Harness File Store tests initial rendering 1`] = `
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="0"
                           data-rbd-draggable-id="0"
+                          data-testid="files[0]"
                           draggable="false"
                           role="button"
                           tabindex="0"
@@ -978,9 +979,11 @@ exports[`Harness File Store tests initial rendering 1`] = `
                                           >
                                             <div
                                               class="Layout--vertical StyledProps--main"
+                                              data-testid="file-store-select"
                                             >
                                               <div
                                                 class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                                data-testid="container-fs"
                                               >
                                                 <p
                                                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-left-xsmall"
@@ -990,7 +993,7 @@ exports[`Harness File Store tests initial rendering 1`] = `
                                                    -
                                                 </p>
                                                 <div
-                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
                                                 >
                                                   <span
                                                     class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
@@ -1018,36 +1021,43 @@ exports[`Harness File Store tests initial rendering 1`] = `
                                         </div>
                                       </div>
                                       <div
-                                        class="bp3-popover-wrapper typeSelectorWrapper"
+                                        class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
                                         <div
-                                          class="bp3-popover-target typeSelector"
+                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
+                                        />
+                                        <div
+                                          class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
-                                          <button
-                                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                                            type="button"
+                                          <div
+                                            class="bp3-popover-target typeSelector"
                                           >
-                                            <span
-                                              class="bp3-button-text"
+                                            <button
+                                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                                              type="button"
                                             >
                                               <span
-                                                class="bp3-icon StyledProps--main icon fixed"
-                                                data-icon="fixed-input"
+                                                class="bp3-button-text"
                                               >
-                                                <svg
-                                                  height="12"
-                                                  viewBox="0 0 9 9"
-                                                  width="12"
-                                                  xmlns="http://www.w3.org/2000/svg"
+                                                <span
+                                                  class="bp3-icon StyledProps--main icon fixed"
+                                                  data-icon="fixed-input"
                                                 >
-                                                  <path
-                                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                                    fill="currentColor"
-                                                  />
-                                                </svg>
+                                                  <svg
+                                                    height="12"
+                                                    viewBox="0 0 9 9"
+                                                    width="12"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                  >
+                                                    <path
+                                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                                      fill="currentColor"
+                                                    />
+                                                  </svg>
+                                                </span>
                                               </span>
-                                            </span>
-                                          </button>
+                                            </button>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -1092,9 +1102,9 @@ exports[`Harness File Store tests initial rendering 1`] = `
                         </div>
                       </div>
                       <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                         data-testid="add-files"
-                        style="padding: 0px; margin-top: 24px;"
+                        style="padding: 0px;"
                         type="button"
                       >
                         <span
@@ -1132,7 +1142,7 @@ exports[`Harness File Store tests initial rendering 1`] = `
                           data-tooltip-id="harnessFileStore_valuesPaths"
                         >
                           <p
-                            class="StyledProps--font StyledProps--main"
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
                           >
                             pipeline.manifestType.valuesYamlPath
                           </p>
@@ -1189,6 +1199,7 @@ exports[`Harness File Store tests initial rendering 1`] = `
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="1"
                           data-rbd-draggable-id="0"
+                          data-testid="valuesPaths[0]"
                           draggable="false"
                           role="button"
                           tabindex="0"
@@ -1269,9 +1280,11 @@ exports[`Harness File Store tests initial rendering 1`] = `
                                           >
                                             <div
                                               class="Layout--vertical StyledProps--main"
+                                              data-testid="file-store-select"
                                             >
                                               <div
                                                 class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                                data-testid="container-fs"
                                               >
                                                 <p
                                                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-left-xsmall"
@@ -1281,7 +1294,7 @@ exports[`Harness File Store tests initial rendering 1`] = `
                                                    -
                                                 </p>
                                                 <div
-                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
                                                 >
                                                   <span
                                                     class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
@@ -1309,36 +1322,43 @@ exports[`Harness File Store tests initial rendering 1`] = `
                                         </div>
                                       </div>
                                       <div
-                                        class="bp3-popover-wrapper typeSelectorWrapper"
+                                        class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
                                         <div
-                                          class="bp3-popover-target typeSelector"
+                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
+                                        />
+                                        <div
+                                          class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
-                                          <button
-                                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                                            type="button"
+                                          <div
+                                            class="bp3-popover-target typeSelector"
                                           >
-                                            <span
-                                              class="bp3-button-text"
+                                            <button
+                                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                                              type="button"
                                             >
                                               <span
-                                                class="bp3-icon StyledProps--main icon fixed"
-                                                data-icon="fixed-input"
+                                                class="bp3-button-text"
                                               >
-                                                <svg
-                                                  height="12"
-                                                  viewBox="0 0 9 9"
-                                                  width="12"
-                                                  xmlns="http://www.w3.org/2000/svg"
+                                                <span
+                                                  class="bp3-icon StyledProps--main icon fixed"
+                                                  data-icon="fixed-input"
                                                 >
-                                                  <path
-                                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                                    fill="currentColor"
-                                                  />
-                                                </svg>
+                                                  <svg
+                                                    height="12"
+                                                    viewBox="0 0 9 9"
+                                                    width="12"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                  >
+                                                    <path
+                                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                                      fill="currentColor"
+                                                    />
+                                                  </svg>
+                                                </span>
                                               </span>
-                                            </span>
-                                          </button>
+                                            </button>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -1383,9 +1403,9 @@ exports[`Harness File Store tests initial rendering 1`] = `
                         </div>
                       </div>
                       <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                         data-testid="add-valuesPaths"
-                        style="padding: 0px; margin-top: 24px;"
+                        style="padding: 0px;"
                         type="button"
                       >
                         <span
@@ -1530,25 +1550,15 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
               <div
                 class="halfWidth"
               >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
+                >
+                  pipeline.manifestType.manifestIdentifier
+                </p>
                 <div
                   class="bp3-form-group"
                   data-id="identifier-0"
                 >
-                  <label
-                    class="bp3-label"
-                    for="identifier"
-                  >
-                    <span
-                      class="Tooltip--acenter"
-                      data-tooltip-id="harnessFileStore_identifier"
-                    >
-                      pipeline.manifestType.manifestIdentifier
-                    </span>
-                     
-                    <span
-                      class="bp3-text-muted"
-                    />
-                  </label>
                   <div
                     class="bp3-form-content"
                   >
@@ -1592,7 +1602,7 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                           data-tooltip-id="harnessFileStore_files"
                         >
                           <p
-                            class="StyledProps--font StyledProps--main"
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
                           >
                             fileFolderPathText
                           </p>
@@ -1649,6 +1659,7 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="2"
                           data-rbd-draggable-id="0"
+                          data-testid="files[0]"
                           draggable="false"
                           role="button"
                           tabindex="0"
@@ -1729,9 +1740,11 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                                           >
                                             <div
                                               class="Layout--vertical StyledProps--main"
+                                              data-testid="file-store-select"
                                             >
                                               <div
                                                 class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                                data-testid="container-fs"
                                               >
                                                 <p
                                                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-left-xsmall"
@@ -1741,7 +1754,7 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                                                    -
                                                 </p>
                                                 <div
-                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
                                                 >
                                                   <span
                                                     class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
@@ -1769,36 +1782,43 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                                         </div>
                                       </div>
                                       <div
-                                        class="bp3-popover-wrapper typeSelectorWrapper"
+                                        class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
                                         <div
-                                          class="bp3-popover-target typeSelector"
+                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
+                                        />
+                                        <div
+                                          class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
-                                          <button
-                                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                                            type="button"
+                                          <div
+                                            class="bp3-popover-target typeSelector"
                                           >
-                                            <span
-                                              class="bp3-button-text"
+                                            <button
+                                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                                              type="button"
                                             >
                                               <span
-                                                class="bp3-icon StyledProps--main icon fixed"
-                                                data-icon="fixed-input"
+                                                class="bp3-button-text"
                                               >
-                                                <svg
-                                                  height="12"
-                                                  viewBox="0 0 9 9"
-                                                  width="12"
-                                                  xmlns="http://www.w3.org/2000/svg"
+                                                <span
+                                                  class="bp3-icon StyledProps--main icon fixed"
+                                                  data-icon="fixed-input"
                                                 >
-                                                  <path
-                                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                                    fill="currentColor"
-                                                  />
-                                                </svg>
+                                                  <svg
+                                                    height="12"
+                                                    viewBox="0 0 9 9"
+                                                    width="12"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                  >
+                                                    <path
+                                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                                      fill="currentColor"
+                                                    />
+                                                  </svg>
+                                                </span>
                                               </span>
-                                            </span>
-                                          </button>
+                                            </button>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -1843,9 +1863,9 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                         </div>
                       </div>
                       <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                         data-testid="add-files"
-                        style="padding: 0px; margin-top: 24px;"
+                        style="padding: 0px;"
                         type="button"
                       >
                         <span
@@ -1883,7 +1903,7 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                           data-tooltip-id="harnessFileStore_valuesPaths"
                         >
                           <p
-                            class="StyledProps--font StyledProps--main"
+                            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
                           >
                             pipeline.manifestType.valuesYamlPath
                           </p>
@@ -1940,6 +1960,7 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="3"
                           data-rbd-draggable-id="0"
+                          data-testid="valuesPaths[0]"
                           draggable="false"
                           role="button"
                           tabindex="0"
@@ -2020,9 +2041,11 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                                           >
                                             <div
                                               class="Layout--vertical StyledProps--main"
+                                              data-testid="file-store-select"
                                             >
                                               <div
                                                 class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                                data-testid="container-fs"
                                               >
                                                 <p
                                                   class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-left-xsmall"
@@ -2032,7 +2055,7 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                                                    -
                                                 </p>
                                                 <div
-                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
                                                 >
                                                   <span
                                                     class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
@@ -2060,36 +2083,43 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                                         </div>
                                       </div>
                                       <div
-                                        class="bp3-popover-wrapper typeSelectorWrapper"
+                                        class="StyledProps--font StyledProps--main multiSelectContainerWrapper StyledProps--flex"
                                       >
                                         <div
-                                          class="bp3-popover-target typeSelector"
+                                          class="StyledProps--font StyledProps--main multiConfigBtnWrapper"
+                                        />
+                                        <div
+                                          class="bp3-popover-wrapper typeSelectorWrapper"
                                         >
-                                          <button
-                                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                                            type="button"
+                                          <div
+                                            class="bp3-popover-target typeSelector"
                                           >
-                                            <span
-                                              class="bp3-button-text"
+                                            <button
+                                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                                              type="button"
                                             >
                                               <span
-                                                class="bp3-icon StyledProps--main icon fixed"
-                                                data-icon="fixed-input"
+                                                class="bp3-button-text"
                                               >
-                                                <svg
-                                                  height="12"
-                                                  viewBox="0 0 9 9"
-                                                  width="12"
-                                                  xmlns="http://www.w3.org/2000/svg"
+                                                <span
+                                                  class="bp3-icon StyledProps--main icon fixed"
+                                                  data-icon="fixed-input"
                                                 >
-                                                  <path
-                                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                                    fill="currentColor"
-                                                  />
-                                                </svg>
+                                                  <svg
+                                                    height="12"
+                                                    viewBox="0 0 9 9"
+                                                    width="12"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                  >
+                                                    <path
+                                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                                      fill="currentColor"
+                                                    />
+                                                  </svg>
+                                                </span>
                                               </span>
-                                            </span>
-                                          </button>
+                                            </button>
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -2134,9 +2164,9 @@ exports[`Harness File Store tests when fields are runtime input 1`] = `
                         </div>
                       </div>
                       <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                         data-testid="add-valuesPaths"
-                        style="padding: 0px; margin-top: 24px;"
+                        style="padding: 0px;"
                         type="button"
                       >
                         <span

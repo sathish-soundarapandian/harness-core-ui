@@ -19,7 +19,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
 import { ECSRollingDeployStepEditRef } from './ECSRollingDeployStepEdit'
-import { ECSRollingDeployStepInputSet } from './ECSRollingDeployStepInputSet'
+import { GenericExecutionStepInputSet } from '../Common/GenericExecutionStep/GenericExecutionStepInputSet'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 interface ECSRollingDeployVariableStepProps {
@@ -41,7 +41,10 @@ export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
     name: '',
     type: StepType.EcsRollingDeploy,
     timeout: '10m',
-    spec: {}
+    spec: {
+      sameAsAlreadyRunningInstances: false,
+      forceNewDeployment: false
+    }
   }
 
   constructor() {
@@ -66,11 +69,8 @@ export class ECSRollingDeployStep extends PipelineStep<StepElementConfig> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <ECSRollingDeployStepInputSet
-          initialValues={initialValues}
-          onUpdate={onUpdate}
+        <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
-          stepViewType={stepViewType}
           inputSetData={inputSetData as InputSetData<StepElementConfig>}
         />
       )

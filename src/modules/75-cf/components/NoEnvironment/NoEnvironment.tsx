@@ -10,9 +10,11 @@ import { String, useStrings } from 'framework/strings'
 import EmptyContent from './EmptyContent.svg'
 import EnvironmentDialog, { EnvironmentDialogProps } from '../CreateEnvironmentDialog/EnvironmentDialog'
 import { NoData } from '../NoData/NoData'
+import GetStartedWithFF from '../GetStartedWithFF/GetStartedWithFF'
 
 export interface NoEnvironmentProps {
   onCreated: EnvironmentDialogProps['onCreate']
+  isLinkVariation?: boolean
 }
 
 export const NoEnvironment: React.FC<NoEnvironmentProps> = ({ onCreated }) => {
@@ -24,7 +26,8 @@ export const NoEnvironment: React.FC<NoEnvironmentProps> = ({ onCreated }) => {
       message={getString('cf.noEnvironment.title')}
       description={<String useRichText stringID="cf.noEnvironment.message" />}
     >
-      <EnvironmentDialog onCreate={onCreated} />
+      <GetStartedWithFF />
+      <EnvironmentDialog onCreate={onCreated} isLinkVariation />
     </NoData>
   )
 }

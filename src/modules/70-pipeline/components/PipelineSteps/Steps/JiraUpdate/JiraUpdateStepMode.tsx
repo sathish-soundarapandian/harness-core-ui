@@ -330,9 +330,16 @@ function FormContent({
                       ? getString('pipeline.jiraUpdateStep.fetchingStatus')
                       : getString('pipeline.jiraUpdateStep.selectStatus')
                   }
+                  useValue
                   multiTypeInputProps={{
                     expressions,
-                    allowableTypes
+                    allowableTypes,
+                    selectProps: {
+                      addClearBtn: !readonly,
+                      items: fetchingStatuses
+                        ? [{ label: getString('pipeline.jiraUpdateStep.fetchingStatus'), value: '' }]
+                        : statusOptions
+                    }
                   }}
                   disabled={isApprovalStepFieldDisabled(readonly)}
                 />

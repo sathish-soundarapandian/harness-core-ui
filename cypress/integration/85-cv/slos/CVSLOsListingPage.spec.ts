@@ -36,7 +36,7 @@ describe('CVSLOsListingPage', () => {
     cy.on('uncaught:exception', () => false)
     cy.login('test', 'test')
 
-    cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponseCalenderType)
+    cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
     cy.intercept('GET', listMonitoredServicesForSLOs, listMonitoredServicesCallResponseForSLOs)
@@ -51,9 +51,10 @@ describe('CVSLOsListingPage', () => {
     cy.contains('p', 'SLO-1').should('be.visible')
     cy.contains('p', 'cvng').should('be.visible')
     cy.contains('p', 'prod').should('be.visible')
-    cy.contains('p', '100.00%').should('be.visible')
+    cy.contains('p', '287.00%').should('be.visible')
+    cy.contains('p', '-2196.04%').should('be.visible')
     cy.contains('p', '99%').should('be.visible')
-    cy.contains('p', '138.44%').should('be.visible')
+    cy.contains('p', 'UserJoruney-1').should('be.visible')
 
     cy.contains('p', 'prod').click({ force: true })
 
@@ -98,8 +99,6 @@ describe('CVSLOsListingPage', () => {
     cy.contains('p', 'All').click({ force: true })
 
     cy.findAllByTestId('monitoredServices-filter').click()
-    cy.contains('p', 'cvng_dev').click({ force: true })
-    cy.contains('h2', 'You don’t have any SLO created yet').should('be.visible')
     cy.findAllByTestId('monitoredServices-filter').click()
     cy.contains('p', 'cvng_prod').click({ force: true })
     cy.contains('p', 'SLO-1').should('be.visible')

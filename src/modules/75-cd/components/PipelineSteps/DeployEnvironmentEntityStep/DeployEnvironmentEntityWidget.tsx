@@ -19,7 +19,7 @@ import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
-import { getEnvironmentTabSchema } from '../PipelineStepsUtil'
+import { getEnvironmentTabV2Schema } from '../PipelineStepsUtil'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeploySingleInfrastructure from './DeploySingleInfrastructure/DeploySingleInfrastructure'
 import type { DeployEnvironmentEntityFormState } from './utils'
@@ -46,7 +46,9 @@ export default function DeployEnvironmentEntityWidget({
   const { getString } = useStrings()
 
   const formikRef = useRef<FormikProps<DeployEnvironmentEntityFormState> | null>(null)
-  const [isMultiEnvInfra, setIsMultiEnvInfra] = useState(false)
+  // TODO: uncomment below line
+  // const [isMultiEnvInfra, setIsMultiEnvInfra] = useState(!!initialValues.environments)
+  const [isMultiEnvInfra, setIsMultiEnvInfra] = useState(true)
 
   const { subscribeForm, unSubscribeForm } = useStageErrorContext<DeployEnvironmentEntityFormState>()
   useEffect(() => {
@@ -111,7 +113,7 @@ export default function DeployEnvironmentEntityWidget({
         onUpdate?.({ ...values })
       }}
       initialValues={initialValues}
-      validationSchema={getEnvironmentTabSchema(getString)}
+      validationSchema={getEnvironmentTabV2Schema(getString)}
     >
       {formik => {
         window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: DeployTabs.ENVIRONMENT }))
@@ -134,7 +136,7 @@ export default function DeployEnvironmentEntityWidget({
                   allowableTypes={allowableTypes}
                   stepViewType={stepViewType}
                   serviceRef={serviceRef}
-                  isMultiEnv={!!formik.values.environments}
+                  isMultiEnv={!formik.values.environments}
                 />
                 {formik.values.environment?.environmentRef && (
                   <>

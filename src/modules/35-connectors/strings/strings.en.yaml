@@ -83,6 +83,7 @@ connectivityMode:
   selectText: 'Select how you would like to connect to the provider'
 title:
   customSecretManager: 'Custom Secrets Manager'
+  gcpSecretManager: 'GCP Secrets Manager'
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'
@@ -934,3 +935,7 @@ customSM:
   sshKey: SSH Key Reference
   validation:
     template: Please select a template
+gcpSecretManager:
+  gcpSMSecretFile: Google Secrets Manager Credentials File
+  validation:
+    credFileRequired: Credentials File is required

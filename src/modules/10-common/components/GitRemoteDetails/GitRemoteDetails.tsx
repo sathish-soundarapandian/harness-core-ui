@@ -18,7 +18,7 @@ export interface GitRemoteDetailsProps {
   filePath?: string
   fileUrl?: string
   branch?: string
-  onBranchChange?: (selectedFilter: { branch: string }, selectedByUser?: boolean) => void
+  onBranchChange?: (selectedFilter: { branch: string }, defaultSelected?: boolean) => void
   flags?: {
     borderless?: boolean
     showRepo?: boolean

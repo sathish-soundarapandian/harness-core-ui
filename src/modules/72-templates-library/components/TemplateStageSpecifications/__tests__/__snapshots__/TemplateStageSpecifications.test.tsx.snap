@@ -105,7 +105,7 @@ exports[`<TemplateStageSpecifications /> tests snapshot test with error 1`] = `
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="height: 300px;"
+                style="height: 600px;"
               >
                 <div
                   class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
@@ -134,11 +134,27 @@ exports[`<TemplateStageSpecifications /> tests snapshot test with error 1`] = `
                         />
                       </svg>
                     </span>
-                    <p
-                      class="StyledProps--font StyledProps--main StyledProps--font-align-center StyledProps--color StyledProps--color-red500"
+                    <div
+                      class="Layout--vertical StyledProps--main container shrink errorHandler StyledProps--background-red100 StyledProps--padding-top-medium StyledProps--padding-bottom-medium StyledProps--padding-left-medium StyledProps--padding-right-medium"
                     >
-                      Template to fetch template inputs does not exist.
-                    </p>
+                      <div
+                        class="StyledProps--font StyledProps--main scroll"
+                      >
+                        <div
+                          class="Layout--vertical StyledProps--main shrink"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main StyledProps--margin-bottom-medium"
+                          >
+                            <span
+                              class="StyledProps--font StyledProps--main text StyledProps--font-weight-bold StyledProps--color StyledProps--color-red700 StyledProps--inline"
+                            >
+                              Template to fetch template inputs does not exist.
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <button
                       class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
                       type="button"

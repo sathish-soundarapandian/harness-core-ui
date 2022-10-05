@@ -18,7 +18,8 @@ import {
   Layout,
   MultiTypeInputType,
   StepProps,
-  Text
+  Text,
+  Color
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
@@ -157,9 +158,15 @@ function HarnessFileStore({
               >
                 <div className={css.manifestStepWidth}>
                   <div className={css.halfWidth}>
+                    <Text
+                      margin={{ bottom: 'xsmall' }}
+                      font={{ size: 'small', weight: 'semi-bold' }}
+                      color={Color.GREY_600}
+                    >
+                      {getString('pipeline.manifestType.manifestIdentifier')}
+                    </Text>
                     <FormInput.Text
                       name="identifier"
-                      label={getString('pipeline.manifestType.manifestIdentifier')}
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                     />
                   </div>
@@ -174,7 +181,11 @@ function HarnessFileStore({
                       values={formik.values.files}
                       multiTypeFieldSelectorProps={{
                         disableTypeSelection: false,
-                        label: <Text>{getString('fileFolderPathText')}</Text>
+                        label: (
+                          <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_600}>
+                            {getString('fileFolderPathText')}
+                          </Text>
+                        )
                       }}
                     />
                   </div>
@@ -190,7 +201,11 @@ function HarnessFileStore({
                         values={formik.values.valuesPaths}
                         multiTypeFieldSelectorProps={{
                           disableTypeSelection: false,
-                          label: <Text>{getString('pipeline.manifestType.valuesYamlPath')}</Text>
+                          label: (
+                            <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_600}>
+                              {getString('pipeline.manifestType.valuesYamlPath')}
+                            </Text>
+                          )
                         }}
                       />
                     </div>

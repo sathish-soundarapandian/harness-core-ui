@@ -1,0 +1,183 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main executionWidgetWrapper"
+  >
+    <div
+      class="Layout--vertical StyledProps--main tooltipStyle deploymentStepsCard StyledProps--margin-medium"
+    >
+      <div
+        class="Text--withDocsTooltip"
+        data-tooltip-id="deploymentStepsDT"
+      >
+        <p
+          class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+        >
+          cd.deploymentSteps
+        </p>
+      </div>
+      <div
+        class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
+      >
+        <div
+          class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+          style="width: 100%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+          >
+            cd.addStepTemplatesForYourDeploymentType
+          </p>
+          <div
+            class="StyledProps--font StyledProps--main stepsContainer"
+          >
+            <span
+              class="bp3-popover-wrapper bp3-dark"
+            >
+              <span
+                class="bp3-popover-target bp3-popover-open"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-align-center-center"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main addStep"
+                  >
+                    <span
+                      class="bp3-icon bp3-icon-plus"
+                      icon="plus"
+                    >
+                      <svg
+                        data-icon="plus"
+                        fill="var(--grey-400)"
+                        height="22"
+                        viewBox="0 0 20 20"
+                        width="22"
+                      >
+                        <desc>
+                          plus
+                        </desc>
+                        <path
+                          d="M16 9h-5V4c0-.55-.45-1-1-1s-1 .45-1 1v5H4c-.55 0-1 .45-1 1s.45 1 1 1h5v5c0 .55.45 1 1 1s1-.45 1-1v-5h5c.55 0 1-.45 1-1s-.45-1-1-1z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey500"
+                  >
+                    add
+                  </p>
+                </div>
+              </span>
+            </span>
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+            >
+              <div
+                class="bp3-card bp3-elevation-0 Card--card paletteCard"
+                data-testid="step-card-http_project_level-0"
+              >
+                <span
+                  class="bp3-icon StyledProps--main templateLibraryIcon"
+                  data-icon="template-library"
+                >
+                  <svg
+                    height="10"
+                    viewBox="0 0 12 13"
+                    width="10"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                  >
+                    <defs>
+                      <path
+                        d="M1.8 13c.2 0 .4-.3.4-.6V.6C2.2.3 2 0 1.8 0H.4C.2 0 0 .3 0 .6v11.7c0 .4.2.7.4.7h1.4zm8.8 0l.9-.3c.3-.1.5-.4.4-.8L8.9.6C8.8.3 8.5.1 8.1.2l-.9.3c-.4 0-.5.4-.5.7l3.1 11.3c.1.4.5.6.8.5zm-5 0c.2 0 .4-.3.4-.7V.6c0-.3-.2-.6-.4-.6H4.2c-.2 0-.4.3-.4.6v11.7c0 .4.2.7.4.7h1.4z"
+                        id="template-library_svg__a"
+                      />
+                    </defs>
+                    <clippath
+                      id="template-library_svg__b"
+                    >
+                      <use
+                        overflow="visible"
+                        xlink:href="#template-library_svg__a"
+                      />
+                    </clippath>
+                    <path
+                      clip-path="url(#template-library_svg__b)"
+                      d="M-5-5h22v23H-5z"
+                      fill="#25a6f7"
+                    />
+                  </svg>
+                </span>
+                <button
+                  class="bp3-button bp3-disabled bp3-loading bp3-minimal Button--button StyledProps--font StyledProps--main closeNode Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-primary"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
+                >
+                  <div
+                    class="bp3-spinner bp3-button-spinner"
+                  >
+                    <div
+                      class="bp3-spinner-animation"
+                    >
+                      <svg
+                        height="20"
+                        stroke-width="16.00"
+                        viewBox="-3.00 -3.00 106.00 106.00"
+                        width="20"
+                      >
+                        <path
+                          class="bp3-spinner-track"
+                          d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                        />
+                        <path
+                          class="bp3-spinner-head"
+                          d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90"
+                          pathLength="280"
+                          stroke-dasharray="280 280"
+                          stroke-dashoffset="210"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <span
+                    class="bp3-icon bp3-icon-cross StyledProps--main"
+                    icon="cross"
+                  >
+                    <svg
+                      data-icon="cross"
+                      height="10"
+                      viewBox="0 0 16 16"
+                      width="10"
+                    >
+                      <desc>
+                        cross
+                      </desc>
+                      <path
+                        d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main stepTemplateCardText StyledProps--font-small StyledProps--color StyledProps--color-grey600"
+                style="--text-line-clamp: 1; width: 64px;"
+              >
+                http project level
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div />
+  </div>
+</div>
+`;

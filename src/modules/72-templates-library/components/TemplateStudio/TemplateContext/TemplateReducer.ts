@@ -52,6 +52,7 @@ export interface TemplateReducerState {
   templateIdentifier: string
   isDBInitialized: boolean
   isLoading: boolean
+  isIntermittentLoading: boolean
   isInitialized: boolean
   isBETemplateUpdated: boolean
   isUpdated: boolean
@@ -79,6 +80,7 @@ export const initialState: TemplateReducerState = {
     }
   },
   isLoading: false,
+  isIntermittentLoading: false,
   isBETemplateUpdated: false,
   isDBInitialized: false,
   isUpdated: false,
@@ -130,6 +132,11 @@ export const TemplateReducer = (state: TemplateReducerState, data: ActionReturnT
     case TemplateActions.Success:
     case TemplateActions.Error:
       return { ...state, isLoading: false, ...response }
+    case TemplateActions.IntermittentLoading:
+      return {
+        ...state,
+        isIntermittentLoading: !!response?.isIntermittentLoading
+      }
     default:
       return state
   }

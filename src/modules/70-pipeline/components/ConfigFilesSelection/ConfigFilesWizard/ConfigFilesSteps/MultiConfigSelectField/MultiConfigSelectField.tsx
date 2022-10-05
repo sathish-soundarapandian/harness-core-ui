@@ -64,6 +64,7 @@ export interface MultiTypeMapProps {
   allowableTypes?: AllowedTypes
   fileUsage?: FileUsage
   addFileLabel?: string
+  isAttachment?: boolean
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -85,6 +86,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     allowableTypes,
     fileUsage,
     addFileLabel,
+    isAttachment = false,
     ...restProps
   } = props
 
@@ -160,6 +162,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                     margin={{ top: 'small', bottom: hasError && 'medium' }}
                                     key={index}
                                     ref={providedDrag.innerRef}
+                                    data-testid={`${name}[${index}]`}
                                     {...providedDrag.draggableProps}
                                     {...providedDrag.dragHandleProps}
                                   >
@@ -262,7 +265,8 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                             push('')
                           }}
                           disabled={disabled || isRunTime}
-                          style={{ padding: 0, marginTop: 24 }}
+                          style={{ padding: 0 }}
+                          margin={{ top: 'xlarge', bottom: isAttachment ? 'xxxlarge' : 'medium' }}
                         />
                       )}
                     </>

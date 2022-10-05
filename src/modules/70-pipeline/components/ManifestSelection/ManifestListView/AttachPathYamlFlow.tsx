@@ -17,7 +17,9 @@ import {
   Layout,
   MultiTypeInputType,
   Icon,
-  AllowedTypes
+  AllowedTypes,
+  Heading,
+  Color
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Form } from 'formik'
@@ -130,26 +132,30 @@ function AttachPathYamlFlow({
                     dragDropFieldWidth={400}
                   />
                 ) : (
-                  <MultiConfigSelectField
-                    name="valuesPaths"
-                    allowableTypes={allowableTypes}
-                    fileType={FILE_TYPE_VALUES.FILE_STORE}
-                    formik={formik}
-                    expressions={expressions}
-                    values={formik.values.valuesPaths as string | string[]}
-                    multiTypeFieldSelectorProps={{
-                      disableTypeSelection: false,
-                      label: <Text>{getString('pipeline.manifestType.pathPlaceholder')}</Text>
-                    }}
-                  />
+                  <>
+                    <Heading
+                      margin={{ bottom: 'xlarge' }}
+                      level={3}
+                      font={{ size: 'medium', weight: 'bold' }}
+                      color={Color.GREY_900}
+                    />
+                    <MultiConfigSelectField
+                      isAttachment
+                      name="valuesPaths"
+                      allowableTypes={allowableTypes}
+                      fileType={FILE_TYPE_VALUES.FILE_STORE}
+                      formik={formik}
+                      expressions={expressions}
+                      values={formik.values.valuesPaths as string | string[]}
+                      multiTypeFieldSelectorProps={{
+                        disableTypeSelection: false,
+                        label: <Text>{getString('pipeline.manifestType.pathPlaceholder')}</Text>
+                      }}
+                    />
+                  </>
                 )}
                 <Layout.Horizontal>
-                  <Button
-                    variation={ButtonVariation.PRIMARY}
-                    type="submit"
-                    text={getString('submit')}
-                    rightIcon="chevron-right"
-                  />
+                  <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('submit')} />
                 </Layout.Horizontal>
               </Layout.Vertical>
             </Form>

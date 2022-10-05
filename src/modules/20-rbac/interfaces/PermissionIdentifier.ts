@@ -93,6 +93,10 @@ export enum PermissionIdentifier {
   DELETE_TEMPLATE = 'core_template_delete',
   ACCESS_TEMPLATE = 'core_template_access',
 
+  // This is edit, delete, access permission
+  // There is no view permission for deployment freeze
+  MANAGE_DEPLOYMENT_FREEZE = 'core_deploymentfreeze_manage',
+
   // CHANGE INTELLIGENCE Permissions
   EDIT_MONITORED_SERVICE = 'chi_monitoredservice_edit',
   VIEW_MONITORED_SERVICE = 'chi_monitoredservice_view',

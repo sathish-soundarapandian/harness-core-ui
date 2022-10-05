@@ -122,7 +122,7 @@ exports[`DeploymentTemplateCard test renders init 1`] = `
                   <span
                     class=""
                   >
-                    &lt;+input&gt;
+                    instances
                   </span>
                 </p>
               </div>
@@ -382,7 +382,7 @@ exports[`DeploymentTemplateCard test renders when name is not set 1`] = `
                   <span
                     class=""
                   >
-                    &lt;+input&gt;
+                    instances
                   </span>
                 </p>
               </div>

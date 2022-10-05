@@ -77,6 +77,10 @@ export interface AwsKmsConfigFormData {
   assumeStsRoleDuration?: string
   default: boolean
 }
+export interface GCPSecretManagerFormData {
+  credentialsRef?: SecretReference
+  default: boolean
+}
 
 export interface StepDetailsProps extends ConnectorInfoDTO {
   name: string

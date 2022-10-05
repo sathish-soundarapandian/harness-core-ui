@@ -36,7 +36,7 @@ import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { useStageTemplateActions } from '@pipeline/utils/useStageTemplateActions'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
-import { replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
 import { stringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
@@ -57,7 +57,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     allowableTypes,
     updateStage,
     isReadonly,
-    getStageFromPipeline
+    getStageFromPipeline,
+    setIntermittentLoading
   } = usePipelineContext()
   const { stage } = getStageFromPipeline(selectedStageId)
   const queryParams = useParams<ProjectPathProps>()
@@ -93,10 +94,6 @@ export const TemplateStageSpecifications = (): JSX.Element => {
       ...getGitQueryParamsWithParentScope(storeMetadata, queryParams, repoIdentifier, branch)
     }
   })
-
-  React.useEffect(() => {
-    setAllValues(undefined)
-  }, [templateRef, templateVersionLabel])
 
   React.useEffect(() => {
     setAllValues({
@@ -164,6 +161,12 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   }, [templateInputs])
 
   React.useEffect(() => {
+    if (templateInputSetLoading) {
+      setAllValues(undefined)
+    }
+  }, [templateInputSetLoading])
+
+  React.useEffect(() => {
     subscribeForm({ tab: TemplateTabs.OVERVIEW, form: formikRef })
     return () => unSubscribeForm({ tab: TemplateTabs.OVERVIEW, form: formikRef })
   }, [subscribeForm, unSubscribeForm, formikRef])
@@ -203,6 +206,20 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   const isLoading = templateLoading || templateInputSetLoading || loadingMergedTemplateInputs
 
   const error = defaultTo(templateInputSetError, templateError)
+
+  /**
+   * This effect disables/enables Save button on Pipeline and Template Studio
+   * For gitx, template resolution takes a long time
+   * If user clicks on Save button before resolution, template exception occurs
+   */
+  React.useEffect(() => {
+    setIntermittentLoading(isLoading)
+
+    // cleanup
+    return () => {
+      setIntermittentLoading(false)
+    }
+  }, [isLoading, setIntermittentLoading])
 
   return (
     <Container className={css.serviceOverrides} height={'100%'} background={Color.FORM_BG}>
@@ -255,11 +272,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                 <Container className={css.inputsContainer}>
                   {isLoading && <PageSpinner />}
                   {!isLoading && error && (
-                    <Container height={300}>
-                      <PageError
-                        message={defaultTo((error?.data as Error)?.message, error?.message)}
-                        onClick={() => refetch()}
-                      />
+                    <Container height={isEmpty((error?.data as Error)?.responseMessages) ? 300 : 600}>
+                      <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
                     </Container>
                   )}
                   {!isLoading && !error && templateInputs && allValues && (

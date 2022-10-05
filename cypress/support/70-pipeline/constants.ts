@@ -370,6 +370,19 @@ export const stepsData = {
   }
 }
 
+export const artifactRepoTypes = [
+  'Custom',
+  'Artifactory',
+  'Jenkins',
+  'Nexus3',
+  'Amazon',
+  'S3',
+  'Docker Registry',
+  'ECR',
+  'GCR',
+  'ACR'
+]
+
 export const triggersListData = {
   Webhook: ['GitHub', 'GitLab', 'BitBucket', 'Azure Repos', 'AWS Code Commit', 'Custom'],
   Artifact: ['GCR', 'ECR', 'Docker Registry', 'Artifactory', 'Amazon S3', 'ACR'],

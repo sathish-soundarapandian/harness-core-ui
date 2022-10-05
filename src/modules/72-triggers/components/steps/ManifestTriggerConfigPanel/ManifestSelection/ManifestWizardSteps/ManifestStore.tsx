@@ -33,8 +33,6 @@ import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import {
   isConnectorStoreType,
@@ -42,8 +40,7 @@ import {
   ManifestIconByType,
   ManifestStoreTitle,
   ManifestToConnectorLabelMap,
-  ManifestToConnectorMap,
-  ManifestStoreMap
+  ManifestToConnectorMap
 } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type {
   ManifestStepInitData,
@@ -77,7 +74,6 @@ export default function ManifestStore({
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const isCustomRemoteEnabled = useFeatureFlag(FeatureFlag.NG_CUSTOM_REMOTE_MANIFEST)
   const [isLoadingConnectors, setIsLoadingConnectors] = useState(true)
   const [selectedStore, setSelectedStore] = useState<ManifestStores>(prevStepData?.store ?? initialValues.store)
   const isValidConnectorStore = (): boolean =>
@@ -126,13 +122,11 @@ export default function ManifestStore({
     return { ...initValues, store: selectedStore }
   }, [handleStoreChange, initialValues, prevStepData, selectedStore])
 
-  const supportedStoresItems = manifestStores
-    .filter(store => store !== ManifestStoreMap.CustomRemote || isCustomRemoteEnabled)
-    .map(store => ({
-      label: getString(ManifestStoreTitle[store]),
-      icon: ManifestIconByType[store] as IconName,
-      value: store
-    }))
+  const supportedStoresItems = manifestStores.map(store => ({
+    label: getString(ManifestStoreTitle[store]),
+    icon: ManifestIconByType[store] as IconName,
+    value: store
+  }))
 
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>

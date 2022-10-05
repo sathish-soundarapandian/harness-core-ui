@@ -465,7 +465,11 @@ export const RunTestsStepBase = (
       )}
       formName="ciRunTests"
       validate={valuesToValidate => {
-        if ([CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType)) {
+        if (
+          [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+            buildInfrastructureType
+          )
+        ) {
           return validateConnectorRefAndImageDepdendency(
             get(valuesToValidate, 'spec.connectorRef', ''),
             get(valuesToValidate, 'spec.image', ''),
@@ -523,7 +527,11 @@ export const RunTestsStepBase = (
                 description: {}
               }}
             />
-            {![CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType) ? (
+            {![
+              CIBuildInfrastructureType.VM,
+              CIBuildInfrastructureType.Cloud,
+              CIBuildInfrastructureType.Docker
+            ].includes(buildInfrastructureType) ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -759,9 +767,11 @@ gradle.projectsEvaluated {
                 summary={getString('pipeline.additionalConfiguration')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {[CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
-                      buildInfrastructureType
-                    ) ? (
+                    {[
+                      CIBuildInfrastructureType.VM,
+                      CIBuildInfrastructureType.Cloud,
+                      CIBuildInfrastructureType.Docker
+                    ].includes(buildInfrastructureType) ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}

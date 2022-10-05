@@ -64,7 +64,7 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
     name: '',
     description: '',
     identifier: '',
-    fileUsage: null,
+    fileUsage: fileUsage ?? null,
     content: '',
     tags: []
   })
@@ -270,6 +270,7 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
                       fileUsage: e.value as FileUsage
                     })
                   }}
+                  usePortal
                 />
               </Container>
               <FooterRenderer

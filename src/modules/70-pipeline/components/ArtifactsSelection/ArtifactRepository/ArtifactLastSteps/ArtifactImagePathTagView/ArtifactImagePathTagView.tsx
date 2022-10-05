@@ -151,10 +151,10 @@ function ArtifactImagePathTagView({
             multiTextInputProps={{ expressions, allowableTypes }}
             onChange={onChangeImageArtifactPath}
           />
-          {getMultiTypeFromValue(formik.values?.artifactPath) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(formik?.values?.artifactPath) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <ConfigureOptions
-                value={formik.values?.artifactPath}
+                value={formik?.values?.artifactPath}
                 type="String"
                 variableName="artifactPath"
                 showRequiredField={false}
@@ -178,10 +178,10 @@ function ArtifactImagePathTagView({
               multiTextInputProps={{ expressions, allowableTypes }}
               onChange={onChangeImageArtifactPath}
             />
-            {getMultiTypeFromValue(formik.values?.imagePath) === MultiTypeInputType.RUNTIME && (
+            {getMultiTypeFromValue(formik?.values?.imagePath) === MultiTypeInputType.RUNTIME && (
               <div className={css.configureOptions}>
                 <ConfigureOptions
-                  value={formik.values?.imagePath}
+                  value={formik?.values?.imagePath}
                   type="String"
                   variableName="imagePath"
                   showRequiredField={false}
@@ -209,13 +209,13 @@ function ArtifactImagePathTagView({
           className={css.radioGroup}
         />
       </div>
-      {formik.values?.tagType === 'value' ? (
+      {formik?.values?.tagType === 'value' ? (
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             selectItems={tags}
             disabled={tagDisabled}
             helperText={
-              getMultiTypeFromValue(formik.values?.tag) === MultiTypeInputType.FIXED &&
+              getMultiTypeFromValue(formik?.values?.tag) === MultiTypeInputType.FIXED &&
               getHelpeTextForTags(
                 helperTextData(selectedArtifact, formik, connectorIdValue),
                 getString,
@@ -226,7 +226,7 @@ function ArtifactImagePathTagView({
               expressions,
               allowableTypes,
               selectProps: {
-                defaultSelectedItem: formik.values?.tag,
+                defaultSelectedItem: formik?.values?.tag,
                 noResults: (
                   <NoTagResults
                     tagError={tagError}
@@ -247,10 +247,10 @@ function ArtifactImagePathTagView({
             className={css.tagInputButton}
           />
 
-          {getMultiTypeFromValue(formik.values?.tag) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(formik?.values?.tag) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <ConfigureOptions
-                value={formik.values?.tag}
+                value={formik?.values?.tag}
                 type="String"
                 variableName="tag"
                 showRequiredField={false}
@@ -276,10 +276,10 @@ function ArtifactImagePathTagView({
             placeholder={getString('pipeline.artifactsSelection.existingDocker.enterTagRegex')}
             multiTextInputProps={{ expressions, allowableTypes }}
           />
-          {getMultiTypeFromValue(formik.values?.tagRegex) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(formik?.values?.tagRegex) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <ConfigureOptions
-                value={formik.values?.tagRegex}
+                value={formik?.values?.tagRegex}
                 type="String"
                 variableName="tagRegex"
                 showRequiredField={false}

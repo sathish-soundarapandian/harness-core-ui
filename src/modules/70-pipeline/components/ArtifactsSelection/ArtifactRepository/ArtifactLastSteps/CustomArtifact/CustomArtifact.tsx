@@ -66,7 +66,7 @@ function FormContent({
   const { getString } = useStrings()
 
   const scriptType: ScriptType =
-    formik.values?.spec?.scripts.fetchAllArtifacts?.spec?.shell || (getString('common.bash') as ScriptType)
+    formik.values?.spec?.scripts?.fetchAllArtifacts?.spec?.shell || (getString('common.bash') as ScriptType)
   return (
     <FormikForm>
       <div className={css.artifactForm}>

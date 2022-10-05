@@ -8,10 +8,10 @@
 import React from 'react'
 import type { Column } from 'react-table'
 import { TableV2 } from '@harness/uicore'
-import type { PageFreezeResponse, ResponsePageFreezeResponse } from 'services/cd-ng'
+import type { SortBy } from '@freeze-windows/types'
+import type { FreezeSummaryResponse, PageFreezeSummaryResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
-import type { SortBy } from '@freeze-windows/pages/FreezeWindowsPage/types'
 import {
   MenuCell,
   LastModifiedCell,
@@ -19,20 +19,13 @@ import {
   FreezeTimeCell,
   StatusCell,
   RowSelectCell,
-  FreezeToggleCell
+  FreezeToggleCell,
+  FreezeWindowListColumnActions
 } from './FreezeWindowListCells'
 import css from './FreezeWindowList.module.scss'
 
-export interface FreezeWindowListColumnActions {
-  onRowSelectToggle: (freezeWindow: PageFreezeResponse) => void
-  onFreezeToggle: (freezeWindow: PageFreezeResponse) => void
-  onViewFreezeWindow: (freezeWindow: PageFreezeResponse) => void
-  onDeleteFreezeWindow: (freezeWindow: PageFreezeResponse) => void
-  getViewFreezeWindowLink: (freezeWindow: PageFreezeResponse) => string
-}
-
 export interface FreezeWindowListTableProps extends FreezeWindowListColumnActions {
-  data: PageFreezeResponse
+  data: PageFreezeSummaryResponse
   gotoPage: (pageNumber: number) => void
   setSortBy: (sortBy: string[]) => void
   sortBy: string[]
@@ -44,10 +37,11 @@ export function FreezeWindowListTable({
   sortBy,
   setSortBy,
   onRowSelectToggle,
-  onFreezeToggle,
-  onViewFreezeWindow,
-  onDeleteFreezeWindow,
-  getViewFreezeWindowLink
+  onToggleFreezeRow,
+  onDeleteRow,
+  onViewFreezeRow,
+  getViewFreezeRowLink,
+  selectedItems
 }: FreezeWindowListTableProps): React.ReactElement {
   const { getString } = useStrings()
   const {
@@ -59,7 +53,7 @@ export function FreezeWindowListTable({
   } = data
   const [currentSort, currentOrder] = sortBy
 
-  const columns: Column<ResponsePageFreezeResponse>[] = React.useMemo(() => {
+  const columns: Column<FreezeSummaryResponse>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {
       return {
         enableServerSort: true,
@@ -77,7 +71,8 @@ export function FreezeWindowListTable({
         width: '3%',
         Cell: RowSelectCell,
         disableSortBy: true,
-        onRowSelectToggle
+        onRowSelectToggle,
+        selectedItems
       },
       {
         Header: '',
@@ -85,7 +80,7 @@ export function FreezeWindowListTable({
         width: '3%',
         Cell: FreezeToggleCell,
         disableSortBy: true,
-        onFreezeToggle
+        onToggleFreezeRow
       },
       {
         Header: 'Name',
@@ -93,7 +88,7 @@ export function FreezeWindowListTable({
         width: '25%',
         Cell: FreezeNameCell,
         serverSortProps: getServerSortProps('name'),
-        getViewFreezeWindowLink
+        getViewFreezeRowLink
       },
       {
         Header: 'Freeze Time',
@@ -122,11 +117,12 @@ export function FreezeWindowListTable({
         width: '5%',
         Cell: MenuCell,
         disableSortBy: true,
-        getViewFreezeWindowLink,
-        onDeleteFreezeWindow
+        getViewFreezeRowLink,
+        onDeleteRow,
+        onToggleFreezeRow
       }
-    ] as unknown as Column<ResponsePageFreezeResponse>[]
-  }, [currentOrder, currentSort, getString, getViewFreezeWindowLink, onDeleteFreezeWindow, setSortBy])
+    ] as unknown as Column<FreezeSummaryResponse>[]
+  }, [currentOrder, currentSort, selectedItems])
 
   return (
     <TableV2
@@ -144,7 +140,7 @@ export function FreezeWindowListTable({
           : undefined
       }
       sortable
-      onRowClick={rowDetails => onViewFreezeWindow(rowDetails)}
+      onRowClick={rowDetails => onViewFreezeRow(rowDetails as any)}
       className={css.table}
     />
   )

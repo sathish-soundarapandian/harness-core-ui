@@ -5,7 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { within } from '@testing-library/dom'
 import {
   templatesListRoute,
   gitSyncEnabledCall,
@@ -75,7 +74,7 @@ describe('Template Schema Validation', () => {
     cy.get('div[data-testid="step-card-Shell Script"]').click({ force: true })
     cy.wait(1000)
 
-    cy.contains('div', 'YAML').click()
+    cy.get('[data-name="toggle-option-two"]').click({ force: true })
 
     cy.contains('span', 'Edit YAML').click()
 

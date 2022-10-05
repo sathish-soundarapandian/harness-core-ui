@@ -32,6 +32,48 @@
   height: 49px;
 }
 
+.titleSubheader {
+  display: flex;
+  width: 45%;
+
+  .breadcrumbsMenu {
+    max-width: 70%;
+
+    &.remotePipelineName {
+      max-width: 50%;
+
+      @media only screen and (min-width: 2400px) {
+        max-width: 70%;
+      }
+
+      @media only screen and (min-width: 2800px) {
+        max-width: 75%;
+      }
+
+      @media only screen and (min-width: 3200px) {
+        max-width: 80%;
+      }
+    }
+
+    @media only screen and (min-width: 1920px) {
+      max-width: 80%;
+    }
+
+    > div {
+      width: 100%;
+      overflow: hidden;
+      > div {
+        width: 100%;
+        overflow: hidden;
+      }
+    }
+  }
+
+  .gitRemoteDetailsWrapper {
+    width: 30%;
+  }
+}
+
 .breadcrumbsMenu {
   display: flex;
   align-items: center;

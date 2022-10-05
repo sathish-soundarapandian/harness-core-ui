@@ -933,6 +933,7 @@ export interface ConnectorInfoDTO {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export interface ControlClusterSummary {
@@ -1016,7 +1017,7 @@ export type CustomSecretManager = ConnectorConfigDTO & {
   default?: boolean
   delegateSelectors?: string[]
   host?: string
-  onDelegate: boolean
+  onDelegate?: boolean
   template: TemplateLinkConfigForCustomSecretManager
   workingDirectory?: string
 }
@@ -1701,12 +1702,16 @@ export interface Error {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2111,12 +2116,16 @@ export interface Failure {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2173,6 +2182,12 @@ export type GcpKmsConnectorDTO = ConnectorConfigDTO & {
 
 export type GcpManualDetails = GcpCredentialSpec & {
   secretKeyRef: string
+}
+
+export type GcpSecretManager = ConnectorConfigDTO & {
+  credentialsRef: string
+  default?: boolean
+  delegateSelectors?: string[]
 }
 
 export interface GitAuthenticationDTO {
@@ -4153,12 +4168,16 @@ export interface ResponseMessage {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4885,6 +4904,14 @@ export interface RestResponseUserJourneyResponse {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseVerificationJobInstance {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: VerificationJobInstance
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseVerifyStepDebugResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5085,6 +5112,11 @@ export interface SLORiskCountResponse {
 }
 
 export interface SLOTarget {
+  timeRangeFilters?: TimeRangeFilter[]
+  type?: 'Rolling' | 'Calender'
+}
+
+export interface SLOTargetDTO {
   sloTargetPercentage: number
   spec: SLOTargetSpec
   type?: 'Rolling' | 'Calender'
@@ -5219,7 +5251,7 @@ export interface ServiceLevelObjectiveDTO {
   tags?: {
     [key: string]: string
   }
-  target: SLOTarget
+  target: SLOTargetDTO
   type?: 'Availability' | 'Latency'
   userJourneyRef: string
 }
@@ -6917,6 +6949,100 @@ export const getMonitoredServiceChangeTimelinePromise = (
   getUsingFetch<RestResponseChangeTimeline, unknown, GetMonitoredServiceChangeTimelineQueryParams, void>(
     getConfig('cv/api'),
     `/change-event/monitored-service-timeline`,
+    props,
+    signal
+  )
+
+export interface GetSampleDataForQueryQueryParams {
+  accountId: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorIdentifier?: string
+  requestGuid?: string
+  region?: string
+  expression?: string
+  metricName?: string
+  metricIdentifier?: string
+}
+
+export type GetSampleDataForQueryProps = Omit<
+  GetProps<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>,
+  'path'
+>
+
+/**
+ * get sample data for given query
+ */
+export const GetSampleDataForQuery = (props: GetSampleDataForQueryProps) => (
+  <Get<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>
+    path={`/cloudwatch/metrics/fetch-sample-data`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetSampleDataForQueryProps = Omit<
+  UseGetProps<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>,
+  'path'
+>
+
+/**
+ * get sample data for given query
+ */
+export const useGetSampleDataForQuery = (props: UseGetSampleDataForQueryProps) =>
+  useGet<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>(
+    `/cloudwatch/metrics/fetch-sample-data`,
+    { base: getConfig('cv/api'), ...props }
+  )
+
+/**
+ * get sample data for given query
+ */
+export const getSampleDataForQueryPromise = (
+  props: GetUsingFetchProps<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseMap, Failure | Error, GetSampleDataForQueryQueryParams, void>(
+    getConfig('cv/api'),
+    `/cloudwatch/metrics/fetch-sample-data`,
+    props,
+    signal
+  )
+
+export type GetRegionsProps = Omit<GetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * get regions
+ */
+export const GetRegions = (props: GetRegionsProps) => (
+  <Get<ResponseListString, Failure | Error, void, void>
+    path={`/cloudwatch/metrics/regions`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetRegionsProps = Omit<UseGetProps<ResponseListString, Failure | Error, void, void>, 'path'>
+
+/**
+ * get regions
+ */
+export const useGetRegions = (props: UseGetRegionsProps) =>
+  useGet<ResponseListString, Failure | Error, void, void>(`/cloudwatch/metrics/regions`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * get regions
+ */
+export const getRegionsPromise = (
+  props: GetUsingFetchProps<ResponseListString, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListString, Failure | Error, void, void>(
+    getConfig('cv/api'),
+    `/cloudwatch/metrics/regions`,
     props,
     signal
   )

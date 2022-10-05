@@ -26,7 +26,7 @@ import { useModalHook } from '@harness/use-modal'
 import type { FormikErrors } from 'formik'
 import { NameSchema } from '@common/utils/Validation'
 import { AddAPIKeyQueryParams, ApiKey, useAddAPIKey } from 'services/cf/index'
-import { useEnvStrings } from '@cf/hooks/environment'
+import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/exports'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
 import { EnvironmentSDKKeyType, getErrorMessage, showToaster } from '@cf/utils/CFUtils'
@@ -71,7 +71,7 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
   apiKeys = []
 }) => {
   const { showError } = useToaster()
-  const { getString, getEnvString } = useEnvStrings()
+  const { getString } = useStrings()
   const { mutate: createKey, loading } = useAddAPIKey({
     queryParams: {
       accountIdentifier: environment.accountId as string,
@@ -83,11 +83,11 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
 
   const keyTypes = [
     {
-      text: getEnvString('apiKeys.clientType'),
+      text: getString('cf.environments.apiKeys.clientType'),
       value: EnvironmentSDKKeyType.CLIENT
     },
     {
-      text: getEnvString('apiKeys.serverType'),
+      text: getString('cf.environments.apiKeys.serverType'),
       value: EnvironmentSDKKeyType.SERVER
     }
   ].filter(type => !keyType || keyType === type.value)
@@ -122,7 +122,7 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
     return (
       <Layout.Vertical flex={{ alignItems: 'start' }} spacing="medium" padding={{ top: 'medium' }}>
         <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} flex={{ justifyContent: 'flex-end' }}>
-          {getEnvString('apiKeys.applicableLanguages')}
+          {getString('cf.environments.apiKeys.applicableLanguages')}
         </Text>
         {value == 'server' ? (
           <Layout.Horizontal spacing="small">
@@ -147,19 +147,19 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
     const errors: { name?: string } = {}
 
     if (apiKeys.some((key: ApiKey) => key.name === values.name)) {
-      errors.name = getEnvString('apiKeys.duplicateKey')
+      errors.name = getString('cf.environments.apiKeys.duplicateKey')
     }
     return errors
   }
 
   const [openModal, hideModal] = useModalHook(() => {
     return (
-      <Dialog isOpen enforceFocus={false} onClose={hideModal} title={getEnvString('apiKeys.addKeyTitle')}>
+      <Dialog isOpen enforceFocus={false} onClose={hideModal} title={getString('cf.environments.apiKeys.addKeyTitle')}>
         <Formik
           initialValues={initialValues}
           formName="addKeyDialog"
           validationSchema={yup.object().shape({
-            name: NameSchema({ requiredErrorMsg: getEnvString('apiKeys.emptyName') })
+            name: NameSchema({ requiredErrorMsg: getString('cf.environments.apiKeys.emptyName') })
           })}
           onSubmit={handleSubmit}
           onReset={() => {
@@ -187,7 +187,7 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
                       font={{ weight: 'bold', variation: FontVariation.FORM_INPUT_TEXT }}
                       padding={{ top: 'medium' }}
                     >
-                      {getEnvString('apiKeys.keyType')}
+                      {getString('cf.environments.apiKeys.keyType')}
                     </Text>
                     <Container flex={{ justifyContent: 'left' }}>
                       <CardSelect
@@ -210,8 +210,8 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
                 <Layout.Vertical spacing="medium" padding={{ bottom: 'medium', top: 'medium' }}>
                   <Text>
                     {formikProps.values.type == 'server'
-                      ? getEnvString('apiKeys.serverDescription')
-                      : getEnvString('apiKeys.clientDescription')}
+                      ? getString('cf.environments.apiKeys.serverDescription')
+                      : getString('cf.environments.apiKeys.clientDescription')}
                   </Text>
                   {keyTypes.length <= 1 ? languagesApplicable(formikProps.values.type) : null}
                 </Layout.Vertical>

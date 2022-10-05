@@ -13,10 +13,12 @@ declare const styles: {
   readonly artifactInfoTooltip: string
   readonly artifactsAccordion: string
   readonly cardSection: string
+  readonly configureOptions: string
   readonly connectorMargin: string
   readonly customVariables: string
   readonly disabled: string
   readonly header: string
+  readonly inputFieldLayout: string
   readonly inputWidth: string
   readonly inputheader: string
   readonly layoutVerticalSpacing: string

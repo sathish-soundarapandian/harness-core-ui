@@ -6,17 +6,33 @@
  */
 
 import { Button, ButtonVariation, Layout } from '@wings-software/uicore'
-import { noop } from 'lodash-es'
 import React, { FC } from 'react'
 import { useStrings } from 'framework/strings'
+import { useFreezeWindowListContext } from '@freeze-windows/context/FreezeWindowListContext'
+import type { FreezeWindowListColumnActions } from '../FreezeWindowList/FreezeWindowListCells'
 
-export const BulkActions: FC = () => {
+interface BulkActionsProps {
+  onDelete: FreezeWindowListColumnActions['onDeleteRow']
+  onToggleFreeze: FreezeWindowListColumnActions['onToggleFreezeRow']
+}
+
+export const BulkActions: FC<BulkActionsProps> = ({ onDelete, onToggleFreeze }) => {
   const { getString } = useStrings()
-  return (
+  const { selectedItems } = useFreezeWindowListContext()
+
+  return selectedItems.length > 0 ? (
     <Layout.Horizontal spacing={'small'} flex={{ align: 'center-center' }}>
-      <Button variation={ButtonVariation.SECONDARY} onClick={noop} text={getString('enable')} />
-      <Button variation={ButtonVariation.SECONDARY} onClick={noop} text={getString('common.disable')} />
-      <Button variation={ButtonVariation.SECONDARY} onClick={noop} text={getString('delete')} />
+      <Button
+        variation={ButtonVariation.SECONDARY}
+        onClick={() => onToggleFreeze({ status: 'Enabled' })}
+        text={getString('enable')}
+      />
+      <Button
+        variation={ButtonVariation.SECONDARY}
+        onClick={() => onToggleFreeze({ status: 'Disabled' })}
+        text={getString('common.disable')}
+      />
+      <Button variation={ButtonVariation.SECONDARY} onClick={() => onDelete()} text={getString('delete')} />
     </Layout.Horizontal>
-  )
+  ) : null
 }

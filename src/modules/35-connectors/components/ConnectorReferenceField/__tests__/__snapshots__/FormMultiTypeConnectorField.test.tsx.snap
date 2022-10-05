@@ -1,5 +1,269 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`FormMultiTypeConnectorField tests renders drawer mode for addition of connectors 1`] = `
+<div>
+  <div
+    class="connectorLabel"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+      data-test-id="connectorTooltip"
+    >
+      connector
+    </div>
+    <div
+      style="display: flex; align-items: center;"
+    >
+      <div
+        class="bp3-form-group"
+        style="margin-bottom: 0px;"
+      >
+        <div
+          class="bp3-form-content"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+            style="width: 400px;"
+          >
+            <button
+              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
+              data-testid="cr-field-connectorRef"
+              style="width: 400px;"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                <span
+                  class="placeholder"
+                >
+                  Select Connector
+                </span>
+              </span>
+              <span
+                class="bp3-icon bp3-icon-chevron-down StyledProps--main"
+                icon="chevron-down"
+              >
+                <svg
+                  data-icon="chevron-down"
+                  height="14"
+                  viewBox="0 0 16 16"
+                  width="14"
+                >
+                  <desc>
+                    chevron-down
+                  </desc>
+                  <path
+                    d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
+            <span
+              class="bp3-popover-wrapper MultiTypeInput--wrapper"
+            >
+              <span
+                class="bp3-popover-target"
+              >
+                <button
+                  class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="fixed-input"
+                  >
+                    <svg
+                      height="12"
+                      viewBox="0 0 9 9"
+                      width="12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FormMultiTypeConnectorField tests renders drawer mode for addition of connectors 2`] = `
+<div
+  class="bp3-drawer bp3-position-right bp3-overlay-content bp3-overlay-appear bp3-overlay-appear-active"
+  style="width: 700px;"
+  tabindex="0"
+>
+  <button
+    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main almostFullScreenCloseTriggerBtn Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+    type="button"
+  >
+    <span
+      class="bp3-icon bp3-icon-cross StyledProps--main"
+      icon="cross"
+    >
+      <svg
+        data-icon="cross"
+        height="16"
+        viewBox="0 0 16 16"
+        width="16"
+      >
+        <desc>
+          cross
+        </desc>
+        <path
+          d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+          fill-rule="evenodd"
+        />
+      </svg>
+    </span>
+  </button>
+  <div
+    class="stepPalette"
+  >
+    <div
+      class="stepInside"
+    >
+      <section
+        class="stepsRenderer"
+      >
+        <div
+          class="Layout--vertical Layout--layout-spacing-large StyledProps--main StyledProps--padding-large"
+        >
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main paletteCardHeader"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+            >
+              <h2
+                class="StyledProps--font StyledProps--font-h2 StyledProps--main title StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold StyledProps--font-size-medium"
+                level="2"
+              >
+                Connectors
+              </h2>
+            </div>
+            <div
+              class="bp3-input-group ui-search-box ExpandingSearchInput--main  ExpandingSearchInput--flip  ExpandingSearchInput--light"
+              data-name=""
+              style="max-width: 232px; width: 232px;"
+            >
+              <span
+                class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+                data-icon="thinner-search"
+              >
+                <svg
+                  fill="none"
+                  height="14"
+                  viewBox="0 0 16 16"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+              <input
+                class="bp3-input  ExpandingSearchInput--filter"
+                dir="auto"
+                placeholder="search"
+                style="padding-right: 38px;"
+                type="search"
+                value=""
+              />
+            </div>
+          </div>
+          <section
+            style="padding-top: 50%; justify-content: center; text-align: center;"
+          >
+            noSearchResultsFoundPeriod
+          </section>
+        </div>
+      </section>
+      <section
+        class="categoriesRenderer"
+      >
+        <section
+          class="headerContainer"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex"
+          >
+            <div
+              class="StyledProps--font StyledProps--main libraryHeader StyledProps--flex"
+            >
+              <span
+                class="bp3-icon StyledProps--main paletteIcon library"
+                data-icon="library"
+              >
+                <svg
+                  fill="none"
+                  height="14"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M2 11.393c0 .32-.178.57-.396.57H.396c-.216 0-.396-.255-.396-.57V.607c0-.32.178-.57.396-.57h1.208c.216 0 .396.255.396.57v10.786zm2.967.57c.218 0 .396-.25.396-.57V.608c0-.315-.18-.57-.396-.57H3.759c-.218 0-.396.25-.396.57v10.786c0 .315.18.57.396.57h1.208zm4.491.019l.847-.252a.564.564 0 00.391-.696L7.94.614a.56.56 0 00-.682-.403L6.41.462a.564.564 0 00-.391.696l2.755 10.42c.082.303.39.482.683.404z"
+                    fill="#fff"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
+                style="font-size: 14px;"
+              >
+                Connectors
+              </p>
+            </div>
+          </div>
+          <section
+            class="primaryCategories"
+          >
+            <section
+              class="showAllBtn"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-white"
+                style="font-size: 11px; font-weight: bold;"
+              >
+                showAll
+                 (
+              </p>
+              0
+              )
+            </section>
+          </section>
+        </section>
+        <hr
+          class="separator"
+        />
+        <section
+          class="secCategories"
+        >
+          <div
+            class="Layout--vertical StyledProps--main"
+          />
+        </section>
+      </section>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`FormMultiTypeConnectorField tests renders without crashing 1`] = `
 <div>
   <div

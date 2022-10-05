@@ -35,8 +35,6 @@ import { useQueryParams } from '@common/hooks'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ManifestStepInitData, ManifestStores, ManifestStoreWithoutConnector } from '../ManifestInterface'
 import {
@@ -45,8 +43,7 @@ import {
   ManifestIconByType,
   ManifestStoreTitle,
   ManifestToConnectorLabelMap,
-  ManifestToConnectorMap,
-  ManifestStoreMap
+  ManifestToConnectorMap
 } from '../Manifesthelper'
 import css from './ManifestWizardSteps.module.scss'
 import style from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
@@ -78,8 +75,6 @@ function ManifestStore({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const isCustomRemoteEnabled = useFeatureFlag(FeatureFlag.NG_CUSTOM_REMOTE_MANIFEST)
-
   const [isLoadingConnectors, setIsLoadingConnectors] = useState<boolean>(true)
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
@@ -147,14 +142,12 @@ function ManifestStore({
 
   const supportedManifestStores = useMemo(
     () =>
-      manifestStoreTypes
-        .filter(store => store !== ManifestStoreMap.CustomRemote || isCustomRemoteEnabled)
-        .map(store => ({
-          label: getString(ManifestStoreTitle[store]),
-          icon: ManifestIconByType[store] as IconName,
-          value: store
-        })),
-    [manifestStoreTypes, isCustomRemoteEnabled, getString]
+      manifestStoreTypes.map(store => ({
+        label: getString(ManifestStoreTitle[store]),
+        icon: ManifestIconByType[store] as IconName,
+        value: store
+      })),
+    [manifestStoreTypes, getString]
   )
 
   return (

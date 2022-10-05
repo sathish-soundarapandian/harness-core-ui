@@ -19,7 +19,6 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { VariableType } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraSpecifications/DeploymentInfraSpecifications'
-import { useGetConnectorsListHook } from '@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook'
 import type { CustomDeploymentInfrastructureSpecEditableProps } from './CustomDeploymentInfrastructureInterface'
 import css from './CustomDeploymentInfrastructureSpec.module.scss'
 
@@ -27,7 +26,7 @@ export const CustomDeploymentInfrastructureSpecInputForm: React.FC<
   CustomDeploymentInfrastructureSpecEditableProps & { path: string }
 > = ({ template, initialValues, readonly = false, path, onUpdate, allowableTypes, allValues, factory }) => {
   const { getString } = useStrings()
-  const { connectorsList } = useGetConnectorsListHook()
+
   return (
     <Layout.Vertical spacing="small">
       {!!template?.variables?.length && (
@@ -45,7 +44,7 @@ export const CustomDeploymentInfrastructureSpecInputForm: React.FC<
               allowableTypes={allowableTypes}
               onUpdate={({ variables }: CustomVariablesData) => {
                 onUpdate?.({
-                  variables: variables as any
+                  variables: variables
                 })
               }}
               customStepProps={{
@@ -59,7 +58,7 @@ export const CustomDeploymentInfrastructureSpecInputForm: React.FC<
                   VariableType.Connector
                 ],
                 isDescriptionEnabled: true,
-                allowedConnectorTypes: connectorsList
+                isDrawerMode: true
               }}
               readonly={readonly}
             />

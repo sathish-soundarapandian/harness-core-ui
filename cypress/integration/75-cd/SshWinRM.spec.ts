@@ -275,22 +275,23 @@ describe('Ssh/WinRM -E2E flow', () => {
     cy.get('input[name="subscriptionId"]').click()
     cy.wait('@azureSubscriptionIdCall')
 
-    cy.get('li[class*="Select--menuItem"] > p:nth-child(1)')
-      .contains('Harness-Test: 12d2db62-5aa9-471d-84bb-faa489b3e319')
-      .click()
+    cy.wait(500)
+    cy.contains('Harness-Test: 12d2db62-5aa9-471d-84bb-faa489b3e319').should('be.visible').click()
 
     //add resourceGroup
     cy.get('input[name="resourceGroup"]').click()
     cy.wait('@azureResourceGroupsCall')
 
-    cy.wait(1000)
-    cy.contains('NetworkWatcherRG').click()
+    cy.wait(500)
+    cy.contains('NetworkWatcherRG').should('be.visible').click()
 
     //add tag
-    cy.wait('@azureTagsCall')
     cy.get('button > span[icon="add"]').click()
     cy.get('input[name="tagslabel1"]').click()
-    cy.get('p[class*="menuItemLabel"]').contains('City').click()
+    cy.wait('@azureTagsCall')
+    cy.wait(500)
+
+    cy.contains('City').should('be.visible').click()
     cy.wait(500)
     cy.get('input[name="tags.City"]').type('BLR')
 
@@ -352,15 +353,15 @@ describe('Ssh/WinRM -E2E flow', () => {
 
     //add aws region
     cy.get('input[name="region"]').click()
-    cy.wait(500)
-    cy.get('p[class*="menuItemLabel"]').contains('US East (N. Virginia)').click()
+    cy.contains('US East (N. Virginia)').should('be.visible').click()
 
     //add tags
-    cy.wait('@awsTagsCall')
     cy.get('button > span[icon="add"]').click()
     cy.get('input[name="tagslabel1"]').click()
-    cy.get('p[class*="menuItemLabel"]').contains('Owner').click()
+    cy.wait('@awsTagsCall')
+
     cy.wait(500)
+    cy.contains('Owner').should('be.visible').click()
     cy.get('input[name="awsInstanceFilter.tags.Owner"]').type('Admin')
 
     //add credential

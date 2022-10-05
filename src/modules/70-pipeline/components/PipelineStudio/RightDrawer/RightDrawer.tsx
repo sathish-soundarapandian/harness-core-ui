@@ -461,7 +461,8 @@ export function RightDrawer(): React.ReactElement {
       gitDetails,
       storeMetadata,
       pipeline,
-      resolvedCustomDeploymentDetailsByRef
+      resolvedCustomDeploymentDetailsByRef,
+      isIntermittentLoading
     },
     allowableTypes,
     updatePipeline,
@@ -516,6 +517,7 @@ export function RightDrawer(): React.ReactElement {
         stepType={stepType}
         toolTipType={toolTipType}
         stepData={stepData}
+        disabled={isIntermittentLoading}
         discardChanges={discardChanges}
         applyChanges={() =>
           applyChanges(formikRef, data, getString, updatePipelineView, pipelineView, setSelectedStepId, trackEvent)

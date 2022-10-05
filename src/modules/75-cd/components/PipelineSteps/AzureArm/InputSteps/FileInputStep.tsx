@@ -18,6 +18,7 @@ import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorRef
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import {
   ConnectorLabelMap,
   ConnectorTypes,
@@ -41,7 +42,7 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
   const inputSet = get(inputSetData, `template.spec.configuration.${type}`)
   return (
     <>
-      <Container flex width={120} padding={{ bottom: 'small' }}>
+      <Container flex width={200} padding={{ bottom: 'small' }}>
         <Text font={{ weight: 'bold' }}>
           {getString(isParam ? 'cd.azureArm.paramFile' : 'cd.cloudFormation.templateFile')}
         </Text>
@@ -131,9 +132,10 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
         <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
           <FileStoreList
             name={`${path}.spec.configuration.${type}.store.spec.files`}
-            type={'fileStore'}
+            type={FILE_TYPE_VALUES.FILE_STORE}
             allowOnlyOne={true}
             formik={formik}
+            expressions={expressions}
           />
         </Layout.Vertical>
       )}
@@ -141,9 +143,10 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
         <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>
           <FileStoreList
             name={`${path}.spec.configuration.${type}.store.spec.secretFiles`}
-            type={'encrypted'}
+            type={FILE_TYPE_VALUES.ENCRYPTED}
             allowOnlyOne={true}
             formik={formik}
+            expressions={expressions}
           />
         </Layout.Vertical>
       )}

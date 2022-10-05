@@ -9,7 +9,6 @@ import type { IconName } from '@wings-software/uicore'
 import type React from 'react'
 import type { Template } from '@templates-library/components/AbstractTemplate/Template'
 import type { Scope } from '@common/interfaces/SecretsInterface'
-import type { TemplateUsage } from '@templates-library/utils/templatesUtils'
 
 export class TemplateFactory {
   /**
@@ -47,9 +46,5 @@ export class TemplateFactory {
 
   getTemplateIsRemoteEnabled(type: string): boolean | undefined {
     return this.templateBank.get(type)?.getIsRemoteEnabled()
-  }
-
-  getTemplateAllowedUsage(type: string): TemplateUsage[] | undefined {
-    return this.templateBank.get(type)?.getAllowedUsage()
   }
 }

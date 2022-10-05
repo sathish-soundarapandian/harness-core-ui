@@ -10,7 +10,7 @@ import {
   versionLabel,
   pipelineTemplateName,
   pipelineMadeFromTemplate,
-  incompletePipelineCreationResponse,
+  incompleteTemplateCreationResponse,
   pipelineTemplatePublishResponse,
   selectedPipelineTemplateResponse,
   applyTemplateResponse,
@@ -59,7 +59,7 @@ describe('Pipeline Template creation and assertion', () => {
       timeout: 30000
     })
 
-    cy.intercept('POST', pipelineTemplateCreationCall, incompletePipelineCreationResponse).as(
+    cy.intercept('POST', pipelineTemplateCreationCall, incompleteTemplateCreationResponse).as(
       'pipelineTemplateCreation'
     )
     cy.intercept('POST', pipelineTemplatePublishCall, pipelineTemplatePublishResponse).as('pipelineTemplatePublish')

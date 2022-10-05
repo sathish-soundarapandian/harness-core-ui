@@ -11,12 +11,13 @@ import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { GroupName } from '@cv/pages/health-source/common/GroupName/GroupName'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import { StackdriverDefinition, useGetLabelNames, useGetMetricPacks } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
+import GroupName from '@cv/components/GroupName/GroupName'
+import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
 import {
   validateMappings,
@@ -28,7 +29,6 @@ import {
   MapSplunkMetricQueryToService,
   PrometheusSetupSource
 } from './SplunkMetricsHealthSource.constants'
-import { initializeGroupNames } from '../../common/GroupName/GroupName.utils'
 import CustomMetric from '../../common/CustomMetric/CustomMetric'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import SelectHealthSourceServices from '../../common/SelectHealthSourceServices/SelectHealthSourceServices'
@@ -179,6 +179,9 @@ export function SplunkMetricsHealthSource(props: SplunkMetricsHealthSourceProps)
                             onChange={formikProps.setFieldValue}
                             item={formikProps.values?.groupName}
                             setGroupNames={setSplunkGroupName}
+                            label={getString('cv.monitoringSources.prometheus.groupName')}
+                            title={getString('cv.monitoringSources.splunk.addSplunkGroupName')}
+                            fieldName={'groupName'}
                           />
                         </>
                       }

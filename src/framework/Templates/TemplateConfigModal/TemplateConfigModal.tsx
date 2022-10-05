@@ -50,8 +50,6 @@ import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from '../templates'
 import css from './TemplateConfigModal.module.scss'
 
@@ -153,7 +151,6 @@ const BasicTemplateDetails = (
     gitSyncEnabledOnlyForFF,
     supportingTemplatesGitx
   } = useAppStore()
-  const isTemplateGitxAccountEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATE_GITX_ACCOUNT_ORG)
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const formName = `create${initialValues.type}Template`
   const [loading, setLoading] = React.useState<boolean>()
@@ -175,9 +172,8 @@ const BasicTemplateDetails = (
     () =>
       intent === Intent.EDIT ||
       !!disabledFields?.includes(Fields.StoreType) ||
-      !templateFactory.getTemplateIsRemoteEnabled(initialValues.type) ||
-      (!isTemplateGitxAccountEnabled && selectedScope !== Scope.PROJECT),
-    [initialValues.type, intent, isTemplateGitxAccountEnabled, disabledFields, selectedScope]
+      !templateFactory.getTemplateIsRemoteEnabled(initialValues.type),
+    [initialValues.type, intent, disabledFields]
   )
 
   const gitDisabledFields = pick(
@@ -296,17 +292,6 @@ const BasicTemplateDetails = (
           } else {
             unset(draft, 'repo')
             unset(draft, 'branch')
-          }
-        }
-        if (!isTemplateGitxAccountEnabled) {
-          if (value === Scope.PROJECT) {
-            Object.assign(draft, pick(formInitialValues, 'connectorRef', 'repo', 'branch', 'storeType', 'filePath'))
-          } else {
-            draft.storeType = GitStoreType.INLINE
-            unset(draft, 'connectorRef')
-            unset(draft, 'repo')
-            unset(draft, 'branch')
-            unset(draft, 'filePath')
           }
         }
       })

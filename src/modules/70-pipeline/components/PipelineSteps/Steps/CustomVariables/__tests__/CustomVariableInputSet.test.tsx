@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { render, queryByAttribute } from '@testing-library/react'
+import { act, fireEvent, render, queryByAttribute, queryByText } from '@testing-library/react'
 import { Formik } from 'formik'
 import { MultiTypeInputType } from '@harness/uicore'
 
-import { TestWrapper } from '@common/utils/testUtils'
+import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import ipsWithDefaultValues from './inputSetsWithDefaultValues.json'
 import { CustomVariableInputSet, CustomVariablesData } from '../CustomVariableInputSet'
 
@@ -23,11 +23,13 @@ interface TestComponentProps {
   allValues?: CustomVariablesData
 }
 
+const validate = jest.fn()
+
 function TestComponent(props: TestComponentProps): React.ReactElement {
   const { path, pathParams, ...rest } = props
   return (
     <TestWrapper path={path} pathParams={pathParams}>
-      <Formik onSubmit={jest.fn()} initialValues={props.initialValues}>
+      <Formik onSubmit={jest.fn()} validate={validate} initialValues={props.initialValues}>
         <CustomVariableInputSet
           {...rest}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
@@ -38,14 +40,15 @@ function TestComponent(props: TestComponentProps): React.ReactElement {
 }
 
 describe('<CustomVariableInputSet /> tests', () => {
-  test('renders correctly', () => {
+  test('renders correctly', async () => {
     const { container } = render(
       <TestComponent
         initialValues={{
           variables: [
-            { name: 'var4', type: 'String', value: 'oldvalue4' },
             { name: 'var1', type: 'String', value: 'oldvalue1' },
-            { name: 'var3', type: 'String', value: 'oldvalue3' }
+            { name: 'var2', type: 'String', value: '<+input>' },
+            { name: 'var3', type: 'String', value: 'oldvalue3' },
+            { name: 'var4', type: 'String', value: '<+input>' }
           ]
         }}
         {...(ipsWithDefaultValues as any)}
@@ -56,10 +59,43 @@ describe('<CustomVariableInputSet /> tests', () => {
       queryByAttribute('name', container, name) as T
 
     expect(container).toMatchSnapshot()
-    expect(queryByName<HTMLInputElement>('variables[0].value')?.value).toBe('oldvalue4')
-    expect(queryByName<HTMLInputElement>('variables[1].value')?.value).toBe('oldvalue1')
+    expect(queryByName<HTMLInputElement>('variables[0].value')?.value).toBe('oldvalue1')
+    expect(queryByName<HTMLInputElement>('variables[1].value')?.value).toBe('<+input>')
     expect(queryByName<HTMLInputElement>('variables[2].value')?.value).toBe('oldvalue3')
-    expect(queryByName<HTMLInputElement>('variables[3].value')?.value).toBeUndefined()
-    expect(queryByName<HTMLInputElement>('variables[4].value')?.value).toBeUndefined()
+    expect(queryByName<HTMLInputElement>('variables[3].value')?.value).toBe('<+input>')
+  })
+
+  test('works correctly', async () => {
+    const { container } = render(
+      <TestComponent
+        initialValues={{ variables: [{ name: 'var', type: 'String', value: '<+input>' }] }}
+        template={{ variables: [{ name: 'var', type: 'String', value: '<+input>' }] }}
+        allValues={{ variables: [{ name: 'var', type: 'String', value: '<+input>' }] }}
+      />
+    )
+
+    const changeInputsButton = container.querySelector(
+      '.bp3-popover-wrapper.MultiTypeInput--wrapper button'
+    ) as HTMLElement
+    await act(async () => {
+      fireEvent.click(changeInputsButton)
+    })
+    const popOver = findPopoverContainer() as HTMLElement
+    const fixedValueButton = queryByText(popOver, 'Fixed value') as HTMLElement
+    await act(async () => {
+      fireEvent.click(fixedValueButton)
+    })
+    expect(validate).toBeCalledWith({ variables: [{ name: 'var', type: 'String', value: '' }] }, undefined)
+
+    const lastVariableInput = container.querySelector('[name="variables[0].value"]') as HTMLElement
+    expect(lastVariableInput).not.toHaveAttribute('disabled')
+    await act(async () => {
+      fireEvent.change(lastVariableInput, { target: { value: 'newValue' } })
+    })
+    expect(validate).toHaveBeenNthCalledWith(
+      2,
+      { variables: [{ name: 'var', type: 'String', value: 'newValue' }] },
+      undefined
+    )
   })
 })

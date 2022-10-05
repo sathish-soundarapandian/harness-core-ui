@@ -26,6 +26,7 @@ import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSo
 import SelectHealthSourceServices from '@cv/pages/health-source/common/SelectHealthSourceServices/SelectHealthSourceServices'
 import { QueryContent } from '@cv/components/QueryViewer/QueryViewer'
 import GroupName from '@cv/components/GroupName/GroupName'
+import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import type { DynatraceCustomMetricsProps } from '@cv/pages/health-source/connectors/Dynatrace/components/DynatraceCustomMetrics/DynatraceCustomMetrics.types'
 import {
   editQueryConfirmationDialogProps,
@@ -36,7 +37,6 @@ import { DynatraceHealthSourceFieldNames } from '@cv/pages/health-source/connect
 import MetricsValidationChart from '@cv/components/CloudMetricsHealthSource/components/validationChart/MetricsValidationChart'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { transformSampleDataIntoHighchartOptions } from '@cv/pages/health-source/connectors/GCOMetricsHealthSource/GCOMetricsHealthSource.utils'
-import { initializeGroupNames } from '@cv/pages/health-source/common/GroupName/GroupName.utils'
 import css from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.module.scss'
 
 export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProps): JSX.Element {

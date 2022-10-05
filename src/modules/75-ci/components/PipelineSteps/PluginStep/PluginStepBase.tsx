@@ -124,7 +124,8 @@ export const PluginStepBase = (
                           shouldHide: [
                             CIBuildInfrastructureType.Cloud,
                             CIBuildInfrastructureType.VM,
-                            CIBuildInfrastructureType.KubernetesHosted
+                            CIBuildInfrastructureType.KubernetesHosted,
+                            CIBuildInfrastructureType.Docker
                           ].includes(buildInfrastructureType)
                         },
                         'spec.settings': {},

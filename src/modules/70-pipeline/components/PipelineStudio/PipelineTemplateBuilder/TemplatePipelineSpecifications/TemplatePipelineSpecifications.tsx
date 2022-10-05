@@ -12,7 +12,7 @@ import { Container, Formik, FormikForm, Heading, Layout, PageError, Text } from 
 import { Color } from '@wings-software/design-system'
 import type { FormikProps, FormikErrors } from 'formik'
 import { produce } from 'immer'
-import { replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getsMergedTemplateInputYamlPromise,
@@ -29,7 +29,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { PageSpinner } from '@common/components'
 import { PipelineInputSetFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
@@ -47,7 +47,8 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     state: { pipeline, schemaErrors, gitDetails, storeMetadata },
     allowableTypes,
     updatePipeline,
-    isReadonly
+    isReadonly,
+    setIntermittentLoading
   } = usePipelineContext()
   const queryParams = useParams<ProjectPathProps>()
   const templateRef = getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, ''))
@@ -157,10 +158,12 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   }, [templateInputs])
 
   React.useEffect(() => {
-    setFormikErrors({})
-    setAllValues(undefined)
-    setFormValues(undefined)
-  }, [templateRef, templateVersionLabel])
+    if (templateInputSetLoading) {
+      setFormikErrors({})
+      setAllValues(undefined)
+      setFormValues(undefined)
+    }
+  }, [templateInputSetLoading])
 
   React.useEffect(() => {
     if (schemaErrors) {
@@ -202,11 +205,25 @@ export function TemplatePipelineSpecifications(): JSX.Element {
 
   const error = defaultTo(templateInputSetError, pipelineError)
 
+  /**
+   * This effect disables/enables Save button on Pipeline and Template Studio
+   * For gitx, template resolution takes a long time
+   * If user clicks on Save button before resolution, template exception occurs
+   */
+  React.useEffect(() => {
+    setIntermittentLoading(isLoading)
+
+    // cleanup
+    return () => {
+      setIntermittentLoading(false)
+    }
+  }, [isLoading, setIntermittentLoading])
+
   return (
     <Container className={css.contentSection} height={'100%'} background={Color.FORM_BG}>
       {isLoading && <PageSpinner />}
       {!isLoading && error && (
-        <PageError message={defaultTo((error?.data as Error)?.message, error?.message)} onClick={() => refetch()} />
+        <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
       )}
       {!isLoading && !error && templateInputs && allValues && formValues && (
         <>

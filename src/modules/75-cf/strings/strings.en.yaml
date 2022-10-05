@@ -1,12 +1,10 @@
 continuous: '{{$.common.purpose.cf.continuous}}'
 shared:
-  individual: Individual
   target: '{{ $.pipelineSteps.targetLabel }}'
   targets: '{{ $.pipeline.targets.title }}'
   targetManagement: Target Management
   segment: Target group
   segments: Target Groups
-  environment: environment
   lastEvaluated: Last Evaluated
   variation: Variation
   variations: Variations
@@ -24,23 +22,18 @@ messages:
   flagCreated: Flag created.
   flagUpdated: Flag updated.
   flagDeleted: Flag deleted.
-  flagArchived: Flag archived.
   targetCreated: Target(s) created.
-  targetUpdated: Target updated.
   targetDeleted: Target deleted.
   segmentCreated: Target group created.
-  segmentUpdated: Target group updated.
   segmentDeleted: Target group deleted.
 rbac:
   category: '{{ $.common.purpose.cf.continuous }}'
   featureflag:
     label: Feature flags
-    edit: '{{ $.edit }}'
     delete: '{{ $.delete }}'
     toggle: Toggle
   targetgroup:
     label: '{{ $.cf.shared.targetManagement }}'
-    edit: '{{ $.edit }}'
     delete: '{{ $.delete }}'
 creationModal:
   jsonType: JSON
@@ -58,7 +51,6 @@ creationModal:
   mustBeValidJSON: Value must be a valid JSON object.
   dataType: Data type
   defaultRulesTooltip: Define which variation users will see by default when the flag is ON or OFF
-  testFlagOption: Test the Flag
 
   aboutFlag:
     aboutFlagHeading: About the flag
@@ -67,29 +59,9 @@ creationModal:
     idRequired: Flag identifier is required
     ffNamePlaceholder: Enter Feature Flag name...
     ffRegex: '{{$.common.validation.formatMustBeAlphanumeric}}'
-    tagsOptional: Tags (optional)
-    tagsPlaceholder: Add Tags
     permaFlagTooltip: A flag is permanent if you wish to keep it in your code for the long term. We won't remind you to these types of flags.
-testTheFlag:
-  testFlagHeading: Test the flag
-  setupAppText: "Let's set up your application and code so that it can communicate with our platform"
-  selectSdk: Select Your SDK
-  sdkClient: Client
-  sdkServer: Server
-  selectSdkLanguage: Select the language
-  installNode: Install Node.js dependency
-  initClient: Initialize Client SDK
-  codeSample: Place this sample code we generated of your feature flag into your code
-  codeSampleNote: Please note that in the above example, it is whatever gets generated. This is just an example. This area can contain some minor notes if necessary.
-  verify: '{{ $.verify }}'
-  verifyText: "Once you're done, run your application so that we can verify that we are able to receive analytic events for your feature."
-  testFlagTargetHeading: Testing feature flag on production environment
-  confirmClose: Are you sure you want to close this modal?
 editVariation:
   title: Edit Variations
-  subTitle: '{{ type }} ({{ count }} variations)'
-  add: + Variation
-  defaultRulesDesc: "Changes will only apply to newly created environments. Existing environments won't be affected"
   envNote: Changes will only apply to newly created environments. Existing environments won’t be affected.
   applyToExistingEnvironments: Also apply to existing environments
   remove: Remove variation
@@ -104,7 +76,6 @@ editDetails:
   permaFlag: '{{ $.cf.creationModal.aboutFlag.permaFlag }}'
 boolean: Boolean
 multivariate: Multivariate
-featureNotReady: This feature is not yet ready. Please check back later.
 noResultMatch: No results match your search criteria
 homepage:
   slogan: '{{ $.common.purpose.cf.descriptionOnly }}'
@@ -127,16 +98,16 @@ clause:
     equalSensitive: 'equals (sensitive)'
     matchSegment: 'Match Target Group'
 featureFlags:
-  newFlag: New Flag
+  newFlag: New Feature Flag
   true: 'True'
   false: 'False'
   noFlagsInProject: There are no Flags in this Project
-  noFlagsDescription: A Feature Flag controls what you want to release, who receives it, and how it will be delivered.
+  flagsDescription: A Feature Flag controls what you want to release, who receives it, and how it will be delivered.
   noFlagsToGetStarted: To get started with Feature Flags, you can <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag" target="_blank" rel="noreferrer">create your first Flag</a>, <a href="https://docs.harness.io/category/rtce97j1wu-ff-sdks" target="_blank" rel="noreferrer">get started with our SDKs</a>, or <a href="https://docs.harness.io/category/iqgyied1c0-ff-getting-started" target="_blank" rel="noreferrer">read our getting started guide</a>.
+  getStartedWithFF: Get Started with Feature Flags
   typeOfFlag: Select the Type of Flag You Want to Create
   startVariation: Start by selecting the variation type that the flag will use
   booleanBtnText: This is a simple ON/OFF toggle
-  multi: '{{ $.cf.multivariate }}'
   multiBtnText: This is suitable for experiments
   percentageRollout: 'Percentage Rollout'
   turnOnHeading: Turn ON Flag
@@ -168,8 +139,6 @@ featureFlags:
   servePercentageRollout: serve <strong>percentage rollout</strong>
   deleteFlag: Delete Flag
   deleteFlagMessage: Are you sure you want to delete flag <strong>{{name}}</strong>? This action cannot be undone.
-  archiveFlag: Archive Flag
-  archiveFlagMessage: Are you sure you want to archive flag <strong>{{name}}</strong>? This action cannot be undone.
   flagOff: Flag is Disabled
   flagOn: Flag is Enabled
   flagWillTurnOn: Enable flag for this environment upon save
@@ -185,18 +154,10 @@ featureFlags:
     whenFlagEnabled: When the Flag is Enabled
     whenFlagDisabled: When the Flag is Disabled
     editRules: Edit Rules
-    flagOn: '{{ $.cf.creationModal.flagOn }}'
-    flagOff: '{{ $.cf.creationModal.flagOff }}'
     defaultRules: Default Rules
     defaultRule: Default Rule
     customRules: Custom Rules (Serve specific targets differently)
-    serveVariationToTarget: '{{ $.cf.featureFlags.serveVariationToTargetLabel }}'
-    add: '{{ $.add }}'
-    toTarget: '{{ $.cf.featureFlags.toTarget }}'
-    following: to following
-    serveToFollowing: 'serve to following:'
     onRequest: On Request
-    onRequestVariation: On Request, check for condition and serve variation
     addTargeting: Add Targeting
     specificTargeting: Specific Targeting
     toTargetGroups: To Target Groups
@@ -207,33 +168,6 @@ featureFlags:
       selectTargetGroup: Please select a Target Group
       valueRequired: Please enter a value
       valueMustAddTo100: Values must add up to 100%
-  flagFilters:
-    environment: '{{ $.environment }}'
-    envDefault: Production (Default)
-    any: Any
-    term: Term
-    switchOnOff: Switch (ON/OFF)
-    status: '{{ $.status }}'
-    createdDate: '{{ $.cf.targets.createdDate }}'
-    modifiedDate: Modified Date
-    owner: Owner
-    ownerOrPinPlaceholder: Individual or Team
-    creator: Creator
-    tagsPlaceholder: '{{ $.valueLabel }}'
-    flagsBy: Only list flags pinned by
-    target: '{{ $.pipelineSteps.targetLabel }}'
-    individualTargets: Individual Target or Target Group
-    apply: '{{ $.filters.apply }}'
-    saveFilters: Save Filters
-    overwriteRadio: Overwrite Existing
-    createFilter: Create New Filter
-    defaultFilter: Default Filter
-    defaultFilterText: This filter will be applied by default when this listing is viewed everytime
-    filterVisible: Who can see this filter?
-    onlyMe: Only Me
-    everyone: '{{ $.filters.visibleToEveryone }}'
-    save: '{{ $.save }}'
-    cancel: '{{ $.cancel }}'
   metrics:
     title: 'Metrics '
     noMetrics: No Evaluations
@@ -291,20 +225,15 @@ flagFilters:
   permanent: Permanent Flags
   potentiallyStale: Potentially Stale Flags
 targets:
-  ID: '{{ $.common.ID }}'
-  name: name
-  targetSegment: Target Group
-  lastActivity: '{{ $.lastActivity }}'
   createdDate: Created Date
   create: New Target
   list: Add a target
   upload: Upload a list of targets (CSV files only)
   enterName: 'Enter target name'
   enterValue: 'Enter target identifier'
+  addRow: Add row
+  removeRow: Remove row
   addTargetsLabel: Add Target(s)
-  addTargets: + Add Target(s)
-  noTargetFound: 'No target found in this environment. Click the button above to create target(s).'
-  noSegmentFound: 'No target group found in this environment. Click the button above to create a target group.'
   uploadHeadline: Please upload a CSV file according to our <a href="https://docs.harness.io/article/dbk9uoaid3-add-targets#step_upload_a_list_of_targets" target="_blank" rel="noreferrer">template</a>.
   uploadHelp: 'Target CSV entry format: Name,Identifier'
   uploadYourFile: Click to upload your file
@@ -318,33 +247,22 @@ targets:
   noTargetForEnv: There are no Targets in this Environment
   noTargetDescription: <a href="https://docs.harness.io/article/dbk9uoaid3-add-targets#step_add_a_target" target="_blank" rel="noreferrer">Targets</a> are individual evaluations of Flags based on attributes you define in our SDKs. For instance, a Target can be a single customer or account that toggle a Flag.
 targetDetail:
-  title: 'Targets: Individual'
-  environmentLine: '<strong>Environment</strong>: {{name}}'
   createdOnDate: Created on {{ date }}, {{ time }} PST
   targetSetting: Target Settings
   flagSetting: Flag Settings
-  attribute: ATTRIBUTE
   attributes: Attributes ({{ counter }})
-  learnMore: To learn how to mark specific target attributes or information as private, read <a href="https://docs.harness.io/category/vjolt35atg-feature-flags" target="_blank" rel="noreferrer">documentation</a>.
   manuallyAdded: MANUALLY ADDED
   addToSegment: Add to {{count}} Target Groups
-  autoAdded: AUTOMATICALLY ADDED THROUGH CONDITIONS
   exclusionList: EXCLUSION LIST
   excludeFromSegment: Exclude from {{count}} Target Groups
   removeSegment: Remove from list
   noSegmentAdded: No Target Group added
-  noSegmentMatched: No Target Group matched
   noSegmentExcluded: No Target Group excluded
   addTargetToSegment: Add Target to Target Group
   excludeTargetFromSegment: Exclude Target from Target Group
-  exclude: Exclude
-  removeFromIncludeListTitle: Remove from include list
   removeFromIncludeList: Are you sure you want to remove target <strong>{{targetName}}</strong> from include target group <strong>{{ segmentName}}</strong>? This action cannot be undone.
-  removeFromExcludeListTitle: Remove from exclusion list
-  removeFromExcludeList: Are you sure you want to remove target <strong>{{targetName}}</strong> from exclusion target group <strong>{{ segmentName}}</strong>? This action cannot be undone.
   noFlagConfigured: No Feature Flags configured for this Target
   searchPlaceholder: Search Feature Flags...
-  deleteTargetSuccess: Target <strong>{{name}}</strong> deleted.
   flagDisabled: This flag is disabled. The default off value will be served.
   addTargetToTargetGroup: Add Target to Target Group {{name}}
   noTargetGroupsAvailable: No Target Groups available
@@ -356,34 +274,21 @@ targetManagementFlagConfiguration:
   removeFlag: Remove Flag
   noFlagsAvailable: No flags available
   selectVariation: select variation
-selectSegmentModal:
-  searchSegmentPlaceholder: Search for Target Group by Name or Description
-  flagsUsingSegment: '{{ counter }} flag'
-  flagsUsingThisSegment: FLAGS USING THIS TARGET GROUP
-  empty: No Target Group found
 segments:
   create: New Target Group
-  targetDefinition: Target Definition
   usingSegment: Flags using this target group
   usingSegmentWithCount: Flags using this target group ({{ count }})
   modalTitle: Create a Target Group
-  displayIcon: Display Icon
-  uploadImage: Upload an image
   delete:
     message: 'Are you sure you want to delete target group <strong>{{segmentName}}</strong>? This action cannot be undone.'
     title: Delete Target Group
   nameRequired: Target Group name is required
   idRequired: Target Group identifier is required
-  noSegment: There are currently no target groups
   noTargetGroupsForEnv: There are no Target Groups in this Environment
   noTargetGroupsDescription: <a href="https://docs.harness.io/article/5qz1qrugyk-add-target-groups#manage-target-groups" target="_blank" rel="noreferrer">Target Groups</a> are larger collection of Targets used to toggle Flags for entire cohorts. For instance, a Target Group could be an entire country, an early adopter list or an internal team.
   pageDescription: Target Groups allow you to serve flag variations to a list of targets in bulk.
 environments:
-  title: '{{ $.environments }}'
   environmentID: 'Id:'
-  empty: 'There are currently no environments'
-  modifiedBy: 'Modified by'
-  adminEnvironments: 'Admin: Environments'
   delete:
     message: 'If you want to delete environment <strong>{{name}}</strong>, the SDK keys for this environment will also be deleted. Delete environment <strong>{{name}}</strong>?'
     title: '{{ $.common.deleteEnvironment.title }}?'
@@ -401,9 +306,9 @@ environments:
     emptyName: 'SDK Key name is required'
     addKey: 'New SDK Key'
     duplicateKey: 'A SDK key with this name already exists. Try another name'
-    clientType: '{{ $.cf.testTheFlag.sdkClient }}'
+    clientType: Client
     clientDescription: 'A client id will be generated as your client-side SDK key.'
-    serverType: '{{ $.cf.testTheFlag.sdkServer }}'
+    serverType: Server
     serverDescription: 'A secret will be generated as your server-side SDK key.'
     deleteTitle: 'Confirm Key Delete?'
     deleteMessage: 'Are you sure you want to delete Key: <strong>{{keyName}}</strong>? You cannot recover it afterwards'
@@ -415,14 +320,12 @@ environments:
     redactionWarning: Your secret will be redacted once you leave the page. Please make sure to copy and store your secret.
     lastUsed: 'Last Used'
 auditLogs:
-  title: Audit Logs
   summaryHeading: 'Module: Feature Flags • Project: {{project}} • Environment: {{environment}}'
   searchPlaceholder: Search Activity
   viewEventSummary: View Event Summary
   timePST: 'TIME (PST)'
   user: USER
   action: ACTION
-  moduleFF: 'Module: Feature Flags'
   flagCreated: Feature activation created
   segmentCreated: Target Group created
   flagUpdated: Feature activation updated
@@ -473,43 +376,19 @@ noEnvironment:
   title: There are no Environments in this Project
   message: <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_2_create_an_environment" target="_blank" rel="noreferrer">Environments</a> are the different places you run your application where you can configure Flags - i.e. your dev server, your QA server and your production server
 pipeline:
-  listing: Pipeline Listing
   rolloutStrategy:
     title: Rollout Strategy
   advanced:
     title: '{{ $.advancedTitle }}'
   flagConfiguration:
-    fixedInput: Fixed Input List
-    runtimeInput: Runtime Input List
     environmentRequired: An environment is required
     flagRequired: A feature flag is required
-    flagState: Feature flag state is required
     stepName: 'Step Name '
     selectEnvironment: '{{ $.cf.shared.selectEnvironment }}'
-    flagSwitchRuntime: Your flag switch setting will be configured at runtime.
     selectFlag: Select Flag
-    viewDetail: View Flag Details
-    whatToConfigure: What are you configuring?
-    flagSwitch: Flag Switch
-    conditionalRules: Conditional Rules
-    serveMapping: Serve Variation to Targets/Target Groups
     switchTo: Set Flag Switch To
-    variationMappingRuntime: Variation to Target/Target Groups setting will be configured at runtime.
-    addVariationMappingTitle: Add Variations Served to Targets/Target Groups
-    editVariationMappingTitle: Edit Variations Served to Targets/Target Groups
-    addEditMapping: + Add/edit specific variation to Targets/Target Groups
-    addNewMapping: + Add variation to Target/Target Groups
-    removeMapping: '- Remove specific variation from Targets/Target Groups'
-    conditionRuntime: Conditional rules setting will be configured at runtime.
-    addOrEdit: + Add/edit
-    remove: '- Remove'
     configureMore: + Configure More
-    addConditionalRules: '+ Add conditional rules'
-    allRuntimeInput:
-      Flag switch, default and custom targeting rules for this step are defined during runtime. You can also make the
-      values static by updating your option to Fixed Input List to test things out.
     serve: Serve
-    toGroups: to Target(s)/Target Group(s)
     flagChanges: Flag Changes
     flagChangesRuntime: 'At runtime, you may choose the following flag configuration changes:'
     flagChangesRuntimeSetFlagSwitch: Set flag switch
@@ -573,7 +452,6 @@ gitSync:
   commitChanges: Commit Changes
   autoCommitMsg: '[AUTO-COMMIT] : {{msg}}'
   commitMsgRequired: Commit message is required
-  flagName: Feature Flag Name
   autoCommitLabel: Always commit to this branch and do not prompt for commit message.
   branchStatus: Auto-commit to {{branch}} is {{status}}
   syncingPaused: Syncing with Git is currently OFF. Click to view settings
@@ -598,19 +476,12 @@ planEnforcement:
     approachingLimit: 'You have used {{ clientMauUsagePercentage }}% of your Monthly Active Users (MAU) subscription limit.'
     upgradeRequired: 'You have exceeded your Monthly Active Users (MAU) subscription limit.'
 onboarding:
-  listeningToEvent: We’re listening for your flag event...
   simpliestFlag: Our Simplest Flag
   simpliestFlagDescription: 'You’re creating our simplest feature flag type: Boolean Flag. This flag type is commonly used as a feature toggle, which effectively shows/hides features from your targets.'
   otherTypes: Check out other flag types
-  connected: "\r\n\r\nSDK is connected\r\nFlag variation is served\r\n\r\nVerification complete."
-  behindTheSenes: In case you’re wondering what’s happening behind the scenes…
-  waitForConnect: Waiting for SDK...{{ message }}
-  allSet: Congratulations! You’re all set!
-  tryTarget: Try out our robust <a href='{{ link }}'>targeting rules for this flag</a> for more granular rollouts.
   backToStart: Complete
   title: Feature Flags Quick Start Guide
   subTitle: Everything you need to know in less than 15 minutes.
-  upAndRunning: Get a flag up and running in 3 steps
   tryItOut: '{{ $.getStarted }}'
   createAFlag: Create a Flag
   createEnvAndSdk: Create an Environment and SDK Key
@@ -618,12 +489,15 @@ onboarding:
   oneCreateAFlag: '1. Create a Flag'
   setUpApp: '2. Set Up Your Application'
   testYourFlag: '3. Test Your Flag'
-  letsStart: Let's start off by creating a simple flag
-  inputLabel: Give your flag a memorable name
-  successLabel: 'You have created <strong>{{name}}</strong> with Id: <strong>{{identifier}}</strong>'
+  letsGetStarted: Let's get started
+  createFlag: Create a Feature Flag
+  flagInputLabel: Select an existing Flag or type the name to create new one
+  selectOrCreateFlag: Select or Create a Flag
+  youCreated: You've created
+  youreUsing: You're using
   setupLabel: Set up your application and code to communicate with our platform.
   selectLanguage: Select your language
-  selectEnvironment: Select your environment
+  selectYourEnvironment: Select your Environment
   createEnv: Create an environment
   envCreated: Environment Created
   sdkKeyLabel: Please create an SDK key for your environment
@@ -640,18 +514,12 @@ onboarding:
   errorReceivingEvent: We couldn't receive a Flag status from your application, check the <a target="_blank" href="https://docs.harness.io/category/eyzngtupao-sdk-overview"> SDK reference guide</a> to ensure you've set up the SDK correctly, then toggle the Flag to try again.
   furtherAssistance: '<br>If you are still having issues,'
   toggleError: We couldn’t receive events, check possible reasons below and toggle the Flag to try again
-  toggleLabel: Enable or disable your Flag by turning the Flag toggle on or off, then verify the event we receive has the same value as your application.
   help:
     heading1: The Importance of Your Flag Id
     text1: Your flag Id is required to reference the flag in your code.
     heading2: Installing an SDK to Your Environment
     text2: Your flag is automatically available for use in all environments of your project. However, you need to install our SDK to environments you wish to initiate your flag in.
     getStarted: Get started with SDKs
-    test:
-      heading: About Flag Events
-      text1: Every time a feature flag is evaluated by your application or platform, it creates an event to let our service know that the flag was used.
-      text2: Flag events are necessary to provide more information about the overall health and performance of your flags.
-      readmore: Read more...
   readme:
     java: |
       # Setup

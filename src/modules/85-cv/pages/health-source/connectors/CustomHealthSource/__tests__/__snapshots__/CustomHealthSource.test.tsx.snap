@@ -152,6 +152,7 @@ exports[`Verify CustomHealthSource should render CustomHealthSource 1`] = `
                           >
                             <div
                               class="StyledProps--font StyledProps--main seletedAppContainer"
+                              data-testid="sideNav-CustomHealth Metric 101"
                             >
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main selectedApp isSelected"

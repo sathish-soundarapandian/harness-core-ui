@@ -5,14 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@wings-software/uicore'
 import type { Dispatch, SetStateAction } from 'react'
+import type { SelectOption } from '@wings-software/uicore'
 
 export interface GroupNameProps {
   groupNames?: SelectOption[]
   onChange: (name: string, value: SelectOption) => void
   item?: SelectOption
-  setGroupNames: Dispatch<SetStateAction<SelectOption[]>>
+  setGroupNames?: Dispatch<SetStateAction<SelectOption[]>>
+  fieldName?: string
+  allowAddGroup?: boolean
 }
 
 export type CreateGroupName = {

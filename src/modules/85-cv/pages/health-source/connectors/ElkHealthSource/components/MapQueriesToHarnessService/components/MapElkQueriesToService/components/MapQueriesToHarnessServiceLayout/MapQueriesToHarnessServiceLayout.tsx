@@ -51,7 +51,6 @@ export default function MapQueriesToHarnessServiceLayout(props: MapQueriesToHarn
   const fetchElkRecords: () => void = useCallback(async () => {
     setLoading(true)
     setError(null)
-    console.log('formikProps?.values?.logIndexesssssssssssssss', formikProps)
     await getSampleData(
       {
         query

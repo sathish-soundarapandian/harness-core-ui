@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo } from 'lodash-es'
+import type { SelectOption } from '@harness/uicore'
+import { defaultTo, isEmpty } from 'lodash-es'
 import type { DeploymentStageConfig } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 
@@ -24,25 +25,31 @@ export interface DeployEnvironmentEntityConfig {
 }
 
 export interface DeployEnvironmentEntityFormState {
-  environment?: DeploymentStageConfig['environment']
-  environments?: DeploymentStageConfig['environments']
+  environment?: DeploymentStageConfig['environment'] & {
+    infrastructureRef?: string
+  }
+  environments?: Omit<DeploymentStageConfig['environments'], 'values'> & {
+    values: SelectOption[]
+  }
   gitOpsEnabled?: DeploymentStageConfig['gitOpsEnabled']
-  infrastructureRef?: string
 }
 
 export function processInitialValues(initialValues: DeployEnvironmentEntityConfig): DeployEnvironmentEntityFormState {
-  if (initialValues.environment) {
+  if (initialValues.environments) {
     return {
-      environment: {
-        environmentRef: defaultTo(initialValues.environment?.environmentRef, ''),
-        deployToAll: initialValues.environment?.deployToAll
-      },
-      infrastructureRef: defaultTo(initialValues.environment?.infrastructureDefinition?.identifier, '')
+      environments: {
+        values: defaultTo(initialValues.environments?.values, []).map(value => ({
+          label: value.environmentRef,
+          value: value.environmentRef
+        }))
+      }
     }
   } else {
     return {
-      environments: {
-        values: defaultTo(initialValues.environments?.values, [])
+      environment: {
+        environmentRef: defaultTo(initialValues.environment?.environmentRef, ''),
+        deployToAll: initialValues.environment?.deployToAll,
+        infrastructureRef: defaultTo(initialValues.environment?.infrastructureDefinition?.identifier, '')
       }
     }
   }
@@ -52,27 +59,36 @@ export function processFormValues(
   data: DeployEnvironmentEntityFormState,
   initialValues: DeployEnvironmentEntityConfig
 ): DeployEnvironmentEntityConfig {
-  // Dummy condition for the time being
-  const deployToAll = data.environment?.environmentRef === initialValues.environment?.environmentRef + 'test'
-
-  if (data.environment?.environmentRef === '') {
+  if (!isEmpty(data.environments?.values)) {
     return {
-      ...data,
+      environments: {
+        values: data.environments?.values.map(value => ({
+          environmentRef: value.value as string
+        }))
+      }
+    }
+  } else if (data.environment) {
+    if (data.environment?.environmentRef === '' || initialValues.environment?.environmentRef === '') {
+      return {
+        environment: {
+          environmentRef: defaultTo(data.environment?.environmentRef, ''),
+          deployToAll: false
+        }
+      }
+    }
+
+    return {
+      // ...data,
       environment: {
         environmentRef: defaultTo(data.environment?.environmentRef, ''),
-        deployToAll: false
+        deployToAll: false,
+        infrastructureDefinition: {
+          identifier: defaultTo(data.environment?.infrastructureRef, '')
+        }
       }
     }
-  }
-
-  return {
-    ...data,
-    environment: {
-      environmentRef: defaultTo(data.environment?.environmentRef, ''),
-      deployToAll: deployToAll,
-      infrastructureDefinition: {
-        identifier: defaultTo(data.infrastructureRef, '')
-      }
-    }
+  } else {
+    // TODO: Add default conversions
+    return {}
   }
 }

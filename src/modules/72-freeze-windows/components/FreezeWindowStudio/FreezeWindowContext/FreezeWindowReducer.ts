@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { clone, isUndefined } from 'lodash-es'
+import { clone, isEqual, omit } from 'lodash-es'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import { ActionReturnType, FreezeWindowActions } from './FreezeWidowActions'
 
@@ -14,22 +14,21 @@ export const DefaultFreezeId = '-1'
 export const DefaultFreeze = {
   name: '',
   identifier: DefaultFreezeId,
-  entityConfigs: [
-    { entity: { rule: 'Rule 1 - Weekend Freeze' } },
-    { entity: { rule: 'Rule 2 - Diwali Freeze' } },
-    { entity: { rule: 'Rule 3 - Black Friday' } }
-  ]
+  entityConfigs: [],
+  status: 'Enabled'
 }
 
 export interface FreezeWindowReducerState {
   isYamlEditable: boolean
   freezeObj: Record<string, unknown>
+  oldFreezeObj: Record<string, unknown>
   isUpdated: boolean | undefined
   yamlHandler?: YamlBuilderHandlerBinding
 }
 export const initialState: FreezeWindowReducerState = {
   isYamlEditable: false,
   freezeObj: { ...DefaultFreeze },
+  oldFreezeObj: { ...DefaultFreeze },
   isUpdated: false
 }
 
@@ -45,8 +44,13 @@ export const FreezeReducer = (state: FreezeWindowReducerState, data: ActionRetur
     case FreezeWindowActions.UpdateFreeze: {
       return {
         ...state,
-        isUpdated: isUndefined(response?.isUpdated) ? true : (response?.isUpdated as boolean),
-        freezeObj: (response ? clone({ ...state.freezeObj, ...response }) : state.freezeObj) as Record<string, unknown>
+        isUpdated: response?.oldFreezeObj
+          ? false
+          : !isEqual(state.oldFreezeObj, { ...state.freezeObj, ...omit(response, 'oldFreezeObj') }),
+        oldFreezeObj: response?.oldFreezeObj ? response.oldFreezeObj : state.oldFreezeObj,
+        freezeObj: (response
+          ? clone({ ...state.freezeObj, ...omit(response, 'oldFreezeObj') })
+          : state.freezeObj) as Record<string, unknown>
       }
     }
     case FreezeWindowActions.Success: {

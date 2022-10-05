@@ -47,7 +47,7 @@ export const delegateGroupsMock: any[] = [
     },
     groupName: 'delegate-1',
     lastHeartBeat: 1616541640941,
-    autoUpgrade: false
+    autoUpgrade: 'ON'
   },
   {
     activelyConnected: false,
@@ -62,7 +62,7 @@ export const delegateGroupsMock: any[] = [
     groupImplicitSelectors: {},
     groupName: 'Group1',
     lastHeartBeat: 20000,
-    autoUpgrade: false
+    autoUpgrade: 'ON'
   },
   {
     groupId: 'ACDJgpvbTeWslY9NrSKU6Q',
@@ -89,7 +89,7 @@ export const delegateGroupsMock: any[] = [
     ],
     groupVersion: '1.0.76600',
     tokenActive: true,
-    autoUpgrade: true,
+    autoUpgrade: 'OFF',
     delegateGroupExpirationTime: 0,
     upgraderLastUpdated: 0,
     immutable: false
@@ -120,10 +120,10 @@ export const delegateGroupsMock: any[] = [
     ],
     groupVersion: '1.0.76200',
     tokenActive: true,
-    autoUpgrade: true,
+    autoUpgrade: 'ON',
     delegateGroupExpirationTime: 0,
     upgraderLastUpdated: 0,
-    immutable: false
+    immutable: true
   }
 ]
 

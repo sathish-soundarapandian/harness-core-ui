@@ -12,6 +12,7 @@ export enum StepType {
   StageRuntimeInput = 'StageRuntimeInput', // UI level step, only used in execution view
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
+  GitOpsUpdateReleaseRepo = 'GitOpsUpdateReleaseRepo',
   Command = 'Command',
   CustomApproval = 'CustomApproval',
   Barrier = 'Barrier',
@@ -110,7 +111,8 @@ export enum StepType {
   CreateAzureARMResource = 'AzureCreateARMResource',
   CustomDeploymentServiceSpec = 'CustomDeploymentServiceSpec',
   CustomDeployment = 'CustomDeployment',
-  FetchInstanceScript = 'FetchInstanceScript'
+  FetchInstanceScript = 'FetchInstanceScript',
+  Wait = 'Wait'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

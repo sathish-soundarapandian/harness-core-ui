@@ -10,6 +10,7 @@ import type { EntityGitDetails, TemplateSummaryResponse } from 'services/templat
 import { TemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import type { TemplateType } from '@common/interfaces/RouteInterfaces'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import type { TemplateUsage } from '@templates-library/utils/templatesUtils'
 
 export interface GetTemplateResponse {
   template: TemplateSummaryResponse
@@ -23,6 +24,8 @@ export interface GetTemplateProps {
     identifiers: string[]
     checkboxLabel?: string
   }
+  disableVersionChange?: boolean
+  allowedUsages?: TemplateUsage[]
   selectedTemplate?: TemplateSummaryResponse
   gitDetails?: EntityGitDetails
   storeMetadata?: StoreMetadata

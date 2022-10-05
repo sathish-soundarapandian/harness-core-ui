@@ -19,6 +19,7 @@ import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import type { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import type { DeployEnvironmentEntityFormState } from './DeployEnvironmentEntityStep/utils'
 
 const namespaceRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 const releaseNameRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/
@@ -179,6 +180,33 @@ export function getEnvironmentTabSchema(getString: UseStringsReturn['getString']
             })
           }
         }
+        return true
+      }
+    })
+}
+
+export function getEnvironmentTabV2Schema(getString: UseStringsReturn['getString']): Yup.MixedSchema {
+  return Yup.mixed()
+    .required()
+    .test({
+      test(valueObj: DeployEnvironmentEntityFormState): boolean | Yup.ValidationError {
+        if (valueObj.environment?.environmentRef === undefined) {
+          return this.createError({
+            path: 'environment.environmentRef',
+            message: getString('cd.pipelineSteps.environmentTab.environmentIsRequired')
+          })
+        }
+
+        if (
+          valueObj.environment?.environmentRef !== RUNTIME_INPUT_VALUE &&
+          valueObj.environment?.infrastructureRef === undefined
+        ) {
+          return this.createError({
+            path: 'environment.infrastructureRef',
+            message: getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired')
+          })
+        }
+
         return true
       }
     })

@@ -2106,7 +2106,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                     </div>
                                   </div>
                                   <div
-                                    class="Accordion--panel"
+                                    class="Accordion--panel accordianSummaryL1"
                                     data-open="true"
                                     data-testid="undefined.StepGroup.step_group_1-panel"
                                     id="undefined.StepGroup.step_group_1-panel"
@@ -2206,7 +2206,7 @@ exports[`<PipelineVariables /> tests snapshot test 1`] = `
                                           data-testid="undefined.StepGroup.step_group_1-details"
                                         >
                                           <div
-                                            class="variablesListTable variablePaddingL3"
+                                            class="variablesListTable variablePaddingL1"
                                           >
                                             <div
                                               class="variableListRow variable-list-row"

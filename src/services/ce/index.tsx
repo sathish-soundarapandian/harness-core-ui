@@ -504,6 +504,7 @@ export interface BusinessMapping {
   costTargets?: CostTarget[]
   createdAt?: number
   createdBy?: EmbeddedUser
+  dataSources?: ('CLUSTER' | 'AWS' | 'GCP' | 'AZURE' | 'COMMON' | 'CUSTOM' | 'BUSINESS_MAPPING' | 'LABEL')[]
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
   name?: string
@@ -1197,6 +1198,7 @@ export interface ConnectorInfoDTO {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export interface ConnectorResponse {
@@ -1354,7 +1356,7 @@ export type CustomSecretManager = ConnectorConfigDTO & {
   default?: boolean
   delegateSelectors?: string[]
   host?: string
-  onDelegate: boolean
+  onDelegate?: boolean
   template: TemplateLinkConfigForCustomSecretManager
   workingDirectory?: string
 }
@@ -1408,6 +1410,7 @@ export interface ECSRecommendationDTO {
   }
   id?: string
   lastDayCost?: Cost
+  launchType?: 'EC2' | 'FARGATE' | 'EXTERNAL'
   memoryHistogram?: HistogramExp
   percentileBased?: {
     [key: string]: {
@@ -1813,12 +1816,16 @@ export interface Error {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2178,12 +2185,16 @@ export interface Failure {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2268,6 +2279,12 @@ export type GcpKmsConnectorDTO = ConnectorConfigDTO & {
 
 export type GcpManualDetails = GcpCredentialSpec & {
   secretKeyRef: string
+}
+
+export type GcpSecretManager = ConnectorConfigDTO & {
+  credentialsRef: string
+  default?: boolean
+  delegateSelectors?: string[]
 }
 
 export interface GitAuthenticationDTO {
@@ -3541,12 +3558,16 @@ export interface ResponseMessage {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4871,6 +4892,23 @@ export const useCCMK8SMetadata = (props: UseCCMK8SMetadataProps) =>
     `/ccmK8sMeta`,
     { base: getConfig('ccm/api'), ...props }
   )
+
+export type GetCENGMicroserviceVersionProps = Omit<GetProps<ResponseString, unknown, void, void>, 'path'>
+
+/**
+ * Get CE-NG Manager version
+ */
+export const GetCENGMicroserviceVersion = (props: GetCENGMicroserviceVersionProps) => (
+  <Get<ResponseString, unknown, void, void> path={`/cenghealth`} base={getConfig('ccm/api')} {...props} />
+)
+
+export type UseGetCENGMicroserviceVersionProps = Omit<UseGetProps<ResponseString, unknown, void, void>, 'path'>
+
+/**
+ * Get CE-NG Manager version
+ */
+export const useGetCENGMicroserviceVersion = (props: UseGetCENGMicroserviceVersionProps) =>
+  useGet<ResponseString, unknown, void, void>(`/cenghealth`, { base: getConfig('ccm/api'), ...props })
 
 export interface AwsaccountconnectiondetailQueryParams {
   accountIdentifier?: string
@@ -6712,6 +6750,7 @@ export interface EcsRecommendationDetailQueryParams {
   id: string
   from?: string
   to?: string
+  bufferPercentage?: number
 }
 
 export type EcsRecommendationDetailProps = Omit<

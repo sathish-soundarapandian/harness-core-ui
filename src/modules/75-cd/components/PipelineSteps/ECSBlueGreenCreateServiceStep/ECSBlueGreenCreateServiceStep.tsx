@@ -33,7 +33,6 @@ export interface ECSBlueGreenCreateServiceStepInitialValues extends StepElementC
   }
 }
 export interface ECSBlueGreenCreateServiceCustomStepProps {
-  initialValues: ECSBlueGreenCreateServiceStepInitialValues
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: ECSBlueGreenCreateServiceStepInitialValues
   selectedStage: StageElementWrapper<DeploymentStageElementConfig>

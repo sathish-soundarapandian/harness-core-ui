@@ -166,6 +166,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.elk.elkLabel'
     case Connectors.AWSSECRETMANAGER:
       return 'connectors.title.awsSecretManager'
+    case Connectors.GcpSecretManager:
+      return 'connectors.title.gcpSecretManager'
     default:
       return 'connector'
   }
@@ -258,6 +260,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'microsoft-azure'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'custom-sm'
+    case Connectors.GcpSecretManager:
+      return 'gcp-secret-manager'
     default:
       return 'placeholder'
   }

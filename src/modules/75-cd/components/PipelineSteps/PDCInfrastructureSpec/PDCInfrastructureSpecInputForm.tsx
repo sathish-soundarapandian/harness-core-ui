@@ -21,7 +21,9 @@ import { Connectors } from '@connectors/constants'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeTextAreaField } from '@common/components'
-import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import MultiTypeSecretInput, {
+  getMultiTypeSecretInputType
+} from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import {
   getValidationSchemaAll,
   HostScope,
@@ -250,7 +252,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
                   <div className={cx(stepCss.formGroup, stepCss.md, css.credRefWidth)}>
                     <MultiTypeSecretInput
                       name={getString('cd.credentialsRef')}
-                      type="SSHKey"
+                      type={getMultiTypeSecretInputType(initialValues.deploymentType)}
                       expressions={expressions}
                       allowableTypes={allowableTypes}
                       label={getString('cd.steps.common.specifyCredentials')}

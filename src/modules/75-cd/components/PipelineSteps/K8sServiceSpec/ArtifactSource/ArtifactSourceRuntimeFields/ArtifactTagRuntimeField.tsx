@@ -6,18 +6,26 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { defaultTo, memoize } from 'lodash-es'
+import { defaultTo, get, memoize } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 
-import { Layout, SelectOption, Text, useToaster } from '@wings-software/uicore'
+import {
+  getMultiTypeFromValue,
+  Layout,
+  MultiTypeInputType,
+  SelectOption,
+  Text,
+  useToaster
+} from '@wings-software/uicore'
 import type { GetDataError } from 'restful-react'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { DockerBuildDetailsDTO, Failure, Error, ArtifactoryBuildDetailsDTO } from 'services/cd-ng'
-
 import { useStrings } from 'framework/strings'
 import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
-import { BuildDetailsDTO, getTagError } from '../artifactSourceUtils'
+import { BuildDetailsDTO, getTagError, isExecutionTimeFieldDisabled } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface TagsRenderContent extends ArtifactSourceRenderProps {
@@ -46,7 +54,8 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
     fetchTags,
     fetchTagsError,
     stageIdentifier,
-    isServerlessDeploymentTypeSelected = false
+    isServerlessDeploymentTypeSelected = false,
+    stepViewType
   } = props
 
   const { getString } = useStrings()
@@ -99,62 +108,99 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
   ))
 
   return (
-    <ExperimentalInput
-      formik={formik}
-      disabled={isFieldDisabled()}
-      selectItems={
-        fetchingTags
-          ? [
-              {
-                label: loadingPlaceholderText,
-                value: loadingPlaceholderText
-              }
-            ]
-          : tagsList
-      }
-      useValue
-      multiTypeInputProps={{
-        onFocus: (e: React.ChangeEvent<HTMLInputElement>) => {
-          if (
-            e?.target?.type !== 'text' ||
-            (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-          ) {
-            return
-          }
-
-          if (!isTagsSelectionDisabled(props, isServerlessDeploymentTypeSelected)) {
-            fetchTags()
-          }
-        },
-        selectProps: {
-          items: fetchingTags
+    <div className={css.inputFieldLayout}>
+      <ExperimentalInput
+        formik={formik}
+        disabled={isFieldDisabled()}
+        selectItems={
+          fetchingTags
             ? [
                 {
                   label: loadingPlaceholderText,
                   value: loadingPlaceholderText
                 }
               ]
-            : tagsList,
-          usePortal: true,
-          addClearBtn: !(readonly || isTagsSelectionDisabled(props, isServerlessDeploymentTypeSelected)),
-          noResults: (
-            <Text lineClamp={1}>{getTagError(fetchTagsError) || getString('pipelineSteps.deploy.errors.notags')}</Text>
-          ),
-          itemRenderer,
-          allowCreatingNewItems: true,
-          popoverClassName: css.selectPopover,
-          loadingItems: fetchingTags
-        },
-        expressions,
-        allowableTypes
-      }}
-      label={isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
-      name={
-        isServerlessDeploymentTypeSelected
-          ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
-          : `${path}.artifacts.${artifactPath}.spec.tag`
-      }
-    />
+            : tagsList
+        }
+        useValue
+        multiTypeInputProps={{
+          onFocus: (e: React.ChangeEvent<HTMLInputElement>) => {
+            if (
+              e?.target?.type !== 'text' ||
+              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+            ) {
+              return
+            }
+
+            if (!isTagsSelectionDisabled(props, isServerlessDeploymentTypeSelected)) {
+              fetchTags()
+            }
+          },
+          selectProps: {
+            items: fetchingTags
+              ? [
+                  {
+                    label: loadingPlaceholderText,
+                    value: loadingPlaceholderText
+                  }
+                ]
+              : tagsList,
+            usePortal: true,
+            addClearBtn: !(readonly || isTagsSelectionDisabled(props, isServerlessDeploymentTypeSelected)),
+            noResults: (
+              <Text lineClamp={1}>
+                {getTagError(fetchTagsError) || getString('pipelineSteps.deploy.errors.notags')}
+              </Text>
+            ),
+            itemRenderer,
+            allowCreatingNewItems: true,
+            popoverClassName: css.selectPopover,
+            loadingItems: fetchingTags
+          },
+          expressions,
+          allowableTypes
+        }}
+        label={isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
+        name={
+          isServerlessDeploymentTypeSelected
+            ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
+            : `${path}.artifacts.${artifactPath}.spec.tag`
+        }
+      />
+      {getMultiTypeFromValue(
+        get(
+          formik?.values,
+          isServerlessDeploymentTypeSelected
+            ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
+            : `${path}.artifacts.${artifactPath}.spec.tag`
+        )
+      ) === MultiTypeInputType.RUNTIME && (
+        <ConfigureOptions
+          className={css.configureOptions}
+          style={{ alignSelf: 'center' }}
+          value={get(
+            formik?.values,
+            isServerlessDeploymentTypeSelected
+              ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
+              : `${path}.artifacts.${artifactPath}.spec.tag`
+          )}
+          type="String"
+          variableName="tag"
+          showRequiredField={false}
+          showDefaultField={true}
+          showAdvanced={true}
+          isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+          onChange={value => {
+            formik.setFieldValue(
+              isServerlessDeploymentTypeSelected
+                ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
+                : `${path}.artifacts.${artifactPath}.spec.tag`,
+              value
+            )
+          }}
+        />
+      )}
+    </div>
   )
 }
 

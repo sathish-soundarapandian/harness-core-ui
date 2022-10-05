@@ -57,7 +57,6 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
       })) ?? [],
     [elkTimeFormat?.data]
   )
-
   const handleSelectChange = () => {
     onChange(MapElkToServiceFieldNames.IS_STALE_RECORD, true)
   }

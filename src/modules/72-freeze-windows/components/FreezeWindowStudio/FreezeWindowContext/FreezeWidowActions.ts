@@ -14,10 +14,16 @@ export enum FreezeWindowActions {
   SetYamlHandler = 'SetYamlHandler'
 }
 
+export enum DrawerTypes {
+  ActivityLog = 'ActivityLog',
+  Notification = 'Notification'
+}
+
 export interface ActionResponse {
   isYamlEditable?: boolean
   isUpdated?: boolean
   freezeObj?: Record<string, unknown>
+  oldFreezeObj?: Record<string, unknown>
   yamlHandler?: YamlBuilderHandlerBinding
 }
 

@@ -86,7 +86,7 @@ function SavePipelinePopover(
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const {
-    state: { pipeline, yamlHandler, storeMetadata, gitDetails, isUpdated },
+    state: { pipeline, yamlHandler, storeMetadata, gitDetails, isUpdated, isIntermittentLoading },
     deletePipelineCache,
     fetchPipeline,
     view,
@@ -152,7 +152,7 @@ function SavePipelinePopover(
 
   const isTemplatesEnabled = templatesFeatureEnabled && canEdit && !pipeline?.template
 
-  const isSaveEnabled = !isReadonly && isUpdated
+  const isSaveDisabled = isReadonly || !isUpdated || isIntermittentLoading
 
   const { save } = useSaveAsTemplate({
     data: pipeline,
@@ -187,7 +187,10 @@ function SavePipelinePopover(
     if (pipelineIdentifier === DefaultNewPipelineId) {
       await deletePipelineCache(gitDetails)
 
-      showSuccess(getString('pipelines-studio.publishPipeline'))
+      // Show toast only for Inline pipelines
+      if (!isPipelineRemote && isEmpty(updatedGitDetails)) {
+        showSuccess(getString('pipelines-studio.publishPipeline'))
+      }
 
       navigateToLocation(newPipelineId, updatedGitDetails)
       // note: without setTimeout does not redirect properly after save
@@ -428,7 +431,7 @@ function SavePipelinePopover(
           text={getString('save')}
           onClick={saveAndPublish}
           icon="send-data"
-          disabled={!isUpdated}
+          disabled={isSaveDisabled}
         />
       )
     } else {
@@ -438,13 +441,13 @@ function SavePipelinePopover(
 
   return (
     <SplitButton
-      disabled={!isSaveEnabled}
+      disabled={isSaveDisabled}
       variation={ButtonVariation.PRIMARY}
       text={getString('save')}
       loading={loading}
       onClick={saveAndPublish}
     >
-      <SplitButtonOption onClick={save} text={getString('common.saveAsTemplate')} />
+      <SplitButtonOption onClick={save} disabled={isIntermittentLoading} text={getString('common.saveAsTemplate')} />
     </SplitButton>
   )
 }

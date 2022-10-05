@@ -21,8 +21,7 @@ import { useToaster } from '@common/exports'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 import { useConfirmAction } from '@common/hooks/useConfirmAction'
-import { useEnvStrings } from '@cf/hooks/environment'
-import { String } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import ListingPageTemplate from '@cf/components/ListingPageTemplate/ListingPageTemplate'
 import EnvironmentDialog from '@cf/components/CreateEnvironmentDialog/EnvironmentDialog'
 import routes from '@common/RouteDefinitions'
@@ -43,12 +42,12 @@ const withActions = withTableData<
 }))
 
 export const TypeCell = withEnvironment(({ environment }) => {
-  const { getString } = useEnvStrings()
+  const { getString } = useStrings()
   return <Text>{getString(environment.type === EnvironmentType.PRODUCTION ? 'production' : 'nonProduction')}</Text>
 })
 
 export const NameCell = withEnvironment(({ environment }) => {
-  const { getString } = useEnvStrings()
+  const { getString } = useStrings()
   return (
     <Layout.Horizontal
       flex={{ distribution: 'space-between', align: 'center-center' }}
@@ -76,7 +75,7 @@ export const NameCell = withEnvironment(({ environment }) => {
 })
 
 export const ModifiedByCell = withActions(({ environment, actions }) => {
-  const { getString } = useEnvStrings()
+  const { getString } = useStrings()
   const identifier = environment.identifier as string
   const deleteEnvironment = useConfirmAction({
     title: getString('cf.environments.delete.title'),
@@ -126,7 +125,7 @@ export const ModifiedByCell = withActions(({ environment, actions }) => {
 type CustomColumn<T extends Record<string, any>> = Column<T>
 
 const EnvironmentsPage: React.FC = () => {
-  const { getString } = useEnvStrings()
+  const { getString } = useStrings()
   const { showError, showSuccess } = useToaster()
   const history = useHistory()
   const [page, setPage] = useState(0)

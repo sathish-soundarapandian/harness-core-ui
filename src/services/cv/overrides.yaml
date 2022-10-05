@@ -163,6 +163,10 @@ allowpaths:
   - /monitored-service/{identifier}/notification-rules
   - /log-dashboard/logs-radar-chart-data
   - /log-dashboard/logs-radar-chart-cluster
+  - /cloudwatch/metrics/fetch-sample-data
+  - /cloudwatch/metrics/regions
+  - /cloudwatch/metrics/fetch-sample-data
+
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications
   /appdynamics/metric-data.post: getAppDynamicsMetricData

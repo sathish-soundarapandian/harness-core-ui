@@ -50,6 +50,7 @@ const WrapperComponent = () => {
             tooptipMessage={'cv.monitoringSources.gcoLogs.addQueryTooltip'}
             addFieldLabel={'cv.monitoringSources.addMetric'}
             initCustomForm={INIT as any}
+            shouldBeAbleToDeleteLastMetric
           >
             <FormInput.Text name={'metricName'} />
             <FormInput.Select
@@ -89,12 +90,14 @@ describe('Test case', () => {
         value: 'Group 2' //{ label: 'Group 2', value: 'Group 2' } as any
       }
     ])
+
     await waitFor(() =>
-      expect(container.querySelectorAll('.seletedAppContainer span[data-icon="main-delete"]').length).toEqual(3)
+      expect(container.querySelectorAll('.seletedAppContainer span[data-icon="main-delete"]').length).toEqual(2)
     )
     act(() => {
       fireEvent.click(container.querySelector('span[data-icon="main-delete"]')!)
     })
+
     await waitFor(() =>
       expect(container.querySelectorAll('.seletedAppContainer span[data-icon="main-delete"]').length).toEqual(1)
     )

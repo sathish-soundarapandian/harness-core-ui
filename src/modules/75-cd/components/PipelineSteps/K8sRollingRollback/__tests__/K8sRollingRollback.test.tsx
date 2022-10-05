@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act } from '@testing-library/react'
+import { render, fireEvent, act, screen } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import userEvent from '@testing-library/user-event'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
@@ -20,7 +21,7 @@ describe('Test K8sRollingRollback Step', () => {
   beforeEach(() => {
     factory.registerStep(new K8sRollingRollbackStep())
   })
-  test('should render edit view', () => {
+  test('should render edit view', async () => {
     const { container } = render(
       <K8sRollingRollback
         type={StepType.K8sRollingRollback}
@@ -29,6 +30,10 @@ describe('Test K8sRollingRollback Step', () => {
       />
     )
     expect(container).toMatchSnapshot()
+
+    userEvent.click(screen.getByTestId('optional-config-summary'))
+
+    expect(await screen.findByRole('checkbox', { name: 'cd.steps.common.enableKubernetesPruning' })).toBeInTheDocument()
   })
   test('should render inputSet view', () => {
     const { container } = render(
@@ -202,7 +207,7 @@ describe('Test K8sRollingRollback Step', () => {
         ref={ref}
       />
     )
-    await ref.current?.submitForm()
+    await act(async () => ref.current?.submitForm())
     expect(container).toMatchSnapshot()
   })
 })

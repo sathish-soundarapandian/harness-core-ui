@@ -30,6 +30,7 @@ export enum PipelineActions {
   UpdateSelection = 'UpdateSelection',
   Initialize = 'Initialize',
   Fetching = 'Fetching',
+  IntermittentLoading = 'IntermittentLoading',
   UpdatePipelineView = 'UpdatePipelineView',
   UpdateTemplateView = 'UpdateTemplateView',
   UpdatePipeline = 'UpdatePipeline',
@@ -140,6 +141,7 @@ export interface PipelineReducerState {
   entityValidityDetails: EntityValidityDetails
   isDBInitialized: boolean
   isLoading: boolean
+  isIntermittentLoading: boolean
   isInitialized: boolean
   isBEPipelineUpdated: boolean
   isUpdated: boolean
@@ -169,6 +171,7 @@ export interface ActionResponse {
   templateServiceData?: TemplateServiceDataType
   resolvedCustomDeploymentDetailsByRef?: { [key: string]: Record<string, string | string[]> }
   originalPipeline?: PipelineInfoConfig
+  isIntermittentLoading?: boolean
   isBEPipelineUpdated?: boolean
   pipelineView?: PipelineViewData
   selectionState?: SelectionState
@@ -210,6 +213,10 @@ const setResolvedCustomDeploymentDetailsByRef = (response: ActionResponse): Acti
 })
 const updating = (): ActionReturnType => ({ type: PipelineActions.UpdatePipeline })
 const fetching = (): ActionReturnType => ({ type: PipelineActions.Fetching })
+const setIntermittentLoading = (response: ActionResponse): ActionReturnType => ({
+  type: PipelineActions.IntermittentLoading,
+  response
+})
 const pipelineSavedAction = (response: ActionResponse): ActionReturnType => ({
   type: PipelineActions.PipelineSaved,
   response
@@ -240,7 +247,8 @@ export const PipelineContextActions = {
   success,
   error,
   updateSchemaErrorsFlag,
-  updateSelectionState
+  updateSelectionState,
+  setIntermittentLoading
 }
 
 export const initialState: PipelineReducerState = {
@@ -264,6 +272,7 @@ export const initialState: PipelineReducerState = {
   templateServiceData: {},
   resolvedCustomDeploymentDetailsByRef: {},
   isLoading: false,
+  isIntermittentLoading: false,
   isBEPipelineUpdated: false,
   isDBInitialized: false,
   isUpdated: false,
@@ -347,6 +356,11 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
       return {
         ...state,
         selectionState: response?.selectionState || state.selectionState
+      }
+    case PipelineActions.IntermittentLoading:
+      return {
+        ...state,
+        isIntermittentLoading: !!response?.isIntermittentLoading
       }
     default:
       return state

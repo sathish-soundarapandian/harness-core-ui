@@ -36,7 +36,7 @@ import {
   useGetSampleDataForNRQL
 } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { initializeGroupNames } from '@cv/pages/health-source/common/GroupName/GroupName.utils'
+import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { NewRelicHealthSourceFieldNames } from '../../NewRelicHealthSource.constants'
 import { getOptionsForChart } from './NewRelicCustomMetricForm.utils'
 import type { NewRelicCustomFormInterface } from './NewRelicCustomMetricForm.types'

@@ -357,12 +357,15 @@ export interface AccessControlCheckError {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -826,7 +829,8 @@ export interface ArtifactSource {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifactsRegistry'
+    | 'AzureArtifacts'
+    | 'AmazonMachineImage'
 }
 
 export interface ArtifactSourceConfig {
@@ -844,7 +848,8 @@ export interface ArtifactSourceConfig {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifactsRegistry'
+    | 'AzureArtifacts'
+    | 'AmazonMachineImage'
 }
 
 export interface ArtifactSourcesResponseDTO {
@@ -1960,6 +1965,7 @@ export interface ConnectorCatalogueItem {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
   )[]
 }
 
@@ -2039,6 +2045,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
   )[]
 }
 
@@ -2094,6 +2101,7 @@ export interface ConnectorInfoDTO {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export interface ConnectorResponse {
@@ -2166,6 +2174,7 @@ export interface ConnectorTypeStatistics {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export interface ConnectorValidationResult {
@@ -2322,7 +2331,7 @@ export type CustomDeploymentInfrastructure = Infrastructure & {
 
 export type CustomDeploymentInstanceInfoDTO = InstanceInfoDTO & {
   hostname: string
-  instanceFetchScriptHash: number
+  infrastructureKey: string
   properties?: {
     [key: string]: { [key: string]: any }
   }
@@ -2424,7 +2433,7 @@ export type CustomSecretManager = ConnectorConfigDTO & {
   default?: boolean
   delegateSelectors?: string[]
   host?: string
-  onDelegate: boolean
+  onDelegate?: boolean
   template: TemplateLinkConfigForCustomSecretManager
   workingDirectory?: string
 }
@@ -2963,6 +2972,7 @@ export type EcsBlueGreenRollbackStepInfo = StepSpecType & {
 
 export type EcsBlueGreenSwapTargetGroupsStepInfo = StepSpecType & {
   delegateSelectors?: string[]
+  doNotDownsizeOldService?: boolean
 }
 
 export type EcsCanaryDeleteStepInfo = StepSpecType & {
@@ -3155,6 +3165,7 @@ export interface EntityDetail {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -3166,6 +3177,7 @@ export interface EntityDetail {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -3212,6 +3224,7 @@ export interface EntityDetail {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
 }
 
 export interface EntityDetailProtoDTO {
@@ -3387,6 +3400,11 @@ export interface EnvironmentInfoByServiceId {
   tag?: string
 }
 
+export interface EnvironmentInputsetYamlAndServiceOverridesMetadataInput {
+  envIdentifiers: string[]
+  serviceIdentifiers: string[]
+}
+
 export interface EnvironmentRequestDTO {
   color?: string
   description?: string
@@ -3431,6 +3449,19 @@ export interface EnvironmentYaml {
     [key: string]: string
   }
   type: 'PreProduction' | 'Production'
+}
+
+export interface EnvironmentYamlMetadata {
+  runtimeInputYaml?: string
+  serviceOverridesYaml?: {
+    [key: string]: string
+  }
+}
+
+export interface EnvironmentYamlMetadataDTO {
+  environmentsInputYamlAndServiceOverrides?: {
+    [key: string]: EnvironmentYamlMetadata
+  }
 }
 
 export interface EnvironmentYamlV2 {
@@ -3788,12 +3819,15 @@ export interface Error {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4144,12 +4178,15 @@ export interface ErrorMetadata {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   errorMessage?: string
 }
 
@@ -4557,12 +4594,15 @@ export interface Failure {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4579,7 +4619,7 @@ export interface FailureStrategyActionConfig {
     | 'StepGroupRollback'
     | 'PipelineRollback'
     | 'ManualIntervention'
-    | 'ProceedWithDefaultValue'
+    | 'ProceedWithDefaultValues'
 }
 
 export interface FailureStrategyConfig {
@@ -4647,6 +4687,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4718,6 +4759,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4791,6 +4833,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4872,6 +4915,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5019,8 +5063,68 @@ export interface FolderNodeDTO {
   type: 'FILE' | 'FOLDER'
 }
 
+export interface FreezeErrorResponseDTO {
+  errorMessage?: string
+  id?: string
+  name?: string
+}
+
+export interface FreezeFilterPropertiesDTO {
+  freezeIdentifiers?: string[]
+  freezeStatus?: 'Enabled' | 'Disabled'
+  searchTerm?: string
+  sort?: string[]
+}
+
 export interface FreezeResponse {
-  [key: string]: any
+  accountId?: string
+  createdAt?: number
+  description?: string
+  freezeScope?: 'account' | 'org' | 'project' | 'unknown'
+  freezeWindows?: FreezeWindow[]
+  identifier?: string
+  lastUpdatedAt?: number
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  status?: 'Enabled' | 'Disabled'
+  tags?: {
+    [key: string]: string
+  }
+  type?: 'GLOBAL' | 'MANUAL'
+  yaml?: string
+}
+
+export interface FreezeResponseWrapperDTO {
+  freezeErrorResponseDTOList?: FreezeErrorResponseDTO[]
+  noOfFailed?: number
+  noOfSuccess?: number
+  successfulFreezeResponseDTOList?: FreezeResponse[]
+}
+
+export interface FreezeSummaryResponse {
+  accountId?: string
+  createdAt?: number
+  description?: string
+  freezeScope?: 'account' | 'org' | 'project' | 'unknown'
+  freezeWindows?: FreezeWindow[]
+  identifier?: string
+  lastUpdatedAt?: number
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  status?: 'Enabled' | 'Disabled'
+  tags?: {
+    [key: string]: string
+  }
+  type?: 'GLOBAL' | 'MANUAL'
+}
+
+export interface FreezeWindow {
+  endTime?: string
+  recurrence?: Recurrence
+  startTime?: string
+  timeZone?: TimeZone
 }
 
 export interface GARBuildDetailsDTO {
@@ -5083,6 +5187,12 @@ export type GcpManualDetails = GcpCredentialSpec & {
 
 export interface GcpResponseDTO {
   clusterNames?: string[]
+}
+
+export type GcpSecretManager = ConnectorConfigDTO & {
+  credentialsRef: string
+  default?: boolean
+  delegateSelectors?: string[]
 }
 
 export type GcrArtifactConfig = ArtifactConfig & {
@@ -5232,6 +5342,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -5243,6 +5354,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -5289,6 +5401,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   )[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   searchTerm?: string
@@ -5347,6 +5460,7 @@ export interface GitEntityFilterProperties {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -5358,6 +5472,7 @@ export interface GitEntityFilterProperties {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -5404,6 +5519,7 @@ export interface GitEntityFilterProperties {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
@@ -5495,6 +5611,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -5506,6 +5623,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -5552,6 +5670,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -5618,6 +5737,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -5629,6 +5749,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -5675,6 +5796,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -5849,6 +5971,7 @@ export interface GitSyncEntityDTO {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -5860,6 +5983,7 @@ export interface GitSyncEntityDTO {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -5906,6 +6030,7 @@ export interface GitSyncEntityDTO {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -5966,6 +6091,7 @@ export interface GitSyncEntityListDTO {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -5977,6 +6103,7 @@ export interface GitSyncEntityListDTO {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -6023,6 +6150,7 @@ export interface GitSyncEntityListDTO {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -6100,6 +6228,7 @@ export interface GitSyncErrorDTO {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -6111,6 +6240,7 @@ export interface GitSyncErrorDTO {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -6157,6 +6287,7 @@ export interface GitSyncErrorDTO {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -6767,6 +6898,20 @@ export interface InfrastructureResponseDTO {
   yaml?: string
 }
 
+export interface InfrastructureYamlMetadata {
+  infrastructureIdentifier: string
+  infrastructureYaml?: string
+  inputSetTemplateYaml?: string
+}
+
+export interface InfrastructureYamlMetadataApiInput {
+  infrastructureIdentifiers: string[]
+}
+
+export interface InfrastructureYamlMetadataDTO {
+  infrastructureYamlMetadataList?: InfrastructureYamlMetadata[]
+}
+
 export type InheritFromManifestStoreConfig = StoreConfig & {
   paths?: string[]
 }
@@ -6828,6 +6973,11 @@ export type InputSetReference = EntityReference & {
 export interface InputSetValidator {
   parameters?: string
   validatorType?: 'ALLOWED_VALUES' | 'REGEX'
+}
+
+export interface InputsValidationResponse {
+  childrenErrorNodes?: NodeErrorSummary[]
+  valid?: boolean
 }
 
 export interface InstanceCountDetailsByEnvTypeAndServiceId {
@@ -7323,7 +7473,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export interface LDAPSettings {
+export type LDAPSettings = NGAuthSettings & {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -7331,7 +7481,6 @@ export interface LDAPSettings {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
-  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -7853,7 +8002,7 @@ export type NexusConnector = ConnectorConfigDTO & {
 }
 
 export type NexusRegistryArtifactConfig = ArtifactConfig & {
-  artifactPath: string
+  artifactPath?: string
   connectorRef: string
   metadata?: string
   repository: string
@@ -7936,6 +8085,12 @@ export interface NodeErrorInfo {
   identifier?: string
   name?: string
   type?: string
+}
+
+export interface NodeErrorSummary {
+  childrenErrorNodes?: NodeErrorSummary[]
+  nodeInfo?: NodeInfo
+  type?: 'TEMPLATE' | 'SERVICE' | 'PIPELINE' | 'UNKNOWN'
 }
 
 export interface NodeInfo {
@@ -8068,7 +8223,7 @@ export interface OnFailureConfig {
     | 'Verification'
     | 'DelegateProvisioning'
     | 'PolicyEvaluationFailure'
-    | 'ExecutionInputTimeoutError'
+    | 'InputTimeoutError'
   )[]
 }
 
@@ -8294,8 +8449,8 @@ export interface PageFilterDTO {
   totalPages?: number
 }
 
-export interface PageFreezeResponse {
-  content?: FreezeResponse[]
+export interface PageFreezeSummaryResponse {
+  content?: FreezeSummaryResponse[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -8816,7 +8971,8 @@ export interface PrimaryArtifact {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifactsRegistry'
+    | 'AzureArtifacts'
+    | 'AmazonMachineImage'
 }
 
 export interface Principal {
@@ -8828,7 +8984,7 @@ export interface Principal {
 }
 
 export type ProceedWithDefaultValuesFailureActionConfig = FailureStrategyActionConfig & {
-  type: 'ProceedWithDefaultValue'
+  type: 'ProceedWithDefaultValues'
 }
 
 export interface Project {
@@ -8902,6 +9058,16 @@ export type RateLimitRestrictionMetadataDTO = RestrictionMetadataDTO & {
   timeUnit?: TimeUnit
 }
 
+export interface Recurrence {
+  spec?: RecurrenceSpec
+  type?: 'Daily' | 'Weekly' | 'Monthly' | 'Yearly'
+}
+
+export interface RecurrenceSpec {
+  count?: number
+  until?: string
+}
+
 export interface ReferenceDTO {
   accountIdentifier?: string
   count?: number
@@ -8970,6 +9136,7 @@ export interface ReferencedByDTO {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -8981,6 +9148,7 @@ export interface ReferencedByDTO {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -9027,6 +9195,15 @@ export interface ReferencedByDTO {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+}
+
+export interface RefreshRequest {
+  yaml: string
+}
+
+export interface RefreshResponse {
+  refreshedYaml?: string
 }
 
 export interface RegionGar {
@@ -9574,6 +9751,13 @@ export interface ResponseEnvironmentResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseEnvironmentYamlMetadataDTO {
+  correlationId?: string
+  data?: EnvironmentYamlMetadataDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseExecutionDeploymentInfo {
   correlationId?: string
   data?: ExecutionDeploymentInfo
@@ -9626,6 +9810,13 @@ export interface ResponseFolderNodeDTO {
 export interface ResponseFreezeResponse {
   correlationId?: string
   data?: FreezeResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseFreezeResponseWrapperDTO {
+  correlationId?: string
+  data?: FreezeResponseWrapperDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9745,6 +9936,20 @@ export interface ResponseInfrastructureConfig {
 export interface ResponseInfrastructureResponse {
   correlationId?: string
   data?: InfrastructureResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInfrastructureYamlMetadataDTO {
+  correlationId?: string
+  data?: InfrastructureYamlMetadataDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInputsValidationResponse {
+  correlationId?: string
+  data?: InputsValidationResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -9943,6 +10148,7 @@ export interface ResponseListEntityType {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -9954,6 +10160,7 @@ export interface ResponseListEntityType {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -10000,6 +10207,7 @@ export interface ResponseListEntityType {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -10031,6 +10239,7 @@ export interface ResponseListExecutionStatus {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -10185,6 +10394,13 @@ export interface ResponseListServiceDefinitionType {
 export interface ResponseListServiceNowFieldNG {
   correlationId?: string
   data?: ServiceNowFieldNG[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListServiceNowStagingTable {
+  correlationId?: string
+  data?: ServiceNowStagingTable[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -10631,12 +10847,15 @@ export interface ResponseMessage {
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
     | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -10648,7 +10867,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -10829,9 +11048,9 @@ export interface ResponsePageFilterDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponsePageFreezeResponse {
+export interface ResponsePageFreezeSummaryResponse {
   correlationId?: string
-  data?: PageFreezeResponse
+  data?: PageFreezeSummaryResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11056,6 +11275,13 @@ export interface ResponseProjectResponse {
 export interface ResponseProjectsDashboardInfo {
   correlationId?: string
   data?: ProjectsDashboardInfo
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseRefreshResponse {
+  correlationId?: string
+  data?: RefreshResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12393,6 +12619,11 @@ export interface ServiceNowFieldValueNG {
   value?: string
 }
 
+export interface ServiceNowStagingTable {
+  label: string
+  name: string
+}
+
 export interface ServiceNowTemplate {
   fields: {
     [key: string]: ServiceNowFieldValueNG
@@ -12601,6 +12832,12 @@ export type ShellScriptInlineSource = ShellScriptBaseSource & {
   script?: string
 }
 
+export type ShellScriptProvisionStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  environmentVariables?: NGVariable[]
+  source: ShellScriptSourceWrapper
+}
+
 export interface ShellScriptSourceWrapper {
   spec: ShellScriptBaseSource
   type: string
@@ -12622,7 +12859,8 @@ export interface SidecarArtifact {
     | 'AmazonS3'
     | 'GoogleArtifactRegistry'
     | 'GithubPackageRegistry'
-    | 'AzureArtifactsRegistry'
+    | 'AzureArtifacts'
+    | 'AmazonMachineImage'
 }
 
 export interface SidecarArtifactWrapper {
@@ -12869,7 +13107,7 @@ export interface StepSpecType {
 
 export interface StepTemplateRef {
   templateRef: string
-  versionLabel: string
+  versionLabel?: string
 }
 
 export interface StepWhenCondition {
@@ -13250,6 +13488,13 @@ export interface TimeValuePairListDTOInteger {
 export interface TimeValuePairObject {
   timestamp?: number
   value?: { [key: string]: any }
+}
+
+export interface TimeZone {
+  displayName?: string
+  dstsavings?: number
+  id?: string
+  rawOffset?: number
 }
 
 export interface TokenAggregateDTO {
@@ -13824,6 +14069,8 @@ export type PatchRequestRequestBody = PatchRequest
 
 export type ProjectRequestRequestBody = ProjectRequest
 
+export type RefreshRequestRequestBody = RefreshRequest
+
 export type RoleAssignmentFilterRequestBody = RoleAssignmentFilter
 
 export type ScimGroupRequestBody = ScimGroup
@@ -13859,6 +14106,8 @@ export type UserGroupDTORequestBody = UserGroupDTO
 export type VariableRequestDTORequestBody = VariableRequestDTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
+
+export type DeleteManyFreezesBodyRequestBody = string[]
 
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
 
@@ -14394,6 +14643,7 @@ export interface ListActivitiesQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -14405,6 +14655,7 @@ export interface ListActivitiesQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -14451,6 +14702,7 @@ export interface ListActivitiesQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -14503,6 +14755,7 @@ export interface ListActivitiesQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -14514,6 +14767,7 @@ export interface ListActivitiesQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -14560,6 +14814,7 @@ export interface ListActivitiesQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -14716,6 +14971,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -14727,6 +14983,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -14773,6 +15030,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -14825,6 +15083,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -14836,6 +15095,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -14882,6 +15142,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -20544,11 +20805,13 @@ export const cFStatesForAwsPromise = (
   )
 
 export interface ClustersQueryParams {
-  awsConnectorRef: string
+  awsConnectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  region: string
+  region?: string
+  envId?: string
+  infraDefinitionId?: string
 }
 
 export type ClustersProps = Omit<GetProps<ResponseListString, Failure | Error, ClustersQueryParams, void>, 'path'>
@@ -20590,7 +20853,7 @@ export const clustersPromise = (
   )
 
 export interface ElasticLoadBalancersQueryParams {
-  awsConnectorRef: string
+  awsConnectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
@@ -20744,7 +21007,7 @@ export const getIamRolesForAwsPromise = (
   )
 
 export interface ListenerRulesQueryParams {
-  awsConnectorRef: string
+  awsConnectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
@@ -20800,7 +21063,7 @@ export const listenerRulesPromise = (
   )
 
 export interface ListenersQueryParams {
-  awsConnectorRef: string
+  awsConnectorRef?: string
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
@@ -22073,6 +22336,7 @@ export interface GetConnectorListQueryParams {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
   category?:
     | 'CLOUD_PROVIDER'
     | 'SECRET_MANAGER'
@@ -22468,6 +22732,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export type GetAllAllowedFieldValuesProps = Omit<
@@ -26439,6 +26704,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -26580,6 +26846,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'AZURE_CREATE_ARM_RESOURCE'
       | 'AZURE_CREATE_BP_RESOURCE'
       | 'AZURE_ROLLBACK_ARM_RESOURCE'
+      | 'SHELL_SCRIPT_PROVISION'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -26656,6 +26923,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -26667,6 +26935,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -26713,6 +26982,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -26825,6 +27095,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -26836,6 +27107,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -26882,6 +27154,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   searchTerm?: string
 }
 
@@ -28071,6 +28344,89 @@ export const dummyNGServiceOverrideConfigPromise = (
     props,
     signal
   )
+
+export interface GetEnvironmentsInputYamlAndServiceOverridesQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetEnvironmentsInputYamlAndServiceOverridesProps = Omit<
+  MutateProps<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns environments runtime input YAML and serviceOverrides Yaml
+ */
+export const GetEnvironmentsInputYamlAndServiceOverrides = (
+  props: GetEnvironmentsInputYamlAndServiceOverridesProps
+) => (
+  <Mutate<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
+    void
+  >
+    verb="POST"
+    path={`/environmentsV2/environmentInputYamlAndServiceOverridesMetadata`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetEnvironmentsInputYamlAndServiceOverridesProps = Omit<
+  UseMutateProps<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns environments runtime input YAML and serviceOverrides Yaml
+ */
+export const useGetEnvironmentsInputYamlAndServiceOverrides = (
+  props: UseGetEnvironmentsInputYamlAndServiceOverridesProps
+) =>
+  useMutate<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
+    void
+  >('POST', `/environmentsV2/environmentInputYamlAndServiceOverridesMetadata`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * This api returns environments runtime input YAML and serviceOverrides Yaml
+ */
+export const getEnvironmentsInputYamlAndServiceOverridesPromise = (
+  props: MutateUsingFetchProps<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseEnvironmentYamlMetadataDTO,
+    Failure | Error,
+    GetEnvironmentsInputYamlAndServiceOverridesQueryParams,
+    EnvironmentInputsetYamlAndServiceOverridesMetadataInput,
+    void
+  >('POST', getConfig('ng/api'), `/environmentsV2/environmentInputYamlAndServiceOverridesMetadata`, props, signal)
 
 export interface GetEnvironmentAccessListQueryParams {
   page?: number
@@ -29754,6 +30110,7 @@ export interface GetReferencedByQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -29765,6 +30122,7 @@ export interface GetReferencedByQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -29811,6 +30169,7 @@ export interface GetReferencedByQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   searchTerm?: string
 }
 
@@ -30180,63 +30539,6 @@ export const getFilterPromise = (
     signal
   )
 
-export interface GetFreezeListQueryParams {
-  page?: number
-  size?: number
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  searchTerm?: string
-  serviceIdentifiers?: string[]
-  sort?: string[]
-  type?: 'GLOBAL' | 'MANUAL'
-  status?: 'ACTIVE' | 'IN_ACTIVE'
-}
-
-export type GetFreezeListProps = Omit<
-  GetProps<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>,
-  'path'
->
-
-/**
- * Gets Freeze Configs list
- */
-export const GetFreezeList = (props: GetFreezeListProps) => (
-  <Get<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>
-    path={`/freeze`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetFreezeListProps = Omit<
-  UseGetProps<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>,
-  'path'
->
-
-/**
- * Gets Freeze Configs list
- */
-export const useGetFreezeList = (props: UseGetFreezeListProps) =>
-  useGet<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>(`/freeze`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
-
-/**
- * Gets Freeze Configs list
- */
-export const getFreezeListPromise = (
-  props: GetUsingFetchProps<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<ResponsePageFreezeResponse, Failure | Error, GetFreezeListQueryParams, void>(
-    getConfig('ng/api'),
-    `/freeze`,
-    props,
-    signal
-  )
-
 export interface CreateFreezeQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -30324,10 +30626,10 @@ export interface DeleteManyFreezesQueryParams {
 
 export type DeleteManyFreezesProps = Omit<
   MutateProps<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -30338,10 +30640,10 @@ export type DeleteManyFreezesProps = Omit<
  */
 export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
   <Mutate<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >
     verb="POST"
@@ -30353,10 +30655,10 @@ export const DeleteManyFreezes = (props: DeleteManyFreezesProps) => (
 
 export type UseDeleteManyFreezesProps = Omit<
   UseMutateProps<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -30367,10 +30669,10 @@ export type UseDeleteManyFreezesProps = Omit<
  */
 export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
   useMutate<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', `/freeze/delete`, { base: getConfig('ng/api'), ...props })
 
@@ -30379,31 +30681,112 @@ export const useDeleteManyFreezes = (props: UseDeleteManyFreezesProps) =>
  */
 export const deleteManyFreezesPromise = (
   props: MutateUsingFetchProps<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
   mutateUsingFetch<
-    ResponseFreezeResponse,
+    ResponseFreezeResponseWrapperDTO,
     Failure | Error,
     DeleteManyFreezesQueryParams,
-    GetBuildDetailsForArtifactoryArtifactWithYamlBodyRequestBody,
+    DeleteManyFreezesBodyRequestBody,
     void
   >('POST', getConfig('ng/api'), `/freeze/delete`, props, signal)
+
+export interface GetFreezeListQueryParams {
+  page?: number
+  size?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetFreezeListProps = Omit<
+  MutateProps<
+    ResponsePageFreezeSummaryResponse,
+    Failure | Error,
+    GetFreezeListQueryParams,
+    FreezeFilterPropertiesDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Freeze Configs list
+ */
+export const GetFreezeList = (props: GetFreezeListProps) => (
+  <Mutate<ResponsePageFreezeSummaryResponse, Failure | Error, GetFreezeListQueryParams, FreezeFilterPropertiesDTO, void>
+    verb="POST"
+    path={`/freeze/list`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetFreezeListProps = Omit<
+  UseMutateProps<
+    ResponsePageFreezeSummaryResponse,
+    Failure | Error,
+    GetFreezeListQueryParams,
+    FreezeFilterPropertiesDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Gets Freeze Configs list
+ */
+export const useGetFreezeList = (props: UseGetFreezeListProps) =>
+  useMutate<
+    ResponsePageFreezeSummaryResponse,
+    Failure | Error,
+    GetFreezeListQueryParams,
+    FreezeFilterPropertiesDTO,
+    void
+  >('POST', `/freeze/list`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Gets Freeze Configs list
+ */
+export const getFreezeListPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageFreezeSummaryResponse,
+    Failure | Error,
+    GetFreezeListQueryParams,
+    FreezeFilterPropertiesDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageFreezeSummaryResponse,
+    Failure | Error,
+    GetFreezeListQueryParams,
+    FreezeFilterPropertiesDTO,
+    void
+  >('POST', getConfig('ng/api'), `/freeze/list`, props, signal)
 
 export interface UpdateFreezeStatusQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  status: 'ACTIVE' | 'IN_ACTIVE'
+  status: 'Enabled' | 'Disabled'
 }
 
 export type UpdateFreezeStatusProps = Omit<
-  MutateProps<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>,
+  MutateProps<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    DeleteManyFreezesBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -30411,7 +30794,13 @@ export type UpdateFreezeStatusProps = Omit<
  * Update the status of Freeze to active or inactive
  */
 export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
-  <Mutate<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>
+  <Mutate<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    DeleteManyFreezesBodyRequestBody,
+    void
+  >
     verb="POST"
     path={`/freeze/updateFreezeStatus`}
     base={getConfig('ng/api')}
@@ -30420,7 +30809,13 @@ export const UpdateFreezeStatus = (props: UpdateFreezeStatusProps) => (
 )
 
 export type UseUpdateFreezeStatusProps = Omit<
-  UseMutateProps<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>,
+  UseMutateProps<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    DeleteManyFreezesBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -30428,26 +30823,34 @@ export type UseUpdateFreezeStatusProps = Omit<
  * Update the status of Freeze to active or inactive
  */
 export const useUpdateFreezeStatus = (props: UseUpdateFreezeStatusProps) =>
-  useMutate<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>(
-    'POST',
-    `/freeze/updateFreezeStatus`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    DeleteManyFreezesBodyRequestBody,
+    void
+  >('POST', `/freeze/updateFreezeStatus`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Update the status of Freeze to active or inactive
  */
 export const updateFreezeStatusPromise = (
-  props: MutateUsingFetchProps<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>,
+  props: MutateUsingFetchProps<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    DeleteManyFreezesBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseFreezeResponse, Failure | Error, UpdateFreezeStatusQueryParams, string[], void>(
-    'POST',
-    getConfig('ng/api'),
-    `/freeze/updateFreezeStatus`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseFreezeResponseWrapperDTO,
+    Failure | Error,
+    UpdateFreezeStatusQueryParams,
+    DeleteManyFreezesBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/freeze/updateFreezeStatus`, props, signal)
 
 export interface DeleteFreezeQueryParams {
   accountIdentifier: string
@@ -30456,7 +30859,7 @@ export interface DeleteFreezeQueryParams {
 }
 
 export type DeleteFreezeProps = Omit<
-  MutateProps<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>,
+  MutateProps<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>,
   'path' | 'verb'
 >
 
@@ -30464,7 +30867,7 @@ export type DeleteFreezeProps = Omit<
  * Delete a Freeze
  */
 export const DeleteFreeze = (props: DeleteFreezeProps) => (
-  <Mutate<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>
+  <Mutate<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>
     verb="DELETE"
     path={`/freeze`}
     base={getConfig('ng/api')}
@@ -30473,7 +30876,7 @@ export const DeleteFreeze = (props: DeleteFreezeProps) => (
 )
 
 export type UseDeleteFreezeProps = Omit<
-  UseMutateProps<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>,
+  UseMutateProps<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>,
   'path' | 'verb'
 >
 
@@ -30481,7 +30884,7 @@ export type UseDeleteFreezeProps = Omit<
  * Delete a Freeze
  */
 export const useDeleteFreeze = (props: UseDeleteFreezeProps) =>
-  useMutate<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>('DELETE', `/freeze`, {
+  useMutate<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>('DELETE', `/freeze`, {
     base: getConfig('ng/api'),
     ...props
   })
@@ -30490,10 +30893,10 @@ export const useDeleteFreeze = (props: UseDeleteFreezeProps) =>
  * Delete a Freeze
  */
 export const deleteFreezePromise = (
-  props: MutateUsingFetchProps<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>,
+  props: MutateUsingFetchProps<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseString, Failure | Error, DeleteFreezeQueryParams, string, void>(
+  mutateUsingFetch<ResponseVoid, Failure | Error, DeleteFreezeQueryParams, string, void>(
     'DELETE',
     getConfig('ng/api'),
     `/freeze`,
@@ -31600,6 +32003,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -31611,6 +32015,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -31657,6 +32062,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -31777,6 +32183,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'DeploymentSteps'
       | 'DeploymentStage'
       | 'ApprovalStage'
+      | 'PipelineStage'
       | 'FeatureFlagStage'
       | 'Template'
       | 'TemplateStage'
@@ -31788,6 +32195,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'ServiceNowApproval'
       | 'ServiceNowCreate'
       | 'ServiceNowUpdate'
+      | 'ServiceNowImportSet'
       | 'GovernancePolicies'
       | 'POLICY_STEP'
       | 'Run'
@@ -31834,6 +32242,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'EcsBlueGreenCreateService'
       | 'EcsBlueGreenSwapTargetGroups'
       | 'EcsBlueGreenRollback'
+      | 'ShellScriptProvision'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -33614,6 +34023,8 @@ export interface GetInfrastructureListQueryParams {
     | 'AzureWebApp'
     | 'CustomDeployment'
     | 'ECS'
+  deploymentTemplateIdentifier?: string
+  versionLabel?: string
   sort?: string[]
 }
 
@@ -33937,6 +34348,86 @@ export const dummyInfraConfigApiPromise = (
     props,
     signal
   )
+
+export interface GetInfrastructureYamlAndRuntimeInputsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  environmentIdentifier: string
+}
+
+export type GetInfrastructureYamlAndRuntimeInputsProps = Omit<
+  MutateProps<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns infrastructure YAML and runtime input YAML
+ */
+export const GetInfrastructureYamlAndRuntimeInputs = (props: GetInfrastructureYamlAndRuntimeInputsProps) => (
+  <Mutate<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >
+    verb="POST"
+    path={`/infrastructures/infrastructureYamlMetadata`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetInfrastructureYamlAndRuntimeInputsProps = Omit<
+  UseMutateProps<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This api returns infrastructure YAML and runtime input YAML
+ */
+export const useGetInfrastructureYamlAndRuntimeInputs = (props: UseGetInfrastructureYamlAndRuntimeInputsProps) =>
+  useMutate<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >('POST', `/infrastructures/infrastructureYamlMetadata`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * This api returns infrastructure YAML and runtime input YAML
+ */
+export const getInfrastructureYamlAndRuntimeInputsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseInfrastructureYamlMetadataDTO,
+    Failure | Error,
+    GetInfrastructureYamlAndRuntimeInputsQueryParams,
+    InfrastructureYamlMetadataApiInput,
+    void
+  >('POST', getConfig('ng/api'), `/infrastructures/infrastructureYamlMetadata`, props, signal)
 
 export interface GetInfrastructureInputsQueryParams {
   accountIdentifier: string
@@ -36687,6 +37178,9 @@ export const getModuleLicenseByIdPromise = (
 
 export interface ConfigureOauthQueryParams {
   accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  secretManagerIdentifier?: string
   provider?: string
 }
 
@@ -37203,6 +37697,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -37214,6 +37709,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -37260,6 +37756,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   yamlGroup?: string
 }
 
@@ -37440,6 +37937,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -37451,6 +37949,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -37497,6 +37996,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -38389,6 +38889,150 @@ export const putProjectPromise = (
     ProjectRequestRequestBody,
     PutProjectPathParams
   >('PUT', getConfig('ng/api'), `/projects/${identifier}`, props, signal)
+
+export interface GetRefreshedYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetRefreshedYamlProps = Omit<
+  MutateProps<ResponseRefreshResponse, Failure | Error, GetRefreshedYamlQueryParams, RefreshRequestRequestBody, void>,
+  'path' | 'verb'
+>
+
+/**
+ * This refreshes and update inputs of entities in given yaml
+ */
+export const GetRefreshedYaml = (props: GetRefreshedYamlProps) => (
+  <Mutate<ResponseRefreshResponse, Failure | Error, GetRefreshedYamlQueryParams, RefreshRequestRequestBody, void>
+    verb="POST"
+    path={`/refresh-inputs/refreshed-yaml`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetRefreshedYamlProps = Omit<
+  UseMutateProps<
+    ResponseRefreshResponse,
+    Failure | Error,
+    GetRefreshedYamlQueryParams,
+    RefreshRequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This refreshes and update inputs of entities in given yaml
+ */
+export const useGetRefreshedYaml = (props: UseGetRefreshedYamlProps) =>
+  useMutate<ResponseRefreshResponse, Failure | Error, GetRefreshedYamlQueryParams, RefreshRequestRequestBody, void>(
+    'POST',
+    `/refresh-inputs/refreshed-yaml`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * This refreshes and update inputs of entities in given yaml
+ */
+export const getRefreshedYamlPromise = (
+  props: MutateUsingFetchProps<
+    ResponseRefreshResponse,
+    Failure | Error,
+    GetRefreshedYamlQueryParams,
+    RefreshRequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseRefreshResponse,
+    Failure | Error,
+    GetRefreshedYamlQueryParams,
+    RefreshRequestRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/refresh-inputs/refreshed-yaml`, props, signal)
+
+export interface ValidateInputsForYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type ValidateInputsForYamlProps = Omit<
+  MutateProps<
+    ResponseInputsValidationResponse,
+    Failure | Error,
+    ValidateInputsForYamlQueryParams,
+    RefreshRequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This validates whether inputs provided to different references in yaml is valid or not
+ */
+export const ValidateInputsForYaml = (props: ValidateInputsForYamlProps) => (
+  <Mutate<
+    ResponseInputsValidationResponse,
+    Failure | Error,
+    ValidateInputsForYamlQueryParams,
+    RefreshRequestRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/refresh-inputs/validate-inputs-yaml`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseValidateInputsForYamlProps = Omit<
+  UseMutateProps<
+    ResponseInputsValidationResponse,
+    Failure | Error,
+    ValidateInputsForYamlQueryParams,
+    RefreshRequestRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * This validates whether inputs provided to different references in yaml is valid or not
+ */
+export const useValidateInputsForYaml = (props: UseValidateInputsForYamlProps) =>
+  useMutate<
+    ResponseInputsValidationResponse,
+    Failure | Error,
+    ValidateInputsForYamlQueryParams,
+    RefreshRequestRequestBody,
+    void
+  >('POST', `/refresh-inputs/validate-inputs-yaml`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * This validates whether inputs provided to different references in yaml is valid or not
+ */
+export const validateInputsForYamlPromise = (
+  props: MutateUsingFetchProps<
+    ResponseInputsValidationResponse,
+    Failure | Error,
+    ValidateInputsForYamlQueryParams,
+    RefreshRequestRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseInputsValidationResponse,
+    Failure | Error,
+    ValidateInputsForYamlQueryParams,
+    RefreshRequestRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/refresh-inputs/validate-inputs-yaml`, props, signal)
 
 export interface CreateRoleAssignmentQueryParams {
   accountIdentifier: string
@@ -40674,6 +41318,70 @@ export const getServiceNowIssueMetadataPromise = (
   getUsingFetch<ResponseListServiceNowFieldNG, Failure | Error, GetServiceNowIssueMetadataQueryParams, void>(
     getConfig('ng/api'),
     `/servicenow/metadata`,
+    props,
+    signal
+  )
+
+export interface GetServiceNowStagingTablesQueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+}
+
+export type GetServiceNowStagingTablesProps = Omit<
+  GetProps<ResponseListServiceNowStagingTable, Failure | Error, GetServiceNowStagingTablesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get serviceNow staging tables
+ */
+export const GetServiceNowStagingTables = (props: GetServiceNowStagingTablesProps) => (
+  <Get<ResponseListServiceNowStagingTable, Failure | Error, GetServiceNowStagingTablesQueryParams, void>
+    path={`/servicenow/stagingTable`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceNowStagingTablesProps = Omit<
+  UseGetProps<ResponseListServiceNowStagingTable, Failure | Error, GetServiceNowStagingTablesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get serviceNow staging tables
+ */
+export const useGetServiceNowStagingTables = (props: UseGetServiceNowStagingTablesProps) =>
+  useGet<ResponseListServiceNowStagingTable, Failure | Error, GetServiceNowStagingTablesQueryParams, void>(
+    `/servicenow/stagingTable`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get serviceNow staging tables
+ */
+export const getServiceNowStagingTablesPromise = (
+  props: GetUsingFetchProps<
+    ResponseListServiceNowStagingTable,
+    Failure | Error,
+    GetServiceNowStagingTablesQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseListServiceNowStagingTable, Failure | Error, GetServiceNowStagingTablesQueryParams, void>(
+    getConfig('ng/api'),
+    `/servicenow/stagingTable`,
     props,
     signal
   )
@@ -49253,6 +49961,7 @@ export interface GetYamlSchemaQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -49264,6 +49973,7 @@ export interface GetYamlSchemaQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -49310,6 +50020,7 @@ export interface GetYamlSchemaQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   subtype?:
     | 'K8sCluster'
     | 'Git'
@@ -49352,6 +50063,7 @@ export interface GetYamlSchemaQueryParams {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'

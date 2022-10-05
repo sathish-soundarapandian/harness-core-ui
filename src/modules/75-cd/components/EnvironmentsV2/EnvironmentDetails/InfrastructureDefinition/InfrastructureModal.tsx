@@ -37,7 +37,8 @@ import {
   InfrastructureResponseDTO,
   useCreateInfrastructure,
   useGetYamlSchema,
-  useUpdateInfrastructure
+  useUpdateInfrastructure,
+  validateInfrastructureForDeploymentTemplatePromise
 } from 'services/cd-ng'
 
 import type { PipelineInfoConfig, StageElementConfig, TemplateLinkConfig } from 'services/pipeline-ng'
@@ -74,6 +75,7 @@ import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineV
 import { InfrastructurePipelineProvider } from '@cd/context/InfrastructurePipelineContext'
 import { useGetTemplate } from 'services/template-ng'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
 import { isEditInfrastructure } from '@cd/components/PipelineSteps/DeployInfrastructureStep/utils'
 import type {
   GetTemplateProps,
@@ -81,6 +83,8 @@ import type {
 } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getTemplateRefVersionLabelObject } from '@pipeline/utils/templateUtils'
 import { useDeepCompareEffect } from '@common/hooks'
+import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import ReconcileInfraDialogWrapper from './ReconcileHandler/ReconcileInfraDialogWrapper'
 import css from './InfrastructureDefinition.module.scss'
 
 interface CustomDeploymentMetaData {
@@ -247,6 +251,7 @@ function BootstrapDeployInfraDefinition({
   const [isSavingInfrastructure, setIsSavingInfrastructure] = useState(false)
   const [selectedDeploymentType, setSelectedDeploymentType] = useState<ServiceDeploymentType | undefined>()
   const [isYamlEditable, setIsYamlEditable] = useState(false)
+  const [showReconcile, setShowReconcile] = useState(false)
   const [formValues, setFormValues] = useState({
     name,
     identifier,
@@ -346,9 +351,41 @@ function BootstrapDeployInfraDefinition({
     }
   })
 
+  const validateInfrastructureReconcile = async (): Promise<void> => {
+    try {
+      const response = await validateInfrastructureForDeploymentTemplatePromise({
+        infraIdentifier: identifier as string,
+        queryParams: {
+          accountIdentifier: accountId,
+          envIdentifier: environmentIdentifier,
+          orgIdentifier,
+          projectIdentifier
+        }
+      })
+      if (response?.data) {
+        setShowReconcile(!!response?.data?.obsolete)
+      }
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+  useEffect(() => {
+    if (
+      stageDeploymentType === ServiceDeploymentType.CustomDeployment &&
+      !isEmpty(customDeploymentMetaData?.templateMetaData)
+    ) {
+      validateInfrastructureReconcile()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customDeploymentMetaData?.templateMetaData, stageDeploymentType])
+
   const addOrUpdateTemplate = async (): Promise<void> => {
     if (getTemplate) {
-      const { template } = await getTemplate({ templateType: 'CustomDeployment' })
+      const { template } = await getTemplate({
+        templateType: TemplateType.CustomDeployment,
+        allowedUsages: [TemplateUsage.USE]
+      })
       const templateJSON = parse(template.yaml || '').template
       setCustomDeploymentMetaData({
         templateMetaData: getTemplateRefVersionLabelObject(template),
@@ -465,7 +502,10 @@ function BootstrapDeployInfraDefinition({
   const onCustomDeploymentSelection = async (): Promise<void> => {
     if (getTemplate && !stageCustomDeploymentData) {
       try {
-        const { template } = await getTemplate({ templateType: 'CustomDeployment' })
+        const { template } = await getTemplate({
+          templateType: TemplateType.CustomDeployment,
+          allowedUsages: [TemplateUsage.USE]
+        })
         const templateRefObj = getTemplateRefVersionLabelObject(template)
         const templateJSON = parse(template.yaml || '').template
         setCustomDeploymentMetaData({
@@ -537,6 +577,26 @@ function BootstrapDeployInfraDefinition({
       }
     })
   }
+  const updateInfraEntity = React.useCallback(
+    async (entityYaml: string) => {
+      const entityInfrastructureDefinition = parse(entityYaml || '')
+      const stageData = produce(stage, draft => {
+        if (draft) {
+          set(
+            draft,
+            'stage.spec.infrastructure.infrastructureDefinition.spec',
+            entityInfrastructureDefinition?.infrastructureDefinition.spec
+          )
+        }
+      })
+      updateStage(stageData?.stage as StageElementConfig)
+      setShowReconcile(false)
+      setDeployInfraRemountCount(deployInfraRemountCount + 1)
+    },
+    [deployInfraRemountCount, stage, updateStage]
+  )
+
+  const refreshYAMLBuilder = React.useMemo(() => JSON.stringify({ ...stage, isYamlEditable }), [stage, isYamlEditable])
 
   return (
     <>
@@ -548,6 +608,14 @@ function BootstrapDeployInfraDefinition({
         <Layout.Horizontal padding={{ bottom: 'large' }} width={'100%'}>
           <VisualYamlToggle selectedView={selectedView} onChange={handleModeSwitch} />
         </Layout.Horizontal>
+        {showReconcile && (
+          <ReconcileInfraDialogWrapper
+            entity={TemplateErrorEntity.INFRASTRUCTURE}
+            isReadOnly={isReadOnly}
+            originalYaml={yamlStringify({ infrastructureDefinition })}
+            updateRootEntity={updateInfraEntity}
+          />
+        )}
         <Container>
           {selectedView === SelectedView.VISUAL ? (
             <>
@@ -595,7 +663,7 @@ function BootstrapDeployInfraDefinition({
                 handleDeploymentTypeChange={handleDeploymentTypeChange}
                 shouldShowGitops={false}
                 customDeploymentData={customDeploymentMetaData?.templateMetaData}
-                addOrUpdateTemplate={addOrUpdateTemplate}
+                addOrUpdateTemplate={isEmpty(stageCustomDeploymentData) ? addOrUpdateTemplate : undefined}
               />
               {selectedDeploymentType && <DeployInfraDefinition key={deployInfraRemountCount} />}
             </>
@@ -619,7 +687,7 @@ function BootstrapDeployInfraDefinition({
                       ?.infrastructure?.allowSimultaneousDeployments
                   } as InfrastructureDefinitionConfig
                 }}
-                key={isYamlEditable.toString()}
+                key={refreshYAMLBuilder}
                 schema={infrastructureDefinitionSchema?.data}
                 bind={setYamlHandler}
                 showSnippetSection={false}

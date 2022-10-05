@@ -187,8 +187,7 @@ describe('BuildTests snapshot test', () => {
 
   test('should render TICallToAction without Upgrade Required', async () => {
     jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      NG_LICENSES_ENABLED: true,
-      TEST_INTELLIGENCE: true
+      NG_LICENSES_ENABLED: true
     })
 
     jest.spyOn(tiService, 'useReportsInfo').mockReturnValue({ data: InfoMock, refetch: jest.fn() } as any)

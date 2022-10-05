@@ -150,6 +150,7 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
               type={'fileStore'}
               allowOnlyOne={true}
               formik={formik}
+              expressions={expressions}
             />
           </Layout.Vertical>
         )
@@ -163,6 +164,7 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
               type={'encrypted'}
               allowOnlyOne={true}
               formik={formik}
+              expressions={expressions}
             />
           </Layout.Vertical>
         )

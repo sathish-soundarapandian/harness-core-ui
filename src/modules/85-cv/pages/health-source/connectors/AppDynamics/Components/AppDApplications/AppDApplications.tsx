@@ -6,6 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
+import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import {
   SelectOption,
@@ -103,7 +104,8 @@ export default function AppDApplications({
             setInputType(multiType)
           }
           const selectedItem = item as string | SelectOption
-          const selectedValue = typeof selectedItem === 'string' ? selectedItem : selectedItem?.label?.toString()
+          const selectedValue =
+            typeof selectedItem === 'string' ? selectedItem : defaultTo(selectedItem?.label?.toString(), '')
           if (selectedValue && selectedValue !== RUNTIME_INPUT_VALUE && !/^</.test(selectedValue)) {
             refetchTier({
               queryParams: {

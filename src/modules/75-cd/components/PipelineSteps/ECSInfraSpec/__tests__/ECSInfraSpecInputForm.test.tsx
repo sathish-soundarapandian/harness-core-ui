@@ -85,6 +85,10 @@ describe('ECSInfraSpecInputForm tests', () => {
         type={StepType.EcsInfra}
         stepViewType={StepViewType.InputSet}
         template={template}
+        customStepProps={{
+          environmentRef: 'Env_1',
+          infrastructureRef: 'Infra_Def_1'
+        }}
       />
     )
 
@@ -164,6 +168,10 @@ describe('ECSInfraSpecInputForm tests', () => {
         stepViewType={StepViewType.InputSet}
         template={template}
         path={'stage.spec.infrastructure.infraDefinition.spec'}
+        customStepProps={{
+          environmentRef: 'Env_1',
+          infrastructureRef: 'Infra_Def_1'
+        }}
       />
     )
 
@@ -192,6 +200,10 @@ describe('ECSInfraSpecInputForm tests', () => {
         type={StepType.EcsInfra}
         stepViewType={StepViewType.InputSet}
         template={template}
+        customStepProps={{
+          environmentRef: 'Env_1',
+          infrastructureRef: 'Infra_Def_1'
+        }}
       />
     )
 
@@ -226,6 +238,10 @@ describe('ECSInfraSpecInputForm tests', () => {
         onUpdate={onUpdate}
         type={StepType.EcsInfra}
         stepViewType={StepViewType.InputSet}
+        customStepProps={{
+          environmentRef: 'Env_1',
+          infrastructureRef: 'Infra_Def_1'
+        }}
       />
     )
 

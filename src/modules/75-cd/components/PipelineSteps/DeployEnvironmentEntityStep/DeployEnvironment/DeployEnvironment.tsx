@@ -7,7 +7,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
 import { parse } from 'yaml'
 import { useFormikContext } from 'formik'
 
@@ -29,6 +29,7 @@ import { useStrings } from 'framework/strings'
 import { EnvironmentResponseDTO, useGetEnvironmentAccessList } from 'services/cd-ng'
 
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 
 import RbacButton from '@rbac/components/Button/Button'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -65,7 +66,7 @@ export default function DeployEnvironment({
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const { setFieldValue } = useFormikContext<DeployEnvironmentEntityConfig>()
+  const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityConfig>()
 
   const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
@@ -193,22 +194,31 @@ export default function DeployEnvironment({
     )
   }, [environments, updateEnvironmentsList])
 
+  let placeHolderForEnvironments =
+    Array.isArray(values.environments) && values.environments
+      ? getString('environments')
+      : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
+
+  if (environmentsLoading) {
+    placeHolderForEnvironments = getString('loading')
+  }
+
   return (
     <>
       <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
         {isMultiEnv ? (
-          <FormInput.MultiSelectTypeInput
+          <FormMultiTypeMultiSelectDropDown
             label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
             tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
             name={'environments.values'}
-            useValue
+            // ? 2 disabled fields
             disabled={readonly || (isFixed && environmentsLoading)}
-            placeholder={
-              environmentsLoading
-                ? getString('loading')
-                : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
-            }
-            multiSelectTypeInputProps={{
+            dropdownProps={{
+              placeholder: placeHolderForEnvironments,
+              items: defaultTo(environmentsSelectOptions, []),
+              disabled: readonly || (isFixed && environmentsLoading)
+            }}
+            multiTypeProps={{
               onTypeChange: setEnvironmentRefType,
               width: 280,
               onChange: item => {
@@ -216,13 +226,8 @@ export default function DeployEnvironment({
                   environments?.find(environment => environment.identifier === (item as SelectOption)?.value)
                 )
               },
-              multiSelectProps: {
-                // addClearBtn: !readonly,
-                items: defaultTo(environmentsSelectOptions, [])
-              },
               allowableTypes
             }}
-            selectItems={defaultTo(environmentsSelectOptions, [])}
           />
         ) : (
           <FormInput.MultiTypeInput
@@ -243,6 +248,10 @@ export default function DeployEnvironment({
                 setSelectedEnvironment(
                   environments?.find(environment => environment.identifier === (item as SelectOption)?.value)
                 )
+
+                if (get(values, 'environment.infrastructureRef')) {
+                  setFieldValue('environment.infrastructureRef', '')
+                }
               },
               selectProps: {
                 addClearBtn: !readonly,

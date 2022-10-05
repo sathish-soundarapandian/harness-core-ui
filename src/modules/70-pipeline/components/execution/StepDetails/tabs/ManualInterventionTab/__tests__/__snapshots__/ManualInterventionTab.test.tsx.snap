@@ -245,6 +245,44 @@ exports[`<ManualInterventionTab /> tests snapshot test 1`] = `
           value="MarkAsSuccess"
         />
       </label>
+      <label
+        class="Thumbnail--squareCardContainer thumbnail"
+      >
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+          tabindex="0"
+        >
+          <span
+            class="bp3-icon bp3-icon-ban-circle StyledProps--main"
+            icon="ban-circle"
+          >
+            <svg
+              data-icon="ban-circle"
+              height="26"
+              viewBox="0 0 20 20"
+              width="26"
+            >
+              <desc>
+                ban-circle
+              </desc>
+              <path
+                d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm5 11H5c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+        >
+          pipeline.failureStrategies.strategiesLabel.MarkAsFail
+        </p>
+        <input
+          name="MarkAsFailure"
+          type="checkbox"
+          value="MarkAsFailure"
+        />
+      </label>
     </div>
   </div>
 </div>

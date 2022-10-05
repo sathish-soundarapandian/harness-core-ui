@@ -25,10 +25,10 @@ import { useParams } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import SelectHealthSourceServices from '@cv/pages/health-source/common/SelectHealthSourceServices/SelectHealthSourceServices'
-import { GroupName } from '@cv/pages/health-source/common/GroupName/GroupName'
+import GroupName from '@cv/components/GroupName/GroupName'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
-import { initializeGroupNames } from '@cv/pages/health-source/common/GroupName/GroupName.utils'
+import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
 import {
@@ -199,10 +199,12 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                   }}
                 />
                 <GroupName
+                  fieldName={'groupName'}
                   groupNames={appdGroupName}
                   onChange={formikSetField}
                   item={formikValues?.groupName}
                   setGroupNames={setAppdGroupName}
+                  title={getString('cv.monitoringSources.appD.newGroupName')}
                 />
                 <Text padding={{ bottom: 'medium' }} font={{ variation: FontVariation.H6 }}>
                   {getString('cv.monitoringSources.appD.appdPathTitle')}

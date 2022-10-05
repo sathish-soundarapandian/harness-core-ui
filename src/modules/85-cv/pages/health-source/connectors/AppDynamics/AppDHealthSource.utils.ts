@@ -634,7 +634,7 @@ export const setAppDynamicsApplication = (
   if (multiType === MultiTypeInputType.EXPRESSION) {
     return appdApplication
   }
-  return value
+  return multiType ? value : value || { label: '', value: '' }
 }
 
 export const setAppDynamicsTier = (
@@ -642,7 +642,7 @@ export const setAppDynamicsTier = (
   appDTier: string,
   tierOptions: SelectOption[],
   multiType?: MultiTypeInputType
-) => {
+): SelectOption | string | undefined => {
   const value = tierLoading || !appDTier ? undefined : tierOptions.find((item: SelectOption) => item.label === appDTier)
   if (multiType && isMultiTypeRuntime(multiType)) {
     return appDTier
@@ -650,7 +650,7 @@ export const setAppDynamicsTier = (
   if (multiType === MultiTypeInputType.EXPRESSION) {
     return appDTier
   }
-  return value
+  return multiType ? value : value || { label: '', value: '' }
 }
 
 export const initAppDCustomFormValue = () => {
@@ -748,8 +748,7 @@ export const persistCustomMetric = ({
   selectedMetric,
   nonCustomFeilds,
   formikValues,
-  setMappedMetrics,
-  isTemplate
+  setMappedMetrics
 }: PersistCustomMetricInterface): void => {
   const mapValue = mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric
   if (!isEmpty(mapValue)) {
@@ -761,17 +760,8 @@ export const persistCustomMetric = ({
       ignoreThresholds: mapValue?.ignoreThresholds,
       failFastThresholds: mapValue?.failFastThresholds
     }
-    const areAllFilled =
-      nonCustomValuesFromSelectedMetric.appdApplication &&
-      nonCustomValuesFromSelectedMetric.appDTier &&
-      nonCustomValuesFromSelectedMetric.metricData
 
-    const shouldUpdate = isTemplate ? isTemplate : areAllFilled
-    if (
-      shouldUpdate &&
-      selectedMetric === formikValues?.metricName &&
-      !isEqual(nonCustomFeilds, nonCustomValuesFromSelectedMetric)
-    ) {
+    if (selectedMetric === formikValues?.metricName && !isEqual(nonCustomFeilds, nonCustomValuesFromSelectedMetric)) {
       const clonedMappedMetrics = cloneDeep(mappedMetrics)
       clonedMappedMetrics.forEach((data, key) => {
         if (selectedMetric === data.metricName) {

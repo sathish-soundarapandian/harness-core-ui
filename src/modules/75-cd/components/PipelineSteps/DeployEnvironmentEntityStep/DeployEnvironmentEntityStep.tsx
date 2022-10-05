@@ -31,6 +31,7 @@ export class DeployEnvironmentEntityStep extends Step<DeployEnvironmentEntityCon
   constructor() {
     super()
   }
+
   renderStep(props: StepProps<DeployEnvironmentEntityConfig>): JSX.Element {
     const { initialValues, readonly = false, allowableTypes, onUpdate, stepViewType, customStepProps } = props
 

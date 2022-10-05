@@ -55,7 +55,7 @@ function DeployEnvironmentInEnvGroup({
     if (!isNil(environments)) {
       setEnvironmentsSelectOptions([
         {
-          label: getString('cd.pipelineSteps.environmentTab.allEnvironmentsInEnvGroupSelected'),
+          label: getString('common.allEnvironments'),
           value: getString('all')
         },
         ...environments.map(environment => {
@@ -79,7 +79,7 @@ function DeployEnvironmentInEnvGroup({
         if (environmentsSelected?.[0] === getString('all')) {
           formik?.setFieldValue('environmentInEnvGroupRef', [
             {
-              label: getString('cd.pipelineSteps.environmentTab.allEnvironmentsInEnvGroupSelected'),
+              label: getString('common.allEnvironments'),
               value: getString('all')
             }
           ])

@@ -869,6 +869,24 @@ export const setupAzureFormData = async (connectorInfo: ConnectorInfoDTO, accoun
     connectivityMode: getConnectivityMode(connectorInfo?.spec?.executeOnDelegate)
   }
 }
+export const setupGCPSecretManagerFormData = async (
+  connectorInfo: ConnectorInfoDTO,
+  accountId: string
+): Promise<FormData> => {
+  const connectorInfoSpec = connectorInfo?.spec
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+  const credentials = await setSecretField(connectorInfoSpec?.credentialsRef, scopeQueryParams)
+  return {
+    credentialsRef: credentials || undefined,
+
+    delegate: connectorInfoSpec?.delegateSelectors || undefined,
+    default: connectorInfoSpec?.default || false
+  }
+}
 
 export const setupAwsKmsFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
   const connectorInfoSpec = connectorInfo?.spec
@@ -1017,6 +1035,25 @@ export const buildAWSKmsSMPayload = (formData: FormData): ConnectorRequestBody =
       },
       kmsArn: formData?.awsArn?.referenceString,
       region: formData?.region,
+      default: formData.default
+    }
+  }
+  return { connector: savedData }
+}
+
+export const buildGcpSMPayload = (formData: FormData): ConnectorRequestBody => {
+  const savedData = {
+    name: formData.name,
+    description: formData.description,
+    projectIdentifier: formData.projectIdentifier,
+    identifier: formData.identifier,
+    orgIdentifier: formData.orgIdentifier,
+    tags: formData.tags,
+    type: Connectors.GcpSecretManager,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      credentialsRef: formData?.credentialsRef.referenceString,
+
       default: formData.default
     }
   }
@@ -2081,6 +2118,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'service-jenkins'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'custom-sm'
+    case Connectors.GcpSecretManager:
+      return 'gcp-secret-manager'
     default:
       return 'cog'
   }
@@ -2156,6 +2195,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Error Tracking'
     case Connectors.CUSTOM_SECRET_MANAGER:
       return 'Custom Secrets Manager'
+    case Connectors.GcpSecretManager:
+      return 'GCP Secrets Manager'
     default:
       return ''
   }

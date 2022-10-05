@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-commented-out-tests */
 /*
  * Copyright 2021 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -6,134 +7,101 @@
  */
 
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, RenderResult, screen, waitFor } from '@testing-library/react'
+import userEvent, { TargetElement } from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PlatformEntryType, SupportPlatforms } from '@cf/components/LanguageSelection/LanguageSelection'
 import mockImport from 'framework/utils/mockImport'
+import * as ffServices from 'services/cf'
+import mockFeatureFlags from '@cf/pages/feature-flags/__tests__/mockFeatureFlags'
+import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
 import { OnboardingDetailPage } from '../OnboardingDetailPage'
-import { CreateAFlagView } from '../views/CreateAFlagView'
 import { SetUpYourApplicationView } from '../views/SetUpYourApplicationView'
 import { SelectEnvironmentView } from '../views/SelectEnvironmentView'
 
-jest.mock('@common/hooks/useTelemetry', () => ({
-  useTelemetry: () => ({ identifyUser: jest.fn(), trackEvent: jest.fn() })
-}))
+const renderComponent = (): RenderResult => {
+  return render(
+    <TestWrapper
+      path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
+      pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+    >
+      <OnboardingDetailPage />
+    </TestWrapper>
+  )
+}
 
 describe('OnboardingDetailPage', () => {
+  const spyGetAllFeatures = jest.spyOn(ffServices, 'useGetAllFeatures')
+  const refetchFlags = jest.fn()
+
+  beforeEach(() => {
+    jest.mock('@common/hooks/useTelemetry', () => ({
+      useTelemetry: () => ({ identifyUser: jest.fn(), trackEvent: jest.fn() })
+    }))
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   test('OnboardingDetailPage empty state should be rendered properly', () => {
-    mockImport('@cf/hooks/useEnvironmentSelectV2', {
-      useEnvironmentSelectV2: () => ({
-        loading: true,
-        refetch: jest.fn(),
-        EnvironmentSelect: <div />,
-        environments: [
-          {
-            accountId: 'harness',
-            identifier: 'foo',
-            name: 'bar',
-            type: 'Production'
-          }
-        ]
-      })
-    })
+    renderComponent()
 
-    const { container } = render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <OnboardingDetailPage />
-      </TestWrapper>
-    )
-    expect(container).toMatchSnapshot()
+    // Breadcrumbs
+    expect(screen.getByTestId('getStartedBreadcrumb')).toHaveTextContent('cf.shared.getStarted/cf.shared.quickGuide/')
+    // First tab should be selected
+    expect(screen.getByText('cf.onboarding.oneCreateAFlag')).toBeVisible()
+    expect(screen.getByText('cf.onboarding.oneCreateAFlag').parentElement).toHaveAttribute('aria-selected', 'true')
+
+    // Footer buttons
+    expect(screen.getByText('next')).toBeVisible()
+    expect(screen.getByText('next').closest('button')).toBeDisabled()
+    expect(screen.getByText('back')).toBeVisible()
   })
 
-  test('Should be able to create a flag', () => {
-    mockImport('@cf/hooks/useEnvironmentSelectV2', {
-      useEnvironmentSelectV2: () => ({
-        loading: true,
-        refetch: jest.fn(),
-        EnvironmentSelect: <div />,
-        environments: [
-          {
-            accountId: 'harness',
-            identifier: 'foo',
-            name: 'bar',
-            type: 'Production'
-          }
-        ]
-      })
+  test('Should be able to create a flag', async () => {
+    const pagedResponse = {
+      ...mockFeatureFlags,
+      features: mockFeatureFlags.features.slice(0, CF_DEFAULT_PAGE_SIZE)
+    }
+    spyGetAllFeatures.mockReturnValue({
+      data: pagedResponse,
+      loading: false,
+      error: null,
+      refetch: refetchFlags
+    } as any)
+
+    const createNewFlag = jest.spyOn(ffServices, 'useCreateFeatureFlag')
+    const flagName = 'Onboarding Flag 1'
+
+    renderComponent()
+
+    const selectInput = document.querySelector('input[id="selectOrCreateFlag"]') as TargetElement
+
+    // Should be prevented from next tab until flag selected/created
+    expect(screen.getByText('next')).toBeVisible()
+    expect(screen.getByText('next').closest('button')).toBeDisabled()
+
+    userEvent.click(selectInput)
+    userEvent.type(selectInput, flagName, { allAtOnce: true })
+
+    expect(refetchFlags).toBeCalled()
+
+    await waitFor(() => {
+      // no options should match this flag name
+      expect(document.getElementsByTagName('li')).toHaveLength(0)
+      expect(document.querySelector('button[class*="createNewItemButton"]')).toBeVisible()
+      expect(document.querySelector('button[class*="createNewItemButton"]')).toHaveTextContent(flagName)
     })
 
-    const { container } = render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <OnboardingDetailPage />
-      </TestWrapper>
-    )
+    // Click to create new flag
+    userEvent.click(document.querySelector('button[class*="createNewItemButton"]') as TargetElement)
 
-    const flagName = 'test-boolean-flag'
-
-    fireEvent.input(container.querySelector('input') as HTMLInputElement, { target: { value: flagName } })
-
-    waitFor(() =>
-      expect(container.querySelector('button[class*=Button--button]:not(:first-of-type)[class*=disabled]')).toBeNull()
-    )
-
-    fireEvent.click(container.querySelector('button[class*=Button--button]:not(:first-of-type)') as HTMLButtonElement)
-
-    // waitFor(() => expect(container.querySelector('button[class*=LanguageSelection-module_button')).not.toBeNull())
-
-    expect(container).toMatchSnapshot()
-  })
-
-  test('CreateAFlagView', () => {
-    mockImport('@cf/hooks/useEnvironmentSelectV2', {
-      useEnvironmentSelectV2: () => ({
-        loading: true,
-        refetch: jest.fn(),
-        EnvironmentSelect: <div />,
-        environments: [
-          {
-            accountId: 'harness',
-            identifier: 'foo',
-            name: 'bar',
-            type: 'Production'
-          }
-        ]
-      })
+    await waitFor(() => {
+      expect(createNewFlag).toBeCalled()
+    }).then(() => {
+      expect(refetchFlags).toBeCalled()
     })
-
-    const { container } = render(
-      <TestWrapper
-        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/onboarding/detail"
-        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
-      >
-        <CreateAFlagView
-          flagInfo={{
-            project: 'dummy',
-            name: 'test-flag',
-            identifier: 'test_flag',
-            kind: 'boolean',
-            archived: false,
-            variations: [
-              { identifier: 'true', name: 'True', value: 'true' },
-              { identifier: 'false', name: 'False', value: 'false' }
-            ],
-            defaultOnVariation: 'true',
-            defaultOffVariation: 'false',
-            permanent: false
-          }}
-          setFlagName={jest.fn()}
-          isCreated={true}
-          goNext={jest.fn()}
-        />
-      </TestWrapper>
-    )
-
-    expect(container).toMatchSnapshot()
   })
 
   test('SetUpYourApplicationView', () => {
@@ -161,6 +129,7 @@ describe('OnboardingDetailPage', () => {
         <SetUpYourApplicationView
           flagInfo={{
             project: 'dummy',
+            createdAt: 1662647079713,
             name: 'test-flag',
             identifier: 'test_flag',
             kind: 'boolean',
@@ -190,23 +159,25 @@ describe('OnboardingDetailPage', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('SelectEnvironmentView should render loading correctly', async () => {
+  test('SelectEnvironmentView should render loading correctly', () => {
     mockImport('@cf/hooks/useEnvironmentSelectV2', {
       useEnvironmentSelectV2: () => ({ loading: true, refetch: jest.fn() })
     })
 
     const { container } = render(
-      <SelectEnvironmentView
-        language={{
-          name: 'foo',
-          icon: 'bar',
-          type: PlatformEntryType.CLIENT,
-          readmeStringId: 'cf.onboarding.readme.java'
-        }}
-        apiKey={undefined}
-        setApiKey={jest.fn()}
-        setEnvironmentIdentifier={jest.fn()}
-      />
+      <TestWrapper>
+        <SelectEnvironmentView
+          language={{
+            name: 'foo',
+            icon: 'bar',
+            type: PlatformEntryType.CLIENT,
+            readmeStringId: 'cf.onboarding.readme.java'
+          }}
+          apiKey={undefined}
+          setApiKey={jest.fn()}
+          setEnvironmentIdentifier={jest.fn()}
+        />
+      </TestWrapper>
     )
 
     expect(container).toMatchSnapshot()
@@ -230,17 +201,19 @@ describe('OnboardingDetailPage', () => {
     })
 
     const { container } = render(
-      <SelectEnvironmentView
-        language={{
-          name: 'foo',
-          icon: 'bar',
-          type: PlatformEntryType.CLIENT,
-          readmeStringId: 'cf.onboarding.readme.java'
-        }}
-        apiKey={undefined}
-        setApiKey={jest.fn()}
-        setEnvironmentIdentifier={jest.fn()}
-      />
+      <TestWrapper>
+        <SelectEnvironmentView
+          language={{
+            name: 'foo',
+            icon: 'bar',
+            type: PlatformEntryType.CLIENT,
+            readmeStringId: 'cf.onboarding.readme.java'
+          }}
+          apiKey={undefined}
+          setApiKey={jest.fn()}
+          setEnvironmentIdentifier={jest.fn()}
+        />
+      </TestWrapper>
     )
 
     expect(container).toMatchSnapshot()

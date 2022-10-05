@@ -50,6 +50,7 @@ export interface JiraCreateVariableListModeProps {
 export interface JiraCreateStepModeProps {
   stepViewType: StepViewType
   initialValues: JiraCreateData
+  unprocessedInitialValues: JiraCreateData
   onUpdate?: (data: JiraCreateData) => void
   onChange?: (data: JiraCreateData) => void
   allowableTypes: AllowedTypes

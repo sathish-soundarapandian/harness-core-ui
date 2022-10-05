@@ -23,6 +23,8 @@ import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipel
 import routes from '@common/RouteDefinitions'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
 import {
   ExecutionListFilterContextProvider,
@@ -56,13 +58,14 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     searchTerm,
     pipelineIdentifier: pipelineIdentifierFromQueryParam
   } = queryParams
+  const NEW_EXECUTION_LIST_VIEW = useFeatureFlag(FeatureFlag.NEW_EXECUTION_LIST_VIEW)
 
   const { module = 'cd' } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
   const location = useLocation()
   // TODO: Temporary, remove once released
   const { listview } = useQueryParams<{ listview?: boolean }>({ decoder: queryParamDecodeAll() })
-  const Executions = listview === true ? MemoisedExecutionListTable : ExecutionListCards
+  const Executions = listview === true || NEW_EXECUTION_LIST_VIEW ? MemoisedExecutionListTable : ExecutionListCards
 
   const isExecutionHistoryView = !!matchPath(location.pathname, {
     path: routes.toPipelineDeploymentList({

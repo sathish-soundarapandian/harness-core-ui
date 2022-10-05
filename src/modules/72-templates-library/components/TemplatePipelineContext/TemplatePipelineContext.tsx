@@ -21,6 +21,7 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import {
+  DefaultPipeline,
   initialState,
   PipelineContextActions,
   PipelineReducer,
@@ -55,6 +56,7 @@ export interface TemplatePipelineProviderProps {
   contextType: PipelineContextType
   isReadOnly: boolean
   renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
+  setIntermittentLoading: PipelineContextInterface['setIntermittentLoading']
 }
 
 export function TemplatePipelineProvider({
@@ -66,7 +68,8 @@ export function TemplatePipelineProvider({
   isReadOnly,
   contextType,
   renderPipelineStage,
-  children
+  children,
+  setIntermittentLoading: setTemplateIntermittentLoading
 }: React.PropsWithChildren<TemplatePipelineProviderProps>): React.ReactElement {
   const allowableTypes: AllowedTypesWithRunTime[] = [
     MultiTypeInputType.FIXED,
@@ -132,18 +135,21 @@ export function TemplatePipelineProvider({
   }, [])
 
   const fetchPipeline = async () => {
-    const templateRefs = findAllByKey('templateRef', initialValue)
+    const originalPipeline = isEqual(state.originalPipeline, DefaultPipeline)
+      ? cloneDeep(initialValue)
+      : state.originalPipeline
     dispatch(
       PipelineContextActions.success({
         error: '',
         pipeline: initialValue,
-        originalPipeline: cloneDeep(initialValue),
+        originalPipeline,
         isBEPipelineUpdated: false,
-        isUpdated: false,
+        isUpdated: !isEqual(originalPipeline, initialValue),
         gitDetails,
         storeMetadata
       })
     )
+    const templateRefs = findAllByKey('templateRef', initialValue)
     if (templateRefs.length > 0) {
       const { templateTypes, templateServiceData } = await getTemplateTypesByRef(
         {
@@ -182,6 +188,14 @@ export function TemplatePipelineProvider({
       })
     )
   }
+
+  const setIntermittentLoading = React.useCallback(
+    isIntermittentLoading => {
+      setTemplateIntermittentLoading(isIntermittentLoading)
+      dispatch(PipelineContextActions.setIntermittentLoading({ isIntermittentLoading }))
+    },
+    [setTemplateIntermittentLoading]
+  )
 
   const getStagePathFromPipeline = React.useCallback(
     (stageId: string, prefix = '', pipeline?: PipelineInfoConfig) => {
@@ -250,7 +264,8 @@ export function TemplatePipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes: noop,
-        setTemplateServiceData: noop
+        setTemplateServiceData: noop,
+        setIntermittentLoading
       }}
     >
       {children}

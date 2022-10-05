@@ -181,7 +181,7 @@ export const ScopeInputStep = (
     if (!isEmpty(managementGroupData?.data?.managementGroups)) {
       const groups = map(get(managementGroupData, 'data.managementGroups', []), group => ({
         label: group.displayName!,
-        value: group.id!
+        value: group.name!
       }))
       setMgmtGroups(groups)
     }
@@ -214,7 +214,7 @@ export const ScopeInputStep = (
           useValue
           multiTypeInputProps={{
             selectProps: {
-              allowCreatingNewItems: false,
+              allowCreatingNewItems: true,
               items: items
             },
             expressions,

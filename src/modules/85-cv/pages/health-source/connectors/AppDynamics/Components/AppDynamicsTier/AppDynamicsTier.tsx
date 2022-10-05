@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { defaultTo } from 'lodash-es'
 import {
   SelectOption,
   FormInput,
@@ -51,11 +52,11 @@ export default function AppDynamicsTier({
   tierError
 }: AppDynamicsTierInterface): JSX.Element {
   const { getString } = useStrings()
-  const allowedTypes: AllowedTypes =
-    getMultiTypeFromValue(formikValues?.appdApplication) === MultiTypeInputType.RUNTIME ||
-    getMultiTypeFromValue(formikValues?.appdApplication) === MultiTypeInputType.EXPRESSION
-      ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-      : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  const isApplicationRuntimeOrExpression =
+    getMultiTypeFromValue(formikValues?.appdApplication) !== MultiTypeInputType.FIXED
+  const allowedTypes: AllowedTypes = isApplicationRuntimeOrExpression
+    ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+    : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
 
   const [multitypeInputValue, setMultitypeInputValue] = React.useState<MultiTypeInputType | undefined>(
     getTypeOfInput(formikValues?.appDTier || formikValues?.appdApplication)
@@ -72,7 +73,7 @@ export default function AppDynamicsTier({
         data-testid="appDTier"
         placeholder={getPlaceholder(tierLoading, 'cv.healthSource.connectors.AppDynamics.tierPlaceholder', getString)}
         selectProps={{
-          items: tierOptions
+          items: isApplicationRuntimeOrExpression ? [] : tierOptions
         }}
         allowableTypes={allowedTypes}
         value={setAppDynamicsTier(tierLoading, formikValues?.appDTier, tierOptions, multitypeInputValue)}
@@ -84,7 +85,8 @@ export default function AppDynamicsTier({
             setMultitypeInputValue(multiType)
           }
           const selectedItem = item as string | SelectOption
-          const selectedValue = typeof selectedItem === 'string' ? selectedItem : selectedItem?.label?.toString()
+          const selectedValue =
+            typeof selectedItem === 'string' ? selectedItem : defaultTo(selectedItem?.label?.toString(), '')
           setAppDTierCustomField(selectedValue as string)
           if (
             !(formikValues?.appdApplication === RUNTIME_INPUT_VALUE || formikValues?.appDTier === RUNTIME_INPUT_VALUE)

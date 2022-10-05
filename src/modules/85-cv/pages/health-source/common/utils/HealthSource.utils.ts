@@ -12,7 +12,9 @@ import type { MetricPackDTO, RiskProfile } from 'services/cv'
 import type {
   AssignComponentPayload,
   BaseHealthSourceMetricDefinition,
-  BaseHealthSourceMetricInfo
+  BaseHealthSourceMetricInfo,
+  CommonSetupHealthSourceListType,
+  RiskThresholdTypes
 } from '@cv/pages/health-source/common/utils/HealthSource.types'
 
 export const convertMetricPackToMetricData = (value?: MetricPackDTO[]): { [key: string]: boolean } => {
@@ -91,25 +93,51 @@ export function validateIdentifier<T extends BaseHealthSourceMetricInfo>(
   return errorsWithIdentifier
 }
 
+export const getThresholdTypes = (thresholds: RiskThresholdTypes): RiskProfile['thresholdTypes'] => {
+  const thresholdTypes: RiskProfile['thresholdTypes'] = []
+
+  if (!thresholds) {
+    return thresholdTypes
+  }
+
+  if (thresholds.lowerBaselineDeviation) {
+    thresholdTypes.push('ACT_WHEN_LOWER')
+  }
+  if (thresholds.higherBaselineDeviation) {
+    thresholdTypes.push('ACT_WHEN_HIGHER')
+  }
+
+  return thresholdTypes
+}
+
+export const getCategoryAndMetricType = (riskCategory?: string): Pick<RiskProfile, 'category' | 'metricType'> => {
+  if (!riskCategory && typeof riskCategory !== 'string') {
+    return {}
+  }
+
+  const [category, metricType] = riskCategory?.split('/') || []
+
+  return {
+    category: category as RiskProfile['category'],
+    metricType: metricType as RiskProfile['metricType']
+  }
+}
+
 export function createPayloadForAssignComponent(baseMetricInfo: BaseHealthSourceMetricInfo): AssignComponentPayload {
   const { riskCategory, lowerBaselineDeviation, higherBaselineDeviation, sli, continuousVerification, healthScore } =
     baseMetricInfo
-  const [category, metricType] = riskCategory?.split('/') || []
-  const categoryData = (category ? { category } : {}) as { category?: RiskProfile['category'] }
-  const thresholdTypes: RiskProfile['thresholdTypes'] = []
 
-  if (lowerBaselineDeviation) {
-    thresholdTypes.push('ACT_WHEN_LOWER')
-  }
-  if (higherBaselineDeviation) {
-    thresholdTypes.push('ACT_WHEN_HIGHER')
-  }
+  const categoryAndMetricType = getCategoryAndMetricType(riskCategory)
+
+  const thresholdTypes: RiskProfile['thresholdTypes'] = getThresholdTypes({
+    lowerBaselineDeviation,
+    higherBaselineDeviation
+  })
 
   const ifOnlySliIsSelected = Boolean(sli) && !(Boolean(healthScore) || Boolean(continuousVerification))
 
   const riskProfile = {
-    ...categoryData,
-    metricType: metricType as RiskProfile['metricType'],
+    ...categoryAndMetricType,
     thresholdTypes
   }
 
@@ -192,4 +220,24 @@ export function mapCommonMetricDefinitionToCommonMetricInfo(
     sli: metricDefinition.sli?.enabled,
     isManualQuery: metricDefinition.isManualQuery
   }
+}
+
+// ⭐️ V2 utils ⭐️
+export const getCurrentHealthSourceData = (
+  healthSourceList: CommonSetupHealthSourceListType[],
+  selectedHealthSourceIdentifier: string
+): CommonSetupHealthSourceListType | null => {
+  if (!healthSourceList || !selectedHealthSourceIdentifier) {
+    return null
+  }
+
+  const foundHealthSource = healthSourceList.find(
+    healthSource => healthSource.identifier === selectedHealthSourceIdentifier
+  )
+
+  if (!foundHealthSource) {
+    return null
+  }
+
+  return foundHealthSource
 }

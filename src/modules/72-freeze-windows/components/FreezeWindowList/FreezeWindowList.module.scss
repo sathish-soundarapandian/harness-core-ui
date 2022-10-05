@@ -7,8 +7,9 @@
 
 .status {
   border-radius: var(--spacing-2);
-  padding: var(--spacing-1) var(--spacing-2) !important;
+  padding: var(--spacing-2) var(--spacing-3) !important;
   display: inline-block !important;
+  text-transform: uppercase;
   &.active {
     background-color: var(--primary-2);
     color: var(--primary-7);
@@ -40,4 +41,8 @@
 
 .table {
   padding: 0 var(--spacing-large) var(--spacing-large);
+}
+
+.switch {
+  margin-bottom: 0 !important;
 }

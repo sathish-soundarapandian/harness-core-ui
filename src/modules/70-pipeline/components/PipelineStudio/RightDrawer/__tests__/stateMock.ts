@@ -246,7 +246,8 @@ const pipelineContextMock: PipelineContextInterface = {
   setSelection: jest.fn(),
   getStagePathFromPipeline: () => '',
   setTemplateTypes: jest.fn(),
-  setTemplateServiceData: jest.fn()
+  setTemplateServiceData: jest.fn(),
+  setIntermittentLoading: jest.fn()
 }
 
 export const updateStageFnArg1 = {

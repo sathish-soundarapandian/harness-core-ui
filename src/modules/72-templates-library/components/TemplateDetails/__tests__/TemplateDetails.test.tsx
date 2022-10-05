@@ -20,8 +20,7 @@ import { TemplateDetails, TemplateDetailsProps } from '../TemplateDetails'
 
 const gitAppStoreValues = {
   featureFlags: {
-    NG_TEMPLATE_GITX: true,
-    NG_TEMPLATE_GITX_ACCOUNT_ORG: false
+    NG_TEMPLATE_GITX: true
   },
   isGitSyncEnabled: false,
   isGitSimplificationEnabled: true,

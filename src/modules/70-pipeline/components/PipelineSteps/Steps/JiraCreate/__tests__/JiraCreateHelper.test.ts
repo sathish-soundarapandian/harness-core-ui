@@ -66,7 +66,6 @@ describe('Jira Create process form data tests', () => {
       type: 'JiraCreate',
       spec: {
         connectorRef: 'conn',
-        delegateSelectors: undefined,
         projectKey: 'pid',
         issueType: 'iss',
         fields: [
@@ -95,7 +94,6 @@ describe('Jira Create process form data tests', () => {
       type: 'JiraCreate',
       spec: {
         connectorRef: '<+input>',
-        delegateSelectors: undefined,
         projectKey: '<+expression>',
         issueType: '<+input>',
         fields: [
@@ -128,7 +126,6 @@ describe('Jira Create process form data tests', () => {
       spec: {
         connectorRef: '<+input>',
         projectKey: '<+expression>',
-        delegateSelectors: undefined,
         issueType: '<+input>',
         fields: [
           {
@@ -246,7 +243,6 @@ describe('Reset Form tests', () => {
         type: 'JiraCreate',
         spec: {
           connectorRef: '',
-          delegateSelectors: undefined,
           projectKey: '',
           issueType: '',
           fields: [

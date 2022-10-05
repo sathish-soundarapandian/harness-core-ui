@@ -37,6 +37,18 @@ export default (
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toFreezeWindows({ ...orgPathProps })} exact>
       <FreezeWindowsPage />
     </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routes.toFreezeWindowStudio({
+        ...orgPathProps,
+        ...{
+          windowIdentifier: ':windowIdentifier'
+        }
+      })}
+      exact
+    >
+      <FreezeStudioWrapper />
+    </RouteWithLayout>
   </>
 )
 
@@ -44,16 +56,32 @@ export const FreezeWindowRouteDestinations: React.FC<{
   moduleParams: ModulePathParams
   licenseRedirectData?: LicenseRedirectProps
   sidebarProps?: SidebarContext
-}> = ({ moduleParams, licenseRedirectData, sidebarProps }) => (
-  <>
-    <RouteWithLayout
-      exact
-      licenseRedirectData={licenseRedirectData}
-      sidebarProps={sidebarProps}
-      path={routes.toFreezeWindows({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
-      pageName={PAGE_NAME.FreezeWindowsPage}
-    >
-      <FreezeWindowsPage />
-    </RouteWithLayout>
-  </>
-)
+}> = ({ moduleParams, licenseRedirectData, sidebarProps }) => {
+  return (
+    <>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toFreezeWindows({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
+        pageName={PAGE_NAME.FreezeWindowsPage}
+      >
+        <FreezeWindowsPage />
+      </RouteWithLayout>
+      <RouteWithLayout
+        sidebarProps={AccountSideNavProps}
+        path={routes.toFreezeWindowStudio({
+          ...accountPathProps,
+          ...projectPathProps,
+          ...moduleParams,
+          ...{
+            windowIdentifier: ':windowIdentifier'
+          }
+        })}
+        exact
+      >
+        <FreezeStudioWrapper />
+      </RouteWithLayout>
+    </>
+  )
+}

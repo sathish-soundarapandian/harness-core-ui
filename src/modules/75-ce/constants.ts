@@ -279,3 +279,18 @@ export const ruleServiceStatusLabelMap = new Map<
     }
   ]
 ])
+
+export const featureNames = {
+  OVERVIEW_FEATURE: 'CCM Overview',
+  PERSPECTIVES_FEATURE: 'Perspectives',
+  BUDGETS_FEATURE: 'Budgets',
+  ANOMALIES_FEATURE: 'Anomalies',
+  RECOMMENDATIONS_FEATURE: 'Recommendations',
+  COMMITMENT_ORCHESTRATOR_FEATURE: 'Commitment Orchestrator',
+  AUTOSTOPPING_FEATURE: 'Autostopping Rules',
+  BI_DASHBOARD_FEATURE: 'BI Dashboard',
+  AUTOSTROPPING_FEATURE: 'Auto Stopping',
+  CLOUD_INTEGRATION_FEATURE: 'Cloud Integration',
+  LOAD_BALANCER_FEATURE: 'Load Balancer',
+  COST_CATEGORY_FEATURE: 'Cost Categories'
+}

@@ -15,6 +15,7 @@ declare const styles: {
   readonly cardTitle: string
   readonly chartCardsContainer: string
   readonly deploymentsChartContainer: string
+  readonly executionCount: string
   readonly failed24HrsExecutionsBadge: string
   readonly frequencyContainer: string
   readonly frequencyCount: string
@@ -27,6 +28,9 @@ declare const styles: {
   readonly mostActiveServicesHeaderContainer: string
   readonly noDataContainer: string
   readonly noDataIcon: string
+  readonly orgStyle: string
+  readonly popoverStyle: string
+  readonly popoverTable: string
   readonly runningExecutions: string
   readonly serviceTooltipRowLabel: string
   readonly servicesByDropdown: string

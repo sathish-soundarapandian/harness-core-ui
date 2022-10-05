@@ -137,9 +137,11 @@ export const DependencyBase = (
                           'spec.envVariables': { tooltipId: 'dependencyEnvironmentVariables' },
                           'spec.entrypoint': {},
                           'spec.args': {},
-                          ...([CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
-                            buildInfrastructureType
-                          ) && {
+                          ...([
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.Cloud,
+                            CIBuildInfrastructureType.Docker
+                          ].includes(buildInfrastructureType) && {
                             'spec.portBindings': {}
                           })
                         }}

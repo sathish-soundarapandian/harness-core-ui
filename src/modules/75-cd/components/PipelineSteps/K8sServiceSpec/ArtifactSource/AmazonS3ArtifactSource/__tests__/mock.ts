@@ -46,6 +46,7 @@ export const templateAmazonS3ArtifactWithoutConnectorRef: ServiceSpec = {
   artifacts: {
     primary: {
       spec: {
+        region: '<+input>',
         bucketName: '<+input>',
         filePath: '<+input>'
       },
@@ -59,6 +60,7 @@ export const templateAmazonS3Artifact: ServiceSpec = {
     primary: {
       spec: {
         connectorRef: '<+input>',
+        region: '<+input>',
         bucketName: '<+input>',
         filePath: '<+input>'
       },
@@ -72,6 +74,7 @@ export const templateAmazonS3ArtifactWithFilePathRegex: ServiceSpec = {
     primary: {
       spec: {
         connectorRef: '<+input>',
+        region: '<+input>',
         bucketName: '<+input>',
         filePathRegex: '<+input>'
       },
@@ -103,6 +106,7 @@ export const commonFormikInitialValues = {
                   artifacts: {
                     primary: {
                       spec: {
+                        region: '<+input>',
                         connectorRef: '<+input>',
                         bucketName: '<+input>',
                         filePath: '<+input>'
@@ -113,6 +117,7 @@ export const commonFormikInitialValues = {
                       {
                         sidecar: {
                           spec: {
+                            region: '<+input>',
                             connectorRef: '<+input>',
                             bucketName: '<+input>',
                             filePath: '<+input>'

@@ -23,7 +23,26 @@ exports[`<KubernetesServiceSpecInputSetMode /> tests snapshot test for kubernete
         <div
           class="Layout--vertical StyledProps--main inputWidth layoutVerticalSpacing"
           data-name="manifest"
-        />
+        >
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+        </div>
       </div>
     </div>
     <div

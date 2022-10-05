@@ -469,6 +469,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
   )[]
 }
 
@@ -960,12 +961,16 @@ export interface Error {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1309,12 +1314,16 @@ export interface ErrorMetadata {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   errorMessage?: string
 }
 
@@ -1384,6 +1393,7 @@ export interface ExecutionInfo {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -1460,6 +1470,7 @@ export interface ExecutionNode {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -1508,7 +1519,15 @@ export interface ExecutionWrapperConfig {
 
 export interface ExecutorInfoDTO {
   email?: string
-  triggerType?: 'NOOP' | 'MANUAL' | 'WEBHOOK' | 'WEBHOOK_CUSTOM' | 'SCHEDULER_CRON' | 'UNRECOGNIZED'
+  triggerType?:
+    | 'NOOP'
+    | 'MANUAL'
+    | 'WEBHOOK'
+    | 'WEBHOOK_CUSTOM'
+    | 'SCHEDULER_CRON'
+    | 'ARTIFACT'
+    | 'MANIFEST'
+    | 'UNRECOGNIZED'
   username?: string
 }
 
@@ -1847,12 +1866,16 @@ export interface Failure {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1870,7 +1893,7 @@ export interface FailureInfoDTO {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   message?: string
   responseMessages?: ResponseMessage[]
@@ -1886,7 +1909,7 @@ export interface FailureStrategyActionConfig {
     | 'StepGroupRollback'
     | 'PipelineRollback'
     | 'ManualIntervention'
-    | 'ProceedWithDefaultValue'
+    | 'ProceedWithDefaultValues'
 }
 
 export interface FailureStrategyConfig {
@@ -2090,6 +2113,7 @@ export interface GraphLayoutNode {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -2186,6 +2210,15 @@ export type HttpStepInfo = StepSpecType & {
 
 export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Ignore'
+}
+
+export interface ImportDataSpec {
+  [key: string]: any
+}
+
+export interface ImportDataSpecWrapper {
+  spec: ImportDataSpec
+  type: 'Json' | 'KeyValues'
 }
 
 export interface InputSetError {
@@ -2393,6 +2426,10 @@ export type JiraUpdateStepInfo = StepSpecType & {
   transitionTo?: TransitionTo
 }
 
+export type JsonImportDataSpec = ImportDataSpec & {
+  jsonBody: string
+}
+
 export interface JsonNode {
   [key: string]: any
 }
@@ -2400,6 +2437,10 @@ export interface JsonNode {
 export type KeyValuesCriteriaSpec = CriteriaSpec & {
   conditions: Condition[]
   matchAnyCondition?: boolean
+}
+
+export type KeyValuesImportDataSpec = ImportDataSpec & {
+  fields: ServiceNowField[]
 }
 
 export interface LandingDashboardRequestPMS {
@@ -2628,7 +2669,7 @@ export interface OnFailureConfig {
     | 'Verification'
     | 'DelegateProvisioning'
     | 'PolicyEvaluationFailure'
-    | 'ExecutionInputTimeoutError'
+    | 'InputTimeoutError'
   )[]
 }
 
@@ -2681,6 +2722,7 @@ export interface PMSPipelineResponseDTO {
   governanceMetadata?: GovernanceMetadata
   modules?: string[]
   resolvedTemplatesPipelineYaml?: string
+  validateTemplateInputsResponse?: ValidateTemplateInputsResponseDTO
   yamlPipeline?: string
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
@@ -2906,6 +2948,7 @@ export type PipelineExecutionFilterProperties = FilterProperties & {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -2978,6 +3021,7 @@ export interface PipelineExecutionSummary {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -3065,6 +3109,12 @@ export interface PipelineSaveResponse {
   identifier?: string
 }
 
+export type PipelineStageConfig = StageInfoConfig & {
+  org: string
+  pipeline: string
+  project: string
+}
+
 export interface PipelineWrapperResponse {
   label?: string
   pipelineInputResponse?: PipelineInputResponse[]
@@ -3113,6 +3163,7 @@ export interface PlanExecution {
     | 'RESOURCE_WAITING'
     | 'APPROVAL_REJECTED'
     | 'INPUT_WAITING'
+    | 'WAIT_STEP_RUNNING'
     | 'UNRECOGNIZED'
   uuid?: string
   validUntil?: string
@@ -3207,7 +3258,7 @@ export interface Principal {
 }
 
 export type ProceedWithDefaultValuesFailureActionConfig = FailureStrategyActionConfig & {
-  type: 'ProceedWithDefaultValue'
+  type: 'ProceedWithDefaultValues'
 }
 
 export type QueueStepInfo = StepSpecType & {
@@ -3238,6 +3289,7 @@ export interface RecentExecutionInfoDTO {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -3983,12 +4035,16 @@ export interface ResponseMessage {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4000,7 +4056,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -4354,6 +4410,7 @@ export interface RetryStageInfo {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -4455,8 +4512,15 @@ export type ServiceNowCreateStepInfo = StepSpecType & {
 }
 
 export interface ServiceNowField {
-  name?: string
+  name: string
   value: string
+}
+
+export type ServiceNowImportSetStepInfo = StepSpecType & {
+  connectorRef: string
+  delegateSelectors?: string[]
+  importData: ImportDataSpecWrapper
+  stagingTableName: string
 }
 
 export interface ServiceNowTicketKeyNG {
@@ -4683,6 +4747,7 @@ export interface StepData {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -4867,6 +4932,7 @@ export interface TemplatesResolvedPipelineResponseDTO {
 
 export interface Throwable {
   cause?: Throwable
+  detailMessage?: string
   localizedMessage?: string
   message?: string
   stackTrace?: StackTraceElement[]
@@ -5091,6 +5157,7 @@ export interface ExecutionSummaryInfo {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -9778,6 +9845,7 @@ export interface GetListOfExecutionsQueryParams {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -13603,6 +13671,7 @@ export interface GetSchemaYamlQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -13614,6 +13683,7 @@ export interface GetSchemaYamlQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -13660,6 +13730,8 @@ export interface GetSchemaYamlQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -13812,6 +13884,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -13823,6 +13896,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -13869,6 +13943,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsBlueGreenCreateService'
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

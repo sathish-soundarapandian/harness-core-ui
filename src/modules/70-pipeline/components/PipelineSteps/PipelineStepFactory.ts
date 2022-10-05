@@ -6,7 +6,7 @@
  */
 
 import { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-
+import { WaitStep } from './Steps/WaitStep/WaitStep'
 import { StepGroupStep } from './Steps/StepGroupStep/StepGroupStep'
 import { CustomVariables } from './Steps/CustomVariables/CustomVariables'
 import { BarrierStep } from './Steps/Barrier/Barrier'
@@ -40,6 +40,7 @@ factory.registerStep(new ServiceNowApproval())
 factory.registerStep(new ServiceNowCreate())
 factory.registerStep(new ServiceNowUpdate())
 factory.registerStep(new JenkinsStep())
+factory.registerStep(new WaitStep())
 factory.registerStep(new CustomApproval())
 
 // build steps

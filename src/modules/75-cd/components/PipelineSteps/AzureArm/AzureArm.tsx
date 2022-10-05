@@ -31,7 +31,7 @@ export class AzureArmStep extends PipelineStep<AzureArmStepInfo> {
 
   protected type = StepType.CreateAzureARMResource
   protected stepIcon: IconName = 'arm'
-  protected stepName = 'Azure ARM Create Resource'
+  protected stepName = 'Create Azure ARM Resources'
   protected stepDescription: keyof StringsMap = 'cd.azureArm.description'
 
   protected defaultValues = {

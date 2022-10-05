@@ -350,7 +350,7 @@ export default function AppDMonitoredSource({
         return (
           <FormikForm className={css.formFullheight}>
             <CardWithOuterTitle title={getString('cv.healthSource.connectors.AppDynamics.applicationsAndTiers')}>
-              <Layout.Horizontal spacing={'large'}>
+              <Layout.Horizontal spacing={'large'} flex={{ alignItems: 'center', justifyContent: 'start' }}>
                 <Container margin={{ bottom: 'small' }} width={'300px'} color={Color.BLACK}>
                   <AppDApplications
                     allowedTypes={getAllowedTypes(isConnectorRuntimeOrExpression)}
@@ -378,7 +378,11 @@ export default function AppDMonitoredSource({
                     <AppDynamicsTier
                       isTemplate={isTemplate}
                       expressions={expressions}
-                      tierOptions={tierOptions}
+                      tierOptions={
+                        getMultiTypeFromValue(formik?.values?.appdApplication) !== MultiTypeInputType.FIXED
+                          ? []
+                          : tierOptions
+                      }
                       tierLoading={tierLoading}
                       formikValues={formik?.values}
                       onValidate={onValidate}

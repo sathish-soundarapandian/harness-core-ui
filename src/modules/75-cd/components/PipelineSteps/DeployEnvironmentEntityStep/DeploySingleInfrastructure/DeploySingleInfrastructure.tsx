@@ -91,7 +91,7 @@ export default function DeploySingleInfrastructure({
   const [selectedInfrastructure, setSelectedInfrastructure] = useState<InfrastructureResponseDTO>()
   const [infrastructuresSelectOptions, setInfrastructuresSelectOptions] = useState<SelectOption[]>()
   const [infrastructureRefType, setInfrastructureRefType] = useState<MultiTypeInputType>(
-    getMultiTypeFromValue(initialValues.infrastructureRef)
+    getMultiTypeFromValue(initialValues.environment?.infrastructureRef)
   )
 
   const isFixed = infrastructureRefType === MultiTypeInputType.FIXED
@@ -100,7 +100,6 @@ export default function DeploySingleInfrastructure({
   useEffect(() => {
     if (environmentIdentifier !== environmentRef) {
       setEnvironmentIdentifier(environmentRef)
-      setFieldValue('infrastructureRef', '')
       setSelectedInfrastructure(undefined)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -153,26 +152,26 @@ export default function DeploySingleInfrastructure({
     if (
       !isEmpty(infrastructuresSelectOptions) &&
       !isNil(infrastructuresSelectOptions) &&
-      initialValues.infrastructureRef
+      initialValues.environment?.infrastructureRef
     ) {
       // istanbul ignore else
-      if (getMultiTypeFromValue(initialValues.infrastructureRef) === MultiTypeInputType.FIXED) {
+      if (getMultiTypeFromValue(initialValues.environment?.infrastructureRef) === MultiTypeInputType.FIXED) {
         const existingInfrastructure = infrastructuresSelectOptions.find(
-          infra => infra.value === initialValues.infrastructureRef
+          infra => infra.value === initialValues.environment?.infrastructureRef
         )
         if (!existingInfrastructure) {
           if (!readonly) {
-            setFieldValue('infrastructureRef', '')
+            setFieldValue('environment.infrastructureRef', '')
           } else {
             const options = [...infrastructuresSelectOptions]
             options.push({
-              label: initialValues.infrastructureRef,
-              value: initialValues.infrastructureRef
+              label: initialValues.environment.infrastructureRef,
+              value: initialValues.environment.infrastructureRef
             })
             setInfrastructuresSelectOptions(options)
           }
         } else {
-          setFieldValue('infrastructureRef', existingInfrastructure.value)
+          setFieldValue('environment.infrastructureRef', existingInfrastructure.value)
           setSelectedInfrastructure(infrastructures?.find(infra => infra.identifier === existingInfrastructure?.value))
         }
       }
@@ -203,7 +202,7 @@ export default function DeploySingleInfrastructure({
       newInfrastructureList?.find(infrastructure => infrastructure.identifier === updatedValues?.identifier)
     )
 
-    setFieldValue('infrastructureRef', updatedValues.identifier)
+    setFieldValue('environment.infrastructureRef', updatedValues.identifier)
     hideInfrastructuresModal()
   }
 
@@ -249,7 +248,7 @@ export default function DeploySingleInfrastructure({
         <FormInput.MultiTypeInput
           label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')}
           tooltipProps={{ dataTooltipId: 'specifyYourInfrastructure' }}
-          name={'infrastructureRef'}
+          name={'environment.infrastructureRef'}
           useValue
           disabled={readonly || (infrastructureRefType === MultiTypeInputType.FIXED && infrastructuresLoading)}
           placeholder={
@@ -302,7 +301,7 @@ export default function DeploySingleInfrastructure({
           onEditClick={showInfrastructuresModal}
           onDeleteClick={() => {
             setSelectedInfrastructure(undefined)
-            setFieldValue('infrastructureRef', '')
+            setFieldValue('environment.infrastructureRef', '')
           }}
         />
       )}

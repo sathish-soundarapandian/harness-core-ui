@@ -61,6 +61,7 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
         return `${path}`
     }
   }
+
   const getScope = (fsValue: string): FileStoreFieldData => {
     const [scope, path] = (fsValue && fsValue.split(':')) || ['', '']
     switch (scope) {
@@ -105,7 +106,7 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
       intent={errorCheck() ? Intent.DANGER : Intent.NONE}
       style={{ width: '100%' }}
     >
-      <Layout.Vertical>
+      <Layout.Vertical data-testid="file-store-select">
         {label ? (
           <label className={'bp3-label'}>
             <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} />
@@ -114,6 +115,7 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
         <Container
           flex={{ alignItems: 'center', justifyContent: 'space-between' }}
           className={css.container}
+          data-testid="container-fs"
           onClick={() => {
             if (!readonly) {
               modalFileStore.openFileStoreModal()
@@ -131,7 +133,7 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
               - {placeholder_} -
             </Text>
           )}
-          <Container padding={{ right: 'small' }}>
+          <Container padding={{ right: 'medium' }}>
             {fileStoreValue && scope ? <Tag>{scope.toUpperCase()}</Tag> : null}
             <Icon name="chevron-down" size={15} color="grey300" margin={{ left: 'small' }} />
           </Container>

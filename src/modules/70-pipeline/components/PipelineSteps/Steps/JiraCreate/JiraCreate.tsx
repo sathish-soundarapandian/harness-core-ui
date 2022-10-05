@@ -164,6 +164,7 @@ export class JiraCreate extends PipelineStep<JiraCreateData> {
         allowableTypes={allowableTypes}
         onChange={(values: JiraCreateData) => onChange?.(values)}
         initialValues={processInitialValues(initialValues)}
+        unprocessedInitialValues={initialValues}
         onUpdate={(values: JiraCreateData) => onUpdate?.(values)}
         isNewStep={isNewStep}
         readonly={readonly}

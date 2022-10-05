@@ -298,7 +298,8 @@ export function ServicePipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes: noop,
-        setTemplateServiceData: noop
+        setTemplateServiceData: noop,
+        setIntermittentLoading: noop
       }}
     >
       {children}

@@ -26,10 +26,10 @@ import { useModalHook } from '@harness/use-modal'
 import type { FormikErrors } from 'formik'
 import * as Yup from 'yup'
 import { EnvironmentResponseDTO, ResponseEnvironmentResponseDTO, useCreateEnvironment } from 'services/cd-ng'
+import { useStrings } from 'framework/strings'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Description } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useToaster } from '@common/exports'
-import { useEnvStrings } from '@cf/hooks/environment'
 import { getErrorMessage } from '@cf/utils/CFUtils'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 import RbacButton from '@rbac/components/Button/Button'
@@ -46,6 +46,7 @@ export interface EnvironmentDialogProps {
   onCreate: (response?: ResponseEnvironmentResponseDTO) => void
   buttonProps?: ButtonProps
   environments?: EnvironmentResponseDTO[]
+  isLinkVariation?: boolean
 }
 
 interface EnvironmentValues {
@@ -56,9 +57,15 @@ interface EnvironmentValues {
   type: EnvironmentType
 }
 
-const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreate, buttonProps, environments }) => {
+const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
+  disabled,
+  onCreate,
+  buttonProps,
+  environments,
+  isLinkVariation
+}) => {
   const { showError } = useToaster()
-  const { getString, getEnvString } = useEnvStrings()
+  const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { mutate: createEnv, loading } = useCreateEnvironment({
     queryParams: {
@@ -126,7 +133,7 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
     const errors: { name?: string } = {}
 
     if (environments?.some(env => env.name === values.name)) {
-      errors.name = getEnvString('create.duplicateName')
+      errors.name = getString('cf.environments.create.duplicateName')
     }
     return errors
   }
@@ -139,7 +146,7 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
         isOpen
         onClose={hideModal}
         className={css.dialog}
-        title={getEnvString('create.title')}
+        title={getString('cf.environments.create.title')}
       >
         <Formik
           initialValues={initialValues}
@@ -161,19 +168,21 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
             return (
               <FormikForm>
                 <Text color={Color.GREY_800} font={{ variation: FontVariation.SMALL }}>
-                  {getEnvString('create.description')}
+                  {getString('cf.environments.create.description')}
                 </Text>
                 <Layout.Vertical padding={{ top: 'medium', left: 'xsmall', right: 'xsmall' }} className={css.container}>
                   <FormInput.InputWithIdentifier
                     inputName="name"
                     idName="identifier"
                     isIdentifierEditable
-                    inputLabel={getEnvString('create.nameLabel')}
+                    inputLabel={getString('cf.environments.create.nameLabel')}
                     inputGroupProps={{ inputGroup: { autoFocus: true } }}
                   />
                   <Description />
                   <Layout.Vertical spacing="small">
-                    <Text font={{ variation: FontVariation.FORM_LABEL }}>{getEnvString('create.envTypeLabel')}</Text>
+                    <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                      {getString('cf.environments.create.envTypeLabel')}
+                    </Text>
                     <CardSelect
                       cornerSelected
                       data={envTypes}
@@ -222,7 +231,7 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
       }}
       text={getString('newEnvironment')}
       intent="primary"
-      variation={ButtonVariation.PRIMARY}
+      variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
       padding={{
         top: 'small',
         bottom: 'small',

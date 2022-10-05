@@ -157,12 +157,12 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="width: 385px;"
+                      style="width: 327px;"
                     >
                       <button
                         class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                         data-testid="cr-field-spec.connectorRef"
-                        style="width: 385px;"
+                        style="width: 327px;"
                         type="button"
                       >
                         <span
@@ -230,7 +230,7 @@ exports[`Git Clone Step InputSet View Render should render all fields with valid
           </div>
           <div
             class="StyledProps--font StyledProps--main"
-            style="width: 385px;"
+            style="width: 327px;"
           >
             <div
               class="Text--withDocsTooltip"

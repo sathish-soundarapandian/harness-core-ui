@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, render, RenderResult, screen, waitFor } from '@testing-library/react'
+import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
@@ -98,10 +98,11 @@ describe('NoFeatureFlags', () => {
       expect(screen.getByText('cf.featureFlags.clearSearch')).toBeVisible()
     })
 
-    await act(async () => {
-      userEvent.click(screen.getByText('cf.featureFlags.clearSearch'))
+    userEvent.click(screen.getByText('cf.featureFlags.clearSearch'))
+
+    await waitFor(() => {
+      expect(onClearSearch).toHaveBeenCalled()
     })
-    expect(onClearSearch).toHaveBeenCalled()
   })
 
   test('It should render the filter message when both flagFilter and searchTerm are present', async () => {
@@ -114,9 +115,10 @@ describe('NoFeatureFlags', () => {
       expect(screen.getByText('cf.featureFlags.resetFilters')).toBeVisible()
     })
 
-    await act(async () => {
-      userEvent.click(screen.getByText('cf.featureFlags.resetFilters'))
+    userEvent.click(screen.getByText('cf.featureFlags.resetFilters'))
+
+    await waitFor(() => {
+      expect(onClearFilter).toHaveBeenCalled()
     })
-    expect(onClearFilter).toHaveBeenCalled()
   })
 })
