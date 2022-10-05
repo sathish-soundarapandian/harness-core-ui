@@ -471,6 +471,9 @@ export function Nexus3Artifact({
                       ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
                       : k8sRepositoryFormatTypes
                   }
+                  tooltipProps={{
+                    dataTooltipId: 'nexusRepositoryFormat'
+                  }}
                   onChange={value => {
                     if (value.value === RepositoryFormatTypes.Maven) {
                       const optionalValues: { extension?: string; classifier?: string } = {}
@@ -509,6 +512,9 @@ export function Nexus3Artifact({
                   disabled={isReadonly}
                   label={getString('repository')}
                   name="repository"
+                  tooltipProps={{
+                    dataTooltipId: 'nexusRepository'
+                  }}
                   placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
                   useValue
                   multiTypeInputProps={{
@@ -569,6 +575,9 @@ export function Nexus3Artifact({
                     <FormInput.MultiTextInput
                       label={getString('pipeline.artifactsSelection.groupId')}
                       name="spec.groupId"
+                      tooltipProps={{
+                        dataTooltipId: 'nexusGroupId'
+                      }}
                       placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />
@@ -593,6 +602,9 @@ export function Nexus3Artifact({
                     <FormInput.MultiTextInput
                       label={getString('pipeline.artifactsSelection.artifactId')}
                       name="spec.artifactId"
+                      tooltipProps={{
+                        dataTooltipId: 'nexusArtifactId'
+                      }}
                       placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />
@@ -617,6 +629,9 @@ export function Nexus3Artifact({
                     <FormInput.MultiTextInput
                       label={getString('pipeline.artifactsSelection.extension')}
                       name="spec.extension"
+                      tooltipProps={{
+                        dataTooltipId: 'nexusExtension'
+                      }}
                       placeholder={getString('pipeline.artifactsSelection.extensionPlaceholder')}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />
@@ -641,6 +656,9 @@ export function Nexus3Artifact({
                     <FormInput.MultiTextInput
                       label={getString('pipeline.artifactsSelection.classifier')}
                       name="spec.classifier"
+                      tooltipProps={{
+                        dataTooltipId: 'nexusClassifier'
+                      }}
                       placeholder={getString('pipeline.artifactsSelection.classifierPlaceholder')}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />
@@ -668,6 +686,9 @@ export function Nexus3Artifact({
                     <FormInput.MultiTextInput
                       label={getString('pipeline.artifactPathLabel')}
                       name="spec.artifactPath"
+                      tooltipProps={{
+                        dataTooltipId: 'nexusArtifactPath'
+                      }}
                       placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
                       multiTextInputProps={{ expressions, allowableTypes }}
                     />
@@ -691,6 +712,9 @@ export function Nexus3Artifact({
                   <div className={css.tagGroup}>
                     <FormInput.RadioGroup
                       name="spec.repositoryPortorRepositoryURL"
+                      tooltipProps={{
+                        dataTooltipId: 'nexusRepositoryURL'
+                      }}
                       radioGroup={{ inline: true }}
                       items={repositoryPortOrServer}
                       className={css.radioGroup}
@@ -734,6 +758,9 @@ export function Nexus3Artifact({
                       <FormInput.MultiTextInput
                         label={getString('pipeline.artifactsSelection.repositoryPort')}
                         name="spec.repositoryPort"
+                        tooltipProps={{
+                          dataTooltipId: 'nexusRepositoryPort'
+                        }}
                         placeholder={getString('pipeline.artifactsSelection.repositoryPortPlaceholder')}
                         multiTextInputProps={{
                           expressions,
@@ -791,6 +818,9 @@ export function Nexus3Artifact({
                   <FormInput.MultiTextInput
                     label={getString('pipeline.artifactsSelection.packageName')}
                     name="spec.packageName"
+                    tooltipProps={{
+                      dataTooltipId: 'nexusPackageName'
+                    }}
                     placeholder={getString('pipeline.manifestType.packagePlaceholder')}
                     multiTextInputProps={{ expressions, allowableTypes }}
                   />
