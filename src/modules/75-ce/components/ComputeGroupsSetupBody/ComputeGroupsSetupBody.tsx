@@ -10,6 +10,7 @@ import { Container, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import ScaleAndLimitPoliciesTab from './ScaleAndLimitPoliciesTab/ScaleAndLimitPoliciesTab'
 import SchedulingAutostoppingTab from './SchedulingAutostoppingTab'
+import ClusterPermissionsTab from './ClusterPermissionsTab'
 import css from './ComputeGroupsSetupBody.module.scss'
 
 const ComputeGroupsSetupBody: React.FC = () => {
@@ -18,12 +19,12 @@ const ComputeGroupsSetupBody: React.FC = () => {
     <Container className={css.cgSetupBodyContainer}>
       <Tabs
         id={'horizontalTabs'}
-        defaultSelectedTabId={'tab2'}
+        defaultSelectedTabId={'tab1'}
         tabList={[
           {
             id: 'tab1',
-            title: getString('ce.computeGroups.setup.spotInstancesTab.title'),
-            panel: <div>Tab 1 content</div>,
+            title: `1. ${getString('ce.cloudIntegration.clusterPermissions')}`,
+            panel: <ClusterPermissionsTab />,
             iconProps: { name: 'gear' }
           },
           {

@@ -1360,6 +1360,13 @@ computeGroups:
   totalNodes: Total Nodes
   efficiencyScore: Efficiency score
   setup:
+    clusterPermissionsTab:
+      note: 'In order to get <b>Intelligent AutoScaler</b> working, you will have to install a few components on the cluster. This is done by applying a YAML file.'
+      info1: Creation of the autostopping-router
+      info2: Creation of the autostopping-controller
+      info3: A configmaps used by them
+      info4: Roles required by them
+      testConnection: Test your connection
     spotInstancesTab:
       title: '1. Spot Instances'
     scalingLimitPoliciesTab:

@@ -5664,6 +5664,12 @@ export interface StringsMap {
   'ce.common.totalCount': string
   'ce.computeGroups.addNewClusterCtaText': string
   'ce.computeGroups.efficiencyScore': string
+  'ce.computeGroups.setup.clusterPermissionsTab.info1': string
+  'ce.computeGroups.setup.clusterPermissionsTab.info2': string
+  'ce.computeGroups.setup.clusterPermissionsTab.info3': string
+  'ce.computeGroups.setup.clusterPermissionsTab.info4': string
+  'ce.computeGroups.setup.clusterPermissionsTab.note': string
+  'ce.computeGroups.setup.clusterPermissionsTab.testConnection': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.cpuRangeSubtitle': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.cpuRangeTitle': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.header': string
