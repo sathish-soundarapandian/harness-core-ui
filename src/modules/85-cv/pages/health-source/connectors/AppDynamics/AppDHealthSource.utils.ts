@@ -460,7 +460,7 @@ export const createAppDynamicsPayload = (
       } = entry[1]
 
       let derivedCompleteMetricPath = completeMetricPath
-      if (formData.pathType == PATHTYPE.DropdownPath) {
+      if (formData.pathType === PATHTYPE.DropdownPath) {
         derivedCompleteMetricPath = `${basePath[Object.keys(basePath)[Object.keys(basePath).length - 1]]?.path}|${
           formData.appDTier
         }|${metricPath[Object.keys(metricPath)[Object.keys(metricPath).length - 1]]?.path}`
