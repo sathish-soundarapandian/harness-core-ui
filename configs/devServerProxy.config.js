@@ -104,6 +104,10 @@ module.exports = {
     pathRewrite: { '^/scm': '' },
     target: process.env.SCM_API_URL || 'http://localhost:3000'
   },
+   '/idp/api': {
+    pathRewrite: { '^/idp/api': '/api' },
+    target: process.env.IDP_BE_URL || 'http://localhost:7007'
+  },
   '/idp': {
     pathRewrite: { '^/idp': '' },
     target: process.env.IDP_UI_URL || 'http://localhost:3000'
