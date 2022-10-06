@@ -488,7 +488,6 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                           </div>
                         </div>
                       </div>
-                      )
                     </div>
                   </div>
                 </div>
@@ -647,7 +646,6 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra initializes
                           </div>
                         </div>
                       </div>
-                      )
                     </div>
                   </div>
                 </div>
@@ -2157,7 +2155,6 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra able to sel
                           </div>
                         </div>
                       </div>
-                      )
                     </div>
                   </div>
                   <div
@@ -2359,7 +2356,6 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra initializes
                           </div>
                         </div>
                       </div>
-                      )
                     </div>
                   </div>
                 </div>

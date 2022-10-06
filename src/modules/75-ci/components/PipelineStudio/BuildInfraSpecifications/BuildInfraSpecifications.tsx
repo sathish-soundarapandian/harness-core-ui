@@ -2268,7 +2268,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                                   {buildInfraType ? <Separator topSeparation={10} /> : null}
                                   {renderBuildInfraMainSection()}
                                 </>
-                                )
                               </Layout.Vertical>
                             </Card>
                             {buildInfraType === CIBuildInfrastructureType.KubernetesDirect
