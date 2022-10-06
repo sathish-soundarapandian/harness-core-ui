@@ -22,7 +22,6 @@ import { matchPath, useHistory, useLocation, useParams } from 'react-router-dom'
 import { isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
-import type { StoreType } from '@common/constants/GitSyncTypes'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -37,7 +36,7 @@ export interface PipelineErrorViewProps {
   branch?: string
   connectorRef?: string
   repoName?: string
-  storeType?: StoreType
+  storeType?: 'INLINE' | 'REMOTE'
 }
 
 export function PipelineErrorView({

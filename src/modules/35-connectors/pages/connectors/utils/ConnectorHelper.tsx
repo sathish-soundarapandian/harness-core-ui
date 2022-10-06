@@ -20,15 +20,17 @@ export const AuthTypes = {
   BEARER_TOKEN: 'Bearer Token(HTTP Header)'
 }
 
-export const GitAuthTypes = {
-  USER_PASSWORD: 'UsernamePassword',
-  USER_TOKEN: 'UsernameToken',
-  KERBEROS: 'Kerberos'
+export enum GitAuthTypes {
+  USER_PASSWORD = 'UsernamePassword',
+  USER_TOKEN = 'UsernameToken',
+  KERBEROS = 'Kerberos',
+  OAUTH = 'OAuth'
 }
 
 export const GitAPIAuthTypes = {
   GITHUB_APP: 'GithubApp',
-  TOKEN: 'Token'
+  TOKEN: 'Token',
+  OAUTH: 'OAuth'
 }
 
 export const dockerProviderTypes = {
@@ -69,6 +71,8 @@ export const getHeadingIdByType = (type: string): StringKeys => {
       return 'connectors.appDynamicsDetails'
     case Connectors.SPLUNK:
       return 'connectors.splunkConnectorDetails'
+    case Connectors.ELK:
+      return 'connectors.elk.elkConnectorDetails'
     case 'Gcr':
       return 'connectors.gcrConnectorDetails'
     default:
@@ -82,6 +86,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.k8sCluster'
     case Connectors.HttpHelmRepo:
       return 'connectors.title.helmConnector'
+    case Connectors.OciHelmRepo:
+      return 'connectors.title.ociHelmConnector'
     case Connectors.GIT:
       return 'connectors.title.gitConnector'
     case Connectors.GITHUB:
@@ -139,9 +145,27 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
     case Connectors.AZURE_KEY_VAULT:
       return 'connectors.title.azureKeyVault'
     case Connectors.ERROR_TRACKING:
-      return 'connectors.title.errorTracking'
+      return 'common.purpose.errorTracking.title'
     case Connectors.AZURE:
       return 'connectors.title.azure'
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return 'connectors.title.customSecretManager'
+    case Connectors.NEW_RELIC:
+      return 'connectors.newRelicLabel'
+    case Connectors.PROMETHEUS:
+      return 'connectors.prometheusLabel'
+    case Connectors.DYNATRACE:
+      return 'connectors.dynatraceLabel'
+    case Connectors.CE_GCP:
+      return 'common.gcp'
+    case Connectors.PAGER_DUTY:
+      return 'common.pagerDuty'
+    case Connectors.CUSTOM_HEALTH:
+      return 'connectors.customLabel'
+    case Connectors.ELK:
+      return 'connectors.elk.elkLabel'
+    case Connectors.AWSSECRETMANAGER:
+      return 'connectors.title.awsSecretManager'
     default:
       return 'connector'
   }
@@ -156,6 +180,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'service-github'
     case Connectors.HttpHelmRepo:
       return 'service-helm'
+    case Connectors.OciHelmRepo:
+      return 'helm-oci'
     case Connectors.GITHUB:
       return 'github'
     case Connectors.GITLAB:
@@ -224,10 +250,14 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'harness'
     case Connectors.CUSTOM_HEALTH:
       return 'service-custom-connector'
+    case Connectors.ELK:
+      return 'service-elk'
     case Connectors.ERROR_TRACKING:
       return 'error-tracking'
     case Connectors.AZURE:
       return 'microsoft-azure'
+    case Connectors.CUSTOM_SECRET_MANAGER:
+      return 'custom-sm'
     default:
       return 'placeholder'
   }

@@ -20,7 +20,8 @@ import {
   getMultiTypeFromValue,
   HarnessDocTooltip,
   MultiTypeInputType,
-  Container
+  Container,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { String, useStrings } from 'framework/strings'
@@ -33,6 +34,8 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { FormMultiTypeUserGroupInput } from '@common/components/UserGroupsInput/FormMultitypeUserGroupInput'
 import { regexPositiveNumbers } from '@common/utils/StringUtils'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import { UserGroupConfigureOptions } from '@common/components/ConfigureOptions/UserGroupConfigureOptions/UserGroupConfigureOptions'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type {
   ApproverInputsSubmitCallInterface,
@@ -136,7 +139,7 @@ function FormContent({
         />
         {getMultiTypeFromValue(formik.values.spec.approvers.userGroups) === MultiTypeInputType.RUNTIME && (
           <Container margin={{ top: 'medium' }}>
-            <ConfigureOptions
+            <UserGroupConfigureOptions
               value={formik.values.spec.approvers.userGroups as string}
               type="String"
               variableName="spec.approvers.userGroups"
@@ -145,6 +148,10 @@ function FormContent({
               showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.approvers.userGroups', value)}
               isReadonly={readonly}
+              userGroupsInputProps={{
+                tooltipProps: { dataTooltipId: 'harnessApproval_spec.approvers.userGroups' },
+                disabled: isApprovalStepFieldDisabled(readonly)
+              }}
             />
           </Container>
         )}
@@ -220,7 +227,9 @@ function FormContent({
                                   label=""
                                   placeholder={getString('valueLabel')}
                                   multiTextInputProps={{
-                                    allowableTypes: allowableTypes.filter(item => item !== MultiTypeInputType.RUNTIME),
+                                    allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                                      item => !isMultiTypeRuntime(item)
+                                    ) as AllowedTypes,
                                     expressions
                                   }}
                                 />

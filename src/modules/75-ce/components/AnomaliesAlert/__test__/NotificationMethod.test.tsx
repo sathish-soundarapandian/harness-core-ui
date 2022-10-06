@@ -27,8 +27,12 @@ const props: any = {
     values: {
       alertList: [
         {
-          channelName: '',
-          channelUrl: ''
+          channelName: 'EMAIL',
+          channelUrl: 'harness.harness.io'
+        },
+        {
+          channelName: 'SLACK',
+          channelUrl: 'https://hooks.slack.com/services/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'
         }
       ]
     },
@@ -75,7 +79,7 @@ describe('Test case for Anomalies alert notification method selection', () => {
     act(() => {
       fireEvent.click(addChannelBtn)
     })
-    await waitFor(() => expect(findByTestId('notification-channel-0')).toBeTruthy())
+    await waitFor(() => expect(findByTestId('notification-channel')).toBeTruthy())
 
     expect(container).toMatchSnapshot()
   })
@@ -116,7 +120,7 @@ describe('Test case for Anomalies alert notification method selection', () => {
     act(() => {
       fireEvent.click(deleteIcon!)
     })
-    expect(() => getByTestId('notification-channel-0')).toThrow()
+    expect(() => getByTestId('notification-channel')).toThrow()
     expect(container).toMatchSnapshot()
   })
 
@@ -139,13 +143,13 @@ describe('Test case for Anomalies alert notification method selection', () => {
   })
 
   test('should be able to submit the form', async () => {
-    const { getByText } = render(
+    const { container } = render(
       <TestWrapper pathParams={params}>
         <NotificationMethod {...props} />
       </TestWrapper>
     )
 
-    const continueBtn = getByText('saveAndContinue')
+    const continueBtn = container?.querySelector('[data-testid="submitForm"]')
     expect(continueBtn).toBeDefined()
     act(() => {
       fireEvent.click(continueBtn!)

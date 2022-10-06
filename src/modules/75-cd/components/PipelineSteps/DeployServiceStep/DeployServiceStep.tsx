@@ -6,18 +6,19 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
 import { get, isEmpty } from 'lodash-es'
-import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { FormikErrors } from 'formik'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { getServiceListPromise } from 'services/cd-ng'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { Step, StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
-import type { DeployServiceData } from './DeployServiceInterface'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
+import type { DeployServiceCustomStepPropType, DeployServiceData } from './DeployServiceInterface'
 import { ServiceRegex } from './DeployServiceUtils'
 import { DeployServiceInputStepFormik } from './DeployServiceInputStep'
 import DeployServiceWidget from './DeployServiceWidget'
@@ -77,9 +78,17 @@ export class DeployServiceStep extends Step<DeployServiceData> {
       resolve([])
     })
   }
-  renderStep(props: StepProps<DeployServiceData>): JSX.Element {
-    const { initialValues, onUpdate, stepViewType, inputSetData, readonly = false, allowableTypes } = props
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+  renderStep(props: StepProps<DeployServiceData, DeployServiceCustomStepPropType>): JSX.Element {
+    const {
+      initialValues,
+      onUpdate,
+      stepViewType,
+      inputSetData,
+      readonly = false,
+      allowableTypes,
+      customStepProps
+    } = props
+    if (isTemplatizedView(stepViewType)) {
       return (
         <DeployServiceInputStepFormik
           initialValues={initialValues}
@@ -88,6 +97,7 @@ export class DeployServiceStep extends Step<DeployServiceData> {
           stepViewType={stepViewType}
           inputSetData={inputSetData}
           allowableTypes={allowableTypes}
+          customStepProps={customStepProps as DeployServiceCustomStepPropType}
         />
       )
     }

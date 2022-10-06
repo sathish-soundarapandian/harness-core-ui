@@ -43,7 +43,6 @@ export const ExecutionStatusEnum: Readonly<Record<ExecutionStatus, ExecutionStat
   InterventionWaiting: 'InterventionWaiting',
   ApprovalWaiting: 'ApprovalWaiting',
   Pausing: 'Pausing',
-  Waiting: 'Waiting',
   InputWaiting: 'InputWaiting'
 }
 
@@ -89,7 +88,10 @@ export function isExecutionQueued(status?: string): boolean {
 
 export function isExecutionWaiting(status?: string): boolean {
   return (
-    isExecutionOnlyWaiting(status) || isExecutionWaitingForApproval(status) || isExecutionWaitingForIntervention(status)
+    isExecutionOnlyWaiting(status) ||
+    isExecutionWaitingForApproval(status) ||
+    isExecutionWaitingForIntervention(status) ||
+    isExecutionWaitingForInput(status)
   )
 }
 
@@ -103,6 +105,10 @@ export function isExecutionWaitingForApproval(status?: string): boolean {
 
 export function isExecutionWaitingForIntervention(status?: string): boolean {
   return changeCase(status) === ExecutionStatusEnum.InterventionWaiting
+}
+
+export function isExecutionWaitingForInput(status?: string): boolean {
+  return changeCase(status) === ExecutionStatusEnum.InputWaiting
 }
 
 export function isExecutionPaused(status?: string): boolean {

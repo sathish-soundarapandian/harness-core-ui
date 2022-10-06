@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, getAllByText, getByText, render, waitFor } from '@testing-library/react'
+import { fireEvent, getAllByText, getByText, render, screen, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
 import mockImport from 'framework/utils/mockImport'
@@ -162,6 +162,8 @@ describe('SegmentsPage', () => {
   })
 
   test('SegmentsPage should render data correctly', async () => {
+    const tableHeaders = ['CF.SHARED.SEGMENT', 'IDENTIFIER', 'CF.TARGETS.CREATEDDATE']
+
     mockImport('services/cf', {
       useGetAllSegments: () => ({
         data: {
@@ -172,7 +174,7 @@ describe('SegmentsPage', () => {
               excluded: [],
               identifier: 'segment1',
               included: [],
-              name: 'segment1',
+              name: 'segment1 name',
               rules: []
             }
           ]
@@ -193,7 +195,7 @@ describe('SegmentsPage', () => {
       })
     })
 
-    const { container } = render(
+    render(
       <TestWrapper
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
@@ -202,7 +204,11 @@ describe('SegmentsPage', () => {
       </TestWrapper>
     )
 
-    expect(container).toMatchSnapshot()
+    expect(screen.getByText('segment1 name')).toBeInTheDocument()
+    expect(screen.getByText('segment1')).toBeInTheDocument()
+    tableHeaders.forEach(header => {
+      expect(screen.getByText(header)).toBeInTheDocument()
+    })
   })
 
   test('No data view should be rendered', async () => {
@@ -225,7 +231,7 @@ describe('SegmentsPage', () => {
       })
     })
 
-    const { container } = render(
+    render(
       <TestWrapper
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
@@ -234,7 +240,9 @@ describe('SegmentsPage', () => {
       </TestWrapper>
     )
 
-    expect(container).toMatchSnapshot()
+    expect(screen.getByTestId('nodata-image')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'plus cf.segments.create' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'cf.segments.noTargetGroupsForEnv' })).toBeInTheDocument()
   })
 
   test('No environment view should be rendered', async () => {
@@ -257,7 +265,7 @@ describe('SegmentsPage', () => {
       })
     })
 
-    const { container } = render(
+    render(
       <TestWrapper
         path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
@@ -266,7 +274,9 @@ describe('SegmentsPage', () => {
       </TestWrapper>
     )
 
-    expect(container).toMatchSnapshot()
+    expect(screen.getByTestId('nodata-image')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'plus newEnvironment' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'cf.noEnvironment.title' })).toBeInTheDocument()
   })
 
   test('Should go to edit page by clicking a row', async () => {

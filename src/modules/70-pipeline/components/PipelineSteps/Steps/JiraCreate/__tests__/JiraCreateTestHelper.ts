@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -14,6 +14,7 @@ import type {
   ResponseConnectorResponse,
   ResponseJiraIssueCreateMetadataNG,
   ResponseListJiraProjectBasicNG,
+  ResponseListJiraUserData,
   ResponsePageConnectorResponse
 } from 'services/cd-ng'
 import type { JiraCreateDeploymentModeProps, JiraCreateStepModeProps } from '../types'
@@ -33,7 +34,11 @@ export const getJiraCreateEditModeProps = (): JiraCreateStepModeProps => ({
     }
   },
   onUpdate: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepViewType: StepViewType.Edit
 })
 
@@ -51,7 +56,11 @@ export const getJiraCreateEditModePropsWithConnectorId = (): JiraCreateStepModeP
     }
   },
   onUpdate: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepViewType: StepViewType.Edit
 })
 
@@ -75,7 +84,11 @@ export const getJiraCreateEditModePropsWithValues = (): JiraCreateStepModeProps 
     }
   },
   onUpdate: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   stepViewType: StepViewType.Edit
 })
 
@@ -141,6 +154,17 @@ export const getJiraCreateInputVariableModeProps = () => ({
           localName: 'step.approval.name'
         }
       },
+      'step-identifier': {
+        yamlExtraProperties: {
+          properties: [
+            {
+              fqn: 'pipeline.stages.qaStage.execution.steps.approval.identifier',
+              localName: 'step.approval.identifier',
+              variableName: 'identifier'
+            }
+          ]
+        }
+      },
       'step-timeout': {
         yamlProperties: {
           fqn: 'pipeline.stages.qaStage.execution.steps.approval.timeout',
@@ -168,6 +192,7 @@ export const getJiraCreateInputVariableModeProps = () => ({
     },
     variablesData: {
       type: StepType.JiraCreate,
+      __uuid: 'step-identifier',
       identifier: 'jira_create',
       name: 'step-name',
       description: 'Description',
@@ -399,4 +424,43 @@ export const getJiraRequiredFieldRendererProps = (): JiraFieldsRendererProps => 
     }
   ],
   renderRequiredFields: true
+})
+
+export const mockJiraUserResponse: UseGetMockData<ResponseListJiraUserData> = {
+  data: {
+    correlationId: '',
+    status: 'SUCCESS',
+    data: [
+      {
+        accountId: '62eccb9c32850ea2a325036e',
+        name: '',
+        displayName: 'Abhinav Hinger',
+        active: true,
+        emailAddress: 'abhinav.hinger@harness.io'
+      },
+      {
+        accountId: '62e646b3432ef494c8c8f8c3',
+        name: '',
+        displayName: 'Abhinav Kumar Singh',
+        active: true,
+        emailAddress: 'abhinav.singh3@harness.io'
+      }
+    ]
+  }
+}
+
+export const getJiraUserFieldRendererProps = (): JiraFieldsRendererProps => ({
+  selectedFields: [
+    {
+      name: 'assignee',
+      value: '',
+      key: 'assignee',
+      allowedValues: [],
+      schema: {
+        typeStr: '',
+        type: 'user'
+      },
+      required: false
+    }
+  ]
 })

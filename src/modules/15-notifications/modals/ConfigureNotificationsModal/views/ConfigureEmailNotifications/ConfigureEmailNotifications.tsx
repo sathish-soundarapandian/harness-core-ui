@@ -24,7 +24,7 @@ import { Popover, Spinner } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
-import { EmailSchema } from '@common/utils/Validation'
+import { EmailSchema, EmailSchemaWithoutRequired } from '@common/utils/Validation'
 import { useToaster } from '@common/components'
 import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
 import type { EmailNotificationConfiguration } from '@notifications/interfaces/Notifications'
@@ -36,8 +36,6 @@ import css from '../../ConfigureNotificationsModal.module.scss'
 
 interface EmailTestConfigData {
   to: string
-  subject: string
-  body: string
 }
 
 interface ConfigureEmailNotificationsProps {
@@ -67,22 +65,16 @@ export const TestEmailConfig: React.FC<TestEmailConfigProps> = props => {
         onSubmit={handleSubmit}
         formName="configureTestEmailNotifications"
         validationSchema={Yup.object().shape({
-          to: EmailSchema(),
-          subject: Yup.string().trim().required(getString('common.smtp.validationSubject')),
-          body: Yup.string().trim().required(getString('common.smtp.validationBody'))
+          to: EmailSchema()
         })}
         initialValues={{
-          to: '',
-          subject: '',
-          body: ''
+          to: ''
         }}
       >
         {formik => {
           return (
             <FormikForm>
               <FormInput.Text name={'to'} label={getString('common.smtp.labelTo')} />
-              <FormInput.Text name={'subject'} label={getString('common.smtp.labelSubject')} />
-              <FormInput.Text name={'body'} label={getString('common.smtp.labelBody')} />
               <Button
                 text={getString('notifications.buttonSend')}
                 onClick={event => {
@@ -117,9 +109,7 @@ export const TestEmailNotifications: React.FC<{ onClick?: () => void; buttonProp
         accountId,
         type: 'EMAIL',
         recipient: testData.to,
-        notificationId: 'asd',
-        subject: testData.subject,
-        body: testData.body
+        notificationId: 'asd'
       } as EmailSettingDTO)
       if (resp.status === 'SUCCESS' && resp.data) {
         showSuccess(getString('notifications.emailTestSuccess'))
@@ -186,7 +176,8 @@ const ConfigureEmailNotifications: React.FC<ConfigureEmailNotificationsProps> = 
           validationSchema={Yup.object().shape({
             emailIds: Yup.string().when('userGroups', {
               is: val => isEmpty(val),
-              then: EmailSchema({ allowMultiple: true, emailSeparator: ',' })
+              then: EmailSchema({ allowMultiple: true, emailSeparator: ',' }),
+              otherwise: EmailSchemaWithoutRequired({ allowMultiple: true, emailSeparator: ',' })
             })
           })}
           initialValues={{

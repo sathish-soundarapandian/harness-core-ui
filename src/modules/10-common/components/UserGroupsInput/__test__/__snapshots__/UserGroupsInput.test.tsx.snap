@@ -9,7 +9,7 @@ exports[`Render with tooltip context hook if formname is empty: tooltipId formna
       class="bp3-form-content"
     >
       <div
-        class="Layout--vertical StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label"
@@ -44,7 +44,7 @@ exports[`Render with tooltip context hook if tooltip ID taken from form name: to
       class="bp3-form-content"
     >
       <div
-        class="Layout--vertical StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
       >
         <div
           class="Text--withDocsTooltip"
@@ -224,29 +224,13 @@ exports[`Rendering Modal should close on clicking cross 1`] = `
           role="tabpanel"
         >
           <div
-            class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--padding-small"
+            class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge StyledProps--flex StyledProps--flex-align-center-center"
           >
-            <span
-              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7"
-              data-icon="spinner"
+            <p
+              class="StyledProps--font StyledProps--main"
             >
-              <svg
-                fill="none"
-                height="24"
-                viewBox="0 0 36 36"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
-                  stroke="currentColor"
-                  stroke-dasharray="75,100"
-                  stroke-linecap="round"
-                  stroke-width="2.8"
-                  style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
-                />
-              </svg>
-            </span>
+              noData
+            </p>
           </div>
         </div>
       </div>
@@ -298,7 +282,7 @@ exports[`Rendering should render 1`] = `
       class="bp3-form-content"
     >
       <div
-        class="Layout--vertical StyledProps--main"
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
       >
         <div
           class="Text--withDocsTooltip"
@@ -478,29 +462,13 @@ exports[`Rendering should render Modal 1`] = `
           role="tabpanel"
         >
           <div
-            class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--padding-small"
+            class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge StyledProps--flex StyledProps--flex-align-center-center"
           >
-            <span
-              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7"
-              data-icon="spinner"
+            <p
+              class="StyledProps--font StyledProps--main"
             >
-              <svg
-                fill="none"
-                height="24"
-                viewBox="0 0 36 36"
-                width="24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
-                  stroke="currentColor"
-                  stroke-dasharray="75,100"
-                  stroke-linecap="round"
-                  stroke-width="2.8"
-                  style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
-                />
-              </svg>
-            </span>
+              noData
+            </p>
           </div>
         </div>
       </div>

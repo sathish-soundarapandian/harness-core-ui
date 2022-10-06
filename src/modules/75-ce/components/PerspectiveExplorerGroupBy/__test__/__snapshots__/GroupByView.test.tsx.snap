@@ -12,7 +12,7 @@ exports[`test cases for groupby views should be able to render group by view pop
         class=""
       >
         <a
-          class="bp3-menu-item bp3-popover-dismiss"
+          class="bp3-menu-item bp3-popover-dismiss listItem"
         >
           <div
             class="bp3-text-overflow-ellipsis bp3-fill"
@@ -29,7 +29,7 @@ exports[`test cases for groupby views should be able to render group by view pop
         class=""
       >
         <a
-          class="bp3-menu-item bp3-popover-dismiss"
+          class="bp3-menu-item bp3-popover-dismiss listItem"
         >
           <div
             class="bp3-text-overflow-ellipsis bp3-fill"
@@ -46,7 +46,7 @@ exports[`test cases for groupby views should be able to render group by view pop
         class=""
       >
         <a
-          class="bp3-menu-item bp3-popover-dismiss"
+          class="bp3-menu-item bp3-popover-dismiss listItem"
         >
           <div
             class="bp3-text-overflow-ellipsis bp3-fill"
@@ -63,7 +63,7 @@ exports[`test cases for groupby views should be able to render group by view pop
         class=""
       >
         <a
-          class="bp3-menu-item bp3-popover-dismiss"
+          class="bp3-menu-item bp3-popover-dismiss listItem"
         >
           <div
             class="bp3-text-overflow-ellipsis bp3-fill"
@@ -80,7 +80,7 @@ exports[`test cases for groupby views should be able to render group by view pop
         class=""
       >
         <a
-          class="bp3-menu-item bp3-popover-dismiss"
+          class="bp3-menu-item bp3-popover-dismiss listItem"
         >
           <div
             class="bp3-text-overflow-ellipsis bp3-fill"
@@ -96,21 +96,38 @@ exports[`test cases for groupby views should be able to render group by view pop
 
 exports[`test cases for groupby views should be able to render label view popover 1`] = `
 <div>
-  <section
-    class="labelDropDownContainer"
-  >
+  <section>
     <div
-      class="TextInput--main"
+      class="bp3-input-group ui-search-box ExpandingSearchInput--main search  ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+      data-name=""
     >
-      <div
-        class="bp3-input-group search"
+      <span
+        class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+        data-icon="thinner-search"
       >
-        <input
-          class="bp3-input"
-          placeholder="Search Value"
-          type="text"
-        />
-      </div>
+        <svg
+          fill="none"
+          height="14"
+          viewBox="0 0 16 16"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+      <input
+        class="bp3-input  ExpandingSearchInput--filter"
+        dir="auto"
+        placeholder="ce.perspectives.createPerspective.filters.searchValue"
+        style="padding-right: 38px;"
+        type="search"
+        value=""
+      />
     </div>
     <ul
       class="groupByList"
@@ -122,7 +139,7 @@ exports[`test cases for groupby views should be able to render label view popove
           class=""
         >
           <a
-            class="bp3-menu-item bp3-popover-dismiss"
+            class="bp3-menu-item bp3-popover-dismiss listItem"
           >
             <div
               class="bp3-text-overflow-ellipsis bp3-fill"
@@ -139,7 +156,7 @@ exports[`test cases for groupby views should be able to render label view popove
           class=""
         >
           <a
-            class="bp3-menu-item bp3-popover-dismiss"
+            class="bp3-menu-item bp3-popover-dismiss listItem"
           >
             <div
               class="bp3-text-overflow-ellipsis bp3-fill"
@@ -156,7 +173,7 @@ exports[`test cases for groupby views should be able to render label view popove
           class=""
         >
           <a
-            class="bp3-menu-item bp3-popover-dismiss"
+            class="bp3-menu-item bp3-popover-dismiss listItem"
           >
             <div
               class="bp3-text-overflow-ellipsis bp3-fill"
@@ -173,7 +190,7 @@ exports[`test cases for groupby views should be able to render label view popove
           class=""
         >
           <a
-            class="bp3-menu-item bp3-popover-dismiss"
+            class="bp3-menu-item bp3-popover-dismiss listItem"
           >
             <div
               class="bp3-text-overflow-ellipsis bp3-fill"
@@ -190,7 +207,7 @@ exports[`test cases for groupby views should be able to render label view popove
           class=""
         >
           <a
-            class="bp3-menu-item bp3-popover-dismiss"
+            class="bp3-menu-item bp3-popover-dismiss listItem"
           >
             <div
               class="bp3-text-overflow-ellipsis bp3-fill"
@@ -207,7 +224,7 @@ exports[`test cases for groupby views should be able to render label view popove
           class=""
         >
           <a
-            class="bp3-menu-item bp3-popover-dismiss"
+            class="bp3-menu-item bp3-popover-dismiss listItem"
           >
             <div
               class="bp3-text-overflow-ellipsis bp3-fill"

@@ -1,0 +1,33 @@
+{
+  "id": "tHlafNQNR3WAFDzBbhBFMA",
+  "type": "CustomApproval",
+  "includePipelineExecutionHistory": true,
+  "deadline": 1615979161158,
+  "status": "APPROVED",
+  "details": {
+    "approvalCriteria": {
+      "type": "KeyValues",
+      "spec": {
+        "matchAnyCondition": false,
+        "conditions": [
+          {
+            "key": "Status",
+            "value": "Resolved",
+            "operator": "equals"
+          },
+          {
+            "key": "Status",
+            "value": "In-progress,Open",
+            "operator": "not in"
+          }
+        ]
+      }
+    },
+    "rejectionCriteria": {
+      "type": "Jexl",
+      "spec": {
+        "expression": "${changes[0].ref.displayId}-${repository.name.substring(${repository.name.indexOf('-')+1})}"
+      }
+    }
+  }
+}

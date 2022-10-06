@@ -51,7 +51,9 @@ export const StageTemplateDiagram = (): JSX.Element => {
       pipeline,
       pipelineView,
       selectionState: { selectedStageId },
-      templateTypes
+      templateTypes,
+      gitDetails: pipelineGitDetails,
+      storeMetadata
     },
     contextType,
     stagesMap,
@@ -77,7 +79,7 @@ export const StageTemplateDiagram = (): JSX.Element => {
     dynamicPopoverHandler?.show(
       `[data-nodeid="${nodeId}"]`,
       {
-        addStage: async (newStage: StageElementWrapper) => {
+        addStageNew: async (newStage: StageElementWrapper) => {
           dynamicPopoverHandler?.hide()
           set(pipeline, 'stages[0].stage', { ...newStage.stage, identifier: DefaultNewStageId })
           await updatePipeline(pipeline)
@@ -93,7 +95,8 @@ export const StageTemplateDiagram = (): JSX.Element => {
         stagesMap: stagesMap,
         contextType,
         templateTypes,
-        getTemplate: Promise.reject
+        gitDetails: pipelineGitDetails,
+        storeMetadata
       },
       { useArrows: true, darkMode: false, fixedPosition: false, placement: 'bottom-start' }
     )
@@ -130,6 +133,7 @@ export const StageTemplateDiagram = (): JSX.Element => {
       defaultSelected: false,
       draggable: false,
       canDelete: false,
+      loopingStrategyEnabled: !!stage?.strategy,
       conditionalExecutionEnabled: stage.when
         ? stage.when?.pipelineStatus !== 'Success' || !!stage.when?.condition?.trim()
         : false,

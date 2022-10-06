@@ -33,3 +33,9 @@
     justify-content: space-between;
   }
 }
+
+.dropdownAws {
+  ul[class*='bp3-menu'] {
+    max-height: 100px !important;
+  }
+}

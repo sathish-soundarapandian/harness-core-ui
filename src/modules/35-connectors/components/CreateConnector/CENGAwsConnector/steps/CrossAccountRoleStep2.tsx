@@ -33,11 +33,11 @@ import { CE_AWS_CONNECTOR_CREATION_EVENTS } from '@connectors/trackingConstants'
 import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useStepLoadTelemetry'
 import ConnectorInstructionList from '@connectors/common/ConnectorCreationInstructionList/ConnectorCreationInstructionList'
 import { connectorHelperUrls } from '@connectors/constants'
-import { FeatureFlag } from '@common/featureFlags'
-import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
-import type { FeaturesString } from './CrossAccountRoleStep1'
+import { Features } from './CrossAccountRoleStep1'
 import type { CEAwsConnectorDTO } from './OverviewStep'
 import css from '../CreateCeAwsConnector.module.scss'
 
@@ -57,10 +57,8 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
   const { mutate: updateConnector } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
-  const { hideOrShowGovernanceErrorModal } = useConnectorGovernanceModal({
-    errorOutOnGovernanceWarning: false,
-    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
-  })
+
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   const { data: awsUrlTemplateData, loading: awsUrlTemplateLoading } = useAwsaccountconnectiondetail({
     queryParams: { accountIdentifier: accountId }
   })
@@ -76,10 +74,10 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
       setExternalId(awsUrlTemplateData?.data?.externalId || '')
   }, [awsUrlTemplateLoading])
 
-  const featuresEnabled: FeaturesString[] = prevStepData?.spec?.featuresEnabled || []
-  const curStatus = featuresEnabled.includes('BILLING')
-  const visibiltyStatus = featuresEnabled.includes('VISIBILITY')
-  const optimizationStatus = featuresEnabled.includes('OPTIMIZATION')
+  const featuresEnabled = (prevStepData?.spec?.featuresEnabled || []) as Features[]
+  const curStatus = featuresEnabled.includes(Features.BILLING)
+  const visibiltyStatus = featuresEnabled.includes(Features.VISIBILITY)
+  const optimizationStatus = featuresEnabled.includes(Features.OPTIMIZATION)
 
   const getRoleName = (roleArn: string) => {
     if (roleArn == undefined) return
@@ -116,8 +114,11 @@ const CrossAccountRoleStep2: React.FC<StepProps<CEAwsConnectorDTO>> = props => {
         if (response.status != 'SUCCESS') {
           throw response as Failure
         }
-        const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
-        if (canGoToNextStep) {
+        if (response.data?.governanceMetadata) {
+          conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
+            nextStep?.(prevStepData)
+          })
+        } else {
           nextStep?.(prevStepData)
         }
       }

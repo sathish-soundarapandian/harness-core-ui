@@ -1,0 +1,94 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.optionsViewContainer {
+  margin: var(--spacing-small) 0 0 var(--spacing-small) !important;
+  .manifestForm {
+    min-height: 490px;
+
+    .connectorContainer {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      .bp3-popover-target > button {
+        width: 28px !important;
+      }
+      div.configureOptions {
+        height: fit-content;
+        line-height: 72px;
+      }
+    }
+    .addNewManifest {
+      position: relative;
+      top: 26px;
+      padding-right: 0 !important;
+      justify-content: flex-start;
+    }
+    .manifestStepWidth {
+      width: 100%;
+    }
+  }
+}
+
+.halfWidth {
+  width: 45%;
+}
+.addFileButton {
+  margin-left: 0;
+}
+.addmarginTop {
+  display: flex;
+  align-self: center;
+}
+.checkbox {
+  margin-right: var(--spacing-medium);
+  margin-bottom: 0 !important;
+  width: 100%;
+}
+.tooltip {
+  > * {
+    width: 60%;
+    margin-top: 8px !important;
+  }
+}
+
+.tooltipContent {
+  width: 300px;
+}
+.runtimeInput {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+}
+
+.advancedStepOpen {
+  min-height: 100px;
+  margin-top: var(--spacing-medium);
+}
+
+.tooltipCls {
+  position: relative;
+  bottom: 5px;
+}
+
+.saveBtn {
+  position: relative;
+  bottom: 0;
+}
+.drag {
+  cursor: move;
+  margin-top: var(--spacing-small) !important;
+}
+.text {
+  width: 12px;
+  margin-top: var(--spacing-small) !important;
+}
+
+.pathLabel {
+  color: var(--grey-600) !important;
+  font-size: var(--form-input-font-size) !important;
+  font-weight: 500 !important;
+}

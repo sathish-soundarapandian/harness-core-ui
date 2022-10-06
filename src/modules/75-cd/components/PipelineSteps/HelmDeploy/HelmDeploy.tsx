@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { IconName, Formik, Layout, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  IconName,
+  Formik,
+  Layout,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
@@ -15,12 +23,12 @@ import { isEmpty } from 'lodash-es'
 
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
-import type { StepElementConfig } from 'services/cd-ng'
+import type { HelmDeployStepInfo, StepElementConfig } from 'services/cd-ng'
 
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StringsMap } from 'stringTypes'
 
@@ -33,20 +41,26 @@ import {
 
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-
+import { FormMultiTypeCheckboxField } from '@common/components'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
+export interface HelmDeployData extends StepElementConfig {
+  spec: Omit<HelmDeployStepInfo, 'ignoreReleaseHistFailStatus'> & {
+    ignoreReleaseHistFailStatus?: boolean
+  }
+}
 interface HelmDeployProps {
-  initialValues: StepElementConfig
-  onUpdate?: (data: StepElementConfig) => void
-  onChange?: (data: StepElementConfig) => void
-  allowableTypes: MultiTypeInputType[]
+  initialValues: HelmDeployData
+  onUpdate?: (data: HelmDeployData) => void
+  onChange?: (data: HelmDeployData) => void
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
   inputSetData?: {
-    template?: StepElementConfig
+    template?: HelmDeployData
     path?: string
     readonly?: boolean
   }
@@ -54,30 +68,27 @@ interface HelmDeployProps {
 }
 
 export interface HelmDeployVariableStepProps {
-  initialValues: StepElementConfig
+  initialValues: HelmDeployData
   stageIdentifier: string
-  onUpdate?(data: StepElementConfig): void
+  onUpdate?(data: HelmDeployData): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: StepElementConfig
+  variablesData: HelmDeployData
 }
 
-const withUpdatedPayload = (values: StepElementConfig) => ({ ...values, spec: { ...values.spec, skipDryRun: false } })
+const withUpdatedPayload = (values: HelmDeployData) => ({ ...values, spec: { ...values.spec, skipDryRun: false } })
 
-function HelmDeployWidget(
-  props: HelmDeployProps,
-  formikRef: StepFormikFowardRef<StepElementConfig>
-): React.ReactElement {
+function HelmDeployWidget(props: HelmDeployProps, formikRef: StepFormikFowardRef<HelmDeployData>): React.ReactElement {
   const { initialValues, onUpdate, onChange, allowableTypes, isNewStep = true, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   return (
     <>
-      <Formik<StepElementConfig>
-        onSubmit={(values: StepElementConfig) => {
+      <Formik<HelmDeployData>
+        onSubmit={(values: HelmDeployData) => {
           /* istanbul ignore next */
           onUpdate?.(withUpdatedPayload(values))
         }}
-        validate={(values: StepElementConfig) => {
+        validate={(values: HelmDeployData) => {
           onChange?.(withUpdatedPayload(values))
         }}
         formName="helmDeploy"
@@ -87,7 +98,7 @@ function HelmDeployWidget(
           timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum'))
         })}
       >
-        {(formik: FormikProps<StepElementConfig>) => {
+        {(formik: FormikProps<HelmDeployData>) => {
           const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
 
@@ -120,8 +131,18 @@ function HelmDeployWidget(
                         setFieldValue('timeout', value)
                       }}
                       isReadonly={props.isReadonly}
+                      allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                     />
                   )}
+                </div>
+                <div className={stepCss.divider} />
+                <div style={{ width: '51%' }}>
+                  <FormMultiTypeCheckboxField
+                    multiTypeTextbox={{ expressions, allowableTypes }}
+                    name="spec.ignoreReleaseHistFailStatus"
+                    label={getString('cd.ignoreReleaseHistFailStatus')}
+                    setToFalseWhenEmpty={true}
+                  />
                 </div>
               </Layout.Vertical>
             </>
@@ -139,7 +160,7 @@ const HelmDeployInputStep: React.FC<HelmDeployProps> = ({ inputSetData, allowabl
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             disabled={inputSetData?.readonly}
@@ -149,6 +170,23 @@ const HelmDeployInputStep: React.FC<HelmDeployProps> = ({ inputSetData, allowabl
               expressions,
               disabled: inputSetData?.readonly
             }}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.ignoreReleaseHistFailStatus) ===
+        MultiTypeInputType.RUNTIME && (
+        <div style={{ width: '50%' }}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes
+            }}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.ignoreReleaseHistFailStatus`}
+            label={getString('cd.ignoreReleaseHistFailStatus')}
+            disabled={inputSetData?.readonly}
+            setToFalseWhenEmpty={true}
           />
         </div>
       )}
@@ -172,13 +210,13 @@ const HelmDeployVariablesStep: React.FC<HelmDeployVariableStepProps> = ({
 }
 
 const HelmDeployWithRef = React.forwardRef(HelmDeployWidget)
-export class HelmDeploy extends PipelineStep<StepElementConfig> {
+export class HelmDeploy extends PipelineStep<HelmDeployData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
-  renderStep(props: StepProps<StepElementConfig>): JSX.Element {
+  renderStep(props: StepProps<HelmDeployData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -191,7 +229,7 @@ export class HelmDeploy extends PipelineStep<StepElementConfig> {
       isNewStep
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <HelmDeployInputStep
           initialValues={initialValues}
@@ -228,13 +266,14 @@ export class HelmDeploy extends PipelineStep<StepElementConfig> {
   protected stepName = 'Helm Deploy'
   protected stepIcon: IconName = 'service-helm'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.HelmDeploy'
+  protected referenceId = 'helmDeployStep'
 
   validateInputSet({
     data,
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<StepElementConfig>): FormikErrors<StepElementConfig> {
+  }: ValidateInputSetProps<HelmDeployData>): FormikErrors<HelmDeployData> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
@@ -261,13 +300,14 @@ export class HelmDeploy extends PipelineStep<StepElementConfig> {
     return errors
   }
 
-  protected defaultValues: StepElementConfig = {
+  protected defaultValues: HelmDeployData = {
     name: '',
     identifier: '',
     timeout: '10m',
     type: StepType.HelmDeploy,
     spec: {
-      skipDryRun: false
+      skipDryRun: false,
+      ignoreReleaseHistFailStatus: false
     }
   }
 }

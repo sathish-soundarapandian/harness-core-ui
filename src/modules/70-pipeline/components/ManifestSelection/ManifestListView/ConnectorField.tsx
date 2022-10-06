@@ -25,7 +25,7 @@ function ConnectorField({
 }: ConnectorFieldPropType): React.ReactElement {
   return (
     <div className={css.connectorNameField}>
-      {!!connectorRef && (
+      {connectorRef ? (
         <>
           <Icon padding={{ right: 'small' }} name={ManifestIconByType[manifestStore]} size={18} />
           <Text
@@ -49,9 +49,11 @@ function ConnectorField({
             {connectorName ?? connectorRef}
           </Text>
           {getMultiTypeFromValue(connectorRef) === MultiTypeInputType.FIXED && (
-            <Icon name="full-circle" size={8} color={connectorColor} />
+            <Icon name="full-circle" size={8} color={connectorColor} padding={{ left: 'small' }} />
           )}
         </>
+      ) : (
+        <Text>{manifestStore}</Text>
       )}
     </div>
   )

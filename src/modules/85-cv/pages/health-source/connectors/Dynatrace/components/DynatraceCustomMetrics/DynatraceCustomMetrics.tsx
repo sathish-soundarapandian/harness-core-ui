@@ -14,10 +14,12 @@ import {
   Utils,
   FormInput,
   useConfirmationDialog,
-  Text
+  Text,
+  getMultiTypeFromValue,
+  MultiTypeInputType
 } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
-import { useGetAllDynatraceServiceMetrics, useGetDynatraceSampleData, useGetMetricPacks } from 'services/cv'
+import { useGetAllDynatraceServiceMetrics, useGetDynatraceSampleData } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
@@ -27,6 +29,7 @@ import GroupName from '@cv/components/GroupName/GroupName'
 import type { DynatraceCustomMetricsProps } from '@cv/pages/health-source/connectors/Dynatrace/components/DynatraceCustomMetrics/DynatraceCustomMetrics.types'
 import {
   editQueryConfirmationDialogProps,
+  getIsQueryExecuted,
   mapMetricSelectorsToMetricSelectorOptions
 } from '@cv/pages/health-source/connectors/Dynatrace/components/DynatraceCustomMetrics/DynatraceCustomMetrics.utils'
 import { DynatraceHealthSourceFieldNames } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.constants'
@@ -38,12 +41,19 @@ import css from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSou
 
 export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProps): JSX.Element {
   const { mappedMetrics } = props
-  const { selectedMetric, metricValues, connectorIdentifier, selectedServiceId, formikSetField } = props
+  const {
+    selectedMetric,
+    metricValues,
+    connectorIdentifier,
+    selectedServiceId,
+    formikSetField,
+    isTemplate,
+    expressions,
+    metricPackResponse
+  } = props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const metricPackResponse = useGetMetricPacks({
-    queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'DYNATRACE' }
-  })
+
   const [dynatraceGroupNames, setDynatraceGroupNames] = useState<SelectOption[]>(
     initializeGroupNames(mappedMetrics, getString)
   )
@@ -60,13 +70,16 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
     }),
     [accountId, projectIdentifier, orgIdentifier, connectorIdentifier]
   )
+  const isConnectorRuntimeOrExpression =
+    getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED ||
+    getMultiTypeFromValue(selectedServiceId) !== MultiTypeInputType.FIXED
   const { mutate: querySampleData, loading, error } = useGetDynatraceSampleData({ queryParams: sampleDataQueryParams })
   const timeseriesDataErrorMessage = useMemo(() => {
     return getErrorMessage(error)
   }, [error])
   const onFetchSampleData = useCallback(
     async metricSelector => {
-      if (!metricSelector.length) {
+      if (!metricSelector?.length) {
         return
       }
       const sampleData = await querySampleData(
@@ -98,6 +111,20 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
     return mappedMetrics.get(selectedMetric)
   }, [selectedMetric, mappedMetrics])
   const { openDialog } = useConfirmationDialog(editQueryConfirmationDialogProps(getString, formikSetField))
+
+  const onChangeActiveMetricSelector = (event: SelectOption): void => {
+    formikSetField(DynatraceHealthSourceFieldNames.METRIC_SELECTOR, event.value)
+  }
+
+  const handleFetchRecords = useCallback((): void => {
+    if (!isConnectorRuntimeOrExpression) {
+      if (!shouldShowChart) {
+        setShouldShowChart(true)
+      }
+      onFetchSampleData(metricValues.metricSelector)
+    }
+  }, [metricValues.metricSelector, shouldShowChart, isConnectorRuntimeOrExpression])
+
   return (
     <Container className={css.main}>
       <SetupSourceCardHeader
@@ -136,7 +163,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
             summary={getString('cv.healthSource.connectors.NewRelic.queryMapping')}
             details={
               <>
-                {metricValues.isManualQuery && (
+                {metricValues.isManualQuery && !isTemplate && (
                   <Container className={css.manualQueryWarning}>
                     <Text icon="warning-sign" iconProps={{ size: 14 }}>
                       {getString('cv.monitoringSources.prometheus.isManualQuery')}
@@ -144,43 +171,47 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
                     <Text
                       data-testid={'data-undo-manual-query-action'}
                       intent="primary"
+                      margin={{ top: 'small', left: 'large' }}
                       onClick={() => formikSetField(DynatraceHealthSourceFieldNames.MANUAL_QUERY, false)}
                     >
                       {getString('cv.monitoringSources.prometheus.undoManualQuery')}
                     </Text>
                   </Container>
                 )}
-                <FormInput.Select
-                  disabled={metricValues.isManualQuery}
-                  name={DynatraceHealthSourceFieldNames.ACTIVE_METRIC_SELECTOR}
-                  label={getString('cv.monitoringSources.metricLabel')}
-                  items={metricSelectorOptions}
-                  value={currentActiveMetricSelector}
-                  onChange={event => {
-                    formikSetField(DynatraceHealthSourceFieldNames.METRIC_SELECTOR, event.value)
-                  }}
-                />
+                {!isConnectorRuntimeOrExpression && (
+                  <FormInput.Select
+                    disabled={metricValues.isManualQuery}
+                    name={DynatraceHealthSourceFieldNames.ACTIVE_METRIC_SELECTOR}
+                    label={getString('cv.monitoringSources.metricLabel')}
+                    items={metricSelectorOptions}
+                    value={currentActiveMetricSelector}
+                    onChange={onChangeActiveMetricSelector}
+                  />
+                )}
                 <QueryContent
+                  key={getMultiTypeFromValue(metricValues?.metricSelector)}
                   textAreaProps={{ readOnly: !metricValues.isManualQuery }}
                   onEditQuery={!metricValues.isManualQuery ? openDialog : undefined}
-                  handleFetchRecords={async () => {
-                    if (!shouldShowChart) {
-                      setShouldShowChart(true)
-                    }
-                    onFetchSampleData(metricValues.metricSelector)
-                  }}
+                  handleFetchRecords={handleFetchRecords}
                   isDialogOpen={false}
                   query={metricValues.metricSelector}
                   loading={!metricValues}
                   textAreaName={DynatraceHealthSourceFieldNames.METRIC_SELECTOR}
+                  isTemplate={isTemplate}
+                  expressions={expressions}
+                  isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                 />
                 <MetricsValidationChart
-                  submitQueryText={'cv.healthSource.connectors.Dynatrace.submitQueryLabel'}
+                  submitQueryText={
+                    getMultiTypeFromValue(metricValues.metricSelector) !== MultiTypeInputType.FIXED
+                      ? 'cv.customHealthSource.chartRuntimeWarning'
+                      : 'cv.healthSource.connectors.Dynatrace.submitQueryLabel'
+                  }
                   loading={loading}
                   error={timeseriesDataErrorMessage}
                   sampleData={timeseriesData}
                   queryValue={metricValues.metricSelector}
-                  isQueryExecuted={shouldShowChart}
+                  isQueryExecuted={getIsQueryExecuted(shouldShowChart, metricValues, setTimeseriesData, timeseriesData)}
                   onRetry={async () => {
                     onFetchSampleData(metricValues.metricSelector)
                   }}
@@ -193,6 +224,7 @@ export default function DynatraceCustomMetrics(props: DynatraceCustomMetricsProp
             summary={getString('cv.monitoringSources.assign')}
             details={
               <SelectHealthSourceServices
+                key={metricValues.identifier}
                 values={{
                   sli: !!metricValues.sli,
                   healthScore: !!metricValues.healthScore,

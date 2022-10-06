@@ -12,8 +12,6 @@
 
 .body {
   padding: var(--spacing-large) !important;
-  display: flex;
-  flex-direction: row;
 }
 
 .card {
@@ -38,4 +36,55 @@
 
 .userGroupTable {
   height: auto !important;
+  div[class*='TableV2--header'] {
+    align-items: end;
+  }
+  div[class*='TableV2--cell']:last-child {
+    display: flex;
+    justify-content: end;
+  }
+}
+
+.secondaryHeader {
+  background-color: var(--white) !important;
+  height: 64px;
+  border-bottom: 1px solid var(--grey-200);
+  padding: var(--spacing-large) !important;
+}
+
+.tabs {
+  background-color: var(--white);
+  border-bottom: 1px solid var(--grey-200);
+  padding: 0 var(--spacing-large) !important;
+  height: 42px;
+}
+
+.tabButton {
+  color: var(--grey-700) !important;
+  padding: none !important;
+  --text-color: var(--grey-700) !important;
+}
+
+.addToGroup {
+  display: flex;
+  justify-content: end;
+}
+
+.roleBindingTable {
+  div[class*='TableV2--header'] {
+    align-items: end;
+  }
+}
+
+.selectedTabs {
+  border-radius: 0px;
+  border-bottom: 2px solid var(--primary-7) !important;
+}
+
+.userGroupsEmptyState {
+  width: 262px;
+}
+
+.userDetailsBody {
+  --page-header-height: 250px;
 }

@@ -19,7 +19,7 @@ export interface APMFetchConfig {
 }
 
 export interface APMSetupTestNodeData {
-  apmMetricCollectionInfo?: MetricCollectionInfo
+  apmMetricCollectionInfo?: ApmMetricCollectionInfo
   appId: string
   fetchConfig?: APMFetchConfig
   fromTime?: number
@@ -32,51 +32,11 @@ export interface APMSetupTestNodeData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -87,12 +47,6 @@ export interface APMSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -103,10 +57,22 @@ export interface APMSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -116,53 +82,19 @@ export interface APMSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -170,11 +102,81 @@ export interface APMSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   toTime?: number
   workflowId?: string
 }
@@ -240,6 +242,7 @@ export interface AccessTokenBean {
 }
 
 export interface Account {
+  accountActivelyUsed?: boolean
   accountEvents?: AccountEvent[]
   accountName: string
   accountPreferences?: AccountPreferences
@@ -259,6 +262,7 @@ export interface Account {
   }
   delegateConfiguration?: DelegateConfiguration
   forImport?: boolean
+  globalDelegateAccount?: boolean
   harnessSupportAccessAllowed?: boolean
   lastUpdatedAt: number
   lastUpdatedBy?: EmbeddedUser
@@ -269,6 +273,7 @@ export interface Account {
   nextGenEnabled?: boolean
   oauthEnabled?: boolean
   povAccount?: boolean
+  productLed?: boolean
   ringName?: string
   serviceAccountConfig?: ServiceAccountConfig
   serviceGuardLimit?: number
@@ -320,6 +325,34 @@ export interface AccountEvent {
   properties?: {
     [key: string]: string
   }
+}
+
+export interface AccountId {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: AccountId
+  descriptorForType?: Descriptor
+  id?: string
+  idBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserAccountId
+  serializedSize?: number
+  unknownFields?: UnknownFieldSet
+}
+
+export interface AccountIdOrBuilder {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Message
+  descriptorForType?: Descriptor
+  id?: string
+  idBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  unknownFields?: UnknownFieldSet
 }
 
 export interface AccountJoinRequest {
@@ -590,7 +623,6 @@ export interface Activity {
   triggeredBy?: TriggeredBy
   type?: 'Command' | 'Verification' | 'Other'
   uuid: string
-  validUntil?: string
   version?: number
   workflowExecutionId?: string
   workflowExecutionName?: string
@@ -613,6 +645,20 @@ export interface AdvancedSearchQuery {
   numResults?: number
   offset?: number
   searchQuery?: string
+}
+
+export interface AgentMtlsEndpointDetails {
+  accountId?: string
+  caCertificates?: string
+  fqdn?: string
+  mode?: 'LOOSE' | 'STRICT'
+  uuid?: string
+}
+
+export interface AgentMtlsEndpointRequest {
+  caCertificates?: string
+  domainPrefix?: string
+  mode?: 'LOOSE' | 'STRICT'
 }
 
 export interface Aggregate {
@@ -680,7 +726,6 @@ export interface Alert {
     | 'MANIFEST_COLLECTION_FAILED'
     | 'DEPLOYMENT_FREEZE_EVENT'
   uuid: string
-  validUntil?: string
 }
 
 export interface AlertData {
@@ -790,6 +835,8 @@ export type AllNonProdEnvFilter = EnvironmentFilter & {}
 
 export type AllProdEnvFilter = EnvironmentFilter & {}
 
+export type AllUserGroupFilter = UserGroupFilter & {}
+
 export interface ApiKeyAuditDetails {
   apiKeyId?: string
   apiKeyName?: string
@@ -811,6 +858,29 @@ export interface ApiKeyEntry {
 export interface ApiKeyInfo {
   apiKeyName?: string
   appKeyId?: string
+}
+
+export interface ApmMetricCollectionInfo {
+  baselineCollectionUrl?: string
+  collectionBody?: string
+  collectionUrl?: string
+  method?: 'POST' | 'GET'
+  metricName?: string
+  metricType?: 'INFRA' | 'VALUE' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'VALUE_LOWER'
+  responseMapping?: ApmResponseMapping
+  responseType?: 'JSON'
+  tag?: string
+}
+
+export interface ApmResponseMapping {
+  hostJsonPath?: string
+  hostRegex?: string
+  metricValueJsonPath?: string
+  timeStampFormat?: string
+  timestampJsonPath?: string
+  txnNameFieldValue?: string
+  txnNameJsonPath?: string
+  txnNameRegex?: string
 }
 
 export interface AppContainer {
@@ -871,6 +941,7 @@ export interface AppPermission {
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
     | 'DEFAULT'
+    | 'ABORT_WORKFLOW'
   )[]
   appFilter?: AppFilter
   entityFilter?: Filter
@@ -943,6 +1014,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
   envPermissions?: {
@@ -957,7 +1029,11 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
+  }
+  envPipelineDeployPermissions?: {
+    [key: string]: PairStringString[]
   }
   pipelinePermissions?: {
     [key: string]: (
@@ -971,6 +1047,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
   provisionerPermissions?: {
@@ -985,6 +1062,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
   servicePermissions?: {
@@ -999,6 +1077,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
   templatePermissions?: {
@@ -1013,6 +1092,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
   workflowPermissions?: {
@@ -1027,6 +1107,7 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
     )[]
   }
 }
@@ -1050,51 +1131,11 @@ export interface AppdynamicsSetupTestNodeData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -1105,12 +1146,6 @@ export interface AppdynamicsSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -1121,10 +1156,22 @@ export interface AppdynamicsSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -1134,53 +1181,19 @@ export interface AppdynamicsSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -1188,11 +1201,81 @@ export interface AppdynamicsSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   tierId?: number
   toTime?: number
   workflowId?: string
@@ -1320,7 +1403,7 @@ export interface ApprovalAuthorization {
 }
 
 export interface ApprovalDetails {
-  action?: 'APPROVE' | 'REJECT'
+  action?: 'APPROVE' | 'REJECT' | 'ROLLBACK' | 'ROLLBACK_PROVISIONER_AFTER_PHASES'
   approvalFromGraphQL?: boolean
   approvalFromSlack?: boolean
   approvalId?: string
@@ -1328,6 +1411,15 @@ export interface ApprovalDetails {
   approvedBy?: EmbeddedUser
   comments?: string
   variables?: NameValuePair[]
+}
+
+export interface ApprovalInfo {
+  approvalId?: string
+}
+
+export interface ApproveAndRejectPreviousDeploymentsBody {
+  approvalDetails?: ApprovalDetails
+  previousApprovalDetails?: PreviousApprovalDetails
 }
 
 export interface Artifact {
@@ -1350,13 +1442,9 @@ export interface Artifact {
   createdBy?: EmbeddedUser
   description?: string
   displayName?: string
-  duplicate?: boolean
   errorMessage?: string
   fileName?: string
   key?: string
-  labels?: {
-    [key: string]: string
-  }
   lastUpdatedAt: number
   lastUpdatedBy?: EmbeddedUser
   metadata?: {
@@ -1364,7 +1452,6 @@ export interface Artifact {
   }
   revision?: string
   serviceIds?: string[]
-  services?: Service[]
   settingId?: string
   source?: {
     [key: string]: string
@@ -1395,6 +1482,11 @@ export interface ArtifactFile {
 export interface ArtifactFileMetadata {
   fileName?: string
   url?: string
+}
+
+export interface ArtifactInput {
+  artifactStreamId?: string
+  buildNo?: string
 }
 
 export interface ArtifactSelection {
@@ -1473,6 +1565,7 @@ export interface ArtifactStreamMetadata {
 
 export interface ArtifactStreamSummary {
   artifactStreamId?: string
+  artifactStreamName?: string
   defaultArtifact?: ArtifactSummary
   displayName?: string
   lastCollectedArtifact?: string
@@ -1481,6 +1574,7 @@ export interface ArtifactStreamSummary {
 }
 
 export interface ArtifactSummary {
+  artifactStreamId?: string
   buildNo?: string
   uiDisplayName?: string
   uuid?: string
@@ -1497,6 +1591,7 @@ export interface ArtifactVariable {
   allowMultipleValues?: boolean
   allowedList?: string[]
   allowedValues?: string
+  artifactInput?: ArtifactInput
   artifactStreamMetadata?: ArtifactStreamMetadata
   artifactStreamSummaries?: ArtifactStreamSummary[]
   description?: string
@@ -1608,6 +1703,47 @@ export interface ArtifactVariable {
   workflowIds?: string[]
 }
 
+export interface ArtifactView {
+  accountId?: string
+  appId: string
+  artifactFileMetadata?: ArtifactFileMetadata[]
+  artifactFileSize?: number
+  artifactFiles?: ArtifactFile[]
+  artifactPath?: string
+  artifactSourceName?: string
+  artifactStreamId?: string
+  artifactStreamName?: string
+  artifactStreamType?: string
+  bucketName?: string
+  buildFullDisplayName?: string
+  buildIdentity?: string
+  buildNo?: string
+  contentStatus?: 'METADATA_ONLY' | 'NOT_DOWNLOADED' | 'DOWNLOADING' | 'DOWNLOADED' | 'DELETED' | 'FAILED'
+  createdAt?: number
+  createdBy?: EmbeddedUser
+  description?: string
+  displayName?: string
+  errorMessage?: string
+  fileName?: string
+  key?: string
+  lastUpdatedAt: number
+  lastUpdatedBy?: EmbeddedUser
+  metadata?: {
+    [key: string]: string
+  }
+  revision?: string
+  serviceIds?: string[]
+  services?: Service[]
+  settingId?: string
+  source?: {
+    [key: string]: string
+  }
+  status?: 'NEW' | 'RUNNING' | 'QUEUED' | 'WAITING' | 'READY' | 'APPROVED' | 'REJECTED' | 'ABORTED' | 'FAILED' | 'ERROR'
+  uiDisplayName?: string
+  url?: string
+  uuid: string
+}
+
 export interface ArtifactoryAuthCredentials {
   [key: string]: any
 }
@@ -1621,6 +1757,7 @@ export type ArtifactoryConnector = ConnectorConfigDTO & {
   artifactoryServerUrl: string
   auth?: ArtifactoryAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
@@ -1630,8 +1767,11 @@ export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
 }
 
 export interface AtomicInteger {
+  acquire?: number
   andDecrement?: number
   andIncrement?: number
+  opaque?: number
+  plain?: number
 }
 
 export interface AttributeMapping {
@@ -1778,10 +1918,12 @@ export type AwsCodeCommitSecretKeyAccessKeyDTO = AwsCodeCommitHttpsCredentialsSp
 export type AwsConnector = ConnectorConfigDTO & {
   credential: AwsCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface AwsCredential {
   crossAccountAccess?: CrossAccountAccess
+  region?: string
   spec?: AwsCredentialSpec
   type: 'InheritFromDelegate' | 'ManualConfig' | 'Irsa'
 }
@@ -1855,11 +1997,11 @@ export interface AwsKmsConnectorCredential {
 }
 
 export type AwsKmsConnectorDTO = ConnectorConfigDTO & {
-  credential?: AwsKmsConnectorCredential
+  credential: AwsKmsConnectorCredential
   default?: boolean
   delegateSelectors?: string[]
   kmsArn: string
-  region?: string
+  region: string
 }
 
 export interface AwsKmsCredentialSpec {
@@ -1971,11 +2113,11 @@ export interface AwsSecretsManagerConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   externalName?: string
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
@@ -2037,6 +2179,30 @@ export interface AzureArtifactsPackage {
   protocolType?: string
 }
 
+export interface AzureAuthCredentialDTO {
+  [key: string]: any
+}
+
+export interface AzureAuthDTO {
+  spec: AzureAuthCredentialDTO
+  type: 'Secret' | 'Certificate'
+}
+
+export type AzureClientKeyCertDTO = AzureAuthCredentialDTO & {
+  certificateRef: string
+}
+
+export type AzureClientSecretKeyDTO = AzureAuthCredentialDTO & {
+  secretRef: string
+}
+
+export type AzureConnector = ConnectorConfigDTO & {
+  azureEnvironmentType: 'AZURE' | 'AZURE_US_GOVERNMENT'
+  credential: AzureCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
 export interface AzureContainerRegistry {
   loginServer?: string
   name?: string
@@ -2044,6 +2210,15 @@ export interface AzureContainerRegistry {
   resourceId?: string
   subscriptionId?: string
   type?: string
+}
+
+export interface AzureCredential {
+  spec?: AzureCredentialSpec
+  type: 'InheritFromDelegate' | 'ManualConfig'
+}
+
+export interface AzureCredentialSpec {
+  [key: string]: any
 }
 
 export interface AzureDevopsProject {
@@ -2065,6 +2240,10 @@ export interface AzureImageGallery {
   regionName?: string
   resourceGroupName?: string
   subscriptionId?: string
+}
+
+export type AzureInheritFromDelegateDetails = AzureCredentialSpec & {
+  auth: AzureMSIAuth
 }
 
 export type AzureInstanceInfrastructure = InfraMappingInfrastructureProvider & {
@@ -2100,14 +2279,81 @@ export type AzureKubernetesService = InfraMappingInfrastructureProvider & {
   subscriptionId?: string
 }
 
+export interface AzureMSIAuth {
+  [key: string]: any
+}
+
+export type AzureManualDetails = AzureCredentialSpec & {
+  applicationId: string
+  auth: AzureAuthDTO
+  tenantId: string
+}
+
+export interface AzureRepoApiAccess {
+  spec?: AzureRepoApiAccessSpecDTO
+  type: 'Token'
+}
+
+export interface AzureRepoApiAccessSpecDTO {
+  [key: string]: any
+}
+
+export interface AzureRepoAuthentication {
+  spec: AzureRepoCredentialsDTO
+  type: 'Http' | 'Ssh'
+}
+
+export type AzureRepoConnector = ConnectorConfigDTO & {
+  apiAccess?: AzureRepoApiAccess
+  authentication: AzureRepoAuthentication
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+  type: 'Project' | 'Repo'
+  url: string
+  validationRepo?: string
+}
+
+export interface AzureRepoCredentialsDTO {
+  [key: string]: any
+}
+
+export type AzureRepoHttpCredentials = AzureRepoCredentialsDTO & {
+  spec: AzureRepoHttpCredentialsSpecDTO
+  type: 'UsernameToken'
+}
+
+export interface AzureRepoHttpCredentialsSpecDTO {
+  [key: string]: any
+}
+
+export type AzureRepoSshCredentials = AzureRepoCredentialsDTO & {
+  sshKeyRef: string
+}
+
+export type AzureRepoTokenSpec = AzureRepoApiAccessSpecDTO & {
+  tokenRef: string
+}
+
+export type AzureRepoUsernameToken = AzureRepoHttpCredentialsSpecDTO & {
+  tokenRef: string
+  username?: string
+  usernameRef?: string
+}
+
 export interface AzureResourceGroup {
   name?: string
   subscriptionId?: string
 }
 
+export type AzureSystemAssignedMSIAuth = AzureAuthCredentialDTO & { [key: string]: any }
+
 export interface AzureTag {
   key?: string
   value?: string
+}
+
+export type AzureUserAssignedMSIAuth = AzureAuthCredentialDTO & {
+  clientId: string
 }
 
 export interface AzureVMInstanceData {
@@ -2143,11 +2389,11 @@ export interface AzureVaultConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
   manuallyEnteredSecretEngineMigrationIteration?: number
@@ -2232,7 +2478,8 @@ export type BitbucketConnector = ConnectorConfigDTO & {
   apiAccess?: BitbucketApiAccess
   authentication: BitbucketAuthentication
   delegateSelectors?: string[]
-  type: 'Account' | 'Repo'
+  executeOnDelegate?: boolean
+  type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
 }
@@ -2338,51 +2585,11 @@ export interface BugsnagSetupTestData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -2393,12 +2600,6 @@ export interface BugsnagSetupTestData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -2409,10 +2610,22 @@ export interface BugsnagSetupTestData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -2422,53 +2635,19 @@ export interface BugsnagSetupTestData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -2476,11 +2655,81 @@ export interface BugsnagSetupTestData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   toTime?: number
   workflowId?: string
 }
@@ -2536,6 +2785,11 @@ export type BuildWorkflow = OrchestrationWorkflow & {
   workflowPhases?: WorkflowPhase[]
 }
 
+export interface ByteString {
+  empty?: boolean
+  validUtf8?: boolean
+}
+
 export type CDModuleLicenseDTO = ModuleLicenseDTO & {
   cdLicenseType?: 'SERVICES' | 'SERVICE_INSTANCES'
   serviceInstances?: number
@@ -2547,6 +2801,7 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
@@ -2621,15 +2876,17 @@ export interface CEView {
   createdAt?: number
   createdBy?: EmbeddedUser
   dataSources?: ('CLUSTER' | 'AWS' | 'GCP' | 'AZURE' | 'COMMON' | 'CUSTOM' | 'BUSINESS_MAPPING' | 'LABEL')[]
+  folderId?: string
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
   name?: string
   totalCost?: number
   uuid?: string
+  viewPreferences?: ViewPreferences
   viewRules?: ViewRule[]
   viewState?: 'DRAFT' | 'COMPLETED'
   viewTimeRange?: ViewTimeRange
-  viewType?: 'SAMPLE' | 'CUSTOMER' | 'DEFAULT_AZURE' | 'DEFAULT'
+  viewType?: 'SAMPLE' | 'CUSTOMER' | 'DEFAULT'
   viewVersion?: string
   viewVisualization?: ViewVisualization
 }
@@ -2654,7 +2911,6 @@ export interface CVActivityLog {
   timestamp?: number
   timestampParams?: number[]
   uuid?: string
-  validUntil?: string
 }
 
 export interface CVAlertFilters {
@@ -2833,6 +3089,7 @@ export interface CVConfiguration {
     | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'CLOUD_FORMATION_ROLLBACK_STACK'
     | 'TERRAFORM_ROLLBACK'
+    | 'COLLECT_REMAINING_INSTANCES'
     | 'K8S_DEPLOYMENT_ROLLING'
     | 'K8S_SCALE'
     | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
@@ -2851,6 +3108,7 @@ export interface CVConfiguration {
     | 'K8S_TRAFFIC_SPLIT'
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
   uuid: string
   workflowConfig?: boolean
 }
@@ -2928,6 +3186,7 @@ export interface CVNGPerpetualTaskDTO {
     | 'NO_DELEGATE_AVAILABLE'
     | 'NO_ELIGIBLE_DELEGATES'
     | 'MULTIPLE_FAILED_PERPETUAL_TASK'
+    | 'VALIDATION_TASK_FAILED'
   delegateId?: string
 }
 
@@ -2976,7 +3235,6 @@ export interface CgEventConfig {
   delegateSelectors?: string[]
   enabled?: boolean
   lastUpdatedAt: number
-  lastUpdatedBy?: EmbeddedUser
   name?: string
   rule?: CgEventRule
   summary?: string
@@ -3006,6 +3264,11 @@ export interface ChangeSetDTO {
 
 export interface ChangesetInformation {
   [key: string]: any
+}
+
+export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
+  totalChaosDelegates?: number
+  totalChaosScenarioRun?: number
 }
 
 export interface CloneMetadata {
@@ -3085,51 +3348,11 @@ export interface CloudWatchSetupTestNodeData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -3140,12 +3363,6 @@ export interface CloudWatchSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -3156,10 +3373,22 @@ export interface CloudWatchSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -3169,53 +3398,19 @@ export interface CloudWatchSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -3223,11 +3418,81 @@ export interface CloudWatchSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   toTime?: number
   workflowId?: string
 }
@@ -3492,11 +3757,11 @@ export interface ConfigFile {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   entityId?: string
   entityType:
     | 'SERVICE'
@@ -3591,7 +3856,6 @@ export interface ConfigFile {
   envIdVersionMap?: {
     [key: string]: EntityVersion
   }
-  envIdVersionMapString?: string
   fileName?: string
   fileUuid?: string
   instances?: string[]
@@ -3663,7 +3927,6 @@ export interface ConfigFile {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -3681,12 +3944,25 @@ export interface ConfigFile {
     | 'KUBERNETES_CLUSTER_NG'
     | 'GIT_NG'
     | 'SSO_SAML'
+    | 'LDAP'
     | 'GCP_SECRETS_MANAGER'
     | 'TRIGGER'
+    | 'OCI_HELM_REPO'
   size?: number
   targetToAllEnv?: boolean
   templateId?: string
   uuid: string
+}
+
+export interface ConfigFileDto {
+  defaultVersion?: number
+  encrypted?: boolean
+  envVersionMap?: {
+    [key: string]: number
+  }
+  relativeFilePath?: string
+  size?: number
+  uuid?: string
 }
 
 export interface ConnectivityValidationAttributes {
@@ -3732,6 +4008,7 @@ export interface ConnectorInfoDTO {
     | 'AwsSecretManager'
     | 'Gcp'
     | 'Aws'
+    | 'Azure'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -3751,6 +4028,12 @@ export interface ConnectorInfoDTO {
     | 'CustomHealth'
     | 'ServiceNow'
     | 'ErrorTracking'
+    | 'Pdc'
+    | 'AzureRepo'
+    | 'Jenkins'
+    | 'OciHelmRepo'
+    | 'CustomSecretManager'
+    | 'ELK'
 }
 
 export interface ConnectorValidationResult {
@@ -4037,6 +4320,7 @@ export interface ContinuousVerificationExecutionMetaData {
     | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'CLOUD_FORMATION_ROLLBACK_STACK'
     | 'TERRAFORM_ROLLBACK'
+    | 'COLLECT_REMAINING_INSTANCES'
     | 'K8S_DEPLOYMENT_ROLLING'
     | 'K8S_SCALE'
     | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
@@ -4055,8 +4339,8 @@ export interface ContinuousVerificationExecutionMetaData {
     | 'K8S_TRAFFIC_SPLIT'
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
   uuid: string
-  validUntil?: string
   workflowExecutionId?: string
   workflowId?: string
   workflowName?: string
@@ -4145,7 +4429,7 @@ export type CustomHealthConnectorDTO = ConnectorConfigDTO & {
 }
 
 export interface CustomHealthKeyAndValue {
-  encryptedValueRef?: SecretRefData
+  encryptedValueRef?: string
   key: string
   value?: string
   valueEncrypted?: boolean
@@ -4170,51 +4454,11 @@ export interface CustomLogSetupTestNodeData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -4225,12 +4469,6 @@ export interface CustomLogSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -4241,10 +4479,22 @@ export interface CustomLogSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -4254,53 +4504,19 @@ export interface CustomLogSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -4308,11 +4524,81 @@ export interface CustomLogSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   toTime?: number
   workflowId?: string
 }
@@ -4325,6 +4611,16 @@ export interface CustomRepositoryMapping {
   artifactAttributes?: AttributeMapping[]
   artifactRoot?: string
   buildNoPath?: string
+}
+
+export type CustomSecretManager = ConnectorConfigDTO & {
+  connectorRef?: string
+  default?: boolean
+  delegateSelectors?: string[]
+  host?: string
+  onDelegate: boolean
+  template: TemplateLinkConfigForCustomSecretManager
+  workingDirectory?: string
 }
 
 export interface CustomSecretsManagerConfig {
@@ -4345,11 +4641,11 @@ export interface CustomSecretsManagerConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   executeOnDelegate?: boolean
   host?: string
   lastUpdatedAt?: number
@@ -4360,6 +4656,7 @@ export interface CustomSecretsManagerConfig {
   numOfEncryptedValue?: number
   remoteHostConnector?: EncryptableSetting
   scopedToAccount?: boolean
+  skipValidation?: boolean
   templateId?: string
   templatized?: boolean
   templatizedFields?: string[]
@@ -4382,40 +4679,8 @@ export interface CustomSourceConfig {
   script?: string
 }
 
-export interface CyberArkConfig {
-  accountId?: string
-  appId?: string
-  certValidationRequired?: boolean
-  clientCertificate?: string
-  createdAt?: number
-  createdBy?: EmbeddedUser
-  cyberArkUrl?: string
-  default?: boolean
-  encryptedBy?: string
-  encryptionServiceUrl?: string
-  encryptionType?:
-    | 'LOCAL'
-    | 'KMS'
-    | 'GCP_KMS'
-    | 'AWS_SECRETS_MANAGER'
-    | 'AZURE_VAULT'
-    | 'CYBERARK'
-    | 'VAULT'
-    | 'GCP_SECRETS_MANAGER'
-    | 'CUSTOM'
-    | 'VAULT_SSH'
-  lastUpdatedAt?: number
-  lastUpdatedBy?: EmbeddedUser
-  manuallyEnteredSecretEngineMigrationIteration?: number
-  name?: string
-  nextTokenRenewIteration?: number
-  numOfEncryptedValue?: number
-  scopedToAccount?: boolean
-  templatized?: boolean
-  templatizedFields?: string[]
-  usageRestrictions?: UsageRestrictions
-  uuid: string
-  validationCriteria?: string
+export type CustomUserGroupFilter = UserGroupFilter & {
+  userGroups?: string[]
 }
 
 export interface DashboardAccessPermissions {
@@ -4514,6 +4779,12 @@ export interface DataCollectionRequest {
     | 'DYNATRACE_VALIDATION_REQUEST'
     | 'DYNATRACE_SAMPLE_DATA_REQUEST'
     | 'DYNATRACE_METRIC_LIST_REQUEST'
+    | 'SPLUNK_METRIC_SAMPLE_DATA'
+    | 'ELK_SAMPLE_DATA'
+    | 'ELK_INDEX_DATA'
+    | 'CLOUDWATCH_METRIC_SAMPLE_DATA_REQUEST'
+    | 'CLOUDWATCH_METRIC_DATA_REQUEST'
+    | 'CLOUDWATCH_METRICS_METADATA_REQUEST'
 }
 
 export interface DataDogSetupTestNodeData {
@@ -4544,51 +4815,11 @@ export interface DataDogSetupTestNodeData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -4599,12 +4830,6 @@ export interface DataDogSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -4615,10 +4840,22 @@ export interface DataDogSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -4628,53 +4865,19 @@ export interface DataDogSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -4682,11 +4885,81 @@ export interface DataDogSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   toTime?: number
   workflowId?: string
 }
@@ -4734,7 +5007,10 @@ export interface Delegate {
   delegateType?: string
   description?: string
   excludeScopes?: DelegateScope[]
+  expirationTime?: number
+  heartbeatAsObject?: boolean
   hostName?: string
+  immutable?: boolean
   includeScopes?: DelegateScope[]
   ip?: string
   keepAlivePacket?: boolean
@@ -4742,6 +5018,7 @@ export interface Delegate {
   lastExpiredEventHeartbeatTime?: number
   lastHeartBeat?: number
   location?: string
+  mtls?: boolean
   ng?: boolean
   owner?: DelegateEntityOwner
   polllingModeEnabled?: boolean
@@ -4763,13 +5040,48 @@ export interface Delegate {
   version?: string
 }
 
+export interface DelegateApprovalResponse {
+  listOfUpdatedDelegateIds?: string[]
+  responseMessage?: string
+}
+
+export interface DelegateCallbackToken {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: DelegateCallbackToken
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserDelegateCallbackToken
+  serializedSize?: number
+  token?: string
+  tokenBytes?: ByteString
+  unknownFields?: UnknownFieldSet
+}
+
+export interface DelegateCallbackTokenOrBuilder {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Message
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  token?: string
+  tokenBytes?: ByteString
+  unknownFields?: UnknownFieldSet
+}
+
 export interface DelegateConfiguration {
-  accountVersion?: boolean
   action?: 'SELF_DESTRUCT'
   delegateVersions?: string[]
+  validTillNextRelease?: boolean
+  validUntil?: number
 }
 
 export interface DelegateConnectionDetails {
+  lastGrpcHeartbeat?: number
   lastHeartbeat?: number
   uuid?: string
   version?: string
@@ -4792,6 +5104,29 @@ export interface DelegateConnectionResultDetail {
   validated?: boolean
 }
 
+export interface DelegateDTO {
+  accountId?: string
+  delegateId?: string
+  delegateName?: string
+  delegateProfileId?: string
+  tags?: string[]
+}
+
+export interface DelegateDownloadRequest {
+  clusterPermissionType?: 'CLUSTER_ADMIN' | 'CLUSTER_VIEWER' | 'NAMESPACE_ADMIN'
+  customClusterNamespace?: string
+  description?: string
+  name: string
+  size?: 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
+  tags?: string[]
+  tokenName?: string
+}
+
+export interface DelegateDownloadResponse {
+  delegateYaml?: string
+  errorMsg?: string
+}
+
 export interface DelegateEntityOwner {
   identifier?: string
 }
@@ -4812,6 +5147,7 @@ export interface DelegateFile {
     | 'TERRAFORM_PLAN'
     | 'TERRAFORM_PLAN_JSON'
     | 'EXPORT_EXECUTIONS'
+    | 'FILE_STORE'
   checksum?: string
   checksumType?: 'MD5' | 'SHA1' | 'SHA256'
   delegateId?: string
@@ -4833,6 +5169,7 @@ export interface DelegateFile {
 export interface DelegateFilterProperties {
   delegateGroupIdentifier?: string
   delegateName?: string
+  delegateTags?: string[]
   delegateType?: string
   description?: string
   filterType?:
@@ -4844,22 +5181,56 @@ export interface DelegateFilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+    | 'Environment'
   hostName?: string
-  status?: 'ENABLED' | 'WAITING_FOR_APPROVAL' | 'DISABLED' | 'DELETED'
+  status?: 'CONNECTED' | 'DISCONNECTED' | 'ENABLED' | 'WAITING_FOR_APPROVAL' | 'DISABLED' | 'DELETED'
   tags?: {
     [key: string]: string
   }
 }
 
+export interface DelegateGroup {
+  accountId?: string
+  delegateConfigurationId?: string
+  delegateType?: string
+  description?: string
+  identifier?: string
+  k8sConfigDetails?: K8sConfigDetails
+  name?: string
+  ng?: boolean
+  owner?: DelegateEntityOwner
+  sizeDetails?: DelegateSizeDetails
+  status?: 'ENABLED' | 'DELETED'
+  tags?: string[]
+  upgraderLastUpdated?: number
+  uuid: string
+  validUntil?: string
+}
+
+export interface DelegateGroupDTO {
+  accountIdentifier?: string
+  identifier?: string
+  name?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  tags?: string[]
+}
+
 export interface DelegateGroupDetails {
   activelyConnected?: boolean
+  autoUpgrade?: boolean
   connectivityStatus?: string
   delegateConfigurationId?: string
   delegateDescription?: string
+  delegateGroupExpirationTime?: number
   delegateGroupIdentifier?: string
-  delegateInsightsDetails?: DelegateInsightsDetails
   delegateInstanceDetails?: DelegateInner[]
   delegateType?: string
+  delegateVersion?: string
   groupCustomSelectors?: string[]
   groupId?: string
   groupImplicitSelectors?: {
@@ -4872,11 +5243,20 @@ export interface DelegateGroupDetails {
       | 'PROFILE_SELECTORS'
   }
   groupName?: string
+  groupVersion?: string
+  grpcActive?: boolean
+  immutable?: boolean
   lastHeartBeat?: number
+  tokenActive?: boolean
+  upgraderLastUpdated?: number
 }
 
 export interface DelegateGroupListing {
   delegateGroupDetails?: DelegateGroupDetails[]
+}
+
+export interface DelegateGroupTags {
+  tags?: string[]
 }
 
 export interface DelegateHeartbeatDetails {
@@ -4893,6 +5273,12 @@ export interface DelegateHeartbeatResponse {
   useCdn?: boolean
 }
 
+export interface DelegateInfoV2 {
+  id?: string
+  instance_id?: string
+  token?: string
+}
+
 export interface DelegateInitializationDetails {
   delegateId?: string
   hostname?: string
@@ -4903,48 +5289,17 @@ export interface DelegateInitializationDetails {
 
 export interface DelegateInner {
   activelyConnected?: boolean
-  ceEnabled?: boolean
   connections?: DelegateConnectionDetails[]
-  delegateGroupName?: string
-  delegateName?: string
-  delegateProfileId?: string
-  delegateType?: string
-  description?: string
-  excludeScopes?: DelegateScope[]
+  delegateExpirationTime?: number
   hostName?: string
-  implicitSelectors?: {
-    [key: string]:
-      | 'PROFILE_NAME'
-      | 'DELEGATE_NAME'
-      | 'HOST_NAME'
-      | 'GROUP_NAME'
-      | 'GROUP_SELECTORS'
-      | 'PROFILE_SELECTORS'
-  }
-  includeScopes?: DelegateScope[]
-  ip?: string
   lastHeartbeat?: number
-  polllingModeEnabled?: boolean
-  profileError?: boolean
-  profileExecutedAt?: number
-  proxy?: boolean
-  sampleDelegate?: boolean
-  status?: 'ENABLED' | 'WAITING_FOR_APPROVAL' | 'DISABLED' | 'DELETED'
-  tags?: string[]
+  tokenActive?: boolean
   uuid?: string
-}
-
-export interface DelegateInsightsBarDetails {
-  counts?: PairDelegateInsightsTypeLong[]
-  timeStamp?: number
-}
-
-export interface DelegateInsightsDetails {
-  insights?: DelegateInsightsBarDetails[]
+  version?: string
 }
 
 export interface DelegateMetaInfo {
-  hostName?: string
+  host_name?: string
   id?: string
 }
 
@@ -4952,6 +5307,7 @@ export interface DelegateParams {
   accountId?: string
   ceEnabled?: boolean
   currentlyExecutingDelegateTasks?: string[]
+  delegateConnectionId?: string
   delegateGroupId?: string
   delegateGroupName?: string
   delegateId?: string
@@ -4961,7 +5317,9 @@ export interface DelegateParams {
   delegateSize?: string
   delegateType?: string
   description?: string
+  heartbeatAsObject?: boolean
   hostName?: string
+  immutable?: boolean
   ip?: string
   keepAlivePacket?: boolean
   lastHeartBeat?: number
@@ -4976,6 +5334,8 @@ export interface DelegateParams {
   sessionIdentifier?: string
   supportedTaskTypes?: string[]
   tags?: string[]
+  token?: string
+  tokenName?: string
   version?: string
 }
 
@@ -5040,8 +5400,12 @@ export interface DelegateResponseData {
 }
 
 export interface DelegateScalingGroup {
+  autoUpgrade?: boolean
+  delegateGroupExpirationTime?: number
   delegates?: DelegateInner[]
   groupName?: string
+  immutable?: boolean
+  upgraderLastUpdated?: number
 }
 
 export interface DelegateScope {
@@ -5135,6 +5499,12 @@ export interface DelegateScope {
     | 'TERRAFORM_NG'
     | 'CE'
     | 'SERVICENOW_NG'
+    | 'CLOUDFORMATION_NG'
+    | 'AZURE'
+    | 'SERVERLESS_NG'
+    | 'COMMAND_TASK_NG'
+    | 'ECS'
+    | 'AZURE_NG_ARM_BLUEPRINT'
   )[]
   uuid: string
   valid?: boolean
@@ -5173,16 +5543,23 @@ export interface DelegateSelectionLogResponse {
   }
 }
 
+export interface DelegateSelector {
+  connected?: boolean
+  name?: string
+}
+
 export interface DelegateSetupDetails {
   delegateConfigurationId?: string
   delegateType: string
   description?: string
+  hostName?: string
   identifier?: string
   k8sConfigDetails?: K8sConfigDetails
   name: string
   orgIdentifier?: string
   projectIdentifier?: string
-  size?: 'EXTRA_SMALL' | 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
+  runAsRoot?: boolean
+  size?: 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
   tags?: string[]
   tokenName?: string
 }
@@ -5192,11 +5569,12 @@ export interface DelegateSizeDetails {
   label?: string
   ram?: number
   replicas?: number
-  size?: 'EXTRA_SMALL' | 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
+  size?: 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
 }
 
 export interface DelegateStatus {
   delegates?: DelegateInner[]
+  publishedImmutableDelegateVersion?: string
   publishedVersions?: string[]
   scalingGroups?: DelegateScalingGroup[]
 }
@@ -5229,11 +5607,19 @@ export interface DelegateTaskEventsResponse {
   delegateTaskEvents?: DelegateTaskEvent[]
 }
 
+export interface DelegateTaskLoggingV2 {
+  abstractions?: {
+    [key: string]: string
+  }
+  token?: string
+}
+
 export interface DelegateTaskPackage {
   accountId?: string
   data?: TaskData
   delegateCallbackToken?: string
   delegateId?: string
+  delegateInstanceId?: string
   delegateTaskId?: string
   encryptionConfigs?: {
     [key: string]: EncryptionConfig
@@ -5249,10 +5635,1090 @@ export interface DelegateTaskPackage {
   secrets?: string[]
 }
 
+export interface DelegateTaskPackageV2 {
+  async?: boolean
+  capabilities?: ExecutionCapability[]
+  data?: { [key: string]: any }
+  delegate?: DelegateInfoV2
+  encryption_configs?: {
+    [key: string]: EncryptionConfig
+  }
+  id?: string
+  logging?: DelegateTaskLoggingV2
+  secret_details?: {
+    [key: string]: SecretDetail
+  }
+  secrets?: string[]
+  timeout?: number
+  type?:
+    | 'CUSTOM_MANIFEST_VALUES_FETCH_TASK_NG'
+    | 'GITOPS_TASK_NG'
+    | 'BATCH_CAPABILITY_CHECK'
+    | 'CAPABILITY_VALIDATION'
+    | 'COMMAND'
+    | 'SCRIPT'
+    | 'HTTP'
+    | 'GCB'
+    | 'JENKINS'
+    | 'JENKINS_COLLECTION'
+    | 'JENKINS_GET_BUILDS'
+    | 'JENKINS_GET_JOBS'
+    | 'JENKINS_GET_JOB'
+    | 'JENKINS_GET_ARTIFACT_PATHS'
+    | 'JENKINS_LAST_SUCCESSFUL_BUILD'
+    | 'JENKINS_GET_PLANS'
+    | 'JENKINS_VALIDATE_ARTIFACT_SERVER'
+    | 'JENKINS_CONNECTIVITY_TEST_TASK'
+    | 'BAMBOO'
+    | 'BAMBOO_COLLECTION'
+    | 'BAMBOO_GET_BUILDS'
+    | 'BAMBOO_GET_JOBS'
+    | 'BAMBOO_GET_ARTIFACT_PATHS'
+    | 'BAMBOO_LAST_SUCCESSFUL_BUILD'
+    | 'BAMBOO_GET_PLANS'
+    | 'BAMBOO_VALIDATE_ARTIFACT_SERVER'
+    | 'DOCKER_GET_BUILDS'
+    | 'DOCKER_GET_LABELS'
+    | 'DOCKER_VALIDATE_ARTIFACT_SERVER'
+    | 'DOCKER_VALIDATE_ARTIFACT_STREAM'
+    | 'DOCKER_GET_ARTIFACT_META_INFO'
+    | 'ECR_GET_BUILDS'
+    | 'ECR_VALIDATE_ARTIFACT_SERVER'
+    | 'ECR_GET_PLANS'
+    | 'ECR_GET_ARTIFACT_PATHS'
+    | 'ECR_VALIDATE_ARTIFACT_STREAM'
+    | 'ECR_GET_LABELS'
+    | 'GCR_GET_BUILDS'
+    | 'GCR_VALIDATE_ARTIFACT_STREAM'
+    | 'GCR_GET_PLANS'
+    | 'ECR_ARTIFACT_TASK_NG'
+    | 'ACR_GET_REGISTRIES'
+    | 'ACR_GET_REGISTRY_NAMES'
+    | 'ACR_GET_REPOSITORIES'
+    | 'ACR_GET_BUILDS'
+    | 'ACR_VALIDATE_ARTIFACT_STREAM'
+    | 'ACR_GET_PLANS'
+    | 'ACR_GET_ARTIFACT_PATHS'
+    | 'NEXUS_GET_JOBS'
+    | 'NEXUS_GET_PLANS'
+    | 'NEXUS_GET_ARTIFACT_PATHS'
+    | 'NEXUS_GET_GROUP_IDS'
+    | 'NEXUS_GET_BUILDS'
+    | 'NEXUS_LAST_SUCCESSFUL_BUILD'
+    | 'NEXUS_COLLECTION'
+    | 'NEXUS_VALIDATE_ARTIFACT_SERVER'
+    | 'NEXUS_VALIDATE_ARTIFACT_STREAM'
+    | 'GCS_GET_ARTIFACT_PATHS'
+    | 'GCS_GET_BUILDS'
+    | 'GCS_GET_BUCKETS'
+    | 'GCS_GET_PROJECT_ID'
+    | 'GCS_GET_PLANS'
+    | 'SFTP_GET_BUILDS'
+    | 'SFTP_GET_ARTIFACT_PATHS'
+    | 'SFTP_VALIDATE_ARTIFACT_SERVER'
+    | 'SMB_GET_BUILDS'
+    | 'SMB_GET_SMB_PATHS'
+    | 'SMB_VALIDATE_ARTIFACT_SERVER'
+    | 'AMAZON_S3_COLLECTION'
+    | 'AMAZON_S3_GET_ARTIFACT_PATHS'
+    | 'AMAZON_S3_LAST_SUCCESSFUL_BUILD'
+    | 'AMAZON_S3_GET_BUILDS'
+    | 'AMAZON_S3_GET_PLANS'
+    | 'AZURE_ARTIFACTS_VALIDATE_ARTIFACT_SERVER'
+    | 'AZURE_ARTIFACTS_VALIDATE_ARTIFACT_STREAM'
+    | 'AZURE_ARTIFACTS_GET_BUILDS'
+    | 'AZURE_ARTIFACTS_GET_PROJECTS'
+    | 'AZURE_ARTIFACTS_GET_FEEDS'
+    | 'AZURE_ARTIFACTS_GET_PACKAGES'
+    | 'AZURE_ARTIFACTS_COLLECTION'
+    | 'AZURE_GET_SUBSCRIPTIONS'
+    | 'AZURE_MACHINE_IMAGE_GET_IMAGE_GALLERIES'
+    | 'AZURE_MACHINE_IMAGE_GET_IMAGE_DEFINITIONS'
+    | 'AZURE_MACHINE_IMAGE_VALIDATE_ARTIFACT_SERVER'
+    | 'AZURE_MACHINE_IMAGE_GET_RESOURCE_GROUPS'
+    | 'AZURE_MACHINE_IMAGE_GET_BUILDS'
+    | 'AZURE_VMSS_COMMAND_TASK'
+    | 'AZURE_APP_SERVICE_TASK'
+    | 'AZURE_ARM_TASK'
+    | 'AZURE_RESOURCE_TASK'
+    | 'LDAP_TEST_CONN_SETTINGS'
+    | 'LDAP_TEST_USER_SETTINGS'
+    | 'LDAP_TEST_GROUP_SETTINGS'
+    | 'LDAP_VALIDATE_SETTINGS'
+    | 'LDAP_AUTHENTICATION'
+    | 'LDAP_SEARCH_GROUPS'
+    | 'LDAP_FETCH_GROUP'
+    | 'NG_LDAP_SEARCH_GROUPS'
+    | 'NG_LDAP_TEST_CONN_SETTINGS'
+    | 'APM_VALIDATE_CONNECTOR_TASK'
+    | 'CUSTOM_LOG_VALIDATE_CONNECTOR_TASK'
+    | 'APM_GET_TASK'
+    | 'APPDYNAMICS_CONFIGURATION_VALIDATE_TASK'
+    | 'CVNG_CONNECTOR_VALIDATE_TASK'
+    | 'GET_DATA_COLLECTION_RESULT'
+    | 'APPDYNAMICS_GET_APP_TASK'
+    | 'APPDYNAMICS_GET_APP_TASK_NG'
+    | 'APPDYNAMICS_GET_TIER_TASK'
+    | 'APPDYNAMICS_GET_TIER_TASK_NG'
+    | 'APPDYNAMICS_GET_TIER_MAP'
+    | 'APPDYNAMICS_COLLECT_METRIC_DATA'
+    | 'APPDYNAMICS_COLLECT_METRIC_DATA_V2'
+    | 'APPDYNAMICS_COLLECT_24_7_METRIC_DATA'
+    | 'APPDYNAMICS_METRIC_DATA_FOR_NODE'
+    | 'INSTANA_GET_INFRA_METRICS'
+    | 'INSTANA_GET_TRACE_METRICS'
+    | 'INSTANA_COLLECT_METRIC_DATA'
+    | 'INSTANA_VALIDATE_CONFIGURATION_TASK'
+    | 'NEWRELIC_VALIDATE_CONFIGURATION_TASK'
+    | 'BUGSNAG_GET_APP_TASK'
+    | 'BUGSNAG_GET_RECORDS'
+    | 'CUSTOM_COLLECT_24_7_LOG_DATA'
+    | 'CUSTOM_APM_COLLECT_METRICS_V2'
+    | 'NEWRELIC_GET_APP_TASK'
+    | 'NEWRELIC_RESOLVE_APP_TASK'
+    | 'NEWRELIC_RESOLVE_APP_ID_TASK'
+    | 'NEWRELIC_GET_APP_INSTANCES_TASK'
+    | 'NEWRELIC_COLLECT_METRIC_DATA'
+    | 'NEWRELIC_COLLECT_METRIC_DATAV2'
+    | 'NEWRELIC_COLLECT_24_7_METRIC_DATA'
+    | 'NEWRELIC_GET_TXNS_WITH_DATA'
+    | 'NEWRELIC_GET_TXNS_WITH_DATA_FOR_NODE'
+    | 'NEWRELIC_POST_DEPLOYMENT_MARKER'
+    | 'STACKDRIVER_COLLECT_METRIC_DATA'
+    | 'STACKDRIVER_METRIC_DATA_FOR_NODE'
+    | 'STACKDRIVER_LOG_DATA_FOR_NODE'
+    | 'STACKDRIVER_LIST_REGIONS'
+    | 'STACKDRIVER_LIST_FORWARDING_RULES'
+    | 'STACKDRIVER_GET_LOG_SAMPLE'
+    | 'STACKDRIVER_COLLECT_24_7_METRIC_DATA'
+    | 'STACKDRIVER_COLLECT_LOG_DATA'
+    | 'STACKDRIVER_COLLECT_24_7_LOG_DATA'
+    | 'SPLUNK'
+    | 'SPLUNK_CONFIGURATION_VALIDATE_TASK'
+    | 'SPLUNK_GET_HOST_RECORDS'
+    | 'SPLUNK_NG_GET_SAVED_SEARCHES'
+    | 'SPLUNK_NG_VALIDATION_RESPONSE_TASK'
+    | 'SPLUNK_COLLECT_LOG_DATAV2'
+    | 'ELK_COLLECT_LOG_DATAV2'
+    | 'DATA_COLLECTION_NEXT_GEN_VALIDATION'
+    | 'SUMO_COLLECT_LOG_DATA'
+    | 'SUMO_VALIDATE_CONFIGURATION_TASK'
+    | 'SUMO_GET_HOST_RECORDS'
+    | 'SUMO_GET_LOG_DATA_BY_HOST'
+    | 'SUMO_COLLECT_24_7_LOG_DATA'
+    | 'ELK_CONFIGURATION_VALIDATE_TASK'
+    | 'ELK_COLLECT_LOG_DATA'
+    | 'ELK_COLLECT_INDICES'
+    | 'ELK_GET_LOG_SAMPLE'
+    | 'ELK_GET_HOST_RECORDS'
+    | 'KIBANA_GET_VERSION'
+    | 'ELK_COLLECT_24_7_LOG_DATA'
+    | 'LOGZ_CONFIGURATION_VALIDATE_TASK'
+    | 'LOGZ_COLLECT_LOG_DATA'
+    | 'LOGZ_GET_LOG_SAMPLE'
+    | 'LOGZ_GET_HOST_RECORDS'
+    | 'ARTIFACTORY_GET_BUILDS'
+    | 'ARTIFACTORY_GET_LABELS'
+    | 'ARTIFACTORY_GET_JOBS'
+    | 'ARTIFACTORY_GET_PLANS'
+    | 'ARTIFACTORY_GET_ARTIFACTORY_PATHS'
+    | 'ARTIFACTORY_GET_GROUP_IDS'
+    | 'ARTIFACTORY_LAST_SUCCSSFUL_BUILD'
+    | 'ARTIFACTORY_COLLECTION'
+    | 'ARTIFACTORY_VALIDATE_ARTIFACT_SERVER'
+    | 'ARTIFACTORY_VALIDATE_ARTIFACT_STREAM'
+    | 'VAULT_GET_CHANGELOG'
+    | 'VAULT_RENEW_TOKEN'
+    | 'VAULT_LIST_ENGINES'
+    | 'VAULT_APPROLE_LOGIN'
+    | 'SSH_SECRET_ENGINE_AUTH'
+    | 'VAULT_SIGN_PUBLIC_KEY_SSH'
+    | 'SECRET_DECRYPT'
+    | 'BATCH_SECRET_DECRYPT'
+    | 'SECRET_DECRYPT_REF'
+    | 'DELETE_SECRET'
+    | 'VALIDATE_SECRET_REFERENCE'
+    | 'UPSERT_SECRET'
+    | 'FETCH_SECRET'
+    | 'ENCRYPT_SECRET'
+    | 'VALIDATE_SECRET_MANAGER_CONFIGURATION'
+    | 'NG_VAULT_RENEW_TOKEN'
+    | 'NG_VAULT_RENEW_APP_ROLE_TOKEN'
+    | 'NG_VAULT_FETCHING_TASK'
+    | 'NG_AZURE_VAULT_FETCH_ENGINES'
+    | 'HOST_VALIDATION'
+    | 'CONTAINER_ACTIVE_SERVICE_COUNTS'
+    | 'CONTAINER_INFO'
+    | 'CONTROLLER_NAMES_WITH_LABELS'
+    | 'AMI_GET_BUILDS'
+    | 'CONTAINER_CE_VALIDATION'
+    | 'CE_DELEGATE_VALIDATION'
+    | 'CONTAINER_CONNECTION_VALIDATION'
+    | 'LIST_CLUSTERS'
+    | 'CONTAINER_VALIDATION'
+    | 'FETCH_MASTER_URL'
+    | 'DYNA_TRACE_VALIDATE_CONFIGURATION_TASK'
+    | 'DYNA_TRACE_METRIC_DATA_COLLECTION_TASK'
+    | 'DYNA_TRACE_GET_TXNS_WITH_DATA_FOR_NODE'
+    | 'DYNA_TRACE_GET_SERVICES'
+    | 'DYNATRACE_COLLECT_24_7_METRIC_DATA'
+    | 'HELM_COMMAND_TASK'
+    | 'HELM_COMMAND_TASK_NG'
+    | 'KUBERNETES_STEADY_STATE_CHECK_TASK'
+    | 'PCF_COMMAND_TASK'
+    | 'SPOTINST_COMMAND_TASK'
+    | 'ECS_COMMAND_TASK'
+    | 'COLLABORATION_PROVIDER_TASK'
+    | 'PROMETHEUS_METRIC_DATA_PER_HOST'
+    | 'CLOUD_WATCH_COLLECT_METRIC_DATA'
+    | 'CLOUD_WATCH_METRIC_DATA_FOR_NODE'
+    | 'CLOUD_WATCH_GENERIC_METRIC_STATISTICS'
+    | 'CLOUD_WATCH_GENERIC_METRIC_DATA'
+    | 'CLOUD_WATCH_COLLECT_24_7_METRIC_DATA'
+    | 'APM_METRIC_DATA_COLLECTION_TASK'
+    | 'APM_24_7_METRIC_DATA_COLLECTION_TASK'
+    | 'CUSTOM_LOG_COLLECTION_TASK'
+    | 'CLOUD_FORMATION_TASK'
+    | 'FETCH_S3_FILE_TASK'
+    | 'TERRAFORM_PROVISION_TASK'
+    | 'TERRAFORM_INPUT_VARIABLES_OBTAIN_TASK'
+    | 'TERRAFORM_FETCH_TARGETS_TASK'
+    | 'TERRAGRUNT_PROVISION_TASK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS_TASK'
+    | 'ECS_STEADY_STATE_CHECK_TASK'
+    | 'AWS_ECR_TASK'
+    | 'AWS_ELB_TASK'
+    | 'AWS_ECS_TASK'
+    | 'AWS_IAM_TASK'
+    | 'AWS_EC2_TASK'
+    | 'AWS_ASG_TASK'
+    | 'AWS_CODE_DEPLOY_TASK'
+    | 'AWS_LAMBDA_TASK'
+    | 'AWS_AMI_ASYNC_TASK'
+    | 'AWS_CF_TASK'
+    | 'K8S_COMMAND_TASK'
+    | 'K8S_COMMAND_TASK_NG'
+    | 'K8S_WATCH_TASK'
+    | 'TRIGGER_TASK'
+    | 'WEBHOOK_TRIGGER_TASK'
+    | 'JIRA'
+    | 'CONNECTIVITY_VALIDATION'
+    | 'GIT_COMMAND'
+    | 'GIT_FETCH_FILES_TASK'
+    | 'GIT_FETCH_NEXT_GEN_TASK'
+    | 'BUILD_SOURCE_TASK'
+    | 'DOCKER_ARTIFACT_TASK_NG'
+    | 'GOOGLE_ARTIFACT_REGISTRY_TASK_NG'
+    | 'JENKINS_ARTIFACT_TASK_NG'
+    | 'GCR_ARTIFACT_TASK_NG'
+    | 'NEXUS_ARTIFACT_TASK_NG'
+    | 'ARTIFACTORY_ARTIFACT_TASK_NG'
+    | 'AMAZON_S3_ARTIFACT_TASK_NG'
+    | 'GITHUB_PACKAGES_TASK_NG'
+    | 'AWS_ROUTE53_TASK'
+    | 'SHELL_SCRIPT_APPROVAL'
+    | 'CUSTOM_GET_BUILDS'
+    | 'CUSTOM_VALIDATE_ARTIFACT_STREAM'
+    | 'CUSTOM_ARTIFACT_NG'
+    | 'SHELL_SCRIPT_PROVISION_TASK'
+    | 'SERVICENOW_ASYNC'
+    | 'SERVICENOW_SYNC'
+    | 'SERVICENOW_VALIDATION'
+    | 'HELM_REPO_CONFIG_VALIDATION'
+    | 'HELM_VALUES_FETCH'
+    | 'HELM_VALUES_FETCH_NG'
+    | 'HELM_COLLECT_CHART'
+    | 'SLACK'
+    | 'INITIALIZATION_PHASE'
+    | 'CI_LE_STATUS'
+    | 'EXECUTE_COMMAND'
+    | 'CI_CLEANUP'
+    | 'CI_EXECUTE_STEP'
+    | 'AWS_S3_TASK'
+    | 'CUSTOM_MANIFEST_VALUES_FETCH_TASK'
+    | 'CUSTOM_MANIFEST_FETCH_TASK'
+    | 'GCP_TASK'
+    | 'VALIDATE_KUBERNETES_CONFIG'
+    | 'NG_GIT_COMMAND'
+    | 'NG_SSH_VALIDATION'
+    | 'NG_WINRM_VALIDATION'
+    | 'NG_HOST_CONNECTIVITY_TASK'
+    | 'DOCKER_CONNECTIVITY_TEST_TASK'
+    | 'NG_AWS_TASK'
+    | 'JIRA_TASK_NG'
+    | 'BUILD_STATUS'
+    | 'GIT_API_TASK'
+    | 'AWS_CODECOMMIT_API_TASK'
+    | 'JIRA_CONNECTIVITY_TASK_NG'
+    | 'K8_FETCH_NAMESPACES'
+    | 'K8_FETCH_WORKLOADS'
+    | 'K8_FETCH_EVENTS'
+    | 'NOTIFY_SLACK'
+    | 'NOTIFY_PAGERDUTY'
+    | 'NOTIFY_MAIL'
+    | 'NOTIFY_MICROSOFTTEAMS'
+    | 'HTTP_TASK_NG'
+    | 'SHELL_SCRIPT_TASK_NG'
+    | 'NG_NEXUS_TASK'
+    | 'NG_ARTIFACTORY_TASK'
+    | 'CE_VALIDATE_KUBERNETES_CONFIG'
+    | 'K8S_SERVICE_ACCOUNT_INFO'
+    | 'NG_AWS_CODE_COMMIT_TASK'
+    | 'HTTP_HELM_CONNECTIVITY_TASK'
+    | 'NG_DECRYT_GIT_API_ACCESS_TASK'
+    | 'TERRAFORM_TASK_NG'
+    | 'SCM_PUSH_TASK'
+    | 'SCM_PATH_FILTER_EVALUATION_TASK'
+    | 'SCM_GIT_REF_TASK'
+    | 'SCM_GIT_FILE_TASK'
+    | 'SCM_PULL_REQUEST_TASK'
+    | 'SCM_GIT_WEBHOOK_TASK'
+    | 'SERVICENOW_CONNECTIVITY_TASK_NG'
+    | 'SERVICENOW_TASK_NG'
+    | 'RANCHER_RESOLVE_CLUSTERS'
+    | 'NG_AZURE_TASK'
+    | 'CLOUDFORMATION_TASK_NG'
+    | 'ACR_ARTIFACT_TASK_NG'
+    | 'SERVERLESS_GIT_FETCH_TASK_NG'
+    | 'SERVERLESS_COMMAND_TASK'
+    | 'FETCH_S3_FILE_TASK_NG'
+    | 'OCI_HELM_CONNECTIVITY_TASK'
+    | 'AZURE_WEB_APP_TASK_NG'
+    | 'COMMAND_TASK_NG'
+    | 'VALIDATE_CUSTOM_SECRET_MANAGER_SECRET_REFERENCE'
+    | 'FETCH_CUSTOM_SECRET'
+    | 'RESOLVE_CUSTOM_SM_CONFIG'
+    | 'CI_DOCKER_INITIALIZE_TASK'
+    | 'CI_DOCKER_EXECUTE_TASK'
+    | 'CI_DOCKER_CLEANUP_TASK'
+    | 'NG_LDAP_TEST_USER_SETTINGS'
+    | 'NG_LDAP_TEST_GROUP_SETTINGS'
+    | 'DLITE_CI_VM_INITIALIZE_TASK'
+    | 'DLITE_CI_VM_EXECUTE_TASK'
+    | 'DLITE_CI_VM_CLEANUP_TASK'
+    | 'NG_LDAP_GROUPS_SYNC'
+    | 'AZURE_NG_ARM'
+    | 'NG_LDAP_TEST_AUTHENTICATION'
+    | 'ECS_GIT_FETCH_TASK_NG'
+    | 'ECS_COMMAND_TASK_NG'
+    | 'WIN_RM_SHELL_SCRIPT_TASK_NG'
+}
+
 export interface DelegateTaskResponse {
   accountId?: string
   response?: DelegateResponseData
   responseCode?: 'OK' | 'FAILED' | 'RETRY_ON_OTHER_DELEGATE'
+  serializationFormat?: 'KRYO' | 'JSON'
+  taskType?:
+    | 'CUSTOM_MANIFEST_VALUES_FETCH_TASK_NG'
+    | 'GITOPS_TASK_NG'
+    | 'BATCH_CAPABILITY_CHECK'
+    | 'CAPABILITY_VALIDATION'
+    | 'COMMAND'
+    | 'SCRIPT'
+    | 'HTTP'
+    | 'GCB'
+    | 'JENKINS'
+    | 'JENKINS_COLLECTION'
+    | 'JENKINS_GET_BUILDS'
+    | 'JENKINS_GET_JOBS'
+    | 'JENKINS_GET_JOB'
+    | 'JENKINS_GET_ARTIFACT_PATHS'
+    | 'JENKINS_LAST_SUCCESSFUL_BUILD'
+    | 'JENKINS_GET_PLANS'
+    | 'JENKINS_VALIDATE_ARTIFACT_SERVER'
+    | 'JENKINS_CONNECTIVITY_TEST_TASK'
+    | 'BAMBOO'
+    | 'BAMBOO_COLLECTION'
+    | 'BAMBOO_GET_BUILDS'
+    | 'BAMBOO_GET_JOBS'
+    | 'BAMBOO_GET_ARTIFACT_PATHS'
+    | 'BAMBOO_LAST_SUCCESSFUL_BUILD'
+    | 'BAMBOO_GET_PLANS'
+    | 'BAMBOO_VALIDATE_ARTIFACT_SERVER'
+    | 'DOCKER_GET_BUILDS'
+    | 'DOCKER_GET_LABELS'
+    | 'DOCKER_VALIDATE_ARTIFACT_SERVER'
+    | 'DOCKER_VALIDATE_ARTIFACT_STREAM'
+    | 'DOCKER_GET_ARTIFACT_META_INFO'
+    | 'ECR_GET_BUILDS'
+    | 'ECR_VALIDATE_ARTIFACT_SERVER'
+    | 'ECR_GET_PLANS'
+    | 'ECR_GET_ARTIFACT_PATHS'
+    | 'ECR_VALIDATE_ARTIFACT_STREAM'
+    | 'ECR_GET_LABELS'
+    | 'GCR_GET_BUILDS'
+    | 'GCR_VALIDATE_ARTIFACT_STREAM'
+    | 'GCR_GET_PLANS'
+    | 'ECR_ARTIFACT_TASK_NG'
+    | 'ACR_GET_REGISTRIES'
+    | 'ACR_GET_REGISTRY_NAMES'
+    | 'ACR_GET_REPOSITORIES'
+    | 'ACR_GET_BUILDS'
+    | 'ACR_VALIDATE_ARTIFACT_STREAM'
+    | 'ACR_GET_PLANS'
+    | 'ACR_GET_ARTIFACT_PATHS'
+    | 'NEXUS_GET_JOBS'
+    | 'NEXUS_GET_PLANS'
+    | 'NEXUS_GET_ARTIFACT_PATHS'
+    | 'NEXUS_GET_GROUP_IDS'
+    | 'NEXUS_GET_BUILDS'
+    | 'NEXUS_LAST_SUCCESSFUL_BUILD'
+    | 'NEXUS_COLLECTION'
+    | 'NEXUS_VALIDATE_ARTIFACT_SERVER'
+    | 'NEXUS_VALIDATE_ARTIFACT_STREAM'
+    | 'GCS_GET_ARTIFACT_PATHS'
+    | 'GCS_GET_BUILDS'
+    | 'GCS_GET_BUCKETS'
+    | 'GCS_GET_PROJECT_ID'
+    | 'GCS_GET_PLANS'
+    | 'SFTP_GET_BUILDS'
+    | 'SFTP_GET_ARTIFACT_PATHS'
+    | 'SFTP_VALIDATE_ARTIFACT_SERVER'
+    | 'SMB_GET_BUILDS'
+    | 'SMB_GET_SMB_PATHS'
+    | 'SMB_VALIDATE_ARTIFACT_SERVER'
+    | 'AMAZON_S3_COLLECTION'
+    | 'AMAZON_S3_GET_ARTIFACT_PATHS'
+    | 'AMAZON_S3_LAST_SUCCESSFUL_BUILD'
+    | 'AMAZON_S3_GET_BUILDS'
+    | 'AMAZON_S3_GET_PLANS'
+    | 'AZURE_ARTIFACTS_VALIDATE_ARTIFACT_SERVER'
+    | 'AZURE_ARTIFACTS_VALIDATE_ARTIFACT_STREAM'
+    | 'AZURE_ARTIFACTS_GET_BUILDS'
+    | 'AZURE_ARTIFACTS_GET_PROJECTS'
+    | 'AZURE_ARTIFACTS_GET_FEEDS'
+    | 'AZURE_ARTIFACTS_GET_PACKAGES'
+    | 'AZURE_ARTIFACTS_COLLECTION'
+    | 'AZURE_GET_SUBSCRIPTIONS'
+    | 'AZURE_MACHINE_IMAGE_GET_IMAGE_GALLERIES'
+    | 'AZURE_MACHINE_IMAGE_GET_IMAGE_DEFINITIONS'
+    | 'AZURE_MACHINE_IMAGE_VALIDATE_ARTIFACT_SERVER'
+    | 'AZURE_MACHINE_IMAGE_GET_RESOURCE_GROUPS'
+    | 'AZURE_MACHINE_IMAGE_GET_BUILDS'
+    | 'AZURE_VMSS_COMMAND_TASK'
+    | 'AZURE_APP_SERVICE_TASK'
+    | 'AZURE_ARM_TASK'
+    | 'AZURE_RESOURCE_TASK'
+    | 'LDAP_TEST_CONN_SETTINGS'
+    | 'LDAP_TEST_USER_SETTINGS'
+    | 'LDAP_TEST_GROUP_SETTINGS'
+    | 'LDAP_VALIDATE_SETTINGS'
+    | 'LDAP_AUTHENTICATION'
+    | 'LDAP_SEARCH_GROUPS'
+    | 'LDAP_FETCH_GROUP'
+    | 'NG_LDAP_SEARCH_GROUPS'
+    | 'NG_LDAP_TEST_CONN_SETTINGS'
+    | 'APM_VALIDATE_CONNECTOR_TASK'
+    | 'CUSTOM_LOG_VALIDATE_CONNECTOR_TASK'
+    | 'APM_GET_TASK'
+    | 'APPDYNAMICS_CONFIGURATION_VALIDATE_TASK'
+    | 'CVNG_CONNECTOR_VALIDATE_TASK'
+    | 'GET_DATA_COLLECTION_RESULT'
+    | 'APPDYNAMICS_GET_APP_TASK'
+    | 'APPDYNAMICS_GET_APP_TASK_NG'
+    | 'APPDYNAMICS_GET_TIER_TASK'
+    | 'APPDYNAMICS_GET_TIER_TASK_NG'
+    | 'APPDYNAMICS_GET_TIER_MAP'
+    | 'APPDYNAMICS_COLLECT_METRIC_DATA'
+    | 'APPDYNAMICS_COLLECT_METRIC_DATA_V2'
+    | 'APPDYNAMICS_COLLECT_24_7_METRIC_DATA'
+    | 'APPDYNAMICS_METRIC_DATA_FOR_NODE'
+    | 'INSTANA_GET_INFRA_METRICS'
+    | 'INSTANA_GET_TRACE_METRICS'
+    | 'INSTANA_COLLECT_METRIC_DATA'
+    | 'INSTANA_VALIDATE_CONFIGURATION_TASK'
+    | 'NEWRELIC_VALIDATE_CONFIGURATION_TASK'
+    | 'BUGSNAG_GET_APP_TASK'
+    | 'BUGSNAG_GET_RECORDS'
+    | 'CUSTOM_COLLECT_24_7_LOG_DATA'
+    | 'CUSTOM_APM_COLLECT_METRICS_V2'
+    | 'NEWRELIC_GET_APP_TASK'
+    | 'NEWRELIC_RESOLVE_APP_TASK'
+    | 'NEWRELIC_RESOLVE_APP_ID_TASK'
+    | 'NEWRELIC_GET_APP_INSTANCES_TASK'
+    | 'NEWRELIC_COLLECT_METRIC_DATA'
+    | 'NEWRELIC_COLLECT_METRIC_DATAV2'
+    | 'NEWRELIC_COLLECT_24_7_METRIC_DATA'
+    | 'NEWRELIC_GET_TXNS_WITH_DATA'
+    | 'NEWRELIC_GET_TXNS_WITH_DATA_FOR_NODE'
+    | 'NEWRELIC_POST_DEPLOYMENT_MARKER'
+    | 'STACKDRIVER_COLLECT_METRIC_DATA'
+    | 'STACKDRIVER_METRIC_DATA_FOR_NODE'
+    | 'STACKDRIVER_LOG_DATA_FOR_NODE'
+    | 'STACKDRIVER_LIST_REGIONS'
+    | 'STACKDRIVER_LIST_FORWARDING_RULES'
+    | 'STACKDRIVER_GET_LOG_SAMPLE'
+    | 'STACKDRIVER_COLLECT_24_7_METRIC_DATA'
+    | 'STACKDRIVER_COLLECT_LOG_DATA'
+    | 'STACKDRIVER_COLLECT_24_7_LOG_DATA'
+    | 'SPLUNK'
+    | 'SPLUNK_CONFIGURATION_VALIDATE_TASK'
+    | 'SPLUNK_GET_HOST_RECORDS'
+    | 'SPLUNK_NG_GET_SAVED_SEARCHES'
+    | 'SPLUNK_NG_VALIDATION_RESPONSE_TASK'
+    | 'SPLUNK_COLLECT_LOG_DATAV2'
+    | 'ELK_COLLECT_LOG_DATAV2'
+    | 'DATA_COLLECTION_NEXT_GEN_VALIDATION'
+    | 'SUMO_COLLECT_LOG_DATA'
+    | 'SUMO_VALIDATE_CONFIGURATION_TASK'
+    | 'SUMO_GET_HOST_RECORDS'
+    | 'SUMO_GET_LOG_DATA_BY_HOST'
+    | 'SUMO_COLLECT_24_7_LOG_DATA'
+    | 'ELK_CONFIGURATION_VALIDATE_TASK'
+    | 'ELK_COLLECT_LOG_DATA'
+    | 'ELK_COLLECT_INDICES'
+    | 'ELK_GET_LOG_SAMPLE'
+    | 'ELK_GET_HOST_RECORDS'
+    | 'KIBANA_GET_VERSION'
+    | 'ELK_COLLECT_24_7_LOG_DATA'
+    | 'LOGZ_CONFIGURATION_VALIDATE_TASK'
+    | 'LOGZ_COLLECT_LOG_DATA'
+    | 'LOGZ_GET_LOG_SAMPLE'
+    | 'LOGZ_GET_HOST_RECORDS'
+    | 'ARTIFACTORY_GET_BUILDS'
+    | 'ARTIFACTORY_GET_LABELS'
+    | 'ARTIFACTORY_GET_JOBS'
+    | 'ARTIFACTORY_GET_PLANS'
+    | 'ARTIFACTORY_GET_ARTIFACTORY_PATHS'
+    | 'ARTIFACTORY_GET_GROUP_IDS'
+    | 'ARTIFACTORY_LAST_SUCCSSFUL_BUILD'
+    | 'ARTIFACTORY_COLLECTION'
+    | 'ARTIFACTORY_VALIDATE_ARTIFACT_SERVER'
+    | 'ARTIFACTORY_VALIDATE_ARTIFACT_STREAM'
+    | 'VAULT_GET_CHANGELOG'
+    | 'VAULT_RENEW_TOKEN'
+    | 'VAULT_LIST_ENGINES'
+    | 'VAULT_APPROLE_LOGIN'
+    | 'SSH_SECRET_ENGINE_AUTH'
+    | 'VAULT_SIGN_PUBLIC_KEY_SSH'
+    | 'SECRET_DECRYPT'
+    | 'BATCH_SECRET_DECRYPT'
+    | 'SECRET_DECRYPT_REF'
+    | 'DELETE_SECRET'
+    | 'VALIDATE_SECRET_REFERENCE'
+    | 'UPSERT_SECRET'
+    | 'FETCH_SECRET'
+    | 'ENCRYPT_SECRET'
+    | 'VALIDATE_SECRET_MANAGER_CONFIGURATION'
+    | 'NG_VAULT_RENEW_TOKEN'
+    | 'NG_VAULT_RENEW_APP_ROLE_TOKEN'
+    | 'NG_VAULT_FETCHING_TASK'
+    | 'NG_AZURE_VAULT_FETCH_ENGINES'
+    | 'HOST_VALIDATION'
+    | 'CONTAINER_ACTIVE_SERVICE_COUNTS'
+    | 'CONTAINER_INFO'
+    | 'CONTROLLER_NAMES_WITH_LABELS'
+    | 'AMI_GET_BUILDS'
+    | 'CONTAINER_CE_VALIDATION'
+    | 'CE_DELEGATE_VALIDATION'
+    | 'CONTAINER_CONNECTION_VALIDATION'
+    | 'LIST_CLUSTERS'
+    | 'CONTAINER_VALIDATION'
+    | 'FETCH_MASTER_URL'
+    | 'DYNA_TRACE_VALIDATE_CONFIGURATION_TASK'
+    | 'DYNA_TRACE_METRIC_DATA_COLLECTION_TASK'
+    | 'DYNA_TRACE_GET_TXNS_WITH_DATA_FOR_NODE'
+    | 'DYNA_TRACE_GET_SERVICES'
+    | 'DYNATRACE_COLLECT_24_7_METRIC_DATA'
+    | 'HELM_COMMAND_TASK'
+    | 'HELM_COMMAND_TASK_NG'
+    | 'KUBERNETES_STEADY_STATE_CHECK_TASK'
+    | 'PCF_COMMAND_TASK'
+    | 'SPOTINST_COMMAND_TASK'
+    | 'ECS_COMMAND_TASK'
+    | 'COLLABORATION_PROVIDER_TASK'
+    | 'PROMETHEUS_METRIC_DATA_PER_HOST'
+    | 'CLOUD_WATCH_COLLECT_METRIC_DATA'
+    | 'CLOUD_WATCH_METRIC_DATA_FOR_NODE'
+    | 'CLOUD_WATCH_GENERIC_METRIC_STATISTICS'
+    | 'CLOUD_WATCH_GENERIC_METRIC_DATA'
+    | 'CLOUD_WATCH_COLLECT_24_7_METRIC_DATA'
+    | 'APM_METRIC_DATA_COLLECTION_TASK'
+    | 'APM_24_7_METRIC_DATA_COLLECTION_TASK'
+    | 'CUSTOM_LOG_COLLECTION_TASK'
+    | 'CLOUD_FORMATION_TASK'
+    | 'FETCH_S3_FILE_TASK'
+    | 'TERRAFORM_PROVISION_TASK'
+    | 'TERRAFORM_INPUT_VARIABLES_OBTAIN_TASK'
+    | 'TERRAFORM_FETCH_TARGETS_TASK'
+    | 'TERRAGRUNT_PROVISION_TASK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS_TASK'
+    | 'ECS_STEADY_STATE_CHECK_TASK'
+    | 'AWS_ECR_TASK'
+    | 'AWS_ELB_TASK'
+    | 'AWS_ECS_TASK'
+    | 'AWS_IAM_TASK'
+    | 'AWS_EC2_TASK'
+    | 'AWS_ASG_TASK'
+    | 'AWS_CODE_DEPLOY_TASK'
+    | 'AWS_LAMBDA_TASK'
+    | 'AWS_AMI_ASYNC_TASK'
+    | 'AWS_CF_TASK'
+    | 'K8S_COMMAND_TASK'
+    | 'K8S_COMMAND_TASK_NG'
+    | 'K8S_WATCH_TASK'
+    | 'TRIGGER_TASK'
+    | 'WEBHOOK_TRIGGER_TASK'
+    | 'JIRA'
+    | 'CONNECTIVITY_VALIDATION'
+    | 'GIT_COMMAND'
+    | 'GIT_FETCH_FILES_TASK'
+    | 'GIT_FETCH_NEXT_GEN_TASK'
+    | 'BUILD_SOURCE_TASK'
+    | 'DOCKER_ARTIFACT_TASK_NG'
+    | 'GOOGLE_ARTIFACT_REGISTRY_TASK_NG'
+    | 'JENKINS_ARTIFACT_TASK_NG'
+    | 'GCR_ARTIFACT_TASK_NG'
+    | 'NEXUS_ARTIFACT_TASK_NG'
+    | 'ARTIFACTORY_ARTIFACT_TASK_NG'
+    | 'AMAZON_S3_ARTIFACT_TASK_NG'
+    | 'GITHUB_PACKAGES_TASK_NG'
+    | 'AWS_ROUTE53_TASK'
+    | 'SHELL_SCRIPT_APPROVAL'
+    | 'CUSTOM_GET_BUILDS'
+    | 'CUSTOM_VALIDATE_ARTIFACT_STREAM'
+    | 'CUSTOM_ARTIFACT_NG'
+    | 'SHELL_SCRIPT_PROVISION_TASK'
+    | 'SERVICENOW_ASYNC'
+    | 'SERVICENOW_SYNC'
+    | 'SERVICENOW_VALIDATION'
+    | 'HELM_REPO_CONFIG_VALIDATION'
+    | 'HELM_VALUES_FETCH'
+    | 'HELM_VALUES_FETCH_NG'
+    | 'HELM_COLLECT_CHART'
+    | 'SLACK'
+    | 'INITIALIZATION_PHASE'
+    | 'CI_LE_STATUS'
+    | 'EXECUTE_COMMAND'
+    | 'CI_CLEANUP'
+    | 'CI_EXECUTE_STEP'
+    | 'AWS_S3_TASK'
+    | 'CUSTOM_MANIFEST_VALUES_FETCH_TASK'
+    | 'CUSTOM_MANIFEST_FETCH_TASK'
+    | 'GCP_TASK'
+    | 'VALIDATE_KUBERNETES_CONFIG'
+    | 'NG_GIT_COMMAND'
+    | 'NG_SSH_VALIDATION'
+    | 'NG_WINRM_VALIDATION'
+    | 'NG_HOST_CONNECTIVITY_TASK'
+    | 'DOCKER_CONNECTIVITY_TEST_TASK'
+    | 'NG_AWS_TASK'
+    | 'JIRA_TASK_NG'
+    | 'BUILD_STATUS'
+    | 'GIT_API_TASK'
+    | 'AWS_CODECOMMIT_API_TASK'
+    | 'JIRA_CONNECTIVITY_TASK_NG'
+    | 'K8_FETCH_NAMESPACES'
+    | 'K8_FETCH_WORKLOADS'
+    | 'K8_FETCH_EVENTS'
+    | 'NOTIFY_SLACK'
+    | 'NOTIFY_PAGERDUTY'
+    | 'NOTIFY_MAIL'
+    | 'NOTIFY_MICROSOFTTEAMS'
+    | 'HTTP_TASK_NG'
+    | 'SHELL_SCRIPT_TASK_NG'
+    | 'NG_NEXUS_TASK'
+    | 'NG_ARTIFACTORY_TASK'
+    | 'CE_VALIDATE_KUBERNETES_CONFIG'
+    | 'K8S_SERVICE_ACCOUNT_INFO'
+    | 'NG_AWS_CODE_COMMIT_TASK'
+    | 'HTTP_HELM_CONNECTIVITY_TASK'
+    | 'NG_DECRYT_GIT_API_ACCESS_TASK'
+    | 'TERRAFORM_TASK_NG'
+    | 'SCM_PUSH_TASK'
+    | 'SCM_PATH_FILTER_EVALUATION_TASK'
+    | 'SCM_GIT_REF_TASK'
+    | 'SCM_GIT_FILE_TASK'
+    | 'SCM_PULL_REQUEST_TASK'
+    | 'SCM_GIT_WEBHOOK_TASK'
+    | 'SERVICENOW_CONNECTIVITY_TASK_NG'
+    | 'SERVICENOW_TASK_NG'
+    | 'RANCHER_RESOLVE_CLUSTERS'
+    | 'NG_AZURE_TASK'
+    | 'CLOUDFORMATION_TASK_NG'
+    | 'ACR_ARTIFACT_TASK_NG'
+    | 'SERVERLESS_GIT_FETCH_TASK_NG'
+    | 'SERVERLESS_COMMAND_TASK'
+    | 'FETCH_S3_FILE_TASK_NG'
+    | 'OCI_HELM_CONNECTIVITY_TASK'
+    | 'AZURE_WEB_APP_TASK_NG'
+    | 'COMMAND_TASK_NG'
+    | 'VALIDATE_CUSTOM_SECRET_MANAGER_SECRET_REFERENCE'
+    | 'FETCH_CUSTOM_SECRET'
+    | 'RESOLVE_CUSTOM_SM_CONFIG'
+    | 'CI_DOCKER_INITIALIZE_TASK'
+    | 'CI_DOCKER_EXECUTE_TASK'
+    | 'CI_DOCKER_CLEANUP_TASK'
+    | 'NG_LDAP_TEST_USER_SETTINGS'
+    | 'NG_LDAP_TEST_GROUP_SETTINGS'
+    | 'DLITE_CI_VM_INITIALIZE_TASK'
+    | 'DLITE_CI_VM_EXECUTE_TASK'
+    | 'DLITE_CI_VM_CLEANUP_TASK'
+    | 'NG_LDAP_GROUPS_SYNC'
+    | 'AZURE_NG_ARM'
+    | 'NG_LDAP_TEST_AUTHENTICATION'
+    | 'ECS_GIT_FETCH_TASK_NG'
+    | 'ECS_COMMAND_TASK_NG'
+    | 'WIN_RM_SHELL_SCRIPT_TASK_NG'
+}
+
+export interface DelegateTaskResponseV2 {
+  code?: 'OK' | 'FAILED' | 'RETRY_ON_OTHER_DELEGATE'
+  data?: ResponseData
+  id?: string
+  type?:
+    | 'CUSTOM_MANIFEST_VALUES_FETCH_TASK_NG'
+    | 'GITOPS_TASK_NG'
+    | 'BATCH_CAPABILITY_CHECK'
+    | 'CAPABILITY_VALIDATION'
+    | 'COMMAND'
+    | 'SCRIPT'
+    | 'HTTP'
+    | 'GCB'
+    | 'JENKINS'
+    | 'JENKINS_COLLECTION'
+    | 'JENKINS_GET_BUILDS'
+    | 'JENKINS_GET_JOBS'
+    | 'JENKINS_GET_JOB'
+    | 'JENKINS_GET_ARTIFACT_PATHS'
+    | 'JENKINS_LAST_SUCCESSFUL_BUILD'
+    | 'JENKINS_GET_PLANS'
+    | 'JENKINS_VALIDATE_ARTIFACT_SERVER'
+    | 'JENKINS_CONNECTIVITY_TEST_TASK'
+    | 'BAMBOO'
+    | 'BAMBOO_COLLECTION'
+    | 'BAMBOO_GET_BUILDS'
+    | 'BAMBOO_GET_JOBS'
+    | 'BAMBOO_GET_ARTIFACT_PATHS'
+    | 'BAMBOO_LAST_SUCCESSFUL_BUILD'
+    | 'BAMBOO_GET_PLANS'
+    | 'BAMBOO_VALIDATE_ARTIFACT_SERVER'
+    | 'DOCKER_GET_BUILDS'
+    | 'DOCKER_GET_LABELS'
+    | 'DOCKER_VALIDATE_ARTIFACT_SERVER'
+    | 'DOCKER_VALIDATE_ARTIFACT_STREAM'
+    | 'DOCKER_GET_ARTIFACT_META_INFO'
+    | 'ECR_GET_BUILDS'
+    | 'ECR_VALIDATE_ARTIFACT_SERVER'
+    | 'ECR_GET_PLANS'
+    | 'ECR_GET_ARTIFACT_PATHS'
+    | 'ECR_VALIDATE_ARTIFACT_STREAM'
+    | 'ECR_GET_LABELS'
+    | 'GCR_GET_BUILDS'
+    | 'GCR_VALIDATE_ARTIFACT_STREAM'
+    | 'GCR_GET_PLANS'
+    | 'ECR_ARTIFACT_TASK_NG'
+    | 'ACR_GET_REGISTRIES'
+    | 'ACR_GET_REGISTRY_NAMES'
+    | 'ACR_GET_REPOSITORIES'
+    | 'ACR_GET_BUILDS'
+    | 'ACR_VALIDATE_ARTIFACT_STREAM'
+    | 'ACR_GET_PLANS'
+    | 'ACR_GET_ARTIFACT_PATHS'
+    | 'NEXUS_GET_JOBS'
+    | 'NEXUS_GET_PLANS'
+    | 'NEXUS_GET_ARTIFACT_PATHS'
+    | 'NEXUS_GET_GROUP_IDS'
+    | 'NEXUS_GET_BUILDS'
+    | 'NEXUS_LAST_SUCCESSFUL_BUILD'
+    | 'NEXUS_COLLECTION'
+    | 'NEXUS_VALIDATE_ARTIFACT_SERVER'
+    | 'NEXUS_VALIDATE_ARTIFACT_STREAM'
+    | 'GCS_GET_ARTIFACT_PATHS'
+    | 'GCS_GET_BUILDS'
+    | 'GCS_GET_BUCKETS'
+    | 'GCS_GET_PROJECT_ID'
+    | 'GCS_GET_PLANS'
+    | 'SFTP_GET_BUILDS'
+    | 'SFTP_GET_ARTIFACT_PATHS'
+    | 'SFTP_VALIDATE_ARTIFACT_SERVER'
+    | 'SMB_GET_BUILDS'
+    | 'SMB_GET_SMB_PATHS'
+    | 'SMB_VALIDATE_ARTIFACT_SERVER'
+    | 'AMAZON_S3_COLLECTION'
+    | 'AMAZON_S3_GET_ARTIFACT_PATHS'
+    | 'AMAZON_S3_LAST_SUCCESSFUL_BUILD'
+    | 'AMAZON_S3_GET_BUILDS'
+    | 'AMAZON_S3_GET_PLANS'
+    | 'AZURE_ARTIFACTS_VALIDATE_ARTIFACT_SERVER'
+    | 'AZURE_ARTIFACTS_VALIDATE_ARTIFACT_STREAM'
+    | 'AZURE_ARTIFACTS_GET_BUILDS'
+    | 'AZURE_ARTIFACTS_GET_PROJECTS'
+    | 'AZURE_ARTIFACTS_GET_FEEDS'
+    | 'AZURE_ARTIFACTS_GET_PACKAGES'
+    | 'AZURE_ARTIFACTS_COLLECTION'
+    | 'AZURE_GET_SUBSCRIPTIONS'
+    | 'AZURE_MACHINE_IMAGE_GET_IMAGE_GALLERIES'
+    | 'AZURE_MACHINE_IMAGE_GET_IMAGE_DEFINITIONS'
+    | 'AZURE_MACHINE_IMAGE_VALIDATE_ARTIFACT_SERVER'
+    | 'AZURE_MACHINE_IMAGE_GET_RESOURCE_GROUPS'
+    | 'AZURE_MACHINE_IMAGE_GET_BUILDS'
+    | 'AZURE_VMSS_COMMAND_TASK'
+    | 'AZURE_APP_SERVICE_TASK'
+    | 'AZURE_ARM_TASK'
+    | 'AZURE_RESOURCE_TASK'
+    | 'LDAP_TEST_CONN_SETTINGS'
+    | 'LDAP_TEST_USER_SETTINGS'
+    | 'LDAP_TEST_GROUP_SETTINGS'
+    | 'LDAP_VALIDATE_SETTINGS'
+    | 'LDAP_AUTHENTICATION'
+    | 'LDAP_SEARCH_GROUPS'
+    | 'LDAP_FETCH_GROUP'
+    | 'NG_LDAP_SEARCH_GROUPS'
+    | 'NG_LDAP_TEST_CONN_SETTINGS'
+    | 'APM_VALIDATE_CONNECTOR_TASK'
+    | 'CUSTOM_LOG_VALIDATE_CONNECTOR_TASK'
+    | 'APM_GET_TASK'
+    | 'APPDYNAMICS_CONFIGURATION_VALIDATE_TASK'
+    | 'CVNG_CONNECTOR_VALIDATE_TASK'
+    | 'GET_DATA_COLLECTION_RESULT'
+    | 'APPDYNAMICS_GET_APP_TASK'
+    | 'APPDYNAMICS_GET_APP_TASK_NG'
+    | 'APPDYNAMICS_GET_TIER_TASK'
+    | 'APPDYNAMICS_GET_TIER_TASK_NG'
+    | 'APPDYNAMICS_GET_TIER_MAP'
+    | 'APPDYNAMICS_COLLECT_METRIC_DATA'
+    | 'APPDYNAMICS_COLLECT_METRIC_DATA_V2'
+    | 'APPDYNAMICS_COLLECT_24_7_METRIC_DATA'
+    | 'APPDYNAMICS_METRIC_DATA_FOR_NODE'
+    | 'INSTANA_GET_INFRA_METRICS'
+    | 'INSTANA_GET_TRACE_METRICS'
+    | 'INSTANA_COLLECT_METRIC_DATA'
+    | 'INSTANA_VALIDATE_CONFIGURATION_TASK'
+    | 'NEWRELIC_VALIDATE_CONFIGURATION_TASK'
+    | 'BUGSNAG_GET_APP_TASK'
+    | 'BUGSNAG_GET_RECORDS'
+    | 'CUSTOM_COLLECT_24_7_LOG_DATA'
+    | 'CUSTOM_APM_COLLECT_METRICS_V2'
+    | 'NEWRELIC_GET_APP_TASK'
+    | 'NEWRELIC_RESOLVE_APP_TASK'
+    | 'NEWRELIC_RESOLVE_APP_ID_TASK'
+    | 'NEWRELIC_GET_APP_INSTANCES_TASK'
+    | 'NEWRELIC_COLLECT_METRIC_DATA'
+    | 'NEWRELIC_COLLECT_METRIC_DATAV2'
+    | 'NEWRELIC_COLLECT_24_7_METRIC_DATA'
+    | 'NEWRELIC_GET_TXNS_WITH_DATA'
+    | 'NEWRELIC_GET_TXNS_WITH_DATA_FOR_NODE'
+    | 'NEWRELIC_POST_DEPLOYMENT_MARKER'
+    | 'STACKDRIVER_COLLECT_METRIC_DATA'
+    | 'STACKDRIVER_METRIC_DATA_FOR_NODE'
+    | 'STACKDRIVER_LOG_DATA_FOR_NODE'
+    | 'STACKDRIVER_LIST_REGIONS'
+    | 'STACKDRIVER_LIST_FORWARDING_RULES'
+    | 'STACKDRIVER_GET_LOG_SAMPLE'
+    | 'STACKDRIVER_COLLECT_24_7_METRIC_DATA'
+    | 'STACKDRIVER_COLLECT_LOG_DATA'
+    | 'STACKDRIVER_COLLECT_24_7_LOG_DATA'
+    | 'SPLUNK'
+    | 'SPLUNK_CONFIGURATION_VALIDATE_TASK'
+    | 'SPLUNK_GET_HOST_RECORDS'
+    | 'SPLUNK_NG_GET_SAVED_SEARCHES'
+    | 'SPLUNK_NG_VALIDATION_RESPONSE_TASK'
+    | 'SPLUNK_COLLECT_LOG_DATAV2'
+    | 'ELK_COLLECT_LOG_DATAV2'
+    | 'DATA_COLLECTION_NEXT_GEN_VALIDATION'
+    | 'SUMO_COLLECT_LOG_DATA'
+    | 'SUMO_VALIDATE_CONFIGURATION_TASK'
+    | 'SUMO_GET_HOST_RECORDS'
+    | 'SUMO_GET_LOG_DATA_BY_HOST'
+    | 'SUMO_COLLECT_24_7_LOG_DATA'
+    | 'ELK_CONFIGURATION_VALIDATE_TASK'
+    | 'ELK_COLLECT_LOG_DATA'
+    | 'ELK_COLLECT_INDICES'
+    | 'ELK_GET_LOG_SAMPLE'
+    | 'ELK_GET_HOST_RECORDS'
+    | 'KIBANA_GET_VERSION'
+    | 'ELK_COLLECT_24_7_LOG_DATA'
+    | 'LOGZ_CONFIGURATION_VALIDATE_TASK'
+    | 'LOGZ_COLLECT_LOG_DATA'
+    | 'LOGZ_GET_LOG_SAMPLE'
+    | 'LOGZ_GET_HOST_RECORDS'
+    | 'ARTIFACTORY_GET_BUILDS'
+    | 'ARTIFACTORY_GET_LABELS'
+    | 'ARTIFACTORY_GET_JOBS'
+    | 'ARTIFACTORY_GET_PLANS'
+    | 'ARTIFACTORY_GET_ARTIFACTORY_PATHS'
+    | 'ARTIFACTORY_GET_GROUP_IDS'
+    | 'ARTIFACTORY_LAST_SUCCSSFUL_BUILD'
+    | 'ARTIFACTORY_COLLECTION'
+    | 'ARTIFACTORY_VALIDATE_ARTIFACT_SERVER'
+    | 'ARTIFACTORY_VALIDATE_ARTIFACT_STREAM'
+    | 'VAULT_GET_CHANGELOG'
+    | 'VAULT_RENEW_TOKEN'
+    | 'VAULT_LIST_ENGINES'
+    | 'VAULT_APPROLE_LOGIN'
+    | 'SSH_SECRET_ENGINE_AUTH'
+    | 'VAULT_SIGN_PUBLIC_KEY_SSH'
+    | 'SECRET_DECRYPT'
+    | 'BATCH_SECRET_DECRYPT'
+    | 'SECRET_DECRYPT_REF'
+    | 'DELETE_SECRET'
+    | 'VALIDATE_SECRET_REFERENCE'
+    | 'UPSERT_SECRET'
+    | 'FETCH_SECRET'
+    | 'ENCRYPT_SECRET'
+    | 'VALIDATE_SECRET_MANAGER_CONFIGURATION'
+    | 'NG_VAULT_RENEW_TOKEN'
+    | 'NG_VAULT_RENEW_APP_ROLE_TOKEN'
+    | 'NG_VAULT_FETCHING_TASK'
+    | 'NG_AZURE_VAULT_FETCH_ENGINES'
+    | 'HOST_VALIDATION'
+    | 'CONTAINER_ACTIVE_SERVICE_COUNTS'
+    | 'CONTAINER_INFO'
+    | 'CONTROLLER_NAMES_WITH_LABELS'
+    | 'AMI_GET_BUILDS'
+    | 'CONTAINER_CE_VALIDATION'
+    | 'CE_DELEGATE_VALIDATION'
+    | 'CONTAINER_CONNECTION_VALIDATION'
+    | 'LIST_CLUSTERS'
+    | 'CONTAINER_VALIDATION'
+    | 'FETCH_MASTER_URL'
+    | 'DYNA_TRACE_VALIDATE_CONFIGURATION_TASK'
+    | 'DYNA_TRACE_METRIC_DATA_COLLECTION_TASK'
+    | 'DYNA_TRACE_GET_TXNS_WITH_DATA_FOR_NODE'
+    | 'DYNA_TRACE_GET_SERVICES'
+    | 'DYNATRACE_COLLECT_24_7_METRIC_DATA'
+    | 'HELM_COMMAND_TASK'
+    | 'HELM_COMMAND_TASK_NG'
+    | 'KUBERNETES_STEADY_STATE_CHECK_TASK'
+    | 'PCF_COMMAND_TASK'
+    | 'SPOTINST_COMMAND_TASK'
+    | 'ECS_COMMAND_TASK'
+    | 'COLLABORATION_PROVIDER_TASK'
+    | 'PROMETHEUS_METRIC_DATA_PER_HOST'
+    | 'CLOUD_WATCH_COLLECT_METRIC_DATA'
+    | 'CLOUD_WATCH_METRIC_DATA_FOR_NODE'
+    | 'CLOUD_WATCH_GENERIC_METRIC_STATISTICS'
+    | 'CLOUD_WATCH_GENERIC_METRIC_DATA'
+    | 'CLOUD_WATCH_COLLECT_24_7_METRIC_DATA'
+    | 'APM_METRIC_DATA_COLLECTION_TASK'
+    | 'APM_24_7_METRIC_DATA_COLLECTION_TASK'
+    | 'CUSTOM_LOG_COLLECTION_TASK'
+    | 'CLOUD_FORMATION_TASK'
+    | 'FETCH_S3_FILE_TASK'
+    | 'TERRAFORM_PROVISION_TASK'
+    | 'TERRAFORM_INPUT_VARIABLES_OBTAIN_TASK'
+    | 'TERRAFORM_FETCH_TARGETS_TASK'
+    | 'TERRAGRUNT_PROVISION_TASK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS_TASK'
+    | 'ECS_STEADY_STATE_CHECK_TASK'
+    | 'AWS_ECR_TASK'
+    | 'AWS_ELB_TASK'
+    | 'AWS_ECS_TASK'
+    | 'AWS_IAM_TASK'
+    | 'AWS_EC2_TASK'
+    | 'AWS_ASG_TASK'
+    | 'AWS_CODE_DEPLOY_TASK'
+    | 'AWS_LAMBDA_TASK'
+    | 'AWS_AMI_ASYNC_TASK'
+    | 'AWS_CF_TASK'
+    | 'K8S_COMMAND_TASK'
+    | 'K8S_COMMAND_TASK_NG'
+    | 'K8S_WATCH_TASK'
+    | 'TRIGGER_TASK'
+    | 'WEBHOOK_TRIGGER_TASK'
+    | 'JIRA'
+    | 'CONNECTIVITY_VALIDATION'
+    | 'GIT_COMMAND'
+    | 'GIT_FETCH_FILES_TASK'
+    | 'GIT_FETCH_NEXT_GEN_TASK'
+    | 'BUILD_SOURCE_TASK'
+    | 'DOCKER_ARTIFACT_TASK_NG'
+    | 'GOOGLE_ARTIFACT_REGISTRY_TASK_NG'
+    | 'JENKINS_ARTIFACT_TASK_NG'
+    | 'GCR_ARTIFACT_TASK_NG'
+    | 'NEXUS_ARTIFACT_TASK_NG'
+    | 'ARTIFACTORY_ARTIFACT_TASK_NG'
+    | 'AMAZON_S3_ARTIFACT_TASK_NG'
+    | 'GITHUB_PACKAGES_TASK_NG'
+    | 'AWS_ROUTE53_TASK'
+    | 'SHELL_SCRIPT_APPROVAL'
+    | 'CUSTOM_GET_BUILDS'
+    | 'CUSTOM_VALIDATE_ARTIFACT_STREAM'
+    | 'CUSTOM_ARTIFACT_NG'
+    | 'SHELL_SCRIPT_PROVISION_TASK'
+    | 'SERVICENOW_ASYNC'
+    | 'SERVICENOW_SYNC'
+    | 'SERVICENOW_VALIDATION'
+    | 'HELM_REPO_CONFIG_VALIDATION'
+    | 'HELM_VALUES_FETCH'
+    | 'HELM_VALUES_FETCH_NG'
+    | 'HELM_COLLECT_CHART'
+    | 'SLACK'
+    | 'INITIALIZATION_PHASE'
+    | 'CI_LE_STATUS'
+    | 'EXECUTE_COMMAND'
+    | 'CI_CLEANUP'
+    | 'CI_EXECUTE_STEP'
+    | 'AWS_S3_TASK'
+    | 'CUSTOM_MANIFEST_VALUES_FETCH_TASK'
+    | 'CUSTOM_MANIFEST_FETCH_TASK'
+    | 'GCP_TASK'
+    | 'VALIDATE_KUBERNETES_CONFIG'
+    | 'NG_GIT_COMMAND'
+    | 'NG_SSH_VALIDATION'
+    | 'NG_WINRM_VALIDATION'
+    | 'NG_HOST_CONNECTIVITY_TASK'
+    | 'DOCKER_CONNECTIVITY_TEST_TASK'
+    | 'NG_AWS_TASK'
+    | 'JIRA_TASK_NG'
+    | 'BUILD_STATUS'
+    | 'GIT_API_TASK'
+    | 'AWS_CODECOMMIT_API_TASK'
+    | 'JIRA_CONNECTIVITY_TASK_NG'
+    | 'K8_FETCH_NAMESPACES'
+    | 'K8_FETCH_WORKLOADS'
+    | 'K8_FETCH_EVENTS'
+    | 'NOTIFY_SLACK'
+    | 'NOTIFY_PAGERDUTY'
+    | 'NOTIFY_MAIL'
+    | 'NOTIFY_MICROSOFTTEAMS'
+    | 'HTTP_TASK_NG'
+    | 'SHELL_SCRIPT_TASK_NG'
+    | 'NG_NEXUS_TASK'
+    | 'NG_ARTIFACTORY_TASK'
+    | 'CE_VALIDATE_KUBERNETES_CONFIG'
+    | 'K8S_SERVICE_ACCOUNT_INFO'
+    | 'NG_AWS_CODE_COMMIT_TASK'
+    | 'HTTP_HELM_CONNECTIVITY_TASK'
+    | 'NG_DECRYT_GIT_API_ACCESS_TASK'
+    | 'TERRAFORM_TASK_NG'
+    | 'SCM_PUSH_TASK'
+    | 'SCM_PATH_FILTER_EVALUATION_TASK'
+    | 'SCM_GIT_REF_TASK'
+    | 'SCM_GIT_FILE_TASK'
+    | 'SCM_PULL_REQUEST_TASK'
+    | 'SCM_GIT_WEBHOOK_TASK'
+    | 'SERVICENOW_CONNECTIVITY_TASK_NG'
+    | 'SERVICENOW_TASK_NG'
+    | 'RANCHER_RESOLVE_CLUSTERS'
+    | 'NG_AZURE_TASK'
+    | 'CLOUDFORMATION_TASK_NG'
+    | 'ACR_ARTIFACT_TASK_NG'
+    | 'SERVERLESS_GIT_FETCH_TASK_NG'
+    | 'SERVERLESS_COMMAND_TASK'
+    | 'FETCH_S3_FILE_TASK_NG'
+    | 'OCI_HELM_CONNECTIVITY_TASK'
+    | 'AZURE_WEB_APP_TASK_NG'
+    | 'COMMAND_TASK_NG'
+    | 'VALIDATE_CUSTOM_SECRET_MANAGER_SECRET_REFERENCE'
+    | 'FETCH_CUSTOM_SECRET'
+    | 'RESOLVE_CUSTOM_SM_CONFIG'
+    | 'CI_DOCKER_INITIALIZE_TASK'
+    | 'CI_DOCKER_EXECUTE_TASK'
+    | 'CI_DOCKER_CLEANUP_TASK'
+    | 'NG_LDAP_TEST_USER_SETTINGS'
+    | 'NG_LDAP_TEST_GROUP_SETTINGS'
+    | 'DLITE_CI_VM_INITIALIZE_TASK'
+    | 'DLITE_CI_VM_EXECUTE_TASK'
+    | 'DLITE_CI_VM_CLEANUP_TASK'
+    | 'NG_LDAP_GROUPS_SYNC'
+    | 'AZURE_NG_ARM'
+    | 'NG_LDAP_TEST_AUTHENTICATION'
+    | 'ECS_GIT_FETCH_TASK_NG'
+    | 'ECS_COMMAND_TASK_NG'
+    | 'WIN_RM_SHELL_SCRIPT_TASK_NG'
 }
 
 export interface DelegateTokenDetails {
@@ -5273,6 +6739,8 @@ export interface DelegateUnregisterRequest {
   hostName?: string
   ipAddress?: string
   ng?: boolean
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface DeploymentFreezeInfo {
@@ -5359,6 +6827,22 @@ export interface DeploymentTimeSeriesAnalysis {
   total?: number
 }
 
+export interface Descriptor {
+  containingType?: Descriptor
+  enumTypes?: EnumDescriptor[]
+  extendable?: boolean
+  extensions?: FieldDescriptor[]
+  fields?: FieldDescriptor[]
+  file?: FileDescriptor
+  fullName?: string
+  index?: number
+  name?: string
+  nestedTypes?: Descriptor[]
+  oneofs?: OneofDescriptor[]
+  options?: MessageOptions
+  realOneofs?: OneofDescriptor[]
+}
+
 export type DirectKubernetesCluster = Cluster & {}
 
 export type DirectKubernetesInfrastructure = InfraMappingInfrastructureProvider & {
@@ -5397,6 +6881,7 @@ export type DockerConnectorDTO = ConnectorConfigDTO & {
   auth?: DockerAuthenticationDTO
   delegateSelectors?: string[]
   dockerRegistryUrl: string
+  executeOnDelegate?: boolean
   providerType: 'DockerHub' | 'Harbor' | 'Quay' | 'Other'
 }
 
@@ -5432,51 +6917,11 @@ export interface DynaTraceSetupTestNodeData {
   serviceMethods?: string
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -5487,12 +6932,6 @@ export interface DynaTraceSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -5503,10 +6942,22 @@ export interface DynaTraceSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -5516,53 +6967,19 @@ export interface DynaTraceSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -5570,11 +6987,81 @@ export interface DynaTraceSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   toTime?: number
   workflowId?: string
 }
@@ -5583,6 +7070,16 @@ export type DynatraceConnectorDTO = ConnectorConfigDTO & {
   apiTokenRef: string
   delegateSelectors?: string[]
   url: string
+}
+
+export type ELKConnectorDTO = ConnectorConfigDTO & {
+  apiKeyId?: string
+  apiKeyRef?: string
+  authType?: 'UsernamePassword' | 'ApiClientToken' | 'None'
+  delegateSelectors?: string[]
+  passwordRef?: string
+  url: string
+  username?: string
 }
 
 export interface EbsInstanceBlockDevice {
@@ -5717,51 +7214,11 @@ export interface ElkSetupTestNodeData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -5772,12 +7229,6 @@ export interface ElkSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -5788,10 +7239,22 @@ export interface ElkSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -5801,53 +7264,19 @@ export interface ElkSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -5855,11 +7284,81 @@ export interface ElkSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   timeStampField?: string
   timeStampFieldFormat?: string
   toTime?: number
@@ -5868,6 +7367,7 @@ export interface ElkSetupTestNodeData {
 
 export interface EmbeddedUser {
   email?: string
+  externalUserId?: string
   name?: string
   uuid?: string
 }
@@ -5940,7 +7440,6 @@ export interface EncryptableSetting {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -5958,8 +7457,10 @@ export interface EncryptableSetting {
     | 'KUBERNETES_CLUSTER_NG'
     | 'GIT_NG'
     | 'SSO_SAML'
+    | 'LDAP'
     | 'GCP_SECRETS_MANAGER'
     | 'TRIGGER'
+    | 'OCI_HELM_REPO'
 }
 
 export interface EncryptedData {
@@ -5974,11 +7475,11 @@ export interface EncryptedData {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   backupKmsId?: string
   base64Encoded?: boolean
   changeLog?: number
@@ -5994,11 +7495,11 @@ export interface EncryptedData {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   envIds?: string[]
   fileSize?: number
   hideFromListing?: boolean
@@ -6013,7 +7514,6 @@ export interface EncryptedData {
   nextAwsToGcpKmsMigrationIteration?: number
   nextLocalToGcpKmsMigrationIteration?: number
   nextMigrationIteration?: number
-  ngMetadata?: NGEncryptedDataMetadata
   parameterizedSecret?: boolean
   parameters?: EncryptedDataParams[]
   parents?: EncryptedDataParent[]
@@ -6083,7 +7583,6 @@ export interface EncryptedData {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -6101,8 +7600,10 @@ export interface EncryptedData {
     | 'KUBERNETES_CLUSTER_NG'
     | 'GIT_NG'
     | 'SSO_SAML'
+    | 'LDAP'
     | 'GCP_SECRETS_MANAGER'
     | 'TRIGGER'
+    | 'OCI_HELM_REPO'
   usageRestrictions?: UsageRestrictions
   uuid: string
 }
@@ -6178,7 +7679,6 @@ export interface EncryptedDataParent {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -6196,8 +7696,10 @@ export interface EncryptedDataParent {
     | 'KUBERNETES_CLUSTER_NG'
     | 'GIT_NG'
     | 'SSO_SAML'
+    | 'LDAP'
     | 'GCP_SECRETS_MANAGER'
     | 'TRIGGER'
+    | 'OCI_HELM_REPO'
 }
 
 export interface EncryptedRecord {
@@ -6210,11 +7712,11 @@ export interface EncryptedRecord {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   backupKmsId?: string
   base64Encoded?: boolean
   encryptedValue?: string[]
@@ -6225,11 +7727,11 @@ export interface EncryptedRecord {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   kmsId?: string
   name?: string
   parameters?: EncryptedDataParams[]
@@ -6247,11 +7749,11 @@ export interface EncryptedRecordData {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   backupKmsId?: string
   base64Encoded?: boolean
   encryptedValue?: string[]
@@ -6262,11 +7764,11 @@ export interface EncryptedRecordData {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   kmsId?: string
   name?: string
   parameters?: EncryptedDataParams[]
@@ -6284,11 +7786,11 @@ export interface EncryptionConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   globalKms?: boolean
   name?: string
   numOfEncryptedValue?: number
@@ -6314,6 +7816,11 @@ export interface EntityAuditRecord {
   operationType?: string
   yamlError?: string
   yamlPath?: string
+}
+
+export interface EntityInformation {
+  fileContent?: string
+  filePath?: string
 }
 
 export interface EntityReference {
@@ -6544,6 +8051,67 @@ export interface EntityVersionCollection {
   version?: number
 }
 
+export interface EnumDescriptor {
+  containingType?: Descriptor
+  file?: FileDescriptor
+  fullName?: string
+  index?: number
+  name?: string
+  options?: EnumOptions
+  values?: EnumValueDescriptor[]
+}
+
+export interface EnumOptions {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  allFieldsRaw?: {
+    [key: string]: { [key: string]: any }
+  }
+  allowAlias?: boolean
+  defaultInstanceForType?: EnumOptions
+  deprecated?: boolean
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserEnumOptions
+  serializedSize?: number
+  uninterpretedOptionCount?: number
+  uninterpretedOptionList?: UninterpretedOption[]
+  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
+  unknownFields?: UnknownFieldSet
+}
+
+export interface EnumValueDescriptor {
+  file?: FileDescriptor
+  fullName?: string
+  index?: number
+  name?: string
+  number?: number
+  options?: EnumValueOptions
+  type?: EnumDescriptor
+}
+
+export interface EnumValueOptions {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  allFieldsRaw?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: EnumValueOptions
+  deprecated?: boolean
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserEnumValueOptions
+  serializedSize?: number
+  uninterpretedOptionCount?: number
+  uninterpretedOptionList?: UninterpretedOption[]
+  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
+  unknownFields?: UnknownFieldSet
+}
+
 export interface EnvFilter {
   filterTypes?: string[]
   ids?: string[]
@@ -6604,6 +8172,7 @@ export interface EnvironmentRole {
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
       | 'DEFAULT'
+      | 'ABORT_WORKFLOW'
   }
 }
 
@@ -6624,6 +8193,12 @@ export type ErrorTrackingConnectorDTO = ConnectorConfigDTO & {
   apiKeyRef: string
   delegateSelectors?: string[]
   url: string
+}
+
+export type ExecutableElementsFilter = Filter & {
+  executableElementFilterType?: string
+  filter?: GenericEntityFilter
+  filterTypes?: string[]
 }
 
 export interface ExecutionArgs {
@@ -6659,7 +8234,6 @@ export interface ExecutionArgs {
   serviceInstances?: ServiceInstance[]
   stageName?: string
   targetToSpecificHosts?: boolean
-  triggeredBy?: EmbeddedUser
   triggeredFromPipeline?: boolean
   triggeringApiKeyId?: string
   workflowType?: 'PIPELINE' | 'ORCHESTRATION'
@@ -6669,6 +8243,7 @@ export interface ExecutionArgs {
 }
 
 export interface ExecutionCapability {
+  capabilityToString?: string
   capabilityType?:
     | 'SOCKET'
     | 'SOCKET_BULK_OR'
@@ -6700,6 +8275,10 @@ export interface ExecutionCapability {
     | 'LITE_ENGINE'
     | 'CI_VM'
     | 'ARTIFACTORY'
+    | 'SERVERLESS_INSTALL'
+    | 'OCI_HELM_REPO'
+    | 'AWS_CLI_INSTALL'
+    | 'NG_WINRM_HOST_CONNECTION'
   maxValidityPeriod?: Duration
   periodUntilNextValidation?: Duration
 }
@@ -6744,6 +8323,8 @@ export interface ExecutionInterrupt {
     | 'MARK_EXPIRED'
     | 'CONTINUE_WITH_DEFAULTS'
     | 'CONTINUE_PIPELINE_STAGE'
+    | 'ROLLBACK_ON_APPROVAL'
+    | 'ROLLBACK_PROVISIONER_AFTER_PHASES_ON_APPROVAL'
   executionUuid: string
   lastUpdatedAt: number
   lastUpdatedBy?: EmbeddedUser
@@ -6897,6 +8478,7 @@ export interface ExpAnalysisInfo {
     | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'CLOUD_FORMATION_ROLLBACK_STACK'
     | 'TERRAFORM_ROLLBACK'
+    | 'COLLECT_REMAINING_INSTANCES'
     | 'K8S_DEPLOYMENT_ROLLING'
     | 'K8S_SCALE'
     | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
@@ -6915,6 +8497,7 @@ export interface ExpAnalysisInfo {
     | 'K8S_TRAFFIC_SPLIT'
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
   workflowExecutionId?: string
 }
 
@@ -7112,6 +8695,7 @@ export interface ExperimentalMetricRecord {
     | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'CLOUD_FORMATION_ROLLBACK_STACK'
     | 'TERRAFORM_ROLLBACK'
+    | 'COLLECT_REMAINING_INSTANCES'
     | 'K8S_DEPLOYMENT_ROLLING'
     | 'K8S_SCALE'
     | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
@@ -7130,6 +8714,7 @@ export interface ExperimentalMetricRecord {
     | 'K8S_TRAFFIC_SPLIT'
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
   workflowExecutionId?: string
 }
 
@@ -7182,6 +8767,8 @@ export interface FailureStrategy {
     | 'MARK_EXPIRED'
     | 'CONTINUE_WITH_DEFAULTS'
     | 'CONTINUE_PIPELINE_STAGE'
+    | 'ROLLBACK_ON_APPROVAL'
+    | 'ROLLBACK_PROVISIONER_AFTER_PHASES_ON_APPROVAL'
   executionScope?: 'WORKFLOW' | 'WORKFLOW_PHASE'
   failureCriteria?: FailureCriteria
   failureTypes: (
@@ -7194,6 +8781,7 @@ export interface FailureStrategy {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   manualInterventionTimeout?: number
   repairActionCode?:
@@ -7241,11 +8829,164 @@ export interface FeaturesUsageComplianceReport {
   targetAccountType?: string
 }
 
+export interface FieldDescriptor {
+  containingOneof?: OneofDescriptor
+  containingType?: Descriptor
+  defaultValue?: { [key: string]: any }
+  enumType?: EnumDescriptor
+  extension?: boolean
+  extensionScope?: Descriptor
+  file?: FileDescriptor
+  fullName?: string
+  index?: number
+  javaType?: 'INT' | 'LONG' | 'FLOAT' | 'DOUBLE' | 'BOOLEAN' | 'STRING' | 'BYTE_STRING' | 'ENUM' | 'MESSAGE'
+  jsonName?: string
+  liteJavaType?: 'INT' | 'LONG' | 'FLOAT' | 'DOUBLE' | 'BOOLEAN' | 'STRING' | 'BYTE_STRING' | 'ENUM' | 'MESSAGE'
+  liteType?:
+    | 'DOUBLE'
+    | 'FLOAT'
+    | 'INT64'
+    | 'UINT64'
+    | 'INT32'
+    | 'FIXED64'
+    | 'FIXED32'
+    | 'BOOL'
+    | 'STRING'
+    | 'GROUP'
+    | 'MESSAGE'
+    | 'BYTES'
+    | 'UINT32'
+    | 'ENUM'
+    | 'SFIXED32'
+    | 'SFIXED64'
+    | 'SINT32'
+    | 'SINT64'
+  mapField?: boolean
+  messageType?: Descriptor
+  name?: string
+  number?: number
+  optional?: boolean
+  options?: FieldOptions
+  packable?: boolean
+  packed?: boolean
+  realContainingOneof?: OneofDescriptor
+  repeated?: boolean
+  required?: boolean
+  type?:
+    | 'DOUBLE'
+    | 'FLOAT'
+    | 'INT64'
+    | 'UINT64'
+    | 'INT32'
+    | 'FIXED64'
+    | 'FIXED32'
+    | 'BOOL'
+    | 'STRING'
+    | 'GROUP'
+    | 'MESSAGE'
+    | 'BYTES'
+    | 'UINT32'
+    | 'ENUM'
+    | 'SFIXED32'
+    | 'SFIXED64'
+    | 'SINT32'
+    | 'SINT64'
+}
+
+export interface FieldOptions {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  allFieldsRaw?: {
+    [key: string]: { [key: string]: any }
+  }
+  ctype?: 'STRING' | 'CORD' | 'STRING_PIECE'
+  defaultInstanceForType?: FieldOptions
+  deprecated?: boolean
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  jstype?: 'JS_NORMAL' | 'JS_STRING' | 'JS_NUMBER'
+  lazy?: boolean
+  packed?: boolean
+  parserForType?: ParserFieldOptions
+  serializedSize?: number
+  uninterpretedOptionCount?: number
+  uninterpretedOptionList?: UninterpretedOption[]
+  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
+  unknownFields?: UnknownFieldSet
+  weak?: boolean
+}
+
+export interface FileDescriptor {
+  dependencies?: FileDescriptor[]
+  enumTypes?: EnumDescriptor[]
+  extensions?: FieldDescriptor[]
+  file?: FileDescriptor
+  fullName?: string
+  messageTypes?: Descriptor[]
+  name?: string
+  options?: FileOptions
+  package?: string
+  publicDependencies?: FileDescriptor[]
+  services?: ServiceDescriptor[]
+  syntax?: 'UNKNOWN' | 'PROTO2' | 'PROTO3'
+}
+
 export interface FileOperationStatus {
   entityId?: string
   errorMssg?: string
   status?: 'FAILED' | 'SUCCESS' | 'SKIPPED'
   yamlFilePath?: string
+}
+
+export interface FileOptions {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  allFieldsRaw?: {
+    [key: string]: { [key: string]: any }
+  }
+  ccEnableArenas?: boolean
+  ccGenericServices?: boolean
+  csharpNamespace?: string
+  csharpNamespaceBytes?: ByteString
+  defaultInstanceForType?: FileOptions
+  deprecated?: boolean
+  descriptorForType?: Descriptor
+  goPackage?: string
+  goPackageBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  javaGenerateEqualsAndHash?: boolean
+  javaGenericServices?: boolean
+  javaMultipleFiles?: boolean
+  javaOuterClassname?: string
+  javaOuterClassnameBytes?: ByteString
+  javaPackage?: string
+  javaPackageBytes?: ByteString
+  javaStringCheckUtf8?: boolean
+  objcClassPrefix?: string
+  objcClassPrefixBytes?: ByteString
+  optimizeFor?: 'SPEED' | 'CODE_SIZE' | 'LITE_RUNTIME'
+  parserForType?: ParserFileOptions
+  phpClassPrefix?: string
+  phpClassPrefixBytes?: ByteString
+  phpGenericServices?: boolean
+  phpMetadataNamespace?: string
+  phpMetadataNamespaceBytes?: ByteString
+  phpNamespace?: string
+  phpNamespaceBytes?: ByteString
+  pyGenericServices?: boolean
+  rubyPackage?: string
+  rubyPackageBytes?: ByteString
+  serializedSize?: number
+  swiftPrefix?: string
+  swiftPrefixBytes?: ByteString
+  uninterpretedOptionCount?: number
+  uninterpretedOptionList?: UninterpretedOption[]
+  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
+  unknownFields?: UnknownFieldSet
 }
 
 export interface Filter {
@@ -7293,8 +9034,9 @@ export type GcpCloudCostConnector = ConnectorConfigDTO & {
 }
 
 export type GcpConnector = ConnectorConfigDTO & {
-  credential?: GcpConnectorCredential
+  credential: GcpConnectorCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface GcpConnectorCredential {
@@ -7310,10 +9052,10 @@ export type GcpKmsConnectorDTO = ConnectorConfigDTO & {
   credentials: string
   default?: boolean
   delegateSelectors?: string[]
-  keyName?: string
-  keyRing?: string
-  projectId?: string
-  region?: string
+  keyName: string
+  keyRing: string
+  projectId: string
+  region: string
 }
 
 export type GcpKubernetesCluster = Cluster & {}
@@ -7349,7 +9091,7 @@ export interface GitAuthenticationDTO {
 
 export type GitConfigDTO = ConnectorConfigDTO & {
   branchName?: string
-  connectionType: 'Account' | 'Repo'
+  connectionType: 'Account' | 'Repo' | 'Project'
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
   spec: GitAuthenticationDTO
@@ -7464,7 +9206,7 @@ export interface GitFileActivity {
   appId?: string
   branchName?: string
   changeFromAnotherCommit?: boolean
-  changeType?: 'ADD' | 'RENAME' | 'MODIFY' | 'DELETE' | 'NONE'
+  changeType?: 'ADD' | 'RENAME' | 'MODIFY' | 'DELETE' | 'NONE' | 'ADD_V2' | 'UPDATE_V2'
   commitId?: string
   commitMessage?: string
   connectorName?: string
@@ -7482,6 +9224,7 @@ export interface GitFileActivity {
   triggeredBy?: 'USER' | 'GIT' | 'FULL_SYNC'
   userDoesNotHavePermForFile?: boolean
   uuid?: string
+  validUntil?: string
 }
 
 export interface GitFileActivitySummary {
@@ -7500,6 +9243,7 @@ export interface GitFileActivitySummary {
   repositoryName?: string
   status?: 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'COMPLETED_WITH_ERRORS' | 'SKIPPED'
   uuid: string
+  validUntil?: string
 }
 
 export interface GitFileConfig {
@@ -7575,6 +9319,7 @@ export interface GitSyncError {
   status?: 'ACTIVE' | 'DISCARDED' | 'EXPIRED' | 'RESOLVED' | 'OVERRIDDEN'
   userDoesNotHavePermForFile?: boolean
   uuid: string
+  validUntil?: string
   yamlContent?: string
   yamlFilePath?: string
   yamlGitConfigId?: string
@@ -7611,7 +9356,7 @@ export interface GitToHarnessErrorCommitStats {
 
 export interface GithubApiAccess {
   spec?: GithubApiAccessSpecDTO
-  type: 'GithubApp' | 'Token'
+  type: 'GithubApp' | 'Token' | 'OAuth'
 }
 
 export interface GithubApiAccessSpecDTO {
@@ -7634,7 +9379,7 @@ export type GithubConnector = ConnectorConfigDTO & {
   authentication: GithubAuthentication
   delegateSelectors?: string[]
   executeOnDelegate?: boolean
-  type: 'Account' | 'Repo'
+  type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
 }
@@ -7645,11 +9390,15 @@ export interface GithubCredentialsDTO {
 
 export type GithubHttpCredentials = GithubCredentialsDTO & {
   spec: GithubHttpCredentialsSpecDTO
-  type: 'UsernamePassword' | 'UsernameToken'
+  type: 'UsernamePassword' | 'UsernameToken' | 'OAuth'
 }
 
 export interface GithubHttpCredentialsSpecDTO {
   [key: string]: any
+}
+
+export type GithubOauth = GithubHttpCredentialsSpecDTO & {
+  tokenRef: string
 }
 
 export type GithubSshCredentials = GithubCredentialsDTO & {
@@ -7674,7 +9423,7 @@ export type GithubUsernameToken = GithubHttpCredentialsSpecDTO & {
 
 export interface GitlabApiAccess {
   spec?: GitlabApiAccessSpecDTO
-  type: 'Token'
+  type: 'Token' | 'OAuth'
 }
 
 export interface GitlabApiAccessSpecDTO {
@@ -7690,7 +9439,8 @@ export type GitlabConnector = ConnectorConfigDTO & {
   apiAccess?: GitlabApiAccess
   authentication: GitlabAuthentication
   delegateSelectors?: string[]
-  type: 'Account' | 'Repo'
+  executeOnDelegate?: boolean
+  type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
 }
@@ -7701,7 +9451,7 @@ export interface GitlabCredentialsDTO {
 
 export type GitlabHttpCredentials = GitlabCredentialsDTO & {
   spec: GitlabHttpCredentialsSpecDTO
-  type: 'UsernamePassword' | 'UsernameToken' | 'Kerberos'
+  type: 'UsernamePassword' | 'UsernameToken' | 'Kerberos' | 'OAuth'
 }
 
 export interface GitlabHttpCredentialsSpecDTO {
@@ -7710,6 +9460,11 @@ export interface GitlabHttpCredentialsSpecDTO {
 
 export type GitlabKerberos = GitlabHttpCredentialsSpecDTO & {
   kerberosKeyRef: string
+}
+
+export type GitlabOauth = GitlabHttpCredentialsSpecDTO & {
+  refreshTokenRef: string
+  tokenRef: string
 }
 
 export type GitlabSshCredentials = GitlabCredentialsDTO & {
@@ -8049,6 +9804,26 @@ export interface HarnessUserGroupDTO {
   name?: string
 }
 
+export interface HeartbeatRequest {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: HeartbeatRequest
+  descriptorForType?: Descriptor
+  heartbeatTimestamp?: Timestamp
+  heartbeatTimestampOrBuilder?: TimestampOrBuilder
+  id?: string
+  idBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserHeartbeatRequest
+  responseCode?: number
+  responseMessage?: string
+  responseMessageBytes?: ByteString
+  serializedSize?: number
+  unknownFields?: UnknownFieldSet
+}
+
 export interface HeatMap {
   cvConfiguration?: CVConfiguration
   observedTimeSeries?: {
@@ -8155,7 +9930,6 @@ export interface Host {
   bastionConnAttr?: string
   computeProviderId?: string
   createdAt?: number
-  createdBy?: EmbeddedUser
   ec2Instance?: Instance
   envId?: string
   hostConnAttr?: string
@@ -8163,7 +9937,6 @@ export interface Host {
   infraDefinitionId?: string
   infraMappingId?: string
   lastUpdatedAt: number
-  lastUpdatedBy?: EmbeddedUser
   properties?: {
     [key: string]: { [key: string]: any }
   }
@@ -8171,6 +9944,13 @@ export interface Host {
   serviceTemplateId?: string
   uuid: string
   winrmConnAttr?: string
+}
+
+export interface HostDTO {
+  hostAttributes?: {
+    [key: string]: string
+  }
+  hostname: string
 }
 
 export interface HostElement {
@@ -8390,6 +10170,7 @@ export interface ImmutablePairResourceTypeAction {
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
     | 'DEFAULT'
+    | 'ABORT_WORKFLOW'
   value?:
     | 'ALL'
     | 'CREATE'
@@ -8401,6 +10182,7 @@ export interface ImmutablePairResourceTypeAction {
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
     | 'DEFAULT'
+    | 'ABORT_WORKFLOW'
 }
 
 export interface ImportStatus {
@@ -8627,7 +10409,6 @@ export interface InfrastructureMapping {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -8645,8 +10426,10 @@ export interface InfrastructureMapping {
     | 'KUBERNETES_CLUSTER_NG'
     | 'GIT_NG'
     | 'SSO_SAML'
+    | 'LDAP'
     | 'GCP_SECRETS_MANAGER'
     | 'TRIGGER'
+    | 'OCI_HELM_REPO'
   uuid: string
 }
 
@@ -8729,51 +10512,11 @@ export interface InstanaSetupTestNodeData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -8784,12 +10527,6 @@ export interface InstanaSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -8800,10 +10537,22 @@ export interface InstanaSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -8813,53 +10562,19 @@ export interface InstanaSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -8867,11 +10582,81 @@ export interface InstanaSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   tagFilters?: InstanaTagFilter[]
   toTime?: number
   workflowId?: string
@@ -8904,17 +10689,21 @@ export interface Instance {
   instanceId?: string
   instanceLifecycle?: string
   instanceType?: string
+  ipv6Address?: string
   kernelId?: string
   keyName?: string
   launchTime?: string
   licenses?: LicenseConfiguration[]
+  maintenanceOptions?: InstanceMaintenanceOptions
   metadataOptions?: InstanceMetadataOptionsResponse
   monitoring?: Monitoring
   networkInterfaces?: InstanceNetworkInterface[]
   outpostArn?: string
   placement?: Placement
   platform?: string
+  platformDetails?: string
   privateDnsName?: string
+  privateDnsNameOptions?: PrivateDnsNameOptionsResponse
   privateIpAddress?: string
   productCodes?: ProductCode[]
   publicDnsName?: string
@@ -8931,6 +10720,9 @@ export interface Instance {
   stateTransitionReason?: string
   subnetId?: string
   tags?: Tag[]
+  tpmSupport?: string
+  usageOperation?: string
+  usageOperationUpdateTime?: string
   virtualizationType?: string
   vpcId?: string
 }
@@ -9045,6 +10837,7 @@ export interface InstanceExecutionHistory {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -9061,6 +10854,7 @@ export interface InstanceExecutionHistory {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -9171,7 +10965,6 @@ export interface InstanceExecutionHistory {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -9196,6 +10989,7 @@ export interface InstanceExecutionHistory {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -9208,6 +11002,7 @@ export interface InstanceExecutionHistory {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -9263,6 +11058,7 @@ export interface InstanceExecutionHistory {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -9299,9 +11095,12 @@ export interface InstanceExecutionHistory {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
+    | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -9321,6 +11120,36 @@ export interface InstanceExecutionHistory {
     | 'RESOURCE_ALREADY_EXISTS'
     | 'INVALID_JSON_PAYLOAD'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   executionInterruptType?:
     | 'ABORT'
     | 'ABORT_ALL'
@@ -9342,6 +11171,8 @@ export interface InstanceExecutionHistory {
     | 'MARK_EXPIRED'
     | 'CONTINUE_WITH_DEFAULTS'
     | 'CONTINUE_PIPELINE_STAGE'
+    | 'ROLLBACK_ON_APPROVAL'
+    | 'ROLLBACK_PROVISIONER_AFTER_PHASES_ON_APPROVAL'
   intanceCount?: number
   message?: string
   stateName?: string
@@ -9383,10 +11214,16 @@ export interface InstanceIpv6Prefix {
   ipv6Prefix?: string
 }
 
+export interface InstanceMaintenanceOptions {
+  autoRecovery?: string
+}
+
 export interface InstanceMetadataOptionsResponse {
   httpEndpoint?: string
+  httpProtocolIpv6?: string
   httpPutResponseHopLimit?: number
   httpTokens?: string
+  instanceMetadataTags?: string
   state?: string
 }
 
@@ -9413,6 +11250,7 @@ export interface InstanceNetworkInterface {
 
 export interface InstanceNetworkInterfaceAssociation {
   carrierIp?: string
+  customerOwnedIp?: string
   ipOwnerId?: string
   publicDnsName?: string
   publicIp?: string
@@ -9516,6 +11354,31 @@ export interface InvocationCount {
   to?: number
 }
 
+export interface JenkinsAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface JenkinsAuthenticationDTO {
+  spec?: JenkinsAuthCredentialsDTO
+  type: 'UsernamePassword' | 'Anonymous' | 'Bearer Token(HTTP Header)'
+}
+
+export type JenkinsBearerTokenDTO = JenkinsAuthCredentialsDTO & {
+  tokenRef: string
+}
+
+export type JenkinsConnectorDTO = ConnectorConfigDTO & {
+  auth?: JenkinsAuthenticationDTO
+  delegateSelectors?: string[]
+  jenkinsUrl: string
+}
+
+export type JenkinsUserNamePasswordDTO = JenkinsAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
 export interface JiraConfig {
   accountId?: string
   baseUrl?: string
@@ -9579,7 +11442,6 @@ export interface JiraConfig {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -9597,8 +11459,10 @@ export interface JiraConfig {
     | 'KUBERNETES_CLUSTER_NG'
     | 'GIT_NG'
     | 'SSO_SAML'
+    | 'LDAP'
     | 'GCP_SECRETS_MANAGER'
     | 'TRIGGER'
+    | 'OCI_HELM_REPO'
   type?: string
   username?: string
 }
@@ -9634,7 +11498,9 @@ export interface JiraTaskParameters {
   issueType?: string
   jiraAction?:
     | 'CREATE_TICKET'
+    | 'CREATE_TICKET_NG'
     | 'UPDATE_TICKET'
+    | 'UPDATE_TICKET_NG'
     | 'AUTH'
     | 'GET_PROJECTS'
     | 'GET_FIELDS_OPTIONS'
@@ -9643,6 +11509,7 @@ export interface JiraTaskParameters {
     | 'FETCH_ISSUE'
     | 'FETCH_ISSUE_DATA'
     | 'CHECK_APPROVAL'
+    | 'SEARCH_USER'
   jiraConfig?: JiraConfig
   labels?: string[]
   priority?: string
@@ -9652,6 +11519,8 @@ export interface JiraTaskParameters {
   status?: string
   summary?: string
   updateIssueIds?: string[]
+  userQuery?: string
+  userQueryOffset?: string
 }
 
 export interface JobDetails {
@@ -9669,27 +11538,7 @@ export interface JobParameter {
 }
 
 export interface JsonNode {
-  array?: boolean
-  bigDecimal?: boolean
-  bigInteger?: boolean
-  binary?: boolean
-  boolean?: boolean
-  containerNode?: boolean
-  double?: boolean
-  float?: boolean
-  floatingPointNumber?: boolean
-  int?: boolean
-  integralNumber?: boolean
-  long?: boolean
-  missingNode?: boolean
-  nodeType?: 'ARRAY' | 'BINARY' | 'BOOLEAN' | 'MISSING' | 'NULL' | 'NUMBER' | 'OBJECT' | 'POJO' | 'STRING'
-  null?: boolean
-  number?: boolean
-  object?: boolean
-  pojo?: boolean
-  short?: boolean
-  textual?: boolean
-  valueNode?: boolean
+  [key: string]: any
 }
 
 export interface K8s {
@@ -9734,11 +11583,11 @@ export interface KmsConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   externalName?: string
   kmsArn?: string
   lastUpdatedAt?: number
@@ -9874,14 +11723,94 @@ export interface LastDeployedHelmChartInformation {
 }
 
 export interface LdapConnectionSettings {
+  accountId?: string
   bindDN?: string
   bindPassword?: string
+  bindSecret?: string[]
   connectTimeout?: number
   host: string
   maxReferralHops?: number
+  passwordType?: string
   port?: number
   referralsEnabled?: boolean
   responseTimeout?: number
+  settingType?:
+    | 'HOST_CONNECTION_ATTRIBUTES'
+    | 'BASTION_HOST_CONNECTION_ATTRIBUTES'
+    | 'SMTP'
+    | 'SFTP'
+    | 'JENKINS'
+    | 'BAMBOO'
+    | 'STRING'
+    | 'SPLUNK'
+    | 'ELK'
+    | 'LOGZ'
+    | 'SUMO'
+    | 'DATA_DOG'
+    | 'APM_VERIFICATION'
+    | 'BUG_SNAG'
+    | 'LOG_VERIFICATION'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'DYNA_TRACE'
+    | 'INSTANA'
+    | 'DATA_DOG_LOG'
+    | 'CLOUD_WATCH'
+    | 'SCALYR'
+    | 'ELB'
+    | 'SLACK'
+    | 'AWS'
+    | 'GCS'
+    | 'GCP'
+    | 'AZURE'
+    | 'PCF'
+    | 'RANCHER'
+    | 'DIRECT'
+    | 'KUBERNETES_CLUSTER'
+    | 'DOCKER'
+    | 'ECR'
+    | 'GCR'
+    | 'ACR'
+    | 'PHYSICAL_DATA_CENTER'
+    | 'KUBERNETES'
+    | 'NEXUS'
+    | 'ARTIFACTORY'
+    | 'SMB'
+    | 'AMAZON_S3'
+    | 'GIT'
+    | 'SSH_SESSION_CONFIG'
+    | 'SERVICE_VARIABLE'
+    | 'CONFIG_FILE'
+    | 'KMS'
+    | 'GCP_KMS'
+    | 'JIRA'
+    | 'SERVICENOW'
+    | 'SECRET_TEXT'
+    | 'YAML_GIT_SYNC'
+    | 'VAULT'
+    | 'VAULT_SSH'
+    | 'AWS_SECRETS_MANAGER'
+    | 'WINRM_CONNECTION_ATTRIBUTES'
+    | 'WINRM_SESSION_CONFIG'
+    | 'PROMETHEUS'
+    | 'INFRASTRUCTURE_MAPPING'
+    | 'HTTP_HELM_REPO'
+    | 'AMAZON_S3_HELM_REPO'
+    | 'GCS_HELM_REPO'
+    | 'SPOT_INST'
+    | 'AZURE_ARTIFACTS_PAT'
+    | 'CUSTOM'
+    | 'CE_AWS'
+    | 'CE_GCP'
+    | 'CE_AZURE'
+    | 'AZURE_VAULT'
+    | 'KUBERNETES_CLUSTER_NG'
+    | 'GIT_NG'
+    | 'SSO_SAML'
+    | 'LDAP'
+    | 'GCP_SECRETS_MANAGER'
+    | 'TRIGGER'
+    | 'OCI_HELM_REPO'
   sslEnabled?: boolean
   useRecursiveGroupMembershipSearch?: boolean
 }
@@ -9927,6 +11856,7 @@ export interface LdapSettings {
   createdAt?: number
   createdBy?: EmbeddedUser
   cronExpression?: string
+  disabled?: boolean
   displayName?: string
   groupSettings?: LdapGroupSettings
   groupSettingsList?: LdapGroupSettings[]
@@ -10025,7 +11955,7 @@ export interface LogCollectionInfo {
   collectionBody?: string
   collectionUrl?: string
   method?: 'POST' | 'GET'
-  responseMapping?: ResponseMapping
+  responseMapping?: LogResponseMapping
   responseType?: 'JSON'
 }
 
@@ -10178,6 +12108,7 @@ export interface LogDataRecord {
     | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'CLOUD_FORMATION_ROLLBACK_STACK'
     | 'TERRAFORM_ROLLBACK'
+    | 'COLLECT_REMAINING_INSTANCES'
     | 'K8S_DEPLOYMENT_ROLLING'
     | 'K8S_SCALE'
     | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
@@ -10196,11 +12127,11 @@ export interface LogDataRecord {
     | 'K8S_TRAFFIC_SPLIT'
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
   supervisedLabel?: string
   timeStamp?: number
   timesLabeled?: number
   uuid: string
-  validUntil?: string
   workflowExecutionId?: string
   workflowId?: string
 }
@@ -10350,6 +12281,7 @@ export interface LogMLAnalysisSummary {
     | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'CLOUD_FORMATION_ROLLBACK_STACK'
     | 'TERRAFORM_ROLLBACK'
+    | 'COLLECT_REMAINING_INSTANCES'
     | 'K8S_DEPLOYMENT_ROLLING'
     | 'K8S_SCALE'
     | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
@@ -10368,6 +12300,7 @@ export interface LogMLAnalysisSummary {
     | 'K8S_TRAFFIC_SPLIT'
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
   testClusters?: LogMLClusterSummary[]
   timeDuration?: number
   unknownClusters?: LogMLClusterSummary[]
@@ -10576,6 +12509,7 @@ export interface LogMLFeedbackRecord {
     | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'CLOUD_FORMATION_ROLLBACK_STACK'
     | 'TERRAFORM_ROLLBACK'
+    | 'COLLECT_REMAINING_INSTANCES'
     | 'K8S_DEPLOYMENT_ROLLING'
     | 'K8S_SCALE'
     | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
@@ -10594,6 +12528,7 @@ export interface LogMLFeedbackRecord {
     | 'K8S_TRAFFIC_SPLIT'
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
   supervisedLabel?: string
   uuid: string
   workflowExecutionId?: string
@@ -10623,6 +12558,14 @@ export interface LogMLHostSummary {
 export interface LogOption {
   key?: string
   value?: string
+}
+
+export interface LogResponseMapping {
+  hostJsonPath?: string
+  hostRegex?: string
+  logMessageJsonPath?: string
+  timestampFormat?: string
+  timestampJsonPath?: string
 }
 
 export interface LoginRequest {
@@ -10811,6 +12754,7 @@ export interface LogsCVConfiguration {
     | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'CLOUD_FORMATION_ROLLBACK_STACK'
     | 'TERRAFORM_ROLLBACK'
+    | 'COLLECT_REMAINING_INSTANCES'
     | 'K8S_DEPLOYMENT_ROLLING'
     | 'K8S_SCALE'
     | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
@@ -10829,6 +12773,7 @@ export interface LogsCVConfiguration {
     | 'K8S_TRAFFIC_SPLIT'
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
   uuid: string
   workflowConfig?: boolean
 }
@@ -10915,23 +12860,88 @@ export interface Member {
   value?: string
 }
 
+export interface Message {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: MessageLite
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserMessage
+  serializedSize?: number
+  unknownFields?: UnknownFieldSet
+}
+
+export interface MessageLite {
+  defaultInstanceForType?: MessageLite
+  initialized?: boolean
+  parserForType?: ParserMessageLite
+  serializedSize?: number
+}
+
+export interface MessageOptions {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  allFieldsRaw?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: MessageOptions
+  deprecated?: boolean
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  mapEntry?: boolean
+  messageSetWireFormat?: boolean
+  noStandardDescriptorAccessor?: boolean
+  parserForType?: ParserMessageOptions
+  serializedSize?: number
+  uninterpretedOptionCount?: number
+  uninterpretedOptionList?: UninterpretedOption[]
+  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
+  unknownFields?: UnknownFieldSet
+}
+
+export interface MethodDescriptor {
+  clientStreaming?: boolean
+  file?: FileDescriptor
+  fullName?: string
+  index?: number
+  inputType?: Descriptor
+  name?: string
+  options?: MethodOptions
+  outputType?: Descriptor
+  serverStreaming?: boolean
+  service?: ServiceDescriptor
+}
+
+export interface MethodOptions {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  allFieldsRaw?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: MethodOptions
+  deprecated?: boolean
+  descriptorForType?: Descriptor
+  idempotencyLevel?: 'IDEMPOTENCY_UNKNOWN' | 'NO_SIDE_EFFECTS' | 'IDEMPOTENT'
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserMethodOptions
+  serializedSize?: number
+  uninterpretedOptionCount?: number
+  uninterpretedOptionList?: UninterpretedOption[]
+  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
+  unknownFields?: UnknownFieldSet
+}
+
 export interface Metric {
   displayName?: string
   metricName?: string
   mlMetricType?: 'INFRA' | 'VALUE' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'VALUE_LOWER'
   tags?: string[]
-}
-
-export interface MetricCollectionInfo {
-  baselineCollectionUrl?: string
-  collectionBody?: string
-  collectionUrl?: string
-  method?: 'POST' | 'GET'
-  metricName?: string
-  metricType?: 'INFRA' | 'VALUE' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'VALUE_LOWER'
-  responseMapping?: ResponseMapping
-  responseType?: 'JSON'
-  tag?: string
 }
 
 export interface MetricsServerCheck {
@@ -10947,9 +12957,12 @@ export interface ModuleLicenseDTO {
   id?: string
   lastModifiedAt?: number
   licenseType?: 'TRIAL' | 'PAID'
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'CORE' | 'PMS' | 'TEMPLATESERVICE'
+  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  premiumSupport?: boolean
+  selfService?: boolean
   startTime?: number
   status?: 'ACTIVE' | 'DELETED' | 'EXPIRED'
+  trialExtended?: boolean
 }
 
 export interface Monitoring {
@@ -10971,38 +12984,47 @@ export type MultiServiceOrchestrationWorkflow = OrchestrationWorkflow & {
   workflowPhases?: WorkflowPhase[]
 }
 
-export interface NGEncryptedDataMetadata {
-  accountIdentifier?: string
-  description?: string
-  draft?: boolean
-  identifier?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  secretManagerIdentifier?: string
-  secretManagerName?: string
-  tags?: string[]
+export interface NamePart {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: NamePart
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  isExtension?: boolean
+  namePart?: string
+  namePartBytes?: ByteString
+  parserForType?: ParserNamePart
+  serializedSize?: number
+  unknownFields?: UnknownFieldSet
 }
 
-export interface NGSecretManagerMetadata {
-  accountIdentifier?: string
-  deleted?: boolean
-  description?: string
-  harnessManaged?: boolean
-  identifier?: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  tags?: NGTag[]
-}
-
-export interface NGTag {
-  key: string
-  value: string
+export interface NamePartOrBuilder {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Message
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  isExtension?: boolean
+  namePart?: string
+  namePartBytes?: ByteString
+  unknownFields?: UnknownFieldSet
 }
 
 export interface NameValuePair {
   name?: string
   value: string
   valueType?: string
+}
+
+export interface NameValuePairWithDefault {
+  name?: string
+  type: string
+  useAsDefault?: boolean
+  value: string
 }
 
 export type NewInstanceTriggerCondition = TriggerCondition & {}
@@ -11183,6 +13205,7 @@ export interface NewRelicMetricAnalysisRecord {
     | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'CLOUD_FORMATION_ROLLBACK_STACK'
     | 'TERRAFORM_ROLLBACK'
+    | 'COLLECT_REMAINING_INSTANCES'
     | 'K8S_DEPLOYMENT_ROLLING'
     | 'K8S_SCALE'
     | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
@@ -11201,6 +13224,7 @@ export interface NewRelicMetricAnalysisRecord {
     | 'K8S_TRAFFIC_SPLIT'
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
   uuid: string
   workflowExecutionId?: string
 }
@@ -11240,51 +13264,11 @@ export interface NewRelicSetupTestNodeData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -11295,12 +13279,6 @@ export interface NewRelicSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -11311,10 +13289,22 @@ export interface NewRelicSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -11324,53 +13314,19 @@ export interface NewRelicSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -11378,11 +13334,81 @@ export interface NewRelicSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   toTime?: number
   workflowId?: string
 }
@@ -11647,6 +13673,27 @@ export interface OauthUserInfo {
   utmInfo?: UtmInfo
 }
 
+export interface OciHelmAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface OciHelmAuthenticationDTO {
+  spec?: OciHelmAuthCredentialsDTO
+  type: 'UsernamePassword' | 'Anonymous'
+}
+
+export type OciHelmConnectorDTO = ConnectorConfigDTO & {
+  auth?: OciHelmAuthenticationDTO
+  delegateSelectors?: string[]
+  helmRepoUrl: string
+}
+
+export type OciHelmUsernamePasswordDTO = OciHelmAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
 export type OktaAddOperation = PatchOperation & {
   value?: JsonNode
 }
@@ -11657,6 +13704,37 @@ export type OktaRemoveOperation = PatchOperation & {
 
 export type OktaReplaceOperation = PatchOperation & {
   value?: JsonNode
+}
+
+export interface OneofDescriptor {
+  containingType?: Descriptor
+  fieldCount?: number
+  fields?: FieldDescriptor[]
+  file?: FileDescriptor
+  fullName?: string
+  index?: number
+  name?: string
+  options?: OneofOptions
+  synthetic?: boolean
+}
+
+export interface OneofOptions {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  allFieldsRaw?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: OneofOptions
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserOneofOptions
+  serializedSize?: number
+  uninterpretedOptionCount?: number
+  uninterpretedOptionList?: UninterpretedOption[]
+  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
+  unknownFields?: UnknownFieldSet
 }
 
 export interface OrchestrationWorkflow {
@@ -11773,6 +13851,26 @@ export interface PhysicalHost {
   publicDns?: string
 }
 
+export interface Page {
+  content?: { [key: string]: any }[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageAccount {
+  content?: Account[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export type PagerDutyConnectorDTO = ConnectorConfigDTO & {
   apiTokenRef: string
   delegateSelectors?: string[]
@@ -11785,15 +13883,103 @@ export interface Pair {
   value?: { [key: string]: any }
 }
 
-export interface PairDelegateInsightsTypeLong {
-  key?: 'SUCCESSFUL' | 'FAILED' | 'IN_PROGRESS' | 'PERPETUAL_TASK_ASSIGNED'
-  left?: 'SUCCESSFUL' | 'FAILED' | 'IN_PROGRESS' | 'PERPETUAL_TASK_ASSIGNED'
-  right?: number
-  value?: number
+export interface PairStringString {
+  key?: string
+  left?: string
+  right?: string
+  value?: string
 }
 
 export interface ParallelInfo {
   groupIndex?: number
+}
+
+export interface Parser {
+  [key: string]: any
+}
+
+export interface ParserAccountId {
+  [key: string]: any
+}
+
+export interface ParserDelegateCallbackToken {
+  [key: string]: any
+}
+
+export interface ParserEnumOptions {
+  [key: string]: any
+}
+
+export interface ParserEnumValueOptions {
+  [key: string]: any
+}
+
+export interface ParserFieldOptions {
+  [key: string]: any
+}
+
+export interface ParserFileOptions {
+  [key: string]: any
+}
+
+export interface ParserHeartbeatRequest {
+  [key: string]: any
+}
+
+export interface ParserMessage {
+  [key: string]: any
+}
+
+export interface ParserMessageLite {
+  [key: string]: any
+}
+
+export interface ParserMessageOptions {
+  [key: string]: any
+}
+
+export interface ParserMethodOptions {
+  [key: string]: any
+}
+
+export interface ParserNamePart {
+  [key: string]: any
+}
+
+export interface ParserOneofOptions {
+  [key: string]: any
+}
+
+export interface ParserSendTaskProgressRequest {
+  [key: string]: any
+}
+
+export interface ParserSendTaskStatusRequest {
+  [key: string]: any
+}
+
+export interface ParserServiceOptions {
+  [key: string]: any
+}
+
+export interface ParserTaskId {
+  [key: string]: any
+}
+
+export interface ParserTaskProgressRequest {
+  [key: string]: any
+}
+
+export interface ParserTaskResponseData {
+  [key: string]: any
+}
+
+export interface ParserTimestamp {
+  [key: string]: any
+}
+
+export interface ParserUninterpretedOption {
+  [key: string]: any
 }
 
 export interface PasswordExpirationPolicy {
@@ -11916,6 +14102,7 @@ export interface Permission {
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
     | 'DEFAULT'
+    | 'ABORT_WORKFLOW'
   appId?: string
   envId?: string
   environmentType?: 'PROD' | 'NON_PROD' | 'ALL'
@@ -12047,6 +14234,7 @@ export interface PerpetualTaskRecord {
     | 'NO_DELEGATE_AVAILABLE'
     | 'NO_ELIGIBLE_DELEGATES'
     | 'MULTIPLE_FAILED_PERPETUAL_TASK'
+    | 'VALIDATION_TASK_FAILED'
   uuid?: string
 }
 
@@ -12119,6 +14307,7 @@ export interface PhaseStep {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_TRAFFIC_SHIFT'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
+    | 'COLLECT_INSTANCES'
   rollback?: boolean
   statusForRollback?:
     | 'ABORTED'
@@ -12147,6 +14336,11 @@ export interface PhaseStep {
   valid?: boolean
   validationMessage?: string
   waitInterval?: number
+}
+
+export type PhysicalDataCenterConnectorDTO = ConnectorConfigDTO & {
+  delegateSelectors?: string[]
+  hosts?: HostDTO[]
 }
 
 export type PhysicalInfra = InfraMappingInfrastructureProvider & {
@@ -12404,13 +14598,23 @@ export interface Preference {
   uuid: string
 }
 
+export interface PreviousApprovalDetails {
+  previousApprovals?: ApprovalInfo[]
+  size?: number
+}
+
 export interface Principal {
   jwtclaims?: {
     [key: string]: string
   }
   name?: string
-  username?: string
   type: 'USER' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT'
+}
+
+export interface PrivateDnsNameOptionsResponse {
+  enableResourceNameDnsAAAARecord?: boolean
+  enableResourceNameDnsARecord?: boolean
+  hostnameType?: string
 }
 
 export interface ProductCode {
@@ -12426,7 +14630,10 @@ export interface ProfileScopingRulesDetails {
 
 export type PrometheusConnectorDTO = ConnectorConfigDTO & {
   delegateSelectors?: string[]
+  headers?: CustomHealthKeyAndValue[]
+  passwordRef?: string
   url: string
+  username?: string
 }
 
 export interface PrometheusSetupTestNodeData {
@@ -12440,51 +14647,11 @@ export interface PrometheusSetupTestNodeData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -12495,12 +14662,6 @@ export interface PrometheusSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -12511,10 +14672,22 @@ export interface PrometheusSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -12524,53 +14697,19 @@ export interface PrometheusSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -12578,11 +14717,81 @@ export interface PrometheusSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   timeSeriesToAnalyze?: TimeSeries[]
   toTime?: number
   workflowId?: string
@@ -12616,13 +14825,6 @@ export interface RateLimitProtection {
   lastNotificationSentToSecOpsAt?: number
   lastNotificationSentToUserAt?: number
   totalIncorrectAttempts?: number
-}
-
-export interface ReferencedTemplate {
-  templateReference?: TemplateReference
-  variableMapping?: {
-    [key: string]: Variable
-  }
 }
 
 export type RemoveOperation = PatchOperation & {
@@ -12780,12 +14982,8 @@ export interface ResponseBoolean {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseMapping {
-  hostJsonPath?: string
-  hostRegex?: string
-  logMessageJsonPath?: string
-  timestampFormat?: string
-  timestampJsonPath?: string
+export interface ResponseData {
+  [key: string]: any
 }
 
 export interface ResponseMessage {
@@ -12816,6 +15014,7 @@ export interface ResponseMessage {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -12832,6 +15031,7 @@ export interface ResponseMessage {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -12942,7 +15142,6 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -12967,6 +15166,7 @@ export interface ResponseMessage {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -12979,6 +15179,7 @@ export interface ResponseMessage {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -13034,6 +15235,7 @@ export interface ResponseMessage {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -13070,9 +15272,12 @@ export interface ResponseMessage {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
+    | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
     | 'PR_CREATION_ERROR'
@@ -13092,6 +15297,36 @@ export interface ResponseMessage {
     | 'RESOURCE_ALREADY_EXISTS'
     | 'INVALID_JSON_PAYLOAD'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'POLICY_SET_ERROR'
+    | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
+    | 'INVALID_NEXUS_REGISTRY_REQUEST'
+    | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -13103,6 +15338,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -13194,6 +15430,14 @@ export interface RestResponseActivity {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseAgentMtlsEndpointDetails {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: AgentMtlsEndpointDetails
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseAlertNotificationRule {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -13271,6 +15515,14 @@ export interface RestResponseArtifactStreamBinding {
     [key: string]: { [key: string]: any }
   }
   resource?: ArtifactStreamBinding
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseArtifactView {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: ArtifactView
   responseMessages?: ResponseMessage[]
 }
 
@@ -13482,6 +15734,14 @@ export interface RestResponseDelegate {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseDelegateApprovalResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateApprovalResponse
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseDelegateConfiguration {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -13490,11 +15750,35 @@ export interface RestResponseDelegateConfiguration {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseDelegateDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateDTO
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseDelegateDownloadResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateDownloadResponse
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseDelegateFile {
   metaData?: {
     [key: string]: { [key: string]: any }
   }
   resource?: DelegateFile
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseDelegateGroup {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateGroup
   responseMessages?: ResponseMessage[]
 }
 
@@ -14306,11 +16590,35 @@ export interface RestResponseListCommandUnitDetails {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseListConfigFileDto {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: ConfigFileDto[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseListCustomDeploymentTypeDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
   }
   resource?: CustomDeploymentTypeDTO[]
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseListDelegateDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateDTO[]
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseListDelegateGroupDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateGroupDTO[]
   responseMessages?: ResponseMessage[]
 }
 
@@ -14322,11 +16630,27 @@ export interface RestResponseListDelegateInitializationDetails {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseListDelegateProfileDetails {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateProfileDetails[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseListDelegateSelectionLogParams {
   metaData?: {
     [key: string]: { [key: string]: any }
   }
   resource?: DelegateSelectionLogParams[]
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseListDelegateSelector {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateSelector[]
   responseMessages?: ResponseMessage[]
 }
 
@@ -15037,7 +17361,6 @@ export interface RestResponseMapDeploymentTypeListSettingVariableTypes {
       | 'VAULT'
       | 'VAULT_SSH'
       | 'AWS_SECRETS_MANAGER'
-      | 'CYBERARK'
       | 'WINRM_CONNECTION_ATTRIBUTES'
       | 'WINRM_SESSION_CONFIG'
       | 'PROMETHEUS'
@@ -15055,8 +17378,10 @@ export interface RestResponseMapDeploymentTypeListSettingVariableTypes {
       | 'KUBERNETES_CLUSTER_NG'
       | 'GIT_NG'
       | 'SSO_SAML'
+      | 'LDAP'
       | 'GCP_SECRETS_MANAGER'
       | 'TRIGGER'
+      | 'OCI_HELM_REPO'
     )[]
   }
   responseMessages?: ResponseMessage[]
@@ -15251,6 +17576,22 @@ export interface RestResponseObject {
     [key: string]: { [key: string]: any }
   }
   resource?: { [key: string]: any }
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseOptionalDelegateGroupDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateGroupDTO
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponsePageAccount {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: PageAccount
   responseMessages?: ResponseMessage[]
 }
 
@@ -15827,6 +18168,14 @@ export interface RestResponsePreference {
     [key: string]: { [key: string]: any }
   }
   resource?: Preference
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponsePreviousApprovalDetails {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: PreviousApprovalDetails
   responseMessages?: ResponseMessage[]
 }
 
@@ -16570,7 +18919,6 @@ export interface SSHVaultConfig {
   appRoleId?: string
   authToken?: string
   awsRegion?: string
-  certValidationRequired?: boolean
   createdAt?: number
   createdBy?: EmbeddedUser
   default?: boolean
@@ -16582,12 +18930,13 @@ export interface SSHVaultConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   engineManuallyEntered?: boolean
+  k8sAuthEndpoint?: string
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
   manuallyEnteredSecretEngineMigrationIteration?: number
@@ -16600,14 +18949,17 @@ export interface SSHVaultConfig {
   scopedToAccount?: boolean
   secretEngineName?: string
   secretId?: string
+  serviceAccountTokenPath?: string
   sinkPath?: string
   templatized?: boolean
   templatizedFields?: string[]
   usageRestrictions?: UsageRestrictions
   useAwsIam?: boolean
+  useK8sAuth?: boolean
   useVaultAgent?: boolean
   uuid: string
   vaultAwsIamRole?: string
+  vaultK8sAuthRole?: string
   vaultUrl?: string
   xvaultAwsIamServerId?: string
 }
@@ -16637,6 +18989,10 @@ export interface SSOSettings {
   type: 'SAML' | 'LDAP' | 'OAUTH'
   url?: string
   uuid: string
+}
+
+export type STOModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfDevelopers?: number
 }
 
 export interface SamlIdentificationInfo {
@@ -16853,17 +19209,16 @@ export interface SecretManagerConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
   manuallyEnteredSecretEngineMigrationIteration?: number
   name?: string
   nextTokenRenewIteration?: number
-  ngMetadata?: NGSecretManagerMetadata
   numOfEncryptedValue?: number
   scopedToAccount?: boolean
   templatized?: boolean
@@ -16871,13 +19226,6 @@ export interface SecretManagerConfig {
   usageRestrictions?: UsageRestrictions
   uuid: string
   validationCriteria?: string
-}
-
-export interface SecretRefData {
-  decryptedValue?: string[]
-  identifier?: string
-  null?: boolean
-  scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
 export interface SecretSetupUsage {
@@ -16940,7 +19288,6 @@ export interface SecretSetupUsage {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -16958,8 +19305,10 @@ export interface SecretSetupUsage {
     | 'KUBERNETES_CLUSTER_NG'
     | 'GIT_NG'
     | 'SSO_SAML'
+    | 'LDAP'
     | 'GCP_SECRETS_MANAGER'
     | 'TRIGGER'
+    | 'OCI_HELM_REPO'
 }
 
 export interface SecretText {
@@ -16997,9 +19346,50 @@ export interface SecretUsageLog {
   lastUpdatedBy?: EmbeddedUser
   pipelineExecution?: boolean
   uuid: string
-  validUntil?: string
   workflowExecutionId?: string
   workflowExecutionName?: string
+}
+
+export interface SendTaskProgressRequest {
+  accountId?: AccountId
+  accountIdOrBuilder?: AccountIdOrBuilder
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  callbackToken?: DelegateCallbackToken
+  callbackTokenOrBuilder?: DelegateCallbackTokenOrBuilder
+  defaultInstanceForType?: SendTaskProgressRequest
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserSendTaskProgressRequest
+  serializedSize?: number
+  taskId?: TaskId
+  taskIdOrBuilder?: TaskIdOrBuilder
+  taskResponseData?: TaskResponseData
+  taskResponseDataOrBuilder?: TaskResponseDataOrBuilder
+  unknownFields?: UnknownFieldSet
+}
+
+export interface SendTaskStatusRequest {
+  accountId?: AccountId
+  accountIdOrBuilder?: AccountIdOrBuilder
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  callbackToken?: DelegateCallbackToken
+  callbackTokenOrBuilder?: DelegateCallbackTokenOrBuilder
+  defaultInstanceForType?: SendTaskStatusRequest
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserSendTaskStatusRequest
+  serializedSize?: number
+  taskId?: TaskId
+  taskIdOrBuilder?: TaskIdOrBuilder
+  taskResponseData?: TaskResponseData
+  taskResponseDataOrBuilder?: TaskResponseDataOrBuilder
+  unknownFields?: UnknownFieldSet
 }
 
 export interface ServerInfo {
@@ -17103,7 +19493,7 @@ export interface Service {
   deploymentTypeTemplateId?: string
   description?: string
   helmValueYaml?: string
-  helmVersion?: 'V2' | 'V3'
+  helmVersion?: 'V2' | 'V3' | 'V380'
   k8sV2?: boolean
   keywords?: string[]
   lastDeploymentActivity?: Activity
@@ -17147,6 +19537,15 @@ export interface ServiceCommand {
   templateUuid?: string
   templateVersion?: string
   uuid: string
+}
+
+export interface ServiceDescriptor {
+  file?: FileDescriptor
+  fullName?: string
+  index?: number
+  methods?: MethodDescriptor[]
+  name?: string
+  options?: ServiceOptions
 }
 
 export interface ServiceElement {
@@ -17321,6 +19720,26 @@ export type ServiceNowConnector = ConnectorConfigDTO & {
   usernameRef?: string
 }
 
+export interface ServiceOptions {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  allFieldsRaw?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: ServiceOptions
+  deprecated?: boolean
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserServiceOptions
+  serializedSize?: number
+  uninterpretedOptionCount?: number
+  uninterpretedOptionList?: UninterpretedOption[]
+  uninterpretedOptionOrBuilderList?: UninterpretedOptionOrBuilder[]
+  unknownFields?: UnknownFieldSet
+}
+
 export interface ServiceSummary {
   appSummary?: EntitySummary
   id?: string
@@ -17442,11 +19861,11 @@ export interface ServiceVariable {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   entityId?: string
   entityType:
     | 'SERVICE'
@@ -17604,7 +20023,6 @@ export interface ServiceVariable {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -17622,8 +20040,10 @@ export interface ServiceVariable {
     | 'KUBERNETES_CLUSTER_NG'
     | 'GIT_NG'
     | 'SSO_SAML'
+    | 'LDAP'
     | 'GCP_SECRETS_MANAGER'
     | 'TRIGGER'
+    | 'OCI_HELM_REPO'
   templateId?: string
   type?: 'TEXT' | 'LB' | 'ENCRYPTED_TEXT' | 'ARTIFACT'
   uuid: string
@@ -17647,11 +20067,11 @@ export interface SettingAttribute {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   envId?: string
   lastUpdatedAt: number
   name?: string
@@ -17723,7 +20143,6 @@ export interface SettingValue {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -17741,8 +20160,10 @@ export interface SettingValue {
     | 'KUBERNETES_CLUSTER_NG'
     | 'GIT_NG'
     | 'SSO_SAML'
+    | 'LDAP'
     | 'GCP_SECRETS_MANAGER'
     | 'TRIGGER'
+    | 'OCI_HELM_REPO'
   type?: string
 }
 
@@ -17827,51 +20248,11 @@ export interface SplunkSetupTestNodeData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -17882,12 +20263,6 @@ export interface SplunkSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -17898,10 +20273,22 @@ export interface SplunkSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -17911,53 +20298,19 @@ export interface SplunkSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -17965,11 +20318,81 @@ export interface SplunkSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   toTime?: number
   workflowId?: string
 }
@@ -17992,7 +20415,6 @@ export type SshCommandTemplate = BaseTemplate & {
   commandType?: 'START' | 'STOP' | 'INSTALL' | 'ENABLE' | 'DISABLE' | 'VERIFY' | 'OTHER' | 'RESIZE' | 'SETUP'
   commandUnits?: CommandUnit[]
   commands?: Yaml[]
-  referencedTemplateList?: ReferencedTemplate[]
 }
 
 export interface SsoRedirectRequest {
@@ -18037,51 +20459,11 @@ export interface StackDriverSetupTestNodeData {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -18092,12 +20474,6 @@ export interface StackDriverSetupTestNodeData {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -18108,10 +20484,22 @@ export interface StackDriverSetupTestNodeData {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -18121,53 +20509,19 @@ export interface StackDriverSetupTestNodeData {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -18175,171 +20529,94 @@ export interface StackDriverSetupTestNodeData {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   toTime?: number
   workflowId?: string
 }
 
 export interface StackTraceElement {
+  classLoaderName?: string
   className?: string
   fileName?: string
   lineNumber?: number
   methodName?: string
+  moduleName?: string
+  moduleVersion?: string
   nativeMethod?: boolean
-}
-
-export interface State {
-  executeWithPreviousSteps?: boolean
-  id?: string
-  ignoreFailure?: boolean
-  name?: string
-  parentId?: string
-  patternsForRequiredContextElementType?: string[]
-  requiredContextElementType?:
-    | 'SERVICE'
-    | 'INFRAMAPPING'
-    | 'SERVICE_TEMPLATE'
-    | 'TAG'
-    | 'SHELL'
-    | 'HOST'
-    | 'INSTANCE'
-    | 'STANDARD'
-    | 'PARAM'
-    | 'PARTITION'
-    | 'OTHER'
-    | 'FORK'
-    | 'CONTAINER_SERVICE'
-    | 'CLUSTER'
-    | 'AWS_LAMBDA_FUNCTION'
-    | 'AMI_SERVICE_SETUP'
-    | 'AMI_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_SETUP'
-    | 'AMI_SWITCH_ROUTES'
-    | 'PCF_SERVICE_SETUP'
-    | 'PCF_SERVICE_DEPLOY'
-    | 'PCF_ROUTE_SWAP_ROLLBACK'
-    | 'PCF_INSTANCE'
-    | 'SPOTINST_SERVICE_SETUP'
-    | 'SPOTINST_SERVICE_DEPLOY'
-    | 'ARTIFACT'
-    | 'ARTIFACT_VARIABLE'
-    | 'HELM_DEPLOY'
-    | 'CLOUD_FORMATION_PROVISION'
-    | 'CLOUD_FORMATION_ROLLBACK'
-    | 'CLOUD_FORMATION_DEPROVISION'
-    | 'TERRAFORM_PROVISION'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'K8S'
-    | 'TERRAFORM_INHERIT_PLAN'
-    | 'TERRAGRUNT_INHERIT_PLAN'
-    | 'AZURE_VMSS_SETUP'
-    | 'AZURE_WEBAPP_SETUP'
-    | 'HELM_CHART'
-    | 'MANIFEST_VARIABLE'
-    | 'RANCHER_K8S_CLUSTER_CRITERIA'
-  requiredExecutionArgumentTypes?: (
-    | 'SERVICE'
-    | 'PROVISIONER'
-    | 'ENVIRONMENT'
-    | 'HOST'
-    | 'RELEASE'
-    | 'ARTIFACT'
-    | 'SSH_USER'
-    | 'SSH_PASSWORD'
-    | 'SSH_APP_ACCOUNT'
-    | 'SSH_KEY_PASSPHRASE'
-    | 'SSH_APP_ACCOUNT_PASSOWRD'
-    | 'SIMPLE_DEPLOYMENT'
-    | 'ORCHESTRATED_DEPLOYMENT'
-    | 'PIPELINE'
-    | 'WORKFLOW'
-    | 'DEPLOYMENT'
-    | 'INSTANCE'
-    | 'APPLICATION'
-    | 'COMMAND'
-    | 'CONFIG'
-    | 'SERVICE_TEMPLATE'
-    | 'INFRASTRUCTURE_MAPPING'
-    | 'INFRASTRUCTURE_DEFINITION'
-    | 'USER'
-    | 'ARTIFACT_STREAM'
-    | 'APPDYNAMICS_CONFIGID'
-    | 'APPDYNAMICS_APPID'
-    | 'APPDYNAMICS_TIERID'
-    | 'ELK_CONFIGID'
-    | 'ELK_INDICES'
-    | 'NEWRELIC_CONFIGID'
-    | 'NEWRELIC_APPID'
-    | 'SS_SSH_CONNECTION_ATTRIBUTE'
-    | 'SS_WINRM_CONNECTION_ATTRIBUTE'
-    | 'SUMOLOGIC_CONFIGID'
-    | 'SPLUNK_CONFIGID'
-    | 'NEWRELIC_MARKER_CONFIGID'
-    | 'NEWRELIC_MARKER_APPID'
-    | 'API_KEY'
-    | 'ACCOUNT'
-    | 'APPLICATION_MANIFEST'
-    | 'USER_GROUP'
-    | 'WHITELISTED_IP'
-    | 'CF_AWS_CONFIG_ID'
-    | 'VERIFICATION_CONFIGURATION'
-    | 'HELM_GIT_CONFIG_ID'
-    | 'NOTIFICATION_GROUP'
-    | 'HELM_CHART_SPECIFICATION'
-    | 'PCF_SERVICE_SPECIFICATION'
-    | 'LAMBDA_SPECIFICATION'
-    | 'USER_DATA_SPECIFICATION'
-    | 'ECS_CONTAINER_SPECIFICATION'
-    | 'ECS_SERVICE_SPECIFICATION'
-    | 'K8S_CONTAINER_SPECIFICATION'
-    | 'CONFIG_FILE'
-    | 'SERVICE_COMMAND'
-    | 'MANIFEST_FILE'
-    | 'SERVICE_VARIABLE'
-    | 'TRIGGER'
-    | 'ROLE'
-    | 'TEMPLATE'
-    | 'TEMPLATE_FOLDER'
-    | 'SETTING_ATTRIBUTE'
-    | 'ENCRYPTED_RECORDS'
-    | 'CV_CONFIGURATION'
-    | 'TAG'
-    | 'CUSTOM_DASHBOARD'
-    | 'PIPELINE_GOVERNANCE_STANDARD'
-    | 'WORKFLOW_EXECUTION'
-    | 'SERVERLESS_INSTANCE'
-    | 'USER_INVITE'
-    | 'LOGIN_SETTINGS'
-    | 'SSO_SETTINGS'
-    | 'DELEGATE'
-    | 'DELEGATE_SCOPE'
-    | 'DELEGATE_PROFILE'
-    | 'EXPORT_EXECUTIONS_REQUEST'
-    | 'GCP_CONFIG'
-    | 'GIT_CONFIG'
-    | 'JENKINS_SERVER'
-    | 'SECRETS_MANAGER'
-    | 'HELM_CHART'
-    | 'SECRET'
-    | 'CONNECTOR'
-    | 'CLOUD_PROVIDER'
-    | 'GOVERNANCE_FREEZE_CONFIG'
-    | 'GOVERNANCE_CONFIG'
-    | 'EVENT_RULE'
-  )[]
-  rollback?: boolean
-  selectionLogsTrackingForTasksEnabled?: boolean
-  stateType?: string
-  templateExpressions?: TemplateExpression[]
-  templateUuid?: string
-  templateVariables?: Variable[]
-  templateVersion?: string
-  timeoutMillis?: number
-  waitInterval?: number
 }
 
 export interface StateExecutionData {
@@ -18435,6 +20712,8 @@ export interface StateExecutionInstance {
     | 'MARK_EXPIRED'
     | 'CONTINUE_WITH_DEFAULTS'
     | 'CONTINUE_PIPELINE_STAGE'
+    | 'ROLLBACK_ON_APPROVAL'
+    | 'ROLLBACK_PROVISIONER_AFTER_PHASES_ON_APPROVAL'
   actionOnTimeout?:
     | 'MANUAL_INTERVENTION'
     | 'ROLLBACK_WORKFLOW'
@@ -18542,41 +20821,6 @@ export interface StateInspectionData {
   [key: string]: any
 }
 
-export interface StateMachine {
-  accountId?: string
-  appId: string
-  cachedStatesMap?: {
-    [key: string]: State
-  }
-  cachedTransitionFlowMap?: {
-    [key: string]: {
-      [key: string]: State[]
-    }
-  }
-  childStateMachines?: {
-    [key: string]: StateMachine
-  }
-  createdAt?: number
-  initialState?: State
-  initialStateName?: string
-  name?: string
-  orchestrationWorkflow?: OrchestrationWorkflow
-  originId?: string
-  originVersion?: number
-  states?: State[]
-  statesMap?: {
-    [key: string]: State
-  }
-  transitionFlowMap?: {
-    [key: string]: {
-      [key: string]: State[]
-    }
-  }
-  transitions?: Transition[]
-  uuid?: string
-  valid?: boolean
-}
-
 export interface StateMachineExecutionCallback {
   [key: string]: any
 }
@@ -18663,10 +20907,6 @@ export interface StorageConfiguration {
   readonly?: boolean
 }
 
-export interface Store {
-  name?: string
-}
-
 export interface StreamingOutput {
   [key: string]: any
 }
@@ -18695,51 +20935,11 @@ export interface SumoLogicSetupTestNodedata {
   serviceLevel?: boolean
   settingId: string
   stateType?:
-    | 'SUB_WORKFLOW'
-    | 'REPEAT'
-    | 'FORK'
-    | 'WAIT'
-    | 'PAUSE'
-    | 'BARRIER'
-    | 'RESOURCE_CONSTRAINT'
-    | 'SHELL_SCRIPT'
-    | 'HTTP'
-    | 'TEMPLATIZED_SECRET_MANAGER'
-    | 'EMAIL'
-    | 'APP_DYNAMICS'
-    | 'NEW_RELIC'
-    | 'NEW_RELIC_DEPLOYMENT_MARKER'
-    | 'DYNA_TRACE'
-    | 'PROMETHEUS'
-    | 'SPLUNKV2'
-    | 'ELK'
-    | 'LOGZ'
-    | 'SUMO'
-    | 'DATA_DOG'
-    | 'DATA_DOG_LOG'
-    | 'CVNG'
-    | 'CLOUD_WATCH'
-    | 'AWS_LAMBDA_VERIFICATION'
-    | 'APM_VERIFICATION'
-    | 'LOG_VERIFICATION'
-    | 'BUG_SNAG'
-    | 'STACK_DRIVER'
-    | 'STACK_DRIVER_LOG'
-    | 'INSTANA'
-    | 'SCALYR'
-    | 'ENV_STATE'
-    | 'ENV_LOOP_STATE'
-    | 'ENV_RESUME_STATE'
-    | 'ENV_LOOP_RESUME_STATE'
-    | 'COMMAND'
-    | 'APPROVAL'
-    | 'APPROVAL_RESUME'
-    | 'ELASTIC_LOAD_BALANCER'
-    | 'JENKINS'
-    | 'GCB'
-    | 'BAMBOO'
     | 'ARTIFACT_COLLECTION'
     | 'ARTIFACT_CHECK'
+    | 'AWS_NODE_SELECT'
+    | 'ELASTIC_LOAD_BALANCER'
+    | 'DC_NODE_SELECT'
     | 'AZURE_NODE_SELECT'
     | 'AZURE_VMSS_SETUP'
     | 'AZURE_VMSS_DEPLOY'
@@ -18750,12 +20950,6 @@ export interface SumoLogicSetupTestNodedata {
     | 'AZURE_WEBAPP_SLOT_SWAP'
     | 'AZURE_WEBAPP_SLOT_SHIFT_TRAFFIC'
     | 'AZURE_WEBAPP_SLOT_ROLLBACK'
-    | 'AWS_NODE_SELECT'
-    | 'DC_NODE_SELECT'
-    | 'ROLLING_NODE_SELECT'
-    | 'PHASE'
-    | 'PHASE_STEP'
-    | 'STAGING_ORIGINAL_EXECUTION'
     | 'AWS_CODEDEPLOY_STATE'
     | 'AWS_CODEDEPLOY_ROLLBACK'
     | 'AWS_LAMBDA_STATE'
@@ -18766,10 +20960,22 @@ export interface SumoLogicSetupTestNodedata {
     | 'ASG_AMI_SERVICE_ALB_SHIFT_DEPLOY'
     | 'AWS_AMI_SWITCH_ROUTES'
     | 'ASG_AMI_ALB_SHIFT_SWITCH_ROUTES'
+    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'AWS_AMI_ROLLBACK_SWITCH_ROUTES'
     | 'ASG_AMI_ROLLBACK_ALB_SHIFT_SWITCH_ROUTES'
-    | 'AWS_AMI_SERVICE_ROLLBACK'
     | 'ECS_SERVICE_SETUP'
+    | 'ECS_RUN_TASK'
+    | 'ECS_DAEMON_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP'
+    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
+    | 'ECS_SERVICE_DEPLOY'
+    | 'ECS_STEADY_STATE_CHECK'
+    | 'ECS_LISTENER_UPDATE'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
+    | 'ECS_SERVICE_SETUP_ROLLBACK'
+    | 'ECS_SERVICE_ROLLBACK'
+    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
+    | 'ECS_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_SETUP'
     | 'SPOTINST_ALB_SHIFT_SETUP'
     | 'SPOTINST_DEPLOY'
@@ -18779,53 +20985,19 @@ export interface SumoLogicSetupTestNodedata {
     | 'SPOTINST_ROLLBACK'
     | 'SPOTINST_LISTENER_UPDATE_ROLLBACK'
     | 'SPOTINST_LISTENER_ALB_SHIFT_ROLLBACK'
-    | 'ECS_SERVICE_SETUP_ROLLBACK'
-    | 'ECS_DAEMON_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP'
-    | 'ECS_BG_SERVICE_SETUP_ROUTE53'
-    | 'ECS_SERVICE_DEPLOY'
-    | 'ECS_SERVICE_ROLLBACK'
-    | 'ECS_LISTENER_UPDATE'
-    | 'ECS_LISTENER_UPDATE_ROLLBACK'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE'
-    | 'ECS_ROUTE53_DNS_WEIGHT_UPDATE_ROLLBACK'
     | 'KUBERNETES_SETUP'
-    | 'KUBERNETES_SETUP_ROLLBACK'
     | 'KUBERNETES_DEPLOY'
-    | 'KUBERNETES_DEPLOY_ROLLBACK'
     | 'KUBERNETES_STEADY_STATE_CHECK'
-    | 'ECS_STEADY_STATE_CHECK'
-    | 'ECS_RUN_TASK'
     | 'GCP_CLUSTER_SETUP'
-    | 'HELM_DEPLOY'
-    | 'HELM_ROLLBACK'
-    | 'PCF_SETUP'
-    | 'PCF_RESIZE'
-    | 'PCF_ROLLBACK'
-    | 'PCF_MAP_ROUTE'
-    | 'PCF_UNMAP_ROUTE'
-    | 'PCF_BG_MAP_ROUTE'
-    | 'PCF_PLUGIN'
-    | 'TERRAFORM_PROVISION'
-    | 'TERRAFORM_APPLY'
-    | 'TERRAGRUNT_PROVISION'
-    | 'TERRAGRUNT_DESTROY'
-    | 'TERRAGRUNT_ROLLBACK'
-    | 'ARM_CREATE_RESOURCE'
-    | 'ARM_ROLLBACK'
-    | 'SHELL_SCRIPT_PROVISION'
-    | 'TERRAFORM_DESTROY'
-    | 'CLOUD_FORMATION_CREATE_STACK'
-    | 'CLOUD_FORMATION_DELETE_STACK'
-    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
-    | 'CLOUD_FORMATION_ROLLBACK_STACK'
-    | 'TERRAFORM_ROLLBACK'
-    | 'K8S_DEPLOYMENT_ROLLING'
-    | 'K8S_SCALE'
-    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
-    | 'K8S_BLUE_GREEN_DEPLOY'
     | 'K8S_CANARY_DEPLOY'
+    | 'K8S_BLUE_GREEN_DEPLOY'
+    | 'K8S_DEPLOYMENT_ROLLING'
+    | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
+    | 'K8S_TRAFFIC_SPLIT'
+    | 'K8S_SCALE'
     | 'K8S_DELETE'
+    | 'K8S_APPLY'
     | 'RANCHER_RESOLVE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING'
     | 'RANCHER_K8S_CANARY_DEPLOY'
@@ -18833,11 +21005,81 @@ export interface SumoLogicSetupTestNodedata {
     | 'RANCHER_KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'RANCHER_K8S_DELETE'
     | 'RANCHER_K8S_DEPLOYMENT_ROLLING_ROLLBACK'
+    | 'ROLLING_NODE_SELECT'
+    | 'KUBERNETES_SETUP_ROLLBACK'
+    | 'KUBERNETES_DEPLOY_ROLLBACK'
+    | 'HELM_DEPLOY'
+    | 'HELM_ROLLBACK'
+    | 'PCF_SETUP'
+    | 'PCF_RESIZE'
+    | 'PCF_MAP_ROUTE'
+    | 'PCF_UNMAP_ROUTE'
+    | 'PCF_BG_MAP_ROUTE'
+    | 'PCF_ROLLBACK'
+    | 'PCF_PLUGIN'
+    | 'CLOUD_FORMATION_CREATE_STACK'
+    | 'CLOUD_FORMATION_DELETE_STACK'
+    | 'CLOUD_FORMATION_ROLLBACK_STACK'
+    | 'TERRAFORM_PROVISION'
+    | 'TERRAFORM_APPLY'
+    | 'TERRAFORM_DESTROY'
+    | 'TERRAFORM_ROLLBACK'
+    | 'TERRAGRUNT_PROVISION'
+    | 'TERRAGRUNT_DESTROY'
+    | 'TERRAGRUNT_ROLLBACK'
+    | 'SHELL_SCRIPT_PROVISION'
+    | 'ARM_ROLLBACK'
+    | 'APP_DYNAMICS'
+    | 'NEW_RELIC'
+    | 'INSTANA'
+    | 'DYNA_TRACE'
+    | 'PROMETHEUS'
+    | 'DATA_DOG'
+    | 'STACK_DRIVER'
+    | 'CLOUD_WATCH'
+    | 'APM_VERIFICATION'
+    | 'DATA_DOG_LOG'
+    | 'BUG_SNAG'
+    | 'ELK'
+    | 'SPLUNKV2'
+    | 'STACK_DRIVER_LOG'
+    | 'SUMO'
+    | 'LOGZ'
+    | 'LOG_VERIFICATION'
+    | 'SCALYR'
+    | 'CVNG'
     | 'JIRA_CREATE_UPDATE'
     | 'SERVICENOW_CREATE_UPDATE'
-    | 'K8S_TRAFFIC_SPLIT'
-    | 'K8S_APPLY'
+    | 'EMAIL'
+    | 'BARRIER'
+    | 'RESOURCE_CONSTRAINT'
+    | 'APPROVAL'
+    | 'JENKINS'
+    | 'GCB'
+    | 'BAMBOO'
+    | 'SHELL_SCRIPT'
+    | 'HTTP'
+    | 'NEW_RELIC_DEPLOYMENT_MARKER'
+    | 'TEMPLATIZED_SECRET_MANAGER'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'COMMAND'
+    | 'STAGING_ORIGINAL_EXECUTION'
+    | 'APPROVAL_RESUME'
+    | 'PHASE_STEP'
+    | 'ENV_LOOP_RESUME_STATE'
+    | 'REPEAT'
+    | 'ENV_STATE'
+    | 'ARM_CREATE_RESOURCE'
+    | 'PAUSE'
+    | 'WAIT'
+    | 'SUB_WORKFLOW'
+    | 'ENV_LOOP_STATE'
+    | 'PHASE'
+    | 'FORK'
+    | 'ENV_RESUME_STATE'
+    | 'AWS_LAMBDA_VERIFICATION'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'COLLECT_REMAINING_INSTANCES'
   toTime?: number
   workflowId?: string
 }
@@ -18891,20 +21133,96 @@ export interface TagFilterCondition {
     | 'OR'
     | 'AND'
     | 'ELEMENT_MATCH'
+    | 'TEXT_SEARCH'
   tagType?: 'USER' | 'HARNESS'
   values?: string[]
 }
 
 export interface TaskData {
   async?: boolean
+  data?: string[]
   expressionFunctorToken?: number
   expressions?: {
     [key: string]: string
   }
   parameters?: { [key: string]: any }[]
   parked?: boolean
+  serializationFormat?: 'KRYO' | 'JSON'
   taskType: string
   timeout?: number
+}
+
+export interface TaskId {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: TaskId
+  descriptorForType?: Descriptor
+  id?: string
+  idBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserTaskId
+  serializedSize?: number
+  unknownFields?: UnknownFieldSet
+}
+
+export interface TaskIdOrBuilder {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Message
+  descriptorForType?: Descriptor
+  id?: string
+  idBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  unknownFields?: UnknownFieldSet
+}
+
+export interface TaskProgressRequest {
+  accountId?: AccountId
+  accountIdOrBuilder?: AccountIdOrBuilder
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: TaskProgressRequest
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserTaskProgressRequest
+  serializedSize?: number
+  taskId?: TaskId
+  taskIdOrBuilder?: TaskIdOrBuilder
+  unknownFields?: UnknownFieldSet
+}
+
+export interface TaskResponseData {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: TaskResponseData
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  kryoResultsData?: ByteString
+  parserForType?: ParserTaskResponseData
+  responseDataCase?: 'KRYO_RESULTS_DATA' | 'RESPONSEDATA_NOT_SET'
+  serializedSize?: number
+  unknownFields?: UnknownFieldSet
+}
+
+export interface TaskResponseDataOrBuilder {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Message
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  kryoResultsData?: ByteString
+  responseDataCase?: 'KRYO_RESULTS_DATA' | 'RESPONSEDATA_NOT_SET'
+  unknownFields?: UnknownFieldSet
 }
 
 export interface TaskSelectorMap {
@@ -18992,6 +21310,12 @@ export interface TaskSelectorMap {
     | 'TERRAFORM_NG'
     | 'CE'
     | 'SERVICENOW_NG'
+    | 'CLOUDFORMATION_NG'
+    | 'AZURE'
+    | 'SERVERLESS_NG'
+    | 'COMMAND_TASK_NG'
+    | 'ECS'
+    | 'AZURE_NG_ARM_BLUEPRINT'
   uuid: string
 }
 
@@ -19073,6 +21397,14 @@ export interface TemplateGallery {
   name?: string
   referencedGalleryId?: string
   uuid: string
+}
+
+export interface TemplateLinkConfigForCustomSecretManager {
+  templateInputs?: {
+    [key: string]: NameValuePairWithDefault[]
+  }
+  templateRef: string
+  versionLabel: string
 }
 
 export interface TemplateMetaData {
@@ -19187,7 +21519,6 @@ export interface ThirdPartyApiCallLog {
     | 'PREPARING'
   title?: string
   uuid?: string
-  validUntil?: string
 }
 
 export interface Threshold {
@@ -19228,6 +21559,7 @@ export interface TimeRangeBasedFreezeConfig {
   freezeWindowState?: 'ACTIVE' | 'INACTIVE'
   name?: string
   timeRange?: TimeRange
+  userGroupSelection?: UserGroupFilter
   userGroups?: string[]
   uuid?: string
 }
@@ -19410,6 +21742,7 @@ export interface TimeSeriesMLTransactionThresholds {
     | 'KUBERNETES_SWAP_SERVICE_SELECTORS'
     | 'CLOUD_FORMATION_ROLLBACK_STACK'
     | 'TERRAFORM_ROLLBACK'
+    | 'COLLECT_REMAINING_INSTANCES'
     | 'K8S_DEPLOYMENT_ROLLING'
     | 'K8S_SCALE'
     | 'K8S_DEPLOYMENT_ROLLING_ROLLBACK'
@@ -19428,6 +21761,7 @@ export interface TimeSeriesMLTransactionThresholds {
     | 'K8S_TRAFFIC_SPLIT'
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
+    | 'ARTIFACT_COLLECT_LOOP_STATE'
   thresholdType?: 'ACCEPTABLE' | 'ANOMALOUS'
   thresholds?: TimeSeriesMetricDefinition
   transactionName?: string
@@ -19464,6 +21798,34 @@ export interface TimeSeriesRisk {
   startTime?: number
 }
 
+export interface Timestamp {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Timestamp
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  nanos?: number
+  parserForType?: ParserTimestamp
+  seconds?: number
+  serializedSize?: number
+  unknownFields?: UnknownFieldSet
+}
+
+export interface TimestampOrBuilder {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Message
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  nanos?: number
+  seconds?: number
+  unknownFields?: UnknownFieldSet
+}
+
 export interface TopConsumer {
   appId?: string
   appName?: string
@@ -19482,12 +21844,6 @@ export interface TransactionTimeSeries {
   metricTimeSeries?: TimeSeriesOfMetric[]
   tag?: string
   transactionName?: string
-}
-
-export interface Transition {
-  fromState?: State
-  toState?: State
-  transitionType?: 'SUCCESS' | 'FAILURE' | 'ABORT' | 'REPEAT' | 'FORK' | 'CONDITIONAL'
 }
 
 export interface TrialSignupOptions {
@@ -19510,7 +21866,6 @@ export interface Trigger {
   lastUpdatedBy?: EmbeddedUser
   manifestSelections?: ManifestSelection[]
   name?: string
-  nextIterations?: number[]
   pipelineId?: string
   pipelineName?: string
   serviceInfraWorkflows?: ServiceInfraWorkflow[]
@@ -19545,6 +21900,60 @@ export interface TwoFactorAuthenticationSettings {
   totpqrurl?: string
   twoFactorAuthenticationEnabled?: boolean
   userId?: string
+}
+
+export interface UninterpretedOption {
+  aggregateValue?: string
+  aggregateValueBytes?: ByteString
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: UninterpretedOption
+  descriptorForType?: Descriptor
+  doubleValue?: number
+  identifierValue?: string
+  identifierValueBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  nameCount?: number
+  nameList?: NamePart[]
+  nameOrBuilderList?: NamePartOrBuilder[]
+  negativeIntValue?: number
+  parserForType?: ParserUninterpretedOption
+  positiveIntValue?: number
+  serializedSize?: number
+  stringValue?: ByteString
+  unknownFields?: UnknownFieldSet
+}
+
+export interface UninterpretedOptionOrBuilder {
+  aggregateValue?: string
+  aggregateValueBytes?: ByteString
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Message
+  descriptorForType?: Descriptor
+  doubleValue?: number
+  identifierValue?: string
+  identifierValueBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  nameCount?: number
+  nameList?: NamePart[]
+  nameOrBuilderList?: NamePartOrBuilder[]
+  negativeIntValue?: number
+  positiveIntValue?: number
+  stringValue?: ByteString
+  unknownFields?: UnknownFieldSet
+}
+
+export interface UnknownFieldSet {
+  defaultInstanceForType?: UnknownFieldSet
+  initialized?: boolean
+  parserForType?: Parser
+  serializedSize?: number
+  serializedSizeAsMessageSet?: number
 }
 
 export interface UpdatePasswordRequest {
@@ -19664,6 +22073,10 @@ export interface UserGroupEntityReference {
   id?: string
 }
 
+export interface UserGroupFilter {
+  filterType?: 'ALL' | 'CUSTOM'
+}
+
 export interface UserInvite {
   accountId?: string
   accountName?: string
@@ -19731,9 +22144,6 @@ export interface UserPermissionInfo {
   appPermissionMap?: {
     [key: string]: AppPermissionSummaryForUI
   }
-  dashboardPermissions?: {
-    [key: string]: ('READ' | 'UPDATE' | 'DELETE' | 'MANAGE')[]
-  }
   hasAllAppAccess?: boolean
 }
 
@@ -19777,7 +22187,6 @@ export interface VaultConfig {
   authToken?: string
   awsRegion?: string
   basePath?: string
-  certValidationRequired?: boolean
   createdAt?: number
   createdBy?: EmbeddedUser
   default?: boolean
@@ -19789,12 +22198,13 @@ export interface VaultConfig {
     | 'GCP_KMS'
     | 'AWS_SECRETS_MANAGER'
     | 'AZURE_VAULT'
-    | 'CYBERARK'
     | 'VAULT'
     | 'GCP_SECRETS_MANAGER'
     | 'CUSTOM'
     | 'VAULT_SSH'
+    | 'CUSTOM_NG'
   engineManuallyEntered?: boolean
+  k8sAuthEndpoint?: string
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
   manuallyEnteredSecretEngineMigrationIteration?: number
@@ -19810,38 +22220,46 @@ export interface VaultConfig {
   secretEngineName?: string
   secretEngineVersion?: number
   secretId?: string
+  serviceAccountTokenPath?: string
   sinkPath?: string
   templatized?: boolean
   templatizedFields?: string[]
   usageRestrictions?: UsageRestrictions
   useAwsIam?: boolean
+  useK8sAuth?: boolean
   useVaultAgent?: boolean
   uuid: string
   vaultAwsIamRole?: string
+  vaultK8sAuthRole?: string
   vaultUrl?: string
   xvaultAwsIamServerId?: string
 }
 
 export type VaultConnectorDTO = ConnectorConfigDTO & {
-  accessType?: 'APP_ROLE' | 'TOKEN' | 'VAULT_AGENT' | 'AWS_IAM'
+  accessType?: 'APP_ROLE' | 'TOKEN' | 'VAULT_AGENT' | 'AWS_IAM' | 'K8s_AUTH'
   appRoleId?: string
   authToken?: string
   awsRegion?: string
   basePath?: string
   default?: boolean
   delegateSelectors?: string[]
+  k8sAuthEndpoint?: string
   namespace?: string
   readOnly?: boolean
-  renewalIntervalMinutes?: number
+  renewAppRoleToken?: boolean
+  renewalIntervalMinutes: number
   secretEngineManuallyConfigured?: boolean
   secretEngineName?: string
   secretEngineVersion?: number
   secretId?: string
+  serviceAccountTokenPath?: string
   sinkPath?: string
   useAwsIam?: boolean
+  useK8sAuth?: boolean
   useVaultAgent?: boolean
   vaultAwsIamRole?: string
-  vaultUrl?: string
+  vaultK8sAuthRole?: string
+  vaultUrl: string
   xvaultAwsIamServerId?: string
 }
 
@@ -19930,7 +22348,6 @@ export interface VerificationStateAnalysisExecutionData {
     [key: string]: { [key: string]: any }
   }
   waitInterval?: number
-  wingsPersistence?: WingsPersistence
 }
 
 export interface Version {
@@ -20000,7 +22417,12 @@ export interface ViewField {
 export type ViewIdCondition = ViewCondition & {
   values?: string[]
   viewField?: ViewField
-  viewOperator?: 'IN' | 'NOT_IN' | 'NOT_NULL' | 'NULL'
+  viewOperator?: 'NOT_IN' | 'IN' | 'EQUALS' | 'NOT_NULL' | 'NULL' | 'LIKE'
+}
+
+export interface ViewPreferences {
+  includeOthers?: boolean
+  includeUnallocatedCost?: boolean
 }
 
 export interface ViewRule {
@@ -20140,6 +22562,7 @@ export interface WeeklyFreezeConfig {
   environmentTypes?: ('PROD' | 'NON_PROD' | 'ALL')[]
   freezeForAllApps?: boolean
   name?: string
+  userGroupSelection?: UserGroupFilter
   userGroups?: string[]
   uuid?: string
   weeklyRange?: WeeklyRange
@@ -20164,12 +22587,6 @@ export interface Whitelist {
   lastUpdatedBy?: EmbeddedUser
   status?: 'ACTIVE' | 'DISABLED'
   uuid: string
-}
-
-export interface WingsPersistence {
-  classStores?: {
-    [key: string]: Store
-  }
 }
 
 export interface Workflow {
@@ -20270,6 +22687,8 @@ export interface WorkflowExecution {
   errorStrategy?: 'CONTINUE' | 'FAIL' | 'PAUSE' | 'RETRY'
   executionArgs?: ExecutionArgs
   executionNode?: GraphNode
+  failedStepNames?: string
+  failedStepTypes?: string
   failureDetails?: string
   graph?: Graph
   helmCharts?: HelmChart[]
@@ -20297,7 +22716,6 @@ export interface WorkflowExecution {
   serviceIds?: string[]
   stageName?: string
   startTs?: number
-  stateMachine?: StateMachine
   stateMachineId?: string
   status?:
     | 'ABORTED'
@@ -20436,7 +22854,6 @@ export interface YamlGitConfig {
   createdAt?: number
   createdBy?: EmbeddedUser
   enabled?: boolean
-  encryptedPassword?: string
   entityId?: string
   entityName?: string
   entityType:
@@ -20529,6 +22946,7 @@ export interface YamlGitConfig {
     | 'GOVERNANCE_CONFIG'
     | 'EVENT_RULE'
   gitConnectorId?: string
+  gitPollingIterator?: number
   keyAuth?: boolean
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
@@ -20590,7 +23008,6 @@ export interface YamlGitConfig {
     | 'VAULT'
     | 'VAULT_SSH'
     | 'AWS_SECRETS_MANAGER'
-    | 'CYBERARK'
     | 'WINRM_CONNECTION_ATTRIBUTES'
     | 'WINRM_SESSION_CONFIG'
     | 'PROMETHEUS'
@@ -20608,8 +23025,10 @@ export interface YamlGitConfig {
     | 'KUBERNETES_CLUSTER_NG'
     | 'GIT_NG'
     | 'SSO_SAML'
+    | 'LDAP'
     | 'GCP_SECRETS_MANAGER'
     | 'TRIGGER'
+    | 'OCI_HELM_REPO'
   sshSettingId?: string
   syncMode?: 'GIT_TO_HARNESS' | 'HARNESS_TO_GIT' | 'BOTH' | 'NONE'
   url?: string
@@ -20783,7 +23202,13 @@ export type DataCollectionConnectorBundleRequestBody = DataCollectionConnectorBu
 
 export type DelegateRequestBody = Delegate
 
+export type DelegateConnectionResultDetailArrayRequestBody = DelegateConnectionResultDetail[]
+
+export type DelegateDownloadRequestRequestBody = DelegateDownloadRequest
+
 export type DelegateGroupDetailsRequestBody = DelegateGroupDetails
+
+export type DelegateGroupTagsRequestBody = DelegateGroupTags
 
 export type DelegateParamsRequestBody = DelegateParams
 
@@ -20812,6 +23237,8 @@ export type FailureStrategyArrayRequestBody = FailureStrategy[]
 export type GcpBillingAccountRequestBody = GcpBillingAccount
 
 export type GcpOrganizationRequestBody = GcpOrganization
+
+export type GraphQLQueryRequestBody = GraphQLQuery
 
 export type HarnessTagRequestBody = HarnessTag
 
@@ -20931,23 +23358,23 @@ export type GetDelegatePropertiesBodyRequestBody = string[]
 
 export type ImportAccountDataRequestBody = void
 
-export type SaveGcpSecretsManagerConfigRequestBody = void
-
 export type SaveGcpSecretsManagerConfig1RequestBody = void
+
+export type SaveGlobalKmsConfigRequestBody = void
 
 export interface SaveMessageComparisonListBodyRequestBody {
   [key: string]: string
 }
 
+export type SaveUploadRequestBody = void
+
 export interface UpdateAccountPreferenceBodyRequestBody {
   [key: string]: any
 }
 
-export type UpdatePlatformRequestBody = void
-
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
 
-export type Update28RequestBody = void
+export type UploadPlatformRequestBody = void
 
 export type UploadSamlMetaDataRequestBody = void
 
@@ -21845,6 +24272,52 @@ export const getDelegateSelectorsUpTheHierarchyPromise = (
     signal
   )
 
+export interface GetDelegateSelectorsUpTheHierarchyV2QueryParams {
+  accountId?: string
+  orgId?: string
+  projectId?: string
+}
+
+export type GetDelegateSelectorsUpTheHierarchyV2Props = Omit<
+  GetProps<RestResponseListDelegateSelector, unknown, GetDelegateSelectorsUpTheHierarchyV2QueryParams, void>,
+  'path'
+>
+
+export const GetDelegateSelectorsUpTheHierarchyV2 = (props: GetDelegateSelectorsUpTheHierarchyV2Props) => (
+  <Get<RestResponseListDelegateSelector, unknown, GetDelegateSelectorsUpTheHierarchyV2QueryParams, void>
+    path={`/setup/delegates/delegate-selectors-up-the-hierarchy-v2`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetDelegateSelectorsUpTheHierarchyV2Props = Omit<
+  UseGetProps<RestResponseListDelegateSelector, unknown, GetDelegateSelectorsUpTheHierarchyV2QueryParams, void>,
+  'path'
+>
+
+export const useGetDelegateSelectorsUpTheHierarchyV2 = (props: UseGetDelegateSelectorsUpTheHierarchyV2Props) =>
+  useGet<RestResponseListDelegateSelector, unknown, GetDelegateSelectorsUpTheHierarchyV2QueryParams, void>(
+    `/setup/delegates/delegate-selectors-up-the-hierarchy-v2`,
+    { base: getConfig('api'), ...props }
+  )
+
+export const getDelegateSelectorsUpTheHierarchyV2Promise = (
+  props: GetUsingFetchProps<
+    RestResponseListDelegateSelector,
+    unknown,
+    GetDelegateSelectorsUpTheHierarchyV2QueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseListDelegateSelector, unknown, GetDelegateSelectorsUpTheHierarchyV2QueryParams, void>(
+    getConfig('api'),
+    `/setup/delegates/delegate-selectors-up-the-hierarchy-v2`,
+    props,
+    signal
+  )
+
 export interface GetDelegateSizesQueryParams {
   accountId?: string
   orgId?: string
@@ -22520,50 +24993,6 @@ export const getDelegateGroupFromIdV2Promise = (
     GetDelegateGroupFromIdV2PathParams
   >(getConfig('api'), `/setup/delegates/v2/${delegateGroupId}`, props, signal)
 
-export interface GenerateKubernetesYamlV3QueryParams {
-  accountId?: string
-  orgId?: string
-  projectId?: string
-}
-
-export type GenerateKubernetesYamlV3Props = Omit<
-  MutateProps<void, void, GenerateKubernetesYamlV3QueryParams, DelegateSetupDetailsRequestBody, void>,
-  'path' | 'verb'
->
-
-export const GenerateKubernetesYamlV3 = (props: GenerateKubernetesYamlV3Props) => (
-  <Mutate<void, void, GenerateKubernetesYamlV3QueryParams, DelegateSetupDetailsRequestBody, void>
-    verb="POST"
-    path={`/setup/delegates/v3/generate-kubernetes-yaml`}
-    base={getConfig('api')}
-    {...props}
-  />
-)
-
-export type UseGenerateKubernetesYamlV3Props = Omit<
-  UseMutateProps<void, void, GenerateKubernetesYamlV3QueryParams, DelegateSetupDetailsRequestBody, void>,
-  'path' | 'verb'
->
-
-export const useGenerateKubernetesYamlV3 = (props: UseGenerateKubernetesYamlV3Props) =>
-  useMutate<void, void, GenerateKubernetesYamlV3QueryParams, DelegateSetupDetailsRequestBody, void>(
-    'POST',
-    `/setup/delegates/v3/generate-kubernetes-yaml`,
-    { base: getConfig('api'), ...props }
-  )
-
-export const generateKubernetesYamlV3Promise = (
-  props: MutateUsingFetchProps<void, void, GenerateKubernetesYamlV3QueryParams, DelegateSetupDetailsRequestBody, void>,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<void, void, GenerateKubernetesYamlV3QueryParams, DelegateSetupDetailsRequestBody, void>(
-    'POST',
-    getConfig('api'),
-    `/setup/delegates/v3/generate-kubernetes-yaml`,
-    props,
-    signal
-  )
-
 export interface DeleteDelegateGroupByIdentifierQueryParams {
   accountId?: string
   orgId?: string
@@ -22781,76 +25210,6 @@ export const validateDockerDelegatePromise = (
     signal
   )
 
-export interface ValidateKubernetesYamlV3QueryParams {
-  accountId?: string
-  orgId?: string
-  projectId?: string
-}
-
-export type ValidateKubernetesYamlV3Props = Omit<
-  MutateProps<
-    RestResponseDelegateSetupDetails,
-    unknown,
-    ValidateKubernetesYamlV3QueryParams,
-    DelegateSetupDetailsRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-export const ValidateKubernetesYamlV3 = (props: ValidateKubernetesYamlV3Props) => (
-  <Mutate<
-    RestResponseDelegateSetupDetails,
-    unknown,
-    ValidateKubernetesYamlV3QueryParams,
-    DelegateSetupDetailsRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/setup/delegates/v3/validate-kubernetes-yaml`}
-    base={getConfig('api')}
-    {...props}
-  />
-)
-
-export type UseValidateKubernetesYamlV3Props = Omit<
-  UseMutateProps<
-    RestResponseDelegateSetupDetails,
-    unknown,
-    ValidateKubernetesYamlV3QueryParams,
-    DelegateSetupDetailsRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-export const useValidateKubernetesYamlV3 = (props: UseValidateKubernetesYamlV3Props) =>
-  useMutate<
-    RestResponseDelegateSetupDetails,
-    unknown,
-    ValidateKubernetesYamlV3QueryParams,
-    DelegateSetupDetailsRequestBody,
-    void
-  >('POST', `/setup/delegates/v3/validate-kubernetes-yaml`, { base: getConfig('api'), ...props })
-
-export const validateKubernetesYamlV3Promise = (
-  props: MutateUsingFetchProps<
-    RestResponseDelegateSetupDetails,
-    unknown,
-    ValidateKubernetesYamlV3QueryParams,
-    DelegateSetupDetailsRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    RestResponseDelegateSetupDetails,
-    unknown,
-    ValidateKubernetesYamlV3QueryParams,
-    DelegateSetupDetailsRequestBody,
-    void
-  >('POST', getConfig('api'), `/setup/delegates/v3/validate-kubernetes-yaml`, props, signal)
-
 export interface ValidateKubernetesYamlQueryParams {
   accountId?: string
   orgId?: string
@@ -23008,6 +25367,54 @@ export const getDelegateFromIdPromise = (
   getUsingFetch<RestResponseDelegate, unknown, GetDelegateFromIdQueryParams, GetDelegateFromIdPathParams>(
     getConfig('api'),
     `/setup/delegates/${delegateId}`,
+    props,
+    signal
+  )
+
+export interface GetIterationsFromCronQueryParams {
+  accountId?: string
+}
+
+export type GetIterationsFromCronProps = Omit<
+  MutateProps<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>,
+  'path' | 'verb'
+>
+
+export const GetIterationsFromCron = (props: GetIterationsFromCronProps) => (
+  <Mutate<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>
+    verb="POST"
+    path={`/sso/ldap/iterations`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetIterationsFromCronProps = Omit<
+  UseMutateProps<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>,
+  'path' | 'verb'
+>
+
+export const useGetIterationsFromCron = (props: UseGetIterationsFromCronProps) =>
+  useMutate<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>(
+    'POST',
+    `/sso/ldap/iterations`,
+    { base: getConfig('api'), ...props }
+  )
+
+export const getIterationsFromCronPromise = (
+  props: MutateUsingFetchProps<
+    RestResponseListLong,
+    unknown,
+    GetIterationsFromCronQueryParams,
+    CronExpressionRequest,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseListLong, unknown, GetIterationsFromCronQueryParams, CronExpressionRequest, void>(
+    'POST',
+    getConfig('api'),
+    `/sso/ldap/iterations`,
     props,
     signal
   )
@@ -23243,6 +25650,47 @@ export const getUserPromise = (
   props: GetUsingFetchProps<RestResponseUser, unknown, void, void>,
   signal?: RequestInit['signal']
 ) => getUsingFetch<RestResponseUser, unknown, void, void>(getConfig('api'), `/users/user`, props, signal)
+
+export interface GetUserAccountsQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  searchTerm?: string
+}
+
+export type GetUserAccountsProps = Omit<
+  GetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const GetUserAccounts = (props: GetUserAccountsProps) => (
+  <Get<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>
+    path={`/users/userAccounts`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetUserAccountsProps = Omit<
+  UseGetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const useGetUserAccounts = (props: UseGetUserAccountsProps) =>
+  useGet<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(`/users/userAccounts`, {
+    base: getConfig('api'),
+    ...props
+  })
+
+export const getUserAccountsPromise = (
+  props: GetUsingFetchProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(
+    getConfig('api'),
+    `/users/userAccounts`,
+    props,
+    signal
+  )
 
 export interface Logout1PathParams {
   userId: string

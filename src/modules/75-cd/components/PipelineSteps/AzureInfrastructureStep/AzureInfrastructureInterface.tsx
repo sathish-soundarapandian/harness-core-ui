@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { AllowedTypes, SelectOption } from '@harness/uicore'
 import * as Yup from 'yup'
 import { isEmpty } from 'lodash-es'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -18,7 +18,8 @@ export const subscriptionLabel = 'cd.steps.azureInfraStep.subscription'
 export const resourceGroupLabel = 'common.resourceGroupLabel'
 export const clusterLabel = 'common.cluster'
 
-export type AzureInfrastructureTemplate = { [key in keyof K8sAzureInfrastructure]: string }
+export type KubernetesAzureInterface = Omit<K8sAzureInfrastructure, 'useClusterAdminCredentials'>
+export type AzureInfrastructureTemplate = { [key in keyof KubernetesAzureInterface]: string }
 
 export const getValue = (item: { label?: string; value?: string } | string | any): string => {
   return typeof item === 'string' ? (item as string) : item?.value
@@ -89,5 +90,5 @@ export interface AzureInfrastructureSpecEditableProps {
   template?: AzureInfrastructureTemplate
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
   variablesData: K8sAzureInfrastructure
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }

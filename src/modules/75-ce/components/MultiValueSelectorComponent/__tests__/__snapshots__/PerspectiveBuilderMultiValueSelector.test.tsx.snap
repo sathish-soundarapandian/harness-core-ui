@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test Cases For PerspectiveBuilderMultiValueSelector Should Be Able To Select All 1`] = `
+exports[`Test Cases For PerspectiveBuilderMultiValueSelector Should Be Able To Select All / Create New Tag 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main valueContainer createPerspectiveMvs"
@@ -14,7 +14,7 @@ exports[`Test Cases For PerspectiveBuilderMultiValueSelector Should Be Able To S
         create
       </span>
       <span
-        class="StyledProps--font StyledProps--main searchText StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--margin-left-small"
+        class="StyledProps--font StyledProps--main searchText StyledProps--inline StyledProps--color StyledProps--color-grey500 StyledProps--margin-left-small StyledProps--margin-bottom-small"
         style="display: inline-flex; align-items: center;"
       >
         val
@@ -103,17 +103,17 @@ exports[`Test Cases For PerspectiveBuilderMultiValueSelector Should Be Able To S
                   style="--text-line-clamp: 1;"
                 >
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey700"
                   >
                     
                   </span>
                   <span
-                    class="StyledProps--font StyledProps--main searchTextHighlight StyledProps--inline"
+                    class="StyledProps--font StyledProps--main searchTextHighlight StyledProps--inline StyledProps--color StyledProps--color-grey700"
                   >
                     val
                   </span>
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey700"
                   >
                     ue1
                   </span>
@@ -144,17 +144,17 @@ exports[`Test Cases For PerspectiveBuilderMultiValueSelector Should Be Able To S
                   style="--text-line-clamp: 1;"
                 >
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey700"
                   >
                     
                   </span>
                   <span
-                    class="StyledProps--font StyledProps--main searchTextHighlight StyledProps--inline"
+                    class="StyledProps--font StyledProps--main searchTextHighlight StyledProps--inline StyledProps--color StyledProps--color-grey700"
                   >
                     val
                   </span>
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey700"
                   >
                     ue2
                   </span>
@@ -185,17 +185,17 @@ exports[`Test Cases For PerspectiveBuilderMultiValueSelector Should Be Able To S
                   style="--text-line-clamp: 1;"
                 >
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey700"
                   >
                     
                   </span>
                   <span
-                    class="StyledProps--font StyledProps--main searchTextHighlight StyledProps--inline"
+                    class="StyledProps--font StyledProps--main searchTextHighlight StyledProps--inline StyledProps--color StyledProps--color-grey700"
                   >
                     val
                   </span>
                   <span
-                    class="StyledProps--font StyledProps--main StyledProps--inline"
+                    class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-grey700"
                   >
                     ue3
                   </span>

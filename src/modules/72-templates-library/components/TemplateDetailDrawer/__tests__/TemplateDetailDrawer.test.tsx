@@ -16,6 +16,11 @@ jest.mock('@wings-software/monaco-yaml/lib/esm/languageservice/yamlLanguageServi
   getLanguageService: jest.fn()
 }))
 
+jest.mock('services/template-ng', () => ({
+  ...jest.requireActual('services/template-ng'),
+  useGetTemplate: jest.fn().mockImplementation(() => ({}))
+}))
+
 describe('<TemplateDetailDrawer /> tests', () => {
   test('snapshot test', () => {
     const { container } = render(

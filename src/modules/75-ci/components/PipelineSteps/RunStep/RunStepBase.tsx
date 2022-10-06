@@ -36,6 +36,7 @@ import {
   getFormValuesInCorrectFormat
 } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
 import type { RunStepProps, RunStepData, RunStepDataUI } from './RunStep'
 import { transformValuesFieldsConfig, getEditViewValidateFieldsConfig } from './RunStepFunctionConfigs'
 import { CIStepOptionalConfig } from '../CIStep/CIStepOptionalConfig'
@@ -46,7 +47,6 @@ import {
 } from '../CIStep/StepUtils'
 import { CIStep } from '../CIStep/CIStep'
 import { ConnectorRefWithImage } from '../CIStep/ConnectorRefWithImage'
-import { CIBuildInfrastructureType } from '../../../constants/Constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const RunStepBase = (
@@ -64,7 +64,9 @@ export const RunStepBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
+  const buildInfrastructureType =
+    (get(currentStage, 'stage.spec.infrastructure.type') as CIBuildInfrastructureType) ||
+    (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
 
   return (
     <Formik
@@ -77,7 +79,11 @@ export const RunStepBase = (
       validate={valuesToValidate => {
         /* If a user configures AWS VMs as an infra, the steps can be executed directly on the VMS or in a container on a VM. 
         For the latter case, even though Container Registry and Image are optional for AWS VMs infra, they both need to be specified for container to be spawned properly */
-        if (buildInfrastructureType === CIBuildInfrastructureType.VM) {
+        if (
+          [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+            buildInfrastructureType
+          )
+        ) {
           return validateConnectorRefAndImageDepdendency(
             get(valuesToValidate, 'spec.connectorRef', ''),
             get(valuesToValidate, 'spec.image', ''),
@@ -125,7 +131,11 @@ export const RunStepBase = (
                 description: {}
               }}
             />
-            {buildInfrastructureType !== CIBuildInfrastructureType.VM ? (
+            {![
+              CIBuildInfrastructureType.VM,
+              CIBuildInfrastructureType.Cloud,
+              CIBuildInfrastructureType.Docker
+            ].includes(buildInfrastructureType) ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -213,7 +223,11 @@ export const RunStepBase = (
                 summary={getString('common.optionalConfig')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {buildInfrastructureType === CIBuildInfrastructureType.VM ? (
+                    {[
+                      CIBuildInfrastructureType.VM,
+                      CIBuildInfrastructureType.Cloud,
+                      CIBuildInfrastructureType.Docker
+                    ].includes(buildInfrastructureType) ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}
@@ -226,8 +240,10 @@ export const RunStepBase = (
                       enableFields={{
                         'spec.privileged': {
                           shouldHide: [
+                            CIBuildInfrastructureType.Cloud,
                             CIBuildInfrastructureType.VM,
-                            CIBuildInfrastructureType.KubernetesHosted
+                            CIBuildInfrastructureType.KubernetesHosted,
+                            CIBuildInfrastructureType.Docker
                           ].includes(buildInfrastructureType)
                         },
                         'spec.reportPaths': {},

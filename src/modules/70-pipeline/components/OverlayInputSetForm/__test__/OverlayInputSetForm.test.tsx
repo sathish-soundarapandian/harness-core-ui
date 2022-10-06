@@ -21,9 +21,11 @@ import {
 } from '@common/utils/routeUtils'
 import * as pipelineng from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
+import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { branchStatusMock } from '@connectors/mocks/mock'
 import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
+import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
 import {
   TemplateResponse,
   PipelineResponse,
@@ -65,7 +67,11 @@ jest.mock(
       )
     }
 )
+jest.mock('react-monaco-editor', () => ({
+  MonacoDiffEditor: MonacoEditor
+}))
 
+jest.mock('@common/components/MonacoEditor/MonacoEditor')
 jest.useFakeTimers()
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
@@ -76,6 +82,7 @@ jest.mock('services/cd-ng', () => ({
   useCreatePR: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetFileContent: jest.fn(() => noop),
+  useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
@@ -118,7 +125,8 @@ jest.mock('services/pipeline-ng', () => ({
   useUpdateOverlayInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: successResponse })),
   useCreateOverlayInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: errorResponse })),
   useGetInputSetsListForPipeline: jest.fn(() => GetInputSetsResponse),
-  useGetSchemaYaml: jest.fn().mockImplementation(() => ({ data: {} }))
+  useGetSchemaYaml: jest.fn().mockImplementation(() => ({ data: {} })),
+  useYamlDiffForInputSet: jest.fn(() => GetInputSetYamlDiffInline)
 }))
 
 const intersectionObserverMock = () => ({

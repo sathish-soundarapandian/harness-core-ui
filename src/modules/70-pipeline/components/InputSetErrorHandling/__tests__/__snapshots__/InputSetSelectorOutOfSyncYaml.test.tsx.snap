@@ -1,0 +1,331 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`INPUT SET SELECTOR -> Input Sets Error Exp Input Set - should open reconcile dialog on clicking reconcile button: Reconcile Dialog - Input Set 1`] = `
+<div
+  class="bp3-dialog Dialog--dialog reconcileDialog"
+>
+  <span
+    class="bp3-icon StyledProps--main Dialog--close"
+    data-icon="Stroke"
+  >
+    <svg
+      fill="none"
+      height="15"
+      width="15"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 .8l6 6 6-6-12 12 6-6 6 6"
+        stroke="#8F90A6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  <div
+    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-large StyledProps--padding-left-xxxlarge"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+          >
+            pipeline.inputSetErrorStrip.reconcileDialogTitle
+          </p>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--background-form StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-xxxlarge StyledProps--padding-left-xxxlarge"
+          style="flex: 1; width: 100%;"
+        >
+          <div
+            class="StyledProps--font StyledProps--main mainContainer"
+          >
+            <div
+              class="Layout--vertical StyledProps--main"
+              style="height: 100%;"
+            >
+              <div
+                class="StyledProps--font StyledProps--main"
+                style="height: 56px;"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                  style="height: 100%;"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-right"
+                    style="width: 604px;"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge"
+                      style="height: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                      >
+                        pipeline.inputSetErrorStrip.existingYaml
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main refreshedHeader"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge"
+                      style="height: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                      >
+                        pipeline.inputSetErrorStrip.validYaml
+                      </p>
+                      <span
+                        class="bp3-popover-wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <div
+                            class=""
+                            tabindex="0"
+                          >
+                            <span
+                              class="bp3-icon StyledProps--main copyIcon"
+                              data-icon="copy-alt"
+                            >
+                              <svg
+                                fill="none"
+                                height="20"
+                                viewBox="0 0 8 9"
+                                width="20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  clip-rule="evenodd"
+                                  d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </div>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <textarea>
+                inputSet:
+  identifier: inputset1
+  name: is1
+  tags: {}
+  orgIdentifier: default
+  projectIdentifier: Eric
+  pipeline:
+    identifier: PipelineId
+    stages:
+      - stage:
+          identifier: stg1
+          type: Custom
+          spec:
+            execution:
+              steps:
+                - step:
+                    identifier: stp1
+                    type: Http
+                    spec:
+                      url: https://test.com
+                      method: GET
+
+              </textarea>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-large StyledProps--padding-left-xxxlarge"
+        >
+          <button
+            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-danger Button--with-current-color"
+            style="width: 232px;"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              pipeline.inputSets.removeInvalidFields
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer />
+</div>
+`;
+
+exports[`INPUT SET SELECTOR -> Input Sets Error Exp Overlay Input Set - should open reconcile dialog on clicking reconcile button: Reconcile Dialog - Overlay IS 1`] = `
+<div
+  class="bp3-dialog Dialog--dialog reconcileDialog"
+>
+  <span
+    class="bp3-icon StyledProps--main Dialog--close"
+    data-icon="Stroke"
+  >
+    <svg
+      fill="none"
+      height="15"
+      width="15"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 .8l6 6 6-6-12 12 6-6 6 6"
+        stroke="#8F90A6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  <div
+    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <div
+        class="Layout--vertical StyledProps--main"
+      >
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-large StyledProps--padding-left-xxxlarge"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+          >
+            pipeline.inputSetErrorStrip.reconcileDialogTitle
+          </p>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--background-form StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-xxxlarge StyledProps--padding-left-xxxlarge"
+          style="flex: 1; width: 100%;"
+        >
+          <div
+            class="StyledProps--font StyledProps--main mainContainer"
+          >
+            <div
+              class="Layout--vertical StyledProps--main"
+              style="height: 100%;"
+            >
+              <div
+                class="StyledProps--font StyledProps--main"
+                style="height: 56px;"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                  style="height: 100%;"
+                >
+                  <div
+                    class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-right"
+                    style="width: 604px;"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge"
+                      style="height: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                      >
+                        pipeline.inputSetErrorStrip.existingYaml
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main refreshedHeader"
+                  >
+                    <div
+                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge"
+                      style="height: 100%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
+                      >
+                        pipeline.inputSetErrorStrip.validYaml
+                      </p>
+                      <span
+                        class="bp3-popover-wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <div
+                            class=""
+                            tabindex="0"
+                          >
+                            <span
+                              class="bp3-icon StyledProps--main copyIcon"
+                              data-icon="copy-alt"
+                            >
+                              <svg
+                                fill="none"
+                                height="20"
+                                viewBox="0 0 8 9"
+                                width="20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  clip-rule="evenodd"
+                                  d="M7.273 1.403c0-.109-.073-.181-.182-.181H3.453c-.108 0-.181.072-.181.18v.181a.363.363 0 01-.727 0v-.361c0-.397.328-.722.728-.722h4c.4 0 .727.325.728.721v5.42a.726.726 0 01-.728.722h-1.09a.364.364 0 01-.365-.36c0-.2.165-.362.364-.362h.91c.108 0 .18-.072.18-.18V1.403zM0 7.847V2.958c0-.359.337-.652.748-.652h4.114c.411 0 .749.293.749.652v4.89c0 .359-.338.652-.749.652H.748C.337 8.5 0 8.207 0 7.847z"
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </div>
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <textarea>
+                overlayInputSet:
+  name: ol1
+  identifier: overlay1
+  orgIdentifier: default
+  projectIdentifier: Eric
+  pipelineIdentifier: PipelineId
+  inputSetReferences:
+    - inputset2
+  tags: {}
+
+              </textarea>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-bottom StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-large StyledProps--padding-left-xxxlarge"
+        >
+          <button
+            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-danger Button--with-current-color"
+            style="width: 232px;"
+            type="button"
+          >
+            <span
+              class="bp3-button-text"
+            >
+              pipeline.inputSets.removeInvalidFields
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer />
+</div>
+`;

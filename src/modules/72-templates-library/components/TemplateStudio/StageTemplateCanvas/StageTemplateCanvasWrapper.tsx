@@ -14,46 +14,38 @@ import {
   DefaultNewStageName
 } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'
 import { TemplatePipelineProvider } from '@templates-library/components/TemplatePipelineContext/TemplatePipelineContext'
-import { StageTemplateCanvasWithRef } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateCanvas'
-import type { PipelineInfoConfig, StageElementConfig } from 'services/cd-ng'
+import { StageTemplateCanvas } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateCanvas'
+import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { DefaultPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
-import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { sanitize } from '@common/utils/JSONUtils'
-import { useQueryParams } from '@common/hooks'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import { useTemplateSelector } from '@templates-library/hooks/useTemplateSelector'
 
-const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef) => {
+const StageTemplateCanvasWrapper = () => {
   const {
-    state: { template, isLoading, isUpdated },
+    state: { template, gitDetails, storeMetadata },
     updateTemplate,
-    isReadonly
+    isReadonly,
+    renderPipelineStage,
+    setIntermittentLoading
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
-  const { getTemplate } = useTemplateSelector()
 
-  const createPipelineFromTemplate = () =>
-    produce({ ...DefaultPipeline }, draft => {
-      set(
-        draft,
-        'stages[0].stage',
-        merge({}, template.spec as StageElementConfig, {
-          name: DefaultNewStageName,
-          identifier: DefaultNewStageId
-        })
-      )
-    })
-
-  const [pipeline, setPipeline] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
-
-  React.useEffect(() => {
-    if (!isLoading && !isUpdated) {
-      setPipeline(createPipelineFromTemplate())
-    }
-  }, [isLoading, isUpdated])
+  const pipeline = React.useMemo(
+    () =>
+      produce({ ...DefaultPipeline }, draft => {
+        set(
+          draft,
+          'stages[0].stage',
+          merge({}, template.spec as StageElementConfig, {
+            name: DefaultNewStageName,
+            identifier: DefaultNewStageId
+          })
+        )
+      }),
+    [template.spec]
+  )
 
   const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig) => {
     const stage = get(pipelineConfig, 'stages[0].stage')
@@ -65,14 +57,17 @@ const StageTemplateCanvasWrapper = (_props: unknown, formikRef: TemplateFormRef)
 
   return (
     <TemplatePipelineProvider
-      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier, repoIdentifier, branch }}
+      queryParams={{ accountIdentifier: accountId, orgIdentifier, projectIdentifier }}
       initialValue={pipeline}
+      gitDetails={gitDetails}
+      storeMetadata={storeMetadata}
       onUpdatePipeline={onUpdatePipeline}
       contextType={PipelineContextType.StageTemplate}
       isReadOnly={isReadonly}
-      getTemplate={getTemplate}
+      renderPipelineStage={renderPipelineStage}
+      setIntermittentLoading={setIntermittentLoading}
     >
-      <StageTemplateCanvasWithRef ref={formikRef} />
+      <StageTemplateCanvas />
     </TemplatePipelineProvider>
   )
 }

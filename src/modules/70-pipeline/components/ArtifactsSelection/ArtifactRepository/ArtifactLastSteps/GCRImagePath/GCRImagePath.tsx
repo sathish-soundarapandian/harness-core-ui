@@ -16,12 +16,12 @@ import {
   StepProps,
   Text,
   SelectOption,
-  ButtonVariation
+  ButtonVariation,
+  FormikForm
 } from '@wings-software/uicore'
 import { Menu } from '@blueprintjs/core'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { memoize, merge } from 'lodash-es'
 import { ConnectorConfigDTO, useGetBuildDetailsForGcr } from 'services/cd-ng'
@@ -46,7 +46,7 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 export const gcrUrlList: SelectOption[] = Object.values(RegistryHostNames).map(item => ({ label: item, value: item }))
@@ -60,8 +60,9 @@ export function GCRImagePath({
   previousStep,
   artifactIdentifiers,
   isReadonly = false,
-  selectedArtifact
-}: StepProps<ConnectorConfigDTO> & ImagePathProps): React.ReactElement {
+  selectedArtifact,
+  isMultiArtifactSource
+}: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
 
   const schemaObject = {
@@ -80,7 +81,7 @@ export function GCRImagePath({
 
   const primarySchema = Yup.object().shape(schemaObject)
 
-  const sidecarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -91,6 +92,8 @@ export function GCRImagePath({
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+
   const [tagList, setTagList] = useState([])
   const [lastQueryData, setLastQueryData] = useState({ imagePath: '', registryHostname: '' })
   const {
@@ -129,8 +132,8 @@ export function GCRImagePath({
   }, [lastQueryData, refetch])
 
   const getInitialValues = useCallback((): ImagePathTypes => {
-    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, context === ModalViewFor.SIDECAR)
-  }, [context, initialValues, selectedArtifact])
+    return getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed) as ImagePathTypes
+  }, [initialValues, isIdentifierAllowed, selectedArtifact])
 
   const fetchTags = (imagePath = '', registryHostname = ''): void => {
     if (canFetchTags(imagePath, registryHostname)) {
@@ -148,7 +151,8 @@ export function GCRImagePath({
   }, [])
 
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
-    const artifactObj = getFinalArtifactObj(formData, context === ModalViewFor.SIDECAR)
+    const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
+
     merge(artifactObj.spec, { registryHostname: formData?.registryHostname })
     handleSubmit(artifactObj)
   }
@@ -174,7 +178,7 @@ export function GCRImagePath({
 
       <Formik
         initialValues={getInitialValues()}
-        validationSchema={context === ModalViewFor.SIDECAR ? sidecarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         formName="gcrImagePath"
         onSubmit={formData => {
           submitFormData({
@@ -186,8 +190,9 @@ export function GCRImagePath({
         }}
       >
         {formik => (
-          <Form>
+          <FormikForm>
             <div className={css.connectorForm}>
+              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTypeInput
@@ -257,7 +262,7 @@ export function GCRImagePath({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

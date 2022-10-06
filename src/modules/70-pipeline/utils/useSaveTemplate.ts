@@ -5,9 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import { cloneDeep, defaultTo, isEmpty, omit } from 'lodash-es'
-import { parse } from 'yaml'
 import { useHistory, useParams } from 'react-router-dom'
 import { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
 import {
@@ -15,21 +14,25 @@ import {
   EntityGitDetails,
   NGTemplateInfoConfig,
   TemplateSummaryResponse,
-  updateExistingTemplateLabelPromise
+  updateExistingTemplateVersionPromise
 } from 'services/template-ng'
-import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { useToaster } from '@common/exports'
+import type { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
 import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { sanitize } from '@common/utils/JSONUtils'
 import routes from '@common/RouteDefinitions'
 import type { GitQueryParams, ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { PromiseExtraArgs } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import type { Pipeline } from './types'
 
 export interface FetchTemplateUnboundProps {
   forceFetch?: boolean
@@ -49,6 +52,11 @@ interface SaveTemplateObj {
   template: NGTemplateInfoConfig
 }
 
+interface LastRemoteObjectId {
+  lastObjectId?: string
+  lastCommitId?: string
+}
+
 interface UseSaveTemplateReturnType {
   saveAndPublish: (
     updatedTemplate: NGTemplateInfoConfig,
@@ -57,35 +65,20 @@ interface UseSaveTemplateReturnType {
 }
 
 export interface TemplateContextMetadata {
-  template: NGTemplateInfoConfig
   yamlHandler?: YamlBuilderHandlerBinding
-  gitDetails?: EntityGitDetails
-  setLoading?: (loading: boolean) => void
   fetchTemplate?: (args: FetchTemplateUnboundProps) => Promise<void>
   deleteTemplateCache?: (gitDetails?: EntityGitDetails) => Promise<void>
   view?: string
-  isPipelineStudio?: boolean
-  stableVersion?: string
-  fireSuccessEvent?: boolean
+  isTemplateStudio?: boolean
 }
 
 export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata): UseSaveTemplateReturnType {
-  const {
-    template,
-    yamlHandler,
-    gitDetails,
-    setLoading,
-    fetchTemplate,
-    deleteTemplateCache,
-    view,
-    isPipelineStudio,
-    stableVersion,
-    fireSuccessEvent
-  } = TemplateContextMetadata
-  const { isGitSyncEnabled } = React.useContext(AppStoreContext)
+  const { yamlHandler, fetchTemplate, deleteTemplateCache, view, isTemplateStudio = true } = TemplateContextMetadata
   const { templateIdentifier, templateType, projectIdentifier, orgIdentifier, accountId, module } = useParams<
     TemplateStudioPathProps & ModulePathParams
   >()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
@@ -93,147 +86,139 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
   const history = useHistory()
   const isYaml = view === SelectedView.YAML
 
-  const navigateToLocation = (
-    newTemplateId: string,
-    versionLabel: string,
-    updatedGitDetails?: SaveToGitFormInterface
-  ): void => {
-    history.replace(
-      routes.toTemplateStudio({
-        projectIdentifier,
-        orgIdentifier,
-        accountId,
-        module,
-        templateType: templateType,
-        templateIdentifier: newTemplateId,
-        versionLabel: versionLabel,
-        repoIdentifier: updatedGitDetails?.repoIdentifier,
-        branch: updatedGitDetails?.branch
-      })
-    )
-  }
+  const navigateToLocation = useCallback(
+    (newTemplate: NGTemplateInfoConfig, updatedGitDetails?: SaveToGitFormInterface): void => {
+      history.replace(
+        routes.toTemplateStudio({
+          projectIdentifier: newTemplate.projectIdentifier,
+          orgIdentifier: newTemplate.orgIdentifier,
+          accountId,
+          ...(!isEmpty(newTemplate.projectIdentifier) && { module }),
+          templateType: templateType,
+          templateIdentifier: newTemplate.identifier,
+          versionLabel: newTemplate.versionLabel,
+          repoIdentifier: updatedGitDetails?.repoIdentifier,
+          branch: updatedGitDetails?.branch
+        })
+      )
+    },
+    [accountId, history, module, templateType]
+  )
 
   const stringifyTemplate = React.useCallback(
-    (temp: NGTemplateInfoConfig) => yamlStringify(JSON.parse(JSON.stringify({ template: temp })), { version: '1.1' }),
+    // Important to sanitize the final template to avoid sending null values as it fails schema validation
+    (temp: NGTemplateInfoConfig) =>
+      yamlStringify({
+        template: sanitize(temp, {
+          removeEmptyString: false,
+          removeEmptyObject: false,
+          removeEmptyArray: false
+        })
+      }),
     []
   )
 
   const updateExistingLabel = async (
+    latestTemplate: NGTemplateInfoConfig,
     comments?: string,
     updatedGitDetails?: SaveToGitFormInterface,
-    lastObject?: { lastObjectId?: string }
+    lastObject?: LastRemoteObjectId,
+    storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
-    try {
-      const response = await updateExistingTemplateLabelPromise({
-        templateIdentifier: template.identifier,
-        versionLabel: template.versionLabel,
-        body: stringifyTemplate(omit(cloneDeep(template), 'repo', 'branch')),
-        queryParams: {
-          accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier,
-          comments,
-          ...(updatedGitDetails ?? {}),
-          ...(lastObject?.lastObjectId ? lastObject : {}),
-          ...(updatedGitDetails && updatedGitDetails.isNewBranch ? { baseBranch: branch } : {})
-        },
-        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      })
-      setLoading?.(false)
-      if (response && response.status === 'SUCCESS') {
-        if (!isGitSyncEnabled) {
-          clear()
-          showSuccess(getString('common.template.updateTemplate.templateUpdated'))
-        }
-        await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
-        if (updatedGitDetails?.isNewBranch) {
-          navigateToLocation(template.identifier, template.versionLabel, updatedGitDetails)
-        }
-        return { status: response.status }
-      } else {
-        throw response
+    const response = await updateExistingTemplateVersionPromise({
+      templateIdentifier: latestTemplate.identifier,
+      versionLabel: latestTemplate.versionLabel,
+      body: stringifyTemplate(latestTemplate),
+      queryParams: {
+        accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
+        comments,
+        ...(updatedGitDetails ?? {}),
+        ...(lastObject ?? {}),
+        ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {}),
+        ...(updatedGitDetails && updatedGitDetails.isNewBranch
+          ? { baseBranch: defaultTo(branch, storeMetadata?.branch), branch: updatedGitDetails.branch }
+          : {})
+      },
+      requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+    })
+    if (response && response.status === 'SUCCESS') {
+      if (isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE) {
+        clear()
+        showSuccess(getString('common.template.updateTemplate.templateUpdated'))
       }
-    } catch (error) {
-      clear()
-      if (!isGitSyncEnabled) {
-        showError(getRBACErrorMessage(error), undefined, 'template.update.template.error')
-        return { status: 'FAILURE' }
-      } else {
-        throw error
+      await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
+      if (updatedGitDetails?.isNewBranch) {
+        navigateToLocation(latestTemplate, updatedGitDetails)
       }
+      return { status: response.status }
+    } else {
+      throw response
     }
   }
 
   const saveAndPublishTemplate = async (
     latestTemplate: NGTemplateInfoConfig,
-    comments = '',
+    comments?: string,
     isEdit = false,
     updatedGitDetails?: SaveToGitFormInterface,
-    lastObject?: { lastObjectId?: string }
+    lastObject?: LastRemoteObjectId,
+    storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
-    if (!isGitSyncEnabled) {
-      setLoading?.(true)
-    }
     if (isEdit) {
-      return updateExistingLabel(comments, updatedGitDetails, lastObject)
+      return updateExistingLabel(latestTemplate, comments, updatedGitDetails, lastObject, storeMetadata)
     } else {
-      try {
-        const response = await createTemplatePromise({
-          body: stringifyTemplate(omit(cloneDeep(latestTemplate), 'repo', 'branch')),
-          queryParams: {
-            accountIdentifier: accountId,
-            projectIdentifier,
-            orgIdentifier,
-            comments,
-            ...(updatedGitDetails ?? {}),
-            ...(updatedGitDetails && updatedGitDetails.isNewBranch ? { baseBranch: branch } : {})
-          },
-          requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-        })
-        if (!isGitSyncEnabled) {
-          setLoading?.(false)
+      const response = await createTemplatePromise({
+        body: stringifyTemplate(omit(cloneDeep(latestTemplate), 'repo', 'branch')),
+        queryParams: {
+          accountIdentifier: accountId,
+          projectIdentifier: latestTemplate.projectIdentifier,
+          orgIdentifier: latestTemplate.orgIdentifier,
+          comments,
+          ...(updatedGitDetails ?? {}),
+          ...(storeMetadata?.storeType === StoreType.REMOTE ? storeMetadata : {}),
+          ...(updatedGitDetails && updatedGitDetails.isNewBranch
+            ? { baseBranch: defaultTo(branch, storeMetadata?.branch), branch: updatedGitDetails.branch }
+            : {})
+        },
+        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
+      })
+      if (response && response.status === 'SUCCESS') {
+        if (!isTemplateStudio && response.data?.templateResponseDTO) {
+          window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: response.data.templateResponseDTO }))
         }
-        if (response && response.status === 'SUCCESS') {
-          if (fireSuccessEvent && response.data?.templateResponseDTO) {
-            window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: response.data.templateResponseDTO }))
-          }
-          if (!isGitSyncEnabled) {
-            clear()
-            showSuccess(getString('common.template.saveTemplate.publishTemplate'))
-          }
-          await deleteTemplateCache?.()
-          if (!isPipelineStudio) {
-            navigateToLocation(latestTemplate.identifier, latestTemplate.versionLabel, updatedGitDetails)
-          }
-          return { status: response.status }
-        } else {
-          throw response
+        if (isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE) {
+          clear()
+          showSuccess(getString('common.template.saveTemplate.publishTemplate'))
         }
-      } catch (error) {
-        clear()
-        if (!isGitSyncEnabled) {
-          showError(getRBACErrorMessage(error), undefined, 'template.save.template.error')
-          return { status: 'FAILURE' }
-        } else {
-          throw error
+        await deleteTemplateCache?.()
+        if (isTemplateStudio) {
+          navigateToLocation(latestTemplate, updatedGitDetails)
         }
+        return { status: response.status }
+      } else {
+        throw response
       }
     }
   }
 
-  const saveAngPublishWithGitInfo = async (
+  const saveAndPublishWithGitInfo = async (
     updatedGitDetails: SaveToGitFormInterface,
     payload?: SaveTemplateObj,
     objectId?: string,
-    isEdit = false
+    isEdit = false,
+    lastCommitId = '',
+    storeMetadata?: StoreMetadata
   ): Promise<UseSaveSuccessResponse> => {
-    let latestTemplate: NGTemplateInfoConfig = payload?.template || template
+    let latestTemplate = payload?.template as NGTemplateInfoConfig
 
     if (isYaml && yamlHandler) {
       try {
-        latestTemplate = payload?.template || (parse(yamlHandler.getLatestYaml()).pipeline as NGTemplateInfoConfig)
+        latestTemplate =
+          payload?.template || (parse<Pipeline>(yamlHandler.getLatestYaml()).pipeline as NGTemplateInfoConfig)
       } /* istanbul ignore next */ catch (err) {
-        showError(getRBACErrorMessage(err), undefined, 'template.save.gitinfo.error')
+        showError(getRBACErrorMessage(err as RBACError), undefined, 'template.save.gitinfo.error')
       }
     }
 
@@ -242,7 +227,8 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
       '',
       isEdit,
       omit(updatedGitDetails, 'name', 'identifier'),
-      templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId } : {}
+      templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId, lastCommitId } : {},
+      storeMetadata
     )
     return {
       status: response?.status
@@ -251,85 +237,61 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
 
   const { openSaveToGitDialog } = useSaveToGitDialog<SaveTemplateObj>({
     onSuccess: (
-      gitData: SaveToGitFormInterface,
+      gitData: GitData,
       payload?: SaveTemplateObj,
       objectId?: string,
-      isEdit = false
+      isEdit = false,
+      storeMetadata?: StoreMetadata
     ): Promise<UseSaveSuccessResponse> =>
-      saveAngPublishWithGitInfo(gitData, payload, objectId || gitDetails?.objectId || '', isEdit)
+      saveAndPublishWithGitInfo(
+        gitData,
+        payload,
+        defaultTo(objectId, ''),
+        isEdit,
+        gitData?.resolvedConflictCommitId || gitData?.lastCommitId,
+        storeMetadata
+      )
   })
 
   const getUpdatedGitDetails = (
     currGitDetails: EntityGitDetails,
     latestTemplate: NGTemplateInfoConfig,
     isEdit: boolean | undefined = false
-  ): EntityGitDetails => {
-    if (isEdit) {
-      return {
-        filePath: `${latestTemplate.identifier}_${latestTemplate.versionLabel
-          .toString()
-          .replace(/[^a-zA-Z0-9-_]/g, '')}.yaml`,
-        ...currGitDetails
-      }
-    }
-    return {
-      ...currGitDetails,
-      filePath: `${latestTemplate.identifier}_${latestTemplate.versionLabel
-        .toString()
-        .replace(/[^a-zA-Z0-9-_]/g, '')}.yaml`
-    }
-  }
-  const saveAndPublish = React.useCallback(
-    async (updatedTemplate: NGTemplateInfoConfig, extraInfo: PromiseExtraArgs): Promise<UseSaveSuccessResponse> => {
-      const { isEdit, comment } = extraInfo
-      const latestTemplate: NGTemplateInfoConfig = defaultTo(updatedTemplate, template)
+  ): EntityGitDetails => ({
+    ...currGitDetails,
+    ...(!isEdit && {
+      filePath: `${defaultTo(latestTemplate.identifier, '')}_${defaultTo(latestTemplate.versionLabel, '').replace(
+        /[^a-zA-Z0-9-_]/g,
+        ''
+      )}.yaml`
+    })
+  })
 
-      // if Git sync enabled then display modal
-      if (isGitSyncEnabled) {
-        if (isEmpty(gitDetails?.repoIdentifier) || isEmpty(gitDetails?.branch)) {
-          clear()
-          showError(getString('pipeline.gitExperience.selectRepoBranch'))
-          return Promise.reject(getString('pipeline.gitExperience.selectRepoBranch'))
-        } else {
-          // @TODO - Uncomment below snippet when schema validation is available at BE.
-          // When git sync enabled, do not irritate user by taking all git info then at the end showing BE errors related to schema
-          // const error = await validateJSONWithSchema({ template: latestTemplate }, templateSchema?.data as any)
-          // if (error.size > 0) {
-          //   clear()
-          //   showError(error)
-          //   return
-          // }
-          // if (isYaml && yamlHandler && !isValidYaml()) {
-          //   return
-          // }
-          openSaveToGitDialog({
-            isEditing: defaultTo(isEdit, false),
-            resource: {
-              type: 'Template',
-              name: latestTemplate.name,
-              identifier: latestTemplate.identifier,
-              gitDetails: gitDetails ? getUpdatedGitDetails(gitDetails, latestTemplate, isEdit) : {}
-            },
-            payload: { template: omit(latestTemplate, 'repo', 'branch') }
-          })
-          return Promise.resolve({ status: 'SUCCESS' })
-        }
-      } else {
-        return saveAndPublishTemplate(latestTemplate, comment, isEdit)
-      }
-    },
-    [
-      template,
-      templateIdentifier,
-      gitDetails,
-      isGitSyncEnabled,
-      isYaml,
-      yamlHandler,
-      showError,
-      showSuccess,
-      stableVersion
-    ]
-  )
+  const saveAndPublish = async (
+    updatedTemplate: NGTemplateInfoConfig,
+    extraInfo: PromiseExtraArgs
+  ): Promise<UseSaveSuccessResponse> => {
+    const { isEdit, comment, updatedGitDetails, storeMetadata, disableCreatingNewBranch } = extraInfo
+
+    // if Git sync enabled then display modal
+    if ((isGitSyncEnabled && !isEmpty(updatedGitDetails)) || storeMetadata?.storeType === StoreType.REMOTE) {
+      openSaveToGitDialog({
+        isEditing: defaultTo(isEdit, false),
+        disableCreatingNewBranch,
+        resource: {
+          type: 'Template',
+          name: updatedTemplate.name,
+          identifier: updatedTemplate.identifier,
+          gitDetails: getUpdatedGitDetails(updatedGitDetails!, updatedTemplate, isEdit),
+          storeMetadata
+        },
+        payload: { template: omit(updatedTemplate, 'repo', 'branch') }
+      })
+      return Promise.resolve({ status: 'SUCCESS' })
+    }
+
+    return saveAndPublishTemplate(updatedTemplate, comment, isEdit)
+  }
 
   return {
     saveAndPublish

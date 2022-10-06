@@ -1,0 +1,227 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.disabled {
+  -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+  filter: grayscale(100%);
+  cursor: not-allowed !important;
+}
+.section-header {
+  font-size: var(--font-size-normal) !important;
+  color: var(--black-100) !important;
+  margin: var(--spacing-medium) 0 !important;
+  font-weight: 600 !important;
+  :global {
+    .bp3-icon {
+      padding: 0 var(--spacing-small) !important;
+    }
+  }
+}
+
+.sub-secton-header {
+  font-size: 13px !important;
+  margin-bottom: var(--spacing-small) !important;
+  color: var(--black-100) !important;
+  font-weight: 600 !important;
+  :global {
+    .bp3-icon {
+      padding: 0 var(--spacing-small) !important;
+    }
+  }
+}
+
+.stages-tree-bullet-circle {
+  text-indent: 20px;
+  &::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    width: 13px;
+    height: 13px;
+    background: linear-gradient(147.14deg, var(--teal-300) 6.95%, hsl(216, 100%, 48%) 93.05%);
+    opacity: 0.6;
+    border-radius: 100px;
+  }
+  span {
+    margin-left: var(--spacing-small);
+  }
+}
+.artifactHeader {
+  display: block;
+  font-weight: bold;
+  padding: 0 var(--spacing-large);
+  margin-bottom: var(--spacing-medium);
+  &.mtop {
+    margin-top: var(--spacing-medium);
+  }
+}
+
+.custom-variables {
+  padding: 0 var(--spacing-large);
+}
+.padSmall {
+  padding: var(--spacing-small);
+}
+.inputWidth {
+  width: 50% !important;
+}
+.nested-accordions {
+  box-shadow: none !important;
+
+  :global {
+    .customVariables {
+      padding-left: 0;
+      padding-right: 0;
+      margin-left: 0;
+      margin-right: 0;
+      border: none;
+    }
+  }
+}
+.nopad-left {
+  padding-left: 0 !important;
+}
+
+.select-popover {
+  position: absolute;
+  border: solid 1px rgb(204, 204, 204);
+  width: 400px;
+  overflow: auto;
+  :global {
+    .icon-container {
+      display: none;
+    }
+    .bp3-menu {
+      max-height: 200px !important;
+    }
+    button.bp3-button {
+      width: 90%;
+      justify-content: flex-start;
+    }
+  }
+}
+.tabHeading {
+  font-size: 16px;
+  color: var(--black);
+  margin-top: var(--spacing-7);
+  font-weight: 600;
+}
+.tabSubHeading {
+  font-size: var(--font-size-normal);
+  color: var(--grey-800);
+  margin-bottom: var(--spacing-5);
+  font-weight: 600;
+}
+.section-card {
+  width: 1024px;
+  margin-top: var(--spacing-3);
+  padding: var(--spacing-7) !important;
+  &.notwide {
+    width: auto;
+  }
+  background-color: var(--white);
+}
+.accordionTitle {
+  background-color: transparent;
+}
+
+.card-section {
+  width: 1024px;
+  margin-bottom: 20px;
+  box-shadow: 0px 0px 1px rgb(40 41 61 / 4%), 0px 2px 4px rgb(96 97 112 / 16%);
+}
+
+.serviceDefinition {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.accordionSummary {
+  width: 100%;
+  background: var(--white);
+  margin-top: 0 !important;
+}
+
+.header {
+  padding: var(--spacing-large) 0 0;
+  font-weight: 600;
+}
+.subheading {
+  font-weight: 600;
+}
+
+.inputheader {
+  font-weight: 600 !important;
+  font-size: var(--font-size-small) !important;
+  padding-bottom: var(--spacing-medium) !important;
+}
+
+.artifactInfoTooltip {
+  margin-left: var(--spacing-small);
+}
+
+.manifestVariablesTable {
+  & + & {
+    margin-top: var(--spacing-large);
+  }
+}
+
+.skipVersioning {
+  :global {
+    .bp3-form-group {
+      position: relative;
+      left: var(--spacing-xlarge);
+    }
+  }
+}
+.width50 {
+  width: 50%;
+}
+
+.width25 {
+  width: 25%;
+}
+
+.serviceSection {
+  align-items: start !important;
+  --layout-spacing: var(--spacing-small) !important;
+}
+
+.connectorMargin {
+  margin-bottom: var(--spacing-small) !important;
+}
+
+.layoutVerticalSpacing {
+  margin-top: var(--spacing-main) !important;
+  .vertical-spacing-input {
+    margin-bottom: var(--spacing-small);
+  }
+  :global {
+    .bp3-form-group {
+      margin-bottom: 0;
+    }
+  }
+}
+.listLabel {
+  margin-bottom: var(--spacing-small);
+}
+.width400 {
+  width: 400px;
+}
+
+.artifactsAccordion {
+  margin-top: var(--spacing-medium) !important;
+}
+.inputFieldLayout {
+  display: grid;
+  grid-template-columns: 400px 20px;
+  margin-top: var(--spacing-large);
+  .configureOptions {
+    position: relative;
+    top: 22px;
+  }
+}

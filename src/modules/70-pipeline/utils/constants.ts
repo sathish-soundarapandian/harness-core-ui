@@ -8,6 +8,7 @@ import type { IconName, SelectOption } from '@harness/uicore'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 
 import type { UseStringsReturn } from 'framework/strings'
+import type { ExecutorInfoDTO } from 'services/pipeline-ng'
 
 export const EXPRESSION_STRING = '<+expression>' // TODO: this needs to be exported from uicore for best use.
 
@@ -23,7 +24,6 @@ export const ConnectorRefWidth = {
   InputSetView: 310,
   DefaultView: 385,
   EditStageView: 366,
-  EditStageViewInputSet: 308,
   RightBarView: 460,
   TemplateBuilder: 361,
   TemplateDetailDrawer: 313,
@@ -74,3 +74,24 @@ export enum OsTypes {
   Windows = 'Windows',
   MacOS = 'MacOS'
 }
+
+export enum ArchTypes {
+  Amd64 = 'Amd64',
+  Arm64 = 'Arm64'
+}
+
+export enum CIBuildInfrastructureType {
+  KubernetesDirect = 'KubernetesDirect',
+  VM = 'VM',
+  KubernetesHosted = 'KubernetesHosted',
+  Cloud = 'Cloud',
+  UseFromStage = 'UseFromStage',
+  Docker = 'Docker'
+}
+
+export const DEFAULT_PAGE_INDEX = 0
+export const DEFAULT_PAGE_SIZE = 20
+export const DEFAULT_PIPELINE_LIST_TABLE_SORT = ['lastUpdatedAt', 'DESC']
+export const DEFAULT_EXECUTION_LIST_TABLE_SORT = ['startTs', 'DESC']
+
+export const AUTO_TRIGGERS: ExecutorInfoDTO['triggerType'][] = ['WEBHOOK_CUSTOM', 'SCHEDULER_CRON']

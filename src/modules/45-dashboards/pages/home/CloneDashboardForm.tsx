@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ModalErrorHandlerBinding, useToaster } from '@harness/uicore'
 import type { DashboardPathProps } from '@common/interfaces/RouteInterfaces'
-import type { IDashboardFormData } from '@dashboards/types/DashboardTypes'
+import type { IDashboardFormData } from '@dashboards/types/DashboardTypes.types'
 import { useStrings } from 'framework/strings'
 import { ClonedDashboardResponse, useCloneDashboard } from 'services/custom-dashboards'
 import DashboardForm, { DashboardFormRequestProps } from './DashboardForm'
@@ -42,7 +42,7 @@ const CloneDashboardForm: React.FC<CloneDashboardFormProps> = ({ hideModal, relo
       const response = await cloneDashboard({ ...completedFormData, dashboardId })
       onSuccess(response)
     } catch (e) {
-      modalErrorHandler?.showDanger(getString('dashboards.cloneDashboardModal.submitFail'))
+      modalErrorHandler?.showDanger(e?.data?.responseMessages || getString('dashboards.cloneDashboardModal.submitFail'))
     }
   }
 

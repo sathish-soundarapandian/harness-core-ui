@@ -6,6 +6,7 @@
  */
 
 import type { DynatraceMetricInfo } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.types'
+import type { useGetMetricPacks } from 'services/cv'
 
 export type CreatedMetricsWithSelectedIndex = {
   createdMetrics: string[]
@@ -21,6 +22,9 @@ export interface DynatraceCustomMetricsProps {
   selectedMetric: string
   connectorIdentifier: string
   selectedServiceId: string
+  isTemplate?: boolean
+  expressions?: string[]
+  metricPackResponse: ReturnType<typeof useGetMetricPacks>
 }
 
 export type SelectedAndMappedMetrics = {

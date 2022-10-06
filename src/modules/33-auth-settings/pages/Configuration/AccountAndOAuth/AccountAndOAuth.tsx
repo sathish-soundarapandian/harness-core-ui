@@ -10,16 +10,16 @@ import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { Radio, Container, Layout, Collapse, Text, useConfirmationDialog } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import type { AuthenticationSettingsResponse } from 'services/cd-ng'
 import { useUpdateAuthMechanism } from 'services/cd-ng'
-import { AuthenticationMechanisms } from '@auth-settings/constants/utils'
 import { useToaster } from '@common/components'
 import HarnessAccount from '@auth-settings/pages/Configuration/AccountAndOAuth/HarnessAccount/HarnessAccount'
 import PublicOAuthProviders from '@auth-settings/pages/Configuration/AccountAndOAuth/OAuthProviders/PublicOAuthProviders'
 import { getForgotPasswordURL } from 'framework/utils/SessionUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import cssConfiguration from '@auth-settings/pages/Configuration/Configuration.module.scss'
 
 interface Props {
@@ -39,6 +39,7 @@ const AccountAndOAuth: React.FC<Props> = ({ authSettings, refetchAuthSettings, c
     /* istanbul ignore next */ authSettings.authenticationMechanism === AuthenticationMechanisms.OAUTH
 
   const { mutate: updateAuthMechanism, loading: updatingAuthMechanism } = useUpdateAuthMechanism({})
+  const currentAuthMechanism = authSettings.authenticationMechanism
 
   React.useEffect(() => {
     setUpdating(updatingAuthMechanism)
@@ -70,18 +71,13 @@ const AccountAndOAuth: React.FC<Props> = ({ authSettings, refetchAuthSettings, c
     contentText: (
       <React.Fragment>
         <Text color={Color.BLACK} padding={{ bottom: 'xlarge' }}>
-          {getString('authSettings.changeLoginToHarnessAccountOrOauth')}
+          {getString('authSettings.changeLoginToHarnessAccountOrOauth', { currentAuthMechanism })}
         </Text>
-        <Text inline color={Color.BLACK} font={{ weight: 'semi-bold', size: 'normal' }}>
-          {getString('common.note')}
-        </Text>
-        <Text inline color={Color.BLACK} font={{ size: 'normal' }}>
-          : {getString('authSettings.changeLoginToHarnessAccountOrOauthDescription')}{' '}
-        </Text>
-        <a href={getForgotPasswordURL()} target="_blank" rel="noreferrer">
-          {getString('common.link')}
-        </a>
-        .
+        <String
+          stringID="authSettings.changeLoginToHarnessAccountOrOauthDescription"
+          useRichText={true}
+          vars={{ forgotPasswordURL: getForgotPasswordURL() }}
+        />
       </React.Fragment>
     ),
     confirmButtonText: getString('confirm'),

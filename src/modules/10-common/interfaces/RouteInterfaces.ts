@@ -7,7 +7,7 @@
 
 import type { EntityGitDetails } from 'services/pipeline-ng'
 import type { Module as ModuleName } from 'framework/types/ModuleName'
-import type { StoreType } from '@common/constants/GitSyncTypes'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export interface AccountPathProps {
   accountId: string
@@ -24,10 +24,9 @@ export interface DashboardPathProps extends AccountPathProps {
 export interface GitQueryParams {
   branch?: EntityGitDetails['branch']
   repoIdentifier?: EntityGitDetails['repoIdentifier']
-  repoName?: EntityGitDetails['repoName']
-  connectorRef?: string
-  storeType?: StoreType
-  filePathTouched?: string
+  repoName?: StoreMetadata['repoName']
+  connectorRef?: StoreMetadata['connectorRef']
+  storeType?: StoreMetadata['storeType']
 }
 
 export interface InputSetGitQueryParams extends GitQueryParams {
@@ -37,6 +36,7 @@ export interface InputSetGitQueryParams extends GitQueryParams {
 export interface PipelineStudioQueryParams extends GitQueryParams, RunPipelineQueryParams {
   stageId?: string
   stepId?: string
+  sectionId?: string
 }
 export interface RunPipelineQueryParams extends GitQueryParams, InputSetGitQueryParams {
   runPipeline?: boolean
@@ -66,19 +66,25 @@ export type TemplateType =
   | 'Step'
   | 'Stage'
   | 'Pipeline'
+  | 'CustomDeployment'
+  | 'ArtifactSource'
   | 'Service'
   | 'Infrastructure'
   | 'StepGroup'
   | 'Execution'
   | 'MonitoredService'
+  | 'SecretManager'
   | ':templateType(Step)'
   | ':templateType(Stage)'
   | ':templateType(Pipeline)'
+  | ':templateType(CustomDeployment)'
   | ':templateType(Service)'
   | ':templateType(Infrastructure)'
   | ':templateType(StepGroup)'
   | ':templateType(Execution)'
   | ':templateType(MonitoredService)'
+  | ':templateType(SecretManager)'
+  | ':templateType(ArtifactSource)'
   | ':templateType'
 
 export interface TemplateStudioPathProps extends ProjectPathProps {
@@ -94,10 +100,21 @@ export interface TriggerPathProps extends PipelinePathProps {
   sourceRepo?: string
   artifactType?: string
   manifestType?: string
+  scheduleType?: string
+}
+
+export interface TriggerQueryParams {
+  triggerIdentifier: string
+  triggerType?: string
+  sourceRepo?: string
+  artifactType?: string
+  manifestType?: string
+  scheduleType?: string
 }
 
 export interface ExecutionPathProps extends PipelinePathProps {
   executionIdentifier: string
+  source: 'deployments' | 'executions' | 'builds' | ':source(deployments|executions|builds)'
 }
 
 export interface BuildPathProps extends ProjectPathProps {
@@ -148,7 +165,7 @@ export interface EnvironmentPathProps {
 }
 
 export interface EnvironmentQueryParams {
-  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE'
+  sectionId?: 'CONFIGURATION' | 'INFRASTRUCTURE' | 'SERVICE_OVERRIDES' | 'GITOPS'
 }
 
 export interface EnvironmentGroupPathProps {
@@ -217,7 +234,7 @@ export interface TemplateStudioQueryParams extends GitQueryParams {
   versionLabel?: string
 }
 
-type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>
+export type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>
 
 export interface GovernancePathProps
   extends RequireField<
@@ -227,6 +244,18 @@ export interface GovernancePathProps
   policyIdentifier?: string
   policySetIdentifier?: string
   evaluationId?: string
+}
+
+export interface SCMPathProps
+  extends RequireField<
+    Partial<Pick<ProjectPathProps, 'accountId' | 'orgIdentifier' | 'projectIdentifier'>>,
+    'accountId' | 'orgIdentifier' | 'projectIdentifier'
+  > {
+  repoName?: string
+  branchName?: string
+  filePath?: string
+  pullRequestId?: string
+  commitId?: string
 }
 
 export interface AccountLevelGitOpsPathProps {

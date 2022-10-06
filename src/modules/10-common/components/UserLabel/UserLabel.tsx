@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Icon, Layout, Text, Avatar, TextProps } from '@wings-software/uicore'
+import { Icon, Layout, Text, Avatar, TextProps } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { IconProps } from '@harness/icons'
 import cx from 'classnames'
@@ -21,12 +21,14 @@ export interface UserLabelProps {
   className?: string
   iconProps?: Omit<IconProps, 'name'>
   textProps?: TextProps
+  showUsernameInitial?: boolean
+  showEmail?: boolean
 }
 
 const handleClickOnPopoverContent = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => e.stopPropagation()
 
 export function UserLabel(props: UserLabelProps): React.ReactElement {
-  const { name, email, profilePictureUrl, className, iconProps, textProps } = props
+  const { name, email, profilePictureUrl, className, iconProps, textProps, showUsernameInitial, showEmail } = props
 
   return (
     <div className={css.wrapper}>
@@ -43,15 +45,17 @@ export function UserLabel(props: UserLabelProps): React.ReactElement {
           >
             {profilePictureUrl ? (
               <Avatar className={css.profilePicture} size={'small'} src={profilePictureUrl} hoverCard={false} />
+            ) : showUsernameInitial ? (
+              <Avatar className={css.profilePicture} size={'small'} name={name} hoverCard={false} />
             ) : (
-              <Icon name="user" size={36} />
+              <Icon name="nav-user-profile" size={36} />
             )}
             <Layout.Vertical className={css.rightSection}>
               <Text font={{ weight: 'bold' }} color={Color.WHITE}>
                 {name}
               </Text>
               {email ? (
-                <Text font={{ size: 'small' }} color={Color.PRIMARY_5}>
+                <Text font={{ size: 'small' }} color={Color.GREY_200}>
                   {email}
                 </Text>
               ) : null}
@@ -62,10 +66,19 @@ export function UserLabel(props: UserLabelProps): React.ReactElement {
         <div className={cx(css.userLabel, className)}>
           {profilePictureUrl ? (
             <Avatar className={css.profilePicture} size={'xsmall'} src={profilePictureUrl} hoverCard={false} />
+          ) : showUsernameInitial ? (
+            <Avatar className={css.profilePicture} size={'small'} name={name} hoverCard={false} />
           ) : (
-            <Icon name="user" size={18} {...iconProps} />
+            <Icon name="nav-user-profile" size={18} {...iconProps} />
           )}
-          <Text {...textProps}>{name}</Text>
+          <div className={css.userDetails}>
+            <Text {...textProps}>{name}</Text>
+            {showEmail && email ? (
+              <Text font={{ size: 'small' }} color={Color.GREY_200} className="UserLabel--email">
+                {email}
+              </Text>
+            ) : null}
+          </div>
         </div>
       </Popover>
     </div>

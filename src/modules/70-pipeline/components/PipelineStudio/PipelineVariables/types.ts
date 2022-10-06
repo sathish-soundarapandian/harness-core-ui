@@ -5,10 +5,48 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { CustomDeploymentNGVariable, StoreConfigWrapper } from 'services/cd-ng'
+import type { VariableMergeServiceResponse, PipelineInfoConfig, ShellScriptInlineSource } from 'services/pipeline-ng'
 
 export interface PipelineVariablesData {
   variablesPipeline: PipelineInfoConfig
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
+}
+
+interface InstanceAttributeVariable {
+  id?: string
+  name?: string
+  jsonPath?: string
+  description?: string
+}
+
+export interface DeploymentInfra {
+  variables?: Array<CustomDeploymentNGVariable>
+  fetchInstancesScript?: {
+    store?: StoreConfigWrapper | ShellScriptInlineSource
+  }
+  instancesListPath?: string
+  instanceAttributes?: Array<InstanceAttributeVariable>
+}
+
+export interface DeploymentConfigStepTemplateRefDetails {
+  templateRef: string
+  versionLabel: string
+}
+
+export interface DeploymentConfig {
+  infrastructure: DeploymentInfra
+  execution: {
+    stepTemplateRefs: DeploymentConfigStepTemplateRefDetails[]
+  }
+}
+
+export interface DeploymentTemplateConfig extends DeploymentConfig {
+  description?: string
+  identifier: string
+  name?: string
+  tags?: {
+    [key: string]: string
+  }
+  type?: string
 }

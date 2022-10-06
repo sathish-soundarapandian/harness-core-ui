@@ -25,6 +25,9 @@ export interface AccessCheckResponse {
 export interface AccessControl {
   permission?: string
   permitted?: boolean
+  resourceAttributes?: {
+    [key: string]: string
+  }
   resourceIdentifier?: string
   resourceScope?: ResourceScope
   resourceType?: string
@@ -58,6 +61,7 @@ export interface AccessControlCheckError {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -74,6 +78,7 @@ export interface AccessControlCheckError {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -184,7 +189,6 @@ export interface AccessControlCheckError {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -209,6 +213,7 @@ export interface AccessControlCheckError {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -221,6 +226,7 @@ export interface AccessControlCheckError {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -276,6 +282,7 @@ export interface AccessControlCheckError {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -312,9 +319,11 @@ export interface AccessControlCheckError {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -343,6 +352,28 @@ export interface AccessControlCheckError {
     | 'AZURE_AUTHENTICATION_ERROR'
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -380,6 +411,7 @@ export interface Error {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -396,6 +428,7 @@ export interface Error {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -506,7 +539,6 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -531,6 +563,7 @@ export interface Error {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -543,6 +576,7 @@ export interface Error {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -598,6 +632,7 @@ export interface Error {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -634,9 +669,11 @@ export interface Error {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -665,6 +702,28 @@ export interface Error {
     | 'AZURE_AUTHENTICATION_ERROR'
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -705,6 +764,7 @@ export interface Failure {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -721,6 +781,7 @@ export interface Failure {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -831,7 +892,6 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -856,6 +916,7 @@ export interface Failure {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -868,6 +929,7 @@ export interface Failure {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -923,6 +985,7 @@ export interface Failure {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -959,9 +1022,11 @@ export interface Failure {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -990,21 +1055,46 @@ export interface Failure {
     | 'AZURE_AUTHENTICATION_ERROR'
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface NodeErrorInfo {
-  fqn?: string
-  identifier?: string
-  name?: string
-  type?: string
-}
-
 export interface Page {
   content?: { [key: string]: any }[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageRoleAssignmentAggregate {
+  content?: RoleAssignmentAggregate[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -1045,6 +1135,9 @@ export interface Permission {
 
 export interface PermissionCheck {
   permission?: string
+  resourceAttributes?: {
+    [key: string]: string
+  }
   resourceIdentifier?: string
   resourceScope?: ResourceScope
   resourceType?: string
@@ -1057,6 +1150,13 @@ export interface PermissionResponse {
 export interface Principal {
   identifier?: string
   scopeLevel?: 'organization' | 'project' | 'account'
+  type?: 'USER' | 'USER_GROUP' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT'
+}
+
+export interface PrincipalV2 {
+  identifier?: string
+  name?: string
+  scopeLevel?: string
   type?: 'USER' | 'USER_GROUP' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT'
 }
 
@@ -1127,6 +1227,7 @@ export interface ResponseMessage {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -1143,6 +1244,7 @@ export interface ResponseMessage {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -1253,7 +1355,6 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1278,6 +1379,7 @@ export interface ResponseMessage {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -1290,6 +1392,7 @@ export interface ResponseMessage {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -1345,6 +1448,7 @@ export interface ResponseMessage {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -1381,9 +1485,11 @@ export interface ResponseMessage {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -1412,6 +1518,28 @@ export interface ResponseMessage {
     | 'AZURE_AUTHENTICATION_ERROR'
     | 'AZURE_CONFIG_ERROR'
     | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1423,9 +1551,17 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
+}
+
+export interface ResponsePageRoleAssignmentAggregate {
+  correlationId?: string
+  data?: PageRoleAssignmentAggregate
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
 export interface ResponsePageRoleAssignmentResponse {
@@ -1497,6 +1633,18 @@ export interface RoleAssignment {
   roleIdentifier?: string
 }
 
+export interface RoleAssignmentAggregate {
+  createdAt?: number
+  disabled?: boolean
+  harnessManaged?: boolean
+  identifier?: string
+  lastModifiedAt?: number
+  principal?: PrincipalV2
+  resourceGroup?: ResourceGroup
+  role?: RoleResponse
+  scope?: ScopeResponse
+}
+
 export interface RoleAssignmentAggregateResponse {
   resourceGroups?: ResourceGroup[]
   roleAssignments?: RoleAssignment[]
@@ -1516,6 +1664,13 @@ export interface RoleAssignmentFilter {
   principalTypeFilter?: ('USER' | 'USER_GROUP' | 'SERVICE' | 'API_KEY' | 'SERVICE_ACCOUNT')[]
   resourceGroupFilter?: string[]
   roleFilter?: string[]
+}
+
+export interface RoleAssignmentFilterV2 {
+  principalFilter?: Principal
+  resourceGroupFilter?: string[]
+  roleFilter?: string[]
+  scopeFilters?: ScopeSelector[]
 }
 
 export interface RoleAssignmentResponse {
@@ -1547,41 +1702,37 @@ export interface RoleResponse {
   scope?: Scope
 }
 
-export type SampleErrorMetadataDTO = ErrorMetadataDTO & {
-  sampleMap?: {
-    [key: string]: string
-  }
-}
-
-export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
-  conflictCommitId?: string
-}
-
 export interface Scope {
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
 }
 
+export interface ScopeResponse {
+  accountIdentifier?: string
+  accountName?: string
+  orgIdentifier?: string
+  orgName?: string
+  projectIdentifier?: string
+  projectName?: string
+}
+
+export interface ScopeSelector {
+  accountIdentifier?: string
+  filter: 'EXCLUDING_CHILD_SCOPES' | 'INCLUDING_CHILD_SCOPES'
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
 export interface StackTraceElement {
+  classLoaderName?: string
   className?: string
   fileName?: string
   lineNumber?: number
   methodName?: string
+  moduleName?: string
+  moduleVersion?: string
   nativeMethod?: boolean
-}
-
-export interface TemplateInputsErrorDTO {
-  fieldName?: string
-  identifierOfErrorSource?: string
-  message?: string
-}
-
-export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
-  errorMap?: {
-    [key: string]: TemplateInputsErrorDTO
-  }
-  errorYaml?: string
 }
 
 export interface Throwable {
@@ -1600,18 +1751,6 @@ export interface ValidationError {
 export interface ValidationResult {
   errorMessage?: string
   valid?: boolean
-}
-
-export interface YamlSchemaErrorDTO {
-  fqn?: string
-  hintMessage?: string
-  message?: string
-  stageInfo?: NodeErrorInfo
-  stepInfo?: NodeErrorInfo
-}
-
-export type YamlSchemaErrorWrapperDTO = ErrorMetadataDTO & {
-  schemaErrors?: YamlSchemaErrorDTO[]
 }
 
 export type RoleRequestBody = Role
@@ -2161,6 +2300,88 @@ export const postRoleAssignmentsPromise = (
     RoleAssignmentCreateRequest,
     void
   >('POST', getConfig('authz/api'), `/roleassignments/multi`, props, signal)
+
+export interface GetFilteredRoleAssignmentByScopeListQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GetFilteredRoleAssignmentByScopeListProps = Omit<
+  MutateProps<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Filtered Role Assignments By Scopes
+ */
+export const GetFilteredRoleAssignmentByScopeList = (props: GetFilteredRoleAssignmentByScopeListProps) => (
+  <Mutate<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >
+    verb="POST"
+    path={`/roleassignments/v2/filter`}
+    base={getConfig('authz/api')}
+    {...props}
+  />
+)
+
+export type UseGetFilteredRoleAssignmentByScopeListProps = Omit<
+  UseMutateProps<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Filtered Role Assignments By Scopes
+ */
+export const useGetFilteredRoleAssignmentByScopeList = (props: UseGetFilteredRoleAssignmentByScopeListProps) =>
+  useMutate<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >('POST', `/roleassignments/v2/filter`, { base: getConfig('authz/api'), ...props })
+
+/**
+ * Get Filtered Role Assignments By Scopes
+ */
+export const getFilteredRoleAssignmentByScopeListPromise = (
+  props: MutateUsingFetchProps<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePageRoleAssignmentAggregate,
+    Failure | AccessControlCheckError | Error,
+    GetFilteredRoleAssignmentByScopeListQueryParams,
+    RoleAssignmentFilterV2,
+    void
+  >('POST', getConfig('authz/api'), `/roleassignments/v2/filter`, props, signal)
 
 export interface ValidateRoleAssignmentQueryParams {
   accountIdentifier?: string

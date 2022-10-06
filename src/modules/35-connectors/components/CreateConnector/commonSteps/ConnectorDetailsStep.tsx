@@ -72,8 +72,8 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
   } = useParams<Params>()
   const projectIdentifier = connectorInfo ? connectorInfo.projectIdentifier : projectIdentifierFromUrl
   const orgIdentifier = connectorInfo ? connectorInfo.orgIdentifier : orgIdentifierFromUrl
-  const { isGitSyncEnabled: gitSyncAppStoreEnabled } = useAppStore()
-  const isGitSyncEnabled = gitSyncAppStoreEnabled && !disableGitSync
+  const { isGitSyncEnabled: gitSyncAppStoreEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = gitSyncAppStoreEnabled && !disableGitSync && !gitSyncEnabledOnlyForFF
   const showGitContextForm = isGitSyncEnabled && orgIdentifier && projectIdentifier
 
   const mounted = useRef(false)
@@ -129,7 +129,10 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
 
   const getInitialValues = () => {
     if (isEdit) {
-      return { ...pick(props.connectorInfo, ['name', 'identifier', 'description', 'tags']) }
+      return {
+        ...pick(props.connectorInfo, ['name', 'identifier', 'description', 'tags']),
+        ...(prevStepData && pick(prevStepData, ['name', 'identifier', 'description', 'tags']))
+      }
     } else if (prevStepData) {
       return { ...pick(prevStepData, ['name', 'identifier', 'description', 'tags']) }
     } else {
@@ -149,7 +152,9 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
 
   return (
     <Layout.Vertical spacing="xxlarge" className={css.firstep}>
-      <Text font={{ variation: FontVariation.H3 }}>{getString(getHeadingIdByType(props.type))}</Text>
+      <Text font={{ variation: FontVariation.H3 }} data-cy="connector-overview-heading">
+        {getString(getHeadingIdByType(props.type))}
+      </Text>
       <ModalErrorHandler bind={setModalErrorHandler} style={{ maxWidth: '740px' }} />
 
       <Container className={css.connectorForm}>

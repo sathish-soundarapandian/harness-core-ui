@@ -20,14 +20,19 @@ import {
   TableV2,
   useConfirmationDialog
 } from '@wings-software/uicore'
-import { Classes, Menu, Position, Intent } from '@blueprintjs/core'
+import { Color } from '@harness/design-system'
+import { Classes, Menu, Position, Intent, PopoverInteractionKind } from '@blueprintjs/core'
 import { defaultTo } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
 import { QlceView, ViewState, ViewType } from 'services/ce/services'
 import { perspectiveDateLabelToDisplayText, SOURCE_ICON_MAPPING } from '@ce/utils/perspectiveUtils'
 import formatCost from '@ce/utils/formatCost'
 import { useStrings } from 'framework/strings'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import useMoveFolderModal from '../PerspectiveFolders/MoveFolderModal'
+import PopoverMenuItem, { getToolTip } from './PerspectiveMenuItems'
 import css from './PerspectiveListView.module.scss'
 
 interface PerspectiveListViewProps {
@@ -67,6 +72,16 @@ const PerspectiveListView: React.FC<PerspectiveListViewProps> = ({
       <Text>{dateLabelToDisplayText[cell.value] || getString('common.repo_provider.customLabel')}</Text>
     ) : null
   }
+
+  const [canEdit, canDelete] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CCM_PERSPECTIVE
+      },
+      permissions: [PermissionIdentifier.EDIT_CCM_PERSPECTIVE, PermissionIdentifier.DELETE_CCM_PERSPECTIVE]
+    },
+    []
+  )
 
   const DataSourcesCell: Renderer<CellProps<QlceView>> = cell => {
     const dataSources = (cell.value || []) as string[]
@@ -108,6 +123,7 @@ const PerspectiveListView: React.FC<PerspectiveListViewProps> = ({
   const NameCell: Renderer<CellProps<QlceView>> = cell => {
     const viewState = (cell as any).row?.original?.viewState
     const viewType = (cell as any).row?.original?.viewType
+    const folderName = (cell as any).row?.original?.folderName
     let iconName: IconName | undefined
     if (viewState === ViewState.Draft) {
       iconName = 'deployment-incomplete-new'
@@ -116,10 +132,28 @@ const PerspectiveListView: React.FC<PerspectiveListViewProps> = ({
       iconName = 'harness'
     }
     return cell.value ? (
-      <Container className={css.nameContainer}>
-        <Text icon={iconName} color="grey800">
+      <Container
+        className={css.nameContainer}
+        margin={{
+          right: 'small'
+        }}
+      >
+        <Text icon={iconName} inline color="grey800" lineClamp={1}>
           {cell.value}
         </Text>
+        {folderName && (
+          <Popover
+            position={Position.TOP}
+            interactionKind={PopoverInteractionKind.HOVER}
+            content={
+              <Text padding={'medium'} background={Color.GREY_0} color={Color.GREY_600}>
+                {folderName}
+              </Text>
+            }
+          >
+            <Icon name={'main-folder'} color={Color.GREY_400} size={14} margin={{ left: 'small' }} />
+          </Popover>
+        )}
         {viewType === ViewType.Default && <Container className={css.sampleRibbon}></Container>}
       </Container>
     ) : null
@@ -152,6 +186,7 @@ const PerspectiveListView: React.FC<PerspectiveListViewProps> = ({
 
     const { openMoveFoldersModal } = useMoveFolderModal({
       perspectiveId: row.original.id || '',
+      folderName: row.original.folderName || '',
       setRefetchFolders,
       setSelectedFolder,
       setRefetchPerspectives
@@ -207,19 +242,52 @@ const PerspectiveListView: React.FC<PerspectiveListViewProps> = ({
           />
           <Container>
             <Menu>
-              <Menu.Item disabled={disableActions} onClick={editClick} icon="edit" text="Edit" />
-              <Menu.Item
+              <PopoverMenuItem
+                disabled={disableActions || !canEdit}
+                onClick={editClick}
+                icon="edit"
+                text="Edit"
+                tooltip={getToolTip(
+                  canEdit,
+                  PermissionIdentifier.EDIT_CCM_PERSPECTIVE,
+                  ResourceType.CCM_PERSPECTIVE,
+                  disableActions,
+                  getString('ce.perspectives.editDefaultPerspective')
+                )}
+              />
+              <PopoverMenuItem
+                disabled={!canEdit}
                 onClick={onCloneClick}
                 icon="duplicate"
                 text="Clone"
                 data-testid={`clone-perspective-${row.original.id}`}
+                tooltip={getToolTip(canEdit, PermissionIdentifier.EDIT_CCM_PERSPECTIVE, ResourceType.CCM_PERSPECTIVE)}
               />
-              <Menu.Item disabled={disableActions} onClick={onDeleteClick} icon="trash" text="Delete" />
-              <Menu.Item
-                disabled={disableActions}
+              <PopoverMenuItem
+                disabled={disableActions || !canDelete}
+                onClick={onDeleteClick}
+                icon="trash"
+                text="Delete"
+                tooltip={getToolTip(
+                  canDelete,
+                  PermissionIdentifier.DELETE_CCM_PERSPECTIVE,
+                  ResourceType.CCM_PERSPECTIVE,
+                  disableActions,
+                  getString('ce.perspectives.deleteDefaultPerspective')
+                )}
+              />
+              <PopoverMenuItem
+                disabled={disableActions || !canEdit}
                 onClick={onMoveClick}
                 icon="add-to-folder"
                 text={getString('ce.perspectives.folders.moveToLabel')}
+                tooltip={getToolTip(
+                  canEdit,
+                  PermissionIdentifier.EDIT_CCM_PERSPECTIVE,
+                  ResourceType.CCM_PERSPECTIVE,
+                  disableActions,
+                  getString('ce.perspectives.editDefaultPerspective')
+                )}
               />
             </Menu>
           </Container>

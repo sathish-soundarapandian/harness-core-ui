@@ -21,6 +21,7 @@ declare const styles: {
   readonly markerStart: string
   readonly nestedGroup: string
   readonly nodeNameText: string
+  readonly parallelNodes: string
   readonly readonly: string
   readonly stageName: string
   readonly stepGroup: string

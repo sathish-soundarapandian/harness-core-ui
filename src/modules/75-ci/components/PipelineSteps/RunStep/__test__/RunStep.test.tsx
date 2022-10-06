@@ -380,6 +380,17 @@ describe('Run Step', () => {
                   localName: 'step.run.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.run.identifier',
+                      localName: 'step.run.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-description': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.run.description',
@@ -456,6 +467,7 @@ describe('Run Step', () => {
             },
             variablesData: {
               type: StepType.Run,
+              __uuid: 'step-identifier',
               identifier: 'run',
               name: 'step-name',
               description: 'step-description',

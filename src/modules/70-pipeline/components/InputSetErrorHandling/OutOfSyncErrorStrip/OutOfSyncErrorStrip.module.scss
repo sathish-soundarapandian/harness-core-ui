@@ -1,0 +1,37 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.mainContainer {
+  background: var(--red-50) !important;
+  padding: var(--spacing-small) var(--spacing-xlarge) var(--spacing-small) var(--spacing-xlarge) !important;
+}
+
+.reconcileButton {
+  position: absolute !important;
+  right: 20px;
+}
+
+.reconcileDialog {
+  width: 1320px;
+  overflow: hidden;
+  position: relative;
+  padding: 0px;
+  min-height: 500px;
+}
+
+:global(.ConfirmationDialog--dialog) {
+  width: auto !important;
+}
+
+:global(.ConfirmationDialog--body) {
+  width: 570px !important;
+}
+
+.reconcileButtonListView {
+  width: 136px;
+  height: 32px !important;
+}

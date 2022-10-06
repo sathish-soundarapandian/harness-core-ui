@@ -11,17 +11,17 @@ import cx from 'classnames'
 import { useParams, useHistory } from 'react-router-dom'
 import { Button, Layout } from '@wings-software/uicore'
 import type { Editions } from '@common/constants/SubscriptionTypes'
-import { SUBSCRIPTION_TAB_NAMES, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { SubscriptionTabNames, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import type { ModuleName } from 'framework/types/ModuleName'
-import type { ModuleLicenseDTO } from 'services/cd-ng'
+import type { AccountDTO, ModuleLicenseDTO } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { StringsMap } from 'stringTypes'
-import { isCommunityPlan } from '@common/utils/utils'
+import { useGetCommunity } from '@common/utils/utils'
 
 import SubscriptionOverview from './overview/SubscriptionOverview'
 import SubscriptionBanner from './SubscriptionBanner'
@@ -29,17 +29,17 @@ import SubscriptionPlans from './plans/SubscriptionPlans'
 import css from './SubscriptionsPage.module.scss'
 
 export interface SubscriptionTabInfo {
-  name: SUBSCRIPTION_TAB_NAMES
+  name: SubscriptionTabNames
   label: keyof StringsMap
 }
 
 export const SUBSCRIPTION_TABS: SubscriptionTabInfo[] = [
   {
-    name: SUBSCRIPTION_TAB_NAMES.OVERVIEW,
+    name: SubscriptionTabNames.OVERVIEW,
     label: 'common.subscriptions.tabs.overview'
   },
   {
-    name: SUBSCRIPTION_TAB_NAMES.PLANS,
+    name: SubscriptionTabNames.PLANS,
     label: 'common.subscriptions.tabs.plans'
   }
   // {
@@ -58,16 +58,16 @@ interface TrialInformation {
 }
 
 interface SubscriptionTabProps {
-  accountName?: string
   trialInfo: TrialInformation
   hasLicense?: boolean
   selectedModule: ModuleName
   licenseData?: ModuleLicenseDTO
   refetchGetLicense: () => void
+  accountData?: AccountDTO
 }
 
 const SubscriptionTab = ({
-  accountName,
+  accountData,
   trialInfo,
   selectedModule,
   hasLicense,
@@ -75,11 +75,11 @@ const SubscriptionTab = ({
   refetchGetLicense
 }: SubscriptionTabProps): ReactElement => {
   const { PLANS_ENABLED } = useFeatureFlags()
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
 
   const [selectedSubscriptionTab, setSelectedSubscriptionTab] = useState<SubscriptionTabInfo>(SUBSCRIPTION_TABS[0])
   const { getString } = useStrings()
-  const { tab: queryTab } = useQueryParams<{ tab?: SUBSCRIPTION_TAB_NAMES }>()
+  const { tab: queryTab } = useQueryParams<{ tab?: SubscriptionTabNames }>()
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
 
@@ -135,13 +135,13 @@ const SubscriptionTab = ({
 
   function getTabComponent(): React.ReactElement | null {
     switch (selectedSubscriptionTab.name) {
-      case SUBSCRIPTION_TAB_NAMES.PLANS:
+      case SubscriptionTabNames.PLANS:
         return <SubscriptionPlans module={selectedModule} />
-      case SUBSCRIPTION_TAB_NAMES.OVERVIEW:
+      case SubscriptionTabNames.OVERVIEW:
       default:
         return (
           <SubscriptionOverview
-            accountName={accountName}
+            accountName={accountData?.name}
             module={selectedModule}
             licenseData={licenseData}
             trialInformation={trialInfo}
@@ -155,7 +155,7 @@ const SubscriptionTab = ({
     <React.Fragment>
       {hasLicense && getBanner()}
       <Layout.Horizontal className={css.subscriptionTabButtons} spacing="medium">
-        {getSubscriptionTabButtons()}
+        {accountData?.productLed && getSubscriptionTabButtons()}
       </Layout.Horizontal>
       {getTabComponent()}
     </React.Fragment>

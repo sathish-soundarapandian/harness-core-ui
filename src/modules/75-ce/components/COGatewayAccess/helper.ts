@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty as _isEmpty, defaultTo as _defaultTo } from 'lodash-es'
+import { isEmpty as _isEmpty, defaultTo as _defaultTo, get } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 import { Utils } from '@ce/common/Utils'
 import type {
@@ -28,6 +28,7 @@ import type {
   GatewayDetails,
   GetInitialAccessPointDetails,
   GetInitialAzureAccessPoint,
+  Handler,
   RuleCreationParams
 } from '../COCreateGateway/models'
 
@@ -43,20 +44,31 @@ export const getSelectedTabId = (accessDetails: ConnectionMetadata): string => {
   return key ? accessDetailsToTabIdMap[key] : ''
 }
 
-export const getValidStatusForDnsLink = (gatewayDetails: GatewayDetails): boolean => {
+export const areCustomDomainsValid = (customDomains: string[]) =>
+  customDomains.every(url =>
+    url.match(
+      /((https?):\/\/)?(www.)?[a-z0-9-]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#-]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/
+    )
+  )
+
+export const getValidStatusForDnsLink = (
+  gatewayDetails: GatewayDetails,
+  domainsToOverride?: string[],
+  overrideAgreement?: boolean
+): boolean => {
   let validStatus = true
   // check for custom domains validation
   if (gatewayDetails.customDomains?.length) {
-    validStatus = gatewayDetails.customDomains.every(url =>
-      url.match(
-        /((https?):\/\/)?(www.)?[a-z0-9-]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#-]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/
-      )
-    )
-    if (
-      !gatewayDetails.routing.custom_domain_providers?.others &&
-      !gatewayDetails.routing.custom_domain_providers?.route53?.hosted_zone_id
-    ) {
+    if (!_isEmpty(domainsToOverride) && !overrideAgreement) {
       validStatus = false
+    } else {
+      validStatus = areCustomDomainsValid(gatewayDetails.customDomains)
+      if (
+        !gatewayDetails.routing.custom_domain_providers?.others &&
+        !gatewayDetails.routing.custom_domain_providers?.route53?.hosted_zone_id
+      ) {
+        validStatus = false
+      }
     }
   }
   // checck for valid access point selected
@@ -66,6 +78,23 @@ export const getValidStatusForDnsLink = (gatewayDetails: GatewayDetails): boolea
 
   // check for routing ports
   if (validStatus && _isEmpty(gatewayDetails.routing.container_svc) && _isEmpty(gatewayDetails.routing.ports)) {
+    validStatus = false
+  }
+
+  // check for AWS redirect routing config
+  if (validStatus && Utils.isProviderAws(gatewayDetails.provider) && !_isEmpty(gatewayDetails.routing.ports)) {
+    validStatus = !gatewayDetails.routing.ports.some(
+      portConfig => portConfig.action === 'redirect' && _isEmpty(portConfig.redirect_url)
+    )
+  }
+
+  // check for custom exclusion/inclusion
+  const sourceFiltersList = get(gatewayDetails, 'routing.source_filters.filters', [])
+  if (
+    validStatus &&
+    !_isEmpty(sourceFiltersList) &&
+    !_isEmpty(sourceFiltersList.find((item: Handler) => _isEmpty(item.value)))
+  ) {
     validStatus = false
   }
   return validStatus
@@ -268,7 +297,7 @@ export const getLoadBalancerToEdit = (
 
 export const getAccessPointFetchQueryParams = (
   { gatewayDetails, accountId }: BaseFetchDetails,
-  isAwsProvider: boolean
+  { isAwsProvider, isGcpProvider }: RuleCreationParams
 ): ListAccessPointsQueryParams => {
   const params: ListAccessPointsQueryParams = {
     cloud_account_id: gatewayDetails.cloudAccount.id,
@@ -282,13 +311,19 @@ export const getAccessPointFetchQueryParams = (
       ? gatewayDetails.selectedInstances[0].vpc
       : gatewayDetails.routing.instance.scale_group?.target_groups?.[0]?.vpc || ''
   }
+  if (isGcpProvider) {
+    const subnet = get(gatewayDetails, 'selectedInstances[0].metadata.network_interfaces[0].subnetwork', null)
+    if (subnet) {
+      params.subnet = subnet
+    }
+  }
   return params
 }
 
-export const getSupportedResourcesQueryParams = ({
-  gatewayDetails,
-  accountId
-}: BaseFetchDetails): AccessPointResourcesQueryParams => {
+export const getSupportedResourcesQueryParams = (
+  { gatewayDetails, accountId }: BaseFetchDetails,
+  { isGcpProvider }: RuleCreationParams
+): AccessPointResourcesQueryParams => {
   const params: AccessPointResourcesQueryParams = {
     cloud_account_id: gatewayDetails.cloudAccount.id,
     accountIdentifier: accountId,
@@ -303,6 +338,12 @@ export const getSupportedResourcesQueryParams = ({
       ? gatewayDetails.selectedInstances[0].region
       : _defaultTo(gatewayDetails.routing.instance.scale_group?.region, '')
     params.resource_group_name = gatewayDetails.selectedInstances[0]?.metadata?.resourceGroup
+  }
+  if (isGcpProvider) {
+    const subnet = get(gatewayDetails, 'selectedInstances[0].metadata.network_interfaces[0].subnetwork', null)
+    if (subnet) {
+      params.subnet = subnet
+    }
   }
   return params
 }

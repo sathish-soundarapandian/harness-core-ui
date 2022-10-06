@@ -8,15 +8,14 @@
 import React from 'react'
 import SplitPane from 'react-split-pane'
 import { debounce, isEmpty } from 'lodash-es'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
-import { StageTemplateFormWithRef } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'
+import { StageTemplateForm } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'
 import { StageTemplateDiagram } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateDiagram/StageTemplateDiagram'
 import { RightDrawer } from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer'
 import { SplitViewTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
 
-const StageTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef): JSX.Element => {
+export const StageTemplateCanvas = (): JSX.Element => {
   const {
     state: {
       pipeline: { stages },
@@ -74,11 +73,9 @@ const StageTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef): JSX.E
         onChange={handleStageResize}
       >
         <StageTemplateDiagram />
-        {openSplitView && type === SplitViewTypes.StageView ? <StageTemplateFormWithRef ref={formikRef} /> : null}
+        {openSplitView && type === SplitViewTypes.StageView ? <StageTemplateForm /> : null}
       </SplitPane>
       <RightDrawer />
     </>
   )
 }
-
-export const StageTemplateCanvasWithRef = React.forwardRef(StageTemplateCanvas)

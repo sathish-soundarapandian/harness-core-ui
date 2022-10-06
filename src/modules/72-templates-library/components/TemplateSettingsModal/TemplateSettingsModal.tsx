@@ -21,17 +21,23 @@ import { isEmpty } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { PageSpinner, useToaster } from '@common/components'
 import { TemplatePreview } from '@templates-library/components/TemplatePreview/TemplatePreview'
 import { TemplateListType } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
-import { useGetTemplateList, TemplateSummaryResponse, useUpdateStableTemplate } from 'services/template-ng'
+import {
+  useGetTemplateList,
+  TemplateSummaryResponse,
+  useUpdateStableTemplate,
+  useGetTemplateMetadataList
+} from 'services/template-ng'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import css from './TemplateSettingsModal.module.scss'
 
 export interface TemplateSettingsModalProps {
@@ -146,12 +152,13 @@ export const TemplateSettingsModal = (props: TemplateSettingsModalProps) => {
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
+  const { supportingTemplatesGitx } = useAppStore()
 
   const {
     data: templateData,
     loading,
     error: templatesError
-  } = useMutateAsGet(useGetTemplateList, {
+  } = useMutateAsGet(supportingTemplatesGitx ? useGetTemplateMetadataList : useGetTemplateList, {
     body: {
       filterType: 'Template',
       templateIdentifiers: [templateIdentifier]
@@ -188,7 +195,7 @@ export const TemplateSettingsModal = (props: TemplateSettingsModalProps) => {
   React.useEffect(() => {
     if (templatesError) {
       onClose()
-      showError(getRBACErrorMessage(templatesError), undefined, 'template.fetch.template.error')
+      showError(getRBACErrorMessage(templatesError as RBACError), undefined, 'template.fetch.template.error')
     }
   }, [templatesError])
 
@@ -204,7 +211,7 @@ export const TemplateSettingsModal = (props: TemplateSettingsModalProps) => {
       onSuccess?.()
     } catch (error) {
       showError(
-        getRBACErrorMessage(error) || getString('common.template.updateTemplate.errorWhileUpdating'),
+        getRBACErrorMessage(error as RBACError) || getString('common.template.updateTemplate.errorWhileUpdating'),
         undefined,
         'template.save.template.error'
       )

@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RenderField test it should render KVTagInput if allowedValuesType is TIME 1`] = `
+<div>
+  <div
+    class="bp3-form-group"
+  >
+    <label
+      class="bp3-label"
+      for="allowedValues"
+    >
+      allowedValues
+       
+      <span
+        class="bp3-text-muted"
+      />
+    </label>
+    <div
+      class="bp3-form-content"
+    >
+      <div
+        class="bp3-input bp3-tag-input"
+      >
+        <div
+          class="bp3-tag-input-values"
+        >
+          <input
+            class="bp3-input-ghost"
+            data-mentions="kv-tag-input-allowedValues"
+            placeholder="Type and press enter to create a tag"
+            value="20s"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RenderField test it should render KVTagInput if allowedValuesType is null 1`] = `
+<div>
+  <div
+    class="bp3-form-group"
+  >
+    <label
+      class="bp3-label"
+      for="allowedValues"
+    >
+      allowedValues
+       
+      <span
+        class="bp3-text-muted"
+      />
+    </label>
+    <div
+      class="bp3-form-content"
+    >
+      <div
+        class="bp3-input bp3-tag-input"
+      >
+        <div
+          class="bp3-tag-input-values"
+        >
+          <input
+            class="bp3-input-ghost"
+            data-mentions="kv-tag-input-allowedValues"
+            placeholder="Type and press enter to create a tag"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

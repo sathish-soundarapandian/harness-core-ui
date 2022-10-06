@@ -45,8 +45,9 @@ import { Entities } from '@common/interfaces/GitSyncInterface'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { FeatureFlag } from '@common/featureFlags'
-import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { connectorGovernanceModalProps } from '@connectors/utils/utils'
+import { doesGovernanceHasErrorOrWarning } from '@governance/utils'
 import { isSMConnector } from '../connectors/utils/ConnectorUtils'
 import css from './CreateConnectorFromYamlPage.module.scss'
 
@@ -59,14 +60,13 @@ const CreateConnectorFromYamlPage: React.FC = () => {
   const { mutate: createConnector, loading: creating } = useCreateConnector({
     queryParams: { accountIdentifier: accountId }
   })
-  const { hideOrShowGovernanceErrorModal, doesGovernanceHasError } = useConnectorGovernanceModal({
-    errorOutOnGovernanceWarning: false,
-    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
-  })
+
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   const [editorContent, setEditorContent] = React.useState<Record<string, any>>()
   const { getString } = useStrings()
   const [hasConnectorChanged, setHasConnectorChanged] = useState<boolean>(false)
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [gitResourceDetails, setGitResourceDetails] = useState<GitResourceInterface>({
     gitDetails: {} as EntityGitDetails,
     type: Entities.CONNECTORS,
@@ -117,14 +117,19 @@ const CreateConnectorFromYamlPage: React.FC = () => {
       ? { accountIdentifier: accountId, ...gitData, baseBranch: gitResourceDetails.gitDetails?.branch }
       : {}
     const response = await createConnector(connectorJSON, { queryParams })
-    const hasAnyGovernnanceError = doesGovernanceHasError(response)
-
-    const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
+    const { governanceMetaDataHasError, governanceMetaDataHasWarning } = doesGovernanceHasErrorOrWarning(
+      response.data?.governanceMetadata
+    )
+    if (response.data?.governanceMetadata) {
+      conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
+        rerouteBasedOnContext()
+      })
+    }
     return {
-      status: !hasAnyGovernnanceError ? response.status : 'FAILURE',
+      status: !governanceMetaDataHasError ? response.status : 'FAILURE',
       governanceMetaData: response.data?.governanceMetadata,
       nextCallback: async () => {
-        if (canGoToNextStep) {
+        if (!governanceMetaDataHasError && !governanceMetaDataHasWarning) {
           rerouteBasedOnContext()
         }
       }
@@ -320,10 +325,8 @@ const CreateConnectorFromYamlPage: React.FC = () => {
                     : handleCreate() /* Handling non-git flow */
                         .then(res => {
                           if (res.status === 'SUCCESS') {
-                            if (!(res.governanceMetaData && res.governanceMetaData.status === 'error')) {
-                              showSuccess(getString('connectors.createdSuccessfully'))
-                              res.nextCallback?.()
-                            }
+                            showSuccess(getString('connectors.createdSuccessfully'))
+                            res.nextCallback?.()
                           } else {
                             /* TODO handle error with API status 200 */
                           }
@@ -337,6 +340,7 @@ const CreateConnectorFromYamlPage: React.FC = () => {
               }}
               disabled={!hasConnectorChanged}
             />
+
             {hasConnectorChanged ? (
               <Button
                 text={getString('cancel')}
@@ -344,7 +348,14 @@ const CreateConnectorFromYamlPage: React.FC = () => {
                 onClick={resetEditor}
                 variation={ButtonVariation.TERTIARY}
               />
-            ) : null}
+            ) : (
+              <Button
+                text={getString('cancel')}
+                margin={{ top: 'xlarge' }}
+                onClick={rerouteBasedOnContext}
+                variation={ButtonVariation.TERTIARY}
+              />
+            )}
           </Layout.Horizontal>
         </Container>
       </PageBody>

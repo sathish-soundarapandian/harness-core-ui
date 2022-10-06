@@ -25,7 +25,6 @@ export const FeatureDescriptor: { [key: string]: React.ReactElement } = {
 }
 
 const CustomFeatureDescriptorMap: Record<string, keyof StringsMap> = {
-  TEST_INTELLIGENCE: 'pipeline.testsReports.tiCallToAction.requiresEnterprisePlan',
   BUILDS: 'pipeline.featureRestriction.maxBuildsPerMonth100PercentLimit',
   MONTHLY_ACTIVE_USERS: 'cf.planEnforcement.upgradeRequiredMau',
   DEVELOPERS: 'cf.planEnforcement.upgradeRequiredDev',

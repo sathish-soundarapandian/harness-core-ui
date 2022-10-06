@@ -5,6 +5,7 @@ rules:
         - lodash.*
         - microfrontends/*
         - '!microfrontends/ChildAppMounter'
+        - modules/72-freeze-windows/*
         - modules/72-triggers/*
         - modules/75-cd/*
         - modules/75-ce/*
@@ -14,6 +15,7 @@ rules:
         - modules/85-cv/*
         - modules/85-sto-steps/*
         - modules/90-gitops/*
+        - '@freeze-windows/*'
         - '@triggers/*'
         - '@cd/*'
         - '@ce/*'
@@ -25,11 +27,12 @@ rules:
         - '@gitops/*'
       paths:
         - lodash
+        - name: js-yaml
+          message: Please use methods from @common/utils/YamlHelperMethods instead of using js-yaml
         - name: yaml
           importNames:
             - stringify
-          message: Please use yamlStringify from @common/utils/YamlHelperMethods instead
-            of this
+          message: Please use yamlStringify from @common/utils/YamlHelperMethods instead of this
         - name: react-router
           message: import from "react-router-dom" instead
         - name: microfrontends

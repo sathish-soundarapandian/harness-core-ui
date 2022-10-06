@@ -89,7 +89,56 @@ const mockMetricInfosMap: Map<string, DynatraceMetricInfo> = new Map([
   ]
 ])
 
+const mockCustomMetricMap: Map<string, DynatraceMetricInfo> = new Map([
+  [
+    'Dynatrace metric custom',
+    {
+      metricSelector: 'builtin:service.cpu.perRequest Group 1',
+      identifier: 'Dynatrace_metric_custom',
+      metricName: 'Dynatrace metric custom',
+      riskCategory: '',
+      lowerBaselineDeviation: false,
+      higherBaselineDeviation: false,
+      groupName: { label: 'Group 1', value: 'Group 1' },
+      continuousVerification: false,
+      healthScore: false,
+      sli: true,
+      isManualQuery: true
+    }
+  ]
+])
+
 export const MockConnectorName = 'dynatraceConnector'
+
+const templateCustomMetric = new Map()
+const templateCustomMetricValue = {
+  metricSelector: '<+input>',
+  identifier: 'Dynatrace_metric',
+  metricName: 'Dynatrace metric',
+  riskCategory: 'Infrastructure/INFRA',
+  lowerBaselineDeviation: false,
+  higherBaselineDeviation: true,
+  groupName: { label: 'Group 1', value: 'Group 1' },
+  continuousVerification: true,
+  healthScore: true,
+  sli: true
+}
+templateCustomMetric.set('Dynatrace metric', templateCustomMetricValue)
+export const MockTemplateMetricData: DynatraceFormDataInterface = {
+  product: { label: 'dynatrace_apm', value: 'dynatrace_apm' },
+  healthSourceName: 'Dynatrace Runtime',
+  healthSourceIdentifier: 'Dynatrace_Runtime',
+  connectorRef: '<+input>',
+  isEdit: true,
+  selectedService: '<+input>',
+  metricPacks: [{ identifier: 'Infrastructure' }, { identifier: 'Performance' }],
+  metricData: { Infrastructure: true, Performance: true },
+  serviceMethods: [],
+  customMetrics: templateCustomMetric,
+  ignoreThresholds: [],
+  failFastThresholds: []
+}
+
 export const MockDynatraceMetricData: DynatraceFormDataInterface = {
   connectorRef: MockConnectorName,
   isEdit: true,
@@ -105,7 +154,24 @@ export const MockDynatraceMetricData: DynatraceFormDataInterface = {
   metricData: {
     Performance: true
   },
-  customMetrics: mockMetricInfosMap
+  customMetrics: mockMetricInfosMap,
+  ignoreThresholds: [],
+  failFastThresholds: []
+}
+
+export const MockDynatraceMetricDataWithCustomMetric: DynatraceFormDataInterface = {
+  product: { label: 'dynatrace_apm', value: 'dynatrace_apm' },
+  healthSourceName: 'Dynatrace',
+  healthSourceIdentifier: 'Dynatrace',
+  connectorRef: 'org.dynatrace',
+  isEdit: true,
+  selectedService: { label: ':4444', value: 'SERVICE-D739201C4CBBA618' },
+  metricPacks: [{ identifier: 'Performance' }, { identifier: 'Infrastructure' }],
+  metricData: { Performance: true, Infrastructure: true },
+  serviceMethods: ['SERVICE_METHOD-F3988BEE84FF7388'],
+  customMetrics: mockCustomMetricMap,
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const ServiceListMock: DynatraceServiceDTO[] = [

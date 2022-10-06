@@ -35,7 +35,7 @@ $dot-space: 10px;
   min-width: 180px;
 
   .add-popover {
-    button {
+    :global(.bp3-button) {
       justify-content: flex-start;
       --background-color: transparent !important;
       --background-color-hover: rgba(255, 255, 255, 0.2) !important;
@@ -60,10 +60,4 @@ $dot-space: 10px;
 
 .graphLink {
   stroke: var(--primary-4);
-}
-
-.portalVisibility {
-  span {
-    z-index: 999 !important;
-  }
 }

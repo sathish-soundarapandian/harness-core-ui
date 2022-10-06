@@ -62,6 +62,23 @@ export const getRiskColorValue = (
   }
 }
 
+export const getRiskColorLogo = (riskStatus?: RiskTypes | SloHealthIndicatorDTO['errorBudgetRisk']): string => {
+  switch (riskStatus) {
+    case RiskValues.HEALTHY:
+      return 'heart'
+    case RiskValues.OBSERVE:
+      return 'warning-icon'
+    case RiskValues.NEED_ATTENTION:
+      return 'warning-sign'
+    case RiskValues.UNHEALTHY:
+      return 'heart-broken'
+    case SLOErrorBudget.EXHAUSTED:
+      return 'remove-minus'
+    default:
+      return 'grid'
+  }
+}
+
 export function getSecondaryRiskColorValue(
   riskStatus?: RiskTypes | SloHealthIndicatorDTO['errorBudgetRisk'],
   realCSSColor = true
@@ -152,6 +169,7 @@ interface GetCVMonitoringServicesSearchParamProps {
   redirectToSLO?: boolean
   sloIdentifier?: string
   monitoredServiceIdentifier?: string
+  templateRef?: string
 }
 
 export const getCVMonitoringServicesSearchParam = (props: GetCVMonitoringServicesSearchParamProps): string => {
@@ -246,4 +264,19 @@ export const getTags = (tags?: CVNGLogTag[]) => {
     })
 
   return JSON.stringify(result)
+}
+
+export const getDetailsLabel = (key: string, getString: UseStringsReturn['getString']): string => {
+  switch (key) {
+    case 'artifactType':
+      return getString('pipeline.artifactsSelection.artifactType')
+    case 'artifactTag':
+      return getString('connectors.cdng.artifactTag')
+    case 'executedBy':
+      return getString('common.executedBy')
+    case 'eventType':
+      return getString('pipeline.verification.logs.eventType')
+    default:
+      return key
+  }
 }

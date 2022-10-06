@@ -130,21 +130,16 @@ export const DelegateSelectors = (props: DelegateSelectorsProps): React.ReactEle
               getString('delegate.DelegateSelectorErrorMessage')
             )
             const invalidChars = new Set()
+            tagChars.map((item: string) => {
+              if (!pattern.test(item)) {
+                invalidChars.add(item)
+              }
+            })
 
             if (!validTag) {
               const errorMsg = (
-                <Text>
-                  {getString('delegate.DelegateSelector')}
-                  <>
-                    {tagChars.map((item: string) => {
-                      if (!pattern.test(item)) {
-                        invalidChars.add(item)
-                        return <strong style={{ color: 'red' }}>{item}</strong>
-                      } else {
-                        return item
-                      }
-                    })}
-                  </>
+                <Text color={Color.WHITE}>
+                  {getString('delegate.DelegateSelector')} <strong>{' ' + tag + ' '} </strong>
                   {getString('delegate.DelegateSelectorErrMsgSplChars')}: {Array.from(invalidChars).join(',')}
                 </Text>
               )

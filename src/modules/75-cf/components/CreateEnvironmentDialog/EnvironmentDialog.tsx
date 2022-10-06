@@ -46,6 +46,7 @@ export interface EnvironmentDialogProps {
   onCreate: (response?: ResponseEnvironmentResponseDTO) => void
   buttonProps?: ButtonProps
   environments?: EnvironmentResponseDTO[]
+  isLinkVariation?: boolean
 }
 
 interface EnvironmentValues {
@@ -56,7 +57,13 @@ interface EnvironmentValues {
   type: EnvironmentType
 }
 
-const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreate, buttonProps, environments }) => {
+const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({
+  disabled,
+  onCreate,
+  buttonProps,
+  environments,
+  isLinkVariation
+}) => {
   const { showError } = useToaster()
   const { getString, getEnvString } = useEnvStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
@@ -212,6 +219,7 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
 
   return (
     <RbacButton
+      icon="plus"
       disabled={disabled}
       onClick={() => {
         trackEvent(FeatureActions.CreateEnvClick, {
@@ -219,8 +227,9 @@ const EnvironmentDialog: React.FC<EnvironmentDialogProps> = ({ disabled, onCreat
         })
         openModal()
       }}
-      text={`+ ${getString('newEnvironment')}`}
+      text={getString('newEnvironment')}
       intent="primary"
+      variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
       padding={{
         top: 'small',
         bottom: 'small',

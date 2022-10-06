@@ -7,11 +7,40 @@
 
 .input {
   width: 100%;
-  background-color: var(--grey-100) !important;
+  display: flex;
   padding: var(--spacing-xsmall) var(--spacing-small);
   border-radius: 5px;
 
-  ~ :global(span .bp3-popover-target > button::before) {
-    background-color: var(--grey-100) !important;
+  > label {
+    margin-right: var(--spacing-7);
+    color: var(--grey-600);
+    font-weight: 500;
+    font-size: var(--font-size-small);
+    letter-spacing: 0.2px;
+
+    span[class*='bp3-control-indicator'] {
+      height: 12px !important;
+      width: 12px !important;
+      box-shadow: inset 0 0 0 1px var(--box-border), inset 0 -1px 0 var(--box-border) !important;
+      --box-border: var(--grey-500);
+      --box-background: var(--white);
+    }
+    span[class*='bp3-control-indicator']::before {
+      height: 12px !important;
+      width: 12px !important;
+    }
+  }
+}
+
+.multiTypeInputs {
+  background-color: var(--white) !important;
+  border: 1px solid var(--bp3-intent-color, var(--grey-200));
+  [class*='bp3-control'] {
+    margin-top: 3px !important;
+    margin-bottom: 2px !important;
+  }
+  [class*='bp3-control-indicator'] {
+    position: relative;
+    top: -1px;
   }
 }

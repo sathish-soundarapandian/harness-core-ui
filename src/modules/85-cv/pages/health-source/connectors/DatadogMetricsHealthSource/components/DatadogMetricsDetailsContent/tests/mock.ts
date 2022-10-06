@@ -75,5 +75,7 @@ export const MockDatadogMetricInfo: DatadogMetricInfo = {
   aggregator: MOCK_AGGREGATION,
   sli: false,
   isCustomCreatedMetric: false,
-  continuousVerification: true
+  continuousVerification: true,
+  ignoreThresholds: [],
+  failFastThresholds: []
 }

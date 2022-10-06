@@ -7,7 +7,8 @@
 
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { DeploymentStageConfig, PipelineInfoConfig } from 'services/cd-ng'
+import type { DeploymentStageConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { serviceAndEnvData, serviceAndEnvDataStage } from '../types'
 
 export const getInfraAndServiceData = (

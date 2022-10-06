@@ -9,6 +9,7 @@ import { cloneDeep, defaultsDeep } from 'lodash-es'
 
 import { Step, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isCustomGeneratedString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 export type { StepProps } from '@pipeline/components/AbstractSteps/Step'
 
 export abstract class PipelineStep<T extends { name?: string; identifier?: string }> extends Step<T> {
@@ -28,5 +29,11 @@ export abstract class PipelineStep<T extends { name?: string; identifier?: strin
   }
   processFormData(values: T): T {
     return values
+  }
+
+  isTemplatizedView(
+    stepViewType?: StepViewType
+  ): stepViewType is StepViewType.DeploymentForm | StepViewType.InputSet | StepViewType.TemplateUsage {
+    return isTemplatizedView(stepViewType)
   }
 }

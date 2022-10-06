@@ -14,6 +14,8 @@ declare const styles: {
   readonly configLabel: string
   readonly configPlaceHolder: string
   readonly configWizard: string
+  readonly configureButton: string
+  readonly configureButtonroleArn: string
   readonly crossIcon: string
   readonly divider: string
   readonly drag: string
@@ -29,8 +31,10 @@ declare const styles: {
   readonly modal: string
   readonly newConnectorButton: string
   readonly optionalDetails: string
+  readonly overrideParam: string
   readonly overrideSelect: string
   readonly overridesInputHeader: string
+  readonly paddingRight: string
   readonly selectInputs: string
   readonly squareCardContainer: string
   readonly templateDropdown: string

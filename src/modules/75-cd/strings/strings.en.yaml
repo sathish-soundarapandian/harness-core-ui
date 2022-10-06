@@ -4,6 +4,7 @@ learnMore: Learn more about Continuous Delivery
 moreIssue: '+ {{count}} More Issue'
 moreIssues: '+ {{count}} More Issues'
 dynamicProvisioning: Dynamic provisioning
+deleteSourceBranch: Delete Source Branch
 dashboard:
   subHeading: Let Harness take your software release process to the next level with Continuous Delivery
   createProject: '{{$.createProject}}'
@@ -15,43 +16,103 @@ steps:
     releaseNamePlaceholder: Enter Release Name
     specifyCredentials: Specify Credentials
     undefinedType: Undefined deployment type
+    enableKubernetesPruning: 'Enable Kubernetes Pruning'
+  commands:
+    runTheCommands: Run the following commands
+    addCommand: Add Command
+    editCommand: Edit Command
+    sourceTypeLabel: Select file type to copy
+    destinationPath: Destination Path
+    destinationPathPlaceholder: Enter Destination Path
+    scriptTypePlaceholder: Enter Script Type
+    filesAndPatterns: Files and Patterns
+    fileToTail: File to Tail
+    patternToSearch: Pattern to Search
+    fileToTailPlaceholder: Enter File to Tail
+    selectScriptLocation: Select script location
+    locationFileStore: Harness File Store
+    patternToSearchPlaceholder: Enter Pattern to Search
+    runOnDelegate: Run on Delegate
+    validation:
+      sourceTypeRequired: Source Type is required
+      destinationPathRequired: Destination Path is required
   kubernetesGcpStep:
     stepName: Specify your GCP Connector
   pdcStep:
     no: No.
-    hostsPlaceholder: Specify list of host names here (comma or new line separated)
+    hostsPlaceholder: Specify list of host names here (comma separated)
     specificHostsPlaceholder: Specify list of comma separated hosts here
     attributesPlaceholder: Specify list of comma separated attributes and values. E.g. hostType:DB, region:west
-    hostNameOption: Host names
-    hostAttributesOption: Host attributes
-    specifyHostsOption: Specify hosts here
+    specifyHostsOption: Specify hosts
     preconfiguredHostsOption: Select preconfigured hosts from Physical Data Center
     pdcConnectorLabel: Physical Datacentar Connector
-    deployAllHostsOption: Deploy to All hosts
-    deploySpecificHostsOption: Deploy to specific hosts based on
+    includeAllHosts: Include all hosts
+    filterHostName: Filter by host name
+    filterHostAttributes: Filter by host attributes
+    specificHosts: Specific Hosts
+    specificHostsOptional: Specific Hosts (Optional)
+    specificAttributes: Specific Attributes
+    specificAttributesOptional: Specific Attributes (Optional)
+    hostsOptional: Hosts (Optional)
     previewHosts: Preview Hosts
     noHosts: No hosts provided
   azureInfraStep:
     azure: 'Microsoft Azure'
     subscription: '{{ $.common.subscriptionId }}'
     subscriptionPlaceholder: '{{ $.common.subscriptionPlaceholder }}'
-    resourceGroupPlaceholder: 'Select or add Resource Group'
+    resourceGroupPlaceholder: 'Select or specify Resource Group'
     resourceGroupError: 'No resource groups found with given Subscription'
     clusterError: 'No cluster found with given Resource Group'
+  azureWebAppInfra:
+    azureWebApp: 'Azure Web App'
+    subscription: '{{ $.common.subscriptionId }}'
+    subscriptionPlaceholder: '{{ $.common.subscriptionPlaceholder }}'
+    webAppPlaceholder: 'Select or add Web App Name'
+    deploymentSlotPlaceHolder: 'Select or add Deployment Slot'
+    targetSlotPlaceHolder: 'Select or add Target Slot'
+    targetSlotInfoText: 'Target Slot is required for Swap Slot Step'
+    webAppNameError: 'No web app names groups found with given Resource Group'
+    deploymentSlotError: 'No deployment slots groups found with given Web App Name'
+    targetSlotError: 'No target slots found with given Web App Name'
+    webAppInfraheader: 'Web App Infrastructure Details'
   serverless:
     regionPlaceholder: Specify a region
     stagePlaceholder: Specify a stage
+  awsInfraStep:
+    regionError: Error fetching regions
+    placeholders:
+      loadBalancer: Select Load Balancer
+      connectionAttribute: Select Connection Attribute
+      hostName: Type Host Name Convention
+      autoScallingGroup: Select Auto Scalling Group
+      vpcs: Select VPCs
+    labels:
+      connectionAttribute: Connection Attribute
+      useAutoScallingGroup: Use Auto Scalling Group
+      autoScallingGroup: Auto Scalling Group
+      useAwsInstanceFilter: Use AWS Instance Filter
+      hostName: Host Name Convention
+      vpcs: VPCs
+  ecsBGCreateServiceStep:
+    sectionHeaders:
+      configureProductionService: Configure your Production Service
+      configureStageService: Configure your Stage Service
+    labels:
+      elasticLoadBalancer: Elastic Load Balancer
+      prodListener: Prod Listener
+      prodListenerRuleARN: Prod Listener Rule ARN
+      stageListener: Stage Listener
+      stageListenerRuleARN: Stage Listener Rule ARN
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
-scriptRequired: Script is a required field
 workloadRequired: Workload is a required field
 stepName: Step Name
 serviceCreated: '{{ $.common.serviceCreated }}'
 serviceUpdated: '{{ $.common.serviceUpdated }}'
 environmentCreated: '{{ $.common.environmentCreated }}'
 environmentUpdated: '{{ $.common.environmentUpdated }}'
-preProduction: 'Pre-Production'
+preProduction: '{{ $.common.preProduction }}'
 preProductionType: 'Pre-Prod'
 environmentDelete: '{{ $.common.deleteEnvironment.title }}'
 environmentDeleteMessage: 'Are you sure you want to delete environment <strong>{{name}}</strong>?'
@@ -84,7 +145,6 @@ varFileDetails: Var File Details
 varFile: Var File
 backEndConfig: Backend Configuration
 gitFetchTypeRequired: Git Fetch Type Required
-contentRequired: Content is required
 specifyTfVarStore: Specify Terraform Var File Store
 addTFVarFileLabel: 'Add File Path'
 enterWorkDirectory: Enter Working Directory
@@ -97,22 +157,55 @@ secretManagerRequired: 'Secret Manager is required.'
 pipelineSteps:
   environmentTab:
     specifyYourEnvironment: Specify Environment
+    specifyYourEnvironmentGroup: Specify Environment Group
+    specifyYourInfrastructure: Specify Infrastructure
+    specifyEnvironmentOrGroup: Specify environment or environment group
+    specifyGitOpsClusters: Specify GitOps Clusters
     selectEnvironment: '- Select Environment -'
+    selectEnvironmentGroup: '- Select Environment Group -'
+    selectInfrastructure: '- Select Infrastructure -'
+    selectInfrastructureType: 'Select Infrastructure Type'
     plusNewEnvironment: '+ {{$.newEnvironment}}'
     newEnvironment: '{{$.newEnvironment}}'
+    deployToAll: Deploy in parallel on all infrastructure
+    environmentOrEnvGroupAsRuntime: Which of Environment or Environment Group should be marked as runtime?
+    allClustersSelected: All Clusters in Environment
     environmentIsRequired: '{{ $.common.validation.environmentIsRequired }}'
+    infrastructureIsRequired: 'Infrastructure is required'
+    environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'
+    environmentInEnvGroupIsRequired: 'Environment in Environment Group is required'
+    clusterIsRequired: 'Clusters are required'
+    multiEnvInfraToggleText: 'Deploy to multiple Environments or Infrastructures'
   serviceTab:
     stageOverrides: Stage Overrides
     overrideChanges: Override artifacts, manifests, service variables for this stage
     deploymentTypeRequired: Deployment type selection is required
     propagateFrom: Propagate from
     differentService: Deploy different Service
-    specifyYourService: Specify Service
+    specifyYourService: '{{$.common.selectService}}'
+    specifyYourServices: '{{$.common.selectServices}}'
     selectService: '- Select Service -'
+    selectServices: '- Select Services -'
     newService: '{{$.newService}}'
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required
     aboutYourService: About the Service
+    manifest:
+      taskDefinition: Task Definition
+      serviceDefinition: Service Definition
+      scalingPolicy: Scaling Policy
+      scalableTarget: Scalable Target
+    newServiceOverride: New configuration overrides
+    multiServicesText: Deploy to multiple Services
+    multiServicesTitleText: Deploy to multiple services?
+    multiServicesParallelDeployLabel: Deploy services in parallel?
+    multiServicesConfirmationText: Are you sure you want to switch to deploying multiple services?. If you choose to proceed, your existing service will be migrated automatically.
+    singleServicesTitleText: Deploy to single service?
+    singleServicesConfirmationText: Are you sure you want to switch to deploying to a single services?. If you choose to proceed, your existing services will be lost.
+    deleteServiceFromListTitleText: Remove service from list?
+    deleteServiceFromListText: Are you sure you want to remove {{name}} service from the list?
+    viewServiceInputs: View service inputs
+    hideServiceInputs: Hide service inputs
   infraTab:
     deploymentType: Infrastructure type selection is required
     clusterError: No cluster found with given Connector
@@ -142,11 +235,27 @@ serviceDashboard:
   6monthTrend: 6 month trend
   instanceCountHistory: Instance Count History
   instanceDetails: Instance Details
+  instancesDetails: Instances Details
+  deploymentDetails: Deployment Details
+  moreDetails: More Details >
+  headers:
+    artifactVersion: Artifact Version
+    environment: '{{$.environment}}'
+    infrastructures: Infrastructures
+    infras: Infras
+    clusters: '{{$.common.clusters}}'
+    instances: '{{$.instanceFieldOptions.instances}}'
+    pipelineExecution: Pipeline Execution
   pod: pod
+  function: function
   deployedAt: Deployed At
   deployedBy: Deployed By
+  host: host
+  deploymentSlot: deploymentSlot
+  webApp: Web App Name
   artifact: artifact
   totalPipelines: Total Pipelines
+  totalDeployments: Total Deployments
   noPipelines: No pipeline execution in {{timeRange}} matches the given criteria
   envName: Env Name
   noActiveServiceInstances: No Active Service Instances
@@ -155,6 +264,13 @@ serviceDashboard:
   helmChartName: Helm Chart Name
   helmRopoUrl: Repo URL
   manageServiceLabel: Manage Services
+  unitDay: '/Day'
+  lastPipelineExecution: Last Pipeline Execution
+  noLastDeployment: No last deployment exist
+  taskDefinitionArn: Task Definition ARN
+  taskArn: Task ARN
+  awsRegion: AWS Region
+  containerList: containerList
 noEnvironment:
   title: No Environments Available
   message: Create an environment and let’s start configuring the deployment
@@ -226,6 +342,7 @@ configFileStoreTitle: 'Config File'
 selectRepository: Select a repository
 selectArtifact: Select an artifact
 artifactName: Artifact Name
+selectArtifactSource: Select Artifact Source
 artifactFormErrors:
   artifactFilePath: Enter the artifact path. You can use wildcards such as `todo/*/*`
   repositoryName: Repository name is required
@@ -235,10 +352,7 @@ serviceList:
   noIdentifier: Selected service does not have any identifier associated with it.
 artifactRepoTooltip: Enter the name of the repository where the artifact source is located.
 serverlessDeployCommandOptions: Serverless Deploy Command Options
-artifactVersion: ARTIFACT VERSION
 useConnectorCredentials: 'Use Connector Credentials'
-serviceOverrides: Service Overrides
-serviceOverridesHelperText: Override existing variables or defined new variables based on the selected service
 configurationVariable: Configuration Variable
 overrideValue: Override Value
 overrideType: Override Type
@@ -250,14 +364,30 @@ environment:
   createSubTitle: An environment is the representation of where your deployments take place
   filters:
     environmentNamePlaceholder: Enter Environment Name
+serviceOverrides:
+  variableOverrides: Variable Overrides
+  manifestOverrides: Manifest Overrides
+  configFileOverrides: Config File Overrides
+  configFileSelection: Config File Selection
+  newConfigFile: New Config File
+  helperText: Override existing variables or define new variables based on the selected service
+  deleted: Successfully deleted Service Override
+  deletedOneVariable: Successfully deleted variable from service override
 infrastructure:
   infrastructureDefinitions: Infrastructure Definitions
   noInfrastructureInEnvironment: You have no infrastructures in this environment
   createNew: Create New Infrastructure
+  edit: Edit Infrastructure
   created: Successfully created Infrastructure {{ identifier }}
+  updated: Successfully updated Infrastructure {{ identifier }}
   delete: Delete Infrastructure
   deleteConfirmation: Are you sure you want to delete this Infrastructure?
   deleted: Successfully deleted Infrastructure {{ identifier }}
+  sshWinRmAzure:
+    cloudProvider: Cloud Provider
+    hostConnectionAttributes: Host Connection Attributes
+    hostConnectionType: Host Connection Type
+    noTagsAzure: No Tags found with given Connector and Subscription Id
 cloudFormation:
   createDescription: Provision resources using a CloudFormation template.
   deleteDescription: Remove any CloudFormation stack you provisioned via Harness or other methods.
@@ -269,6 +399,7 @@ cloudFormation:
   specifyCapabilities: Specify Capabilities
   parameterFiles: Cloud Formation Parameter Files
   parameterFileDetails: Parameter File Details
+  overrideParameterFileDetails: Override Parameter File Details
   specifyParameterFiles: Specify Parameter Files...
   inlineParameterFiles: CloudFormation Parameters Overrides
   specifyInlineParameterFiles: Specify Inline Parameters...
@@ -280,6 +411,14 @@ cloudFormation:
   awsURL: S3 URL
   urls: URLs
   parameterFilePaths: Parameter File Paths
+  remoteTags: Specify Remote Tags File...
+  tagsConnector: Tags Connector
+  tagsFileStore: Tags File Store
+  remoteTagsConnector: Remote Tags Connector
+  remoteTagsFileStore: Remote Tags File Store
+  remoteTagsDetails: Remote Tags
+  remoteTagsFilePath: Remote Tags File Path
+  remoteTagsUrlPath: Remote Tags S3 URL
   errors:
     region: AWS Region is required
     role: Role ARN required
@@ -292,3 +431,134 @@ cloudFormation:
     templateRequired: Template file required
   deploymentTypes:
     pdc: PDC
+gitOpsCluster: 'GitOps Clusters'
+selectGitopsCluster: 'Select GitOps Clusters to add to Environment'
+clustersSelected: 'Clusters Selected'
+selectClusterLabel: 'Select Cluster(s)'
+noLinkedClusters: 'No Linked Clusters Available'
+selectedLabel: 'Selected'
+successfullyLinkedClusters: 'Successfully Linked Clusters'
+unLink: 'UnLink'
+unLinkedCluster: 'Unlinked Successfully'
+overrideYaml: Override Yaml Values
+manifestId: Manifest Id
+azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
+azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
+getStartedWithCD:
+  workloadDeploy: What workload would you like to deploy?
+  serviceDeploy: Where do you want to deploy your service?
+  serviceHeading: What is the name of your Service?
+  configureRepo: Configure Repository
+  manifestFile: Configure Infra
+  serverless: Serverless Function
+  artifactLocation: Where is your Artifact?
+  codeRepos: Where is your code repository?
+  inManifest: In Manifest
+  inManifestContent: Harness can take your existing Kubernetes manifests and can proceed to deploy with them
+  artifactManifest: Artifact + Manifest
+  artifactManifestContent: Harness can take your existing Kubernetes manifests and artifacts and can proceed to deploy with them
+  provideManifest: Provide Manifest Details
+  reposubheading: We need to connect to your repo to access serverless.yaml file
+  directK8s: Direct K8s
+  googleK8s: Google K8s Engine
+  azureK8s: Azure K8s Engine
+  awsElasticK8s: AWS Elastic K8s Service
+  envName: Environment Name
+  infraName: Infrastructure Name
+  setupDelegate: Setup Delegate
+  delegateInfo: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
+  setupaNewDelegate: + Setup a New Delegate
+ecsRollingDeployStep:
+  sameAsAlreadyRunningInstances: Same as already running instances
+  forceNewDeployment: Force new deployment
+serviceName: '{{ $.common.serviceName }}'
+skipRendering: Skip K8s Manifest(s) Rendering
+credentialsRef: credentialsRef
+connectorRefText: connectorRef
+loadingDelegate: Please Wait, Creating a Delegate for you...
+hosts: hosts
+hostFilters: hostFilters
+attributeFilters: attributeFilters
+azureArmRollback:
+  description: Restore the Azure ARM resource group to its previous running state.
+azureBlueprint:
+  description: Build Azure Blueprint artifacts to rapidly build and start up new environments.
+  templateFileSource: Template File Source
+  templateFileDetails: Template File Details
+  specifyTemplateFileSource: Specify Azure Blueprint Template File
+  azureBlueprintTemplate: Azure Blueprint Template
+  assignmentName: Assignment Name
+  assignmentNameError: Assignment Name Required
+  configuration: Azure Blueprint Configuration
+  managementGroup: Management Group
+  templateFolderPath: Template Folder Path
+validation:
+  specifyFilter: Specify the filter condition
+welcomeMessage: Welcome to Harness
+delegateInstallation: Install the Delegate to deploy your cluster
+learnMoreDelegate: Learn more about Delegates
+runDelegate: How do you want to run the Delegate
+installDelegate: Install Delegate
+instructionsDelegate: Instructions to Install the Delegate
+downloadYAML: DOWNLOAD THE YAML
+previewYAML: Preview Yaml
+installCluster: INSTALL ON YOUR CLUSTER
+checkCluster: Check if you can connect to your cluster
+delegateInstallCommand: Install the delegate by running the following command
+delegateConnectionWait: WAITING FOR DELEGATE TO CONNECT
+delegateFailed: Delegate Failed to connect to Harness
+delegateFailText1: Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach https://app.harness.io
+delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be scheduled on the cluster
+delegateSuccess: Great! You have successfully installed the Delegate.
+pipelineCreation: Please proceed to creating your first pipeline
+instructionsCluster: Instructions to check if you have access to your cluster
+googleK8sService: Google K8s Service
+amazonElasticK8sService: Amazon Elastic K8s Service
+azureK8sService: Azure K8s Service
+minikube: Minikube
+delegateWarning: Waiting for Delegate to connect. Visit Project Setup -> Delegates to check the status of delegate connection.
+gCloud: Make sure Gcloud is installed.
+kubectl: Install Kubectl
+kubectlCommand: gcloud components install kubectl
+oauthPlugin: Install Google auth plugin to the cluster
+oauthPluginCmd: gcloud components install gke-gcloud-auth-plugin
+clusterVerify: Verify the connection to the cluster
+gcloudClusterCmd: gcloud container clusters get-credentials CLUSTER_NAME
+kubectlNamespace: kubectl get namespaces
+pluginVersion: gke-gcloud-auth-plugin --version
+awsCli: Make sure the aws cli and eksctl and are installed
+amazonElasticCmd: eksctl utils write-kubeconfig --cluster=delegate
+azureCli: Make sure the Azure CLI is installed
+azureCliCmd: az aks install-cli
+azureCmd: az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+kubectlNodes: kubectl get nodes
+miniKube: Install Minikube
+miniKubeCmd1: curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+miniKubeCmd2: sudo install minikube-linux-amd64 /usr/local/bin/minikube
+miniKubeCmd3: minikube start
+miniKubeCmd4: kubectl get pods -A
+deploymentSteps: Deployment Steps
+addStepTemplatesForYourDeploymentType: Add step templates for your deployment type here
+removeStepTemplate: Remove Step Template
+removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
+azureArm:
+  description: Deploy resources using Azure Resource Manager (ARM).
+  location: Location
+  templateFile: ARM Template File
+  templateFileSource: '{{ $.cd.azureBlueprint.templateFileSource }}'
+  templateFileDetails: '{{ $.cd.azureBlueprint.templateFileDetails }}'
+  paramFileSource: Parameter File Source
+  specifyTemplateFile: Specify ARM Template File
+  specifyTemplateFileSource: Specify Template File Source
+  paramFile: ARM Parameter File
+  paramFilePath: Parameter File Path
+  specifyParameterFile: Specify ARM Parameter File
+  managementGroup: '{{ $.cd.azureBlueprint.managementGroup }}'
+  tenant: Tenant
+  required: '{{name}} is Required'
+removeStepTemplateSuccess: Step Template has been successfully removed
+addStepTemplate: Add step template
+useStepTemplate: Use step template
+ignoreReleaseHistFailStatus: 'Ignore Release History Failed Status'
+artifactVersion: 'Version :'
+artifactPath: 'Path :'

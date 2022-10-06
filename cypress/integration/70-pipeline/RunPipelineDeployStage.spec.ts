@@ -8,7 +8,7 @@
 import {
   cdFailureStrategiesYaml,
   invalidYAMLErrorMsgOnEmptyStageSave,
-  pipelineSaveCall
+  pipelineSaveCallWithStoreType
 } from '../../support/70-pipeline/constants'
 
 describe('RUN PIPELINE MODAL - deploy stage', () => {
@@ -65,14 +65,16 @@ describe('RUN PIPELINE MODAL - deploy stage', () => {
   })
 
   it('error validations on pipeline save from API', () => {
-    cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post.emptyPipeline' }).as('pipelineSave')
+    cy.intercept('POST', pipelineSaveCallWithStoreType, { fixture: 'pipeline/api/pipelines.post.emptyPipeline' }).as(
+      'pipelineSave'
+    )
     cy.wait(1000)
     cy.contains('div', 'Unsaved changes').should('be.visible')
     cy.contains('span', 'Save').click({ force: true })
     cy.wait('@pipelineSave')
 
     cy.contains('span', 'Invalid request: Field for key [stages] does not exist').should('be.visible')
-    cy.intercept('POST', pipelineSaveCall, { fixture: 'pipeline/api/pipelines.post.emptyStage' }).as(
+    cy.intercept('POST', pipelineSaveCallWithStoreType, { fixture: 'pipeline/api/pipelines.post.emptyStage' }).as(
       'pipelineSaveStage'
     )
     cy.createDeploymentStage()
@@ -110,7 +112,7 @@ describe('RUN PIPELINE MODAL - deploy stage', () => {
       })
 
       cy.wait(1000)
-
+      cy.visitPageAssertion('#aboutService')
       // Service tab config
       cy.get('input[name="serviceRef"]').click({ force: true })
       cy.contains('p', 'testService').click({ force: true })

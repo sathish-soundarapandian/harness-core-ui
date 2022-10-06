@@ -33,7 +33,7 @@ export const PrerequisiteItem: React.FC<PrerequisiteItemProps> = ({
   const flagVariation = prerequisite.variations[0]
 
   return (
-    <Layout.Horizontal flex={{ alignItems: 'center' }}>
+    <Layout.Horizontal flex={{ alignItems: 'center' }} data-testid="prerequisiteItem">
       <Text width="45%" lineClamp={1} color={Color.GREY_800} font={{ variation: FontVariation.SMALL }}>
         <VariationTypeIcon style={{ transform: 'translateY(1px)' }} multivariate={!isFlagTypeBoolean} />
         {prerequisite.feature}

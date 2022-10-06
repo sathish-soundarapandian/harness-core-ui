@@ -5,18 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import type { OptionsStackingValue } from 'highcharts'
 import moment from 'moment'
-import { Icon } from '@wings-software/uicore'
+import { Icon, Layout, Text } from '@wings-software/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import qs from 'qs'
-import { QlceViewTimeGroupType } from 'services/ce/services'
+import { QlceViewFieldInputInput, QlceViewTimeGroupType } from 'services/ce/services'
 import type { PerspectiveAnomalyData } from 'services/ce'
 import formatCost from '@ce/utils/formatCost'
 import routes from '@common/RouteDefinitions'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { useStrings } from 'framework/strings'
 import { CE_DATE_FORMAT_INTERNAL } from '@ce/utils/momentUtils'
 import { generateGroupBy, getCloudProviderFromFields, getFiltersFromEnityMap } from '@ce/utils/anomaliesUtils'
@@ -24,6 +23,7 @@ import { useUpdateQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import type { ChartConfigType } from './chartUtils'
+import { CE_COLOR_CONST } from '../CEChart/CEChartOptions'
 import CEChart from '../CEChart/CEChart'
 import ChartLegend from './ChartLegend'
 import css from './Chart.module.scss'
@@ -55,6 +55,7 @@ interface GetChartProps {
   setFilterUsingChartClick?: (value: string) => void
   showLegends: boolean
   anomaliesCountData?: PerspectiveAnomalyData[]
+  groupBy: QlceViewFieldInputInput
 }
 
 const GetChart: React.FC<GetChartProps> = ({
@@ -66,10 +67,10 @@ const GetChart: React.FC<GetChartProps> = ({
   xAxisPointCount,
   setFilterUsingChartClick,
   showLegends,
-  anomaliesCountData
+  anomaliesCountData,
+  groupBy
 }) => {
   const [chartObj, setChartObj] = useState<Highcharts.Chart | null>(null)
-  const isAnomaliesEnabled = useFeatureFlag(FeatureFlag.CCM_ANOMALY_DETECTION_NG)
 
   const [forceCounter, setForceCounter] = useState(0)
   const history = useHistory()
@@ -212,23 +213,66 @@ const GetChart: React.FC<GetChartProps> = ({
   }
 
   const anomaliesLabels = () => {
+    const anomaliesPointMap = anomaliesCounts
     const labels = anomaliesCountData?.map(item => {
+      const yCoord = anomaliesPointMap[item.timestamp || 0]
       return {
-        point: `${item.timestamp}`,
+        point: { x: item.timestamp || 0, y: yCoord, xAxis: 0, yAxis: 0 },
         useHTML: true,
         text: labelsText(item),
-        y: -40
+        y: -20
       }
     })
 
     return labels || []
   }
 
+  const chartData = useMemo(() => {
+    let index = 0
+    const data: ChartConfigType[] = []
+
+    chart.forEach(chartItem => {
+      switch (chartItem.name) {
+        case 'Others':
+          data.push({ ...chartItem, color: 'var(--blue-100)' })
+          break
+        case 'Unallocated':
+          data.push({ ...chartItem, color: 'var(--primary-2)' })
+          break
+        default: {
+          data.push({ ...chartItem, color: CE_COLOR_CONST[index % CE_COLOR_CONST.length] })
+          index++
+        }
+      }
+    })
+
+    return data
+  }, [chart])
+
+  const anomaliesCounts = useMemo(() => {
+    const anomaliesPointMap: Record<number, number> = {}
+    chartData.map(chartItem => {
+      chartItem.data.map(dataItem => {
+        const xCoord = dataItem[0]
+        const yCoord = dataItem[1]
+        const item = anomaliesCountData?.filter(anomaliesPoint => anomaliesPoint.timestamp === xCoord) || []
+        if (item?.length > 0) {
+          if (xCoord in anomaliesPointMap) {
+            anomaliesPointMap[xCoord] = anomaliesPointMap[xCoord] + Number(yCoord)
+          } else {
+            anomaliesPointMap[xCoord] = Number(yCoord)
+          }
+        }
+      })
+    })
+    return anomaliesPointMap
+  }, [anomaliesCountData])
+
   return (
     <article key={idx} onClick={redirection}>
       <CEChart
         options={{
-          series: chart as any,
+          series: chartData as any,
           chart: {
             zoomType: 'x',
             height: 300,
@@ -261,7 +305,7 @@ const GetChart: React.FC<GetChartProps> = ({
             {
               labels: anomaliesLabels(),
               draggable: '',
-              visible: isAnomaliesEnabled,
+              visible: true,
               labelOptions: {
                 crop: false,
                 useHTML: true,
@@ -273,7 +317,12 @@ const GetChart: React.FC<GetChartProps> = ({
         }}
       />
       {chartObj && showLegends ? (
-        <ChartLegend chartRefObj={chartObj as unknown as Highcharts.Chart} />
+        <Layout.Horizontal style={{ alignItems: 'center' }}>
+          <Text padding={{ left: 'large' }} font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_400}>
+            {getString('ce.perspectives.top12GroupBy', { groupBy: groupBy.fieldName })}
+          </Text>
+          <ChartLegend chartRefObj={chartObj as unknown as Highcharts.Chart} />
+        </Layout.Horizontal>
       ) : showLegends ? (
         <Icon name="spinner" />
       ) : null}
@@ -290,6 +339,7 @@ interface CCMChartProps {
   setFilterUsingChartClick?: (value: string) => void
   showLegends: boolean
   anomaliesCountData?: PerspectiveAnomalyData[]
+  groupBy: QlceViewFieldInputInput
 }
 
 const Chart: React.FC<CCMChartProps> = ({
@@ -300,7 +350,8 @@ const Chart: React.FC<CCMChartProps> = ({
   xAxisPointCount,
   setFilterUsingChartClick,
   showLegends,
-  anomaliesCountData
+  anomaliesCountData,
+  groupBy
 }) => {
   return (
     <>
@@ -317,6 +368,7 @@ const Chart: React.FC<CCMChartProps> = ({
             onLoad={onLoad}
             showLegends={showLegends}
             anomaliesCountData={anomaliesCountData}
+            groupBy={groupBy}
           />
         ) : /* istanbul ignore next */ null
       })}

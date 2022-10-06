@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StepWidget tests renders DeployStageSpecifications without crashing  1`] = `
+exports[`StepWidget tests it renders StageOverview 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main StyledProps--padding-top-small StyledProps--padding-right-xxlarge StyledProps--padding-bottom-xxlarge StyledProps--padding-left-xxlarge"
+    class="StyledProps--font StyledProps--main StyledProps--padding-huge"
   >
     <h3
       class="StyledProps--font StyledProps--font-h3 StyledProps--main StyledProps--color StyledProps--color-black"
@@ -14,6 +14,7 @@ exports[`StepWidget tests renders DeployStageSpecifications without crashing  1`
     </h3>
     <div
       class="StyledProps--font StyledProps--main"
+      data-testid="stageOverview"
       id="stageOverview"
     >
       <form
@@ -23,6 +24,7 @@ exports[`StepWidget tests renders DeployStageSpecifications without crashing  1`
         <div>
           <div
             class="StyledProps--font StyledProps--main StyledProps--margin-top-large StyledProps--padding-large StyledProps--background-white"
+            data-testid="stageOverviewPanel"
             style="border-radius: 4px; width: 400px; filter: drop-shadow(0px 0px 1px rgba(40, 41, 61, 0.16));"
           >
             <div
@@ -34,11 +36,16 @@ exports[`StepWidget tests renders DeployStageSpecifications without crashing  1`
                 <div
                   class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
                 >
-                  <p
-                    class="StyledProps--font StyledProps--main"
+                  <div
+                    class="Text--withDocsTooltip"
+                    data-tooltip-id="universalInputNameWithId"
                   >
-                    Id
-                  </p>
+                    <p
+                      class="StyledProps--font StyledProps--main"
+                    >
+                      Id
+                    </p>
+                  </div>
                   <p
                     class="StyledProps--font StyledProps--main"
                   >

@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SCM Sidenav Nav should render Repositories link 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+  >
+    <div
+      class="Layout--vertical StyledProps--main StyledProps--padding-left-large StyledProps--padding-right-large StyledProps--padding-top-large StyledProps--padding-bottom-small"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--margin-bottom-xsmall StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
+      >
+        projectLabel
+      </p>
+      <div
+        class="projectSelector selectProjectDisplay"
+      >
+        <div
+          class="bp3-popover-wrapper bp3-fill"
+        >
+          <div
+            class="bp3-popover-target bp3-popover-open"
+          >
+            <button
+              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main popoverTarget selectButton bp3-active Button--with-current-color Button--without-shadow Button--withRightIcon"
+              data-testid="project-select-button"
+              type="button"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey400 StyledProps--font-size-normal StyledProps--padding-xsmall"
+                >
+                  selectProject
+                </p>
+              </span>
+              <span
+                class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                icon="chevron-right"
+              >
+                <svg
+                  data-icon="chevron-right"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    chevron-right
+                  </desc>
+                  <path
+                    d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="pickProjectHelp"
+      style="background-image: url(test-file-stub);"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey200 StyledProps--padding-small"
+      >
+        pickProject
+      </p>
+    </div>
+    <a
+      class="link"
+      href="/account/dummy/scm/orgs/dummy/projects/dummy/repos"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        repositories
+      </p>
+    </a>
+  </div>
+</div>
+`;
+
+exports[`SCM Sidenav Nav should render Repositories link 2`] = `
+<div>
+  <div>
+    <h1>
+      Not Found
+    </h1>
+    <div
+      data-testid="location"
+    >
+      /account/dummy/scm/orgs/Cisco_Meraki/projects/Online_Banking/repos
+    </div>
+  </div>
+</div>
+`;

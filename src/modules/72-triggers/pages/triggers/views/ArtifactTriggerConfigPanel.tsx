@@ -19,7 +19,8 @@ import {
   getArtifactSpecObj,
   updatePipelineManifest,
   updatePipelineArtifact,
-  getArtifactId
+  getArtifactId,
+  getCorrectErrorString
 } from '../utils/TriggersWizardPageUtils'
 import type { artifactTableItem, artifactManifestData } from '../interface/TriggersWizardInterface'
 import css from './ArtifactTriggerConfigPanel.module.scss'
@@ -279,10 +280,14 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
   const loading = false
   const allowSelectArtifact = !!data?.length
   const artifactOrManifestText = isManifest ? getString('manifestsText') : getString(artifactStr)
+  const artifactOrManifestString = isManifest
+    ? getString('pipeline.manifestType.http.chartVersion')
+    : getString('pipeline.artifactTriggerConfigPanel.artifactTagSetting')
   const { errors } = formikProps
   const getTooltipIds = (manifestTooltipIds: string, artifactTooltipIds: string): string => {
     return isManifest ? manifestTooltipIds : artifactTooltipIds
   }
+
   return (
     <Layout.Vertical className={css.artifactTriggerConfigContainer} padding="xxlarge">
       {loading && (
@@ -357,9 +362,15 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
         )}
         {inputSetTemplateYamlObj && !appliedArtifact && !allowSelectArtifact && (
           <Text margin="small" intent="warning">
-            {getString('pipeline.artifactTriggerConfigPanel.noSelectableArtifactsFound', {
-              artifact: artifactOrManifestText
-            })}
+            {getCorrectErrorString(
+              resolvedPipeline,
+              isManifest,
+              artifactOrManifestString,
+              artifactOrManifestText,
+              artifactType,
+              manifestType,
+              getString
+            )}
           </Text>
         )}
       </div>

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, ReactNode } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { noop } from 'lodash-es'
@@ -20,6 +20,7 @@ export interface GitSyncStoreProps {
   readonly loadingCodeManagers: boolean
   updateStore(data: Partial<Pick<GitSyncStoreProps, 'gitSyncRepos'>>): void
   refreshStore(): void
+  spinner?: ReactNode
 }
 
 export const GitSyncStoreContext = React.createContext<GitSyncStoreProps>({
@@ -28,14 +29,15 @@ export const GitSyncStoreContext = React.createContext<GitSyncStoreProps>({
   loadingRepos: false,
   loadingCodeManagers: false,
   updateStore: noop,
-  refreshStore: noop
+  refreshStore: noop,
+  spinner: PageSpinner
 })
 
 export const useGitSyncStore = (): GitSyncStoreProps => {
   return React.useContext(GitSyncStoreContext)
 }
 
-export const GitSyncStoreProvider: React.FC = props => {
+export const GitSyncStoreProvider: React.FC<Pick<GitSyncStoreProps, 'spinner'>> = props => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
   //Note: right now we support git-sync only at project level
@@ -111,7 +113,7 @@ export const GitSyncStoreProvider: React.FC = props => {
         updateStore
       }}
     >
-      {loadingRepos ? <PageSpinner /> : props.children}
+      {loadingRepos ? props.spinner : props.children}
     </GitSyncStoreContext.Provider>
   )
 }

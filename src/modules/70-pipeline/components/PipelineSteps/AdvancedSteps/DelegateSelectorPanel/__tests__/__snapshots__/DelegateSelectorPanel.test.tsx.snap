@@ -85,7 +85,7 @@ exports[`<DelegateSelectorPanel /> test should be able to select multiple tags f
                     data-name="DelegateSelectors"
                   >
                     <div
-                      class="bp3-popover-wrapper delegateInput delegatePopover bp3-fill"
+                      class="bp3-popover-wrapper delegatePopover bp3-fill"
                     >
                       <div
                         class="bp3-popover-target bp3-popover-open"
@@ -94,13 +94,13 @@ exports[`<DelegateSelectorPanel /> test should be able to select multiple tags f
                           class=""
                         >
                           <div
-                            class="bp3-input bp3-tag-input bp3-fill bp3-multi-select"
+                            class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
                           >
                             <div
                               class="bp3-tag-input-values"
                             >
                               <span
-                                class="bp3-tag bp3-intent-danger bp3-minimal TagInput--tag"
+                                class="bp3-tag bp3-intent-primary bp3-minimal"
                                 data-tag-index="0"
                               >
                                 <span
@@ -162,7 +162,8 @@ exports[`<DelegateSelectorPanel /> test should be able to select multiple tags f
                                     class=""
                                   >
                                     <a
-                                      class="bp3-menu-item bp3-popover-dismiss"
+                                      class="bp3-menu-item"
+                                      role="listOption"
                                     >
                                       <span
                                         class="bp3-icon bp3-icon-add"
@@ -294,7 +295,7 @@ exports[`<DelegateSelectorPanel /> test snapshot testing 1`] = `
                     data-name="DelegateSelectors"
                   >
                     <div
-                      class="bp3-popover-wrapper delegateInput delegatePopover bp3-fill"
+                      class="bp3-popover-wrapper delegatePopover bp3-fill"
                     >
                       <div
                         class="bp3-popover-target"
@@ -303,13 +304,13 @@ exports[`<DelegateSelectorPanel /> test snapshot testing 1`] = `
                           class=""
                         >
                           <div
-                            class="bp3-input bp3-tag-input bp3-fill bp3-multi-select"
+                            class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
                           >
                             <div
                               class="bp3-tag-input-values"
                             >
                               <span
-                                class="bp3-tag bp3-intent-danger bp3-minimal TagInput--tag"
+                                class="bp3-tag bp3-intent-primary bp3-minimal"
                                 data-tag-index="0"
                               >
                                 <span

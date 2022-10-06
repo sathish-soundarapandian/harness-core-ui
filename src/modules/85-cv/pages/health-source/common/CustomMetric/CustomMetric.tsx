@@ -34,13 +34,21 @@ export default function CustomMetric(props: CustomMetricInterface): JSX.Element 
     setGroupedCreatedMetrics,
     initCustomForm,
     isPrimaryMetric,
-    shouldBeAbleToDeleteLastMetric
+    shouldBeAbleToDeleteLastMetric,
+    isMetricThresholdEnabled,
+    filterRemovedMetricNameThresholds
   } = props
   const { getString } = useStrings()
 
   useEffect(() => {
     setMappedMetrics(oldState => {
       const emptyName = formikValues.metricName?.length
+      // add default metric data when we delete last metric and add again
+      if (!emptyName && !oldState?.selectedMetric && mappedMetrics?.size === 0) {
+        const initMap = new Map()
+        initMap.set(defaultMetricName, initCustomForm)
+        return { selectedMetric: defaultMetricName, mappedMetrics: initMap }
+      }
       if (!emptyName) {
         return { selectedMetric: oldState.selectedMetric, mappedMetrics: mappedMetrics }
       }
@@ -61,15 +69,15 @@ export default function CustomMetric(props: CustomMetricInterface): JSX.Element 
         isPrimaryMetric
       })
     })
-  }, [formikValues?.groupName, formikValues?.metricName])
+  }, [formikValues?.groupName, formikValues?.metricName, formikValues?.continuousVerification])
 
   useEffect(() => {
     const updatedGroupedCreatedMetrics = getGroupedCreatedMetrics(mappedMetrics, getString)
     setGroupedCreatedMetrics(updatedGroupedCreatedMetrics)
-  }, [formikValues?.groupName, mappedMetrics, selectedMetric])
+  }, [formikValues?.groupName, mappedMetrics, selectedMetric, formikValues?.continuousVerification])
 
   const removeMetric = useCallback(
-    (removedMetric, updatedMetric, updatedList, smIndex) =>
+    (removedMetric, updatedMetric, updatedList, smIndex) => {
       onRemoveMetric({
         removedMetric,
         updatedMetric,
@@ -78,7 +86,11 @@ export default function CustomMetric(props: CustomMetricInterface): JSX.Element 
         formikValues,
         setCreatedMetrics,
         setMappedMetrics
-      }),
+      })
+      if (isMetricThresholdEnabled && filterRemovedMetricNameThresholds && removedMetric) {
+        filterRemovedMetricNameThresholds(removedMetric)
+      }
+    },
     [formikValues]
   )
 
@@ -114,6 +126,7 @@ export default function CustomMetric(props: CustomMetricInterface): JSX.Element 
           }
           onSelectMetric={(newMetric, updatedList, smIndex) => selectMetric(newMetric, updatedList, smIndex)}
           shouldBeAbleToDeleteLastMetric={shouldBeAbleToDeleteLastMetric}
+          isMetricThresholdEnabled={isMetricThresholdEnabled}
         />
       }
       content={children}

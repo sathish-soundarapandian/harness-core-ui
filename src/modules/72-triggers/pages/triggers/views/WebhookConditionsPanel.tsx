@@ -27,6 +27,7 @@ const WebhookConditionsPanel: React.FC<WebhookConditionsPanelPropsInterface> = (
     errors
   } = formikProps
   const { getString } = useStrings()
+
   return (
     <Layout.Vertical className={cx(css.webhookConditionsContainer)} spacing="large" padding="xxlarge">
       <Text style={{ fontSize: '16px' }} font={{ weight: 'bold' }} inline={true} color={Color.GREY_800}>

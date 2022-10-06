@@ -14,7 +14,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { DashboardModel } from 'services/custom-dashboards'
-import { DashboardType } from '@dashboards/types/DashboardTypes'
+import { DashboardType } from '@dashboards/types/DashboardTypes.types'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -37,6 +37,7 @@ const DashboardList: React.FC<DashboardListProps> = ({
   const { getString } = useStrings()
   const { accountId, folderId } = useParams<{ accountId: string; folderId: string }>()
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   type CustomColumn<T extends Record<string, any>> = Column<T>
 
   const RenderDashboardName: Renderer<CellProps<DashboardModel>> = ({ row }) => {
@@ -122,7 +123,7 @@ const DashboardList: React.FC<DashboardListProps> = ({
       Header: getString('name'),
       id: 'name',
       accessor: row => row.title,
-      width: '30%',
+      width: '40%',
       Cell: RenderDashboardName
     },
     {
@@ -137,12 +138,6 @@ const DashboardList: React.FC<DashboardListProps> = ({
       id: 'view_count',
       accessor: row => row.view_count,
       width: '15%'
-    },
-    {
-      Header: getString('dashboards.dashboardList.headerFavoriteCount'),
-      id: 'favorite_count',
-      accessor: row => row.favorite_count,
-      width: '10%'
     },
     {
       Header: '',

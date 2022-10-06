@@ -67,6 +67,7 @@ const PercentageRolloutItem = ({
           addClearButton
           hideOverError
           hideTargetGroupDivider
+          disabled={disabled}
         />
       </Container>
     </>

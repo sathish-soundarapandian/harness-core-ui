@@ -14,6 +14,7 @@ declare const styles: {
   readonly highlight: string
   readonly labelItem: string
   readonly multiSelectOption: string
+  readonly noSearchResults: string
   readonly searchBoxContainer: string
   readonly searchCheckBox: string
   readonly searchText: string

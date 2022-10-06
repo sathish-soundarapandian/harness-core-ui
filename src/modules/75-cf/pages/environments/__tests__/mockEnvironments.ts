@@ -214,6 +214,19 @@ export default {
         deleted: false,
         tags: {},
         version: 0
+      },
+      {
+        accountId: 'zEaak-FLS425IEO7OLzMUg',
+        orgIdentifier: 'Harness',
+        projectIdentifier: 'TNHUFF_PROJECT',
+        identifier: 'Mock_Environment',
+        name: 'Mock Environment',
+        description: '',
+        color: '#0063F7',
+        type: 'PreProduction',
+        deleted: false,
+        tags: {},
+        version: 0
       }
     ],
     pageIndex: 0,

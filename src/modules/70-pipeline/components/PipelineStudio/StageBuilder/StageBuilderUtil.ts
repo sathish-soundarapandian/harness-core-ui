@@ -11,13 +11,9 @@ import { Color } from '@harness/design-system'
 import { v4 as uuid } from 'uuid'
 import type { NodeModelListener, LinkModelListener, DiagramEngine } from '@projectstorm/react-diagrams-core'
 import produce from 'immer'
-import { parse } from 'yaml'
-import type {
-  StageElementWrapperConfig,
-  PageConnectorResponse,
-  PipelineInfoConfig,
-  DeploymentStageConfig
-} from 'services/cd-ng'
+import { parse } from '@common/utils/YamlHelperMethods'
+import type { PageConnectorResponse, DeploymentStageConfig } from 'services/cd-ng'
+import type { StageElementWrapperConfig, PipelineInfoConfig, EntityGitDetails } from 'services/pipeline-ng'
 import type * as Diagram from '@pipeline/components/Diagram'
 import {
   getIdentifierFromValue,
@@ -30,6 +26,7 @@ import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { DiagramType, Event } from '@pipeline/components/Diagram'
 import { PipelineOrStageStatus } from '@pipeline/components/PipelineSteps/AdvancedSteps/ConditionalExecutionPanel/ConditionalExecutionPanelUtils'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { EmptyStageName } from '../PipelineConstants'
 import type { PipelineContextInterface, StagesMap } from '../PipelineContext/PipelineContext'
 import { getStageFromPipeline } from '../PipelineContext/helpers'
@@ -78,9 +75,9 @@ export interface PopoverData {
   onClickGroupStage?: (stageId: string, type: StageType) => void
   renderPipelineStage: PipelineContextInterface['renderPipelineStage']
   isHoverView?: boolean
-  getTemplate: PipelineContextInterface['getTemplate']
   templateTypes: { [key: string]: string }
-  newPipelineStudioEnabled?: boolean
+  gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
 }
 
 export const getStageIndexByIdentifier = (
@@ -116,7 +113,7 @@ export const getNewStageFromTemplate = (
 ): StageElementWrapperConfig => {
   return {
     stage: {
-      ...parse(template?.yaml || '')?.template.spec,
+      ...parse<any>(template?.yaml || '')?.template.spec,
       name: clearDefaultValues ? '' : EmptyStageName,
       identifier: clearDefaultValues ? '' : uuid()
     }
@@ -443,12 +440,10 @@ export const getLinkEventListeners = (
   ) => void,
   updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
   confirmMoveStage: () => void,
-  getTemplate: PipelineContextInterface['getTemplate'],
-  stageMap: Map<string, StageState>,
-  newPipelineStudioEnabled?: boolean
+  stageMap: Map<string, StageState>
 ): LinkModelListener => {
   const {
-    state: { pipeline, templateTypes },
+    state: { pipeline, templateTypes, gitDetails, storeMetadata },
     contextType = 'Pipeline',
     stagesMap,
     renderPipelineStage,
@@ -475,8 +470,8 @@ export const getLinkEventListeners = (
             renderPipelineStage,
             contextType,
             templateTypes,
-            getTemplate,
-            newPipelineStudioEnabled
+            gitDetails,
+            storeMetadata
           },
           { useArrows: false, darkMode: false, fixedPosition: false }
         )
@@ -569,16 +564,17 @@ export const getNodeEventListerner = (
 
   updateMoveStageDetails: (moveStageDetails: MoveStageDetailsType) => void,
   confirmMoveStage: () => void,
-  getTemplate: PipelineContextInterface['getTemplate'],
   stageMap: Map<string, StageState>,
-  newPipelineStudioEnabled?: boolean
+  sectionId?: string | null
 ): NodeModelListener => {
   const {
     state: {
       pipeline,
       pipelineView: { isSplitViewOpen },
       pipelineView,
-      templateTypes
+      templateTypes,
+      gitDetails,
+      storeMetadata
     },
     contextType = 'Pipeline',
     stagesMap,
@@ -606,8 +602,8 @@ export const getNodeEventListerner = (
               stagesMap,
               contextType,
               templateTypes,
-              getTemplate,
-              newPipelineStudioEnabled
+              gitDetails,
+              storeMetadata
             },
             { useArrows: true, darkMode: false, fixedPosition: false }
           )
@@ -633,14 +629,14 @@ export const getNodeEventListerner = (
                   renderPipelineStage,
                   contextType,
                   templateTypes,
-                  getTemplate,
-                  newPipelineStudioEnabled
+                  gitDetails,
+                  storeMetadata
                 },
                 { useArrows: false, darkMode: false, fixedPosition: false }
               )
               setSelectionRef.current({ stageId: undefined, sectionId: undefined })
             } else {
-              setSelectionRef.current({ stageId: data?.stage?.identifier, sectionId: undefined })
+              setSelectionRef.current({ stageId: data?.stage?.identifier, sectionId })
             }
           } /* istanbul ignore else */ else if (!isSplitViewOpen) {
             if (stageMap.has(data?.stage?.identifier || '')) {
@@ -662,8 +658,8 @@ export const getNodeEventListerner = (
                   renderPipelineStage,
                   contextType,
                   templateTypes,
-                  getTemplate,
-                  newPipelineStudioEnabled
+                  gitDetails,
+                  storeMetadata
                 },
                 { useArrows: false, darkMode: false, fixedPosition: false }
               )
@@ -701,8 +697,8 @@ export const getNodeEventListerner = (
             renderPipelineStage,
             contextType,
             templateTypes,
-            getTemplate,
-            newPipelineStudioEnabled
+            gitDetails,
+            storeMetadata
           },
           { useArrows: false, darkMode: false, fixedPosition: false },
           event.callback
@@ -801,8 +797,8 @@ export const getNodeEventListerner = (
             renderPipelineStage,
             contextType,
             templateTypes,
-            getTemplate,
-            newPipelineStudioEnabled
+            gitDetails,
+            storeMetadata
           },
           { useArrows: true, darkMode: false, fixedPosition: false, placement: 'top' },
           noop,
@@ -833,18 +829,14 @@ interface MoveStageParams {
   stageMap: Map<string, StageState>
   addStage: AddStage
   addStageNew: AddStageNew
-  newPipelineStudioEnabled: boolean
 }
 export const moveStage = ({
   moveStageDetails,
   pipelineContext,
-  updateStageOnAddLink,
   updateStageOnAddLinkNew,
   resetPipelineStages,
-  addStage,
   stageMap,
-  addStageNew,
-  newPipelineStudioEnabled
+  addStageNew
 }: MoveStageParams): void => {
   const {
     event,
@@ -861,18 +853,8 @@ export const moveStage = ({
   const dropNode = getStageFromPipelineData(nodeIdentifier).stage
 
   if (currentStage?.parent?.parallel || isLastAddLink) {
-    if (newPipelineStudioEnabled) {
-      if (dropNode && event.node.identifier !== event?.destination?.identifier) {
-        updateStageOnAddLinkNew(event, dropNode, currentStage)
-
-        const updatedStages = resetServiceSelectionForStages(
-          dependentStages.length ? dependentStages : [nodeIdentifier],
-          pipeline
-        )
-        resetPipelineStages(updatedStages)
-      }
-    } else if (dropNode && event.node.identifier !== event?.entity.getIdentifier()) {
-      updateStageOnAddLink(event, dropNode, currentStage)
+    if (dropNode && event.node.identifier !== event?.destination?.identifier) {
+      updateStageOnAddLinkNew(event, dropNode, currentStage)
 
       const updatedStages = resetServiceSelectionForStages(
         dependentStages.length ? dependentStages : [nodeIdentifier],
@@ -883,9 +865,7 @@ export const moveStage = ({
   } else {
     const isRemove = removeNodeFromPipeline(getStageFromPipelineData(nodeIdentifier), pipeline, stageMap, false)
     if (isRemove && dropNode) {
-      newPipelineStudioEnabled
-        ? addStageNew(dropNode, !!currentStage, !currentStage, undefined, undefined, undefined, event.destination)
-        : addStage(dropNode, !!currentStage, event as any)
+      addStageNew(dropNode, !!currentStage, !currentStage, undefined, undefined, undefined, event.destination)
       const updatedStages = resetServiceSelectionForStages(
         dependentStages.length ? dependentStages : [nodeIdentifier],
         pipeline

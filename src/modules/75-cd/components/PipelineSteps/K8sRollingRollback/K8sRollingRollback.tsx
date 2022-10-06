@@ -6,18 +6,27 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput, Layout, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  IconName,
+  Formik,
+  FormInput,
+  Layout,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 
 import { isEmpty } from 'lodash-es'
+import { Accordion } from '@harness/uicore'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig, K8sRollingRollbackStepInfo } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { useStrings } from 'framework/strings'
@@ -28,7 +37,7 @@ import {
 
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
@@ -51,7 +60,7 @@ interface K8sRollingRollbackProps {
   initialValues: K8sRollingRollbackData
   onUpdate?: (data: K8sRollingRollbackData) => void
   onChange?: (data: K8sRollingRollbackData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   stepViewType?: StepViewType
   isNewStep?: boolean
@@ -73,12 +82,12 @@ function K8sRollingRollbackWidget(
     <>
       <Formik<K8sRollingRollbackData>
         onSubmit={(values: K8sRollingRollbackData) => {
-          onUpdate?.({ ...values, spec: { skipDryRun: false } })
+          onUpdate?.({ ...values, spec: { ...values.spec, skipDryRun: false } })
         }}
         formName="k8RollingRB"
         initialValues={initialValues}
         validate={data => {
-          onChange?.({ ...data, spec: { skipDryRun: false } })
+          onChange?.({ ...data, spec: { ...data.spec, skipDryRun: false } })
         }}
         validationSchema={Yup.object().shape({
           ...getNameAndIdentifierSchema(getString, stepViewType),
@@ -128,9 +137,27 @@ function K8sRollingRollbackWidget(
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
+
+              <Accordion className={stepCss.accordion}>
+                <Accordion.Panel
+                  id="optional-config"
+                  summary={getString('common.optionalConfig')}
+                  details={
+                    <div className={cx(stepCss.formGroup, stepCss.md)}>
+                      <FormMultiTypeCheckboxField
+                        multiTypeTextbox={{ expressions, allowableTypes }}
+                        name="spec.pruningEnabled"
+                        label={getString('cd.steps.common.enableKubernetesPruning')}
+                        disabled={readonly}
+                      />
+                    </div>
+                  }
+                />
+              </Accordion>
             </Layout.Vertical>
           )
         }}
@@ -146,7 +173,7 @@ const K8sRollingRollbackInputStep: React.FC<K8sRollingRollbackProps> = ({ inputS
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
@@ -156,6 +183,8 @@ const K8sRollingRollbackInputStep: React.FC<K8sRollingRollbackProps> = ({ inputS
               disabled: inputSetData?.readonly
             }}
             disabled={inputSetData?.readonly}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
           />
         </div>
       )}
@@ -169,6 +198,20 @@ const K8sRollingRollbackInputStep: React.FC<K8sRollingRollbackProps> = ({ inputS
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipDryRun`}
             className={stepCss.checkbox}
             label={getString('pipelineSteps.skipDryRun')}
+            disabled={inputSetData?.readonly}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.pruningEnabled) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes: allowableTypes
+            }}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.pruningEnabled`}
+            label={getString('cd.steps.common.enableKubernetesPruning')}
             disabled={inputSetData?.readonly}
             setToFalseWhenEmpty={true}
           />
@@ -214,7 +257,7 @@ export class K8sRollingRollbackStep extends PipelineStep<K8sRollingRollbackData>
       onChange,
       allowableTypes
     } = props
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <K8sRollingRollbackInputStep
           allowableTypes={allowableTypes}
@@ -285,6 +328,7 @@ export class K8sRollingRollbackStep extends PipelineStep<K8sRollingRollbackData>
   protected type = StepType.K8sRollingRollback
   protected stepName = 'K8s Rollout Rollback'
   protected stepIcon: IconName = 'undo'
+  protected referenceId = 'rollingRollbackStep'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sRollingRollback'
 
   protected defaultValues: K8sRollingRollbackData = {
@@ -293,7 +337,8 @@ export class K8sRollingRollbackStep extends PipelineStep<K8sRollingRollbackData>
     type: StepType.K8sRollingRollback,
     timeout: '10m',
     spec: {
-      skipDryRun: false
+      skipDryRun: false,
+      pruningEnabled: false
     }
   }
 }

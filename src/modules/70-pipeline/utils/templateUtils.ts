@@ -5,10 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { defaultTo, get, isEmpty, isEqual, set, unset } from 'lodash-es'
+import { defaultTo, get, isEmpty, isEqual, set, trim, unset, map } from 'lodash-es'
 import produce from 'immer'
-import { parse } from 'yaml'
-import type { PipelineInfoConfig, StageElementConfig, StepElementConfig, TemplateLinkConfig } from 'services/cd-ng'
+import { parse } from '@common/utils/YamlHelperMethods'
+import type {
+  PipelineInfoConfig,
+  StageElementConfig,
+  StepElementConfig,
+  TemplateLinkConfig,
+  TemplateStepNode
+} from 'services/pipeline-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import {
   getIdentifierFromValue,
@@ -17,7 +23,6 @@ import {
 } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { generateRandomString } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
@@ -26,20 +31,13 @@ import {
   GetTemplateListQueryParams,
   ResponsePageTemplateSummaryResponse
 } from 'services/template-ng'
-import type { TemplateType } from '@common/interfaces/RouteInterfaces'
+import { Category } from '@common/constants/TrackingConstants'
+import type { ServiceDefinition } from 'services/cd-ng'
+import { INPUT_EXPRESSION_REGEX_STRING, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 
 export const TEMPLATE_INPUT_PATH = 'template.templateInputs'
-
-export interface GetTemplateResponse {
-  template: TemplateSummaryResponse
-  isCopied: boolean
-}
-
-export interface GetTemplateProps {
-  templateType: TemplateType
-  selectedChildType?: string
-  allChildTypes?: string[]
-  selectedTemplate?: TemplateSummaryResponse
+export interface TemplateServiceDataType {
+  [key: string]: ServiceDefinition['type']
 }
 
 export const getTemplateNameWithLabel = (template?: TemplateSummaryResponse): string => {
@@ -69,7 +67,7 @@ export const getStepType = (step?: StepElementConfig | TemplateStepNode): StepTy
 export const setTemplateInputs = (
   data: TemplateStepNode | StageElementConfig | PipelineInfoConfig,
   templateInputs: TemplateLinkConfig['templateInputs']
-) => {
+): void => {
   if (isEmpty(templateInputs)) {
     unset(data, TEMPLATE_INPUT_PATH)
   } else {
@@ -80,7 +78,7 @@ export const setTemplateInputs = (
 export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig | StepOrStepGroupOrTemplateStepData>(
   data?: T,
   template?: TemplateSummaryResponse
-) => {
+): T => {
   return produce({} as T, draft => {
     draft.name = defaultTo(data?.name, '')
     draft.identifier = defaultTo(data?.identifier, '')
@@ -89,13 +87,21 @@ export const createTemplate = <T extends PipelineInfoConfig | StageElementConfig
       if (template.versionLabel) {
         set(draft, 'template.versionLabel', template.versionLabel)
       }
+      set(draft, 'template.templateInputs', get(data, 'template.templateInputs'))
     }
   })
 }
 
-export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, isCopied = false) => {
+export const getTemplateRefVersionLabelObject = (template: TemplateSummaryResponse): TemplateLinkConfig => {
+  return {
+    templateRef: defaultTo(getScopeBasedTemplateRef(template), ''),
+    versionLabel: defaultTo(template.versionLabel, '')
+  }
+}
+
+export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, isCopied = false): StepElementConfig => {
   return (isCopied
-    ? produce(defaultTo(parse(defaultTo(template?.yaml, ''))?.template.spec, {}) as StepElementConfig, draft => {
+    ? produce(defaultTo(parse<any>(defaultTo(template?.yaml, ''))?.template.spec, {}) as StepElementConfig, draft => {
         draft.name = defaultTo(template?.name, '')
         draft.identifier = generateRandomString(defaultTo(template?.name, ''))
       })
@@ -109,10 +115,7 @@ export const createStepNodeFromTemplate = (template: TemplateSummaryResponse, is
       })) as unknown as StepElementConfig
 }
 
-export const getTemplateTypesByRef = (
-  params: GetTemplateListQueryParams,
-  templateRefs: string[]
-): Promise<{ [key: string]: string }> => {
+const getPromisesForTemplateList = (params: GetTemplateListQueryParams, templateRefs: string[]) => {
   const scopedTemplates = templateRefs.reduce((a: { [key: string]: string[] }, b) => {
     const identifier = getIdentifierFromValue(b)
     const scope = getScopeFromValue(b)
@@ -123,6 +126,7 @@ export const getTemplateTypesByRef = (
     }
     return a
   }, {})
+
   const promises: Promise<ResponsePageTemplateSummaryResponse>[] = []
   Object.keys(scopedTemplates).forEach(scope => {
     promises.push(
@@ -142,18 +146,92 @@ export const getTemplateTypesByRef = (
       })
     )
   })
+
+  return promises
+}
+
+export const getResolvedCustomDeploymentDetailsByRef = (
+  params: GetTemplateListQueryParams,
+  templateRefs: string[]
+): Promise<{ resolvedCustomDeploymentDetailsByRef: { [key: string]: Record<string, string | string[]> } }> => {
+  const promises = getPromisesForTemplateList(params, templateRefs)
   return Promise.all(promises)
     .then(responses => {
+      const resolvedCustomDeploymentDetailsByRef = {}
+      responses.forEach(response => {
+        response.data?.content?.forEach(item => {
+          const templateData = parse<any>(item.yaml || '').template
+          const scopeBasedTemplateRef = getScopeBasedTemplateRef(item)
+          set(resolvedCustomDeploymentDetailsByRef, scopeBasedTemplateRef, {
+            name: item.name,
+            linkedTemplateRefs: map(
+              templateData?.spec?.execution?.stepTemplateRefs,
+              (stepTemplateRefObj: TemplateLinkConfig) => getIdentifierFromValue(stepTemplateRefObj.templateRef)
+            )
+          })
+        })
+      })
+      return { resolvedCustomDeploymentDetailsByRef }
+    })
+    .catch(_ => {
+      return { resolvedCustomDeploymentDetailsByRef: {} }
+    })
+}
+
+export const getTemplateTypesByRef = (
+  params: GetTemplateListQueryParams,
+  templateRefs: string[]
+): Promise<{
+  templateTypes: { [key: string]: string }
+  templateServiceData: TemplateServiceDataType
+}> => {
+  const promises = getPromisesForTemplateList(params, templateRefs)
+  return Promise.all(promises)
+    .then(responses => {
+      const templateServiceData = {}
       const templateTypes = {}
       responses.forEach(response => {
         response.data?.content?.forEach(item => {
-          set(templateTypes, getScopeBasedTemplateRef(item), parse(item.yaml || '').template.spec.type)
+          const templateData = parse<any>(item.yaml || '').template
+          const scopeBasedTemplateRef = getScopeBasedTemplateRef(item)
+          set(templateTypes, scopeBasedTemplateRef, templateData.spec.type)
+
+          const serviceData = defaultTo(
+            templateData.spec.spec?.serviceConfig?.serviceDefinition?.type,
+            templateData.spec.spec?.deploymentType
+          )
+          if (templateData.type === Category.STAGE && serviceData) {
+            set(templateServiceData, scopeBasedTemplateRef, serviceData)
+          }
         })
       })
-      return templateTypes
+      return { templateTypes, templateServiceData }
     })
     .catch(_ => {
-      return {}
+      return { templateTypes: {}, templateServiceData: {} }
+    })
+}
+
+export const getResolvedTemplateDetailsByRef = (
+  params: GetTemplateListQueryParams,
+  templateRefs: string[]
+): Promise<{
+  templateDetailsByRef: { [key: string]: TemplateSummaryResponse }
+}> => {
+  const promises = getPromisesForTemplateList(params, templateRefs)
+  return Promise.all(promises)
+    .then(responses => {
+      const templateDetailsByRef = {}
+      responses.forEach(response => {
+        response.data?.content?.forEach(item => {
+          const scopeBasedTemplateRef = getScopeBasedTemplateRef(item)
+          set(templateDetailsByRef, scopeBasedTemplateRef, item)
+        })
+      })
+      return { templateDetailsByRef }
+    })
+    .catch(_ => {
+      return { templateDetailsByRef: {} }
     })
 }
 
@@ -171,4 +249,30 @@ export const areTemplatesEqual = (
   template2?: TemplateSummaryResponse
 ): boolean => {
   return areTemplatesSame(template1, template2) && isEqual(template1?.versionLabel, template2?.versionLabel)
+}
+
+/**
+ * Replaces all the "<+input>.defaultValue(value)" with "value"
+ * Does not replace any other "<+input>"
+ */
+export function replaceDefaultValues<T>(template: T): T {
+  const INPUT_EXPRESSION_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
+  return JSON.parse(
+    JSON.stringify(template || {}).replace(
+      new RegExp(`"${INPUT_EXPRESSION_REGEX.source.slice(1).slice(0, -1)}"`, 'g'),
+      value => {
+        const parsed = parseInput(trim(value, '"'))
+
+        if (!parsed || parsed.executionInput) {
+          return value
+        }
+
+        if (parsed.default !== null) {
+          return `"${parsed.default}"`
+        }
+
+        return value
+      }
+    )
+  )
 }

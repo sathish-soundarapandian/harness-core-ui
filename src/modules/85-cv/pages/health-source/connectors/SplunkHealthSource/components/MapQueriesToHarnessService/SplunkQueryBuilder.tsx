@@ -6,14 +6,20 @@
  */
 
 import React, { useState } from 'react'
-import { Formik, FormikForm, Utils, useToaster } from '@wings-software/uicore'
+import {
+  Formik,
+  FormikForm,
+  Utils,
+  useToaster,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@wings-software/uicore'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
 import { useStrings } from 'framework/strings'
 import { MultiItemsSideNav } from '@cv/components/MultiItemsSideNav/MultiItemsSideNav'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
-import { updateSelectedMetricsMap, validateMappings } from './utils'
-import { initialFormData } from './constants'
+import { updateSelectedMetricsMap, validateMappings, getSplunkMappedMetric } from './utils'
 import MapQueriesToHarnessServiceLayout from './components/MapSplunkQueriesToService/components/MapQueriesToHarnessServiceLayout/MapQueriesToHarnessServiceLayout'
 import type { MapSplunkQueryToService, SplunkQueryBuilderProps } from './types'
 import css from './SplunkQueryBuilder.module.scss'
@@ -21,29 +27,23 @@ import css from './SplunkQueryBuilder.module.scss'
 export function SplunkQueryBuilder(props: SplunkQueryBuilderProps): JSX.Element {
   const { getString } = useStrings()
   const { showError } = useToaster()
-  const { onSubmit, data: sourceData, onPrevious } = props
+  const { onSubmit, data: sourceData, onPrevious, isTemplate, expressions } = props
+
+  const connectorIdentifier =
+    typeof sourceData?.connectorRef === 'string' ? sourceData?.connectorRef : sourceData?.connectorRef?.value
+
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
 
   const [{ selectedMetric, mappedMetrics }, setMappedMetrics] = useState<{
     selectedMetric: string
     mappedMetrics: Map<string, MapSplunkQueryToService>
-  }>({
-    selectedMetric:
-      (Array.from(sourceData?.mappedServicesAndEnvs?.keys() || [])?.[0] as string) ||
-      getString('cv.monitoringSources.splunk.splunkLogsQuery'),
-    mappedMetrics:
-      sourceData?.mappedServicesAndEnvs?.size > 0
-        ? sourceData?.mappedServicesAndEnvs
-        : new Map<string, MapSplunkQueryToService>([
-            [getString('cv.monitoringSources.splunk.splunkLogsQuery'), initialFormData]
-          ])
-  })
+  }>(getSplunkMappedMetric({ sourceData, isConnectorRuntimeOrExpression, getString }))
 
   const [{ createdMetrics, selectedMetricIndex }, setCreatedMetrics] = useState({
     createdMetrics: Array.from(mappedMetrics.keys()) || [getString('cv.monitoringSources.splunk.splunkLogsQuery')],
     selectedMetricIndex: Array.from(mappedMetrics.keys()).findIndex(metric => metric === selectedMetric)
   })
 
-  const connectorIdentifier = sourceData?.connectorRef
   const [rerenderKey, setRerenderKey] = useState('')
 
   return (
@@ -136,6 +136,9 @@ export function SplunkQueryBuilder(props: SplunkQueryBuilderProps): JSX.Element 
                   onChange={formikProps.setFieldValue}
                   formikProps={formikProps}
                   connectorIdentifier={connectorIdentifier}
+                  isTemplate={isTemplate}
+                  expressions={expressions}
+                  isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                 />
               </>
             }

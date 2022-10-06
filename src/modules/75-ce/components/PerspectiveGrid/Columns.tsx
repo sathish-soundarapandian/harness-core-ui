@@ -10,6 +10,7 @@ import type { CellProps } from 'react-table'
 import moment from 'moment'
 import { CircularPercentageChart, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import cx from 'classnames'
 import formatCost from '@ce/utils/formatCost'
 import {
   QlceViewFieldInputInput,
@@ -34,15 +35,36 @@ export type GridData = Omit<
 > &
   Omit<ClusterData, '__typename'> & { legendColor: string }
 
-export const addLegendColorToRow = (data: QlceViewEntityStatsDataPoint[]): GridData[] => {
+interface FixedDecimalDataOptions {
+  decimalPoints?: number
+  returnValueType?: 'string' | 'number'
+}
+
+export const addLegendColorToRow = (data: QlceViewEntityStatsDataPoint[], columnSequence?: string[]): GridData[] => {
   let idx = 0
   const colors = new Map()
 
   return data.map(({ name, id, clusterData = {}, storageDetails = {}, instanceDetails = {}, ...rest }) => {
     const key = id
+    const isAlreadyInChart = columnSequence?.includes(name || '')
+    const indexInChart = Number(columnSequence?.indexOf(name || ''))
+
     if (!colors.has(key)) {
-      colors.set(key, CE_COLOR_CONST[idx % CE_COLOR_CONST.length])
-      idx++
+      switch (name) {
+        case 'Others':
+          colors.set(key, 'var(--blue-100)')
+          break
+        case 'Unallocated':
+          colors.set(key, 'var(--primary-2)')
+          break
+        default:
+          if (isAlreadyInChart) {
+            colors.set(key, CE_COLOR_CONST[indexInChart % CE_COLOR_CONST.length])
+          } else {
+            colors.set(key, CE_COLOR_CONST[idx % CE_COLOR_CONST.length])
+          }
+          idx++
+      }
     }
 
     return {
@@ -157,19 +179,23 @@ const GRID_EFFICIENCY_SCORE = {
 }
 
 // Cell Renderers
-const RenderNameCell = ({ row }: CellProps<GridData>): ReactNode => {
+export const RenderNameCell = ({ row }: CellProps<GridData>): ReactNode => {
   const { legendColor, name } = row.original
+  const columns = row.cells.length
+
   return (
     <div className={css.nameCell}>
       <span className={css.legendColorCtn}>
         <span style={{ background: legendColor }} className={css.legendColor}></span>
       </span>
-      <Text lineClamp={1} className={css.name}>
+      <Text lineClamp={1} className={cx({ [css.name]: columns > DEFAULT_COLS.length })}>
         {name}
       </Text>
     </div>
   )
 }
+
+export const RenderTextCell = (props: CellProps<GridData>): JSX.Element => <span>{props.value}</span>
 
 export const RenderCostCell = (props: CellProps<GridData>): JSX.Element => <span>{formatCost(+props.value)}</span>
 
@@ -203,6 +229,15 @@ const RenderEfficiencyScoreCell = (props: CellProps<GridData>) => {
       </div>
     </div>
   )
+}
+
+export const getFixedDecimalData = (data: Record<string, number>, opts?: FixedDecimalDataOptions) => {
+  const { decimalPoints = 2, returnValueType = 'string' } = opts || {}
+  const updatedData: Record<string, string | number> = {}
+  Object.entries(data).forEach(([key, val]) => {
+    updatedData[key] = returnValueType === 'string' ? val.toFixed(decimalPoints) : Number(val.toFixed(decimalPoints))
+  })
+  return updatedData
 }
 
 export type Column = {

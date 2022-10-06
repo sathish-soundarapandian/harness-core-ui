@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, findAllByText as findAllByTextGlobal } from '@testing-library/react'
+import { render, fireEvent, findAllByText as findAllByTextGlobal, queryByAttribute } from '@testing-library/react'
 
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -42,6 +42,7 @@ const pathParams = {
   pipelineIdentifier: 'TEST_PIPELINE',
   executionIdentifier: 'TEST_EXECUTION',
   module: 'cd',
+  source: 'executions',
   stageId: 'selectedStageId'
 }
 
@@ -160,10 +161,11 @@ describe('<ExecutionStepDetails /> tests', () => {
         data: responseData,
         loading: false
       }))
-      const { container, findByText } = render(
+      const { container } = render(
         <TestComponent selectedStep="retriedStep" queryParams={{ retryStep: 'retryId_1' }} />
       )
-      await findByText(/Retried Step 1/, { selector: '.title' })
+      const step = queryByAttribute('data-name', container, 'Retried Step 1')
+      expect(step).toBeInTheDocument()
       expect(container).toMatchSnapshot()
     })
 
@@ -172,7 +174,7 @@ describe('<ExecutionStepDetails /> tests', () => {
         data: null,
         loading: false
       }))
-      const { container, findByText } = render(
+      const { container } = render(
         <TestComponent
           selectedStep="retriedStep"
           queryParams={{ retryStep: 'retryId_1' }}
@@ -185,7 +187,8 @@ describe('<ExecutionStepDetails /> tests', () => {
           }}
         />
       )
-      await findByText(/Already_Present_Data/, { selector: '.title' })
+      const step = queryByAttribute('data-name', container, 'Already_Present_Data')
+      expect(step).toBeInTheDocument()
       expect(container).toMatchSnapshot()
     })
 

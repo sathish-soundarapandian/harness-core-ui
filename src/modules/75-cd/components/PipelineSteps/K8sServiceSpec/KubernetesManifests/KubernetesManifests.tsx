@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
-import { get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Text } from '@harness/uicore'
@@ -16,8 +16,8 @@ import manifestSourceBaseFactory from '@cd/factory/ManifestSourceFactory/Manifes
 import type { GitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { ManifestConfig } from 'services/cd-ng'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import type { KubernetesManifestsProps } from '../K8sServiceSpecInterface'
-import { isRuntimeMode } from '../K8sServiceSpecHelper'
 import { fromPipelineInputTriggerTab, getManifestTriggerSetValues } from '../ManifestSource/ManifestSourceUtils'
 import css from './KubernetesManifests.module.scss'
 
@@ -30,11 +30,10 @@ const ManifestInputField = (props: ManifestInputFieldProps): React.ReactElement 
   >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
-  const runtimeMode = isRuntimeMode(props.stepViewType)
+  const runtimeMode = isTemplatizedView(props.stepViewType)
   const isManifestsRuntime = runtimeMode && !!get(props.template, 'manifests', false)
-
   const manifestSource = manifestSourceBaseFactory.getManifestSource(props.manifest.type)
-  const manifestDefaultValue = props.manifests?.find(
+  const manifestDefaultValue = defaultTo(props.manifests, props.template.manifests)?.find(
     manifestData => manifestData?.manifest?.identifier === props.manifest?.identifier
   )?.manifest as ManifestConfig
 
@@ -87,7 +86,7 @@ export function KubernetesManifests(props: KubernetesManifestsProps): React.Reac
         </div>
       )}
       {props.template.manifests?.map((manifestObj, index) => {
-        if (!manifestObj?.manifest || !props.manifests?.length) {
+        if (!manifestObj?.manifest || !props.template.manifests?.length) {
           return null
         }
         const manifestPath = `manifests[${index}].manifest`

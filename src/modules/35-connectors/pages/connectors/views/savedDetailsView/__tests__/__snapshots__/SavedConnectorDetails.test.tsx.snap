@@ -982,6 +982,141 @@ exports[`Saved Connector Details render for GitHttp schema 1`] = `
 </div>
 `;
 
+exports[`Saved Connector Details render for Github Repo schema 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainer"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+      >
+        overview
+      </p>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.name_labels.Github
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            github
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          identifier
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            github-identifier
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+      >
+        credentials
+      </p>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          common.git.urlType
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            Repo
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          common.git.connectionType
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            SSH
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          UrlLabel
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            git@github.com:wings-software/sample-k8s-manifests.git
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          SSH_KEY
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            githubkey
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Saved Connector Details render for Inline K8s schema 1`] = `
 <div>
   <div
@@ -1460,6 +1595,87 @@ exports[`Saved Connector Details render for Nexus schema 1`] = `
             class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
           >
             account.NexusPassword
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Saved Connector Details render for PDC schema 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-xlarge StyledProps--main detailsSectionContainer"
+  >
+    <div
+      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+      >
+        overview
+      </p>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.name_labels.PDC
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            PDC
+          </span>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          identifier
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            PDCX
+          </span>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bp3-card bp3-elevation-0 Card--card detailsSection"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-weight-bold StyledProps--font-size-medium StyledProps--color StyledProps--color-grey700"
+      >
+        connectors.pdc.hosts
+      </p>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main detailsSectionRowWrapper StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+        >
+          connectors.pdc.hosts
+        </p>
+        <div
+          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main detailsSectionRow"
+        >
+          <span
+            class="StyledProps--font StyledProps--main detailsValue StyledProps--inline StyledProps--color StyledProps--color-black"
+          >
+            test hostname
           </span>
         </div>
       </div>

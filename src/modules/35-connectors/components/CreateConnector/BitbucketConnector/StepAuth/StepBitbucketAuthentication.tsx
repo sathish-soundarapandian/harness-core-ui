@@ -35,6 +35,7 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import { getCommonConnectorsValidationSchema } from '../../CreateConnectorUtils'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepBitbucketAuthentication.module.scss'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
@@ -53,6 +54,7 @@ interface BitbucketAuthenticationProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 interface BitbucketFormInterface {
@@ -136,6 +138,10 @@ const StepBitbucketAuthentication: React.FC<
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(true && props.isEditMode)
 
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+  })
+
   const authOptions: Array<SelectOption> = [
     {
       label: getString('usernamePassword'),
@@ -174,7 +180,10 @@ const StepBitbucketAuthentication: React.FC<
   return loadingConnectorSecrets ? (
     <PageSpinner />
   ) : (
-    <Layout.Vertical width="60%" style={{ minHeight: 460 }} className={cx(css.secondStep, commonCss.stepContainer)}>
+    <Layout.Vertical
+      width="60%"
+      className={cx(css.secondStep, commonCss.connectorModalMinHeight, commonCss.stepContainer)}
+    >
       <Text font={{ variation: FontVariation.H3 }}>{getString('credentials')}</Text>
 
       <Formik

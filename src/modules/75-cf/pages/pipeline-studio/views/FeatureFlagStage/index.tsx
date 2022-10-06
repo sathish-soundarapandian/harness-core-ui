@@ -14,7 +14,7 @@ import { FeatureFlagStage } from './FeatureFlagStage'
 
 /* istanbul ignore next */
 const getStageAttributes = (getString: UseStringsReturn['getString']): StageAttributes => ({
-  name: getString('pipelineSteps.feature.create.featureStageName'),
+  name: getString('common.moduleTitles.cf'),
   type: StageType.FEATURE,
   icon: 'cf-main',
   iconColor: 'var(--pipeline-feature-stage-color)',
@@ -27,14 +27,13 @@ const getStageEditorImplementation = (isEnabled: boolean, getString: UseStringsR
     icon={'cf-main'}
     hoverIcon={'feature-flag-stage'}
     iconsStyle={{ color: 'var(--pipeline-feature-stage-color)' }}
-    name={getString('pipelineSteps.feature.create.featureStageName')}
+    name={getString('common.moduleTitles.cf')}
     type={StageType.FEATURE}
-    title={getString('pipelineSteps.feature.create.featureStageName')}
+    title={getString('common.moduleTitles.cf')}
     description={getString('pipeline.pipelineSteps.featureStageDescription')}
     isDisabled={false}
     isHidden={!isEnabled}
     isApproval={false}
-    isTemplateSupported={true}
   />
 )
 

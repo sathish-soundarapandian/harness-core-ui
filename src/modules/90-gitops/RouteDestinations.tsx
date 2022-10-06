@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { RouteWithLayout } from '@common/router'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import CDSideNav from '@cd/components/CDSideNav/CDSideNav'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
@@ -19,12 +18,12 @@ import {
   DeployEnvironmentWidget,
   NewEditEnvironmentModal
 } from '@cd/components/PipelineSteps/DeployEnvStep/DeployEnvStep'
-import GitOpsServersPage from '@cd/pages/gitops/GitOpsServersHomePage'
-import GitOpsModalContainer from '@cd/pages/gitops/NativeArgo/GitOpsProvidersList'
+
 import type { GitOpsCustomMicroFrontendProps } from '@cd/interfaces/GitOps.types'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import DeployServiceWidget from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceWidget'
+import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 
 // eslint-disable-next-line import/no-unresolved
 const GitOpsServersList = React.lazy(() => import('gitopsui/MicroFrontendApp'))
@@ -41,31 +40,18 @@ const pipelineModuleParams: ModulePathParams = {
 }
 
 const GitOpsPage = (): React.ReactElement | null => {
-  const { ARGO_PHASE1, ARGO_PHASE2_MANAGED } = useFeatureFlags()
-
-  if (ARGO_PHASE2_MANAGED) {
-    return (
-      <ChildAppMounter<GitOpsCustomMicroFrontendProps>
-        ChildApp={GitOpsServersList}
-        customComponents={{
-          DeployEnvironmentWidget,
-          DeployServiceWidget,
-          NewEditEnvironmentModal,
-          NewEditServiceModal
-        }}
-      />
-    )
-  }
-
-  if (ARGO_PHASE1) {
-    return (
-      <GitOpsServersPage>
-        <GitOpsModalContainer />
-      </GitOpsServersPage>
-    )
-  }
-
-  return null
+  return (
+    <ChildAppMounter<GitOpsCustomMicroFrontendProps>
+      getLinkForAccountResources={getLinkForAccountResources}
+      ChildApp={GitOpsServersList}
+      customComponents={{
+        DeployEnvironmentWidget,
+        DeployServiceWidget,
+        NewEditEnvironmentModal,
+        NewEditServiceModal
+      }}
+    />
+  )
 }
 
 export default (

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ArtifactListConfig, PrimaryArtifact, ServiceSpec, SidecarArtifact } from 'services/cd-ng'
@@ -29,7 +29,7 @@ export interface KubernetesServiceInputFormProps {
   stageIdentifier: string
   formik?: any
   fromTrigger?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export interface KubernetesArtifactsProps {
@@ -43,7 +43,7 @@ export interface KubernetesArtifactsProps {
   path?: string
   initialValues: K8SDirectServiceStep
   readonly: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   fromTrigger?: boolean
   artifact?: PrimaryArtifact | SidecarArtifact
   isSidecar?: boolean

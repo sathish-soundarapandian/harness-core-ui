@@ -228,6 +228,17 @@ describe('Restore Cache GCS Step', () => {
                   localName: 'step.restoreCacheGCS.name'
                 }
               },
+              'step-identifier': {
+                yamlExtraProperties: {
+                  properties: [
+                    {
+                      fqn: 'pipeline.stages.qaStage.execution.steps.restoreCacheGCS.identifier',
+                      localName: 'step.restoreCacheGCS.identifier',
+                      variableName: 'identifier'
+                    }
+                  ]
+                }
+              },
               'step-timeout': {
                 yamlProperties: {
                   fqn: 'pipeline.stages.qaStage.execution.steps.restoreCacheGCS.timeout',
@@ -286,6 +297,7 @@ describe('Restore Cache GCS Step', () => {
             },
             variablesData: {
               type: StepType.RestoreCacheGCS,
+              __uuid: 'step-identifier',
               identifier: 'restoreCacheGCS',
               name: 'step-name',
               timeout: 'step-timeout',

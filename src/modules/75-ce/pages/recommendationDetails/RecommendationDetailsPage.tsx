@@ -34,6 +34,7 @@ import { RecommendationOverviewStats, ResourceType, useFetchRecommendationQuery 
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import CustomizeRecommendationsImg from './images/custom-recommendations.gif'
 
 import RecommendationDetails from '../../components/RecommendationDetails/RecommendationDetails'
@@ -200,6 +201,8 @@ const RecommendationDetailsPage: React.FC = () => {
     label: TimeRange.LAST_7
   })
 
+  useDocumentTitle([getString('ce.recommendation.sideNavText'), recommendationName], true)
+
   const [qualityOfService, setQualityOfService] = useQueryParamsState<QualityOfService>(
     'QoS',
     QualityOfService.BURSTABLE
@@ -319,7 +322,6 @@ const RecommendationDetailsPage: React.FC = () => {
                     timeRange={timeRange}
                     recommendationStats={recommendationStats}
                     qualityOfService={qualityOfService}
-                    timeRangeFilter={timeRangeFilter}
                     cpuAndMemoryValueBuffer={cpuAndMemoryValueBuffer}
                     currentContainer={index + 1}
                     totalContainers={Object.keys(recommendationDetails.containerRecommendations || {}).length}

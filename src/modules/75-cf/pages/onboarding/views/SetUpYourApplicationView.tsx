@@ -7,18 +7,19 @@
 
 import React, { useState, useEffect } from 'react'
 import { Container, Heading, Layout, Text } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
-import { String, useStrings } from 'framework/strings'
-import type { ApiKey, FeatureFlagRequestRequestBody } from 'services/cf'
+import { useStrings } from 'framework/strings'
+import type { ApiKey, Feature } from 'services/cf'
 import { LanguageSelection, PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+import { OnboardingSelectedFlag } from '../OnboardingSelectedFlag'
 import { SetUpAppInfoView } from './SetUpAppInfoView'
 import { SelectEnvironmentView } from './SelectEnvironmentView'
 import { SetUpYourCodeView } from './SetUpYourCodeView'
+import css from './SetUpYourApplicationView.module.scss'
 
 export interface SetUpYourApplicationViewProps {
-  flagInfo: FeatureFlagRequestRequestBody
+  flagInfo: Feature
   language: PlatformEntry | undefined
   setLanguage: (language: PlatformEntry) => void
   apiKey: ApiKey | undefined
@@ -39,42 +40,18 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
   return (
     <Container height="100%">
-      <Container padding="xlarge" width="calc(100% - 400px)" height="calc(100vh - 140px)" style={{ overflow: 'auto' }}>
-        <Text
-          inline
-          color={Color.BLACK}
-          padding={{ top: 'xsmall', bottom: 'xsmall', left: 'small', right: 'small' }}
-          style={{
-            background: '#F3F3FA',
-            borderRadius: '4px'
-          }}
-        >
-          <String
-            stringID="cf.onboarding.successLabel"
-            vars={{ name: flagInfo.name, identifier: flagInfo.identifier }}
-            useRichText
-          />
-        </Text>
-        <Heading
-          level={2}
-          style={{
-            fontWeight: 600,
-            fontSize: '20px',
-            lineHeight: '28px',
-            color: '#22222A'
-          }}
-          padding={{ top: 'xlarge', bottom: 'xlarge' }}
-        >
+      <Container className={css.container} width="calc(100% - 400px)" height="calc(100vh - 140px)">
+        {flagInfo && <OnboardingSelectedFlag selectedFlag={flagInfo} />}
+        <Heading level={2} className={css.setUpLabel}>
           {getString('cf.onboarding.setupLabel')}
         </Heading>
         <Container>
           <Layout.Vertical spacing="xsmall">
-            <Text style={{ fontWeight: 600, fontSize: '16px', color: '#22222A' }}>
-              {getString('cf.onboarding.selectLanguage')}
-            </Text>
-            <Container padding="large" style={{ background: '#FAFBFC' }}>
+            <Text className={css.selectLanguage}>{getString('cf.onboarding.selectLanguage')}</Text>
+            <Container className={css.languageSelectionContainer}>
               <LanguageSelection
                 selected={language}
                 onSelect={entry => {
@@ -93,35 +70,24 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
         </Container>
 
         {language && (
-          <Container margin={{ top: 'large' }}>
-            <Layout.Vertical spacing="xsmall">
-              <Text style={{ fontWeight: 600, fontSize: '16px', color: '#22222A' }}>
-                {getString('cf.onboarding.selectEnvironment')}
-              </Text>
-              <Container padding="large" style={{ background: '#FAFBFC' }}>
-                <SelectEnvironmentView
-                  apiKey={apiKey}
-                  setApiKey={key => {
-                    setApiKey(key)
-                    props.setApiKey(key)
-                  }}
-                  setEnvironmentIdentifier={environmentIdentifier => {
-                    props.setEnvironmentIdentifier(environmentIdentifier)
-                  }}
-                  language={language}
-                />
-              </Container>
-            </Layout.Vertical>
-          </Container>
+          <SelectEnvironmentView
+            apiKey={apiKey}
+            setApiKey={key => {
+              setApiKey(key)
+              props.setApiKey(key)
+            }}
+            setEnvironmentIdentifier={environmentIdentifier => {
+              props.setEnvironmentIdentifier(environmentIdentifier)
+            }}
+            language={language}
+          />
         )}
 
         {language && apiKey && (
           <Container margin={{ top: 'large' }}>
             <Layout.Vertical spacing="xsmall">
-              <Text style={{ fontWeight: 600, fontSize: '16px', color: '#22222A' }}>
-                {getString('cf.onboarding.setUpYourCode')}
-              </Text>
-              <Container padding="large" style={{ paddingTop: 0 }}>
+              <Text className={css.setUpYourCode}>{getString('cf.onboarding.setUpYourCode')}</Text>
+              <Container className={css.setUpYourCodeContainer}>
                 <SetUpYourCodeView apiKey={apiKey} language={language} />
               </Container>
             </Layout.Vertical>

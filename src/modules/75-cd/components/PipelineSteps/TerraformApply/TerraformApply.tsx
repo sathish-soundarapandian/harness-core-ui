@@ -43,6 +43,7 @@ export class TerraformApply extends PipelineStep<TFFormData> {
     this._hasDelegateSelectionVisible = true
   }
   protected type = StepType.TerraformApply
+  protected referenceId = 'terraformApplyStep'
   protected defaultValues: TFFormData = {
     identifier: '',
     timeout: '10m',
@@ -154,7 +155,7 @@ export class TerraformApply extends PipelineStep<TFFormData> {
       path,
       readonly
     } = props
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <TerraformInputStep
           initialValues={initialValues}

@@ -110,7 +110,7 @@ export const editViewValidateFieldsConfig = [
   {
     name: 'spec.host',
     type: ValidationFieldTypes.Text,
-    label: 'pipelineSteps.hostLabel',
+    label: 'common.hostLabel',
     isRequired: true
   },
   {
@@ -179,7 +179,7 @@ export function getInputSetViewValidateFieldsConfig(
     {
       name: 'spec.host',
       type: ValidationFieldTypes.Text,
-      label: 'pipelineSteps.hostLabel',
+      label: 'common.hostLabel',
       isRequired
     },
     {

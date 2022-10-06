@@ -43,16 +43,16 @@ import { useToaster } from '@common/exports'
 import { useQueryParams } from '@common/hooks'
 import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
 import { useGovernance } from '@cf/hooks/useGovernance'
-import { FFDetailPageTab, getErrorMessage, rewriteCurrentLocationWithActiveEnvironment } from '@cf/utils/CFUtils'
+import { FFDetailPageTab, getErrorMessage } from '@cf/utils/CFUtils'
 import routes from '@common/RouteDefinitions'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import type { FeatureFlagPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import TargetingRulesTab from '@cf/pages/feature-flags-detail/targeting-rules-tab/TargetingRulesTab'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import FlagPipelineTab from '@cf/pages/feature-flags-detail/flag-pipeline-tab/FlagPipelineTab'
 import TabTargeting from '../EditFlagTabs/TabTargeting'
 import TabActivity from '../EditFlagTabs/TabActivity'
 import { CFEnvironmentSelect } from '../CFEnvironmentSelect/CFEnvironmentSelect'
@@ -118,18 +118,11 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
     refetch: refetchEnvironments,
     environments
   } = useEnvironmentSelectV2({
-    selectedEnvironmentIdentifier: environmentIdentifier,
-    onChange: (_value, _environment, _userEvent) => {
-      rewriteCurrentLocationWithActiveEnvironment(_environment)
-
-      if (_userEvent) {
-        refetchFlag()
-      }
-    }
+    selectedEnvironmentIdentifier: environmentIdentifier
   })
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
 
-  const FFM_1513 = useFeatureFlag(FeatureFlag.FFM_1513)
+  const { FFM_1513, FFM_2134_FF_PIPELINES_TRIGGER } = useFeatureFlags()
 
   const { gitSyncValidationSchema, gitSyncInitialValues } =
     gitSync?.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.UPDATED_FLAG_RULES) || {}
@@ -431,7 +424,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
 
   useEffect(() => {
     if (tab !== activeTabId) {
-      history.replace(withActiveEnvironment(routes.toCFFeatureFlagsDetail(pathParams) + `&tab=${activeTabId}`))
+      history.replace(withActiveEnvironment(routes.toCFFeatureFlagsDetail(pathParams) + `?tab=${activeTabId}`))
     }
   }, [activeTabId, history, pathParams, tab, withActiveEnvironment])
 
@@ -445,9 +438,8 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
 
   if (noEnvironmentExists) {
     return (
-      <Container style={{ height: '100%', display: 'grid', alignItems: 'center' }}>
+      <Container flex={{ align: 'center-center' }} height="100%">
         <NoEnvironment
-          style={{ marginTop: '-100px' }}
           onCreated={response => {
             history.replace(
               withActiveEnvironment(
@@ -489,13 +481,12 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
       {formikProps => {
         return (
           <FormikForm>
-            <Container className={css.formContainer}>
+            <Container className={css.formContainer} height={FFM_1513 ? undefined : '100vh'}>
               <Layout.Horizontal className={css.environmentHeaderContainer} flex={{ alignItems: 'center' }}>
                 <FlexExpander />
                 <CFEnvironmentSelect component={<EnvironmentSelect />} />
               </Layout.Horizontal>
-
-              <Container data-tab-container className={css.tabContainer}>
+              <Container data-is-new-targetting-rules={FFM_1513} className={css.tabContainer}>
                 {flagData && (
                   <>
                     <Tabs
@@ -529,6 +520,23 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
                           </>
                         }
                       />
+
+                      {FFM_2134_FF_PIPELINES_TRIGGER && (
+                        <Tab
+                          id={FFDetailPageTab.FLAG_PIPELINE}
+                          title={
+                            <Text className={css.tabTitle}>{getString('cf.featureFlags.flagPipeline.title')}</Text>
+                          }
+                          panel={
+                            <FlagPipelineTab
+                              flagIdentifier={flagData.identifier}
+                              flagVariations={flagData.variations}
+                            />
+                          }
+                          panelClassName={css.flagPipelinePanel}
+                        />
+                      )}
+
                       <Tab
                         id={FFDetailPageTab.METRICS}
                         title={<Text className={css.tabTitle}>{getString('cf.featureFlags.metrics.title')}</Text>}

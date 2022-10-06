@@ -5,10 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { AppDynamicsFomikFormInterface } from './AppDHealthSource.types'
 import { BasePathInitValue } from './Components/BasePath/BasePath.constants'
 import { MetricPathInitValue } from './Components/MetricPath/MetricPath.constants'
 
-export const AppDynamicsMonitoringSourceFieldNames = {
+export const AppDynamicsMonitoringSourceFieldNames: Record<string, keyof AppDynamicsFomikFormInterface | string> = {
   METRIC_NAME: 'metricName',
   METRIC_IDENTIFIER: 'metricIdentifier',
   APPDYNAMICS_APPLICATION: 'appdApplication',
@@ -25,7 +26,23 @@ export const AppDynamicsMonitoringSourceFieldNames = {
   BASE_PATH: 'basePath',
   METRIC_PATH: 'metricPath',
   SERVICE_INSTANCE_METRIC_PATH: 'serviceInstanceMetricPath',
-  PATH_TYPE: 'pathType'
+  PATH_TYPE: 'pathType',
+  IGNORETHRESHOLDS: 'ignoreThresholds',
+  FAILFASTTHRESHOLDS: 'failFastThresholds',
+  METRIC_THRESHOLD_METRIC_TYPE: 'metricType',
+  METRIC_THRESHOLD_METRIC_NAME: 'metricName',
+  METRIC_THRESHOLD_GROUP_NAME: 'groupName',
+  METRIC_THRESHOLD_CRITERIA: 'criteria',
+  METRIC_THRESHOLD_CRITERIA_PERCENTAGE_TYPE: 'criteriaPercentageType',
+  METRIC_THRESHOLD_LESS_THAN: 'lessThan',
+  METRIC_THRESHOLD_GREATER_THAN: 'greaterThan',
+  METRIC_THRESHOLD_ACTION: 'action',
+  METRIC_THRESHOLD_COUNT: 'count'
+}
+
+export const ThresholdTypes: Record<string, 'IgnoreThreshold' | 'FailImmediately'> = {
+  IgnoreThreshold: 'IgnoreThreshold',
+  FailImmediately: 'FailImmediately'
 }
 
 export const initCustomForm = {

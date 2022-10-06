@@ -9,6 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { useGetInheritingChildScopeList } from 'services/cd-ng'
 import { PrincipalScope } from '@common/interfaces/SecretsInterface'
+import { TestWrapper } from '@common/utils/testUtils'
 import UserGroupRefScopeList from '../UserGroupRefScopeList'
 
 const errorResponse = {
@@ -50,10 +51,7 @@ jest.mock('framework/strings', () => ({
 
 describe('Scope list of a user group', () => {
   test('renders error module with retry', () => {
-    const accountId = 'lorem',
-      orgIdentifier = 'lorem',
-      projectIdentifier = 'lorem',
-      userGroupIdentifier = 'lorem',
+    const userGroupIdentifier = 'lorem',
       parentScope = PrincipalScope.ORG
 
     useGetInheritingChildScopeListMock.mockImplementation(() => {
@@ -64,17 +62,19 @@ describe('Scope list of a user group', () => {
     })
 
     const { container } = render(
-      <UserGroupRefScopeList {...{ accountId, orgIdentifier, projectIdentifier, userGroupIdentifier, parentScope }} />
+      <TestWrapper
+        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <UserGroupRefScopeList {...{ userGroupIdentifier, parentScope }} />
+      </TestWrapper>
     )
 
     expect(container).toHaveTextContent('Invalid request: User Group is not available')
   })
 
   test('renders blank results card', () => {
-    const accountId = 'lorem',
-      orgIdentifier = 'lorem',
-      projectIdentifier = 'lorem',
-      userGroupIdentifier = 'lorem',
+    const userGroupIdentifier = 'lorem',
       parentScope = PrincipalScope.ORG
 
     useGetInheritingChildScopeListMock.mockImplementation(() => {
@@ -82,7 +82,12 @@ describe('Scope list of a user group', () => {
     })
 
     const { container } = render(
-      <UserGroupRefScopeList {...{ accountId, orgIdentifier, projectIdentifier, userGroupIdentifier, parentScope }} />
+      <TestWrapper
+        path="/account/:accountId/cf/orgs/:orgIdentifier/projects/:projectIdentifier/feature-flags"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <UserGroupRefScopeList {...{ userGroupIdentifier, parentScope }} />
+      </TestWrapper>
     )
 
     expect(container).toMatchSnapshot('Blank results card')

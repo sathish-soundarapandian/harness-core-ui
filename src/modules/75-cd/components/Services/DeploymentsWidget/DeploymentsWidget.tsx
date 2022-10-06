@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import type { SeriesAreaOptions } from 'highcharts'
 import { Card, Container, Layout, Text, PageError } from '@wings-software/uicore'
 import { defaultTo } from 'lodash-es'
+import moment from 'moment'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticker'
@@ -25,6 +26,7 @@ import {
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getTooltip } from '@pipeline/utils/DashboardUtils'
+import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import css from '@cd/components/Services/DeploymentsWidget/DeploymentsWidget.module.scss'
 
 export interface ChangeValue {
@@ -56,14 +58,16 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
   const { serviceIdentifier } = props
   const { timeRange } = useContext(DeploymentsTimeRangeContext)
 
+  const [startTime, endTime] = getFormattedTimeRange(timeRange)
+
   const queryParams: GetServiceDeploymentsInfoQueryParams = useMemo(() => {
     return {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
       serviceId: serviceIdentifier,
-      startTime: timeRange?.range[0]?.getTime() || 0,
-      endTime: timeRange?.range[1]?.getTime() || 0,
+      startTime,
+      endTime,
       bucketSizeInDays: getBucketSizeForTimeRange(timeRange?.range)
     }
   }, [accountId, orgIdentifier, projectIdentifier, serviceIdentifier, timeRange])
@@ -108,6 +112,9 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
         custom.push(deployment)
       })
 
+      const successCount = successData.reduce((sum, i) => sum + i, 0)
+      const failureCount = failureData.reduce((sum, i) => sum + i, 0)
+
       return {
         deployments: {
           value: numberFormatter(serviceDeploymentListInfo.totalDeployments),
@@ -123,15 +130,15 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
         },
         data: [
           {
-            name: getString('success'),
-            data: successData,
-            color: '#3dc7f6',
+            name: `${getString('failed')} (${failureCount})`,
+            data: failureData,
+            color: 'var(--red-400)',
             custom
           },
           {
-            name: getString('failed'),
-            data: failureData,
-            color: '#ee5f54',
+            name: `${getString('success')} (${successCount})`,
+            data: successData,
+            color: '#5FB34E',
             custom
           }
         ]
@@ -194,12 +201,12 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
       allowDecimals: false,
       labels: {
         formatter: function (this) {
-          let time = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
+          let time = new Date().getTime()
           if (dataList?.length) {
             const val = dataList?.[this.pos]?.time
-            time = val ? new Date(val).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : time
+            time = val ? new Date(val).getTime() : time
           }
-          return time
+          return moment(time).utc().format('MMM D')
         }
       }
     },
@@ -302,8 +309,13 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
                     margin={{ right: 'xsmall' }}
                     data-test="tickerText"
                   >
-                    {item.value}
+                    {index ? item.value : `${item.value}%`}
                   </Text>
+                  {index ? (
+                    <Text font={{ size: 'xsmall' }} className={css.unitText}>
+                      {getString('cd.serviceDashboard.unitDay')}
+                    </Text>
+                  ) : null}
                 </Ticker>
               </Layout.Vertical>
             )

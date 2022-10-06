@@ -5,33 +5,68 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Icon, Layout } from '@wings-software/uicore'
+import React, { useEffect, useRef } from 'react'
+import cx from 'classnames'
+import { FontVariation } from '@harness/design-system'
+import { Text } from '@wings-software/uicore'
+import { useStrings } from 'framework/strings'
+import { ruleServiceStatusLabelMap } from '@ce/constants'
 import css from './InstanceStatusIndicator.module.scss'
 
-export const RunningStatusIndicator = () => {
-  return (
-    <Layout.Horizontal className={css.instanceStatusIndicator}>
-      <Icon name={'play'} />
-      <span style={{ color: '#42ab45' }}>Running</span>
-    </Layout.Horizontal>
-  )
+interface InstanceStatusIndicatorV2Props {
+  status: string
+  disabled?: boolean
+  refetchStatus?: () => void
 }
 
-export const StoppedStatusIndicator = () => {
-  return (
-    <Layout.Horizontal className={css.instanceStatusIndicator}>
-      <Icon name={'stop'} />
-      <span style={{ color: '#DA291D' }}>Stopped</span>
-    </Layout.Horizontal>
-  )
-}
+export const InstanceStatusIndicatorV2: React.FC<InstanceStatusIndicatorV2Props> = ({
+  status,
+  disabled,
+  refetchStatus
+}) => {
+  const { getString } = useStrings()
+  const serviceState = ruleServiceStatusLabelMap.get(status)
+  const intervalId = useRef<number | undefined>()
 
-export const CreatedStatusIndicator = () => {
+  useEffect(() => {
+    if (serviceState?.intent === 'load' && refetchStatus) {
+      if (!intervalId.current) {
+        intervalId.current = window.setInterval(() => refetchStatus(), 5000)
+      }
+    } else if (intervalId.current) {
+      window.clearInterval(intervalId.current)
+    }
+    return () => window.clearInterval(intervalId.current)
+  }, [serviceState?.intent])
+
+  if (!serviceState) {
+    return null
+  }
+
   return (
-    <Layout.Horizontal className={css.instanceStatusIndicator}>
-      <Icon name={'full-circle'} size={10} />
-      <span style={{ color: '#42ab45' }}>Created</span>
-    </Layout.Horizontal>
+    <>
+      {!disabled ? (
+        <Text
+          font={{ variation: FontVariation.UPPERCASED }}
+          icon={serviceState.icon}
+          iconProps={{ size: 14 }}
+          className={cx(css.stateLabel, {
+            [css.runningLabel]: serviceState.intent === 'running',
+            [css.stoppedLabel]: serviceState.intent === 'stopped',
+            [css.loadingLabel]: serviceState.intent === 'load'
+          })}
+        >
+          {getString(serviceState.labelStringId)}
+        </Text>
+      ) : (
+        <Text
+          className={cx(css.stateLabel, css.disabledLabel)}
+          font={{ variation: FontVariation.UPPERCASED }}
+          icon="deployment-aborted-legacy"
+        >
+          {getString('ce.common.disabled')}
+        </Text>
+      )}
+    </>
   )
 }

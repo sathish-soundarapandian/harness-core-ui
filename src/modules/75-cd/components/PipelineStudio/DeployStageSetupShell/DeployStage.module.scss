@@ -5,23 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.tabHeading {
+  font-size: 16px;
+  color: var(--black);
+  font-weight: 600;
+  line-height: 24px;
+  margin-top: var(--spacing-7);
+}
+
 .deployStage {
   min-width: 464px;
   margin-top: 2px;
   .content-section {
     background-color: var(--form-bg);
-    padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-13) var(--spacing-huge);
     height: 100%;
     > .tabHeading {
-      font-size: 16px;
-      color: var(--black);
-      margin-top: var(--spacing-7);
-      font-weight: 600;
-      line-height: 24px;
       &:first-child {
         margin-top: 0;
       }
     }
+  }
+  .padded-section {
+    padding: var(--spacing-xxlarge) var(--spacing-huge) var(--spacing-13) var(--spacing-huge);
   }
   .editServiceModal {
     padding: 0;
@@ -35,11 +40,9 @@
       padding: 0;
     }
     .tabHeading {
-      font-size: 16px;
-      color: var(--black);
-      font-weight: 600;
+      margin-top: 0;
       margin-left: var(--spacing-small);
-      line-height: 24px;
+      margin-right: var(--spacing-small);
     }
   }
 }
@@ -67,11 +70,15 @@
   }
 }
 
+.divider {
+  margin: var(--spacing-7) 0px;
+  width: 1024px;
+}
+
 .stage-view {
   margin-top: var(--spacing-3);
   display: block;
   padding-top: var(--spacing-medium);
-  padding-bottom: var(--spacing-7);
   .info {
     font-size: 13px;
   }

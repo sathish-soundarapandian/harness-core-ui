@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { render, act, fireEvent, waitFor } from '@testing-library/react'
-import { putPipelinePromise, createPipelinePromise } from 'services/pipeline-ng'
+import { putPipelinePromise, createPipelinePromise, PipelineInfoConfig } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { useMutateAsGet } from '@common/hooks'
 import { PipelineCanvas, PipelineCanvasProps } from '../PipelineCanvas'
@@ -19,7 +19,7 @@ import {
   mockApiDataEmpty,
   mockPipelineTemplateYaml
 } from './PipelineCanvasTestHelper'
-
+import duplicateStepIdentifierPipeline from './mock/duplicateStepIdentifierPipeline.json'
 const getProps = (): PipelineCanvasProps => ({
   toPipelineStudio: jest.fn(),
   toPipelineDetail: jest.fn(),
@@ -79,7 +79,13 @@ jest.mock('@wings-software/uicore', () => ({
   ...jest.requireActual('@wings-software/uicore'),
   useToaster: jest.fn(() => ({ showError, showSuccess, clear: toasterClear }))
 }))
-
+const mockIntersectionObserver = jest.fn()
+mockIntersectionObserver.mockReturnValue({
+  observe: () => null,
+  unobserve: () => null,
+  disconnect: () => null
+})
+window.IntersectionObserver = mockIntersectionObserver
 /* Mocks end */
 
 describe('Pipeline Canvas - new pipeline', () => {
@@ -169,6 +175,47 @@ describe('Pipeline Canvas - new pipeline', () => {
     expect(props.toPipelineStudio).toBeCalled()
   })
 
+  test('duplicate identifiers error on switching back to VISUAL from YAML mode', async () => {
+    // eslint-disable-next-line
+    // @ts-ignore
+    putPipelinePromise.mockResolvedValue(mockApiDataEmpty)
+    // eslint-disable-next-line
+    // @ts-ignore
+    createPipelinePromise.mockResolvedValue(mockApiDataEmpty)
+    const props = getProps()
+    const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false, isUpdated: true })
+    const { getByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider
+          value={{
+            ...contextValue,
+            state: {
+              ...contextValue.state,
+              pipeline: duplicateStepIdentifierPipeline as PipelineInfoConfig,
+              pipelineView: {
+                splitViewData: {},
+                isDrawerOpened: false,
+                isYamlEditable: false,
+                isSplitViewOpen: false,
+                drawerData: { type: DrawerTypes.AddStep }
+              }
+            },
+
+            view: 'YAML'
+          }}
+        >
+          <PipelineCanvas {...props} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    // Click on VISUAL again
+    act(() => {
+      fireEvent.click(getByText('VISUAL'))
+    })
+    await waitFor(() => expect(showError).toBeCalledWith('pipeline.duplicateStepIdentifiers', 5000))
+  })
+
   test('loading state', () => {
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: true })
@@ -242,7 +289,7 @@ describe('Pipeline Canvas - new pipeline', () => {
       </TestWrapper>
     )
     expect(queryByText('common.viewAndExecutePermissions')).toBeTruthy()
-    expect(queryByText('save')).toBeNull()
+    expect(queryByText('save')).toBeTruthy()
   })
 
   test('isUpdated true and execute permissions', () => {
@@ -263,6 +310,55 @@ describe('Pipeline Canvas - new pipeline', () => {
       </TestWrapper>
     )
     expect(queryByText('unsavedChanges')).toBeTruthy()
+  })
+
+  test('Enabling Edit Mode in YAML editor and checking for retention', async () => {
+    // eslint-disable-next-line
+    // @ts-ignore
+    putPipelinePromise.mockResolvedValue(mockApiDataEmpty)
+    // eslint-disable-next-line
+    // @ts-ignore
+    createPipelinePromise.mockResolvedValue(mockApiDataEmpty)
+
+    const props = getProps()
+    const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false, isUpdated: true })
+    const { getByText, getByRole } = render(
+      <TestWrapper>
+        <PipelineContext.Provider
+          value={{
+            ...contextValue,
+            state: {
+              ...contextValue.state,
+              pipelineView: {
+                ...contextValue.state.pipelineView,
+                isYamlEditable: false
+              }
+            },
+            view: 'YAML'
+          }}
+        >
+          <PipelineCanvas {...props} />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    // Click on Edit YAML
+    act(() => {
+      fireEvent.click(getByText('common.editYaml'))
+    })
+    // Edit mode option on modal
+    expect(getByText('pipeline.alwaysEditModeYAML')).toBeTruthy()
+    const enableEditModeCheckbox = getByRole('checkbox', { name: 'pipeline.alwaysEditModeYAML' })
+    act(() => {
+      fireEvent.click(enableEditModeCheckbox)
+    })
+    // warning text on selection
+    expect(getByText('pipeline.warningForInvalidYAMLDiscard')).toBeTruthy()
+    expect(getByText('enable')).toBeTruthy()
+    await act(() => {
+      fireEvent.click(getByText('enable'))
+    })
+    await waitFor(() => expect(contextValue.updatePipelineView).toBeCalled())
   })
 })
 

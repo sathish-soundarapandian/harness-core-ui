@@ -6,17 +6,25 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  IconName,
+  Formik,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
+import { Accordion } from '@harness/uicore'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import type { K8sRollingStepInfo, StepElementConfig } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import {
   FormMultiTypeDurationField,
@@ -28,6 +36,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
@@ -44,7 +53,7 @@ interface K8BGDeployProps {
   readonly?: boolean
   isNewStep?: boolean
   onChange?: (data: K8sBGDeployData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   inputSetData?: {
     template?: K8sBGDeployData
     path?: string
@@ -113,22 +122,40 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
-              <div className={stepCss.divider} />
-              <div className={cx(stepCss.formGroup, stepCss.sm)}>
-                <FormMultiTypeCheckboxField
-                  name="spec.skipDryRun"
-                  label={getString('pipelineSteps.skipDryRun')}
-                  disabled={readonly}
-                  multiTypeTextbox={{
-                    expressions,
-                    disabled: readonly,
-                    allowableTypes
-                  }}
+              <Accordion className={stepCss.accordion}>
+                <Accordion.Panel
+                  id="optional-config"
+                  summary={getString('common.optionalConfig')}
+                  details={
+                    <>
+                      <div className={cx(stepCss.formGroup, stepCss.sm)}>
+                        <FormMultiTypeCheckboxField
+                          name="spec.skipDryRun"
+                          label={getString('pipelineSteps.skipDryRun')}
+                          disabled={readonly}
+                          multiTypeTextbox={{
+                            expressions,
+                            disabled: readonly,
+                            allowableTypes
+                          }}
+                        />
+                      </div>
+                      <div className={cx(stepCss.formGroup, stepCss.md)}>
+                        <FormMultiTypeCheckboxField
+                          multiTypeTextbox={{ expressions, allowableTypes }}
+                          name="spec.pruningEnabled"
+                          label={getString('cd.steps.common.enableKubernetesPruning')}
+                          disabled={readonly}
+                        />
+                      </div>
+                    </>
+                  }
                 />
-              </div>
+              </Accordion>
             </>
           )
         }}
@@ -144,7 +171,7 @@ const K8BGDeployInputStep: React.FC<K8BGDeployProps> = ({ inputSetData, allowabl
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
               enableConfigureOptions: false,
@@ -154,6 +181,8 @@ const K8BGDeployInputStep: React.FC<K8BGDeployProps> = ({ inputSetData, allowabl
             }}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             disabled={inputSetData?.readonly}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
           />
         </div>
       )}
@@ -165,8 +194,21 @@ const K8BGDeployInputStep: React.FC<K8BGDeployProps> = ({ inputSetData, allowabl
               allowableTypes
             }}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipDryRun`}
-            className={stepCss.checkbox}
             label={getString('pipelineSteps.skipDryRun')}
+            disabled={inputSetData?.readonly}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.pruningEnabled) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes
+            }}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.pruningEnabled`}
+            label={getString('cd.steps.common.enableKubernetesPruning')}
             disabled={inputSetData?.readonly}
             setToFalseWhenEmpty={true}
           />
@@ -216,7 +258,7 @@ export class K8sBlueGreenDeployStep extends PipelineStep<K8sBGDeployData> {
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <K8BGDeployInputStep
           initialValues={initialValues}
@@ -290,6 +332,7 @@ export class K8sBlueGreenDeployStep extends PipelineStep<K8sBGDeployData> {
   protected stepIcon: IconName = 'bluegreen'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sBlueGreenDeploy'
   protected isHarnessSpecific = true
+  protected referenceId = 'stageDeploymentStep'
 
   protected defaultValues: K8sBGDeployData = {
     identifier: '',
@@ -297,7 +340,8 @@ export class K8sBlueGreenDeployStep extends PipelineStep<K8sBGDeployData> {
     name: '',
     type: StepType.K8sBlueGreenDeploy,
     spec: {
-      skipDryRun: false
+      skipDryRun: false,
+      pruningEnabled: false
     }
   }
 }

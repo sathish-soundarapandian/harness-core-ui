@@ -15,6 +15,8 @@ import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
+import { PAGE_NAME } from '@common/pages/pageContext/PageName'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
@@ -28,9 +30,8 @@ import {
 
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { isCommunityPlan } from '@common/utils/utils'
+import { useGetCommunity } from '@common/utils/utils'
 import SubscriptionTab from './SubscriptionTab'
-
 import css from './SubscriptionsPage.module.scss'
 
 export interface TrialInformation {
@@ -69,14 +70,18 @@ const MODULE_SELECT_CARDS: ModuleSelectCard[] = [
   }
 ]
 const SubscriptionsPage: React.FC = () => {
+  const { trackPage } = useTelemetry()
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { moduleCard } = useQueryParams<{ moduleCard?: ModuleName }>()
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SRM_LICENSE_ENABLED } =
+    useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const history = useHistory()
-  const isCommunity = isCommunityPlan()
-
+  const isCommunity = useGetCommunity()
+  useEffect(() => {
+    trackPage(PAGE_NAME.SubscriptionsPage, { module: moduleCard as string })
+  }, [])
   const ACTIVE_MODULE_SELECT_CARDS = MODULE_SELECT_CARDS.reduce(
     (accumulator: ModuleSelectCard[], card: ModuleSelectCard) => {
       const { module } = card
@@ -86,7 +91,7 @@ const SubscriptionsPage: React.FC = () => {
           CDNG_ENABLED && accumulator.push(card)
           return accumulator
         case ModuleName.CV:
-          CVNG_ENABLED && accumulator.push(card)
+          CVNG_ENABLED && SRM_LICENSE_ENABLED && accumulator.push(card)
           return accumulator
         case ModuleName.CI:
           CING_ENABLED && accumulator.push(card)
@@ -117,7 +122,7 @@ const SubscriptionsPage: React.FC = () => {
   } = useGetAccountNG({ accountIdentifier: accountId, queryParams: { accountIdentifier: accountId } })
 
   const getModuleLicenseQueryParams: GetModuleLicensesByAccountAndModuleTypeQueryParams = {
-    moduleType: selectedModuleCard.module as GetModuleLicensesByAccountAndModuleTypeQueryParams['moduleType']
+    moduleType: selectedModuleCard?.module as GetModuleLicensesByAccountAndModuleTypeQueryParams['moduleType']
   }
 
   const {
@@ -138,7 +143,7 @@ const SubscriptionsPage: React.FC = () => {
     handleUpdateLicenseStore(
       { ...licenseInformation },
       updateLicenseStore,
-      selectedModuleCard.module.toString() as Module,
+      selectedModuleCard?.module?.toString() as Module,
       latestModuleLicense
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -206,7 +211,7 @@ const SubscriptionsPage: React.FC = () => {
       </Container>
     ) : (
       <SubscriptionTab
-        accountName={accountData?.data?.name}
+        accountData={accountData?.data}
         trialInfo={trialInformation}
         hasLicense={hasLicense}
         selectedModule={selectedModuleCard.module}

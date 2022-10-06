@@ -42,7 +42,7 @@ describe('Test ToolTip', () => {
     })
     let expandError
     await waitFor(() => {
-      expandError = screen.getByText('connectors.testConnectionStep.errorDetails')
+      expandError = screen.getByText('ce.common.detailsCtaLabel')
     })
     expect(expandError).toBeDefined()
     expect(container).toMatchSnapshot()

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { debounce } from 'lodash-es'
@@ -20,17 +20,24 @@ import {
   Color,
   TextInput,
   FormError,
-  Icon
+  Icon,
+  Select,
+  SelectOption,
+  IconProps,
+  IconName
 } from '@harness/uicore'
-import { useGetListOfAllReposByRefConnector, UserRepoResponse } from 'services/cd-ng'
+import { ConnectorInfoDTO, useGetListOfAllReposByRefConnector, UserRepoResponse, Error } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import { Connectors } from '@connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { ACCOUNT_SCOPE_PREFIX, getFullRepoName } from './Constants'
 
 import css from './InfraProvisioningWizard.module.scss'
 
 export interface SelectRepositoryRef {
-  repository: UserRepoResponse
+  repository?: UserRepoResponse
+  enableCloneCodebase: boolean
 }
 
 export type SelectRepositoryForwardRef =
@@ -39,9 +46,10 @@ export type SelectRepositoryForwardRef =
   | null
 
 interface SelectRepositoryProps {
-  selectedRepository?: UserRepoResponse
   showError?: boolean
-  validatedConnectorRef?: string
+  validatedConnector?: ConnectorInfoDTO
+  connectorsEligibleForPreSelection?: ConnectorInfoDTO[]
+  onConnectorSelect?: (connector: ConnectorInfoDTO) => void
   disableNextBtn: () => void
   enableNextBtn: () => void
 }
@@ -50,16 +58,26 @@ const SelectRepositoryRef = (
   props: SelectRepositoryProps,
   forwardRef: SelectRepositoryForwardRef
 ): React.ReactElement => {
-  const { selectedRepository, showError, validatedConnectorRef, disableNextBtn, enableNextBtn } = props
+  const {
+    showError,
+    validatedConnector,
+    disableNextBtn,
+    enableNextBtn,
+    connectorsEligibleForPreSelection,
+    onConnectorSelect
+  } = props
   const { getString } = useStrings()
-  const [repository, setRepository] = useState<UserRepoResponse | undefined>(selectedRepository)
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const [repository, setRepository] = useState<UserRepoResponse | undefined>()
   const [query, setQuery] = useState<string>('')
   const [repositories, setRepositories] = useState<UserRepoResponse[]>()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const [selectedConnectorOption, setSelectedConnectorOption] = useState<SelectOption>()
   const {
     data: repoData,
     loading: fetchingRepositories,
-    refetch: fetchRepositories
+    refetch: fetchRepositories,
+    cancel: cancelRepositoriesFetch,
+    error: errorWhileFetchingRepositories
   } = useGetListOfAllReposByRefConnector({
     queryParams: {
       accountIdentifier: accountId,
@@ -69,23 +87,79 @@ const SelectRepositoryRef = (
     },
     lazy: true
   })
+  const enableCloneCodebase = true
+
+  const getIcon = useCallback((type: ConnectorInfoDTO['type']): IconName | undefined => {
+    switch (type) {
+      case Connectors.GITHUB:
+        return 'github'
+      case Connectors.GITLAB:
+        return 'gitlab'
+      case Connectors.BITBUCKET:
+        return 'bitbucket-blue'
+      default:
+        return
+    }
+  }, [])
+
+  const ConnectorSelectionItems = useMemo((): SelectOption[] => {
+    if (!validatedConnector) {
+      return []
+    }
+    const items: ConnectorInfoDTO[] =
+      Array.isArray(connectorsEligibleForPreSelection) && connectorsEligibleForPreSelection?.length > 0
+        ? connectorsEligibleForPreSelection
+        : [validatedConnector]
+    return items?.map((item: ConnectorInfoDTO) => {
+      const { type, name, identifier } = item
+      return {
+        icon: { name: getIcon(type), className: css.listIcon } as IconProps,
+        label: name,
+        value: identifier
+      }
+    }) as SelectOption[]
+  }, [connectorsEligibleForPreSelection, validatedConnector])
 
   useEffect(() => {
-    if (validatedConnectorRef) {
+    if (validatedConnector && ConnectorSelectionItems.length > 0) {
+      setSelectedConnectorOption(
+        ConnectorSelectionItems.find((item: SelectOption) => item.value === validatedConnector.identifier)
+      )
+    }
+  }, [ConnectorSelectionItems, validatedConnector])
+
+  const fetchReposWithConnectorRef = useCallback((connectorRef: string): void => {
+    if (connectorRef) {
+      cancelRepositoriesFetch()
       fetchRepositories({
         queryParams: {
           accountIdentifier: accountId,
           projectIdentifier,
           orgIdentifier,
-          connectorRef: `${ACCOUNT_SCOPE_PREFIX}${validatedConnectorRef}`
+          connectorRef: `${ACCOUNT_SCOPE_PREFIX}${connectorRef}`
         }
       })
     }
-  }, [validatedConnectorRef])
+  }, [])
 
   useEffect(() => {
-    setRepositories(repoData?.data)
-  }, [repoData?.data])
+    if (selectedConnectorOption) {
+      const matchingConnector = connectorsEligibleForPreSelection?.find(
+        (item: ConnectorInfoDTO) => item.identifier === selectedConnectorOption?.value
+      )
+      if (matchingConnector) {
+        onConnectorSelect?.(matchingConnector)
+      }
+      setRepository(undefined)
+      fetchReposWithConnectorRef(selectedConnectorOption?.value as string)
+    }
+  }, [selectedConnectorOption, connectorsEligibleForPreSelection])
+
+  useEffect(() => {
+    if (!fetchingRepositories && !errorWhileFetchingRepositories) {
+      setRepositories(repoData?.data)
+    }
+  }, [fetchingRepositories, errorWhileFetchingRepositories, repoData?.data])
 
   const debouncedRepositorySearch = useCallback(
     debounce((queryText: string): void => {
@@ -103,14 +177,10 @@ const SelectRepositoryRef = (
   }, [fetchingRepositories])
 
   useEffect(() => {
-    if (selectedRepository) {
-      setRepository(selectedRepository)
-    }
-  }, [selectedRepository])
-
-  useEffect(() => {
     if (query) {
-      setRepositories((repoData?.data || []).filter(item => getFullRepoName(item).includes(query)))
+      setRepositories(
+        (repoData?.data || []).filter(item => getFullRepoName(item).toLowerCase().includes(query.toLowerCase()))
+      )
     } else {
       setRepositories(repoData?.data)
     }
@@ -125,61 +195,118 @@ const SelectRepositoryRef = (
       return
     }
 
-    if (repository) {
-      forwardRef.current = {
-        repository: repository
-      }
+    forwardRef.current = {
+      repository,
+      enableCloneCodebase
     }
-  })
+  }, [repository, enableCloneCodebase])
 
-  const renderView = React.useCallback((): JSX.Element => {
+  const renderRepositories = useCallback((): JSX.Element => {
     if (fetchingRepositories) {
       return (
-        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" padding={{ top: 'large' }}>
+        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="small" padding={{ top: 'xsmall' }}>
           <Icon name="steps-spinner" color="primary7" size={25} />
-          <Text font={{ variation: FontVariation.H6 }}>{getString('ci.getStartedWithCI.fetchingRepos')}</Text>
+          <Text font={{ variation: FontVariation.H6 }}>{getString('common.getStarted.fetchingRepos')}</Text>
         </Layout.Horizontal>
       )
+    } else {
+      if (errorWhileFetchingRepositories) {
+        const { status: fetchRepoStatus, data: fetchRepoError } = errorWhileFetchingRepositories || {}
+        const errorMessages =
+          (fetchRepoError as Error)?.responseMessages || [
+            {
+              level: 'ERROR',
+              message: (fetchRepoError as any)?.error
+            }
+          ] ||
+          []
+        if (fetchRepoStatus !== 200 && errorMessages.length > 0) {
+          disableNextBtn()
+          return (
+            <Container padding={{ top: 'small' }}>
+              <ErrorHandler responseMessages={errorMessages} />
+            </Container>
+          )
+        }
+      } else if (repositories && Array.isArray(repositories)) {
+        return repositories.length > 0 ? (
+          <RepositorySelectionTable repositories={repositories} onRowClick={setRepository} />
+        ) : (
+          <Text flex={{ justifyContent: 'center' }} padding={{ top: 'medium' }}>
+            {getString('noSearchResultsFoundPeriod')}
+          </Text>
+        )
+      }
+      return <></>
     }
-    if (Array.isArray(repositories) && repositories.length > 0) {
-      return <RepositorySelectionTable repositories={repositories} onRowClick={setRepository} />
-    }
-    return (
-      <Text flex={{ justifyContent: 'center' }} padding={{ top: 'medium' }}>
-        {getString('noSearchResultsFoundPeriod')}
-      </Text>
-    )
-  }, [fetchingRepositories, repositories, repoData?.data])
+  }, [fetchingRepositories, repositories, selectedConnectorOption, errorWhileFetchingRepositories])
 
-  const showValidationErrorForRepositoryNotSelected = showError && !repository?.name
+  const showValidationErrorForRepositoryNotSelected = useMemo((): boolean => {
+    return (!fetchingRepositories && showError && !repository?.name) || false
+  }, [showError, repository?.name, fetchingRepositories])
 
   return (
     <Layout.Vertical spacing="small">
-      <Text font={{ variation: FontVariation.H4 }}>{getString('ci.getStartedWithCI.selectYourRepo')}</Text>
-      <Text font={{ variation: FontVariation.BODY2 }}>{getString('ci.getStartedWithCI.codebaseHelptext')}</Text>
-      <Container padding={{ top: 'small' }} className={cx(css.repositories)}>
-        <TextInput
-          leftIcon="search"
-          placeholder={getString('ci.getStartedWithCI.searchRepo')}
-          className={css.repositorySearch}
-          leftIconProps={{ name: 'search', size: 18, padding: 'xsmall' }}
-          onChange={e => {
-            debouncedRepositorySearch((e.currentTarget as HTMLInputElement).value)
-          }}
-          disabled={fetchingRepositories}
-        />
-        {renderView()}
-        {showValidationErrorForRepositoryNotSelected ? (
-          <Container padding={{ top: 'xsmall' }}>
-            <FormError
-              name={'repository'}
-              errorMessage={getString('ci.getStartedWithCI.plsChoose', {
-                field: `a ${getString('repository').toLowerCase()}`
-              })}
-            />
+      <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
+        {getString('common.selectYourRepo')}
+      </Text>
+      <Layout.Horizontal
+        flex={{ justifyContent: 'flex-start' }}
+        spacing="xsmall"
+        padding={{ bottom: enableCloneCodebase ? 'xsmall' : 'xlarge' }}
+      >
+        <Text font={{ variation: FontVariation.BODY }}>{getString('common.getStarted.codebaseHelptext')}</Text>
+      </Layout.Horizontal>
+      {enableCloneCodebase ? (
+        <>
+          <Container padding={{ top: 'small' }} width="65%">
+            <Layout.Horizontal>
+              <TextInput
+                leftIcon="search"
+                placeholder={getString('common.getStarted.searchRepo')}
+                className={css.repositorySearch}
+                leftIconProps={{ name: 'search', size: 18, padding: 'xsmall' }}
+                onChange={e => {
+                  debouncedRepositorySearch((e.currentTarget as HTMLInputElement).value)
+                }}
+                disabled={fetchingRepositories}
+              />
+              <Select
+                items={ConnectorSelectionItems}
+                value={selectedConnectorOption}
+                className={css.connectorSelect}
+                onChange={(item: SelectOption) => setSelectedConnectorOption(item)}
+              />
+            </Layout.Horizontal>
           </Container>
-        ) : null}
-      </Container>
+          <Container
+            className={cx(css.repositories, {
+              [css.repositoriesWithError]: showValidationErrorForRepositoryNotSelected
+            })}
+          >
+            {renderRepositories()}
+            {showValidationErrorForRepositoryNotSelected ? (
+              <Container padding={{ top: 'xsmall' }}>
+                <FormError
+                  name={'repository'}
+                  errorMessage={getString('common.getStarted.plsChoose', {
+                    field: `a ${getString('repository').toLowerCase()}`
+                  })}
+                />
+              </Container>
+            ) : null}
+          </Container>
+        </>
+      ) : (
+        <Container
+          padding={{ top: 'small', bottom: 'small', left: 'medium', right: 'medium' }}
+          className={css.noCodebaseHelpText}
+        >
+          <Text font={{ variation: FontVariation.BODY }}>
+            {getString('ci.getStartedWithCI.createPipelineWithOtherOption')}
+          </Text>
+        </Container>
+      )}
     </Layout.Vertical>
   )
 }
@@ -206,7 +333,7 @@ function RepositorySelectionTable({ repositories, onRowClick }: RepositorySelect
         width: '100%',
         Cell: ({ row }: CellProps<UserRepoResponse>) => {
           const { name: repositoryName } = row.original
-          const isRowSelected = repositoryName === selectedRow?.name
+          const isRowSelected = selectedRow && getFullRepoName(row.original) === getFullRepoName(selectedRow)
           return (
             <Layout.Horizontal
               data-testid={repositoryName}

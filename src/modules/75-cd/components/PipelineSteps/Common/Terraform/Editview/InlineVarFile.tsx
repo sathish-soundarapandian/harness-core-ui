@@ -16,7 +16,8 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   FormikForm,
-  ButtonVariation
+  ButtonVariation,
+  AllowedTypes
 } from '@wings-software/uicore'
 import cx from 'classnames'
 
@@ -40,7 +41,7 @@ interface InlineVarFileProps {
   onClose: () => void
   onSubmit: () => void
   isReadonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 const InlineVarFile = (props: InlineVarFileProps) => {
@@ -86,7 +87,7 @@ const InlineVarFile = (props: InlineVarFileProps) => {
             varFile: Yup.object().shape({
               identifier: Yup.string().required(getString('common.validation.identifierIsRequired')),
               spec: Yup.object().shape({
-                content: Yup.string().required(getString('cd.contentRequired'))
+                content: Yup.string().required(getString('common.contentRequired'))
               })
             })
           })}

@@ -56,7 +56,6 @@ describe('Assign Roles Test', () => {
       <TestWrapper
         path={routes.toUserGroups({ ...projectPathProps })}
         pathParams={{ accountId: 'testAcc', orgIdentifier: 'testOrg', projectIdentifier: 'testProject', module: 'cd' }}
-        defaultFeatureFlagValues={{ INHERITED_USER_GROUP: true }}
       >
         <AssignRoles />
       </TestWrapper>

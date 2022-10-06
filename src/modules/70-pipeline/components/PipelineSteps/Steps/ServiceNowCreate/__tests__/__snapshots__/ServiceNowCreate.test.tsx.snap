@@ -10,7 +10,7 @@ exports[`ServiceNow Create tests Basic snapshot - deploymentform mode: serviceNo
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -371,7 +371,7 @@ exports[`ServiceNow Create tests Basic snapshot - input variable view: serviceNo
       <span
         class="nameSection"
       >
-        name
+        identifier
       </span>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
@@ -380,25 +380,6 @@ exports[`ServiceNow Create tests Basic snapshot - input variable view: serviceNo
         <span
           class=""
         />
-      </p>
-    </div>
-    <div
-      class="variableListRow variable-list-row"
-    >
-      <span
-        class="nameSection"
-      >
-        timeout
-      </span>
-      <p
-        class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
-        style="--text-line-clamp: 1;"
-      >
-        <span
-          class=""
-        >
-          1d
-        </span>
       </p>
     </div>
     <div
@@ -476,7 +457,7 @@ exports[`ServiceNow Create tests Basic snapshot - inputset mode: input set with 
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -973,7 +954,7 @@ exports[`ServiceNow Create tests Deploymentform readonly mode: serviceNow-create
     >
       <div
         class="StyledProps--font StyledProps--main"
-        style="margin-bottom: 5px;"
+        data-test-id="connectorTooltip"
       >
         <span
           class="Tooltip--acenter bp3-label"
@@ -1578,7 +1559,7 @@ exports[`ServiceNow Create tests Edit Stage - readonly view for Template type: e
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="serviceNowCreate_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -1751,7 +1732,7 @@ exports[`ServiceNow Create tests Edit Stage - readonly view for Template type: e
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"
@@ -2174,7 +2155,7 @@ exports[`ServiceNow Create tests Edit Stage - readonly view: edit-stage-readonly
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="serviceNowCreate_identifier"
+                data-tooltip-id="universalInputNameWithId"
               >
                 <p
                   class="StyledProps--font StyledProps--main"
@@ -2347,7 +2328,7 @@ exports[`ServiceNow Create tests Edit Stage - readonly view: edit-stage-readonly
           >
             <div
               class="StyledProps--font StyledProps--main"
-              style="margin-bottom: 5px;"
+              data-test-id="connectorTooltip"
             >
               <span
                 class="Tooltip--acenter bp3-label"

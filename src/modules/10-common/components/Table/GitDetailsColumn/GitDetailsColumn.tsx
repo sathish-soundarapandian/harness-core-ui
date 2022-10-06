@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { CellProps, Renderer } from 'react-table'
-
+import { defaultTo } from 'lodash-es'
 import { Icon, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { getRepoDetailsByIndentifier } from '@common/utils/gitSyncUtils'
@@ -57,7 +57,10 @@ export const GitDetailsColumn: Renderer<CellProps<any>> = ({ row }) => {
   const { gitDetails } = row.original
   return (
     <GitSyncStoreProvider>
-      <RenderGitDetails repoIdentifier={gitDetails.repoIdentifier} branch={gitDetails.branch} />
+      <RenderGitDetails
+        repoIdentifier={defaultTo(gitDetails?.repoIdentifier, '')}
+        branch={defaultTo(gitDetails?.branch, '')}
+      />
     </GitSyncStoreProvider>
   )
 }

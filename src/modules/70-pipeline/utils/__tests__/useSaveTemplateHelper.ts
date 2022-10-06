@@ -32,8 +32,8 @@ export const createTemplatePromiseArg = {
     createPr: false,
     filePath: 'Test_Http_Template_v1.yaml',
     isNewBranch: false,
-    orgIdentifier: undefined,
-    projectIdentifier: undefined,
+    orgIdentifier: 'default',
+    projectIdentifier: 'Yogesh_Test',
     repoIdentifier: 'gitSyncRepo',
     rootFolder: '/rootFolderTest/.harness/',
     targetBranch: ''
@@ -45,7 +45,7 @@ export const createTemplatePromiseArg = {
   }
 }
 
-export const updateExistingTemplateLabelPromiseArg = {
+export const updateExistingTemplateVersionPromiseArg = {
   body: `template:
   name: Test Http Template
   identifier: Test_Http_Template
@@ -73,6 +73,7 @@ export const updateExistingTemplateLabelPromiseArg = {
     filePath: 'test_pipeline.yaml',
     isNewBranch: false,
     lastObjectId: '4471ec3aa40c26377353974c29a6670d998db06f',
+    lastCommitId: '',
     orgIdentifier: undefined,
     projectIdentifier: undefined,
     repoIdentifier: 'gitSyncRepo',

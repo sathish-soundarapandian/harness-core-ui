@@ -9,7 +9,7 @@ import React from 'react'
 
 import { render, waitFor, getByText as getByTextBody } from '@testing-library/react'
 
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import InlineVarFile from '../Editview/InlineVarFile'
 
@@ -24,7 +24,11 @@ const props = {
   selectedVar: {},
   onClose: jest.fn(),
   onSubmit: jest.fn(),
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.EXPRESSION,
+    MultiTypeInputType.RUNTIME
+  ] as AllowedTypesWithRunTime[]
 }
 
 jest.mock('react-monaco-editor', () => ({ value, onChange, name }: any) => {
@@ -63,7 +67,11 @@ describe('Inline var file testing', () => {
       },
       onClose: jest.fn(),
       onSubmit: jest.fn(),
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[]
     }
     render(
       <TestWrapper>
@@ -95,7 +103,11 @@ describe('Inline var file testing', () => {
       },
       onClose: jest.fn(),
       onSubmit: jest.fn(),
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[]
     }
     render(
       <TestWrapper>
@@ -127,7 +139,11 @@ describe('Inline var file testing', () => {
       },
       onClose: jest.fn(),
       onSubmit: jest.fn(),
-      allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.EXPRESSION,
+        MultiTypeInputType.RUNTIME
+      ] as AllowedTypesWithRunTime[]
     }
     render(
       <TestWrapper>

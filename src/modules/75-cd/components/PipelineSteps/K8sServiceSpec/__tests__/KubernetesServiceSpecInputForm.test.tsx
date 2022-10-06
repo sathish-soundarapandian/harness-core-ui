@@ -19,7 +19,7 @@ import {
   factory as testStepFactory
 } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import type { K8SDirectServiceStep } from '../K8sServiceSpecInterface'
-import { KubernetesServiceSpec } from '../K8sServiceSpec'
+import { GenericServiceSpec } from '../K8sServiceSpec'
 import {
   mockAwsRegionsResponse,
   mockConnectorResponse,
@@ -79,7 +79,7 @@ jest.mock('services/portal', () => ({
 describe('DOCKER', () => {
   beforeEach(() => {
     testStepFactory.reset()
-    testStepFactory.registerStep(new KubernetesServiceSpec())
+    testStepFactory.registerStep(new GenericServiceSpec())
   })
   test(`renders the primary artifact form if all the attributes are runtime`, () => {
     const { container } = render(
@@ -249,7 +249,7 @@ describe('DOCKER', () => {
 describe('ECR', () => {
   beforeEach(() => {
     testStepFactory.reset()
-    testStepFactory.registerStep(new KubernetesServiceSpec())
+    testStepFactory.registerStep(new GenericServiceSpec())
   })
   test(`renders the primary artifact form if all the attributes are runtime`, () => {
     const { container } = render(
@@ -420,7 +420,7 @@ describe('ECR', () => {
 describe('GCR', () => {
   beforeEach(() => {
     testStepFactory.reset()
-    testStepFactory.registerStep(new KubernetesServiceSpec())
+    testStepFactory.registerStep(new GenericServiceSpec())
   })
   test(`renders the primary artifact form if all the attributes are runtime`, () => {
     const { container } = render(
@@ -591,7 +591,7 @@ describe('GCR', () => {
 describe('VARIABLES', () => {
   beforeEach(() => {
     testStepFactory.reset()
-    testStepFactory.registerStep(new KubernetesServiceSpec())
+    testStepFactory.registerStep(new GenericServiceSpec())
     testStepFactory.registerStep(new CustomVariables())
   })
   test(`renders the service variables form`, async () => {
@@ -648,7 +648,7 @@ describe('VARIABLES', () => {
 describe('MANIFEST', () => {
   beforeEach(() => {
     testStepFactory.reset()
-    testStepFactory.registerStep(new KubernetesServiceSpec())
+    testStepFactory.registerStep(new GenericServiceSpec())
   })
   test(`renders the K8 manifest`, async () => {
     // stepTestUtilFactory.registerStep(new CustomVariables())
@@ -688,7 +688,7 @@ describe('MANIFEST', () => {
 describe('VALIDATIONS', () => {
   beforeEach(() => {
     testStepFactory.reset()
-    testStepFactory.registerStep(new KubernetesServiceSpec())
+    testStepFactory.registerStep(new GenericServiceSpec())
   })
   test('ARTIFACTS', async () => {
     const ref = React.createRef<StepFormikRef<unknown>>()

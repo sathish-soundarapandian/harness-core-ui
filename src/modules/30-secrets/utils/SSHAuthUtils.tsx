@@ -84,6 +84,8 @@ export const getStringForType = (type?: SecretDTOV2['type']): React.ReactElement
       return <String stringID="secrets.secret.labelFile" />
     case 'SSHKey':
       return <String stringID="secrets.typeSSH" />
+    case 'WinRmCredentials':
+      return <String stringID="secrets.typeWinRM" />
     default:
       return <String stringID="secrets.blank" />
   }
@@ -181,9 +183,11 @@ export function buildAuthConfig(data: SSHConfigFormData): SSHConfigDTO | Kerbero
 
 export const getSecretReferencesforSSH = async (
   secret: SecretDTOV2,
-  accountId: string,
-  orgIdentifier?: string,
-  projectIdentifier?: string
+  pathParams: {
+    accountIdentifier: string
+    orgIdentifier?: string
+    projectIdentifier?: string
+  }
 ): Promise<{
   keySecret?: SecretReference
   passwordSecret?: SecretReference
@@ -208,7 +212,7 @@ export const getSecretReferencesforSSH = async (
       if (keyRefSpec.key) {
         const data = await getSecretV2Promise({
           identifier: keyRefSpec.key.indexOf('.') < 0 ? keyRefSpec.key : keyRefSpec.key.split('.')[1],
-          queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+          queryParams: pathParams
         })
         const keySecretData = data.data?.secret
         if (keySecretData) {
@@ -230,7 +234,7 @@ export const getSecretReferencesforSSH = async (
     const secretId = password.indexOf('.') < 0 ? password : password.split('.')[1]
     const data = await getSecretV2Promise({
       identifier: secretId,
-      queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+      queryParams: pathParams
     })
     passwordSecret = {
       ...data.data?.secret,
@@ -242,7 +246,7 @@ export const getSecretReferencesforSSH = async (
     const secretId = encryptedPassphrase.indexOf('.') < 0 ? encryptedPassphrase : encryptedPassphrase.split('.')[1]
     const data = await getSecretV2Promise({
       identifier: secretId,
-      queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+      queryParams: pathParams
     })
     encryptedPassphraseSecret = {
       ...data.data?.secret,

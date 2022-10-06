@@ -19,7 +19,11 @@ import {
 } from '@pipeline/components/TemplateVariablesContext/TemplateVariablesContext'
 import TemplateVariablesWrapper from '@templates-library/components/TemplateStudio/TemplateVariables/TemplateVariables'
 import {
+  deploymentTemplateMetaDataMap,
+  deploymentTemplateMock,
   getTemplateContextMock,
+  monitoedServiceMetaDataMap,
+  monitoredServiceTemplateMock,
   pipelineTemplateMock,
   stageTemplateMock,
   stepTemplateMock
@@ -28,8 +32,10 @@ import { TemplateType } from '@templates-library/utils/templatesUtils'
 import * as PipelineVariables from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables'
 import * as StepCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StepCard'
 import * as StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
-import type { PipelineCardPanelProps } from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import * as MonitoredServiceCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/MonitoredServiceCard'
+import * as DeploymentTemplateCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/DeploymentTemplateCard'
+import type { PipelineCardProps } from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/PipelineCard'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { DrawerTypes } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateActions'
 
 jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
@@ -38,7 +44,14 @@ jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
 jest.spyOn(cdng, 'useGetSourceCodeManagers').mockImplementation((): any => {
   return { data: sourceCodeManagers, refetch: jest.fn(), loading: false }
 })
-
+jest.mock('@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook', () => ({
+  useGetConnectorsListHook: jest.fn().mockReturnValue({
+    loading: false,
+    categoriesMap: {},
+    connectorsList: ['K8sCluster'],
+    connectorCatalogueOrder: ['CLOUD_PROVIDER']
+  })
+}))
 const variablesTemplate = { name: '', identifier: '' }
 
 describe('<TemplateVariables /> tests', () => {
@@ -46,12 +59,13 @@ describe('<TemplateVariables /> tests', () => {
     const PipelineCardPanelMock = jest.spyOn(PipelineVariables, 'PipelineCardPanel')
     render(
       <TestWrapper>
-        <TemplateContext.Provider value={getTemplateContextMock(TemplateType.Pipeline)}>
+        <TemplateContext.Provider value={{ ...getTemplateContextMock(TemplateType.Pipeline), isReadonly: true }}>
           <TemplateVariablesContext.Provider
             value={
               {
                 originalTemplate: pipelineTemplateMock,
-                variablesTemplate
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
               } as unknown as TemplateVariablesData
             }
           >
@@ -62,7 +76,11 @@ describe('<TemplateVariables /> tests', () => {
     )
 
     expect(PipelineCardPanelMock).toBeCalledWith(
-      expect.objectContaining({ pipeline: pipelineTemplateMock.spec, originalPipeline: pipelineTemplateMock.spec }),
+      expect.objectContaining({
+        pipeline: pipelineTemplateMock.spec,
+        originalPipeline: pipelineTemplateMock.spec,
+        readonly: true
+      }),
       expect.anything()
     )
   })
@@ -71,12 +89,13 @@ describe('<TemplateVariables /> tests', () => {
     const StepCardPanelMock = jest.spyOn(StepCard, 'StepCardPanel')
     render(
       <TestWrapper>
-        <TemplateContext.Provider value={getTemplateContextMock(TemplateType.Step)}>
+        <TemplateContext.Provider value={{ ...getTemplateContextMock(TemplateType.Step), isReadonly: true }}>
           <TemplateVariablesContext.Provider
             value={
               {
                 originalTemplate: stepTemplateMock,
-                variablesTemplate
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
               } as unknown as TemplateVariablesData
             }
           >
@@ -87,7 +106,7 @@ describe('<TemplateVariables /> tests', () => {
     )
 
     expect(StepCardPanelMock).toBeCalledWith(
-      expect.objectContaining({ originalStep: stepTemplateMock.spec }),
+      expect.objectContaining({ originalStep: stepTemplateMock.spec, readonly: true }),
       expect.anything()
     )
   })
@@ -96,12 +115,13 @@ describe('<TemplateVariables /> tests', () => {
     const StageCardMock = jest.spyOn(StageCard, 'default')
     render(
       <TestWrapper>
-        <TemplateContext.Provider value={getTemplateContextMock(TemplateType.Stage)}>
+        <TemplateContext.Provider value={{ ...getTemplateContextMock(TemplateType.Stage), isReadonly: true }}>
           <TemplateVariablesContext.Provider
             value={
               {
                 originalTemplate: stageTemplateMock,
-                variablesTemplate
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
               } as unknown as TemplateVariablesData
             }
           >
@@ -112,7 +132,10 @@ describe('<TemplateVariables /> tests', () => {
     )
 
     expect(StageCardMock).toBeCalledWith(
-      expect.objectContaining({ originalStage: { ...stageTemplateMock.spec, identifier: 'stage_name' } }),
+      expect.objectContaining({
+        originalStage: { ...stageTemplateMock.spec, identifier: 'stage_name' },
+        readonly: true
+      }),
       expect.anything()
     )
   })
@@ -158,7 +181,7 @@ describe('<TemplateVariables /> tests', () => {
   })
 
   test('should call apply and discard correctly', async () => {
-    jest.spyOn(PipelineVariables, 'PipelineCardPanel').mockImplementation((props: PipelineCardPanelProps) => {
+    jest.spyOn(PipelineVariables, 'PipelineCardPanel').mockImplementation((props: PipelineCardProps) => {
       return (
         <div className={'pipeline-card-panel-mock'}>
           <button
@@ -182,7 +205,8 @@ describe('<TemplateVariables /> tests', () => {
             value={
               {
                 originalTemplate: pipelineTemplateMock,
-                variablesTemplate
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
               } as unknown as TemplateVariablesData
             }
           >
@@ -196,7 +220,7 @@ describe('<TemplateVariables /> tests', () => {
       fireEvent.click(getByRole('button', { name: 'pipeline.discard' }))
     })
     expect(templateContext.updateTemplateView).toBeCalledWith({
-      drawerData: { type: DrawerTypes.AddStep },
+      drawerData: { data: { paletteData: { onSelection: expect.anything() } }, type: DrawerTypes.TemplateVariables },
       isDrawerOpened: false,
       isYamlEditable: false
     })
@@ -212,9 +236,69 @@ describe('<TemplateVariables /> tests', () => {
     })
     expect(templateContext.updateTemplate).toBeCalledWith(updatedTemplate)
     expect(templateContext.updateTemplateView).toBeCalledWith({
-      drawerData: { type: DrawerTypes.AddStep },
+      drawerData: { data: { paletteData: { onSelection: expect.anything() } }, type: DrawerTypes.TemplateVariables },
       isDrawerOpened: false,
       isYamlEditable: false
     })
+  })
+
+  test('should call MonitoredServiceCard with correct props', async () => {
+    const MonitoredServiceCardMock = jest.spyOn(MonitoredServiceCard, 'default')
+    render(
+      <TestWrapper>
+        <TemplateContext.Provider value={getTemplateContextMock(TemplateType.MonitoredService)}>
+          <TemplateVariablesContext.Provider
+            value={
+              {
+                originalTemplate: monitoredServiceTemplateMock,
+                metadataMap: monitoedServiceMetaDataMap,
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
+              } as unknown as TemplateVariablesData
+            }
+          >
+            <TemplateVariablesWrapper />
+          </TemplateVariablesContext.Provider>
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(MonitoredServiceCardMock).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        metadataMap: monitoedServiceMetaDataMap
+      }),
+      expect.anything()
+    )
+  })
+
+  test('should call DeploymentTemplateCard with correct props', async () => {
+    const DeploymentTemplateCardMock = jest.spyOn(DeploymentTemplateCard, 'default')
+    render(
+      <TestWrapper>
+        <TemplateContext.Provider value={getTemplateContextMock(TemplateType.CustomDeployment)}>
+          <TemplateVariablesContext.Provider
+            value={
+              {
+                originalTemplate: deploymentTemplateMock,
+                metadataMap: deploymentTemplateMetaDataMap,
+                variablesTemplate,
+                serviceExpressionPropertiesList: []
+              } as unknown as TemplateVariablesData
+            }
+          >
+            <TemplateVariablesWrapper />
+          </TemplateVariablesContext.Provider>
+        </TemplateContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(DeploymentTemplateCardMock).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        metadataMap: deploymentTemplateMetaDataMap
+      }),
+      expect.anything()
+    )
   })
 })

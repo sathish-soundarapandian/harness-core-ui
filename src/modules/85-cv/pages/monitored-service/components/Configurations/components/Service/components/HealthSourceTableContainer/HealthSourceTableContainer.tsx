@@ -7,6 +7,7 @@
 
 import React, { useCallback } from 'react'
 import type { FormikContextType, FormikProps } from 'formik'
+import { useParams } from 'react-router-dom'
 import type { HealthSource } from 'services/cv'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import HealthSourceTable from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable'
@@ -24,11 +25,15 @@ import { createOpenHealthSourceTableProps } from './HealthSourceTableContainer.u
 export default function HealthSourceTableContainer({
   serviceFormFormik,
   healthSourceListFromAPI,
-  isTemplate
+  isTemplate,
+  expressions,
+  onSave
 }: {
   serviceFormFormik: FormikContextType<MonitoredServiceForm>
   healthSourceListFromAPI: HealthSource[] | undefined
   isTemplate?: boolean
+  expressions?: string[]
+  onSave: (data: any) => void | Promise<void>
 }): JSX.Element {
   const {
     showDrawer: showHealthSourceDrawer,
@@ -36,7 +41,9 @@ export default function HealthSourceTableContainer({
     setDrawerHeaderProps
   } = useDrawer({
     createHeader: props => <HealthSourceDrawerHeader {...props} />,
-    createDrawerContent: props => <HealthSourceDrawerContent {...props} isTemplate={isTemplate} />
+    createDrawerContent: props => (
+      <HealthSourceDrawerContent {...props} isTemplate={isTemplate} expressions={expressions} />
+    )
   })
 
   const updateHealthSource = useCallback(
@@ -45,11 +52,14 @@ export default function HealthSourceTableContainer({
         ...formik.values?.sources,
         healthSources: data
       })
+      if (identifier) {
+        onSave(data)
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [serviceFormFormik]
   )
-
+  const { identifier } = useParams<{ identifier?: string }>()
   const onSuccessHealthSourceTableWrapper = (
     data: UpdatedHealthSource,
     formik: FormikContextType<MonitoredServiceForm>

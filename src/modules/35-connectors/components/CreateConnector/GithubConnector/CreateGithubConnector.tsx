@@ -15,7 +15,7 @@ import {
   CreateConnectorModalProps,
   GIT_TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { useStrings } from 'framework/strings'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { buildGithubPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -32,6 +32,7 @@ const CreateGithubConnector = (props: CreateConnectorModalProps): JSX.Element =>
     'isEditMode',
     'connectorInfo',
     'gitDetails',
+    'status',
     'setIsEditMode',
     'accountId',
     'orgIdentifier',
@@ -53,6 +54,7 @@ const CreateGithubConnector = (props: CreateConnectorModalProps): JSX.Element =>
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
         mock={props.mock}
+        helpPanelReferenceId="gitHubConnectorOverview"
       />
       <GitDetailsStep
         type={Connectors.GITHUB}
@@ -60,12 +62,14 @@ const CreateGithubConnector = (props: CreateConnectorModalProps): JSX.Element =>
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo}
         mock={props.mock}
+        helpPanelReferenceId="gitHubConnectorDetails"
       />
       <StepGithubAuthentication
         name={getString('credentials')}
         identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
         {...commonProps}
         onConnectorCreated={props.onSuccess}
+        helpPanelReferenceId="gitHubConnectorCredentials"
       />
 
       <ConnectivityModeStep
@@ -80,6 +84,7 @@ const CreateGithubConnector = (props: CreateConnectorModalProps): JSX.Element =>
         setConnectivityMode={props.setConnectivityMode}
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
+        helpPanelReferenceId="ConnectorConnectToTheProvider"
       />
 
       {props.connectivityMode === ConnectivityModeType.Delegate ? (
@@ -92,10 +97,11 @@ const CreateGithubConnector = (props: CreateConnectorModalProps): JSX.Element =>
           onConnectorCreated={props.onSuccess}
           connectorInfo={props.connectorInfo}
           gitDetails={props.gitDetails}
+          helpPanelReferenceId="ConnectorDelegatesSetup"
         />
       ) : null}
 
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep={true}
@@ -103,6 +109,7 @@ const CreateGithubConnector = (props: CreateConnectorModalProps): JSX.Element =>
         type={Connectors.GITHUB}
         onClose={props.onClose}
         stepIndex={GIT_TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

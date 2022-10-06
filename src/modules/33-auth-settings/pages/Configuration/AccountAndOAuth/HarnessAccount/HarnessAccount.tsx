@@ -10,12 +10,12 @@ import { Layout, Switch, Collapse, useConfirmationDialog } from '@wings-software
 import { Color, Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/components'
-import { AuthenticationMechanisms } from '@auth-settings/constants/utils'
 import type { AuthenticationSettingsResponse, UsernamePasswordSettings } from 'services/cd-ng'
 import PasswordStrength from '@auth-settings/pages/Configuration/AccountAndOAuth/HarnessAccount/PasswordStrength/PasswordStrength'
 import PasswordExpire from '@auth-settings/pages/Configuration/AccountAndOAuth/HarnessAccount/PasswordExpire/PasswordExpire'
 import LockoutPolicy from '@auth-settings/pages/Configuration/AccountAndOAuth/HarnessAccount/LockoutPolicy/LockoutPolicy'
 import TwoFactorAuthentication from '@auth-settings/pages/Configuration/AccountAndOAuth/HarnessAccount/TwoFactorAuthentication/TwoFactorAuthentication'
+import { AuthenticationMechanisms } from '@rbac/utils/utils'
 import cssConfiguration from '@auth-settings/pages/Configuration/Configuration.module.scss'
 
 interface Props {

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import { parse } from 'yaml'
 import get from 'lodash-es/get'
 import type { FormikErrors } from 'formik'
@@ -77,7 +77,7 @@ export interface RestoreCacheS3StepProps {
   stepViewType: StepViewType
   onUpdate?: (data: RestoreCacheS3StepData) => void
   onChange?: (data: RestoreCacheS3StepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export class RestoreCacheS3Step extends PipelineStep<RestoreCacheS3StepData> {
@@ -159,7 +159,7 @@ export class RestoreCacheS3Step extends PipelineStep<RestoreCacheS3StepData> {
       allowableTypes
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <RestoreCacheS3StepInputSet
           initialValues={initialValues}

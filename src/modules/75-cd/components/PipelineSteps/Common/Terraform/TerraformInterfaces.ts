@@ -6,7 +6,7 @@
  */
 
 import { unset } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -37,7 +37,7 @@ export interface TerraformProps<T = TerraformData> {
   initialValues: T
   onUpdate?: (data: T) => void
   onChange?: (data: T) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   configTypes?: SelectOption[]
   isNewStep?: boolean
@@ -56,7 +56,7 @@ export interface TerraformPlanProps {
   initialValues: TFPlanFormData
   onUpdate?: (data: TFPlanFormData) => void
   onChange?: (data: TFPlanFormData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   configTypes?: SelectOption[]
   isNewStep?: boolean
@@ -337,7 +337,7 @@ export const onSubmitTerraformData = (values: any): TFFormData => {
         ...values.spec?.configuration?.spec?.configFiles,
         store: {
           ...values.spec?.configuration?.spec?.configFiles?.store,
-          type: connectorValue?.connector?.type || values?.spec?.configuration?.spec?.configFiles?.store?.type,
+          type: values?.spec?.configuration?.spec?.configFiles?.store?.type,
           spec: {
             ...values.spec?.configuration?.spec?.configFiles?.store?.spec,
             connectorRef: values?.spec?.configuration?.spec?.configFiles?.store?.spec?.connectorRef
@@ -442,7 +442,7 @@ export const onSubmitTFPlanData = (values: any): TFPlanFormData => {
       ...values.spec?.configuration?.configFiles,
       store: {
         ...values.spec?.configuration?.configFiles?.store,
-        type: connectorValue?.connector?.type || values?.spec?.configuration?.configFiles?.store?.type,
+        type: values?.spec?.configuration?.configFiles?.store?.type,
         spec: {
           ...values.spec?.configuration?.configFiles?.store?.spec,
           connectorRef: values?.spec?.configuration?.configFiles?.store?.spec?.connectorRef

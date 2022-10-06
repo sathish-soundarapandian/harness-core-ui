@@ -17,11 +17,11 @@ import { useTelemetryInstance } from './useTelemetryInstance'
 type TrackEvent = (eventName: string, properties: Record<string, unknown>) => void
 type TrackPage = (name: string, properties: Record<string, string>) => void
 type IdentifyUser = (email: string | undefined) => void
-interface PageParams {
+export interface PageParams {
   pageName?: string
   properties?: Record<string, string>
 }
-interface TelemetryReturnType {
+export interface TelemetryReturnType {
   trackEvent: TrackEvent
   identifyUser: IdentifyUser
   trackPage: TrackPage

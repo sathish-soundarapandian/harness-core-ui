@@ -92,7 +92,7 @@ export const ServiceSelectOrCreate: React.FC<ServiceSelectOrCreateProps> = props
   }
 
   return (
-    <Container onClick={e => e.stopPropagation()}>
+    <Container data-testid="service" onClick={e => e.stopPropagation()}>
       {isMultiType ? (
         <MultiTypeInput
           name={name ?? 'service'}

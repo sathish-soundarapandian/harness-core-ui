@@ -9,6 +9,7 @@ import React, { useContext, useMemo, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
+import moment from 'moment'
 import { Color } from '@harness/design-system'
 import { Card, Container, Layout, Text, PageError } from '@wings-software/uicore'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
@@ -19,6 +20,7 @@ import { getReadableDateTime } from '@common/utils/dateUtils'
 import { PageSpinner, TimeSeriesAreaChart } from '@common/components'
 import type { TimeSeriesAreaChartProps } from '@common/components/TimeSeriesAreaChart/TimeSeriesAreaChart'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
+import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import css from '@cd/components/ServiceDetails/InstanceCountHistory/InstanceCountHistory.module.scss'
 
 const instanceCountHistoryChartColors = ['#9CCC65', '#47D5DF', '#AE82FC', '#FFA86B', '#0BB6FF']
@@ -80,13 +82,15 @@ export const InstanceCountHistory: React.FC = () => {
   const { getString } = useStrings()
   const envData = useRef<Record<string, Record<string, number>>>({})
 
+  const [startTime, endTime] = getFormattedTimeRange(timeRange)
+
   const queryParams: GetInstanceCountHistoryQueryParams = {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
     serviceId,
-    startTime: timeRange?.range[0]?.getTime() || 0,
-    endTime: timeRange?.range[1]?.getTime() || 0
+    startTime,
+    endTime
   }
   const { loading, data, error, refetch } = useGetInstanceCountHistory({ queryParams })
 
@@ -129,12 +133,12 @@ export const InstanceCountHistory: React.FC = () => {
         allowDecimals: false,
         labels: {
           formatter: function () {
-            let time = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
+            let time = new Date().getTime()
             if (dataList?.length) {
               const val = dataList?.[this.pos]?.timestamp
-              time = val ? new Date(val).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : time
+              time = val ? new Date(val).getTime() : time
             }
-            return time
+            return moment(time).utc().format('MMM D')
           }
         }
       },

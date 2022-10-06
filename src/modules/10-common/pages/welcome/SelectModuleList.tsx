@@ -8,14 +8,22 @@
 import React, { useLayoutEffect, useRef, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { IconName } from '@wings-software/uicore'
+import { upperCase } from 'lodash-es'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import routes from '@common/RouteDefinitions'
-import { useUpdateAccountDefaultExperienceNG } from 'services/cd-ng'
+import {
+  ResponseModuleLicenseDTO,
+  StartFreeLicenseQueryParams,
+  useStartFreeLicense,
+  useUpdateAccountDefaultExperienceNG
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { Experiences } from '@common/constants/Utils'
 import { useToaster } from '@common/components'
 import { Category, PurposeActions } from '@common/constants/TrackingConstants'
-import type { Module, AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import type { Module, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getSavedRefererURL } from '@common/utils/utils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ModuleCard from './ModuleCard'
 import css from './WelcomePage.module.scss'
 
@@ -32,10 +40,36 @@ interface SelectModuleListProps {
   moduleList: ModuleProps[]
 }
 
+const DEFAULT_PROJECT_ID = 'default_project'
+const DEFAULT_ORG = 'default'
+const getModuleToDefaultURLMap = (accountId: string, module: Module): { [key: string]: string } => ({
+  ci: routes.toGetStartedWithCI({
+    accountId,
+    module,
+    projectIdentifier: DEFAULT_PROJECT_ID,
+    orgIdentifier: DEFAULT_ORG
+  }),
+  cd: routes.toGetStartedWithCD({
+    accountId,
+    module,
+    projectIdentifier: DEFAULT_PROJECT_ID,
+    orgIdentifier: DEFAULT_ORG
+  }),
+  cf: routes.toCFOnboarding({
+    accountId,
+    projectIdentifier: DEFAULT_PROJECT_ID,
+    orgIdentifier: DEFAULT_ORG
+  }),
+  ce: routes.toCEOverview({
+    accountId
+  })
+})
+
 const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, moduleList }) => {
   const [selected, setSelected] = useState<Module>()
+  const { CREATE_DEFAULT_PROJECT, AUTO_FREE_MODULE_LICENSE } = useFeatureFlags()
   const { getString } = useStrings()
-  const { accountId } = useParams<AccountPathProps>()
+  const { accountId } = useParams<ProjectPathProps>()
   const { trackEvent } = useTelemetry()
   const { showError } = useToaster()
   const { mutate: updateDefaultExperience, loading: updatingDefaultExperience } = useUpdateAccountDefaultExperienceNG({
@@ -43,30 +77,87 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
   })
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: innerHeight })
   const ref = useRef<HTMLDivElement>(null)
-
+  const { mutate } = useStartFreeLicense({
+    queryParams: { accountIdentifier: accountId, moduleType: '' as StartFreeLicenseQueryParams['moduleType'] },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    }
+  })
   const handleModuleSelection = (module: Module): void => {
     setSelected(module)
     onModuleClick(module)
   }
 
   const history = useHistory()
-
-  const getButtonProps = (buttonType: string): { clickHandle?: () => void; disabled?: boolean } => {
+  const startFreeLicense = async (): Promise<ResponseModuleLicenseDTO> => {
+    const refererURL = getSavedRefererURL()
+    return mutate(undefined, {
+      queryParams: {
+        accountIdentifier: accountId,
+        moduleType: upperCase(selected) as StartFreeLicenseQueryParams['moduleType'],
+        ...(refererURL ? { referer: refererURL } : {})
+      }
+    })
+  }
+  const getButtonProps = (buttonType: string): { clickHandle?: () => Promise<void>; disabled?: boolean } => {
     switch (buttonType) {
       case 'ci':
+        return {
+          clickHandle: async (): Promise<void> => {
+            trackEvent(PurposeActions.ModuleContinue, { category: Category.SIGNUP, module: buttonType })
+            try {
+              // if (AUTO_FREE_MODULE_LICENSE) {
+              //   await updateDefaultExperience({
+              //     defaultExperience: Experiences.NG
+              //   })
+
+              //   await startFreeLicense()
+              //   const defaultURL = getModuleToDefaultURLMap(accountId, selected as Module)[selected as string]
+
+              //   CREATE_DEFAULT_PROJECT
+              //     ? history.push(defaultURL)
+              //     : history.push(routes.toModuleTrialHome({ accountId, module: buttonType }))
+              // } else {
+              updateDefaultExperience({
+                defaultExperience: Experiences.NG
+              }).then(() => {
+                history.push(routes.toModuleTrialHome({ accountId, module: buttonType }))
+              })
+              // }
+            } catch (error) {
+              showError(error.data?.message || getString('somethingWentWrong'))
+            }
+          },
+          disabled: updatingDefaultExperience
+        }
       case 'cd':
       case 'ce':
       case 'cv':
       case 'cf':
         return {
-          clickHandle: () => {
+          clickHandle: async () => {
             trackEvent(PurposeActions.ModuleContinue, { category: Category.SIGNUP, module: buttonType })
             try {
-              updateDefaultExperience({
-                defaultExperience: Experiences.NG
-              }).then(() => {
-                history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
-              })
+              if (AUTO_FREE_MODULE_LICENSE) {
+                await updateDefaultExperience({
+                  defaultExperience: Experiences.NG
+                })
+
+                await startFreeLicense()
+                const defaultURL = getModuleToDefaultURLMap(accountId, selected as Module)[selected as string]
+
+                CREATE_DEFAULT_PROJECT
+                  ? history.push(defaultURL)
+                  : history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
+              } else {
+                updateDefaultExperience({
+                  defaultExperience: Experiences.NG
+                }).then(() => {
+                  history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
+                })
+              }
             } catch (error) {
               showError(error.data?.message || getString('somethingWentWrong'))
             }
@@ -79,7 +170,7 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
   }
 
   const moduleListElements = moduleList.map(option => {
-    const buttonProp: { clickHandle?: () => void; disabled?: boolean } = getButtonProps(option.module)
+    const buttonProp: { clickHandle?: () => Promise<void>; disabled?: boolean } = getButtonProps(option.module)
 
     return (
       <ModuleCard

@@ -7,13 +7,17 @@
 
 import React from 'react'
 import { defaultTo } from 'lodash-es'
+import { ansiToJson, AnserJsonEntry } from 'anser'
+import { tokenize } from 'linkifyjs'
 
-import { LogLine } from '@common/components/LogViewer/LogLine'
-import { breakOnLinks } from '@common/components/LinkifyText/LinkifyText'
-
+import { getAnserClasses } from '@common/components/LogViewer/LogLine'
 import { getRegexForSearch } from '../../LogsState/utils'
 import type { LogLineData } from '../../LogsState/types'
 import css from './MultiLogLine.module.scss'
+
+export interface AnserJsonWithLink extends AnserJsonEntry {
+  isLink: boolean
+}
 
 export interface GetTextWithSearchMarkersProps {
   txt?: string
@@ -84,23 +88,34 @@ export function getTextWithSearchMarkersAndLinks(props: GetTextWithSearchMarkers
   const searchRegex = getRegexForSearch(defaultTo(searchText, ''))
 
   let offset = 0
-  return breakOnLinks(txt)
-    .map(textItem => {
-      const matches = searchText ? defaultTo(textItem.content.match(searchRegex), []) : []
+  const tokens: AnserJsonWithLink[] = ansiToJson(txt, { use_classes: true }).flatMap(row => {
+    const linkTokens = tokenize(row.content)
 
-      const highligtedText = getTextWithSearchMarkers({
+    return linkTokens.map(token => ({
+      ...row,
+      content: token.toString(),
+      isLink: token.isLink
+    }))
+  })
+
+  return tokens
+    .map(token => {
+      let content = token.content
+      const matches = searchText ? defaultTo(content.match(searchRegex), []) : []
+
+      content = getTextWithSearchMarkers({
         ...props,
-        txt: textItem.content,
+        txt: content,
         searchIndices: props.searchIndices?.slice(offset)
       })
 
       offset += matches.length
 
-      if (textItem.type === 'URL') {
-        return `<a href="${textItem.content}" class="ansi-decoration-link" target="_blank" rel="noreferrer">${highligtedText}</a>`
+      if (token.isLink) {
+        content = `<a href="${token.content}" class="ansi-decoration-link" target="_blank" rel="noreferrer">${content}</a>`
       }
 
-      return highligtedText
+      return `<span class="${getAnserClasses(token)}">${content}<span>`
     })
     .join('')
 }
@@ -121,15 +136,16 @@ export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
   return (
     <div className={css.logLine} style={{ '--char-size': `${limit.toString().length}ch` } as any}>
       <span className={css.lineNumber}>{lineNumber + 1}</span>
-      <LogLine
-        skipLinkify
+      <span
         className={css.level}
-        data={getTextWithSearchMarkers({
-          txt: text.level,
-          searchText,
-          searchIndices: searchIndices?.level,
-          currentSearchIndex
-        })}
+        dangerouslySetInnerHTML={{
+          __html: getTextWithSearchMarkers({
+            txt: text.level,
+            searchText,
+            searchIndices: searchIndices?.level,
+            currentSearchIndex
+          })
+        }}
       />
       <span
         className={css.time}
@@ -142,14 +158,16 @@ export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
           })
         }}
       />
-      <LogLine
-        skipLinkify
-        data={getTextWithSearchMarkersAndLinks({
-          txt: text.out,
-          searchText,
-          searchIndices: searchIndices?.out,
-          currentSearchIndex
-        })}
+      <span
+        className={css.out}
+        dangerouslySetInnerHTML={{
+          __html: getTextWithSearchMarkersAndLinks({
+            txt: text.out,
+            searchText,
+            searchIndices: searchIndices?.out,
+            currentSearchIndex
+          })
+        }}
       />
     </div>
   )

@@ -184,6 +184,8 @@ export default function FeatureBanner(): React.ReactElement | null {
       const moduleFeatures = featuresFactory.getFeaturesByModule(module)
       setActiveModuleFeatures(moduleFeatures || null)
     }
+    // added to fix https://harness.atlassian.net/browse/BG-328
+    return () => setActiveModuleFeatures(null)
   }, [module])
 
   const { message: messageFn, bannerType } =

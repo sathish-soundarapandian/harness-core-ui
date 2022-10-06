@@ -6,13 +6,11 @@
  */
 
 import React, { useMemo } from 'react'
-import { Layout, Icon } from '@wings-software/uicore'
-import { useHistory, useParams } from 'react-router-dom'
-import { Color } from '@harness/design-system'
-import RepositoryCard from '@pipeline/components/Dashboards/BuildCards/RepositoryCard'
+import { useParams } from 'react-router-dom'
 import type { WorkloadDateCountInfo, LastWorkloadInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import ServiceCardWithChart from './CardWithChart'
 import css from '../CDDashboardPage.module.scss'
 export interface WorkloadCardProps {
   serviceName: string
@@ -29,16 +27,12 @@ export interface WorkloadCardProps {
 export default function WorkloadCard({
   serviceName,
   lastExecuted,
-  lastMessage,
   totalDeployments,
   percentSuccess,
   rateSuccess,
-  username,
   workload,
   serviceId = ''
 }: WorkloadCardProps): React.ReactElement {
-  const history = useHistory()
-
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const countList = useMemo(() => {
     if (workload) {
@@ -50,20 +44,16 @@ export default function WorkloadCard({
       }))
     }
   }, [workload])
-
   const gotoServices = (): void => {
-    history.push(routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module }))
+    const route = routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module })
+    window.open(`#${route}`)
   }
   return (
-    <RepositoryCard
-      title={
-        <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }}>
-          <Icon size={30} name={'services'} color={Color.PRIMARY_5} />
-          {serviceName}
-        </Layout.Horizontal>
-      }
-      message={lastMessage!}
-      username={username}
+    <ServiceCardWithChart
+      title={serviceName}
+      message={lastExecuted?.triggerType}
+      profileUrl={lastExecuted?.authorInfo?.url}
+      username={lastExecuted?.authorInfo?.name}
       startTime={lastExecuted?.startTime as number}
       endTime={lastExecuted?.endTime as number}
       count={totalDeployments}
@@ -74,6 +64,7 @@ export default function WorkloadCard({
       countList={countList}
       onClick={gotoServices}
       className={css.hoverService}
+      lastExecutionStatus={lastExecuted?.status}
     />
   )
 }

@@ -22,6 +22,7 @@ import {
 import { connect, FormikContextType } from 'formik'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
@@ -114,7 +115,7 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
       )}
       {getMultiTypeFromValue(config?.spec?.workspace) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.spec.configuration.spec.workspace`}
             placeholder={getString('pipeline.terraformStep.workspace')}
             label={getString('pipelineSteps.workspace')}
@@ -123,6 +124,8 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
               expressions,
               allowableTypes
             }}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.spec.workspace'}
           />
         </div>
       )}

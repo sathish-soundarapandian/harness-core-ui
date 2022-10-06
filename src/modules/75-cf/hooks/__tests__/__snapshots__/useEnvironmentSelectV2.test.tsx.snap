@@ -14,6 +14,7 @@ exports[`Test useEnvironmentSelectV2 useEnvironmentSelectV2 should send back pro
         <input
           autocomplete="off"
           class="bp3-input"
+          name="environmentSelectEl"
           placeholder="- Select -"
           style="padding-right: 0px;"
           type="text"

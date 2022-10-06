@@ -8,6 +8,7 @@
 import React, { FC, useCallback, useEffect, useMemo } from 'react'
 import { get } from 'lodash-es'
 import {
+  AllowedTypes,
   Container,
   getMultiTypeFromValue,
   Heading,
@@ -20,13 +21,14 @@ import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { Feature } from 'services/cf'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import type { FeatureFlagConfigurationInstruction, FlagConfigurationStepFormDataValues } from '../types'
 import FlagChangesForm, { FlagChangesFormProps } from './FlagChangesForm'
 
 import subSectionCSS from './SubSection.module.scss'
 import css from './FlagChanges.module.scss'
 
-const allowedTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+const allowedTypes: AllowedTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
 
 export interface FlagChangesProps {
   selectedFeature?: Feature | typeof RUNTIME_INPUT_VALUE
@@ -94,9 +96,7 @@ const FlagChanges: FC<FlagChangesProps> = ({
           <MultiTypeSelectorButton
             type={getMultiTypeFromValue(get(fieldValues, instructionsPath), allowedTypes)}
             allowedTypes={allowedTypes}
-            onChange={type =>
-              setField(instructionsPath, type === MultiTypeInputType.RUNTIME ? RUNTIME_INPUT_VALUE : undefined)
-            }
+            onChange={type => setField(instructionsPath, isMultiTypeRuntime(type) ? RUNTIME_INPUT_VALUE : undefined)}
             data-testid="runtime-fixed-selector-button"
             disabled={selectedFeature === RUNTIME_INPUT_VALUE}
           />

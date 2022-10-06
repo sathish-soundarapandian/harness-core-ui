@@ -1,0 +1,15 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "namespace": "defaultProject",
+      "name": "Repo1"
+    },
+    {
+      "namespace": "defaultProject",
+      "name": "Repo2"
+    }
+  ],
+  "metaData": null,
+  "correlationId": "a192f5c0-a080-4e40-9be1-42473ce1867d"
+}

@@ -9,14 +9,14 @@ import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
 
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 
 import type { PolicyStepData } from './PolicyStepTypes'
 import { MultiTypePolicySetSelector } from './PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
@@ -27,7 +27,7 @@ export default function PolicyInputSetStep(props: {
   readonly?: boolean
   template?: PolicyStepData
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
   const { readonly, template, path, allowableTypes } = props
   const { getString } = useStrings()
@@ -38,7 +38,7 @@ export default function PolicyInputSetStep(props: {
     <>
       {getMultiTypeFromValue(/* istanbul ignore next */ template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.lg)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             name={`${prefix}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             disabled={readonly}
@@ -46,8 +46,11 @@ export default function PolicyInputSetStep(props: {
             multiTypeDurationProps={{
               enableConfigureOptions: false,
               expressions,
-              disabled: readonly
+              disabled: readonly,
+              allowableTypes
             }}
+            fieldPath={'timeout'}
+            template={template}
           />
         </div>
       )}

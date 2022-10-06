@@ -17,7 +17,6 @@ import {
   MockDataDashBOardDetails,
   MockQuery,
   MockQueryWithGroupBy,
-  MockSelectedMetricInfo,
   MockValidationResponse,
   MockValidationResponseWithMultipleTxns,
   sourceDataUpdated
@@ -270,8 +269,7 @@ describe('Test GCOMetricsHealthSource', () => {
     await waitFor(() => expect(container.querySelector(`input[name=${FieldNames.SERVICE_INSTANCE_FIELD}]`)).toBeNull())
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('Ensure that when a metric is selected in the nav, the content in the form is rendered', async () => {
+  test('Ensure that when a metric is selected in the nav, the content in the form is rendered', async () => {
     const getMetricPackSpy = jest.spyOn(cvService, 'useGetMetricPacks')
     getMetricPackSpy.mockReturnValue({
       data: { resource: [{ identifier: 'Errors' }, { identifier: 'Performance' }] }
@@ -287,18 +285,10 @@ describe('Test GCOMetricsHealthSource', () => {
     sampleDataSpy.mockReturnValue({ mutate: mutateMockLocal as unknown, cancel: jest.fn() as unknown } as any)
     const onSubmitMock = jest.fn()
     const { container, getByText } = render(<WrapperComponent onSubmit={onSubmitMock} data={sourceDataUpdated} />)
-
     await waitFor(() => expect(container.querySelector('[class*="main"]')).not.toBeNull())
-    const metricNav = container.querySelector('[class^="MetricDashboardWidgetNav"]')
-    if (!metricNav) {
-      throw Error('Metric nav was not rendered.')
-    }
-
-    fireEvent.click(metricNav)
     await waitFor(() =>
-      expect(container.querySelector(`input[value="${MockSelectedMetricInfo.metric}"]`)).not.toBeNull()
+      expect(container.querySelector(`input[name="metricName"]`)).toHaveValue('kubernetes.io/container/restart_count')
     )
-    expect(getByText(MockSelectedMetricInfo.widgetName)).not.toBeNull()
 
     fireEvent.click(getByText('submit'))
     expect(onSubmitMock).not.toHaveBeenCalled()

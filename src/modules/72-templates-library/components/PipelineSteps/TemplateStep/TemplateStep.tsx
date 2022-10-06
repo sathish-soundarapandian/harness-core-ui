@@ -187,7 +187,7 @@ export class TemplateStep extends PipelineStep<TemplateStepNode> {
       customStepProps
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <TemplateInputSetStep
           initialValues={initialValues}

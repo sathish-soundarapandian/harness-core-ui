@@ -4,6 +4,11 @@ rules:
     - error
     - namedComponents: function-declaration
       unnamedComponents: arrow-function
+  'no-restricted-imports':
+    - 2
+    - paths:
+        - name: yaml
+          message: Please use methods from @common/utils/YamlHelperMethods instead of using yaml
 overrides:
   - files:
       - '*.stories.tsx'

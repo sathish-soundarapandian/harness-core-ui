@@ -16,9 +16,9 @@ import {
   SelectOption,
   StepProps,
   Text,
-  ButtonVariation
+  ButtonVariation,
+  FormikForm
 } from '@wings-software/uicore'
-import { Form } from 'formik'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -45,7 +45,7 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
-import SideCarArtifactIdentifier from '../SideCarArtifactIdentifier'
+import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
 
 export function ECRArtifact({
@@ -58,11 +58,14 @@ export function ECRArtifact({
   previousStep,
   artifactIdentifiers,
   isReadonly = false,
-  selectedArtifact
-}: StepProps<ConnectorConfigDTO> & ImagePathProps): React.ReactElement {
+  selectedArtifact,
+  isMultiArtifactSource
+}: StepProps<ConnectorConfigDTO> & ImagePathProps<ImagePathTypes>): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+
   const [tagList, setTagList] = React.useState([])
   const [regions, setRegions] = React.useState<SelectOption[]>([])
   const [lastQueryData, setLastQueryData] = React.useState<{ imagePath: string; region: any }>({
@@ -85,7 +88,7 @@ export function ECRArtifact({
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
-  const sideCarSchema = Yup.object().shape({
+  const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
       artifactIdentifiers,
@@ -165,17 +168,18 @@ export function ECRArtifact({
     const values = getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
-      context === ModalViewFor.SIDECAR
-    )
+      isIdentifierAllowed
+    ) as ImagePathTypes
     const specValues = get(initialValues, 'spec', null)
     if (getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED) {
       values.region = regions.find(regionData => regionData.value === specValues?.region)
     }
     return values
-  }, [context, initialValues, regions, selectedArtifact])
+  }, [initialValues, isIdentifierAllowed, regions, selectedArtifact])
 
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
-    const artifactObj = getFinalArtifactObj(formData, context === ModalViewFor.SIDECAR)
+    const artifactObj = getFinalArtifactObj(formData, isIdentifierAllowed)
+
     merge(artifactObj.spec, { region: formData?.region?.value ? formData?.region?.value : formData?.region })
     handleSubmit(artifactObj)
   }
@@ -187,7 +191,7 @@ export function ECRArtifact({
       </Text>
       <Formik
         initialValues={getInitialValues()}
-        validationSchema={context === ModalViewFor.SIDECAR ? sideCarSchema : primarySchema}
+        validationSchema={isIdentifierAllowed ? schemaWithIdentifier : primarySchema}
         formName="ecrArtifact"
         onSubmit={formData => {
           submitFormData({
@@ -199,8 +203,9 @@ export function ECRArtifact({
         enableReinitialize={true}
       >
         {formik => (
-          <Form>
+          <FormikForm>
             <div className={css.connectorForm}>
+              {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>
                 <FormInput.MultiTypeInput
@@ -268,7 +273,7 @@ export function ECRArtifact({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

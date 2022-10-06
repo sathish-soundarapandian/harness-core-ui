@@ -188,3 +188,22 @@ export const getDimensionsAsPerContainerWidth = (
 export const limitMaxSliderWidth = (selectedTimePeriod: string): boolean => {
   return selectedTimePeriod === TimePeriodEnum.SEVEN_DAYS || selectedTimePeriod === TimePeriodEnum.THIRTY_DAYS
 }
+
+export const getHoursByTimePeriod = (timePeriod: TimePeriodEnum) => {
+  const mins = 60 * 1000
+  const hours = 1 * 60 * mins
+  switch (timePeriod) {
+    case TimePeriodEnum.FOUR_HOURS:
+      return 15 * mins
+    case TimePeriodEnum.TWENTY_FOUR_HOURS:
+      return 1 * hours
+    case TimePeriodEnum.THREE_DAYS:
+      return 4 * hours
+    case TimePeriodEnum.SEVEN_DAYS:
+      return 10 * hours
+    case TimePeriodEnum.THIRTY_DAYS:
+      return 20 * hours
+    default:
+      return 4 * hours
+  }
+}

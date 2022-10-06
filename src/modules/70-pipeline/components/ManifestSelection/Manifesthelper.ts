@@ -8,10 +8,49 @@
 import type { Schema } from 'yup'
 import type { IconName } from '@wings-software/uicore'
 import { Connectors } from '@connectors/constants'
-import type { ConnectorInfoDTO } from 'services/cd-ng'
+import type { ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
 import { NameSchema } from '@common/utils/Validation'
-import type { HelmVersionOptions, ManifestStores, ManifestTypes, PrimaryManifestType } from './ManifestInterface'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  buildBitbucketPayload,
+  buildGithubPayload,
+  buildGitlabPayload,
+  buildGitPayload
+} from '@connectors/pages/connectors/utils/ConnectorUtils'
+import type {
+  HelmVersionOptions,
+  ManifestStores,
+  ManifestStoreWithoutConnector,
+  ManifestTypes,
+  PrimaryManifestType
+} from './ManifestInterface'
+
+export type ReleaseRepoPipeline = PipelineInfoConfig & { gitOpsEnabled: boolean }
+
+export const isManifestAdditionAllowed = (deploymentType: ServiceDefinition['type']): boolean => {
+  return !(
+    deploymentType === ServiceDeploymentType.Ssh ||
+    deploymentType === ServiceDeploymentType.WinRm ||
+    deploymentType === ServiceDeploymentType.AzureWebApp
+  )
+}
+
+export const showAddManifestBtn = (
+  isReadonly: boolean,
+  allowOnlyOne: boolean,
+  listOfManifests: Array<any>,
+  deploymentType?: ServiceDefinition['type']
+): boolean => {
+  if (allowOnlyOne && listOfManifests.length >= 1) {
+    return false
+  }
+  if (deploymentType) {
+    return !isReadonly && isManifestAdditionAllowed(deploymentType)
+  }
+  return !isReadonly
+}
 
 export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   K8sManifest: 'K8sManifest',
@@ -21,7 +60,11 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   OpenshiftTemplate: 'OpenshiftTemplate',
   OpenshiftParam: 'OpenshiftParam',
   KustomizePatches: 'KustomizePatches',
-  ServerlessAwsLambda: 'ServerlessAwsLambda'
+  ServerlessAwsLambda: 'ServerlessAwsLambda',
+  EcsTaskDefinition: 'EcsTaskDefinition',
+  EcsServiceDefinition: 'EcsServiceDefinition',
+  EcsScalingPolicyDefinition: 'EcsScalingPolicyDefinition',
+  EcsScalableTargetDefinition: 'EcsScalableTargetDefinition'
 }
 
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
@@ -49,9 +92,13 @@ export const ManifestStoreMap: { [key: string]: ManifestStores } = {
   GitLab: 'GitLab',
   Bitbucket: 'Bitbucket',
   Http: 'Http',
+  OciHelmChart: 'OciHelmChart',
   S3: 'S3',
   Gcs: 'Gcs',
-  InheritFromManifest: 'InheritFromManifest'
+  InheritFromManifest: 'InheritFromManifest',
+  Inline: 'Inline',
+  Harness: 'Harness',
+  CustomRemote: 'CustomRemote'
 }
 
 export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
@@ -65,24 +112,59 @@ export const allowedManifestTypes: Record<string, Array<ManifestTypes>> = {
     ManifestDataType.KustomizePatches
   ],
   NativeHelm: [ManifestDataType.Values, ManifestDataType.HelmChart],
-  ServerlessAwsLambda: [ManifestDataType.ServerlessAwsLambda]
+  ServerlessAwsLambda: [ManifestDataType.ServerlessAwsLambda],
+  Ssh: [],
+  WinRm: [],
+  AzureWebApp: [],
+  ECS: [
+    ManifestDataType.EcsTaskDefinition,
+    ManifestDataType.EcsServiceDefinition,
+    ManifestDataType.EcsScalingPolicyDefinition,
+    ManifestDataType.EcsScalableTargetDefinition
+  ],
+  CustomDeployment: []
 }
 
-export const manifestStoreTypes: Array<ManifestStores> = [
+export const gitStoreTypes: Array<ManifestStores> = [
   ManifestStoreMap.Git,
   ManifestStoreMap.Github,
   ManifestStoreMap.GitLab,
   ManifestStoreMap.Bitbucket
 ]
+
+export const gitStoreTypesWithHarnessStoreType: Array<ManifestStores> = [...gitStoreTypes, ManifestStoreMap.Harness]
+
 export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
-  K8sManifest: manifestStoreTypes,
-  Values: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
-  HelmChart: [...manifestStoreTypes, ManifestStoreMap.Http, ManifestStoreMap.S3, ManifestStoreMap.Gcs],
-  Kustomize: manifestStoreTypes,
-  OpenshiftTemplate: manifestStoreTypes,
-  OpenshiftParam: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
-  KustomizePatches: [...manifestStoreTypes, ManifestStoreMap.InheritFromManifest],
-  ServerlessAwsLambda: manifestStoreTypes
+  K8sManifest: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
+  Values: [
+    ...gitStoreTypes,
+    ManifestStoreMap.InheritFromManifest,
+    ManifestStoreMap.Harness,
+    ManifestStoreMap.CustomRemote
+  ],
+  HelmChart: [
+    ...gitStoreTypes,
+    ManifestStoreMap.Http,
+    ManifestStoreMap.OciHelmChart,
+    ManifestStoreMap.S3,
+    ManifestStoreMap.Gcs,
+    ManifestStoreMap.Harness,
+    ManifestStoreMap.CustomRemote
+  ],
+  OpenshiftTemplate: [...gitStoreTypesWithHarnessStoreType, ManifestStoreMap.CustomRemote],
+  OpenshiftParam: [
+    ...gitStoreTypes,
+    ManifestStoreMap.InheritFromManifest,
+    ManifestStoreMap.Harness,
+    ManifestStoreMap.CustomRemote
+  ],
+  Kustomize: gitStoreTypesWithHarnessStoreType,
+  KustomizePatches: [...gitStoreTypes, ManifestStoreMap.InheritFromManifest, ManifestStoreMap.Harness],
+  ServerlessAwsLambda: gitStoreTypes,
+  EcsTaskDefinition: gitStoreTypesWithHarnessStoreType,
+  EcsServiceDefinition: gitStoreTypesWithHarnessStoreType,
+  EcsScalingPolicyDefinition: gitStoreTypesWithHarnessStoreType,
+  EcsScalableTargetDefinition: gitStoreTypesWithHarnessStoreType
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -93,7 +175,11 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   OpenshiftTemplate: 'openshift',
   OpenshiftParam: 'openshift-params',
   KustomizePatches: 'kustomizeparam',
-  ServerlessAwsLambda: 'service-serverless-aws'
+  ServerlessAwsLambda: 'service-serverless-aws',
+  EcsTaskDefinition: 'service-amazon-ecs',
+  EcsServiceDefinition: 'service-amazon-ecs',
+  EcsScalingPolicyDefinition: 'service-amazon-ecs',
+  EcsScalableTargetDefinition: 'service-amazon-ecs'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -104,7 +190,11 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   OpenshiftTemplate: 'pipeline.manifestTypeLabels.OpenshiftTemplate',
   OpenshiftParam: 'pipeline.manifestTypeLabels.OpenshiftParam',
   KustomizePatches: 'pipeline.manifestTypeLabels.KustomizePatches',
-  ServerlessAwsLambda: 'pipeline.manifestTypeLabels.ServerlessAwsLambda'
+  ServerlessAwsLambda: 'pipeline.manifestTypeLabels.ServerlessAwsLambda',
+  EcsTaskDefinition: 'pipeline.manifestTypeLabels.EcsTaskDefinition',
+  EcsServiceDefinition: 'pipeline.manifestTypeLabels.EcsServiceDefinition',
+  EcsScalingPolicyDefinition: 'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition',
+  EcsScalableTargetDefinition: 'pipeline.manifestTypeLabels.EcsScalableTargetDefinition'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [
@@ -118,9 +208,13 @@ export const ManifestIconByType: Record<ManifestStores, IconName> = {
   GitLab: 'service-gotlab',
   Bitbucket: 'bitbucket',
   Http: 'service-helm',
+  OciHelmChart: 'helm-oci',
   S3: 'service-service-s3',
   Gcs: 'gcs-step',
-  InheritFromManifest: 'custom-artifact'
+  InheritFromManifest: 'custom-artifact',
+  Inline: 'custom-artifact',
+  Harness: 'harness',
+  CustomRemote: 'custom-remote-manifest'
 }
 
 export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
@@ -129,9 +223,13 @@ export const ManifestStoreTitle: Record<ManifestStores, StringKeys> = {
   GitLab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'pipeline.manifestType.bitBucketLabel',
   Http: 'pipeline.manifestType.httpHelmRepoConnectorLabel',
+  OciHelmChart: 'pipeline.manifestType.ociHelmConnectorLabel',
   S3: 'connectors.S3',
   Gcs: 'connectors.GCS.fullName',
-  InheritFromManifest: 'pipeline.manifestType.InheritFromManifest'
+  InheritFromManifest: 'pipeline.manifestType.InheritFromManifest',
+  Inline: 'inline',
+  Harness: 'harness',
+  CustomRemote: 'pipeline.manifestType.customRemote'
 }
 
 export const ManifestToConnectorMap: Record<ManifestStores | string, ConnectorInfoDTO['type']> = {
@@ -140,16 +238,18 @@ export const ManifestToConnectorMap: Record<ManifestStores | string, ConnectorIn
   GitLab: Connectors.GITLAB,
   Bitbucket: Connectors.BITBUCKET,
   Http: Connectors.HttpHelmRepo,
+  OciHelmChart: Connectors.OciHelmRepo,
   S3: Connectors.AWS,
   Gcs: Connectors.GCP
 }
 
-export const ManifestToConnectorLabelMap: Record<Exclude<ManifestStores, 'InheritFromManifest'>, StringKeys> = {
+export const ManifestToConnectorLabelMap: Record<ManifestStoreWithoutConnector, StringKeys> = {
   Git: 'pipeline.manifestType.gitConnectorLabel',
   Github: 'common.repo_provider.githubLabel',
   GitLab: 'common.repo_provider.gitlabLabel',
   Bitbucket: 'pipeline.manifestType.bitBucketLabel',
   Http: 'connectors.title.helmConnector',
+  OciHelmChart: 'connectors.title.ociHelmConnector',
   S3: 'pipeline.manifestToConnectorLabelMap.AWSLabel',
   Gcs: 'common.gcp'
 }
@@ -182,4 +282,69 @@ export const ManifestIdentifierValidation = (
   return {
     identifier: NameSchema()
   }
+}
+
+export const doesStorehasConnector = (selectedStore: ManifestStoreWithoutConnector): boolean => {
+  return [
+    ManifestStoreMap.InheritFromManifest,
+    ManifestStoreMap.Harness,
+    ManifestStoreMap.Inline,
+    ManifestStoreMap.CustomRemote
+  ].includes(selectedStore)
+}
+
+export function isConnectorStoreType(): boolean {
+  return !(ManifestStoreMap.InheritFromManifest || ManifestStoreMap.Harness || ManifestStoreMap.Inline,
+  ManifestStoreMap.CustomRemote)
+}
+export const isGitTypeManifestStore = (manifestStore: ManifestStores): boolean =>
+  [ManifestStoreMap.Git, ManifestStoreMap.Github, ManifestStoreMap.GitLab, ManifestStoreMap.Bitbucket].includes(
+    manifestStore
+  )
+export function getManifestLocation(manifestType: ManifestTypes, manifestStore: ManifestStores): string {
+  switch (true) {
+    case manifestStore === ManifestStoreMap.Harness:
+      return 'store.spec.files'
+    case manifestStore === ManifestStoreMap.CustomRemote:
+      return 'store.spec.filePath'
+    case [
+      ManifestDataType.K8sManifest,
+      ManifestDataType.Values,
+      ManifestDataType.KustomizePatches,
+      ManifestDataType.OpenshiftParam,
+      ManifestDataType.OpenshiftTemplate,
+      ManifestDataType.ServerlessAwsLambda,
+      ManifestDataType.EcsTaskDefinition,
+      ManifestDataType.EcsServiceDefinition,
+      ManifestDataType.EcsScalableTargetDefinition,
+      ManifestDataType.EcsScalingPolicyDefinition
+    ].includes(manifestType):
+      return 'store.spec.paths'
+    case manifestType === ManifestDataType.Kustomize:
+    case manifestType === ManifestDataType.HelmChart &&
+      ([ManifestStoreMap.S3, ManifestStoreMap.Gcs].includes(manifestStore) || isGitTypeManifestStore(manifestStore)):
+      return 'store.spec.folderPath'
+    case manifestType === ManifestDataType.HelmChart && manifestStore === ManifestStoreMap.Http:
+      return 'chartName'
+    default:
+      return 'paths'
+  }
+}
+export const getBuildPayload = (type: ConnectorInfoDTO['type']) => {
+  switch (type) {
+    case Connectors.GIT:
+      return buildGitPayload
+    case Connectors.GITHUB:
+      return buildGithubPayload
+    case Connectors.BITBUCKET:
+      return buildBitbucketPayload
+    case Connectors.GITLAB:
+      return buildGitlabPayload
+    default:
+      return () => ({})
+  }
+}
+
+export const getManifestsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
+  return `${selectedDeploymentType}DeploymentTypeManifests`
 }

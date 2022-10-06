@@ -46,6 +46,10 @@ module.exports = {
   '/cv/api': {
     target: targetLocalHost ? 'https://localhost:6060' : `${baseUrl}`
   },
+  '/cf/web': {
+    pathRewrite: { '^/cf/web': '' },
+    target: process.env.FF_UI_URL || 'http://localhost:9292'
+  },
   '/cf': {
     target: targetLocalHost ? 'http://localhost:3000' : baseUrl,
     pathRewrite: targetLocalHost ? { '^/cf': '/api/1.0' } : {}
@@ -63,6 +67,10 @@ module.exports = {
   '/lw/api': {
     target: targetLocalHost ? 'http://localhost:9090' : `${baseUrl}/lw/api`,
     pathRewrite: { '^/lw/api': '' }
+  },
+  '/lw/co/api': {
+    target: targetLocalHost ? 'http://localhost:9090' : `${baseUrl}/lw/co/api`,
+    pathRewrite: { '^/lw/co/api': '' }
   },
   '/dashboard': {
     target: process.env.CUSTOM_DASHBOARDS_API_URL || baseUrl
@@ -92,12 +100,20 @@ module.exports = {
     pathRewrite: { '^/pm': '' },
     target: process.env.OPA_GOVERNANCE_UI_URL || 'http://localhost:3000'
   },
+  '/scm/api': {
+    pathRewrite: { '^/scm': '' },
+    target: process.env.SCM_API_URL || 'http://localhost:3001'
+  },
+  '/scm': {
+    pathRewrite: { '^/scm': '' },
+    target: process.env.SCM_API_URL || 'http://localhost:3000'
+  },
   '/sto/api': {
     pathRewrite: { '^/sto': '' },
     target: process.env.STO_API_URL || 'http://localhost:4000'
   },
   '/sto': {
-    pathRewrite: { '^/sto': '' },
+    pathRewrite: { '^/sto(/v2)?': '' },
     target: process.env.STO_UI_URL || 'http://localhost:3002'
   },
   '/gitops': {
@@ -106,18 +122,21 @@ module.exports = {
   },
   '/chaos': {
     pathRewrite: { '^/chaos': '' },
-    target: 'http://localhost:8184'
+    target: process.env.CHAOS_UI_URL || 'https://localhost:8184'
   },
   '/et': {
     pathRewrite: { '^/et': '' },
     target: process.env.ERROR_TRACKING_URL || 'http://localhost:9191'
   },
   '/audit/api': {
-    pathRewrite: { '^/ng/api': '' },
     target: targetLocalHost ? 'http://localhost:9005' : baseUrl
   },
   '/auth': {
     pathRewrite: { '^/auth': '' },
     target: 'https://app.harness.io/auth'
+  },
+  '/ccmui': {
+    pathRewrite: { '^/ccmui': '' },
+    target: process.env.CCM_UI_URL || 'https://localhost:8183'
   }
 }

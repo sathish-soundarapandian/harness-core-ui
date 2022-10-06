@@ -78,8 +78,8 @@
   // grid-template-columns: 300px 1fr;
   background: var(--grey-50);
   .treeSidebar {
-    border-right: solid 1px #ccc;
-    background: #fff;
+    border-right: solid 1px var(--grey-200);
+    background: var(--white);
     height: calc(100vh - var(--page-header-height, 64px));
     overflow: auto;
   }
@@ -102,11 +102,55 @@
   padding-left: var(--spacing-medium) !important;
 }
 .errorHeader {
-  background: #fff9e7;
-  color: #000;
+  background: var(--yellow-100);
+  color: var(--black);
   :global {
     .bp3-icon {
       padding-right: var(--spacing-large);
+    }
+  }
+}
+
+.inModal {
+  min-width: 1000px;
+  max-height: calc(100vh - 100px);
+  padding-top: var(--spacing-large) !important;
+
+  > div[class*='bp3-dialog-header'] {
+    width: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+  }
+
+  > div[class*='PageHeader--container'] {
+    padding: 0 0 var(--spacing-xxlarge) 0 !important;
+  }
+
+  > div[class*='PageBody--pageBody'] {
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  .formInModal {
+    &.withError {
+      [class*='OverlaySpinner--overlaySpinner'] {
+        .content {
+          height: calc(100vh - 377px) !important;
+        }
+      }
+    }
+
+    [class*='OverlaySpinner--overlaySpinner'] {
+      .content {
+        height: calc(100vh - 338px) !important;
+        min-height: auto !important;
+      }
+
+      .footer {
+        position: sticky;
+        padding: var(--spacing-xxlarge) 0 0 0 !important;
+        background-color: var(--white);
+      }
     }
   }
 }

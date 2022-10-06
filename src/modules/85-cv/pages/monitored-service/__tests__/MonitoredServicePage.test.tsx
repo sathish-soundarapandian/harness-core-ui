@@ -92,7 +92,7 @@ describe('Unit tests for createting monitored source', () => {
       refetch: refetchDashboardWidgets
     } as any)
 
-    jest.spyOn(cvServices, 'useGetAllMonitoredServicesWithTimeSeriesHealthSources').mockReturnValue({
+    jest.spyOn(cvServices, 'useGetSLOAssociatedMonitoredServices').mockReturnValue({
       data: [],
       loading: false,
       error: null,
@@ -270,6 +270,16 @@ describe('Unit tests for createting monitored source', () => {
               }
             }
           },
+          refetch: jest.fn(),
+          error: null,
+          loading: false,
+          cancel: jest.fn()
+        } as any)
+    )
+    jest.spyOn(cvServices, 'useGetSLOHealthListView').mockImplementation(
+      () =>
+        ({
+          data: null,
           refetch: jest.fn(),
           error: null,
           loading: false,

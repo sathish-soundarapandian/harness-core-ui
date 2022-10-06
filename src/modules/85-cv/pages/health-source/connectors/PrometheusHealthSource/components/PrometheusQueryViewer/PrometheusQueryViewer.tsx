@@ -6,11 +6,19 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
+import { defaultTo, isEmpty } from 'lodash-es'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
 import { IDrawerProps, Position, Drawer } from '@blueprintjs/core'
 import cx from 'classnames'
-import { Container, Text, Utils, useConfirmationDialog } from '@wings-software/uicore'
+import {
+  Container,
+  Text,
+  Utils,
+  useConfirmationDialog,
+  MultiTypeInputType,
+  getMultiTypeFromValue
+} from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { ResponseListPrometheusSampleData, useGetSampleData } from 'services/cv'
@@ -18,6 +26,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Records } from '@cv/components/Records/Records'
 import { QueryContent } from '@cv/components/QueryViewer/QueryViewer'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import CVMultiTypeQuery from '@cv/components/CVMultiTypeQuery/CVMultiTypeQuery'
 import { transformPrometheusSampleData, createPrometheusQuery } from './PrometheusQueryViewer.utils'
 import {
   MapPrometheusQueryToService,
@@ -30,6 +39,8 @@ export interface PrometheusQueryViewerProps {
   className?: string
   connectorIdentifier?: string
   onChange: (fieldName: string, value: any) => void
+  isTemplate?: boolean
+  expressions?: string[]
 }
 
 interface ChartAndRecordsProps {
@@ -40,6 +51,7 @@ interface ChartAndRecordsProps {
   isQueryExecuted?: boolean
   fetchData: () => void
   onChange: PrometheusQueryViewerProps['onChange']
+  isQueryRuntimeOrEpression?: boolean
 }
 
 const DrawerProps: IDrawerProps = {
@@ -55,7 +67,7 @@ const DrawerProps: IDrawerProps = {
 }
 
 export function ChartAndRecords(props: ChartAndRecordsProps): JSX.Element {
-  const { query, error, loading, data, onChange, isQueryExecuted, fetchData } = props
+  const { query, error, loading, data, onChange, isQueryExecuted, fetchData, isQueryRuntimeOrEpression } = props
   const { getString } = useStrings()
 
   const { options: highchartsOptions, records } = useMemo(() => {
@@ -79,6 +91,18 @@ export function ChartAndRecords(props: ChartAndRecordsProps): JSX.Element {
         />
       </>
     )
+  } else if (isQueryRuntimeOrEpression) {
+    return (
+      <Records
+        fetchRecords={fetchData}
+        loading={loading}
+        data={!query?.length ? null : records}
+        error={error}
+        query={query}
+        isQueryExecuted={false}
+        queryNotExecutedMessage={getString('cv.customHealthSource.chartRuntimeWarning')}
+      />
+    )
   }
   return (
     <Records
@@ -94,10 +118,12 @@ export function ChartAndRecords(props: ChartAndRecordsProps): JSX.Element {
 }
 
 export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.Element {
-  const { values, className, connectorIdentifier, onChange } = props
+  const { values, className, connectorIdentifier, onChange, isTemplate, expressions } = props
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const [isQueryExecuted, setIsQueryExecuted] = useState(false)
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
+
   const query = useMemo(() => {
     if (values?.isManualQuery) {
       return values.query?.length ? values.query : ''
@@ -129,35 +155,74 @@ export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.El
     }
   })
   const isManualQuery = Boolean(values?.isManualQuery)
+  const isQueryRuntimeOrEpression = getMultiTypeFromValue(query) !== MultiTypeInputType.FIXED
+
+  useEffect(() => {
+    if (isTemplate) {
+      onChange(PrometheusMonitoringSourceFieldNames.IS_MANUAL_QUERY, true)
+    }
+  }, [isTemplate, values?.isManualQuery, isConnectorRuntimeOrExpression])
+
   let content = (
     <>
-      <QueryContent
-        handleFetchRecords={async () => {
-          cancel()
-          await refetch({
-            queryParams: {
-              accountId,
-              projectIdentifier,
-              orgIdentifier,
-              query: query || '',
-              tracingId: Utils.randomId(),
-              connectorIdentifier: connectorIdentifier as string
-            }
-          })
-          if (!isQueryExecuted) {
-            setIsQueryExecuted(true)
+      {isTemplate ? (
+        <CVMultiTypeQuery
+          key={values?.identifier}
+          name={PrometheusMonitoringSourceFieldNames.QUERY}
+          expressions={defaultTo(expressions, [])}
+          allowedTypes={
+            isConnectorRuntimeOrExpression
+              ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+              : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
           }
-        }}
-        query={query}
-        loading={loading}
-        textAreaName={PrometheusMonitoringSourceFieldNames.QUERY}
-        onClickExpand={setIsDrawerOpen}
-        onEditQuery={!isManualQuery ? openDialog : undefined}
-        isDialogOpen={isDrawerOpen}
-        textAreaProps={{ readOnly: !isManualQuery }}
-        mandatoryFields={[values?.prometheusMetric]}
-        isAutoFetch={!isManualQuery}
-      />
+          disableFetchButton={isConnectorRuntimeOrExpression || isEmpty(query)}
+          fetchRecords={async () => {
+            cancel()
+            await refetch({
+              queryParams: {
+                accountId,
+                projectIdentifier,
+                orgIdentifier,
+                query: query || '',
+                tracingId: Utils.randomId(),
+                connectorIdentifier: connectorIdentifier as string
+              }
+            })
+            if (!isQueryExecuted) {
+              setIsQueryExecuted(true)
+            }
+          }}
+        />
+      ) : (
+        <QueryContent
+          handleFetchRecords={async () => {
+            cancel()
+            await refetch({
+              queryParams: {
+                accountId,
+                projectIdentifier,
+                orgIdentifier,
+                query: query || '',
+                tracingId: Utils.randomId(),
+                connectorIdentifier: connectorIdentifier as string
+              }
+            })
+            if (!isQueryExecuted) {
+              setIsQueryExecuted(true)
+            }
+          }}
+          query={query}
+          loading={loading}
+          textAreaName={PrometheusMonitoringSourceFieldNames.QUERY}
+          onClickExpand={setIsDrawerOpen}
+          onEditQuery={!isManualQuery ? openDialog : undefined}
+          isDialogOpen={isDrawerOpen}
+          textAreaProps={{ readOnly: !isManualQuery }}
+          mandatoryFields={[values?.prometheusMetric]}
+          isAutoFetch={!isManualQuery}
+        />
+      )}
+
       <ChartAndRecords
         fetchData={async () =>
           refetch({
@@ -174,9 +239,10 @@ export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.El
         query={query}
         isQueryExecuted={isQueryExecuted}
         onChange={onChange}
-        data={data}
+        data={isQueryRuntimeOrEpression ? null : data}
         error={getErrorMessage(error)}
         loading={loading}
+        isQueryRuntimeOrEpression={isQueryRuntimeOrEpression || isConnectorRuntimeOrExpression}
       />
     </>
   )
@@ -191,7 +257,7 @@ export function PrometheusQueryViewer(props: PrometheusQueryViewerProps): JSX.El
 
   return (
     <Container className={cx(css.main, className)}>
-      <Text className={css.labelText}>{getString('cv.query')}</Text>
+      {!isTemplate && <Text className={css.labelText}>{getString('cv.query')}</Text>}
       {content}
     </Container>
   )

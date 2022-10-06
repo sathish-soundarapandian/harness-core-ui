@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import cx from 'classnames'
 import {
   Card,
@@ -19,16 +19,23 @@ import {
   StackedSummaryTable,
   handleZeroOrInfinityTrend,
   renderTrend,
-  IconName
+  IconName,
+  Popover
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation, Color } from '@harness/design-system'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEqual } from 'lodash-es'
+import moment from 'moment'
 import type { TooltipFormatterContextObject } from 'highcharts'
 import type { GetDataError } from 'restful-react'
-import moment from 'moment'
+import qs from 'qs'
+import { HTMLTable } from '@blueprintjs/core'
 import type { Error, Failure } from 'services/template-ng'
-import { useLandingDashboardContext } from '@common/factories/LandingDashboardContext'
+import {
+  useLandingDashboardContext,
+  TimeRangeToDays,
+  DashboardTimeRange
+} from '@common/factories/LandingDashboardContext'
 import { String, StringKeys, useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
@@ -42,34 +49,21 @@ import {
   TimeBasedStats,
   GetDeploymentStatsOverviewQueryParams,
   DeploymentsStatsOverview,
-  ActiveServiceInfo
+  ActiveServiceInfo,
+  PipelineExecutionInfo
 } from 'services/dashboard-service'
-import { useErrorHandler } from '@pipeline/components/Dashboards/shared'
+import { FailedStatus, useErrorHandler } from '@pipeline/components/Dashboards/shared'
 import DashboardAPIErrorWidget from '@projects-orgs/components/DashboardAPIErrorWidget/DashboardAPIErrorWidget'
 import DashboardNoDataWidget from '@projects-orgs/components/DashboardNoDataWidget/DashboardNoDataWidget'
 
-import type { TimeRangeSelectorProps } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { renderTooltipContent } from '@pipeline/utils/DashboardUtils'
 import css from './LandingDashboardDeploymentsWidget.module.scss'
 
 export enum TimeRangeGroupByMapping {
-  'DAY' = 'DAY',
-  'WEEK' = 'WEEK',
-  'MONTH' = 'MONTH'
-}
-
-const getGroupByValue = (timeRange: TimeRangeSelectorProps): TimeRangeGroupByMapping => {
-  const startDate = moment(timeRange.range[0])
-  const endDate = moment(timeRange.range[1])
-  const diff = endDate.diff(startDate, 'day')
-
-  if (diff <= 30) {
-    return TimeRangeGroupByMapping.DAY
-  } else if (diff > 30 && diff <= 90) {
-    return TimeRangeGroupByMapping.WEEK
-  }
-
-  return TimeRangeGroupByMapping.MONTH
+  '30Days' = 'DAY',
+  '60Days' = 'WEEK',
+  '90Days' = 'WEEK',
+  '1Year' = 'MONTH'
 }
 
 const sortByOptions: SelectOption[] = [
@@ -80,11 +74,8 @@ const sortByOptions: SelectOption[] = [
 const getTooltip = (currPoint: TooltipFormatterContextObject): string => {
   const custom = currPoint?.series?.userOptions?.custom
   const point: TimeBasedStats = custom?.[currPoint.key]
-  const time =
-    point && point?.time
-      ? new Date(point?.time).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })
-      : currPoint.x
-  let failureRate: string | number = 'Infinity'
+  const time = point && point?.time ? moment(new Date(point?.time).getTime()).utc().format('MMM D') : currPoint.x
+  let failureRate: string | number = 'N/A'
   if (point?.countWithSuccessFailureDetails?.failureCount && point.countWithSuccessFailureDetails?.count) {
     failureRate =
       ((point.countWithSuccessFailureDetails.failureCount / point.countWithSuccessFailureDetails.count) * 100).toFixed(
@@ -97,9 +88,9 @@ const getTooltip = (currPoint: TooltipFormatterContextObject): string => {
   return renderTooltipContent({
     time,
     failureRate,
-    count: point?.countWithSuccessFailureDetails?.count,
-    successCount: point?.countWithSuccessFailureDetails?.successCount,
-    failureCount: point?.countWithSuccessFailureDetails?.failureCount
+    count: defaultTo(point?.countWithSuccessFailureDetails?.count, 0),
+    successCount: defaultTo(point?.countWithSuccessFailureDetails?.successCount, 0),
+    failureCount: defaultTo(point?.countWithSuccessFailureDetails?.failureCount, 0)
   })
 }
 
@@ -117,6 +108,89 @@ function EmptyCard({ children }: { children: React.ReactElement }): JSX.Element 
   )
 }
 
+const makeKey = (item: PipelineExecutionInfo) => {
+  const accountInfo = item.accountInfo?.accountIdentifier
+  const orgInfo = item.orgInfo?.orgIdentifier
+  const projectInfo = item.projectInfo?.projectIdentifier
+  return `${accountInfo}-${orgInfo}-${projectInfo}`
+}
+
+function DeployOverviewPopover({
+  overview,
+  status
+}: {
+  overview: PipelineExecutionInfo[]
+  status: string[]
+}): JSX.Element {
+  const { getString } = useStrings()
+
+  const projectOrgCount = new Map()
+  const projectOrgMap = new Map()
+
+  overview.forEach(item => projectOrgCount.set(makeKey(item), (projectOrgCount.get(makeKey(item)) || 0) + 1))
+  overview.forEach(item => projectOrgMap.set(makeKey(item), item))
+
+  function toDeployment(item: PipelineExecutionInfo): void {
+    const projectIdentifier = defaultTo(item.projectInfo?.projectIdentifier, '')
+    const orgIdentifier = defaultTo(item.orgInfo?.orgIdentifier, '')
+    const accountId = defaultTo(item.accountInfo?.accountIdentifier, '')
+    const route = routes.toDeployments({ projectIdentifier, orgIdentifier, accountId, module: 'cd' })
+    const filterQuery = isEqual(status, Object.keys(FailedStatus))
+      ? {
+          status,
+          timeRange: {
+            startTime: Date.now() - 24 * 60 * 60000,
+            endTime: Date.now()
+          }
+        }
+      : { status }
+    const search = qs.stringify({ filters: { ...filterQuery } })
+    window.open(`#${route + '?' + search}`)
+  }
+
+  const keyList = Array.from(projectOrgCount.keys())
+  return (
+    <HTMLTable small className={css.popoverTable}>
+      <thead>
+        <tr>
+          <th>{getString('projectsText').toLocaleUpperCase()}</th>
+          <th>{getString('deploymentsText').toLocaleUpperCase()}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {keyList.map(i => (
+          <tr key={i}>
+            <td>
+              <Layout.Vertical>
+                <Text color={Color.GREY_1000} lineClamp={1} style={{ maxWidth: 200 }}>
+                  {(projectOrgMap.get(i) as PipelineExecutionInfo).projectInfo?.projectName}
+                </Text>
+                {(projectOrgMap.get(i) as PipelineExecutionInfo).orgInfo?.orgIdentifier !== 'default' && (
+                  <div className={css.orgStyle}>
+                    <Icon name="nav-organization" size={12} />
+                    <Text color={Color.GREY_450} font={{ size: 'xsmall' }}>
+                      {` Orgs: ${(projectOrgMap.get(i) as PipelineExecutionInfo).orgInfo?.orgName}`}
+                    </Text>
+                  </div>
+                )}
+              </Layout.Vertical>
+            </td>
+            <td>
+              <Text
+                onClick={() => toDeployment(projectOrgMap.get(i))}
+                color={Color.PRIMARY_7}
+                className={css.executionCount}
+              >
+                {projectOrgCount.get(i)}
+              </Text>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </HTMLTable>
+  )
+}
+
 const showBadgesCard = (deploymentsOverview: DeploymentsOverview): boolean => {
   const deploymentsOverviewKeys = Object.keys(deploymentsOverview)
   if (Object.keys(deploymentsOverviewKeys).length === 0) {
@@ -128,66 +202,79 @@ const showBadgesCard = (deploymentsOverview: DeploymentsOverview): boolean => {
   return nonZeroDeploymentsOverviewKeys.length > 0
 }
 
-const getBadge = (type: string, stat: number): JSX.Element | null => {
+const getBadge = (type: string, deployStat: PipelineExecutionInfo[]): JSX.Element | null => {
+  const stat = deployStat.length
   if (stat <= 0) {
     return null
   }
   switch (type) {
     case 'pendingManualInterventionExecutions':
       return (
-        <div className={css.badge} key={type}>
-          <Icon name="status-pending" size={16} color={Color.ORANGE_700} />
-          <Text className={css.badgeText}>
-            {`${stat} `}
-            {stat > 1 ? (
-              <String stringID={'pipeline.dashboardDeploymentsWidget.pendingManualIntervention.plural'} />
-            ) : (
-              <String stringID={'pipeline.dashboardDeploymentsWidget.pendingManualIntervention.singular'} />
-            )}
-          </Text>
-        </div>
+        <Popover interactionKind="hover" popoverClassName={css.popoverStyle} autoFocus={false}>
+          <div className={css.badge} key={type}>
+            <Icon name="status-pending" size={16} color={Color.ORANGE_700} />
+            <Text className={css.badgeText}>
+              {`${stat} `}
+              {stat > 1 ? (
+                <String stringID={'pipeline.dashboardDeploymentsWidget.pendingManualIntervention.plural'} />
+              ) : (
+                <String stringID={'pipeline.dashboardDeploymentsWidget.pendingManualIntervention.singular'} />
+              )}
+            </Text>
+          </div>
+          <DeployOverviewPopover overview={deployStat} status={['InterventionWaiting']} />
+        </Popover>
       )
     case 'pendingApprovalExecutions':
       return (
-        <div className={css.badge} key={type}>
-          <Icon name="status-pending" size={16} color={Color.ORANGE_700} />
-          <Text className={css.badgeText}>
-            {`${stat} `}
-            {stat > 1 ? (
-              <String stringID={'pipeline.dashboardDeploymentsWidget.pendingApproval.plural'} />
-            ) : (
-              <String stringID={'pipeline.dashboardDeploymentsWidget.pendingApproval.singular'} />
-            )}
-          </Text>
-        </div>
+        <Popover interactionKind="hover" popoverClassName={css.popoverStyle} autoFocus={false}>
+          <div className={css.badge} key={type}>
+            <Icon name="status-pending" size={16} color={Color.ORANGE_700} />
+            <Text className={css.badgeText}>
+              {`${stat} `}
+              {stat > 1 ? (
+                <String stringID={'pipeline.dashboardDeploymentsWidget.pendingApproval.plural'} />
+              ) : (
+                <String stringID={'pipeline.dashboardDeploymentsWidget.pendingApproval.singular'} />
+              )}
+            </Text>
+          </div>
+          <DeployOverviewPopover overview={deployStat} status={['ApprovalWaiting']} />
+        </Popover>
       )
     case 'failed24HrsExecutions':
       return (
-        <div className={cx(css.badge, css.failed24HrsExecutionsBadge)} key={type}>
-          <Icon name="warning-sign" size={12} color={Color.RED_600} />
-          <Text className={css.badgeText}>
-            {`${stat} `}
-            {stat > 1 ? (
-              <String stringID={'pipeline.dashboardDeploymentsWidget.failed24Hrs.plural'} />
-            ) : (
-              <String stringID={'pipeline.dashboardDeploymentsWidget.failed24Hrs.singular'} />
-            )}
-          </Text>
-        </div>
+        <Popover interactionKind="hover" popoverClassName={css.popoverStyle} autoFocus={false}>
+          <div className={cx(css.badge, css.failed24HrsExecutionsBadge)} key={type}>
+            <Icon name="warning-sign" size={12} color={Color.RED_600} />
+            <Text className={css.badgeText}>
+              {`${stat} `}
+              {stat > 1 ? (
+                <String stringID={'pipeline.dashboardDeploymentsWidget.failed24Hrs.plural'} />
+              ) : (
+                <String stringID={'pipeline.dashboardDeploymentsWidget.failed24Hrs.singular'} />
+              )}
+            </Text>
+          </div>
+          <DeployOverviewPopover overview={deployStat} status={Object.keys(FailedStatus)} />
+        </Popover>
       )
     case 'runningExecutions':
       return (
-        <div className={cx(css.badge, css.runningExecutions)} key={type}>
-          <Icon name="status-running" size={16} color={Color.PRIMARY_7} />
-          <Text className={css.badgeText}>
-            {`${stat} `}
-            {stat > 1 ? (
-              <String stringID={'pipeline.dashboardDeploymentsWidget.runningPipeline.plural'} />
-            ) : (
-              <String stringID={'pipeline.dashboardDeploymentsWidget.runningPipeline.singular'} />
-            )}
-          </Text>
-        </div>
+        <Popover interactionKind="hover" popoverClassName={css.popoverStyle} autoFocus={false}>
+          <div className={cx(css.badge, css.runningExecutions)} key={type}>
+            <Icon name="status-running" size={16} color={Color.PRIMARY_7} />
+            <Text className={css.badgeText}>
+              {`${stat} `}
+              {stat > 1 ? (
+                <String stringID={'pipeline.dashboardDeploymentsWidget.runningPipeline.plural'} />
+              ) : (
+                <String stringID={'pipeline.dashboardDeploymentsWidget.runningPipeline.singular'} />
+              )}
+            </Text>
+          </div>
+          <DeployOverviewPopover overview={deployStat} status={['Running']} />
+        </Popover>
       )
     default:
       return null
@@ -330,10 +417,12 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
   const { getString } = useStrings()
   const { selectedTimeRange } = useLandingDashboardContext()
   const { accountId } = useParams<ProjectPathProps>()
+  const [range, setRange] = useState([0, 0])
+  const [groupByValue, setGroupByValues] = useState(TimeRangeGroupByMapping[selectedTimeRange])
   const [sortByValue, setSortByValue] = useState<GetDeploymentStatsOverviewQueryParams['sortBy']>('DEPLOYMENTS')
   const [selectedView, setSelectedView] = useState<ChartType>(ChartType.BAR)
   const getServiceDetailsLink = (service: ActiveServiceInfo): string => {
-    const serviceId = defaultTo(service.serviceInfo?.serviceIdentifier, '')
+    const serviceId = service.serviceInfo?.serviceIdentifier || ''
     return routes.toServiceStudio({
       accountId,
       orgIdentifier: service.orgInfo?.orgIdentifier || '',
@@ -343,19 +432,30 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
     })
   }
 
-  const groupByValue = getGroupByValue(selectedTimeRange)
-
   const { data, error, refetch, loading } = useGetDeploymentStatsOverview({
     queryParams: {
       accountIdentifier: accountId,
-      startTime: selectedTimeRange.range[0]?.getTime() || 0,
-      endTime: selectedTimeRange.range[1]?.getTime() || 0,
-      groupBy: getGroupByValue(selectedTimeRange),
+      startTime: range[0],
+      endTime: range[1],
+      groupBy: groupByValue,
       sortBy: sortByValue
-    }
+    },
+    lazy: true
   })
 
   const response = data?.data?.response
+
+  useEffect(() => {
+    setRange([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
+    setGroupByValues(TimeRangeGroupByMapping[selectedTimeRange])
+  }, [selectedTimeRange])
+
+  useEffect(() => {
+    if (!range[0]) {
+      return
+    }
+    refetch()
+  }, [refetch, range, groupByValue, sortByValue])
 
   useErrorHandler(error)
 
@@ -404,7 +504,7 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
         trend: getFormattedNumber(response?.deploymentsStatsSummary?.failureRateAndChangeRate?.rateChangeRate) + '%'
       },
       {
-        title: getString('pipeline.deploymentFrequency'),
+        title: getString('pipeline.executionFrequency'),
         count: getFormattedNumber(defaultTo(response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rate, 0)),
         trend: getFormattedNumber(response?.deploymentsStatsSummary?.deploymentRateAndChangeRate?.rateChangeRate) + '%'
       }
@@ -441,9 +541,11 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
                     color: Color.RED_500
                   }
                 ],
-          trend: `${Math.round(
-            service.countWithSuccessFailureDetails?.countChangeAndCountChangeRateInfo?.countChangeRate ?? 0
-          )}%`
+          trend: `${
+            Math.round(
+              (service.countWithSuccessFailureDetails?.countChangeAndCountChangeRateInfo?.countChangeRate ?? 0) * 100
+            ) / 100
+          }%`
         }
       }
     )
@@ -476,15 +578,21 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
   }
 
   const noDataRenderer = () => {
+    const TIME_RANGE_TO_LABEL_STRING = {
+      [DashboardTimeRange['30Days']]: getString('projectsOrgs.landingDashboard.last30Days'),
+      [DashboardTimeRange['60Days']]: getString('projectsOrgs.landingDashboard.last60Days'),
+      [DashboardTimeRange['90Days']]: getString('projectsOrgs.landingDashboard.last90Days'),
+      [DashboardTimeRange['1Year']]: getString('projectsOrgs.landingDashboard.last1Year')
+    }
     if (sortByValue === 'INSTANCES') {
       return (
         <div className={css.noDataContainer}>
           <Icon name="no-instances" size={55} className={css.noDataIcon} />
-          No Service Instances in selected time range
+          No Service Instances in {TIME_RANGE_TO_LABEL_STRING[selectedTimeRange]}
         </div>
       )
     }
-    return <div className={css.noDataContainer}>No Deployments in selected time range</div>
+    return <div className={css.noDataContainer}>No Deployments in {TIME_RANGE_TO_LABEL_STRING[selectedTimeRange]}</div>
   }
 
   return (
@@ -494,7 +602,7 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
           {response?.deploymentsOverview &&
             Object.keys(response?.deploymentsOverview).map(key =>
               // eslint-disable-next-line
-              getBadge(key, (response?.deploymentsOverview as any)[key].length)
+              getBadge(key, (response?.deploymentsOverview as any)[key])
             )}
         </Card>
       )}
@@ -524,12 +632,12 @@ function LandingDashboardDeploymentsWidget(): React.ReactElement {
                 },
                 labels: {
                   formatter: function (this) {
-                    let time = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short' })
+                    let time = new Date().getTime()
                     if (response?.deploymentsStatsSummary?.deploymentStats?.length) {
                       const val = response.deploymentsStatsSummary.deploymentStats[this.pos].time
-                      time = val ? new Date(val).toLocaleDateString('en-US', { day: 'numeric', month: 'short' }) : time
+                      time = val ? new Date(val).getTime() : time
                     }
-                    return time
+                    return moment(time).utc().format('MMM D')
                   }
                 }
               },

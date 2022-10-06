@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, findByText, fireEvent, render } from '@testing-library/react'
+import { act, findByText, fireEvent, render, waitFor } from '@testing-library/react'
 import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
 import SaveToGitFormV2 from '../SaveToGitFormV2'
@@ -45,6 +45,7 @@ describe('SaveToGitFormV2 test', () => {
         <SaveToGitFormV2
           {...pathParams}
           isEditing={false}
+          disableCreatingNewBranch={false}
           resource={{
             type: 'Pipelines',
             name: 'testPipeline',
@@ -111,5 +112,55 @@ describe('SaveToGitFormV2 test', () => {
     })
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('<SaveToGitFormV2 /> takes git info from storeMetadata if gitDetails are not there', async () => {
+    const onSuccess = jest.fn()
+    const { container, getByText } = render(
+      <TestWrapper>
+        <SaveToGitFormV2
+          isEditing={false}
+          disableCreatingNewBranch={false}
+          resource={{
+            type: 'Template',
+            name: 'testTemplate',
+            identifier: 'testTemplate',
+            gitDetails: {},
+            storeMetadata: {
+              storeType: 'REMOTE',
+              connectorRef: 'connectorRef1',
+              repoName: 'repoName1',
+              branch: 'branch1',
+              filePath: 'filePath1'
+            }
+          }}
+          onSuccess={onSuccess}
+          {...pathParams}
+        />
+      </TestWrapper>
+    )
+
+    expect(getByText('common.git.existingBranchCommitLabel')).toBeInTheDocument()
+    expect(getByText('branch1')).toBeInTheDocument()
+
+    const labelNewBranch = getByText('common.git.newBranchCommitLabel')
+    fireEvent.click(labelNewBranch)
+
+    const input = queryByNameAttribute('branch', container) as HTMLInputElement
+    expect(input.value).toBe('branch1-patch')
+
+    const saveBtn = getByText('save') as HTMLButtonElement
+
+    fireEvent.click(saveBtn)
+
+    await waitFor(() => {
+      expect(onSuccess).toHaveBeenCalledWith({
+        commitMsg: 'common.gitSync.createResource',
+        createPr: false,
+        isNewBranch: true,
+        branch: 'branch1-patch',
+        baseBranch: 'branch1'
+      })
+    })
   })
 })

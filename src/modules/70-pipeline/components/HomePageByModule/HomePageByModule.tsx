@@ -54,14 +54,14 @@ function getStringByModuleProps(module: ModuleName): StringByModuleProps {
       title = 'ci.continuous'
       subTitle = 'ci.dashboard.subHeading'
       documentText = 'ci.learnMore'
-      documentURL = 'https://ngdocs.harness.io/category/zgffarnh1m-ci-category'
+      documentURL = 'https://docs.harness.io/category/zgffarnh1m-ci-category'
       break
     }
     case ModuleName.CD: {
       title = 'cd.continuous'
       subTitle = 'cd.dashboard.subHeading'
       documentText = 'cd.learnMore'
-      documentURL = 'https://ngdocs.harness.io/article/knunou9j30-kubernetes-cd-quickstart'
+      documentURL = 'https://docs.harness.io/article/knunou9j30-kubernetes-cd-quickstart'
       break
     }
   }
@@ -169,7 +169,18 @@ function HomePageByModule({ moduleName, bgImageURL, useTrialModal }: HomePageMod
   const { openProjectModal, closeProjectModal } = useProjectModal({
     onWizardComplete: (projectData?: Project) => {
       closeProjectModal()
-      pushToPipelineStudio('-1', projectData, `?modal=${experience}`)
+      if (modal === ModuleLicenseType.FREE && experience === ModuleLicenseType.FREE && module === 'cd') {
+        history.push(
+          routes.toGetStartedWithCD({
+            accountId,
+            module,
+            orgIdentifier: projectData?.orgIdentifier || '',
+            projectIdentifier: projectData?.identifier || ''
+          })
+        )
+      } else {
+        pushToPipelineStudio('-1', projectData, `?modal=${experience}`)
+      }
     }
   })
 

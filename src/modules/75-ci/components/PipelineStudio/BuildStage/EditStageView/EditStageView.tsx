@@ -14,7 +14,8 @@ import {
   Button,
   Switch,
   RUNTIME_INPUT_VALUE,
-  IconName
+  IconName,
+  MultiTypeInputType
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
@@ -23,7 +24,7 @@ import { useParams } from 'react-router-dom'
 import type { FormikErrors } from 'formik'
 import { produce } from 'immer'
 import { parse } from 'yaml'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
@@ -87,6 +88,7 @@ export const EditStageView: React.FC<EditStageView> = ({
   const { expressions } = useVariablesExpression()
   const [connectionType, setConnectionType] = React.useState('')
   const [connectorUrl, setConnectorUrl] = React.useState('')
+  const [connectorType, setConnectorType] = React.useState('')
   const gitScope = useGitScope()
   const repositoryNameLabel = getString('common.repositoryName')
 
@@ -198,7 +200,7 @@ export const EditStageView: React.FC<EditStageView> = ({
       // TODO: Add Codebase verification
       let pipelineData: PipelineInfoConfig | undefined = undefined
       if (values.cloneCodebase && values.connectorRef) {
-        pipelineData = produce(pipeline, draft => {
+        pipelineData = produce<PipelineInfoConfig>(pipeline, draft => {
           set(draft, 'properties.ci.codebase', {
             connectorRef: typeof values.connectorRef === 'string' ? values.connectorRef : values.connectorRef?.value,
             ...(values.repoName && { repoName: values.repoName }),
@@ -335,7 +337,14 @@ export const EditStageView: React.FC<EditStageView> = ({
                     isReadonly,
                     setCodebaseRuntimeInputs,
                     codebaseRuntimeInputs,
-                    connectorWidth: 366
+                    connectorWidth: 366,
+                    setConnectorType,
+                    connectorType,
+                    allowableTypes: [
+                      MultiTypeInputType.FIXED,
+                      MultiTypeInputType.EXPRESSION,
+                      MultiTypeInputType.RUNTIME
+                    ]
                   })}
                 </div>
               )}

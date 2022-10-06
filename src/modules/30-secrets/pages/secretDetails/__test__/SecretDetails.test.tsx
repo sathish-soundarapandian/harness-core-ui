@@ -103,6 +103,15 @@ describe('Secret Details', () => {
       const yamlButton = await findByText(container, 'YAML')
       expect(yamlButton).toBeDefined()
       fireEvent.click(yamlButton)
+
+      const editButton = await findByText(container, 'editDetails')
+      expect(yamlButton).toBeDefined()
+      fireEvent.click(editButton)
+
+      const saveButton = await findByText(container, 'save')
+      expect(saveButton).toBeDefined()
+      fireEvent.click(saveButton)
+
       // const yamlDiv = await findByText(container, 'yamlDiv')
       // expect(yamlDiv).toBeDefined()
       expect(container).toMatchSnapshot()

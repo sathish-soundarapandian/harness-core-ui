@@ -9,6 +9,5 @@
 declare const styles: {
   readonly header: string
   readonly monitoredServiceTabs: string
-  readonly pageBody: string
 }
 export default styles

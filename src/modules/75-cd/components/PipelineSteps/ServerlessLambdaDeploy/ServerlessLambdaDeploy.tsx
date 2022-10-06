@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  IconName,
+  Formik,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes,
+  FormikForm
+} from '@wings-software/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
 
@@ -21,7 +29,7 @@ import {
   InputSetData
 } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import {
@@ -36,6 +44,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { ServerlessDeployCommandOptions } from './ServerlessDeployCommandOptions'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -45,7 +54,7 @@ interface ServerlessLambdaDeployProps {
   onUpdate?: (data: StepElementConfig) => void
   stepViewType?: StepViewType
   onChange?: (data: StepElementConfig) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
   inputSetData: {
@@ -82,7 +91,7 @@ function ServerlessLambdaDeployWidget(
           setFormikRef(formikRef, formik)
           const { values, setFieldValue } = formik
           return (
-            <>
+            <FormikForm>
               {stepViewType !== StepViewType.Template && (
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormInput.InputWithIdentifier
@@ -120,13 +129,13 @@ function ServerlessLambdaDeployWidget(
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
-              <div className={stepCss.divider} />
 
               <ServerlessDeployCommandOptions isReadonly={readonly} stepViewType={props.stepViewType} />
-            </>
+            </FormikForm>
           )
         }}
       </Formik>
@@ -145,7 +154,7 @@ const ServerlessLambdaDeployInputStep: React.FC<ServerlessLambdaDeployProps> = (
     <>
       {getMultiTypeFromValue(inputSetData.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
@@ -155,6 +164,8 @@ const ServerlessLambdaDeployInputStep: React.FC<ServerlessLambdaDeployProps> = (
               disabled: inputSetData.readonly
             }}
             disabled={inputSetData.readonly}
+            fieldPath="timeout"
+            template={inputSetData.template}
           />
         </div>
       )}
@@ -213,7 +224,7 @@ export class ServerlessLambdaDeployStep extends PipelineStep<StepElementConfig> 
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <ServerlessLambdaDeployInputStep
           initialValues={initialValues}
@@ -289,6 +300,7 @@ export class ServerlessLambdaDeployStep extends PipelineStep<StepElementConfig> 
   protected stepIcon: IconName = 'serverless-deploy-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ServerlessLambdaDeploy'
   protected isHarnessSpecific = true
+  protected referenceId = 'serverlessDeployStep'
 
   protected defaultValues: StepElementConfig = {
     identifier: '',

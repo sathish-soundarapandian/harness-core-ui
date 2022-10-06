@@ -78,6 +78,7 @@ exports[`EXECUTION VIEW should should have the values prefilled and fields as di
                     >
                       <div
                         class="bp3-form-group bp3-disabled variableInput"
+                        data-id="variables[0].value-0"
                       >
                         
                         <div
@@ -253,7 +254,6 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
                         class="bp3-control bp3-radio bp3-inline valueProviderRadio"
                       >
                         <input
-                          checked=""
                           name="existingProvideRadio"
                           type="radio"
                           value="provide"
@@ -267,6 +267,7 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
                         class="bp3-control bp3-radio bp3-inline valueProviderRadio selectedValueProvider"
                       >
                         <input
+                          checked=""
                           name="existingProvideRadio"
                           type="radio"
                           value="existing"
@@ -513,7 +514,21 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
                   </span>
                   <div
                     class="bp3-overlay bp3-overlay-inline"
-                  />
+                  >
+                    <div
+                      class="bp3-transition-container bp3-popover-exit bp3-popover-exit-active"
+                      style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(NaNpx, NaNpx, 0);"
+                    >
+                      <div
+                        class="bp3-popover bp3-minimal"
+                        style="transform-origin: center top;"
+                      >
+                        <div
+                          class="bp3-popover-content"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </span>
               </div>
               <div
@@ -641,7 +656,7 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
           class="Layout--horizontal StyledProps--main StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
         >
           <label
-            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
+            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--margin-right-medium StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
           >
             <input
               type="checkbox"
@@ -651,27 +666,17 @@ exports[`STUDIO MODE Valid input set enables Run button if it was disabled due t
             />
             pre-flight-check.skipCheckBtn
           </label>
-          <span
-            class="bp3-popover-wrapper"
+          <label
+            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
           >
+            <input
+              type="checkbox"
+            />
             <span
-              class="bp3-popover-target"
-            >
-              <label
-                class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--margin-left-medium StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
-              >
-                <input
-                  disabled=""
-                  tabindex="0"
-                  type="checkbox"
-                />
-                <span
-                  class="bp3-control-indicator"
-                />
-                pipeline.runPipelineForm.notifyOnlyMe
-              </label>
-            </span>
-          </span>
+              class="bp3-control-indicator"
+            />
+            pipeline.runPipelineForm.notifyOnlyMe
+          </label>
         </div>
         <div
           class="Layout--horizontal StyledProps--main footer StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--padding-top-large StyledProps--padding-bottom-large StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center"
@@ -848,7 +853,6 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                         class="bp3-control bp3-radio bp3-inline valueProviderRadio"
                       >
                         <input
-                          checked=""
                           name="existingProvideRadio"
                           type="radio"
                           value="provide"
@@ -862,6 +866,7 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
                         class="bp3-control bp3-radio bp3-inline valueProviderRadio selectedValueProvider"
                       >
                         <input
+                          checked=""
                           name="existingProvideRadio"
                           type="radio"
                           value="existing"
@@ -1171,7 +1176,7 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
           class="Layout--horizontal StyledProps--main StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
         >
           <label
-            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
+            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--margin-right-medium StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
           >
             <input
               type="checkbox"
@@ -1181,27 +1186,17 @@ exports[`STUDIO MODE invalid input sets should not be applied 1`] = `
             />
             pre-flight-check.skipCheckBtn
           </label>
-          <span
-            class="bp3-popover-wrapper"
+          <label
+            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
           >
+            <input
+              type="checkbox"
+            />
             <span
-              class="bp3-popover-target"
-            >
-              <label
-                class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--margin-left-medium StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
-              >
-                <input
-                  disabled=""
-                  tabindex="0"
-                  type="checkbox"
-                />
-                <span
-                  class="bp3-control-indicator"
-                />
-                pipeline.runPipelineForm.notifyOnlyMe
-              </label>
-            </span>
-          </span>
+              class="bp3-control-indicator"
+            />
+            pipeline.runPipelineForm.notifyOnlyMe
+          </label>
         </div>
         <div
           class="Layout--horizontal StyledProps--main footer StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--padding-top-large StyledProps--padding-bottom-large StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center"
@@ -1378,7 +1373,6 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                         class="bp3-control bp3-radio bp3-inline valueProviderRadio"
                       >
                         <input
-                          checked=""
                           name="existingProvideRadio"
                           type="radio"
                           value="provide"
@@ -1392,6 +1386,7 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
                         class="bp3-control bp3-radio bp3-inline valueProviderRadio selectedValueProvider"
                       >
                         <input
+                          checked=""
                           name="existingProvideRadio"
                           type="radio"
                           value="existing"
@@ -1780,7 +1775,7 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
           class="Layout--horizontal StyledProps--main StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
         >
           <label
-            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
+            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--margin-right-medium StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
           >
             <input
               type="checkbox"
@@ -1790,27 +1785,17 @@ exports[`STUDIO MODE should accept values from input sets and submit the form: a
             />
             pre-flight-check.skipCheckBtn
           </label>
-          <span
-            class="bp3-popover-wrapper"
+          <label
+            class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
           >
+            <input
+              type="checkbox"
+            />
             <span
-              class="bp3-popover-target"
-            >
-              <label
-                class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox footerCheckbox StyledProps--main StyledProps--background-grey100 StyledProps--color StyledProps--color-black StyledProps--margin-left-medium StyledProps--padding-top-small StyledProps--padding-bottom-small StyledProps--padding-left-xxlarge StyledProps--padding-right-medium"
-              >
-                <input
-                  disabled=""
-                  tabindex="0"
-                  type="checkbox"
-                />
-                <span
-                  class="bp3-control-indicator"
-                />
-                pipeline.runPipelineForm.notifyOnlyMe
-              </label>
-            </span>
-          </span>
+              class="bp3-control-indicator"
+            />
+            pipeline.runPipelineForm.notifyOnlyMe
+          </label>
         </div>
         <div
           class="Layout--horizontal StyledProps--main footer StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--padding-top-large StyledProps--padding-bottom-large StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center"

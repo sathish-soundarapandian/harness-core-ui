@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
@@ -17,25 +17,29 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { ServiceNowTicketTypeDTO, useGetServiceNowTicketTypes } from 'services/cd-ng'
+import { useGetServiceNowIssueCreateMetadata, useGetServiceNowTicketTypes } from 'services/cd-ng'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { ServiceNowTicketTypeSelectOption, SnowApprovalDeploymentModeProps } from './types'
+import { getDateTimeOptions } from './ServiceNowApprovalChangeWindow'
 import css from './ServiceNowApproval.module.scss'
 
 const fetchingTicketTypesPlaceholder: StringKeys = 'pipeline.serviceNowApprovalStep.fetchingTicketTypesPlaceholder'
 
 function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Element {
-  const { inputSetData, initialValues, allowableTypes } = formContentProps
+  const { inputSetData, initialValues, allowableTypes, formik } = formContentProps
   const template = inputSetData?.template
   const path = inputSetData?.path
   const prefix = isEmpty(path) ? '' : `${path}.`
   const readonly = inputSetData?.readonly
+  const runTimeTicketType = get(formik?.values, `${prefix}spec.ticketType`)
+  const fixedTicketType = inputSetData?.allValues?.spec?.ticketType
   const { getString } = useStrings()
-  const [snowConnector, setSnowConnector] = React.useState(get(inputSetData?.allValues, 'spec.connectorRef', ''))
+  const [snowConnector, setSnowConnector] = useState(get(inputSetData?.allValues, 'spec.connectorRef', ''))
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -47,12 +51,22 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
     branch
   }
   const { expressions } = useVariablesExpression()
-  const {
-    refetch: refetchServiceNowTicketTypes,
-    data: serviceNowTicketTypesResponse,
-    error: serviceNowTicketTypesFetchError,
-    loading: fetchingServiceNowTicketTypes
-  } = useGetServiceNowTicketTypes({
+
+  const getServiceNowTicketTypesQuery = useGetServiceNowTicketTypes({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: ''
+    }
+  })
+  const serviceNowTicketTypesOptions: ServiceNowTicketTypeSelectOption[] =
+    getServiceNowTicketTypesQuery.data?.data?.map(ticketType => ({
+      label: defaultTo(ticketType.name, ''),
+      value: defaultTo(ticketType.key, ''),
+      key: defaultTo(ticketType.key, '')
+    })) || []
+
+  const getServiceNowIssueCreateMetadataQuery = useGetServiceNowIssueCreateMetadata({
     lazy: true,
     queryParams: {
       ...commonParams,
@@ -60,37 +74,52 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
     }
   })
 
-  const [serviceNowTicketTypesOptions, setServiceNowTicketTypesOptions] = React.useState<
-    ServiceNowTicketTypeSelectOption[]
-  >([])
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isEmpty(snowConnector) && getMultiTypeFromValue(snowConnector) === MultiTypeInputType.FIXED) {
-      refetchServiceNowTicketTypes({
+      getServiceNowTicketTypesQuery.refetch({
         queryParams: {
           ...commonParams,
           connectorRef: snowConnector.toString()
         }
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [snowConnector])
-  React.useEffect(() => {
-    // Set ticket types
-    let options: ServiceNowTicketTypeSelectOption[] = []
-    const ticketTypesResponseList: ServiceNowTicketTypeDTO[] = serviceNowTicketTypesResponse?.data || []
-    options = ticketTypesResponseList.map((ticketType: ServiceNowTicketTypeDTO) => ({
-      label: defaultTo(ticketType.name, ''),
-      value: defaultTo(ticketType.key, ''),
-      key: defaultTo(ticketType.key, '')
-    }))
-    setServiceNowTicketTypesOptions(options)
-  }, [serviceNowTicketTypesResponse?.data])
+
+  useEffect(() => {
+    if (runTimeTicketType || (fixedTicketType && getMultiTypeFromValue(fixedTicketType) === MultiTypeInputType.FIXED)) {
+      getServiceNowIssueCreateMetadataQuery.refetch({
+        queryParams: {
+          ...commonParams,
+          connectorRef: snowConnector,
+          ticketType: runTimeTicketType?.toString() || fixedTicketType?.toString()
+        }
+      })
+    }
+  }, [runTimeTicketType, fixedTicketType])
+
+  const commonMultiTypeInputProps = (placeholder: string) => {
+    const selectOptions = getDateTimeOptions(getServiceNowIssueCreateMetadataQuery.data?.data || [])
+    return {
+      selectItems: selectOptions,
+      placeholder: getServiceNowIssueCreateMetadataQuery.loading
+        ? getString('pipeline.serviceNowApprovalStep.fetching')
+        : getServiceNowIssueCreateMetadataQuery.error?.message || `${getString('select')} ${placeholder}`,
+      useValue: true,
+      multiTypeInputProps: {
+        selectProps: {
+          addClearBtn: true,
+          items: selectOptions
+        },
+        allowableTypes,
+        expressions
+      }
+    }
+  }
 
   return (
-    <React.Fragment>
+    <Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <FormMultiTypeDurationField
+        <TimeoutFieldInputSetView
           name={`${prefix}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
           className={css.deploymentViewMedium}
@@ -101,6 +130,8 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
             disabled: isApprovalStepFieldDisabled(readonly)
           }}
           disabled={isApprovalStepFieldDisabled(readonly)}
+          fieldPath="timeout"
+          template={template}
         />
       ) : null}
 
@@ -136,7 +167,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
             dataTooltipId: 'serviceNowApprovalTicketType'
           }}
           selectItems={
-            fetchingServiceNowTicketTypes
+            getServiceNowTicketTypesQuery.loading
               ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
               : serviceNowTicketTypesOptions
           }
@@ -144,18 +175,16 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           label={getString('pipeline.serviceNowApprovalStep.ticketType')}
           className={css.deploymentViewMedium}
           placeholder={
-            fetchingServiceNowTicketTypes
+            getServiceNowTicketTypesQuery.loading
               ? getString(fetchingTicketTypesPlaceholder)
-              : serviceNowTicketTypesFetchError?.message
-              ? serviceNowTicketTypesFetchError?.message
-              : getString('select')
+              : getServiceNowTicketTypesQuery.error?.message || getString('select')
           }
           useValue
-          disabled={isApprovalStepFieldDisabled(readonly, fetchingServiceNowTicketTypes)}
+          disabled={isApprovalStepFieldDisabled(readonly, getServiceNowTicketTypesQuery.loading)}
           multiTypeInputProps={{
             selectProps: {
               addClearBtn: true,
-              items: fetchingServiceNowTicketTypes
+              items: getServiceNowTicketTypesQuery.loading
                 ? [{ label: getString(fetchingTicketTypesPlaceholder), value: '' }]
                 : serviceNowTicketTypesOptions
             },
@@ -165,7 +194,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.ticketNumber) === MultiTypeInputType.RUNTIME ? (
-        <FormInput.MultiTextInput
+        <TextFieldInputSetView
           label={getString('pipeline.serviceNowApprovalStep.issueNumber')}
           name={`${prefix}spec.ticketNumber`}
           multiTextInputProps={{
@@ -174,6 +203,8 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
             allowableTypes
           }}
           className={css.deploymentViewMedium}
+          fieldPath="spec.ticketNumber"
+          template={template}
         />
       ) : null}
 
@@ -202,7 +233,25 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           }}
         />
       ) : null}
-    </React.Fragment>
+
+      {getMultiTypeFromValue(template?.spec?.changeWindow?.startField) === MultiTypeInputType.RUNTIME ? (
+        <FormInput.MultiTypeInput
+          className={css.deploymentViewMedium}
+          name={`${prefix}spec.changeWindow.startField`}
+          label={getString('pipeline.serviceNowApprovalStep.windowStart')}
+          {...commonMultiTypeInputProps(getString('pipeline.serviceNowApprovalStep.windowStart'))}
+        />
+      ) : null}
+
+      {getMultiTypeFromValue(template?.spec?.changeWindow?.endField) === MultiTypeInputType.RUNTIME ? (
+        <FormInput.MultiTypeInput
+          className={css.deploymentViewMedium}
+          name={`${prefix}spec.changeWindow.endField`}
+          label={getString('pipeline.serviceNowApprovalStep.windowEnd')}
+          {...commonMultiTypeInputProps(getString('pipeline.serviceNowApprovalStep.windowEnd'))}
+        />
+      ) : null}
+    </Fragment>
   )
 }
 

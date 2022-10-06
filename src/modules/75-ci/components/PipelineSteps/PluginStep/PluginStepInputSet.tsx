@@ -68,6 +68,9 @@ export const PluginStepInputSetBasic: React.FC<PluginStepProps> = ({
           ...(getMultiTypeFromValue(template?.spec?.privileged) === MultiTypeInputType.RUNTIME && {
             'spec.privileged': {}
           }),
+          ...(getMultiTypeFromValue(template?.spec?.entrypoint) === MultiTypeInputType.RUNTIME && {
+            'spec.entrypoint': {}
+          }),
           ...(shouldRenderRunTimeInputView(template?.spec?.settings) && {
             'spec.settings': {}
           })

@@ -55,7 +55,6 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
       noData={{
         when: () => !sloDashboardWidget
       }}
-      className={css.pageBody}
     >
       {sloDashboardWidget && (
         <Container padding="xlarge">
@@ -69,6 +68,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
             serviceLevelObjective={sloDashboardWidget}
             filteredServiceLevelObjective={data?.data?.sloDashboardWidget}
             timeRangeFilters={timeRangeFilters}
+            showUserHint
           />
 
           <Container padding={{ bottom: 'xlarge' }} />

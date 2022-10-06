@@ -51,19 +51,46 @@ exports[`HealthCheck table tests render table 1`] = `
         <thead>
           <tr>
             <th>
-              PROTOCOL
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.common.protocol
+              </p>
             </th>
             <th>
-              PATH
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                common.path
+              </p>
             </th>
             <th>
-              PORT
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                common.smtp.port
+              </p>
             </th>
             <th>
-              TIMEOUT
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.common.interval
+              </p>
             </th>
             <th>
-              STATUS (from-to)
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.co.autoStoppingRule.setupAccess.healthCheckTimeoutLabel
+              </p>
+            </th>
+            <th>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.co.autoStoppingRule.setupAccess.healthCheckStatusLabel
+              </p>
             </th>
             <th />
           </tr>
@@ -141,6 +168,21 @@ exports[`HealthCheck table tests render table 1`] = `
                     class="bp3-input"
                     type="text"
                     value="80"
+                  />
+                </div>
+              </div>
+            </td>
+            <td>
+              <div
+                class="TextInput--main"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    class="bp3-input"
+                    type="text"
+                    value="90"
                   />
                 </div>
               </div>
@@ -237,19 +279,46 @@ exports[`HealthCheck table tests update table values 1`] = `
         <thead>
           <tr>
             <th>
-              PROTOCOL
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.common.protocol
+              </p>
             </th>
             <th>
-              PATH
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                common.path
+              </p>
             </th>
             <th>
-              PORT
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                common.smtp.port
+              </p>
             </th>
             <th>
-              TIMEOUT
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.common.interval
+              </p>
             </th>
             <th>
-              STATUS (from-to)
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.co.autoStoppingRule.setupAccess.healthCheckTimeoutLabel
+              </p>
+            </th>
+            <th>
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+              >
+                ce.co.autoStoppingRule.setupAccess.healthCheckStatusLabel
+              </p>
             </th>
             <th />
           </tr>
@@ -371,6 +440,21 @@ exports[`HealthCheck table tests update table values 1`] = `
                     class="bp3-input"
                     type="text"
                     value="81"
+                  />
+                </div>
+              </div>
+            </td>
+            <td>
+              <div
+                class="TextInput--main"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    class="bp3-input"
+                    type="text"
+                    value="90"
                   />
                 </div>
               </div>

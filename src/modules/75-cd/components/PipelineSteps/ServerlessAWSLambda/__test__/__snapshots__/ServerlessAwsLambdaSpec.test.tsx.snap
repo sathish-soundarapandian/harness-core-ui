@@ -16,7 +16,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view for input
         >
           <div
             class="StyledProps--font StyledProps--main"
-            style="margin-bottom: 5px;"
+            data-test-id="connectorTooltip"
           >
             <span
               class="Tooltip--acenter bp3-label"
@@ -290,7 +290,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with empt
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -633,7 +633,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with runt
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -1016,7 +1016,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view with valu
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"

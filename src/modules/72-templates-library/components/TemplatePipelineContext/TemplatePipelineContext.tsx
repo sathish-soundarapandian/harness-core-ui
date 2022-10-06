@@ -7,7 +7,11 @@
 
 import React from 'react'
 import { cloneDeep, get, isEmpty, isEqual, noop } from 'lodash-es'
-import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import {
+  AllowedTypesWithRunTime,
+  MultiTypeInputType,
+  VisualYamlSelectedView as SelectedView
+} from '@wings-software/uicore'
 import merge from 'lodash-es/merge'
 import {
   findAllByKey,
@@ -17,6 +21,7 @@ import {
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getTemplateTypesByRef } from '@pipeline/utils/templateUtils'
 import {
+  DefaultPipeline,
   initialState,
   PipelineContextActions,
   PipelineReducer,
@@ -31,41 +36,46 @@ import {
   getStageFromPipeline as _getStageFromPipeline,
   getStagePathFromPipeline as _getStagePathFromPipeline
 } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
-import { PipelineStages, PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
-import { StageType } from '@pipeline/utils/stageHelpers'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
-import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import type {
+  PipelineInfoConfig,
+  StageElementConfig,
+  StageElementWrapperConfig,
+  GetPipelineQueryParams
+} from 'services/pipeline-ng'
 import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
-import type { GetPipelineQueryParams } from 'services/pipeline-ng'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import type { EntityGitDetails } from 'services/template-ng'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export interface TemplatePipelineProviderProps {
   queryParams: GetPipelineQueryParams
   initialValue: PipelineInfoConfig
+  gitDetails: EntityGitDetails
+  storeMetadata?: StoreMetadata
   onUpdatePipeline: (pipeline: PipelineInfoConfig) => void
   contextType: PipelineContextType
   isReadOnly: boolean
-  getTemplate: PipelineContextInterface['getTemplate']
+  renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
+  setIntermittentLoading: PipelineContextInterface['setIntermittentLoading']
 }
 
 export function TemplatePipelineProvider({
   queryParams,
   initialValue,
+  gitDetails,
+  storeMetadata,
   onUpdatePipeline,
   isReadOnly,
   contextType,
-  getTemplate,
-  children
+  renderPipelineStage,
+  children,
+  setIntermittentLoading: setTemplateIntermittentLoading
 }: React.PropsWithChildren<TemplatePipelineProviderProps>): React.ReactElement {
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
-  const { licenseInformation } = useLicenseStore()
-  const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED) && !!licenseInformation['CD']
-  const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED) && !!licenseInformation['CI']
-  const isCFEnabled = useFeatureFlag(FeatureFlag.CFNG_ENABLED) && !!licenseInformation['CF']
-  const isSTOEnabled = useFeatureFlag(FeatureFlag.SECURITY_STAGE)
-  const isCustomStageEnabled = useFeatureFlag(FeatureFlag.NG_CUSTOM_STAGE)
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
   const { getString } = useStrings()
   const [state, dispatch] = React.useReducer(PipelineReducer, initialState)
   const [view, setView] = useLocalStorage<SelectedView>('pipeline_studio_view', SelectedView.VISUAL)
@@ -81,21 +91,6 @@ export function TemplatePipelineProvider({
     },
     [state.pipeline, state.pipeline?.stages]
   )
-
-  const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) => {
-    return (
-      <PipelineStages {...args}>
-        {stagesCollection.getStage(StageType.BUILD, isCIEnabled, getString)}
-        {stagesCollection.getStage(StageType.DEPLOY, isCDEnabled, getString)}
-        {stagesCollection.getStage(StageType.APPROVAL, true, getString)}
-        {stagesCollection.getStage(StageType.FEATURE, isCFEnabled, getString)}
-        {stagesCollection.getStage(StageType.SECURITY, isSTOEnabled, getString)}
-        {stagesCollection.getStage(StageType.PIPELINE, false, getString)}
-        {stagesCollection.getStage(StageType.CUSTOM, isCustomStageEnabled, getString)}
-        {stagesCollection.getStage(StageType.Template, false, getString)}
-      </PipelineStages>
-    )
-  }
 
   const updatePipeline = async (pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig)) => {
     let pipeline = pipelineArg
@@ -140,31 +135,42 @@ export function TemplatePipelineProvider({
   }, [])
 
   const fetchPipeline = async () => {
-    const templateRefs = findAllByKey('templateRef', initialValue)
+    const originalPipeline = isEqual(state.originalPipeline, DefaultPipeline)
+      ? cloneDeep(initialValue)
+      : state.originalPipeline
     dispatch(
       PipelineContextActions.success({
         error: '',
         pipeline: initialValue,
-        originalPipeline: cloneDeep(initialValue),
+        originalPipeline,
         isBEPipelineUpdated: false,
-        isUpdated: false
+        isUpdated: !isEqual(originalPipeline, initialValue),
+        gitDetails,
+        storeMetadata
       })
     )
+    const templateRefs = findAllByKey('templateRef', initialValue)
     if (templateRefs.length > 0) {
+      const { templateTypes, templateServiceData } = await getTemplateTypesByRef(
+        {
+          accountIdentifier: queryParams.accountIdentifier,
+          orgIdentifier: queryParams.orgIdentifier,
+          projectIdentifier: queryParams.projectIdentifier,
+          templateListType: 'Stable',
+          repoIdentifier: gitDetails?.repoIdentifier,
+          branch: gitDetails?.branch,
+          getDefaultFromOtherRepo: true
+        },
+        templateRefs
+      )
       dispatch(
         PipelineContextActions.setTemplateTypes({
-          templateTypes: await getTemplateTypesByRef(
-            {
-              accountIdentifier: queryParams.accountIdentifier,
-              orgIdentifier: queryParams.orgIdentifier,
-              projectIdentifier: queryParams.projectIdentifier,
-              templateListType: 'Stable',
-              repoIdentifier: queryParams.repoIdentifier,
-              branch: queryParams.branch,
-              getDefaultFromOtherRepo: true
-            },
-            templateRefs
-          )
+          templateTypes
+        })
+      )
+      dispatch(
+        PipelineContextActions.setTemplateServiceData({
+          templateServiceData
         })
       )
     }
@@ -182,6 +188,14 @@ export function TemplatePipelineProvider({
       })
     )
   }
+
+  const setIntermittentLoading = React.useCallback(
+    isIntermittentLoading => {
+      setTemplateIntermittentLoading(isIntermittentLoading)
+      dispatch(PipelineContextActions.setIntermittentLoading({ isIntermittentLoading }))
+    },
+    [setTemplateIntermittentLoading]
+  )
 
   const getStagePathFromPipeline = React.useCallback(
     (stageId: string, prefix = '', pipeline?: PipelineInfoConfig) => {
@@ -201,19 +215,22 @@ export function TemplatePipelineProvider({
       {
         ...queryParams,
         templateListType: 'Stable',
-        repoIdentifier: state.gitDetails.repoIdentifier,
-        branch: state.gitDetails.repoIdentifier,
+        repoIdentifier: state.gitDetails?.repoIdentifier,
+        branch: state.gitDetails?.branch,
         getDefaultFromOtherRepo: true
       },
       templateRefs
     ).then(resp => {
-      PipelineContextActions.setTemplateTypes({ templateTypes: merge(state.templateTypes, resp) })
+      PipelineContextActions.setTemplateTypes({ templateTypes: merge(state.templateTypes, resp.templateTypes) })
+      PipelineContextActions.setTemplateServiceData({
+        templateServiceData: merge(state.templateServiceData, resp.templateServiceData)
+      })
     })
   }, [state.pipeline])
 
   React.useEffect(() => {
     fetchPipeline()
-  }, [initialValue])
+  }, [initialValue, gitDetails])
 
   return (
     <PipelineContext.Provider
@@ -229,7 +246,7 @@ export function TemplatePipelineProvider({
         setSchemaErrorView,
         stagesMap: stagesCollection.getAllStagesAttributes(getString),
         getStageFromPipeline,
-        renderPipelineStage,
+        renderPipelineStage: renderPipelineStage || (() => <></>),
         fetchPipeline: Promise.resolve,
         updateGitDetails: Promise.resolve,
         updatePipelineStoreMetadata: Promise.resolve,
@@ -247,7 +264,8 @@ export function TemplatePipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes: noop,
-        getTemplate: getTemplate
+        setTemplateServiceData: noop,
+        setIntermittentLoading
       }}
     >
       {children}

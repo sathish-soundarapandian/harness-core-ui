@@ -96,7 +96,7 @@ exports[`DeploymentsWidget should render DeploymentsWidget 1`] = `
                 class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--margin-right-xsmall"
                 data-test="tickerText"
               >
-                24.2
+                24.2%
               </p>
               <div
                 class="ticker tickerCenterAlign"
@@ -151,6 +151,11 @@ exports[`DeploymentsWidget should render DeploymentsWidget 1`] = `
                 data-test="tickerText"
               >
                 324.2
+              </p>
+              <p
+                class="StyledProps--font StyledProps--main unitText StyledProps--font-size-xsmall"
+              >
+                cd.serviceDashboard.unitDay
               </p>
               <div
                 class="ticker tickerCenterAlign"

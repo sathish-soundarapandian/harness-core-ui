@@ -8,9 +8,9 @@
 import type { Dispatch, SetStateAction } from 'react'
 import type { FormikProps } from 'formik'
 import type { IOptionProps } from '@blueprintjs/core'
-import { isNumber, isEmpty } from 'lodash-es'
+import { isNumber, isEmpty, defaultTo } from 'lodash-es'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type {
-  RiskProfile,
   MetricPackDTO,
   TimeSeriesSampleDTO,
   StackdriverMetricHealthSourceSpec,
@@ -25,6 +25,7 @@ import { HealthSourceTypes } from '../../types'
 import { chartsConfig } from './GCOWidgetChartConfig'
 import { OVERALL } from './GCOMetricsHealthSource.constants'
 import { MANUAL_INPUT_QUERY } from './components/ManualInputQueryModal/ManualInputQueryModal'
+import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
 
 export const GCOProduct = {
   CLOUD_METRICS: 'Cloud Metrics',
@@ -110,6 +111,11 @@ export function transformGCOMetricHealthSourceToGCOMetricSetupSource(sourceData:
       metricTags[tag] = ''
     }
 
+    const parsedQuery =
+      getMultiTypeFromValue(JSON.stringify(defaultTo(metricDefinition.jsonMetricDefinition, ''))) ===
+      MultiTypeInputType.FIXED
+        ? JSON.stringify(defaultTo(metricDefinition.jsonMetricDefinition, ''), null, 2)
+        : metricDefinition.jsonMetricDefinition?.toString()
     setupSource.metricDefinition.set(metricDefinition.metricName, {
       metricName: metricDefinition.metricName,
       identifier: metricDefinition.identifier,
@@ -120,7 +126,7 @@ export function transformGCOMetricHealthSourceToGCOMetricSetupSource(sourceData:
       riskCategory: `${metricDefinition.riskProfile?.category}/${metricDefinition.riskProfile?.metricType}`,
       higherBaselineDeviation: metricDefinition.riskProfile?.thresholdTypes?.includes('ACT_WHEN_HIGHER'),
       lowerBaselineDeviation: metricDefinition.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER'),
-      query: JSON.stringify(metricDefinition.jsonMetricDefinition, null, 2),
+      query: parsedQuery,
       sli: metricDefinition.sli?.enabled,
       continuousVerification: metricDefinition.analysis?.deploymentVerification?.enabled,
       healthScore: metricDefinition.analysis?.liveMonitoring?.enabled,
@@ -137,7 +143,8 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(setupSource: GCOM
     identifier: setupSource.healthSourceIdentifier,
     name: setupSource.healthSourceName,
     spec: {
-      connectorRef: setupSource.connectorRef,
+      connectorRef:
+        typeof setupSource.connectorRef === 'string' ? setupSource.connectorRef : setupSource.connectorRef?.value,
       feature: GCOProduct.CLOUD_METRICS,
       metricDefinitions: []
     }
@@ -145,17 +152,24 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(setupSource: GCOM
   for (const selectedMetricInfo of setupSource.metricDefinition) {
     const [selectedMetric, metricInfo] = selectedMetricInfo
     if (!selectedMetric || !metricInfo) continue
-    const [category, metricType] = metricInfo.riskCategory?.split('/') || []
 
-    const thresholdTypes: RiskProfile['thresholdTypes'] = []
-    if (metricInfo.lowerBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_LOWER')
-    }
-    if (metricInfo.higherBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_HIGHER')
-    }
+    const { sli, riskCategory, healthScore, continuousVerification, lowerBaselineDeviation, higherBaselineDeviation } =
+      metricInfo
 
+    const assignComponentPayload = createPayloadForAssignComponent({
+      sli,
+      riskCategory,
+      healthScore,
+      continuousVerification,
+      lowerBaselineDeviation,
+      higherBaselineDeviation
+    })
+
+    const regexExpression = /^\{/
     const spec: StackdriverMetricHealthSourceSpec = healthSource.spec || []
+    const isFixed = getMultiTypeFromValue(metricInfo.query) === MultiTypeInputType.FIXED
+    const startWithCurlyBraces = regexExpression.test(defaultTo(metricInfo.query?.trim(), ''))
+    const shouldParseQuery = startWithCurlyBraces ? true : isFixed
     spec.metricDefinitions?.push({
       dashboardName: (metricInfo.dashboardName || '') as string,
       dashboardPath: (metricInfo.dashboardPath || '') as string,
@@ -163,25 +177,12 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(setupSource: GCOM
       metricTags: Object.keys(metricInfo.metricTags || {}),
       identifier: metricInfo.identifier,
       isManualQuery: metricInfo.isManualQuery,
-      jsonMetricDefinition: JSON.parse(metricInfo.query || ''),
+      jsonMetricDefinition: shouldParseQuery ? JSON.parse(metricInfo.query || '') : metricInfo.query,
       riskProfile: {
-        metricType: metricType as RiskProfile['metricType'],
-        category: category as RiskProfile['category'],
-        thresholdTypes
+        ...assignComponentPayload.analysis?.riskProfile
       },
-      sli: { enabled: metricInfo?.sli || false },
       serviceInstanceField: metricInfo.continuousVerification ? metricInfo.serviceInstanceField : null,
-      analysis: {
-        riskProfile: {
-          category: category as RiskProfile['category'],
-          metricType: metricType,
-          thresholdTypes
-        },
-        liveMonitoring: { enabled: metricInfo.healthScore || false },
-        deploymentVerification: {
-          enabled: metricInfo.continuousVerification || false
-        }
-      }
+      ...assignComponentPayload
     } as StackdriverDefinition)
   }
 
@@ -410,10 +411,21 @@ export const onSelectNavItem = ({
     }
   }
 
-  metricInfo.query = formatJSON(metricInfo.query) || ''
+  metricInfo.query =
+    (getMultiTypeFromValue(metricInfo.query as any) === MultiTypeInputType.FIXED
+      ? formatJSON(metricInfo.query)
+      : metricInfo.query?.toString()) || ''
   updatedData.set(metricName, metricInfo)
   if (selectedMetric) {
     updatedData.set(selectedMetric as string, { ...formikProps.values })
   }
   setUpdatedData(new Map(updatedData))
 }
+
+export const getNoDataMessage = (getString: (key: StringKeys) => string, query?: string): string =>
+  getMultiTypeFromValue(query) === MultiTypeInputType.FIXED
+    ? getString('cv.monitoringSources.gcoLogs.submitQueryToSeeRecords')
+    : getString('cv.customHealthSource.chartRuntimeWarning')
+
+export const getIsQueryExecuted = (shouldShowChart: boolean, query?: string): boolean =>
+  shouldShowChart && getMultiTypeFromValue(query) === MultiTypeInputType.FIXED

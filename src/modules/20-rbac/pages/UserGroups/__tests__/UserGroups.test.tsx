@@ -86,11 +86,7 @@ describe('UsersPage Test', () => {
 
   beforeEach(async () => {
     const renderObj = render(
-      <TestWrapper
-        path={routes.toUserGroups({ ...accountPathProps })}
-        pathParams={{ accountId: 'testAcc' }}
-        defaultFeatureFlagValues={{ INHERITED_USER_GROUP: true }}
-      >
+      <TestWrapper path={routes.toUserGroups({ ...accountPathProps })} pathParams={{ accountId: 'testAcc' }}>
         <UserGroupsPage />
       </TestWrapper>
     )

@@ -10,6 +10,7 @@ import { Button, ButtonVariation, TextInput } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useParams, useHistory } from 'react-router-dom'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -17,28 +18,29 @@ import { useGetTriggerListForTarget } from 'services/pipeline-ng'
 import { useGetListOfBranchesWithStatus } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
 import { AddDrawer } from '@common/components'
-import { AddDrawerMapInterface, DrawerContext } from '@common/components/AddDrawer/AddDrawer'
+import { DrawerContext } from '@common/components/AddDrawer/AddDrawer'
 import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isNewServiceEnvEntity } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
 import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
-
 import css from './TriggersList.module.scss'
 
 interface TriggersListPropsInterface {
   onNewTriggerClick: (val: TriggerDataInterface) => void
   isPipelineInvalid?: boolean
   gitAwareForTriggerEnabled?: boolean
+  pipeline: any
 }
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
-  const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
+  const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled, pipeline } = props
   const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
@@ -52,31 +54,18 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
   const [searchParam, setSearchParam] = useState('')
   const { getString } = useStrings()
 
-  const { NG_AZURE } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN = false, CD_TRIGGERS_REFACTOR = false } = useFeatureFlags()
+  const isNewService = isNewServiceEnvEntity(
+    NG_SVC_ENV_REDESIGN,
+    pipeline?.stages?.[0]?.stage as DeploymentStageElementConfig
+  )
 
-  const getCategories = (): AddDrawerMapInterface => {
-    const categories = getCategoryItems(getString)
-
-    return {
-      ...categories,
-      categories: categories?.categories?.map(category => {
-        return {
-          ...category,
-          items:
-            category.categoryValue === 'Artifact'
-              ? category?.items?.filter(item => {
-                  switch (item.value) {
-                    case ENABLED_ARTIFACT_TYPES.Acr:
-                      return NG_AZURE
-                    default:
-                      return true
-                  }
-                })
-              : category?.items
-        }
-      })
-    }
-  }
+  /*
+   *  Show artifact and manifest selection only if:
+   *   1: CD_TRIGGERS_REFACTOR is enabled
+   *   2: If its not newService
+   */
+  const hideArtifactManifestSelection = CD_TRIGGERS_REFACTOR || !isNewService ? false : true
 
   const {
     data: triggerListResponse,
@@ -192,14 +181,15 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
           triggerType: val.categoryValue,
           sourceRepo: (val.categoryValue === TriggerTypes.WEBHOOK && val.value) || undefined,
           artifactType: (val.categoryValue === TriggerTypes.ARTIFACT && val.value) || undefined,
-          manifestType: (val.categoryValue === TriggerTypes.MANIFEST && val.value) || undefined
+          manifestType: (val.categoryValue === TriggerTypes.MANIFEST && val.value) || undefined,
+          scheduleType: (val.categoryValue === TriggerTypes.SCHEDULE && val.value) || undefined
         })
       }
     }
 
     return (
       <AddDrawer
-        addDrawerMap={getCategories()}
+        addDrawerMap={getCategoryItems(getString, hideArtifactManifestSelection)}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.STUDIO}
@@ -214,6 +204,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
 
   return (
     <>
+      <HelpPanel referenceId="triggers" type={HelpPanelType.FLOATING_CONTAINER} />
       <Page.SubHeader>
         <Button
           disabled={!isEditable || incompatibleGitSyncBranch || isPipelineInvalid}

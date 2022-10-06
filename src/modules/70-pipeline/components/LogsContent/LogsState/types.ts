@@ -113,7 +113,7 @@ export interface LogSectionData {
 }
 
 export interface CreateSectionsPayload {
-  node: ExecutionNode
+  node?: ExecutionNode
   getSectionName(index: number): string
   selectedStep: string
   selectedStage: string
@@ -122,6 +122,7 @@ export interface CreateSectionsPayload {
 export interface UpdateSectionsPayload {
   id: string
   data: string
+  append?: boolean
 }
 
 export interface Action<T extends ActionType> {

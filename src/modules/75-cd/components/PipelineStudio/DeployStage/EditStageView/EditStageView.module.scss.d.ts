@@ -9,7 +9,11 @@
 declare const styles: {
   readonly addStageHeading: string
   readonly contentSection: string
+  readonly deploymentType: string
+  readonly gitOpsCheck: string
+  readonly halfWidthBar: string
   readonly nameIdDescriptionTags: string
   readonly stageTypeThumbnail: string
+  readonly templateBarOverride: string
 }
 export default styles

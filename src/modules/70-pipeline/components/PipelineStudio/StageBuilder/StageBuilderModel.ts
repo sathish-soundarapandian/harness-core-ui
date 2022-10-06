@@ -8,7 +8,7 @@
 import { IconName, Utils } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo, isEmpty, uniq } from 'lodash-es'
-import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { getStageType } from '@pipeline/utils/templateUtils'
 import { EmptyStageName } from '../PipelineConstants'

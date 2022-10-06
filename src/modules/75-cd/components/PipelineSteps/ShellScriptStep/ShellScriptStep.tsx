@@ -75,7 +75,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
       readonly
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <ShellScriptInputSetStep
           initialValues={this.getInitialValues(initialValues)}
@@ -212,6 +212,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
   protected stepIcon: IconName = 'command-shell-script'
   protected stepIconColor = Color.GREY_700
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.SHELLSCRIPT'
+  protected referenceId = 'shellScriptHelpPanel'
   protected isHarnessSpecific = true
   protected invocationMap: Map<
     RegExp,
@@ -285,7 +286,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
       ...initialValues,
       spec: {
         ...initialValues.spec,
-        shell: 'Bash',
+        shell: initialValues.spec?.shell || 'Bash',
         onDelegate: initialValues.spec?.onDelegate ? 'delegate' : 'targethost',
         source: {
           type: 'Inline',
@@ -309,7 +310,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
   }
 
   processFormData(data: ShellScriptFormData): ShellScriptData {
-    return {
+    const modifiedData = {
       ...data,
       spec: {
         ...data.spec,
@@ -339,5 +340,15 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
           : undefined
       }
     }
+
+    if (!modifiedData.spec.executionTarget.connectorRef) {
+      delete modifiedData.spec.executionTarget.connectorRef
+    }
+
+    if (modifiedData.spec.onDelegate) {
+      delete modifiedData.spec.executionTarget
+    }
+
+    return modifiedData
   }
 }

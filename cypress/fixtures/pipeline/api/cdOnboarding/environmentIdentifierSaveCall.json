@@ -1,0 +1,22 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "environment": {
+      "accountId": "px7xd_BFRCi-pfWPYXVjvw",
+      "orgIdentifier": "default",
+      "projectIdentifier": "project1",
+      "identifier": "sample_environment_1658954821373",
+      "name": "sample_environment",
+      "description": "",
+      "color": "#0063F7",
+      "type": "PreProduction",
+      "deleted": false,
+      "tags": {},
+      "yaml": "environment:\n  orgIdentifier: \"default\"\n  projectIdentifier: \"project1\"\n  identifier: \"sample_environment_1658954821373\"\n  tags: {}\n  name: \"sample_environment\"\n  description: \"\"\n  type: \"PreProduction\"\n"
+    },
+    "createdAt": 1658954822036,
+    "lastModifiedAt": 1658954822036
+  },
+  "metaData": null,
+  "correlationId": "8cffa93f-ba20-4a4c-8e4d-b3d9a7aa51f8"
+}

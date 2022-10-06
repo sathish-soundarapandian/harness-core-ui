@@ -163,7 +163,7 @@ export const getMonitoredServiceFilterOptions = (
   return [
     {
       type: FilterTypes.ALL,
-      title: getString('cv.allServices'),
+      title: getString('common.allServices'),
       icon: 'services',
       iconSize: 18,
       count: serviceCountData?.allServicesCount

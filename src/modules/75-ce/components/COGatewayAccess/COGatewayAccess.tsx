@@ -60,6 +60,8 @@ const COGatewayAccess: React.FC<COGatewayAccessProps> = props => {
   const { trackEvent } = useTelemetry()
   const { isEditFlow } = useGatewayContext()
   const isAwsProvider = Utils.isProviderAws(props.gatewayDetails.provider)
+  const hasOverrideRoute53Agreement = Boolean(props.gatewayDetails.routing.override_dns_record)
+
   const [accessDetails, setAccessDetails] = useState<ConnectionMetadata>(
     Utils.getConditionalResult(
       !_isEmpty(props.gatewayDetails.opts.access_details),
@@ -71,6 +73,11 @@ const COGatewayAccess: React.FC<COGatewayAccessProps> = props => {
   const [selectedHelpText, setSelectedHelpText] = useState<string>('')
   const [selectedHelpTextSections, setSelectedHelpTextSections] = useState<string[]>([])
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false)
+  const [domainsToOverlap, setDomainsToOverlap] = useState<string[]>(
+    hasOverrideRoute53Agreement ? (props.gatewayDetails.customDomains as string[]) : []
+  )
+  const [overrideRoute53, setOverrideRoute53] = useState(hasOverrideRoute53Agreement)
+
   const { data: serviceDescribeData, loading: serviceDataLoading } = useDescribeServiceInContainerServiceCluster({
     account_id: accountId,
     cluster_name: _defaultTo(props.gatewayDetails.routing.container_svc?.cluster, ''),
@@ -98,7 +105,7 @@ const COGatewayAccess: React.FC<COGatewayAccessProps> = props => {
     ) {
       validStatus = true
     } else if (accessDetails.dnsLink.selected) {
-      validStatus = getValidStatusForDnsLink(props.gatewayDetails)
+      validStatus = getValidStatusForDnsLink(props.gatewayDetails, domainsToOverlap, overrideRoute53)
     } else {
       validStatus =
         (isK8sRule && !_isEmpty(props.gatewayDetails.routing.k8s?.RuleJson)) ||
@@ -130,7 +137,10 @@ const COGatewayAccess: React.FC<COGatewayAccessProps> = props => {
     props.gatewayDetails.routing.k8s?.RuleJson,
     props.gatewayDetails.routing.container_svc,
     serviceDescribeData?.response,
-    props.gatewayDetails.routing.database
+    props.gatewayDetails.routing.database,
+    domainsToOverlap,
+    overrideRoute53,
+    props.gatewayDetails.routing.source_filters
   ])
 
   useEffect(() => {
@@ -210,12 +220,7 @@ const COGatewayAccess: React.FC<COGatewayAccessProps> = props => {
           setDrawerOpen(false)
         }}
         size="392px"
-        style={{
-          // top: '85px',
-          boxShadow: 'rgb(40 41 61 / 4%) 0px 2px 8px, rgb(96 97 112 / 16%) 0px 16px 24px',
-          height: '100vh',
-          overflowY: 'scroll'
-        }}
+        className={css.drawerContainer}
       >
         <Container style={{ textAlign: 'right' }}>
           <Button icon="cross" minimal onClick={_ => setDrawerOpen(false)} />
@@ -312,6 +317,10 @@ const COGatewayAccess: React.FC<COGatewayAccessProps> = props => {
                       activeStepDetails={props.activeStepDetails}
                       serverNames={props.serverNames}
                       setServerNames={props.setServerNames}
+                      overrideRoute53={overrideRoute53}
+                      setOverrideRoute53={setOverrideRoute53}
+                      domainsToOverlap={domainsToOverlap}
+                      setDomainsToOverlap={setDomainsToOverlap}
                     />
                   }
                 ></Tab>

@@ -8,17 +8,18 @@
 import React from 'react'
 import { Container } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 
 export const DefaultNewStageName = 'Stage Name'
 export const DefaultNewStageId = 'stage_name'
 
-const StageTemplateForm = (_props: unknown, _formikRef: TemplateFormRef) => {
+export const StageTemplateForm = () => {
   const {
     state: {
-      selectionState: { selectedStageId }
+      selectionState: { selectedStageId },
+      gitDetails,
+      storeMetadata
     },
     contextType,
     renderPipelineStage,
@@ -37,10 +38,10 @@ const StageTemplateForm = (_props: unknown, _formikRef: TemplateFormRef) => {
         renderPipelineStage({
           stageType: selectedStage?.stage?.stage?.type,
           minimal: false,
+          gitDetails,
+          storeMetadata,
           contextType
         })}
     </Container>
   )
 }
-
-export const StageTemplateFormWithRef = React.forwardRef(StageTemplateForm)

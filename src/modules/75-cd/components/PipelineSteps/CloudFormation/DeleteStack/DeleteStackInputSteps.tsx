@@ -7,18 +7,24 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { isEmpty, map, get } from 'lodash-es'
+import { isEmpty, map, get, defaultTo } from 'lodash-es'
 import cx from 'classnames'
-import { FormInput, FormikForm, Text, Color, MultiSelectOption } from '@harness/uicore'
+import { FormikForm, Text, Color, MultiSelectOption, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { connect, FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import {
+  ConnectorReferenceDTO,
+  FormMultiTypeConnectorField
+} from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { Connectors } from '@connectors/constants'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useListAwsRegions } from 'services/portal'
 import { useGetIamRolesForAws } from 'services/cd-ng'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { DeleteStackData, DeleteStackProps } from '../CloudFormationInterfaces.types'
 import { isRuntime } from '../CloudFormationHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -26,13 +32,21 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackData>(
   props: DeleteStackProps<T> & { formik?: FormikContextType<any> }
 ): React.ReactElement {
-  const { inputSetData, readonly, path, allowableTypes, formik, allValues } = props
+  const { inputSetData, readonly, path, allowableTypes, allValues, formik, initialValues } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [regions, setRegions] = useState<MultiSelectOption[]>([])
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])
-  const [awsRef, setAwsRef] = useState<string>('')
+  const [awsRef, setAwsRef] = useState<string>(
+    defaultTo(
+      get(initialValues, 'spec.configuration.spec.connectorRef'),
+      get(allValues, 'spec.configuration.spec.connectorRef')
+    )
+  )
+  const [regionsRef, setRegionsRef] = useState(
+    defaultTo(get(initialValues, 'spec.configuration.spec.region'), get(allValues, 'spec.configuration.spec.region'))
+  )
 
   const {
     data: regionData,
@@ -69,7 +83,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
       accountIdentifier: accountId,
       orgIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      awsConnectorRef: awsRef || connectorRef
+      awsConnectorRef: awsRef || connectorRef,
+      region: regionsRef as string
     }
   })
 
@@ -82,12 +97,19 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
       }
       setAwsRoles(roles)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roleData, roleRequired])
 
-    if (!roleData && roleRequired && (awsRef || connectorRef)) {
+  useEffect(() => {
+    if (
+      !isEmpty(awsRef) &&
+      getMultiTypeFromValue(awsRef) === MultiTypeInputType.FIXED &&
+      !isEmpty(regionsRef) &&
+      getMultiTypeFromValue(regionsRef) === MultiTypeInputType.FIXED
+    ) {
       getRoles()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [roleData, roleRequired, awsRef])
+  }, [awsRef, getRoles, regionsRef])
 
   return (
     <FormikForm>
@@ -95,7 +117,7 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormMultiTypeDurationField
+            <TimeoutFieldInputSetView
               label={getString('pipelineSteps.timeoutLabel')}
               name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
               disabled={readonly}
@@ -105,6 +127,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 expressions,
                 disabled: readonly
               }}
+              template={inputSetData?.template}
+              fieldPath={'timeout'}
             />
           </div>
         )
@@ -113,7 +137,7 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.provisionerIdentifier as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               name={`${path}.spec.configuration.spec.provisionerIdentifier`}
               label={getString('pipelineSteps.provisionerIdentifier')}
               disabled={readonly}
@@ -121,6 +145,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 expressions,
                 allowableTypes
               }}
+              template={inputSetData?.template}
+              fieldPath={'spec.configuration.spec.provisionerIdentifier'}
             />
           </div>
         )
@@ -141,10 +167,21 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
               multiTypeProps={{ expressions, allowableTypes }}
               disabled={readonly}
               width={300}
-              onChange={(value: any, _unused, _notUsed) => {
+              onChange={(selected: any, _typeValue, type) => {
+                const item = selected as unknown as { record?: ConnectorReferenceDTO; scope: Scope }
                 /* istanbul ignore next */
-                setAwsRef(value?.record?.identifier)
-                formik?.setFieldValue(`${path}.spec.configuration.spec.connectorRef`, value?.record?.identifier)
+                if (type === MultiTypeInputType.FIXED) {
+                  const connectorRefValue =
+                    item.scope === Scope.ORG || item.scope === Scope.ACCOUNT
+                      ? `${item.scope}.${item?.record?.identifier}`
+                      : item.record?.identifier
+                  setAwsRef(connectorRefValue as string)
+                } else setAwsRef(selected as string)
+                get(formik?.values, `${path}.spec.configuration.spec.roleArn`) &&
+                  getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.spec.roleArn`)) ===
+                    MultiTypeInputType.FIXED &&
+                  formik?.setFieldValue(`${path}.spec.configuration.spec.roleArn`, '')
+                setAwsRoles([])
               }}
               setRefValue
             />
@@ -155,13 +192,23 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.region as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
               label={getString('regionLabel')}
               name={`${path}.spec.configuration.spec.region`}
               placeholder={getString(regionsLoading ? 'common.loading' : 'pipeline.regionPlaceholder')}
               disabled={readonly}
               useValue
+              template={inputSetData?.template}
+              fieldPath={'spec.configuration.spec.region'}
               multiTypeInputProps={{
+                onChange: value => {
+                  setRegionsRef((value as any).value as string)
+                  get(formik?.values, `${path}.spec.configuration.spec.roleArn`) &&
+                    getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.spec.roleArn`)) ===
+                      MultiTypeInputType.FIXED &&
+                    formik?.setFieldValue(`${path}.spec.configuration.spec.roleArn`, '')
+                  setAwsRoles([])
+                },
                 selectProps: {
                   allowCreatingNewItems: true,
                   items: regions ? regions : []
@@ -178,12 +225,14 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.roleArn as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
               label={getString('connectors.awsKms.roleArnLabel')}
               name={`${path}.spec.configuration.spec.roleArn`}
-              disabled={readonly}
+              disabled={readonly || loading}
               placeholder={getString(loading ? 'common.loading' : 'select')}
               useValue
+              template={inputSetData?.template}
+              fieldPath={'spec.configuration.spec.roleArn'}
               multiTypeInputProps={{
                 selectProps: {
                   allowCreatingNewItems: false,
@@ -201,7 +250,7 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.stackName as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               name={`${path}.spec.configuration.spec.stackName`}
               label={getString('cd.cloudFormation.stackName')}
               disabled={readonly}
@@ -209,6 +258,8 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
                 expressions,
                 allowableTypes
               }}
+              template={inputSetData?.template}
+              fieldPath={'spec.configuration.spec.stackName'}
             />
           </div>
         )

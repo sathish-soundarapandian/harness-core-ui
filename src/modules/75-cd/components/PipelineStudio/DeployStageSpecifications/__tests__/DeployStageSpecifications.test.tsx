@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, fireEvent, act, findByText, waitFor } from '@testing-library/react'
 
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContext,
@@ -61,13 +61,20 @@ const getPipelineContext = (): PipelineContextInterface => ({
     isDBInitialized: true,
     isInitialized: true,
     isLoading: false,
+    isIntermittentLoading: false,
     gitDetails: {},
     entityValidityDetails: {},
     isUpdated: true,
-    templateTypes: {}
+    templateTypes: {},
+    templateServiceData: {},
+    resolvedCustomDeploymentDetailsByRef: {}
   },
   contextType: PipelineContextType.Pipeline,
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   setSchemaErrorView: jest.fn(),
   stagesMap: {},
   updatePipelineStoreMetadata: jest.fn(),
@@ -94,7 +101,8 @@ const getPipelineContext = (): PipelineContextInterface => ({
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
   setTemplateTypes: jest.fn(),
-  getTemplate: jest.fn()
+  setTemplateServiceData: jest.fn(),
+  setIntermittentLoading: jest.fn()
 })
 
 jest.mock('../../DeployStage/EditStageView/EditStageView', () => ({

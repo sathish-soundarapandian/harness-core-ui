@@ -13,18 +13,19 @@ import { cloneDeep, debounce, isNil } from 'lodash-es'
 import type { NodeModelListener, LinkModelListener } from '@projectstorm/react-diagrams-core'
 import SplitPane from 'react-split-pane'
 import produce from 'immer'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
+import { useParams } from 'react-router-dom'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StageActions } from '@common/constants/TrackingConstants'
-import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
-import { CanvasButtons } from '@pipeline/components/CanvasButtons/CanvasButtons'
 import { moveStageToFocusDelayed } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import HoverCard from '@pipeline/components/HoverCard/HoverCard'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import ConditionalExecutionTooltip from '@pipeline/components/ConditionalExecutionToolTip/ConditionalExecutionTooltip'
-import { useGlobalEventListener } from '@common/hooks'
+import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
@@ -36,10 +37,9 @@ import CreateNodeStage from '@pipeline/components/PipelineDiagram/Nodes/CreateNo
 import EndNodeStage from '@pipeline/components/PipelineDiagram/Nodes/EndNode/EndNodeStage'
 import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode/StartNodeStage'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import type { DeploymentStageConfig } from 'services/cd-ng'
+import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import {
-  CanvasWidget,
   createEngine,
   DefaultLinkModel,
   DefaultNodeEvent,
@@ -62,13 +62,15 @@ import {
   getNodeEventListerner,
   MoveDirection,
   MoveStageDetailsType,
-  moveStage
+  moveStage,
+  getFlattenedStages
 } from './StageBuilderUtil'
 import { useStageBuilderCanvasState } from './useStageBuilderCanvasState'
 import { StageList } from './views/StageList'
 import { SplitViewTypes } from '../PipelineContext/PipelineActions'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { getNodeListenersOld, getLinkListernersOld } from './StageBuildOldUtils'
+import type { PipelineSelectionState } from '../PipelineQueryParamState/usePipelineQueryParam'
 import css from './StageBuilder.module.scss'
 
 const diagram = new DiagramFactory('graph')
@@ -112,7 +114,6 @@ export const initializeStageStateMap = (stages: StageElementWrapperConfig[], map
 
 export const renderPopover = ({
   data,
-  addStage,
   addStageNew,
   isParallel,
   isGroupStage,
@@ -126,9 +127,9 @@ export const renderPopover = ({
   renderPipelineStage,
   isHoverView,
   contextType,
-  getTemplate,
   templateTypes,
-  newPipelineStudioEnabled
+  gitDetails,
+  storeMetadata
 }: PopoverData): JSX.Element => {
   if (isStageView && data) {
     const stageData = {
@@ -141,6 +142,8 @@ export const renderPopover = ({
     return renderPipelineStage({
       minimal: true,
       stageType: data.stage?.type,
+      gitDetails,
+      storeMetadata,
       stageProps: {
         data: stageData,
         onSubmit: (values: StageElementWrapperConfig, identifier: string) => {
@@ -149,8 +152,7 @@ export const renderPopover = ({
           }
           onSubmitPrimaryData?.(values, identifier)
         }
-      },
-      getTemplate
+      }
     })
   } else if (isGroupStage) {
     return (
@@ -173,37 +175,21 @@ export const renderPopover = ({
       </HoverCard>
     )
   }
-  if (newPipelineStudioEnabled) {
-    return renderPipelineStage({
-      isParallel,
-      showSelectMenu: true,
-      getNewStageFromType: getNewStageFromType as any,
-      getNewStageFromTemplate: getNewStageFromTemplate as any,
-      onSelectStage: (type, stage, pipelineTemp) => {
-        if (stage) {
-          addStageNew?.(stage, isParallel, !isParallel, undefined, true, pipelineTemp, event?.node)
-        } else {
-          addStageNew?.(getNewStageFromType(type as any), isParallel, !isParallel, event?.node)
-        }
-      },
-      contextType: contextType,
-      getTemplate
-    })
-  }
   return renderPipelineStage({
     isParallel,
     showSelectMenu: true,
+    gitDetails,
+    storeMetadata,
     getNewStageFromType: getNewStageFromType as any,
     getNewStageFromTemplate: getNewStageFromTemplate as any,
     onSelectStage: (type, stage, pipelineTemp) => {
       if (stage) {
-        addStage?.(stage, isParallel, event, undefined, true, pipelineTemp)
+        addStageNew?.(stage, isParallel, !isParallel, undefined, true, pipelineTemp, event?.node)
       } else {
-        addStage?.(getNewStageFromType(type as any), isParallel, event)
+        addStageNew?.(getNewStageFromType(type as any), isParallel, !isParallel, event?.node)
       }
     },
-    contextType: contextType,
-    getTemplate
+    contextType: contextType
   })
 }
 
@@ -219,7 +205,9 @@ function StageBuilder(): JSX.Element {
       pipelineView,
       isInitialized,
       selectionState: { selectedStageId },
-      templateTypes
+      templateTypes,
+      gitDetails,
+      storeMetadata
     },
     // contextType = 'Pipeline',
     isReadonly,
@@ -228,15 +216,14 @@ function StageBuilder(): JSX.Element {
     updatePipelineView,
     renderPipelineStage,
     getStageFromPipeline,
-    setSelection,
-    getTemplate
+    setSelection
   } = usePipelineContext()
+  const { sectionId } = useQueryParams<PipelineSelectionState>()
+  const { module } = useParams<ModulePathParams>()
 
   // NOTE: we are using ref as setSelection is getting cached somewhere
   const setSelectionRef = React.useRef(setSelection)
   setSelectionRef.current = setSelection
-
-  const newPipelineStudioEnabled: boolean = useFeatureFlag(FeatureFlag.NEW_PIPELINE_STUDIO)
 
   const { trackEvent } = useTelemetry()
 
@@ -250,11 +237,30 @@ function StageBuilder(): JSX.Element {
 
   const [deleteId, setDeleteId] = React.useState<string | undefined>(undefined)
   const { showSuccess, showError } = useToaster()
+
+  let deletionContentText = `${getString('stageConfirmationText', {
+    name: getStageFromPipeline(deleteId || '').stage?.stage?.name || deleteId,
+    id: deleteId
+  })} `
+
+  if (deleteId) {
+    const propagatingStages = getFlattenedStages(pipeline)
+      .stages?.filter(
+        currentStage =>
+          (currentStage.stage?.spec as DeploymentStageConfig)?.serviceConfig?.useFromStage?.stage === deleteId
+      )
+      ?.reduce((prev, next) => {
+        return prev ? `${prev}, ${next.stage?.name}` : next.stage?.name || ''
+      }, '')
+
+    if (propagatingStages)
+      deletionContentText = getString('pipeline.parentStageDeleteWarning', {
+        propagatingStages
+      })
+  }
+
   const { openDialog: confirmDeleteStage } = useConfirmationDialog({
-    contentText: `${getString('stageConfirmationText', {
-      name: getStageFromPipeline(deleteId || '').stage?.stage?.name || deleteId,
-      id: deleteId
-    })} `,
+    contentText: deletionContentText,
     titleText: getString('deletePipelineStage'),
     confirmButtonText: getString('delete'),
     cancelButtonText: getString('cancel'),
@@ -599,8 +605,7 @@ function StageBuilder(): JSX.Element {
           pipelineContext,
           stageMap,
           resetPipelineStages,
-          addStageNew,
-          newPipelineStudioEnabled
+          addStageNew
         })
       }
     }
@@ -616,7 +621,6 @@ function StageBuilder(): JSX.Element {
     addStage,
     updateMoveStageDetails,
     confirmMoveStage,
-    getTemplate,
     stageMap,
     engine
   )
@@ -631,9 +635,8 @@ function StageBuilder(): JSX.Element {
     addStageNew,
     updateMoveStageDetails,
     confirmMoveStage,
-    getTemplate,
     stageMap,
-    newPipelineStudioEnabled
+    sectionId
   )
 
   const resetPipelineStages = (stages: StageElementWrapperConfig[]): void => {
@@ -657,7 +660,6 @@ function StageBuilder(): JSX.Element {
     openSplitView,
     updateMoveStageDetails,
     confirmMoveStage,
-    getTemplate,
     stageMap
   )
 
@@ -667,9 +669,7 @@ function StageBuilder(): JSX.Element {
     addStageNew,
     updateMoveStageDetails,
     confirmMoveStage,
-    getTemplate,
-    stageMap,
-    newPipelineStudioEnabled
+    stageMap
   )
 
   const canvasClick = (): void => {
@@ -722,31 +722,6 @@ function StageBuilder(): JSX.Element {
   // handle position and zoom of canvas
   useStageBuilderCanvasState(engine, [])
 
-  const StageCanvas = (
-    <div
-      className={css.canvas}
-      ref={canvasRef}
-      onClick={e => {
-        const div = e.target as HTMLDivElement
-        if (div === canvasRef.current?.children[0]) {
-          dynamicPopoverHandler?.hide()
-        }
-
-        if (isSplitViewOpen) {
-          setSelectionRef.current({ stageId: undefined, sectionId: undefined })
-        }
-      }}
-    >
-      <CanvasWidget engine={engine} />
-      <DynamicPopover
-        darkMode={false}
-        className={css.renderPopover}
-        render={renderPopover}
-        bind={setDynamicPopoverHandler}
-      />
-      <CanvasButtons tooltipPosition="left" engine={engine} callback={() => dynamicPopoverHandler?.hide()} />
-    </div>
-  )
   // eslint-disable-next-line
   const resizerStyle = !!navigator.userAgent.match(/firefox/i)
     ? { display: 'flow-root list-item' }
@@ -763,6 +738,24 @@ function StageBuilder(): JSX.Element {
     })
   }, [pipeline, errorMap, templateTypes])
 
+  const referenceId = (sectionIdPassed: string | null | undefined): string => {
+    switch (sectionIdPassed) {
+      case 'SERVICE':
+        return 'ServicePipelineStudio'
+      case 'INFRASTRUCTURE':
+        return 'InfrastructurePipelineStudio'
+      case 'ENVIRONMENT':
+        return 'environmentDetails'
+      case 'EXECUTION':
+        return 'ExecutionPipelineStudio'
+      case 'ADVANCED':
+        return 'AdvancedStagePipelineStudio'
+      case 'OVERVIEW':
+        return 'stageOverview'
+      default:
+        return 'PipelineStudio'
+    }
+  }
   return (
     <Layout.Horizontal className={cx(css.canvasContainer)} padding="medium">
       <div className={css.canvasWrapper}>
@@ -777,40 +770,37 @@ function StageBuilder(): JSX.Element {
           onChange={handleStageResize}
           allowResize={openSplitView}
         >
-          {newPipelineStudioEnabled ? (
-            <div
-              className={cx(css.canvas, { [css.graphActions]: !isSplitViewOpen })}
-              ref={canvasRef}
-              onClick={e => {
-                const div = e.target as HTMLDivElement
-                if (div === canvasRef.current?.children[0]) {
-                  dynamicPopoverHandler?.hide()
-                }
+          <div
+            className={css.canvas}
+            ref={canvasRef}
+            onClick={e => {
+              const div = e.target as HTMLDivElement
+              if (div === canvasRef.current?.children[0]) {
+                dynamicPopoverHandler?.hide()
+              }
 
-                if (isSplitViewOpen) {
-                  setSelectionRef.current({ stageId: undefined, sectionId: undefined })
-                }
-              }}
-            >
-              <CDPipelineStudioNew
-                selectedNodeId={selectedStageId}
-                data={stageData}
-                loaderComponent={DiagramLoader}
-                parentSelector={'.Pane1'}
-                collapsibleProps={{ percentageNodeVisible: 0.8, bottomMarginInPixels: 80 }}
-                createNodeTitle={getString('addStage')}
-                graphLinkClassname={css.graphLink}
-              />
-              <DynamicPopover
-                darkMode={false}
-                className={css.renderPopover}
-                render={renderPopover}
-                bind={setDynamicPopoverHandler}
-              />
-            </div>
-          ) : (
-            StageCanvas
-          )}
+              if (isSplitViewOpen) {
+                setSelectionRef.current({ stageId: undefined, sectionId: undefined })
+              }
+            }}
+          >
+            <CDPipelineStudioNew
+              readonly={isReadonly}
+              selectedNodeId={selectedStageId}
+              data={stageData}
+              loaderComponent={DiagramLoader}
+              parentSelector={'.Pane1'}
+              collapsibleProps={{ percentageNodeVisible: 0.8, bottomMarginInPixels: 80 }}
+              createNodeTitle={getString('addStage')}
+              graphLinkClassname={css.graphLink}
+            />
+            <DynamicPopover
+              darkMode={false}
+              className={css.renderPopover}
+              render={renderPopover}
+              bind={setDynamicPopoverHandler}
+            />
+          </div>
 
           <div
             style={{
@@ -822,12 +812,17 @@ function StageBuilder(): JSX.Element {
             {openSplitView && type === SplitViewTypes.StageView
               ? renderPipelineStage({
                   stageType: stageType,
-                  minimal: false
+                  minimal: false,
+                  gitDetails,
+                  storeMetadata
                 })
               : null}
           </div>
         </SplitPane>
       </div>
+      {module === 'cd' ? (
+        <HelpPanel referenceId={referenceId(sectionId)} type={HelpPanelType.FLOATING_CONTAINER} />
+      ) : null}
     </Layout.Horizontal>
   )
 }

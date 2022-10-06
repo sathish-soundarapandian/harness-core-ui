@@ -1,0 +1,11 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "yamlPipeline": "pipeline:\n  name: testPipeline_Cypress\n  identifier: testPipeline_Cypress\n  projectIdentifier: Satyam_Onboarding\n  orgIdentifier: default\n  tags: {}\n  stages:\n    - stage:\n        name: Jenkins\n        identifier: Jenkins\n        description: \"\"\n        type: Custom\n        spec:\n          execution:\n            steps:\n              - step:\n                  type: JenkinsBuild\n                  name: jenkinsStep\n                  identifier: jenkinsStep\n                  spec:\n                    connectorRef: <+input>\n                    jobName: <+input>\n                    jobParameter: <+input>\n                    delegateSelectors: []\n                    unstableStatusAsSuccess: false\n                    captureEnvironmentVariable: false\n                  timeout: 10m\n        tags: {}\n",
+    "resolvedTemplatesPipelineYaml": "pipeline:\n  name: testPipeline_Cypress\n  identifier: testPipeline_Cypress\n  projectIdentifier: Satyam_Onboarding\n  orgIdentifier: default\n  tags: {}\n  stages:\n    - stage:\n        name: Jenkins\n        identifier: Jenkins\n        description: \"\"\n        type: Custom\n        spec:\n          execution:\n            steps:\n              - step:\n                  type: JenkinsBuild\n                  name: jenkinsStep\n                  identifier: jenkinsStep\n                  spec:\n                    connectorRef: <+input>\n                    jobName: <+input>\n                    jobParameter: <+input>\n                    delegateSelectors: []\n                    unstableStatusAsSuccess: false\n                    captureEnvironmentVariable: false\n                  timeout: 10m\n        tags: {}\n",
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "modules": ["pms"]
+  },
+  "metaData": null,
+  "correlationId": "d797667b-ddaf-48f3-abcc-23b72fd37c9f"
+}

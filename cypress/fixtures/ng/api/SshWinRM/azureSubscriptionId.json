@@ -1,0 +1,8 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "subscriptions": [{ "subscriptionName": "Harness-Test", "subscriptionId": "12d2db62-5aa9-471d-84bb-faa489b3e319" }]
+  },
+  "metaData": null,
+  "correlationId": "d794cef3-f416-4abb-8c8f-f1e7eec7d047"
+}

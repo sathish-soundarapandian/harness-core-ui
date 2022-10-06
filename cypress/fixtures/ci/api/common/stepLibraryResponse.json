@@ -1,0 +1,155 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "name": "Library",
+    "stepsData": [],
+    "stepCategories": [
+      {
+        "name": "Continuous Integration",
+        "stepsData": [],
+        "stepCategories": [
+          {
+            "name": "Artifacts",
+            "stepsData": [
+              {
+                "name": "Upload Artifacts to JFrog Artifactory",
+                "type": "ArtifactoryUpload",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Build and Push to ECR",
+                "type": "BuildAndPushECR",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Build and Push an image to Docker Registry",
+                "type": "BuildAndPushDockerRegistry",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Build and Push to GCR",
+                "type": "BuildAndPushGCR",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Upload Artifacts to S3",
+                "type": "S3Upload",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Upload Artifacts to GCS",
+                "type": "GCSUpload",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Build and Push to ACR",
+                "type": "BuildAndPushACR",
+                "disabled": false,
+                "featureRestrictionName": null
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Build",
+            "stepsData": [
+              {
+                "name": "Upload Artifacts to JFrog Artifactory",
+                "type": "ArtifactoryUpload",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Restore Cache From GCS",
+                "type": "RestoreCacheGCS",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Restore Cache From S3",
+                "type": "RestoreCacheS3",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Save Cache to S3",
+                "type": "SaveCacheS3",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Build and Push to ECR",
+                "type": "BuildAndPushECR",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Build and Push an image to Docker Registry",
+                "type": "BuildAndPushDockerRegistry",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Build and Push to GCR",
+                "type": "BuildAndPushGCR",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Run",
+                "type": "Run",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Run Tests",
+                "type": "RunTests",
+                "disabled": false,
+                "featureRestrictionName": "TEST_INTELLIGENCE"
+              },
+              {
+                "name": "Save Cache to GCS",
+                "type": "SaveCacheGCS",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Build and Push to ACR",
+                "type": "BuildAndPushACR",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Plugin",
+                "type": "Plugin",
+                "disabled": false,
+                "featureRestrictionName": null
+              }
+            ],
+            "stepCategories": []
+          },
+          {
+            "name": "Security",
+            "stepsData": [
+              {
+                "name": "Security",
+                "type": "Security",
+                "disabled": false,
+                "featureRestrictionName": "SECURITY"
+              }
+            ],
+            "stepCategories": []
+          }
+        ]
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "8431cf14-5269-4e21-a0b6-c3a26fb39920"
+}

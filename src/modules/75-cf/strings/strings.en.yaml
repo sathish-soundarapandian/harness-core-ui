@@ -20,8 +20,6 @@ shared:
   pleaseSelectVariation: Please select a variation first.
   getStarted: '{{ $.getStarted }}'
   quickGuide: Quick Guide
-  true: 'true'
-  false: 'false'
 messages:
   flagCreated: Flag created.
   flagUpdated: Flag updated.
@@ -94,6 +92,7 @@ editVariation:
   defaultRulesDesc: "Changes will only apply to newly created environments. Existing environments won't be affected"
   envNote: Changes will only apply to newly created environments. Existing environments won’t be affected.
   applyToExistingEnvironments: Also apply to existing environments
+  remove: Remove variation
 addPrerequisites:
   addPrerequisitesHeading: Add Prerequisites
   addPrerequisitesDesc: The following must be met before your flag can be enabled
@@ -106,10 +105,7 @@ editDetails:
 boolean: Boolean
 multivariate: Multivariate
 featureNotReady: This feature is not yet ready. Please check back later.
-noFlag: You currently have no flags
 noResultMatch: No results match your search criteria
-noTarget: There are currently no targets
-noTargetForEnv: There are currently no targets for this environment
 homepage:
   slogan: '{{ $.common.purpose.cf.descriptionOnly }}'
   learnMore: Learn more about Feature Flags
@@ -131,9 +127,13 @@ clause:
     equalSensitive: 'equals (sensitive)'
     matchSegment: 'Match Target Group'
 featureFlags:
-  newFlag: + New Flag
+  newFlag: New Feature Flag
   true: 'True'
   false: 'False'
+  noFlagsInProject: There are no Flags in this Project
+  flagsDescription: A Feature Flag controls what you want to release, who receives it, and how it will be delivered.
+  noFlagsToGetStarted: To get started with Feature Flags, you can <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag" target="_blank" rel="noreferrer">create your first Flag</a>, <a href="https://docs.harness.io/category/rtce97j1wu-ff-sdks" target="_blank" rel="noreferrer">get started with our SDKs</a>, or <a href="https://docs.harness.io/category/iqgyied1c0-ff-getting-started" target="_blank" rel="noreferrer">read our getting started guide</a>.
+  getStartedWithFF: Get Started with Feature Flags
   typeOfFlag: Select the Type of Flag You Want to Create
   startVariation: Start by selecting the variation type that the flag will use
   booleanBtnText: This is a simple ON/OFF toggle
@@ -179,6 +179,9 @@ featureFlags:
   activity: '{{ $.activity }}'
   results: Results
   makeSure: Make sure your code is deployed
+  changeOrReset: Change your filter criteria or reset
+  resetFilters: Reset Filters
+  clearSearch: Clear Search
   rules:
     whenFlagEnabled: When the Flag is Enabled
     whenFlagDisabled: When the Flag is Disabled
@@ -241,31 +244,71 @@ featureFlags:
     targetServed: Target Served  ({{ count }})
     noData: No metrics found in this time range.
     totalEvaluations: Total Evaluations
+  flagPipeline:
+    deleteModalTitle: Remove this Pipeline from this Flag?
+    deleteModalText:
+      If you remove the Pipeline from the Flag, the automated steps in this Pipeline won’t be triggered, for example, automated approval steps.
+      The Pipeline will be saved and you can add it again later.
+
+      Are you sure you want to separate the Pipeline?
+    title: Flag Pipeline
+    noDataMessage: Automate processes with Flag Pipelines
+    noDataDescription: Flag Pipelines help to automate routine processes like approval requests, notifications, Jira ticket creation or update
+    drawerTitle: Flag Pipelines
+    drawerDescription: |
+      You can only set Pipelines that:
+        <ul>
+          <li>Have a Flag stage configured</li>
+          <li>The Flag must be set as a runtime input</li>
+          <li>Don’t include a Build or Deploy stage</li>
+        <ul>
+    drawerButtonText: Set as Flag Pipeline
+    envText: 'Set all Flags in {{ env }}'
+    saveSuccess: Flag Pipeline updated
+    noAvailablePipelinesMessage: There are no Pipelines available
+    noAvailablePipelinesDescription: You can create a Flag Pipeline in Pipeline Studio to automate your workflow
+    noExecutionMessage: There are no Pipeline executions yet
+    noExecutionDescription: Once a Pipeline has been triggered, the execution details will appear here
+    triggerDetails: Trigger Details
+    flagState: Flag State
+    defaultOffVariation: When Flag is Disabled - Default Rule
+    defaultServe: When Flag is Enabled - Default Rule
+    to: to {{ target }}
+    buildID: Build ID
+    openExecution: Open Pipeline Execution
+    pipelineDeleted: The Pipeline in use has been deleted from the Pipelines library
+    targeting: When Flag is Enabled - Specific Targeting
 featureFlagDetail:
   variationCount: '{{ count }} variations'
+  serviceDescription: Services this flag is associated with
+  serviceUpdateSuccess: Services updated
+  noServices: 'No Monitored Service available'
+  searchService: 'Search for Service name'
 flagFilters:
   active: Active Flags
   allFlags: All Flags
   enabled: Enabled Flags
-  last24: Changed Last 24 Hours
-  permanent: Permanent
-  potentiallyStale: Potentially Stale
+  recentlyAccessed: Recently Changed Flags
+  permanent: Permanent Flags
+  potentiallyStale: Potentially Stale Flags
 targets:
   ID: '{{ $.common.ID }}'
   name: name
   targetSegment: Target Group
   lastActivity: '{{ $.lastActivity }}'
   createdDate: Created Date
-  create: + New Target
+  create: New Target
   list: Add a target
   upload: Upload a list of targets (CSV files only)
   enterName: 'Enter target name'
   enterValue: 'Enter target identifier'
+  addRow: Add row
+  removeRow: Remove row
   addTargetsLabel: Add Target(s)
   addTargets: + Add Target(s)
   noTargetFound: 'No target found in this environment. Click the button above to create target(s).'
   noSegmentFound: 'No target group found in this environment. Click the button above to create a target group.'
-  uploadHeadline: Please upload a CSV file according to our <a href="https://ngdocs.harness.io/article/dbk9uoaid3-add-targets#step_upload_a_list_of_targets" target="_blank" rel="noreferrer">template</a>.
+  uploadHeadline: Please upload a CSV file according to our <a href="https://docs.harness.io/article/dbk9uoaid3-add-targets#step_upload_a_list_of_targets" target="_blank" rel="noreferrer">template</a>.
   uploadHelp: 'Target CSV entry format: Name,Identifier'
   uploadYourFile: Click to upload your file
   uploadStats: <strong>Targets</strong> ({{ count }})
@@ -275,6 +318,8 @@ targets:
   deleteTargetSuccess: Target <strong>{{name}}</strong> deleted.
   pageDescription: This list displays targets manually added or impacted by flags.
   uploadError: CSV processing failed
+  noTargetForEnv: There are no Targets in this Environment
+  noTargetDescription: <a href="https://docs.harness.io/article/dbk9uoaid3-add-targets#step_add_a_target" target="_blank" rel="noreferrer">Targets</a> are individual evaluations of Flags based on attributes you define in our SDKs. For instance, a Target can be a single customer or account that toggle a Flag.
 targetDetail:
   title: 'Targets: Individual'
   environmentLine: '<strong>Environment</strong>: {{name}}'
@@ -283,7 +328,7 @@ targetDetail:
   flagSetting: Flag Settings
   attribute: ATTRIBUTE
   attributes: Attributes ({{ counter }})
-  learnMore: To learn how to mark specific target attributes or information as private, read <a href="https://ngdocs.harness.io/category/vjolt35atg-feature-flags" target="_blank" rel="noreferrer">documentation</a>.
+  learnMore: To learn how to mark specific target attributes or information as private, read <a href="https://docs.harness.io/category/vjolt35atg-feature-flags" target="_blank" rel="noreferrer">documentation</a>.
   manuallyAdded: MANUALLY ADDED
   addToSegment: Add to {{count}} Target Groups
   autoAdded: AUTOMATICALLY ADDED THROUGH CONDITIONS
@@ -320,7 +365,7 @@ selectSegmentModal:
   flagsUsingThisSegment: FLAGS USING THIS TARGET GROUP
   empty: No Target Group found
 segments:
-  create: + New Target Group
+  create: New Target Group
   targetDefinition: Target Definition
   usingSegment: Flags using this target group
   usingSegmentWithCount: Flags using this target group ({{ count }})
@@ -333,7 +378,8 @@ segments:
   nameRequired: Target Group name is required
   idRequired: Target Group identifier is required
   noSegment: There are currently no target groups
-  noSegmentForEnv: There are currently no target groups for this environment
+  noTargetGroupsForEnv: There are no Target Groups in this Environment
+  noTargetGroupsDescription: <a href="https://docs.harness.io/article/5qz1qrugyk-add-target-groups#manage-target-groups" target="_blank" rel="noreferrer">Target Groups</a> are larger collection of Targets used to toggle Flags for entire cohorts. For instance, a Target Group could be an entire country, an early adopter list or an internal team.
   pageDescription: Target Groups allow you to serve flag variations to a list of targets in bulk.
 environments:
   title: '{{ $.environments }}'
@@ -356,7 +402,8 @@ environments:
     message: 'Secrets are only visible right after creation and redacted once you leave the page. Please make sure to copy and store your secret somewhere safe'
     title: 'SDK Keys'
     emptyName: 'SDK Key name is required'
-    addKey: '+ New SDK Key'
+    addKey: 'New SDK Key'
+    duplicateKey: 'A SDK key with this name already exists. Try another name'
     clientType: '{{ $.cf.testTheFlag.sdkClient }}'
     clientDescription: 'A client id will be generated as your client-side SDK key.'
     serverType: '{{ $.cf.testTheFlag.sdkServer }}'
@@ -367,8 +414,9 @@ environments:
     keyType: 'Key Type'
     applicableLanguages: 'Applicable Languages:'
     noKeysFoundTitle: There are no SDK keys for this environment
-    noKeysFoundMessage: Create an <a href="https://ngdocs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key" target="_blank" rel="noreferrer"> SDK key</a> for this environment so that your application can connect to our FF client. We support SDK keys for multiple programming languages.
+    noKeysFoundMessage: Create an <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_3_create_an_sdk_key" target="_blank" rel="noreferrer"> SDK key</a> for this Environment so that your application can connect to our FF client. We support SDK keys for multiple programming languages.
     redactionWarning: Your secret will be redacted once you leave the page. Please make sure to copy and store your secret.
+    lastUsed: 'Last Used'
 auditLogs:
   title: Audit Logs
   summaryHeading: 'Module: Feature Flags • Project: {{project}} • Environment: {{environment}}'
@@ -390,6 +438,12 @@ auditLogs:
   changeDetails: Change details
   events:
     updateClause: A clause was updated for a rule
+    removeClause: A clause was removed
+    addClause: A clause was added
+    addToIncludeList: '{{target}} added to included Targets'
+    removeFromIncludeList: '{{target}} removed from included Targets'
+    addToExcludeList: '{{target}} added to excluded Targets'
+    removeFromExcludeList: '{{target}} removed from excluded Targets'
     reorderRules: Rules reordered
     updateDefaultServe:
       bucketBy: Default serve updated for bucket by '{{bucketBy}}'
@@ -416,13 +470,14 @@ auditLogs:
     removeTargetsToVariationTargetMap: Variation '{{variation}}' removed for targets '{{targets}}'
     clearVariationTargetMapping: Variation target mapping removed
     updateOffVariation: Off variation updated to '{{variation}}'
-    removeClause: A clause was removed
+    addService: Service {{name}} added
+    removeService: Service {{name}} removed
 noEnvironment:
-  title: No Environment Available
-  message: Create an environment and let’s start configuring the targeting rules of your flag
+  title: There are no Environments in this Project
+  message: <a href="https://docs.harness.io/article/1j7pdkqh7j-create-a-feature-flag#step_2_create_an_environment" target="_blank" rel="noreferrer">Environments</a> are the different places you run your application where you can configure Flags - i.e. your dev server, your QA server and your production server
 pipeline:
   listing: Pipeline Listing
-  rollloutStrategy:
+  rolloutStrategy:
     title: Rollout Strategy
   advanced:
     title: '{{ $.advancedTitle }}'
@@ -555,31 +610,43 @@ onboarding:
   waitForConnect: Waiting for SDK...{{ message }}
   allSet: Congratulations! You’re all set!
   tryTarget: Try out our robust <a href='{{ link }}'>targeting rules for this flag</a> for more granular rollouts.
-  backToStart: Back to Quick Start Guide
+  backToStart: Complete
   title: Feature Flags Quick Start Guide
   subTitle: Everything you need to know in less than 15 minutes.
   upAndRunning: Get a flag up and running in 3 steps
   tryItOut: '{{ $.getStarted }}'
-  createAFlag: '1. Create a Flag'
+  createAFlag: Create a Flag
+  createEnvAndSdk: Create an Environment and SDK Key
+  setupCode: Setup your Code
+  oneCreateAFlag: '1. Create a Flag'
   setUpApp: '2. Set Up Your Application'
   testYourFlag: '3. Test Your Flag'
-  letsStart: Let's start off by creating a simple flag
-  inputLabel: Give your flag a memorable name
-  successLabel: 'You have created <strong>{{name}}</strong> with Id: <strong>{{identifier}}</strong>'
+  letsGetStarted: Let's get started
+  createFlag: Create a Feature Flag
+  flagInputLabel: Select an existing Flag or type the name to create new one
+  selectOrCreateFlag: Select or Create a Flag
+  youCreated: You've created
+  youreUsing: You're using
   setupLabel: Set up your application and code to communicate with our platform.
   selectLanguage: Select your language
-  selectEnvironment: Select your environment
-  createEnv: + Create an environment
+  selectYourEnvironment: Select your Environment
+  createEnv: Create an environment
   envCreated: Environment Created
   sdkKeyLabel: Please create an SDK key for your environment
-  sdkButtonLabel: + Create SDK Key
   keyDescriptionServer: We generated a secret as the server-side SDK key of your new environment for you to use in your code below. This secret will be redacted once you leave the page, so make sure to copy and store your secret somewhere safe.
   keyDescriptionClient: We generated a client-side SDK key of your new environment for you to use in your code below.
   secret: SDK Secret
   clientKey: Client SDK Key
   setUpYourCode: Set up your code
-  listenToEvent: We’re listening for the event of your feature flag.
-  toggleLabel: Enable or disable your flag by turning the flag toggle on or off, then verify the event we receive has the same value as your application.
+  listenToEvent: We're listening for the change to your Flag status...<br>Be patient, it may take up to 3-5 minutes
+  validatingYourFlag: Validating your Flag
+  validatingFlagInfo: 'Enable your Flag to verify that the event we received has the same value. Learn more about <a target="_blank" href="https://docs.harness.io/article/7ikyqtmjce-communication-sdks-harness-feature-flags">Events and Evaluation</a>'
+  eventWeReceived: Event we received
+  createdAndValidated: Congrats! You have created and validated your first Flag! <br><br>Now you can define which Targets and Target Groups this Flag should be enabled for, and then see how that affects your application.
+  errorReceivingEvent: We couldn't receive a Flag status from your application, check the <a target="_blank" href="https://docs.harness.io/category/eyzngtupao-sdk-overview"> SDK reference guide</a> to ensure you've set up the SDK correctly, then toggle the Flag to try again.
+  furtherAssistance: '<br>If you are still having issues,'
+  toggleError: We couldn’t receive events, check possible reasons below and toggle the Flag to try again
+  toggleLabel: Enable or disable your Flag by turning the Flag toggle on or off, then verify the event we receive has the same value as your application.
   help:
     heading1: The Importance of Your Flag Id
     text1: Your flag Id is required to reference the flag in your code.
@@ -1270,10 +1337,10 @@ onboarding:
     dotnet: |
       # Install
 
-      You can reference the SDK in your project using NuGet package. Package is published to default package repository (nuget.org).
-      Package name is 
+      You can reference the SDK in your project using NuGet package. The package is published to default package repository (nuget.org) and can be installed
+      with the following command:
       ```
-      ff-netF48-server-sdk --version 1.0.8
+      dotnet add package ff-dotnet-server-sdk
       ```
 
       More information can be found <a href="https://docs.microsoft.com/en-us/nuget/quickstart/install-and-use-a-package-using-the-dotnet-cli">here</>

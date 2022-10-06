@@ -16,7 +16,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view for inputset vi
         >
           <div
             class="StyledProps--font StyledProps--main"
-            style="margin-bottom: 5px;"
+            data-test-id="connectorTooltip"
           >
             <span
               class="Tooltip--acenter bp3-label"
@@ -219,7 +219,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with empty init
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -490,7 +490,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with runtime va
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"
@@ -763,7 +763,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view with values  1`
             >
               <div
                 class="StyledProps--font StyledProps--main"
-                style="margin-bottom: 5px;"
+                data-test-id="connectorTooltip"
               >
                 <span
                   class="Tooltip--acenter bp3-label"

@@ -6,8 +6,8 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Layout, Icon, Text } from '@wings-software/uicore'
-import { Intent, Color } from '@harness/design-system'
+import { Container, Icon, Layout, Text } from '@wings-software/uicore'
+import { Color, Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import EnvironmentDialog from '@cf/components/CreateEnvironmentDialog/EnvironmentDialog'
 import { useEnvironmentSelectV2 } from '@cf/hooks/useEnvironmentSelectV2'
@@ -20,7 +20,7 @@ import type { EnvironmentResponseDTO } from 'services/cd-ng'
 import { PlatformEntry, PlatformEntryType } from '@cf/components/LanguageSelection/LanguageSelection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
-
+import css from './SelectEnvironmentView.module.scss'
 export interface SelectEnvironmentViewProps {
   language: PlatformEntry
   apiKey: ApiKey | undefined
@@ -60,93 +60,91 @@ export const SelectEnvironmentView: React.FC<SelectEnvironmentViewProps> = props
   const serverSide = props.language.type === PlatformEntryType.SERVER
 
   return (
-    <Container>
-      <Layout.Horizontal spacing="small">
-        {loading && <Icon name="spinner" size={16} color="blue500" />}
-        {!loading && (
-          <>
-            {!!environments?.length && (
-              <Container width={250}>
-                <EnvironmentSelect />
+    <Container margin={{ top: 'large' }}>
+      <Layout.Vertical spacing="xsmall">
+        <Text className={css.selectEnvironment}>{getString('cf.onboarding.selectYourEnvironment')}</Text>
+        <Container className={css.environmentContainer}>
+          <Container>
+            <Layout.Horizontal spacing="small">
+              {loading && <Icon name="spinner" size={16} color="blue500" />}
+              {!loading && (
+                <>
+                  {!!environments?.length && (
+                    <Container width={250}>
+                      <EnvironmentSelect />
+                    </Container>
+                  )}
+                  <EnvironmentDialog
+                    onCreate={() => {
+                      setEnvironmentCreated(true)
+                      refetch()
+                      props.setApiKey(undefined)
+                    }}
+                    buttonProps={{
+                      intent: Intent.NONE,
+                      text: getString('cf.onboarding.createEnv'),
+                      style: { color: 'var(--blue-500)', ...(environments?.length ? { border: 'none' } : {}) }
+                    }}
+                  />
+                </>
+              )}
+            </Layout.Horizontal>
+            {environmentCreated && (
+              <Text
+                margin={{ top: 'medium' }}
+                icon="tick-circle"
+                color={Color.GREEN_700}
+                iconProps={{ color: Color.GREEN_700, size: 16 }}
+              >
+                {getString('cf.onboarding.envCreated')}
+              </Text>
+            )}
+
+            {!!environments?.length && environment && (
+              <Container>
+                <Text margin={{ top: 'large', bottom: 'medium' }} className={css.sdkLabel}>
+                  {getString(
+                    apiKey
+                      ? serverSide
+                        ? 'cf.onboarding.keyDescriptionServer'
+                        : 'cf.onboarding.keyDescriptionClient'
+                      : 'cf.onboarding.sdkKeyLabel'
+                  )}
+                </Text>
+                <Layout.Horizontal spacing="small" className={css.onboardingLayout}>
+                  {apiKey && (
+                    <>
+                      <Text className={css.secret}>
+                        {getString(serverSide ? 'cf.onboarding.secret' : 'cf.onboarding.clientKey')}
+                      </Text>
+                      <IdentifierText allowCopy identifier={apiKey.apiKey} className={css.idText} />
+                    </>
+                  )}
+                  <AddKeyDialog
+                    keyType={
+                      props.language.type === PlatformEntryType.CLIENT
+                        ? EnvironmentSDKKeyType.CLIENT
+                        : EnvironmentSDKKeyType.SERVER
+                    }
+                    environment={environment as EnvironmentResponseDTO}
+                    onCreate={(newKey: ApiKey, hideCreate) => {
+                      setApiKey(newKey)
+                      props.setApiKey(newKey)
+                      hideCreate()
+                    }}
+                    buttonProps={{
+                      intent: Intent.NONE,
+                      minimal: false,
+                      style: { color: 'var(--blue-500)' },
+                      text: getString('cf.environments.apiKeys.addKeyTitle')
+                    }}
+                  />
+                </Layout.Horizontal>
               </Container>
             )}
-            <EnvironmentDialog
-              onCreate={() => {
-                setEnvironmentCreated(true)
-                refetch()
-                props.setApiKey(undefined)
-              }}
-              buttonProps={{
-                intent: Intent.NONE,
-                text: getString('cf.onboarding.createEnv'),
-                style: { color: 'var(--blue-500)', ...(environments?.length ? { border: 'none' } : {}) }
-              }}
-            />
-          </>
-        )}
-      </Layout.Horizontal>
-      {environmentCreated && (
-        <Text
-          margin={{ top: 'medium' }}
-          icon="tick-circle"
-          color={Color.GREEN_700}
-          iconProps={{ color: Color.GREEN_700, size: 16 }}
-        >
-          {getString('cf.onboarding.envCreated')}
-        </Text>
-      )}
-
-      {!!environments?.length && environment && (
-        <Container>
-          <Text margin={{ top: 'large', bottom: 'medium' }} style={{ color: '#6B6D85', lineHeight: '20px' }}>
-            {getString(
-              apiKey
-                ? serverSide
-                  ? 'cf.onboarding.keyDescriptionServer'
-                  : 'cf.onboarding.keyDescriptionClient'
-                : 'cf.onboarding.sdkKeyLabel'
-            )}
-          </Text>
-
-          <Layout.Horizontal spacing="small" style={{ alignItems: 'baseline' }}>
-            {apiKey && (
-              <>
-                <Text style={{ fontWeight: 600 }}>
-                  {getString(serverSide ? 'cf.onboarding.secret' : 'cf.onboarding.clientKey')}
-                </Text>
-                <IdentifierText
-                  allowCopy
-                  identifier={apiKey.apiKey}
-                  style={{
-                    padding: 'var(--spacing-small) var(--spacing-medium)',
-                    background: '#F3F3FA',
-                    border: 'none'
-                  }}
-                />
-              </>
-            )}
-            <AddKeyDialog
-              keyType={
-                props.language.type === PlatformEntryType.CLIENT
-                  ? EnvironmentSDKKeyType.CLIENT
-                  : EnvironmentSDKKeyType.SERVER
-              }
-              environment={environment as EnvironmentResponseDTO}
-              onCreate={(newKey: ApiKey, hideCreate) => {
-                setApiKey(newKey)
-                props.setApiKey(newKey)
-                hideCreate()
-              }}
-              buttonProps={{
-                intent: Intent.NONE,
-                minimal: false,
-                style: { color: 'var(--blue-500)' },
-                text: getString('cf.onboarding.sdkButtonLabel')
-              }}
-            />
-          </Layout.Horizontal>
+          </Container>
         </Container>
-      )}
+      </Layout.Vertical>
     </Container>
   )
 }

@@ -20,14 +20,11 @@ import type {
 } from 'services/cd-ng'
 import type { DependencyElement } from 'services/ci'
 import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { EmptyNodeSeparator } from '../StageBuilder/StageBuilderUtil'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import {
-  CreateNewModel,
   DefaultLinkModel,
   DefaultNodeModel,
   StepGroupNodeLayerModel,
-  StepGroupNodeLayerOptions,
-  StepsType,
   DiamondNodeModel,
   DiagramType
 } from '../../Diagram'
@@ -95,6 +92,22 @@ export const getDefaultDependencyServiceState = (): StepState => ({
   isStepGroup: false,
   stepType: StepType.SERVICE
 })
+interface GetStepFromNodeProps {
+  stepData: ExecutionWrapper | undefined
+  node?: DefaultNodeModel
+  isComplete: boolean
+  isFindParallelNode: boolean
+  nodeId?: string
+  parentId?: string
+  isRollback?: boolean
+}
+
+interface RemoveStepOrGroupProps {
+  state: ExecutionGraphState
+  entity: any
+  skipFlatten?: boolean
+  isRollback?: boolean
+}
 
 export type StepStateMap = Map<string, StepState>
 
@@ -153,29 +166,37 @@ export const getDependencyFromNodeV1 = (
   return { node: _service, parent: servicesData }
 }
 
-export const getStepFromNode = (
-  stepData: ExecutionWrapper | undefined,
-  node?: DefaultNodeModel,
+export const getStepFromNode = ({
+  stepData,
+  node,
   isComplete = false,
   isFindParallelNode = false,
-  nodeId?: string,
-  parentId?: string
-): { node: ExecutionWrapper | undefined; parent: ExecutionWrapper[] } => {
+  nodeId,
+  parentId,
+  isRollback
+}: GetStepFromNodeProps): { node: ExecutionWrapper | undefined; parent: ExecutionWrapper[] } => {
   let data = stepData
   if (parentId) {
-    const group = getStepFromId(data, defaultTo(parentId, ''), false).node
+    const group = getStepFromId(data, defaultTo(parentId, ''), false, false, Boolean(isRollback)).node
     if (group) {
       data = group
     }
   }
-  return getStepFromId(data, nodeId || node?.getIdentifier() || '', isComplete, isFindParallelNode)
+  return getStepFromId(
+    data,
+    nodeId || node?.getIdentifier() || '',
+    isComplete,
+    isFindParallelNode,
+    data?.rollbackSteps && isRollback ? isRollback : false
+  )
 }
 
 export const getStepFromId = (
   stageData: ExecutionWrapper | undefined,
   id: string,
   isComplete = false,
-  isFindParallelNode = false
+  isFindParallelNode = false,
+  isRollback?: boolean
 ): {
   node: ExecutionWrapper | undefined
   parent: ExecutionWrapper[]
@@ -183,21 +204,16 @@ export const getStepFromId = (
   parallelParentIdx?: number
   parallelParentParent?: ExecutionWrapper[]
 } => {
-  let returnObj = getStepFromIdInternal(
-    (stageData as ExecutionElementConfig)?.steps,
+  return getStepFromIdInternal(
+    (stageData as ExecutionElementConfig)?.[isRollback ? 'rollbackSteps' : 'steps'],
     id,
     isComplete,
-    isFindParallelNode
+    isFindParallelNode,
+    undefined,
+    undefined,
+    undefined,
+    Boolean(isRollback)
   )
-  if (!returnObj.node) {
-    returnObj = getStepFromIdInternal(
-      (stageData as ExecutionElementConfig)?.rollbackSteps,
-      id,
-      isComplete,
-      isFindParallelNode
-    )
-  }
-  return returnObj
 }
 
 const getStepFromIdInternal = (
@@ -207,7 +223,8 @@ const getStepFromIdInternal = (
   isFindParallelNode = false,
   _parallelParent: ExecutionWrapperConfig | undefined = undefined,
   _parallelParentIdx: number | undefined = undefined,
-  _parallelParentParent: ExecutionWrapperConfig[] | undefined = undefined
+  _parallelParentParent: ExecutionWrapperConfig[] | undefined = undefined,
+  isRollback = false
 ): {
   node: ExecutionWrapper | undefined
   parent: ExecutionWrapper[]
@@ -257,7 +274,7 @@ const getStepFromIdInternal = (
               parallelParentIdx = _parallelParentIdx
               return false
             } else {
-              const response = getStepFromId(nodeP.stepGroup, id, isComplete, isFindParallelNode)
+              const response = getStepFromId(nodeP.stepGroup, id, isComplete, isFindParallelNode, isRollback)
               if (response.node) {
                 parent = response.parent
                 stepResp = response.node
@@ -274,7 +291,7 @@ const getStepFromIdInternal = (
           return false
         }
       } else {
-        const response = getStepFromIdInternal(node.parallel, id, isComplete, false, node, idx, stepData)
+        const response = getStepFromIdInternal(node.parallel, id, isComplete, false, node, idx, stepData, isRollback)
         if (response.node) {
           stepResp = response.node
           parent = response.parent
@@ -437,65 +454,12 @@ export const updateStepsState = (
   }
 }
 
-export const removeStepOrGroup = (
-  state: ExecutionGraphState,
-  entity: any,
+export const removeStepOrGroup = ({
+  state,
+  entity,
   skipFlatten = false,
-  newPipelineStudioEnabled?: boolean
-): boolean => {
-  if (newPipelineStudioEnabled) {
-    return removeStepOrGroupV2(state, entity, skipFlatten)
-  }
-  // 1. services
-  const servicesData = state.dependenciesData
-  if (servicesData) {
-    let idx
-    servicesData.forEach((service, _idx) => {
-      if (service.identifier === entity.getOptions().identifier) {
-        idx = _idx
-      }
-    })
-    if (idx !== undefined) {
-      servicesData.splice(idx, 1)
-      return true
-    }
-  }
-
-  // 2. steps
-  let isRemoved = false
-  let data: ExecutionWrapper = state.stepsData
-  const layer = entity.getParent()
-  if (layer instanceof StepGroupNodeLayerModel) {
-    const node = getStepFromId(data, layer.getIdentifier() || '', false).node
-    if (node) {
-      data = node
-    }
-  }
-  const response = getStepFromId(data, entity.getIdentifier(), true)
-  if (response.node) {
-    const index = response.parent.indexOf(response.node)
-    if (index > -1) {
-      response.parent.splice(index, 1)
-      // NOTE: if there is one item in parallel array, we are removing parallel array
-      if (
-        !skipFlatten &&
-        response.parallelParent &&
-        (response.parallelParent as ExecutionWrapperConfig).parallel?.length === 1
-      ) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const stepToReAttach = (response.parallelParent as ExecutionWrapperConfig).parallel![0]
-        // reattach step
-        if (response.parallelParentParent && response.parallelParentIdx !== undefined) {
-          response.parallelParentParent[response.parallelParentIdx] = stepToReAttach
-        }
-      }
-      isRemoved = true
-    }
-  }
-  return isRemoved
-}
-
-export const removeStepOrGroupV2 = (state: ExecutionGraphState, entity: any, skipFlatten = false): boolean => {
+  isRollback = false
+}: RemoveStepOrGroupProps): boolean => {
   // 1. services
   const servicesData = state.dependenciesData
   if (servicesData) {
@@ -516,12 +480,18 @@ export const removeStepOrGroupV2 = (state: ExecutionGraphState, entity: any, ski
   let data: ExecutionWrapper = state.stepsData
   // const layer = entity.getParent()
   if (entity?.node?.parentIdentifier) {
-    const node = getStepFromId(data, entity?.node?.parentIdentifier || '', false).node
+    const node = getStepFromId(data, defaultTo(entity?.node?.parentIdentifier, ''), false, false, isRollback).node
     if (node) {
       data = node
     }
   }
-  const response = getStepFromId(data, entity?.node?.identifier, true)
+  const response = getStepFromId(
+    data,
+    entity?.node?.identifier,
+    true,
+    false,
+    data?.rollbackSteps && isRollback ? isRollback : false
+  )
   if (response.node) {
     const index = response.parent.indexOf(response.node)
     if (index > -1) {
@@ -567,140 +537,33 @@ export const addStepOrGroup = (
   data: ExecutionWrapper,
   step: ExecutionWrapperConfig,
   isParallel: boolean,
-  isRollback: boolean,
-  newPipelineStudioEnabled?: boolean
-): void => {
-  if (newPipelineStudioEnabled) {
-    addStepOrGroupV2(entity, data, step, isParallel, isRollback)
-    return
-  }
-
-  if (entity instanceof DefaultLinkModel) {
-    const sourceNode = entity.getSourcePort().getNode() as DefaultNodeModel
-    const targetNode = entity.getTargetPort().getNode() as DefaultNodeModel
-    if (isLinkUnderStepGroup(entity)) {
-      const layer = sourceNode.getParent()
-      if (layer instanceof StepGroupNodeLayerModel) {
-        const node = getStepFromId(data, layer.getIdentifier() || '', false).node
-        if (node) {
-          data = node
-        }
-      }
-    }
-    let response = getStepFromId(data, sourceNode.getIdentifier(), true)
-    let next = 1
-    if (!response.node) {
-      response = getStepFromId(data, targetNode.getIdentifier(), true)
-      next = 0
-    }
-    if (response.node) {
-      const index = response.parent.indexOf(response.node)
-      if (index > -1) {
-        response.parent.splice(index + next, 0, step)
-      }
-    } else {
-      // parallel next parallel case
-      let nodeId = sourceNode.getIdentifier().split(EmptyNodeSeparator)[1]
-      response = getStepFromId(data, nodeId, true, true)
-      next = 1
-      if (!response.node) {
-        nodeId = targetNode.getIdentifier().split(EmptyNodeSeparator)[2]
-        response = getStepFromId(data, nodeId, true, true)
-        next = 0
-      }
-      if (response.node) {
-        const index = response.parent.indexOf(response.node)
-        if (index > -1) {
-          response.parent.splice(index + next, 0, step)
-        }
-      }
-    }
-  } else if (entity instanceof CreateNewModel) {
-    // Steps if you are under step group
-    const groupId = entity.getIdentifier().split(EmptyNodeSeparator)[1]
-    const node = getStepFromId(data, groupId).node
-    const layer = entity.getParent()
-    if (layer instanceof StepGroupNodeLayerModel) {
-      const options = layer.getOptions() as StepGroupNodeLayerOptions
-      const isRollbackGroup = options.rollBackProps?.active === StepsType.Rollback
-      if (!isRollbackGroup && isExecutionElementConfig(node) && node?.steps) {
-        node.steps.push(step)
-      } else if (isRollbackGroup && isExecutionElementConfig(node) && node) {
-        if (isNil(node.rollbackSteps)) {
-          node.rollbackSteps = []
-        }
-        node.rollbackSteps.push(step)
-      }
-    } else {
-      if (isRollback) {
-        if (isExecutionElementConfig(data)) data.rollbackSteps?.push?.(step)
-      } else {
-        if (isExecutionElementConfig(data)) data.steps.push(step)
-      }
-    }
-  } else if (entity instanceof DefaultNodeModel) {
-    if (isParallel) {
-      const response = getStepFromId(data, entity.getIdentifier(), true, true) as {
-        node: ExecutionWrapperConfig
-        parent: ExecutionWrapperConfig[]
-      }
-      if (response.node) {
-        if (response.node.parallel && response.node.parallel.length > 0) {
-          response.node.parallel.push(step)
-        } else {
-          const index = response.parent.indexOf(response.node)
-          if (index > -1) {
-            response.parent.splice(index, 1, { parallel: [response.node, step] })
-          }
-        }
-      }
-    } else {
-      if (isRollback) {
-        ;(data as ExecutionElementConfig).rollbackSteps?.push?.(step)
-      } else {
-        ;(data as ExecutionElementConfig).steps.push(step)
-      }
-    }
-  } else if (entity instanceof StepGroupNodeLayerModel) {
-    if (isParallel) {
-      const response = getStepFromId(data, entity.getIdentifier() || '', true, true) as {
-        node: ExecutionWrapperConfig
-        parent: ExecutionWrapperConfig[]
-      }
-      if (response.node) {
-        if (response.node.parallel && response.node.parallel.length > 0) {
-          response.node.parallel.push(step)
-        } else {
-          const index = response.parent.indexOf(response.node)
-          if (index > -1) {
-            response.parent.splice(index, 1, { parallel: [response.node, step] })
-          }
-        }
-      }
-    }
-  }
-}
-
-export const addStepOrGroupV2 = (
-  entity: any,
-  data: ExecutionWrapper,
-  step: ExecutionWrapperConfig,
-  isParallel: boolean,
   isRollback: boolean
 ): void => {
   if (entity?.entityType === DiagramType.Link) {
     const sourceNode = entity?.isRightAddIcon ? entity?.node : entity?.node?.prevNode
     const targetNode = entity?.isRightAddIcon ? entity?.node?.nextNode : entity?.node
     if (entity?.node?.parentIdentifier) {
-      const node = getStepFromId(data, entity?.node?.parentIdentifier || '', false).node
+      const node = getStepFromId(data, defaultTo(entity?.node?.parentIdentifier, ''), false, false, isRollback).node
       if (node) {
         data = node
       }
     }
-    let response = getStepFromId(data, sourceNode?.identifier || '', true, sourceNode?.children?.length)
+    let response = getStepFromId(
+      data,
+      defaultTo(sourceNode?.identifier, ''),
+      true,
+      sourceNode?.children?.length,
+      data?.rollbackSteps && isRollback ? isRollback : false
+    )
     let next = 1
     if (!response.node) {
-      response = getStepFromId(data, targetNode?.identifier || '', true, targetNode?.children?.length)
+      response = getStepFromId(
+        data,
+        defaultTo(targetNode?.identifier, ''),
+        true,
+        targetNode?.children?.length,
+        data?.rollbackSteps && isRollback ? isRollback : false
+      )
       next = 0
     }
     if (response.node) {
@@ -712,7 +575,7 @@ export const addStepOrGroupV2 = (
   } else if (entity?.entityType === DiagramType.CreateNew) {
     // Steps if you are under step group
     const groupId = entity?.identifier
-    const node = getStepFromId(data, groupId).node
+    const node = getStepFromId(data, groupId, false, false, isRollback).node
     if (entity?.node?.parentIdentifier) {
       if (isExecutionElementConfig(node) && node?.steps) {
         node.steps.push(step)
@@ -735,7 +598,7 @@ export const addStepOrGroupV2 = (
     }
   } else if (entity?.entityType === DiagramType.Default) {
     if (isParallel) {
-      const response = getStepFromId(data, entity.identifier, true, true) as {
+      const response = getStepFromId(data, entity.identifier, true, true, isRollback) as {
         node: ExecutionWrapperConfig
         parent: ExecutionWrapperConfig[]
       }
@@ -758,7 +621,7 @@ export const addStepOrGroupV2 = (
     }
   } else if (entity?.entityType === DiagramType.StepGroupNode) {
     if (isParallel) {
-      const response = getStepFromId(data, entity.identifier || '', true, true) as {
+      const response = getStepFromId(data, defaultTo(entity.identifier, ''), true, true, isRollback) as {
         node: ExecutionWrapperConfig
         parent: ExecutionWrapperConfig[]
       }
@@ -820,5 +683,14 @@ export const StepTypeToPipelineIconMap: Record<any, IconName> = {
   [PipelineStepType.HarnessApproval]: 'harness-with-color',
   [PipelineStepType.JiraCreate]: 'jira-create',
   [PipelineStepType.JiraUpdate]: 'jira-update',
-  [PipelineStepType.Barrier]: 'barrier-open'
+  [PipelineStepType.Barrier]: 'barrier-open',
+  [PipelineStepType.CustomApproval]: 'custom-approval',
+  [PipelineStepType.FetchInstanceScript]: 'rolling'
+}
+
+export const isServiceDependenciesSupported = (stageType: string): boolean => {
+  if (stageType === StageType.BUILD || stageType === StageType.SECURITY) {
+    return true
+  }
+  return false
 }

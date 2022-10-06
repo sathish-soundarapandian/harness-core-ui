@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, queryByAttribute, fireEvent, act, waitFor } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import HelmWithGcs from '../HelmWithGcs'
@@ -15,7 +15,11 @@ import HelmWithGcs from '../HelmWithGcs'
 const props = {
   stepName: 'Manifest details',
   expressions: [],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   handleSubmit: jest.fn(),
   manifestIdsList: []
 }

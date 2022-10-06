@@ -120,7 +120,7 @@ exports[`<AdvancedSteps /> tests snapshot test 1`] = `
                                 data-name="DelegateSelectors"
                               >
                                 <div
-                                  class="bp3-popover-wrapper delegateInput delegatePopover bp3-fill"
+                                  class="bp3-popover-wrapper delegatePopover bp3-fill"
                                 >
                                   <div
                                     class="bp3-popover-target"
@@ -129,7 +129,7 @@ exports[`<AdvancedSteps /> tests snapshot test 1`] = `
                                       class=""
                                     >
                                       <div
-                                        class="bp3-input bp3-tag-input bp3-fill bp3-multi-select"
+                                        class="bp3-input bp3-tag-input bp3-fill bp3-multi-select delegateInput"
                                       >
                                         <div
                                           class="bp3-tag-input-values"
@@ -195,6 +195,34 @@ exports[`<AdvancedSteps /> tests snapshot test 1`] = `
                   class="Accordion--label"
                 >
                   pipeline.failureStrategies.title
+                </div>
+                <div
+                  class="Accordion--chevron"
+                />
+              </div>
+              <div
+                class="bp3-collapse Accordion--collapse"
+              >
+                <div
+                  aria-hidden="false"
+                  class="bp3-collapse-body"
+                  style="transform: translateY(-undefinedpx);"
+                />
+              </div>
+            </div>
+            <div
+              class="Accordion--panel"
+              data-open="false"
+              data-testid="loopingStrategy-panel"
+            >
+              <div
+                class="Accordion--summary"
+                data-testid="loopingStrategy-summary"
+              >
+                <div
+                  class="Accordion--label"
+                >
+                  pipeline.loopingStrategy.title
                 </div>
                 <div
                   class="Accordion--chevron"

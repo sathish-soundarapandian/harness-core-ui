@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StartupScriptSelection empty state - no context values 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+      style="width: 100%;"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <section />
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`StartupScriptSelection initial render 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+      style="width: 100%;"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <section />
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+      >
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main addStartupScript Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+          data-test-id="addStartupScript"
+          id="add-startup-script"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            common.plusAddName
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`StartupScriptSelection readonly mode 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+      style="width: 100%;"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+      >
+        <div
+          class="startupScriptList listHeader"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            style="width: 200px;"
+          >
+            store
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            style="width: 200px;"
+          >
+            location
+          </p>
+          <span />
+        </div>
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <section>
+            <div
+              class="rowItem"
+            >
+              <section
+                class="startupScriptList"
+              >
+                <div
+                  class="columnId"
+                >
+                  <div
+                    class="connectorNameField"
+                  />
+                </div>
+              </section>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+      />
+    </div>
+  </div>
+</div>
+`;

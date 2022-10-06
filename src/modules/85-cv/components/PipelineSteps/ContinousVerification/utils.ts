@@ -7,18 +7,23 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@wings-software/uicore'
 import { isEmpty, isNull, isUndefined, omit, omitBy, set } from 'lodash-es'
-import { yupToFormErrors } from 'formik'
+import { FormikErrors, yupToFormErrors } from 'formik'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import type { ContinousVerificationData, spec } from './types'
+import type { ContinousVerificationData, spec, VerifyStepMonitoredService } from './types'
 import {
   VerificationSensitivityOptions,
   durationOptions,
   baseLineOptions,
   trafficSplitPercentageOptions,
-  SensitivityTypes
+  SensitivityTypes,
+  defaultMonitoredServiceSpec,
+  monitoredServiceRefPath,
+  extendedDurationOptions
 } from './constants'
+import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
+import { validateTemplateInputs } from './components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
 
 /**
  * checks if a field is a runtime input.
@@ -42,12 +47,44 @@ export function validateField(
   fieldValue: string,
   fieldKey: string,
   data: ContinousVerificationData,
-  errors: any,
+  errors: FormikErrors<ContinousVerificationData>,
   getString: UseStringsReturn['getString'],
   isRequired = true
 ): void {
   if (checkIfRunTimeInput(fieldValue) && isRequired && isEmpty(data?.spec?.spec && data?.spec?.spec[fieldKey])) {
     set(errors, `spec.spec.${fieldKey}`, getString('fieldRequired', { field: fieldKey }))
+  }
+}
+
+export function validateMonitoredService(
+  data: ContinousVerificationData,
+  errors: FormikErrors<ContinousVerificationData>,
+  getString: UseStringsReturn['getString'],
+  isRequired: boolean,
+  monitoredService?: VerifyStepMonitoredService
+): void {
+  if (
+    checkIfRunTimeInput(monitoredService?.spec?.monitoredServiceRef) &&
+    isRequired &&
+    isEmpty(data?.spec?.monitoredService?.spec?.monitoredServiceRef)
+  ) {
+    set(errors, monitoredServiceRefPath, getString('fieldRequired', { field: 'Monitored service' }))
+  }
+}
+
+export function validateMonitoredServiceTemplateInputs(
+  data: ContinousVerificationData,
+  errors: FormikErrors<ContinousVerificationData>,
+  getString: UseStringsReturn['getString'],
+  monitoredService?: VerifyStepMonitoredService
+): void {
+  if (monitoredService?.type === MONITORED_SERVICE_TYPE.TEMPLATE) {
+    validateTemplateInputs(
+      monitoredService?.spec?.templateInputs,
+      data?.spec?.monitoredService?.spec?.templateInputs,
+      errors,
+      getString
+    )
   }
 }
 
@@ -121,6 +158,38 @@ export function getSpecYamlData(specInfo?: spec, type?: string): spec {
   return validspec
 }
 
+export function getMonitoredServiceYamlData(spec: ContinousVerificationData['spec']): VerifyStepMonitoredService {
+  let monitoredService: VerifyStepMonitoredService = defaultMonitoredServiceSpec
+  const monitoredServiceTemplateSpec = omit(spec?.monitoredService?.spec, ['monitoredServiceRef'])
+
+  switch (spec?.monitoredService?.type) {
+    case MONITORED_SERVICE_TYPE.DEFAULT:
+      monitoredService = defaultMonitoredServiceSpec
+      break
+    case MONITORED_SERVICE_TYPE.CONFIGURED:
+      monitoredService = {
+        type: MONITORED_SERVICE_TYPE.CONFIGURED,
+        spec: {
+          monitoredServiceRef: getMonitoredServiceRef(spec)
+        }
+      }
+      break
+    case MONITORED_SERVICE_TYPE.TEMPLATE:
+      monitoredService = {
+        type: MONITORED_SERVICE_TYPE.TEMPLATE,
+        spec: { ...monitoredServiceTemplateSpec }
+      }
+      break
+    default:
+      monitoredService = defaultMonitoredServiceSpec
+  }
+  return monitoredService
+}
+
+export function getMonitoredServiceRef(spec: ContinousVerificationData['spec']): string {
+  return spec?.monitoredService?.spec?.monitoredServiceRef as string
+}
+
 /**
  * returns forms data for spec field.
  * @param specInfo
@@ -135,7 +204,7 @@ export function getSpecFormData(specInfo: spec | undefined): spec {
           setFieldData(validspec, 'sensitivity', VerificationSensitivityOptions)
           break
         case 'duration':
-          setFieldData(validspec, 'duration', durationOptions)
+          setFieldData(validspec, 'duration', [...durationOptions, ...extendedDurationOptions])
           break
         case 'baseline':
           setFieldData(validspec, 'baseline', baseLineOptions)
@@ -169,4 +238,56 @@ export function setFieldData(validspec: spec | undefined, field: string, fieldOp
       validspec[field] = fieldOptions.find((el: SelectOption) => el.value === (validspec && validspec[field]))
     }
   }
+}
+
+export function isDefaultMonitoredServiceAndServiceOrEnvRunTime(
+  type: string,
+  serviceIdentifierFromStage: string,
+  envIdentifierDataFromStage: string
+): boolean {
+  return (
+    (serviceIdentifierFromStage === RUNTIME_INPUT_VALUE || envIdentifierDataFromStage === RUNTIME_INPUT_VALUE) &&
+    type === MONITORED_SERVICE_TYPE.DEFAULT
+  )
+}
+
+export function isConfiguredMonitoredServiceRunTime(
+  type: string,
+  monitoredService?: VerifyStepMonitoredService
+): boolean {
+  return type === MONITORED_SERVICE_TYPE.CONFIGURED && checkIfRunTimeInput(monitoredService?.spec?.monitoredServiceRef)
+}
+
+export function isTemplatisedMonitoredService(type: string): boolean {
+  return type === MONITORED_SERVICE_TYPE.TEMPLATE
+}
+
+export function getMetricDefinitions(hasQueries: boolean, healthSource: any) {
+  return hasQueries
+    ? healthSource?.spec?.queries
+    : healthSource?.spec?.metricDefinitions || healthSource?.spec?.newRelicMetricDefinitions
+}
+
+export function doesHealthSourceHasQueries(healthSource: any) {
+  return healthSource?.spec?.queries !== undefined
+}
+
+export function getMetricDefinitionPath(path: string, hasQueries: boolean) {
+  return `${path}.${hasQueries ? 'queries' : 'metricDefinitions'}`
+}
+
+export const getDurationOptions = (enableVerifyStepLongDuration?: boolean): SelectOption[] =>
+  enableVerifyStepLongDuration ? [...durationOptions, ...extendedDurationOptions] : durationOptions
+
+export const setCommaSeperatedList = (
+  value: string,
+  onChange: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
+  path: string
+) => {
+  let actualValue: string | string[] = value
+  const isFixedValue = getMultiTypeFromValue(value) === MultiTypeInputType.FIXED
+  if (isFixedValue) {
+    actualValue = value?.toString()?.split(',')
+  }
+  onChange?.(path, actualValue)
 }

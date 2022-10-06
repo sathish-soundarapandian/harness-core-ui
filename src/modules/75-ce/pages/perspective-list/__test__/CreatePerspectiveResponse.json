@@ -1,0 +1,35 @@
+{
+  "uuid": "mock_id",
+  "name": "Perspective-XH3TFW",
+  "accountId": "account_id",
+  "folderId": "folder_id",
+  "viewVersion": "v1",
+  "viewTimeRange": {
+    "viewTimeRangeType": "LAST_7",
+    "startTime": 0,
+    "endTime": 0
+  },
+  "viewRules": null,
+  "dataSources": [],
+  "viewVisualization": {
+    "granularity": "DAY",
+    "groupBy": {
+      "fieldId": "product",
+      "fieldName": "Product",
+      "identifier": "COMMON",
+      "identifierName": "COMMON"
+    },
+    "chartType": "STACKED_LINE_CHART"
+  },
+  "viewPreferences": {
+    "includeOthers": false,
+    "includeUnallocatedCost": false
+  },
+  "viewType": "CUSTOMER",
+  "viewState": "DRAFT",
+  "totalCost": 0,
+  "createdAt": 1658486511599,
+  "lastUpdatedAt": 1658486511599,
+  "createdBy": null,
+  "lastUpdatedBy": null
+}

@@ -16,15 +16,19 @@ import { useStrings } from 'framework/strings'
 import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useGetAccountNG } from 'services/cd-ng'
 import { LaunchButton } from '../LaunchButton/LaunchButton'
 
 export default function AccountSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { NG_LICENSES_ENABLED, OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE, AUDIT_TRAIL_WEB_INTERFACE } =
-    useFeatureFlags()
+  const { NG_LICENSES_ENABLED, OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE } = useFeatureFlags()
+  const NG_DEPLOYMENT_FREEZE = false
   const canUsePolicyEngine = useAnyEnterpriseLicense()
-
+  const { data: accountData } = useGetAccountNG({
+    accountIdentifier: accountId,
+    queryParams: { accountIdentifier: accountId }
+  })
   return (
     <Layout.Vertical spacing="small" margin={{ top: 'xxxlarge' }}>
       <SidebarLink exact label={getString('overview')} to={routes.toAccountSettingsOverview({ accountId })} />
@@ -33,13 +37,17 @@ export default function AccountSideNav(): React.ReactElement {
       {canUsePolicyEngine && (OPA_PIPELINE_GOVERNANCE || OPA_FF_GOVERNANCE) && (
         <SidebarLink label={getString('common.governance')} to={routes.toGovernance({ accountId })} />
       )}
+      {NG_DEPLOYMENT_FREEZE ? (
+        <SidebarLink label={getString('common.freezeWindows')} to={routes.toFreezeWindows({ accountId })} />
+      ) : null}
       <SidebarLink to={routes.toAccessControl({ accountId })} label={getString('accessControl')} />
+      {accountData?.data?.productLed && (
+        <SidebarLink exact label={getString('common.billing')} to={routes.toBilling({ accountId })} />
+      )}
       {NG_LICENSES_ENABLED && (
         <SidebarLink exact label={getString('common.subscriptions.title')} to={routes.toSubscriptions({ accountId })} />
       )}
-      {AUDIT_TRAIL_WEB_INTERFACE && (
-        <SidebarLink label={getString('common.auditTrail')} to={routes.toAuditTrail({ accountId })} />
-      )}
+      <SidebarLink label={getString('common.auditTrail')} to={routes.toAuditTrail({ accountId })} />
       <SidebarLink label={getString('orgsText')} to={routes.toOrganizations({ accountId })} />
       <LaunchButton
         launchButtonText={getString('common.cgLaunchText')}

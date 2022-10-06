@@ -141,8 +141,6 @@ describe('TemplateContext', () => {
         setLatestYaml: () => ''
       })
 
-      result.current.setLoading(false)
-
       await result.current.fetchTemplate({
         branch: 'main',
         repoIdentifier: 'repoIdentifier',

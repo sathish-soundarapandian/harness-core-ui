@@ -5,17 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
-import type { NewRelicHealthSourceSpec, NewRelicMetricDefinition, RiskProfile } from 'services/cv'
+import type { NewRelicHealthSourceSpec, NewRelicMetricDefinition } from 'services/cv'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
 import type { NewRelicData } from './NewRelicHealthSource.types'
+import { getMetricPacksForPayload } from '../../common/MetricThresholds/MetricThresholds.utils'
+import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
 
-export const createNewRelicPayload = (formData: any): UpdatedHealthSource | null => {
+export const createNewRelicPayload = (formData: any, isMetricThresholdEnabled: boolean): UpdatedHealthSource | null => {
   const specPayload = {
-    applicationName: formData?.newRelicApplication?.label,
-    applicationId: formData?.newRelicApplication?.value,
+    applicationName: formData?.newRelicApplication?.label || formData?.newRelicApplication,
+    applicationId: formData?.newRelicApplication?.value || formData?.newRelicApplication,
     metricData: formData?.metricData,
     newRelicMetricDefinitions: [] as NewRelicMetricDefinition[]
   }
@@ -39,15 +40,14 @@ export const createNewRelicPayload = (formData: any): UpdatedHealthSource | null
         higherBaselineDeviation
       } = entry[1]
 
-      const [category, metricType] = riskCategory?.split('/') || []
-      const thresholdTypes: RiskProfile['thresholdTypes'] = []
-
-      if (lowerBaselineDeviation) {
-        thresholdTypes.push('ACT_WHEN_LOWER')
-      }
-      if (higherBaselineDeviation) {
-        thresholdTypes.push('ACT_WHEN_HIGHER')
-      }
+      const assignComponentPayload = createPayloadForAssignComponent({
+        sli,
+        riskCategory,
+        healthScore,
+        continuousVerification,
+        lowerBaselineDeviation,
+        higherBaselineDeviation
+      })
 
       specPayload?.newRelicMetricDefinitions?.push({
         identifier: metricIdentifier || uuid(),
@@ -60,16 +60,7 @@ export const createNewRelicPayload = (formData: any): UpdatedHealthSource | null
           timestampFormat: timestampFormat,
           timestampJsonPath: timestamp
         },
-        sli: { enabled: Boolean(sli) },
-        analysis: {
-          riskProfile: {
-            category,
-            metricType,
-            thresholdTypes
-          },
-          liveMonitoring: { enabled: Boolean(healthScore) },
-          deploymentVerification: { enabled: Boolean(continuousVerification) }
-        }
+        ...assignComponentPayload
       })
     }
   }
@@ -81,16 +72,11 @@ export const createNewRelicPayload = (formData: any): UpdatedHealthSource | null
     spec: {
       ...specPayload,
       feature: formData.product?.value as string,
-      connectorRef: (formData?.connectorRef?.connector?.identifier as string) || (formData.connectorRef as string),
-      metricPacks: Object.entries(formData?.metricData)
-        .map(item => {
-          return item[1]
-            ? {
-                identifier: item[0]
-              }
-            : {}
-        })
-        .filter(item => !isEmpty(item))
+      connectorRef:
+        formData?.connectorRef.value ||
+        (formData?.connectorRef?.connector?.identifier as string) ||
+        (formData.connectorRef as string),
+      metricPacks: getMetricPacksForPayload(formData, isMetricThresholdEnabled)
     }
   }
 }

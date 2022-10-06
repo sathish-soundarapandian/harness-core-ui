@@ -24,27 +24,34 @@ import {
   SelectOption,
   Button,
   Icon,
-  useToaster
+  useToaster,
+  AllowedTypes
 } from '@harness/uicore'
-import { map, get } from 'lodash-es'
+import { map, get, isEmpty, defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { IdentifierSchemaWithOutName, NameSchema, ConnectorRefSchema } from '@common/utils/Validation'
+import { IdentifierSchemaWithOutName, ConnectorRefSchema } from '@common/utils/Validation'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
+import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useListAwsRegions } from 'services/portal'
 import { useCFCapabilitiesForAws, useCFStatesForAws, useGetIamRolesForAws } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
+import { useQueryParams } from '@common/hooks'
+import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { TFMonaco } from '../../Common/Terraform/Editview/TFMonacoEditor'
 import CFRemoteWizard from './RemoteFilesForm/CFRemoteWizard'
 import { InlineParameterFile } from './InlineParameterFile'
+import { Tags } from './TagsInput/Tags'
 import type { Parameter, CloudFormationCreateStackProps } from '../CloudFormationInterfaces.types'
 import { onDragStart, onDragEnd, onDragLeave, onDragOver, onDrop } from '../DragHelper'
 
@@ -58,10 +65,19 @@ enum TemplateTypes {
 }
 
 export const CreateStack = (
-  { allowableTypes, isNewStep, readonly = false, initialValues, onUpdate, onChange }: CloudFormationCreateStackProps,
+  {
+    allowableTypes,
+    isNewStep,
+    readonly = false,
+    initialValues,
+    onUpdate,
+    onChange,
+    stepViewType
+  }: CloudFormationCreateStackProps,
   formikRef: StepFormikFowardRef
 ): JSX.Element => {
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { expressions } = useVariablesExpression()
   const [showModal, setShowModal] = useState(false)
@@ -72,6 +88,7 @@ export const CreateStack = (
   const [awsStates, setAwsStates] = useState<SelectOption[]>([])
   const [awsRoles, setAwsRoles] = useState<MultiSelectOption[]>([])
   const [awsRef, setAwsRef] = useState<string>(initialValues?.spec?.configuration?.connectorRef)
+  const [regionsRef, setRegionsRef] = useState<string>(initialValues?.spec?.configuration?.region)
   const { showError } = useToaster()
   const templateFile = getString('cd.cloudFormation.templateFile')
   const {
@@ -83,6 +100,8 @@ export const CreateStack = (
       accountId
     }
   })
+  const query = useQueryParams()
+  const sectionId = (query as any).sectionId || ''
 
   useEffect(() => {
     if (regionData && !regions.length) {
@@ -117,9 +136,10 @@ export const CreateStack = (
       accountIdentifier: accountId,
       orgIdentifier: orgIdentifier,
       projectIdentifier: projectIdentifier,
-      awsConnectorRef: awsRef
+      awsConnectorRef: awsRef,
+      region: regionsRef
     }
-  }, [accountId, orgIdentifier, projectIdentifier, awsRef])
+  }, [accountId, orgIdentifier, projectIdentifier, awsRef, regionsRef])
 
   const {
     data: roleData,
@@ -134,16 +154,16 @@ export const CreateStack = (
 
   useEffect(() => {
     if (regionError) {
-      showError(regionError.message)
+      showError(getRBACErrorMessage(regionError as any))
     }
     if (capabilitiesError) {
-      showError(capabilitiesError.message)
+      showError(getRBACErrorMessage(capabilitiesError))
     }
     if (statesError) {
-      showError(statesError.message)
+      showError(getRBACErrorMessage(statesError))
     }
     if (rolesError) {
-      showError(rolesError.message)
+      showError(getRBACErrorMessage(rolesError))
     }
     /*  eslint-disable-next-line react-hooks/exhaustive-deps  */
   }, [regionError, capabilitiesError, statesError, rolesError])
@@ -157,10 +177,18 @@ export const CreateStack = (
       }
       setAwsRoles(roles)
     }
-    if (!roleData && awsRef) {
+  }, [roleData])
+
+  useEffect(() => {
+    if (
+      !isEmpty(awsRef) &&
+      getMultiTypeFromValue(awsRef) === MultiTypeInputType.FIXED &&
+      !isEmpty(regionsRef) &&
+      getMultiTypeFromValue(regionsRef) === MultiTypeInputType.FIXED
+    ) {
       refetch()
     }
-  }, [roleData, awsRef])
+  }, [awsRef, refetch, regionsRef])
 
   /* istanbul ignore next */
   const onSelectChange = (
@@ -200,7 +228,7 @@ export const CreateStack = (
     <Formik
       enableReinitialize={true}
       initialValues={initialValues}
-      formName="cloudFormationCreateStack"
+      formName={`cloudFormationCreateStack-${sectionId}`}
       validate={values => {
         const payload = {
           ...values
@@ -218,7 +246,7 @@ export const CreateStack = (
         onUpdate?.(payload)
       }}
       validationSchema={Yup.object().shape({
-        name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
+        ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
           provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
@@ -269,7 +297,7 @@ export const CreateStack = (
       {formik => {
         setFormikRef(formikRef, formik)
         const { values, setFieldValue, errors } = formik
-        const config = values.spec.configuration
+        const config = values?.spec?.configuration
         const awsConnector = config?.connectorRef
         const templateFileType = config?.templateFile?.type
         const inlineTemplateFile = config?.templateFile?.spec?.templateBody
@@ -281,15 +309,17 @@ export const CreateStack = (
         const templateError = get(errors, 'spec.configuration.templateFile.spec.store.spec.connectorRef')
         return (
           <>
-            <div className={cx(stepCss.formGroup, stepCss.lg)}>
-              <FormInput.InputWithIdentifier
-                inputLabel={getString('name')}
-                isIdentifierEditable={isNewStep}
-                inputGroupProps={{
-                  disabled: readonly
-                }}
-              />
-            </div>
+            {stepViewType !== StepViewType.Template && (
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormInput.InputWithIdentifier
+                  inputLabel={getString('name')}
+                  isIdentifierEditable={isNewStep}
+                  inputGroupProps={{
+                    disabled: readonly
+                  }}
+                />
+              </div>
+            )}
             <div className={cx(stepCss.formGroup, stepCss.sm)}>
               <FormMultiTypeDurationField
                 name="timeout"
@@ -297,9 +327,22 @@ export const CreateStack = (
                 multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
                 disabled={readonly}
               />
+              {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
+                <ConfigureOptions
+                  value={defaultTo(values.timeout, '')}
+                  type="String"
+                  variableName="timeout"
+                  showRequiredField={false}
+                  showDefaultField={false}
+                  showAdvanced={true}
+                  onChange={value => formik.setFieldValue('timeout', value)}
+                  isReadonly={readonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
+                />
+              )}
             </div>
             <div className={css.divider} />
-            <div className={stepCss.formGroup}>
+            <div className={cx(stepCss.formGroup, stepCss.sm)}>
               <FormInput.MultiTextInput
                 name="spec.provisionerIdentifier"
                 label={getString('pipelineSteps.provisionerIdentifier')}
@@ -309,9 +352,9 @@ export const CreateStack = (
               />
               {
                 /* istanbul ignore next */
-                getMultiTypeFromValue(values.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
+                getMultiTypeFromValue(values?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={values.spec?.provisionerIdentifier as string}
+                    value={values?.spec?.provisionerIdentifier as string}
                     type="String"
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
@@ -322,7 +365,7 @@ export const CreateStack = (
                       setFieldValue('spec.provisionerIdentifier', value)
                     }}
                     isReadonly={readonly}
-                    className={css.inputWidth}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                   />
                 )
               }
@@ -341,13 +384,25 @@ export const CreateStack = (
                 disabled={readonly}
                 width={300}
                 setRefValue
-                onChange={(value: any, _unused, _multiType) => {
-                  /* istanbul ignore next */
-                  if (value?.record?.identifier !== awsRef) {
-                    setAwsRef(value?.record?.identifier)
+                onChange={(value: any, _unused, multiType) => {
+                  const scope = value?.scope
+                  let newConnectorRef: string
+                  if (scope === 'org' || scope === 'account') {
+                    newConnectorRef = `${scope}.${value?.record?.identifier}`
+                  } else if (isMultiTypeRuntime(multiType) || multiType === MultiTypeInputType.EXPRESSION) {
+                    newConnectorRef = value
+                  } else {
+                    newConnectorRef = value?.record?.identifier
                   }
                   /* istanbul ignore next */
-                  setFieldValue('spec.configuration.connectorRef', value?.record?.identifier || value)
+                  if (value?.record?.identifier !== awsRef) {
+                    setAwsRef(newConnectorRef)
+                    setAwsRoles([])
+                    getMultiTypeFromValue(formik?.values?.spec.configuration.roleArn) === MultiTypeInputType.FIXED &&
+                      setFieldValue('spec.configuration.roleArn', '')
+                  }
+                  /* istanbul ignore next */
+                  setFieldValue('spec.configuration.connectorRef', newConnectorRef)
                 }}
               />
             </div>
@@ -359,6 +414,14 @@ export const CreateStack = (
                   disabled={readonly}
                   useValue
                   multiTypeInputProps={{
+                    onChange: value => {
+                      if ((value as any).value !== regionsRef) {
+                        setRegionsRef((value as any).value as string)
+                        setAwsRoles([])
+                        getMultiTypeFromValue(formik?.values?.spec.configuration.roleArn) ===
+                          MultiTypeInputType.FIXED && setFieldValue('spec.configuration.roleArn', '')
+                      }
+                    },
                     selectProps: {
                       allowCreatingNewItems: false,
                       items: regions
@@ -370,13 +433,31 @@ export const CreateStack = (
                   selectItems={regions}
                   placeholder={regionLoading ? getString('loading') : getString('select')}
                 />
+                {getMultiTypeFromValue(awsRegion) === MultiTypeInputType.RUNTIME && (
+                  <SelectConfigureOptions
+                    value={defaultTo(awsRegion, '')}
+                    options={regions}
+                    loading={false}
+                    type="String"
+                    variableName="spec.configuration.region"
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    isReadonly={readonly}
+                    onChange={value => formik.setFieldValue('spec.configuration.region', value)}
+                  />
+                )}
               </Layout.Horizontal>
             </Layout.Vertical>
             <div className={css.divider} />
             <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
               {(templateFileType === TemplateTypes.Remote || templateFileType === TemplateTypes.S3URL) && (
                 <Layout.Vertical>
-                  <Label style={{ color: Color.GREY_900 }} className={css.configLabel}>
+                  <Label
+                    data-tooltip-id={'cloudFormationTemplate'}
+                    style={{ color: Color.GREY_900 }}
+                    className={css.configLabel}
+                  >
                     {templateFile}
                   </Label>
                 </Layout.Vertical>
@@ -434,7 +515,11 @@ export const CreateStack = (
               <>
                 <MultiTypeFieldSelector
                   name="spec.configuration.templateFile.spec.templateBody"
-                  label={<Text style={{ color: 'rgb(11, 11, 13)' }}>{templateFile}</Text>}
+                  label={
+                    <Text data-tooltip-id={'cloudFormationTemplate'} style={{ color: 'rgb(11, 11, 13)' }}>
+                      {templateFile}
+                    </Text>
+                  }
                   defaultValueToReset=""
                   allowedTypes={allowableTypes}
                   skipRenderValueInExpressionLabel
@@ -505,9 +590,9 @@ export const CreateStack = (
               />
               {
                 /* istanbul ignore next */
-                getMultiTypeFromValue(values.spec?.stackName) === MultiTypeInputType.RUNTIME && (
+                getMultiTypeFromValue(config?.stackName) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
-                    value={values?.spec?.stackName}
+                    value={config?.stackName}
                     type="String"
                     variableName="spec.configuration.stackName"
                     showRequiredField={false}
@@ -517,7 +602,7 @@ export const CreateStack = (
                       setFieldValue('spec.configuration.stackName', value)
                     }}
                     isReadonly={readonly}
-                    className={css.inputWidth}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                   />
                 )
               }
@@ -529,7 +614,11 @@ export const CreateStack = (
                 details={
                   <div className={css.optionalDetails}>
                     <Layout.Vertical>
-                      <Label style={{ color: Color.GREY_900 }} className={css.configLabel}>
+                      <Label
+                        data-tooltip-id={'cloudFormationParameterFiles'}
+                        style={{ color: Color.GREY_900 }}
+                        className={css.configLabel}
+                      >
                         {getString('optionalField', { name: getString('cd.cloudFormation.parameterFiles') })}
                       </Label>
                       {remoteParameterFiles && (
@@ -610,7 +699,11 @@ export const CreateStack = (
                       </Layout.Horizontal>
                     </Layout.Vertical>
                     <Layout.Vertical className={css.addMarginBottom}>
-                      <Label style={{ color: Color.GREY_900 }} className={css.configLabel}>
+                      <Label
+                        data-tooltip-id={'cloudFormationParameterOverrides'}
+                        style={{ color: Color.GREY_900 }}
+                        className={css.configLabel}
+                      >
                         {getString('optionalField', { name: getString('cd.cloudFormation.inlineParameterFiles') })}
                       </Label>
                       <div className={cx(css.configFile, css.addMarginBottom)}>
@@ -628,12 +721,12 @@ export const CreateStack = (
                         </div>
                       </div>
                     </Layout.Vertical>
-                    <Layout.Vertical>
+                    <Layout.Horizontal className={stepCss.formGroup}>
                       <FormInput.MultiTypeInput
                         label={getString('optionalField', { name: getString('connectors.awsKms.roleArnLabel') })}
                         name="spec.configuration.roleArn"
                         placeholder={getString(rolesLoading ? 'common.loading' : 'select')}
-                        disabled={readonly}
+                        disabled={readonly || rolesLoading}
                         useValue
                         multiTypeInputProps={{
                           selectProps: {
@@ -648,7 +741,21 @@ export const CreateStack = (
                         selectItems={awsRoles}
                         style={{ color: 'rgb(11, 11, 13)' }}
                       />
-                    </Layout.Vertical>
+                      {getMultiTypeFromValue(config?.roleArn) === MultiTypeInputType.RUNTIME && (
+                        <SelectConfigureOptions
+                          value={defaultTo(config?.roleArn, '')}
+                          options={awsRoles}
+                          loading={false}
+                          type="String"
+                          variableName="spec.configuration.roleArn"
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          isReadonly={readonly}
+                          onChange={value => formik.setFieldValue('spec.configuration.roleArn', value)}
+                        />
+                      )}
+                    </Layout.Horizontal>
                     <MultiTypeFieldSelector
                       name="spec.configuration.capabilities"
                       label={
@@ -657,7 +764,11 @@ export const CreateStack = (
                         </Text>
                       }
                       defaultValueToReset=""
-                      allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                      allowedTypes={
+                        (allowableTypes as MultiTypeInputType[]).filter(
+                          item => item !== MultiTypeInputType.EXPRESSION
+                        ) as AllowedTypes
+                      }
                       skipRenderValueInExpressionLabel
                       disabled={readonly}
                     >
@@ -675,43 +786,7 @@ export const CreateStack = (
                     </MultiTypeFieldSelector>
 
                     <div className={css.divider} />
-                    <div className={cx(stepCss.formGroup, stepCss.alignStart, css.addMarginTop, css.addMarginBottom)}>
-                      <MultiTypeFieldSelector
-                        name="spec.configuration.tags.spec.content"
-                        label={
-                          <Text style={{ color: 'rgb(11, 11, 13)' }}>
-                            {getString('optionalField', { name: getString('tagsLabel') })}
-                          </Text>
-                        }
-                        defaultValueToReset=""
-                        allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
-                        skipRenderValueInExpressionLabel
-                        disabled={readonly}
-                      >
-                        <TFMonaco
-                          name="spec.configuration.tags.spec.content"
-                          formik={formik}
-                          title={getString('tagsLabel')}
-                        />
-                      </MultiTypeFieldSelector>
-                      {
-                        /* istanbul ignore next */
-                        getMultiTypeFromValue(values.tags) === MultiTypeInputType.RUNTIME && (
-                          <ConfigureOptions
-                            value={values.spec?.configuration?.spec?.tags?.spec?.content}
-                            type="String"
-                            variableName="spec.configuration.tags.spec.content"
-                            showRequiredField={false}
-                            showDefaultField={false}
-                            showAdvanced={true}
-                            onChange={value => {
-                              setFieldValue('spec.configuration.tags.spec.content', value)
-                            }}
-                            isReadonly={readonly}
-                          />
-                        )
-                      }
-                    </div>
+                    <Tags formik={formik} allowableTypes={allowableTypes} readonly={readonly} regions={regions} />
                     <MultiTypeFieldSelector
                       name="spec.configuration.skipOnStackStatuses"
                       label={
@@ -720,7 +795,11 @@ export const CreateStack = (
                         </Text>
                       }
                       defaultValueToReset=""
-                      allowedTypes={allowableTypes.filter(item => item !== MultiTypeInputType.EXPRESSION)}
+                      allowedTypes={
+                        (allowableTypes as MultiTypeInputType[]).filter(
+                          item => item !== MultiTypeInputType.EXPRESSION
+                        ) as AllowedTypes
+                      }
                       skipRenderValueInExpressionLabel
                       disabled={readonly}
                     >
@@ -765,6 +844,8 @@ export const CreateStack = (
                 /* istanbul ignore next */
                 setInlineParams(false)
               }}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
               awsConnectorRef={awsConnector}
               type={templateFileType}
               region={awsRegion}
@@ -776,7 +857,8 @@ export const CreateStack = (
                       isBranch: remoteTemplateFile?.gitFetchType === 'Branch',
                       filePath: remoteTemplateFile?.paths?.[0],
                       branch: remoteTemplateFile?.branch,
-                      commitId: remoteTemplateFile?.commitId
+                      commitId: remoteTemplateFile?.commitId,
+                      repoName: remoteTemplateFile?.repoName
                     }
                   : undefined
               }

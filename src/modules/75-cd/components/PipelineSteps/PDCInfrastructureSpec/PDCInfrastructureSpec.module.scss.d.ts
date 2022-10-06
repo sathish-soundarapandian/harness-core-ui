@@ -11,14 +11,17 @@ declare const styles: {
   readonly accordionPanel: string
   readonly clusterInputWrapper: string
   readonly connectorRef: string
+  readonly connectorRuntime: string
+  readonly credRefWidth: string
   readonly formRow: string
   readonly hostSelect: string
-  readonly hostSpecificContainer: string
+  readonly hostsControls: string
   readonly hostsTextArea: string
   readonly inputWidth: string
   readonly lastRow: string
   readonly marginTop: string
   readonly previewHostsLabel: string
+  readonly runtimeWidth: string
   readonly simultaneousDeployment: string
   readonly specifyHostsRadioGroup: string
 }

@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { isEmpty } from 'lodash-es'
+import { isEmpty, omitBy } from 'lodash-es'
 import { Link } from 'react-router-dom'
 import cx from 'classnames'
 import { PopoverInteractionKind, Position, ProgressBar } from '@blueprintjs/core'
@@ -15,7 +15,7 @@ import { Accordion, Button, Container, Layout, Popover, Text } from '@wings-soft
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
   ConnectorCheckResponse,
   PipelineInputResponse,
@@ -519,8 +519,9 @@ export function PreFlightCheckModal({
 
   const { showError } = useToaster()
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
-  const processResponseError = (error?: { message?: string }) => {
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const processResponseError = (error?: { message?: string }): void => {
     showError(error?.message ? error?.message : getString('somethingWentWrong'), undefined, 'pipeline.preflight.error')
     onCloseButtonClick()
   }
@@ -536,7 +537,9 @@ export function PreFlightCheckModal({
           pipelineIdentifier,
           ...(isGitSyncEnabled ? { repoIdentifier, branch, getDefaultFromOtherRepo: true } : {})
         },
-        body: !isEmpty(pipeline) ? (yamlStringify({ pipeline }) as any) : ''
+        body: !isEmpty(pipeline)
+          ? (yamlStringify({ pipeline: omitBy(pipeline, (_value, key) => key.startsWith('_')) }) as any)
+          : ''
       })
         .then(response => {
           if (response?.status === 'ERROR' || response?.status === 'FAILURE') {

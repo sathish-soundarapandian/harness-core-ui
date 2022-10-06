@@ -9,7 +9,9 @@ rules:
         - modules/40-gitsync/*
         - modules/45-dashboards/*
         - modules/45-projects-orgs/*
+        - modules/60-scm/*
         - modules/70-pipeline/*
+        - modules/72-freeze-windows/*
         - modules/72-templates-library/*
         - modules/72-triggers/*
         - modules/75-cd/*
@@ -24,7 +26,9 @@ rules:
         - '@gitsync/*'
         - '@dashboards/*'
         - '@projects-orgs/*'
+        - '@scm/*'
         - '@pipeline/*'
+        - '@freeze-windows/*'
         - '@templates-library/*'
         - '@triggers/*'
         - '@cd/*'
@@ -37,11 +41,12 @@ rules:
         - '@gitops/*'
       paths:
         - lodash
+        - name: js-yaml
+          message: Please use methods from @common/utils/YamlHelperMethods instead of using js-yaml
         - name: yaml
           importNames:
             - stringify
-          message: Please use yamlStringify from @common/utils/YamlHelperMethods instead
-            of this
+          message: Please use yamlStringify from @common/utils/YamlHelperMethods instead of this
         - name: react-router
           message: import from "react-router-dom" instead
         - name: microfrontends

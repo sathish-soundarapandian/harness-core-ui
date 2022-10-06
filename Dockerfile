@@ -1,22 +1,18 @@
-FROM nginx:alpine
-# https://github.com/nginxinc/docker-nginx/issues/640
-RUN apk update
-RUN apk add --upgrade libxml2 libxslt 
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6-941
+RUN microdnf module enable nginx:1.16
+RUN microdnf install nginx
 
 COPY dist /opt/nextgenui
 COPY docker/entrypoint.sh /opt/
 COPY docker/nginx.conf /etc/nginx/
 COPY docker/nginx-ipv6-only.conf /etc/nginx/
+
 WORKDIR /opt/nextgenui
 
-# for on-prem
-RUN addgroup -S 101 && adduser -S 101 -G 101
-RUN chown -R 101:101 /opt/ /tmp
-RUN chmod 700 -R /opt
-RUN chmod 700 -R /tmp
-USER 101
-# end on-prem
+RUN chown 65534:65534 -R /opt/nextgenui
+RUN chown 65534:65534 -R /var/log/nginx
 
+USER 65534
 
 EXPOSE 8080
 ENTRYPOINT ["sh", "/opt/entrypoint.sh"]

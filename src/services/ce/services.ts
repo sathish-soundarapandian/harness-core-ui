@@ -30,6 +30,7 @@ export const CcmMetaDataDocument = gql`
       defaultAwsPerspectiveId
       defaultGcpPerspectiveId
       defaultClusterPerspectiveId
+      showCostOverview
     }
   }
 `
@@ -38,8 +39,8 @@ export function useCcmMetaDataQuery(options?: Omit<Urql.UseQueryArgs<CcmMetaData
   return Urql.useQuery<CcmMetaDataQuery>({ query: CcmMetaDataDocument, ...options })
 }
 export const FetchAllPerspectivesDocument = gql`
-  query FetchAllPerspectives($folderId: String) {
-    perspectives(folderId: $folderId) {
+  query FetchAllPerspectives($folderId: String, $sortCriteria: QLCEViewSortCriteriaInput = null) {
+    perspectives(folderId: $folderId, sortCriteria: $sortCriteria) {
       sampleViews {
         id
         name
@@ -61,6 +62,7 @@ export const FetchAllPerspectivesDocument = gql`
         reportScheduledConfigured
         dataSources
         folderId
+        folderName
         groupBy {
           fieldId
           fieldName
@@ -142,6 +144,7 @@ export const FetchBudgetSummaryDocument = gql`
         basedOn
         percentage
         emailAddresses
+        slackWebhooks
         userGroupIds
       }
     }
@@ -177,6 +180,7 @@ export const FetchBudgetDocument = gql`
         percentage
         emailAddresses
         userGroupIds
+        slackWebhooks
       }
     }
   }
@@ -225,6 +229,7 @@ export const FetchCcmMetaDataDocument = gql`
       defaultAwsPerspectiveId
       defaultGcpPerspectiveId
       defaultClusterPerspectiveId
+      showCostOverview
     }
   }
 `
@@ -559,6 +564,7 @@ export const FetchperspectiveGridDocument = gql`
         }
       }
     }
+    perspectiveTotalCount(filters: $filters, groupBy: $groupBy, isClusterQuery: $isClusterOnly)
   }
 `
 
@@ -668,8 +674,14 @@ export const FetchPerspectiveDetailsSummaryWithBudgetDocument = gql`
     $filters: [QLCEViewFilterWrapperInput]
     $aggregateFunction: [QLCEViewAggregationInput]
     $isClusterQuery: Boolean
+    $groupBy: [QLCEViewGroupByInput]
   ) {
-    perspectiveTrendStats(filters: $filters, aggregateFunction: $aggregateFunction, isClusterQuery: $isClusterQuery) {
+    perspectiveTrendStats(
+      filters: $filters
+      aggregateFunction: $aggregateFunction
+      isClusterQuery: $isClusterQuery
+      groupBy: $groupBy
+    ) {
       cost {
         statsDescription
         statsLabel
@@ -698,7 +710,12 @@ export const FetchPerspectiveDetailsSummaryWithBudgetDocument = gql`
         statsValue
       }
     }
-    perspectiveForecastCost(filters: $filters, aggregateFunction: $aggregateFunction, isClusterQuery: $isClusterQuery) {
+    perspectiveForecastCost(
+      filters: $filters
+      aggregateFunction: $aggregateFunction
+      isClusterQuery: $isClusterQuery
+      groupBy: $groupBy
+    ) {
       cost {
         statsLabel
         statsTrend
@@ -722,12 +739,13 @@ export const FetchPerspectiveTimeSeriesDocument = gql`
     $filters: [QLCEViewFilterWrapperInput]
     $groupBy: [QLCEViewGroupByInput]
     $limit: Int
+    $preferences: QLCEViewPreferencesInput
   ) {
     perspectiveTimeSeriesStats(
       filters: $filters
       groupBy: $groupBy
       limit: $limit
-      preferences: { includeOthers: false, includeUnallocatedCost: false }
+      preferences: $preferences
       aggregateFunction: [{ operationType: SUM, columnName: "cost" }]
       sortCriteria: [{ sortType: COST, sortOrder: DESCENDING }]
     ) {
@@ -890,6 +908,7 @@ export const FetchRecommendationDocument = gql`
       }
       ... on ECSRecommendationDTO {
         clusterName
+        launchType
         id
         percentileBased
         serviceArn
@@ -942,6 +961,199 @@ export function useRecommendationFiltersQuery(
   options?: Omit<Urql.UseQueryArgs<RecommendationFiltersQueryVariables>, 'query'>
 ) {
   return Urql.useQuery<RecommendationFiltersQuery>({ query: RecommendationFiltersDocument, ...options })
+}
+export const FetchServiceGridDocument = gql`
+  query FetchServiceGrid($filters: [QLCEViewFilterWrapperInput], $isClusterQuery: Boolean) {
+    perspectiveGrid(
+      filters: $filters
+      isClusterQuery: $isClusterQuery
+      aggregateFunction: [
+        { operationType: SUM, columnName: "networkcost" }
+        { operationType: SUM, columnName: "storageActualIdleCost" }
+        { operationType: SUM, columnName: "cost" }
+        { operationType: SUM, columnName: "memoryBillingAmount" }
+        { operationType: SUM, columnName: "cpuBillingAmount" }
+        { operationType: SUM, columnName: "storageCost" }
+        { operationType: SUM, columnName: "unallocatedcost" }
+        { operationType: SUM, columnName: "storageUnallocatedCost" }
+        { operationType: SUM, columnName: "memoryUnallocatedCost" }
+        { operationType: SUM, columnName: "cpuUnallocatedCost" }
+        { operationType: SUM, columnName: "actualidlecost" }
+        { operationType: SUM, columnName: "memoryActualIdleCost" }
+        { operationType: SUM, columnName: "cpuActualIdleCost" }
+        { operationType: SUM, columnName: "systemcost" }
+        { operationType: MAX, columnName: "storageUtilizationValue" }
+        { operationType: MAX, columnName: "storageRequest" }
+      ]
+      sortCriteria: [{ sortType: COST, sortOrder: DESCENDING }]
+      groupBy: { entityGroupBy: { fieldId: "instanceId", fieldName: "ECS Task Id", identifier: CLUSTER } }
+      limit: 100
+      offset: 0
+    ) {
+      data {
+        id
+        name
+        cost
+        costTrend
+        clusterData {
+          name
+          id
+          taskId
+          clusterName
+          clusterId
+          launchType
+          totalCost
+          idleCost
+          systemCost
+          networkCost
+          unallocatedCost
+          memoryBillingAmount
+          cpuBillingAmount
+          storageUnallocatedCost
+          memoryUnallocatedCost
+          cpuUnallocatedCost
+          cpuActualIdleCost
+          memoryIdleCost
+          cpuIdleCost
+          storageCost
+          storageActualIdleCost
+          storageUtilizationValue
+          storageRequest
+          cloudServiceName
+        }
+      }
+    }
+  }
+`
+
+export function useFetchServiceGridQuery(options?: Omit<Urql.UseQueryArgs<FetchServiceGridQueryVariables>, 'query'>) {
+  return Urql.useQuery<FetchServiceGridQuery>({ query: FetchServiceGridDocument, ...options })
+}
+export const FetchServiceSummaryDocument = gql`
+  query FetchServiceSummary($filters: [QLCEViewFilterWrapperInput], $isClusterQuery: Boolean) {
+    perspectiveTrendStats(
+      filters: $filters
+      isClusterQuery: $isClusterQuery
+      aggregateFunction: [
+        { operationType: SUM, columnName: "billingamount" }
+        { operationType: SUM, columnName: "actualidlecost" }
+        { operationType: SUM, columnName: "unallocatedcost" }
+        { operationType: MAX, columnName: "startTime" }
+        { operationType: MIN, columnName: "startTime" }
+      ]
+    ) {
+      cost {
+        statsLabel
+        statsTrend
+        statsValue
+        statsDescription
+      }
+      idleCost {
+        statsLabel
+        statsTrend
+        statsValue
+        statsDescription
+      }
+      utilizedCost {
+        statsLabel
+        statsTrend
+        statsValue
+        statsDescription
+      }
+    }
+    perspectiveGrid(
+      filters: $filters
+      isClusterQuery: $isClusterQuery
+      aggregateFunction: [{ operationType: SUM, columnName: "cost" }]
+      sortCriteria: []
+      groupBy: { entityGroupBy: { fieldId: "instanceId", fieldName: "ECS Task Id", identifier: CLUSTER } }
+      limit: 100
+      offset: 0
+    ) {
+      data {
+        clusterData {
+          name
+          id
+          taskId
+          clusterName
+          clusterId
+          launchType
+          cloudServiceName
+        }
+      }
+    }
+  }
+`
+
+export function useFetchServiceSummaryQuery(
+  options?: Omit<Urql.UseQueryArgs<FetchServiceSummaryQueryVariables>, 'query'>
+) {
+  return Urql.useQuery<FetchServiceSummaryQuery>({ query: FetchServiceSummaryDocument, ...options })
+}
+export const FetchServiceTimeSeriesDocument = gql`
+  query FetchServiceTimeSeries(
+    $filters: [QLCEViewFilterWrapperInput]
+    $aggregateFunction: [QLCEViewAggregationInput]
+    $isClusterQuery: Boolean
+    $groupBy: [QLCEViewGroupByInput]
+  ) {
+    perspectiveTimeSeriesStats(
+      filters: $filters
+      isClusterQuery: $isClusterQuery
+      aggregateFunction: $aggregateFunction
+      groupBy: $groupBy
+      limit: 100
+      offset: 0
+      preferences: { includeOthers: false, includeUnallocatedCost: false }
+    ) {
+      cpuRequest {
+        time
+        values {
+          key {
+            name
+            id
+          }
+          value
+        }
+      }
+      cpuUtilValues {
+        time
+        values {
+          key {
+            name
+            id
+          }
+          value
+        }
+      }
+      memoryRequest {
+        time
+        values {
+          key {
+            name
+            id
+          }
+          value
+        }
+      }
+      memoryUtilValues {
+        time
+        values {
+          key {
+            name
+            id
+          }
+          value
+        }
+      }
+    }
+  }
+`
+
+export function useFetchServiceTimeSeriesQuery(
+  options?: Omit<Urql.UseQueryArgs<FetchServiceTimeSeriesQueryVariables>, 'query'>
+) {
+  return Urql.useQuery<FetchServiceTimeSeriesQuery>({ query: FetchServiceTimeSeriesDocument, ...options })
 }
 export const FetchViewFieldsDocument = gql`
   query FetchViewFields($filters: [QLCEViewFilterWrapperInput]) {
@@ -1206,11 +1418,13 @@ export type CcmMetaDataQuery = {
     defaultAwsPerspectiveId: string | null
     defaultGcpPerspectiveId: string | null
     defaultClusterPerspectiveId: string | null
+    showCostOverview: boolean
   } | null
 }
 
 export type FetchAllPerspectivesQueryVariables = Exact<{
   folderId: InputMaybe<Scalars['String']>
+  sortCriteria?: InputMaybe<QlceViewSortCriteriaInput>
 }>
 
 export type FetchAllPerspectivesQuery = {
@@ -1240,6 +1454,7 @@ export type FetchAllPerspectivesQuery = {
       reportScheduledConfigured: boolean
       dataSources: Array<ViewFieldIdentifier | null> | null
       folderId: string | null
+      folderName: string | null
       groupBy: {
         __typename?: 'QLCEViewField'
         fieldId: string
@@ -1324,6 +1539,7 @@ export type FetchBudgetSummaryQuery = {
       basedOn: AlertThresholdBase | null
       percentage: number
       emailAddresses: Array<string | null> | null
+      slackWebhooks: Array<string | null> | null
       userGroupIds: Array<string | null> | null
     } | null> | null
   } | null
@@ -1357,6 +1573,7 @@ export type FetchBudgetQuery = {
       percentage: number
       emailAddresses: Array<string | null> | null
       userGroupIds: Array<string | null> | null
+      slackWebhooks: Array<string | null> | null
     } | null> | null
   } | null> | null
 }
@@ -1402,6 +1619,7 @@ export type FetchCcmMetaDataQuery = {
     defaultAwsPerspectiveId: string | null
     defaultGcpPerspectiveId: string | null
     defaultClusterPerspectiveId: string | null
+    showCostOverview: boolean
   } | null
 }
 
@@ -1582,6 +1800,7 @@ export type FetchperspectiveGridQueryVariables = Exact<{
 
 export type FetchperspectiveGridQuery = {
   __typename?: 'Query'
+  perspectiveTotalCount: number | null
   perspectiveGrid: {
     __typename?: 'PerspectiveEntityStatsData'
     data: Array<{
@@ -1773,6 +1992,7 @@ export type FetchPerspectiveDetailsSummaryWithBudgetQueryVariables = Exact<{
   filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>> | InputMaybe<QlceViewFilterWrapperInput>>
   aggregateFunction: InputMaybe<Array<InputMaybe<QlceViewAggregationInput>> | InputMaybe<QlceViewAggregationInput>>
   isClusterQuery: InputMaybe<Scalars['Boolean']>
+  groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>> | InputMaybe<QlceViewGroupByInput>>
 }>
 
 export type FetchPerspectiveDetailsSummaryWithBudgetQuery = {
@@ -1813,6 +2033,7 @@ export type FetchPerspectiveTimeSeriesQueryVariables = Exact<{
   filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>> | InputMaybe<QlceViewFilterWrapperInput>>
   groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>> | InputMaybe<QlceViewGroupByInput>>
   limit: InputMaybe<Scalars['Int']>
+  preferences: InputMaybe<QlceViewPreferencesInput>
 }>
 
 export type FetchPerspectiveTimeSeriesQuery = {
@@ -1867,6 +2088,7 @@ export type FetchRecommendationQuery = {
     | {
         __typename?: 'ECSRecommendationDTO'
         clusterName: string | null
+        launchType: LaunchType | null
         id: string | null
         percentileBased: any | null
         serviceArn: string | null
@@ -2012,6 +2234,151 @@ export type RecommendationFiltersQuery = {
     key: string | null
     values: Array<string | null> | null
   } | null> | null
+}
+
+export type FetchServiceGridQueryVariables = Exact<{
+  filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>> | InputMaybe<QlceViewFilterWrapperInput>>
+  isClusterQuery: InputMaybe<Scalars['Boolean']>
+}>
+
+export type FetchServiceGridQuery = {
+  __typename?: 'Query'
+  perspectiveGrid: {
+    __typename?: 'PerspectiveEntityStatsData'
+    data: Array<{
+      __typename?: 'QLCEViewEntityStatsDataPoint'
+      id: string | null
+      name: string | null
+      cost: any | null
+      costTrend: any | null
+      clusterData: {
+        __typename?: 'ClusterData'
+        name: string | null
+        id: string | null
+        taskId: string | null
+        clusterName: string | null
+        clusterId: string | null
+        launchType: string | null
+        totalCost: number | null
+        idleCost: number | null
+        systemCost: number | null
+        networkCost: number | null
+        unallocatedCost: number | null
+        memoryBillingAmount: number | null
+        cpuBillingAmount: number | null
+        storageUnallocatedCost: number | null
+        memoryUnallocatedCost: number | null
+        cpuUnallocatedCost: number | null
+        cpuActualIdleCost: number | null
+        memoryIdleCost: number | null
+        cpuIdleCost: number | null
+        storageCost: number | null
+        storageActualIdleCost: number | null
+        storageUtilizationValue: number | null
+        storageRequest: number | null
+        cloudServiceName: string | null
+      } | null
+    } | null> | null
+  } | null
+}
+
+export type FetchServiceSummaryQueryVariables = Exact<{
+  filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>> | InputMaybe<QlceViewFilterWrapperInput>>
+  isClusterQuery: InputMaybe<Scalars['Boolean']>
+}>
+
+export type FetchServiceSummaryQuery = {
+  __typename?: 'Query'
+  perspectiveTrendStats: {
+    __typename?: 'PerspectiveTrendStats'
+    cost: {
+      __typename?: 'StatsInfo'
+      statsLabel: string
+      statsTrend: any | null
+      statsValue: string
+      statsDescription: string
+    } | null
+    idleCost: {
+      __typename?: 'StatsInfo'
+      statsLabel: string
+      statsTrend: any | null
+      statsValue: string
+      statsDescription: string
+    } | null
+    utilizedCost: {
+      __typename?: 'StatsInfo'
+      statsLabel: string
+      statsTrend: any | null
+      statsValue: string
+      statsDescription: string
+    } | null
+  } | null
+  perspectiveGrid: {
+    __typename?: 'PerspectiveEntityStatsData'
+    data: Array<{
+      __typename?: 'QLCEViewEntityStatsDataPoint'
+      clusterData: {
+        __typename?: 'ClusterData'
+        name: string | null
+        id: string | null
+        taskId: string | null
+        clusterName: string | null
+        clusterId: string | null
+        launchType: string | null
+        cloudServiceName: string | null
+      } | null
+    } | null> | null
+  } | null
+}
+
+export type FetchServiceTimeSeriesQueryVariables = Exact<{
+  filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>> | InputMaybe<QlceViewFilterWrapperInput>>
+  aggregateFunction: InputMaybe<Array<InputMaybe<QlceViewAggregationInput>> | InputMaybe<QlceViewAggregationInput>>
+  isClusterQuery: InputMaybe<Scalars['Boolean']>
+  groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>> | InputMaybe<QlceViewGroupByInput>>
+}>
+
+export type FetchServiceTimeSeriesQuery = {
+  __typename?: 'Query'
+  perspectiveTimeSeriesStats: {
+    __typename?: 'PerspectiveTimeSeriesData'
+    cpuRequest: Array<{
+      __typename?: 'TimeSeriesDataPoints'
+      time: any
+      values: Array<{
+        __typename?: 'DataPoint'
+        value: any
+        key: { __typename?: 'Reference'; name: string; id: string }
+      } | null>
+    } | null> | null
+    cpuUtilValues: Array<{
+      __typename?: 'TimeSeriesDataPoints'
+      time: any
+      values: Array<{
+        __typename?: 'DataPoint'
+        value: any
+        key: { __typename?: 'Reference'; name: string; id: string }
+      } | null>
+    } | null> | null
+    memoryRequest: Array<{
+      __typename?: 'TimeSeriesDataPoints'
+      time: any
+      values: Array<{
+        __typename?: 'DataPoint'
+        value: any
+        key: { __typename?: 'Reference'; name: string; id: string }
+      } | null>
+    } | null> | null
+    memoryUtilValues: Array<{
+      __typename?: 'TimeSeriesDataPoints'
+      time: any
+      values: Array<{
+        __typename?: 'DataPoint'
+        value: any
+        key: { __typename?: 'Reference'; name: string; id: string }
+      } | null>
+    } | null> | null
+  } | null
 }
 
 export type FetchViewFieldsQueryVariables = Exact<{
@@ -2405,6 +2772,7 @@ export type CcmMetaData = {
   inventoryDataPresent: Scalars['Boolean']
   isSampleClusterPresent: Scalars['Boolean']
   k8sClusterConnectorPresent: Scalars['Boolean']
+  showCostOverview: Scalars['Boolean']
 }
 
 export type ClusterData = {
@@ -2517,6 +2885,7 @@ export type EcsRecommendationDto = {
   current: Maybe<Scalars['Map_String_StringScalar']>
   id: Maybe<Scalars['String']>
   lastDayCost: Maybe<Cost>
+  launchType: Maybe<LaunchType>
   memoryHistogram: Maybe<HistogramExp>
   percentileBased: Maybe<Scalars['Map_String_Map_String_StringScalar']>
   serviceArn: Maybe<Scalars['String']>
@@ -2651,6 +3020,12 @@ export type K8sRecommendationFilterDtoInput = {
   resourceTypes: InputMaybe<Array<InputMaybe<ResourceType>>>
 }
 
+export enum LaunchType {
+  Ec2 = 'EC2',
+  External = 'EXTERNAL',
+  Fargate = 'FARGATE'
+}
+
 export type NodePool = {
   __typename?: 'NodePool'
   role: Maybe<Scalars['String']>
@@ -2728,6 +3103,12 @@ export type PerspectiveTrendStats = {
   utilizedCost: Maybe<StatsInfo>
 }
 
+export type QlceInExpressionFilterInput = {
+  fields: Array<InputMaybe<QlceViewFieldInputInput>>
+  nullValueField: InputMaybe<Scalars['String']>
+  values: Array<InputMaybe<Array<InputMaybe<Scalars['String']>>>>
+}
+
 export enum QlceSortOrder {
   Ascending = 'ASCENDING',
   Descending = 'DESCENDING'
@@ -2740,6 +3121,7 @@ export type QlceView = {
   createdBy: Maybe<Scalars['String']>
   dataSources: Maybe<Array<Maybe<ViewFieldIdentifier>>>
   folderId: Maybe<Scalars['String']>
+  folderName: Maybe<Scalars['String']>
   groupBy: Maybe<QlceViewField>
   id: Maybe<Scalars['String']>
   lastUpdatedAt: Maybe<Scalars['Long']>
@@ -2811,11 +3193,13 @@ export enum QlceViewFilterOperator {
   Like = 'LIKE',
   NotIn = 'NOT_IN',
   NotNull = 'NOT_NULL',
-  Null = 'NULL'
+  Null = 'NULL',
+  Search = 'SEARCH'
 }
 
 export type QlceViewFilterWrapperInput = {
   idFilter: InputMaybe<QlceViewFilterInput>
+  inExpressionFilter: InputMaybe<QlceInExpressionFilterInput>
   ruleFilter: InputMaybe<QlceViewRuleInput>
   timeFilter: InputMaybe<QlceViewTimeFilterInput>
   viewMetadataFilter: InputMaybe<QlceViewMetadataFilterInput>
@@ -2848,6 +3232,7 @@ export type QlceViewSortCriteriaInput = {
 export enum QlceViewSortType {
   ClusterCost = 'CLUSTER_COST',
   Cost = 'COST',
+  Name = 'NAME',
   Time = 'TIME'
 }
 
@@ -2921,6 +3306,8 @@ export type Query = {
   recommendationStatsV2: Maybe<RecommendationOverviewStats>
   /** The list of all types of recommendations for overview page */
   recommendationsV2: Maybe<RecommendationsDto>
+  /** Labels for workloads */
+  workloadLabels: Maybe<Scalars['Map_String_Map_String_StringScalar']>
 }
 
 /** Query root */
@@ -2997,6 +3384,7 @@ export type QueryPerspectiveFiltersArgs = {
 export type QueryPerspectiveForecastCostArgs = {
   aggregateFunction: InputMaybe<Array<InputMaybe<QlceViewAggregationInput>>>
   filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>>>
+  groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>>>
   isClusterQuery: InputMaybe<Scalars['Boolean']>
 }
 
@@ -3035,16 +3423,19 @@ export type QueryPerspectiveTotalCountArgs = {
 export type QueryPerspectiveTrendStatsArgs = {
   aggregateFunction: InputMaybe<Array<InputMaybe<QlceViewAggregationInput>>>
   filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>>>
+  groupBy: InputMaybe<Array<InputMaybe<QlceViewGroupByInput>>>
   isClusterQuery: InputMaybe<Scalars['Boolean']>
 }
 
 /** Query root */
 export type QueryPerspectivesArgs = {
   folderId: InputMaybe<Scalars['String']>
+  sortCriteria: InputMaybe<QlceViewSortCriteriaInput>
 }
 
 /** Query root */
 export type QueryRecommendationDetailsArgs = {
+  bufferPercentage?: InputMaybe<Scalars['Int']>
   endTime: InputMaybe<Scalars['OffsetDateTime']>
   id: Scalars['String']
   resourceType: ResourceType
@@ -3065,6 +3456,12 @@ export type QueryRecommendationStatsV2Args = {
 /** Query root */
 export type QueryRecommendationsV2Args = {
   filter?: InputMaybe<K8sRecommendationFilterDtoInput>
+}
+
+/** Query root */
+export type QueryWorkloadLabelsArgs = {
+  filters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>>>
+  workloads: InputMaybe<Array<InputMaybe<Scalars['String']>>>
 }
 
 export type RecommendClusterRequest = {
@@ -3105,6 +3502,7 @@ export type RecommendationItemDto = {
 }
 
 export type RecommendationItemDtoRecommendationDetailsArgs = {
+  bufferPercentage?: InputMaybe<Scalars['Int']>
   endTime: InputMaybe<Scalars['OffsetDateTime']>
   startTime: InputMaybe<Scalars['OffsetDateTime']>
 }
@@ -3255,7 +3653,6 @@ export enum ViewTimeRangeType {
 export enum ViewType {
   Customer = 'CUSTOMER',
   Default = 'DEFAULT',
-  DefaultAzure = 'DEFAULT_AZURE',
   Sample = 'SAMPLE'
 }
 

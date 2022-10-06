@@ -381,7 +381,7 @@ export const healthSourcePayload = {
     connectorRef: 'newrelic',
     feature: 'apm',
     metricData: { Performance: true },
-    metricPacks: [{ identifier: 'Performance' }],
+    metricPacks: [{ identifier: 'Performance', metricThresholds: [] }],
     newRelicMetricDefinitions: []
   },
   type: 'NewRelic'
@@ -391,6 +391,22 @@ export const NewRelicInputFormData = {
   name: 'New_relic',
   identifier: 'New_relic',
   connectorRef: 'account.new_relic',
+  isEdit: false,
+  product: {
+    value: 'apm',
+    label: 'Full Stack Observability: APM'
+  },
+  type: 'NewRelic',
+  applicationName: '',
+  applicationId: '',
+  metricPacks: [],
+  mappedServicesAndEnvs: new Map()
+}
+
+export const NewRelicInputFormTemplateData = {
+  name: 'New_relic',
+  identifier: 'New_relic',
+  connectorRef: '<+input>',
   isEdit: false,
   product: {
     value: 'apm',
@@ -573,7 +589,9 @@ export const newRelicPayload = {
   riskCategory: '',
   lowerBaselineDeviation: false,
   higherBaselineDeviation: false,
-  showCustomMetric: true
+  showCustomMetric: true,
+  ignoreThresholds: [],
+  failFastThresholds: []
 }
 
 export const newRelicExpectedPayload = {
@@ -589,7 +607,8 @@ export const newRelicExpectedPayload = {
     },
     metricPacks: [
       {
-        identifier: 'Performance'
+        identifier: 'Performance',
+        metricThresholds: []
       }
     ],
     newRelicMetricDefinitions: [
@@ -601,11 +620,7 @@ export const newRelicExpectedPayload = {
           liveMonitoring: {
             enabled: false
           },
-          riskProfile: {
-            category: '',
-            metricType: undefined,
-            thresholdTypes: []
-          }
+          riskProfile: {}
         },
         groupName: 'Group 1',
         identifier: '9a895e7d-ab48-4eaa-a8e3-69c25872925e',
@@ -624,4 +639,33 @@ export const newRelicExpectedPayload = {
     ]
   },
   type: 'NewRelic'
+}
+
+const templateMappedServicesAndEnvs = new Map()
+const customMetricWithRuntimeInput = {
+  metricName: 'New Relic Custom Metric',
+  metricIdentifier: 'New_Relic_Custom_Metric_',
+  groupName: { label: 'Group 1', value: 'Group 1' },
+  query: '<+input>',
+  metricValue: '<+input>',
+  timestamp: '<+input>',
+  sli: true,
+  continuousVerification: true,
+  healthScore: true,
+  riskCategory: 'Performance/RESP_TIME',
+  lowerBaselineDeviation: false,
+  higherBaselineDeviation: true
+}
+templateMappedServicesAndEnvs.set('New Relic Custom Metric', customMetricWithRuntimeInput)
+export const templateWithCustomMetric = {
+  name: 'NewRelic',
+  identifier: 'NewRelic',
+  connectorRef: '<+input>',
+  isEdit: true,
+  product: { label: 'apm', value: 'apm' },
+  type: 'NewRelic',
+  applicationName: '<+input>',
+  applicationId: '<+input>',
+  metricPacks: [{ identifier: 'Performance' }],
+  mappedServicesAndEnvs: templateMappedServicesAndEnvs
 }

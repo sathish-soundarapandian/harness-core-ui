@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { act } from 'react-test-renderer'
+import { Formik, FormikForm } from '@harness/uicore'
 import { Classes } from '@blueprintjs/core'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -15,7 +16,11 @@ import { SelectedAppsSideNav, SelectedAppsSideNavProps } from '../SelectedAppsSi
 function WrapperComponent(props: SelectedAppsSideNavProps): JSX.Element {
   return (
     <TestWrapper>
-      <SelectedAppsSideNav {...props} />
+      <Formik initialValues={{}} onSubmit={jest.fn()} formName="testForm">
+        <FormikForm>
+          <SelectedAppsSideNav {...props} />
+        </FormikForm>
+      </Formik>
     </TestWrapper>
   )
 }

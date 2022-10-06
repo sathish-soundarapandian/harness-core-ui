@@ -5,19 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, isEmpty } from 'lodash-es'
+import { cloneDeep, isEmpty, isEqual } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import type { StringKeys } from 'framework/strings'
+import { AllowedTypes, getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type {
   AppDMetricDefinitions,
   AppDynamicsHealthSourceSpec,
   AppdynamicsValidationResponse,
-  MetricPackDTO,
-  RiskProfile
+  MetricPackDTO
 } from 'services/cv'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import type { GroupedCreatedMetrics } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
 import type {
@@ -25,13 +26,22 @@ import type {
   AppDynamicsFomikFormInterface,
   MapAppDynamicsMetric,
   NonCustomFeildsInterface,
+  PersistCustomMetricInterface,
   ValidateMappingInterface
 } from './AppDHealthSource.types'
 import type { BasePathData } from './Components/BasePath/BasePath.types'
 import type { MetricPathData } from './Components/MetricPath/MetricPath.types'
-import { AppDynamicsMonitoringSourceFieldNames, initCustomForm } from './AppDHealthSource.constants'
+import { AppDynamicsMonitoringSourceFieldNames, initCustomForm, ThresholdTypes } from './AppDHealthSource.constants'
 import { PATHTYPE } from './Components/AppDCustomMetricForm/AppDCustomMetricForm.constants'
 import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
+import { MetricThresholdPropertyName, MetricTypeValues } from '../../common/MetricThresholds/MetricThresholds.constants'
+import {
+  getFilteredCVDisabledMetricThresholds,
+  getFilteredMetricThresholdValues,
+  getMetricPacksForPayload,
+  validateCommonFieldsForMetricThreshold
+} from '../../common/MetricThresholds/MetricThresholds.utils'
+import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
 
 export const convertStringBasePathToObject = (baseFolder: string | BasePathData): BasePathData => {
   let basePathObj = {} as any
@@ -75,11 +85,7 @@ export const createAppDynamicsData = (sourceData: any): AppDynamicsData => {
     (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
   )
 
-  const {
-    applicationName = '',
-    tierName = '',
-    metricPacks = undefined
-  } = (payload?.spec as AppDynamicsHealthSourceSpec) || {}
+  const { applicationName = '', tierName = '', metricPacks } = (payload?.spec as AppDynamicsHealthSourceSpec) || {}
 
   const appdData = {
     name: sourceData?.healthSourceName,
@@ -102,6 +108,7 @@ export const createAppDynamicsData = (sourceData: any): AppDynamicsData => {
       appdData.mappedServicesAndEnvs.set(metricDefinition.metricName, {
         metricPath: metricPathObj,
         basePath: basePathObj,
+        completeMetricPath: metricDefinition.completeMetricPath,
         metricName: metricDefinition.metricName,
         metricIdentifier: metricDefinition.identifier,
         riskCategory:
@@ -125,14 +132,40 @@ export const createAppDynamicsData = (sourceData: any): AppDynamicsData => {
   return appdData
 }
 
+const validateMetricThresholds = (
+  errors: Record<keyof AppDynamicsFomikFormInterface | string, string>,
+  values: AppDynamicsFomikFormInterface,
+  getString: UseStringsReturn['getString']
+): void => {
+  // ignoreThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.IgnoreThreshold,
+    errors,
+    values[MetricThresholdPropertyName.IgnoreThreshold],
+    getString,
+    true
+  )
+
+  // failFastThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.FailFastThresholds,
+    errors,
+    values[MetricThresholdPropertyName.FailFastThresholds],
+    getString,
+    true
+  )
+}
+
 export const validateMapping = ({
   values,
   createdMetrics,
   selectedMetricIndex,
   getString,
-  mappedMetrics
-}: ValidateMappingInterface): ((key: string | boolean | string[]) => string) => {
-  let errors = {} as any
+  mappedMetrics,
+  isMetricThresholdEnabled
+}: ValidateMappingInterface): Record<keyof AppDynamicsFomikFormInterface | string, string> => {
+  let errors = {} as Record<keyof AppDynamicsFomikFormInterface | string, string>
+
   const metricValueList = values?.metricData ? Object.values(values?.metricData).filter(val => val) : []
 
   if (!values.appdApplication) {
@@ -166,6 +199,10 @@ export const validateMapping = ({
     )
   }
 
+  if (isMetricThresholdEnabled) {
+    validateMetricThresholds(errors, values, getString)
+  }
+
   return errors
 }
 
@@ -176,7 +213,7 @@ const validateCustomMetricFields = (
   errors: any,
   getString: (key: StringKeys) => string,
   mappedMetrics?: Map<string, MapAppDynamicsMetric>
-): ((key: string | boolean | string[]) => string) => {
+): Record<keyof AppDynamicsFomikFormInterface | string, string> => {
   let _error = cloneDeep(errors)
 
   if (values.pathType === PATHTYPE.DropdownPath) {
@@ -184,16 +221,40 @@ const validateCustomMetricFields = (
   }
 
   if (values.pathType === PATHTYPE.FullPath) {
-    const isfullPathEmpty = !values.fullPath.length
-    const fullPathContainsTierInfo = values.fullPath
-      .split('|')
-      .map((item: string) => item.trim())
-      .includes(values?.appDTier)
-    const incorrectPairing = values.fullPath.split('|').filter((item: string) => !item.length).length
-    if (incorrectPairing && isfullPathEmpty) {
-      _error[PATHTYPE.FullPath] = getString('cv.healthSource.connectors.AppDynamics.validation.fullPath')
-    } else if (!fullPathContainsTierInfo) {
-      _error[PATHTYPE.FullPath] = getString('cv.healthSource.connectors.AppDynamics.validation.missingTierInFullPath')
+    const isfullPathEmpty = !values.completeMetricPath?.length
+    const hasCompleteMetricPath =
+      Boolean(values?.completeMetricPath) &&
+      getMultiTypeFromValue(values?.completeMetricPath) !== MultiTypeInputType.FIXED
+
+    if (isfullPathEmpty) {
+      _error[PATHTYPE.CompleteMetricPath] = getString('cv.healthSource.connectors.AppDynamics.validation.fullPath')
+    } else if (hasCompleteMetricPath) {
+      const incorrectPairing = values.completeMetricPath
+        ?.split('|')
+        ?.filter((item: string) => !item?.trim()?.length)?.length
+      if (incorrectPairing) {
+        _error[PATHTYPE.CompleteMetricPath] = getString(
+          'cv.healthSource.connectors.AppDynamics.validation.inCorrectMetricPath'
+        )
+      }
+    } else {
+      const fullPathContainsTierInfo = values.completeMetricPath
+        ?.split('|')
+        ?.map((item: string) => item.trim())
+        ?.includes(values?.appDTier)
+      const incorrectPairing = values.completeMetricPath
+        ?.split('|')
+        ?.filter((item: string) => !item?.trim()?.length)?.length
+
+      if (incorrectPairing) {
+        _error[PATHTYPE.CompleteMetricPath] = getString(
+          'cv.healthSource.connectors.AppDynamics.validation.inCorrectMetricPath'
+        )
+      } else if (!fullPathContainsTierInfo) {
+        _error[PATHTYPE.CompleteMetricPath] = getString(
+          'cv.healthSource.connectors.AppDynamics.validation.missingTierInFullPath'
+        )
+      }
     }
   }
 
@@ -345,7 +406,7 @@ export const getBaseAndMetricPath = (
     const data = convertFullPathToBaseAndMetric(fullPath, appDTier)
     derivedBasePath = data.derivedBasePath
     derivedMetricPath = data.derivedMetricPath
-  } else {
+  } else if (basePath && metricPath) {
     derivedBasePath = basePath[Object.keys(basePath)[Object.keys(basePath).length - 1]]?.path
     derivedMetricPath = metricPath[Object.keys(metricPath)[Object.keys(metricPath).length - 1]]?.path
   }
@@ -364,7 +425,10 @@ export const convertFullPathToBaseAndMetric = (
   return { derivedBasePath, derivedMetricPath }
 }
 
-export const createAppDynamicsPayload = (formData: any): UpdatedHealthSource | null => {
+export const createAppDynamicsPayload = (
+  formData: any,
+  isMetricThresholdEnabled: boolean
+): UpdatedHealthSource | null => {
   const specPayload = {
     applicationName: (formData?.appdApplication?.label as string) || (formData.appdApplication as string),
     tierName: (formData?.appDTier?.label as string) || (formData.appDTier as string),
@@ -387,7 +451,8 @@ export const createAppDynamicsPayload = (formData: any): UpdatedHealthSource | n
         metricPath,
         metricIdentifier,
         serviceInstanceMetricPath,
-        fullPath
+        fullPath,
+        completeMetricPath
       } = entry[1]
 
       const { derivedBasePath, derivedMetricPath } = getBaseAndMetricPath(
@@ -397,35 +462,29 @@ export const createAppDynamicsPayload = (formData: any): UpdatedHealthSource | n
         formData.appDTier
       )
 
-      const [category, metricType] = riskCategory?.split('/') || []
-      const thresholdTypes: RiskProfile['thresholdTypes'] = []
-
-      if (lowerBaselineDeviation) {
-        thresholdTypes.push('ACT_WHEN_LOWER')
-      }
-      if (higherBaselineDeviation) {
-        thresholdTypes.push('ACT_WHEN_HIGHER')
-      }
-
-      const ifOnlySliIsSelected = Boolean(sli) && !(Boolean(healthScore) || Boolean(continuousVerification))
+      const assignComponentPayload = createPayloadForAssignComponent({
+        sli,
+        riskCategory,
+        healthScore,
+        continuousVerification,
+        lowerBaselineDeviation,
+        higherBaselineDeviation
+      })
 
       specPayload?.metricDefinitions?.push({
         identifier: metricIdentifier,
         metricName,
         baseFolder: derivedBasePath,
         metricPath: derivedMetricPath,
+        completeMetricPath,
         groupName: groupName?.value as string,
-        sli: { enabled: Boolean(sli) },
+        ...assignComponentPayload,
         analysis: {
-          riskProfile: ifOnlySliIsSelected
-            ? {}
-            : {
-                category,
-                metricType,
-                thresholdTypes
-              },
-          liveMonitoring: { enabled: Boolean(healthScore) },
-          deploymentVerification: { enabled: Boolean(continuousVerification), serviceInstanceMetricPath }
+          ...assignComponentPayload.analysis,
+          deploymentVerification: {
+            ...assignComponentPayload.analysis?.deploymentVerification,
+            serviceInstanceMetricPath
+          }
         }
       })
     }
@@ -439,15 +498,7 @@ export const createAppDynamicsPayload = (formData: any): UpdatedHealthSource | n
       ...specPayload,
       feature: 'Application Monitoring' as string,
       connectorRef: (formData?.connectorRef?.value as string) || (formData.connectorRef as string),
-      metricPacks: Object.entries(formData?.metricData)
-        .map(item => {
-          return item[1]
-            ? {
-                identifier: item[0]
-              }
-            : {}
-        })
-        .filter(item => !isEmpty(item))
+      metricPacks: getMetricPacksForPayload(formData, isMetricThresholdEnabled)
     }
   }
 }
@@ -456,43 +507,37 @@ export const submitData = (
   formik: FormikProps<AppDynamicsFomikFormInterface>,
   mappedMetrics: Map<string, CustomMappedMetric>,
   selectedMetric: string,
-  selectedMetricIndex: number,
-  createdMetrics: string[],
-  getString: (key: StringKeys) => string,
-  onSubmit: (healthSourcePayload: any) => void
+  onSubmit: (healthSourcePayload: any) => void,
+  groupedCreatedMetrics: GroupedCreatedMetrics
 ): void => {
-  formik.setTouched({
-    ...formik.touched,
-    [AppDynamicsMonitoringSourceFieldNames.APPDYNAMICS_TIER]: true,
-    [AppDynamicsMonitoringSourceFieldNames.APPDYNAMICS_APPLICATION]: true,
-    [AppDynamicsMonitoringSourceFieldNames.SLI]: true,
-    [AppDynamicsMonitoringSourceFieldNames.CONTINUOUS_VERIFICATION]: true,
-    [AppDynamicsMonitoringSourceFieldNames.GROUP_NAME]: true,
-    [AppDynamicsMonitoringSourceFieldNames.METRIC_NAME]: true,
-    [AppDynamicsMonitoringSourceFieldNames.LOWER_BASELINE_DEVIATION]: true,
-    [AppDynamicsMonitoringSourceFieldNames.RISK_CATEGORY]: true,
-    [AppDynamicsMonitoringSourceFieldNames.BASE_PATH]: { basePathDropdown_0: { value: true, path: true } },
-    [AppDynamicsMonitoringSourceFieldNames.METRIC_PATH]: { metricPathDropdown_0: { value: true, path: true } },
-    [AppDynamicsMonitoringSourceFieldNames.METRIC_DATA]: { Errors: true, Performance: true },
-    [PATHTYPE.FullPath]: true
-  })
-  const errors = validateMapping({ values: formik.values, createdMetrics, selectedMetricIndex, getString })
-  if (Object.keys(errors || {})?.length > 0) {
-    formik.validateForm()
-    return
-  }
   const updatedMetric = formik.values
   if (updatedMetric) {
     mappedMetrics.set(selectedMetric, updatedMetric)
   }
-  const updatedValues = { ...formik.values, mappedServicesAndEnvs: mappedMetrics }
+
+  const filteredCVDisabledMetricThresholds = getFilteredCVDisabledMetricThresholds(
+    formik.values.ignoreThresholds,
+    formik.values.failFastThresholds,
+    groupedCreatedMetrics
+  )
+
+  const updatedValues = {
+    ...formik.values,
+    ...filteredCVDisabledMetricThresholds,
+    mappedServicesAndEnvs: mappedMetrics
+  }
   onSubmit(updatedValues)
 }
 
 export const convertMetricPackToMetricData = (value?: MetricPackDTO[]) => {
   const dataObject: { [key: string]: boolean } = {}
   const metricList: MetricPackDTO[] = value || []
-  metricList.forEach((i: MetricPackDTO) => (dataObject[i.identifier as string] = true))
+  metricList.forEach((i: MetricPackDTO) => {
+    // `Custom` is being used for Metric threshold's Custom metric metricType
+    if (i.identifier !== MetricTypeValues.Custom) {
+      dataObject[i.identifier as string] = true
+    }
+  })
   return dataObject
 }
 
@@ -500,34 +545,41 @@ export const createAppDFormData = (
   appDynamicsData: AppDynamicsData,
   mappedMetrics: Map<string, CustomMappedMetric>,
   selectedMetric: string,
-  nonCustomFeilds: {
-    appdApplication: string
-    appDTier: string
-    metricPacks?: MetricPackDTO[]
-    metricData: {
-      [key: string]: boolean
-    }
-  },
+  nonCustomFeilds: NonCustomFeildsInterface,
   showCustomMetric: boolean,
   isTemplate = false
 ): AppDynamicsFomikFormInterface => {
   const mappedMetricsData = mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric
   const metricIdentifier = mappedMetricsData?.metricIdentifier || selectedMetric?.split(' ').join('_')
-  const { basePath = {}, metricPath = {} } = mappedMetricsData || {}
+  const {
+    basePath = {},
+    metricPath = {},
+    completeMetricPath = '',
+    serviceInstanceMetricPath = ''
+  } = mappedMetricsData || {}
   const lastItemBasePath = Object.keys(basePath)[Object.keys(basePath).length - 1]
   const lastItemMetricPath = Object.keys(metricPath)[Object.keys(metricPath).length - 1]
-  let fullPath =
+  const fullPath =
     basePath[lastItemBasePath]?.path && metricPath[lastItemMetricPath]?.path && appDynamicsData.tierName
       ? `${basePath[lastItemBasePath]?.path}|${appDynamicsData.tierName}|${metricPath[lastItemMetricPath]?.path}`
       : ''
 
-  if (
-    isTemplate &&
-    fullPath === '' &&
-    (nonCustomFeilds.appDTier === '<+input>' || nonCustomFeilds.appdApplication === '<+input>')
-  ) {
-    fullPath = '<+input>'
+  if (isTemplate && serviceInstanceMetricPath === '' && mappedMetricsData) {
+    mappedMetricsData.serviceInstanceMetricPath = RUNTIME_INPUT_VALUE
   }
+
+  const isTierRuntimeOrExpression = getMultiTypeFromValue(nonCustomFeilds?.appDTier) !== MultiTypeInputType.FIXED
+  const isApplicationRuntimeOrExpression =
+    getMultiTypeFromValue(nonCustomFeilds.appdApplication) !== MultiTypeInputType.FIXED
+  const isConnectorRuntimeOrExpression =
+    getMultiTypeFromValue(appDynamicsData?.connectorRef?.value) !== MultiTypeInputType.FIXED
+
+  const completeMetricPathForTemplates =
+    (isTierRuntimeOrExpression || isApplicationRuntimeOrExpression || isConnectorRuntimeOrExpression) &&
+    getMultiTypeFromValue(completeMetricPath) === MultiTypeInputType.FIXED
+      ? RUNTIME_INPUT_VALUE
+      : completeMetricPath
+
   return {
     name: appDynamicsData.name,
     identifier: appDynamicsData.identifier,
@@ -535,26 +587,37 @@ export const createAppDFormData = (
     isEdit: appDynamicsData.isEdit,
     product: appDynamicsData.product,
     type: appDynamicsData.type,
-    pathType: isTemplate ? PATHTYPE.FullPath : PATHTYPE.DropdownPath,
+    pathType: isTemplate || completeMetricPath ? PATHTYPE.FullPath : PATHTYPE.DropdownPath,
     fullPath,
     mappedServicesAndEnvs: appDynamicsData.mappedServicesAndEnvs,
+    ...nonCustomFeilds,
     ...(mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric),
-    appdApplication: nonCustomFeilds.appdApplication,
-    appDTier: nonCustomFeilds.appDTier,
-    metricPacks: nonCustomFeilds.metricPacks,
-    metricData: nonCustomFeilds.metricData,
+    completeMetricPath: isTemplate ? completeMetricPathForTemplates : completeMetricPath,
     metricName: selectedMetric,
     showCustomMetric,
     metricIdentifier
   }
 }
 
-export const initializeNonCustomFields = (appDynamicsData: AppDynamicsData) => {
+export const initializeNonCustomFields = (
+  appDynamicsData: AppDynamicsData,
+  isMetricThresholdEnabled: boolean
+): NonCustomFeildsInterface => {
+  const ignoreThresholds = isMetricThresholdEnabled
+    ? getFilteredMetricThresholdValues(ThresholdTypes.IgnoreThreshold, appDynamicsData.metricPacks)
+    : []
+
+  const failFastThresholds = isMetricThresholdEnabled
+    ? getFilteredMetricThresholdValues(ThresholdTypes.FailImmediately, appDynamicsData.metricPacks)
+    : []
+
   return {
     appdApplication: appDynamicsData.applicationName || '',
     appDTier: appDynamicsData.tierName || '',
     metricPacks: appDynamicsData.metricPacks || undefined,
-    metricData: convertMetricPackToMetricData(appDynamicsData?.metricPacks)
+    metricData: convertMetricPackToMetricData(appDynamicsData?.metricPacks),
+    ignoreThresholds,
+    failFastThresholds
   }
 }
 
@@ -565,7 +628,7 @@ export const setAppDynamicsApplication = (
 ): SelectOption | string | undefined => {
   const value = !appdApplication ? undefined : tierOptions.find((item: SelectOption) => item.label === appdApplication)
 
-  if (multiType === MultiTypeInputType.RUNTIME) {
+  if (multiType && isMultiTypeRuntime(multiType)) {
     return appdApplication
   }
   if (multiType === MultiTypeInputType.EXPRESSION) {
@@ -581,7 +644,7 @@ export const setAppDynamicsTier = (
   multiType?: MultiTypeInputType
 ) => {
   const value = tierLoading || !appDTier ? undefined : tierOptions.find((item: SelectOption) => item.label === appDTier)
-  if (multiType === MultiTypeInputType.RUNTIME) {
+  if (multiType && isMultiTypeRuntime(multiType)) {
     return appDTier
   }
   if (multiType === MultiTypeInputType.EXPRESSION) {
@@ -604,7 +667,7 @@ export const getPlaceholder = (
 ): string => (loading ? getString('loading') : getString(placeholderText))
 
 export const showValidation = (appdApplication?: string, appDTier?: string): boolean =>
-  Boolean(appDTier) && Boolean(appdApplication) && !(appdApplication === '<+input>' || appDTier === '<+input>')
+  Boolean(appDTier) && Boolean(appdApplication) && !(appdApplication === RUNTIME_INPUT_VALUE || appDTier === '<+input>')
 
 export const getTypeOfInput = (value: SelectOption | string) => {
   const selectedItem = typeof value === 'string' ? value : value?.label
@@ -619,16 +682,7 @@ export const getTypeOfInput = (value: SelectOption | string) => {
 
 export const setCustomFieldAndValidation = (
   value: string,
-  setNonCustomFeilds: React.Dispatch<
-    React.SetStateAction<{
-      appdApplication: string
-      appDTier: string
-      metricPacks: MetricPackDTO[] | undefined
-      metricData: {
-        [key: string]: boolean
-      }
-    }>
-  >,
+  setNonCustomFeilds: React.Dispatch<React.SetStateAction<NonCustomFeildsInterface>>,
   nonCustomFeilds: NonCustomFeildsInterface,
   setAppDValidation: React.Dispatch<
     React.SetStateAction<{
@@ -641,7 +695,7 @@ export const setCustomFieldAndValidation = (
   const updatedNonCustomValue = {
     ...nonCustomFeilds,
     appdApplication: value,
-    appDTier: getTypeOfInput(value) !== MultiTypeInputType.FIXED ? '<+input>' : ''
+    appDTier: getTypeOfInput(value) !== MultiTypeInputType.FIXED ? RUNTIME_INPUT_VALUE : ''
   }
   setNonCustomFeilds(updatedNonCustomValue)
   if (validate) {
@@ -660,7 +714,7 @@ export const shouldMakeTierCall = (applicationName: string) =>
   getMultiTypeFromValue(applicationName) !== MultiTypeInputType.RUNTIME &&
   (getMultiTypeFromValue(applicationName) !== MultiTypeInputType.EXPRESSION || /^<+>/.test(applicationName))
 
-export const getAllowedTypes = (isConnectorRuntimeOrExpression: boolean) =>
+export const getAllowedTypes = (isConnectorRuntimeOrExpression: boolean): AllowedTypes =>
   isConnectorRuntimeOrExpression
     ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
     : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
@@ -686,5 +740,47 @@ export const resetShowCustomMetric = (
 ) => {
   if (!selectedMetric && !mappedMetrics.size) {
     setShowCustomMetric(false)
+  }
+}
+
+export const persistCustomMetric = ({
+  mappedMetrics,
+  selectedMetric,
+  nonCustomFeilds,
+  formikValues,
+  setMappedMetrics,
+  isTemplate
+}: PersistCustomMetricInterface): void => {
+  const mapValue = mappedMetrics.get(selectedMetric) as MapAppDynamicsMetric
+  if (!isEmpty(mapValue)) {
+    const nonCustomValuesFromSelectedMetric = {
+      appdApplication: mapValue?.appdApplication,
+      appDTier: mapValue?.appDTier,
+      metricPacks: mapValue?.metricPacks,
+      metricData: mapValue?.metricData,
+      ignoreThresholds: mapValue?.ignoreThresholds,
+      failFastThresholds: mapValue?.failFastThresholds
+    }
+    const areAllFilled =
+      nonCustomValuesFromSelectedMetric.appdApplication &&
+      nonCustomValuesFromSelectedMetric.appDTier &&
+      nonCustomValuesFromSelectedMetric.metricData
+
+    const shouldUpdate = isTemplate ? isTemplate : areAllFilled
+    if (
+      shouldUpdate &&
+      selectedMetric === formikValues?.metricName &&
+      !isEqual(nonCustomFeilds, nonCustomValuesFromSelectedMetric)
+    ) {
+      const clonedMappedMetrics = cloneDeep(mappedMetrics)
+      clonedMappedMetrics.forEach((data, key) => {
+        if (selectedMetric === data.metricName) {
+          clonedMappedMetrics.set(selectedMetric, { ...formikValues, ...nonCustomFeilds })
+        } else {
+          clonedMappedMetrics.set(key, { ...data, ...nonCustomFeilds })
+        }
+      })
+      setMappedMetrics({ selectedMetric: selectedMetric, mappedMetrics: clonedMappedMetrics })
+    }
   }
 }

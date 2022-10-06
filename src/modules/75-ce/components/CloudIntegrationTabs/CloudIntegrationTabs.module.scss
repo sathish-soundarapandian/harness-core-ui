@@ -1,0 +1,157 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.main {
+  padding: var(--spacing-small) var(--spacing-xxxlarge) !important;
+
+  .table {
+    .nameCell {
+      flex: 1;
+      color: var(--primary-7);
+      cursor: pointer;
+      padding-right: var(--spacing-medium);
+    }
+
+    .statusCell {
+      display: grid;
+      grid-template-columns: 120px max-content;
+
+      .testBtn {
+        align-self: center;
+        border-radius: 8px;
+        font-size: 10px;
+        padding-left: var(--spacing-small);
+        padding-right: var(--spacing-small);
+        letter-spacing: 0.2px;
+      }
+    }
+
+    .permissionTag {
+      padding: 6px var(--spacing-small);
+      margin-right: var(--spacing-small);
+      font-size: 13px;
+      font-weight: 400;
+      border-radius: 4px;
+      height: 32px;
+
+      &.success {
+        background: var(--purple-50);
+        color: var(--purple-700);
+      }
+
+      &.failure {
+        background: var(--red-50);
+        color: var(--red-800);
+        font-weight: 500;
+      }
+    }
+
+    .features {
+      align-items: center;
+      :global(.bp3-button-text) {
+        font-size: 13px;
+      }
+
+      .enableCloudCostsBtn,
+      .addAutoStoppingBtn {
+        &:global(.bp3-button) {
+          background-color: var(--primary-1) !important;
+        }
+      }
+
+      .addAutoStoppingBtn {
+        height: 32px;
+        padding: 6px var(--spacing-small) !important;
+
+        :global(.bp3-button-text) {
+          font-weight: 500;
+          letter-spacing: 0.2px;
+        }
+      }
+    }
+  }
+}
+
+.spinner {
+  min-height: calc(var(--page-min-height) - 175px) !important;
+  display: flex;
+  justify-content: center;
+}
+
+.lastEvent {
+  padding: var(--spacing-medium) !important;
+  max-width: 417px;
+
+  p::first-letter {
+    text-transform: capitalize;
+  }
+}
+
+.statusError {
+  padding: var(--spacing-medium) !important;
+  max-width: 400px;
+}
+
+.emptyStateCtn {
+  min-height: calc(var(--page-min-height) - 73px) !important;
+
+  &.emptySearch {
+    min-height: calc(var(--page-min-height) - 175px) !important;
+  }
+
+  .cloudProviderList {
+    margin-top: 0 !important;
+
+    > div {
+      > div:nth-child(1) {
+        :global(.bp3-card) {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 8px;
+        }
+
+        grid-template-columns: repeat(4, 80px);
+        grid-template-rows: 80px;
+        column-gap: var(--spacing-xxlarge);
+      }
+
+      > div:nth-child(2) {
+        grid-template-columns: repeat(4, 80px);
+        column-gap: var(--spacing-xxlarge);
+
+        > p {
+          color: var(--grey-700);
+        }
+      }
+    }
+  }
+}
+
+.deleteConnectorModal {
+  width: 584px;
+  padding-bottom: 0;
+  position: relative;
+  overflow: auto;
+
+  .ctn {
+    display: grid;
+    grid-template-columns: 60fr 40fr;
+
+    .deleteImage {
+      height: 150px;
+      align-self: center;
+      margin: auto;
+    }
+  }
+
+  .crossIcon {
+    position: absolute;
+    right: var(--spacing-small);
+    top: var(--spacing-small);
+  }
+}

@@ -63,7 +63,6 @@ ZeroNorthStep.args = {
     description: 'Description',
     timeout: '10s',
     spec: {
-      connectorRef: 'account.connectorRef',
       privileged: false,
       settings: {
         key1: 'value1',
@@ -93,7 +92,6 @@ ZeroNorthStep.args = {
     description: RUNTIME_INPUT_VALUE,
     timeout: RUNTIME_INPUT_VALUE,
     spec: {
-      connectorRef: RUNTIME_INPUT_VALUE,
       privileged: RUNTIME_INPUT_VALUE,
       settings: RUNTIME_INPUT_VALUE,
       // Right now we do not support Image Pull Policy but will do in the future
@@ -113,7 +111,6 @@ ZeroNorthStep.args = {
     description: RUNTIME_INPUT_VALUE,
     timeout: RUNTIME_INPUT_VALUE,
     spec: {
-      connectorRef: RUNTIME_INPUT_VALUE,
       privileged: RUNTIME_INPUT_VALUE,
       settings: RUNTIME_INPUT_VALUE,
       // Right now we do not support Image Pull Policy but will do in the future
@@ -145,12 +142,6 @@ ZeroNorthStep.args = {
         yamlProperties: {
           fqn: 'pipeline.stages.qaStage.execution.steps.zeronorth.timeout',
           localName: 'step.zeronorth.timeout'
-        }
-      },
-      'step-connectorRef': {
-        yamlProperties: {
-          fqn: 'pipeline.stages.qaStage.execution.steps.zeronorth.spec.connectorRef',
-          localName: 'step.zeronorth.spec.connectorRef'
         }
       },
       'step-settings': {
@@ -186,7 +177,6 @@ ZeroNorthStep.args = {
       description: 'step-description',
       timeout: 'step-timeout',
       spec: {
-        connectorRef: 'step-connectorRef',
         settings: 'step-settings',
         privileged: false,
         // Right now we do not support Image Pull Policy but will do in the future

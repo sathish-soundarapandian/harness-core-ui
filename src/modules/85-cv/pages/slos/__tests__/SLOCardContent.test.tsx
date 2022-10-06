@@ -4,7 +4,6 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
 import React from 'react'
 import userEvent from '@testing-library/user-event'
 import { render, screen } from '@testing-library/react'
@@ -158,16 +157,16 @@ describe('SLOCardContent', () => {
     )
 
     expect(screen.getByTestId('timeline-slider-container')).toBeInTheDocument()
-    userEvent.click(screen.getByTestId('timeline-slider-container'))
 
-    expect(setSliderTimeRange).toBeCalledTimes(1)
+    expect(setSliderTimeRange).toBeCalledTimes(0)
+    userEvent.click(screen.getByTestId('timeline-slider-container'))
 
     expect(screen.getByText('reset')).toBeInTheDocument()
 
     userEvent.click(screen.getByText('reset'))
 
     expect(screen.queryByText('reset')).not.toBeInTheDocument()
-    expect(setSliderTimeRange).toBeCalledTimes(2)
+    expect(setSliderTimeRange).toBeCalledTimes(1)
   })
 
   test('it should handle resetSlider for type Error Budget', () => {
@@ -197,5 +196,48 @@ describe('SLOCardContent', () => {
     userEvent.click(screen.getByText('reset'))
 
     expect(screen.queryByText('reset')).not.toBeInTheDocument()
+  })
+
+  test('should not render the user hint if showUserHint prop is not passed', () => {
+    const sliderTimeRange = { startTime: 1639993400000, endTime: 1639993420000 }
+
+    render(
+      <TestWrapper {...testWrapperProps}>
+        <SLOCardContent
+          isCardView
+          sliderTimeRange={sliderTimeRange}
+          setSliderTimeRange={jest.fn()}
+          serviceLevelObjective={dashboardWidgetsContent}
+        />
+      </TestWrapper>
+    )
+
+    expect(screen.queryByTestId('SLOCard_UserHint_SLO')).not.toBeInTheDocument()
+
+    userEvent.click(screen.getByText('cv.errorBudget'))
+
+    expect(screen.queryByTestId('SLOCard_UserHint_ErrorBudget')).not.toBeInTheDocument()
+  })
+
+  test('should render the user hint if showUserHint prop is passed', () => {
+    const sliderTimeRange = { startTime: 1639993400000, endTime: 1639993420000 }
+
+    render(
+      <TestWrapper {...testWrapperProps}>
+        <SLOCardContent
+          isCardView
+          sliderTimeRange={sliderTimeRange}
+          setSliderTimeRange={jest.fn()}
+          serviceLevelObjective={dashboardWidgetsContent}
+          showUserHint
+        />
+      </TestWrapper>
+    )
+
+    expect(screen.queryByTestId('SLOCard_UserHint_SLO')).toBeInTheDocument()
+
+    userEvent.click(screen.getByText('cv.errorBudget'))
+
+    expect(screen.queryByTestId('SLOCard_UserHint_ErrorBudget')).toBeInTheDocument()
   })
 })

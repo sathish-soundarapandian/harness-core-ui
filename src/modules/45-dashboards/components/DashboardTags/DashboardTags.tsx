@@ -9,7 +9,7 @@ import React from 'react'
 import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type { DashboardModel } from 'services/custom-dashboards'
-import { DashboardType } from '@dashboards/types/DashboardTypes'
+import { DashboardType } from '@dashboards/types/DashboardTypes.types'
 import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface DashboardTagProps {
@@ -18,6 +18,7 @@ export interface DashboardTagProps {
 
 const DashboardTags: React.FC<DashboardTagProps> = ({ dashboard }) => {
   const { getString } = useStrings()
+  let hasDeploymentTag = false
   return (
     <Container className={moduleTagCss.predefinedTags}>
       {dashboard?.type === DashboardType.SHARED && (
@@ -40,7 +41,8 @@ const DashboardTags: React.FC<DashboardTagProps> = ({ dashboard }) => {
             </section>
           )
         }
-        if (tag === 'CD') {
+        if (!hasDeploymentTag && (tag === 'CD' || tag == 'CG_CD')) {
+          hasDeploymentTag = true
           return (
             <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.cdTag}>
               {getString('deploymentsText')}
@@ -54,10 +56,10 @@ const DashboardTags: React.FC<DashboardTagProps> = ({ dashboard }) => {
             </section>
           )
         }
-        if (tag === 'CG_CD') {
+        if (tag === 'STO') {
           return (
-            <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.cgCdTag}>
-              {getString('dashboards.modules.cgDeployments')}
+            <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.stoTag}>
+              {getString('common.purpose.sto.continuous')}
             </section>
           )
         }

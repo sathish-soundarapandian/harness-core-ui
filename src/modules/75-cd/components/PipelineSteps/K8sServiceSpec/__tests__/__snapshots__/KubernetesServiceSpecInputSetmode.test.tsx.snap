@@ -14,6 +14,36 @@ exports[`<KubernetesServiceSpecInputSetMode /> tests snapshot test for kubernete
       >
         pipelineSteps.deploy.serviceSpecifications.deploymentTypes.manifests
       </div>
+      <div>
+        <p
+          class="StyledProps--font StyledProps--main inputheader StyledProps--margin-top-medium"
+        >
+          manifest_1
+        </p>
+        <div
+          class="Layout--vertical StyledProps--main inputWidth layoutVerticalSpacing"
+          data-name="manifest"
+        >
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+          <div
+            class="inputFieldLayout"
+          />
+        </div>
+      </div>
     </div>
     <div
       class="nopadLeft accordionSummary"

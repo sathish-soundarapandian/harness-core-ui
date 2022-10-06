@@ -51,5 +51,3 @@ const makePatchHook =
   }
 
 export const useServeFeatureFlagVariationToTargets = makePatchHook('addTargetsToVariationTargetMap')
-
-export const useRemoveFeatureFlagVariationFromTargets = makePatchHook('removeTargetsToVariationTargetMap')

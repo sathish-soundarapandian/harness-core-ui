@@ -8,7 +8,7 @@
 import React from 'react'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import K8sValuesYamlManifestContent from '../ManifestSourceRuntimeFields/K8sValuesYamlManifestContent'
+import { ManifestContent } from '../ManifestSourceRuntimeFields/ManifestContent'
 
 export class ValuesYamlManifestSource extends ManifestSourceBase<ManifestSourceRenderProps> {
   protected manifestType = ManifestDataType.Values
@@ -18,6 +18,6 @@ export class ValuesYamlManifestSource extends ManifestSourceBase<ManifestSourceR
       return null
     }
 
-    return <K8sValuesYamlManifestContent {...props} pathFieldlabel="common.git.filePath" />
+    return <ManifestContent {...props} pathFieldlabel="common.git.filePath" />
   }
 }

@@ -8,12 +8,12 @@
 import React from 'react'
 import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
-
 import { Checkbox, Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { useStrings } from 'framework/strings'
+import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import type { EntityGitDetails, InputSetErrorWrapper, InputSetSummaryResponse } from 'services/pipeline-ng'
 import { getIconByType } from './utils'
 import { InputSetGitDetails } from './InputSetGitDetails'
@@ -30,17 +30,32 @@ interface MultipleInputSetListProps {
     inputSetErrorDetails?: InputSetErrorWrapper,
     overlaySetErrorDetails?: { [key: string]: string }
   ) => void
+  pipelineGitDetails?: EntityGitDetails
+  refetch: () => Promise<void>
+  hideInputSetButton?: boolean
+  showReconcile: boolean
+  onReconcile?: (identifier: string) => void
+  reRunInputSetYaml?: string
 }
 
 export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Element {
-  const { inputSet, onCheckBoxHandler } = props
+  const {
+    inputSet,
+    onCheckBoxHandler,
+    pipelineGitDetails,
+    refetch,
+    hideInputSetButton,
+    showReconcile,
+    onReconcile,
+    reRunInputSetYaml
+  } = props
   const { getString } = useStrings()
 
   return (
     <li
       className={cx(css.item)}
       onClick={() => {
-        if (isInputSetInvalid(inputSet)) {
+        if (isInputSetInvalid(inputSet) || showReconcile) {
           return
         }
         onCheckBoxHandler(
@@ -58,7 +73,7 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
         <Layout.Horizontal flex={{ alignItems: 'center' }}>
           <Checkbox
             className={css.checkbox}
-            disabled={isInputSetInvalid(inputSet)}
+            disabled={isInputSetInvalid(inputSet) || showReconcile}
             labelElement={
               <Layout.Horizontal flex={{ alignItems: 'center' }} padding={{ left: true }}>
                 <Icon name={getIconByType(inputSet.inputSetType)}></Icon>
@@ -78,16 +93,25 @@ export function MultipleInputSetList(props: MultipleInputSetListProps): JSX.Elem
               </Layout.Horizontal>
             }
           />
-          {isInputSetInvalid(inputSet) && (
-            <Container padding={{ left: 'large' }}>
+          {(isInputSetInvalid(inputSet) || showReconcile) && !reRunInputSetYaml && (
+            <Container padding={{ left: 'large' }} className={css.invalidEntity}>
               <Badge
                 text={'common.invalid'}
                 iconName="error-outline"
-                showTooltip={true}
+                showTooltip={false}
                 entityName={inputSet.name}
                 entityType={inputSet.inputSetType === 'INPUT_SET' ? 'Input Set' : 'Overlay Input Set'}
                 uuidToErrorResponseMap={inputSet.inputSetErrorDetails?.uuidToErrorResponseMap}
                 overlaySetErrorDetails={inputSet.overlaySetErrorDetails}
+              />
+              <OutOfSyncErrorStrip
+                inputSet={inputSet}
+                pipelineGitDetails={pipelineGitDetails}
+                onlyReconcileButton={true}
+                refetch={refetch}
+                hideInputSetButton={hideInputSetButton}
+                isOverlayInputSet={inputSet.inputSetType === 'OVERLAY_INPUT_SET'}
+                onReconcile={onReconcile}
               />
             </Container>
           )}

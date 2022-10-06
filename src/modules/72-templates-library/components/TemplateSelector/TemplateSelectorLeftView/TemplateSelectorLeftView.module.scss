@@ -13,7 +13,25 @@
   .searchBox {
     flex-grow: 1;
   }
-  :global(.DropDown--dropdownButton) {
-    background-color: var(--white) !important;
+  .mainContainer {
+    overflow: auto;
+    position: relative;
+    :global(.DropDown--dropdownButton) {
+      background-color: var(--white) !important;
+    }
+    .linkedTemplateCheckbox {
+      border: 1px solid var(--primary-7);
+      background: var(--primary-1);
+      padding: 6px var(--spacing-3) !important;
+      border-radius: var(--spacing-2);
+
+      .linkedTemplateCheckboxLabel {
+        max-width: 280px !important;
+      }
+    }
+    .templatesContainer {
+      flex-grow: 1;
+      position: relative;
+    }
   }
 }

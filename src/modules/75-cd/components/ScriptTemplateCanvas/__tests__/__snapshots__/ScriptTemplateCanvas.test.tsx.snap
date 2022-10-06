@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test ScriptTemplateCanvasWithRef should match snapshot for ScriptTemplateCanvasWithRef 1`] = `
+<div>
+  <div
+    class="script-form-mock"
+  >
+    <button>
+      onChange Button
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Test ScriptTemplateCanvasWithRef should match snapshot for default scriptTemplateContextMock 1`] = `
+<div>
+  <div
+    class="script-form-mock"
+  >
+    <button>
+      onChange Button
+    </button>
+  </div>
+</div>
+`;

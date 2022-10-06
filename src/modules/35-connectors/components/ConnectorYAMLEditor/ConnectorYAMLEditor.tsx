@@ -44,8 +44,9 @@ import {
   UseSaveToGitDialogReturn
 } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
-import { FeatureFlag } from '@common/featureFlags'
-import { useConnectorGovernanceModal } from '@connectors/hooks/useConnectorGovernanceModal'
+import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
+import { connectorGovernanceModalProps } from '@connectors/utils/utils'
+import { doesGovernanceHasErrorOrWarning } from '@governance/utils'
 import css from './ConnectorYAMLEditor.module.scss'
 
 interface ConnectorYAMLEditorProp {
@@ -142,7 +143,8 @@ const ConnectorYAMLEditor: React.FC<ConnectorYAMLEditorProp> = props => {
     setConnectorForYaml,
     refetchConnector
   } = props
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const [hasConnectorChanged, setHasConnectorChanged] = useState<boolean>(false)
 
@@ -172,10 +174,8 @@ const ConnectorYAMLEditor: React.FC<ConnectorYAMLEditorProp> = props => {
   const { mutate: updateConnector, loading: updating } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
-  const { hideOrShowGovernanceErrorModal, doesGovernanceHasError } = useConnectorGovernanceModal({
-    errorOutOnGovernanceWarning: false,
-    featureFlag: FeatureFlag.OPA_CONNECTOR_GOVERNANCE
-  })
+
+  const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
 
   const { openSaveToGitDialog } = useSaveToGitDialog<Connector>({
     onSuccess: (
@@ -250,17 +250,27 @@ const ConnectorYAMLEditor: React.FC<ConnectorYAMLEditorProp> = props => {
           baseBranch: responsedata.gitDetails?.branch
         }
       })
-      const hasAnyGovernnanceError = doesGovernanceHasError(response)
-      const { canGoToNextStep } = await hideOrShowGovernanceErrorModal(response)
-      if (response.status === 'SUCCESS' && response?.data?.connector && !hasAnyGovernnanceError) {
-        setEnableEdit(false)
+      const { governanceMetaDataHasError, governanceMetaDataHasWarning } = doesGovernanceHasErrorOrWarning(
+        response.data?.governanceMetadata
+      )
+      if (response.data?.governanceMetadata) {
+        conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
+          setEnableEdit(false)
+          refetchConnector()
+        })
+      }
+      if (response.status === 'SUCCESS' && response?.data?.connector && !governanceMetaDataHasError) {
+        if (!governanceMetaDataHasWarning) {
+          setEnableEdit(false)
+        }
         setConnector(response?.data?.connector)
         setConnectorForYaml(response?.data?.connector)
       }
+
       return {
-        status: !hasAnyGovernnanceError ? response.status : 'FAILURE',
+        status: !governanceMetaDataHasError ? response.status : 'FAILURE',
         nextCallback: async () => {
-          if (canGoToNextStep) {
+          if (!governanceMetaDataHasError && !governanceMetaDataHasWarning) {
             refetchConnector()
           }
         },

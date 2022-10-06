@@ -217,13 +217,13 @@ exports[`CI enabled CI READONLY mode: CI stage readonly mode 1`] = `
       >
         <div
           class="Text--withDocsTooltip"
-          data-tooltip-id="ciCodebase"
+          data-tooltip-id="codebase"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
             data-name="ci-codebase-title"
           >
-            ciCodebase
+            codebase
           </p>
         </div>
       </div>
@@ -318,13 +318,13 @@ exports[`CI enabled CI present in one of the stages: CI codebase input set form 
       >
         <div
           class="Text--withDocsTooltip"
-          data-tooltip-id="ciCodebase"
+          data-tooltip-id="codebase"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
             data-name="ci-codebase-title"
           >
-            ciCodebase
+            codebase
           </p>
         </div>
       </div>
@@ -395,10 +395,10 @@ exports[`CI enabled CI present in one of the stages: CI codebase input set form 
                 style="width: 50%;"
               >
                 <div
-                  class="StyledProps--font StyledProps--main"
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
                 >
                   <div
-                    class="bp3-form-group"
+                    class="bp3-form-group width100"
                   >
                     <label
                       class="bp3-label"
@@ -514,13 +514,13 @@ exports[`CI enabled CI present with triggers: CI codebase input set form with tr
       >
         <div
           class="Text--withDocsTooltip"
-          data-tooltip-id="ciCodebase"
+          data-tooltip-id="codebase"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
             data-name="ci-codebase-title"
           >
-            ciCodebase
+            codebase
           </p>
         </div>
       </div>
@@ -591,10 +591,10 @@ exports[`CI enabled CI present with triggers: CI codebase input set form with tr
                 style="width: 50%;"
               >
                 <div
-                  class="StyledProps--font StyledProps--main"
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center"
                 >
                   <div
-                    class="bp3-form-group"
+                    class="bp3-form-group width100"
                   >
                     <label
                       class="bp3-label"
@@ -710,13 +710,13 @@ exports[`CI enabled CI with ConnectorRef as runtime input: CI stage expects Conn
       >
         <div
           class="Text--withDocsTooltip"
-          data-tooltip-id="ciCodebase"
+          data-tooltip-id="codebase"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
             data-name="ci-codebase-title"
           >
-            ciCodebase
+            codebase
           </p>
         </div>
       </div>
@@ -741,7 +741,7 @@ exports[`CI enabled CI with ConnectorRef as runtime input: CI stage expects Conn
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"
@@ -833,13 +833,13 @@ exports[`CI enabled PR Number build radio option should not be visible for CodeC
       >
         <div
           class="Text--withDocsTooltip"
-          data-tooltip-id="ciCodebase"
+          data-tooltip-id="codebase"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
             data-name="ci-codebase-title"
           >
-            ciCodebase
+            codebase
           </p>
         </div>
       </div>
@@ -921,13 +921,13 @@ exports[`CI enabled Render CI Codebase all runtime inputs: all inputs as runtime
       >
         <div
           class="Text--withDocsTooltip"
-          data-tooltip-id="ciCodebase"
+          data-tooltip-id="codebase"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
             data-name="ci-codebase-title"
           >
-            ciCodebase
+            codebase
           </p>
         </div>
       </div>
@@ -952,7 +952,7 @@ exports[`CI enabled Render CI Codebase all runtime inputs: all inputs as runtime
                 >
                   <div
                     class="StyledProps--font StyledProps--main"
-                    style="margin-bottom: 5px;"
+                    data-test-id="connectorTooltip"
                   >
                     <span
                       class="Tooltip--acenter bp3-label"

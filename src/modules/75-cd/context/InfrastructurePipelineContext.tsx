@@ -7,10 +7,13 @@
 
 import React from 'react'
 import { cloneDeep, isEqual, noop } from 'lodash-es'
-import { MultiTypeInputType, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
+import {
+  AllowedTypesWithRunTime,
+  MultiTypeInputType,
+  VisualYamlSelectedView as SelectedView
+} from '@wings-software/uicore'
 import {
   PipelineContext,
-  PipelineContextInterface,
   PipelineContextType
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import {
@@ -28,27 +31,33 @@ import {
   getStageFromPipeline as _getStageFromPipeline,
   getStagePathFromPipeline as _getStagePathFromPipeline
 } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/cd-ng'
 import type { PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
 import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio/PipelineQueryParamState/usePipelineQueryParam'
-import type { GetPipelineQueryParams } from 'services/pipeline-ng'
+import type {
+  GetPipelineQueryParams,
+  PipelineInfoConfig,
+  StageElementConfig,
+  StageElementWrapperConfig
+} from 'services/pipeline-ng'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 
 export interface InfrastructurePipelineProviderProps {
   queryParams: GetPipelineQueryParams
   initialValue: PipelineInfoConfig
   isReadOnly: boolean
-  getTemplate: PipelineContextInterface['getTemplate']
 }
 
 export function InfrastructurePipelineProvider({
   queryParams,
   initialValue,
   isReadOnly,
-  getTemplate,
   children
 }: React.PropsWithChildren<InfrastructurePipelineProviderProps>): React.ReactElement {
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
+  const allowableTypes: AllowedTypesWithRunTime[] = [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ]
   const { getString } = useStrings()
   const [state, dispatch] = React.useReducer(PipelineReducer, initialState)
   const [view, setView] = useLocalStorage<SelectedView>('pipeline_studio_view', SelectedView.VISUAL)
@@ -181,7 +190,8 @@ export function InfrastructurePipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes: noop,
-        getTemplate
+        setTemplateServiceData: noop,
+        setIntermittentLoading: noop
       }}
     >
       {children}

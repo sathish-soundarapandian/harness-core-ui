@@ -10,7 +10,8 @@ import { defaultTo } from 'lodash-es'
 
 import { Icon, Layout, Text } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import type { GitSyncEntityDTO, PipelineInfoConfig } from 'services/cd-ng'
+import type { GitSyncEntityDTO } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import type { EntityGitDetails, NGTemplateInfoConfig } from 'services/template-ng'
 import { useGitSyncStore } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useStrings } from 'framework/strings'
@@ -19,6 +20,8 @@ import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFil
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { getEntityUrl, getRepoEntityObject } from '@gitsync/common/gitSyncUtils'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { DefaultNewPipelineId } from './PipelineContext/PipelineActions'
 import GitPopover from '../GitPopover/GitPopover'
 
@@ -29,24 +32,81 @@ interface StudioGitPopoverProps {
   entityData: PipelineInfoConfig | NGTemplateInfoConfig
   onGitBranchChange: (selectedFilter: GitFilterScope) => void
   entityType: string
+  connectorRef?: string
 }
 
 const breakWord = 'break-word'
 
+const getFilePath = (
+  supportingGitSimplification: boolean | undefined,
+  gitDetails: EntityGitDetails,
+  repoEntity: GitSyncEntityDTO
+): string | undefined => {
+  if (supportingGitSimplification) {
+    return defaultTo(gitDetails?.fileUrl, gitDetails?.filePath)
+  }
+
+  return getEntityUrl(repoEntity)
+}
+
 export function GitDetails(props: StudioGitPopoverProps): JSX.Element {
-  const { gitDetails, identifier, isReadonly, onGitBranchChange, entityType } = props
+  const { gitDetails, identifier, isReadonly, onGitBranchChange, entityType, connectorRef } = props
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { gitSyncRepos, loadingRepos } = useGitSyncStore()
+  const { supportingGitSimplification } = useAppStore()
+
   const { getString } = useStrings()
 
   const getDisabledOptionTitleText = (): string => {
     return getString('common.gitSync.branchSyncNotAllowed', { entityType })
   }
 
-  if (gitDetails?.objectId || (identifier === DefaultNewPipelineId && gitDetails.repoIdentifier)) {
+  if (
+    gitDetails?.objectId ||
+    (identifier === DefaultNewPipelineId && gitDetails.repoIdentifier) ||
+    gitDetails?.repoName
+  ) {
     const repo = getRepoDetailsByIndentifier(gitDetails?.repoIdentifier, gitSyncRepos)
     const repoEntity: GitSyncEntityDTO = getRepoEntityObject(repo, gitDetails)
-    const repoName: string = defaultTo(repo?.name, '')
+    const repoName = supportingGitSimplification
+      ? defaultTo(gitDetails?.repoName, gitDetails?.repoIdentifier)
+      : defaultTo(repo?.name, '')
+
+    const branchUI =
+      identifier === DefaultNewPipelineId || isReadonly ? (
+        <>
+          <Icon name="git-new-branch" size={14} color={Color.GREY_700} />
+          <Text
+            font={FontVariation.SMALL}
+            style={{ wordWrap: breakWord, maxWidth: '200px' }}
+            lineClamp={1}
+            color={Color.GREY_800}
+          >
+            {gitDetails?.branch}
+          </Text>
+        </>
+      ) : supportingGitSimplification ? (
+        <GitRemoteDetails
+          connectorRef={connectorRef}
+          repoName={repoName}
+          branch={defaultTo(branch, gitDetails.branch)}
+          flags={{ borderless: false, showRepo: false, normalInputStyle: true }}
+          onBranchChange={onGitBranchChange}
+        />
+      ) : (
+        <>
+          <Icon name="git-new-branch" size={14} color={Color.GREY_700} />
+          <GitFilters
+            onChange={onGitBranchChange}
+            showRepoSelector={false}
+            defaultValue={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
+            showBranchIcon={false}
+            shouldAllowBranchSync={false}
+            getDisabledOptionTitleText={getDisabledOptionTitleText}
+          />
+        </>
+      )
+
     return (
       <>
         <Layout.Vertical spacing="large">
@@ -79,7 +139,7 @@ export function GitDetails(props: StudioGitPopoverProps): JSX.Element {
                 lineClamp={1}
                 color={Color.GREY_800}
               >
-                {getEntityUrl(repoEntity)}
+                {getFilePath(supportingGitSimplification, gitDetails, repoEntity)}
               </Text>
             </Layout.Horizontal>
           </Layout.Vertical>
@@ -90,31 +150,7 @@ export function GitDetails(props: StudioGitPopoverProps): JSX.Element {
             {getString('pipelineSteps.deploy.inputSet.branch')}
           </Text>
           <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
-            {identifier === DefaultNewPipelineId || isReadonly ? (
-              <>
-                <Icon name="git-new-branch" size={14} color={Color.GREY_700} />
-                <Text
-                  font={FontVariation.SMALL}
-                  style={{ wordWrap: breakWord, maxWidth: '200px' }}
-                  lineClamp={1}
-                  color={Color.GREY_800}
-                >
-                  {gitDetails?.branch}
-                </Text>
-              </>
-            ) : (
-              <>
-                <Icon name="git-new-branch" size={14} color={Color.GREY_700} />
-                <GitFilters
-                  onChange={onGitBranchChange}
-                  showRepoSelector={false}
-                  defaultValue={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
-                  showBranchIcon={false}
-                  shouldAllowBranchSync={false}
-                  getDisabledOptionTitleText={getDisabledOptionTitleText}
-                />
-              </>
-            )}
+            {branchUI}
           </Layout.Horizontal>
         </Layout.Vertical>
       </>

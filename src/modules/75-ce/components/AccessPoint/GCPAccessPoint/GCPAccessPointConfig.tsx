@@ -87,7 +87,7 @@ const GCPAccessPointConfig: React.FC<GCPAccessPointConfigProps> = ({
       }
     } catch (e) {
       setLbCreationInProgress(false)
-      showError(e.data?.errors?.join('\n '))
+      showError(Utils.getASErrorMessage(e))
     }
   }
 

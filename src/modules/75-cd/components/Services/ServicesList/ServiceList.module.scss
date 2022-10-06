@@ -13,7 +13,6 @@
 }
 
 .lastDeploymentText {
-  white-space: nowrap !important;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -30,4 +29,14 @@
 
 .pieChartLabelStyles {
   font-size: var(--font-size-xsmall) !important;
+}
+
+.openNewTabStyle {
+  display: flex;
+  align-items: center;
+}
+
+.lastDeployment {
+  display: grid !important;
+  grid-template-columns: 60% 40%;
 }

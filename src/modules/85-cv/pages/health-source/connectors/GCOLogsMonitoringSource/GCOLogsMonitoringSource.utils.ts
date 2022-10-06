@@ -28,6 +28,7 @@ export function createGCOLogsHealthSourcePayload(setupSource: GCOMonitoringSourc
     const { metricName, query, serviceInstance, messageIdentifier }: MapGCOLogsQueryToService = entry[1]
     gcoLogsPayload.spec.queries.push({
       name: metricName,
+      identifier: metricName?.split(' ')?.join('_'),
       query,
       serviceInstanceIdentifier: serviceInstance,
       messageIdentifier: messageIdentifier

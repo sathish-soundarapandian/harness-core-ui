@@ -25,8 +25,8 @@ import { RecommendationItem, TimeRangeValue, ResourceObject, QualityOfService, C
 import type { RecommendationOverviewStats } from 'services/ce/services'
 
 import formatCost from '@ce/utils/formatCost'
-import { getTimePeriodString } from '@ce/utils/momentUtils'
-import { addBufferToValue, calculateSavingsPercentage } from '@ce/utils/recommendationUtils'
+import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@ce/utils/momentUtils'
+import { addBufferToValue, addBufferWithoutPrecision, calculateSavingsPercentage } from '@ce/utils/recommendationUtils'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { RecommendationType, ChartColors, PercentileValues } from './constants'
 import RecommendationTabs from './RecommendationTabs'
@@ -48,7 +48,6 @@ interface RecommendationDetailsProps {
   timeRange: TimeRangeValue
   recommendationStats: RecommendationOverviewStats
   qualityOfService: QualityOfService
-  timeRangeFilter: string[]
   cpuAndMemoryValueBuffer: number
   currentContainer: number
   totalContainers: number
@@ -60,8 +59,7 @@ const RecommendationDetails: React.FC<RecommendationDetailsProps> = ({
   timeRange,
   recommendationStats,
   qualityOfService,
-  timeRangeFilter,
-  cpuAndMemoryValueBuffer,
+  cpuAndMemoryValueBuffer: buffer,
   currentContainer,
   totalContainers
 }) => {
@@ -89,15 +87,30 @@ const RecommendationDetails: React.FC<RecommendationDetailsProps> = ({
   const currentCPUResource = getCPUValueInCPUFromExpression(currentResources?.requests?.cpu || 1)
   const currentMemResource = getMemoryValueInGBFromExpression(currentResources?.requests?.memory)
 
-  const cpuReqValue = Number(histogramData?.cpuHistogram.precomputed[cpuReqVal])
-  const memReqValue = Number(histogramData?.memoryHistogram.precomputed[memReqVal])
-  const memLimitValue = Number(histogramData?.memoryHistogram.precomputed[memLimitVal])
+  const cpuReqValue = addBufferWithoutPrecision(Number(histogramData?.cpuHistogram.precomputed[cpuReqVal]), buffer)
+  const memReqValue = addBufferWithoutPrecision(Number(histogramData?.memoryHistogram.precomputed[memReqVal]), buffer)
+  const memLimitValue = addBufferWithoutPrecision(
+    Number(histogramData?.memoryHistogram.precomputed[memLimitVal]),
+    buffer
+  )
 
-  const perfCPUReqValue = Number(histogramData?.cpuHistogram.precomputed[PercentileValues.P95])
-  const perfMemReqValue = Number(histogramData?.memoryHistogram.precomputed[PercentileValues.P95])
+  const perfCPUReqValue = addBufferWithoutPrecision(
+    Number(histogramData?.cpuHistogram.precomputed[PercentileValues.P95]),
+    buffer
+  )
+  const perfMemReqValue = addBufferWithoutPrecision(
+    Number(histogramData?.memoryHistogram.precomputed[PercentileValues.P95]),
+    buffer
+  )
 
-  const costOptimisedCPUReqValue = Number(histogramData?.cpuHistogram.precomputed[PercentileValues.P50])
-  const costOptimisedMemReqValue = Number(histogramData?.memoryHistogram.precomputed[PercentileValues.P50])
+  const costOptimisedCPUReqValue = addBufferWithoutPrecision(
+    Number(histogramData?.cpuHistogram.precomputed[PercentileValues.P50]),
+    buffer
+  )
+  const costOptimisedMemReqValue = addBufferWithoutPrecision(
+    Number(histogramData?.memoryHistogram.precomputed[PercentileValues.P50]),
+    buffer
+  )
 
   const isLastDayCostDefined = cpuCost && memoryCost
 
@@ -242,32 +255,27 @@ const RecommendationDetails: React.FC<RecommendationDetailsProps> = ({
         <Layout.Horizontal padding={{ top: 'large' }}>
           <Container width="100%">
             <RecommendationDetailsSpendCard
-              withRecommendationAmount={formatCost(
-                recommendationStats?.totalMonthlyCost - recommendationStats?.totalMonthlySaving
-              )}
+              withRecommendationAmount={formatCost(recommendationStats?.totalMonthlyCost - currentSavings)}
               withoutRecommendationAmount={formatCost(recommendationStats?.totalMonthlyCost)}
               title={
                 totalContainers > 1
                   ? getString('ce.recommendation.detailsPage.workloadMonthlyPotentialCostText')
                   : getString('ce.recommendation.listPage.monthlyPotentialCostText')
               }
-              spentBy={getTimePeriodString(timeRangeFilter[1], 'MMM DD')}
+              spentBy={getTimePeriodString(+DATE_RANGE_SHORTCUTS.THIS_MONTH[1], 'MMM DD')}
             />
           </Container>
           <Container width="100%">
             <RecommendationDetailsSavingsCard
-              amount={formatCost(recommendationStats?.totalMonthlySaving)}
+              amount={formatCost(currentSavings)}
               title={
                 totalContainers > 1
                   ? getString('ce.recommendation.detailsPage.workloadMonthlySavingsText')
                   : getString('ce.recommendation.listPage.monthlySavingsText')
               }
-              amountSubTitle={calculateSavingsPercentage(
-                recommendationStats?.totalMonthlySaving,
-                recommendationStats?.totalMonthlyCost
-              )}
-              subTitle={`${getTimePeriodString(timeRangeFilter[0], 'MMM DD')} - ${getTimePeriodString(
-                timeRangeFilter[1],
+              amountSubTitle={calculateSavingsPercentage(currentSavings, recommendationStats?.totalMonthlyCost)}
+              subTitle={`${getTimePeriodString(+DATE_RANGE_SHORTCUTS.THIS_MONTH[0], 'MMM DD')} - ${getTimePeriodString(
+                +DATE_RANGE_SHORTCUTS.THIS_MONTH[1],
                 'MMM DD'
               )}`}
             />
@@ -311,9 +319,9 @@ const RecommendationDetails: React.FC<RecommendationDetailsProps> = ({
                 color="primary5"
                 onClick={() => {
                   const yamlVal = getRecommendationYaml(
-                    addBufferToValue(cpuReqValue, cpuAndMemoryValueBuffer),
-                    addBufferToValue(memReqValue, cpuAndMemoryValueBuffer),
-                    addBufferToValue(memLimitValue, cpuAndMemoryValueBuffer),
+                    addBufferToValue(cpuReqValue, buffer),
+                    addBufferToValue(memReqValue, buffer),
+                    addBufferToValue(memLimitValue, buffer),
                     qualityOfService
                   )
                   copy(yamlVal)
@@ -327,15 +335,15 @@ const RecommendationDetails: React.FC<RecommendationDetailsProps> = ({
             recommendedResources={{
               limits: {
                 memory: getMemValueInReadableForm(
-                  addBufferToValue(histogramData?.memoryHistogram.precomputed[memLimitVal], cpuAndMemoryValueBuffer)
+                  addBufferToValue(histogramData?.memoryHistogram.precomputed[memLimitVal], buffer)
                 )
               },
               requests: {
                 memory: getMemValueInReadableForm(
-                  addBufferToValue(histogramData?.memoryHistogram.precomputed[memReqVal], cpuAndMemoryValueBuffer)
+                  addBufferToValue(histogramData?.memoryHistogram.precomputed[memReqVal], buffer)
                 ),
                 cpu: getCPUValueInReadableForm(
-                  addBufferToValue(histogramData?.cpuHistogram.precomputed[cpuReqVal], cpuAndMemoryValueBuffer)
+                  addBufferToValue(histogramData?.cpuHistogram.precomputed[cpuReqVal], buffer)
                 )
               }
             }}

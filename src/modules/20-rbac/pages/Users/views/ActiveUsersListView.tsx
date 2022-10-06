@@ -37,7 +37,8 @@ import {
 import { useStrings } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
-import { getUserName, PrincipalType } from '@rbac/utils/utils'
+import { PrincipalType } from '@rbac/utils/utils'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useMutateAsGet } from '@common/hooks'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -46,7 +47,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import RbacButton from '@rbac/components/Button/Button'
-import { setPageNumber, isCommunityPlan } from '@common/utils/utils'
+import { getUserName, setPageNumber, useGetCommunity } from '@common/utils/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import css from './UserListView.module.scss'
@@ -345,7 +346,7 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
   const history = useHistory()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const [page, setPage] = useState(0)
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetAggregatedUsers, {
     body: {},
@@ -416,10 +417,12 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
     [openRoleAssignmentModal, refetch]
   )
 
+  const { getRBACErrorMessage } = useRBACError()
+
   return (
     <Page.Body
       loading={loading}
-      error={(error as any)?.data?.message || error?.message}
+      error={error ? getRBACErrorMessage(error) : ''}
       retryOnError={() => refetch()}
       noData={
         !searchTerm

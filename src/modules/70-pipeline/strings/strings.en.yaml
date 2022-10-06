@@ -1,12 +1,17 @@
 verificationResult: 'Verification result:'
 estimatedTimeRemaining: 'Estimated time remaining:'
 progressPercentage: 'Progress percentage:'
+piplineDiffTitle: pipeline.yaml (saved) ↔ pipeline.yaml (updated)
 clone: Clone Pipeline
 discard: '{{ $.common.discard }}'
 serviceDependencyText: Service Dependency
 serviceDependenciesText: Service Dependencies
 stepLabel: '{{name}} (Id: {{identifier}})'
-enableVerificationOptions: Enable verification options
+numOfStage: 1 stage
+numOfStages: '{{n}} stages'
+enableVerificationTitle: Add Continuous Verification
+enableVerificationOptions: Enable Continuous Verification
+enableVerificationHelpText: Apply verification step to a deployment to detect regressions or anomalies, and to rollback failed deployments.
 openInPipelineStudio: Open in Pipeline Studio
 closeStepConfig: Step Config
 stepConfigHasChanges: Form has some unsaved changes, Do you want to apply the changes?
@@ -28,6 +33,7 @@ templateInputs: Template Inputs
 onlyPositiveInteger: Only positive integer values
 depth: Depth
 advancedOptions: Advanced Options
+additionalConfiguration: Additional Configuration
 pipelineTimeoutSettings: Pipeline Timeout Settings
 pipelineTimeoutHelpText: Enter a timeout for the entire Pipeline. You can change this setting at any time.
 stageExecutionSettings: Stage Execution Settings
@@ -42,6 +48,7 @@ parallelSelectedStages: '{{selected}}, +{{total}} Stages'
 parallelStages: '+{{total}} Stages'
 runAPipeline: Run a Pipeline
 regionPlaceholder: Select Region
+repositoryPlaceholder: <container-registry-name>.azurecr.io/<image>
 repositoryUrlPlaceholder: Enter Repository URL
 lastSevenDays: In Last 7 days
 neverRan: This pipeline never ran
@@ -49,10 +56,13 @@ startedOn: Started On
 nodes: nodes
 nodesLabel: Nodes
 poweredByHarness: powered by Harness
+linuxOnly: Supported on Linux only
 outOf: Out Of
 clickToExpandErrorDetails: Click to expand error details
+totalCount: 'Total: {{ count }}'
 approvalStage:
   settingUpStage: Getting stage data
+  approvalStageLogsViewMessage: This step is waiting for your approval. Please click on the Approval button on the right to approve or reject.
 filters:
   pipelineNamePlaceholder: Enter Pipeline Name
   deploymentTypePlaceholder: Search/Select Deployment Type
@@ -105,13 +115,25 @@ approvalStep:
     REJECT: Rejected
   notAuthorizedExecution: User is not authorized to approve/reject the pipeline
   disallowedApproverExecution: This approval step has been configured to disallow pipeline executors to approve this stage.
-lockStep:
+queueStep:
   keyPlaceholder: Enter Resource Key
   resourceKey: Resource Key
   keyRequired: Resource Key is required
   scopeRequired: Scope is required
   scopePlaceholder: Select Scope
-  scope: Scope (to release constraint)
+  scope: Run next queued execution after completion of
+  queuedExecutions: Queued Executions
+  queuedByResourceKey: 'Queued by Resource Key:'
+  noQueuedExecutions: No queued executions
+jenkinsStep:
+  addJobParameters: Add Job Parameter
+  validations:
+    jobName: Jobname is a required field
+  jobNamePlaceholder: Select Job Name
+  jobParameter: Job Parameters
+  unstableStatusAsSuccess: Treat unstable Jenkins status as success
+  useConnectorUrlForJobExecution: Use this URL for job execution
+  captureEnvironmentVariable: Capture environment variables from Jenkins build
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
@@ -136,8 +158,6 @@ jiraApprovalStep:
     wasRejected: 'Rejection Criteria was met for Jira Ticket:'
     wasExpired: 'Jira approval expired for Ticket:'
     jiraTicket: 'JIRA Ticket Pending Approval:'
-    allConditionsMsg: 'If all of the following conditions are met:'
-    anyConditionsMsg: 'If any of the following conditions is met:'
     conditions:
       equals: '{{ key }} equals'
       not_equals: '{{ key }} does not equals'
@@ -160,6 +180,7 @@ jiraCreateStep:
   selectFieldListHelp: Select your project and issue type to list available fields to choose from.
   fetchingFields: Fetching your fields
   fieldsSelectorPlaceholder: Your fields will be populated here
+  unsupportedRequiredFieldsError: "Changes can't be saved as unsupported fields are present - {{ fields }}"
   selectProject: Select Project
   validations:
     summary: Summary is required
@@ -199,9 +220,14 @@ serviceNowApprovalStep:
   issueNumberPlaceholder: Enter Ticket Number
   fetchingTicketTypesPlaceholder: Fetching Ticket Types...
   fetchTicketTypesError: Failed to fetch ticket types
+  fetching: Fetching...
+  failedToFetch: Failed to fetch
   jexlExpressionPlaceholder: |
     Example: <+ticket.state.value> == "Done"
   serviceNowField: Service Now Field
+  approvalChangeWindow: Approval Change Window
+  windowStart: Window Start
+  windowEnd: Window End
   execution:
     wasApproved: 'Approval Criteria was met for ServiceNow Ticket:'
     wasRejected: 'Rejection Criteria was met for ServiceNow Ticket:'
@@ -216,6 +242,8 @@ serviceNowApprovalStep:
     connectorRef: ServiceNow Connector is required
     ticketType: Ticket Type is required
     issueNumber: Ticket Number is required
+    windowStart: Window Start is required
+    windowEnd: Window End is required
 serviceNowCreateStep:
   fieldType:
     configureFields: Configure Fields
@@ -239,15 +267,43 @@ serviceNowUpdateStep:
   fieldType:
     applyFromTemplate: Apply from template
     updateFields: Update Fields
+commonApprovalStep:
+  execution:
+    allConditionsMsg: 'If all of the following conditions are met:'
+    anyConditionsMsg: 'If any of the following conditions is met:'
+customApprovalStep:
+  scriptTimeout: Script Timeout
+  retryInterval: Retry interval
+  execution:
+    wasApproved: 'Approval Criteria was met for Custom Shell Script Approval'
+    wasRejected: 'Rejection Criteria was met for Custom Shell Script Approval'
+    wasExpired: 'Custom Shell Script Approval expired'
+    wasAborted: 'Custom Shell Script Approval aborted'
+    customApprovalPending: 'Custom Shell Script Approval Pending Approval'
+    conditions:
+      equals: '{{ key }} equals'
+      not_equals: '{{ key }} does not equals'
+      in: '{{ key }} is in'
+      not_in: '{{ key }} is not in'
+  validation:
+    outputVariable: Output Variable(s) is required
+    minimumRetryIntervalIs10Secs: Minimum Retry interval is 10 seconds
+    minimumScriptTimeoutIs10Secs: Minimum Script timeout is 10 seconds
+    atLeastOneOutputVariableIsRequired: At least one output field must be set
 manifestType:
+  addManifestLabel: Add Manifest
   attachPath: + Attach {{manifestPath}}
   manifestTyperequired: Manifest Type is required
   gitConnectorLabel: 'Git'
   bitBucketLabel: 'Bitbucket'
   InheritFromManifest: 'Inherit From Manifest'
+  customRemote: 'Custom Remote'
   httpHelmRepoConnectorLabel: 'HTTP Helm'
   manifestIdentifier: Manifest Name
   manifestPlaceholder: Enter Manifest Name
+  ociHelmConnectorLabel: OCI Helm
+  basePathPlaceholder: Enter Base Path
+  basePath: Base Path
   manifestSource: Manifest Source
   manifestDetails: Manifest Details
   manifestRepoType: '{{ $.manifestsText }} {{ $.typeLabel }}'
@@ -260,8 +316,6 @@ manifestType:
   kustomizePathHelperText: Enter the path from the root of the Source Provider repo to the folder containing kustomization.yaml
   helmCommandFlags: By Default, Harness versions ConfigMaps and Secrets that are deployed into the Kubernetes Cluster.
   helmCommandFlagLabel: Helm Command Flags (optional)
-  helmCommandType: Command Type
-  helmCommandTypePlaceholder: Enter Command Type
   helmVersionRequired: 'Helm Version is required'
   commandFlagRequired: 'Command Flag is required'
   folderPathRequired: Folder Path is required
@@ -286,12 +340,17 @@ manifestType:
   commitPlaceholder: Enter Commit Id / Git Tag
   filePathPlaceholder: Enter File or Folder Path
   kustomizeFolderPath: Kustomize Folder Path
+  kustomizeBasePath: Kustomize Base Path
   kustomizeFolderPathPlaceholder: Enter Kustomize Folder Path
   kustomizePluginPathPlaceholder: Enter Kustomize Plugin Path
   repoNamePlaceholder: Enter Repository Name
+  packagePlaceholder: Enter Package Name
   serverlessConfigFilePath: Serverless Config File Path
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
+  customRemoteExtractionScript: Custom Remote Manifest Extraction Script
+  customRemoteExtractedFileLocation: Extracted Manifest File Location
+  customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
   paramsYamlPath: Openshift Parameters
   http:
     chartName: 'Chart Name'
@@ -300,6 +359,12 @@ manifestType:
     chartNamePlaceHolder: 'Enter Chart Name'
     chartVersionPlaceHolder: 'Enter Chart Version'
     chartVersionRequired: 'Chart Version is required'
+  oci:
+    basePathRequired: 'Base Path is required'
+    chartVersionValidation: '"latest" tag is not supported as chart version'
+  optimizedKustomizeManifestCollection: Optimized Kustomize Manifest Collection
+  kustomizeYamlFolderPath: Kustomize YAML Folder Path
+  kustomizeYamlFolderPathRequired: Kustomize YAML Folder Path is required
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML
@@ -313,11 +378,17 @@ manifestTypeLabels:
   ServerlessGCP: Serverless GCP Manifest
   AwsSAM: AWS SAM Manifest
   AzureFunctions: Azure Functions Manifest
+  EcsTaskDefinition: 'ECS Task Definition'
+  EcsServiceDefinition: 'ECS Service Definition'
+  EcsScalingPolicyDefinition: 'ECS Scaling Policy'
+  EcsScalableTargetDefinition: 'ECS Scalable Target'
+  ReleaseRepo: Release Repo Manifest
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:
   performAction: '{{ $.common.performAction }}'
   title: Failure Strategy
+  learnMoreLink: https://docs.harness.io/article/0zvnn5s1ph
   helpText: |
     Define one or more failure strategies to control the behavior of your pipeline when your step execution encounters an error.
   addedAllStrategies: You have added all possible failure strategies. There are no more options to add.
@@ -343,6 +414,7 @@ failureStrategies:
     DelegateProvisioning: Delegate Provisioning Errors
     Unknown: Unknown Errors
     PolicyEvaluationFailure: Policy Evaluation Failures
+    ExecutionInputTimeoutError: Execution-time Inputs Timeout Errors
   validation:
     arrayOrUndefined: Value must be an array if defined.
     strategyRequired: 'At least 1 strategy is required'
@@ -364,6 +436,26 @@ failureStrategies:
     gitBranchRequired: Git Branch is required
     gitTagRequired: Git Tag is required
     gitPRRequired: Git Pull Request is required
+loopingStrategy:
+  title: Looping Strategy
+  subTitle: 'Select 1 of the {{maxCount}} looping execution strategy below.'
+  warningText: All the configuration will be lost
+  learnMore: Learn more about Looping strategies
+  deleteModal:
+    title: Are you sure, you want to remove the looping strategy?
+    content: '{{$.pipeline.loopingStrategy.warningText}}'
+  toggleTypeModal:
+    title: Are you sure, you want to switch the looping strategy?
+    content: '{{$.pipeline.loopingStrategy.warningText}}'
+  matrix:
+    label: Matrix
+    helperText: Matrix gives the ability to execute the same set of tasks multiple times for a bunch of different configurations.
+  repeat:
+    label: Repeat
+    helperText: Repeat gives the ability to execute the same set of tasks multiple times.
+  parallelism:
+    label: Parallelism
+    helperText: If parallelism is set to N > 1, then N independent executors will be set up and each will run that stage/step in parallel.
 selectOrCreatePipeline:
   pipelineNameRequired: Please select a pipeline
   setupHeader: Create or Select a Pipeline
@@ -386,6 +478,8 @@ execution:
   retryStepCount: 'Retry #{{ num }}'
   currentExecution: Current Execution
   timePrefix: 'Execution Time: '
+  compareAction: Compare
+  compareExecutionsTitle: Select executions to compare the compiled YAML
   ignoreFailedWarningText: A failed step was ignored because the step’s Failure Strategy is Ignore Failure. The step’s failure did not impact the Pipeline’s success.
   iotab:
     noInputText: No input found for current step
@@ -408,6 +502,8 @@ execution:
     pauseStage: Pause Stage
     abortStage: Abort Stage
     downloadLogs: Download logs
+    viewCompiledYaml: View Compiled YAML
+    compareExecutions: Compare Executions
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -418,7 +514,7 @@ execution:
     abortTitle: Abort Execution?
 resourceConstraints:
   title: Resource Constraint
-  infoText: 'You have {{executioncount}} {{executiontext}} in queue that have to complete before your execution begins. Only one execution on a {{infraEntityText}} is allowed at a time.'
+  infoText: You have {{executioncount}} Pipeline {{executiontext}} queued for this {{infraEntityText}}. Only one execution on the same {{infraEntityText}} is allowed at a time.
   currentlyExecuting: ' ( currently executing )'
   yourPipeline: ' ( your execution )'
   k8sNamespaceText: K8s namespace
@@ -475,8 +571,8 @@ conditionalExecution:
     success: Execute this {{entity}} if the {{parentEntity}} execution is successful thus far
     all: Always execute this {{entity}}
     failure: Execute this {{entity}} only if prior {{parentEntity}} or {{entity}} failed
-  condition: And execute this {{entity}} only if the following JEXL Condition evaluates to True
-  conditionLabel: Execute only if the following JEXL Condition evaluates to True
+  condition: And execute this {{entity}} only if the following JEXL Condition evaluates to true
+  conditionLabel: Execute only if the following JEXL Condition evaluates to true
   toolTip:
     stageTitle: Conditions for stage execution
     stepTitle: Conditions for step execution
@@ -486,6 +582,18 @@ startTime: Start time
 duration: Duration
 and: '{{ $.common.andCaps }}'
 gitDetails: git details
+runtimeInputs: Runtime Inputs
+approveOrReject: Approve or Reject
+jenkinsBuild: Jenkins Builds
+enterBuildRegex: Enter Build Regex
+buildRegex: Build Regex
+selectJenkinsBuildsPlaceholder: Select Jenkins Build
+releaseRepo: Release Repo
+addReleaseRepo: + Add Release Repo Manifest
+releaseRepoStore: Release Repo Store
+runtimeInputsSubmittedMsg: Inputs have been submitted successfully
+packageType: Package Type
+packageTypePlaceholder: Select Package Type
 pipelineInputPanel:
   noRuntimeInputs: 'No Runtime Inputs'
   automaticallyExtractedFromText: Automatically extracted from event payload
@@ -501,17 +609,21 @@ artifactTriggerConfigPanel:
   configureInput: 'Configure Input'
   listenOnNewArtifact: 'Listen on New {{artifact}}'
   plusSelect: '+ Select {{artifact}}'
+  defineArtifactSource: 'Define Artifact Source'
+  defineManifestSource: 'Define Manifest Source'
   selectAnArtifact: 'Select an Artifact Reference'
   selectAManifest: 'Select a Manifest Reference'
   configureArtifactRuntimeInputs: 'Configure {{artifact}} Runtime Inputs'
+  artifactTagSetting: 'Tag setting'
   noSelectableArtifactsFound: 'No selectable {{artifact}}s found. Please add one in the pipeline.'
+  noSelectableRuntimeArtifactsFound: 'The {{artifact}} {{artifactOrManifest}} must be set to Runtime Input (<+input>) to use an {{artifact}} as a Trigger.'
   noArtifacts: No artifacts for selected stage.
   configureInputs: Configure inputs
   hasRuntimeInputs: 'Has Runtime Inputs'
   runtimeInput: 'Runtime Input'
   chartVersionRuntimeInput: 'Some {{artifact}} references may be unselectable because {{ runTimeStr }} must be a runtime input.'
   artifactReferenceUnique: 'Some {{artifact}} references may not be available for selection because they must be unique and not from a previous stage'
-  tagArtifactPath: Tag or Artifact Path
+  tagArtifactPathBuild: Tag or Artifact Path or Build
 dashboards:
   failedBuilds: Failed Builds
   activeBuilds: Active Builds
@@ -519,6 +631,8 @@ dashboards:
   failedDeployments: Failed Deployments
   activeDeployments: Active Deployments
   pendingDeployments: Pending Approval/Manual Intervention
+  baselineTargets: Target Baselines
+  baselineActivityComingSoon: Baseline target activity coming soon!
   noRepositories: No Repositories found
   noFailedBuilds: No Failed Builds found
   noActiveBuilds: No Active Builds found
@@ -609,10 +723,10 @@ testsReports:
   resultLabel: Test Execution Result
   sortBy: 'Sort by:'
   poweredByTI: 'Powered by Test Intelligence'
+  searchByTestName: Search by Test Name
   tiCallToAction:
     header: Did you know you can save time using Test Intelligence?
-    upsellSubText: 'Optimize your tests cycle and reduce build time by using machine learning based Test Intelligence.'
-    utilizeTISubText: 'Reduce test cycle time of your Java application by using machine learning based Test Intelligence.'
+    utilizeTISubText: 'Reduce test cycle time of your Java, .NET, Scala, Kotlin applications by using machine learning based Test Intelligence.'
     addRunTestsStep: Add 'Run Tests step' to your Pipeline
     requiresEnterprisePlan: Requires Enterprise Plan to access Test Intelligence
 uniqueIdentifier: Identifier must be unique
@@ -627,17 +741,25 @@ inputSets:
   noRuntimeInputsWhileExecution: No runtime inputs were present in the pipeline during this execution
   inputSetPlaceholder: Enter Input Sets
   selectPlaceholder: Select Input Set(s)
+  createNewInputSet: Create New Input Set
   aboutInputSets: A Harness Input Set is a group of Pipeline settings and values. You create Input Sets and use them when you run a Pipeline. Input Sets let you use one Pipeline for many scenarios.
   overlayISHelperText: Selected inputs will be applied in the order listed. Drag to reorder the input sets.
-  invalidInputSet1: Your Input Set form contains invalid fields because they are no longer a pipeline runtime input. Would you like us to remove all invalid fields in your form?
   invalidFields: Invalid Fields
   removeInvalidFields: Remove Invalid Fields
   editInYamlView: Edit in YAML view
-  invalidInputSet2: Your input set is not valid anymore because you do not have any pipeline runtime inputs. You may delete this input set, update your pipeline or go back to the Input Set list.
+  invalidInputSetDesc1: Your input set is not valid anymore because you do not have any pipeline runtime inputs. You may delete this input set, update your pipeline or go back to the Input Set list.
+  invalidInputSetDesc2: Your input set is not valid anymore because you do not have any pipeline runtime inputs. You can either delete this input set or navigate to the Input Set list.
+  invalidInputSetDesc3: Your input set is not valid anymore because you do not have any pipeline runtime inputs. This input set may be removed.
   invalidInputSet: Invalid Input Set
+  invalidOverlayISDesc1: Your overlay input set is not valid anymore because there are no valid input set references. This overlay input set may be removed.
+  invalidOverlayISDesc2: Your overlay input set is not valid anymore because there are no valid input set references. You can either delete this overlay input set or navigate to the Input Set list.
+  invalidOverlayIS: Invalid Overlay Input Set
   deleteInputSet: Delete Input Set
+  deleteOverlayIS: Delete Overlay Input Set
   goBackToInputSetList: Go back to Input Set list
-
+  inputSetUpdated: Input Set "{{name}}" updated
+  overlayISUpdated: Overlay Input Set "{{name}}" updated
+  inputSetApplied: Input Set(s) applied successfully
 provisionerSteps: Provisioner Steps
 addStage:
   title: Select Stage Type
@@ -652,6 +774,8 @@ pipelineSteps:
   deployStageDescription: Deploy services, Serverless functions, or other workloads.
   featureStageDescription: Enable or disable functionality remotely without redeploying code.
   approvalStageDescription: Approve or reject changes during Pipeline progress.
+pipelineChaining:
+  selectPipeline: Select Pipeline
 aboutYourStage:
   stageNamePlaceholder: Enter Stage Name
 infraSpecifications:
@@ -662,44 +786,88 @@ infraSpecifications:
   initTimeoutPlaceholder: Enter Init Timeout
   validation:
     requiredExistingStage: Existing stage is a required field
+  selectOs: Select the Operating System
   os: OS
   osTypes:
     windows: Windows
     macos: MacOS
+  selectArchitecture: Select the Architecture
+  architecture: Architecture
+  architectureTypes:
+    amd64: AMD64
+    arm64: ARM64
 imagePathLabel: Image Path
 artifactPathLabel: Artifact Path
+artifactImagePathLabel: Artifact/Image Path
+selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
+  artifactId: Artifact ID
+  artifactIdPlaceholder: Enter Artifact ID
+  groupId: Group ID
+  groupIdPlaceholder: Enter Group ID
+  extension: Extension
+  extensionPlaceholder: Enter Extension
+  classifier: Classifier
+  classifierPlaceholder: Enter Classifier
+  packageName: Package Name
+  addPrimaryArtifact: Add Primary Artifact
+  addArtifactSource: Add Artifact Source
+  addSidecar: Add Sidecar
+  artifactSourceName: Artifact Source Name
+  projectPlaceholder: Enter Project
+  repositoryTypePlaceholder: Select Repository Type
+  delegateselectionPlaceholder: Add specific selectors or leave empty to target any delegate
   repositoryPort: Repository Port
+  artifactsArrayPath: Artifacts Array Path
+  versionPath: Version Path
+  versionPathPlaceholder: Enter Version Path
   repositoryPortPlaceholder: Enter Repository Port
   repositoryPlaceholder: Enter Repository
   artifactType: Artifact Type
   artifactDetails: Artifact Details
+  orgNamePlaceholder: Enter Organization Name
+  versionDetails: Version Details
+  versionPlaceholder: Enter Version
+  versionRegex: Version Regex
+  versionRegexPlaceholder: Enter Version Regex
   artifactTyperequired: Artifact Type is required
   loadingTags: Loading Tags...
   loadingArtifactPaths: Loading Artifact Paths...
-  artifactNamePlaceholder: Enter Artifact Path
+  artifactPathPlaceholder: Enter Artifact Path
   artifactDirectory: Artifact Directory
   artifactDirectoryPlaceholder: Enter Artifact Directory
-  versionPlaceholder: Enter Version
+  filePathRegexLabel: File Path Regex
+  filePathRegexPlaceholder: Enter File Path Regex
+  amazonS3Title: Amazon S3
+  googleArtifactRegistryTitle: Google Artifact Registry
+  githubPackageRegistryTitle: Github Package Registry
+  azureArtifactRegistryTitle: Azure Artifact Registry
   existingDocker:
-    sidecarId: Sidecar Identifier
-    sidecarIdPlaceholder: Enter Artifact Identifier
+    sidecarId: Sidecar Name
+    sidecarIdPlaceholder: Enter Artifact Name
     imageNamePlaceholder: Enter Image Path
     enterTagRegex: Enter Tag Regex
   validation:
+    noBuild: No build found with given details
+    packageType: Package Type is required
+    versionRegex: Version Regex is required
+    packageName: Package Name is required
     imagePath: Image Path is required
     artifactPath: Artifact Path is required
+    artifactId: Artifact ID is required
+    groupId: Group ID is required
     region: '{{$.validation.regionRequired}}'
     tag: Tag is required
     tagRegex: Tag Regex is required
     sidecarId: Sidecar Identifier is required
     repositoryPort: Repository Port is required
+    repositoryFormat: Repository Format is required
     repositoryUrl: Repository URL is required
+    repositoryType: Repository Type is required
     artifactDirectory: Artifact Directory is required
     artifactPathFilter: Artifact Path Filter is required
-    artifactPathAndArtifactPathFilter: Artifact Path and Artifact Path Filter, both can not be empty
-    manifestRequiredForStage: 'Please provide manifest for stage: {{ stageName }}'
+    filePathRegex: File Path Regex is required
   errors:
     noRepositories: No repositories found with given connector
 overrideSets:
@@ -784,6 +952,7 @@ stepCommonFields:
     mustBeANumber: '{{label}} must be a number'
     invalidLimitMemory: Invalid Limit Memory. To learn more, hover over the Set Container Resources tooltip.
     invalidLimitCPU: Invalid Limit CPU. To learn more, hover over the Set Container Resources tooltip.
+    notIn: '{{label}} must not be one of the following values: {{notAllowedValues}}'
 ciCodebase:
   prCloneStrategy: Pull Request Clone Strategy
   ciCodebaseBuildType: CI Codebase Build Type
@@ -795,19 +964,30 @@ ciCodebase:
     optionalPrCloneStrategy: Value must be one of these values [{{values}}]. You may use the default value provided.
     optionalLimitMemory: Invalid Limit Memory. To learn more, hover over the Set Container Resources tooltip. You may use the default value provided.
     optionalLimitCPU: Invalid Limit CPU. To learn more, hover over the Set Container Resources tooltip. You may use the default value provided.
+    pullRequestNumber: Pull Request Number must be a positive integer.
+gitCloneStep:
+  cloneDirectory: Clone Directory
+  validation:
+    associatedBuildInput: Associated build input
 tagDependencyRequired: required to fetch the tags
 artifactPathDependencyRequired: required to fetch the artifact paths
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
+dependencyRequired: 'Connector is required to fetch buckets'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
+mySecurityTestsText: My Security Tests
+myPipelineRunsText: My Pipeline Runs
+noRegions: No regions found
 noBuckets: No buckets found with given region
 gitRepo: Git Repo
 buildRepo: Build Repo
+failureTypetext: Select Failure Type
 stepDescription:
   HTTP: Run HTTP requests containing URLs, methods, headers, assertions, and variables.
   SHELLSCRIPT: Execute scripts in the shell session. The scripts can be executed on the pod/instance running a Harness Delegate or on a remote host in the infrastructure.
+  Wait: Suspend/Wait the execution for the given amount of time.
   Barrier: Synchronize multiple Pipelines to coordinate deployments systematically.
-  Lock: Description of lock step comes here.
+  Queue: Queue pipeline executions to prevent multiple stages or pipelines from requesting the same deployment resources simultaneously.
   K8sRollingRollback: Roll back the workloads deployed by the stage.
   K8sBlueGreenDeploy: Deploy your new app version to the stage environment.
   K8sCanaryDeploy: Define how many pods are deployed for a Canary test of your new service version.
@@ -819,17 +999,19 @@ stepDescription:
   K8sRollingDeploy: Use a rolling update to schedule new pods on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
   Plugin: Use Docker containers to perform predefined tasks like deploy code, publish artifacts, send notifications, and more.
   Run: Execute one or more commands on a container image in a CI stage.
-  GCR: Build an image and push it to Google Container Registry (GCR).
-  ECR: Build an image and push it to AWS Elastic Container Registry (ECR).
+  ACR: Build a Docker image and push it to Azure Container Registry (ACR).
+  GCR: Build a Docker image and push it to Google Container Registry (GCR).
+  ECR: Build a Docker image and push it to AWS Elastic Container Registry (ECR).
   SaveCacheGCS: Preserve files and directories between builds using Google Cloud Storage (GCS).
   RestoreCacheGCS: Restore saved files and directories between builds using Google Cloud Storage (GCS).
   SaveCacheS3: Preserve files and directories between builds using AWS S3.
   RestoreCacheS3: Restore saved files and directories between builds using AWS S3.
   DockerHub: Build a Docker image from a Dockerfile and push it to a Docker registry.
+  Jenkins: Jenkins Description.
   GCS: Upload artifacts to Google Cloud Storage (GCS).
   S3: Upload artifacts to AWS S3.
   JFrogArtifactory: Upload artifacts to JFrog Artifactory.
-  RunTests: Execute unit, integration, and other tests on a CI container image.
+  RunTests: Execute unit tests for Java and .NET with Harness Test Intelligence. For all other tests, use the "Run" step
   HarnessApproval: Add manual approvals as steps and stages.
   JiraApproval: Use Jira issues to approve steps and stages.
   Verify: Verify a deployment using your monitoring tools.
@@ -847,13 +1029,22 @@ stepDescription:
   Policy: Evaluate policy during pipeline execution
   ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
+  createPR: Create PR
+  mergePR: Merge PR
+  fetchInstanceScript: Fetch Instances
+  AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
+  CustomApproval: Custom Approval
+  AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
+  ECSRollingDeploy: Use a rolling update to schedule new aws instances on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
+  GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
+  Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
   strategies:
     rolling:
       description: All pods/instances in a single environment are incrementally replaced with a new service version without downtime.
-      learnMoreLink: https://ngdocs.harness.io/article/0zsf97lo3c-deployment-concepts#rolling_deployment
+      learnMoreLink: https://docs.harness.io/article/0zsf97lo3c-deployment-concepts#rolling_deployment
       steps:
         step1:
           description: Test the new version.
@@ -863,7 +1054,7 @@ executionStrategy:
           description: Replace new version.
     blueGreen:
       description: 'Two identical environments for staging and production traffic run simultaneously with different versions of the service. Deployment of a new service version is first done to the staging environment. Once the new version is verified, network traffic is switched between the two environments. The staging environment is now the production environment.'
-      learnMoreLink: https://ngdocs.harness.io/article/0zsf97lo3c-deployment-concepts#blue_green_deployment
+      learnMoreLink: https://docs.harness.io/article/0zsf97lo3c-deployment-concepts#blue_green_deployment
       steps:
         step1:
           description: Maintain two identical fleets of servers.
@@ -873,7 +1064,7 @@ executionStrategy:
           description: After verification, switch the load balancer to point to the newly-deployed fleet.
     canary:
       description: 'Harness performs a two phase deployment: Phase 1 adds new pods/instances with the new service version to a single environment. Phase 2 performs a Rolling Update in the same environment.'
-      learnMoreLink: https://ngdocs.harness.io/article/0zsf97lo3c-deployment-concepts#canary_deployment
+      learnMoreLink: https://docs.harness.io/article/0zsf97lo3c-deployment-concepts#canary_deployment
       steps:
         step1:
           title: 'Canary deployment:'
@@ -888,7 +1079,7 @@ executionStrategy:
       actualName: '{{$.common.default}}'
       displayName: Blank Canvas
       description: A blank slate for custom processes. You can use any combination of steps. Only recommended for advanced users.
-      learnMoreLink: https://ngdocs.harness.io/article/0zsf97lo3c-deployment-concepts#basic_deployment
+      learnMoreLink: https://docs.harness.io/article/0zsf97lo3c-deployment-concepts#basic_deployment
     basic:
       description: In a Basic deployment, all nodes within a single environment are replaced at the same time with new nodes containing the new service/artifact version.Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
     common:
@@ -904,6 +1095,7 @@ gitPullRequest: Git Pull Request
 gitPullRequestNumber: Git Pull Request Number
 expressionsEvaluation: Expressions Evaluation
 deploymentFrequency: 'Deployment Frequency'
+executionFrequency: 'Execution Frequency'
 retryPipeline: Retry Failed Pipeline
 openInNewTab: Open in new tab
 stagetoRetryFrom: Select the stage that you would like to resume from
@@ -949,7 +1141,10 @@ noApprovalInstanceCreated: Approval instance not created, no details to display
 approvalTypeRequired: Approval type is required
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
+  servicesDeployed: 'Services deployed'
+  artifactDeployedText: 'Artifacts deployed ({{size}})'
   EnvironmentsText: 'Environments ({{size}})'
+artifactImageTag: 'Artifact (Image: Tag)'
 replacedExpressions: Replaced Expressions
 expressionRequired: Expression value is required.
 nativeHelm: Native Helm
@@ -1017,10 +1212,15 @@ serviceDeploymentTypes:
   serverlessGoogleFunctions: Serverless Google Functions
   awsSAM: AWS SAM
   azureFunctions: Azure Functions
+  azureWebApp: Azure Web Apps
+  customDeployment: Deployment Template
+  serverlessAwsType: Serverless Aws Lambda
+  customDeploy: Custom Deployment
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
+serviceDataDeleteWarningTitle: Discard Service Data
 stageDataDeleteWarningText: Changing deployment type will delete existing stage data like artifacts, manifests, infrastructure details, steps etc. Do you still want to proceed?
-stageDataDeleteWarningContent: Changing deployment type will delete existing stage data like service, environments, steps etc. Do you still want to proceed?
+serviceDataDeleteWarningText: Changing deployment type will delete existing service data like artifacts, manifests etc. Do you still want to proceed?
 errorFramework:
   pipelineErrorsTitle: 'Pipeline cannot be saved because {{fields}} further configuration.'
   fixErrors: Fix Errors
@@ -1044,6 +1244,7 @@ cannotRunInvalidPipeline: Cannot run the pipeline because it's invalid, please r
 cannotAddTriggerInvalidPipeline: Cannot add a trigger because pipeline is invalid, please review the configuration.
 cannotAddInputSetInvalidPipeline: Cannot add an input set because pipeline is invalid, please review the configuration.
 cannotEditTriggerInvalidPipeline: Cannot edit the trigger because pipeline is invalid, please review the configuration.
+parentStageDeleteWarning: "Warning: this Stage's settings are propagated to another Stage(s) in this Pipeline ({{propagatingStages}}). If you delete this Stage, you must update the other Stages' settings or the Pipeline will fail."
 outOfSyncErrorStrip:
   reconcile: Reconcile
   unsyncedTemplateInfo: Some template(s) referenced in this {{entity}} have gone out of sync.
@@ -1057,6 +1258,14 @@ reconcileDialog:
   refreshedYamlLabel: Refreshed
   updateAllLabel: Update all unsynced entities
   updateEntityLabel: 'Update {{entity}}'
+inputSetErrorStrip:
+  errorInfo: Your {{type}} form contains invalid fields!
+  goToInpSetBtn: Go to Input Set list
+  updateRuntimeFields: Update Runtime Field(s)
+  reconcileDialogTitle: '{{type}} ERROR INSPECTION'
+  existingYaml: Existing YAML (Invalid)
+  validYaml: Valid YAML
+  reconcileErrorInfo: Please reconcile the invalid input set present in selected input set(s)
 ACR:
   name: ACR
   subscription: '{{ $.common.subscriptionId }}'
@@ -1068,8 +1277,120 @@ ACR:
   repositoryPlaceholder: 'Select or add Repository'
   repositoryError: 'No repository found with given Registry'
   tagError: 'No tags found with given Connector, Subscription Id, Registry and Repository'
+configFiles:
+  title: 'Config File {{type}}'
+  source: 'Config File Source'
+  selectFileType: 'Select file type'
+  plainText: 'Plain text'
+  identifierLabel: 'Config File Identifier'
+  encryptedFiles: 'Encrypted file(s)'
+  fileType: 'File Type'
+  encryptedLocation: 'Secrets Manager Name'
+  addConfigFile: Add Config File
+  error:
+    fileType: 'File type is required'
+    identifier: 'Config file identifier is required'
+    files: 'File(s) is required'
+    file: 'This field is required'
+    fileSelection: 'Select atleast one config file'
 OverviewEmptyStates:
-  createPipelineHeaderMsg: Set up a Pipeline and run your first deployment!
-  createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like building and deploying software.
+  createPipelineHeaderMsg: Set up a Pipeline and run your first {{executionLabel}}!
+  createPipelineInfo: A Harness Pipeline is a series of stages that performs operations like {{pipelineOperation1}} and {{pipelineOperation2}} software.
   runPipelineHeaderMsg: You haven’t tried running your pipelines yet.
-  runPipelineInfo: Click the button below to select a pipeline and get your deployments started.
+  runPipelineInfo: Click the button below to select a pipeline and get your {{executionsLabel}} started.
+importSuccessMessage: '{{resourceType}} has been imported successfully'
+duplicateImport: This file is already in use. Do you still want to proceed?
+duplicateImportPipeline: This file is already in use by another pipeline. Do you still want to proceed?
+duplicateImportInputset: This file is already in use by another pipeline or input set. Do you still want to proceed?
+MatrixNode:
+  maxConcurrency: 'Max Concurrency:'
+fieldLabels:
+  commandType: Command Type
+fieldPlaceholders:
+  commandType: Enter Command Type
+traffic: Traffic
+trafficPercentage: '{{$.pipeline.traffic}} %'
+viewPipeline: View Pipeline
+viewExecution: View Execution
+codeSource: 'Code Source'
+recentExecutions: 'Recent Executions'
+mostRecentDirection: 'Latest one on right side'
+lastExecution: 'Last Execution'
+executionId: Execution Id
+imageTag: 'image: {{image}}'
+fileSource: 'File Source'
+fileDetails: 'File Details'
+appServiceConfig:
+  title: App Services Configuration
+  applicationSettings:
+    name: Application Settings
+    file: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File'
+    fileDetails: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Details'
+    fileSource: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Source'
+    filePath: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Path'
+    subtitle: 'Specify {{$.pipeline.appServiceConfig.applicationSettings.name}} Script File Type'
+  connectionStrings:
+    name: Connection Strings
+    file: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File'
+    fileDetails: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Details'
+    fileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Source'
+    filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
+    subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
+startupCommand:
+  name: Startup Command
+  subtitle: 'Specify Azure Web App Startup Command Store Type'
+  fileDetails: '{{$.pipeline.startupCommand.name}} File Details'
+  fileSource: '{{$.pipeline.startupCommand.name}} File Source'
+  scriptFilePath: 'Script File Path'
+  fileValidation: 'file is required'
+  plainText: 'Plain Text'
+triggerInfo: 'Trigger Info'
+phasesForm:
+  phases: 'Phases'
+  phase: 'Phase'
+  addPhase: '+ Add Phase'
+  useVerification: 'Use Verification'
+  errors:
+    limitError: 'This field can not be more than'
+    prevLimitError: 'This field should be more than'
+    wrongPercentageFormat: 'Wrong percentage format'
+    duplicationValue: 'Duplication of previous value'
+  packageTypes:
+    jar: 'Jar'
+    tar: 'Tar'
+    war: 'War'
+    rpm: 'Rpm'
+    zip: 'Zip'
+  packageTypesWinrm:
+    application: 'IIS Application'
+    website: 'IIS Website'
+    virtualDir: 'IIS Virtual directory'
+draft: 'Draft'
+duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
+alwaysEditModeYAML: Enable read/write mode always
+warningForInvalidYAMLDiscard: Enabling this sets the YAML editor in read/write mode for the Pipelines you view. You can enable/disable this setting in any Pipeline.
+azureWebApp:
+  strategy:
+    basic: In a Basic deployment, a new Service/Artifact version is deployed to the deployment slot. Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
+    canary: 'Harness performs a three phase deployment: Phase 1 deploys a new service version to the deployment slot. Phase 2 performs a Traffic Shift to that deployment slot. Phase 3 swaps the deployment slot with target slot.'
+    blueGreen: 'Harness performs a two phase deployment: Phase 1 deploys a new service version to deployment slot. Phase 2 swaps the deployment slot with target slot.'
+skipInstances:
+  title: 'Skip instances with the same artifact version already deployed'
+selectiveStageExecution: 'Selective stage execution'
+customDeployment:
+  infraVariablesTitle: 'Define the variables to be used in your infrastructure'
+  updateInfraVariablesTitle: ' Update values for variables defined as part of used template'
+  seeOnlyTemplatesFor: See only templates for {{name}}
+  instanceObjectArrayPath: 'Instance Object Array Path'
+  instanceAttributes: 'Instance Attributes'
+  newAttribute: 'New Attribute'
+  fetchInstancesScript: 'Fetch Instance Script'
+  fetchInstanceScriptHeader: 'Define your script inline or from File Store.'
+  fieldNameLabel: 'Field Name'
+  jsonPathRelativeLabel: 'JSON Path (relative)'
+  fieldNamePlaceholder: 'Enter Field Name'
+  errors:
+    fetchScriptRequired: 'Fetch Instances Script is required'
+    fetchScriptBodyRequired: 'Fetch Instances Script body is required'
+  validations:
+    nameUnique: Field Name should be unique

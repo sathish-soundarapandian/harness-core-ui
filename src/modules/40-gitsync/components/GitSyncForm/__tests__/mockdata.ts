@@ -15,7 +15,7 @@ export const mockRepos = {
 export const mockBranches = {
   status: 'SUCCESS',
   data: {
-    branches: [{ name: 'main' }, { name: 'main-demo' }, { name: 'main-patch' }, { name: 'main-patch2' }],
+    branches: [{ name: 'main' }, { name: 'main-demo' }, { name: 'main-patch' }, { name: 'dev' }],
     defaultBranch: { name: 'main' }
   },
   metaData: null,

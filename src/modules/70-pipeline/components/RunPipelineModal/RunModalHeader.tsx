@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useState } from 'react'
 import cx from 'classnames'
 import {
   Heading,
@@ -52,7 +52,6 @@ export interface RunModalHeaderProps {
   runClicked: boolean
   executionView?: boolean
   pipelineResponse: ResponsePMSPipelineResponseDTO | null
-  getTemplateFromPipeline(): Promise<void> | undefined
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
   formRefDom: React.MutableRefObject<HTMLElement | undefined>
   formErrors: FormikErrors<InputSetDTO>
@@ -71,19 +70,22 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
     executionView,
     selectedView,
     pipelineResponse,
-    getTemplateFromPipeline,
     template,
     formRefDom,
     formErrors,
     stageExecutionData,
     executionStageList
   } = props
-  const { isGitSyncEnabled, isGitSimplificationEnabled } = useAppStore()
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingGitSimplification
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { getString } = useStrings()
-  const stageSelectionRef = useRef(false)
   const [localSelectedStagesData, setLocalSelectedStagesData] = useState(selectedStageData)
   const isPipelineRemote =
-    isGitSimplificationEnabled &&
+    supportingGitSimplification &&
     pipelineResponse?.data?.gitDetails?.repoName &&
     pipelineResponse?.data?.gitDetails?.branch
 
@@ -95,7 +97,6 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
   const stageExecutionDisabledTooltip = isStageExecutionDisabled() ? 'stageExecutionDisabled' : undefined
 
   const onStageSelect = (items: SelectOption[]): void => {
-    stageSelectionRef.current = true
     const allStagesSelected = items.find(item => item.value === ALL_STAGE_VALUE)
     const updatedSelectedStages: SelectedStageData[] = []
     const hasOnlyAllStagesUnChecked =
@@ -163,14 +164,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
             disabled={isStageExecutionDisabled()}
             buttonTestId={'stage-select'}
             onChange={onStageSelect}
-            onPopoverClose={() => {
-              setSelectedStageData(localSelectedStagesData)
-              if (stageSelectionRef.current) {
-                getTemplateFromPipeline()?.then(() => {
-                  stageSelectionRef.current = false
-                })
-              }
-            }}
+            onPopoverClose={() => setSelectedStageData(localSelectedStagesData)}
             value={localSelectedStagesData.selectedStageItems}
             items={executionStageList}
             minWidth={150}
@@ -197,6 +191,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
             repoName={pipelineResponse?.data?.gitDetails?.repoName}
             branch={pipelineResponse?.data?.gitDetails?.branch}
             filePath={pipelineResponse?.data?.gitDetails?.filePath}
+            fileUrl={pipelineResponse?.data?.gitDetails?.fileUrl}
             flags={{ readOnly: true }}
           />
         </div>

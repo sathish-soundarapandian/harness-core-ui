@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test cases for Filter Pill component should be able to render the component 1`] = `
+<div>
+  <section
+    class="filterPillContainer"
+  >
+    <div
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main filterPillInnerContainer StyledProps--background-primary2 StyledProps--padding-xsmall"
+      style="align-items: center;"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-small"
+      >
+        Cluster:
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--font-small"
+      >
+        Cluster Name
+      </p>
+      <span
+        class="bp3-popover-wrapper"
+      >
+        <span
+          class="bp3-popover-target"
+        >
+          <span
+            class=""
+          >
+            <span
+              class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-small StyledProps--inline StyledProps--padding-right-xsmall"
+            >
+              IN
+            </span>
+            <span
+              class="bp3-popover-wrapper"
+            >
+              <span
+                class="bp3-popover-target"
+              >
+                <div
+                  class="valueListContainer hideCount"
+                  tabindex="0"
+                >
+                  <div
+                    class="firstValue"
+                  >
+                    aditya cloud
+                  </div>
+                </div>
+              </span>
+            </span>
+          </span>
+        </span>
+      </span>
+      <span
+        class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--color StyledProps--color-blue500"
+        data-testid="removeFilterPill"
+        icon="cross"
+      >
+        <svg
+          data-icon="cross"
+          height="12"
+          viewBox="0 0 16 16"
+          width="12"
+        >
+          <desc>
+            cross
+          </desc>
+          <path
+            d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </div>
+  </section>
+</div>
+`;

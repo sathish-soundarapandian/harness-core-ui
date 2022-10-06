@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { findByTestId, fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   PipelineContextInterface,
@@ -19,12 +19,17 @@ import type { ManualInterventionFailureActionConfig } from 'services/cd-ng'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import * as useTelemetry from '@common/hooks/useTelemetry'
 import * as useValidationErrors from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
+import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import DeployAdvancedSpecifications from '../DeployAdvancedSpecifications'
 import overridePipelineContext from './overrideSetPipeline.json'
 
 const mockGetCallFunction = jest.fn()
 jest.mock('services/portal', () => ({
   useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return []
+  }),
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return []
   })
@@ -39,7 +44,9 @@ const getOverrideContextValue = (): PipelineContextInterface => {
           identifier: 's3',
           type: StageType.DEPLOY,
           description: '',
-          spec: {}
+          spec: {
+            deploymentType: 'Ssh'
+          }
         }
       }
     }),
@@ -204,5 +211,42 @@ describe('Deploy advanced specifications test', () => {
     )
 
     expect(errorContextProvider.submitFormsForTab).toBeCalled()
+  })
+  test(`Skip Instance not should be in document`, () => {
+    const { container } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={getOverrideContextValue()}>
+          <DeployAdvancedSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('#skipInstance')).not.toBeInTheDocument()
+  })
+  test(`Render Skip Instances with enabled FF`, async () => {
+    jest.spyOn(useFeatureFlagMock, 'useFeatureFlags').mockReturnValue({
+      SSH_NG: true
+    })
+    const context = getOverrideContextValue()
+
+    const { container, findAllByText } = render(
+      <TestWrapper>
+        <PipelineContext.Provider value={context}>
+          <DeployAdvancedSpecifications />
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    const skipInstancesContainer = await findByTestId(container, 'skip-instances')
+    expect(skipInstancesContainer).toBeInTheDocument()
+    const title = await waitFor(() => findAllByText('pipeline.skipInstances.title'))
+    expect(title[0]).toBeTruthy()
+    const skipInstancesField = await findByTestId(container, 'skip-instances-check')
+    expect(skipInstancesField).toBeInTheDocument()
+    fireEvent.click(skipInstancesField!, { target: { checked: true } })
+
+    fireEvent.click(skipInstancesField as HTMLElement)
+    expect(context.getStageFromPipeline).toBeCalled()
+    expect(context.getStageFromPipeline).toBeCalledWith(context.state.selectionState.selectedStageId)
+    expect(context.updateStage).toBeCalled()
   })
 })

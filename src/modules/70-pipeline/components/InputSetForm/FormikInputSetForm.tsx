@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import * as Yup from 'yup'
-import { defaultTo, isEmpty, omit, isUndefined, noop } from 'lodash-es'
+import { defaultTo, isEmpty, omit, isUndefined, get, omitBy } from 'lodash-es'
 import {
   Button,
   Container,
@@ -18,14 +18,15 @@ import {
   VisualYamlSelectedView as SelectedView
 } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
-import { parse } from 'yaml'
+import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
 import type {
+  PipelineInfoConfig,
   ResponsePMSPipelineResponseDTO,
   EntityGitDetails,
-  ResponseInputSetTemplateWithReplacedExpressionsResponse
+  ResponseInputSetTemplateWithReplacedExpressionsResponse,
+  InputSetResponse
 } from 'services/pipeline-ng'
-import type { PipelineInfoConfig } from 'services/cd-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { InputSetGitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { NameIdDescriptionTags } from '@common/components'
@@ -46,10 +47,14 @@ import {
   getPipelineWithoutCodebaseInputs
 } from '@pipeline/utils/CIUtils'
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
+import { getYamlFileName } from '@pipeline/utils/yamlUtils'
+import { memoizedParse, parse } from '@common/utils/YamlHelperMethods'
+import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { factory } from '../PipelineSteps/Steps/__tests__/StepTestUtil'
-import { YamlBuilderMemo } from '../PipelineStudio/PipelineYamlView/PipelineYamlView'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { StepViewType } from '../AbstractSteps/Step'
 import css from './InputSetForm.module.scss'
@@ -58,8 +63,10 @@ export const showPipelineInputSetForm = (
   resolvedTemplatesPipelineYaml: string | undefined,
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
 ): boolean => {
-  return (
-    resolvedTemplatesPipelineYaml && template?.data?.inputSetTemplateYaml && parse(template.data.inputSetTemplateYaml)
+  return !!(
+    resolvedTemplatesPipelineYaml &&
+    template?.data?.inputSetTemplateYaml &&
+    parse<Pipeline>(template.data.inputSetTemplateYaml)
   )
 }
 
@@ -69,6 +76,18 @@ export const isYamlPresent = (
 ): string | undefined => {
   return template?.data?.inputSetTemplateYaml && pipeline?.data?.yamlPipeline
 }
+
+const OMITTED_FIELDS = [
+  'inputSetReferences',
+  'repo',
+  'branch',
+  'outdated',
+  'connectorRef',
+  'repoName',
+  'filePath',
+  'storeType',
+  'inputSetErrorWrapper'
+]
 
 type InputSetDTOGitDetails = InputSetDTO & GitContextProps & StoreMetadata
 interface FormikInputSetFormProps {
@@ -88,9 +107,13 @@ interface FormikInputSetFormProps {
   executionView?: boolean
   isEdit: boolean
   isGitSyncEnabled?: boolean
-  isGitSimplificationEnabled?: boolean
+  supportingGitSimplification?: boolean
   yamlHandler?: YamlBuilderHandlerBinding
   setYamlHandler: React.Dispatch<React.SetStateAction<YamlBuilderHandlerBinding | undefined>>
+  className?: string
+  onCancel?: () => void
+  filePath?: string
+  inputSetUpdateResponseHandler?: (responseData: InputSetResponse) => void
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -134,22 +157,22 @@ function useValidateValues({
       try {
         await NameIdSchema.validate(values)
       } catch (err) {
-        if (err.name === 'ValidationError') {
+        /* istanbul ignore else */ if (err.name === 'ValidationError') {
           errors = { [err.path]: err.message }
         }
       }
       if (values.pipeline && isYamlPresent(template, pipeline)) {
         errors.pipeline = validatePipeline({
           pipeline: values.pipeline,
-          template: parse(defaultTo(template?.data?.inputSetTemplateYaml, '')).pipeline,
-          originalPipeline: parse(defaultTo(pipeline?.data?.yamlPipeline, '')).pipeline,
+          template: parse<Pipeline>(get(template, 'data.inputSetTemplateYaml', '')).pipeline,
+          originalPipeline: parse<Pipeline>(get(pipeline, 'data.yamlPipeline', '')).pipeline,
           getString,
           viewType: StepViewType.InputSet,
           viewTypeMetadata: { isInputSet: true },
           resolvedPipeline
         }) as any
 
-        if (isEmpty(errors.pipeline)) {
+        /* istanbul ignore else */ if (isEmpty(errors.pipeline)) {
           delete errors.pipeline
         }
       }
@@ -179,11 +202,12 @@ const onSubmitClick = (
         formikProps.values,
         {
           repoIdentifier: formikProps.values.repo,
-          branch: formikProps.values.branch
+          branch: formikProps.values.branch,
+          repoName: formikProps.values.repo
         },
         {
           connectorRef: formikProps.values.connectorRef,
-          repoName: formikProps.values.repoName,
+          repoName: formikProps.values.repo,
           branch: formikProps.values.branch,
           filePath: formikProps.values.filePath,
           storeType: formikProps.values.storeType
@@ -207,9 +231,13 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     executionView,
     isEdit,
     isGitSyncEnabled,
-    isGitSimplificationEnabled,
+    supportingGitSimplification,
     yamlHandler,
-    setYamlHandler
+    setYamlHandler,
+    className,
+    onCancel,
+    filePath,
+    inputSetUpdateResponseHandler
   } = props
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
@@ -217,7 +245,10 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
   >()
   const { repoIdentifier, branch, connectorRef, storeType, repoName } = useQueryParams<InputSetGitQueryParams>()
   const history = useHistory()
-  const resolvedPipeline = defaultTo(parse(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline, {})
+  const resolvedPipeline = defaultTo(
+    memoizedParse<Pipeline>(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline,
+    {} as PipelineInfoConfig
+  )
 
   useEffect(() => {
     if (!isUndefined(inputSet?.outdated) && yamlHandler?.setLatestYaml) {
@@ -270,18 +301,46 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     identifier: IdentifierSchema()
   })
   const formRefDom = React.useRef<HTMLElement | undefined>()
-  const init = React.useMemo(() => {
-    const omittedPipeline = omit(inputSet, 'gitDetails', 'entityValidityDetails', 'outdated') as Pipeline
+  const getPipelineData = (): Pipeline => {
+    const omittedPipeline = omit(
+      inputSet,
+      'gitDetails',
+      'entityValidityDetails',
+      'outdated',
+      'inputSetErrorWrapper'
+    ) as Pipeline
     return mergeTemplateWithInputSetData({
       templatePipeline: omittedPipeline,
       inputSetPortion: omittedPipeline,
       allValues: { pipeline: resolvedPipeline },
       shouldUseDefaultValues: !isEdit
     })
+  }
+  const init = React.useMemo(() => {
+    return getPipelineData()
+  }, [inputSet, isEdit, resolvedPipeline])
+
+  const hasError = useMemo(() => {
+    return formErrors && Object.keys(formErrors).length > 0
+  }, [formErrors])
+
+  const storeMetadata = {
+    repo: isGitSyncEnabled ? defaultTo(repoIdentifier, '') : defaultTo(repoName, ''),
+    branch: defaultTo(branch, ''),
+    connectorRef: defaultTo(connectorRef, ''),
+    repoName: defaultTo(repoName, ''),
+    storeType: defaultTo(storeType, StoreType.INLINE),
+    filePath: defaultTo(inputSet.gitDetails?.filePath, filePath)
+  }
+
+  const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
+  React.useEffect(() => {
+    const initialValues = getPipelineData()
+    formikRef.current?.setValues({ ...initialValues, ...storeMetadata })
   }, [inputSet, isEdit, resolvedPipeline])
 
   return (
-    <Container className={css.inputSetForm}>
+    <Container className={cx(css.inputSetForm, className, hasError ? css.withError : '')}>
       <Layout.Vertical
         spacing="medium"
         ref={ref => {
@@ -291,14 +350,8 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
         <Formik<InputSetDTO & GitContextProps & StoreMetadata>
           initialValues={{
             ...init,
-            repo: defaultTo(repoIdentifier, ''),
-            branch: defaultTo(branch, ''),
-            connectorRef: defaultTo(connectorRef, ''),
-            repoName: defaultTo(repoName, ''),
-            storeType: defaultTo(storeType, StoreType.INLINE),
-            filePath: defaultTo(inputSet.gitDetails?.filePath, formikRef.current?.values.filePath)
+            ...storeMetadata
           }}
-          enableReinitialize={true}
           formName="inputSetForm"
           validationSchema={NameIdSchema}
           validate={validateValues}
@@ -307,11 +360,12 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
               values,
               {
                 repoIdentifier: values.repo,
-                branch: values.branch
+                branch: values.branch,
+                repoName: values.repo
               },
               {
                 connectorRef: values.connectorRef,
-                repoName: values.repoName,
+                repoName: values.repo,
                 branch: values.branch,
                 filePath: values.filePath,
                 storeType: values.storeType
@@ -358,13 +412,12 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                                 />
                               </GitSyncStoreProvider>
                             )}
-                            {isGitSimplificationEnabled && storeType === StoreType.REMOTE && (
+                            {isPipelineRemote && (
                               <Container className={css.gitRemoteDetailsForm}>
                                 <GitSyncForm
                                   formikProps={formikProps as any}
-                                  handleSubmit={noop}
                                   isEdit={isEdit}
-                                  showRemoteTypeSelection={false}
+                                  initialValues={storeMetadata}
                                   disableFields={
                                     !isEdit
                                       ? {
@@ -382,8 +435,10 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                               <PipelineInputSetForm
                                 path="pipeline"
                                 readonly={!isEditable}
-                                originalPipeline={parse(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline}
-                                template={parse(defaultTo(template?.data?.inputSetTemplateYaml, '')).pipeline}
+                                originalPipeline={
+                                  parse<Pipeline>(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline
+                                }
+                                template={parse<Pipeline>(get(template, 'data.inputSetTemplateYaml', '')).pipeline}
                                 viewType={StepViewType.InputSet}
                               />
                             )}
@@ -403,7 +458,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                           &nbsp; &nbsp;
                           <Button
                             variation={ButtonVariation.TERTIARY}
-                            onClick={history.goBack}
+                            onClick={onCancel || history.goBack}
                             text={getString('cancel')}
                           />
                         </Layout.Horizontal>
@@ -413,21 +468,21 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                 ) : (
                   <div className={css.editor}>
                     <ErrorsStrip formErrors={formErrors} />
+                    {isInputSetInvalid(inputSet) && (
+                      <OutOfSyncErrorStrip
+                        inputSet={inputSet}
+                        pipelineGitDetails={get(pipeline, 'data.gitDetails')}
+                        inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
+                        fromInputSetForm={true}
+                      />
+                    )}
                     <Layout.Vertical className={css.content} padding="xlarge">
                       <YamlBuilderMemo
                         {...yamlBuilderReadOnlyModeProps}
                         existingJSON={{
-                          inputSet: omit(
+                          inputSet: omitBy(
                             formikProps?.values,
-                            'inputSetReferences',
-                            'repo',
-                            'branch',
-                            'outdated',
-                            'connectorRef',
-                            'repoName',
-                            'filePath',
-                            'storeType',
-                            'remoteType'
+                            (_val, key) => OMITTED_FIELDS.includes(key) || key.startsWith('_')
                           )
                         }}
                         bind={setYamlHandler}
@@ -437,6 +492,11 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                         width="calc(100vw - 350px)"
                         showSnippetSection={false}
                         isEditModeSupported={isEditable}
+                        fileName={getYamlFileName({
+                          isPipelineRemote,
+                          filePath: get(inputSet, 'gitDetails.filePath'),
+                          defaultName: yamlBuilderReadOnlyModeProps.fileName
+                        })}
                       />
                     </Layout.Vertical>
                     <Layout.Horizontal className={css.footer} padding="xlarge">
@@ -447,7 +507,10 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                         text={getString('save')}
                         onClick={() => {
                           const latestYaml = defaultTo(yamlHandler?.getLatestYaml(), '')
-                          const inputSetDto: InputSetDTO = parse(latestYaml)?.inputSet
+                          const inputSetDto: InputSetDTO = parse<{ inputSet: InputSetDTO }>(latestYaml)?.inputSet
+                          const identifier = inputSetDto.identifier
+                          const defaultFilePath = identifier ? `.harness/${identifier}.yaml` : ''
+
                           handleSubmit(
                             inputSetDto,
                             {
@@ -458,7 +521,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                               connectorRef: formikProps.values.connectorRef,
                               repoName: formikProps.values.repoName,
                               branch: formikProps.values.branch,
-                              filePath: formikProps.values.filePath,
+                              filePath: defaultTo(formikProps.values.filePath, defaultFilePath),
                               storeType: formikProps.values.storeType
                             }
                           )
@@ -467,9 +530,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                       &nbsp; &nbsp;
                       <Button
                         variation={ButtonVariation.TERTIARY}
-                        onClick={() => {
-                          history.goBack()
-                        }}
+                        onClick={onCancel || history.goBack}
                         text={getString('cancel')}
                       />
                     </Layout.Horizontal>

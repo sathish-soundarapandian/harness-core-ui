@@ -4,12 +4,13 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-
-import React, { useCallback, useState } from 'react'
-import { Layout, Container, Heading, PillToggle, PillToggleProps, Text, Card, Icon } from '@harness/uicore'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Layout, Container, Heading, PillToggle, PillToggleProps, Text, Card } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { PageSpinner } from '@common/components'
 import { useStrings } from 'framework/strings'
+import UserHint from '@cv/pages/components/UserHint/UserHint'
+import type { SLODashboardWidget } from 'services/cv'
 import { getErrorBudgetGaugeOptions } from '../CVSLOListingPage.utils'
 import { SLOCardContentProps, SLOCardToggleViews } from '../CVSLOsListingPage.types'
 import TimeRangeFilter from './TimeRangeFilter'
@@ -19,7 +20,7 @@ import css from '../CVSLOsListingPage.module.scss'
 
 const SLOCardContent: React.FC<SLOCardContentProps> = props => {
   const { getString } = useStrings()
-  const { isCardView, serviceLevelObjective, setSliderTimeRange } = props
+  const { isCardView, serviceLevelObjective, setSliderTimeRange, showUserHint } = props
   const { sloPerformanceTrend, sloTargetPercentage } = serviceLevelObjective
 
   const [toggle, setToggle] = useState(SLOCardToggleViews.SLO)
@@ -50,6 +51,29 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
     className: css.pillToggle
   }
 
+  useEffect(() => {
+    setShowTimelineSlider(true)
+  }, [setSliderTimeRange])
+
+  const renderRecalculation = (serviceLevelObjectiveData: SLODashboardWidget): JSX.Element => {
+    if (serviceLevelObjectiveData?.calculatingSLI) {
+      return <PageSpinner className={css.sloCardSpinner} message={getString('cv.sloAnalysisTakingLong')} />
+    } else if (serviceLevelObjectiveData?.recalculatingSLI) {
+      return (
+        <PageSpinner
+          className={css.sloCardSpinner}
+          message={
+            toggle === SLOCardToggleViews.SLO
+              ? getString('cv.sloRecalculationInProgress')
+              : getString('cv.errorBudgetRecalculationInProgress')
+          }
+        />
+      )
+    } else {
+      return <></>
+    }
+  }
+
   const SLOAndErrorBudgetChartContainer = isCardView ? Card : Container
   const stylesSLOAndSLICard = isCardView ? css.cardSloAndSliForCardView : css.cardSloAndSli
   const headingVariation = isCardView ? FontVariation.SMALL_BOLD : FontVariation.FORM_LABEL
@@ -68,9 +92,7 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
       <SLOAndErrorBudgetChartContainer style={{ position: 'relative' }}>
         {toggle === SLOCardToggleViews.SLO && (
           <>
-            {serviceLevelObjective.recalculatingSLI && (
-              <PageSpinner className={css.sloCardSpinner} message={getString('cv.sloRecalculationInProgress')} />
-            )}
+            {renderRecalculation(serviceLevelObjective)}
             <Container flex>
               <Heading level={2} font={{ variation: headingVariation }} data-tooltip-id={'SLOPerformanceTrend'}>
                 {getString('cv.SLOPerformanceTrend')}
@@ -108,12 +130,9 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                 </Container>
               </Layout.Vertical>
               <Container style={{ overflow: 'auto' }} className={css.flexGrowOne}>
-                <Layout.Horizontal margin={{ top: 'small' }}>
-                  <Icon margin={{ right: 'small' }} name="main-issue" color={Color.PRIMARY_7} />
-                  <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
-                    {getString('cv.sloGraphUserHint')}
-                  </Text>
-                </Layout.Horizontal>
+                {showUserHint && (
+                  <UserHint userMessage={getString('cv.sloGraphUserHint')} dataTestId="SLOCard_UserHint_SLO" />
+                )}
                 <SLOTargetChartWithChangeTimeline
                   {...props}
                   type={SLOCardToggleViews.SLO}
@@ -129,12 +148,7 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
         )}
         {toggle === SLOCardToggleViews.ERROR_BUDGET && (
           <Layout.Horizontal spacing="medium">
-            {serviceLevelObjective.recalculatingSLI && (
-              <PageSpinner
-                className={css.sloCardSpinner}
-                message={getString('cv.errorBudgetRecalculationInProgress')}
-              />
-            )}
+            {renderRecalculation(serviceLevelObjective)}
             <Container height={200} className={css.errorBudgetGaugeContainer}>
               <Heading font={{ variation: headingVariation }} data-tooltip-id={'errorBudgetRemaining'}>
                 {getString('cv.errorBudgetRemainingWithMins')}
@@ -162,12 +176,9 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                   />
                 )}
               </Container>
-              <Layout.Horizontal margin={{ top: 'small' }}>
-                <Icon margin={{ right: 'small' }} name="main-issue" color={Color.PRIMARY_7} />
-                <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }}>
-                  {getString('cv.sloGraphUserHint')}
-                </Text>
-              </Layout.Horizontal>
+              {showUserHint && (
+                <UserHint userMessage={getString('cv.sloGraphUserHint')} dataTestId="SLOCard_UserHint_ErrorBudget" />
+              )}
               <SLOTargetChartWithChangeTimeline
                 {...props}
                 type={SLOCardToggleViews.ERROR_BUDGET}

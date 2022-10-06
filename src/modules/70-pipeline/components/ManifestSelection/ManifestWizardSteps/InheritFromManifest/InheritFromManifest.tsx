@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React from 'react'
 
 import {
+  AllowedTypes,
   Button,
   ButtonVariation,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   Layout,
@@ -19,21 +21,23 @@ import {
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
+import cx from 'classnames'
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import type { InheritFromManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import css from '../K8sValuesManifest/ManifestDetails.module.scss'
+import { filePathWidth } from '../ManifestUtils'
+import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface InheritFromManifestPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   selectedManifest: ManifestTypes | null
   handleSubmit: (data: ManifestConfigWrapper) => void
@@ -50,11 +54,12 @@ function InheritFromManifest({
   handleSubmit,
   prevStepData,
   previousStep,
-  manifestIdsList
+  manifestIdsList,
+  isReadonly
 }: StepProps<ConnectorConfigDTO> & InheritFromManifestPropType): React.ReactElement {
   const { getString } = useStrings()
 
-  const getInitialValues = useCallback((): InheritFromManifestDataType => {
+  const getInitialValues = (): InheritFromManifestDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
 
     if (specValues) {
@@ -71,9 +76,9 @@ function InheritFromManifest({
       identifier: '',
       paths: [{ path: '', uuid: uuid('', nameSpace()) }]
     }
-  }, [])
+  }
 
-  const submitFormData = (formData: InheritFromManifestDataType & { store?: string; connectorRef?: string }): void => {
+  const submitFormData = (formData: InheritFromManifestDataType & { store?: string }): void => {
     const manifestObj: ManifestConfigWrapper = {
       manifest: {
         identifier: formData.identifier,
@@ -126,7 +131,7 @@ function InheritFromManifest({
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: InheritFromManifestDataType }) => {
           return (
-            <Form>
+            <FormikForm>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
                 className={css.manifestForm}
@@ -139,15 +144,34 @@ function InheritFromManifest({
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                     />
                   </div>
-
-                  <DragnDropPaths
-                    formik={formik}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                    fieldPath="paths"
-                    pathLabel={getString('fileFolderPathText')}
-                    placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
-                  />
+                  <div
+                    className={cx({
+                      [css.runtimeInput]: getMultiTypeFromValue(formik.values?.paths) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
+                    <DragnDropPaths
+                      formik={formik}
+                      expressions={expressions}
+                      allowableTypes={allowableTypes}
+                      fieldPath="paths"
+                      pathLabel={getString('fileFolderPathText')}
+                      placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                      defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                      dragDropFieldWidth={filePathWidth}
+                    />
+                    {getMultiTypeFromValue(formik.values.paths) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        value={formik.values.paths}
+                        type={getString('string')}
+                        variableName={'paths'}
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={val => formik?.setFieldValue('paths', val)}
+                        isReadonly={isReadonly}
+                      />
+                    )}
+                  </div>
                 </div>
 
                 <Layout.Horizontal spacing="medium" className={css.saveBtn}>
@@ -165,7 +189,7 @@ function InheritFromManifest({
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

@@ -6,17 +6,29 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, queryByText, render } from '@testing-library/react'
 import { MultiTypeInputType } from '@wings-software/uicore'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import { catalogueData } from '@connectors/pages/connectors/__tests__/mockData'
 import { FormMultiTypeConnectorField } from '../FormMultiTypeConnectorField'
 
 jest.mock('services/cd-ng', () => ({
-  useGetConnector: jest.fn().mockImplementation(() => ({ data: {} }))
+  useGetConnector: jest.fn().mockImplementation(() => ({ data: {} })),
+  useGetConnectorCatalogue: jest.fn().mockImplementation(() => {
+    return { data: catalogueData, loading: false }
+  })
+}))
+jest.mock('@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook', () => ({
+  useGetConnectorsListHook: jest.fn().mockReturnValue({
+    loading: false,
+    categoriesMap: { drawerLabel: 'Connectors', categories: [] },
+    connectorsList: ['K8sCluster'],
+    connectorCatalogueOrder: ['CLOUD_PROVIDER']
+  })
 }))
 describe('FormMultiTypeConnectorField tests', () => {
-  test(`renders without crashing`, () => {
-    const { container } = render(
+  test(`renders without crashing`, async () => {
+    const { container, getByText } = render(
       <TestWrapper>
         <FormMultiTypeConnectorField
           key={'Github'}
@@ -36,5 +48,49 @@ describe('FormMultiTypeConnectorField tests', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+    const selectConnector = getByText('Select Connector')
+    fireEvent.click(selectConnector)
+    const dialog = findDialogContainer() as HTMLElement
+    const newconnect = queryByText(dialog, '+ newConnectorLabel')
+    fireEvent.click(newconnect as HTMLElement)
+    const newConnectorDialog = document.querySelectorAll('.bp3-dialog')[1]
+    expect(newConnectorDialog).toMatchSnapshot()
+    const cross = queryByText(newConnectorDialog as HTMLElement, 'cross')
+    fireEvent.click(cross as HTMLElement)
+    expect(document.querySelectorAll('.bp3-dialog').length).toEqual(1)
+  })
+
+  test(`renders drawer mode for addition of connectors`, async () => {
+    const { container, getByText } = render(
+      <TestWrapper>
+        <FormMultiTypeConnectorField
+          key={'Github'}
+          onLoadingFinish={jest.fn()}
+          name="connectorRef"
+          label={'connector'}
+          placeholder={`Select Connector`}
+          accountIdentifier={'dummy'}
+          projectIdentifier={'dummy'}
+          orgIdentifier={'dummy'}
+          width={400}
+          multiTypeProps={{ expressions: [], allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME] }}
+          createNewLabel={'newConnectorLabel'}
+          enableConfigureOptions={true}
+          gitScope={{ repo: 'repoIdentifier', branch: 'branch', getDefaultFromOtherRepo: true }}
+          isDrawerMode={true}
+        />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+    const selectConnector = getByText('Select Connector')
+    fireEvent.click(selectConnector)
+    const dialog = findDialogContainer() as HTMLElement
+    const newconnect = queryByText(dialog, '+ newConnectorLabel')
+    fireEvent.click(newconnect as HTMLElement)
+    const newConnectorDialog = document.querySelectorAll('.bp3-drawer')[0]
+    expect(newConnectorDialog).toMatchSnapshot()
+    const cross = queryByText(newConnectorDialog as HTMLElement, 'cross')
+    fireEvent.click(cross as HTMLElement)
+    expect(document.querySelectorAll('.bp3-drawer').length).toEqual(0)
   })
 })

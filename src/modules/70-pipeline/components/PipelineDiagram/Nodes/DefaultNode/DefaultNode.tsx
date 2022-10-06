@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { debounce, defaultTo } from 'lodash-es'
 import { Icon, Text, Button, ButtonVariation, IconName } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/Diagram'
@@ -29,6 +29,9 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
     }
     setVisibilityOfAdd(visibility)
   }
+  const debounceHideVisibility = debounce(() => {
+    setVisibilityOfAdd(false)
+  }, 300)
 
   React.useEffect(() => {
     const currentNode = nodeRef.current
@@ -37,7 +40,7 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
     }
     const onMouseLeave = (_e: MouseEvent): void => {
       setTimeout(() => {
-        setAddVisibility(false)
+        debounceHideVisibility()
       }, 100)
     }
 
@@ -89,7 +92,7 @@ function DefaultNode(props: DefaultNodeProps): JSX.Element {
         event.stopPropagation()
 
         if (event.dataTransfer.types.indexOf(DiagramDrag.AllowDropOnNode) !== -1) {
-          setAddVisibility(false)
+          debounceHideVisibility()
         }
       }}
       onDrop={event => {

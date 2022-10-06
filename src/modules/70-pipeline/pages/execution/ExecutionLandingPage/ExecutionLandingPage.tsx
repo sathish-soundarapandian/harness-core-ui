@@ -25,7 +25,8 @@ import {
   getPipelineStagesMap,
   getActiveStageForPipeline,
   getActiveStep,
-  addServiceDependenciesFromLiteTaskEngine
+  isNodeTypeMatrixOrFor,
+  processForCIData
 } from '@pipeline/utils/executionUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
@@ -38,12 +39,12 @@ import { logsCache } from '@pipeline/components/LogsContent/LogsState/utils'
 import { EvaluationModal } from '@governance/EvaluationModal'
 import ExecutionContext, { GraphCanvasState } from '@pipeline/context/ExecutionContext'
 import { ModuleName } from 'framework/types/ModuleName'
-import useTabVisible from '@common/hooks/useTabVisible'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { usePolling } from '@common/hooks/usePolling'
 import { ExecutionHeader } from './ExecutionHeader/ExecutionHeader'
 import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
 import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
-
+import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
 import css from './ExecutionLandingPage.module.scss'
 
 export const POLL_INTERVAL = 2 /* sec */ * 1000 /* ms */
@@ -53,16 +54,20 @@ const setStageIds = ({
   queryParams,
   setAutoSelectedStageId,
   setAutoSelectedStepId,
+  setAutoStageNodeExecutionId,
   setSelectedStepId,
   setSelectedStageId,
+  setSelectedStageExecutionId,
   data,
   error
 }: {
   queryParams: ExecutionPageQueryParams
   setAutoSelectedStageId: Dispatch<SetStateAction<string>>
   setAutoSelectedStepId: Dispatch<SetStateAction<string>>
+  setAutoStageNodeExecutionId: Dispatch<SetStateAction<string>>
   setSelectedStepId: Dispatch<SetStateAction<string>>
   setSelectedStageId: Dispatch<SetStateAction<string>>
+  setSelectedStageExecutionId: Dispatch<SetStateAction<string>>
   data?: ResponsePipelineExecutionDetail | null
   error?: GetDataError<Failure | Error> | null
 }): void => {
@@ -89,20 +94,35 @@ const setStageIds = ({
     data.data?.pipelineExecutionSummary?.status as ExecutionStatus
   )
 
-  const runningStep = getActiveStep(
-    data.data.executionGraph || {},
-    undefined,
-    data.data.pipelineExecutionSummary?.layoutNodeMap
-  )
+  const runningStep = getActiveStep(data.data.executionGraph, data.data.pipelineExecutionSummary)
 
   if (runningStage) {
-    setAutoSelectedStageId(runningStage)
-    setSelectedStageId(runningStage)
+    if (isNodeTypeMatrixOrFor(data.data?.pipelineExecutionSummary?.layoutNodeMap?.[runningStage]?.nodeType)) {
+      const nodeExecid = get(
+        data,
+        ['data', 'pipelineExecutionSummary', 'layoutNodeMap', runningStage, 'edgeLayoutList', 'currentNodeChildren', 0],
+        runningStage
+      ) as string // UNIQUE ID--> stageNodeExecutionID
+      const nodeId = get(
+        data,
+        ['data', 'pipelineExecutionSummary', 'layoutNodeMap', nodeExecid, 'nodeUuid'],
+        ''
+      ) as string // COMMMON--> stageNodeID
+      setAutoSelectedStageId(nodeId)
+      setSelectedStageId(nodeId)
+      setAutoStageNodeExecutionId(nodeExecid)
+      setSelectedStageExecutionId(nodeExecid)
+    } else {
+      setAutoSelectedStageId(runningStage)
+      setSelectedStageId(runningStage)
+      setAutoStageNodeExecutionId('')
+      setSelectedStageExecutionId('')
+    }
   }
 
   if (runningStep) {
-    setAutoSelectedStepId(runningStep)
-    setSelectedStepId(runningStep)
+    setAutoSelectedStepId(runningStep.node)
+    setSelectedStepId(runningStep.node)
   }
 }
 
@@ -119,10 +139,12 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   /* These are used when auto updating selected stage/step when a pipeline is running */
   const [autoSelectedStageId, setAutoSelectedStageId] = React.useState<string>('')
   const [autoSelectedStepId, setAutoSelectedStepId] = React.useState<string>('')
+  const [autoStageNodeExecutionId, setAutoStageNodeExecutionId] = React.useState<string>('')
   const [isPipelineInvalid, setIsPipelineInvalid] = React.useState(false)
 
   /* These are updated only when new data is fetched successfully */
   const [selectedStageId, setSelectedStageId] = React.useState<string>('')
+  const [selectedStageExecutionId, setSelectedStageExecutionId] = React.useState<string>('')
   const [selectedStepId, setSelectedStepId] = React.useState<string>('')
   const { preference: savedExecutionView, setPreference: setSavedExecutionView } = usePreferenceStore<
     string | undefined
@@ -148,7 +170,11 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       accountIdentifier: accountId,
       stageNodeId: isEmpty(queryParams.stage || autoSelectedStageId)
         ? undefined
-        : queryParams.stage || autoSelectedStageId
+        : queryParams.stage || autoSelectedStageId,
+      ...(selectedStageId !== selectedStageExecutionId &&
+        !isEmpty(selectedStageExecutionId) && {
+          stageNodeExecutionId: selectedStageExecutionId
+        })
     },
     debounce: 500
   })
@@ -198,9 +224,10 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
 
   // combine steps and dependencies(ci stage)
   useDeepCompareEffect(() => {
-    const nodeMap = { ...data?.data?.executionGraph?.nodeMap }
-    // NOTE: add dependencies from "liteEngineTask" (ci stage)
-    addServiceDependenciesFromLiteTaskEngine(nodeMap, data?.data?.executionGraph?.nodeAdjacencyListMap)
+    let nodeMap = { ...data?.data?.executionGraph?.nodeMap }
+
+    nodeMap = processForCIData({ nodeMap, data })
+
     setAllNodeMap(oldNodeMap => {
       const interruptHistories = pickBy(oldNodeMap, val => get(val, '__isInterruptNode'))
 
@@ -208,21 +235,12 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     })
   }, [data?.data?.executionGraph?.nodeMap, data?.data?.executionGraph?.nodeAdjacencyListMap])
 
-  const visibility = useTabVisible()
-  // setup polling
-  React.useEffect(() => {
-    if (!loading && data && !isExecutionComplete(data.data?.pipelineExecutionSummary?.status)) {
-      const timerId = window.setTimeout(() => {
-        if (visibility) {
-          refetch()
-        }
-      }, POLL_INTERVAL)
-
-      return () => {
-        window.clearTimeout(timerId)
-      }
-    }
-  }, [data, refetch, loading, visibility])
+  // Do polling after initial default loading and has some data, stop if execution is in complete status
+  usePolling(refetch, {
+    pollingInterval: POLL_INTERVAL,
+    startPolling: !loading && !!data && !isExecutionComplete(data.data?.pipelineExecutionSummary?.status),
+    pollOnInactiveTab: !isExecutionComplete(data?.data?.pipelineExecutionSummary?.status)
+  })
 
   // show the current running stage and steps automatically
   React.useEffect(() => {
@@ -230,8 +248,10 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       queryParams,
       setAutoSelectedStageId,
       setAutoSelectedStepId,
+      setAutoStageNodeExecutionId,
       setSelectedStepId,
       setSelectedStageId,
+      setSelectedStageExecutionId,
       data,
       error
     })
@@ -248,8 +268,10 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     if (loading) {
       setSelectedStageId((queryParams.stage as string) || autoSelectedStageId)
     }
+    setSelectedStageExecutionId((queryParams?.stageExecId as string) || autoStageNodeExecutionId)
     setSelectedStepId((queryParams.step as string) || autoSelectedStepId)
-  }, [loading, queryParams, autoSelectedStageId, autoSelectedStepId])
+    queryParams?.stage && !queryParams?.stageExecId && setAutoStageNodeExecutionId(queryParams?.stageExecId || '')
+  }, [loading, queryParams, autoSelectedStageId, autoSelectedStepId, autoStageNodeExecutionId])
 
   return (
     <ExecutionContext.Provider
@@ -260,6 +282,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         isPipelineInvalid,
         selectedStageId,
         selectedStepId,
+        selectedStageExecutionId,
         loading,
         isDataLoadedForSelectedStage,
         queryParams,
@@ -271,63 +294,72 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         setSelectedStageId,
         setSelectedStepId,
         setIsPipelineInvalid,
+        setSelectedStageExecutionId,
         addNewNodeToMap(id, node) {
           setAllNodeMap(nodeMap => ({ ...nodeMap, [id]: node }))
         }
       }}
     >
-      {loading && !data ? <PageSpinner /> : null}
-      {error ? (
-        <PageError message={getRBACErrorMessage(error) as string} />
-      ) : (
-        <main className={css.main}>
-          <div className={css.lhs}>
-            <header className={css.header}>
-              <ExecutionHeader />
-              <ExecutionMetadata />
-            </header>
-            <ExecutionTabs savedExecutionView={savedExecutionView} setSavedExecutionView={setSavedExecutionView} />
-            {module === 'ci' && (
-              <>
-                {deprecatedImages?.length ? (
-                  <PipelineExecutionWarning
-                    warning={
-                      <>
-                        <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
-                          <Icon name="warning-sign" intent={Intent.DANGER} />
-                          <Text color={Color.ORANGE_900} font={{ variation: FontVariation.SMALL_BOLD }}>
-                            {getString('pipeline.imageVersionDeprecated')}
+      <ExecutionPipelineVariables
+        shouldFetch={data?.data?.pipelineExecutionSummary?.executionInputConfigured}
+        accountIdentifier={accountId}
+        orgIdentifier={orgIdentifier}
+        projectIdentifier={projectIdentifier}
+        planExecutionId={executionIdentifier}
+      >
+        {loading && !data ? <PageSpinner /> : null}
+        {error ? (
+          <PageError message={getRBACErrorMessage(error) as string} />
+        ) : (
+          <main className={css.main}>
+            <div className={css.lhs}>
+              <header className={css.header}>
+                <ExecutionHeader />
+                <ExecutionMetadata />
+              </header>
+              <ExecutionTabs savedExecutionView={savedExecutionView} setSavedExecutionView={setSavedExecutionView} />
+              {module === 'ci' && (
+                <>
+                  {deprecatedImages?.length ? (
+                    <PipelineExecutionWarning
+                      warning={
+                        <>
+                          <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
+                            <Icon name="warning-sign" intent={Intent.DANGER} />
+                            <Text color={Color.ORANGE_900} font={{ variation: FontVariation.SMALL_BOLD }}>
+                              {getString('pipeline.imageVersionDeprecated')}
+                            </Text>
+                          </Layout.Horizontal>
+                          <Text font={{ weight: 'semi-bold', size: 'small' }} color={Color.PRIMARY_10} lineClamp={2}>
+                            <String
+                              stringID="pipeline.unsupportedImagesWarning"
+                              vars={{
+                                summary: `${getDeprecatedImageSummary(deprecatedImages)}.`
+                              }}
+                              useRichText
+                            />
                           </Text>
-                        </Layout.Horizontal>
-                        <Text font={{ weight: 'semi-bold', size: 'small' }} color={Color.PRIMARY_10} lineClamp={2}>
-                          <String
-                            stringID="pipeline.unsupportedImagesWarning"
-                            vars={{
-                              summary: `${getDeprecatedImageSummary(deprecatedImages)}.`
-                            }}
-                            useRichText
-                          />
-                        </Text>
-                        {/* <Link to={'/'}>{getString('learnMore')}</Link> */}
-                      </>
-                    }
-                  />
-                ) : null}
-              </>
-            )}
-            <div
-              className={css.childContainer}
-              data-view={selectedPageTab === PageTabs.PIPELINE && isLogView ? 'log' : 'graph'}
-              id="pipeline-execution-container"
-            >
-              {props.children}
+                          {/* <Link to={'/'}>{getString('learnMore')}</Link> */}
+                        </>
+                      }
+                    />
+                  ) : null}
+                </>
+              )}
+              <div
+                className={css.childContainer}
+                data-view={selectedPageTab === PageTabs.PIPELINE && isLogView ? 'log' : 'graph'}
+                id="pipeline-execution-container"
+              >
+                {props.children}
+              </div>
+              {!!location?.state?.shouldShowGovernanceEvaluations && (
+                <EvaluationModal accountId={accountId} metadata={location?.state?.governanceMetadata} />
+              )}
             </div>
-            {!!location?.state?.shouldShowGovernanceEvaluations && (
-              <EvaluationModal accountId={accountId} metadata={location?.state?.governanceMetadata} />
-            )}
-          </div>
-        </main>
-      )}
+          </main>
+        )}
+      </ExecutionPipelineVariables>
     </ExecutionContext.Provider>
   )
 }

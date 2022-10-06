@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { FormInput, FormikForm, Container, RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
+import { FormInput, FormikForm, Container } from '@wings-software/uicore'
 import { isEmpty } from 'lodash-es'
 
 import { parse } from 'yaml'
@@ -14,25 +14,31 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type { InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import type { PipelineInfoConfig } from 'services/cd-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useGetPipeline } from 'services/pipeline-ng'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { spec } from '../../types'
-import { checkIfRunTimeInput } from '../../utils'
-import type { ContinousVerificationProps } from './types'
 import {
-  baseLineOptions,
-  durationOptions,
-  trafficSplitPercentageOptions,
-  VerificationSensitivityOptions
-} from '../../constants'
+  checkIfRunTimeInput,
+  getDurationOptions,
+  isConfiguredMonitoredServiceRunTime,
+  isDefaultMonitoredServiceAndServiceOrEnvRunTime,
+  isTemplatisedMonitoredService
+} from '../../utils'
+import type { ContinousVerificationProps } from './types'
+import { baseLineOptions, trafficSplitPercentageOptions, VerificationSensitivityOptions } from '../../constants'
 import RunTimeMonitoredService from './components/RunTimeMonitoredService/RunTimeMonitoredService'
 import {
   getInfraAndServiceData,
   getInfraAndServiceFromStage
 } from './components/ContinousVerificationInputSetStep.utils'
 
+import ConfiguredRunTimeMonitoredService from './components/ConfiguredRunTimeMonitoredService/ConfiguredRunTimeMonitoredService'
+import TemplatisedRunTimeMonitoredService from './components/TemplatisedRunTimeMonitoredService/TemplatisedRunTimeMonitoredService'
+import { MONITORED_SERVICE_TYPE } from '../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import css from './ContinousVerificationInputSetStep.module.scss'
 
 export function ContinousVerificationInputSetStep(
@@ -47,6 +53,7 @@ export function ContinousVerificationInputSetStep(
   const [pipeline, setPipeline] = useState<{ pipeline: PipelineInfoConfig } | undefined>()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { sensitivity, duration, baseline, trafficsplit, deploymentTag } = (template?.spec?.spec as spec) || {}
+  const { monitoredService } = template?.spec || {}
   const { data: pipelineData, refetch: fetchPipeline } = useGetPipeline({
     pipelineIdentifier,
     queryParams: {
@@ -80,9 +87,33 @@ export function ContinousVerificationInputSetStep(
     return { serviceIdentifier: serviceIdentifierData, envIdentifier: envIdentifierData }
   }, [pipeline, formik])
 
-  return (
-    <FormikForm>
-      {(serviceIdentifierFromStage === RUNTIME_INPUT_VALUE || envIdentifierDataFromStage === RUNTIME_INPUT_VALUE) && (
+  const extendedDurationFlag = useFeatureFlag(FeatureFlag.SRM_ENABLE_VERIFY_STEP_LONG_DURATION)
+  const durationList = getDurationOptions(extendedDurationFlag)
+
+  const renderRunTimeMonitoredService = (): JSX.Element => {
+    const type = monitoredService?.type ?? MONITORED_SERVICE_TYPE.DEFAULT
+    if (isConfiguredMonitoredServiceRunTime(type, monitoredService)) {
+      return (
+        <ConfiguredRunTimeMonitoredService
+          prefix={prefix}
+          expressions={expressions}
+          allowableTypes={allowableTypes}
+          monitoredService={monitoredService}
+        />
+      )
+    } else if (isTemplatisedMonitoredService(type)) {
+      return (
+        <TemplatisedRunTimeMonitoredService
+          prefix={prefix}
+          expressions={expressions}
+          allowableTypes={allowableTypes}
+          monitoredService={monitoredService}
+        />
+      )
+    } else if (
+      isDefaultMonitoredServiceAndServiceOrEnvRunTime(type, serviceIdentifierFromStage, envIdentifierDataFromStage)
+    ) {
+      return (
         <RunTimeMonitoredService
           serviceIdentifier={serviceIdentifier}
           envIdentifier={envIdentifier}
@@ -90,8 +121,15 @@ export function ContinousVerificationInputSetStep(
           initialValues={initialValues}
           prefix={prefix}
         />
-      )}
+      )
+    } else {
+      return <></>
+    }
+  }
 
+  return (
+    <FormikForm>
+      {renderRunTimeMonitoredService()}
       <Container className={css.container}>
         {checkIfRunTimeInput(sensitivity) && (
           <Container className={css.itemRuntimeSetting}>
@@ -114,7 +152,7 @@ export function ContinousVerificationInputSetStep(
             <FormInput.MultiTypeInput
               label={getString('duration')}
               name={`${prefix}spec.spec.duration`}
-              selectItems={durationOptions}
+              selectItems={durationList}
               useValue
               multiTypeInputProps={{
                 expressions,

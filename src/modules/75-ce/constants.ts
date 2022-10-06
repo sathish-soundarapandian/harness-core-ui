@@ -5,7 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { IconName } from '@harness/icons'
 import { getConfig } from 'services/config'
+import type { StringsMap } from 'stringTypes'
 import type { Provider } from './components/COCreateGateway/models'
 
 export const allProviders: Provider[] = [
@@ -83,7 +85,8 @@ export enum GatewayKindType {
 export enum CCM_CHART_TYPES {
   COLUMN = 'column',
   AREA = 'area',
-  LINE = 'line'
+  LINE = 'line',
+  SPLINE = 'spline'
 }
 
 export const portProtocolMap: { [key: number]: string } = {
@@ -118,7 +121,9 @@ export enum RESOURCES {
   KUBERNETES = 'KUBERNETES',
   ECS = 'ECS',
   RDS = 'RDS',
-  IG = 'IG'
+  IG = 'IG',
+  AZURE_INSTANCES = 'AZURE_INSTANCES',
+  GCP_INSTANCES = 'GCP_INSTANCES'
 }
 
 export const CONFIG_TOTAL_STEP_COUNTS = {
@@ -177,11 +182,6 @@ export const notificationChannelsList = [
     label: 'ce.anomalyDetection.notificationAlerts.emailChannelLabel',
     value: 'EMAIL',
     icon: { name: 'email-inline' }
-  },
-  {
-    label: 'ce.anomalyDetection.notificationAlerts.microsoftTeamChannelLabel',
-    value: 'MSTEAMS',
-    icon: { name: 'service-msteams' }
   }
 ]
 
@@ -201,6 +201,11 @@ export const channelImgMap = {
   PAGERDUTY: 'service-pagerduty'
 }
 
+export enum ServiceErrorType {
+  error = 'Error',
+  warning = 'Warning'
+}
+
 export enum RulesMode {
   ACTIVE = 'active',
   DRY = 'dryrun'
@@ -216,4 +221,76 @@ export const folderViewType = {
 export const moveFolderType = {
   NEW: 'NEW',
   EXISTING: 'EXISTING'
+}
+
+export enum CustomHandlerType {
+  exclude = 'exclude',
+  include = 'include'
+}
+
+export enum HandlerKind {
+  path = 'path',
+  ip = 'iprange',
+  header = 'header'
+}
+
+export const ruleServiceStatusLabelMap = new Map<
+  string,
+  { labelStringId: keyof StringsMap; intent: 'running' | 'stopped' | 'load'; icon?: IconName }
+>([
+  [
+    'active',
+    {
+      labelStringId: 'ce.co.ruleState.running',
+      intent: 'running',
+      icon: 'play'
+    }
+  ],
+  [
+    'down',
+    {
+      labelStringId: 'ce.co.ruleState.stopped',
+      intent: 'stopped',
+      icon: 'pause'
+    }
+  ],
+  [
+    'created',
+    {
+      labelStringId: 'created',
+      intent: 'running',
+      icon: 'play'
+    }
+  ],
+  [
+    'warmingup',
+    {
+      labelStringId: 'ce.co.ruleState.warmingUp',
+      intent: 'load',
+      icon: 'loading'
+    }
+  ],
+  [
+    'coolingdown',
+    {
+      labelStringId: 'ce.co.ruleState.coolingDown',
+      intent: 'load',
+      icon: 'loading'
+    }
+  ]
+])
+
+export const featureNames = {
+  OVERVIEW_FEATURE: 'CCM Overview',
+  PERSPECTIVES_FEATURE: 'Perspectives',
+  BUDGETS_FEATURE: 'Budgets',
+  ANOMALIES_FEATURE: 'Anomalies',
+  RECOMMENDATIONS_FEATURE: 'Recommendations',
+  COMMITMENT_ORCHESTRATOR_FEATURE: 'Commitment Orchestrator',
+  AUTOSTOPPING_FEATURE: 'Autostopping Rules',
+  BI_DASHBOARD_FEATURE: 'BI Dashboard',
+  AUTOSTROPPING_FEATURE: 'Auto Stopping',
+  CLOUD_INTEGRATION_FEATURE: 'Cloud Integration',
+  LOAD_BALANCER_FEATURE: 'Load Balancer',
+  COST_CATEGORY_FEATURE: 'Cost Categories'
 }

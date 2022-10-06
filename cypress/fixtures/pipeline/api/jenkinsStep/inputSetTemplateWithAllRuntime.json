@@ -1,0 +1,10 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "inputSetTemplateYaml": "pipeline:\n  identifier: \"testPipeline_Cypress\"\n  stages:\n  - stage:\n      identifier: \"Jenkins\"\n      type: \"Custom\"\n      spec:\n        execution:\n          steps:\n          - step:\n              identifier: \"jenkinsStep\"\n              type: \"JenkinsBuild\"\n              spec:\n                connectorRef: \"<+input>\"\n                jobName: \"<+input>\"\n                jobParameter: \"<+input>\"\n",
+    "modules": ["pms"],
+    "hasInputSets": false
+  },
+  "metaData": null,
+  "correlationId": "0cbb5286-3ee2-4319-9115-f372a422de66"
+}

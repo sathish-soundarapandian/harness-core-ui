@@ -18,6 +18,11 @@ export interface BaseHealthSourceMetricDefinition {
   sli?: Slidto
 }
 
+export interface AssignComponentPayload {
+  analysis?: AnalysisDTO
+  sli?: Slidto
+}
+
 export interface BaseHealthSourceMetricInfo {
   metricName?: string
   identifier?: string

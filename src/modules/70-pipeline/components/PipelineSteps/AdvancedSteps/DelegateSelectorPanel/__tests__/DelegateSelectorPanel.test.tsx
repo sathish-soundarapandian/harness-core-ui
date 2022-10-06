@@ -18,7 +18,18 @@ jest.mock('services/portal', () => ({
   useGetDelegateSelectorsUpTheHierarchy: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return []
-  })
+  }),
+  useGetDelegateSelectorsUpTheHierarchyV2: jest.fn().mockImplementation(() => ({
+    data: {
+      resource: [
+        { name: 'harness-sample-k8s-delegate', connected: false },
+        { name: 'delegate-selector', connected: false },
+        { name: 'delegate1', connected: true },
+        { name: 'delegate2', connected: false }
+      ]
+    },
+    loading: false
+  }))
 }))
 
 const params = {
@@ -62,6 +73,7 @@ describe('<DelegateSelectorPanel /> test', () => {
     const { container } = render(
       <WrapperComponent initialValues={{ delegateSelectors: ['harness-sample-k8s-delegate'] }} />
     )
+    expect(document.body.innerHTML).toContain('harness-sample-k8s-delegate')
     const selectedTag = getByText(container, 'harness-sample-k8s-delegate')
     expect(selectedTag).not.toBeNull()
     const inputBox = container.getElementsByClassName('bp3-multi-select-tag-input-input')[0]

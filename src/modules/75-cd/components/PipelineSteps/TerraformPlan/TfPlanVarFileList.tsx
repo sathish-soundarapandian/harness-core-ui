@@ -9,16 +9,7 @@ import React from 'react'
 
 import cx from 'classnames'
 
-import {
-  Layout,
-  Text,
-  Button,
-  Icon,
-  StepWizard,
-  Label,
-  ButtonVariation,
-  MultiTypeInputType
-} from '@wings-software/uicore'
+import { Layout, Text, Button, Icon, StepWizard, Label, ButtonVariation, AllowedTypes } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, MenuItem, Popover, PopoverInteractionKind, Menu, Dialog, IDialogProps } from '@blueprintjs/core'
 import { FieldArray, FieldArrayRenderProps } from 'formik'
@@ -42,7 +33,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 interface TfVarFileProps {
   formik: FormikProps<TFPlanFormData>
   isReadonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   getNewConnectorSteps?: any
   setSelectedConnector?: any
   selectedConnector?: string

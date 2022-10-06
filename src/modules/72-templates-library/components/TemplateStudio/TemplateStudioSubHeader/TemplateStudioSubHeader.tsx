@@ -24,10 +24,13 @@ import { TemplateContext } from '@templates-library/components/TemplateStudio/Te
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import {
   GetErrorResponse,
-  SaveTemplatePopover
+  SaveTemplateHandle,
+  SaveTemplatePopoverWithRef
 } from '@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'
 import { DefaultNewTemplateId } from 'framework/Templates/templates'
 import { TemplateStudioSubHeaderLeftView } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/views/TemplateStudioSubHeaderLeftView/TemplateStudioSubHeaderLeftView'
+import useDiffDialog from '@common/hooks/useDiffDialog'
+import { stringify } from '@common/utils/YamlHelperMethods'
 import css from './TemplateStudioSubHeader.module.scss'
 
 export interface TemplateStudioSubHeaderProps {
@@ -36,17 +39,38 @@ export interface TemplateStudioSubHeaderProps {
   onGitBranchChange: (selectedFilter: GitFilterScope) => void
 }
 
-export const TemplateStudioSubHeader: (props: TemplateStudioSubHeaderProps) => JSX.Element = ({
-  onViewChange,
-  getErrors,
-  onGitBranchChange
-}) => {
+export type TemplateStudioSubHeaderHandle = {
+  updateTemplate: (templateYaml: string) => Promise<void>
+}
+
+const TemplateStudioSubHeader: (
+  props: TemplateStudioSubHeaderProps,
+  ref: React.ForwardedRef<TemplateStudioSubHeaderHandle>
+) => JSX.Element = ({ onViewChange, getErrors, onGitBranchChange }, ref) => {
   const { state, fetchTemplate, view, isReadonly } = React.useContext(TemplateContext)
-  const { isUpdated, entityValidityDetails } = state
+  const { template, originalTemplate, isUpdated, entityValidityDetails, templateYamlError } = state
   const { getString } = useStrings()
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
   const isYaml = view === SelectedView.YAML
   const isVisualViewDisabled = React.useMemo(() => entityValidityDetails.valid === false, [entityValidityDetails.valid])
+
+  const saveTemplateHandleRef = React.useRef<SaveTemplateHandle | null>(null)
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      updateTemplate: async (templateYaml: string) => {
+        await saveTemplateHandleRef.current?.updateTemplate(templateYaml)
+      }
+    }),
+    [saveTemplateHandleRef.current]
+  )
+
+  const { open: openDiffModal } = useDiffDialog({
+    originalYaml: stringify(originalTemplate),
+    updatedYaml: stringify(template),
+    title: getString('templatesLibrary.diffTitle')
+  })
 
   return (
     <Container
@@ -58,53 +82,64 @@ export const TemplateStudioSubHeader: (props: TemplateStudioSubHeaderProps) => J
     >
       <Layout.Horizontal height={'100%'} flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
         <TemplateStudioSubHeaderLeftView onGitBranchChange={onGitBranchChange} />
-        <Container>
-          <VisualYamlToggle
-            className={css.visualYamlToggle}
-            selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
-            onChange={nextMode => {
-              onViewChange(nextMode)
-            }}
-            disableToggle={isVisualViewDisabled}
-          />
-        </Container>
-        <Container>
-          <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center' }}>
-            {isReadonly && (
-              <Container>
-                <Layout.Horizontal spacing={'small'}>
-                  <Icon name="eye-open" size={16} color={Color.ORANGE_800} />
-                  <Text color={Color.ORANGE_800} font={{ size: 'small' }}>
-                    {getString('common.readonlyPermissions')}
-                  </Text>
-                </Layout.Horizontal>
-              </Container>
-            )}
-            {isUpdated && !isReadonly && (
-              <Text color={Color.ORANGE_600} font={{ size: 'small' }} className={css.tagRender}>
-                {getString('unsavedChanges')}
-              </Text>
-            )}
-            {!isReadonly && (
-              <Container>
-                <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
-                  <SaveTemplatePopover getErrors={getErrors} />
-                  {templateIdentifier !== DefaultNewTemplateId && (
-                    <Button
-                      disabled={!isUpdated}
-                      onClick={() => {
-                        fetchTemplate({ forceFetch: true, forceUpdate: true })
-                      }}
-                      variation={ButtonVariation.SECONDARY}
-                      text={getString('common.discard')}
-                    />
-                  )}
-                </Layout.Horizontal>
-              </Container>
-            )}
-          </Layout.Horizontal>
-        </Container>
+        {!templateYamlError && (
+          <Container>
+            <VisualYamlToggle
+              className={css.visualYamlToggle}
+              selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
+              onChange={nextMode => {
+                onViewChange(nextMode)
+              }}
+              disableToggle={isVisualViewDisabled}
+            />
+          </Container>
+        )}
+        {!templateYamlError && (
+          <Container>
+            <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center' }}>
+              {isReadonly && (
+                <Container>
+                  <Layout.Horizontal spacing={'small'}>
+                    <Icon name="eye-open" size={16} color={Color.ORANGE_800} />
+                    <Text color={Color.ORANGE_800} font={{ size: 'small' }}>
+                      {getString('common.readonlyPermissions')}
+                    </Text>
+                  </Layout.Horizontal>
+                </Container>
+              )}
+              {isUpdated && !isReadonly && (
+                <Button
+                  variation={ButtonVariation.LINK}
+                  intent="warning"
+                  className={css.tagRender}
+                  onClick={openDiffModal}
+                >
+                  {getString('unsavedChanges')}
+                </Button>
+              )}
+              {!isReadonly && (
+                <Container>
+                  <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'center' }}>
+                    <SaveTemplatePopoverWithRef getErrors={getErrors} ref={saveTemplateHandleRef} />
+                    {templateIdentifier !== DefaultNewTemplateId && (
+                      <Button
+                        disabled={!isUpdated}
+                        onClick={() => {
+                          fetchTemplate({ forceFetch: true, forceUpdate: true })
+                        }}
+                        variation={ButtonVariation.SECONDARY}
+                        text={getString('common.discard')}
+                      />
+                    )}
+                  </Layout.Horizontal>
+                </Container>
+              )}
+            </Layout.Horizontal>
+          </Container>
+        )}
       </Layout.Horizontal>
     </Container>
   )
 }
+
+export const TemplateStudioSubHeaderWithRef = React.forwardRef(TemplateStudioSubHeader)

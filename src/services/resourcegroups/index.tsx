@@ -40,6 +40,7 @@ export interface AccessControlCheckError {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -56,6 +57,7 @@ export interface AccessControlCheckError {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -166,7 +168,6 @@ export interface AccessControlCheckError {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -191,6 +192,7 @@ export interface AccessControlCheckError {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -203,6 +205,7 @@ export interface AccessControlCheckError {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -258,6 +261,7 @@ export interface AccessControlCheckError {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -294,9 +298,11 @@ export interface AccessControlCheckError {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -321,6 +327,32 @@ export interface AccessControlCheckError {
     | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
     | 'INVALID_NEXUS_REGISTRY_REQUEST'
     | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -338,6 +370,11 @@ export interface AccountNotificationSettingDTO {
 
 export type AddCollaboratorAuditEventData = AuditEventData & {
   source: Source
+}
+
+export interface AttributeFilter {
+  attributeName?: string
+  attributeValues?: string[]
 }
 
 export interface AuditEventDTO {
@@ -359,6 +396,7 @@ export interface AuditEventDTO {
     | 'UNSUCCESSFUL_LOGIN'
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
+    | 'ERROR_BUDGET_RESET'
   auditEventData?: AuditEventData
   auditId?: string
   authenticationInfo: AuthenticationInfoDTO
@@ -368,7 +406,7 @@ export interface AuditEventDTO {
   internalInfo?: {
     [key: string]: string
   }
-  module: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'CORE' | 'PMS' | 'TEMPLATESERVICE'
+  module: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
   requestMetadata?: RequestMetadata
   resource: ResourceDTO
   resourceScope: ResourceScopeDTO
@@ -381,6 +419,8 @@ export interface AuditEventData {
     | 'UserInvitationAuditEventData'
     | 'AddCollaboratorAuditEventData'
     | 'TemplateAuditEventData'
+    | 'OpaAuditEventData'
+    | 'ChaosAuditEventData'
     | 'USER_INVITE'
     | 'USER_MEMBERSHIP'
 }
@@ -404,6 +444,7 @@ export interface AuditFilterProperties {
     | 'UNSUCCESSFUL_LOGIN'
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
+    | 'ERROR_BUDGET_RESET'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -416,11 +457,17 @@ export interface AuditFilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
-  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'CORE' | 'PMS' | 'TEMPLATESERVICE')[]
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+    | 'Environment'
+  modules?: ('CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS')[]
   principals?: Principal[]
   resources?: ResourceDTO[]
   scopes?: ResourceScopeDTO[]
   startTime?: number
+  staticFilter?: 'EXCLUDE_LOGIN_EVENTS' | 'EXCLUDE_SYSTEM_EVENTS'
   tags?: {
     [key: string]: string
   }
@@ -437,15 +484,16 @@ export interface AuthenticationInfoDTO {
   principal: Principal
 }
 
+export type ChaosAuditEventData = AuditEventData & {
+  eventModule?: string
+}
+
 export type DynamicResourceSelector = ResourceSelector & {
   includeChildScopes?: boolean
   resourceType: string
 }
 
-export type EmailSettingDTO = NotificationSettingDTO & {
-  body: string
-  subject: string
-}
+export type EmailSettingDTO = NotificationSettingDTO & {}
 
 export interface Environment {
   identifier: string
@@ -480,6 +528,7 @@ export interface Error {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -496,6 +545,7 @@ export interface Error {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -606,7 +656,6 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -631,6 +680,7 @@ export interface Error {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -643,6 +693,7 @@ export interface Error {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -698,6 +749,7 @@ export interface Error {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -734,9 +786,11 @@ export interface Error {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -761,6 +815,32 @@ export interface Error {
     | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
     | 'INVALID_NEXUS_REGISTRY_REQUEST'
     | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -801,6 +881,7 @@ export interface Failure {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -817,6 +898,7 @@ export interface Failure {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -927,7 +1009,6 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -952,6 +1033,7 @@ export interface Failure {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -964,6 +1046,7 @@ export interface Failure {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -1019,6 +1102,7 @@ export interface Failure {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -1055,9 +1139,11 @@ export interface Failure {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -1082,6 +1168,32 @@ export interface Failure {
     | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
     | 'INVALID_NEXUS_REGISTRY_REQUEST'
     | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1107,6 +1219,11 @@ export interface FilterProperties {
     | 'Deployment'
     | 'Audit'
     | 'Template'
+    | 'EnvironmentGroup'
+    | 'FileStore'
+    | 'CCMRecommendation'
+    | 'Anomaly'
+    | 'Environment'
   tags?: {
     [key: string]: string
   }
@@ -1134,6 +1251,10 @@ export interface NotificationSettingDTO {
   notificationId: string
   recipient: string
   type?: 'EMAIL' | 'SLACK' | 'PAGERDUTY' | 'MSTEAMS'
+}
+
+export type OpaAuditEventData = AuditEventData & {
+  eventModule?: string
 }
 
 export interface Page {
@@ -1200,6 +1321,9 @@ export type PagerDutySettingDTO = NotificationSettingDTO & {}
 
 export interface PermissionCheck {
   permission?: string
+  resourceAttributes?: {
+    [key: string]: string
+  }
   resourceIdentifier?: string
   resourceScope?: ResourceScope
   resourceType?: string
@@ -1233,6 +1357,7 @@ export interface ResourceDTO {
     | 'TEMPLATE'
     | 'INPUT_SET'
     | 'DELEGATE_CONFIGURATION'
+    | 'DELEGATE_GROUPS'
     | 'SERVICE'
     | 'ENVIRONMENT'
     | 'DELEGATE'
@@ -1241,6 +1366,28 @@ export interface ResourceDTO {
     | 'API_KEY'
     | 'TOKEN'
     | 'DELEGATE_TOKEN'
+    | 'GOVERNANCE_POLICY'
+    | 'GOVERNANCE_POLICY_SET'
+    | 'VARIABLE'
+    | 'CHAOS_HUB'
+    | 'MONITORED_SERVICE'
+    | 'CHAOS_DELEGATE'
+    | 'CHAOS_SCENARIO'
+    | 'STO_TARGET'
+    | 'STO_EXEMPTION'
+    | 'CHAOS_GITOPS'
+    | 'SERVICE_LEVEL_OBJECTIVE'
+    | 'PERSPECTIVE'
+    | 'PERSPECTIVE_BUDGET'
+    | 'PERSPECTIVE_REPORT'
+    | 'COST_CATEGORY'
+    | 'SMTP'
+    | 'PERSPECTIVE_FOLDER'
+    | 'AUTOSTOPPING_RULE'
+    | 'AUTOSTOPPING_LB'
+    | 'AUTOSTOPPING_STARTSTOP'
+    | 'SETTING'
+    | 'NG_LOGIN_SETTINGS'
 }
 
 export interface ResourceFilter {
@@ -1343,13 +1490,20 @@ export interface ResourceSelectorFilter {
 }
 
 export interface ResourceSelectorV2 {
+  attributeFilter?: AttributeFilter
   identifiers?: string[]
   resourceType: string
 }
 
 export interface ResourceType {
   name?: string
-  validatorTypes?: ('BY_RESOURCE_IDENTIFIER' | 'BY_RESOURCE_TYPE' | 'BY_RESOURCE_TYPE_INCLUDING_CHILD_SCOPES')[]
+  validatorTypes?: (
+    | 'BY_RESOURCE_IDENTIFIER'
+    | 'BY_RESOURCE_TYPE'
+    | 'BY_RESOURCE_TYPE_INCLUDING_CHILD_SCOPES'
+    | 'BY_ATTRIBUTE_INCLUDING_CHILD_SCOPES'
+    | 'BY_ATTRIBUTE'
+  )[]
 }
 
 export interface ResourceTypeDTO {
@@ -1419,6 +1573,7 @@ export interface ResponseMessage {
     | 'INVALID_CAPTCHA_TOKEN'
     | 'NOT_ACCOUNT_MGR_NOR_HAS_ALL_APP_ACCESS'
     | 'EXPIRED_TOKEN'
+    | 'INVALID_AGENT_MTLS_AUTHORITY'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'
     | 'ACCESS_DENIED'
     | 'NG_ACCESS_DENIED'
@@ -1435,6 +1590,7 @@ export interface ResponseMessage {
     | 'SOCKET_CONNECTION_ERROR'
     | 'CONNECTION_ERROR'
     | 'SOCKET_CONNECTION_TIMEOUT'
+    | 'WINRM_COMMAND_EXECUTION_TIMEOUT'
     | 'CONNECTION_TIMEOUT'
     | 'SSH_CONNECTION_ERROR'
     | 'USER_GROUP_ERROR'
@@ -1545,7 +1701,6 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1570,6 +1725,7 @@ export interface ResponseMessage {
     | 'USER_HAS_NO_PERMISSIONS'
     | 'USER_NOT_AUTHORIZED'
     | 'USER_ALREADY_PRESENT'
+    | 'EMAIL_ERROR'
     | 'INVALID_USAGE_RESTRICTION'
     | 'USAGE_RESTRICTION_ERROR'
     | 'STATE_EXECUTION_INSTANCE_NOT_FOUND'
@@ -1582,6 +1738,7 @@ export interface ResponseMessage {
     | 'FILE_NOT_FOUND_ERROR'
     | 'USAGE_LIMITS_EXCEEDED'
     | 'EVENT_PUBLISH_FAILED'
+    | 'CUSTOM_APPROVAL_ERROR'
     | 'JIRA_ERROR'
     | 'EXPRESSION_EVALUATION_FAILED'
     | 'KUBERNETES_VALUES_ERROR'
@@ -1637,6 +1794,7 @@ export interface ResponseMessage {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -1673,9 +1831,11 @@ export interface ResponseMessage {
     | 'HTTP_RESPONSE_EXCEPTION'
     | 'SCM_NOT_FOUND_ERROR'
     | 'SCM_CONFLICT_ERROR'
+    | 'SCM_CONFLICT_ERROR_V2'
     | 'SCM_UNPROCESSABLE_ENTITY'
     | 'PROCESS_EXECUTION_EXCEPTION'
     | 'SCM_UNAUTHORIZED'
+    | 'SCM_BAD_REQUEST'
     | 'SCM_INTERNAL_SERVER_ERROR'
     | 'DATA'
     | 'CONTEXT'
@@ -1700,6 +1860,32 @@ export interface ResponseMessage {
     | 'INVALID_ARTIFACTORY_REGISTRY_REQUEST'
     | 'INVALID_NEXUS_REGISTRY_REQUEST'
     | 'ENTITY_NOT_FOUND'
+    | 'INVALID_AZURE_CONTAINER_REGISTRY_REQUEST'
+    | 'AZURE_AUTHENTICATION_ERROR'
+    | 'AZURE_CONFIG_ERROR'
+    | 'DATA_PROCESSING_ERROR'
+    | 'INVALID_AZURE_AKS_REQUEST'
+    | 'AWS_IAM_ERROR'
+    | 'AWS_CF_ERROR'
+    | 'AWS_INSTANCE_ERROR'
+    | 'AWS_VPC_ERROR'
+    | 'AWS_TAG_ERROR'
+    | 'AWS_ASG_ERROR'
+    | 'AWS_LOAD_BALANCER_ERROR'
+    | 'SCM_INTERNAL_SERVER_ERROR_V2'
+    | 'SCM_UNAUTHORIZED_ERROR_V2'
+    | 'TOO_MANY_REQUESTS'
+    | 'INVALID_IDENTIFIER_REF'
+    | 'SPOTINST_NULL_ERROR'
+    | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1711,6 +1897,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -1805,16 +1992,6 @@ export interface RoleBinding {
   roleIdentifier?: string
 }
 
-export type SampleErrorMetadataDTO = ErrorMetadataDTO & {
-  sampleMap?: {
-    [key: string]: string
-  }
-}
-
-export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
-  conflictCommitId?: string
-}
-
 export interface Scope {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -1846,10 +2023,13 @@ export interface Source {
 }
 
 export interface StackTraceElement {
+  classLoaderName?: string
   className?: string
   fileName?: string
   lineNumber?: number
   methodName?: string
+  moduleName?: string
+  moduleVersion?: string
   nativeMethod?: boolean
 }
 
@@ -1869,19 +2049,6 @@ export interface TemplateDTO {
 export type TemplateEventData = AuditEventData & {
   comments?: string
   templateUpdateEventType?: string
-}
-
-export interface TemplateInputsErrorDTO {
-  fieldName?: string
-  identifierOfErrorSource?: string
-  message?: string
-}
-
-export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
-  errorMap?: {
-    [key: string]: TemplateInputsErrorDTO
-  }
-  errorYaml?: string
 }
 
 export interface Throwable {

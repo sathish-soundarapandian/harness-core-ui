@@ -31,7 +31,10 @@ import useDeleteServiceHook from '@ce/common/useDeleteService'
 import { Utils } from '@ce/common/Utils'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetConnector } from 'services/cd-ng'
-import { allProviders, ceConnectorTypes } from '@ce/constants'
+import { allProviders, ceConnectorTypes, RulesMode } from '@ce/constants'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import COGatewayLogs from './COGatewayLogs'
 import COGatewayUsageTime from './COGatewayUsageTime'
 import {
@@ -54,6 +57,7 @@ interface COGatewayAnalyticsProps {
   handleServiceToggle: (type: 'SUCCESS' | 'FAILURE', data: Service | any, index?: number) => void
   handleServiceDeletion: (type: 'SUCCESS' | 'FAILURE', data: Service | any) => void
   handleServiceEdit: (_service: Service) => void
+  mode: RulesMode
 }
 
 function getBarChartOptions(
@@ -153,6 +157,10 @@ const COGatewayAnalytics: React.FC<COGatewayAnalyticsProps> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { showError } = useToaster()
+  const [canEdit, canDelete] = usePermission({
+    resource: { resourceType: ResourceType.AUTOSTOPPINGRULE },
+    permissions: [PermissionIdentifier.EDIT_CCM_AUTOSTOPPING_RULE, PermissionIdentifier.DELETE_CCM_AUTOSTOPPING_RULE]
+  })
 
   const isK8sRule = Utils.isK8sRule(props.service?.data as Service)
   const isEcsRule = !_isEmpty(props.service?.data.routing?.container_svc)
@@ -221,7 +229,7 @@ const COGatewayAnalytics: React.FC<COGatewayAnalyticsProps> = props => {
 
   const domainProtocol = useMemo(() => {
     const hasHttpsConfig = !_isEmpty(
-      props.service?.data.routing?.ports?.find(portConfig => portConfig.protocol === 'https')
+      props.service?.data.routing?.ports?.find(portConfig => portConfig.protocol?.toLowerCase() === 'https')
     )
     return Utils.getConditionalResult(hasHttpsConfig, 'https', 'http')
   }, [props.service?.data.routing?.ports])
@@ -243,20 +251,24 @@ const COGatewayAnalytics: React.FC<COGatewayAnalyticsProps> = props => {
             </Layout.Horizontal>
             <Layout.Horizontal spacing="large" className={css.headerLayout}>
               <Layout.Horizontal flex spacing="large">
-                <Icon
-                  name="Edit"
-                  size={20}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => props.handleServiceEdit(props.service?.data as Service)}
-                  data-testid="editRuleIcon"
-                ></Icon>
-                <Icon
-                  name="main-trash"
-                  size={20}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => triggerDelete()}
-                  data-testid="deleteRuleIcon"
-                ></Icon>
+                {canEdit && (
+                  <Icon
+                    name="Edit"
+                    size={20}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => props.handleServiceEdit(props.service?.data as Service)}
+                    data-testid="editRuleIcon"
+                  ></Icon>
+                )}
+                {canDelete && (
+                  <Icon
+                    name="main-trash"
+                    size={20}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => triggerDelete()}
+                    data-testid="deleteRuleIcon"
+                  ></Icon>
+                )}
               </Layout.Horizontal>
             </Layout.Horizontal>
           </Layout.Horizontal>
@@ -288,7 +300,7 @@ const COGatewayAnalytics: React.FC<COGatewayAnalyticsProps> = props => {
                       >
                         {`${_defaultTo(serviceDescribeData?.response?.task_count, 0)} tasks`}
                       </Link>
-                      {getStateTag(serviceDescribeData?.response?.task_count ? 'active' : 'down')}
+                      {getStateTag()}
                     </>
                   ) : (
                     <>
@@ -316,7 +328,7 @@ const COGatewayAnalytics: React.FC<COGatewayAnalyticsProps> = props => {
                       {healthDataLoading ? (
                         <Icon name="spinner" size={12} color="blue500" />
                       ) : healthData?.response?.['state'] != null ? (
-                        getStateTag(healthData?.response?.['state'])
+                        getStateTag()
                       ) : null}
                     </>
                   )}
@@ -392,18 +404,18 @@ const COGatewayAnalytics: React.FC<COGatewayAnalyticsProps> = props => {
             </Layout.Vertical>
           </Container>
         )}
-        <CumulativeSavingsSection service={props.service?.data} />
+        <CumulativeSavingsSection service={props.service?.data} mode={props.mode} />
         <Layout.Horizontal spacing="small" style={{ alignSelf: 'center' }}>
-          <Text>Showing data for Last 7 days</Text>
+          <Text>{getString('ce.co.ruleDrawer.lastWeekDataLabel')}</Text>
         </Layout.Horizontal>
-        <SpendVsSavingsGraph service={props.service?.data} />
+        <SpendVsSavingsGraph service={props.service?.data} mode={props.mode} />
         <LogsAndUsage service={props.service?.data} />
       </Layout.Vertical>
     </Container>
   )
 }
 
-const CumulativeSavingsSection = (props: { service?: Service }) => {
+const CumulativeSavingsSection = (props: { service?: Service; mode: RulesMode }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
 
@@ -411,7 +423,8 @@ const CumulativeSavingsSection = (props: { service?: Service }) => {
     account_id: accountId,
     rule_id: props.service?.id as number,
     queryParams: {
-      accountIdentifier: accountId
+      accountIdentifier: accountId,
+      dry_run: props.mode === RulesMode.DRY
     }
   })
 
@@ -453,7 +466,7 @@ const CumulativeSavingsSection = (props: { service?: Service }) => {
   )
 }
 
-const SpendVsSavingsGraph = (props: { service?: Service }) => {
+const SpendVsSavingsGraph = (props: { service?: Service; mode: RulesMode }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
 
@@ -470,7 +483,8 @@ const SpendVsSavingsGraph = (props: { service?: Service }) => {
       accountIdentifier: accountId,
       from: moment(startOfDay(today().subtract(7, 'days'))).format(DATE_FORMAT),
       to: moment(endOfDay(today())).format(DATE_FORMAT),
-      group_by: 'date'
+      group_by: 'date',
+      dry_run: props.mode === RulesMode.DRY
     }
   })
 

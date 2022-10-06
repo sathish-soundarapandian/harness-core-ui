@@ -7,7 +7,7 @@
 
 import React, { forwardRef } from 'react'
 import * as Yup from 'yup'
-import { isEmpty, map, set, unset, isNull, forOwn } from 'lodash-es'
+import { isEmpty, map, set, unset, isNull, forOwn, get } from 'lodash-es'
 import { IconName, MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { yupToFormErrors, FormikErrors } from 'formik'
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
@@ -37,6 +37,7 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
   protected stepName = 'CloudFormation Create Stack'
   protected stepDescription: keyof StringsMap = 'cd.cloudFormation.createDescription'
   protected stepIconSize = 32
+  protected referenceId = 'cloudFormationCreateStep'
 
   protected defaultValues: CreateStackStepInfo = {
     type: StepType.CloudFormationCreateStack,
@@ -66,21 +67,71 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
     const errors = {} as any
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
 
-    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
-      let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
-
-      if (isRequired) {
-        timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
+    if (
+      getMultiTypeFromValue(template?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.provisionerIdentifier?.trim())
+    ) {
+      errors.spec = {
+        ...errors.spec,
+        provisionerIdentifier: getString?.('common.validation.provisionerIdentifierIsRequired')
       }
+    }
+
+    if (
+      getMultiTypeFromValue(template?.spec?.configuration?.connectorRef) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.configuration?.connectorRef)
+    ) {
+      errors.spec = {
+        ...errors.spec,
+        configuration: {
+          ...errors.spec?.configuration,
+          connectorRef: getString?.('pipelineSteps.build.create.connectorRequiredError')
+        }
+      }
+    }
+
+    if (
+      getMultiTypeFromValue(template?.spec?.configuration?.region) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.configuration?.region)
+    ) {
+      errors.spec = {
+        ...errors.spec,
+        configuration: {
+          ...errors.spec?.configuration,
+          region: getString?.('cd.cloudFormation.errors.region')
+        }
+      }
+    }
+
+    if (
+      getMultiTypeFromValue(template?.spec?.configuration?.stackName) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.configuration?.stackName)
+    ) {
+      errors.spec = {
+        ...errors.spec,
+        configuration: {
+          ...errors.spec?.configuration,
+          stackName: getString?.('cd.cloudFormation.errors.stackName')
+        }
+      }
+    }
+
+    if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && isRequired) {
       const timeout = Yup.object().shape({
-        timeout: timeoutSchema
+        timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString?.('validation.timeout10SecMinimum'))
       })
 
       try {
         timeout.validateSync(data)
       } catch (e) {
+        /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {
           const err = yupToFormErrors(e)
+
           Object.assign(errors, err)
         }
       }
@@ -161,9 +212,21 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
     }
 
     if (!isEmpty(data.spec.configuration?.tags)) {
-      set(data, 'spec.configuration.tags.type', 'Inline')
-    }
+      const tagsType = get(data?.spec?.configuration?.tags?.spec?.store, 'type')
+      const tags = get(data?.spec?.configuration?.tags?.spec?.store, 'spec')
+      if (tagsType === 'S3' || tagsType === 'S3Url') {
+        set(data?.spec?.configuration?.tags?.spec?.store, 'type', 'S3Url')
+        set(data?.spec?.configuration?.tags?.spec?.store, 'spec', {
+          region: tags?.region,
+          connectorRef: tags?.connectorRef,
+          urls: tags?.paths || tags?.urls
+        })
+      }
 
+      if (tags?.connectorRef?.value) {
+        set(data?.spec?.configuration?.tags?.spec?.store?.spec, 'connectorRef', tags?.connectorRef?.value)
+      }
+    }
     return {
       ...data,
       spec: {
@@ -208,6 +271,19 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
       }))
       set(data, 'spec.configuration.parameters', parameters)
     }
+
+    if (!isEmpty(data.spec.configuration?.tags)) {
+      const tagsType = get(data, 'spec.configuration.tags.spec.store.type')
+      if (tagsType === 'S3' || tagsType === 'S3Url') {
+        const tags = get(data, 'spec.configuration.tags.spec.store.spec')
+        set(data, 'spec.configuration.tags.spec.store.type', 'S3Url')
+        set(data, 'spec.configuration.tags.spec.store.spec', {
+          region: tags?.region,
+          connectorRef: tags?.connectorRef,
+          paths: tags?.paths || tags?.urls
+        })
+      }
+    }
     // empty values returned from api removed
     // causes issues with yup having null values for strings/arrays
     forOwn(config, (value, key) => isNull(value) && unset(config, key))
@@ -244,7 +320,7 @@ export class CFCreateStack extends PipelineStep<CreateStackStepInfo> {
     path,
     customStepProps
   }: StepProps<CreateStackStepInfo>): JSX.Element {
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <CreateStackInputStep
           initialValues={initialValues}

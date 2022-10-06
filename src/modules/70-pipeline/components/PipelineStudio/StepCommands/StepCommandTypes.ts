@@ -5,24 +5,27 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes } from '@wings-software/uicore'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type {
   StepElementConfig,
   StepGroupElementConfig,
   StepWhenCondition,
-  FailureStrategyConfig
+  FailureStrategyConfig,
+  StageElementConfig
 } from 'services/cd-ng'
-import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { TemplateStepNode, TemplateLinkConfig } from 'services/pipeline-ng'
+import type { TemplateStepNode, TemplateLinkConfig, EntityGitDetails } from 'services/pipeline-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 
 export enum AdvancedPanels {
   PreRequisites = 'preRequisites',
   FailureStrategy = 'failureStrategy',
   DelegateSelectors = 'delegateSelectors',
-  ConditionalExecution = 'conditionalExecution'
+  ConditionalExecution = 'conditionalExecution',
+  LoopingStrategy = 'loopingStrategy'
 }
 
 export enum StepCommandsViews {
@@ -31,6 +34,8 @@ export enum StepCommandsViews {
 }
 
 export interface StepCommandsProps {
+  showHelpPanel?: () => void
+  helpPanelVisible?: boolean
   step: StepOrStepGroupOrTemplateStepData
   onChange?: (step: Partial<Values>) => void
   onUpdate: (step: Partial<Values>) => void
@@ -43,11 +48,14 @@ export interface StepCommandsProps {
   hasStepGroupAncestor?: boolean
   hiddenPanels?: AdvancedPanels[]
   withoutTabs?: boolean
-  stageType?: StageType
+  selectedStage?: StageElementWrapper<StageElementConfig>
   stepViewType?: StepViewType
   className?: string
   viewType?: StepCommandsViews
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
+  gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
+  isSaveAsTemplateEnabled?: boolean
 }
 
 export enum TabTypes {
@@ -64,4 +72,5 @@ export type Values = StepOrStepGroupOrTemplateStepData & {
   when?: StepWhenCondition
   failureStrategies?: FailureStrategyConfig[]
   template?: TemplateLinkConfig
+  strategy?: any
 }

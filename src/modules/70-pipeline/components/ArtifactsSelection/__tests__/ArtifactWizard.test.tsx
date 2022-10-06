@@ -6,15 +6,25 @@
  */
 
 import React from 'react'
-import { findAllByText, findByText, fireEvent, render } from '@testing-library/react'
-import { MultiTypeInputType } from '@wings-software/uicore'
+import userEvent from '@testing-library/user-event'
+import {
+  findAllByText,
+  findByText,
+  fireEvent,
+  getByPlaceholderText,
+  queryByAttribute,
+  render
+} from '@testing-library/react'
+import { AllowedTypesWithRunTime, MultiTypeInputType } from '@wings-software/uicore'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import ArtifactWizard from '../ArtifactWizard/ArtifactWizard'
 import type { ArtifactType, InitialArtifactDataType, TagTypes } from '../ArtifactInterface'
 import { DockerRegistryArtifact } from '../ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import connectorsData from './connectors_mock.json'
 import { GCRImagePath } from '../ArtifactRepository/ArtifactLastSteps/GCRImagePath/GCRImagePath'
+import { AmazonS3 } from '../ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
 
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 
@@ -36,7 +46,11 @@ jest.mock('services/cd-ng', () => ({
 const laststepProps = {
   name: 'Artifact Location',
   expressions: [''],
-  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
   context: 1,
   initialValues: {
     identifier: 'id',
@@ -49,6 +63,57 @@ const laststepProps = {
   artifactIdentifiers: [],
   selectedArtifact: 'DockerRegistry' as ArtifactType,
   selectedDeploymentType: ServiceDeploymentType.Kubernetes
+}
+
+const AmazsonS3LastStepProps = {
+  name: 'Artifact Location',
+  expressions: [''],
+  allowableTypes: [
+    MultiTypeInputType.FIXED,
+    MultiTypeInputType.RUNTIME,
+    MultiTypeInputType.EXPRESSION
+  ] as AllowedTypesWithRunTime[],
+  context: 1,
+  initialValues: {
+    identifier: '',
+    bucketName: '',
+    tagType: 'value' as TagTypes,
+    filePath: '',
+    region: ''
+  },
+  handleSubmit: jest.fn(),
+  artifactIdentifiers: [],
+  selectedArtifact: 'AmazonS3' as ArtifactType
+}
+
+const newConnectorStepProps = {
+  auth: {
+    identifier: CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
+    isEditMode: true,
+    setIsEditMode: jest.fn(),
+    accountId: 'accountId',
+    orgIdentifier: 'orgIdentifier',
+    projectIdentifier: 'projectIdentifier',
+    connectorInfo: undefined
+  },
+  delegate: {
+    name: 'delegate.DelegateselectionLabel',
+    isEditMode: true,
+    setIsEditMode: jest.fn(),
+    connectorInfo: undefined
+  },
+  connectivity: {
+    gitDetails: { repoIdentifier: 'repoIdentifier', branch: 'branch', getDefaultFromOtherRepo: true },
+    isEditMode: true,
+    setIsEditMode: jest.fn(),
+    connectorInfo: undefined
+  },
+  verify: {
+    name: 'connectors.stepThreeName',
+    connectorInfo: undefined,
+    isStep: true,
+    isLastStep: false
+  }
 }
 
 describe('Artifact WizardStep tests', () => {
@@ -69,6 +134,7 @@ describe('Artifact WizardStep tests', () => {
           selectedArtifact={'DockerRegistry'}
           changeArtifactType={jest.fn()}
           newConnectorView={false}
+          newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           lastSteps={<DockerRegistryArtifact {...laststepProps} key={'key'} />}
@@ -99,6 +165,7 @@ describe('Artifact WizardStep tests', () => {
           selectedArtifact={'DockerRegistry'}
           changeArtifactType={jest.fn()}
           newConnectorView={false}
+          newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
           lastSteps={<DockerRegistryArtifact {...laststepProps} key={'key'} />}
         />
@@ -128,8 +195,9 @@ describe('Artifact WizardStep tests', () => {
           selectedArtifact={'Gcr'}
           changeArtifactType={jest.fn()}
           newConnectorView={false}
+          newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
-          lastSteps={<DockerRegistryArtifact {...laststepProps} key={'key'} />}
+          lastSteps={<GCRImagePath {...laststepProps} key={'key'} />}
         />
       </TestWrapper>
     )
@@ -157,8 +225,9 @@ describe('Artifact WizardStep tests', () => {
           selectedArtifact={'DockerRegistry'}
           changeArtifactType={jest.fn()}
           newConnectorView={true}
+          newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
-          lastSteps={<GCRImagePath {...laststepProps} key={'key'} />}
+          lastSteps={<DockerRegistryArtifact {...laststepProps} key={'key'} />}
         />
       </TestWrapper>
     )
@@ -172,7 +241,6 @@ describe('Artifact WizardStep tests', () => {
 
     const GCRArtifactType = await findByText(container, 'connectors.GCR.name')
     expect(GCRArtifactType).toBeDefined()
-    fireEvent.click(GCRArtifactType)
 
     const continueButton = await findByText(container, 'continue')
     expect(continueButton).toBeDefined()
@@ -184,9 +252,8 @@ describe('Artifact WizardStep tests', () => {
     expect(newConnectorLabel).toBeDefined()
 
     fireEvent.click(newConnectorLabel)
-    const gcrHostname = await findByText(container, 'connectors.GCR.registryHostname')
-    expect(gcrHostname).toBeDefined()
-    fireEvent.click(gcrHostname)
+
+    expect(getByPlaceholderText(container, 'common.namePlaceholder')!).toBeDefined()
 
     expect(container).toMatchSnapshot()
   })
@@ -212,6 +279,7 @@ describe('Artifact WizardStep tests', () => {
           selectedArtifact={'DockerRegistry'}
           changeArtifactType={jest.fn()}
           newConnectorView={true}
+          newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
           lastSteps={<DockerRegistryArtifact {...laststepProps} key={'key'} />}
         />
@@ -271,6 +339,7 @@ describe('Artifact WizardStep tests', () => {
           selectedArtifact={'DockerRegistry'}
           changeArtifactType={jest.fn()}
           newConnectorView={true}
+          newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
           lastSteps={<DockerRegistryArtifact {...laststepProps} key={'key'} />}
         />
@@ -278,5 +347,61 @@ describe('Artifact WizardStep tests', () => {
     )
 
     expect(container).toMatchSnapshot()
+  })
+
+  test(`select AmazonS3 artifact type and validate last step`, async () => {
+    const initialValues = {
+      connectorId: 'AWSX',
+      submittedArtifact: 'AmazonS3'
+    }
+    const { container } = render(
+      <TestWrapper>
+        <ArtifactWizard
+          handleViewChange={jest.fn()}
+          artifactInitialValue={initialValues as InitialArtifactDataType}
+          types={['ArtifactoryRegistry', 'Ecr', 'AmazonS3']}
+          expressions={[]}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          showConnectorStep={true}
+          isReadonly={false}
+          labels={{
+            firstStepName: 'first step',
+            secondStepName: 'second step'
+          }}
+          selectedArtifact={'AmazonS3'}
+          changeArtifactType={jest.fn()}
+          newConnectorView={true}
+          newConnectorProps={newConnectorStepProps}
+          iconsProps={{ name: 'info' }}
+          lastSteps={<AmazonS3 {...AmazsonS3LastStepProps} key={'key'} />}
+        />
+      </TestWrapper>
+    )
+
+    // First step
+    const artifactLabel = await findByText(container, 'connectors.artifactRepository')
+    expect(artifactLabel).toBeDefined()
+    const AmazonS3ArtifactType = await findAllByText(container, 'pipeline.artifactsSelection.amazonS3Title')
+    expect(AmazonS3ArtifactType).toHaveLength(2)
+    const changeText = await findByText(container, 'Change')
+    fireEvent.click(changeText)
+    const ArtifactoryArtifactType = await findAllByText(container, 'connectors.artifactory.artifactoryLabel')
+    expect(ArtifactoryArtifactType).toBeDefined()
+    const ECRArtifactType = await findByText(container, 'connectors.ECR.name')
+    expect(ECRArtifactType).toBeDefined()
+    const continueButton = await findByText(container, 'continue')
+    expect(continueButton).toBeDefined()
+    userEvent.click(continueButton)
+    // Second step
+    const artifactConnectorLabel = await findByText(container, 'AWS connector')
+    expect(artifactConnectorLabel).toBeDefined()
+    const secondStepContinueButton = await findByText(container, 'continue')
+    expect(secondStepContinueButton).toBeDefined()
+    fireEvent.click(secondStepContinueButton)
+    // Last step
+    const bucketNameInput = queryByAttribute('name', container, 'bucketName')
+    expect(bucketNameInput).toBeDefined()
+    const filePathInput = queryByAttribute('name', container, 'filePath')
+    expect(filePathInput).toBeDefined()
   })
 })

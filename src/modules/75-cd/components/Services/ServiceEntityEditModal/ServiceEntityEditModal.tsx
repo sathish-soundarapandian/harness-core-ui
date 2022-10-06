@@ -7,9 +7,11 @@
 
 import React from 'react'
 import { PageSpinner } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
 import type { ServiceResponseDTO, ServiceYaml } from 'services/cd-ng'
 import ServiceConfigurationWrapper from '@cd/components/Services/ServiceStudio/ServiceConfigWrapper/ServiceConfigWrapper'
 import { ServiceContextProvider } from '@cd/context/ServiceContext'
+import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 interface ServiceEntityEditModalProps {
   onCloseModal: () => void
@@ -17,13 +19,19 @@ interface ServiceEntityEditModalProps {
   isServiceCreateModalView: boolean
   serviceResponse?: ServiceResponseDTO
   isLoading?: boolean
+  serviceCacheKey?: string
+  selectedDeploymentType?: ServiceDeploymentType
+  gitOpsEnabled?: boolean
 }
 function ServiceEntityEditModal({
   isServiceCreateModalView,
   onServiceCreate,
   onCloseModal,
   serviceResponse,
-  isLoading
+  isLoading,
+  serviceCacheKey,
+  selectedDeploymentType,
+  gitOpsEnabled
 }: ServiceEntityEditModalProps): React.ReactElement {
   if (isLoading) {
     return (
@@ -41,6 +49,9 @@ function ServiceEntityEditModal({
       onServiceCreate={onServiceCreate}
       isServiceEntityPage={true}
       isServiceCreateModalView={isServiceCreateModalView}
+      serviceCacheKey={defaultTo(serviceCacheKey, '')}
+      selectedDeploymentType={selectedDeploymentType as ServiceDeploymentType}
+      gitOpsEnabled={defaultTo(gitOpsEnabled, false)}
     >
       <ServiceConfigurationWrapper />
     </ServiceContextProvider>

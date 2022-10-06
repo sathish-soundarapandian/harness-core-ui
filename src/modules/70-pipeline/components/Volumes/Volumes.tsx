@@ -13,7 +13,9 @@ import {
   Container,
   MultiTypeInputType,
   Layout,
-  getMultiTypeFromValue
+  getMultiTypeFromValue,
+  AllowedTypesWithRunTime,
+  AllowedTypes
 } from '@wings-software/uicore'
 import { get } from 'lodash-es'
 import { Color, FontVariation } from '@harness/design-system'
@@ -35,7 +37,7 @@ interface VolumesPropsInterface {
   name: string
   expressions?: string[]
   disabled?: boolean
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
 }
 
 const emptyRow = { mountPath: '', type: '' }
@@ -152,11 +154,11 @@ const renderFields = ({
   getString: UseStringsReturn['getString']
   index: number
   expressions?: string[]
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   disabled?: boolean
 }): JSX.Element | null => {
   const additionalFields = getAdditionalTextFields(type, getString) || []
-  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+  const allowableTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION] as AllowedTypesWithRunTime[]
   return (
     <>
       {additionalFields.map((field, i) => {
@@ -221,7 +223,7 @@ function VolumeRow({
   index: number
   getString: UseStringsReturn['getString']
   expressions?: string[]
-  allowableTypes?: MultiTypeInputType[]
+  allowableTypes?: AllowedTypes
   disabled?: boolean
 }): JSX.Element {
   const { values = {} } = formik

@@ -14,15 +14,22 @@ import type { ResourceHandlerTableData } from '../ResourceHandlerTable/ResourceH
 interface StaticResourceRendererProps<T extends ResourceHandlerTableData> {
   data: T[]
   columns: Column<T>[]
-  onResourceSelectionChange: (resourceType: ResourceType, isAdd: boolean, identifiers?: string[] | undefined) => void
+  onResourceSelectionChange: (
+    resourceType: ResourceType,
+    isAdd: boolean,
+    identifiers?: string[] | undefined,
+    attributeFilters?: string[]
+  ) => void
   resourceType: ResourceType
+  isAtrributeFilterEnabled?: boolean
 }
 
 const StaticResourceRenderer = <T extends ResourceHandlerTableData>({
   data,
   columns,
   onResourceSelectionChange,
-  resourceType
+  resourceType,
+  isAtrributeFilterEnabled = false
 }: StaticResourceRendererProps<T>): React.ReactElement => {
   const staticResourceColumns: Column<T>[] = useMemo(
     () => [
@@ -36,17 +43,21 @@ const StaticResourceRenderer = <T extends ResourceHandlerTableData>({
         Cell: ({ row }: CellProps<T>) => {
           return (
             <Button
-              icon="remove-minus"
+              icon="main-trash"
               minimal
               onClick={() => {
-                onResourceSelectionChange(resourceType, false, [row.original.identifier])
+                // This is base renderer class for both, rendering attributes & rendering static identifiers.
+                // Same underlying handler works for both and hence the check.
+                const rowIdentifier = isAtrributeFilterEnabled ? undefined : [row.original.identifier]
+                const rowAttribute = isAtrributeFilterEnabled ? [row.original.identifier] : undefined
+                onResourceSelectionChange(resourceType, false, rowIdentifier, rowAttribute)
               }}
             />
           )
         }
       }
     ],
-    [onResourceSelectionChange, resourceType]
+    [columns, isAtrributeFilterEnabled, onResourceSelectionChange, resourceType]
   )
 
   return <TableV2<T> columns={staticResourceColumns} data={data} minimal hideHeaders={true} />

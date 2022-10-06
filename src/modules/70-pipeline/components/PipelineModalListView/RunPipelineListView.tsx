@@ -28,7 +28,7 @@ type CustomColumn<T extends Record<string, any>> = Column<T> & {
   reload?: () => Promise<void>
 }
 
-interface PipelineDTO extends PMSPipelineSummaryResponse {
+export interface PipelineDTO extends PMSPipelineSummaryResponse {
   admin?: string
   collaborators?: string
   status?: string
@@ -51,7 +51,8 @@ export default function RunPipelineListView({ data, refetch, gotoPage }: Pipelin
 
   const history = useHistory()
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const routeToPipelinesPage = (pipeline: PipelineDTO): void => {
     history.push(

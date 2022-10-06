@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import set from 'lodash-es/set'
 import {
@@ -21,7 +21,6 @@ import {
   SelectOption,
   Tag
 } from '@wings-software/uicore'
-import * as Yup from 'yup'
 import type { FormikProps, FormikHelpers } from 'formik'
 import {
   DelegateSizeDetails,
@@ -42,12 +41,15 @@ import {
   FormikForAddDescriptionandKVTags
 } from '@common/components/AddDescriptionAndTags/AddDescriptionAndTags'
 
-import { DelegateSize } from '@delegates/constants'
+import { DelegateSize, isHelmDelegateEnabled } from '@delegates/constants'
 import { useCreateTokenModal } from '@delegates/components/DelegateTokens/modals/useCreateTokenModal'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import SelectDelegateType, { FormikForSelectDelegateType } from './components/SelectDelegateType'
 import DelegateSizes from '../../components/DelegateSizes/DelegateSizes'
-
+import { DelegateType, k8sPermissionType } from './DelegateSetupStep.types'
+import { validateDelegateSetupDetails } from './DelegateSetupStep.utils'
 import css from './DelegateSetupStep.module.scss'
 
 interface DelegateSetupStepProps {
@@ -60,15 +62,6 @@ export interface K8sDelegateWizardData {
   name: string
   replicas?: number
 }
-
-enum k8sPermissionType {
-  CLUSTER_ADMIN = 'CLUSTER_ADMIN',
-  CLUSTER_VIEWER = 'CLUSTER_VIEWER',
-  NAMESPACE_ADMIN = 'NAMESPACE_ADMIN'
-}
-
-//this regex is retrieved from kubernetes
-const delegateNameRegex = /^[a-z]([-a-z0-9]*[a-z])?(\.[a-z0-9]([-a-z0-9]*[a-z])?)*$/g
 
 const formatProfileList = (data: any): Array<SelectOption> => {
   const profiles: Array<DelegateProfile> = data?.resource?.response
@@ -116,9 +109,11 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
       name: '',
       identifier: '',
       description: '',
+      delegateType: '',
       size: DelegateSize.LAPTOP,
       sesssionIdentifier: '',
       tokenName: '',
+      runAsRoot: true,
       k8sConfigDetails: {
         k8sPermissionType: k8sPermissionType.CLUSTER_ADMIN,
         namespace: ''
@@ -128,7 +123,8 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
-
+  const IS_HELM_DELEGATE_ENABLED: boolean = isHelmDelegateEnabled(true)
+  const { USE_IMMUTABLE_DELEGATE } = useFeatureFlags()
   const { mutate: createKubernetesYaml } = useValidateKubernetesYaml({
     queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier }
   })
@@ -179,8 +175,14 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
   )
   const { trackEvent } = useTelemetry()
 
+  const validateDelegateSetupSchema = validateDelegateSetupDetails(
+    getString,
+    selectedPermission,
+    IS_HELM_DELEGATE_ENABLED
+  )
+
   const onSubmit = async (values: DelegateSetupDetails, formikActions: FormikHelpers<DelegateSetupDetails>) => {
-    const createParams = { ...values }
+    const createParams = validateDelegateSetupSchema.cast(values) as DelegateSetupDetails
     if (createParams.tags) {
       const tagsArray = Object.keys(values.tags || {})
       set(createParams, 'tags', tagsArray)
@@ -191,7 +193,12 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
     if (orgIdentifier) {
       set(createParams, 'orgIdentifier', orgIdentifier)
     }
-    set(createParams, 'delegateType', 'KUBERNETES')
+
+    if (createParams.delegateType) {
+      set(createParams, 'delegateType', values.delegateType)
+    } else {
+      set(createParams, 'delegateType', DelegateType.KUBERNETES)
+    }
 
     trackEvent(DelegateActions.SetupDelegate, {
       category: Category.DELEGATE,
@@ -229,7 +236,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
       formikActions.setFieldError('name', getString('delegates.delegateNameNotUnique'))
     }
   }
-
+  const [rootAccess, setRootAccess] = useState(true)
   const delegateTokenOptions = useMemo(() => formatTokenOptions(tokensResponse), [tokensResponse])
 
   return (
@@ -242,22 +249,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
             onSubmit(values, formikActions)
           }}
           formName="delegateSetupStepForm"
-          validationSchema={Yup.object().shape({
-            name: Yup.string()
-              .trim()
-              .required(getString('delegate.delegateNameRequired'))
-              .max(63)
-              .matches(delegateNameRegex, getString('delegates.delegateNameRegexIssue')),
-            size: Yup.string().trim().required(getString('delegate.delegateSizeRequired')),
-            k8sConfigDetails: Yup.object().shape({
-              k8sPermissionType: Yup.string().trim().required(getString('delegates.permissionRequired')),
-              namespace:
-                selectedPermission === k8sPermissionType.NAMESPACE_ADMIN
-                  ? Yup.string().trim().required(getString('delegates.delegateNamespaceRequired'))
-                  : Yup.string().trim()
-            }),
-            tokenName: Yup.string().trim().required()
-          })}
+          validationSchema={validateDelegateSetupSchema}
         >
           {(formikProps: FormikProps<DelegateSetupDetails>) => {
             const selectors: any = getProfile(data, formikProps.values.delegateConfigurationId)
@@ -284,7 +276,12 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                           }}
                         />
                       )}
-                      {profileOptions?.length > 0 && (
+                      {IS_HELM_DELEGATE_ENABLED && (
+                        <SelectDelegateType
+                          formikProps={formikProps as unknown as FormikProps<FormikForSelectDelegateType>}
+                        />
+                      )}
+                      {!USE_IMMUTABLE_DELEGATE && profileOptions?.length > 0 && (
                         <div className={`${css.formGroup} ${css.profileSelect}`}>
                           <FormInput.Select
                             items={profileOptions}
@@ -294,7 +291,7 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                         </div>
                       )}
 
-                      {formikProps.values.delegateConfigurationId && selectors && (
+                      {!USE_IMMUTABLE_DELEGATE && formikProps.values.delegateConfigurationId && selectors && (
                         <Container className={css.profileSelectors}>
                           <Text>{getString('delegate.tagsFromDelegateConfig')}</Text>
                           <div className={css.profileSelectorsItemsContainer}>
@@ -323,6 +320,15 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                           text={getString('add')}
                         />
                       </Layout.Horizontal>
+                      {USE_IMMUTABLE_DELEGATE ? (
+                        <Layout.Horizontal className={css.runAsRootCheckbox}>
+                          <FormInput.CheckBox
+                            name="runAsRoot"
+                            label={getString('delegates.runAsRoot')}
+                            onChange={() => setRootAccess(!rootAccess)}
+                          />
+                        </Layout.Horizontal>
+                      ) : null}
                     </Layout.Vertical>
                     <Layout.Vertical className={css.rightPanel}>
                       <div className={css.permissionsTitle}>{getString('delegates.delegatePermissions.title')}</div>

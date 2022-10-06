@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { MutateMethod } from 'restful-react'
-import { defaultTo, isEmpty, omit } from 'lodash-es'
+import { defaultTo, isEmpty, noop, omit } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 
 import { useToaster } from '@harness/uicore'
@@ -26,7 +26,7 @@ import { UseSaveSuccessResponse, useSaveToGitDialog } from '@common/modals/SaveT
 import { getFormattedErrors } from '@pipeline/utils/runPipelineUtils'
 import type { InputSetGitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import type { SaveToGitFormV2Interface } from '@common/components/SaveToGitFormV2/SaveToGitFormV2'
+import type { GitData } from '@common/modals/GitDiffEditor/useGitDiffEditorDialog'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { clearNullUndefined } from '@pipeline/utils/inputSetUtils'
@@ -42,14 +42,15 @@ const getUpdatedGitDetails = (
   isEdit: boolean,
   gitDetails: SaveToGitFormInterface | undefined,
   lastObjectId: string,
-  initialGitDetails: EntityGitDetails
+  initialGitDetails: EntityGitDetails,
+  conflictCommitId?: string
 ): GetUpdatedGitDetailsReturnType => {
   let updatedGitDetails: GetUpdatedGitDetailsReturnType = {}
   if (gitDetails) {
     updatedGitDetails = { ...gitDetails }
     if (isEdit) {
       updatedGitDetails['lastObjectId'] = lastObjectId
-      updatedGitDetails['lastCommitId'] = initialGitDetails.commitId
+      updatedGitDetails['lastCommitId'] = conflictCommitId || initialGitDetails.commitId
     }
     if (gitDetails.isNewBranch) {
       updatedGitDetails['baseBranch'] = initialGitDetails.branch
@@ -77,10 +78,18 @@ interface InputSetInfo {
   inputSetResponse: ResponseInputSetResponse | null
   isEdit: boolean
   setFormErrors: React.Dispatch<React.SetStateAction<Record<string, unknown>>>
+  onCreateSuccess?: (response: ResponseInputSetResponse) => void
 }
 
 export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetReturnType {
-  const { createInputSet, updateInputSet, inputSetResponse, isEdit, setFormErrors } = inputSetInfo
+  const {
+    createInputSet,
+    updateInputSet,
+    inputSetResponse,
+    isEdit,
+    setFormErrors,
+    onCreateSuccess = noop
+  } = inputSetInfo
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -100,17 +109,26 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
     storeType
   })
 
-  const { isGitSyncEnabled } = React.useContext(AppStoreContext)
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = React.useContext(AppStoreContext)
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
 
   const createUpdateInputSet = React.useCallback(
     async (
       inputSetObj: InputSetDTO,
       gitDetails?: SaveToGitFormInterface,
-      objectId = ''
+      objectId = '',
+      onCreateInputSetSuccess: (response: ResponseInputSetResponse) => void = noop,
+      conflictCommitId?: string
     ): CreateUpdateInputSetsReturnType => {
       let response: ResponseInputSetResponse | null = null
       try {
-        const updatedGitDetails = getUpdatedGitDetails(isEdit, gitDetails, objectId, initialGitDetails)
+        const updatedGitDetails = getUpdatedGitDetails(
+          isEdit,
+          gitDetails,
+          objectId,
+          initialGitDetails,
+          conflictCommitId
+        )
         if (isEdit) {
           if (inputSetObj.identifier) {
             response = await updateInputSet(yamlStringify({ inputSet: clearNullUndefined(inputSetObj) }), {
@@ -122,8 +140,12 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
                 orgIdentifier,
                 pipelineIdentifier,
                 projectIdentifier,
-                pipelineRepoID: repoIdentifier,
-                pipelineBranch: branch,
+                ...(isGitSyncEnabled
+                  ? {
+                      pipelineRepoID: repoIdentifier,
+                      pipelineBranch: branch
+                    }
+                  : {}),
                 ...(initialStoreMetadata.storeType === StoreType.REMOTE ? initialStoreMetadata : {}),
                 ...updatedGitDetails
               }
@@ -138,12 +160,17 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
               orgIdentifier,
               pipelineIdentifier,
               projectIdentifier,
-              pipelineRepoID: repoIdentifier,
-              pipelineBranch: branch,
+              ...(isGitSyncEnabled
+                ? {
+                    pipelineRepoID: repoIdentifier,
+                    pipelineBranch: branch
+                  }
+                : {}),
               ...(initialStoreMetadata.storeType === StoreType.REMOTE ? initialStoreMetadata : {}),
               ...updatedGitDetails
             }
           })
+          onCreateInputSetSuccess(response)
         }
         if (!isGitSyncEnabled && initialStoreMetadata.storeType !== StoreType.REMOTE) {
           showSuccess(getString('inputSets.inputSetSaved'))
@@ -162,7 +189,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
         }
       }
       return {
-        status: response?.status, // nextCallback can be added if required
+        status: response?.status, // nextCallback can be added if required,        response,
         nextCallback: () => history.goBack()
       }
     },
@@ -187,11 +214,14 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
   )
 
   const { openSaveToGitDialog } = useSaveToGitDialog<SaveInputSetDTO>({
-    onSuccess: (
-      gitData: SaveToGitFormInterface & SaveToGitFormV2Interface,
-      payload?: SaveInputSetDTO,
-      objectId?: string
-    ): Promise<UseSaveSuccessResponse> => createUpdateInputSet(payload?.inputSet || savedInputSetObj, gitData, objectId)
+    onSuccess: (gitData: GitData, payload?: SaveInputSetDTO, objectId?: string): Promise<UseSaveSuccessResponse> =>
+      createUpdateInputSet(
+        payload?.inputSet || savedInputSetObj,
+        gitData,
+        objectId,
+        onCreateSuccess,
+        gitData?.resolvedConflictCommitId
+      )
   })
 
   const handleSubmit = React.useCallback(
@@ -203,8 +233,7 @@ export function useSaveInputSet(inputSetInfo: InputSetInfo): UseSaveInputSetRetu
         'connectorRef',
         'repoName',
         'filePath',
-        'storeType',
-        'remoteType'
+        'storeType'
       )
       setSavedInputSetObj(inputSetObj)
       setInitialGitDetails(defaultTo(isEdit ? inputSetResponse?.data?.gitDetails : gitDetails, {}))

@@ -11,7 +11,7 @@ import debounce from 'p-debounce'
 
 import { validateJSONWithSchema } from '@common/utils/YamlUtils'
 import { useDeepCompareEffect } from '@common/hooks'
-import type { PipelineInfoConfig, ResponseJsonNode } from 'services/cd-ng'
+import type { PipelineInfoConfig, ResponseJsonNode } from 'services/pipeline-ng'
 
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { usePipelineSchema } from '../PipelineSchema/PipelineSchemaContext'

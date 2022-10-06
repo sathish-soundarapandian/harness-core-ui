@@ -6,7 +6,9 @@
  */
 
 import React from 'react'
+import type { GetDataError } from 'restful-react'
 import { render, act, fireEvent } from '@testing-library/react'
+import type { Failure } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
@@ -29,13 +31,12 @@ jest.mock('services/pipeline-ng', () => ({
   )
 }))
 
+const updateConnector = jest.fn()
+const createConnector = jest.fn()
+const cancelRepositoriesFetch = jest.fn()
+let repoFetchError: GetDataError<Failure | Error> | null = null
 jest.mock('services/cd-ng', () => ({
   useProvisionResourcesForCI: jest.fn().mockImplementation(() =>
-    Promise.resolve({
-      status: 'SUCCESS'
-    })
-  ),
-  useGetDelegateInstallStatus: jest.fn().mockImplementation(() =>
     Promise.resolve({
       status: 'SUCCESS'
     })
@@ -46,7 +47,32 @@ jest.mock('services/cd-ng', () => ({
     })
   ),
   useGetListOfAllReposByRefConnector: jest.fn().mockImplementation(() => {
-    return { data: { data: repos, status: 'SUCCESS' }, refetch: jest.fn(), error: null, loading: false }
+    return {
+      data: { data: repos, status: 'SUCCESS' },
+      refetch: jest.fn(),
+      error: repoFetchError,
+      loading: false,
+      cancel: cancelRepositoriesFetch
+    }
+  }),
+  useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
+  useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector }))
+}))
+
+const mockGetCallFunction = jest.fn()
+jest.mock('services/portal', () => ({
+  useGetDelegateGroupsNGV2: jest.fn().mockImplementation(args => {
+    mockGetCallFunction(args)
+    return {
+      data: {
+        resource: {
+          delegateGroupDetails: [{ delegateGroupIdentifier: '_harness_kubernetes_delegate', activelyConnected: false }]
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
   })
 }))
 
@@ -68,7 +94,7 @@ describe('Test SelectRepository component', () => {
       'div[class*="FormError--errorDiv"][data-name="repository"]'
     )
     expect(repositoryValidationError).toBeInTheDocument()
-    expect(getByText('ci.getStartedWithCI.plsChoose')).toBeTruthy()
+    expect(getByText('common.getStarted.plsChoose')).toBeTruthy()
     const testRepoName = getFullRepoName(repos[1])
     const testRepository = getByText(testRepoName)
     expect(testRepository).toBeInTheDocument()
@@ -78,7 +104,7 @@ describe('Test SelectRepository component', () => {
     expect(repositoryValidationError).not.toBeInTheDocument()
 
     const repositorySearch = container.querySelector(
-      'input[placeholder="ci.getStartedWithCI.searchRepo"]'
+      'input[placeholder="common.getStarted.searchRepo"]'
     ) as HTMLInputElement
     expect(repositorySearch).toBeTruthy()
     await act(async () => {
@@ -105,5 +131,37 @@ describe('Test SelectRepository component', () => {
       fireEvent.click(createPipelineBtn)
     })
     expect(routesToPipelineStudio).not.toHaveBeenCalled()
+  })
+
+  test('Should show error for api failure', async () => {
+    repoFetchError = {
+      message: 'Failed to fetch',
+      data: { responseMessages: [{ level: 'ERROR', message: 'Failed to fetch' }] } as any,
+      status: 502
+    }
+    const { getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectRepository} />
+      </TestWrapper>
+    )
+    expect(getByText('Failed to fetch')).toBeInTheDocument()
+    expect(routesToPipelineStudio).not.toHaveBeenCalled()
+  })
+
+  // eslint-disable-next-line jest/no-disabled-tests
+  test.skip('Should show Clone codebase switch on by default', async () => {
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectRepository} />
+      </TestWrapper>
+    )
+
+    const cloneCodebaseToggle = container.querySelector('input[data-id="enable-clone-codebase-switch"]') as HTMLElement
+    expect(cloneCodebaseToggle).toBeChecked()
+    fireEvent.click(cloneCodebaseToggle)
+    expect(cloneCodebaseToggle).not.toBeChecked()
+    expect(cancelRepositoriesFetch).toBeCalled()
+    const calloutElement = getByText('ci.getStartedWithCI.createPipelineWithOtherOption')
+    expect(calloutElement).toBeInTheDocument()
   })
 })

@@ -10,10 +10,8 @@ sideNav:
   noDashboard: 'No custom dashboard found'
 modules:
   harness: 'By Harness'
-  cgDeployments: 'CG Deployments'
 homePage:
   folders: 'Folders'
-  searchPlaceholder: 'Search by name'
   noFolderAvailable: 'No Folders available'
   noTags: 'No custom tags available'
   noDashboardsAvailable: 'No dashboards available'
@@ -56,10 +54,14 @@ createFolder:
   folderSubmitFail: 'Folder creation failed, Please try again.'
 updateFolder:
   folderUpdateFail: 'Failed to update folder, Please try again.'
+deleteDashboard:
+  success: 'Successfully deleted dashboard'
+  failed: 'Failed to delete dashboard'
 deleteFolder:
   confirmDeleteTitle: 'Delete {{name}} folder'
   confirmDeleteText: 'Deleting the folder {{name}} would mean that you are also deleting all the dashboards associated with it. Are you sure you want to delete the Folder?'
   success: 'Successfully deleted folder'
+  failed: 'Failed to delete folder'
 resourceModal:
   folders: 'Folder Name'
   folderDetail: 'Folder Dashboards'
@@ -73,4 +75,9 @@ getStarted:
   subTextVideo3: 'Learn how to send dashboards in a variety of formats to email, FTP and other destinations'
 dashboardList:
   headerViewCount: 'View Count'
-  headerFavoriteCount: 'Favorite Count'
+dashboardSortingOptions:
+  default: 'Select Option'
+  recentlyViewed: 'Recently Viewed'
+  recentlyCreated: 'Recently Created'
+  mostViewed: 'Most Viewed'
+  mostLiked: 'Most Liked'

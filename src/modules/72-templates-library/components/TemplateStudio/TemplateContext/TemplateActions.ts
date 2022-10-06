@@ -10,32 +10,32 @@ import type { Failure } from 'services/cd-ng'
 import type {
   EntityGitDetails,
   EntityValidityDetails,
+  Error as TemplateError,
   ErrorNodeSummary,
   NGTemplateInfoConfig
 } from 'services/template-ng'
 import type { TemplateViewData } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateReducer'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
 export enum TemplateActions {
   DBInitialize = 'DBInitialize',
   Initialize = 'Initialize',
   Fetching = 'Fetching',
-  Loading = 'Loading',
   UpdateTemplateView = 'UpdateTemplateView',
   UpdateTemplate = 'UpdateTemplate',
   SetYamlHandler = 'SetYamlHandler',
   Success = 'Success',
-  Error = 'Error'
+  Error = 'Error',
+  IntermittentLoading = 'IntermittentLoading'
 }
 
 export enum DrawerTypes {
-  AddStep = 'AddCommand',
   TemplateVariables = 'TemplateVariables',
   TemplateInputs = 'TemplateInputs'
 }
 
 export const DrawerSizes: Record<DrawerTypes, React.CSSProperties['width']> = {
-  [DrawerTypes.AddStep]: 700,
   [DrawerTypes.TemplateVariables]: 876,
   [DrawerTypes.TemplateInputs]: 876
 }
@@ -52,11 +52,14 @@ export interface ActionResponse {
   lastPublishedVersion?: string
   versions?: string[]
   isLoading?: boolean
+  isIntermittentLoading?: boolean
   gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
   entityValidityDetails?: EntityValidityDetails
   templateYaml?: string
   templateError?: GetDataError<Failure | Error> | null
   templateInputsErrorNodeSummary?: ErrorNodeSummary
+  templateYamlError?: TemplateError
 }
 
 export interface ActionReturnType {
@@ -66,7 +69,6 @@ export interface ActionReturnType {
 
 const dbInitialized = (): ActionReturnType => ({ type: TemplateActions.DBInitialize })
 const initialized = (): ActionReturnType => ({ type: TemplateActions.Initialize })
-const loading = (response: ActionResponse): ActionReturnType => ({ type: TemplateActions.Loading, response })
 const updateTemplateView = (response: ActionResponse): ActionReturnType => ({
   type: TemplateActions.UpdateTemplateView,
   response
@@ -79,15 +81,19 @@ const updating = (): ActionReturnType => ({ type: TemplateActions.UpdateTemplate
 const fetching = (): ActionReturnType => ({ type: TemplateActions.Fetching })
 const success = (response: ActionResponse): ActionReturnType => ({ type: TemplateActions.Success, response })
 const error = (response: ActionResponse): ActionReturnType => ({ type: TemplateActions.Error, response })
+const setIntermittentLoading = (response: ActionResponse): ActionReturnType => ({
+  type: TemplateActions.IntermittentLoading,
+  response
+})
 
 export const TemplateContextActions = {
   dbInitialized,
   initialized,
-  loading,
   updating,
   fetching,
   updateTemplateView,
   setYamlHandler,
+  setIntermittentLoading,
   success,
   error
 }

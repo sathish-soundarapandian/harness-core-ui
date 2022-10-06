@@ -8,15 +8,20 @@
 import produce from 'immer'
 import { isEmpty, set, get } from 'lodash-es'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { StageType } from '@pipeline/utils/stageHelpers'
-import type { StageElementConfig, StageElementWrapperConfig, StepElementConfig } from 'services/cd-ng'
-import type { StepPalleteModuleInfo } from 'services/pipeline-ng'
+import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
+import type {
+  StepPalleteModuleInfo,
+  StageElementConfig,
+  StageElementWrapperConfig,
+  StepElementConfig
+} from 'services/pipeline-ng'
 import {
   StepOrStepGroupOrTemplateStepData,
   TabTypes,
   Values
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { sanitize } from '@common/utils/JSONUtils'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { DeploymentStageElementConfigWrapper } from './pipelineTypes'
 
 export enum StepMode {
@@ -64,14 +69,22 @@ export function getStepPaletteModuleInfosFromStage(
   initialCategory?: string,
   stages?: StageElementWrapperConfig[]
 ): StepPalleteModuleInfo[] {
-  let deploymentType = get(stage, 'spec.serviceConfig.serviceDefinition.type', undefined)
+  let deploymentType = get(
+    stage,
+    'spec.serviceConfig.serviceDefinition.type',
+    get(stage, `spec.deploymentType`, undefined)
+  )
   // When stage is propagated from other previous stage
   const propagateFromStageId = get(stage, 'spec.serviceConfig.useFromStage.stage', undefined)
   if (!deploymentType && stages?.length && propagateFromStageId) {
     const propagateFromStage = stages.find(
       currStage => (currStage as DeploymentStageElementConfigWrapper).stage.identifier === propagateFromStageId
     ) as DeploymentStageElementConfigWrapper
-    deploymentType = propagateFromStage?.stage.spec?.serviceConfig?.serviceDefinition?.type
+    deploymentType = get(
+      propagateFromStage?.stage,
+      'spec.serviceConfig.serviceDefinition.type',
+      get(propagateFromStage?.stage, `spec.deploymentType`, undefined)
+    )
   }
 
   let category = initialCategory
@@ -84,6 +97,15 @@ export function getStepPaletteModuleInfosFromStage(
       break
     case 'ServerlessAwsLambda':
       category = 'ServerlessAwsLambda'
+      break
+    case 'AzureWebApp':
+      category = 'AzureWebApp'
+      break
+    case ServiceDeploymentType.ECS:
+      category = 'ECS'
+      break
+    case ServiceDeploymentType.CustomDeployment:
+      category = 'CustomDeployment'
       break
   }
   switch (stageType) {
@@ -120,11 +142,47 @@ export function getStepPaletteModuleInfosFromStage(
         },
         {
           module: 'cd',
+          category: 'Builds',
+          shouldShowCommonSteps: false
+        },
+        {
+          module: 'cd',
           category: 'Provisioner',
           shouldShowCommonSteps: false
         }
       ]
-
+    case StageType.DEPLOY:
+      if (deploymentType === ServiceDeploymentType.CustomDeployment) {
+        return [
+          {
+            module: 'cd',
+            category: category,
+            shouldShowCommonSteps: true
+          },
+          {
+            module: 'cd',
+            category: 'Provisioner',
+            shouldShowCommonSteps: false
+          }
+        ]
+      } else {
+        return [
+          {
+            module: 'cd',
+            category: category,
+            shouldShowCommonSteps: true
+          },
+          {
+            module: 'cd',
+            category: 'Builds',
+            shouldShowCommonSteps: false
+          },
+          {
+            module: 'cv',
+            shouldShowCommonSteps: false
+          }
+        ]
+      }
     default:
       return [
         {
@@ -168,6 +226,11 @@ export function getStepDataFromValues(
       } else if (node.spec?.delegateSelectors) {
         delete node.spec.delegateSelectors
       }
+      if (!isEmpty(item.strategy)) {
+        node.strategy = item.strategy
+      } else if (node.strategy) {
+        delete node.strategy
+      }
     }
     // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
     if (Array.isArray(item.failureStrategies) && !isEmpty(item.failureStrategies)) {
@@ -178,4 +241,12 @@ export function getStepDataFromValues(
   })
   sanitize(processNode, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
   return processNode
+}
+
+const TEMPLATIZED_VIEWS = [StepViewType.DeploymentForm, StepViewType.InputSet, StepViewType.TemplateUsage]
+
+export function isTemplatizedView(
+  stepViewType?: StepViewType
+): stepViewType is StepViewType.DeploymentForm | StepViewType.InputSet | StepViewType.TemplateUsage {
+  return !!stepViewType && TEMPLATIZED_VIEWS.includes(stepViewType)
 }

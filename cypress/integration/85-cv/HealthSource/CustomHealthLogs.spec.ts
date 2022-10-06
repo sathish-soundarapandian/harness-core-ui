@@ -1,6 +1,8 @@
 import {
+  countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  validations
 } from '../../../support/85-cv/monitoredService/constants'
 import {
   baseURLCall,
@@ -35,7 +37,7 @@ function populateMetricValues() {
   cy.contains('span', 'Submit').click({ force: true })
   cy.contains('span', 'Log Message JSON Path is reqired.').should('be.visible')
   cy.contains('span', 'Timestamp JSON Path is required.').should('be.visible')
-  cy.contains('span', 'Service Instance Identifier is required.').should('be.visible')
+  cy.contains('span', validations.serviceInstanceIdentifier).should('be.visible')
 
   cy.contains('span', 'Select path for log message').click({ force: true })
   cy.wait(1000)
@@ -57,12 +59,9 @@ describe('Configure Datadog health source', () => {
     })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
-    cy.intercept(
-      'GET',
-      '/cv/api/monitored-service/count-of-services?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1',
-      { allServicesCount: 1, servicesAtRiskCount: 0 }
-    )
+    cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
     cy.visitChangeIntelligence()
+    cy.visitSRMMonitoredServicePage()
   })
 
   it('Add new Custom HealthSource ', () => {

@@ -14,10 +14,12 @@ import common from '@common/strings/strings.en.yaml'
 import notifications from '@notifications/strings/strings.en.yaml'
 import auditTrail from '@audit-trail/strings/strings.en.yaml'
 import rbac from '@rbac/strings/strings.en.yaml'
+import defaultSettings from '@default-settings/strings/strings.en.yaml'
 import governance from '@governance/strings/strings.en.yaml'
-import sto from '@sto/strings/strings.en.yaml'
+import et from '@et/strings/strings.en.yaml'
 import delegates from '@delegates/strings/strings.en.yaml'
 import secrets from '@secrets/strings/strings.en.yaml'
+import filestore from '@filestore/strings/strings.en.yaml'
 import variables from '@variables/strings/strings.en.yaml'
 import authSettings from '@auth-settings/strings/strings.en.yaml'
 import connectors from '@connectors/strings/strings.en.yaml'
@@ -25,7 +27,9 @@ import userProfile from '@user-profile/strings/strings.en.yaml'
 import gitsync from '@gitsync/strings/strings.en.yaml'
 import dashboards from '@dashboards/strings/strings.en.yaml'
 import projectsOrgs from '@projects-orgs/strings/strings.en.yaml'
+import scm from '@scm/strings/strings.en.yaml'
 import pipeline from '@pipeline/strings/strings.en.yaml'
+import freezeWindows from '@freeze-windows/strings/strings.en.yaml'
 import templatesLibrary from '@templates-library/strings/strings.en.yaml'
 import triggers from '@triggers/strings/strings.en.yaml'
 import cd from '@cd/strings/strings.en.yaml'
@@ -43,10 +47,12 @@ export default function languageLoader() {
     notifications,
     auditTrail,
     rbac,
+    defaultSettings,
     governance,
-    sto,
+    et,
     delegates,
     secrets,
+    filestore,
     variables,
     authSettings,
     connectors,
@@ -54,7 +60,9 @@ export default function languageLoader() {
     gitsync,
     dashboards,
     projectsOrgs,
+    scm,
     pipeline,
+    freezeWindows,
     templatesLibrary,
     triggers,
     cd,

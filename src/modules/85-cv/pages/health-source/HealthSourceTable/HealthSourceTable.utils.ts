@@ -22,10 +22,12 @@ export const getTypeByFeature = (feature: string, getString: UseStringsReturn['g
     case Connectors.DYNATRACE:
     case HealthSourceTypes.StackdriverMetrics:
     case HealthSourceTypes.DatadogMetrics:
+    case HealthSourceTypes.SplunkMetric:
       return getString('pipeline.verification.analysisTab.metrics')
     case HealthSourceTypes.StackdriverLog:
     case HealthSourceTypes.DatadogLog:
     case HealthSourceTypes.Splunk:
+    case HealthSourceTypes.Elk:
       return getString('pipeline.verification.analysisTab.logs')
     default:
       return getString('common.repo_provider.customLabel')
@@ -71,7 +73,10 @@ export const getIconBySourceType = (type: string): IconName => {
       return 'service-datadog'
     case 'SPLUNK':
     case 'Splunk':
+    case 'SplunkMetric':
       return 'service-splunk'
+    case 'ELKLog':
+      return 'elk'
     case 'PagerDuty':
       return 'service-pagerduty'
     case 'CUSTOM_HEALTH_METRIC':

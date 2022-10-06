@@ -6,7 +6,14 @@
  */
 
 import React, { useState } from 'react'
-import { Formik, FormikForm, Utils } from '@wings-software/uicore'
+import {
+  Formik,
+  FormikForm,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE,
+  Utils
+} from '@wings-software/uicore'
 import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSourceCardHeader/SetupSourceCardHeader'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
 import { useStrings } from 'framework/strings'
@@ -20,7 +27,18 @@ import css from './MapQueriesToHarnessService.module.scss'
 
 export function MapQueriesToHarnessService(props: MapQueriesToHarnessServiceProps): JSX.Element {
   const { getString } = useStrings()
-  const { onSubmit, data: sourceData, onPrevious } = props
+  const { onSubmit, data: sourceData, onPrevious, isTemplate, expressions } = props
+  const connectorIdentifier =
+    typeof sourceData?.connectorRef === 'string' ? sourceData?.connectorRef : sourceData?.connectorRef?.value
+  const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
+
+  const initialMetricData = isConnectorRuntimeOrExpression
+    ? {
+        ...initialFormData,
+        serviceInstance: RUNTIME_INPUT_VALUE,
+        messageIdentifier: RUNTIME_INPUT_VALUE
+      }
+    : initialFormData
 
   const [{ selectedMetric, mappedMetrics }, setMappedMetrics] = useState<{
     selectedMetric: string
@@ -33,7 +51,7 @@ export function MapQueriesToHarnessService(props: MapQueriesToHarnessServiceProp
       sourceData?.mappedServicesAndEnvs?.size > 0
         ? sourceData?.mappedServicesAndEnvs
         : new Map<string, MapGCOLogsQueryToService>([
-            [getString('cv.monitoringSources.gcoLogs.gcoLogsQuery'), initialFormData]
+            [getString('cv.monitoringSources.gcoLogs.gcoLogsQuery'), initialMetricData]
           ])
   })
 
@@ -42,7 +60,6 @@ export function MapQueriesToHarnessService(props: MapQueriesToHarnessServiceProp
     selectedMetricIndex: Array.from(mappedMetrics.keys()).findIndex(metric => metric === selectedMetric)
   })
 
-  const connectorIdentifier = sourceData?.connectorRef
   const [rerenderKey, setRerenderKey] = useState('')
 
   return (
@@ -112,7 +129,8 @@ export function MapQueriesToHarnessService(props: MapQueriesToHarnessServiceProp
                       updatedMetric: newMetric,
                       oldMetric: oldState.selectedMetric,
                       mappedMetrics: new Map<string, MapGCOLogsQueryToService>(oldState.mappedMetrics),
-                      formikProps
+                      formikProps,
+                      initialFormData: initialMetricData
                     })
                   })
                   setRerenderKey(Utils.randomId())
@@ -130,6 +148,9 @@ export function MapQueriesToHarnessService(props: MapQueriesToHarnessServiceProp
                   onChange={formikProps.setFieldValue}
                   formikProps={formikProps}
                   connectorIdentifier={connectorIdentifier}
+                  isTemplate={isTemplate}
+                  expressions={expressions}
+                  isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
                 />
               </>
             }

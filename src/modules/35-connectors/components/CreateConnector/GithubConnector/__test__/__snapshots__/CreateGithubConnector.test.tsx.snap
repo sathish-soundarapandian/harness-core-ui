@@ -123,6 +123,7 @@ exports[`Create Github connector Wizard Creating Github step one 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+          data-cy="connector-overview-heading"
         >
           overview
         </p>
@@ -152,7 +153,7 @@ exports[`Create Github connector Wizard Creating Github step one 1`] = `
                       >
                         <div
                           class="Text--withDocsTooltip"
-                          data-tooltip-id="connectorDetailsStepFormGithub_identifier"
+                          data-tooltip-id="universalInputNameWithId"
                         >
                           <p
                             class="StyledProps--font StyledProps--main"
@@ -2513,8 +2514,7 @@ exports[`Create Github connector Wizard should form for edit http and authtype u
     >
        
       <div
-        class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        class="Layout--vertical StyledProps--main secondStep connectorModalMinHeight stepContainer"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
@@ -3259,8 +3259,7 @@ exports[`Create Github connector Wizard should form for edit http and authtype u
     >
        
       <div
-        class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        class="Layout--vertical StyledProps--main secondStep connectorModalMinHeight stepContainer"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
@@ -4005,8 +4004,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
     >
        
       <div
-        class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        class="Layout--vertical StyledProps--main secondStep connectorModalMinHeight stepContainer"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
@@ -4479,7 +4477,12 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                         class="bp3-label"
                         for="privateKey"
                       >
-                        common.git.privateKey
+                        <span
+                          class="Tooltip--acenter"
+                          data-tooltip-id="stepGithubAuthForm_privateKey"
+                        >
+                          common.git.privateKey
+                        </span>
                          
                         <span
                           class="bp3-text-muted"
@@ -4810,8 +4813,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
     >
        
       <div
-        class="Layout--vertical StyledProps--main secondStep stepContainer"
-        style="min-height: 460px; width: 60%;"
+        class="Layout--vertical StyledProps--main secondStep connectorModalMinHeight stepContainer"
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
@@ -5284,7 +5286,12 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                         class="bp3-label"
                         for="privateKey"
                       >
-                        common.git.privateKey
+                        <span
+                          class="Tooltip--acenter"
+                          data-tooltip-id="stepGithubAuthForm_privateKey"
+                        >
+                          common.git.privateKey
+                        </span>
                          
                         <span
                           class="bp3-text-muted"

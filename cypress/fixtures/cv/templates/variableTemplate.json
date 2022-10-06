@@ -1,0 +1,9 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "mergedPipelineYaml": "name: \"New MonitoredService Template Name\"\nidentifier: \"new_monitoredservice_template_name\"\nversionLabel: \"1\"\ntype: \"MonitoredService\"\nprojectIdentifier: \"testSRM\"\norgIdentifier: \"default\"\ntags: {}\nspec:\n  serviceRef: \"<+input>\"\n  environmentRef: \"<+input>\"\n  type: \"Application\"\n  sources:\n    changeSources:\n    - name: \"Harness CD Next Gen\"\n      identifier: \"harness_cd_next_gen\"\n      type: \"HarnessCDNextGen\"\n      enabled: true\n      category: \"Deployment\"\n      spec: {}\n    healthSources: []\n  variables:\n  - name: \"AppDApplication\"\n    type: \"String\"\n    value: \"cv-app\"\n",
+    "templateReferenceSummaries": []
+  },
+  "metaData": null,
+  "correlationId": "a8c500cc-865a-471e-91a1-9cbcb78edef8"
+}

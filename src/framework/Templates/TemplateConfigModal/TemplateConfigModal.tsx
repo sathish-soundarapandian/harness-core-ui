@@ -5,22 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, useState, SetStateAction, useContext } from 'react'
+import React, { Dispatch, SetStateAction, useContext, useRef, useState } from 'react'
 import * as Yup from 'yup'
-import { isEmpty, omit, defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty, isEqual, omit, pick, unset } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import {
-  Formik,
-  Layout,
-  FormikForm,
-  FormInput,
-  Text,
   Button,
   ButtonVariation,
   Container,
-  Icon
+  Formik,
+  FormikForm,
+  FormInput,
+  Icon,
+  Layout,
+  Select,
+  SelectOption,
+  Text
 } from '@wings-software/uicore'
-import { Color } from '@harness/design-system'
+import produce from 'immer'
+import { Classes, Divider } from '@blueprintjs/core'
+import { Color, FontVariation } from '@harness/design-system'
+import classNames from 'classnames'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import RbacButton from '@rbac/components/Button/Button'
@@ -31,12 +37,19 @@ import { TemplatePreview } from '@templates-library/components/TemplatePreview/T
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 import { PageSpinner } from '@common/components'
 import type { UseSaveSuccessResponse } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
-import GitContextForm, { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
+import GitContextForm from '@common/components/GitContextForm/GitContextForm'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
-import { regexVersionLabel } from '@common/utils/StringUtils'
-import type { Error } from 'services/cd-ng'
+import { IdentifierSchema, NameSchema, TemplateVersionLabelSchema } from '@common/utils/Validation'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { getScopeFromDTO, getScopeLabelfromScope } from '@common/components/EntityReference/EntityReference'
+import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
+import { CardInterface, InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
+import { StoreMetadata, StoreType as GitStoreType } from '@common/constants/GitSyncTypes'
+import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from '../templates'
 import css from './TemplateConfigModal.module.scss'
 
@@ -47,112 +60,288 @@ export enum Fields {
   Tags = 'tags',
   VersionLabel = 'versionLabel',
   Repo = 'repo',
-  Branch = 'branch'
+  RepoName = 'repoName',
+  Branch = 'branch',
+  ConnectorRef = 'connectorRef',
+  StoreType = 'storeType',
+  FilePath = 'filePath'
 }
 
 export interface PromiseExtraArgs {
   isEdit?: boolean
   updatedGitDetails?: EntityGitDetails
   comment?: string
+  storeMetadata?: StoreMetadata
+  disableCreatingNewBranch?: boolean
+}
+
+export enum Intent {
+  START = 'Start',
+  EDIT = 'Edit',
+  SAVE = 'SAVE'
 }
 
 export interface ModalProps {
-  title: string
-  disabledFields?: Fields[]
-  emptyFields?: Fields[]
-  shouldGetComment?: boolean
+  initialValues: NGTemplateInfoConfig
   promise: (values: NGTemplateInfoConfig, extraInfo: PromiseExtraArgs) => Promise<UseSaveSuccessResponse>
-  onSuccess?: (values: NGTemplateInfoConfig) => void
-  onFailure?: (error: Error) => void
+  gitDetails?: EntityGitDetails
+  storeMetadata?: StoreMetadata
+  title: string
+  intent: Intent
+  disabledFields?: Fields[]
+  allowScopeChange?: boolean
   lastPublishedVersion?: string
+  disableCreatingNewBranch?: boolean
+  onFailure?: (error: any, latestTemplate: NGTemplateInfoConfig) => void
 }
 
 export interface TemplateConfigValues extends NGTemplateInfoConfigWithGitDetails {
-  comment: string
+  comment?: string
 }
 
 export interface NGTemplateInfoConfigWithGitDetails extends NGTemplateInfoConfig {
-  repo: string
-  branch: string
+  connectorRef?: string
+  repo?: string
+  branch?: string
+  storeType?: 'INLINE' | 'REMOTE'
+  filePath?: string
 }
 
-export interface ConfigModalProps {
-  initialValues: NGTemplateInfoConfigWithGitDetails
+export interface ConfigModalProps extends ModalProps {
   onClose: () => void
-  modalProps: ModalProps
-  showGitFields?: boolean
-  gitDetails?: IGitContextFormProps
 }
 
 interface BasicDetailsInterface extends ConfigModalProps {
   setPreviewValues: Dispatch<SetStateAction<NGTemplateInfoConfigWithGitDetails>>
 }
 
-const MAX_VERSION_LABEL_LENGTH = 63
+export type TemplateConfigModalHandle = {
+  updateTemplate: (templateYaml: string) => Promise<void>
+}
 
-const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
-  const { initialValues, setPreviewValues, onClose, modalProps, showGitFields, gitDetails } = props
-  const {
-    title,
-    disabledFields = [],
-    shouldGetComment = false,
-    promise,
-    onSuccess,
-    onFailure,
-    lastPublishedVersion
-  } = modalProps
+export type BasicTemplateDetailsHandle = {
+  updateTemplate: (templateYaml: string) => Promise<void>
+}
+
+const BasicTemplateDetails = (
+  props: BasicDetailsInterface,
+  ref: React.ForwardedRef<BasicTemplateDetailsHandle>
+): JSX.Element => {
   const { getString } = useStrings()
-  const [isEdit, setIsEdit] = React.useState<boolean>()
-  const { isGitSyncEnabled } = useAppStore()
-  const currentTemplateType = initialValues.type
-  const formName = `create${currentTemplateType}Template`
+
+  const {
+    initialValues,
+    setPreviewValues,
+    onClose,
+    gitDetails,
+    storeMetadata,
+    allowScopeChange = false,
+    title,
+    intent,
+    disabledFields = [],
+    promise,
+    lastPublishedVersion,
+    onFailure,
+    disableCreatingNewBranch
+  } = props
+  const pathParams = useParams<TemplateStudioPathProps>()
+  const { orgIdentifier, projectIdentifier } = pathParams
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingTemplatesGitx
+  } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const formName = `create${initialValues.type}Template`
   const [loading, setLoading] = React.useState<boolean>()
   const { isReadonly } = useContext(TemplateContext)
+  const scope = getScopeFromDTO(pathParams)
+  const [selectedScope, setSelectedScope] = React.useState<Scope>(scope)
+  const allowedScopes = templateFactory.getTemplateAllowedScopes(initialValues.type)
+  const formikRef = useRef<FormikProps<TemplateConfigValues>>()
+  const scopeOptions = React.useMemo(
+    () =>
+      (allowedScopes || []).map(item => ({
+        value: item,
+        label: getScopeLabelfromScope(item, getString)
+      })),
+    [allowedScopes]
+  )
 
-  React.useEffect(() => {
-    const edit = initialValues.identifier !== DefaultNewTemplateId
-    setIsEdit(edit)
-  }, [initialValues])
+  const cardDisabledStatus = React.useMemo(
+    () =>
+      intent === Intent.EDIT ||
+      !!disabledFields?.includes(Fields.StoreType) ||
+      !templateFactory.getTemplateIsRemoteEnabled(initialValues.type),
+    [initialValues.type, intent, disabledFields]
+  )
 
-  const onSubmit = React.useCallback((values: TemplateConfigValues) => {
-    setLoading(true)
-    const formGitDetails =
-      values.repo && values.repo.trim().length > 0 ? { repoIdentifier: values.repo, branch: values.branch } : undefined
-    const comment = values.comment.trim()
-    promise(omit(values, 'repo', 'branch', 'comment'), {
-      isEdit: false,
-      updatedGitDetails: formGitDetails,
-      ...(comment.length > 0 && { comment: values.comment })
-    })
-      .then(response => {
-        setLoading(false)
-        if (response && response.status === 'SUCCESS') {
-          onSuccess?.(values)
-          onClose()
+  const gitDisabledFields = pick(
+    disabledFields?.reduce((fields: Record<string, boolean>, field: string) => {
+      fields[field] = true
+      return fields
+    }, {}),
+    Fields.ConnectorRef,
+    Fields.RepoName,
+    Fields.Branch,
+    Fields.FilePath
+  )
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      updateTemplate: async (templateYaml: string) => {
+        const template = (parse(templateYaml) as { template: NGTemplateInfoConfig })?.template
+        formikRef.current?.setFieldValue('spec', template.spec)
+        await formikRef.current?.submitForm()
+      }
+    }),
+    [formikRef.current]
+  )
+
+  const formInitialValues = React.useMemo(
+    () =>
+      produce(initialValues as TemplateConfigValues, draft => {
+        if (isEqual(initialValues.identifier, DefaultNewTemplateId)) {
+          unset(draft, 'identifier')
+        }
+        if (isEqual(initialValues.versionLabel, DefaultNewVersionLabel)) {
+          unset(draft, 'versionLabel')
+        }
+
+        if (isGitSyncEnabled) {
+          draft.repo = gitDetails?.repoIdentifier
+          draft.branch = gitDetails?.branch
+        } else if (supportingTemplatesGitx) {
+          draft.connectorRef = defaultTo(storeMetadata?.connectorRef, '')
+          draft.repo = defaultTo(storeMetadata?.repoName, '')
+          draft.branch = defaultTo(storeMetadata?.branch, '')
+          draft.storeType = defaultTo(storeMetadata?.storeType, GitStoreType.INLINE)
+          draft.filePath = intent === Intent.SAVE ? '' : defaultTo(storeMetadata?.filePath, '')
+        }
+      }),
+    [initialValues, storeMetadata, gitDetails]
+  )
+
+  const submitButtonLabel = React.useMemo(() => {
+    if (intent === Intent.EDIT) {
+      return getString('continue')
+    } else {
+      if (intent === Intent.START) {
+        return getString('start')
+      } else {
+        if (isGitSyncEnabled && getScopeFromDTO(formikRef.current?.values || {}) === Scope.PROJECT) {
+          return getString('continue')
         } else {
-          throw response
+          return getString('save')
+        }
+      }
+    }
+  }, [intent, isGitSyncEnabled, formikRef.current])
+
+  const onSubmit = React.useCallback(
+    (values: TemplateConfigValues) => {
+      setLoading(true)
+      const storeMetadataValues = {
+        storeType: values.storeType,
+        connectorRef:
+          typeof values.connectorRef === 'string'
+            ? values.connectorRef
+            : (values.connectorRef as unknown as ConnectorSelectedValue)?.value,
+        repoName: values.repo,
+        branch: values.branch,
+        filePath: values.filePath
+      }
+
+      const updateTemplate = omit(values, 'repo', 'branch', 'comment', 'connectorRef', 'storeType', 'filePath')
+      promise(updateTemplate, {
+        isEdit: intent === Intent.EDIT,
+        disableCreatingNewBranch,
+        ...(!isEmpty(values.repo) && {
+          updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
+        }),
+        ...(supportingTemplatesGitx ? { storeMetadata: storeMetadataValues } : {}),
+        ...(!isEmpty(values.comment?.trim()) && { comment: values.comment?.trim() })
+      })
+        .then(response => {
+          setLoading(false)
+          if (response && response.status === 'SUCCESS') {
+            onClose()
+          } else {
+            throw response
+          }
+        })
+        .catch(error => {
+          setLoading(false)
+          onFailure?.(error, updateTemplate)
+        })
+    },
+    [setLoading, promise, gitDetails, onClose]
+  )
+
+  const onScopeChange = ({ value }: SelectOption) => {
+    setSelectedScope(value as Scope)
+    formikRef.current?.setValues(
+      produce(formikRef.current?.values, draft => {
+        draft.projectIdentifier = value === Scope.PROJECT ? projectIdentifier : undefined
+        draft.orgIdentifier = value === Scope.ACCOUNT ? undefined : orgIdentifier
+        if (isGitSyncEnabled) {
+          if (value === Scope.PROJECT) {
+            draft.repo = gitDetails?.repoIdentifier
+            draft.branch = gitDetails?.branch
+          } else {
+            unset(draft, 'repo')
+            unset(draft, 'branch')
+          }
         }
       })
-      .catch(error => {
-        setLoading(false)
-        onFailure?.(error)
+    )
+  }
+
+  const onInlineRemoteChange = (item: CardInterface): void => {
+    formikRef.current?.setValues(
+      produce(formikRef.current?.values, draft => {
+        draft.storeType = item.type as GitStoreType
+        if (item.type === GitStoreType.INLINE) {
+          unset(draft, 'connectorRef')
+          unset(draft, 'repo')
+          unset(draft, 'branch')
+          unset(draft, 'filePath')
+        } else {
+          Object.assign(draft, pick(formInitialValues, 'connectorRef', 'repo', 'branch', 'filePath'))
+        }
       })
-  }, [])
-
-  const getSaveButtonText = React.useCallback((): string => {
-    if (isEdit) {
-      if (isGitSyncEnabled) {
-        return getString('continue')
-      }
-      return getString('save')
+    )
+    if (item.type === GitStoreType.REMOTE) {
+      setTimeout(() => {
+        const elem = document.getElementsByClassName(css.gitFormWrapper)[0]
+        elem?.scrollTo(0, elem.scrollHeight)
+      }, 0)
     }
-    return getString('start')
-  }, [isEdit, isGitSyncEnabled, getString])
+  }
 
-  const versionLabelText = getString('templatesLibrary.createNewModal.versionLabel')
+  React.useEffect(() => {
+    setPreviewValues(formInitialValues)
+  }, [formInitialValues])
+
+  const gitxValidationSchema = supportingTemplatesGitx ? gitSyncFormSchema(getString) : {}
+  const gitsyncValidationSchema =
+    isGitSyncEnabled && selectedScope === Scope.PROJECT
+      ? {
+          repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+          branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
+        }
+      : {}
 
   return (
-    <Container width={'55%'} className={css.basicDetails} background={Color.FORM_BG} padding={'huge'}>
+    <Container
+      width={'55%'}
+      className={classNames(css.basicDetails, {
+        [css.gitBasicDetails]: supportingTemplatesGitx
+      })}
+      background={Color.FORM_BG}
+      padding={'huge'}
+    >
       {loading && <PageSpinner />}
       <Text
         color={Color.GREY_800}
@@ -162,11 +351,10 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
         {defaultTo(title, '')}
       </Text>
       <Formik<TemplateConfigValues>
-        initialValues={{ ...initialValues, comment: '' }}
+        initialValues={formInitialValues}
         onSubmit={onSubmit}
-        validate={values => setPreviewValues(values)}
+        validate={setPreviewValues}
         formName={formName}
-        enableReinitialize={true}
         validationSchema={Yup.object().shape({
           name: NameSchema({
             requiredErrorMsg: getString('common.validation.fieldIsRequired', {
@@ -174,39 +362,17 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
             })
           }),
           identifier: IdentifierSchema(),
-          versionLabel: Yup.string()
-            .trim()
-            .required(
-              getString('common.validation.fieldIsRequired', {
-                name: versionLabelText
-              })
-            )
-            .matches(
-              regexVersionLabel,
-              getString('common.validation.fieldMustStartWithAlphanumericAndCanNotHaveSpace', {
-                name: versionLabelText
-              })
-            )
-            .max(
-              MAX_VERSION_LABEL_LENGTH,
-              getString('common.validation.fieldCannotbeLongerThanN', {
-                name: versionLabelText,
-                n: MAX_VERSION_LABEL_LENGTH
-              })
-            ),
-          ...(isGitSyncEnabled && showGitFields
-            ? {
-                repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-                branch: Yup.string().trim().required(getString('common.git.validation.branchRequired'))
-              }
-            : {})
+          versionLabel: TemplateVersionLabelSchema(),
+          ...gitxValidationSchema,
+          ...gitsyncValidationSchema
         })}
       >
         {(formik: FormikProps<TemplateConfigValues>) => {
+          formikRef.current = formik
           return (
             <FormikForm>
               <Layout.Vertical spacing={'huge'}>
-                <Container>
+                <Container className={css.gitFormWrapper}>
                   <Layout.Vertical spacing={'small'}>
                     <Container>
                       <Layout.Vertical>
@@ -215,7 +381,12 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
                           formikProps={formik}
                           identifierProps={{
                             isIdentifierEditable: !disabledFields.includes(Fields.Identifier) && !isReadonly,
-                            inputGroupProps: { disabled: disabledFields.includes(Fields.Name) || isReadonly }
+                            inputGroupProps: {
+                              disabled: disabledFields.includes(Fields.Name) || isReadonly,
+                              placeholder: getString('templatesLibrary.createNewModal.namePlaceholder', {
+                                entity: templateFactory.getTemplateLabel(formik.values.type)
+                              })
+                            }
                           }}
                           className={css.nameIdDescriptionTags}
                           descriptionProps={{
@@ -228,8 +399,9 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
                         <FormInput.Text
                           name="versionLabel"
                           placeholder={getString('templatesLibrary.createNewModal.versionPlaceholder')}
-                          label={versionLabelText}
+                          label={getString('common.versionLabel')}
                           disabled={disabledFields.includes(Fields.VersionLabel) || isReadonly}
+                          className={css.gitFormFieldWidth}
                         />
                         {lastPublishedVersion && (
                           <Container
@@ -238,10 +410,15 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
                             flex={{ alignItems: 'center' }}
                             padding={'small'}
                             margin={{ bottom: 'medium' }}
+                            className={css.gitFormFieldWidth}
                           >
-                            <Layout.Horizontal spacing="small" flex={{ justifyContent: 'start' }}>
+                            <Layout.Horizontal spacing="small" flex={{ justifyContent: 'start' }} width={'100%'}>
                               <Icon name="info-messaging" size={18} />
-                              <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'small' }}>
+                              <Text
+                                color={Color.BLACK}
+                                font={{ weight: 'semi-bold', size: 'small' }}
+                                className={css.lastPublishedVersionLabel}
+                              >
                                 {getString('templatesLibrary.createNewModal.lastPublishedVersion')}
                               </Text>
                               <Text
@@ -255,22 +432,60 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
                             </Layout.Horizontal>
                           </Container>
                         )}
-                        {shouldGetComment && (
-                          <FormInput.TextArea
-                            name="comment"
-                            label={getString('optionalField', {
-                              name: getString('common.commentModal.commentLabel')
-                            })}
-                            textArea={{
-                              className: css.comment
-                            }}
-                          />
+                        {allowScopeChange && scope === Scope.PROJECT && (
+                          <Container className={Classes.FORM_GROUP} width={160} margin={{ bottom: 'medium' }}>
+                            <label className={Classes.LABEL}>
+                              {getString('templatesLibrary.templateSettingsModal.scopeLabel')}
+                            </label>
+                            <Select
+                              value={scopeOptions.find(item => item.value === getScopeFromDTO(formik.values))}
+                              items={scopeOptions}
+                              onChange={onScopeChange}
+                            />
+                          </Container>
                         )}
+                        {intent === Intent.SAVE &&
+                          (!isGitSyncEnabled || isEmpty(formik.values.repo)) &&
+                          (!supportingTemplatesGitx || formik.values?.storeType === GitStoreType.INLINE) && (
+                            <FormInput.TextArea
+                              name="comment"
+                              label={getString('optionalField', {
+                                name: getString('common.commentModal.commentLabel')
+                              })}
+                              textArea={{
+                                className: css.comment
+                              }}
+                            />
+                          )}
                       </Layout.Vertical>
                     </Container>
-                    {isGitSyncEnabled && showGitFields && (
+                    {supportingTemplatesGitx && (
+                      <>
+                        <Divider />
+                        <Text font={{ variation: FontVariation.H6 }} className={css.choosePipelineSetupHeader}>
+                          {getString('templatesLibrary.chooseTemplateSetupHeader')}
+                        </Text>
+                        <InlineRemoteSelect
+                          entityType={'Template'}
+                          className={css.inlineRemoteWrapper}
+                          selected={defaultTo(formik.values?.storeType, GitStoreType.INLINE)}
+                          onChange={onInlineRemoteChange}
+                          getCardDisabledStatus={() => cardDisabledStatus}
+                        />
+                        {formik.values?.storeType === GitStoreType.REMOTE && (
+                          <GitSyncForm
+                            formikProps={formik}
+                            isEdit={intent === Intent.EDIT}
+                            initialValues={formInitialValues}
+                            entityScope={getScopeFromDTO(formik.values)}
+                            disableFields={gitDisabledFields}
+                          />
+                        )}
+                      </>
+                    )}
+                    {isGitSyncEnabled && isEmpty(gitDetails) && getScopeFromDTO(formik.values) === Scope.PROJECT && (
                       <GitSyncStoreProvider>
-                        <GitContextForm formikProps={formik as any} gitDetails={gitDetails} />
+                        <GitContextForm formikProps={formik as any} />
                       </GitSyncStoreProvider>
                     )}
                   </Layout.Vertical>
@@ -278,7 +493,7 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
                 <Container>
                   <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-end', justifyContent: 'flex-start' }}>
                     <RbacButton
-                      text={getSaveButtonText()}
+                      text={submitButtonLabel}
                       type="submit"
                       variation={ButtonVariation.PRIMARY}
                       permission={{
@@ -300,46 +515,38 @@ const BasicTemplateDetails = (props: BasicDetailsInterface): JSX.Element => {
   )
 }
 
-export const TemplateConfigModal = (props: ConfigModalProps): JSX.Element => {
-  const { initialValues, modalProps, ...rest } = props
-  const { emptyFields = [] } = modalProps
-  const [previewValues, setPreviewValues] = useState(props.initialValues)
-  const [formInitialValues, setFormInitialValues] = React.useState(initialValues)
-  const { isGitSyncEnabled } = useAppStore()
-  const { getString } = useStrings()
+export const BasicTemplateDetailsWithRef = React.forwardRef(BasicTemplateDetails)
 
-  React.useEffect(() => {
-    const newInitialValues = {
-      ...initialValues,
-      ...((emptyFields.includes(Fields.Name) || isEmpty(initialValues.name)) && {
-        name: getString('templatesLibrary.createNewModal.namePlaceholder', { entity: initialValues.type })
-      }),
-      ...((emptyFields.includes(Fields.Identifier) || initialValues.identifier === DefaultNewTemplateId) && {
-        identifier: getString('templatesLibrary.createNewModal.identifierPlaceholder', {
-          entity: initialValues.type.toLowerCase()
-        })
-      }),
-      ...((emptyFields.includes(Fields.VersionLabel) || initialValues.versionLabel === DefaultNewVersionLabel) && {
-        versionLabel: undefined
-      }),
-      ...(emptyFields.includes(Fields.Description) && { description: undefined }),
-      ...(emptyFields.includes(Fields.Tags) && { tags: undefined }),
-      ...(emptyFields.includes(Fields.Repo) && { repo: undefined }),
-      ...(emptyFields.includes(Fields.Branch) && { branch: undefined })
-    }
-    setFormInitialValues(newInitialValues)
-  }, [initialValues, JSON.stringify(emptyFields)])
+const TemplateConfigModal = (
+  props: ConfigModalProps,
+  ref: React.ForwardedRef<TemplateConfigModalHandle>
+): JSX.Element => {
+  const { initialValues, ...rest } = props
+  const [previewValues, setPreviewValues] = useState<NGTemplateInfoConfigWithGitDetails>({
+    ...initialValues,
+    repo: defaultTo(rest.gitDetails?.repoName, rest.gitDetails?.repoIdentifier),
+    branch: rest.gitDetails?.branch
+  })
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const basicTemplateDetailsHandle = React.useRef<BasicTemplateDetailsHandle>(null)
 
-  React.useEffect(() => {
-    setPreviewValues(formInitialValues)
-  }, [formInitialValues])
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      updateTemplate: async (templateYaml: string) => {
+        await basicTemplateDetailsHandle.current?.updateTemplate(templateYaml)
+      }
+    }),
+    [basicTemplateDetailsHandle.current]
+  )
 
   const content = (
     <Layout.Horizontal>
-      <BasicTemplateDetails
-        initialValues={formInitialValues}
-        modalProps={modalProps}
+      <BasicTemplateDetailsWithRef
+        initialValues={initialValues}
         setPreviewValues={setPreviewValues}
+        ref={basicTemplateDetailsHandle}
         {...rest}
       />
       <TemplatePreview previewValues={previewValues} />
@@ -354,3 +561,5 @@ export const TemplateConfigModal = (props: ConfigModalProps): JSX.Element => {
   )
   return isGitSyncEnabled ? <GitSyncStoreProvider>{content}</GitSyncStoreProvider> : content
 }
+
+export const TemplateConfigModalWithRef = React.forwardRef(TemplateConfigModal)

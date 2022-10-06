@@ -6,16 +6,18 @@
  */
 
 import React, { useState } from 'react'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
 
-import { SelectOption, FormInput, MultiTypeInputType } from '@harness/uicore'
+import { SelectOption, FormInput, AllowedTypes } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -32,9 +34,15 @@ export default function BasePolicyStep(props: {
   isNewStep: boolean
   readonly?: boolean
   stepViewType?: StepViewType
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }): React.ReactElement {
-  const { isNewStep, readonly, stepViewType, allowableTypes } = props
+  const {
+    formik: { values: formValues, setFieldValue },
+    isNewStep,
+    readonly,
+    stepViewType,
+    allowableTypes
+  } = props
 
   const [entityType, setEntityType] = useState<string | number | symbol>('Custom')
   const { getString } = useStrings()
@@ -63,6 +71,18 @@ export default function BasePolicyStep(props: {
             disabled: readonly
           }}
         />
+        {getMultiTypeFromValue(formValues.timeout) === MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            value={formValues.timeout || ''}
+            type="String"
+            variableName="timeout"
+            showRequiredField={false}
+            showDefaultField={false}
+            showAdvanced={true}
+            onChange={value => setFieldValue('timeout', value)}
+            isReadonly={readonly}
+          />
+        )}
       </div>
       <div className={cx(stepCss.formGroup, stepCss.lg)}>
         <FormInput.Select

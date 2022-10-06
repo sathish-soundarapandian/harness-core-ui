@@ -8,13 +8,15 @@
 import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
 import { Layout, FormInput, SelectOption, Text, HarnessDocTooltip, PageSpinner } from '@wings-software/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { useGetGitTriggerEventDetails } from 'services/pipeline-ng'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { GitSourceProviders, getSourceRepoOptions } from '../utils/TriggersListUtils'
 import {
-  handleSourceRepoChange,
   renderNonCustomEventFields,
   getEventAndActions,
   clearEventsAndActions
@@ -44,6 +46,7 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
   const [actionsOptions, setActionsOptions] = useState<SelectOption[]>([])
   const [actionsOptionsMap, setActionsOptionsMap] = useState<{ [key: string]: string[] }>({})
   const { getString } = useStrings()
+  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.GIT_WEBHOOK_POLLING)
   const loading = false
 
   useEffect(() => {
@@ -124,11 +127,15 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
       <div className={css.formContent}>
         <section style={{ width: '650px' }}>
           <FormInput.Select
-            label={getString('triggers.triggerConfigurationPanel.payloadType')}
+            label={
+              <Text color={Color.GREY_600} font={{ variation: FontVariation.FORM_INPUT_TEXT, weight: 'semi-bold' }}>
+                {getString('triggers.triggerConfigurationPanel.payloadType')}
+              </Text>
+            }
             name="sourceRepo"
             className={cx(sourceRepo === GitSourceProviders.CUSTOM.value && css.bottomMarginZero)}
             items={getSourceRepoOptions(getString)}
-            onChange={e => handleSourceRepoChange({ e, formikProps })}
+            disabled={true}
           />
           {sourceRepo !== GitSourceProviders.CUSTOM.value
             ? renderNonCustomEventFields({
@@ -138,7 +145,8 @@ const WebhookTriggerConfigPanel: React.FC<WebhookTriggerConfigPanelPropsInterfac
                 eventOptions,
                 getString,
                 actionsOptions,
-                actions
+                actions,
+                isGitWebhookPollingEnabled
               })
             : null}
         </section>

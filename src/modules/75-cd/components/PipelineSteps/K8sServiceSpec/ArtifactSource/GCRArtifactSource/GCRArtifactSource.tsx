@@ -7,31 +7,36 @@
 
 import React, { useState } from 'react'
 import { defaultTo, get } from 'lodash-es'
-
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@wings-software/uicore'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { SidecarArtifact, useGetBuildDetailsForGcrWithYaml } from 'services/cd-ng'
-
 import { ArtifactToConnectorMap, ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   gcrUrlList,
+  getDefaultQueryParam,
+  getFinalQueryParamValue,
+  getFqnPath,
   getImagePath,
   getYamlData,
-  isArtifactSourceRuntime,
   isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity,
   resetTags,
-  shouldFetchTagsSource
+  shouldFetchTagsSource,
+  isExecutionTimeFieldDisabled
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
-import css from '../../K8sServiceSpec.module.scss'
+import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
+
 interface GCRRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
 }
@@ -51,25 +56,40 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     pipelineIdentifier,
     branch,
     stageIdentifier,
+    serviceIdentifier,
     isTagsSelectionDisabled,
     allowableTypes,
     fromTrigger,
     artifact,
     isSidecar,
-    artifactPath
+    artifactPath,
+    stepViewType
   } = props
 
   const { getString } = useStrings()
   const isPropagatedStage = path?.includes('serviceConfig.stageOverrides')
   const { expressions } = useVariablesExpression()
   const [lastQueryData, setLastQueryData] = useState({ connectorRef: '', imagePath: '', registryHostname: '' })
+  const imagePathValue = getImagePath(
+    artifact?.spec?.imagePath,
+    get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
+  )
+  const connectorRefValue = getDefaultQueryParam(
+    artifact?.spec?.connectorRef,
+    get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
+  )
+  const registryHostnameValue = getDefaultQueryParam(
+    artifact?.spec?.registryHostname,
+    get(initialValues, `artifacts.${artifactPath}.spec.registryHostname`, '')
+  )
+
   const {
     data: gcrTagsData,
     loading: fetchingTags,
-    refetch,
+    refetch: refetchTags,
     error: fetchTagsError
   } = useMutateAsGet(useGetBuildDetailsForGcrWithYaml, {
-    body: yamlStringify(getYamlData(formik?.values)),
+    body: getYamlData(formik?.values, stepViewType as StepViewType, path as string),
     requestOptions: {
       headers: {
         'content-type': 'application/json'
@@ -81,33 +101,25 @@ const Content = (props: GCRRenderContent): JSX.Element => {
       orgIdentifier,
       repoIdentifier,
       branch,
-      imagePath: getImagePath(
-        artifact?.spec?.imagePath,
-        get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
-      ),
-      connectorRef:
-        getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.connectorRef
-          : get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, ''),
-      registryHostname:
-        getMultiTypeFromValue(artifact?.spec?.registryHostname) !== MultiTypeInputType.RUNTIME
-          ? artifact?.spec?.registryHostname
-          : get(initialValues?.artifacts, `${artifactPath}.spec.registryHostname`, ''),
+      imagePath: getFinalQueryParamValue(imagePathValue),
+      connectorRef: getFinalQueryParamValue(connectorRefValue),
+      registryHostname: getFinalQueryParamValue(registryHostnameValue),
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-      fqnPath: isPropagatedStage
-        ? `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.tag`
-        : `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.tag`
+      serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+      fqnPath: getFqnPath(
+        path as string,
+        !!isPropagatedStage,
+        stageIdentifier,
+        defaultTo(
+          isSidecar
+            ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+            : artifactPath,
+          ''
+        )
+      )
     },
     lazy: true
   })
-  const imagePathValue = getImagePath(
-    artifact?.spec?.imagePath,
-    get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
-  )
-  const connectorRefValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
-  const registryHostnameValue =
-    get(initialValues, `artifacts.${artifactPath}.spec.registryHostname`, '') || artifact?.spec?.registryHostname
 
   const fetchTags = (): void => {
     if (canFetchTags()) {
@@ -116,7 +128,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
         imagePath: imagePathValue,
         registryHostname: registryHostnameValue
       })
-      refetch()
+      refetchTags()
     }
   }
 
@@ -124,6 +136,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     return !!(
       (lastQueryData.connectorRef != connectorRefValue ||
         lastQueryData.imagePath !== imagePathValue ||
+        getMultiTypeFromValue(artifact?.spec?.imagePath) === MultiTypeInputType.EXPRESSION ||
         lastQueryData.registryHostname !== registryHostnameValue) &&
       shouldFetchTagsSource([connectorRefValue, imagePathValue, registryHostnameValue])
     )
@@ -149,8 +162,7 @@ const Content = (props: GCRRenderContent): JSX.Element => {
     return false
   }
 
-  const isRuntime = isArtifactSourceRuntime(isPrimaryArtifactsRuntime, isSidecarRuntime, isSidecar as boolean)
-
+  const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   return (
     <>
       {isRuntime && (
@@ -182,35 +194,75 @@ const Content = (props: GCRRenderContent): JSX.Element => {
             />
           )}
 
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
-            <FormInput.MultiTextInput
-              label={getString('pipeline.imagePathLabel')}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
-              onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
-            />
-          )}
+          <div className={css.inputFieldLayout}>
+            {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
+              <TextFieldInputSetView
+                label={getString('pipeline.imagePathLabel')}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.imagePath`)}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                name={`${path}.artifacts.${artifactPath}.spec.imagePath`}
+                onChange={() => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)}
+                fieldPath={`artifacts.${artifactPath}.spec.imagePath`}
+                template={template}
+              />
+            )}
+            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.imagePath`)) ===
+              MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                className={css.configureOptions}
+                style={{ alignSelf: 'center' }}
+                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.imagePath`)}
+                type="String"
+                variableName="imagePath"
+                showRequiredField={false}
+                showDefaultField={true}
+                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+                showAdvanced={true}
+                onChange={value => {
+                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.imagePath`, value)
+                }}
+              />
+            )}
+          </div>
 
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.registryHostname`, template) && (
-            <ExperimentalInput
-              formik={formik}
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.registryHostname`)}
-              selectItems={gcrUrlList}
-              useValue
-              multiTypeInputProps={{
-                onChange: () => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`),
-                expressions,
-                allowableTypes,
-                selectProps: { allowCreatingNewItems: true, addClearBtn: true, items: gcrUrlList }
-              }}
-              label={getString('connectors.GCR.registryHostname')}
-              name={`${path}.artifacts.${artifactPath}.spec.registryHostname`}
-            />
-          )}
+          <div className={css.inputFieldLayout}>
+            {isFieldRuntime(`artifacts.${artifactPath}.spec.registryHostname`, template) && (
+              <ExperimentalInput
+                formik={formik}
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.registryHostname`)}
+                selectItems={gcrUrlList}
+                useValue
+                multiTypeInputProps={{
+                  onChange: () => resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`),
+                  expressions,
+                  allowableTypes,
+                  selectProps: { allowCreatingNewItems: true, addClearBtn: true, items: gcrUrlList }
+                }}
+                label={getString('connectors.GCR.registryHostname')}
+                name={`${path}.artifacts.${artifactPath}.spec.registryHostname`}
+              />
+            )}
+            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.registryHostname`)) ===
+              MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                className={css.configureOptions}
+                style={{ alignSelf: 'center' }}
+                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.registryHostname`)}
+                type="String"
+                variableName="registryHostname"
+                showRequiredField={false}
+                showDefaultField={true}
+                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+                showAdvanced={true}
+                onChange={value => {
+                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.registryHostname`, value)
+                }}
+              />
+            )}
+          </div>
 
           {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.tag`, template) && (
             <FormInput.MultiTextInput
@@ -237,17 +289,36 @@ const Content = (props: GCRRenderContent): JSX.Element => {
               stageIdentifier={stageIdentifier}
             />
           )}
-          {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
-            <FormInput.MultiTextInput
-              disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              label={getString('tagRegex')}
-              name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
-            />
-          )}
+          <div className={css.inputFieldLayout}>
+            {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
+              <FormInput.MultiTextInput
+                disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
+                multiTextInputProps={{
+                  expressions,
+                  allowableTypes
+                }}
+                label={getString('tagRegex')}
+                name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
+              />
+            )}
+            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.tagRegex`)) ===
+              MultiTypeInputType.RUNTIME && (
+              <ConfigureOptions
+                className={css.configureOptions}
+                style={{ alignSelf: 'center' }}
+                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.tagRegex`)}
+                type="String"
+                variableName="tagRegex"
+                showRequiredField={false}
+                showDefaultField={true}
+                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+                showAdvanced={true}
+                onChange={value => {
+                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.tagRegex`, value)
+                }}
+              />
+            )}
+          </div>
         </Layout.Vertical>
       )}
     </>
@@ -265,14 +336,14 @@ export class GCRArtifactSource extends ArtifactSourceBase<ArtifactSourceRenderPr
       artifact?.spec?.imagePath,
       get(initialValues, `artifacts.${artifactPath}.spec.imagePath`, '')
     )
-    const isConnectorPresent =
-      getMultiTypeFromValue(artifact?.spec?.connectorRef) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.connectorRef
-        : get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
-    const isRegistryHostnamePresent =
-      getMultiTypeFromValue(artifact?.spec?.registryHostname) !== MultiTypeInputType.RUNTIME
-        ? artifact?.spec?.registryHostname
-        : get(initialValues, `artifacts.${artifactPath}.spec.registryHostname`, '')
+    const isConnectorPresent = getDefaultQueryParam(
+      artifact?.spec?.connectorRef,
+      get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '')
+    )
+    const isRegistryHostnamePresent = getDefaultQueryParam(
+      artifact?.spec?.registryHostname,
+      get(initialValues, `artifacts.${artifactPath}.spec.registryHostname`, '')
+    )
     return !(isImagePathPresent && isConnectorPresent && isRegistryHostnamePresent)
   }
 

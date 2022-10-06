@@ -28,7 +28,8 @@ const TemplateResourceRenderer: React.FC<RbacResourceRendererProps> = ({
 }) => {
   const { accountIdentifier, orgIdentifier = '', projectIdentifier = '' } = resourceScope
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [templateData, setData] = React.useState<PageTemplateSummaryResponse | undefined>()
 
   const {

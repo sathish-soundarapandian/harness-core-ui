@@ -31,7 +31,7 @@ export function formatDuration(value?: number | string) {
   if (typeof value !== 'number') {
     return
   }
-  let signPrefix = undefined
+  let signPrefix
   let h = 0
   let m = 0
   let s = 0

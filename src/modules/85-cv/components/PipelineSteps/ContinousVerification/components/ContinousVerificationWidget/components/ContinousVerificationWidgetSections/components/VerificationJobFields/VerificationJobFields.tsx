@@ -5,15 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { CSSProperties, useEffect, useMemo, useState } from 'react'
-import { FormInput, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
-import { useParams } from 'react-router-dom'
+import React, { CSSProperties, useMemo } from 'react'
+import { AllowedTypes, FormInput, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { UseStringsReturn } from 'framework/strings'
 import { useStrings } from 'framework/strings'
-import { useListBaselineExecutions } from 'services/cv'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'
+import { FeatureFlag } from '@common/featureFlags'
+import { getDurationOptions } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import { getMultiTypeInputProps } from './VerificationJobFields.utils'
 
 interface BaseFieldProps {
@@ -24,7 +24,7 @@ interface BaseFieldProps {
   formik?: FormikProps<ContinousVerificationData>
   expressions?: string[]
   isSimpleDropdown?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
 }
 
 export function getDefaultBaselineOptions(getString: UseStringsReturn['getString']): SelectOption[] {
@@ -71,17 +71,9 @@ export function VerificationSensitivity(props: BaseFieldProps): JSX.Element {
 }
 
 export function Duration(props: BaseFieldProps): JSX.Element {
-  const selectProps = useMemo(
-    () => ({
-      items: [
-        { label: '5 min', value: '5m' },
-        { label: '10 min', value: '10m' },
-        { label: '15 min', value: '15m' },
-        { label: '30 min', value: '30m' }
-      ]
-    }),
-    []
-  )
+  const extendedDurationFlag = useFeatureFlag(FeatureFlag.SRM_ENABLE_VERIFY_STEP_LONG_DURATION)
+  const selectProps = useMemo(() => ({ items: getDurationOptions(extendedDurationFlag) }), [extendedDurationFlag])
+
   const { zIndex, label, name, expressions, formik, isSimpleDropdown, allowableTypes } = props
   const style: CSSProperties = useMemo(() => ({ zIndex: zIndex ?? 8 }), [zIndex]) as CSSProperties
   const { getString } = useStrings()
@@ -102,7 +94,7 @@ export function Duration(props: BaseFieldProps): JSX.Element {
         style={style}
         label={label ? label : getString('duration')}
         items={selectProps.items}
-        value={(formik?.values as ContinousVerificationData).spec?.spec?.duration as SelectOption}
+        value={(formik?.values as ContinousVerificationData)?.spec?.spec?.duration as SelectOption}
         disabled={true}
       />
     )
@@ -180,28 +172,7 @@ export function Baseline(props: BaseFieldProps): JSX.Element {
 }
 
 export function BaselineSelect(props: BaseFieldProps): JSX.Element {
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
-  const [baselineOption, setBaselineOption] = useState([...getDefaultBaselineOptions(getString)])
-  const { data } = useListBaselineExecutions({
-    queryParams: {
-      accountId,
-      projectIdentifier,
-      orgIdentifier
-    }
-  })
-
-  useEffect(() => {
-    if (data?.resource?.length) {
-      const options = data.resource.map(item => {
-        return {
-          label: new Date(item?.createdAt || 0),
-          value: item.verificationJobInstanceId
-        }
-      })
-      setBaselineOption(baselineOption.concat(options as any))
-    }
-  }, [data])
 
   const { zIndex, label, name, expressions, formik, isSimpleDropdown, allowableTypes } = props
   const style: CSSProperties = useMemo(() => ({ zIndex: zIndex ?? 5 }), [zIndex]) as CSSProperties
@@ -211,7 +182,7 @@ export function BaselineSelect(props: BaseFieldProps): JSX.Element {
         name={name ? name : 'baseline'}
         style={style}
         label={label ? label : getString('connectors.cdng.baseline')}
-        selectItems={baselineOption}
+        selectItems={getDefaultBaselineOptions(getString)}
         multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
       />
     )
@@ -221,7 +192,7 @@ export function BaselineSelect(props: BaseFieldProps): JSX.Element {
         name={name ? name : 'baseline'}
         style={style}
         label={label ? label : getString('connectors.cdng.baseline')}
-        items={baselineOption}
+        items={getDefaultBaselineOptions(getString)}
         value={(formik?.values as ContinousVerificationData).spec?.spec?.baseline as SelectOption}
         disabled={true}
       />

@@ -10,14 +10,13 @@ import { useParams, useHistory } from 'react-router-dom'
 import moment from 'moment'
 import ReactTimeago from 'react-timeago'
 import { Intent } from '@blueprintjs/core'
-import { Button, Container, ExpandingSearchInput, Layout, Pagination, TableV2, Text } from '@wings-software/uicore'
+import { Button, Container, ExpandingSearchInput, Layout, Pagination, TableV2, Text } from '@harness/uicore'
 import type { Cell, Column } from 'react-table'
 import { Color } from '@harness/design-system'
 import ListingPageTemplate from '@cf/components/ListingPageTemplate/ListingPageTemplate'
 import {
   CF_DEFAULT_PAGE_SIZE,
   getErrorMessage,
-  rewriteCurrentLocationWithActiveEnvironment,
   SEGMENT_PRIMARY_COLOR,
   showToaster,
   TARGET_PRIMARY_COLOR
@@ -52,10 +51,7 @@ export const TargetsPage: React.FC = () => {
     refetch: refetchEnvs,
     environments
   } = useEnvironmentSelectV2({
-    selectedEnvironmentIdentifier: environmentIdentifier,
-    onChange: (_value, _environment, _userEvent) => {
-      rewriteCurrentLocationWithActiveEnvironment(_environment)
-    }
+    selectedEnvironmentIdentifier: environmentIdentifier
   })
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const { getString } = useStrings()
@@ -86,9 +82,10 @@ export const TargetsPage: React.FC = () => {
   const onSearchInputChanged = useCallback(
     targetName => {
       setSearchTerm(targetName)
-      refetchTargets({ queryParams: { ...queryParams, targetName } })
+      setPageNumber(0)
+      refetchTargets({ queryParams: { ...queryParams, targetName, pageNumber: 0 } })
     },
-    [setSearchTerm, refetchTargets, queryParams]
+    [setSearchTerm, refetchTargets, queryParams, setPageNumber]
   )
   const loading = loadingEnvironments || loadingTargets
   const error = errEnvironments || errTargets
@@ -339,7 +336,6 @@ export const TargetsPage: React.FC = () => {
         refetchTargets({ queryParams: { ...queryParams, pageNumber: 0 } })
         showToaster(getString('cf.messages.targetCreated'))
       }}
-      hasEnvironment={!!environments?.length}
     />
   ) : (
     <>

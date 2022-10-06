@@ -22,19 +22,14 @@ import { useToaster } from '@common/components'
 import { usePostRoleAssignments, RoleAssignment as RBACRoleAssignment } from 'services/rbac'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import {
-  getScopeBasedDefaultAssignment,
-  isAccountBasicRolePresent,
-  isNewRoleAssignment,
-  PrincipalType
-} from '@rbac/utils/utils'
+import { getScopeBasedDefaultAssignment, isNewRoleAssignment, PrincipalType } from '@rbac/utils/utils'
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
   getPrincipalScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import UserGroupsInput from '@common/components/UserGroupsInput/UserGroupsInput'
-import { isCommunityPlan } from '@common/utils/utils'
+import { useGetCommunity } from '@common/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RoleAssignmentForm from './RoleAssignmentForm'
@@ -64,19 +59,14 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
   const { getString } = useStrings()
   const { ACCOUNT_BASIC_ROLE } = useFeatureFlags()
   const { getRBACErrorMessage } = useRBACError()
-  const isCommunity = isCommunityPlan()
+  const isCommunity = useGetCommunity()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const { mutate: createRoleAssignment, loading: saving } = usePostRoleAssignments({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
 
-  const assignments: Assignment[] = getScopeBasedDefaultAssignment(
-    scope,
-    getString,
-    isCommunity,
-    isAccountBasicRolePresent(scope, !!ACCOUNT_BASIC_ROLE)
-  )
+  const assignments: Assignment[] = getScopeBasedDefaultAssignment(scope, getString, isCommunity, !!ACCOUNT_BASIC_ROLE)
 
   const handleRoleAssignment = async (values: UserGroupRoleAssignmentValues): Promise<void> => {
     /* istanbul ignore next */ if (values.assignments.length === 0) {

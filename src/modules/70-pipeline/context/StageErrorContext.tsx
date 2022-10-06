@@ -14,15 +14,15 @@ interface DeployStageErrorState {
   forms: { [key: string]: React.MutableRefObject<FormikProps<unknown> | null>[] }
 }
 
-interface FormProps {
+interface FormProps<T = unknown> {
   tab: string
-  form: React.MutableRefObject<FormikProps<unknown> | null>
+  form: React.MutableRefObject<FormikProps<T> | null>
 }
 
-export interface StageErrorContextInterface {
+export interface StageErrorContextInterface<T = unknown> {
   state: DeployStageErrorState
-  subscribeForm: (formData: FormProps) => void
-  unSubscribeForm: (formData: FormProps) => void
+  subscribeForm: (formData: FormProps<T>) => void
+  unSubscribeForm: (formData: FormProps<T>) => void
   submitFormsForTab: (tab: string) => void
   checkErrorsForTab: (tab: string) => Promise<void>
 }
@@ -112,4 +112,8 @@ export function DeployStageErrorProvider(props: DeployStageErrorProviderProps): 
       {props.children}
     </StageErrorContext.Provider>
   )
+}
+
+export function useStageErrorContext<T = unknown>(): StageErrorContextInterface<T> {
+  return React.useContext(StageErrorContext) as StageErrorContextInterface<T>
 }

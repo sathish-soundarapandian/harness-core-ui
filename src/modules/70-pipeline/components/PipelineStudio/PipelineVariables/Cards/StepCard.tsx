@@ -6,8 +6,7 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, NestedAccordionPanel, Text } from '@wings-software/uicore'
-import cx from 'classnames'
+import { AllowedTypes, NestedAccordionPanel, Text } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import type { StepElementConfig } from 'services/cd-ng'
@@ -31,7 +30,7 @@ export interface StepCardProps {
   stepPath: string
   readonly?: boolean
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory // REQUIRED (pass to addUpdateGraph)
 }
 
@@ -98,7 +97,7 @@ export function StepCardPanel(props: StepCardProps): React.ReactElement {
           </Text>
         </VariableAccordionSummary>
       }
-      summaryClassName={cx(css.variableBorderBottom, css.accordianSummaryL3)}
+      summaryClassName={css.accordianSummaryL2}
       details={<StepCard {...props} />}
     />
   )
@@ -118,7 +117,7 @@ export interface StepGroupCardProps {
   stepGroupOriginalName: string
   readonly?: boolean
   path?: string
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepsFactory: AbstractStepFactory
 }
 
@@ -141,9 +140,27 @@ export function StepGroupCard(props: StepGroupCardProps): React.ReactElement {
         data={{ name: stepGroupName }}
         originalData={{ name: stepGroupOriginalName }}
         metadataMap={metadataMap}
-        className={css.variablePaddingL3}
+        className={css.variablePaddingL1}
       />
-      {steps.map(row => {
+      {steps.map((row: any) => {
+        if (row.type === 'StepGroupRenderData') {
+          return (
+            <StepGroupCardPanel
+              key={row.path}
+              steps={row.steps}
+              stepGroupIdentifier={row.identifier}
+              stepGroupName={row.name}
+              path={row.path}
+              allowableTypes={allowableTypes}
+              stepGroupOriginalName={row.originalName}
+              metadataMap={metadataMap}
+              readonly={readonly}
+              stageIdentifier={stageIdentifier}
+              onUpdateStep={onUpdateStep}
+              stepsFactory={stepsFactory}
+            />
+          )
+        }
         const { step, originalStep, path } = row
         return (
           <StepCardPanel
@@ -173,6 +190,7 @@ export function StepGroupCardPanel(props: StepGroupCardProps): React.ReactElemen
       collapseProps={{
         keepChildrenMounted: true
       }}
+      panelClassName={css.accordianSummaryL1}
       id={`${props.path}.StepGroup.${props.stepGroupIdentifier}`}
       summary={
         <VariableAccordionSummary>
@@ -181,7 +199,7 @@ export function StepGroupCardPanel(props: StepGroupCardProps): React.ReactElemen
           </Text>
         </VariableAccordionSummary>
       }
-      summaryClassName={cx(css.variableBorderBottom, css.accordianSummaryL2)}
+      summaryClassName={css.accordianSummaryL1}
       details={<StepGroupCard {...props} />}
     />
   )

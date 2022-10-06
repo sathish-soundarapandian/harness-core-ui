@@ -187,3 +187,104 @@
     padding: 0 var(--spacing-huge) var(--spacing-huge) var(--spacing-huge) !important;
   }
 }
+
+.cvEnableSwitch {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-4);
+
+  :global {
+    .bp3-control-indicator {
+      margin-top: 1px;
+    }
+  }
+}
+
+.enableVerificationDetail {
+  max-width: 60%;
+}
+
+.enableVerificationImage {
+  max-width: 100%;
+}
+
+.phaseName {
+  height: var(--spacing-xxlarge);
+  display: flex;
+  align-items: center;
+  padding-left: var(--spacing-small) !important;
+}
+.phaseLabel {
+  margin-bottom: var(--spacing-xsmall) !important;
+}
+.phaseForm {
+  :global {
+    .bp3-input {
+      min-width: 320px !important;
+    }
+  }
+  .canary {
+    :global {
+      .bp3-input {
+        min-width: 212px !important;
+      }
+      .bp3-button {
+        padding: 0 !important;
+      }
+    }
+  }
+}
+.removePhase {
+  height: 100%;
+  position: relative;
+  :global {
+    .bp3-button {
+      position: absolute;
+      top: var(--spacing-small);
+    }
+  }
+}
+.phaseContainer {
+  max-height: 600px;
+  :global {
+    .OverlaySpinner--overlay {
+      background: transparent !important;
+    }
+  }
+}
+.phaseFormWrapper {
+  padding-top: var(--spacing-xxlarge);
+  position: relative;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  :global {
+    .bp3-form-group label.bp3-label {
+      margin-bottom: var(--spacing-xsmall) !important;
+    }
+  }
+  .selectPackageType {
+    width: 320px;
+  }
+  .phasesSubmit {
+    width: 133px;
+  }
+  .addBtn {
+    margin: var(--spacing-small) 0px;
+    padding: none;
+  }
+  .cvEnableSwitch {
+    margin-top: var(--spacing-medium);
+    margin-bottom: var(--spacing-xxlarge);
+  }
+  .btnContainer {
+    position: absolute;
+    right: -250px;
+    top: 280px;
+  }
+  .phasesListContainer {
+    max-height: 240px;
+    overflow: scroll;
+  }
+}

@@ -12,9 +12,12 @@ import {
   MultiTypeInputType,
   getMultiTypeFromValue,
   MultiTypeInput,
-  Label,
-  FormError
+  Text,
+  FormError,
+  RUNTIME_INPUT_VALUE,
+  AllowedTypes
 } from '@wings-software/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getPlaceholder, getTypeOfInput, setAppDynamicsTier } from '../../AppDHealthSource.utils'
 import { getInputGroupProps } from '../../../MonitoredServiceConnector.utils'
@@ -22,6 +25,7 @@ import css from '../../AppDHealthSource.module.scss'
 
 interface AppDynamicsTierInterface {
   isTemplate?: boolean
+  expressions?: string[]
   tierOptions: SelectOption[]
   tierLoading: boolean
   formikValues: any
@@ -38,6 +42,7 @@ interface AppDynamicsTierInterface {
 
 export default function AppDynamicsTier({
   isTemplate,
+  expressions,
   tierOptions,
   tierLoading,
   formikValues,
@@ -46,7 +51,7 @@ export default function AppDynamicsTier({
   tierError
 }: AppDynamicsTierInterface): JSX.Element {
   const { getString } = useStrings()
-  const allowedTypes =
+  const allowedTypes: AllowedTypes =
     getMultiTypeFromValue(formikValues?.appdApplication) === MultiTypeInputType.RUNTIME ||
     getMultiTypeFromValue(formikValues?.appdApplication) === MultiTypeInputType.EXPRESSION
       ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
@@ -56,16 +61,15 @@ export default function AppDynamicsTier({
     getTypeOfInput(formikValues?.appDTier || formikValues?.appdApplication)
   )
 
-  // React.useEffect(() => {
-  //   setMultitypeInputValue(getTypeOfInput(formikValues?.appdApplication))
-  // }, [formikValues?.appdApplication])
-
   return isTemplate ? (
     <>
-      <Label>{getString('cv.healthSource.connectors.AppDynamics.trierLabel')}</Label>
+      <Text color={Color.BLACK} margin={{ bottom: 'small' }}>
+        {getString('cv.healthSource.connectors.AppDynamics.trierLabel')}
+      </Text>
       <MultiTypeInput
-        key={multitypeInputValue}
+        key={multitypeInputValue + formikValues?.appdApplication}
         name={'appDTier'}
+        data-testid="appDTier"
         placeholder={getPlaceholder(tierLoading, 'cv.healthSource.connectors.AppDynamics.tierPlaceholder', getString)}
         selectProps={{
           items: tierOptions
@@ -73,7 +77,7 @@ export default function AppDynamicsTier({
         allowableTypes={allowedTypes}
         value={setAppDynamicsTier(tierLoading, formikValues?.appDTier, tierOptions, multitypeInputValue)}
         style={{ width: '300px' }}
-        expressions={[]}
+        expressions={expressions}
         multitypeInputValue={multitypeInputValue}
         onChange={async (item, _valueType, multiType) => {
           if (multitypeInputValue !== multiType) {
@@ -82,12 +86,14 @@ export default function AppDynamicsTier({
           const selectedItem = item as string | SelectOption
           const selectedValue = typeof selectedItem === 'string' ? selectedItem : selectedItem?.label?.toString()
           setAppDTierCustomField(selectedValue as string)
-          if (!(formikValues?.appdApplication === '<+input>' || formikValues?.appDTier === '<+input>')) {
+          if (
+            !(formikValues?.appdApplication === RUNTIME_INPUT_VALUE || formikValues?.appDTier === RUNTIME_INPUT_VALUE)
+          ) {
             await onValidate(formikValues?.appdApplication, selectedValue, formikValues.metricData)
           }
         }}
       />
-      {tierError && <FormError name={'appdApplication'} errorMessage={tierError} />}
+      {tierError && <FormError name="appDTier" errorMessage={tierError} />}
     </>
   ) : (
     <FormInput.Select
@@ -97,7 +103,9 @@ export default function AppDynamicsTier({
       value={setAppDynamicsTier(tierLoading, formikValues?.appDTier, tierOptions) as SelectOption}
       onChange={async item => {
         setAppDTierCustomField(item.label)
-        if (!(formikValues?.appdApplication === '<+input>' || formikValues?.appDTier === '<+input>')) {
+        if (
+          !(formikValues?.appdApplication === RUNTIME_INPUT_VALUE || formikValues?.appDTier === RUNTIME_INPUT_VALUE)
+        ) {
           await onValidate(formikValues.appdApplication, item.label as string, formikValues.metricData)
         }
       }}

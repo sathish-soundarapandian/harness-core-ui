@@ -85,6 +85,7 @@ exports[`Role Details Page render data 1`] = `
     class="StyledProps--font StyledProps--main PageBody--pageBody pageContainer"
     data-name="page-body"
   >
+    
     <div
       class="masonry"
     >

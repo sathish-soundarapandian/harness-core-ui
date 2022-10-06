@@ -98,7 +98,7 @@ describe('DatadogLogsHealthSource unit tests', () => {
 
   test('Ensure that existing queries (metrics) are transformed and passed to MultiItemsSideNav correctly.', async () => {
     // render component with mock health source which contains DatadogLog queries
-    render(<WrapperComponent data={DatadogLogMockHealthSource} onSubmit={jest.fn()} />)
+    render(<WrapperComponent data={DatadogLogMockHealthSource as any} onSubmit={jest.fn()} />)
 
     expect(createdMetricsValidationMock).toHaveBeenNthCalledWith(1, [
       DatadogLogQueryMock1.name,
@@ -108,7 +108,7 @@ describe('DatadogLogsHealthSource unit tests', () => {
 
   test('It should add new created metric to metrics map', async () => {
     // render component with mock health source which contains DatadogLog queries
-    const { container } = render(<WrapperComponent data={DatadogLogMockHealthSource} onSubmit={jest.fn()} />)
+    const { container } = render(<WrapperComponent data={DatadogLogMockHealthSource as any} onSubmit={jest.fn()} />)
     const selectAddMetricContainerMock = container.querySelector('.selectAddMetricContainer')
 
     if (!selectAddMetricContainerMock) {
@@ -129,7 +129,7 @@ describe('DatadogLogsHealthSource unit tests', () => {
 
   test('It should remove deleted metric from metrics map', async () => {
     // render component with mock health source which contains DatadogLog queries
-    const { container } = render(<WrapperComponent data={DatadogLogMockHealthSource} onSubmit={jest.fn()} />)
+    const { container } = render(<WrapperComponent data={DatadogLogMockHealthSource as any} onSubmit={jest.fn()} />)
     const selectRemoveMetricContainerMock = container.querySelector('.selectRemoveMetricContainer')
 
     if (!selectRemoveMetricContainerMock) {

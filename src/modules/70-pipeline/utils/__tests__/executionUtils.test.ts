@@ -8,6 +8,7 @@
 import * as utils from '../executionUtils'
 
 import stageGraph from './stage-graph.json'
+import success from './successful-execution.json'
 
 jest.mock('@pipeline/components/PipelineSteps/PipelineStepFactory', () => ({}))
 
@@ -16,7 +17,13 @@ describe('ExecutionUtils tests', () => {
     test('gives current running step from stage graph', () => {
       const result = utils.getActiveStep(stageGraph as unknown as any)
 
-      expect(result).toBe('WOLUCzOCQDWyjJyOLN_9TQ')
+      expect(result?.node).toBe('WOLUCzOCQDWyjJyOLN_9TQ')
+    })
+
+    test('gives successful step', () => {
+      const result = utils.getActiveStep(success.executionGraph as any, success.pipelineExecutionSummary as any)
+
+      expect(result?.node).toBe('Jt0IeteUS7i6aJ4-4jY-UQ')
     })
 
     test('handles empty objects', () => {

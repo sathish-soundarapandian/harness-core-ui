@@ -6,22 +6,34 @@
  */
 
 import React from 'react'
-import { ansiToJson } from 'anser'
+import { AnserJsonEntry, ansiToJson } from 'anser'
 import cx from 'classnames'
-import { breakOnLinks } from '@common/components/LinkifyText/LinkifyText'
+import { tokenize } from 'linkifyjs'
 
 import css from './LogLine.module.scss'
 
-function linkyText(txt: string): string {
-  return breakOnLinks(txt)
-    .map(textItem => {
-      if (textItem.type === 'URL') {
-        return `<a href="${textItem.content}" class="ansi-decoration-link" target="_blank" rel="noreferrer">${textItem.content}</a>`
+function linkifyText(txt: string): string {
+  return tokenize(txt)
+    .map(token => {
+      const content = token.toString()
+
+      if (token.isLink) {
+        return `<a href="${content}" class="ansi-decoration-link" target="_blank" rel="noreferrer">${content}</a>`
       }
 
-      return textItem.content
+      return content
     })
     .join('')
+}
+
+export function getAnserClasses(data: AnserJsonEntry): string {
+  return cx(
+    {
+      [`${data.bg}-bg`]: data.bg,
+      [`${data.fg}-fg`]: data.fg
+    },
+    ...(data.decorations || []).map(p => `ansi-decoration-${p}`)
+  )
 }
 
 export interface LogLineProps {
@@ -33,7 +45,7 @@ export interface LogLineProps {
 export function LogLine(props: LogLineProps): React.ReactElement {
   const { data, skipLinkify, className } = props
   const anserJson = React.useMemo(() => {
-    return ansiToJson(skipLinkify ? data : linkyText(data), { use_classes: true })
+    return ansiToJson(skipLinkify ? data : linkifyText(data), { use_classes: true })
   }, [data, skipLinkify])
 
   return (
@@ -41,13 +53,7 @@ export function LogLine(props: LogLineProps): React.ReactElement {
       {anserJson?.map((row, i) => {
         return (
           <span
-            className={cx(
-              {
-                [`${row.bg}-bg`]: row.bg,
-                [`${row.fg}-fg`]: row.fg
-              },
-              ...(row.decorations || []).map(p => `ansi-decoration-${p}`)
-            )}
+            className={getAnserClasses(row)}
             key={`${row.content}_${i}`}
             dangerouslySetInnerHTML={{ __html: row.content }}
           />

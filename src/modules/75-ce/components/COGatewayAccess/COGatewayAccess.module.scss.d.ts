@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addBtn: string
   readonly centerAlignedRadio: string
   readonly certiLabel: string
   readonly checkbox: string
@@ -15,7 +16,9 @@ declare const styles: {
   readonly configHeading: string
   readonly configInfo: string
   readonly customDomainContainer: string
+  readonly customExclusion: string
   readonly dnsLinkContainer: string
+  readonly drawerContainer: string
   readonly fixedDrawer: string
   readonly flexRow: string
   readonly formFieldRow: string
@@ -24,11 +27,13 @@ declare const styles: {
   readonly helpTextHeader: string
   readonly helperImage: string
   readonly infoSection: string
+  readonly kindSelector: string
   readonly lbNameInput: string
   readonly loadBalancerDnsConfigDialog: string
   readonly loadBalancerSelector: string
   readonly mapDomainHelperText: string
   readonly othersHelpTextContainer: string
+  readonly overlappingDomainsInfo: string
   readonly page: string
   readonly publicAccessibleCheckboxContainer: string
   readonly radioBtn: string
@@ -46,9 +51,11 @@ declare const styles: {
   readonly text: string
   readonly title: string
   readonly titleHelpTextDescription: string
+  readonly toggle: string
   readonly type: string
   readonly uploadCtaContainer: string
   readonly uploadText: string
+  readonly valueContainer: string
   readonly yamlEditorContainer: string
 }
 export default styles

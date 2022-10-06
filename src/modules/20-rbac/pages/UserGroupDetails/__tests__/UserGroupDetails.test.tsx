@@ -20,7 +20,7 @@ import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, userGroupPathProps } from '@common/utils/routeUtils'
 import { ResponseBoolean, useGetUserGroupAggregate } from 'services/cd-ng'
-import * as hooks from '@common/hooks/useFeatureFlag'
+import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
 import UserGroupDetails from '../UserGroupDetails'
 import {
   mockResponse,
@@ -74,6 +74,17 @@ jest.mock('services/cd-ng', () => ({
   }),
   useUnlinkSsoGroup: jest.fn().mockImplementation(() => {
     return { mutate: unLinkToSSoMock }
+  }),
+  useSearchLdapGroups: jest.fn().mockImplementation(() => {
+    return {
+      data: mockResponse,
+      loading: false,
+      refetch: jest.fn().mockReturnValue(mockResponse),
+      error: null
+    }
+  }),
+  useLinkToLdapGroup: jest.fn().mockImplementation(() => {
+    return { mutate: () => Promise.resolve(mockResponse) }
   })
 }))
 
@@ -95,10 +106,6 @@ describe('UserGroupDetails Test', () => {
       error: null,
       loading: false
     }))
-    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlags')
-    useFeatureFlags.mockReturnValue({
-      INHERITED_USER_GROUP: true
-    })
     const renderObj = render(
       <TestWrapper
         path={routes.toUserGroupDetails({ ...accountPathProps, ...userGroupPathProps })}
@@ -113,6 +120,19 @@ describe('UserGroupDetails Test', () => {
   })
   test('render data', () => {
     expect(container).toMatchSnapshot()
+  })
+
+  test('render data for community editiion', () => {
+    const communityEditionRender = render(
+      <TestWrapper
+        defaultLicenseStoreValues={communityLicenseStoreValues}
+        path={routes.toUserGroupDetails({ ...accountPathProps, ...userGroupPathProps })}
+        pathParams={{ accountId: 'testAcc', userGroupIdentifier: 'New_RG' }}
+      >
+        <UserGroupDetails />
+      </TestWrapper>
+    )
+    expect(communityEditionRender.container).toMatchSnapshot()
   })
   test('Delete Member', async () => {
     deleteMember.mockReset()
@@ -167,6 +187,7 @@ describe('UserGroupDetails Test', () => {
       </TestWrapper>
     )
     await waitFor(() => getAllByTextLinked('accessControl: common.userGroups'))
+    await waitFor(() => expect(getAllByTextLinked('rbac.userDetails.linkToSSOProviderModal.ldap')).not.toBeNull())
     const unLinkSSOButton = getAllByTextLinked('rbac.userDetails.linkToSSOProviderModal.delinkLabel')[0]
     fireEvent.click(unLinkSSOButton)
     await act(async () => {

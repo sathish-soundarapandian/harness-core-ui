@@ -10,17 +10,11 @@ import { useParams, useHistory } from 'react-router-dom'
 import moment from 'moment'
 import ReactTimeago from 'react-timeago'
 import { Intent } from '@blueprintjs/core'
-import { Container, ExpandingSearchInput, Layout, Pagination, TableV2, Text } from '@wings-software/uicore'
+import { Container, ExpandingSearchInput, Layout, Pagination, TableV2, Text } from '@harness/uicore'
 import type { Cell, Column } from 'react-table'
 import { Color } from '@harness/design-system'
 import ListingPageTemplate from '@cf/components/ListingPageTemplate/ListingPageTemplate'
-import {
-  CF_DEFAULT_PAGE_SIZE,
-  getErrorMessage,
-  rewriteCurrentLocationWithActiveEnvironment,
-  SEGMENT_PRIMARY_COLOR,
-  showToaster
-} from '@cf/utils/CFUtils'
+import { CF_DEFAULT_PAGE_SIZE, getErrorMessage, SEGMENT_PRIMARY_COLOR, showToaster } from '@cf/utils/CFUtils'
 import { useConfirmAction } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
@@ -49,10 +43,7 @@ export const SegmentsPage: React.FC = () => {
     refetch: refetchEnvs,
     environments
   } = useEnvironmentSelectV2({
-    selectedEnvironmentIdentifier: environmentIdentifier,
-    onChange: (_value, _environment, _userEvent) => {
-      rewriteCurrentLocationWithActiveEnvironment(_environment)
-    }
+    selectedEnvironmentIdentifier: environmentIdentifier
   })
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const { getString } = useStrings()
@@ -83,9 +74,10 @@ export const SegmentsPage: React.FC = () => {
   const onSearchInputChanged = useCallback(
     name => {
       setSearchTerm(name)
-      refetchSegments({ queryParams: { ...queryParams, name } as GetAllSegmentsQueryParams })
+      setPageNumber(0)
+      refetchSegments({ queryParams: { ...queryParams, name, pageNumber: 0 } as GetAllSegmentsQueryParams })
     },
-    [setSearchTerm, refetchSegments, queryParams]
+    [setSearchTerm, refetchSegments, queryParams, setPageNumber]
   )
   const loading = loadingEnvironments || loadingSegments
   const error = errEnvironments || errSegments
@@ -166,7 +158,7 @@ export const SegmentsPage: React.FC = () => {
                 margin={{ right: 'small' }}
               />
               <Container>
-                <Text style={{ fontWeight: 600, lineHeight: '24px', color: '#22222A' }}>{cell.row.original.name}</Text>
+                <Text color={Color.GREY_900}>{cell.row.original.name}</Text>
                 {description && <Text>{description}</Text>}
               </Container>
             </Layout.Horizontal>
@@ -280,7 +272,6 @@ export const SegmentsPage: React.FC = () => {
     </Container>
   ) : noSegmentExists ? (
     <NoSegmentsView
-      hasEnvironment={!!environments?.length}
       onNewSegmentCreated={segmentIdentifier => {
         gotoSegmentDetailPage(segmentIdentifier)
         showToaster(getString('cf.messages.segmentCreated'))

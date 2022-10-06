@@ -22,9 +22,10 @@ import css from './FlagDialog.module.scss'
 export interface FlagModalProps {
   disabled?: boolean
   environment: string
+  isLinkVariation?: boolean
 }
 
-const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment }) => {
+const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment, isLinkVariation }) => {
   const { getString } = useStrings()
   const [flagTypeClicked, setFlagTypeClicked] = useState(false)
   const [flagTypeView, setFlagTypeView] = useState('')
@@ -132,7 +133,7 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment }) => {
     )
   }, [flagTypeClicked, flagTypeView])
 
-  return <CreateFlagButton disabled={disabled} showModal={showModal} />
+  return <CreateFlagButton disabled={disabled} showModal={showModal} isLinkVariation={isLinkVariation} />
 }
 
 export default FlagModal

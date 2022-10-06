@@ -14,7 +14,8 @@ import type {
   PerspectiveTimeSeriesData,
   TimeSeriesDataPoints,
   QlceViewTimeGroupType,
-  Maybe
+  Maybe,
+  QlceViewFieldInputInput
 } from 'services/ce/services'
 
 import type { CCM_CHART_TYPES } from '@ce/constants'
@@ -38,6 +39,7 @@ interface CloudCostInsightChartProps {
   showLegends?: boolean
   pageType?: CCM_PAGE_TYPE
   anomaliesCountData?: PerspectiveAnomalyData[]
+  groupBy?: QlceViewFieldInputInput
 }
 
 /* istanbul ignore next */
@@ -106,7 +108,8 @@ const CloudCostInsightChart = forwardRef((props: CloudCostInsightChartProps, ref
     pageType,
     fetching,
     columnSequence,
-    anomaliesCountData
+    anomaliesCountData,
+    groupBy
   } = props
 
   const chartListData = useMemo(
@@ -160,6 +163,7 @@ const CloudCostInsightChart = forwardRef((props: CloudCostInsightChartProps, ref
         setFilterUsingChartClick={setFilterUsingChartClick}
         showLegends={showLegends || false}
         anomaliesCountData={anomaliesCountData}
+        groupBy={groupBy as QlceViewFieldInputInput}
       />
     </div>
   )

@@ -198,4 +198,8 @@ export class Utils {
   static getAllCustomDomains = (serverNames: string[] = [], customDomains?: string[]): string[] => {
     return uniq([...serverNames, ..._defaultTo(customDomains, [])])
   }
+
+  static getASErrorMessage = (e: any) => {
+    return e?.data?.errors?.join('\n')
+  }
 }

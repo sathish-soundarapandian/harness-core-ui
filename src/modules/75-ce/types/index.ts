@@ -84,7 +84,8 @@ export enum NodepoolTimeRangeType {
 
 export enum CCM_PAGE_TYPE {
   Workload = 'WORKLOAD',
-  Node = 'NODE'
+  Node = 'NODE',
+  Service = 'SERVICE'
 }
 
 export interface YamlDependency {
@@ -126,7 +127,6 @@ export enum CloudProvider {
 }
 
 export interface DNSLinkSetupFormVal {
-  usingCustomDomain: string
   customURL: string | undefined
   publicallyAccessible: string
   dnsProvider: string
@@ -176,3 +176,10 @@ export interface AzureFiltersProps {
   resourceGroup?: SelectOption
   tags?: SelectedTagFilter
 }
+
+export interface ServiceWarning {
+  action?: string
+  warning?: string
+}
+
+export type RefreshFunction = () => void

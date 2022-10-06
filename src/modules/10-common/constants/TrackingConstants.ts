@@ -171,6 +171,15 @@ export enum ManifestActions {
   UpdateManifestOnPipelinePage = 'Update Manifest on Pipeline Page'
 }
 
+export enum ServiceConfigActions {
+  SaveConnectionStringOnPipelinePage = 'Save Connection String on Pipeline Page',
+  SaveApplicationSettingOnPipelinePage = 'Save Application Setting on Pipeline Page'
+}
+
+export enum StartupScriptActions {
+  SaveStartupScriptOnPipelinePage = 'Save Startup Script on Pipeline Page'
+}
+
 export enum ArtifactActions {
   SavePrimaryArtifactOnPipelinePage = 'Save Primary Artifact on Pipeline Page',
   UpdatePrimaryArtifactOnPipelinePage = 'Update Primary Artifact on Pipeline Page',
@@ -223,6 +232,10 @@ export enum FeatureActions {
   BackToSelectFeatureFlagType = 'Back to FeatureFlag Type Select Clicked',
   VariationSettings = 'Variation Settings Loaded',
   CreateFeatureFlagSubmit = 'Create FeatureFlag Submitted',
+  AddFlagPipeline = 'Add New Flag Pipeline Button Clicked',
+  SavedFlagPipeline = 'Flag Pipeline Saved',
+  EditFlagPipeline = 'Edit Flag Pipeline Button Clicked',
+  DeletedFlagPipeline = 'Flag Pipeline Deleted',
   GitExperience = 'Set Up with Existing Repository Loaded',
   GitExperienceSubmit = 'Set Up with Existing Repository Submitted',
   GitExperienceBack = 'Set Up with Existing Repository Back Clicked',
@@ -246,4 +259,20 @@ export enum FeatureActions {
 export enum CCMActions {
   CCMStartPlanModal = 'CCM Start Plan Modal Loaded',
   CCMStartPlanContinue = 'CCM Start Plan Modal Continue Clicked'
+}
+
+export enum CIOnboardingActions {
+  SelectGitProvider = 'Git Provider Selected'
+}
+
+export enum CDOnboardingActions {
+  delegateInstallWizardStart = 'delegate_install wizard_start',
+  delegateInstallWizardEnd = 'delegate_install wizard_end',
+  StartOnboardingDelegateCreation = 'Start Onboarding Delegate Creation',
+  SetupOnboardingDelegate = 'Setup Onboarding Delegate',
+  SaveCreateOnboardingDelegate = 'Save Create Onboarding Delegate',
+  BackOnboardingDelgateCreation = 'Back Onboarding Delegate Creation',
+  DownloadOnboardingYAML = 'Download Onboarding YAML File',
+  HeartbeatVerifiedOnboardingYAML = 'HeartBeat Verified Onboarding YAML',
+  HeartBeatFailedOnboardingYAML = 'HeartBeat Failed Onboarding YAML'
 }

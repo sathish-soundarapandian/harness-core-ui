@@ -24,16 +24,20 @@ import {
   mockProjectsErrorResponse,
   getJiraCreateEditModePropsWithConnectorId,
   getJiraRequiredFieldRendererProps,
-  getJiraOptionalFieldRendererProps
+  getJiraOptionalFieldRendererProps,
+  getJiraUserFieldRendererProps,
+  mockJiraUserResponse
 } from './JiraCreateTestHelper'
 import { JiraFieldsRenderer } from '../JiraFieldsRenderer'
+import { JiraUserMultiTypeInput } from '../JiraUserMultiTypeInput'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: () => mockConnectorResponse,
   useGetJiraProjects: jest.fn(),
-  useGetJiraIssueCreateMetadata: () => mockProjectMetadataResponse
+  useGetJiraIssueCreateMetadata: () => mockProjectMetadataResponse,
+  useJiraUserSearch: () => mockJiraUserResponse
 }))
 describe('Jira Create fetch projects', () => {
   beforeAll(() => {
@@ -209,7 +213,7 @@ describe('Jira Create tests', () => {
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     fireEvent.change(queryByNameAttribute('name')!, { target: { value: 'jira createe step' } })
     expect(queryByDisplayValue('1d')).toBeTruthy()
-    expect(queryByDisplayValue('pid1')).toBeTruthy()
+    expect(queryByDisplayValue('p1')).toBeTruthy()
     expect(queryByDisplayValue('itd1')).toBeTruthy()
 
     fireEvent.click(getByText('common.optionalConfig'))
@@ -305,6 +309,37 @@ describe('Jira Create tests', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('Jira User Fields Renderer Test', async () => {
+    const props = getJiraUserFieldRendererProps()
+    const { container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ ALLOW_USER_TYPE_FIELDS_JIRA: true }}>
+        <JiraFieldsRenderer {...props}>
+          <JiraUserMultiTypeInput
+            props={{ ...props, connectorRef: 'abc' }}
+            formikFieldPath={'spec.selectedOptionalFields[0].value'}
+            selectedField={{
+              name: 'assignee',
+              key: 'assignee',
+              allowedValues: [],
+              schema: {
+                typeStr: '',
+                type: 'user'
+              },
+              required: false
+            }}
+            expressions={[]}
+          />
+        </JiraFieldsRenderer>
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+    await waitFor(() => {
+      fireEvent.change(container.querySelector('input[name="spec.selectedOptionalFields[0].value"]')!, {
+        target: { value: 'abhinav.singh3@harness.io' }
+      })
+    })
   })
 
   test('Minimum time cannot be less than 10s', () => {

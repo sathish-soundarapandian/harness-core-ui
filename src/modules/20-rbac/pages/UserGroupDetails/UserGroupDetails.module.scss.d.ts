@@ -12,6 +12,7 @@ declare const styles: {
   readonly buttonPadding: string
   readonly card: string
   readonly detailsContainer: string
+  readonly header: string
   readonly memberList: string
   readonly membersContainer: string
   readonly popover: string

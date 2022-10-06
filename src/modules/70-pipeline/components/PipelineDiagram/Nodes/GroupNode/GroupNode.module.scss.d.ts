@@ -8,5 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly nodelistpopover: string
+  readonly secondaryIcon: string
+  readonly stageRow: string
 }
 export default styles

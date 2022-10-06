@@ -10,10 +10,10 @@ import type { SelectOption } from '@wings-software/uicore'
 import { Intent } from '@harness/design-system'
 import { defaultTo, keyBy } from 'lodash-es'
 import { Tooltip } from '@blueprintjs/core'
-import type { PipelineInfoConfig } from 'services/cd-ng'
 import InfoStrip from '@common/components/InfoStrip/InfoStrip'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type {
+  PipelineInfoConfig,
   ResponseInputSetTemplateWithReplacedExpressionsResponse,
   StageExecutionResponse
 } from 'services/pipeline-ng'

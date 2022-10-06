@@ -55,7 +55,7 @@ exports[`PipelineSummaryCards shows data correctly 1`] = `
       class="StyledProps--font StyledProps--main summaryCards"
     >
       <div
-        class="StyledProps--font StyledProps--main card"
+        class="StyledProps--font StyledProps--main card variantIncrease"
       >
         <div
           class="StyledProps--font StyledProps--main cardHeader"
@@ -112,7 +112,7 @@ exports[`PipelineSummaryCards shows data correctly 1`] = `
         </div>
       </div>
       <div
-        class="StyledProps--font StyledProps--main card variantIncrease"
+        class="StyledProps--font StyledProps--main card variantDecrease"
       >
         <div
           class="StyledProps--font StyledProps--main cardHeader"
@@ -215,25 +215,6 @@ exports[`PipelineSummaryCards shows data correctly 1`] = `
           <div
             class="StyledProps--font StyledProps--main diffContent"
           >
-            <span
-              class="bp3-icon bp3-icon-caret-down StyledProps--main"
-              icon="caret-down"
-            >
-              <svg
-                data-icon="caret-down"
-                height="14"
-                viewBox="0 0 16 16"
-                width="14"
-              >
-                <desc>
-                  caret-down
-                </desc>
-                <path
-                  d="M12 6.5c0-.28-.22-.5-.5-.5h-7a.495.495 0 00-.37.83l3.5 4c.09.1.22.17.37.17s.28-.07.37-.17l3.5-4c.08-.09.13-.2.13-.33z"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
             <p
               class="StyledProps--font StyledProps--main"
             />
@@ -289,25 +270,6 @@ exports[`PipelineSummaryCards shows data correctly 1`] = `
           <div
             class="StyledProps--font StyledProps--main diffContent"
           >
-            <span
-              class="bp3-icon bp3-icon-caret-down StyledProps--main"
-              icon="caret-down"
-            >
-              <svg
-                data-icon="caret-down"
-                height="14"
-                viewBox="0 0 16 16"
-                width="14"
-              >
-                <desc>
-                  caret-down
-                </desc>
-                <path
-                  d="M12 6.5c0-.28-.22-.5-.5-.5h-7a.495.495 0 00-.37.83l3.5 4c.09.1.22.17.37.17s.28-.07.37-.17l3.5-4c.08-.09.13-.2.13-.33z"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
             <p
               class="StyledProps--font StyledProps--main"
             />

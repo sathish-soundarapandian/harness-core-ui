@@ -10,12 +10,10 @@ import { Icon, Button, Text } from '@wings-software/uicore'
 import { ResizeSensor } from '@blueprintjs/core'
 import cx from 'classnames'
 import { throttle } from 'lodash-es'
-
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import { isExecutionRunning, isExecutionCompletedWithBadState } from '@pipeline/utils/statusHelpers'
 import { processLayoutNodeMap, ExecutionStatusIconMap as IconMap } from '@pipeline/utils/executionUtils'
-import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
-
+import type { ProjectPathProps, ModulePathParams, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { StageNode, RunningIcon } from './StageNode'
 import { ParallelStageNode } from './ParallelStageNode'
 import css from './MiniExecutionGraph.module.scss'
@@ -25,10 +23,11 @@ const THROTTLE_TIME = 300
 
 export interface MiniExecutionGraphProps extends ProjectPathProps, ModulePathParams {
   pipelineExecution: PipelineExecutionSummary
+  source: ExecutionPathProps['source']
 }
 
 export default function MiniExecutionGraph(props: MiniExecutionGraphProps): React.ReactElement {
-  const { pipelineExecution, accountId, orgIdentifier, projectIdentifier, module } = props
+  const { pipelineExecution, accountId, orgIdentifier, projectIdentifier, module, source } = props
   const {
     successfulStagesCount,
     runningStagesCount,
@@ -138,6 +137,7 @@ export default function MiniExecutionGraph(props: MiniExecutionGraphProps): Reac
                     <ParallelStageNode
                       key={i}
                       stages={parallel}
+                      source={source}
                       {...{ accountId, orgIdentifier, projectIdentifier, module, pipelineIdentifier, planExecutionId }}
                     />
                   )
@@ -148,6 +148,7 @@ export default function MiniExecutionGraph(props: MiniExecutionGraphProps): Reac
                     <StageNode
                       key={stage.nodeUuid}
                       stage={stage}
+                      source={source}
                       {...{ accountId, orgIdentifier, projectIdentifier, module, pipelineIdentifier, planExecutionId }}
                     />
                   )

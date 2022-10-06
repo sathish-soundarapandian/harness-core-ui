@@ -11,10 +11,30 @@ import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+
 import { K8sApplyStep } from '../K8sApplyStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
-
+const overrides = [
+  {
+    manifest: {
+      identifier: 'Test',
+      type: 'Values' as any,
+      spec: {
+        store: {
+          type: 'Git',
+          spec: {
+            branch: 'test-3',
+            connectorRef: 'account.test',
+            gitFetchType: 'Branch',
+            paths: ['temp'],
+            repoName: 'reponame'
+          }
+        }
+      }
+    }
+  }
+]
 describe('Test K8sApplyStep', () => {
   beforeEach(() => {
     factory.registerStep(new K8sApplyStep())
@@ -37,7 +57,9 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: false,
-            filePaths: ['test-1', 'test-2']
+            skipRendering: false,
+            filePaths: ['test-1', 'test-2'],
+            overrides: overrides
           }
         }}
         type={StepType.K8sApply}
@@ -63,6 +85,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: ['test-1', 'test-2']
           }
         }}
@@ -75,6 +98,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: RUNTIME_INPUT_VALUE,
+            skipRendering: RUNTIME_INPUT_VALUE,
             filePaths: RUNTIME_INPUT_VALUE
           }
         }}
@@ -87,6 +111,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: RUNTIME_INPUT_VALUE
           }
         }}
@@ -108,6 +133,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: RUNTIME_INPUT_VALUE,
+            skipRendering: RUNTIME_INPUT_VALUE,
             filePaths: RUNTIME_INPUT_VALUE
           }
         }}
@@ -130,6 +156,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: false,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: ['test-1', 'test-2']
           }
         }}
@@ -142,6 +169,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: false,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: ['test-1', 'test-2']
           }
         }}
@@ -154,6 +182,7 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: false,
             skipSteadyStateCheck: false,
+            skipRendering: false,
             filePaths: ['test-1', 'test-2']
           }
         }}
@@ -190,6 +219,12 @@ describe('Test K8sApplyStep', () => {
                 fqn: 'pipeline.stages.qaStage.execution.steps.k8sApply.skipSteadyStateCheck',
                 localName: 'step.k8sApply.skipSteadyStateCheck'
               }
+            },
+            'step-skipRendering': {
+              yamlProperties: {
+                fqn: 'pipeline.stages.qaStage.execution.steps.k8sApply.skipRendering',
+                localName: 'step.k8sApply.skipRendering'
+              }
             }
           },
           variablesData: {
@@ -201,6 +236,7 @@ describe('Test K8sApplyStep', () => {
             spec: {
               skipDryRun: 'step-skipdryRun',
               skipSteadyStateCheck: 'step-skipSteadyCheck',
+              skipRendering: 'step-skipRendering',
               filePaths: ['step-filePaths', 'test-2']
             }
           }
@@ -226,7 +262,9 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: false,
             skipSteadyStateCheck: false,
-            filePaths: ['test-1', 'test-2']
+            skipRendering: false,
+            filePaths: ['test-1', 'test-2'],
+            overrides: overrides
           }
         }}
         type={StepType.K8sApply}
@@ -242,7 +280,9 @@ describe('Test K8sApplyStep', () => {
       spec: {
         filePaths: ['test-1', 'test-2'],
         skipDryRun: false,
-        skipSteadyStateCheck: false
+        skipSteadyStateCheck: false,
+        skipRendering: false,
+        overrides: overrides
       },
       timeout: '10m',
       type: 'K8sApply'
@@ -258,6 +298,7 @@ describe('Test K8sApplyStep', () => {
         spec: {
           skipDryRun: false,
           skipSteadyStateCheck: false,
+          skipRendering: false,
           filePaths: null
         }
       },
@@ -269,6 +310,7 @@ describe('Test K8sApplyStep', () => {
         spec: {
           skipDryRun: false,
           skipSteadyStateCheck: false,
+          skipRendering: false,
           filePaths: RUNTIME_INPUT_VALUE
         }
       },
@@ -292,7 +334,9 @@ describe('Test K8sApplyStep', () => {
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: false,
-            filePaths: ['test-1', 'test-2']
+            skipRendering: RUNTIME_INPUT_VALUE,
+            filePaths: ['test-1', 'test-2'],
+            overrides: overrides
           }
         }}
         path={'/abc'}
@@ -301,11 +345,31 @@ describe('Test K8sApplyStep', () => {
           name: 'Test A',
           identifier: 'Test_A',
           timeout: RUNTIME_INPUT_VALUE,
-
           spec: {
             skipDryRun: RUNTIME_INPUT_VALUE,
             skipSteadyStateCheck: RUNTIME_INPUT_VALUE,
-            filePaths: RUNTIME_INPUT_VALUE
+            skipRendering: RUNTIME_INPUT_VALUE,
+            filePaths: RUNTIME_INPUT_VALUE,
+            overrides: [
+              {
+                manifest: {
+                  identifier: 'Test',
+                  type: 'Values' as any,
+                  spec: {
+                    store: {
+                      type: 'Git',
+                      spec: {
+                        branch: RUNTIME_INPUT_VALUE,
+                        connectorRef: RUNTIME_INPUT_VALUE,
+                        gitFetchType: 'Branch',
+                        paths: RUNTIME_INPUT_VALUE,
+                        repoName: 'reponame'
+                      }
+                    }
+                  }
+                }
+              }
+            ]
           }
         }}
         type={StepType.K8sApply}

@@ -3,8 +3,8 @@
 exports[`test cases for ColumnSelector component should be able to render the column selector and its dropdown 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
-    style="align-items: flex-end;"
+    class="Layout--horizontal StyledProps--main StyledProps--padding-left-xlarge StyledProps--padding-top-xlarge"
+    style="align-items: center;"
   >
     <span
       style="flex-grow: 1;"

@@ -82,10 +82,12 @@ connectivityMode:
   connectToProvider: 'Connect to the provider'
   selectText: 'Select how you would like to connect to the provider'
 title:
+  customSecretManager: 'Custom Secrets Manager'
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'
   helmConnector: 'HTTP Helm Repo'
+  ociHelmConnector: 'OCI Helm Registry'
   gitConnector: 'Git Connector'
   githubConnector: 'GitHub Connector'
   gitlabConnector: 'GitLab Connector'
@@ -110,7 +112,6 @@ title:
   sumologic: 'SumoLogic'
   ceAws: 'AWS Connector '
   gcpKms: GCP Key Management Service
-  errorTracking: 'Error Tracking'
   azure: 'Azure Cloud Provider'
   harnessImageConnectorRef: 'Override Image Connector'
 placeholder:
@@ -118,6 +119,7 @@ placeholder:
 name_labels:
   Kubernetes: 'Kubernetes Connector Name'
   HttpHelmRepo: 'Helm Http Connector Name'
+  OCIHelm: 'Helm OCI Connector Name'
   Git: 'Git Connector Name'
   Github: 'GitHub Connector Name'
   Gitlab: 'GitLab Connector Name'
@@ -178,11 +180,15 @@ testConnectionStep:
     sumologic: Validating Sumologic authentication and permissions
     gcpKms: Validating GCP Key Management Service authentication and permissions
     testingURLReachability: Testing reachability to the URL
+    customSM: Validating Custom Secret Manager authentication and permissions
 validation:
   serviceNowUrl: 'ServiceNow URL is required.'
   personalAccessToken: Personal Access Token is required
+  connectorIsRequired: Connector is required.
 httpHelm:
   httpHelmRepoUrl: 'Helm Repo URL'
+ociHelm:
+  ociHelmUrl: 'OCI Helm URL'
 jira:
   jiraUrl: 'Jira URL'
 serviceNow:
@@ -241,13 +247,14 @@ hashiCorpVault:
   sinkPath: Sink Path
   sinkPathIsRequired: Sink Path is required
   k8s_auth: 'Kubernetes Auth'
+  k8sAuthEndpoint: Kubernetes Auth Endpoint
   vaultK8sAuthRole: Role Name
   serviceAccountTokenPath: Service Account Token Path
   vaultK8sAuthRoleRequired: Role Required
   serviceAccountRequired: Service Account Token Path Required
-  preventDefaultWhenReadOnly: Read only secret manager cannot be set as default
 nexus:
-  nexusLabel: Nexus
+  nexusLabel: Nexus3
+  nexus2Label: Nexus2
   nexusServerUrl: 'Nexus Repository URL'
 artifactory:
   artifactoryLabel: Artifactory
@@ -293,6 +300,9 @@ jenkins:
   bearerTokenRequired: Bearer token is required
   usernamePasswordAPIToken: 'Username and Password/APIToken'
   passwordAPIToken: 'Password/APIToken'
+  jenkinsConnectorLabel: 'Jenkins Connector'
+  jobNameLabel: 'Job Name'
+  jobParameterLabel: 'Job Parameter (Optional)'
   jenkins: 'Jenkins'
   jenkinsUrlRequired: 'Jenkins Registry URL is required'
   jenkinsUrl: 'Jenkins Registry URL'
@@ -305,6 +315,7 @@ aws:
   enableCrossAcc: Enable cross-account access (STS Role)
   crossAccURN: Cross account role ARN
   externalId: External Id (Optional)
+  testRegion: Test Region
   assumeIAMRole: Assume IAM role on Delegate
   useIRSA: Use IRSA
   validation:
@@ -333,6 +344,15 @@ newRelic:
   accountIdTooltip: For steps to get New Relic Account Id
   products:
     fullStackObservability: 'Full Stack Observability: APM'
+elk:
+  elkConnectorDetails: 'ELK Connector Details'
+  testConnectionStepValidation: 'Validating ELK authentication and permissions'
+  elkLabel: ELK
+  apiId: API ID
+  noAuthentication: No Authentication
+  validation:
+    apiKeyId: API ID is a required field
+    apiKeyRef: API KEY is a required field
 prometheus:
   urlValidation: Prometheus URL is required.
 datadog:
@@ -360,8 +380,9 @@ customHealth:
   valueRequired: Value is required.
   keyRequired: Key is required.
 cdng:
-  jobName: Job Name
   continousVerificationType: Continous Verification Type
+  monitoredServiceType: Monitored Service Type
+  verificationTypeHeading: Select a type that matches your deployment strategy.
   artifactTag: Artifact Tag
   defineVerificationJob: Define Verification Job
   baseline: Baseline
@@ -374,14 +395,16 @@ cdng:
   selectTheJobNameFirst: Please select the job name first by clicking on Define Verification Job Panel
   error: Something went wrong , please try again by clicking on CV step again
   monitoredService:
-    label: Monitored Service
+    label: Monitored Service Name
     fetchingMonitoredService: Fetching Monitored service ...
+    fetchingHealthSources: Fetching Health Sources ...
     creatingMonitoredService: Creating Monitored service ...
     fetchingMonitoredServiceError: Failed to fetch monitored service . Please try again by reopening the Verify Step
     autoCreateMonitoredService: Click to autocreate a monitored service
     creatingMonitoredServiceError: Failed to create monitored service . Please try again by reopening the Verify step and selecting service, environment.
     monitoredServiceText: A monitored service for the
     backToVerifyStep: Back to Verify Step
+    monitoredServiceDef: A Monitored Service is a Service and Environment combination that monitors any changes, such as deployments, infrastructure changes and any health trend deviations using logs and metrics obtained from APM and Logging tools.
   runTimeMonitoredService:
     pleaseSpecify: Please specify
     toFetchMonitoredService: to fetch the monitored service.
@@ -391,6 +414,7 @@ cdng:
     backToRunPipeline: Back to Run Pipeline
   healthSources:
     label: Health Sources
+    healthSourceDef: Monitors changes in health trends of the Service in a deployment environment using logs, metrics and events collected from an APM or logging tools.
     noHealthSourcesDefined: No health sources have been defined. To complete the verification, you would need at least one healthsource added.
   validations:
     deploymentTagRequired: Deployment Tag is required
@@ -401,6 +425,11 @@ cdng:
     monitoringServiceRequired: Monitored Service is required
     healthSourceRequired: At least one health source is required
     timeoutValidation: Timeout should be at least 40 minutes
+    applicationNameValidation: Application Name is required.
+    tierNameValidation: Tier Name is required.
+    completeMetricPathValidation: Complete Metric Path is required.
+    serviceInstanceMetricPathValidation: Service Instance Label Path is required.
+    serviceInstanceFieldNameValidation: Service Instance Field Name is required.
   verificationSensitivityLabel:
     high: High
     medium: Medium
@@ -525,6 +554,7 @@ ceAws:
     trySuggestion: '{{ $.common.errorHandler.tryTheseSuggestions }}'
     editConnector: '{{ $.connectors.editConnector }}'
     ifReq: '{{ $.connectors.ifReq }}'
+    govCloudHeader: 'Is this an AWS GovCloud account?'
     validation:
       numeric: 'AWS Account Id must be numeric'
       positive: 'AWS Account Id must be a positive number'
@@ -739,13 +769,17 @@ ceAzure:
     info: Cost visibility of the resources for which you added the Billing Export in the previous step is enabled by default. Select the others as per your requirements.
     visibilityCardDesc: Cost insights, anomaly detection, service insights, creating budgets perspectives and alerts, utilised/wasted resources in clusters.
     optimizationCardDesc: Detection of orphaned resources, recommendations to save costs, scaling/tearing down, turning off in non-work hours, reserving instances.
-    visibility:
+    billing:
       feat1: Azure costs by services, accounts, etc.
       feat2: Cost perspective by various constructs
       feat3: Cost anomaly detection
       feat4: Budgets and forecasts
       feat5: Email and Slack alerts
       footer: from Billing export
+    visibility:
+      heading: Inventory Management
+      feat1: VM inventory dashboard
+      feat2: VM metrics dashboard
     optimization:
       feat1: Orchestrate VMs based on idleness
       feat2: Set dependencies between VMs
@@ -761,6 +795,7 @@ ceAzure:
     registerCommand: '# Register the Harness app'
     costVisibilityCmd: '# Role assignment for enabling Cost Visibility'
     assignRoleCmd: '# Assign role to the app on the scope fetched above'
+    inventoryMgtCmd: '# Role assignment for enabling Inventory Management'
     optimisationCmd: '# Role assignment for enabling Cost Optimization using Autostopping'
   testConnection:
     heading: '{{ $.common.labelTestConnection }}'
@@ -778,13 +813,17 @@ ceGcp:
   overview:
     heading: '{{ $.overview }}'
     projectIdLabel: 'Specify Project Id'
+    alreadyExist: 'CCM Connector already exists for this GCP Project'
+    alreadyExistInfo: 'The GCP project {{projectId}} already has a Connector “{{existingConnectorName}}” linked to it. The Connector has permission for {{featureText}}'
   billingExport:
     heading: 'Setup Billing Export'
+    subHeading: 'The following {{ reportCount }} billing exports are connected with your Harness Account.'
     description: 'Cloud Billing export to BigQuery enables you to export detailed Google Cloud billing data (such as usage and cost estimate data) automatically throughout the day to a BigQuery dataset that you specify.'
     followInstruction: 'Please follow the instructions to provide create a Billing export for the specified Project Id'
     launchTemplate: 'Launch GCP console'
     datasetIdLabel: 'Dataset Name'
     tableIdLabel: 'Table Name'
+    setupNew: 'Setup new billing export'
   billingExtention:
     heading: 'How to create GCP Billing Export and find DataSet Name?'
     prerequisite: 'Pre-Requisite:A project where the Cloud Billing data will be stored with billing enabled on the project.'
@@ -800,7 +839,12 @@ ceGcp:
     step7: 'Select the BigQuery export tab (this tab is selected by default). On the BigQuery export tab, enable Daily cost detail.'
     otherLinks: 'Other Links:'
     link1: 'https://cloud.google.com/billing/docs/how-to/export-data-bigquery-setup'
-    link2: 'Harness Docs (https://ngdocs.harness.io/article/kxnsritjls)'
+    link2: 'Harness Docs (https://docs.harness.io/article/kxnsritjls)'
+  existingCurTable:
+    projectId: 'Project ID'
+    searchPlaceholder: 'Search Project ID'
+    nextStepHint1: 'If the GCP Project Id you entered is covered by any of the above, click “Continue >” to proceed.'
+    nextStepHint2: '{{ $.connectors.ceAws.curExising.nextStepHint2 }}'
   chooseRequirements:
     name: '{{ $.connectors.ceAws.steps.req }}'
     heading: '{{ $.connectors.ceAws.steps.req }}'
@@ -810,10 +854,10 @@ ceGcp:
     cardDetails:
       billing:
         feat1: 'GCP costs by product, project, etc.'
-        feat2: '{{$.connectors.ceAzure.chooseRequirements.visibility.feat2}}'
-        feat3: '{{$.connectors.ceAzure.chooseRequirements.visibility.feat3}}'
-        feat4: '{{$.connectors.ceAzure.chooseRequirements.visibility.feat4}}'
-        feat5: '{{$.connectors.ceAzure.chooseRequirements.visibility.feat5}}'
+        feat2: '{{$.connectors.ceAzure.chooseRequirements.billing.feat2}}'
+        feat3: '{{$.connectors.ceAzure.chooseRequirements.billing.feat3}}'
+        feat4: '{{$.connectors.ceAzure.chooseRequirements.billing.feat4}}'
+        feat5: '{{$.connectors.ceAzure.chooseRequirements.billing.feat5}}'
         footer: 'from Billing Export'
       visibility:
         feat1: 'GCE VMs'
@@ -838,17 +882,27 @@ ceGcp:
     optimization:
       step1: 'Navigate to IAM & Admin  in the GCP console'
       step2: 'Search for the service account: {{serviceAccount}}'
-      step3: 'Click on Edit Principal and add Editor role available in the Basic category'
+      step3: 'Click on Edit Principal and add Editor {{otherRole}} role available in the Basic category'
+    inventory:
+      computeEngine: 'Compute Engine'
+      step1: 'apis in your gcp project'
+      step2: 'and Compute Viewer role'
+      completePermissionStep: 'Click on Edit Principal and add Compute Viewer role available in the Basic category'
   testConnection:
     heading: '{{ $.common.labelTestConnection }}'
     step1: 'Verifying GCP connector setup'
     error: 'Could not verify connectivity'
 pdc:
+  selectLabel: 'Select how you would like to define your list of hosts'
+  manuallyHosts: 'Manually enter host names'
+  uploadJson: 'Upload JSON file'
   hosts: 'Hosts'
+  hostsJson: 'JSON content'
   hostsRule: 'Enter JSON or comma separated list here'
   hostsUpload1: 'Drop JSON file here'
   hostsUpload2: 'or click to upload'
   errorUploading: 'Uploading file error'
+  errorParsingJsonFile: 'File format not supported. Please provide a valid json file.'
   editHosts: 'Edit hosts'
   testConnection:
     step1: 'Validating the PDC hosts connectivity'
@@ -858,3 +912,25 @@ policyEvaluations:
   failedToSave: Connector cannot be saved due to the policy evaluation failures
   warning: Connector saved with policy warnings
 sameCredentialsAsAbove: Same credentials as above
+linkToGitProvider: 'Link to {{gitProvider}}'
+relinkToGitProvider: 'Re-link to {{gitProvider}}'
+oAuth:
+  inProgress: OAuth in progress...
+  failed: Error while authorizing user via OAuth. Please try using an access token instead.
+  configured: OAuth configured successfully
+  reConfigured: OAuth re-configured successfully
+  accessRevoked: Access revoked. Please reconfigure the connection.
+gitProviderURLs:
+  github: 'https://github.com'
+  gitlab: 'https://gitlab.com'
+  bitbucket: 'https://bitbucket.org'
+  azureRepos: 'https://dev.azure.com'
+customSM:
+  details: Custom Secrets Manager Details
+  selectTemplate: Select Template
+  executeOnDelegate: Execute on Delegate
+  templateRef: Template Reference
+  templateVersion: Template Version
+  sshKey: SSH Key Reference
+  validation:
+    template: Please select a template

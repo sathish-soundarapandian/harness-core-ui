@@ -14,4 +14,6 @@ export interface NewRelicCustomFormInterface {
   formikValues: InitNewRelicCustomFormInterface
   formikSetField: (key: string, value: any) => void
   connectorIdentifier: string
+  isTemplate?: boolean
+  expressions?: string[]
 }

@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { Layout } from '@wings-software/uicore'
+import { ButtonVariation, Container, Layout, VisualYamlToggle } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import type { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore/dist/components/VisualYamlToggle/VisualYamlToggle'
 import type {
   KerberosConfigDTO,
   SecretResponseWrapper,
@@ -19,26 +20,40 @@ import type {
   SSHPasswordCredentialDTO,
   TGTKeyTabFilePathSpecDTO,
   ConnectorConnectivityDetails,
-  TGTPasswordSpecDTO
+  TGTPasswordSpecDTO,
+  WinRmCredentialsSpecDTO,
+  NTLMConfigDTO
 } from 'services/cd-ng'
 import { getKeyForCredentialType, getStringForType } from '@secrets/utils/SSHAuthUtils'
 
-import VerifyConnection from '@secrets/modals/CreateSSHCredModal/views/VerifyConnection'
+import VerifyConnectionSSH from '@secrets/modals/CreateSSHCredModal/views/VerifyConnection'
+import VerifyConnectionWinRM from '@secrets/modals/CreateWinRmCredModal/views/VerifyConnection'
 import ConnectorStats from '@common/components/ConnectorStats/ConnectorStats'
 import {
   ActivityDetailsRowInterface,
   RenderDetailsTable
 } from '@common/components/RenderDetailsTable/RenderDetailsTable'
 import { useStrings } from 'framework/strings'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import css from './ViewSecretDetails.module.scss'
 
 interface ViewSecretDetailsProps {
   secret: SecretResponseWrapper
+  edit: boolean | undefined
+  handleEdit: () => void
+  setMode: (nextMode: SelectedView) => void
+  mode: SelectedView
 }
 
 const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
   const {
-    secret: { secret }
+    secret: { secret },
+    edit,
+    handleEdit,
+    setMode,
+    mode
   } = props
   const { getString } = useStrings()
 
@@ -54,6 +69,61 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
   const getSecretCredentialsRow = (): ActivityDetailsRowInterface[] => {
     const items: ActivityDetailsRowInterface[] = []
     items.push({ label: getString('secrets.labelType'), value: getStringForType(secret.type) })
+    if (secret.type === 'WinRmCredentials' && (secret.spec as WinRmCredentialsSpecDTO)?.auth?.type) {
+      items.push({
+        label: getString('authentication'),
+        value: (secret.spec as WinRmCredentialsSpecDTO)?.auth.type
+      })
+      if ((secret.spec as WinRmCredentialsSpecDTO)?.auth.type === 'NTLM') {
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.domain'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as NTLMConfigDTO).domain
+        })
+        items.push({
+          label: getString('username'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as NTLMConfigDTO).username
+        })
+        items.push({
+          label: getString('common.useSSL'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as NTLMConfigDTO).useSSL!.toString()
+        })
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.skipCertCheck'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as NTLMConfigDTO).skipCertChecks!.toString()
+        })
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.useNoProfile'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as NTLMConfigDTO).useNoProfile!.toString()
+        })
+      }
+      if ((secret.spec as WinRmCredentialsSpecDTO)?.auth.type === 'Kerberos') {
+        items.push({
+          label: getString('secrets.sshAuthFormFields.labelPrincipal'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).principal
+        })
+        items.push({
+          label: getString('secrets.sshAuthFormFields.labelRealm'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).realm
+        })
+        items.push({
+          label: getString('common.useSSL'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).useSSL!.toString()
+        })
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.skipCertCheck'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).skipCertChecks!.toString()
+        })
+        items.push({
+          label: getString('secrets.winRmAuthFormFields.useNoProfile'),
+          value: ((secret.spec as WinRmCredentialsSpecDTO)?.auth.spec as KerberosConfigDTO).useNoProfile!.toString()
+        })
+      }
+      items.push({
+        label: getString('secrets.winRmAuthFormFields.labelWinRmPort'),
+        value: (secret.spec as WinRmCredentialsSpecDTO)?.port
+      })
+    }
+
     if (secret.type === 'SSHKey' && (secret.spec as SSHKeySpecDTO)?.auth?.type) {
       items.push({
         label: getString('authentication'),
@@ -162,6 +232,31 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
   return (
     <Layout.Horizontal>
       <Layout.Vertical width="60%" spacing="large">
+        <Container padding={{ bottom: 'large' }}>
+          {edit ? null : (
+            <Layout.Horizontal flex>
+              <VisualYamlToggle
+                selectedView={mode}
+                onChange={nextMode => {
+                  setMode(nextMode)
+                }}
+              />
+              <RbacButton
+                text={getString('editDetails')}
+                icon="edit"
+                onClick={handleEdit}
+                permission={{
+                  permission: PermissionIdentifier.UPDATE_SECRET,
+                  resource: {
+                    resourceType: ResourceType.SECRET,
+                    resourceIdentifier: secret.identifier
+                  }
+                }}
+                variation={ButtonVariation.SECONDARY}
+              />
+            </Layout.Horizontal>
+          )}
+        </Container>
         <Layout.Horizontal spacing="medium">
           <RenderDetailsTable
             title={getString('overview')}
@@ -171,15 +266,21 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
           <RenderDetailsTable title={'Credentials'} data={getSecretCredentialsRow()} className={css.renderDetails} />
         </Layout.Horizontal>
       </Layout.Vertical>
-      {secret.type === 'SSHKey' ? (
-        <Layout.Vertical width="40%" spacing="xxxlarge" border={{ left: true }} padding={{ left: 'xxxlarge' }}>
+      {secret.type === 'SSHKey' || secret.type === 'WinRmCredentials' ? (
+        <Layout.Vertical
+          width="40%"
+          spacing="xxxlarge"
+          border={{ left: true, color: Color.GREY_300 }}
+          padding={{ left: 'xxxlarge' }}
+        >
           <ConnectorStats
             createdAt={props.secret.createdAt as number}
             lastUpdated={props.secret.updatedAt}
             status={'' as ConnectorConnectivityDetails['status']}
             className={css.stats}
           />
-          <VerifyConnection identifier={secret.identifier} />
+          {secret.type === 'SSHKey' && <VerifyConnectionSSH identifier={secret.identifier} />}
+          {secret.type === 'WinRmCredentials' && <VerifyConnectionWinRM identifier={secret.identifier} />}
         </Layout.Vertical>
       ) : null}
     </Layout.Horizontal>

@@ -542,7 +542,7 @@ exports[`smtp details render smtp creation dialog 1`] = `
                       class="Tooltip--acenter"
                       data-tooltip-id="smtpStepDetailsForm_host"
                     >
-                      pipelineSteps.hostLabel
+                      common.hostLabel
                     </span>
                      
                     <span
@@ -647,7 +647,7 @@ exports[`smtp details render smtp creation dialog 1`] = `
                         class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
                         data-tooltip-id="smtpStepDetailsForm_startTLS"
                       >
-                        common.smtp.startTSL
+                        common.smtp.startTLS
                       </span>
                     </label>
                   </div>

@@ -21,7 +21,8 @@ import {
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TerraformData, TerraformProps, TerraformStoreTypes } from './TerraformInterfaces'
 import ConfigInputs from './InputSteps/ConfigSection'
@@ -48,7 +49,7 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
       {getMultiTypeFromValue((inputSetData?.template as TerraformData)?.spec?.provisionerIdentifier) ===
         MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormInput.MultiTextInput
+          <TextFieldInputSetView
             name={`${path}.spec.provisionerIdentifier`}
             placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
             label={getString('pipelineSteps.provisionerIdentifier')}
@@ -57,12 +58,14 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
               expressions,
               allowableTypes
             }}
+            fieldPath={'spec.provisionerIdentifier'}
+            template={inputSetData?.template}
           />
         </div>
       )}
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             label={getString('pipelineSteps.timeoutLabel')}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             disabled={readonly}
@@ -72,6 +75,8 @@ export default function TerraformInputStep<T extends TerraformData = TerraformDa
               expressions,
               disabled: readonly
             }}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
           />
         </div>
       )}

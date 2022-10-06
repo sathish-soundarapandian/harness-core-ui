@@ -10,7 +10,7 @@ import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Color, Container, FontVariation, Heading, Icon, PageError, PageSpinner, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useGetSLODetails } from 'services/cv'
+import { SLODashboardWidget, useGetSLODetails } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { SLOTargetChart } from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart'
@@ -74,6 +74,27 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
     [type, sloPerformanceTrend, errorBudgetBurndown]
   )
 
+  const renderRecalculation = (serviceLevelObjectiveData: SLODashboardWidget): JSX.Element => {
+    if (!selectedSLO.outOfRange && serviceLevelObjectiveData?.calculatingSLI) {
+      return (
+        <PageSpinner className={cssCVSLOsListingPage.sloCardSpinner} message={getString('cv.sloAnalysisTakingLong')} />
+      )
+    } else if (!selectedSLO.outOfRange && serviceLevelObjectiveData?.recalculatingSLI) {
+      return (
+        <PageSpinner
+          className={cssCVSLOsListingPage.sloCardSpinner}
+          message={
+            type === SLOCardToggleViews.SLO
+              ? getString('cv.sloRecalculationInProgress')
+              : getString('cv.errorBudgetRecalculationInProgress')
+          }
+        />
+      )
+    } else {
+      return <></>
+    }
+  }
+
   return (
     <Container height={250}>
       <Heading level={2} font={{ variation: FontVariation.SMALL_SEMI }} color={Color.BLACK}>
@@ -95,16 +116,7 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWrapperProps> = ({
                 </Text>
               </Container>
             )}
-            {!selectedSLO.outOfRange && serviceLevelObjective.recalculatingSLI && (
-              <PageSpinner
-                className={cssCVSLOsListingPage.sloCardSpinner}
-                message={getString(
-                  type === SLOCardToggleViews.SLO
-                    ? 'cv.sloRecalculationInProgress'
-                    : 'cv.errorBudgetRecalculationInProgress'
-                )}
-              />
-            )}
+            {renderRecalculation(serviceLevelObjective)}
             {!selectedSLO.outOfRange && !!markerPosition && (
               <div style={{ position: 'absolute', top: 20 }}>
                 <ColumnChartEventMarker

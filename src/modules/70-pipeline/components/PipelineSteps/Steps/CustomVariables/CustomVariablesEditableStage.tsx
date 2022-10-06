@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { debounce } from 'lodash-es'
+import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import { Formik, FieldArray, FormikProps } from 'formik'
 import { v4 as uuid } from 'uuid'
 import {
@@ -22,25 +22,37 @@ import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import * as Yup from 'yup'
 
+import { useParams } from 'react-router-dom'
 import { String, useStrings } from 'framework/strings'
 import type { UseStringsReturn } from 'framework/strings'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import type { NGVariable } from 'services/cd-ng'
+import type { CustomDeploymentNGVariable, NGVariable } from 'services/cd-ng'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { getVariablesValidationField } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { useQueryParams } from '@common/hooks'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import type { CustomVariableEditableProps, CustomVariablesData } from './CustomVariableEditable'
 import { VariableType, labelStringMap } from './CustomVariableUtils'
 import AddEditCustomVariable, { VariableState } from './AddEditCustomVariable'
 import css from './CustomVariables.module.scss'
 
-const getValidationSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
+export type VariablesCustomValidationSchemaType = (
+  getString: UseStringsReturn['getString']
+) => Record<string, Yup.Schema<unknown>>
+
+const getValidationSchema = (
+  getString: UseStringsReturn['getString'],
+  validationSchema?: VariablesCustomValidationSchemaType
+): Yup.Schema<unknown> =>
   Yup.object().shape({
-    ...getVariablesValidationField(getString)
+    ...(validationSchema ? validationSchema(getString) : getVariablesValidationField(getString))
   })
 
 export function CustomVariablesEditableStage(props: CustomVariableEditableProps): React.ReactElement {
@@ -54,9 +66,21 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
     readonly,
     formName,
     tabName = 'OVERVIEW',
-    allowableTypes
+    allowableTypes,
+    allowedVarialblesTypes,
+    isDescriptionEnabled,
+    addVariableLabel,
+    validationSchema,
+    isDrawerMode
   } = props
   const uids = React.useRef<string[]>([])
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<{
+    projectIdentifier: string
+    orgIdentifier: string
+    accountId: string
+  }>()
+
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
 
@@ -69,13 +93,12 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
 
   function addNew(): void {
     setSelectedVariable({
-      variable: { name: '', type: 'String', value: '' },
+      variable: { name: '', type: 'String', value: '', description: '' },
       index: -1
     })
   }
 
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
 
   React.useEffect(() => {
@@ -92,7 +115,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
       initialValues={initialValues}
       onSubmit={data => onUpdate?.(data)}
       validate={debouncedUpdate}
-      validationSchema={enableValidation ? getValidationSchema(getString) : undefined}
+      validationSchema={enableValidation ? getValidationSchema(getString, validationSchema) : undefined}
     >
       {formik => {
         const { values, setFieldValue } = formik
@@ -107,7 +130,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
               }
 
               function handleUpdate(index: number, variable: AllNGVariables): void {
-                variable.value = ''
+                variable.value = isValueRuntimeInput(variable.value) ? variable.value : ''
                 replace(index, variable)
               }
 
@@ -125,11 +148,16 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                     updateVariable={handleUpdate}
                     existingVariables={values.variables}
                     formName={formName}
+                    allowedVarialblesTypes={allowedVarialblesTypes}
+                    isDescriptionEnabled={isDescriptionEnabled}
                   />
                   {values.variables?.length > 0 ? (
-                    <div className={cx(css.tableRow, css.headerRow)}>
+                    <div className={cx(css.tableRow, css.headerRow, 'variablesTableRow')}>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('name')}</Text>
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('typeLabel')}</Text>
+                      {isDescriptionEnabled && (
+                        <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('description')}</Text>
+                      )}
                       <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('valueLabel')}</Text>
                     </div>
                   ) : null}
@@ -142,7 +170,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                     const yamlData = yamlProperties?.[index] || {}
 
                     return (
-                      <div key={key} className={css.tableRow}>
+                      <div key={key} className={cx(css.tableRow, 'variablesTableRow')}>
                         <TextInputWithCopyBtn
                           name={`variables[${index}].name`}
                           label=""
@@ -155,8 +183,29 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                           stringID={labelStringMap[variable.type as VariableType]}
                           data-testid={`variables[${index}].type`}
                         />
+                        {isDescriptionEnabled && (
+                          <Text lineClamp={1}>{isEmpty(variable?.description) ? '-' : variable?.description}</Text>
+                        )}
+
                         <div className={css.valueColumn} data-type={getMultiTypeFromValue(variable.value as string)}>
-                          {variable.type === VariableType.Secret ? (
+                          {(variable.type as CustomDeploymentNGVariable) === VariableType.Connector ? (
+                            <FormMultiTypeConnectorField
+                              name={`variables[${index}].value`}
+                              label=""
+                              placeholder={getString('connectors.selectConnector')}
+                              disabled={readonly}
+                              accountIdentifier={accountId}
+                              multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
+                              projectIdentifier={projectIdentifier}
+                              orgIdentifier={orgIdentifier}
+                              gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+                              setRefValue
+                              connectorLabelClass="connectorVariableField"
+                              enableConfigureOptions={false}
+                              isDrawerMode={isDrawerMode}
+                              type={[]}
+                            />
+                          ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput name={`variables[${index}].value`} label="" disabled={readonly} />
                           ) : (
                             <FormInput.MultiTextInput
@@ -214,12 +263,13 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                   })}
                   {values.canAddVariable && (
                     <Button
+                      icon="plus"
                       className={css.addVariable}
                       disabled={readonly}
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
                       onClick={addNew}
-                      text={'+ ' + getString('common.addVariable')}
+                      text={getString(defaultTo(addVariableLabel, 'common.addVariable'))}
                     />
                   )}
                 </div>

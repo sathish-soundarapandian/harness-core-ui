@@ -75,7 +75,7 @@ exports[`CDFirstGenTrial Test cases it should render the dialog with no deployme
             class="StyledProps--font StyledProps--main StyledProps--padding-top-xxxlarge"
           >
             <a
-              href="https://ngdocs.harness.io/article/1fjmm4by22"
+              href="https://docs.harness.io/article/1fjmm4by22"
               rel="noreferrer"
               target="_blank"
             >
@@ -110,7 +110,7 @@ exports[`CDFirstGenTrial Test cases it should render the dialog with valid deplo
         <p
           class="StyledProps--font StyledProps--main StyledProps--margin-top-xxxlarge StyledProps--margin-right-xxxlarge StyledProps--padding-top-large StyledProps--color StyledProps--color-grey800 StyledProps--font-size-large StyledProps--font-weight-bold"
         >
-          serviceDeploymentTypes.awsLambda is available on Harness CD First Generation
+          pipeline.serviceDeploymentTypes.awsLambda is available on Harness CD First Generation
         </p>
         <div
           class="cdFirstGenTrialContent"
@@ -164,7 +164,7 @@ exports[`CDFirstGenTrial Test cases it should render the dialog with valid deplo
             class="StyledProps--font StyledProps--main StyledProps--padding-top-xxxlarge"
           >
             <a
-              href="https://ngdocs.harness.io/article/1fjmm4by22"
+              href="https://docs.harness.io/article/1fjmm4by22"
               rel="noreferrer"
               target="_blank"
             >
@@ -199,7 +199,7 @@ exports[`CDFirstGenTrial Test cases it should render the dialog with valid deplo
         <p
           class="StyledProps--font StyledProps--main StyledProps--margin-top-xxxlarge StyledProps--margin-right-xxxlarge StyledProps--padding-top-large StyledProps--color StyledProps--color-grey800 StyledProps--font-size-large StyledProps--font-weight-bold"
         >
-          serviceDeploymentTypes.awsLambda is available on Harness CD First Generation
+          pipeline.serviceDeploymentTypes.awsLambda is available on Harness CD First Generation
         </p>
         <div
           class="cdFirstGenTrialContent"
@@ -281,7 +281,7 @@ exports[`CDFirstGenTrial Test cases it should render the dialog with valid deplo
             class="StyledProps--font StyledProps--main StyledProps--padding-top-xxxlarge"
           >
             <a
-              href="https://ngdocs.harness.io/article/1fjmm4by22"
+              href="https://docs.harness.io/article/1fjmm4by22"
               rel="noreferrer"
               target="_blank"
             >

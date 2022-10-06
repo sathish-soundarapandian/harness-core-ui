@@ -8,9 +8,9 @@
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import { get, set, isEmpty, isNil } from 'lodash-es'
-import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { FormikErrors } from 'formik'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
 import { listSecretsV2Promise, SecretResponseWrapper } from 'services/cd-ng'
@@ -18,6 +18,7 @@ import { StepViewType, ValidateInputSetProps, Step } from '@pipeline/components/
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 import type { AllNGVariables } from '@pipeline/utils/types'
 import { CustomVariableEditable, CustomVariableEditableExtraProps } from './CustomVariableEditable'
 import { CustomVariableInputSet, CustomVariableInputSetExtraProps } from './CustomVariableInputSet'
@@ -52,7 +53,7 @@ export class CustomVariables extends Step<CustomVariablesData> {
   ): JSX.Element {
     const { initialValues, onUpdate, stepViewType, customStepProps, inputSetData, readonly, allowableTypes } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (isTemplatizedView(stepViewType)) {
       return (
         <CustomVariableInputSet
           initialValues={initialValues}
@@ -188,6 +189,7 @@ export class CustomVariables extends Step<CustomVariablesData> {
         ...(!isNil(row.default)
           ? { default: row.type === 'Number' ? parseFloat(row.default as unknown as string) : row.default }
           : {}),
+        ...(!isNil(row.description) ? { description: row.description } : {}),
         value:
           row.type === 'Number' &&
           getMultiTypeFromValue(row.value as unknown as string) === MultiTypeInputType.FIXED &&

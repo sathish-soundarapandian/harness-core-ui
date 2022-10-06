@@ -7,7 +7,7 @@
 
 import { ValueType } from '@secrets/components/TextReference/TextReference'
 import { setSecretField } from '@secrets/utils/SecretField'
-import type { ConnectorConfigDTO, GetSecretV2QueryParams, SecretRefData } from 'services/cd-ng'
+import type { ConnectorConfigDTO, GetSecretV2QueryParams } from 'services/cd-ng'
 import type { CustomHealthConnectorDTO, CustomHealthKeyAndValue } from 'services/cv'
 import type {
   BaseCompFields,
@@ -96,7 +96,7 @@ function getSpecHeaderAndEntity(entity: PlainEntity | EncryptedEntity): CustomHe
   if (entity?.value?.fieldType === ValueType.ENCRYPTED && entity.key && entity.value.secretField?.referenceString) {
     return {
       valueEncrypted: true,
-      encryptedValueRef: entity.value.secretField.referenceString as SecretRefData,
+      encryptedValueRef: entity.value.secretField.referenceString,
       key: entity.key
     }
   } else if (entity?.value?.fieldType === ValueType.TEXT && entity.key && entity.value.textField) {

@@ -57,8 +57,3 @@ export interface FormVariationMap {
 export interface VariationColorMap {
   [key: string]: string
 }
-
-export interface TagInputItem {
-  label: string
-  value: string
-}

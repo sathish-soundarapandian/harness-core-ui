@@ -23,6 +23,7 @@ export const getBucketSizeForTimeRange = (timeRange?: DateRange): number => {
 }
 
 export const startOfDay = (time: moment.Moment): Date => time.utc().startOf('day').toDate()
+export const endOfDay = (time: number): number => moment(time).utc().endOf('day').toDate().getTime()
 
 export interface TimeRangeSelectorProps {
   range: DateRange
@@ -46,12 +47,12 @@ export const TimeRangeSelector: React.FC<{
     },
     {
       dateRange: [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())],
-      label: getString('common.duration.month'),
+      label: getString('common.subscriptions.usage.last30days'),
       includeTime: true
     },
     {
       dateRange: [startOfDay(moment().subtract(3, 'month').add(1, 'day')), startOfDay(moment())],
-      label: getString('common.duration.3months'),
+      label: getString('common.duration.90Days'),
       includeTime: true
     },
     {

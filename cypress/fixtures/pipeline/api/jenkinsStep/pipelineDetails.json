@@ -1,0 +1,10 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "yamlPipeline": "pipeline:\n  name: testPipeline_Cypress\n  identifier: testPipeline_Cypress\n  projectIdentifier: Satyam_Onboarding\n  orgIdentifier: default\n  tags: {}\n  stages:\n    - stage:\n        name: Jenkins\n        identifier: Jenkins\n        description: \"\"\n        type: Custom\n        spec:\n          execution:\n            steps:\n              - step:\n                  type: JenkinsBuild\n                  name: jenkinsStep\n                  identifier: jenkinsStep\n                  spec:\n                    connectorRef: testConnector\n                    jobName: AutomationQA\n                    jobParameter:\n                      - name: booleankey\n                        value: \"true\"\n                        type: String\n                        id: cab37f9d-d8a9-419b-863b-9e59a4d31e36\n                      - name: name\n                        value: test name\n                        type: String\n                        id: 90d02035-7548-4148-aca8-0514654f67bf\n                      - name: test\n                        value: \"123\"\n                        type: String\n                        id: e9a3f9c8-46ac-45c0-bede-d01c7378d87e\n                    delegateSelectors: []\n                    unstableStatusAsSuccess: false\n                    captureEnvironmentVariable: false\n                  timeout: 10m\n        tags: {}\n",
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "modules": ["pms"]
+  },
+  "metaData": null,
+  "correlationId": "3c87b330-f94e-4227-980a-61578a0186a0"
+}

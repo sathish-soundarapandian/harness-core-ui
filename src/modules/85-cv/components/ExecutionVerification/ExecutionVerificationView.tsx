@@ -87,6 +87,7 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
           <Tab
             id={getString('errors')}
             title={getString('errors')}
+            panelClassName={css.mainTabPanelLogs}
             panel={
               <LogAnalysisContainer
                 step={step}

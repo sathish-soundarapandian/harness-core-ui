@@ -6,7 +6,14 @@
  */
 
 import React from 'react'
-import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import {
+  IconName,
+  Formik,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
@@ -18,13 +25,14 @@ import type { K8sCanaryDeleteStepInfo, StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
@@ -40,7 +48,7 @@ interface K8sCanaryDeployProps {
   readonly?: boolean
   onUpdate?: (data: K8sCanaryDeleteStepData) => void
   onChange?: (data: K8sCanaryDeleteStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
   inputSetData?: {
@@ -124,6 +132,7 @@ function K8sCanaryDeleteWidget(
                       setFieldValue('timeout', value)
                     }}
                     isReadonly={readonly}
+                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
                   />
                 )}
               </div>
@@ -142,7 +151,7 @@ const K8sCanaryDeleteInputWidget: React.FC<K8sCanaryDeployProps> = ({ inputSetDa
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
             multiTypeDurationProps={{
               enableConfigureOptions: false,
@@ -152,6 +161,8 @@ const K8sCanaryDeleteInputWidget: React.FC<K8sCanaryDeployProps> = ({ inputSetDa
             }}
             label={getString('pipelineSteps.timeoutLabel')}
             disabled={inputSetData?.readonly}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
           />
         </div>
       )}
@@ -210,7 +221,7 @@ export class K8sCanaryDeleteStep extends PipelineStep<K8sCanaryDeleteStepData> {
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <K8sCanaryDeleteInputWidget
           initialValues={initialValues}
@@ -245,7 +256,7 @@ export class K8sCanaryDeleteStep extends PipelineStep<K8sCanaryDeleteStepData> {
 
   protected type = StepType.K8sCanaryDelete
   protected stepName = 'K8s Canary Delete'
-
+  protected referenceId = 'canaryDeleteStep'
   protected stepIcon: IconName = 'canary-delete'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sCanaryDelete'
 

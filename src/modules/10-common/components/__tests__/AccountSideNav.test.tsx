@@ -9,10 +9,26 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
+import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
+import { useGetAccountNG } from 'services/cd-ng'
 import AccountSideNav from '../AccountSideNav/AccountSideNav'
-
+jest.mock('services/cd-ng')
+const useGetAccountNGMock = useGetAccountNG as jest.MockedFunction<any>
 beforeEach(() => {
   window.deploymentType = 'SAAS'
+  useGetAccountNGMock.mockImplementation(() => {
+    return {
+      data: {
+        data: {
+          name: 'account name',
+          identifier: 'id1',
+          cluster: 'free',
+          defaultExperience: 'NG'
+        }
+      },
+      refetch: jest.fn()
+    }
+  })
 })
 describe('AccountSideNav', () => {
   test('AccountSideNav simple snapshot test', () => {
@@ -25,9 +41,8 @@ describe('AccountSideNav', () => {
   })
 
   test('Disable launch button for community edition', () => {
-    window.deploymentType = 'COMMUNITY'
     const { container } = render(
-      <TestWrapper>
+      <TestWrapper defaultLicenseStoreValues={communityLicenseStoreValues}>
         <AccountSideNav />
       </TestWrapper>
     )
@@ -44,8 +59,8 @@ describe('AccountSideNav', () => {
       <TestWrapper
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CI: { edition: 'ENTERPRISE', licenseType: 'PAID' },
-            CD: { edition: 'FREE', licenseType: 'TRIAL' }
+            CI: { edition: 'ENTERPRISE', status: 'ACTIVE' },
+            CD: { edition: 'FREE', status: 'EXPIRED' }
           }
         }}
       >
@@ -65,8 +80,8 @@ describe('AccountSideNav', () => {
       <TestWrapper
         defaultLicenseStoreValues={{
           licenseInformation: {
-            CI: { edition: 'ENTERPRISE', licenseType: 'PAID' },
-            CD: { edition: 'FREE', licenseType: 'TRIAL' }
+            CI: { edition: 'ENTERPRISE', status: 'ACTIVE' },
+            CD: { edition: 'FREE', status: 'EXPIRED' }
           }
         }}
       >
@@ -89,9 +104,6 @@ describe('AccountSideNav', () => {
   })
 
   test('AccountSideNav test audit trail', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      AUDIT_TRAIL_WEB_INTERFACE: true
-    })
     const renderObj = render(
       <TestWrapper>
         <AccountSideNav />

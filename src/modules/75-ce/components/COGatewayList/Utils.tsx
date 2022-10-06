@@ -6,16 +6,12 @@
  */
 
 import React from 'react'
-import { defaultTo as _defaultTo } from 'lodash-es'
+import { defaultTo as _defaultTo, isEmpty, get } from 'lodash-es'
 import moment from 'moment'
 import { getColorValue } from '@common/components/HeatMap/ColorUtils'
-import {
-  CreatedStatusIndicator,
-  RunningStatusIndicator,
-  StoppedStatusIndicator
-} from '@ce/common/InstanceStatusIndicator/InstanceStatusIndicator'
 import type { AllResourcesOfAccountResponse, Service } from 'services/lw'
 import { GatewayKindType, PROVIDER_TYPES, RulesMode } from '@ce/constants'
+import type { Provider } from '../COCreateGateway/models'
 import odIcon from './images/ondemandIcon.svg'
 import spotIcon from './images/spotIcon.svg'
 import css from './COGatewayCumulativeAnalytics.module.scss'
@@ -77,14 +73,8 @@ export function getInstancesLink(service: Service, resources?: AllResourcesOfAcc
   }
 }
 
-const gatewayStateMap: { [key: string]: JSX.Element } = {
-  down: <StoppedStatusIndicator />,
-  active: <RunningStatusIndicator />,
-  created: <CreatedStatusIndicator />
-}
-
-export function getStateTag(state: string): JSX.Element {
-  return gatewayStateMap[state]
+export function getStateTag(): JSX.Element {
+  return <></>
 }
 const PLOT_LINE_LOCATIONS = [11, 22, 33, 44, 55, 66, 77, 88].map(degree => ({
   color: 'white',
@@ -294,4 +284,75 @@ export function cleanupForHostName(name: string): string {
 
 export function roundToPrecision(n: number): number {
   return Math.round(n * 100) / 100
+}
+
+export const getFilterBodyFromFilterData = (data: { [key: string]: any }) => {
+  return Object.entries(data).map(([key, values]) => {
+    return {
+      field: key,
+      operator: 'equals',
+      values
+    }
+  })
+}
+
+export const getRuleType = (rule: Service, provider?: Provider) => {
+  let type = ''
+  if (rule.kind === 'k8s') {
+    type = 'ce.co.ruleTypes.k8s'
+  } else if (provider?.value === PROVIDER_TYPES.AWS) {
+    if (!isEmpty(rule.routing?.container_svc)) {
+      type = 'ce.co.ruleTypes.ecs'
+    } else if (!isEmpty(rule.routing?.database)) {
+      type = 'ce.co.ruleTypes.rds'
+    } else if (!isEmpty(rule.routing?.instance?.scale_group)) {
+      type = 'ce.co.ruleTypes.asg'
+    } else {
+      type = 'ce.co.ruleTypes.ec2'
+    }
+  } else if (provider?.value === PROVIDER_TYPES.AZURE) {
+    type = 'ce.co.autoStoppingRule.helpText.step2.description.resourceList.azureVms'
+  } else if (provider?.value === PROVIDER_TYPES.GCP) {
+    if (!isEmpty(rule.routing?.instance?.scale_group)) {
+      type = 'ce.co.ruleTypes.ig'
+    } else {
+      type = 'ce.co.ruleTypes.gcpVm'
+    }
+  }
+  return type
+}
+
+export const isK8sWorkloadRule = (k8sJson: Record<string, any>) => {
+  return !isEmpty(k8sJson.spec.ingress) && !isEmpty(k8sJson.spec.istio) && !isEmpty(k8sJson.spec.traefik)
+}
+
+export const getManagedResourcesStringId = (rule: Service, provider?: Provider) => {
+  let id = ''
+  if (rule.kind === 'k8s') {
+    const k8sJson = JSON.parse(get(rule, 'routing.k8s.RuleJson', '{}'))
+    if (isK8sWorkloadRule(k8sJson)) {
+      id = 'workload'
+    } else {
+      id = 'service'
+    }
+  } else if (provider?.value === PROVIDER_TYPES.AWS) {
+    if (!isEmpty(rule.routing?.container_svc)) {
+      id = 'ce.co.resourcesManagedDescription.ecs'
+    } else if (!isEmpty(rule.routing?.database)) {
+      id = 'ce.co.resourcesManagedDescription.rds'
+    } else if (!isEmpty(rule.routing?.instance?.scale_group)) {
+      id = 'ce.co.resourcesManagedDescription.asg'
+    } else {
+      id = 'ce.co.resourcesManagedDescription.ec2'
+    }
+  } else if (provider?.value === PROVIDER_TYPES.AZURE) {
+    id = 'ce.co.resourcesManagedDescription.azureVm'
+  } else if (provider?.value === PROVIDER_TYPES.GCP) {
+    if (!isEmpty(rule.routing?.instance?.scale_group)) {
+      id = 'ce.co.resourcesManagedDescription.gcpVm'
+    } else {
+      id = 'ce.co.resourcesManagedDescription.gcpVm'
+    }
+  }
+  return id
 }

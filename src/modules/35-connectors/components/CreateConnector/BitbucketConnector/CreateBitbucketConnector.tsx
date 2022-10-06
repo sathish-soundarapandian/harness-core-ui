@@ -14,14 +14,16 @@ import {
   CreateConnectorModalProps,
   GIT_TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { useStrings } from 'framework/strings'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import { buildBitbucketPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '../commonSteps/GitDetailsStep'
 import StepBitbucketAuthentication from './StepAuth/StepBitbucketAuthentication'
+import ConnectivityModeStep from '../commonSteps/ConnectivityModeStep/ConnectivityModeStep'
 import css from './CreateBitbucketConnector.module.scss'
 const CreateBitbucketConnector = (props: CreateConnectorModalProps): JSX.Element => {
   const { getString } = useStrings()
@@ -32,7 +34,9 @@ const CreateBitbucketConnector = (props: CreateConnectorModalProps): JSX.Element
     'setIsEditMode',
     'accountId',
     'orgIdentifier',
-    'projectIdentifier'
+    'projectIdentifier',
+    'connectivityMode',
+    'setConnectivityMode'
   ])
 
   return (
@@ -49,6 +53,7 @@ const CreateBitbucketConnector = (props: CreateConnectorModalProps): JSX.Element
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
         mock={props.mock}
+        helpPanelReferenceId="BitbucketConnectorOverview"
       />
       <GitDetailsStep
         type={Connectors.BITBUCKET}
@@ -56,24 +61,43 @@ const CreateBitbucketConnector = (props: CreateConnectorModalProps): JSX.Element
         isEditMode={props.isEditMode}
         connectorInfo={props.connectorInfo}
         mock={props.mock}
+        helpPanelReferenceId="BitbucketConnectorDetails"
       />
       <StepBitbucketAuthentication
         name={getString('credentials')}
         identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
         {...commonProps}
         onConnectorCreated={props.onSuccess}
+        helpPanelReferenceId="BitbucketConnectorCredentials"
       />
-      <DelegateSelectorStep
-        name={getString('delegate.DelegateselectionLabel')}
+      <ConnectivityModeStep
+        name={getString('connectors.selectConnectivityMode')}
+        type={Connectors.BITBUCKET}
+        gitDetails={props.gitDetails}
+        connectorInfo={props.connectorInfo}
         isEditMode={props.isEditMode}
         setIsEditMode={props.setIsEditMode}
         buildPayload={buildBitbucketPayload}
+        connectivityMode={props.connectivityMode}
+        setConnectivityMode={props.setConnectivityMode}
         hideModal={props.onClose}
         onConnectorCreated={props.onSuccess}
-        connectorInfo={props.connectorInfo}
-        gitDetails={props.gitDetails}
+        helpPanelReferenceId="ConnectorConnectToTheProvider"
       />
-      <VerifyOutOfClusterDelegate
+      {props.connectivityMode === ConnectivityModeType.Delegate ? (
+        <DelegateSelectorStep
+          name={getString('delegate.DelegateselectionLabel')}
+          isEditMode={props.isEditMode}
+          setIsEditMode={props.setIsEditMode}
+          buildPayload={buildBitbucketPayload}
+          hideModal={props.onClose}
+          onConnectorCreated={props.onSuccess}
+          connectorInfo={props.connectorInfo}
+          gitDetails={props.gitDetails}
+          helpPanelReferenceId="ConnectorDelegatesSetup"
+        />
+      ) : null}
+      <ConnectorTestConnection
         type={Connectors.BITBUCKET}
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
@@ -81,6 +105,7 @@ const CreateBitbucketConnector = (props: CreateConnectorModalProps): JSX.Element
         isLastStep={true}
         onClose={props.onClose}
         stepIndex={GIT_TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

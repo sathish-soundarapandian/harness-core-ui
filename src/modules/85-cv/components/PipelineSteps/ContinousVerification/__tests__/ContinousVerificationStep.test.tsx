@@ -6,6 +6,8 @@
  */
 
 import React from 'react'
+import { set } from 'lodash-es'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
 import * as usePermission from '@rbac/hooks/usePermission'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
@@ -19,14 +21,19 @@ import {
   PipelineResponse,
   verifyStepInitialValues,
   verifyStepInitialValuesWithRunTimeFields,
-  mockedCreatedMonitoredService
+  mockedCreatedMonitoredService,
+  monitoredServiceYamlData
 } from './ContinousVerificationMocks'
-import { getSpecYamlData } from '../utils'
+import { getSpecYamlData, getMonitoredServiceYamlData, validateMonitoredService } from '../utils'
+import { MONITORED_SERVICE_TYPE } from '../components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 
 jest.mock('services/cv', () => ({
   useGetMonitoredServiceFromServiceAndEnvironment: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: mockedMonitoredServiceAndHealthSources, error: null })),
+  useGetAllMonitoredServicesWithTimeSeriesHealthSources: jest
+    .fn()
+    .mockImplementation(() => ({ loading: false, data: {}, error: null })),
   useCreateDefaultMonitoredService: jest.fn().mockImplementation(() => ({
     error: null,
     loading: false,
@@ -37,11 +44,6 @@ jest.mock('services/cv', () => ({
         responseMessages: []
       }
     })
-  })),
-  useListBaselineExecutions: jest.fn().mockImplementation(() => ({
-    metaData: {},
-    resource: [],
-    responseMessages: []
   })),
   useUpdateMonitoredService: () =>
     jest.fn().mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: jest.fn() }))
@@ -62,13 +64,6 @@ describe('Test ContinousVerificationStep Step', () => {
     jest.clearAllMocks()
   })
 
-  test('should render editView when a new step is added', () => {
-    const { container } = render(
-      <TestStepWidget initialValues={{}} type={StepType.Verify} stepViewType={StepViewType.Edit} />
-    )
-    expect(container).toMatchSnapshot()
-  })
-
   test('should render editView when current step is being edited', () => {
     const initialValues = {
       name: 'CV Step',
@@ -79,6 +74,10 @@ describe('Test ContinousVerificationStep Step', () => {
         monitoredServiceRef: 'monitored-service',
         type: 'Rolling',
         healthSources: [],
+        monitoredService: {
+          type: MONITORED_SERVICE_TYPE.DEFAULT,
+          spec: {}
+        },
         spec: {
           sensitivity: 'Low',
           duration: '15min',
@@ -88,14 +87,6 @@ describe('Test ContinousVerificationStep Step', () => {
         }
       }
     }
-    const { container } = render(
-      <TestStepWidget initialValues={initialValues} type={StepType.Verify} stepViewType={StepViewType.Edit} />
-    )
-    expect(container).toMatchSnapshot()
-  })
-
-  test('should render editView when current step is being edited and runtime inputs are passed', () => {
-    const initialValues = verifyStepInitialValuesWithRunTimeFields
     const { container } = render(
       <TestStepWidget initialValues={initialValues} type={StepType.Verify} stepViewType={StepViewType.Edit} />
     )
@@ -431,5 +422,52 @@ describe('Test ContinousVerificationStep Step', () => {
     await waitFor(() => {
       expect(getByText('cv.healthSource.addHealthSource')).toBeTruthy()
     })
+  })
+
+  test('should verify getMonitoredServiceYamlData', () => {
+    expect(getMonitoredServiceYamlData(monitoredServiceYamlData)).toEqual({
+      spec: {},
+      type: MONITORED_SERVICE_TYPE.DEFAULT
+    })
+    expect(
+      getMonitoredServiceYamlData({
+        ...monitoredServiceYamlData,
+        monitoredService: { ...monitoredServiceYamlData.monitoredService, type: MONITORED_SERVICE_TYPE.TEMPLATE }
+      })
+    ).toEqual({ spec: {}, type: 'Template' })
+    expect(
+      getMonitoredServiceYamlData({
+        ...monitoredServiceYamlData,
+        monitoredService: { ...monitoredServiceYamlData.monitoredService, type: MONITORED_SERVICE_TYPE.CONFIGURED }
+      })
+    ).toEqual({ spec: {}, type: 'Configured' })
+  })
+
+  test('should validate validateMonitoredService', () => {
+    const error = {}
+    const updatedError = {
+      spec: {
+        monitoredService: {
+          spec: {
+            monitoredServiceRef: 'fieldRequired'
+          }
+        }
+      }
+    }
+    const data = { spec: { monitoredService: { spec: { monitoredServiceRef: '' } } } }
+    const monitoredService = { spec: { monitoredServiceRef: '<+input>' } }
+    // with error
+    validateMonitoredService(data as any, error, str => str, true, monitoredService as any)
+    expect(error).toEqual(updatedError)
+    // no error
+    const noError = {}
+    validateMonitoredService(data as any, noError, str => str, false, monitoredService as any)
+    expect(noError).toEqual({})
+    set(data, 'spec.monitoredService.spec.monitoredServiceRef', RUNTIME_INPUT_VALUE)
+    validateMonitoredService(data as any, noError, str => str, true, monitoredService as any)
+    expect(noError).toEqual({})
+    set(monitoredService, 'spec.monitoredServiceRef', 'ms101')
+    validateMonitoredService(data as any, noError, str => str, true, monitoredService as any)
+    expect(noError).toEqual({})
   })
 })

@@ -8,6 +8,7 @@
 import React from 'react'
 import { findByText, fireEvent, render, waitFor } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
+import { TestWrapper } from '@common/utils/testUtils'
 import COHealthCheckTable from '../COHealthCheckTable'
 
 jest.mock('lodash-es', () => ({
@@ -23,19 +24,28 @@ const mockPattern = {
   path: '/',
   port: 80,
   timeout: 30,
+  interval: 90,
   status_code_from: 200,
   status_code_to: 299
 }
 
 describe('HealthCheck table tests', () => {
   test('render table', () => {
-    const { container } = render(<COHealthCheckTable pattern={mockPattern} updatePattern={jest.fn()} />)
+    const { container } = render(
+      <TestWrapper>
+        <COHealthCheckTable pattern={mockPattern} updatePattern={jest.fn()} />
+      </TestWrapper>
+    )
 
     expect(container).toMatchSnapshot()
   })
 
   test('update table values', async () => {
-    const { container } = render(<COHealthCheckTable pattern={mockPattern} updatePattern={jest.fn()} />)
+    const { container } = render(
+      <TestWrapper>
+        <COHealthCheckTable pattern={mockPattern} updatePattern={jest.fn()} />
+      </TestWrapper>
+    )
 
     // protocol change
     const protocolCaret = container

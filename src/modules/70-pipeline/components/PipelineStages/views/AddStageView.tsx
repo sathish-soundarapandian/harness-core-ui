@@ -13,8 +13,6 @@ import { useStrings } from 'framework/strings'
 import { ComingSoonIcon } from '@common/components/ComingSoonIcon/ComingSoonIcon'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
@@ -48,7 +46,6 @@ export function AddStageView({
   contextType,
   onUseTemplate
 }: AddStageViewProps): JSX.Element {
-  const isTemplatesEnabled = useFeatureFlag(FeatureFlag.NG_TEMPLATES)
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const [selectedType, setSelectedType] = React.useState<SelectedAddStageTypeData | undefined>(undefined)
@@ -66,7 +63,7 @@ export function AddStageView({
           <Heading level={6} color={Color.GREY_800}>
             {getString('pipeline.addStage.title')}
           </Heading>
-          {isContextTypeNotStageTemplate(contextType) && isTemplatesEnabled && (
+          {isContextTypeNotStageTemplate(contextType) && (
             <RbacButton
               text={getString('common.useTemplate')}
               variation={ButtonVariation.SECONDARY}

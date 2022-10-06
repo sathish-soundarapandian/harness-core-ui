@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import { parse } from 'yaml'
 import get from 'lodash-es/get'
 import type { FormikErrors } from 'formik'
@@ -96,7 +96,7 @@ export interface RunStepProps {
   isNewStep?: boolean
   onUpdate?: (data: RunStepData) => void
   onChange?: (data: RunStepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 
@@ -111,7 +111,10 @@ export class RunStep extends PipelineStep<RunStepData> {
       this.getConnectorList.bind(this, ['Github', 'Gitlab', 'Bitbucket', 'Codecommit'])
     )
     this.invocationMap.set(infrastructureConRegEx, this.getConnectorList.bind(this, ['K8sCluster']))
-    this.invocationMap.set(serviceDepConRegEx, this.getConnectorList.bind(this, ['Gcp', 'Aws', 'DockerRegistry']))
+    this.invocationMap.set(
+      serviceDepConRegEx,
+      this.getConnectorList.bind(this, ['Gcp', 'Aws', 'DockerRegistry', 'Azure'])
+    )
   }
 
   protected type = StepType.Run
@@ -151,7 +154,7 @@ export class RunStep extends PipelineStep<RunStepData> {
     if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.connectorRef', ''))
       if (obj.type === StepType.Run || obj.type === StepType.Plugin) {
-        return getConnectorSuggestions(params, ['Gcp', 'Aws', 'DockerRegistry'])
+        return getConnectorSuggestions(params, ['Gcp', 'Aws', 'DockerRegistry', 'Azure'])
       }
     }
     return []
@@ -190,7 +193,7 @@ export class RunStep extends PipelineStep<RunStepData> {
       allowableTypes
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <RunStepInputSet
           initialValues={initialValues}

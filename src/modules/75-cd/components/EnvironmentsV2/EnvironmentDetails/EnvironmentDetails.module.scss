@@ -13,6 +13,22 @@
   }
 }
 
+.clusterDataTable {
+  padding-top: var(--spacing-small);
+  width: 100%;
+
+  :global(.TableV2--header) {
+    padding: var(--spacing-xlarge) var(--spacing-xxxlarge) !important;
+  }
+
+  :global(.TableV2--body) {
+    padding: 0 var(--spacing-xlarge);
+    max-height: calc(100% - 128px);
+    overflow: hidden;
+    overflow-y: auto;
+  }
+}
+
 .environmentDetailsBody {
   :global {
     .bp3-tab-list {
@@ -21,7 +37,7 @@
       border-bottom: 0;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.13);
       align-items: center;
-      padding: 0 var(--spacing-large);
+      padding: 0 var(--spacing-xlarge);
     }
   }
 }
@@ -69,11 +85,29 @@
   margin-top: var(--spacing-3);
   display: block;
   padding: var(--spacing-7);
-  width: 100%;
+  width: 80%;
 
   .thumbnailSelect {
     &:global(.bp3-form-group) {
       margin-bottom: 0px;
     }
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.yamlBuilder {
+  position: relative;
+  padding: var(--spacing-large);
+
+  .buttonWrapper {
+    position: absolute;
+    top: var(--spacing-xxlarge);
+    right: var(--spacing-xxxlarge);
+    display: flex;
+    column-gap: var(--spacing-large);
+    align-items: center;
   }
 }

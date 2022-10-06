@@ -935,8 +935,9 @@ export const metrics = {
     responseMessages: []
   }
 }
-export const serviceScreenLogsListURL = `cv/api/log-dashboard/logs-radar-chart-data?routingId=${routingId}&accountId=${accountId}&pageNumber=0&pageSize=10&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=${monitoredServiceIdentifier}&minAngle=0&maxAngle=360&startTime=1649128528705&endTime=1649133776735&clusterTypes=KNOWN_EVENT&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
-export const serviceScreenLogsRadarClusterURL = `cv/api/log-dashboard/logs-radar-chart-cluster?routingId=${routingId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=${monitoredServiceIdentifier}&startTime=1649128528705&endTime=1649133776735&clusterTypes=KNOWN_EVENT&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
+
+export const serviceScreenLogsListURL = `cv/api/log-dashboard/logs-radar-chart-data?routingId=${routingId}&accountId=${accountId}&pageNumber=0&pageSize=10&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=${monitoredServiceIdentifier}&minAngle=0&maxAngle=360&startTime=*&endTime=*&clusterTypes=KNOWN_EVENT&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
+export const serviceScreenLogsRadarClusterURL = `cv/api/log-dashboard/logs-radar-chart-cluster?routingId=${routingId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&monitoredServiceIdentifier=${monitoredServiceIdentifier}&startTime=*&endTime=*&clusterTypes=KNOWN_EVENT&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
 
 export const serviceScreenLogsListData = {
   metaData: {},

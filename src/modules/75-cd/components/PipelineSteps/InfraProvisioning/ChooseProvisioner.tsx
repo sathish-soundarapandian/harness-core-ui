@@ -13,8 +13,6 @@ import { useModalHook } from '@harness/use-modal'
 
 import { merge } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { ProvisionerTypes } from '../Common/ProvisionerConstants'
 
 import css from './InfraProvisioning.module.scss'
@@ -28,7 +26,6 @@ interface ProvDialogProps {
 
 const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps) => {
   const { getString } = useStrings()
-  const isCloudFormationEnabled = useFeatureFlag(FeatureFlag.CLOUDFORMATION)
   const [provisioner, setProvisioner] = useState<string>(ProvisionerTypes.Terraform)
   const modalProps = {
     isOpen: true,
@@ -45,7 +42,7 @@ const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps)
     {
       name: ProvisionerTypes.CloudFormation,
       icon: 'cloudformation',
-      enabled: isCloudFormationEnabled
+      enabled: true
     },
     {
       name: ProvisionerTypes.ARM,

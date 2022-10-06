@@ -29,13 +29,17 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { allProviders, AS_RESOURCE_TYPE, ceConnectorTypes, GatewayKindType, PROVIDER_TYPES } from '@ce/constants'
 import { Utils } from '@ce/common/Utils'
+import { useStrings } from 'framework/strings'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { useGetConnector } from 'services/cd-ng'
-import { resourceToInstanceObject } from './helper'
+import { getGatewayDetailsSourceFilterFromPayload, resourceToInstanceObject } from './helper'
+import css from './CECOEditGatewayPage.module.scss'
 
 export const CECOEditGatewayPage: React.FC = () => {
   const { accountId, orgIdentifier, projectIdentifier, gatewayIdentifier } = useParams<
     ProjectPathProps & { gatewayIdentifier: string }
   >()
+  const { getString } = useStrings()
 
   const { data, loading } = useRouteDetails({
     account_id: accountId,
@@ -75,6 +79,8 @@ export const CECOEditGatewayPage: React.FC = () => {
   })
 
   const [gatewayDetails, setGatewayDetails] = useState<GatewayDetails>()
+
+  useDocumentTitle([getString('ce.co.editAsRule'), _defaultTo(gatewayDetails?.name, '')], true)
 
   const checkAndFetchSchedules = (_service: Service) => {
     if (_service.cloud_account_id && _isEmpty(staticSchedulesData)) {
@@ -137,6 +143,9 @@ export const CECOEditGatewayPage: React.FC = () => {
       const selectedResources = _defaultTo(resources?.response, [])
       selectedInstances = selectedResources.map(item => resourceToInstanceObject(providerType, item))
     }
+    if (!_isEmpty(service.routing?.source_filters)) {
+      routing.source_filters = getGatewayDetailsSourceFilterFromPayload(_defaultTo(service.routing, {}))
+    }
     const gwDetails: GatewayDetails = {
       id: service.id,
       name: service.name,
@@ -192,7 +201,7 @@ export const CECOEditGatewayPage: React.FC = () => {
           originalRuleDetails={data?.response?.service}
         />
       ) : (
-        <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
+        <div className={css.loaderContainer}>
           <PageSpinner />
         </div>
       )}

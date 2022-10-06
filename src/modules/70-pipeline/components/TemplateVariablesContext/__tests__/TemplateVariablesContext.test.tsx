@@ -24,7 +24,7 @@ jest.mock('@common/hooks', () => ({
   useMutateAsGet: jest.fn().mockImplementation(props => {
     if (props.name === 'useGetYamlWithTemplateRefsResolved') {
       return MergedPipelineResponse
-    } else if (props.name === 'useCreateVariables') {
+    } else if (props.name === 'useCreateVariablesV2') {
       return CreateVariableResponse
     }
   })

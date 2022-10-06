@@ -19,10 +19,11 @@ export interface DefaultRulesProps {
   hideSubheading?: boolean
   titleStringId: keyof StringsMap
   inputName: string
+  disabled?: boolean
 }
 
 const DefaultRules = (props: DefaultRulesProps): ReactElement => {
-  const { featureFlagVariations, titleStringId, inputName, hideSubheading = false } = props
+  const { featureFlagVariations, titleStringId, inputName, hideSubheading = false, disabled = false } = props
 
   const { getString } = useStrings()
   const variationItems = featureFlagVariations.map<SelectOption>((variation, index) => ({
@@ -48,6 +49,7 @@ const DefaultRules = (props: DefaultRulesProps): ReactElement => {
           inline
           name={inputName}
           items={variationItems}
+          disabled={disabled}
         />
       </DisabledFeatureTooltip>
     </>

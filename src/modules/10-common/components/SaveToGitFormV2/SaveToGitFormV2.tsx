@@ -26,6 +26,7 @@ import type { GitSyncEntityDTO, EntityGitDetails } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { getEntityNameFromType } from '@common/utils/StringUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import type { StringsMap } from 'stringTypes'
 import RepoBranchSelectV2 from '../RepoBranchSelectV2/RepoBranchSelectV2'
 import css from './SaveToGitFormV2.module.scss'
 
@@ -42,6 +43,7 @@ interface SaveToGitFormV2Props {
   orgIdentifier: string
   projectIdentifier: string
   isEditing: boolean
+  disableCreatingNewBranch: boolean
   resource: GitResourceInterface
 }
 
@@ -49,6 +51,21 @@ interface ModalConfigureProps {
   onClose?: () => void
   onSuccess?: (data: SaveToGitFormV2Interface) => void
 }
+
+const getInitialValues = (
+  resource: GitResourceInterface,
+  isEditing: boolean,
+  getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string
+): SaveToGitFormV2Interface => ({
+  isNewBranch: false,
+  branch: defaultTo(resource.gitDetails?.branch, resource.storeMetadata?.branch || ''),
+  commitMsg: getString(isEditing ? 'common.gitSync.updateResource' : 'common.gitSync.createResource', {
+    name: resource.name,
+    type: getEntityNameFromType(resource.type)
+  }),
+  createPr: false,
+  targetBranch: ''
+})
 
 export interface SaveToGitFormV2Interface {
   isNewBranch: boolean
@@ -60,7 +77,7 @@ export interface SaveToGitFormV2Interface {
 }
 
 const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = props => {
-  const { isEditing = false, resource } = props
+  const { isEditing = false, resource, disableCreatingNewBranch } = props
   const { getString } = useStrings()
   const [isNewBranch, setIsNewBranch] = React.useState(false)
   const formikRef = useRef<FormikContextType<SaveToGitFormV2Interface>>()
@@ -68,25 +85,18 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
   const [createPR, setCreatePR] = useState<boolean>(false)
   const [disableBranchSelection, setDisableBranchSelection] = useState<boolean>(true)
 
-  const defaultInitialFormData: SaveToGitFormV2Interface = {
-    isNewBranch: false,
-    branch: defaultTo(resource.gitDetails?.branch, ''),
-    commitMsg: getString(isEditing ? 'common.gitSync.updateResource' : 'common.gitSync.createResource', {
-      name: resource.name,
-      type: getEntityNameFromType(resource.type)
-    }),
+  const initialValues: SaveToGitFormV2Interface = getInitialValues(resource, isEditing, getString)
 
-    createPr: false,
-    targetBranch: ''
-  }
+  const branch = defaultTo(resource.gitDetails?.branch, resource.storeMetadata?.branch)
 
   const handleBranchTypeChange = (isNew: boolean, formik: FormikContextType<SaveToGitFormV2Interface>): void => {
+    formik.resetForm()
     if (isNewBranch !== isNew) {
       setIsNewBranch(isNew)
-      formik.setFieldValue('branch', `${resource.gitDetails?.branch}-patch`)
+      formik.setFieldValue('branch', isNew ? `${branch}-patch` : initialValues.branch)
       formik.setFieldTouched('branch', false)
     }
-    formik.setFieldValue('targetBranch', isNew ? resource.gitDetails?.branch || '' : '')
+    formik.setFieldValue('targetBranch', isNew ? defaultTo(branch, '') : '')
     formik.setFieldTouched('targetBranch', false)
     formik.setFieldValue('createPr', false)
     formik.setFieldTouched('createPr', false)
@@ -95,19 +105,15 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
 
   const CreatePR = React.useMemo(() => {
     return (
-      <Layout.Horizontal flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }} padding={{ top: 'small' }}>
+      <Layout.Horizontal flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }} padding={{ top: 'small' }}>
         <FormInput.CheckBox
-          margin={{ right: 'small' }}
+          className={css.createPrCheckbox}
           name="createPr"
           label={getString('common.git.startPRLabel')}
           onChange={e => {
             formikRef.current?.setFieldValue('createPr', e.currentTarget.checked)
             setCreatePR(e.currentTarget.checked)
-            if (e.currentTarget.checked) {
-              setDisableBranchSelection(false)
-            } else {
-              setDisableBranchSelection(true)
-            }
+            setDisableBranchSelection(!e.currentTarget.checked)
           }}
         />
 
@@ -116,17 +122,14 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
           noLabel={true}
           disabled={disableBranchSelection}
           connectorIdentifierRef={resource.storeMetadata?.connectorRef}
-          repoName={resource.gitDetails?.repoName}
-          onChange={(selected: SelectOption, options?: SelectOption[]) => {
-            if (!options?.find(branch => branch.value === selected.value)) {
-              formikRef.current?.setFieldValue('targetBranch', '')
-            } else {
-              formikRef.current?.setFieldValue('targetBranch', selected.value)
-              setTargetBranch(selected.value as string)
-            }
+          repoName={defaultTo(resource.storeMetadata?.repoName, resource.gitDetails?.repoName)}
+          onChange={(selected: SelectOption) => {
+            formikRef.current?.setFieldValue('targetBranch', selected.value)
+            setTargetBranch(selected.value as string)
           }}
           selectedValue={targetBranch}
           showErrorInModal
+          fallbackDefaultBranch={false}
         />
       </Layout.Horizontal>
     )
@@ -152,7 +155,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
 
       <Container className={css.modalBody}>
         <Formik<SaveToGitFormV2Interface>
-          initialValues={defaultInitialFormData}
+          initialValues={initialValues}
           formName="saveToGitFormV2"
           validationSchema={Yup.object().shape({
             branch: Yup.string().trim().required(getString('validation.branchName')),
@@ -160,11 +163,9 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
               .trim()
               .when('createPr', {
                 is: true,
-                then: Yup.string().required(getString('common.git.validation.targetBranch'))
-              })
-              .when('createPr', {
-                is: true,
-                then: Yup.string().notOneOf([Yup.ref('branch')], getString('common.git.validation.sameBranches'))
+                then: Yup.string()
+                  .required(getString('common.git.validation.targetBranch'))
+                  .notOneOf([Yup.ref('branch')], getString('common.git.validation.sameBranches'))
               }),
             commitMsg: Yup.string().trim().min(1).required(getString('common.git.validation.commitMessage'))
           })}
@@ -172,8 +173,8 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
             props.onSuccess?.({
               ...pick(formData, ['commitMsg', 'createPr']),
               isNewBranch,
-              branch: isNewBranch ? formData.branch : defaultInitialFormData.branch,
-              ...(isNewBranch ? { baseBranch: defaultInitialFormData.branch } : {}),
+              branch: isNewBranch ? formData.branch : initialValues.branch,
+              ...(isNewBranch ? { baseBranch: initialValues.branch } : {}),
               ...(formData.createPr ? { targetBranch: formData.targetBranch } : {})
             })
           }}
@@ -213,7 +214,7 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
                           border={{ radius: 5 }}
                           color={Color.BLACK}
                         >
-                          {defaultInitialFormData.branch}
+                          {initialValues.branch}
                         </Text>
                       </Radio>
                       {!isNewBranch && CreatePR}
@@ -227,8 +228,9 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
                       <Radio
                         data-test="newBranchRadioBtn"
                         large
-                        onChange={() => handleBranchTypeChange(true, formik)}
+                        onChange={() => !disableCreatingNewBranch && handleBranchTypeChange(true, formik)}
                         checked={isNewBranch}
+                        disabled={disableCreatingNewBranch}
                       >
                         <Icon name="git-new-branch" color={Color.GREY_700}></Icon>
                         <Text inline margin={{ left: 'small' }}>

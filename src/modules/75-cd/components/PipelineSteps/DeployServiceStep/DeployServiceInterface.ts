@@ -5,11 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiTypeInputType } from '@harness/uicore'
+import type { AllowedTypes } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { ServiceConfig, ServiceDefinition, ServiceRequestDTO, ServiceResponseDTO } from 'services/cd-ng'
+import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
+export interface DeployServiceCustomStepPropType {
+  stageIdentifier: string
+  isNewServiceEntity: boolean
+  deploymentType: ServiceDefinition['type']
+  gitOpsEnabled?: boolean
+}
 export interface DeployServiceProps {
   initialValues: DeployServiceData
   onUpdate?: (data: DeployServiceData) => void
@@ -20,8 +27,9 @@ export interface DeployServiceProps {
     path?: string
     readonly?: boolean
   }
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   serviceLabel?: string
+  customStepProps?: DeployServiceCustomStepPropType
 }
 
 export interface DeployServiceState {
@@ -34,7 +42,8 @@ export interface DeployServiceState {
 export interface DeployServiceData extends Omit<ServiceConfig, 'serviceRef'> {
   serviceRef?: string
   isNewServiceEntity?: boolean
-  deploymentType?: ServiceDefinition['type']
+  deploymentType?: ServiceDeploymentType
+  gitOpsEnabled?: boolean
 }
 
 export interface NewEditServiceModalProps {

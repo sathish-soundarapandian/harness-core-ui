@@ -24,7 +24,7 @@ exports[`PipelineCreate test initializes ok edit pipeline 1`] = `
               >
                 <div
                   class="Text--withDocsTooltip"
-                  data-tooltip-id="pipelineCreate_identifier"
+                  data-tooltip-id="universalInputNameWithId"
                 >
                   <p
                     class="StyledProps--font StyledProps--main"
@@ -216,7 +216,7 @@ exports[`PipelineCreate test initializes ok for CD module 1`] = `
               >
                 <div
                   class="Text--withDocsTooltip"
-                  data-tooltip-id="pipelineCreate_identifier"
+                  data-tooltip-id="universalInputNameWithId"
                 >
                   <p
                     class="StyledProps--font StyledProps--main"
@@ -384,6 +384,52 @@ exports[`PipelineCreate test initializes ok for CD module 1`] = `
                 </span>
               </label>
             </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--padding-top-large"
+          >
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
+              type="button"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="template-library"
+              >
+                <svg
+                  height="12"
+                  viewBox="0 0 12 13"
+                  width="12"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                >
+                  <defs>
+                    <path
+                      d="M1.8 13c.2 0 .4-.3.4-.6V.6C2.2.3 2 0 1.8 0H.4C.2 0 0 .3 0 .6v11.7c0 .4.2.7.4.7h1.4zm8.8 0l.9-.3c.3-.1.5-.4.4-.8L8.9.6C8.8.3 8.5.1 8.1.2l-.9.3c-.4 0-.5.4-.5.7l3.1 11.3c.1.4.5.6.8.5zm-5 0c.2 0 .4-.3.4-.7V.6c0-.3-.2-.6-.4-.6H4.2c-.2 0-.4.3-.4.6v11.7c0 .4.2.7.4.7h1.4z"
+                      id="template-library_svg__a"
+                    />
+                  </defs>
+                  <clippath
+                    id="template-library_svg__b"
+                  >
+                    <use
+                      overflow="visible"
+                      xlink:href="#template-library_svg__a"
+                    />
+                  </clippath>
+                  <path
+                    clip-path="url(#template-library_svg__b)"
+                    d="M-5-5h22v23H-5z"
+                    fill="#25a6f7"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
+              >
+                common.templateStartLabel
+              </span>
+            </button>
           </div>
           <div
             class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
@@ -441,7 +487,7 @@ exports[`PipelineCreate test initializes ok for CI module 1`] = `
               >
                 <div
                   class="Text--withDocsTooltip"
-                  data-tooltip-id="pipelineCreate_identifier"
+                  data-tooltip-id="universalInputNameWithId"
                 >
                   <p
                     class="StyledProps--font StyledProps--main"
@@ -611,6 +657,52 @@ exports[`PipelineCreate test initializes ok for CI module 1`] = `
             </div>
           </div>
           <div
+            class="StyledProps--font StyledProps--main StyledProps--padding-top-large"
+          >
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
+              type="button"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="template-library"
+              >
+                <svg
+                  height="12"
+                  viewBox="0 0 12 13"
+                  width="12"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                >
+                  <defs>
+                    <path
+                      d="M1.8 13c.2 0 .4-.3.4-.6V.6C2.2.3 2 0 1.8 0H.4C.2 0 0 .3 0 .6v11.7c0 .4.2.7.4.7h1.4zm8.8 0l.9-.3c.3-.1.5-.4.4-.8L8.9.6C8.8.3 8.5.1 8.1.2l-.9.3c-.4 0-.5.4-.5.7l3.1 11.3c.1.4.5.6.8.5zm-5 0c.2 0 .4-.3.4-.7V.6c0-.3-.2-.6-.4-.6H4.2c-.2 0-.4.3-.4.6v11.7c0 .4.2.7.4.7h1.4z"
+                      id="template-library_svg__a"
+                    />
+                  </defs>
+                  <clippath
+                    id="template-library_svg__b"
+                  >
+                    <use
+                      overflow="visible"
+                      xlink:href="#template-library_svg__a"
+                    />
+                  </clippath>
+                  <path
+                    clip-path="url(#template-library_svg__b)"
+                    d="M-5-5h22v23H-5z"
+                    fill="#25a6f7"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
+              >
+                common.templateStartLabel
+              </span>
+            </button>
+          </div>
+          <div
             class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"
           >
             <button
@@ -666,7 +758,7 @@ exports[`PipelineCreate test initializes ok new pipeline 1`] = `
               >
                 <div
                   class="Text--withDocsTooltip"
-                  data-tooltip-id="pipelineCreate_identifier"
+                  data-tooltip-id="universalInputNameWithId"
                 >
                   <p
                     class="StyledProps--font StyledProps--main"
@@ -686,7 +778,8 @@ exports[`PipelineCreate test initializes ok new pipeline 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-editable-text bp3-disabled bp3-editable-text-placeholder InputWithIdentifier--idValue"
+                      class="bp3-editable-text bp3-editable-text-placeholder InputWithIdentifier--idValue"
+                      tabindex="0"
                     >
                       <span
                         class="bp3-editable-text-content"
@@ -694,6 +787,32 @@ exports[`PipelineCreate test initializes ok new pipeline 1`] = `
                       />
                     </div>
                   </span>
+                </span>
+                <span
+                  class="bp3-icon StyledProps--main"
+                  data-icon="Edit"
+                  style="vertical-align: middle; cursor: pointer;"
+                >
+                  <svg
+                    height="12"
+                    viewBox="0 0 16 16"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      clip-rule="evenodd"
+                      d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      clip-rule="evenodd"
+                      d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                      fill="currentColor"
+                      fill-rule="evenodd"
+                      opacity="0.3"
+                    />
+                  </svg>
                 </span>
               </div>
               <div
@@ -799,6 +918,52 @@ exports[`PipelineCreate test initializes ok new pipeline 1`] = `
                 </span>
               </label>
             </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main StyledProps--padding-top-large"
+          >
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
+              type="button"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
+                data-icon="template-library"
+              >
+                <svg
+                  height="12"
+                  viewBox="0 0 12 13"
+                  width="12"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                >
+                  <defs>
+                    <path
+                      d="M1.8 13c.2 0 .4-.3.4-.6V.6C2.2.3 2 0 1.8 0H.4C.2 0 0 .3 0 .6v11.7c0 .4.2.7.4.7h1.4zm8.8 0l.9-.3c.3-.1.5-.4.4-.8L8.9.6C8.8.3 8.5.1 8.1.2l-.9.3c-.4 0-.5.4-.5.7l3.1 11.3c.1.4.5.6.8.5zm-5 0c.2 0 .4-.3.4-.7V.6c0-.3-.2-.6-.4-.6H4.2c-.2 0-.4.3-.4.6v11.7c0 .4.2.7.4.7h1.4z"
+                      id="template-library_svg__a"
+                    />
+                  </defs>
+                  <clippath
+                    id="template-library_svg__b"
+                  >
+                    <use
+                      overflow="visible"
+                      xlink:href="#template-library_svg__a"
+                    />
+                  </clippath>
+                  <path
+                    clip-path="url(#template-library_svg__b)"
+                    d="M-5-5h22v23H-5z"
+                    fill="#25a6f7"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
+              >
+                common.templateStartLabel
+              </span>
+            </button>
           </div>
           <div
             class="StyledProps--font StyledProps--main StyledProps--padding-top-xlarge"

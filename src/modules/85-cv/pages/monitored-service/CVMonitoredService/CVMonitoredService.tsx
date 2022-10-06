@@ -17,19 +17,25 @@ import {
   Views,
   SelectOption,
   Heading,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  ExpandingSearchInput,
+  Container
 } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useGetMonitoredServiceListEnvironments, useGetCountOfServices } from 'services/cv'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RbacButton from '@rbac/components/Button/Button'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { TemplateUsage } from '@templates-library/utils/templatesUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getCVMonitoringServicesSearchParam, getErrorMessage, getEnvironmentOptions } from '@cv/utils/CommonUtils'
 import ServiceDependencyGraph from '@cv/pages/monitored-service/CVMonitoredService/components/MonitoredServiceGraphView/MonitoredServiceGraphView'
 import { getEnvironmentIdentifier } from './CVMonitoredService.utils'
@@ -50,10 +56,12 @@ const MonitoredService: React.FC = () => {
     orgIdentifier,
     projectIdentifier
   }
+  const { CVNG_TEMPLATE_MONITORED_SERVICE } = useFeatureFlags()
 
   const [page, setPage] = useState(0)
   const [selectedView, setSelectedView] = useState<Views>(view === Views.GRID ? Views.GRID : Views.LIST)
   const [environment, setEnvironment] = useState<SelectOption>()
+  const [search, setSearch] = useState<string>('')
   const [selectedFilter, setSelectedFilter] = useState<FilterTypes>(FilterTypes.ALL)
 
   useEffect(() => {
@@ -77,40 +85,80 @@ const MonitoredService: React.FC = () => {
   })
 
   useEffect(() => {
-    if (serviceCountData) {
+    /* istanbul ignore else */ if (serviceCountData) {
       refetchServiceCountData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedView])
 
   const onFilter = (type: FilterTypes): void => {
-    if (type !== selectedFilter) {
+    /* istanbul ignore else */ if (type !== selectedFilter) {
       setPage(0)
       setSelectedFilter(type)
       refetchServiceCountData()
     }
   }
 
-  const createButton = (
-    <RbacButton
-      variation={ButtonVariation.PRIMARY}
-      icon="plus"
-      text={getString('cv.monitoredServices.newMonitoredServices')}
-      onClick={() => {
-        history.push({
-          pathname: routes.toCVAddMonitoringServicesSetup(pathParams),
-          search: getCVMonitoringServicesSearchParam({ view: selectedView })
-        })
-      }}
-      permission={{
-        permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-        resource: {
-          resourceType: ResourceType.MONITOREDSERVICE,
-          resourceIdentifier: projectIdentifier
-        }
-      }}
-    />
-  )
+  const { getTemplate } = useTemplateSelector()
+
+  const onUseTemplate = async () => {
+    const { template } = await getTemplate({ templateType: 'MonitoredService', allowedUsages: [TemplateUsage.USE] })
+    const templateRefData = {
+      identifier: template?.identifier,
+      accountId: template?.accountId,
+      orgIdentifier: template?.orgIdentifier,
+      projectIdentifier: template?.projectIdentifier,
+      versionLabel: template?.versionLabel
+    }
+    history.push({
+      pathname: routes.toCVMonitoringServicesInputSets(pathParams),
+      search: getCVMonitoringServicesSearchParam({
+        view: selectedView,
+        templateRef: JSON.stringify(templateRefData)
+      })
+    })
+  }
+
+  const createButton = (hasMonitoredServices: boolean) => {
+    {
+      const LayoutOrientation = hasMonitoredServices ? Layout.Horizontal : Layout.Vertical
+      return (
+        <LayoutOrientation spacing="large">
+          <RbacButton
+            variation={ButtonVariation.PRIMARY}
+            icon="plus"
+            text={getString('cv.monitoredServices.newMonitoredServices')}
+            onClick={() => {
+              history.push({
+                pathname: routes.toCVAddMonitoringServicesSetup(pathParams),
+                search: getCVMonitoringServicesSearchParam({ view: selectedView })
+              })
+            }}
+            permission={{
+              permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+              resource: {
+                resourceType: ResourceType.MONITOREDSERVICE,
+                resourceIdentifier: projectIdentifier
+              }
+            }}
+          />
+          {hasMonitoredServices && CVNG_TEMPLATE_MONITORED_SERVICE && (
+            <RbacButton
+              text={getString('common.useTemplate')}
+              variation={ButtonVariation.SECONDARY}
+              icon="template-library"
+              onClick={onUseTemplate}
+              featuresProps={{
+                featuresRequest: {
+                  featureNames: [FeatureIdentifier.TEMPLATE_SERVICE]
+                }
+              }}
+            />
+          )}
+        </LayoutOrientation>
+      )
+    }
+  }
 
   return (
     <>
@@ -124,9 +172,18 @@ const MonitoredService: React.FC = () => {
         }
       />
       <Page.Header
-        title={createButton}
+        title={createButton(Boolean(serviceCountData?.allServicesCount))}
         toolbar={
-          <Layout.Horizontal>
+          <Layout.Horizontal spacing="medium">
+            <Container data-name="monitoredServiceSeachContainer">
+              <ExpandingSearchInput
+                width={250}
+                alwaysExpanded
+                throttle={500}
+                onChange={setSearch}
+                placeholder={getString('cv.monitoredServices.searchMonitoredServices')}
+              />
+            </Container>
             <Select
               value={{
                 label: `${getString('environment')}: ${defaultTo(environment?.label, getString('all'))}`,
@@ -151,9 +208,10 @@ const MonitoredService: React.FC = () => {
       {selectedView === Views.LIST ? (
         <MonitoredServiceList
           page={page}
+          search={search}
           setPage={setPage}
           environmentIdentifier={getEnvironmentIdentifier(environment)}
-          createButton={createButton}
+          createButton={createButton(Boolean(!serviceCountData?.allServicesCount))}
           selectedFilter={selectedFilter}
           onFilter={onFilter}
           serviceCountData={serviceCountData}
@@ -164,12 +222,13 @@ const MonitoredService: React.FC = () => {
       ) : (
         <ServiceDependencyGraph
           isPageView
+          search={search}
           serviceCountData={serviceCountData}
           selectedFilter={selectedFilter}
           onFilter={onFilter}
           refetchServiceCountData={refetchServiceCountData}
           serviceCountLoading={serviceCountLoading}
-          createButton={createButton}
+          createButton={createButton(Boolean(!serviceCountData?.allServicesCount))}
           environmentIdentifier={getEnvironmentIdentifier(environment)}
           serviceCountErrorMessage={getErrorMessage(serviceCountError)}
         />

@@ -371,6 +371,103 @@
           "valid": true,
           "invalidYaml": null
         }
+      },
+      {
+        "connector": {
+          "name": "NewGitTestConn1",
+          "identifier": "NewGitTestConn1",
+          "description": null,
+          "orgIdentifier": "default",
+          "projectIdentifier": "Kapil",
+          "tags": {},
+          "type": "Git",
+          "spec": {
+            "url": "https://repo",
+            "validationRepo": null,
+            "branchName": null,
+            "delegateSelectors": [],
+            "executeOnDelegate": true,
+            "type": "Http",
+            "connectionType": "Repo"
+          }
+        },
+        "createdAt": 1657099672072,
+        "lastModifiedAt": 1657099672068,
+        "status": {
+          "status": "FAILURE",
+          "errorSummary": "Error Encountered (Task has expired. It wasn't picked up by any delegate or delegate did not have enough time to finish the execution.)",
+          "errors": [
+            {
+              "reason": "Unexpected Error",
+              "message": "Task has expired. It wasn't picked up by any delegate or delegate did not have enough time to finish the execution.",
+              "code": 450
+            }
+          ],
+          "testedAt": 1657099913619,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 0
+        },
+        "activityDetails": {
+          "lastActivityTime": 1657099672106
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "governanceMetadata": null
+      },
+      {
+        "connector": {
+          "name": "azureConnector",
+          "identifier": "connector",
+          "description": null,
+          "orgIdentifier": "CVNG",
+          "projectIdentifier": null,
+          "tags": {},
+          "type": "Azure",
+          "spec": {
+            "url": "https://qva35651.azureARM.com/",
+            "apiTokenRef": "org.harness",
+            "delegateSelectors": []
+          }
+        },
+        "createdAt": 1646186996478,
+        "lastModifiedAt": 1646203306079,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1646623973765,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1646623973765
+        },
+        "activityDetails": {
+          "lastActivityTime": 1646203306167
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        }
       }
     ],
     "pageIndex": 0,

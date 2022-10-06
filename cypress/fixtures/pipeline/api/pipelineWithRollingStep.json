@@ -1,0 +1,13 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "yamlPipeline": "pipeline:\n    name: testCypressInit\n    identifier: testCypressInit\n    projectIdentifier: project1\n    orgIdentifier: default\n    tags: {}\n    stages:\n        - stage:\n              name: testCypressInit123\n              identifier: test\n              description: \"\"\n              type: Deployment\n              spec:\n                  serviceConfig:\n                      serviceRef: testService\n                      serviceDefinition:\n                          spec:\n                              variables: []\n                          type: Kubernetes\n                  infrastructure:\n                      environmentRef: testEnv\n                      infrastructureDefinition:\n                          type: KubernetesDirect\n                          spec:\n                              connectorRef: jhj_1658691544489\n                              namespace: default\n                              releaseName: release-<+INFRA_KEY>\n                      allowSimultaneousDeployments: false\n                  execution:\n                      steps:\n                          - step:\n                                type: K8sRollingRollback\n                                name: testRollBack\n                                identifier: testRollBack\n                                spec:\n                                    skipDryRun: false\n                                timeout: 10m\n                      rollbackSteps: []\n              tags: {}\n              failureStrategies:\n                  - onFailure:\n                        errors:\n                            - AllErrors\n                        action:\n                            type: StageRollback\n",
+    "entityValidityDetails": {
+      "valid": true,
+      "invalidYaml": null
+    },
+    "modules": ["cd", "pms"]
+  },
+  "metaData": null,
+  "correlationId": "78937c05-8138-4f37-8366-ffd378ee3ab4"
+}

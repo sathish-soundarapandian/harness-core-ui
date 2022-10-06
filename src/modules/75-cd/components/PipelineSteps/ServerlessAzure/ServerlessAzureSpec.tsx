@@ -140,7 +140,7 @@ export class ServerlessAzureSpec extends PipelineStep<ServerlessAzureInfrastruct
 
   renderStep(props: StepProps<ServerlessAzureInfrastructure>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, customStepProps, readonly, allowableTypes } = props
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <ServerlessInputForm
           {...(customStepProps as ServerlessSpecEditableProps)}

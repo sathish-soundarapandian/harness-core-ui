@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Accordion,
   Layout,
@@ -17,11 +17,12 @@ import {
   MultiTypeInputType,
   Text,
   ButtonVariation,
-  getErrorInfoFromErrorObject
+  getErrorInfoFromErrorObject,
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { get, isEmpty } from 'lodash-es'
@@ -36,7 +37,7 @@ import type { HelmWithGcsDataType } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
 import { helmVersions, ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
-import { handleCommandFlagsSubmitData } from '../ManifestUtils'
+import { filePathWidth, handleCommandFlagsSubmitData } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
@@ -44,7 +45,7 @@ import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 interface HelmWithGcsPropType {
   stepName: string
   expressions: string[]
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   initialValues: ManifestConfig
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
@@ -85,7 +86,7 @@ function HelmWithGcs({
     value: item
   }))
 
-  const onBucketNameFocus = useCallback((): void => {
+  const onBucketNameFocus = (): void => {
     if (!bucketData?.data) {
       refetchBuckets({
         queryParams: {
@@ -96,8 +97,7 @@ function HelmWithGcs({
         }
       })
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bucketData?.data, prevStepData?.connectorRef?.value, refetchBuckets])
+  }
 
   const getInitialValues = (): HelmWithGcsDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -209,7 +209,7 @@ function HelmWithGcs({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: HelmWithGcsDataType }) => (
-          <Form>
+          <FormikForm>
             <div className={helmcss.helmGitForm}>
               <Layout.Horizontal flex spacing="huge">
                 <div className={helmcss.halfWidth}>
@@ -386,7 +386,12 @@ function HelmWithGcs({
                   />
                 </div>
               </Layout.Horizontal>
-              <div className={helmcss.halfWidth}>
+              <div
+                className={cx({
+                  [helmcss.runtimeInput]:
+                    getMultiTypeFromValue(formik.values?.valuesPaths) === MultiTypeInputType.RUNTIME
+                })}
+              >
                 <DragnDropPaths
                   formik={formik}
                   expressions={expressions}
@@ -394,7 +399,21 @@ function HelmWithGcs({
                   fieldPath="valuesPaths"
                   pathLabel={getString('pipeline.manifestType.valuesYamlPath')}
                   placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                  defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
+                  dragDropFieldWidth={filePathWidth}
                 />
+                {getMultiTypeFromValue(formik.values.valuesPaths) === MultiTypeInputType.RUNTIME && (
+                  <ConfigureOptions
+                    value={formik.values.valuesPaths}
+                    type={getString('string')}
+                    variableName={'valuesPaths'}
+                    showRequiredField={false}
+                    showDefaultField={false}
+                    showAdvanced={true}
+                    onChange={val => formik?.setFieldValue('valuesPaths', val)}
+                    isReadonly={isReadonly}
+                  />
+                )}
               </div>
 
               <Accordion
@@ -436,7 +455,7 @@ function HelmWithGcs({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

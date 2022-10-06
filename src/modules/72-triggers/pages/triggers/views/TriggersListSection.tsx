@@ -239,6 +239,7 @@ const RenderColumnStatus: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
   const data = row.original
   const { validationStatus, pollingSubscriptionStatus, webhookAutoRegistrationStatus } = data?.triggerStatus || {}
   let statusMessage: string | undefined = ''
+  let isWebhookAutoRegistrationStatus = false
 
   if (errorStatusList.includes(validationStatus?.statusResult || '')) {
     statusMessage = validationStatus?.detailedMessage
@@ -246,6 +247,7 @@ const RenderColumnStatus: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
     statusMessage = pollingSubscriptionStatus?.detailedMessage
   } else if (errorStatusList.includes(webhookAutoRegistrationStatus?.registrationResult || '')) {
     statusMessage = webhookAutoRegistrationStatus?.detailedMessage
+    isWebhookAutoRegistrationStatus = true
   }
 
   return (
@@ -267,7 +269,9 @@ const RenderColumnStatus: Renderer<CellProps<NGTriggerDetailsResponse>> = ({
           }
           tooltipProps={{ isDark: true, position: 'bottom', popoverClassName: css.tooltip }}
         >
-          {column.getString('failed').toLowerCase()}
+          {isWebhookAutoRegistrationStatus
+            ? column.getString('triggers.error.webhookRegistrationFailed')
+            : column.getString('failed').toLowerCase()}
         </Text>
       )}
     </Layout.Horizontal>
@@ -528,7 +532,9 @@ const RenderPipelineReferenceBranch: Renderer<CellProps<NGTriggerDetailsResponse
     data = parse(row.original?.yaml || '')
     return (
       <Container flex>
-        <Text lineClamp={1}>{get(data, 'trigger.pipelineBranchName')}</Text>
+        <Text icon="git-new-branch" iconProps={{ size: 14 }} lineClamp={1}>
+          {get(data, 'trigger.pipelineBranchName')}
+        </Text>
       </Container>
     )
   } catch (e) {

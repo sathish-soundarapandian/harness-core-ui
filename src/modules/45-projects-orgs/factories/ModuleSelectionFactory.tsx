@@ -5,20 +5,35 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import React, { FC, ReactNode } from 'react'
 import type { ModuleName } from 'framework/types/ModuleName'
+import type { Project } from 'services/cd-ng'
+
+export interface ModuleSelectionPanelProps {
+  projectData?: Project
+}
+
+export type ModuleSelectionPanel = FC<ModuleSelectionPanelProps>
 
 class ModuleSelectionFactory {
-  private readonly moduleSelectionMap: Map<ModuleName, JSX.Element>
+  private readonly moduleSelectionMap: Map<ModuleName, ModuleSelectionPanel>
 
   constructor() {
     this.moduleSelectionMap = new Map()
   }
 
-  registerModuleSelection(moduleName: ModuleName, ele: JSX.Element): void {
-    this.moduleSelectionMap.set(moduleName, ele)
+  registerModuleSelection(moduleName: ModuleName, panel: ModuleSelectionPanel): void {
+    this.moduleSelectionMap.set(moduleName, panel)
   }
-  getModuleSelectionEle(moduleName: ModuleName): JSX.Element | undefined {
-    return this.moduleSelectionMap.get(moduleName)
+
+  getModuleSelectionPanel(moduleName: ModuleName, projectData?: Project): ReactNode {
+    const Panel = this.moduleSelectionMap.get(moduleName)
+
+    return Panel && <Panel projectData={projectData} />
+  }
+
+  clear(): void {
+    this.moduleSelectionMap.clear()
   }
 }
 

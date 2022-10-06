@@ -8,7 +8,8 @@
 import React, { useState, useMemo, ReactNode, useEffect } from 'react'
 import cronstrue from 'cronstrue'
 import { isEmpty } from 'lodash-es'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import cx from 'classnames'
 import type { Column, CellProps, Renderer } from 'react-table'
 import {
   Button,
@@ -21,12 +22,12 @@ import {
   ButtonSize,
   ButtonVariation,
   Link,
-  getErrorInfoFromErrorObject
+  getErrorInfoFromErrorObject,
+  Card
 } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { Popover, Position, Classes, PopoverInteractionKind } from '@blueprintjs/core'
+import { Popover, Position, Classes, PopoverInteractionKind, Collapse } from '@blueprintjs/core'
 import { DEFAULT_GROUP_BY } from '@ce/utils/perspectiveUtils'
-import routes from '@common/RouteDefinitions'
 import { QlceViewFieldInputInput, ViewChartType, AlertThreshold } from 'services/ce/services'
 import {
   CEView,
@@ -45,6 +46,10 @@ import formatCost from '@ce/utils/formatCost'
 
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { PAGE_NAMES, USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { useBooleanStatus } from '@common/hooks'
 import Table from './Table'
 import PerspectiveBuilderPreview from '../PerspectiveBuilderPreview/PerspectiveBuilderPreview'
 import useCreateReportModal from './PerspectiveCreateReport'
@@ -66,11 +71,14 @@ interface TableActionsProps {
   onClickEdit: () => void
   onClickDelete: () => void
   className?: string
+  canEdit?: boolean
+  canDelete?: boolean
 }
 
 interface ReportsAndBudgetsProps {
   values?: CEView
   onPrevButtonClick: () => void
+  onNext: () => void
 }
 
 interface SelectedAlertType {
@@ -83,7 +91,7 @@ export interface UrlParams {
   accountId: string
 }
 
-const ReportsAndBudgets: React.FC<ReportsAndBudgetsProps> = ({ values, onPrevButtonClick }) => {
+const ReportsAndBudgets: React.FC<ReportsAndBudgetsProps> = ({ values, onPrevButtonClick, onNext }) => {
   const [groupBy, setGroupBy] = useState<QlceViewFieldInputInput>(() => {
     return (values?.viewVisualization?.groupBy as QlceViewFieldInputInput) || DEFAULT_GROUP_BY
   })
@@ -96,49 +104,32 @@ const ReportsAndBudgets: React.FC<ReportsAndBudgetsProps> = ({ values, onPrevBut
     return (values?.viewVisualization?.chartType as ViewChartType) || ViewChartType.StackedLineChart
   })
 
-  const history = useHistory()
-  const { trackEvent } = useTelemetry()
   const { getString } = useStrings()
-  const { perspectiveId, accountId } = useParams<UrlParams>()
-
-  const savePerspective = (): void => {
-    history.push(
-      routes.toPerspectiveDetails({
-        accountId,
-        perspectiveId,
-        perspectiveName: perspectiveId
-      })
-    )
-  }
 
   return (
     <Container className={css.mainContainer}>
       <Container className={css.innerContainer}>
         <Layout.Vertical
-          spacing="xxlarge"
+          spacing="medium"
           height="100%"
           padding={{
             left: 'large',
             right: 'xxlarge',
             bottom: 'xxlarge',
-            top: 'xxlarge'
+            top: 'large'
           }}
           style={{ overflowY: 'auto' }}
         >
-          <ScheduledReports />
+          <Text font={{ variation: FontVariation.H4 }} margin={{ bottom: 'large' }}>
+            {getString('ce.perspectives.createPerspective.budgetsReportsAlerts')}
+          </Text>
           <Budgets perspectiveName={values?.name || ''} />
+          <ScheduledReports />
           <AnomalyAlerts />
           <FlexExpander />
           <Layout.Horizontal padding={{ top: 'medium' }} spacing="large">
             <Button icon="chevron-left" text={getString('previous')} onClick={onPrevButtonClick} />
-            <Button
-              intent="primary"
-              text={getString('ce.perspectives.save')}
-              onClick={() => {
-                trackEvent(USER_JOURNEY_EVENTS.SAVE_PERSPECTIVE, {})
-                savePerspective()
-              }}
-            />
+            <Button intent="primary" icon="chevron-right" text={getString('next')} onClick={onNext} />
           </Layout.Horizontal>
         </Layout.Vertical>
         {values && (
@@ -205,7 +196,8 @@ export const ScheduledReports: React.FC = () => {
     () => [
       {
         Header: getString('ce.perspectives.reports.reportName'),
-        accessor: 'name'
+        accessor: 'name',
+        Cell: ReportName
       },
       {
         Header: getString('ce.perspectives.reports.frequency'),
@@ -238,16 +230,17 @@ export const ScheduledReports: React.FC = () => {
     openModal()
   }
 
+  const { state: isOpen, toggle: toggleCard } = useBooleanStatus()
+
   return (
-    <Container>
-      <Layout.Horizontal>
-        <Container>
-          <Text color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
-            {getString('ce.perspectives.reports.title', {
-              count: reports.length || 0
-            })}
-          </Text>
-        </Container>
+    <Card className={cx(css.collapseCard, { [css.cardOpen]: isOpen })}>
+      <Layout.Horizontal style={{ alignItems: 'center' }}>
+        <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} onClick={toggleCard} className={css.chevron} />
+        <Text color={isOpen ? Color.GREY_800 : Color.GREY_500} font={{ variation: FontVariation.H5 }}>
+          {getString('ce.perspectives.reports.title', {
+            count: reports.length || 0
+          })}
+        </Text>
         <FlexExpander />
         {reports.length ? (
           <Link
@@ -266,20 +259,26 @@ export const ScheduledReports: React.FC = () => {
           </Link>
         ) : null}
       </Layout.Horizontal>
-      <Text padding={{ top: 'large', bottom: 'large' }} color={Color.GREY_800} className={css.subtext}>
-        {`${getString('ce.perspectives.reports.desc')} ${
-          !reports.length ? getString('ce.perspectives.reports.msg') : ''
-        }`}
-      </Text>
-      <List
-        buttonText={getString('ce.perspectives.reports.createNew')}
-        onButtonClick={openCreateReportModal}
-        showCreateButton={!reports.length}
-        hasData={!!reports.length}
-        loading={loading}
-        grid={<Table<CEReportSchedule> data={reports} columns={columns} />}
-      />
-    </Container>
+      <Collapse isOpen={isOpen} keepChildrenMounted>
+        <Text
+          padding={{ top: 'medium', bottom: 'medium' }}
+          color={Color.GREY_800}
+          font={{ variation: FontVariation.SMALL }}
+        >
+          {`${getString('ce.perspectives.reports.desc')} ${
+            !reports.length ? getString('ce.perspectives.reports.msg') : ''
+          }`}
+        </Text>
+        <List
+          buttonText={getString('ce.perspectives.reports.createNew')}
+          onButtonClick={openCreateReportModal}
+          showCreateButton={!reports.length}
+          hasData={!!reports.length}
+          loading={loading}
+          grid={<Table<CEReportSchedule> data={reports} columns={columns} />}
+        />
+      </Collapse>
+    </Card>
   )
 }
 
@@ -303,6 +302,15 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
     }
   })
   const { showSuccess, showError } = useToaster()
+  const [canEdit, canDelete] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.CCM_BUDGETS
+      },
+      permissions: [PermissionIdentifier.EDIT_CCM_BUDGET, PermissionIdentifier.DELETE_CCM_BUDGET]
+    },
+    []
+  )
 
   const handleDeleteBudget: (budget: Budget) => void = async budget => {
     try {
@@ -341,8 +349,8 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
         Header: getString('ce.perspectives.reports.recipientLabel'),
         accessor: 'emailAddresses',
         Cell: ({ row }: CellProps<AlertThreshold>) => {
-          const emailAddresses = [...(row.original.emailAddresses || [])] as string[]
-          return <RenderEmailAddresses emailAddresses={emailAddresses} />
+          const recipients = [...(row.original.emailAddresses || []), ...(row.original.slackWebhooks || [])] as string[]
+          return <RenderEmailAddresses emailAddresses={recipients} />
         }
       }
     ],
@@ -383,7 +391,7 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
             alignItems: 'center'
           }}
         >
-          <Text font="small" color={Color.GREY_800}>
+          <Text color={Color.GREY_800} font={{ variation: FontVariation.SMALL }}>
             {getString('ce.perspectives.budgets.sendAlerts')}
           </Text>
           <Container margin={{ right: 'large' }}>
@@ -398,6 +406,8 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
                 })
               }
               onClickDelete={() => handleDeleteBudget(budget)}
+              canEdit={canEdit}
+              canDelete={canDelete}
             />
           </Container>
         </Layout.Horizontal>
@@ -420,10 +430,13 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
     })
   }
 
+  const { state: isOpen, toggle: toggleCard } = useBooleanStatus()
+
   return (
-    <Container>
-      <Layout.Horizontal>
-        <Text color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
+    <Card className={cx(css.collapseCard, { [css.cardOpen]: isOpen })}>
+      <Layout.Horizontal style={{ alignItems: 'center' }}>
+        <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} onClick={toggleCard} className={css.chevron} />
+        <Text color={isOpen ? Color.GREY_800 : Color.GREY_500} font={{ variation: FontVariation.H5 }}>
           {getString('ce.perspectives.budgets.perspectiveCreateBudgetTitle', {
             count: budgets.length || 0
           })}
@@ -431,6 +444,7 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
         <FlexExpander />
         {budgets.length ? (
           <Link
+            disabled={!canEdit}
             size={ButtonSize.SMALL}
             padding="none"
             margin="none"
@@ -446,34 +460,40 @@ export const Budgets = ({ perspectiveName }: { perspectiveName: string }): JSX.E
           </Link>
         ) : null}
       </Layout.Horizontal>
-      <Text padding={{ top: 'large', bottom: 'large' }} color={Color.GREY_800} className={css.subtext}>
-        {getString('ce.perspectives.budgets.desc')}
-      </Text>
-      {budgets.map((budget, idx) => {
-        return (
+      <Collapse isOpen={isOpen} keepChildrenMounted>
+        <Text
+          padding={{ top: 'large', bottom: 'large' }}
+          color={Color.GREY_800}
+          font={{ variation: FontVariation.SMALL }}
+        >
+          {getString('ce.perspectives.budgets.desc')}
+        </Text>
+        {budgets.map((budget, idx) => {
+          return (
+            <List
+              key={budget.uuid}
+              buttonText={getString('ce.perspectives.budgets.createNew')}
+              onButtonClick={openCreateNewBudgetModal}
+              hasData={!isEmpty(budget)}
+              loading={loading}
+              showCreateButton={isEmpty(budget)}
+              meta={renderMeta(budget, idx)}
+              grid={renderGrid(budget)}
+            />
+          )
+        })}
+        {!budgets.length ? (
           <List
-            key={budget.uuid}
-            buttonText={getString('ce.perspectives.budgets.createNew')}
-            onButtonClick={openCreateNewBudgetModal}
-            hasData={!isEmpty(budget)}
+            grid={null}
             loading={loading}
-            showCreateButton={isEmpty(budget)}
-            meta={renderMeta(budget, idx)}
-            grid={renderGrid(budget)}
+            onButtonClick={openCreateNewBudgetModal}
+            buttonText={getString('ce.perspectives.budgets.createNew')}
+            hasData={false}
+            showCreateButton={true}
           />
-        )
-      })}
-      {!budgets.length ? (
-        <List
-          grid={null}
-          loading={loading}
-          onButtonClick={openCreateNewBudgetModal}
-          buttonText={getString('ce.perspectives.budgets.createNew')}
-          hasData={false}
-          showCreateButton={true}
-        />
-      ) : null}
-    </Container>
+        ) : null}
+      </Collapse>
+    </Card>
   )
 }
 
@@ -565,10 +585,13 @@ export const AnomalyAlerts = () => {
     []
   )
 
+  const { state: isOpen, toggle: toggleCard } = useBooleanStatus()
+
   return (
-    <Container>
-      <Layout.Horizontal>
-        <Text color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
+    <Card className={cx(css.collapseCard, { [css.cardOpen]: isOpen })}>
+      <Layout.Horizontal style={{ alignItems: 'center' }}>
+        <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} onClick={toggleCard} className={css.chevron} />
+        <Text color={isOpen ? Color.GREY_800 : Color.GREY_500} font={{ variation: FontVariation.H5 }}>
           {getString('ce.anomalyDetection.perspectiveCreateAnomalyAlertTitle', {
             count: channelsList.length || 0
           })}
@@ -591,27 +614,33 @@ export const AnomalyAlerts = () => {
           </Link>
         ) : null}
       </Layout.Horizontal>
-      <Text padding={{ top: 'large', bottom: 'large' }} color={Color.GREY_800} className={css.subtext}>
-        {getString('ce.anomalyDetection.addAnoamlyAlertDesc')}
-      </Text>
-      <Container className={css.anomalyAlertsWrapper}>
-        {channelsList.length ? (
-          <RenderEditDeleteActions
-            onClickEdit={() => onEdit()}
-            onClickDelete={() => deleteNotification()}
-            className={css.anomalyAlertsActionBtn}
+      <Collapse isOpen={isOpen} keepChildrenMounted>
+        <Text
+          padding={{ top: 'large', bottom: 'large' }}
+          color={Color.GREY_800}
+          font={{ variation: FontVariation.SMALL }}
+        >
+          {getString('ce.anomalyDetection.addAnoamlyAlertDesc')}
+        </Text>
+        <Container className={css.anomalyAlertsWrapper}>
+          {channelsList.length ? (
+            <RenderEditDeleteActions
+              onClickEdit={() => onEdit()}
+              onClickDelete={() => deleteNotification()}
+              className={css.anomalyAlertsActionBtn}
+            />
+          ) : null}
+          <List
+            buttonText={getString('ce.anomalyDetection.createNewAnomalyAlert')}
+            onButtonClick={openAnomaliesAlertModal}
+            showCreateButton={!channelsList.length}
+            hasData={!!channelsList.length}
+            loading={loading}
+            grid={<Table<CCMNotificationChannel> data={channelsList} columns={columns} />}
           />
-        ) : null}
-        <List
-          buttonText={getString('ce.anomalyDetection.createNewAnomalyAlert')}
-          onButtonClick={openAnomaliesAlertModal}
-          showCreateButton={!channelsList.length}
-          hasData={!!channelsList.length}
-          loading={loading}
-          grid={<Table<CCMNotificationChannel> data={channelsList} columns={columns} />}
-        />
-      </Container>
-    </Container>
+        </Container>
+      </Collapse>
+    </Card>
   )
 }
 
@@ -647,11 +676,7 @@ const List = (props: ListProps): JSX.Element => {
   }
 
   return (
-    <Container
-      margin={{
-        bottom: 'xlarge'
-      }}
-    >
+    <Container>
       {loading && renderLoader()}
       {!loading && hasData && (
         <>
@@ -667,6 +692,14 @@ const List = (props: ListProps): JSX.Element => {
 const RenderReportFrequency: Renderer<CellProps<CEReportSchedule>> = ({ row }) => {
   const cron = row.original.userCron || ''
   return <span>{cronstrue.toString(cron)}</span>
+}
+
+const ReportName: Renderer<CellProps<CEReportSchedule>> = ({ row }) => {
+  return (
+    <Text color={Color.GREY_700} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
+      {row.original.name}
+    </Text>
+  )
 }
 
 const RenderBasedOn: Renderer<CellProps<AlertThreshold>> = ({ row }) => {
@@ -689,7 +722,7 @@ const RenderEmailAddresses = ({ emailAddresses = [] }: { emailAddresses: string[
 
   return (
     <Layout.Horizontal spacing="xsmall">
-      <Text color={Color.GREY_700} font="small">
+      <Text color={Color.GREY_700} font="small" lineClamp={1}>
         {email}
       </Text>
       {emailAddresses.length ? (
@@ -717,7 +750,7 @@ const RenderEmailAddresses = ({ emailAddresses = [] }: { emailAddresses: string[
 }
 
 const RenderEditDeleteActions = (props: TableActionsProps): JSX.Element => {
-  const { onClickEdit, onClickDelete, className } = props
+  const { onClickEdit, onClickDelete, className, canEdit = true, canDelete = true } = props
   return (
     <Layout.Horizontal
       spacing="medium"
@@ -727,21 +760,25 @@ const RenderEditDeleteActions = (props: TableActionsProps): JSX.Element => {
       }}
       className={className}
     >
-      <Icon
-        size={14}
-        name={'Edit'}
-        color={Color.PRIMARY_7}
-        onClick={onClickEdit}
+      <Button
+        minimal
+        icon="Edit"
+        disabled={!canEdit}
+        intent="primary"
+        iconProps={{ size: 14 }}
         className={css.icon}
         data-testid="editIcon"
+        onClick={onClickEdit}
       />
-      <Icon
-        size={14}
-        name={'trash'}
-        color={Color.PRIMARY_7}
-        onClick={onClickDelete}
+      <Button
+        minimal
+        icon="trash"
+        disabled={!canDelete}
+        intent="primary"
+        iconProps={{ size: 14 }}
         className={css.icon}
         data-testid="deleteIcon"
+        onClick={onClickDelete}
       />
     </Layout.Horizontal>
   )

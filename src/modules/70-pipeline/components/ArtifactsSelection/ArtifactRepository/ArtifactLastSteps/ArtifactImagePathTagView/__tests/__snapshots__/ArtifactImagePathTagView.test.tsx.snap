@@ -2,16 +2,12 @@
 
 exports[`ArtifactImagePathTagView tests check if NoTagResults renders correctly and custom tagErrorMessage exists in the document 1`] = `
 <div>
-  <span
-    class="padSmall"
+  <p
+    class="StyledProps--font Text--lineclamp StyledProps--main padSmall"
+    style="--text-line-clamp: 1;"
   >
-    <p
-      class="StyledProps--font Text--lineclamp StyledProps--main"
-      style="--text-line-clamp: 1;"
-    >
-      tagErrorMessage
-    </p>
-  </span>
+    tagErrorMessage
+  </p>
 </div>
 `;
 
@@ -166,7 +162,7 @@ exports[`ArtifactImagePathTagView tests check if artifactimagetagView renders wi
               autocomplete="off"
               class="bp3-input"
               name="artifactPath"
-              placeholder="pipeline.artifactsSelection.artifactNamePlaceholder"
+              placeholder="pipeline.artifactsSelection.artifactPathPlaceholder"
               type="text"
               value=""
             />

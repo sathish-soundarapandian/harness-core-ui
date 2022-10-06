@@ -7,12 +7,12 @@
 
 import React from 'react'
 import * as Yup from 'yup'
-import { parse } from 'yaml'
 import { isEmpty, get, compact } from 'lodash-es'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { connect, FormikErrors, yupToFormErrors } from 'formik'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import { parse } from '@common/utils/YamlHelperMethods'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getUserGroupListPromise } from 'services/cd-ng'
 import { loggerFor } from 'framework/logging/logging'
@@ -23,7 +23,7 @@ import { VariablesListTable } from '@pipeline/components/VariablesListTable/Vari
 import type { StringsMap } from 'stringTypes'
 import { PipelineStep } from '../../PipelineStep'
 import { StepType } from '../../PipelineStepInterface'
-import { flatObject } from '../Common/ApprovalCommons'
+import { getSanitizedflatObjectForVariablesView } from '../Common/ApprovalCommons'
 import { processFormData, processForInitialValues } from './helper'
 import HarnessApprovalDeploymentMode from './HarnessApprovalDeploymentMode'
 import HarnessApprovalStepModeWithRef from './HarnessApprovalStepMode'
@@ -45,6 +45,7 @@ export class HarnessApproval extends PipelineStep<HarnessApprovalData> {
     this.invocationMap.set(UserGroupRegex, this.getUgListForYaml.bind(this))
   }
 
+  protected referenceId = 'harnessApprovalStep'
   protected isHarnessSpecific = true
   protected type = StepType.HarnessApproval
   protected stepName = 'Manual Approval'
@@ -217,7 +218,7 @@ export class HarnessApproval extends PipelineStep<HarnessApprovalData> {
       onChange
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <HarnessApprovalDeploymentModeWithFormik
           stepViewType={stepViewType}
@@ -232,7 +233,7 @@ export class HarnessApproval extends PipelineStep<HarnessApprovalData> {
       const customStepPropsTyped = customStepProps as HarnessApprovalVariableListModeProps
       return (
         <VariablesListTable
-          data={flatObject(customStepPropsTyped.variablesData)}
+          data={getSanitizedflatObjectForVariablesView(customStepPropsTyped.variablesData)}
           originalData={initialValues as Record<string, any>}
           metadataMap={customStepPropsTyped.metadataMap}
           className={pipelineVariablesCss.variablePaddingL3}

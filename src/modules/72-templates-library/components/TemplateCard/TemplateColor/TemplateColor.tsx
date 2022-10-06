@@ -5,10 +5,54 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { LegacyRef, useRef } from 'react'
 import cx from 'classnames'
+import { defaultTo } from 'lodash-es'
+import styled from '@emotion/styled'
 import { Text } from '@wings-software/uicore'
 import css from './TemplateColor.module.scss'
+
+interface StyledTrapazoidTitleContainerInterface {
+  stroke: string
+  fill: string
+  width: number
+}
+
+export const StyledTrapazoidTitleContainer = styled.div`
+  position: relative;
+  padding: 0px 18px;
+  ${(props: StyledTrapazoidTitleContainerInterface) =>
+    props.width
+      ? `  
+  -webkit-perspective: ${props.width}px;
+  -moz-perspective: ${props.width}px;
+  -ms-perspective: ${props.width}px;
+  -o-perspective: ${props.width}px;`
+      : ''}
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    border: 1px solid ${(props: StyledTrapazoidTitleContainerInterface) => props.stroke};
+    background: ${(props: StyledTrapazoidTitleContainerInterface) => props.fill};
+    border-radius: 5px 5px 0 0;
+    transform: rotateX(45deg);
+    -webkit-transform: rotateX(45deg);
+    -moz-transform: rotateX(45deg);
+    -ms-transform: rotateX(45deg);
+    -o-transform: rotateX(45deg);
+    -webkit-transform-origin: center bottom;
+    -moz-transform-origin: center bottom;
+    -ms-transform-origin: center bottom;
+    -o-transform-origin: center bottom;
+  }
+  p {
+    position: relative;
+  }
+`
 
 export interface TemplateColorProps {
   fill: string
@@ -17,22 +61,19 @@ export interface TemplateColorProps {
   textColor?: string
 }
 export const TemplateColor: React.FC<TemplateColorProps> = (props): JSX.Element => {
-  const { fill, stroke, title, textColor } = props
+  const { fill, title, stroke, textColor } = props
+
+  const titleContainerRef: LegacyRef<HTMLDivElement> = useRef(null)
+  // increase perspective by 100 to give more height to trapezoid
+  const titleWidth = parseInt(defaultTo(titleContainerRef.current?.getClientRects()?.[0]?.width, 0).toFixed(0)) + 100
 
   return (
-    <div className={css.templateColor}>
-      <div className={css.absolutePos}>
-        <svg width="121" height="18" viewBox="0 0 121 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M10.6577 4.36758L0.989019 17.5H120.044L111.076 4.58226C109.301 2.02513 106.385 0.5 103.272 0.5H18.3079C15.288 0.5 12.4481 1.93575 10.6577 4.36758Z"
-            fill={fill}
-            stroke={stroke}
-          />
-        </svg>
+    <StyledTrapazoidTitleContainer fill={fill} stroke={stroke} width={titleWidth}>
+      <div ref={titleContainerRef}>
+        <Text className={cx(css.text, css.absolutePos)} style={{ color: textColor }}>
+          {title}
+        </Text>
       </div>
-      <Text className={cx(css.text, css.absolutePos)} style={{ color: textColor }}>
-        {title}
-      </Text>
-    </div>
+    </StyledTrapazoidTitleContainer>
   )
 }

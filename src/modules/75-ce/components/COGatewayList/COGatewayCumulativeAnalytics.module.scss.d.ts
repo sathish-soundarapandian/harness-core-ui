@@ -10,10 +10,13 @@ declare const styles: {
   readonly analyticsColHeader: string
   readonly analyticsContainer: string
   readonly center: string
+  readonly colChartBorderRadius: string
+  readonly collapsed: string
   readonly fulFilmentIcon: string
   readonly gaugeChartWrapper: string
   readonly instanceCount: string
   readonly instanceManager: string
+  readonly pointerCursor: string
   readonly spotUsage: string
   readonly summaryHeading: string
   readonly totalSavingsInfoCard: string

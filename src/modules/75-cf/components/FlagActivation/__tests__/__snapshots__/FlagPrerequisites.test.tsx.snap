@@ -54,7 +54,7 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
                         placeholder="- Select -"
                         style="padding-right: 0px;"
                         type="text"
-                        value=""
+                        value="Test Paging Flag"
                       />
                       <span
                         class="bp3-input-action"
@@ -108,10 +108,10 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="prerequisites.0.variation"
-                        placeholder="- Select -"
+                        placeholder="- cf.addPrerequisites.selectVariation -"
                         style="padding-right: 0px;"
                         type="text"
-                        value="false"
+                        value="False"
                       />
                       <span
                         class="bp3-input-action"
@@ -172,7 +172,7 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
                         placeholder="- Select -"
                         style="padding-right: 0px;"
                         type="text"
-                        value=""
+                        value="X Flag 11"
                       />
                       <span
                         class="bp3-input-action"
@@ -226,10 +226,10 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="prerequisites.1.variation"
-                        placeholder="- Select -"
+                        placeholder="- cf.addPrerequisites.selectVariation -"
                         style="padding-right: 0px;"
                         type="text"
-                        value="adminOnly"
+                        value="False"
                       />
                       <span
                         class="bp3-input-action"
@@ -290,7 +290,7 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
                         placeholder="- Select -"
                         style="padding-right: 0px;"
                         type="text"
-                        value=""
+                        value="X Flag 10"
                       />
                       <span
                         class="bp3-input-action"
@@ -344,10 +344,10 @@ exports[`FlagPrerequisites it should render correctly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="prerequisites.2.variation"
-                        placeholder="- Select -"
+                        placeholder="- cf.addPrerequisites.selectVariation -"
                         style="padding-right: 0px;"
                         type="text"
-                        value="true"
+                        value="True"
                       />
                       <span
                         class="bp3-input-action"

@@ -7,17 +7,19 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { get, map, memoize } from 'lodash-es'
+import { defaultTo, get, map, memoize } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { Menu } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
-import type { ImagePathTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { Failure, useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { AllowedTypes, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { Failure, ServiceSpec, useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import type { ImagePathTypes } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import css from '../../ArtifactConnector.module.scss'
 
 function NoRepositoryResults({ error }: { error: GetDataError<Failure | Error> | null }): JSX.Element {
@@ -35,16 +37,31 @@ function NoRepositoryResults({ error }: { error: GetDataError<Failure | Error> |
 export interface ServerlessArtifactoryRepositoryProps {
   expressions: string[]
   isReadonly?: boolean
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik: FormikProps<ImagePathTypes>
   connectorRef: string
   fieldName: string
+  serviceId?: string
+  fqnPath?: string
+  template?: ServiceSpec
+  fieldPath?: string
 }
 
 export default function ServerlessArtifactoryRepository(
   props: ServerlessArtifactoryRepositoryProps
 ): React.ReactElement {
-  const { isReadonly, expressions, allowableTypes, formik, connectorRef, fieldName } = props
+  const {
+    isReadonly,
+    expressions,
+    allowableTypes,
+    formik,
+    connectorRef,
+    fieldName,
+    fqnPath,
+    serviceId,
+    template,
+    fieldPath
+  } = props
   const { getString } = useStrings()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -60,7 +77,9 @@ export default function ServerlessArtifactoryRepository(
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      repositoryType: 'generic'
+      repositoryType: 'generic',
+      serviceId,
+      fqnPath
     },
     lazy: true
   })
@@ -81,13 +100,23 @@ export default function ServerlessArtifactoryRepository(
   }, [artifactRepoLoading, artifactRepoError])
 
   useEffect(() => {
-    if (getMultiTypeFromValue(connectorRef) === MultiTypeInputType.FIXED && !artifactRepoData) {
-      getArtifactRepos()
-    }
     if (artifactRepoData) {
       setConnectorRepos(map(artifactRepoData.data?.repositories, repo => ({ label: repo, value: repo })))
     }
   }, [artifactRepoData, connectorRef])
+
+  const hasRepositoryData = () => {
+    if (
+      (artifactRepoError?.data as Failure)?.status === 'ERROR' ||
+      (artifactRepoError?.data as Failure)?.status === 'FAILURE'
+    ) {
+      return false
+    }
+    if (connectorRepos.length > 0) {
+      return true
+    }
+    return false
+  }
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
@@ -103,20 +132,27 @@ export default function ServerlessArtifactoryRepository(
     </div>
   ))
 
+  const getFieldHelperText = () => {
+    if (
+      getMultiTypeFromValue(formik.values.repository as string) === MultiTypeInputType.FIXED &&
+      getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME
+    ) {
+      return getString('pipeline.artifactRepositoryDependencyRequired')
+    }
+  }
+
   return (
     <div className={css.imagePathContainer}>
-      <FormInput.MultiTypeInput
+      <SelectInputSetView
         className={css.tagInputButton}
         name={fieldName}
         label={getString('repository')}
+        fieldPath={defaultTo(fieldPath, '')} // // Only used for Runtime view
         selectItems={connectorRepos}
+        template={defaultTo(template, {})} // Only used for Runtime view
         disabled={isReadonly}
-        helperText={
-          getMultiTypeFromValue(formik.values.repository as string) === MultiTypeInputType.FIXED &&
-          getMultiTypeFromValue(connectorRef) === MultiTypeInputType.RUNTIME &&
-          getString('pipeline.artifactRepositoryDependencyRequired')
-        }
-        useValue
+        helperText={getFieldHelperText()}
+        useValue={true}
         multiTypeInputProps={{
           expressions,
           allowableTypes,
@@ -131,7 +167,8 @@ export default function ServerlessArtifactoryRepository(
           onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
             if (
               e?.target?.type !== 'text' ||
-              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+              hasRepositoryData()
             ) {
               return
             }
@@ -142,8 +179,10 @@ export default function ServerlessArtifactoryRepository(
 
       {getMultiTypeFromValue(formik.values.repository) === MultiTypeInputType.RUNTIME && (
         <div className={css.configureOptions}>
-          <ConfigureOptions
+          <SelectConfigureOptions
             value={formik.values.repository as string}
+            options={connectorRepos}
+            loading={artifactRepoLoading}
             type="String"
             variableName="repository"
             showRequiredField={false}

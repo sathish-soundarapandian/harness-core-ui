@@ -16,6 +16,7 @@ import { Utils } from '../../common/Utils'
 import LBAdvancedConfiguration from './LBAdvancedConfiguration'
 import ResourceAccessUrlSelector from './ResourceAccessUrlSelector'
 import LoadBalancerSelection from './LoadBalancerSelection'
+import CustomExclusion from './CustomExclusion'
 
 interface DNSLinkSetupProps {
   gatewayDetails: GatewayDetails
@@ -25,10 +26,15 @@ interface DNSLinkSetupProps {
   activeStepDetails?: { count?: number; tabId?: string } | null
   serverNames: string[]
   setServerNames: (val: string[]) => void
+  domainsToOverlap: string[]
+  setDomainsToOverlap: (domains: string[]) => void
+  overrideRoute53: boolean
+  setOverrideRoute53: (flag: boolean) => void
 }
 
 const DNSLinkSetup: React.FC<DNSLinkSetupProps> = props => {
   const { getString } = useStrings()
+  const isAwsProvider = Utils.isProviderAws(props.gatewayDetails.provider)
   const accessDetails = props.gatewayDetails.opts.access_details as ConnectionMetadata // eslint-disable-line
   const customDomainProviderDetails = props.gatewayDetails.routing.custom_domain_providers as CustomDomainDetails // eslint-disable-line
   const allCustomDomains = useMemo(
@@ -42,7 +48,6 @@ const DNSLinkSetup: React.FC<DNSLinkSetupProps> = props => {
 
       <Formik<DNSLinkSetupFormVal>
         initialValues={{
-          usingCustomDomain: Utils.getConditionalResult(!_isEmpty(allCustomDomains), 'yes', 'no'),
           customURL: allCustomDomains.join(','),
           publicallyAccessible: _defaultTo(accessDetails.dnsLink.public as string, 'yes'),
           dnsProvider: customDomainProviderDetails
@@ -67,7 +72,6 @@ const DNSLinkSetup: React.FC<DNSLinkSetupProps> = props => {
               /((https?):\/\/)?(www.)?[a-z0-9-]+(\.[a-z]{2,}){1,3}(#?\/?[a-zA-Z0-9#-]+)*\/?(\?[a-zA-Z0-9-_]+=[a-zA-Z0-9-%]+&?)?$/,
               'Enter a valid URL'
             )
-            .required()
         })}
       >
         {formik => (
@@ -91,7 +95,15 @@ const DNSLinkSetup: React.FC<DNSLinkSetupProps> = props => {
                 setGatewayDetails={props.setGatewayDetails}
                 setHelpTextSections={props.setHelpTextSections}
                 serverNames={props.serverNames}
+                overrideRoute53={props.overrideRoute53}
+                setOverrideRoute53={props.setOverrideRoute53}
+                domainsToOverlap={props.domainsToOverlap}
+                setDomainsToOverlap={props.setDomainsToOverlap}
+                allCustomDomains={allCustomDomains}
               />
+              {isAwsProvider && (
+                <CustomExclusion gatewayDetails={props.gatewayDetails} setGatewayDetails={props.setGatewayDetails} />
+              )}
             </Layout.Vertical>
           </FormikForm>
         )}

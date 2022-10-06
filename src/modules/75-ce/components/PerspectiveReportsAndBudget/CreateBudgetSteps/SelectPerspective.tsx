@@ -61,7 +61,7 @@ const SelectPerspective: (props: StepProps<BudgetStepData> & SelectPerspectivePr
     }
   })
 
-  const [{ data: perspectiveData }] = useFetchPerspectiveListQuery()
+  const [{ data: perspectiveData }] = useFetchPerspectiveListQuery({ requestPolicy: 'cache-and-network' })
 
   const perspectiveList = (perspectiveData?.perspectives?.customerViews || []) as QlceView[]
 

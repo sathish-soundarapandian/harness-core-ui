@@ -55,9 +55,15 @@ export const getStringKeyFromObjectValues = (
   keys: string[],
   glue = '/'
 ): string => {
+  const { resourceAttributes = {} } = permissionRequest // To accomodate ABAC filters
+  const [attributeFilterName] = Object.keys(resourceAttributes)
+  const attributeFilterVal = resourceAttributes[attributeFilterName]
+
   // pick specific keys, get their values, and join with a `/`
   return keys
     .map(key => get(permissionRequest, key))
+    .concat(attributeFilterName)
+    .concat(attributeFilterVal)
     .filter(value => value)
     .join(glue)
 }

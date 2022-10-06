@@ -10,6 +10,7 @@ declare const styles: {
   readonly active: string
   readonly activeItem: string
   readonly container: string
+  readonly disabledPopover: string
   readonly filterContainer: string
   readonly groupByContainer: string
   readonly groupByItems: string
@@ -19,9 +20,10 @@ declare const styles: {
   readonly groupBys: string
   readonly icon: string
   readonly iconContainer: string
-  readonly labelDropDownContainer: string
+  readonly listItem: string
   readonly mainContainer: string
   readonly noResults: string
+  readonly popover: string
   readonly search: string
 }
 export default styles

@@ -11,6 +11,7 @@ declare const styles: {
   readonly addSharedPathsBtn: string
   readonly alignStart: string
   readonly boldLabel: string
+  readonly bottomMargin0: string
   readonly bottomMargin1: string
   readonly bottomMargin2: string
   readonly bottomMargin3: string
@@ -21,6 +22,7 @@ declare const styles: {
   readonly checkbox: string
   readonly code: string
   readonly delegate: string
+  readonly delegateSelector: string
   readonly divider: string
   readonly duration: string
   readonly fieldsGroup: string
@@ -36,10 +38,12 @@ declare const styles: {
   readonly noLookDivider: string
   readonly removeBpLabelMargin: string
   readonly removeBpPopoverWrapperTopMargin: string
+  readonly shellScriptMonacoField: string
   readonly sm: string
   readonly stepPanel: string
   readonly stepSubSectionHeading: string
   readonly textWithTooltip: string
+  readonly topMargin3: string
   readonly topMargin4: string
   readonly topMargin5: string
   readonly topPadding3: string

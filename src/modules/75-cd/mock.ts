@@ -102,7 +102,8 @@ export const serviceDetails = {
           identifier: 'Test',
           name: 'Test',
           status: 'SUCCESS',
-          lastExecutedAt: 1523825890218
+          lastExecutedAt: 1523825890218,
+          planExecutionId: 'nDo66l1JRNumvjObZpOKlQ'
         }
       }
     ]

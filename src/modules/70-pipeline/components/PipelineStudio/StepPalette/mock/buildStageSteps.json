@@ -36,6 +36,10 @@
             "name": "Build and Push an image to Docker Registry"
           },
           {
+            "type": "BuildAndPushACR",
+            "name": "Build and Push to ACR"
+          },
+          {
             "type": "BuildAndPushGCR",
             "name": "Build and Push to GCR"
           },
@@ -56,6 +60,10 @@
           {
             "type": "BuildAndPushDockerRegistry",
             "name": "Build and Push an image to Docker Registry"
+          },
+          {
+            "type": "BuildAndPushACR",
+            "name": "Build and Push to ACR"
           },
           {
             "type": "BuildAndPushGCR",

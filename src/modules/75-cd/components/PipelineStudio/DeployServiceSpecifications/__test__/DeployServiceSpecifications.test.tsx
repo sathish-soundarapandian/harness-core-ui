@@ -20,12 +20,19 @@ import {
 import { StageType } from '@pipeline/utils/stageHelpers'
 import * as useValidationErrors from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
-import overridePipelineContext from './overrideSetPipeline.json'
-import DeployServiceSpecifications from '../DeployServiceSpecifications'
-import connectorListJSON from './connectorList.json'
-import mockListSecrets from './mockListSecret.json'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import { DeployServiceStep } from '@cd/components/PipelineSteps/DeployServiceStep/DeployServiceStep'
+import { GenericServiceSpec } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpec'
+import { ServerlessAwsLambdaServiceSpec } from '@cd/components/PipelineSteps/ServerlessAwsLambdaServiceSpec/ServerlessAwsLambdaServiceSpec'
+import { ECSServiceSpec } from '@cd/components/PipelineSteps/ECSServiceSpec/ECSServiceSpec'
 import services, { servicesV2Mock } from './servicesMock'
+import mockListSecrets from './mockListSecret.json'
+import connectorListJSON from './connectorList.json'
+import DeployServiceSpecifications from '../DeployServiceSpecifications'
+import overridePipelineContext from './overrideSetPipeline.json'
 
+const setDefaultServiceSchema = jest.fn()
+const mockchildren = <div />
 const getOverrideContextValue = (): PipelineContextInterface => {
   return {
     ...overridePipelineContext,
@@ -92,12 +99,20 @@ const intersectionObserverMock = () => ({
 window.IntersectionObserver = jest.fn().mockImplementation(intersectionObserverMock)
 
 describe('Deploy service stage specifications', () => {
+  beforeAll(() => {
+    factory.registerStep(new DeployServiceStep())
+    factory.registerStep(new GenericServiceSpec())
+    factory.registerStep(new ServerlessAwsLambdaServiceSpec())
+    factory.registerStep(new ECSServiceSpec())
+  })
   test(`Propagate from option and dropdown to select previous stage and service should be present`, async () => {
     const { getByPlaceholderText, getByText } = render(
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
           <PipelineContext.Provider value={getOverrideContextValue()}>
-            <DeployServiceSpecifications />
+            <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
+              {mockchildren}
+            </DeployServiceSpecifications>
           </PipelineContext.Provider>
         </Formik>
       </TestWrapper>
@@ -142,7 +157,9 @@ describe('Deploy service stage specifications', () => {
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
           <PipelineContext.Provider value={getOverrideContextValue()}>
-            <DeployServiceSpecifications />
+            <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
+              {mockchildren}
+            </DeployServiceSpecifications>
           </PipelineContext.Provider>
         </Formik>
       </TestWrapper>
@@ -156,7 +173,9 @@ describe('Deploy service stage specifications', () => {
       <TestWrapper>
         <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
           <PipelineContext.Provider value={getOverrideContextValue()}>
-            <DeployServiceSpecifications />
+            <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
+              {mockchildren}
+            </DeployServiceSpecifications>
           </PipelineContext.Provider>
         </Formik>
       </TestWrapper>
@@ -181,7 +200,9 @@ describe('Deploy service stage specifications', () => {
         <Formik initialValues={{}} onSubmit={noop} formName="deployServiceSpecificationsTest">
           <PipelineContext.Provider value={getOverrideContextValue()}>
             <StageErrorContext.Provider value={errorContextProvider}>
-              <DeployServiceSpecifications />
+              <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
+                {mockchildren}
+              </DeployServiceSpecifications>
             </StageErrorContext.Provider>
           </PipelineContext.Provider>
         </Formik>
@@ -194,9 +215,11 @@ describe('Deploy service stage specifications', () => {
   test('Deployment types should have Serverless Lambda as a part of it', async () => {
     getOverrideContextValue().state.selectionState.selectedStageId = 'st1'
     const { getByText } = render(
-      <TestWrapper defaultFeatureFlagValues={{ SERVERLESS_SUPPORT: true }}>
+      <TestWrapper>
         <PipelineContext.Provider value={getOverrideContextValue()}>
-          <DeployServiceSpecifications />
+          <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
+            {mockchildren}
+          </DeployServiceSpecifications>
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -204,15 +227,17 @@ describe('Deploy service stage specifications', () => {
 
     const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
     userEvent.click(serverlessLambda)
-    await waitFor(() => expect(getByText('pipelineSteps.serviceTab.manifestList.addManifest')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('pipeline.manifestType.addManifestLabel')).toBeInTheDocument())
   })
 
   test('Add manifest dialog should display manifest store screen directly if Serverless Lambda is deployment type', async () => {
     getOverrideContextValue().state.selectionState.selectedStageId = 'st1'
     const { getByText } = render(
-      <TestWrapper defaultFeatureFlagValues={{ SERVERLESS_SUPPORT: true }}>
+      <TestWrapper>
         <PipelineContext.Provider value={getOverrideContextValue()}>
-          <DeployServiceSpecifications />
+          <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
+            {mockchildren}
+          </DeployServiceSpecifications>
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -220,8 +245,8 @@ describe('Deploy service stage specifications', () => {
 
     const serverlessLambda = getByText('pipeline.serviceDeploymentTypes.serverlessAwsLambda')
     userEvent.click(serverlessLambda)
-    await waitFor(() => expect(getByText('pipelineSteps.serviceTab.manifestList.addManifest')).toBeDefined())
-    const addManifestButton = getByText('pipelineSteps.serviceTab.manifestList.addManifest')
+    await waitFor(() => expect(getByText('pipeline.manifestType.addManifestLabel')).toBeDefined())
+    const addManifestButton = getByText('pipeline.manifestType.addManifestLabel')
     userEvent.click(addManifestButton)
 
     // Find Add Manifest dialog portal div
@@ -251,5 +276,39 @@ describe('Deploy service stage specifications', () => {
     expect(getElementByText(portalDiv, 'common.repo_provider.githubLabel')).toBeDefined()
     expect(getElementByText(portalDiv, 'common.repo_provider.gitlabLabel')).toBeDefined()
     expect(getElementByText(portalDiv, 'pipeline.manifestType.bitBucketLabel')).toBeDefined()
+  })
+
+  test('when deploymentType is ECS, ECS related UI should appear', async () => {
+    getOverrideContextValue().state.selectionState.selectedStageId = 'st1'
+    const { findAllByText, getByText, getAllByText } = render(
+      <TestWrapper defaultFeatureFlagValues={{ ECS_NG: true }}>
+        <PipelineContext.Provider value={getOverrideContextValue()}>
+          <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
+            {mockchildren}
+          </DeployServiceSpecifications>
+        </PipelineContext.Provider>
+      </TestWrapper>
+    )
+    expect(getByText('deploymentTypeText')).toBeDefined()
+
+    // Select ECS deployment type
+    const amazonEcs = getByText('pipeline.serviceDeploymentTypes.amazonEcs')
+    userEvent.click(amazonEcs)
+
+    // By checking Add buttons, check if manifest section for each manifest type is rendered
+    const allPlusAddManifestButtons = await findAllByText(/common.addName/)
+    expect(allPlusAddManifestButtons).toHaveLength(4)
+    // Check header of each manifest section card
+    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    expect(getAllByText('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')).toHaveLength(2)
+    expect(getAllByText('common.headerWithOptionalText')).toHaveLength(2)
+
+    // Check for + Add Primary Artifact button which confirms if Primary Artifact section is rendered
+    expect(getByText('pipeline.artifactsSelection.addPrimaryArtifact')).toBeInTheDocument()
+    // Check for + Add Sidecar button which confirms if Sidecar Artifact section is rendered
+    expect(getByText('pipeline.artifactsSelection.addSidecar')).toBeInTheDocument()
+
+    // Check if Variable section is rendered
+    expect(getByText('common.variables')).toBeInTheDocument()
   })
 })

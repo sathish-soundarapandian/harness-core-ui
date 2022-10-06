@@ -9,7 +9,7 @@ import React from 'react'
 import { StepWizard } from '@wings-software/uicore'
 import { pick } from 'lodash-es'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import {
   Connectors,
   CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
@@ -54,6 +54,7 @@ const CreateNexusConnector: React.FC<CreateConnectorModalProps> = props => {
           identifier={CONNECTOR_CREDENTIALS_STEP_IDENTIFIER}
           {...commonProps}
           onConnectorCreated={props.onSuccess}
+          helpPanelReferenceId="NexusDetails"
         />
         <DelegateSelectorStep
           name={getString('delegate.DelegateselectionLabel')}
@@ -66,7 +67,7 @@ const CreateNexusConnector: React.FC<CreateConnectorModalProps> = props => {
           gitDetails={props.gitDetails}
           helpPanelReferenceId="ConnectorDelegatesSetup"
         />
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.stepThreeName')}
           connectorInfo={props.connectorInfo}
           isStep

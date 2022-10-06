@@ -13,7 +13,7 @@ import { defaultTo } from 'lodash-es'
 import { Container, Dialog, Heading, Text, Views } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
-
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useGetEnvironmentListV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
@@ -32,7 +32,6 @@ import EnvironmentTabs from './EnvironmentTabs'
 import EnvironmentsList from './EnvironmentsList/EnvironmentsList'
 import EnvironmentsGrid from './EnvironmentsGrid/EnvironmentsGrid'
 import EnvironmentsFilters from './EnvironmentsFilters/EnvironmentsFilters'
-
 import EmptyContentImg from './EmptyContent.svg'
 
 import css from './Environments.module.scss'
@@ -45,7 +44,7 @@ export function Environments() {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
 
   const [showCreateModal, hideCreateModal] = useModalHook(
-    () => (
+    /* istanbul ignore next */ () => (
       <Dialog
         isOpen={true}
         enforceFocus={false}
@@ -91,7 +90,7 @@ export function Environments() {
     [orgIdentifier, projectIdentifier]
   )
 
-  const handleCustomSortChange = (value: string) => {
+  const handleCustomSortChange = /* istanbul ignore next */ (value: string) => {
     return value === SortFields.AZ09
       ? [SortFields.Name, Sort.ASC]
       : value === SortFields.ZA90
@@ -106,6 +105,7 @@ export function Environments() {
         setView
       }}
     >
+      <HelpPanel referenceId="environmentListing" type={HelpPanelType.FLOATING_CONTAINER} />
       <PageTemplate
         title={getString('environments')}
         titleTooltipId="ff_env_heading"
@@ -117,6 +117,10 @@ export function Environments() {
             permission: PermissionIdentifier.EDIT_ENVIRONMENT,
             resource: {
               resourceType: ResourceType.ENVIRONMENT
+            },
+            attributeFilter: {
+              attributeName: 'type',
+              attributeValues: ['Production', 'PreProduction']
             }
           },
           onClick: showCreateModal

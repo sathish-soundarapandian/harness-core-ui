@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { IconName, MultiTypeInputType } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 import type { FormikErrors } from 'formik'
 import type { StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -74,7 +74,7 @@ export interface SaveCacheS3StepProps {
   stepViewType: StepViewType
   onUpdate?: (data: SaveCacheS3StepData) => void
   onChange?: (data: SaveCacheS3StepData) => void
-  allowableTypes: MultiTypeInputType[]
+  allowableTypes: AllowedTypes
   formik?: any
 }
 export class SaveCacheS3Step extends PipelineStep<SaveCacheS3StepData> {
@@ -133,7 +133,7 @@ export class SaveCacheS3Step extends PipelineStep<SaveCacheS3StepData> {
       allowableTypes
     } = props
 
-    if (stepViewType === StepViewType.InputSet || stepViewType === StepViewType.DeploymentForm) {
+    if (this.isTemplatizedView(stepViewType)) {
       return (
         <SaveCacheS3StepInputSet
           initialValues={initialValues}

@@ -29,6 +29,13 @@ import {
 import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/ValidationStatus.constants'
 import { StatusState, HealthSoureSupportedConnectorTypes } from './MonitoredServiceConnector.constants'
 import type { UpdatedHealthSource } from '../HealthSourceDrawer/HealthSourceDrawerContent.types'
+import {
+  getIsRemovedMetricNameContainsMetricThresholds,
+  getIsRemovedMetricPackContainsMetricThresholds,
+  getMetricThresholdsCustomFiltered
+} from '../common/MetricThresholds/MetricThresholds.utils'
+import type { MetricThresholdType, ThresholdsPropertyNames } from '../common/MetricThresholds/MetricThresholds.types'
+import type { CommonNonCustomMetricFieldsType } from '../types'
 import css from './NewRelic/NewrelicMonitoredSource.module.scss'
 
 export const createPayloadByConnectorType = (formData: any, connector: string): UpdatedHealthSource | null => {
@@ -115,7 +122,7 @@ export const getOptions = (
       }) || []
 }
 
-export const createMetricDataFormik = (metricPacks: MetricPackDTO[] | undefined): { [key: string]: boolean } => {
+export const createMetricDataFormik = (metricPacks?: MetricPackDTO[]): { [key: string]: boolean } => {
   const metricData: { [key: string]: boolean } = {}
   if (!metricPacks) {
     metricPacks = []
@@ -209,4 +216,88 @@ export function transformNewRelicDataToAppd(
     }
     return appDMeticData
   })
+}
+
+export const getFilteredThresholdsWithCallback = <T extends Record<ThresholdsPropertyNames, MetricThresholdType[]>>(
+  nonCustomFields: T,
+  filterCallbackFunction?: (threshold: MetricThresholdType) => boolean
+): T => {
+  if (nonCustomFields && filterCallbackFunction) {
+    nonCustomFields.ignoreThresholds = getMetricThresholdsCustomFiltered(
+      nonCustomFields.ignoreThresholds,
+      filterCallbackFunction
+    )
+    nonCustomFields.failFastThresholds = getMetricThresholdsCustomFiltered(
+      nonCustomFields.failFastThresholds,
+      filterCallbackFunction
+    )
+    return nonCustomFields
+  }
+
+  return {} as T
+}
+
+export const getUpdatedNonCustomFields = <T extends CommonNonCustomMetricFieldsType>(
+  isMetricThresholdEnabled: boolean,
+  nonCustomFeilds: T,
+  metricPackIdentifier: string,
+  updatedValue: boolean
+): T => {
+  const isRemovedMetricPackContainsMetricThresholds = getIsRemovedMetricPackContainsMetricThresholds(
+    isMetricThresholdEnabled,
+    nonCustomFeilds,
+    metricPackIdentifier,
+    updatedValue
+  )
+
+  let updatedNonCustomFields = {
+    ...nonCustomFeilds,
+    metricData: {
+      ...nonCustomFeilds.metricData,
+      [metricPackIdentifier]: updatedValue
+    }
+  }
+
+  if (isRemovedMetricPackContainsMetricThresholds) {
+    const updatedNonCustomFieldsWithThresholds = getFilteredThresholdsWithCallback(
+      updatedNonCustomFields,
+      threshold => threshold.metricType !== metricPackIdentifier
+    )
+    updatedNonCustomFields = {
+      ...updatedNonCustomFields,
+      ...updatedNonCustomFieldsWithThresholds
+    }
+  }
+
+  return updatedNonCustomFields
+}
+
+export const getMetricNameFilteredNonCustomFields = <T extends Record<ThresholdsPropertyNames, MetricThresholdType[]>>(
+  isMetricThresholdEnabled: boolean,
+  nonCustomFeilds: T,
+  metricName: string
+): T => {
+  const isRemovedMetricNameContainsMetricThresholds = getIsRemovedMetricNameContainsMetricThresholds(
+    isMetricThresholdEnabled,
+    nonCustomFeilds,
+    metricName
+  )
+
+  let updatedNonCustomFields = {
+    ...nonCustomFeilds
+  }
+
+  if (isRemovedMetricNameContainsMetricThresholds) {
+    const updatedNonCustomFieldsWithThresholds = getFilteredThresholdsWithCallback<T>(
+      updatedNonCustomFields,
+      threshold => threshold.metricName !== metricName
+    )
+
+    updatedNonCustomFields = {
+      ...updatedNonCustomFields,
+      ...updatedNonCustomFieldsWithThresholds
+    }
+  }
+
+  return updatedNonCustomFields
 }

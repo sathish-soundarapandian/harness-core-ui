@@ -25,8 +25,6 @@ import type { FormikErrors } from 'formik'
 import {
   useGetConnectorListV2,
   ResponsePageConnectorResponse,
-  useGetConnectorCatalogue,
-  ConnectorCatalogueItem,
   ResponseConnectorCatalogueResponse,
   useGetConnectorStatistics,
   useGetFilterList,
@@ -45,12 +43,7 @@ import type { ConnectorFilterProperties } from 'services/cd-ng'
 import type { UseGetMockData } from '@common/utils/testUtils'
 import { Page, useToaster, StringUtils } from '@common/exports'
 import { AddDrawer, PageSpinner } from '@common/components'
-import {
-  AddDrawerMapInterface,
-  DrawerContext,
-  CategoryInterface,
-  ItemInterface
-} from '@common/components/AddDrawer/AddDrawer'
+import { DrawerContext, ItemInterface } from '@common/components/AddDrawer/AddDrawer'
 import routes from '@common/RouteDefinitions'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import { Filter, FilterRef } from '@common/components/Filter/Filter'
@@ -65,8 +58,6 @@ import type { FilterInterface, FilterDataInterface } from '@common/components/Fi
 import type { CrudOperation } from '@common/components/Filter/FilterCRUD/FilterCRUD'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import FilterSelector from '@common/components/Filter/FilterSelector/FilterSelector'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -78,17 +69,13 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import ScopedTitle from '@common/components/Title/ScopedTitle'
-import { useFeature } from '@common/hooks/useFeatures'
-import type { CheckFeatureReturn } from 'framework/featureStore/featureStoreUtil'
-import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
-import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { Connectors } from '@connectors/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CE_CONNECTOR_CLICK, CONNECTORS_PAGE } from '@connectors/trackingConstants'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { resourceAttributeMap } from '@rbac/pages/ResourceGroupDetails/utils'
 import ConnectorsListView from './views/ConnectorsListView'
-import { getIconByType, getConnectorDisplayName } from './utils/ConnectorUtils'
 import {
   createRequestBodyPayload,
   ConnectorFormType,
@@ -100,6 +87,7 @@ import {
 } from './utils/RequestUtils'
 import ConnectorsEmptyState from './images/connectors-empty-state.png'
 
+import { useGetConnectorsListHook } from './hooks/useGetConnectorsListHook/useGetConectorsListHook'
 import css from './ConnectorsPage.module.scss'
 
 interface ConnectorsListProps {
@@ -112,8 +100,9 @@ interface ConnectorsListProps {
 const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, statisticsMockData, filtersMockData }) => {
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(0)
   const [filters, setFilters] = useState<FilterDTO[]>()
@@ -143,30 +132,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   }
   const history = useHistory()
   useDocumentTitle(getString('connectorsLabel'))
-  const isCustomHealthEnabled = useFeatureFlag(FeatureFlag.CHI_CUSTOM_HEALTH)
-  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
-  const isAzureEnabled = useFeatureFlag(FeatureFlag.NG_AZURE)
   const { trackEvent } = useTelemetry()
-
-  const ConnectorCatalogueNames = new Map<ConnectorCatalogueItem['category'], string>()
-  // This list will control which categories will be displayed in UI and its order
-  const connectorCatalogueOrder: Array<ConnectorCatalogueItem['category']> = [
-    'CLOUD_PROVIDER',
-    'ARTIFACTORY',
-    'CLOUD_COST',
-    'CODE_REPO',
-    'TICKETING',
-    'MONITORING',
-    'SECRET_MANAGER'
-  ]
-
-  ConnectorCatalogueNames.set('CLOUD_PROVIDER', getString('cloudProviders'))
-  ConnectorCatalogueNames.set('ARTIFACTORY', getString('artifactRepositories'))
-  ConnectorCatalogueNames.set('CODE_REPO', getString('codeRepositories'))
-  ConnectorCatalogueNames.set('TICKETING', getString('ticketingSystems'))
-  ConnectorCatalogueNames.set('MONITORING', getString('monitoringAndLoggingSystems'))
-  ConnectorCatalogueNames.set('SECRET_MANAGER', getString('secretManagers'))
-  ConnectorCatalogueNames.set('CLOUD_COST', getString('cloudCostsText'))
 
   /* #region Connector CRUD section */
 
@@ -300,107 +266,12 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
 
   /* #region Create Connector Catalogue section */
 
-  const computeDrawerMap = (
-    catalogueData: ResponseConnectorCatalogueResponse | null,
-    featureInfo: CheckFeatureReturn
-  ): AddDrawerMapInterface => {
-    const originalData = catalogueData?.data?.catalogue || []
-    originalData.forEach(value => {
-      if (value.category === 'SECRET_MANAGER') {
-        value.connectors = ['Vault', 'AwsKms', 'AzureKeyVault', 'AwsSecretManager', 'GcpKms']
-      }
-    })
-    const orderedCatalogue: ConnectorCatalogueItem[] | { category: string; connectors: string[] } = []
-    connectorCatalogueOrder.forEach(catalogueItem => {
-      const catalogueEntry = originalData.find(item => item['category'] === catalogueItem)
-      if (catalogueEntry && !(projectIdentifier != undefined && catalogueEntry.category == 'CLOUD_COST')) {
-        // CLOUD_COST should not be displayed at project level drawer
-        orderedCatalogue.push(catalogueEntry)
-      }
-    })
-
-    const k8sLimitWarningRenderer = () => {
-      const { featureDetail: { count, limit } = {} } = featureInfo
-      return (
-        <section className={css.limitWarningTooltipCtn}>
-          <FeatureWarningTooltip
-            featureName={FeatureIdentifier.CCM_K8S_CLUSTERS}
-            warningMessage={getString('connectors.ceK8.featureWarning', { count, limit })}
-          />
-        </section>
-      )
-    }
-
-    const RestrictionLimitWarningRenderers: Record<string, (item: ItemInterface) => React.ReactNode> = {
-      CEK8sCluster: k8sLimitWarningRenderer
-    }
-
-    const isRestrictedConnector = (item: ConnectorCatalogueItem, connector: string) => {
-      if (!item.category) {
-        return false
-      }
-
-      // TODO: make it generic
-      return connector === 'CEK8sCluster' && !featureInfo.enabled
-    }
-
-    const filterConnectors = (connector: string): boolean => {
-      switch (connector) {
-        case Connectors.ERROR_TRACKING:
-          return isErrorTrackingEnabled
-        case Connectors.AZURE:
-          return isAzureEnabled
-        default:
-          return true
-      }
-    }
-
-    return Object.assign(
-      {},
-      {
-        drawerLabel: 'Connectors',
-        categories:
-          orderedCatalogue.map((item: ConnectorCatalogueItem) => {
-            return {
-              categoryLabel: ConnectorCatalogueNames.get(item['category']) || '',
-              warningTooltipRenderer: i => {
-                const renderer = RestrictionLimitWarningRenderers[i.value]
-                return renderer && renderer(i)
-              },
-              items:
-                item.connectors
-                  ?.filter(connector => filterConnectors(connector))
-                  .sort((a, b) => (getConnectorDisplayName(a) < getConnectorDisplayName(b) ? -1 : 1))
-                  .filter(entry => {
-                    const name = entry.valueOf() || ''
-                    if (name !== 'CustomHealth') return true
-                    return isCustomHealthEnabled !== false
-                  })
-                  .map(entry => {
-                    const name = entry.valueOf() || ''
-                    return {
-                      itemLabel: getConnectorDisplayName(entry) || name,
-                      iconName: getIconByType(entry),
-                      value: name,
-                      disabled: isRestrictedConnector(item, entry)
-                    }
-                  }) || []
-            } as CategoryInterface
-          }) || []
-      }
-    )
-  }
-
-  const featureInfo = useFeature({
-    featureRequest: {
-      featureName: FeatureIdentifier.CCM_K8S_CLUSTERS
-    }
-  })
-
-  const { data: catalogueData, loading: loadingCatalogue } = useGetConnectorCatalogue({
-    queryParams: { accountIdentifier: accountId },
-    mock: catalogueMockData
-  })
+  const {
+    connectorsList: catalogueData,
+    loading: loadingCatalogue,
+    categoriesMap,
+    connectorCatalogueOrder
+  } = useGetConnectorsListHook(catalogueMockData)
 
   const {
     loading: isFetchingConnectorStats,
@@ -461,14 +332,14 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
       <PageSpinner />
     ) : (
       <AddDrawer
-        addDrawerMap={computeDrawerMap(catalogueData, featureInfo)}
+        addDrawerMap={categoriesMap}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.PAGE}
         showRecentlyUsed={false}
       />
     )
-  }, [catalogueData, featureInfo])
+  }, [catalogueData])
 
   /* #endregion */
 
@@ -720,6 +591,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
   fieldToLabelMapping.set('tags', getString('tagsLabel'))
   fieldToLabelMapping.set('connectivityStatuses', getString('connectivityStatus'))
 
+  const attributeFilterName = resourceAttributeMap.get(ResourceType.CONNECTOR)
   /* #endregion */
 
   return (
@@ -740,7 +612,7 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
           />
         }
       />
-      <Layout.Vertical height={'calc(100vh - 64px'} className={css.listPage}>
+      <Layout.Vertical className={css.listPage}>
         {connectors?.content?.length || isGitSyncEnabled || searchTerm || loading || appliedFilter ? (
           <Layout.Horizontal flex className={css.header}>
             <Layout.Horizontal spacing="small">
@@ -752,6 +624,10 @@ const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, stat
                   permission: PermissionIdentifier.UPDATE_CONNECTOR,
                   resource: {
                     resourceType: ResourceType.CONNECTOR
+                  },
+                  attributeFilter: {
+                    attributeName: attributeFilterName ?? ('' as string),
+                    attributeValues: connectorCatalogueOrder as string[]
                   }
                 }}
                 onClick={openDrawer}

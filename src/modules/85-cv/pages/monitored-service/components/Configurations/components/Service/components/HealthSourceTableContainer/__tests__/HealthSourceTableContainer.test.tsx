@@ -35,6 +35,7 @@ describe('Validate', () => {
         <HealthSourceTableContainer
           healthSourceListFromAPI={[healthSourceList]}
           serviceFormFormik={formFormik as any}
+          onSave={jest.fn()}
         />
       </TestWrapper>
     )
@@ -67,6 +68,7 @@ describe('Validate', () => {
         <HealthSourceTableContainer
           healthSourceListFromAPI={[healthSourceList]}
           serviceFormFormik={{ values: serviceFormik } as any}
+          onSave={jest.fn()}
         />
       </TestWrapper>
     )
@@ -98,6 +100,7 @@ describe('Validate', () => {
         <HealthSourceTableContainer
           healthSourceListFromAPI={[healthSourceList]}
           serviceFormFormik={{ values: serviceFormik } as any}
+          onSave={jest.fn()}
         />
       </TestWrapper>
     )

@@ -153,7 +153,7 @@ const LoadBalancerDnsConfig: React.FC<LoadBalancerDnsConfigProps> = props => {
         setLoadBalancerId(result.response.id as string)
       }
     } catch (e) {
-      showError(e.data?.errors?.join('\n') || e.data?.message || e.message, undefined, 'ce.lb.create.error')
+      showError(Utils.getASErrorMessage(e) || e.data?.message || e.message, undefined, 'ce.lb.create.error')
       setLbCreationInProgress(false)
     }
   }

@@ -1,0 +1,48 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "connector": {
+      "name": "testConnector",
+      "identifier": "testConnector",
+      "description": "",
+      "orgIdentifier": "default",
+      "projectIdentifier": "defaultproject",
+      "tags": {},
+      "type": "Jenkins",
+      "spec": {
+        "jenkinsUrl": "https://jenkins.dev.harness.io",
+        "auth": {
+          "type": "UsernamePassword",
+          "spec": { "username": "harnessadmin", "usernameRef": null, "passwordRef": "jenkinsPass" }
+        },
+        "delegateSelectors": ["temp-delegate-pr"]
+      }
+    },
+    "createdAt": 1654257836459,
+    "lastModifiedAt": 1654257836327,
+    "status": {
+      "status": "SUCCESS",
+      "errorSummary": null,
+      "errors": null,
+      "testedAt": 1656059380066,
+      "lastTestedAt": 0,
+      "lastConnectedAt": 1656059380066
+    },
+    "activityDetails": { "lastActivityTime": 1654257837220 },
+    "harnessManaged": false,
+    "gitDetails": {
+      "objectId": null,
+      "branch": null,
+      "repoIdentifier": null,
+      "rootFolder": null,
+      "filePath": null,
+      "repoName": null,
+      "commitId": null,
+      "fileUrl": null
+    },
+    "entityValidityDetails": { "valid": true, "invalidYaml": null },
+    "governanceMetadata": null
+  },
+  "metaData": null,
+  "correlationId": "2adcb847-5aa6-47a4-9a8a-bce17cd32d55"
+}

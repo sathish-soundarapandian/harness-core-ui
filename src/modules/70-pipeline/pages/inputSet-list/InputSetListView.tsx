@@ -21,6 +21,7 @@ import { Color } from '@harness/design-system'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { useParams } from 'react-router-dom'
 import { Classes, Menu, Position } from '@blueprintjs/core'
+import { get } from 'lodash-es'
 import type {
   PageInputSetSummaryResponse,
   InputSetSummaryResponse,
@@ -38,6 +39,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
+import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import useDeleteConfirmationDialog from '../utils/DeleteConfirmDialog'
 import { Badge } from '../utils/Badge/Badge'
 import css from './InputSetList.module.scss'
@@ -109,7 +111,7 @@ const RenderColumnInputSet: Renderer<CellProps<InputSetLocal>> = ({ row }) => {
             <Badge
               text={'common.invalid'}
               iconName="error-outline"
-              showTooltip={true}
+              showTooltip={false}
               entityName={data.name}
               entityType={data.inputSetType === 'INPUT_SET' ? 'Input Set' : 'Overlay Input Set'}
               uuidToErrorResponseMap={data.inputSetErrorDetails?.uuidToErrorResponseMap}
@@ -246,7 +248,17 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
     storeType
   })
 
-  return (
+  return isInputSetInvalid(row.original) ? (
+    <OutOfSyncErrorStrip
+      inputSet={row.original}
+      onlyReconcileButton={true}
+      hideInputSetButton={true}
+      isOverlayInputSet={get(row.original, 'inputSetType') === 'OVERLAY_INPUT_SET'}
+      fromInputSetForm={false}
+      fromInputSetListView={true}
+      refetchInputSets={(column as any)?.refetchInputSet}
+    />
+  ) : (
     <RbacButton
       disabled={!(column as any)?.pipelineHasRuntimeInputs || isPipelineInvalid}
       tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
@@ -287,7 +299,12 @@ export function InputSetListView({
   template
 }: InputSetListViewProps): React.ReactElement {
   const { getString } = useStrings()
-  const { isGitSyncEnabled } = useAppStore()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const totalItems = get(data, 'totalItems', 0)
+  const pageSize = get(data, 'pageSize', 10)
+  const totalPages = get(data, 'totalPages', -1)
+  const pageIndex = get(data, 'pageIndex', 0)
   const columns: CustomColumn<InputSetLocal>[] = React.useMemo(
     () => [
       {
@@ -320,7 +337,8 @@ export function InputSetListView({
         pipelineHasRuntimeInputs,
         isPipelineInvalid,
         template,
-        isGitSyncEnabled
+        isGitSyncEnabled,
+        refetchInputSet
       },
       {
         Header: '',
@@ -348,15 +366,13 @@ export function InputSetListView({
     <TableV2<InputSetLocal>
       className={css.table}
       columns={columns}
-      data={data?.content || /* istanbul ignore next */ []}
+      data={get(data, 'content', [])}
       onRowClick={item => !isPipelineInvalid && pipelineHasRuntimeInputs && goToInputSetDetail?.(item)}
-      pagination={{
-        itemCount: data?.totalItems || /* istanbul ignore next */ 0,
-        pageSize: data?.pageSize || /* istanbul ignore next */ 10,
-        pageCount: data?.totalPages || /* istanbul ignore next */ -1,
-        pageIndex: data?.pageIndex || /* istanbul ignore next */ 0,
-        gotoPage
-      }}
+      pagination={
+        totalItems > pageSize
+          ? { itemCount: totalItems, pageSize: pageSize, pageCount: totalPages, pageIndex: pageIndex, gotoPage }
+          : undefined
+      }
     />
   )
 }

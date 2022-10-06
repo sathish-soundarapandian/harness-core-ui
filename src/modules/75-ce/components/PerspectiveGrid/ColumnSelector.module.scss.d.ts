@@ -10,7 +10,7 @@ declare const styles: {
   readonly columnInfo: string
   readonly container: string
   readonly dropDown: string
-  readonly exportCsvBtn: string
+  readonly search: string
   readonly selectBtn: string
 }
 export default styles

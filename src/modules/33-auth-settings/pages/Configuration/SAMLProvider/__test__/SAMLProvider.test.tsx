@@ -12,7 +12,8 @@ import { setFieldValue, InputTypes } from '@common/utils/JestFormHelper'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { authSettings, mockResponse, permissionRequest } from '@auth-settings/pages/Configuration/__test__/mock'
-import { AuthenticationMechanisms, getSamlEndpoint } from '@auth-settings/constants/utils'
+import { AuthenticationMechanisms } from '@rbac/utils/utils'
+import { getSamlEndpoint } from '@auth-settings/constants/utils'
 import SAMLProvider from '../SAMLProvider'
 
 jest.mock('services/cd-ng', () => ({

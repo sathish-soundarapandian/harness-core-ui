@@ -231,13 +231,7 @@ export default function PageTemplate({
           toolbar={headerToolbar}
         />
         <Page.SubHeader className={css.toolbar}>
-          <RbacButton
-            intent="primary"
-            icon="plus"
-            iconProps={{ size: 12 }}
-            font={{ weight: 'bold' }}
-            {...createButtonProps}
-          />
+          <RbacButton intent="primary" icon="plus" font={{ weight: 'bold' }} {...createButtonProps} />
           <Layout.Horizontal flex={{ justifyContent: 'flex-end', alignItems: 'center' }}>
             <ExpandingSearchInput
               alwaysExpanded

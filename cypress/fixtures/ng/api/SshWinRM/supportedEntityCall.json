@@ -1,0 +1,6 @@
+{
+  "status": "SUCCESS",
+  "data": ["Pipelines", "PipelineSteps", "Service", "Secrets", "Template"],
+  "metaData": null,
+  "correlationId": "04370d27-fd25-4aeb-bde0-f041ca4c0090"
+}

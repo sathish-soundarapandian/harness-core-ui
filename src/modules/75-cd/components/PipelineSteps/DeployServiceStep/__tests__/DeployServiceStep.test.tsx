@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, fireEvent, getByText, act, waitFor } from '@testing-library/react'
+import { render, fireEvent, getByText, act, waitFor, queryByText } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -73,7 +73,9 @@ jest.mock('services/cd-ng', () => ({
 describe('Test DeployService Step', () => {
   test('should render service view and save', async () => {
     const { container } = render(
-      <DeployService type={StepType.DeployService} initialValues={{}} stepViewType={StepViewType.Edit} />
+      <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_SVC_ENV_REDESIGN: false } }}>
+        <DeployService type={StepType.DeployService} initialValues={{}} stepViewType={StepViewType.Edit} />
+      </TestWrapper>
     )
     fireEvent.click(getByText(container, 'cd.pipelineSteps.serviceTab.plusNewService'))
     const dialog = findDialogContainer()
@@ -94,13 +96,25 @@ describe('Test DeployService Step', () => {
       "
     `)
   })
+  test('new service should not be present with service entity feature flag on', async () => {
+    const { container } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_SVC_ENV_REDESIGN: true } }}>
+        <DeployService type={StepType.DeployService} initialValues={{}} stepViewType={StepViewType.DeploymentForm} />
+      </TestWrapper>
+    )
+    const newServiceBtnText = queryByText(container, 'cd.pipelineSteps.serviceTab.plusNewService')
+    expect(newServiceBtnText).toBeNull()
+  })
+
   test('should render edit service view (service ref), then update and then save', async () => {
     const { container } = render(
-      <DeployService
-        type={StepType.DeployService}
-        initialValues={{ serviceRef: 'login4' }}
-        stepViewType={StepViewType.Edit}
-      />
+      <TestWrapper defaultAppStoreValues={{ featureFlags: { NG_SVC_ENV_REDESIGN: false } }}>
+        <DeployService
+          type={StepType.DeployService}
+          initialValues={{ serviceRef: 'login4' }}
+          stepViewType={StepViewType.Edit}
+        />
+      </TestWrapper>
     )
     fireEvent.click(getByText(container, 'editService'))
     const dialog = findDialogContainer()

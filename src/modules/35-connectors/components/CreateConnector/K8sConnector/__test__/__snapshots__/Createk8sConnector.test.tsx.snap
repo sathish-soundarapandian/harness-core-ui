@@ -119,6 +119,7 @@ exports[`Create k8 connector Wizard should form for authtype username 1`] = `
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+          data-cy="connector-overview-heading"
         >
           overview
         </p>
@@ -148,7 +149,7 @@ exports[`Create k8 connector Wizard should form for authtype username 1`] = `
                       >
                         <div
                           class="Text--withDocsTooltip"
-                          data-tooltip-id="connectorDetailsStepFormK8sCluster_identifier"
+                          data-tooltip-id="universalInputNameWithId"
                         >
                           <p
                             class="StyledProps--font StyledProps--main"
@@ -940,7 +941,7 @@ exports[`Create k8 connector Wizard should form for edit authtype OIDC 1`] = `
                     name="masterUrl"
                     placeholder="UrlLabel"
                     type="text"
-                    value="/url"
+                    value="https://url.com"
                   />
                 </div>
               </div>
@@ -1835,7 +1836,7 @@ exports[`Create k8 connector Wizard should form for edit authtype serviceAccount
                     name="masterUrl"
                     placeholder="UrlLabel"
                     type="text"
-                    value="/url"
+                    value="https://url.com"
                   />
                 </div>
               </div>
@@ -2275,6 +2276,7 @@ exports[`Create k8 connector Wizard should form for edit authtype username 1`] =
       >
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-h3"
+          data-cy="connector-overview-heading"
         >
           overview
         </p>
@@ -2304,7 +2306,7 @@ exports[`Create k8 connector Wizard should form for edit authtype username 1`] =
                       >
                         <div
                           class="Text--withDocsTooltip"
-                          data-tooltip-id="connectorDetailsStepFormK8sCluster_identifier"
+                          data-tooltip-id="universalInputNameWithId"
                         >
                           <p
                             class="StyledProps--font StyledProps--main"
@@ -2801,7 +2803,7 @@ exports[`Create k8 connector Wizard should form for edit authtype username 2`] =
                     name="masterUrl"
                     placeholder="UrlLabel"
                     type="text"
-                    value="/url7878"
+                    value="https://url.com"
                   />
                 </div>
               </div>
@@ -3429,7 +3431,7 @@ exports[`should render form for edit authtype clientKey 1`] = `
                     name="masterUrl"
                     placeholder="UrlLabel"
                     type="text"
-                    value="/url"
+                    value="https://url.com"
                   />
                 </div>
               </div>

@@ -28,19 +28,23 @@ import routes from '@common/RouteDefinitions'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { setUpCI, StartFreeLicenseAndSetupProjectCallback } from '@common/utils/GetStartedWithCIUtil'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
-import { ModuleName } from 'framework/types/ModuleName'
-import { ModuleLicenseType, Editions } from '@common/constants/SubscriptionTypes'
+import { ModuleName, Module as ModuleType } from 'framework/types/ModuleName'
+import { ModuleLicenseType, Editions, SubscriptionTabNames } from '@common/constants/SubscriptionTypes'
 import type { FetchPlansQuery } from 'services/common/services'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useSubscribeModal } from '@auth-settings/modals/Subscription/useSubscriptionModal'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import type { TimeType } from '@common/constants/SubscriptionTypes'
 import { getBtnProps } from './planUtils'
-import type { TIME_TYPE, PlanData, PlanProp } from './planUtils'
+import type { PlanData, PlanProp } from './planUtils'
 import Plan from './Plan'
 
 type plansType = 'ciSaasPlans' | 'ffPlans' | 'cdPlans' | 'ccPlans'
 interface PlanProps {
   plans: NonNullable<FetchPlansQuery['pricing']>[plansType]
   moduleName: ModuleName
-  timeType: TIME_TYPE
+  timeType: TimeType
 }
 
 export interface BtnProps {
@@ -181,6 +185,15 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
     expiryTime: licenseData.maxExpiryTime
   }
 
+  const { openSubscribeModal } = useSubscribeModal({
+    // refresh to fetch new license after subscribe
+    onClose: () => {
+      history.push(routes.toSubscriptions({ accountId, moduleCard: module, tab: SubscriptionTabNames.PLANS }))
+    }
+  })
+  const isSelfService = licenseInformation?.[moduleType]?.selfService === true
+  const isSelfServiceEnabled = useFeatureFlag(FeatureFlag.SELF_SERVICE_ENABLED) && isSelfService
+
   useEffect(() => {
     handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, updatedLicenseInfo)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -252,8 +265,15 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
       handleContactSales: openMarketoContactSales,
       handleExtendTrial,
       handleManageSubscription,
+      handleUpgrade: () =>
+        openSubscribeModal({
+          _module: moduleName.toLowerCase() as ModuleType,
+          _time: timeType,
+          _plan: planEdition || Editions.FREE
+        }),
       btnLoading,
-      actions: actions?.data
+      actions: actions?.data,
+      isSelfServiceEnabled
     })
 
     return {
