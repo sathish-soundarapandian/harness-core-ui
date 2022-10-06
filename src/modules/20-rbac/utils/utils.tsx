@@ -96,6 +96,7 @@ export interface ScopeFilterParams {
   scopeForFilterParams?: string
   selectedOrg?: string
   orgQuery?: string
+  projectIdentifiers?: string
 }
 
 interface HandleInvitationResponse {

@@ -46,11 +46,17 @@ interface ProjectMultiSelectProps {
   accountIdentifier: string
   orgIdentifier?: string
   onChange: (opts: MultiSelectOption[]) => void
+  projectIdentifiersFromQueryParams?: string
 }
 
 const DEFAULT_ORG_ID = 'default'
 
-const ProjectMultiSelect: React.FC<ProjectMultiSelectProps> = ({ accountIdentifier, orgIdentifier, onChange }) => {
+const ProjectMultiSelect: React.FC<ProjectMultiSelectProps> = ({
+  accountIdentifier,
+  orgIdentifier,
+  onChange
+  // projectIdentifiersFromQueryParams = ''
+}) => {
   const { getString } = useStrings()
   const allProjectsOption: MultiSelectOption = {
     label: getString('all'),
@@ -163,7 +169,6 @@ const OrgSelect: React.FC<OrgSelectProps> = ({
         setOrgQuery(query)
       }}
       onChange={item => {
-        // debugger
         onChange(item, orgQuery)
       }}
       query={orgQuery}
@@ -182,25 +187,26 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
   const {
     scopeForFilterParams,
     selectedOrg: selectOrgfromQueryParams,
-    orgQuery: orgQueryFromQueryParams
+    orgQuery: orgQueryFromQueryParams,
+    projectIdentifiers: projectIdentifiersFromQueryParams
   } = useQueryParams<ScopeFilterParams>()
+  const { updateQueryParams } = useUpdateQueryParams<ScopeFilterParams>()
   const [accountFilter, setAccountFilter] = useState(
     defaultTo(scopeForFilterParams as ScopeFilterItems, getDefaultSelectedFilter(scope))
   )
   const [orgFilter, setOrgFilter] = useState<string | undefined>(defaultTo(selectOrgfromQueryParams, orgIdentifier))
   const [orgFetchError, setOrgFetchError] = useState<boolean>(false)
-  const { updateQueryParams } = useUpdateQueryParams<ScopeFilterParams>()
 
   const handleAccountFilterChange = (newScope: ScopeFilterItems): void => {
     updateQueryParams({
-      scopeForFilterParams: newScope
+      scopeForFilterParams: newScope,
+      orgQuery: ''
     })
     setOrgFetchError(false)
     setAccountFilter(newScope)
   }
 
   const handleOrgChange = (item: SelectOption, orgQuery: string) => {
-    // debugger
     const selectedOrg = item.value.toString()
     updateQueryParams({
       selectedOrg,
@@ -209,6 +215,31 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
     setOrgFetchError(false)
     setOrgFilter(selectedOrg)
     setScopeFilters(getScopeFilter(accountFilter, selectedOrg))
+  }
+
+  const handleProjectChange = (items: MultiSelectOption[]) => {
+    let projectIdentifiers = ''
+    const arr: ScopeSelector[] = []
+    items.forEach(item => {
+      const value = item.value.toString()
+      projectIdentifiers += `${value},`
+      arr.push(
+        item.value === ProjectFilter.ALL
+          ? {
+              accountIdentifier: accountId,
+              orgIdentifier: orgFilter,
+              filter: 'INCLUDING_CHILD_SCOPES'
+            }
+          : {
+              accountIdentifier: accountId,
+              orgIdentifier: orgFilter,
+              projectIdentifier: value,
+              filter: 'EXCLUDING_CHILD_SCOPES'
+            }
+      )
+    })
+    updateQueryParams({ projectIdentifiers })
+    setScopeFilters(arr)
   }
 
   const getScopeDropDownItems = (): SelectOption[] => {
@@ -434,24 +465,8 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
           <ProjectMultiSelect
             accountIdentifier={accountId}
             orgIdentifier={orgFilter}
-            onChange={items => {
-              setScopeFilters(
-                items.map(item =>
-                  item.value === ProjectFilter.ALL
-                    ? {
-                        accountIdentifier: accountId,
-                        orgIdentifier: orgFilter,
-                        filter: 'INCLUDING_CHILD_SCOPES'
-                      }
-                    : {
-                        accountIdentifier: accountId,
-                        orgIdentifier: orgFilter,
-                        projectIdentifier: item.value.toString(),
-                        filter: 'EXCLUDING_CHILD_SCOPES'
-                      }
-                )
-              )
-            }}
+            onChange={handleProjectChange}
+            projectIdentifiersFromQueryParams={projectIdentifiersFromQueryParams}
           />
         ) : null}
       </Layout.Horizontal>
