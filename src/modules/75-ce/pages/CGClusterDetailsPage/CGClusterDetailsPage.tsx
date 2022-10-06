@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { Color, Container, FontVariation, Icon, Layout, Page, PageHeader, TabNavigation, Text } from '@harness/uicore'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -15,6 +15,8 @@ import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import CopyButton from '@ce/common/CopyButton'
 import CGClusterDetailsBody from '@ce/components/CGClusterDetailsBody/CGClusterDetailsBody'
+import WorkloadDetails from '@ce/components/CGClusterDetailsBody/WorkloadDetails'
+import NodepoolDetails from '@ce/components/CGClusterDetailsBody/NodepoolDetails'
 
 interface NavigationLink {
   label: string
@@ -24,6 +26,10 @@ interface NavigationLink {
 
 const CGClusterDetailsPage: React.FC = () => {
   const { accountId, id } = useParams<AccountPathProps & { id: string }>()
+  const { pathname } = useLocation()
+  const isOverviewTab = pathname.includes('overview')
+  const isWorkloadsTab = pathname.includes('workloads')
+  const isNodepoolTab = pathname.includes('nodepool')
   const { getString } = useStrings()
   const breadcrumbLinks = useMemo(
     () => [
@@ -80,7 +86,9 @@ const CGClusterDetailsPage: React.FC = () => {
         toolbar={<TabNavigation size="small" links={navigationLinks} />}
       />
       <Page.Body>
-        <CGClusterDetailsBody />
+        {isOverviewTab && <CGClusterDetailsBody />}
+        {isWorkloadsTab && <WorkloadDetails />}
+        {isNodepoolTab && <NodepoolDetails />}
       </Page.Body>
     </Container>
   )

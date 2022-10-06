@@ -1370,6 +1370,7 @@ computeGroups:
     nodesBreakdown: Nodes breakdown
     podDetails: Pod Details
     totalPods: Total pods
+    comparedText: '*compared to on-demand equivalent'
   setup:
     clusterPermissionsTab:
       note: 'In order to get <b>Intelligent AutoScaler</b> working, you will have to install a few components on the cluster. This is done by applying a YAML file.'
@@ -1378,6 +1379,7 @@ computeGroups:
       info3: A configmaps used by them
       info4: Roles required by them
       testConnection: Test your connection
+      totalReplicas: Total Replicas
     spotInstancesTab:
       title: 'Spot Instances'
       enableNote: 'Enable <b>spot instances</b> to see detailed insights'

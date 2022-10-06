@@ -5666,6 +5666,7 @@ export interface StringsMap {
   'ce.common.unScheduled': string
   'ce.common.updated': string
   'ce.computeGroups.addNewClusterCtaText': string
+  'ce.computeGroups.clusterDetails.comparedText': string
   'ce.computeGroups.clusterDetails.cpuBreakdown': string
   'ce.computeGroups.clusterDetails.k8sClusterDetailsHeader': string
   'ce.computeGroups.clusterDetails.memoryBreakdown': string
@@ -5680,6 +5681,7 @@ export interface StringsMap {
   'ce.computeGroups.setup.clusterPermissionsTab.info4': string
   'ce.computeGroups.setup.clusterPermissionsTab.note': string
   'ce.computeGroups.setup.clusterPermissionsTab.testConnection': string
+  'ce.computeGroups.setup.clusterPermissionsTab.totalReplicas': string
   'ce.computeGroups.setup.reviewTab.savingsByScheduling': string
   'ce.computeGroups.setup.reviewTab.savingsBySpotInstances': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.cpuRangeSubtitle': string
