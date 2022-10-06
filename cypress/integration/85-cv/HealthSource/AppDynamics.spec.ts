@@ -368,6 +368,7 @@ describe('Create empty monitored service', () => {
 
     // Update values and verify
     cy.get('input[name="metricName"]').scrollIntoView().type(' updated')
+    cy.contains('label', 'Select the path from the AppD metric').click()
     cy.get('input[name="metricPathDropdown"]').click()
     cy.contains('p', 'Calls per Minute').click({ force: true })
 
