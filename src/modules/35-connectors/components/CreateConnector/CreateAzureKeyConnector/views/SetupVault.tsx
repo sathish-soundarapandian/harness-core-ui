@@ -46,7 +46,6 @@ import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
-import { Connectors } from '@connectors/constants'
 
 export interface SetupVaultFormData {
   vaultName?: string
@@ -164,19 +163,12 @@ const SetupVault: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps> 
     }
   }
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 4b9e6d482e95 ([PL-23547]: Changed connector title; restore keyvault files)
   const { trackEvent } = useTelemetry()
 
   useTrackEvent(ConnectorActions.SetupVaultLoad, {
     category: Category.CONNECTOR
   })
 
-=======
->>>>>>> dbe3309ec945 ([PL-23547]: Changed connector title; restore keyvault files)
   return loadingFormData ? (
     <PageSpinner />
   ) : (

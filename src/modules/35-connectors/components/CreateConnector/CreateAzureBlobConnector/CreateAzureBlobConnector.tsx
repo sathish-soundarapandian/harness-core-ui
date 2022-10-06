@@ -17,7 +17,7 @@ import {
 } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
 import { buildAzureBlobPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import DelegateSelectorStep from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import AzureBlobForm from './views/AzureBlobForm'
@@ -61,7 +61,7 @@ const CreateAzureBlobConnector: React.FC<CreateConnectorModalProps> = props => {
         gitDetails={props.gitDetails}
         disableGitSync={true}
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep
@@ -69,6 +69,7 @@ const CreateAzureBlobConnector: React.FC<CreateConnectorModalProps> = props => {
         isLastStep={true}
         type={Connectors.AZURE_BLOB}
         stepIndex={GIT_TESTCONNECTION_STEP_INDEX}
+        helpPanelReferenceId="ConnectorTest"
       />
     </StepWizard>
   )

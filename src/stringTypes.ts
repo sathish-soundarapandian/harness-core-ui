@@ -174,15 +174,9 @@ export interface StringsMap {
   'common.connectThroughPlatformInfo': string
   'common.connectivityErrors': string
   'common.contactSupport': string
-<<<<<<< HEAD
-  'common.contentRequired': string
-=======
   'common.containerName': string
-<<<<<<< HEAD
->>>>>>> fbb6fda8160a ([PL-23547]: Connector details and list page for blob)
-=======
   'common.containerURL': string
->>>>>>> c7ffec39c132 ([PL-23547]: Update UI for changed details)
+  'common.contentRequired': string
   'common.copy': string
   'common.copyFqn': string
   'common.copyVariableName': string
@@ -1871,8 +1865,6 @@ export interface StringsMap {
   'connectors.awsKms.validation.selectDelegate': string
   'connectors.awsKms.validation.selectRegion': string
   'connectors.awsSecretManager.secretNamePrefix': string
-<<<<<<< HEAD
-<<<<<<< HEAD
   'connectors.azure.applicationId': string
   'connectors.azure.auth.certificate': string
   'connectors.azure.clientId': string
@@ -1882,18 +1874,10 @@ export interface StringsMap {
   'connectors.azure.managedIdentities.systemAssigned': string
   'connectors.azure.managedIdentities.userAssigned': string
   'connectors.azure.managedIdentity': string
-=======
-  'connectors.azureBlob.labels.connectionString': string
-=======
->>>>>>> 09ab41c56d9b ([PL-23547]: Updated snapshot; removed unwanted fields)
   'connectors.azureBlob.labels.containerURL': string
   'connectors.azureBlob.validation.containerURLIsRequired': string
-<<<<<<< HEAD
   'connectors.azureBlob.validation.keyIdIsRequired': string
   'connectors.azureBlob.validation.keyNameIsRequired': string
->>>>>>> 793e5fa4a9dd (feat: [PL-23547]: Added UI for Azure Blob connector CRUD)
-=======
->>>>>>> 09ab41c56d9b ([PL-23547]: Updated snapshot; removed unwanted fields)
   'connectors.azureKeyVault.labels.fetchVault': string
   'connectors.azureKeyVault.labels.setupVault': string
   'connectors.azureKeyVault.labels.subscription': string
@@ -2587,11 +2571,8 @@ export interface StringsMap {
   'connectors.title.awsCodeCommit': string
   'connectors.title.awsKms': string
   'connectors.title.awsSecretManager': string
-<<<<<<< HEAD
   'connectors.title.azure': string
-=======
   'connectors.title.azureBlob': string
->>>>>>> a397c2d99125 ([PL-22385]: Corrected the title)
   'connectors.title.azureKeyVault': string
   'connectors.title.azureRepoConnector': string
   'connectors.title.bitbucketConnector': string

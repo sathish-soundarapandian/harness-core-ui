@@ -43,38 +43,11 @@ const AzureKeyVaultForm: React.FC<StepProps<StepDetailsProps> & ConnectorDetails
 
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingFormData, setLoadingFormData] = useState(isEditMode)
-<<<<<<< HEAD
+  
   useConnectorWizard({
     helpPanel: { referenceId: 'AzureKeyVaultDetails', contentWidth: 900 }
   })
-=======
 
-<<<<<<< HEAD
-  const getValidations = () => {
-    const azureValidations = {
-      clientId: Yup.string().required(getString('common.validation.clientIdIsRequired')),
-      tenantId: Yup.string().required(getString('connectors.azureKeyVault.validation.tenantId')),
-      subscription: Yup.string().required(getString('connectors.azureKeyVault.validation.subscription')),
-      secretKey: Yup.string().when('vaultName', {
-        is: () => !(prevStepData?.spec as AzureKeyVaultConnectorDTO)?.vaultName,
-        then: Yup.string().trim().required(getString('common.validation.keyIsRequired'))
-      })
-    }
-    let azureBlobValidations
-    if (type === Connectors.AZURE_BLOB) {
-      azureBlobValidations = {
-        connectionString: Yup.string().required(
-          getString('connectors.azureBlob.validation.connectionStringIsRequired')
-        ),
-        containerName: Yup.string().required(getString('connectors.azureBlob.validation.containerNameIsRequired'))
-      }
-    }
-    return { ...azureValidations, ...azureBlobValidations }
-  }
-
->>>>>>> c3ec2681adb0 ([PL-22385]: Added secret creation wizard)
-=======
->>>>>>> c7ffec39c132 ([PL-23547]: Update UI for changed details)
   React.useEffect(() => {
     if (isEditMode && connectorInfo) {
       setupAzureKeyVaultFormData(connectorInfo, accountId).then(data => {

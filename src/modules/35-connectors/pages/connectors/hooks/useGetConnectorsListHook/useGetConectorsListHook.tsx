@@ -32,6 +32,7 @@ export const useGetConnectorsListHook = (
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
   const isCustomSMEnabled = useFeatureFlag(FeatureFlag.CUSTOM_SECRET_MANAGER_NG)
   const isGcpSMEnabled = useFeatureFlag(FeatureFlag.PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG)
+  const isAzureBlobSMEnabled = useFeatureFlag(FeatureFlag.AZURE_BLOB_SM)
   // This list will control which categories will be displayed in UI and its order
   const connectorCatalogueOrder: Array<ConnectorCatalogueItem['category']> = [
     'CLOUD_PROVIDER',
@@ -76,6 +77,9 @@ export const useGetConnectorsListHook = (
           value.connectors = ['Vault', 'AwsKms', 'AzureKeyVault', 'AwsSecretManager', 'GcpKms', 'CustomSecretManager']
           if (isGcpSMEnabled) {
             value.connectors.push('GcpSecretManager')
+          }
+          if(isAzureBlobSMEnabled) {
+            value.connectors.push('AzureBlob')
           }
         }
       })

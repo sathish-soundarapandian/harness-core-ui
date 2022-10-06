@@ -98,7 +98,6 @@ interface ConnectorsListProps {
 }
 
 const ConnectorsPage: React.FC<ConnectorsListProps> = ({ catalogueMockData, statisticsMockData, filtersMockData }) => {
-  const { AZURE_BLOB_SM, CHI_CUSTOM_HEALTH, ERROR_TRACKING_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
