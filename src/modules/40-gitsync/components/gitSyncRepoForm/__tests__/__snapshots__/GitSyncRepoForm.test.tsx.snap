@@ -85,11 +85,34 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               />
             </div>
             <div
-              aria-controls="bp3-tab-panel_selectScope_project"
+              aria-controls="bp3-tab-panel_selectScope_all"
               aria-disabled="false"
               aria-expanded="true"
               aria-selected="true"
-              class="bp3-tab tabClass"
+              class="bp3-tab"
+              data-tab-id="all"
+              id="bp3-tab-title_selectScope_all"
+              role="tab"
+              tabindex="0"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
+                  style="--text-line-clamp: 1;"
+                >
+                  common.all
+                </p>
+                
+              </div>
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_selectScope_project"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
               data-tab-id="project"
               id="bp3-tab-title_selectScope_project"
               role="tab"
@@ -134,9 +157,9 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               aria-disabled="false"
               aria-expanded="false"
               aria-selected="false"
-              class="bp3-tab tabClass"
-              data-tab-id="org"
-              id="bp3-tab-title_selectScope_org"
+              class="bp3-tab"
+              data-tab-id="organization"
+              id="bp3-tab-title_selectScope_organization"
               role="tab"
               tabindex="0"
             >
@@ -176,7 +199,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               aria-disabled="false"
               aria-expanded="false"
               aria-selected="false"
-              class="bp3-tab tabClass"
+              class="bp3-tab"
               data-tab-id="account"
               id="bp3-tab-title_selectScope_account"
               role="tab"
@@ -216,9 +239,9 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
           </div>
           <div
             aria-hidden="false"
-            aria-labelledby="bp3-tab-title_selectScope_project"
-            class="bp3-tab-panel tabClass"
-            id="bp3-tab-panel_selectScope_project"
+            aria-labelledby="bp3-tab-title_selectScope_all"
+            class="bp3-tab-panel"
+            id="bp3-tab-panel_selectScope_all"
             role="tabpanel"
           >
             <div
@@ -2206,11 +2229,34 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               />
             </div>
             <div
-              aria-controls="bp3-tab-panel_selectScope_project"
+              aria-controls="bp3-tab-panel_selectScope_all"
               aria-disabled="false"
               aria-expanded="true"
               aria-selected="true"
-              class="bp3-tab tabClass"
+              class="bp3-tab"
+              data-tab-id="all"
+              id="bp3-tab-title_selectScope_all"
+              role="tab"
+              tabindex="0"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
+                  style="--text-line-clamp: 1;"
+                >
+                  common.all
+                </p>
+                
+              </div>
+            </div>
+            <div
+              aria-controls="bp3-tab-panel_selectScope_project"
+              aria-disabled="false"
+              aria-expanded="false"
+              aria-selected="false"
+              class="bp3-tab"
               data-tab-id="project"
               id="bp3-tab-title_selectScope_project"
               role="tab"
@@ -2255,9 +2301,9 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               aria-disabled="false"
               aria-expanded="false"
               aria-selected="false"
-              class="bp3-tab tabClass"
-              data-tab-id="org"
-              id="bp3-tab-title_selectScope_org"
+              class="bp3-tab"
+              data-tab-id="organization"
+              id="bp3-tab-title_selectScope_organization"
               role="tab"
               tabindex="0"
             >
@@ -2297,7 +2343,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               aria-disabled="false"
               aria-expanded="false"
               aria-selected="false"
-              class="bp3-tab tabClass"
+              class="bp3-tab"
               data-tab-id="account"
               id="bp3-tab-title_selectScope_account"
               role="tab"
@@ -2337,9 +2383,9 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
           </div>
           <div
             aria-hidden="false"
-            aria-labelledby="bp3-tab-title_selectScope_project"
-            class="bp3-tab-panel tabClass"
-            id="bp3-tab-panel_selectScope_project"
+            aria-labelledby="bp3-tab-title_selectScope_all"
+            class="bp3-tab-panel"
+            id="bp3-tab-panel_selectScope_all"
             role="tabpanel"
           >
             <div
