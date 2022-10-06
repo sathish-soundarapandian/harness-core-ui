@@ -30,6 +30,7 @@ NA
 - Coverage: `retrigger coverage`
 - Rebase: `trigger rebase`
 - Cypress: `trigger cypress`
+- Cypress-CV: `trigger cypress-cv`
 - Fix Prettier: `fix prettier`
 </details>
 
