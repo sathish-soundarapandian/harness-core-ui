@@ -154,11 +154,10 @@ function DeployEnvironment({
             },
             path
           )
-
           const values = { ...formik?.values }
           if (parsedEnvironmentYaml.environmentInputs) {
             set(values, 'environment.environmentInputs', {
-              ...clearRuntimeInput(parsedEnvironmentYaml.environmentInputs)
+              ...clearRuntimeInput(values?.environment?.environmentInputs)
             })
           } else {
             unset(values, 'environment.environmentInputs')
@@ -166,16 +165,10 @@ function DeployEnvironment({
 
           if (parsedServiceOverridesYaml.serviceOverrideInputs) {
             set(values, 'environment.serviceOverrideInputs', {
-              ...clearRuntimeInput(parsedServiceOverridesYaml.serviceOverrideInputs)
+              ...clearRuntimeInput(values?.environment?.serviceOverrideInputs)
             })
           } else {
             unset(values, `environment.serviceOverrideInputs`)
-          }
-
-          if (gitOpsEnabled) {
-            set(values, `environment.gitOpsClusters`, '')
-          } else {
-            set(values, `environment.infrastructureDefinitions`, '')
           }
           formik?.setValues({ ...values, isEnvInputLoaded: true })
         } else {
@@ -310,7 +303,8 @@ function DeployEnvironment({
             setEnvironmentsSelectOptions(options)
           }
         } else {
-          formik?.setFieldValue('environment.environmentRef', existingEnvironment?.value)
+          console.log(initialValues)
+          formik?.setFieldValue('environment', initialValues.environment)
           setSelectedEnvironment(
             environments?.find(environment => environment.identifier === existingEnvironment?.value)
           )
