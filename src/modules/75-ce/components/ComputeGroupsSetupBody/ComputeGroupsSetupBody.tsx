@@ -11,6 +11,8 @@ import { useStrings } from 'framework/strings'
 import ScaleAndLimitPoliciesTab from './ScaleAndLimitPoliciesTab/ScaleAndLimitPoliciesTab'
 import SchedulingAutostoppingTab from './SchedulingAutostoppingTab'
 import ClusterPermissionsTab from './ClusterPermissionsTab'
+import SpotInstancesTab from './SpotInstancesTab'
+import ReviewTab from './ReviewTab'
 import css from './ComputeGroupsSetupBody.module.scss'
 
 const ComputeGroupsSetupBody: React.FC = () => {
@@ -19,7 +21,7 @@ const ComputeGroupsSetupBody: React.FC = () => {
     <Container className={css.cgSetupBodyContainer}>
       <Tabs
         id={'horizontalTabs'}
-        defaultSelectedTabId={'tab1'}
+        defaultSelectedTabId={'tab5'}
         tabList={[
           {
             id: 'tab1',
@@ -29,14 +31,26 @@ const ComputeGroupsSetupBody: React.FC = () => {
           },
           {
             id: 'tab2',
+            title: `2. ${getString('ce.computeGroups.setup.spotInstancesTab.title')}`,
+            panel: <SpotInstancesTab />,
+            iconProps: { name: 'gear' }
+          },
+          {
+            id: 'tab3',
             title: getString('ce.computeGroups.setup.scalingLimitPoliciesTab.title'),
             panel: <ScaleAndLimitPoliciesTab />,
             iconProps: { name: 'gear' }
           },
           {
-            id: 'tab3',
-            title: getString('ce.computeGroups.setup.schedulingTab.title'),
+            id: 'tab4',
+            title: `4. ${getString('ce.computeGroups.setup.schedulingTab.title')}`,
             panel: <SchedulingAutostoppingTab />,
+            iconProps: { name: 'gear' }
+          },
+          {
+            id: 'tab5',
+            title: `5. ${getString('review')}`,
+            panel: <ReviewTab />,
             iconProps: { name: 'gear' }
           }
         ]}

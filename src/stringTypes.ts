@@ -5662,6 +5662,7 @@ export interface StringsMap {
   'ce.common.targetProtocol': string
   'ce.common.toggleLabel': string
   'ce.common.totalCount': string
+  'ce.common.updated': string
   'ce.computeGroups.addNewClusterCtaText': string
   'ce.computeGroups.efficiencyScore': string
   'ce.computeGroups.setup.clusterPermissionsTab.info1': string
@@ -5670,6 +5671,8 @@ export interface StringsMap {
   'ce.computeGroups.setup.clusterPermissionsTab.info4': string
   'ce.computeGroups.setup.clusterPermissionsTab.note': string
   'ce.computeGroups.setup.clusterPermissionsTab.testConnection': string
+  'ce.computeGroups.setup.reviewTab.savingsByScheduling': string
+  'ce.computeGroups.setup.reviewTab.savingsBySpotInstances': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.cpuRangeSubtitle': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.cpuRangeTitle': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.header': string
@@ -5713,7 +5716,16 @@ export interface StringsMap {
   'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.specifyScheduleSubheader': string
   'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.totalSpend': string
   'ce.computeGroups.setup.schedulingTab.title': string
+  'ce.computeGroups.setup.spotInstancesTab.enableNote': string
+  'ce.computeGroups.setup.spotInstancesTab.notSpotFriendly': string
+  'ce.computeGroups.setup.spotInstancesTab.spotFriendly': string
   'ce.computeGroups.setup.spotInstancesTab.title': string
+  'ce.computeGroups.setup.spotInstancesTab.useSpotSection.allWorkloads': string
+  'ce.computeGroups.setup.spotInstancesTab.useSpotSection.header': string
+  'ce.computeGroups.setup.spotInstancesTab.useSpotSection.selectWorkloadLabel': string
+  'ce.computeGroups.setup.spotInstancesTab.useSpotSection.spotReadyWorkloads': string
+  'ce.computeGroups.setup.spotInstancesTab.useSpotSection.subHeader': string
+  'ce.computeGroups.setup.spotInstancesTab.workloadToRunOnSpot': string
   'ce.computeGroups.sideNavText': string
   'ce.computeGroups.table.headers.managedBy': string
   'ce.computeGroups.table.headers.memory': string

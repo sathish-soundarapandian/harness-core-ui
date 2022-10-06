@@ -32,6 +32,7 @@ common:
   cpu: '{{ $.delegate.delegateCPU }}'
   gib: GIB
   storage: Storage
+  updated: '{{$.auditTrail.actions.updated}}'
 allRegions: 'All Regions'
 enforcementMessage:
   exceededSpendLimit: You have exceeded your cloud spend subscription limit. Consider increasing your limits to manage higher cloud spend.
@@ -1368,9 +1369,19 @@ computeGroups:
       info4: Roles required by them
       testConnection: Test your connection
     spotInstancesTab:
-      title: '1. Spot Instances'
+      title: 'Spot Instances'
+      enableNote: 'Enable <b>spot instances</b> to see detailed insights'
+      workloadToRunOnSpot: Workloads to run on spot
+      notSpotFriendly: not spot-friendly
+      spotFriendly: spot-friendly
+      useSpotSection:
+        header: Use spot instances
+        subHeader: Show spot instance recommendations in the report.
+        selectWorkloadLabel: 'Run on spot nodes:'
+        allWorkloads: All workloads
+        spotReadyWorkloads: Spot-ready workloads
     scalingLimitPoliciesTab:
-      title: '2. Scaling and Limit Policies'
+      title: '3. Scaling and Limit Policies'
       instanceFamiliesSection:
         header: Set Instance Family Preferences
         subHeader: You can specify Preferred Instance Families for nodepools which otherwise is all families if not specfied. The alogrithm will orchestrate out of this pool of preferred instances.
@@ -1406,7 +1417,7 @@ computeGroups:
         maxCoreLabel: Max cores
     schedulingTab:
       enableNote: Enable <b>Scheduling/AutoStopping</b>  to see detailed insights.
-      title: '4. Scheduling/AutoStopping'
+      title: 'Scheduling/AutoStopping'
       setupSchedulingSection:
         setupHeader: Setup Scheduling/AutoStopping
         selectScopeLabel: '{{$.pipeline.queueStep.scopePlaceholder}}'
@@ -1419,3 +1430,6 @@ computeGroups:
         savingsPercentage: Savings Percentage
         costPerMonthHeader: Cost/Mo
         autoStoppingEnabledLabel: AutoStopping Enabled
+    reviewTab:
+      savingsBySpotInstances: Savings by spot instances
+      savingsByScheduling: Savings by Scheduling/AutoStopping

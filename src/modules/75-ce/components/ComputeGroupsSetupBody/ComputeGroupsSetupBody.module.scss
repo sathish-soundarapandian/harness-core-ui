@@ -43,17 +43,15 @@
   }
 }
 
-.scheduleAutostoppingContainer {
-  .whiteCard {
-    padding: var(--spacing-large) var(--spacing-huge);
-    background-color: var(--white);
-    box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
-    border-radius: 4px;
-    > p {
-      margin-top: var(--spacing-large);
-      &:first-child {
-        margin-top: 0;
-      }
+.whiteCard {
+  padding: var(--spacing-large) var(--spacing-huge) !important;
+  background-color: var(--white) !important;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  border-radius: 4px;
+  > p {
+    margin-top: var(--spacing-large);
+    &:first-child {
+      margin-top: 0;
     }
   }
 }
@@ -78,5 +76,19 @@
     color: var(--black) !important;
     white-space: pre-wrap !important;
     font-family: monospace !important;
+  }
+}
+
+.previewRow {
+  padding: var(--spacing-small) !important;
+  &.savingsRow {
+    background: var(--green-50);
+    border-radius: 4px;
+    > p:nth-child(2) {
+      color: var(--green-700);
+    }
+  }
+  > p {
+    flex: 1;
   }
 }

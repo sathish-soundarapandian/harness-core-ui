@@ -24,7 +24,7 @@ const SchedulingAutostoppingTab: React.FC = () => {
   const { getString } = useStrings()
   const [selectedVal, setSelectedVal] = useState<string>('none')
   return (
-    <Container className={css.scheduleAutostoppingContainer}>
+    <Container>
       {selectedVal === 'none' && (
         <Container className={css.noteContainer}>
           <Text icon="info-messaging" iconProps={{ size: 28, margin: { right: 'medium' } }} color={Color.GREY_800}>

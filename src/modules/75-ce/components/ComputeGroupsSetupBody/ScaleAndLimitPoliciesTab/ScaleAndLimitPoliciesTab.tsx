@@ -26,6 +26,7 @@ const ScaleAndLimitPoliciesTab: React.FC = () => {
   return (
     <Container className={css.scaleLimitPoliciesTabContainer}>
       <ToggleSection
+        hideToggle
         title={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.instanceFamiliesSection.header')}
         subTitle={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.instanceFamiliesSection.subHeader')}
       >
@@ -34,6 +35,7 @@ const ScaleAndLimitPoliciesTab: React.FC = () => {
         </Container>
       </ToggleSection>
       <ToggleSection
+        hideToggle
         title={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.header')}
         subTitle={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.unSchedPodsSection.subHeader')}
       >
@@ -67,6 +69,7 @@ const ScaleAndLimitPoliciesTab: React.FC = () => {
         </FieldContainerWithCheckbox>
       </ToggleSection>
       <ToggleSection
+        hideToggle
         title={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.header')}
         subTitle={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodeDeletionPolicySection.subHeader')}
         className={css.nodeDeletionPolicySection}
@@ -74,6 +77,7 @@ const ScaleAndLimitPoliciesTab: React.FC = () => {
         <TTLSettings />
       </ToggleSection>
       <ToggleSection
+        hideToggle
         title={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.header')}
         subTitle={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.cpuLimitPolicySection.subHeader')}
       >

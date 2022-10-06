@@ -12,7 +12,8 @@ declare const styles: {
   readonly copyCommand: string
   readonly independentSection: string
   readonly noteContainer: string
-  readonly scheduleAutostoppingContainer: string
+  readonly previewRow: string
+  readonly savingsRow: string
   readonly toggleHeader: string
   readonly toggleSectionContainer: string
   readonly whiteCard: string
