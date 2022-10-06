@@ -5661,9 +5661,18 @@ export interface StringsMap {
   'ce.common.targetPort': string
   'ce.common.targetProtocol': string
   'ce.common.toggleLabel': string
+  'ce.common.totalComputeSpend': string
   'ce.common.totalCount': string
+  'ce.common.unScheduled': string
   'ce.common.updated': string
   'ce.computeGroups.addNewClusterCtaText': string
+  'ce.computeGroups.clusterDetails.cpuBreakdown': string
+  'ce.computeGroups.clusterDetails.k8sClusterDetailsHeader': string
+  'ce.computeGroups.clusterDetails.memoryBreakdown': string
+  'ce.computeGroups.clusterDetails.nodesBreakdown': string
+  'ce.computeGroups.clusterDetails.podDetails': string
+  'ce.computeGroups.clusterDetails.totalPods': string
+  'ce.computeGroups.clusterDetails.workloads': string
   'ce.computeGroups.efficiencyScore': string
   'ce.computeGroups.setup.clusterPermissionsTab.info1': string
   'ce.computeGroups.setup.clusterPermissionsTab.info2': string

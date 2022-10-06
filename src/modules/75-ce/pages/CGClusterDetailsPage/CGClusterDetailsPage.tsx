@@ -8,15 +8,22 @@
 import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { Container, FontVariation, Icon, Layout, PageHeader, Text } from '@harness/uicore'
+import { Color, Container, FontVariation, Icon, Layout, Page, PageHeader, TabNavigation, Text } from '@harness/uicore'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import CopyButton from '@ce/common/CopyButton'
+import CGClusterDetailsBody from '@ce/components/CGClusterDetailsBody/CGClusterDetailsBody'
+
+interface NavigationLink {
+  label: string
+  to: string
+  disabled?: boolean
+}
 
 const CGClusterDetailsPage: React.FC = () => {
-  const { accountId } = useParams<AccountPathProps>()
+  const { accountId, id } = useParams<AccountPathProps & { id: string }>()
   const { getString } = useStrings()
   const breadcrumbLinks = useMemo(
     () => [
@@ -27,6 +34,25 @@ const CGClusterDetailsPage: React.FC = () => {
     ],
     [accountId]
   )
+
+  const navigationLinks: NavigationLink[] = useMemo(
+    () => [
+      {
+        label: getString('overview'),
+        to: routes.toClusterDetailsPage({ accountId, id })
+      },
+      {
+        label: getString('ce.computeGroups.clusterDetails.workloads'),
+        to: routes.toClusterWorkloadsDetailsPage({ accountId, id })
+      },
+      {
+        label: getString('ce.nodeRecommendation.nodepool'),
+        to: routes.toClusterNodepoolDetailsPage({ accountId, id })
+      }
+    ],
+    [accountId]
+  )
+
   return (
     <Container>
       <PageHeader
@@ -34,20 +60,28 @@ const CGClusterDetailsPage: React.FC = () => {
         breadcrumbs={<NGBreadcrumbs links={breadcrumbLinks} />}
         title={
           <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">
-            <Icon name={'app-kubernetes'} size={30} />
-            <Container>
-              <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+            <Icon name={'app-kubernetes'} size={50} />
+            <Layout.Vertical spacing={'small'}>
+              <Layout.Horizontal spacing={'huge'} flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
                 <Text font={{ variation: FontVariation.H4 }}>{defaultTo('MyK8sCluster', '')}</Text>
-                <Container>Enabled</Container>
+                <Container>
+                  <Text icon="check-alt" iconProps={{ color: Color.GREEN_700, size: 18 }}>
+                    Enabled
+                  </Text>
+                </Container>
               </Layout.Horizontal>
-              <Layout.Horizontal spacing="small">
-                <Text>ndy92hiufhwiibdwyi932b8</Text>
+              <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+                <Text>ID: ndy92hiufhwiibdwyi932b8</Text>
                 <CopyButton textToCopy={'ndy92hiufhwiibdwyi932b8'} />
               </Layout.Horizontal>
-            </Container>
+            </Layout.Vertical>
           </Layout.Horizontal>
         }
+        toolbar={<TabNavigation size="small" links={navigationLinks} />}
       />
+      <Page.Body>
+        <CGClusterDetailsBody />
+      </Page.Body>
     </Container>
   )
 }

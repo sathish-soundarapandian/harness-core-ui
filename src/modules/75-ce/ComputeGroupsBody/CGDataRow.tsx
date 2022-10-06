@@ -7,11 +7,10 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { Color, Container, FontVariation, Layout, Text, Utils } from '@harness/uicore'
+import { Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
-import CEChart from '@ce/components/CEChart/CEChart'
-import { getRadialChartOptions } from '@ce/components/CEChart/CEChartOptions'
+import DonughtChartDataDistributionCard from './DonughtChartDataDistributionCard'
 import css from './ComputeGroupsBody.module.scss'
 
 const DEFAULT_VALUE = 22135.13
@@ -19,49 +18,33 @@ const DEFAULT_VALUE = 22135.13
 const MOCK_NODES_DATA = [
   {
     color: Color.GREY_200,
-    text: 'On-demand (1)',
-    amount: 645.75
+    legendText: 'On-demand (1)',
+    name: 'On-demand',
+    value: formatCost(645.75),
+    graphPercentage: 20
   },
   {
     color: Color.PRIMARY_2,
-    text: 'Spot (2)',
-    amount: 64.93
+    legendText: 'Spot (2)',
+    name: 'Spot',
+    value: formatCost(64.93),
+    graphPercentage: 25
   },
   {
     color: Color.PRIMARY_4,
-    text: 'Fallback (4)',
-    amount: 27.83
+    legendText: 'Fallback (4)',
+    name: 'Fallback',
+    value: formatCost(27.83),
+    graphPercentage: 30
   },
   {
     color: Color.PRIMARY_7,
-    text: 'Commitments (2)',
-    amount: 119.27
+    legendText: 'Commitments (2)',
+    name: 'Commitments',
+    value: formatCost(119.27),
+    graphPercentage: 25
   }
 ]
-
-interface LegendsProps {
-  data: { color: Color; text: string; amount: number }[]
-}
-
-const Legends: React.FC<LegendsProps> = ({ data }) => {
-  return (
-    <Layout.Vertical spacing="medium">
-      {data.map(item => {
-        return (
-          <Container key={item.text}>
-            <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-              <Layout.Horizontal spacing="small">
-                <span className={css.legendMarker} style={{ backgroundColor: Utils.getRealCSSColor(item.color) }} />
-                <Text color={Color.GREY_800}>{item.text}</Text>
-              </Layout.Horizontal>
-              <Text color={Color.GREY_800}>{formatCost(item.amount, { decimalPoints: 2 })}</Text>
-            </Layout.Horizontal>
-          </Container>
-        )
-      })}
-    </Layout.Vertical>
-  )
-}
 
 const CGDataRow: React.FC = () => {
   const { getString } = useStrings()
@@ -91,7 +74,7 @@ const CGDataRow: React.FC = () => {
           <Text font={{ variation: FontVariation.SMALL }}>{getString('ce.commitmentOrchestration.monthToDate')}</Text>
         </Layout.Vertical>
       </Container>
-      <Container className={cx(css.infoContainer, css.spacedContainer)}>
+      {/* <Container className={cx(css.infoContainer, css.spacedContainer)}>
         <Text margin={{ bottom: 'medium' }} font={{ variation: FontVariation.H6 }}>
           {getString('ce.overview.cardtitles.clusterBreakdown')}
         </Text>
@@ -134,8 +117,21 @@ const CGDataRow: React.FC = () => {
             <Legends data={MOCK_NODES_DATA} />
           </Container>
         </Layout.Horizontal>
+      </Container> */}
+      <Container className={cx(css.infoContainer, css.spacedContainer)}>
+        <DonughtChartDataDistributionCard
+          header={getString('ce.overview.cardtitles.clusterBreakdown')}
+          data={MOCK_NODES_DATA}
+        />
       </Container>
       <Container className={cx(css.infoContainer, css.spacedContainer)}>
+        <DonughtChartDataDistributionCard
+          header={getString('ce.overview.cardtitles.clusterBreakdown')}
+          data={MOCK_NODES_DATA}
+          efficiencyScore={44}
+        />
+      </Container>
+      {/* <Container className={cx(css.infoContainer, css.spacedContainer)}>
         <Text margin={{ bottom: 'medium' }} font={{ variation: FontVariation.H6 }}>
           {getString('ce.overview.cardtitles.clusterBreakdown')}
         </Text>
@@ -182,7 +178,7 @@ const CGDataRow: React.FC = () => {
             </Layout.Horizontal>
           </Container>
         </Layout.Horizontal>
-      </Container>
+      </Container> */}
     </Container>
   )
 }
