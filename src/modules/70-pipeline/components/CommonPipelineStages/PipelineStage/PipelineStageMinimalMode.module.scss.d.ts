@@ -7,6 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly codeSourceColumn: string
+  readonly codeSourceColumnContainer: string
+  readonly contentWrapper: string
   readonly dialog: string
   readonly iconCheck: string
   readonly iconChecked: string

@@ -114,8 +114,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     loading,
     refetch: refetchBuckets
   } = useGetV2BucketListForS3({
-    lazy: true,
-    debounce: 300
+    lazy: true
   })
 
   const fetchBuckets = (): void => {

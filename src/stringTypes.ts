@@ -147,6 +147,7 @@ export interface StringsMap {
   'common.community': string
   'common.confictOccured': string
   'common.config': string
+  'common.configureModuleList': string
   'common.configureOptions.advancedHelp': string
   'common.configureOptions.askDuringExecution': string
   'common.configureOptions.configureOptions': string
@@ -482,7 +483,18 @@ export interface StringsMap {
   'common.module.pms': string
   'common.module.sto': string
   'common.module.templateService': string
+  'common.moduleConfig.autoSaved': string
+  'common.moduleConfig.customize': string
+  'common.moduleConfig.navigation': string
+  'common.moduleConfig.restoreDefault': string
+  'common.moduleConfig.selectModules': string
+  'common.moduleConfig.your': string
   'common.moduleLabel': string
+  'common.moduleList.buildAndTest': string
+  'common.moduleList.deployChanges': string
+  'common.moduleList.manageImpact': string
+  'common.moduleList.optimize': string
+  'common.moduleList.title': string
   'common.moduleTitles.cd': string
   'common.moduleTitles.cf': string
   'common.monitoredServices': string
@@ -714,6 +726,7 @@ export interface StringsMap {
   'common.selectAVersion.title': string
   'common.selectBranch': string
   'common.selectDefaultExperience': string
+  'common.selectModules': string
   'common.selectName': string
   'common.selectService': string
   'common.selectServices': string
@@ -2920,12 +2933,14 @@ export interface StringsMap {
   'pipeline.appServiceConfig.applicationSettings.filePath': string
   'pipeline.appServiceConfig.applicationSettings.fileSource': string
   'pipeline.appServiceConfig.applicationSettings.name': string
+  'pipeline.appServiceConfig.applicationSettings.overrides': string
   'pipeline.appServiceConfig.applicationSettings.subtitle': string
   'pipeline.appServiceConfig.connectionStrings.file': string
   'pipeline.appServiceConfig.connectionStrings.fileDetails': string
   'pipeline.appServiceConfig.connectionStrings.filePath': string
   'pipeline.appServiceConfig.connectionStrings.fileSource': string
   'pipeline.appServiceConfig.connectionStrings.name': string
+  'pipeline.appServiceConfig.connectionStrings.overrides': string
   'pipeline.appServiceConfig.connectionStrings.subtitle': string
   'pipeline.appServiceConfig.title': string
   'pipeline.approvalCriteria.allConditions': string
@@ -3685,6 +3700,7 @@ export interface StringsMap {
   'pipeline.onlyPositiveInteger': string
   'pipeline.openInNewTab': string
   'pipeline.openInPipelineStudio': string
+  'pipeline.openPipelineInNewTab': string
   'pipeline.openTemplateInNewTabLabel': string
   'pipeline.operatorPlaceholder': string
   'pipeline.outOf': string
@@ -4138,13 +4154,15 @@ export interface StringsMap {
   'freezeWindows.freezeWindowsPage.noFreezeWindowsTitle': string
   'freezeWindows.freezeWindowsPage.updateStatusFailure': string
   'freezeWindows.freezeWindowsPage.updateStatusSuccess': string
-  'freezeWindows.globalFreeze.disableFreeze': string
   'freezeWindows.globalFreeze.disableFreezeFailure': string
   'freezeWindows.globalFreeze.disableFreezeSuccess': string
   'freezeWindows.globalFreeze.disableFreezeText': string
-  'freezeWindows.globalFreeze.enableFreeze': string
+  'freezeWindows.globalFreeze.disableFreezeTitle': string
+  'freezeWindows.globalFreeze.disabled': string
   'freezeWindows.globalFreeze.enableFreezeFailure': string
   'freezeWindows.globalFreeze.enableFreezeSuccess': string
+  'freezeWindows.globalFreeze.enableFreezeTitle': string
+  'freezeWindows.globalFreeze.enabled': string
   'templatesLibrary.addNewTemplate': string
   'templatesLibrary.alwaysUseStableVersion': string
   'templatesLibrary.changeGitBranch': string
@@ -4519,6 +4537,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.codeRepos': string
   'cd.getStartedWithCD.configureRepo': string
   'cd.getStartedWithCD.delegateInfo': string
+  'cd.getStartedWithCD.delegateRequiredWarning': string
   'cd.getStartedWithCD.directK8s': string
   'cd.getStartedWithCD.envName': string
   'cd.getStartedWithCD.googleK8s': string
@@ -6456,10 +6475,10 @@ export interface StringsMap {
   'cf.targets.uploadHelp': string
   'cf.targets.uploadStats': string
   'cf.targets.uploadYourFile': string
-  'chaos.chaosGitops': string
+  'chaos.chaosExperiment': string
+  'chaos.chaosGameday': string
   'chaos.chaosHub': string
   'chaos.chaosInfrastructure': string
-  'chaos.chaosScenario': string
   'chaos.homepage.chaosHomePageTitle': string
   'chaos.homepage.learnMore': string
   'chaos.homepage.slogan': string
@@ -7388,6 +7407,7 @@ export interface StringsMap {
   'cv.slos.noData': string
   'cv.slos.noDataMS': string
   'cv.slos.noMatchingData': string
+  'cv.slos.noMatchingDataForSearch': string
   'cv.slos.noSLOsStateMessage': string
   'cv.slos.pickMetricsSLI': string
   'cv.slos.reviewChanges': string

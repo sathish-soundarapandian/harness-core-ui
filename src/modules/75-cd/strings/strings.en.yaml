@@ -478,6 +478,7 @@ getStartedWithCD:
   infraName: Infrastructure Name
   setupDelegate: Setup Delegate
   delegateInfo: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
+  delegateRequiredWarning: The delegate is not successfully connected, you will not be able to deploy without a delegate. Are you sure you want to continue?
   setupaNewDelegate: + Setup a New Delegate
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances

@@ -35,7 +35,7 @@ description: Build, test and push artifacts to repositories.
 createPipeline: '{{ $.common.createPipeline }}'
 annotations: Annotations
 labels: '{{ $.pipelineSteps.labelsLabel }}'
-optimize: Optimize
+optimize: '{{ $.common.moduleList.optimize }}'
 remoteCacheImage:
   label: Remote Cache Image
   dockerInfo: The remote cache repository needs to be created in the same account and organization as the build image. The repository must already exist for caching to work

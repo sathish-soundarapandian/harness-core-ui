@@ -69,9 +69,10 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
     allowableTypes,
     allowedVarialblesTypes,
     isDescriptionEnabled,
-    addVariableLabel,
     validationSchema,
-    isDrawerMode
+    isDrawerMode,
+    addVariableLabel,
+    fromEnvironmentConfiguration
   } = props
   const uids = React.useRef<string[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -269,7 +270,13 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
                       onClick={addNew}
-                      text={getString(defaultTo(addVariableLabel, 'common.addVariable'))}
+                      text={
+                        fromEnvironmentConfiguration
+                          ? `${getString('common.newName', {
+                              name: getString('variableLabel')
+                            })} ${getString('common.override')}`
+                          : getString(defaultTo(addVariableLabel, 'common.addVariable'))
+                      }
                     />
                   )}
                 </div>

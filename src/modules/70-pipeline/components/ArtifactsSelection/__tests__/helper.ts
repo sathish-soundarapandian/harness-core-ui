@@ -10,7 +10,7 @@ import { findByText, queryByAttribute } from '@testing-library/dom'
 export const testArtifactTypeList = async (): Promise<void> => {
   const dialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
   const artifactLabel = await findByText(dialog, 'connectors.specifyArtifactRepoType')
-  expect(artifactLabel).toBeDefined()
+  expect(artifactLabel).toBeInTheDocument()
   const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', dialog, value)
   // Docker, GCR, ECR, Nexus, Artifactory, Custom, ACR should be rendered
   const DockerRegistry = queryByValueAttribute('DockerRegistry')

@@ -88,8 +88,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     loading,
     refetch: refetchBuckets
   } = useGetV2BucketListForS3({
-    lazy: true,
-    debounce: 300
+    lazy: true
   })
 
   const fetchBuckets = (region: string): void => {
@@ -215,7 +214,10 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   ))
 
   const renderS3BucketField = (formik: FormikProps<AmazonS3InitialValuesType>): JSX.Element => {
-    if (getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED) {
+    if (
+      getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED ||
+      getMultiTypeFromValue(formik.values.region) !== MultiTypeInputType.FIXED
+    ) {
       return (
         <div className={css.imagePathContainer}>
           <FormInput.MultiTextInput

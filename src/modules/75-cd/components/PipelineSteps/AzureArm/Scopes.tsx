@@ -8,7 +8,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { map, get, isEmpty } from 'lodash-es'
+import { map, get, isEmpty, split, includes } from 'lodash-es'
 import {
   FormInput,
   Layout,
@@ -37,7 +37,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './AzureArm.module.scss'
 
 const isFixed = (value: string): boolean => getMultiTypeFromValue(value) === MultiTypeInputType.FIXED
-
+export const GetSubString = (id: string): string => (includes(id, '-') ? split(id, '-', 1)[0] : id.substring(0, 8))
 enum Mode {
   Incremental = 'Incremental',
   Complete = 'Complete'
@@ -105,7 +105,7 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
   useEffect(() => {
     if (subscriptionsData) {
       const subs = map(get(subscriptionsData, 'data.subscriptions', []), sub => ({
-        label: sub.subscriptionName,
+        label: `${sub.subscriptionName} - ${GetSubString(sub.subscriptionId)}`,
         value: sub.subscriptionId
       }))
       setSubscriptions(subs)
@@ -215,7 +215,7 @@ export const Scopes = ({ formik, readonly, expressions, allowableTypes, connecto
   useEffect(() => {
     if (!isEmpty(managementGroupData?.data?.managementGroups)) {
       const groups = map(get(managementGroupData, 'data.managementGroups', []), group => ({
-        label: group.displayName!,
+        label: `${group.displayName!} - ${GetSubString(group?.name)}`,
         value: group.name!
       }))
       setMgmtGroups(groups)

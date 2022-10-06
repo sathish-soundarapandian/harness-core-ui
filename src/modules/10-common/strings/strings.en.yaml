@@ -963,6 +963,21 @@ invalidIdentifiers: 'Identifier must not be one of the following values: {{ident
 repositoryFormat: Repository Format
 hostLabel: Host
 useSSL: Use SSL
+moduleList:
+  title: Select a module
+  buildAndTest: Build & Test
+  deployChanges: Deploy Changes
+  manageImpact: Manage Impact
+  optimize: Optimize
+moduleConfig:
+  customize: Customize your navigation
+  selectModules: Select which modules you want readily available on
+  your: your
+  navigation: navigation
+  autoSaved: Changes are automatically saved
+  restoreDefault: Restore Default Settings
+selectModules: Select Modules
+configureModuleList: Configure Module List
 
 # Chaos Module
 chaosText: Chaos

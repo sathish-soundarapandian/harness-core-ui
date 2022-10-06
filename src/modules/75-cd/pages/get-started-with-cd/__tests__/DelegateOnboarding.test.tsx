@@ -7,8 +7,8 @@
 
 import React from 'react'
 
-import { render, waitFor } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import { render, waitFor, getByText as getByTextBody, fireEvent } from '@testing-library/react'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import * as servicePortal from 'services/portal'
 import * as serviceCDNG from 'services/cd-ng'
 import GetStartedWithCD from '../GetStartedWithCD'
@@ -115,6 +115,11 @@ describe('Test the initial flow for kubernetes delegate Creation', () => {
     expect(global.URL.createObjectURL).toBeCalled()
     const createPipeline = getByText('ci.getStartedWithCI.createPipeline') as HTMLElement
     createPipeline.click()
+    const dialog = findDialogContainer() as HTMLElement
+    await waitFor(() => getByTextBody(dialog, 'Create Pipeline'))
+    await waitFor(() => getByTextBody(dialog, 'cd.getStartedWithCD.delegateRequiredWarning'))
+    const continueBtn = getByTextBody(dialog, 'continue')
+    fireEvent.click(continueBtn)
     await waitFor(() => expect(getByText('cd.delegateWarning')).toBeInTheDocument())
   })
   test('failure API call', async () => {

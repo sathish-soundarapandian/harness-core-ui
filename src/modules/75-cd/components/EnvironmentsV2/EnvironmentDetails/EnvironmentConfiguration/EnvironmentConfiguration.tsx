@@ -34,7 +34,9 @@ import { projectPathProps, modulePathProps, environmentPathProps } from '@common
 import { NavigationCheck } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import {
+  ApplicationSettingsConfiguration,
   ConfigFileWrapper,
+  ConnectionStringsConfiguration,
   ManifestConfigWrapper,
   NGEnvironmentInfoConfig,
   ResponseEnvironmentResponse,
@@ -53,6 +55,8 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import ApplicationConfigSelection from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
+import { AzureWebAppSelectionTypes } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfig.types'
 import ServiceManifestOverride from '../ServiceOverrides/ServiceManifestOverride/ServiceManifestOverride'
 import ServiceConfigFileOverride from '../ServiceOverrides/ServiceConfigFileOverride/ServiceConfigFileOverride'
 import css from '../EnvironmentDetails.module.scss'
@@ -118,7 +122,6 @@ export default function EnvironmentConfiguration({
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
   const history = useHistory()
   const { expressions } = useVariablesExpression()
-  const { variables, overrides } = formikProps.values
 
   const [canEdit] = usePermission({
     resource: {
@@ -200,31 +203,52 @@ export default function EnvironmentConfiguration({
   }, [yamlHandler])
 
   const invalidYaml = isInvalidYaml()
-  const accordionActiveId =
-    variables?.length || overrides?.manifests?.length || overrides?.configFiles?.length ? 'advanced' : ''
 
   /**********************************************Service Overide CRUD Operations ************************************************/
   const handleOverrideSubmit = useCallback(
-    (overrideObj: ManifestConfigWrapper | ConfigFileWrapper, overrideIdx: number, type: string): void => {
-      const envOverrides = get(formikProps.values.overrides, `${type}`)
-      const overrideDefaultValue = Array.isArray(envOverrides) ? [...envOverrides] : []
-      if (overrideDefaultValue.length > 0) {
-        overrideDefaultValue.splice(overrideIdx, 1, overrideObj)
-      } else {
-        overrideDefaultValue.push(overrideObj)
+    (
+      overrideObj:
+        | ManifestConfigWrapper
+        | ConfigFileWrapper
+        | ApplicationSettingsConfiguration
+        | ConnectionStringsConfiguration,
+      overrideIdx: number,
+      type: string
+    ): void => {
+      switch (type) {
+        case 'applicationSettings':
+        case 'connectionStrings':
+          formikProps.setFieldValue(`overrides.${type}`, overrideObj)
+          break
+        default: {
+          const envOverrides = get(formikProps.values.overrides, `${type}`)
+          const overrideDefaultValue = Array.isArray(envOverrides) ? [...envOverrides] : []
+          if (overrideDefaultValue.length > 0) {
+            overrideDefaultValue.splice(overrideIdx, 1, overrideObj)
+          } else {
+            overrideDefaultValue.push(overrideObj)
+          }
+          formikProps.setFieldValue(`overrides.${type}`, overrideDefaultValue)
+        }
       }
-      formikProps.setFieldValue(`overrides.${type}`, overrideDefaultValue)
     },
     [formikProps]
   )
 
   const removeOverrideConfig = useCallback(
     (index: number, type: string): void => {
-      const envOverrides = get(formikProps.values.overrides, `${type}`)
-
-      const overrideDefaultValue = Array.isArray(envOverrides) ? [...envOverrides] : []
-      overrideDefaultValue.splice(index, 1)
-      formikProps.setFieldValue(`overrides.${type}`, overrideDefaultValue)
+      switch (type) {
+        case 'applicationSettings':
+        case 'connectionStrings':
+          formikProps.setFieldValue(`overrides.${type}`, undefined)
+          break
+        default: {
+          const envOverrides = get(formikProps.values.overrides, `${type}`)
+          const overrideDefaultValue = Array.isArray(envOverrides) ? [...envOverrides] : []
+          overrideDefaultValue.splice(index, 1)
+          formikProps.setFieldValue(`overrides.${type}`, overrideDefaultValue)
+        }
+      }
     },
     [formikProps]
   )
@@ -301,75 +325,146 @@ export default function EnvironmentConfiguration({
             </Text>
             <ThumbnailSelect className={css.thumbnailSelect} name={'type'} items={typeList} isReadonly={!canEdit} />
           </Card>
+          <Accordion activeId={'environment'} className={css.accordion}>
+            <Accordion.Panel
+              id="environment"
+              addDomId={true}
+              summary={
+                <Text
+                  color={Color.GREY_700}
+                  font={{ weight: 'bold', size: 'medium' }}
+                  margin={{ left: 'small', right: 'small' }}
+                  data-tooltip-id="environmentGlobalOverride"
+                >
+                  {`${getString('common.environmentOverrides')}`}
+                  <HarnessDocTooltip useStandAlone={true} tooltipId="environmentGlobalOverride" />
+                </Text>
+              }
+              details={
+                <Layout.Vertical spacing="medium" margin={{ bottom: 'small' }}>
+                  <Card
+                    className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                    id="manifests"
+                  >
+                    <Text
+                      color={Color.GREY_700}
+                      font={{ weight: 'bold' }}
+                      margin={{ bottom: 'small' }}
+                      data-tooltip-id="manifestsOverride"
+                    >
+                      {getString('manifests')}
+                      <HarnessDocTooltip useStandAlone={true} tooltipId="manifestsOverride" />
+                    </Text>
+                    <ServiceManifestOverride
+                      manifestOverrides={defaultTo(formikProps.values.overrides?.manifests, [])}
+                      handleManifestOverrideSubmit={(manifestObj, index) =>
+                        handleOverrideSubmit(manifestObj, index, 'manifests')
+                      }
+                      removeManifestConfig={index => removeOverrideConfig(index, 'manifests')}
+                      isReadonly={!canEdit}
+                      fromEnvConfigPage
+                      expressions={expressions}
+                      allowableTypes={allowableTypes}
+                    />
+                  </Card>
+                  <Card
+                    className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                    id="configFiles"
+                  >
+                    <Text
+                      color={Color.GREY_700}
+                      font={{ weight: 'bold' }}
+                      margin={{ bottom: 'small' }}
+                      data-tooltip-id="filesOverride"
+                    >
+                      {getString('pipelineSteps.configFiles')}
+                      <HarnessDocTooltip useStandAlone={true} tooltipId="filesOverride" />
+                    </Text>
+                    <ServiceConfigFileOverride
+                      fileOverrides={defaultTo(formikProps.values.overrides?.configFiles, [])}
+                      allowableTypes={allowableTypes}
+                      handleConfigFileOverrideSubmit={(filesObj, index) =>
+                        handleOverrideSubmit(filesObj, index, 'configFiles')
+                      }
+                      handleServiceFileDelete={index => removeOverrideConfig(index, 'configFiles')}
+                      isReadonly={!canEdit}
+                      expressions={expressions}
+                      fromEnvConfigPage
+                    />
+                  </Card>
+                  <Card
+                    className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                    id="applicationSettings"
+                  >
+                    <Text
+                      color={Color.GREY_700}
+                      font={{ weight: 'bold' }}
+                      margin={{ bottom: 'small' }}
+                      data-tooltip-id="applicationSettingsOverride"
+                    >
+                      {getString('pipeline.appServiceConfig.applicationSettings.name')}
+                      <HarnessDocTooltip useStandAlone={true} tooltipId="applicationSettingsOverride" />
+                    </Text>
+                    <ApplicationConfigSelection
+                      environmentAllowableTypes={allowableTypes}
+                      readonly={!canEdit}
+                      showApplicationSettings={true}
+                      data={formikProps.values.overrides?.applicationSettings}
+                      selectionType={AzureWebAppSelectionTypes.ENV_CONFIG}
+                      handleSubmitConfig={(config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration) =>
+                        handleOverrideSubmit(config, 0, 'applicationSettings')
+                      }
+                      handleDeleteConfig={index => removeOverrideConfig(index, 'applicationSettings')}
+                    />
+                  </Card>
+                  <Card
+                    className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
+                    id="connectionStrings"
+                  >
+                    <Text
+                      color={Color.GREY_700}
+                      font={{ weight: 'bold' }}
+                      margin={{ bottom: 'small' }}
+                      data-tooltip-id="connectionStringsOverride"
+                    >
+                      {getString('pipeline.appServiceConfig.connectionStrings.name')}
+                      <HarnessDocTooltip useStandAlone={true} tooltipId="connectionStringsOverride" />
+                    </Text>
+                    <ApplicationConfigSelection
+                      environmentAllowableTypes={allowableTypes}
+                      readonly={!canEdit}
+                      showConnectionStrings={true}
+                      data={formikProps.values.overrides?.connectionStrings}
+                      selectionType={AzureWebAppSelectionTypes.ENV_CONFIG}
+                      handleSubmitConfig={(config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration) =>
+                        handleOverrideSubmit(config, 0, 'connectionStrings')
+                      }
+                      handleDeleteConfig={index => removeOverrideConfig(index, 'connectionStrings')}
+                    />
+                  </Card>
+                </Layout.Vertical>
+              }
+            />
+          </Accordion>
           {/* #region Advanced section */}
           {data?.data && (
-            <Accordion activeId={accordionActiveId} className={css.accordion}>
+            <Accordion activeId={'advanced'} className={css.accordion}>
               <Accordion.Panel
                 id="advanced"
                 addDomId={true}
                 summary={
                   <Text
                     color={Color.GREY_700}
-                    font={{ weight: 'bold' }}
+                    font={{ weight: 'bold', size: 'medium' }}
                     margin={{ left: 'small', right: 'small' }}
-                    data-tooltip-id="environmentGlobalOverride"
+                    data-tooltip-id="environmentAdvancedOverride"
                   >
                     {`${getString('common.advanced')}  ${getString('titleOptional')}`}
-                    <HarnessDocTooltip useStandAlone={true} tooltipId="environmentGlobalOverride" />
+                    <HarnessDocTooltip useStandAlone={true} tooltipId="environmentAdvancedOverride" />
                   </Text>
                 }
                 details={
                   <Layout.Vertical spacing="medium" margin={{ bottom: 'small' }}>
-                    <Card
-                      className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
-                      id="manifests"
-                    >
-                      <Text
-                        color={Color.GREY_700}
-                        font={{ weight: 'bold' }}
-                        margin={{ bottom: 'small' }}
-                        data-tooltip-id="manifestsOverride"
-                      >
-                        {getString('manifests')}
-                        <HarnessDocTooltip useStandAlone={true} tooltipId="manifestsOverride" />
-                      </Text>
-                      <ServiceManifestOverride
-                        manifestOverrides={defaultTo(formikProps.values.overrides?.manifests, [])}
-                        handleManifestOverrideSubmit={(manifestObj, index) =>
-                          handleOverrideSubmit(manifestObj, index, 'manifests')
-                        }
-                        removeManifestConfig={index => removeOverrideConfig(index, 'manifests')}
-                        isReadonly={!canEdit}
-                        fromEnvConfigPage
-                        expressions={expressions}
-                        allowableTypes={allowableTypes}
-                      />
-                    </Card>
-                    <Card
-                      className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
-                      id="configFiles"
-                    >
-                      <Text
-                        color={Color.GREY_700}
-                        font={{ weight: 'bold' }}
-                        margin={{ bottom: 'small' }}
-                        data-tooltip-id="filesOverride"
-                      >
-                        {getString('pipelineSteps.configFiles')}
-                        <HarnessDocTooltip useStandAlone={true} tooltipId="filesOverride" />
-                      </Text>
-                      <ServiceConfigFileOverride
-                        fileOverrides={defaultTo(formikProps.values.overrides?.configFiles, [])}
-                        allowableTypes={allowableTypes}
-                        handleConfigFileOverrideSubmit={(filesObj, index) =>
-                          handleOverrideSubmit(filesObj, index, 'configFiles')
-                        }
-                        handleServiceFileDelete={index => removeOverrideConfig(index, 'configFiles')}
-                        isReadonly={!canEdit}
-                        expressions={expressions}
-                        fromEnvConfigPage
-                      />
-                    </Card>
                     <Card
                       className={cx(css.sectionCard, { [css.fullWidth]: context !== PipelineContextType.Standalone })}
                       id="variables"
@@ -398,6 +493,7 @@ export default function EnvironmentConfiguration({
                         onUpdate={values => {
                           formikProps.setFieldValue('variables', values.variables)
                         }}
+                        fromEnvironmentConfiguration={true}
                       />
                     </Card>
                   </Layout.Vertical>
@@ -424,7 +520,9 @@ export default function EnvironmentConfiguration({
                 overrides: !isEmpty(formikProps.values.overrides)
                   ? {
                       manifests: formikProps.values.overrides?.manifests,
-                      configFiles: formikProps.values.overrides?.configFiles
+                      configFiles: formikProps.values.overrides?.configFiles,
+                      applicationSettings: formikProps.values.overrides?.applicationSettings,
+                      connectionStrings: formikProps.values.overrides?.connectionStrings
                     }
                   : undefined
               }

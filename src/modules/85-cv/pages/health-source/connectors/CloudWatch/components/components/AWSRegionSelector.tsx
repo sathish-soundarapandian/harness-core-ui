@@ -28,6 +28,7 @@ export default function AWSRegionSelector(): JSX.Element {
           placeholder={placeholderText}
           name={CloudWatchProperties.region}
           items={items}
+          disabled={loading}
         ></FormInput.Select>
       </Container>
     </CardWithOuterTitle>

@@ -3267,8 +3267,8 @@ export interface ChangesetInformation {
 }
 
 export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
-  totalChaosDelegates?: number
-  totalChaosScenarioRun?: number
+  totalChaosInfrastructures?: number
+  totalChaosExperimentRun?: number
 }
 
 export interface CloneMetadata {

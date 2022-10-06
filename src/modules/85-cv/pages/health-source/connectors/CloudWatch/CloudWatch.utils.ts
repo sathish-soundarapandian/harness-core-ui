@@ -161,7 +161,7 @@ export const validateForm = (
         errors[`customMetrics.${index}.groupName`] = getString('cv.monitoringSources.prometheus.validation.groupName')
       }
 
-      if (!expression) {
+      if (!expression || !expression?.trim()?.length) {
         errors[`customMetrics.${index}.expression`] = getString(
           'cv.healthSource.connectors.CloudWatch.validationMessage.expression'
         )
@@ -197,7 +197,11 @@ export const validateForm = (
             )
           }
 
-          if (analysis?.deploymentVerification?.enabled && !customMetric.responseMapping?.serviceInstanceJsonPath) {
+          if (
+            analysis?.deploymentVerification?.enabled &&
+            (!customMetric.responseMapping?.serviceInstanceJsonPath ||
+              !customMetric.responseMapping?.serviceInstanceJsonPath?.trim().length)
+          ) {
             errors[`customMetrics.${index}.responseMapping.serviceInstanceJsonPath`] = getString(
               'cv.monitoringSources.gcoLogs.validation.serviceInstance'
             )

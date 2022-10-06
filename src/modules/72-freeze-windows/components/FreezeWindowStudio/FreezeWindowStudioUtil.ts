@@ -153,6 +153,17 @@ export const getInitialValuesForConfigSection = (
     set(initialValues, `entity[${i}].name`, c.name)
 
     const entities = c.entities
+
+    let projectResourcesMap: Record<string, SelectOption> | null = null
+    if (resources.freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+      const orgObj = entities.find(entity => entity.type === FIELD_KEYS.Org) || {}
+      const orgIds = (orgObj as EntityType).entityRefs
+      const filterType = (orgObj as EntityType).filterType
+      if (orgIds?.length === 1 && filterType && filterType !== 'All') {
+        projectResourcesMap = resources.projectsByOrgId[orgIds[0]]?.projectsMap
+      }
+    }
+
     entities?.forEach(entity => {
       const { type, filterType, entityRefs } = entity
       if (filterType === 'All') {
@@ -163,7 +174,20 @@ export const getInitialValuesForConfigSection = (
           SINGLE_SELECT_FIELDS[type as FIELD_KEYS.EnvType] ? filterType : selectedValueForFilterTypeAll(type, getString)
         )
       } else if (filterType === 'Equals') {
-        set(initialValues, `entity[${i}].${type}`, equalsOptions(type, entityRefs || [], resources))
+        set(
+          initialValues,
+          `entity[${i}].${type}`,
+          equalsOptions(
+            type,
+            entityRefs || [],
+            type === FIELD_KEYS.Proj && projectResourcesMap
+              ? {
+                  ...resources,
+                  projectsMap: projectResourcesMap
+                }
+              : resources
+          )
+        )
         // equals
       } else if (filterType === 'NotEquals') {
         const excludeFieldKeys = ExcludeFieldKeys[type as 'Org' | 'Project']
@@ -171,7 +195,20 @@ export const getInitialValuesForConfigSection = (
           const { CheckboxKey, ExcludeFieldKey } = excludeFieldKeys
           set(initialValues, `entity[${i}].${type}`, selectedValueForFilterTypeAll(type, getString))
           set(initialValues, `entity[${i}].${CheckboxKey}`, true)
-          set(initialValues, `entity[${i}].${ExcludeFieldKey}`, equalsOptions(type, entityRefs || [], resources))
+          set(
+            initialValues,
+            `entity[${i}].${ExcludeFieldKey}`,
+            equalsOptions(
+              type,
+              entityRefs || [],
+              type === FIELD_KEYS.Proj && projectResourcesMap
+                ? {
+                    ...resources,
+                    projectsMap: projectResourcesMap
+                  }
+                : resources
+            )
+          )
         }
       }
     })
@@ -289,6 +326,7 @@ export const convertValuesToYamlObj = (currentValues: any, newValues: any, field
   adaptForEnvField(newValues, entities as EntityType[])
   if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
     adaptForOrgField(newValues, entities)
+    adaptForProjectField(newValues, entities)
   }
 
   if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.PROJECT) {

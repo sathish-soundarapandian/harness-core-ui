@@ -119,7 +119,7 @@ function _FreezeWindowsPage(): React.ReactElement {
   const pageFreezeSummaryResponse = data?.data
   return (
     <div className={css.main}>
-      <FreezeWindowListHeader refetch={refetch} />
+      <FreezeWindowListHeader freezeListLoading={freezeListLoading} />
       <FreezeWindowListSubHeader />
       <Page.Body error={error?.message} retryOnError={refetch}>
         {freezeListLoading ? (

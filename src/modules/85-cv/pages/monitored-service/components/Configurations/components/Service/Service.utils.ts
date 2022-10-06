@@ -7,7 +7,9 @@
 
 import type { FormikContextType } from 'formik'
 import { isEqual, omit } from 'lodash-es'
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { MonitoredServiceDTO } from 'services/cv'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import type { NGMonitoredServiceTemplateInfoConfig } from '@cv/components/MonitoredServiceTemplate/components/MonitoredServiceTemplateCanvas.types'
 import { MonitoredServiceType } from './components/MonitoredServiceOverview/MonitoredServiceOverview.constants'
 import type { MonitoredServiceForm } from './Service.types'
@@ -16,7 +18,8 @@ export const getInitFormData = (
   defaultMonitoredService: MonitoredServiceDTO | undefined,
   isEdit: boolean,
   isTemplate = false,
-  data?: MonitoredServiceDTO | NGMonitoredServiceTemplateInfoConfig
+  data?: MonitoredServiceDTO | NGMonitoredServiceTemplateInfoConfig,
+  templateScope?: Scope
 ): MonitoredServiceForm => {
   if (isTemplate) {
     const templateValue = data as NGMonitoredServiceTemplateInfoConfig
@@ -26,9 +29,9 @@ export const getInitFormData = (
       identifier: templateValue?.identifier || '',
       description: '',
       tags: templateValue?.tags || {},
-      serviceRef: templateValue?.spec?.serviceRef,
+      serviceRef: templateScope !== Scope.PROJECT ? RUNTIME_INPUT_VALUE : templateValue?.spec?.serviceRef,
       type: MonitoredServiceType.APPLICATION as MonitoredServiceForm['type'],
-      environmentRef: templateValue?.spec?.environmentRef,
+      environmentRef: templateScope !== Scope.PROJECT ? RUNTIME_INPUT_VALUE : templateValue?.spec?.environmentRef,
       environmentRefList: [],
       sources: templateValue?.spec?.sources,
       dependencies: [],

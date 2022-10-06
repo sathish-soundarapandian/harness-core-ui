@@ -27,6 +27,9 @@ sed -i "s|<\!-- saberToken -->|<script>window.saberToken = '$SABER_TOKEN'</scrip
 sed -i "s|<\!-- helpPanelAccessToken -->|<script>window.helpPanelAccessToken = '$HELP_PANEL_ACCESS_TOKEN'</script>|" index.html
 sed -i "s|<\!-- helpPanelSpace -->|<script>window.helpPanelSpace = '$HELP_PANEL_SPACE'</script>|" index.html
 sed -i "s|<\!-- helpPanelEnvironment -->|<script>window.helpPanelEnvironment = '$HELP_PANEL_ENVIRONMENT'</script>|" index.html
+sed -i "s|<\!-- newNavContentfulAccessToken -->|<script>window.helpPanelAccessToken = '$NEW_NAV_CONTENTFUL_ACCESS_TOKEN'</script>|" index.html
+sed -i "s|<\!-- newNavContetfulSpace -->|<script>window.helpPanelSpace = '$NEW_NAV_CONTENTFUL_SPACE'</script>|" index.html
+sed -i "s|<\!-- newNavContentfulEnvironment -->|<script>window.helpPanelEnvironment = '$NEW_NAV_CONTENTFUL_ENVIRONMENT'</script>|" index.html
 sed -i "s|<\!-- stripeApiKey -->|<script>window.stripeApiKey = '$STRIPE_API_KEY'</script>|" index.html
 if [ "$HARNESS_ENABLE_CDN_PLACEHOLDER" = "true" ]
 then

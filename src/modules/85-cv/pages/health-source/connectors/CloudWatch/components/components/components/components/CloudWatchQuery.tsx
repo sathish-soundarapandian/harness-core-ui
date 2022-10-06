@@ -75,7 +75,7 @@ export default function CloudWatchQuery(): JSX.Element {
         isAutoFetch={false}
         fetchButtonText={getString('cv.healthSource.connectors.CloudWatch.fetchDataButtonText')}
         textAreaName={`customMetrics.${selectedCustomMetricIndex}.expression`}
-        isFetchButtonDisabled={!expression || !region}
+        isFetchButtonDisabled={!expression || !expression?.trim()?.length || !region}
       />
 
       <Container className={css.metricChartHolder}>

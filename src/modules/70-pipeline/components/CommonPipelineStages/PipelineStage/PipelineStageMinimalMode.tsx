@@ -238,6 +238,8 @@ export function PipelineStageMinimalMode(): React.ReactElement {
               pipelineData={pipelineListData}
               selectedRow={selectedRow}
               setSelectedRow={setSelectedRow}
+              orgIdentifier={selectedOrg.value as string}
+              projectIdentifier={selectedProject.value as string}
             />
           ) : (
             <div className={css.noPipelineSection}>

@@ -105,4 +105,17 @@
       }
     }
   }
+  .codeSourceColumnContainer {
+    display: flex;
+  }
+  .codeSourceColumn {
+    display: flex;
+    justify-content: center;
+    background-color: var(--grey-100);
+    padding: var(--spacing-small);
+    border-radius: var(--spacing-3);
+  }
+  .contentWrapper {
+    max-width: 380px;
+  }
 }

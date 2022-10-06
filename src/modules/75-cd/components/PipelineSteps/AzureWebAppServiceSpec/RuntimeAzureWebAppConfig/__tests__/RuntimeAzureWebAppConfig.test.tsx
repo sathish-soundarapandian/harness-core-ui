@@ -18,14 +18,14 @@ import type {
 import { AzureWebAppConfigBaseFactory } from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { template, startupCommand, applicationSettings, connectionStrings } from './mocks'
-import { AzureWebAppConfig } from '../RuntimeAzureWebAppConfig'
+import { ApplicationConfig } from '../RuntimeAzureWebAppConfig'
 import { AzureWebAppConfigType } from '../../AzureWebAppServiceSpecInterface.types'
 
 describe('Azure Web App config tests', () => {
   test('Should match snapshot for startup script', () => {
     const { container } = render(
       <TestWrapper>
-        <AzureWebAppConfig
+        <ApplicationConfig
           initialValues={{ startupCommand: startupCommand as StartupCommandConfiguration }}
           template={template as ServiceSpec}
           azureWebAppConfig={startupCommand as StartupCommandConfiguration}
@@ -44,7 +44,7 @@ describe('Azure Web App config tests', () => {
   test('Should match snapshot for application settings', () => {
     const { container } = render(
       <TestWrapper>
-        <AzureWebAppConfig
+        <ApplicationConfig
           initialValues={{ applicationSettings: applicationSettings as ApplicationSettingsConfiguration }}
           template={template as ServiceSpec}
           azureWebAppConfig={applicationSettings as ApplicationSettingsConfiguration}
@@ -63,7 +63,7 @@ describe('Azure Web App config tests', () => {
   test('Should match snapshot for connection strings', () => {
     const { container } = render(
       <TestWrapper>
-        <AzureWebAppConfig
+        <ApplicationConfig
           initialValues={{ connectionStrings: connectionStrings as ConnectionStringsConfiguration }}
           template={template as ServiceSpec}
           azureWebAppConfig={connectionStrings as ConnectionStringsConfiguration}

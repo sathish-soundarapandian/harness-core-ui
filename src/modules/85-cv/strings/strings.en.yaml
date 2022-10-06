@@ -736,6 +736,7 @@ slos:
   noData: You don’t have any SLO created yet
   noDataMS: There are no SLOs available for this service
   noMatchingData: No matching data for the applied filters.
+  noMatchingDataForSearch: No matching data for the applied search.
   monitoredServiceText: A Monitored Service is automatically created by Harness by concatenating the names of the Service and Environment.
   createMonitoredService: Create a Monitored Service
   confirmDeleteSLO: 'Are you sure you want to delete SLO: {{ name }}?'

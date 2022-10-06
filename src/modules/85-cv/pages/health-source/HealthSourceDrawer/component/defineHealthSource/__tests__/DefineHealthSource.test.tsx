@@ -13,7 +13,7 @@ import * as featureFlags from '@common/hooks/useFeatureFlag'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { FeatureFlag } from '@common/featureFlags'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import DefineHealthSource from '../DefineHealthSource'
 
 const createModeProps: TestWrapperProps = {
@@ -49,6 +49,19 @@ jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
     }
   }),
   CVObjectStoreNames: {}
+}))
+
+jest.mock('services/cd-ng', () => ({
+  useGetConnector: jest.fn().mockImplementation(() => ({ data: {} })),
+  useGetConnectorCatalogue: jest.fn().mockImplementation(() => {
+    return { data: [], loading: false }
+  })
+}))
+jest.mock('@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook', () => ({
+  useGetConnectorsListHook: jest.fn().mockReturnValue({
+    loading: true,
+    categoriesMap: {}
+  })
 }))
 
 describe('DefineHealthSource', () => {
@@ -101,7 +114,7 @@ describe('DefineHealthSource', () => {
       </TestWrapper>
     )
 
-    await waitFor(() => expect(getByText('CloudWatch Metrics')).not.toBeNull())
+    await waitFor(() => expect(getByText('CloudWatch')).not.toBeNull())
 
     act(() => {
       userEvent.click(container.querySelector('[data-icon="service-aws"]')!)
@@ -127,5 +140,59 @@ describe('DefineHealthSource', () => {
     )
 
     await waitFor(() => expect(screen.queryByText('CloudWatch Metrics')).toBeNull())
+  })
+
+  test('Verify connector has only Account tab when template is account level', async () => {
+    const accountLevelProps: TestWrapperProps = {
+      path: routes.toTemplateStudio({ ...accountPathProps }),
+      pathParams: { accountId: '1234_accountId' }
+    }
+    const { container } = render(
+      <TestWrapper {...accountLevelProps}>
+        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+          <DefineHealthSource />
+        </SetupSourceTabs>
+      </TestWrapper>
+    )
+    await act(() => {
+      userEvent.click(container.querySelector('span[data-icon="service-appdynamics"]')!)
+    })
+    await act(() => {
+      userEvent.click(container.querySelector('button[data-testid="cr-field-connectorRef"]')!)
+    })
+    await waitFor(() => expect(document.querySelector('.bp3-dialog div[data-tab-id="account"]')).toBeInTheDocument())
+    await waitFor(() =>
+      expect(document.querySelector('.bp3-dialog div[data-tab-id="organization"]')).not.toBeInTheDocument()
+    )
+    await waitFor(() =>
+      expect(document.querySelector('.bp3-dialog div[data-tab-id="project"]')).not.toBeInTheDocument()
+    )
+  })
+
+  test('Verify connector has only Account tab and Org tab when template is Org level', async () => {
+    const accountLevelProps: TestWrapperProps = {
+      path: routes.toTemplateStudio({ ...accountPathProps, ...orgPathProps }),
+      pathParams: { accountId: '1234_accountId', orgIdentifier: '1234_org' }
+    }
+    const { container } = render(
+      <TestWrapper {...accountLevelProps}>
+        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
+          <DefineHealthSource />
+        </SetupSourceTabs>
+      </TestWrapper>
+    )
+    await act(() => {
+      userEvent.click(container.querySelector('span[data-icon="service-appdynamics"]')!)
+    })
+    await act(() => {
+      userEvent.click(container.querySelector('button[data-testid="cr-field-connectorRef"]')!)
+    })
+    await waitFor(() => expect(document.querySelector('.bp3-dialog div[data-tab-id="account"]')).toBeInTheDocument())
+    await waitFor(() =>
+      expect(document.querySelector('.bp3-dialog div[data-tab-id="organization"]')).toBeInTheDocument()
+    )
+    await waitFor(() =>
+      expect(document.querySelector('.bp3-dialog div[data-tab-id="project"]')).not.toBeInTheDocument()
+    )
   })
 })

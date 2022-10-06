@@ -71,6 +71,9 @@ declare interface Window {
   helpPanelAccessToken: string
   helpPanelSpace: string
   helpPanelEnvironment: 'QA' | 'master'
+  newNavContentfulAccessToken: string
+  newNavContetfulSpace: string
+  newNavContentfulEnvironment: 'master'
   stripeApiKey: string
 }
 

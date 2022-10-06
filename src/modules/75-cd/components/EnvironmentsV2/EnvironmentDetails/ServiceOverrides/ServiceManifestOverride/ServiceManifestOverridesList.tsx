@@ -35,7 +35,7 @@ function ServiceManifestOverridesList({
 }: ServiceManifestOverridesListProps): React.ReactElement {
   const { getString } = useStrings()
   return (
-    <Layout.Vertical>
+    <Layout.Vertical width={'100%'}>
       {!!manifestOverridesList?.length && (
         <>
           <div className={cx(css.manifestList, css.listHeader)}>

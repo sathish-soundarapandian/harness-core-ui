@@ -59,7 +59,7 @@ export default function CloudWatch({ data, onSubmit }: CloudWatchProps): JSX.Ele
               <CustomMetricsV2HelperContext.Provider value={customMetricHelperContextValue}>
                 <CloudWatchContent />
 
-                <Container height={520} />
+                <Container height={200} />
                 <DrawerFooter
                   isSubmit
                   onPrevious={onPrevious}

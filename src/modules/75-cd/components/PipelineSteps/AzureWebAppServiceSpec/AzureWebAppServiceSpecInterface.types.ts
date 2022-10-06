@@ -46,7 +46,7 @@ export enum AzureWebAppConfigType {
   startupCommand = 'startupCommand'
 }
 
-export interface AzureWebAppConfigProps {
+export interface ApplicationConfigProps {
   template: AzureWebAppServiceSpec
   path?: string
   stepViewType?: StepViewType

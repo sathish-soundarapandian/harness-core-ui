@@ -208,7 +208,8 @@ function ServiceVariableOverride({
       />
 
       <RbacButton
-        text={getString('common.plusNewName', { name: getString('common.override') })}
+        icon={'plus'}
+        text={`${getString('common.newName', { name: getString('variableLabel') })} ${getString('common.override')}`}
         size={ButtonSize.SMALL}
         variation={ButtonVariation.LINK}
         className={css.addOverrideBtn}

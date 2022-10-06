@@ -59,7 +59,7 @@ export default function Configurations(
 
   const { showWarning, showError, showSuccess } = useToaster()
   const history = useHistory()
-  const { isTemplate } = useMonitoredServiceContext()
+  const { isTemplate, templateScope } = useMonitoredServiceContext()
   const { expressions } = useVariablesExpression()
   const { orgIdentifier, projectIdentifier, accountId, identifier, templateIdentifier } = useParams<
     ProjectPathProps & { identifier: string; templateIdentifier?: string }
@@ -201,7 +201,8 @@ export default function Configurations(
         defaultMonitoredService,
         isTemplate ? templateIdentifier !== DefaultNewTemplateId : !!identifier,
         isTemplate,
-        isTemplate ? templateValue : dataMonitoredServiceById?.data?.monitoredService
+        isTemplate ? templateValue : dataMonitoredServiceById?.data?.monitoredService,
+        templateScope
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [

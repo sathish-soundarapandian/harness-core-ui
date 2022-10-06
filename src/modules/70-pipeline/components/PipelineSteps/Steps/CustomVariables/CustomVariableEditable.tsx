@@ -81,6 +81,7 @@ export interface CustomVariableEditableProps extends CustomVariableEditableExtra
   stepViewType?: StepViewType
   readonly?: boolean
   allowableTypes: AllowedTypes
+  fromEnvironmentConfiguration?: boolean
 }
 
 export function CustomVariableEditable(props: CustomVariableEditableProps): React.ReactElement {

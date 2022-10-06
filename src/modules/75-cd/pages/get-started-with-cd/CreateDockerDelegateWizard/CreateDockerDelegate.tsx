@@ -27,10 +27,11 @@ import { DelegateTypes } from '@delegates/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import StepProcessing from '../CreateKubernetesDelegateWizard/StepProcessing'
+import type { DelegateSuccessHandler } from '../CDOnboardingUtils'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
 export interface CreateDockerDelegateProps {
-  onSuccessHandler: () => void
+  onSuccessHandler: (data: DelegateSuccessHandler) => void
   successRef: React.MutableRefObject<(() => void) | null>
   delegateNameRef: React.MutableRefObject<string | undefined>
 }
@@ -133,7 +134,7 @@ export const CreateDockerDelegate = ({
         } else {
           setYaml(dockerYaml)
           setLoader(false)
-          onSuccessHandler()
+          onSuccessHandler({ delegateCreated: true })
           trackEvent(CDOnboardingActions.SaveCreateOnboardingDelegate, {
             category: Category.DELEGATE,
             data: { ...createParams, generatedYaml: dockerYaml }
@@ -239,7 +240,7 @@ export const CreateDockerDelegate = ({
                   <Text style={{ marginRight: 'var(--spacing-xlarge)' }} font="small">
                     {`$ ${dockerComposeCommand}`}
                   </Text>
-                  <CopyToClipboard content={getString('delegate.verifyDelegateYamlCmnd').slice(2)} showFeedback />
+                  <CopyToClipboard content={dockerComposeCommand} showFeedback />
                 </Container>
               </Layout.Horizontal>
               <div className={css.spacing} />

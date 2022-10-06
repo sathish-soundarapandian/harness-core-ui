@@ -3,9 +3,9 @@ homepage:
   slogan: Take your software build process to the next level using our Harness Chaos Engineering.
   learnMore: Learn more about Chaos Engineering
 chaosHub: ChaosHub
-chaosScenario: Chaos Scenario
+chaosExperiment: Chaos Experiment
 chaosInfrastructure: Chaos Infrastructure
-chaosGitops: Chaos Gitops
+chaosGameday: Chaos Gameday
 navLabels:
   chaosExperiments: Chaos Experiments
   chaosHubs: Chaos Hubs

@@ -452,5 +452,6 @@ describe('CloudWatch', () => {
     const regionLoadingDropdown = screen.getByPlaceholderText('- loading -')
 
     expect(regionLoadingDropdown).toBeInTheDocument()
+    expect(regionLoadingDropdown).toBeDisabled()
   })
 })

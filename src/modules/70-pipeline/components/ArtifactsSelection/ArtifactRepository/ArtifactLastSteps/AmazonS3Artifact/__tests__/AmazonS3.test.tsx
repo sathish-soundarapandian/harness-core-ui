@@ -581,7 +581,7 @@ describe('AmazonS3 tests', () => {
     await waitFor(() => expect(fetchBuckets).toHaveBeenCalled())
   })
 
-  test(`fetchBucket should not be called, if region is Runtime input`, async () => {
+  test(`Bucket Name field should be rendered as free text field, if region is Runtime input`, async () => {
     const initialValues = {
       spec: {
         identifier: '',
@@ -598,16 +598,16 @@ describe('AmazonS3 tests', () => {
       </TestWrapper>
     )
 
-    const portalDivs = document.getElementsByClassName('bp3-portal')
-    expect(portalDivs.length).toBe(0)
-    const bucketNameDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[0]
-    fireEvent.click(bucketNameDropDownButton!)
-    expect(portalDivs.length).toBe(1)
-    const dropdownPortalDiv = portalDivs[0]
-    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
-    const noBucketsOption = await findByText(selectListMenu as HTMLElement, 'pipeline.noBuckets')
-    expect(noBucketsOption).toBeDefined()
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const bucketNameInput = queryByNameAttribute('bucketName') as HTMLInputElement
+    const bucketNameDropDownButtons = container.querySelectorAll('[data-icon="chevron-down"]')
+    expect(bucketNameDropDownButtons.length).toBe(0)
+    userEvent.click(bucketNameInput)
     await waitFor(() => expect(fetchBuckets).not.toHaveBeenCalled())
+    expect(bucketNameInput.value).toBe('cdng-terraform-state')
+    userEvent.clear(bucketNameInput)
+    userEvent.type(bucketNameInput, 'abc')
+    expect(bucketNameInput.value).toBe('abc')
   })
 
   test(`submits should work when filePath value is given`, async () => {

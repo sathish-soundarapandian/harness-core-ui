@@ -288,7 +288,12 @@ const ConfigsSection = ({
   )
   React.useEffect(() => {
     setInitialValues(getInitialValuesForConfigSection(entityConfigs, getString, resources))
-  }, [])
+  }, [
+    resources.orgs.length,
+    resources.projects.length,
+    resources.services.length,
+    Object.keys(resources.projectsByOrgId).length
+  ])
 
   React.useEffect(() => {
     if (editViews.length === 0 && entityConfigs.length > 0) {

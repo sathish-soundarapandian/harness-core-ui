@@ -28,10 +28,12 @@ freezeStudio:
   freezeUpdatedSuccessfully: Freeze window updated successfully
 
 globalFreeze:
-  disableFreeze: Disable Freeze on all deployments for this {{scope}}
+  disabled: Freeze disabled on all deployments for this {{scope}}
+  disableFreezeTitle: Disable Freeze on all deployments for this {{scope}}
   disableFreezeText: For any deployments frozen, you will have to manually go back and resume them.
   disableFreezeSuccess: Freeze disabled on all deployments for this {{scope}}
   disableFreezeFailure: Failed to disable freeze
-  enableFreeze: Enable Freeze on all deployments for this {{scope}}
+  enabled: Freeze enabled on all deployments for this {{scope}} until {{endTime}} {{timeZone}}
+  enableFreezeTitle: Enable Freeze on all deployments for this {{scope}}
   enableFreezeSuccess: Freeze enabled on all deployments for this {{scope}}
   enableFreezeFailure: Failed to enable freeze

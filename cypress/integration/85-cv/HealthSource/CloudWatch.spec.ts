@@ -34,7 +34,7 @@ describe('Cloud watch health source without feature flag enabled tests', () => {
 
     cy.contains('span', 'Add New Health Source').click()
 
-    cy.findByText(/CloudWatch Metrics/).should('not.exist')
+    cy.findByText(/CloudWatch/).should('not.exist')
   })
 })
 
@@ -72,7 +72,7 @@ describe('Cloud watch health source', () => {
     // cy.populateDefineHealthSource(Connectors.AWS, 'cloudWatchTest', 'CloudWatch Metrics')
     cy.contains('span', 'Add New Health Source').click()
 
-    cy.findByText(/CloudWatch Metrics/).should('exist')
+    cy.findByText(/CloudWatch/).should('exist')
 
     cy.get('input[name="healthSourceName"]').clear().type(longInvalidName)
 

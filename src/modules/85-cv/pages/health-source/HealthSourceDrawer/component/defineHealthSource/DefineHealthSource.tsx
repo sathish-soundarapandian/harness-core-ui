@@ -45,7 +45,8 @@ import {
   getInitialValues,
   validate,
   validateDuplicateIdentifier,
-  getConnectorTypeName
+  getConnectorTypeName,
+  getConnectorPlaceholderText
 } from './DefineHealthSource.utils'
 import css from './DefineHealthSource.module.scss'
 
@@ -150,7 +151,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
           placeholder={getString('cv.healthSource.connectors.selectConnector', {
-            sourceType: formik?.values?.sourceType
+            sourceType: getConnectorPlaceholderText(formik?.values?.sourceType)
           })}
           disabled={isEdit ? !!formik?.values?.connectorRef && isEdit : !formik?.values?.sourceType}
           tooltipProps={{ dataTooltipId: 'selectHealthSourceConnector' }}

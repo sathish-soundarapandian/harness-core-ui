@@ -91,6 +91,9 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
               return true
             }
           }
+          if (value.services && !Array.isArray(value.services)) {
+            return true
+          }
 
           /* istanbul ignore else */
           return this.createError({ message, path: 'services' })

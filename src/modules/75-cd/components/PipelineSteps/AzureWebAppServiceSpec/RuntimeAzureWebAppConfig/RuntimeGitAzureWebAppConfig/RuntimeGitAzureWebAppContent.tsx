@@ -91,7 +91,7 @@ const GitAzureWebAppConfigContent = ({
           </div>
         )}
 
-        {isFieldRuntime(`${azureWebAppConfigPath}.store.spec.repoName`, template) && showRepoName && (
+        {(isFieldRuntime(`${azureWebAppConfigPath}.store.spec.repoName`, template) || showRepoName) && (
           <div className={css.verticalSpacingInput}>
             <FormInput.MultiTextInput
               disabled={readonly}

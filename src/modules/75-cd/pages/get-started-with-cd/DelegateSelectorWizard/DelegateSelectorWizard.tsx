@@ -7,8 +7,17 @@
 
 import React, { useRef } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Button, ButtonVariation, Container, Layout, Tabs, Text } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import {
+  Button,
+  ButtonVariation,
+  Container,
+  HarnessDocTooltip,
+  Layout,
+  Tabs,
+  Text,
+  useConfirmationDialog
+} from '@harness/uicore'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import cx from 'classnames'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
@@ -20,15 +29,19 @@ import { GoogleK8sService } from '../HelpTexts/GoogleK8sService'
 import { AmazonElasticK8sService } from '../HelpTexts/AmazonElasticK8sService'
 import { AzureK8sService } from '../HelpTexts/AzureK8sService'
 import { Minikube } from '../HelpTexts/Minikube'
+import type { DelegateSuccessHandler } from '../CDOnboardingUtils'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 
 export interface DelegateTypeSelectorProps {
   onClickBack: () => void
 }
 
+const DOCUMENT_URL = 'https://www.harness.io/technical-blog/deploy-in-5-minutes-with-a-delegate-first-approach'
+
 export const DelegateSelectorWizard = ({ onClickBack }: DelegateTypeSelectorProps): JSX.Element => {
   const [delegateType, setDelegateType] = React.useState<string>('')
   const [disableBtn, setDisableBtn] = React.useState<boolean>(true)
+  const [isDelegateInstalled, setIsDelegateInstalled] = React.useState<boolean>(false)
   const [helpPanelVisible, setHelpPanelVisible] = React.useState<boolean>(false)
   const { getString } = useStrings()
   const history = useHistory()
@@ -36,8 +49,53 @@ export const DelegateSelectorWizard = ({ onClickBack }: DelegateTypeSelectorProp
   const successRefHandler = useRef<(() => void) | null>(null)
   const delegateName = useRef<string>()
 
-  const onSuccessHandler = (): void => {
-    setDisableBtn(false)
+  const onSuccessHandler = ({ delegateCreated, delegateInstalled }: DelegateSuccessHandler): void => {
+    setDisableBtn(!delegateCreated)
+    setIsDelegateInstalled(Boolean(delegateInstalled))
+  }
+
+  const deletionContentText = React.useMemo(
+    () => (
+      <Text color={Color.BLACK} padding="medium">
+        {getString('cd.getStartedWithCD.delegateRequiredWarning')}{' '}
+        <a rel="noreferrer" target="_blank" href={DOCUMENT_URL}>
+          {getString('pipeline.createPipeline.learnMore')}
+        </a>
+      </Text>
+    ),
+    [getString]
+  )
+
+  const { openDialog: showDelegateRequiredWarning } = useConfirmationDialog({
+    contentText: deletionContentText,
+    titleText: 'Create Pipeline',
+    confirmButtonText: getString('continue'),
+    cancelButtonText: getString('cancel'),
+    intent: Intent.WARNING,
+    onCloseDialog: async (isConfirmed: boolean) => {
+      if (isConfirmed) {
+        createPipelineHandler()
+      }
+    }
+  })
+  const createPipelineHandler = (): void => {
+    successRefHandler?.current?.()
+    trackEvent(CDOnboardingActions.delegateInstallWizardEnd, {
+      category: Category.DELEGATE,
+      data: {
+        delegateName: delegateName.current,
+        delegateType: delegateType
+      }
+    })
+    history.push(
+      routes.toPipelineStudio({
+        accountId: accountId,
+        module: 'cd',
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier: '-1'
+      })
+    )
   }
 
   const isHelpPanelVisible = (): void => {
@@ -73,7 +131,13 @@ export const DelegateSelectorWizard = ({ onClickBack }: DelegateTypeSelectorProp
     <Layout.Horizontal>
       <Layout.Vertical width={'55%'} padding={'huge'} height={'100vh'}>
         <Container height={'200px'}>
-          <Text font={{ variation: FontVariation.H2, weight: 'semi-bold' }}>{getString('cd.installDelegate')}</Text>
+          <Text
+            font={{ variation: FontVariation.H2, weight: 'semi-bold' }}
+            data-tooltip-id="cdOnboardingInstallDelegate"
+          >
+            {getString('cd.installDelegate')}
+            <HarnessDocTooltip tooltipId="cdOnboardingInstallDelegate" useStandAlone={true} />
+          </Text>
           <div className={css.borderBottomClass} />
           <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.marginBottomClass}>
             {getString('cd.runDelegate')}
@@ -124,23 +188,11 @@ export const DelegateSelectorWizard = ({ onClickBack }: DelegateTypeSelectorProp
             disabled={disableBtn}
             className={css.createPipelineBtn}
             onClick={() => {
-              successRefHandler?.current?.()
-              trackEvent(CDOnboardingActions.delegateInstallWizardEnd, {
-                category: Category.DELEGATE,
-                data: {
-                  delegateName: delegateName.current,
-                  delegateType: delegateType
-                }
-              })
-              history.push(
-                routes.toPipelineStudio({
-                  accountId: accountId,
-                  module: 'cd',
-                  orgIdentifier,
-                  projectIdentifier,
-                  pipelineIdentifier: '-1'
-                })
-              )
+              if (isDelegateInstalled) {
+                createPipelineHandler()
+              } else {
+                showDelegateRequiredWarning()
+              }
             }}
           />
         </Container>

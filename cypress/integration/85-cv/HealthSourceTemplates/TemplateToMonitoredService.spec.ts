@@ -52,13 +52,20 @@ describe('Create empty monitored service', () => {
         ]
       })
     })
+    cy.intercept(
+      'POST',
+      'template/api/templates/applyTemplates?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&getDefaultFromOtherRepo=true',
+      {
+        fixture: 'cv/templates/healthsourceTemplate'
+      }
+    ).as('applyTemplates')
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
     cy.visitSRMTemplate()
   })
 
-  it('Add new AppDynamics monitored service with custom metric and all Runtime values and use it to create Monitored Service', () => {
+  it.skip('Add new AppDynamics monitored service with custom metric and all Runtime values and use it to create Monitored Service', () => {
     // Template Creation
     cy.addNewSRMTemplate()
     cy.populateTemplateDetails(HealthSourceDetails.template.name, HealthSourceDetails.template.version)
@@ -126,7 +133,11 @@ describe('Create empty monitored service', () => {
     cy.findByText('Template published successfully').should('be.visible')
     cy.intercept('POST', templateListCall, templateListValue).as('templatesListCall')
     cy.wait(2000)
+    cy.contains('div', 'Unsaved changes').should('be.visible')
     cy.contains('p', 'Templates').click()
+    cy.get('.bp3-dialog')
+      .findByRole('button', { name: /Confirm/i })
+      .click()
     cy.findByText('AppD Template').should('be.visible')
 
     // MS Creation Using Template

@@ -19,6 +19,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import delegateErrorURL from '../../home/images/delegate-error.svg'
 import delegateSuccessURL from '../../home/images/cd-delegates-success.svg'
+import type { DelegateSuccessHandler } from '../CDOnboardingUtils'
 import css from './CreateK8sDelegate.module.scss'
 
 interface StepDelegateData {
@@ -26,7 +27,7 @@ interface StepDelegateData {
   delegateType?: string
   name?: string
   replicas?: number
-  onSuccessHandler?: () => void
+  onSuccessHandler?: (data: DelegateSuccessHandler) => void
 }
 
 const StepProcessing: FC<StepDelegateData> = props => {
@@ -93,8 +94,9 @@ const StepProcessing: FC<StepDelegateData> = props => {
         category: Category.DELEGATE,
         data: { name: name, delegateType: delegateType }
       })
-      onSuccessHandler && onSuccessHandler()
+      onSuccessHandler && onSuccessHandler({ delegateCreated: true, delegateInstalled: true })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, verifyHeartBeat, loading, onSuccessHandler])
 
   if (showError) {

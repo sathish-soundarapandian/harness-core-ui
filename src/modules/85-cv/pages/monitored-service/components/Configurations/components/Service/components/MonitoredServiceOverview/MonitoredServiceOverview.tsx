@@ -6,11 +6,19 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
-import { Layout, FormInput, Utils, useConfirmationDialog } from '@wings-software/uicore'
+import {
+  Layout,
+  FormInput,
+  Utils,
+  useConfirmationDialog,
+  MultiTypeInputType,
+  AllowedTypes
+} from '@wings-software/uicore'
 import { Intent } from '@harness/design-system'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
 import type { MonitoredServiceDTO } from 'services/cv'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   useGetHarnessServices,
   useGetHarnessEnvironments,
@@ -33,7 +41,7 @@ import css from './MonitoredServiceOverview.module.scss'
 
 export default function MonitoredServiceOverview(props: MonitoredServiceOverviewProps): JSX.Element {
   const { formikProps, isEdit, onChangeMonitoredServiceType } = props
-  const { isTemplate } = useMonitoredServiceContext()
+  const { isTemplate, templateScope } = useMonitoredServiceContext()
   const { getString } = useStrings()
   const [tempServiceType, setTempServiceType] = useState<MonitoredServiceDTO['type']>()
   const { serviceOptions, setServiceOptions } = useGetHarnessServices()
@@ -57,6 +65,15 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
     environment => updatedMonitoredServiceNameForEnv(formikProps, environment, formikProps.values?.type),
     [formikProps.values]
   )
+
+  const multiTypeByScope = useMemo(
+    () =>
+      templateScope !== Scope.PROJECT
+        ? [MultiTypeInputType.RUNTIME]
+        : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+    [templateScope]
+  ) as AllowedTypes
+
   return (
     <CardWithOuterTitle title={getString('overview')} className={css.monitoredService}>
       {!isEdit ? (
@@ -90,6 +107,7 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
                 className: css.dropdown,
                 disabled: isEdit,
                 isMultiType: isTemplate,
+                allowableTypes: multiTypeByScope,
                 item: serviceOptions.find(item => item?.value === values.serviceRef) || values.serviceRef,
                 options: serviceOptions,
                 onSelect: selectedService => serviceOnSelect(isTemplate, selectedService, formikProps),
@@ -114,6 +132,7 @@ export default function MonitoredServiceOverview(props: MonitoredServiceOverview
                   className: css.dropdown,
                   disabled: isEdit,
                   isMultiType: isTemplate,
+                  allowableTypes: multiTypeByScope,
                   popOverClassName: css.popOverClassName,
                   item:
                     formikProps.values?.type === ChangeSourceCategoryName.INFRASTRUCTURE

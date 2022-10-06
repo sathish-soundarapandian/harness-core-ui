@@ -51,7 +51,7 @@ function ServiceVariablesOverridesList({
           <Text>{variable.value}</Text>
           {!isReadonly && (
             <span>
-              <Layout.Horizontal>
+              <Layout.Horizontal className={css.variableListButtons}>
                 <RbacButton
                   icon="Edit"
                   tooltip={<String className={css.tooltip} stringID="common.editVariableType" />}

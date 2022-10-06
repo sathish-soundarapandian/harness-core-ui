@@ -14,7 +14,7 @@ import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useStrings } from 'framework/strings'
 import { GlobalFreezeToggle } from '../GlobalFreezeToggle/GlobalFreezeToggle'
 
-export function FreezeWindowListHeader({ refetch }: { refetch: () => void }): ReactElement {
+export function FreezeWindowListHeader({ freezeListLoading }: { freezeListLoading: boolean }): ReactElement {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
 
@@ -29,7 +29,7 @@ export function FreezeWindowListHeader({ refetch }: { refetch: () => void }): Re
       breadcrumbs={
         <NGBreadcrumbs links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })} />
       }
-      toolbar={<GlobalFreezeToggle refetch={refetch} />}
+      toolbar={<GlobalFreezeToggle freezeListLoading={freezeListLoading} />}
     />
   )
 }

@@ -19,7 +19,7 @@ export class MonitoredServiceTemplate extends Template {
   protected label = 'Monitored Service'
   protected type = TemplateType.MonitoredService
   protected icon: IconName = 'cv-main'
-  protected allowedScopes = [Scope.PROJECT]
+  protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
   protected colorMap = {
     color: '#06B7C3',
     stroke: '#D4E7D1',

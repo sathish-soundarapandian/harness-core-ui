@@ -219,14 +219,13 @@ function ServiceConfigFileOverride({
         editFileOverride={editFileOverride}
         handleServiceFileDelete={handleServiceFileDelete}
       />
-      {fromEnvConfigPage ? (
-        <RbacButton {...addBtnCommonProps} icon="plus" text={getString('pipeline.configFiles.addConfigFile')} />
-      ) : (
-        <RbacButton
-          {...addBtnCommonProps}
-          text={getString('common.plusNewName', { name: getString('common.override') })}
-        />
-      )}
+      <RbacButton
+        {...addBtnCommonProps}
+        icon="plus"
+        text={`${getString('common.newName', {
+          name: getString('cd.configFileStoreTitle')
+        })} ${getString('common.override')}`}
+      />
     </Layout.Vertical>
   )
 }

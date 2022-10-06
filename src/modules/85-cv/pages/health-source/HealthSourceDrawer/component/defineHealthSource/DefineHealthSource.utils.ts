@@ -63,6 +63,18 @@ export const getConnectorTypeName = (name: HealthSourceTypes): string => {
   return connectorTypeName
 }
 
+export const getConnectorPlaceholderText = (sourceType?: string): string => {
+  if (!sourceType) {
+    return ''
+  }
+
+  if (sourceType === Connectors.AWS) {
+    return Connectors.AWS.toUpperCase()
+  } else {
+    return sourceType
+  }
+}
+
 export const getFeatureOption = (
   type: string,
   getString: UseStringsReturn['getString'],
@@ -173,7 +185,7 @@ export const getFeatureOption = (
       return [
         {
           value: CloudWatchProductNames.METRICS,
-          label: getString('cv.monitoringSources.gco.product.metrics')
+          label: CloudWatchProductNames.METRICS
         }
       ]
     default:
