@@ -152,7 +152,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
 
   useEffect(() => {
     if (formikValues.pathType === PATHTYPE.DropdownPath && formikValues.metricName === selectedMetric) {
-      formikSetField(PATHTYPE.FullPath, '')
+      formikSetField(PATHTYPE.CompleteMetricPath, '')
     }
   }, [formikValues.pathType, selectedMetric])
 
@@ -212,15 +212,15 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                 <Radio
                   padding={{ bottom: 'medium', left: 'xlarge' }}
                   label={getString('cv.healthSource.connectors.AppDynamics.metricPathType.text')}
-                  checked={formikValues?.pathType === PATHTYPE.FullPath}
-                  onChange={() => formikSetField('pathType', PATHTYPE.FullPath)}
+                  checked={formikValues?.pathType === PATHTYPE.CompleteMetricPath}
+                  onChange={() => formikSetField('pathType', PATHTYPE.CompleteMetricPath)}
                 />
                 {!isTemplate ? (
                   <FormInput.Text
                     className={css.fullPath}
-                    name={completeMetricPath ? PATHTYPE.CompleteMetricPath : PATHTYPE.FullPath}
+                    name={PATHTYPE.CompleteMetricPath}
                     tooltipProps={{ dataTooltipId: 'appDynamicsCompletePath' }}
-                    disabled={formikValues?.pathType !== PATHTYPE.FullPath}
+                    disabled={formikValues?.pathType !== PATHTYPE.CompleteMetricPath}
                   />
                 ) : (
                   <FormInput.MultiTextInput
@@ -242,7 +242,7 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
                       }
                     }}
                     tooltipProps={{ dataTooltipId: 'appDynamicsCompletePath' }}
-                    disabled={formikValues?.pathType !== PATHTYPE.FullPath}
+                    disabled={formikValues?.pathType !== PATHTYPE.CompleteMetricPath}
                   />
                 )}
                 <Radio

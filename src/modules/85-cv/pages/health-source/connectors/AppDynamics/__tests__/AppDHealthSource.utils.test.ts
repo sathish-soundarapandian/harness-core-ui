@@ -87,7 +87,7 @@ describe('Test Util funcitons', () => {
     ).toEqual({ metricPath: 'cv.healthSource.connectors.AppDynamics.validation.metricPathWithoutLeafNode' })
 
     const fullPathMissingTierInfo = Object.assign({}, validateMappingNoError) as any
-    fullPathMissingTierInfo['pathType'] = PATHTYPE.FullPath
+    fullPathMissingTierInfo['pathType'] = PATHTYPE.CompleteMetricPath
     fullPathMissingTierInfo['fullPath'] = 'Overall Application Performance | docker-tier | Calls per Minute'
     expect(
       validateMapping({
@@ -102,7 +102,7 @@ describe('Test Util funcitons', () => {
 
   test('thresholds validation errors', () => {
     const fullPathMissingTierInfo = Object.assign({}, validateMappingNoError) as any
-    fullPathMissingTierInfo['pathType'] = PATHTYPE.FullPath
+    fullPathMissingTierInfo['pathType'] = PATHTYPE.CompleteMetricPath
     fullPathMissingTierInfo['fullPath'] = 'Overall Application Performance | docker-tier | Calls per Minute'
     fullPathMissingTierInfo.ignoreThresholds = [
       {
@@ -186,10 +186,7 @@ describe('Test Util funcitons', () => {
     formDataExpectedOutput.spec.metricData.Errors = false
     formDataExpectedOutput.spec.metricData.Performance = false
     formDataExpectedOutput.spec.metricDefinitions[1].sli = { enabled: true }
-    formDataExpectedOutput.spec.metricDefinitions[1].analysis.deploymentVerification = {
-      enabled: false,
-      serviceInstanceMetricPath: undefined
-    }
+    formDataExpectedOutput.spec.metricDefinitions[1].analysis.deploymentVerification = { enabled: false }
     formDataExpectedOutput.spec.metricDefinitions[1].analysis.riskProfile = {} as any
     expect(createAppDynamicsPayload(formData, false)).toEqual(formDataExpectedOutput)
 

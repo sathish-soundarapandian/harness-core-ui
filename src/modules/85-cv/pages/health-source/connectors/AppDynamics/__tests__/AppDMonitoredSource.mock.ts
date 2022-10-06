@@ -8,6 +8,7 @@
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { ThresholdTypes } from '../AppDHealthSource.constants'
 import type { AppDynamicsData, AppDynamicsFomikFormInterface } from '../AppDHealthSource.types'
+import { PATHTYPE } from '../Components/AppDCustomMetricForm/AppDCustomMetricForm.constants'
 
 export const sourceData = {
   isEdit: true,
@@ -33,11 +34,7 @@ export const sourceData = {
             },
             analysis: {
               liveMonitoring: { enabled: true },
-              deploymentVerification: {
-                enabled: true,
-                serviceInstanceFieldName: null,
-                serviceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute'
-              },
+              deploymentVerification: { enabled: true },
               riskProfile: {
                 category: 'Errors',
                 metricType: 'ERROR',
@@ -46,10 +43,10 @@ export const sourceData = {
             },
             sli: { enabled: true },
             groupName: 'Group 1',
-            baseFolder: 'Overall Application Performance',
-            metricPath: 'Calls per Minute',
             appDApplication: 'PR-git-experiment',
             appDTier: 'cvng',
+            completeServiceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute',
+            completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
             lowerBaselineDeviation: true,
             metricPacks: [{ identifier: 'Performance' }, { identifier: 'Errors' }]
           }
@@ -549,6 +546,7 @@ export const appDMetricValue = {
     }
   },
   continuousVerification: true,
+  completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
   groupName: {
     label: 'Group 1',
     value: 'Group 1'
@@ -571,7 +569,6 @@ export const appDMetricValue = {
     }
   },
   riskCategory: 'Errors/ERROR',
-  serviceInstance: null,
   serviceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute',
   sli: true
 }
@@ -1209,6 +1206,7 @@ export const formData = {
     basePathDropdown_0: { path: '', value: 'Overall Application Performance' },
     basePathDropdown_1: { path: 'Overall Application Performance', value: '' }
   },
+  pathType: PATHTYPE.DropdownPath,
   metricName: 'appdMetric One Updated',
   riskCategory: 'Errors/INFRA',
   lowerBaselineDeviation: true,
@@ -1236,48 +1234,38 @@ export const formDataExpectedOutput = {
     metricDefinitions: [
       {
         analysis: {
-          deploymentVerification: {
-            enabled: false,
-            serviceInstanceMetricPath: undefined
-          },
-          liveMonitoring: {
-            enabled: true
-          },
+          deploymentVerification: { enabled: false },
+          liveMonitoring: { enabled: true },
           riskProfile: {
             category: 'Errors',
             metricType: 'ERROR',
             thresholdTypes: []
           }
         },
-        baseFolder: 'Application Infrastructure Performance',
         groupName: 'Two',
         identifier: undefined,
         metricName: 'appdMetric Two',
-        metricPath: 'JVM',
+        completeMetricPath: 'Application Infrastructure Performance|cvng|JVM',
+        completeServiceInstanceMetricPath: undefined,
         sli: {
           enabled: true
         }
       },
       {
         analysis: {
-          deploymentVerification: {
-            enabled: true,
-            serviceInstanceMetricPath: undefined
-          },
-          liveMonitoring: {
-            enabled: false
-          },
+          deploymentVerification: { enabled: true },
+          liveMonitoring: { enabled: false },
           riskProfile: {
             category: 'Errors',
             metricType: 'INFRA',
             thresholdTypes: ['ACT_WHEN_LOWER']
           }
         },
-        baseFolder: 'Overall Application Performance',
         groupName: 'One',
         identifier: undefined,
         metricName: 'appdMetric One Updated',
-        metricPath: 'Calls per Minute',
+        completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
+        completeServiceInstanceMetricPath: undefined,
         sli: {
           enabled: false
         }
@@ -1398,6 +1386,7 @@ const appdMetricData = {
       value: ''
     }
   },
+  completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
   continuousVerification: true,
   groupName: {
     label: 'Group 1',
@@ -1421,7 +1410,6 @@ const appdMetricData = {
     }
   },
   riskCategory: 'Errors/ERROR',
-  serviceInstance: null,
   serviceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute',
   sli: true
 }
@@ -1443,7 +1431,7 @@ export const formikInitialData = {
       value: ''
     }
   },
-  completeMetricPath: '',
+  completeMetricPath: 'Overall Application Performance|cvng|Calls per Minute',
   connectorRef: 'TestAppD',
   continuousVerification: true,
   groupName: {
@@ -1453,11 +1441,10 @@ export const formikInitialData = {
   healthScore: true,
   higherBaselineDeviation: true,
   identifier: 'AppD_Single',
-  pathType: 'dropdownPath',
+  pathType: 'completeMetricPath',
   isEdit: true,
   lowerBaselineDeviation: true,
   metricIdentifier: 'appdMetric',
-  fullPath: 'Overall Application Performance|cvng|Calls per Minute',
   metricData: {
     Errors: true,
     Performance: true
@@ -1489,7 +1476,6 @@ export const formikInitialData = {
     value: 'Application Monitoring'
   },
   riskCategory: 'Errors/ERROR',
-  serviceInstance: null,
   serviceInstanceMetricPath: 'Individual Nodes|*|Errors per Minute',
   showCustomMetric: true,
   sli: true,
@@ -1577,7 +1563,6 @@ export const defaultPayload = {
   appdApplication: 'cv-app',
   completeMetricPath: '',
   connectorRef: 'appdconnector',
-  fullPath: '',
   identifier: 'appdtemplate',
   isEdit: false,
   metricData: {
@@ -1589,7 +1574,7 @@ export const defaultPayload = {
   metricName: 'cv.monitoringSources.appD.defaultAppDMetricName',
   metricPacks: undefined,
   name: 'appdtemplate',
-  pathType: 'fullPath',
+  pathType: 'completeMetricPath',
   product: {
     label: 'Application Monitoring',
     value: 'Application Monitoring'

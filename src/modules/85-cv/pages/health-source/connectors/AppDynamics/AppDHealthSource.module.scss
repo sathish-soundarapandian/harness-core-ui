@@ -58,6 +58,7 @@
 
   .content {
     padding: var(--spacing-large) !important;
+    margin-bottom: var(--spacing-xlarge);
 
     .accordian [data-testid='riskProfile-details'],
     [data-testid='metricToService-details'],
