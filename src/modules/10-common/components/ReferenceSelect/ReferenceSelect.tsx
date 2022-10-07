@@ -232,7 +232,6 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
             onCancel={() => {
               setOpen(false)
             }}
-            showAllTab
             renderTabSubHeading
             defaultScope={defaultScopeRef.current}
             isMultiSelect={isMultiSelect}
