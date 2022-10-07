@@ -19,7 +19,7 @@ import type { TargetManagementFlagConfigurationPanelFormValues as FormValues } f
 import TargetManagementFlagConfigurationPanel from '@cf/components/TargetManagementFlagConfigurationPanel/TargetManagementFlagConfigurationPanel'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
 import { useGovernance } from '@cf/hooks/useGovernance'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import useGetTargetGroupFlags from '../../hooks/useGetTargetGroupFlags'
 import { getAddFlagsInstruction, getFlagSettingsInstructions } from './flagSettingsInstructions'
 
@@ -106,7 +106,7 @@ const FlagSettingsPanel: FC<FlagSettingsPanelProps> = ({ targetGroup }) => {
 
       try {
         saveWithGit({
-          autoCommitMessage: AUTO_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS,
+          commitMessage: GIT_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS,
           patchInstructions: { instructions },
           onSave: handleSave
         })
@@ -124,7 +124,7 @@ const FlagSettingsPanel: FC<FlagSettingsPanelProps> = ({ targetGroup }) => {
 
       try {
         saveWithGit({
-          autoCommitMessage: AUTO_COMMIT_MESSAGES.ADDED_FLAG_TARGETS,
+          commitMessage: GIT_COMMIT_MESSAGES.ADDED_FLAG_TARGETS,
           patchInstructions: { instructions },
           onSave: handleSave
         })

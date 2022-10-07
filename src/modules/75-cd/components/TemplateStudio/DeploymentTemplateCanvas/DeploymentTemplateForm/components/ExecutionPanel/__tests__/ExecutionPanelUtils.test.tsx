@@ -11,25 +11,18 @@ import { stepTemplateMock } from './mocks'
 describe('ExecutionPanel utils Test', () => {
   test('should return updated deployment config with added template ref', () => {
     const data = {
-      templateRefObj: { templateRef: 'http_project_level', versionLabel: 'v1' },
+      templateRef: 'http_project_level',
       deploymentConfig: {
         infrastructure: {},
         execution: {
-          stepTemplateRefs: [
-            { templateRef: 'org.http_org_level', versionLabel: 'v1' },
-            { templateRef: 'account.accountSetup', versionLabel: 'v1' }
-          ]
+          stepTemplateRefs: ['org.http_org_level', 'account.accountSetup']
         }
       }
     }
     expect(getUpdatedDeploymentConfig(data)).toEqual({
       infrastructure: {},
       execution: {
-        stepTemplateRefs: [
-          { templateRef: 'org.http_org_level', versionLabel: 'v1' },
-          { templateRef: 'account.accountSetup', versionLabel: 'v1' },
-          { templateRef: 'http_project_level', versionLabel: 'v1' }
-        ]
+        stepTemplateRefs: ['org.http_org_level', 'account.accountSetup', 'http_project_level']
       }
     })
   })

@@ -61,7 +61,7 @@ import { FlagTypeVariations } from '@cf/components/CreateFlagDialog/FlagDialogUt
 import FlagDialog from '@cf/components/CreateFlagDialog/FlagDialog'
 
 import SaveFlagToGitModal from '@cf/components/SaveFlagToGitModal/SaveFlagToGitModal'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import GitSyncActions from '@cf/components/GitSyncActions/GitSyncActions'
 import { GitDetails, GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance, UseGovernancePayload } from '@cf/hooks/useGovernance'
@@ -110,9 +110,7 @@ export const RenderColumnFlag: React.FC<RenderColumnFlagProps> = ({
 
   const [isSaveToggleModalOpen, setIsSaveToggleModalOpen] = useState(false)
 
-  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta(
-    AUTO_COMMIT_MESSAGES.TOGGLED_FLAG
-  )
+  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.TOGGLED_FLAG)
 
   const [canToggle] = usePermission(
     {

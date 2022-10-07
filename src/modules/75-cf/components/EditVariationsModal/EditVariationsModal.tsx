@@ -35,7 +35,7 @@ import type { PermissionsRequest } from '@rbac/hooks/usePermission'
 import type { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 
 import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
@@ -93,7 +93,7 @@ export const EditVariationsModal: React.FC<EditVariationsModalProps> = ({
       } as PatchFeatureQueryParams
     })
 
-    const gitSyncFormData = gitSync?.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS)
+    const gitSyncFormData = gitSync?.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS)
 
     const initialValues = {
       defaultOnVariation: feature.defaultOnVariation,

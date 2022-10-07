@@ -92,8 +92,8 @@ const StepDockerAuthentication: React.FC<StepProps<StepDockerAuthenticationProps
         value: DockerProviderType.DOCKERHUB
       },
       {
-        label: getString('connectors.docker.harbour'),
-        value: DockerProviderType.HARBOUR
+        label: getString('connectors.docker.harbor'),
+        value: DockerProviderType.HARBOR
       },
       {
         label: getString('connectors.docker.quay'),

@@ -47,7 +47,7 @@ import { FFDetailPageTab, getErrorMessage } from '@cf/utils/CFUtils'
 import routes from '@common/RouteDefinitions'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import type { FeatureFlagPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import TargetingRulesTab from '@cf/pages/feature-flags-detail/targeting-rules-tab/TargetingRulesTab'
@@ -125,7 +125,7 @@ const FlagActivation: React.FC<FlagActivationProps> = props => {
   const { FFM_1513, FFM_2134_FF_PIPELINES_TRIGGER } = useFeatureFlags()
 
   const { gitSyncValidationSchema, gitSyncInitialValues } =
-    gitSync?.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.UPDATED_FLAG_RULES) || {}
+    gitSync?.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.UPDATED_FLAG_RULES) || {}
 
   const initialValues = useMemo(
     () =>

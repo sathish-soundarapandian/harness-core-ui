@@ -39,7 +39,7 @@ import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import SaveFlagToGitModal from '@cf/components/SaveFlagToGitModal/SaveFlagToGitModal'
 
 import { GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
@@ -357,7 +357,7 @@ export const VariationSelect: React.FC<VariationSelectProps> = ({
   const { showError } = useToaster()
 
   const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta(
-    AUTO_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS
+    GIT_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS
   )
 
   const _useServeFlagVariationToTargets = useServeFeatureFlagVariationToTargets(patchParams)

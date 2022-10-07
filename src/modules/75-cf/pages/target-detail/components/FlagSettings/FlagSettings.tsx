@@ -16,7 +16,7 @@ import { getErrorMessage } from '@cf/utils/CFUtils'
 import type { TargetManagementFlagConfigurationPanelFormValues as FormValues } from '@cf/components/TargetManagementFlagConfigurationPanel/types'
 import TargetManagementFlagConfigurationPanel from '@cf/components/TargetManagementFlagConfigurationPanel/TargetManagementFlagConfigurationPanel'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import useResponseError from '@cf/hooks/useResponseError'
 import type { PatchOperation } from 'services/cf'
@@ -100,7 +100,7 @@ const FlagSettings: FC<FlagSettingsProps> = ({ target }) => {
       if (instructions.length) {
         try {
           saveWithGit({
-            autoCommitMessage: AUTO_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS,
+            commitMessage: GIT_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS,
             patchInstructions: { instructions },
             onSave: handleSave
           })
@@ -121,7 +121,7 @@ const FlagSettings: FC<FlagSettingsProps> = ({ target }) => {
       if (instructions.length) {
         try {
           saveWithGit({
-            autoCommitMessage: AUTO_COMMIT_MESSAGES.ADDED_FLAG_TARGETS,
+            commitMessage: GIT_COMMIT_MESSAGES.ADDED_FLAG_TARGETS,
             patchInstructions: { instructions },
             onSave: handleSave
           })

@@ -8,7 +8,7 @@
 import React from 'react'
 import { debounce, defaultTo, isEmpty, isEqual, noop, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Container, Formik, FormikForm, Heading, Layout, PageError, Text } from '@wings-software/uicore'
+import { Container, Formik, FormikForm, Heading, Layout, PageError } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import type { FormikProps, FormikErrors } from 'formik'
 import { produce } from 'immer'
@@ -38,9 +38,6 @@ import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods
 import type { Pipeline } from '@pipeline/utils/types'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import css from './TemplatePipelineSpecifications.module.scss'
-
-const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): number =>
-  (JSON.stringify(templateInfo || {}).match(/<\+input>/g) || []).length
 
 export function TemplatePipelineSpecifications(): JSX.Element {
   const {
@@ -111,8 +108,6 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     () => parse(defaultTo(templateInputSetYaml?.data, '')),
     [templateInputSetYaml?.data]
   )
-
-  const templateInputsCount = React.useMemo(() => getTemplateRuntimeInputsCount(templateInputs), [templateInputs])
 
   const updateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
     const updatedPipeline = produce(pipeline, draft => {
@@ -245,12 +240,9 @@ export function TemplatePipelineSpecifications(): JSX.Element {
                     }}
                   >
                     <Layout.Vertical padding={{ bottom: 'large' }} spacing={'xlarge'}>
-                      <Layout.Horizontal flex={{ distribution: 'space-between' }}>
-                        <Heading level={5} color={Color.BLACK}>
-                          {getString('pipeline.templateInputs')}
-                        </Heading>
-                        <Text font={{ size: 'normal' }}>{`Total Inputs: ${templateInputsCount}`}</Text>
-                      </Layout.Horizontal>
+                      <Heading level={5} color={Color.BLACK}>
+                        {getString('pipeline.templateInputs')}
+                      </Heading>
                       <Container>
                         <PipelineInputSetFormInternal
                           template={templateInputs}

@@ -293,7 +293,7 @@ docker:
   dockerRegistryURL: 'Docker Registry URL'
   dockerProvideType: 'Provider Type'
   dockerHub: 'DockerHub'
-  harbour: 'Harbour'
+  harbor: 'Harbor'
   quay: 'Quay'
   other: 'Other (Docker V2 compliant)'
   dockerRepository: Docker Repository

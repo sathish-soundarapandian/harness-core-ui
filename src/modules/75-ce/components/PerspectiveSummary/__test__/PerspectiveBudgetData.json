@@ -1,0 +1,17 @@
+{
+  "data": {
+    "budgetSummaryList": [
+      {
+        "id": "-xUl-wT7T0-Hxb8WJAyBfg",
+        "name": "Cost per Dev",
+        "budgetAmount": 173000.0,
+        "actualCost": 29975.72,
+        "timeLeft": 26,
+        "timeUnit": "days",
+        "timeScope": "monthly",
+        "period": "MONTHLY",
+        "__typename": "BudgetSummary"
+      }
+    ]
+  }
+}

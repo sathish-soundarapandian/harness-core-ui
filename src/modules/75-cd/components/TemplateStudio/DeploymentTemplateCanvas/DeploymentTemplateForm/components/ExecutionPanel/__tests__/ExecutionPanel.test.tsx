@@ -6,12 +6,18 @@
  */
 
 import React from 'react'
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, getByText } from '@testing-library/react'
 import { factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { TestWrapper } from '@common/utils/testUtils'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { DeploymentContextProvider } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { ExecutionPanel } from '../ExecutionPanel'
 import { initialValues } from './mocks'
+
+jest.mock('framework/Templates/TemplateSelectorContext/useTemplateSelector', () => ({
+  useTemplateSelector: jest.fn().mockReturnValue({
+    getTemplate: jest.fn().mockImplementation(() => ({ template: {}, isCopied: false }))
+  })
+}))
 
 jest.mock('@pipeline/utils/templateUtils', () => ({
   ...jest.requireActual('@pipeline/utils/templateUtils'),
@@ -74,7 +80,24 @@ const DeploymentContextWrapper = ({
 const children = <div></div>
 
 describe('Test DeploymentInfraWrapperWithRef', () => {
-  test('initial render', async () => {
+  test('initial render - without step template refs', async () => {
+    const updatedValues = {
+      ...initialValues,
+      execution: {
+        stepTemplateRefs: ['']
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <DeploymentContextWrapper initialValue={updatedValues}>
+          <ExecutionPanel>{children}</ExecutionPanel>
+        </DeploymentContextWrapper>
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('initial render - with step template refs', async () => {
     const { container } = render(
       <TestWrapper>
         <DeploymentContextWrapper initialValue={initialValues}>
@@ -85,6 +108,22 @@ describe('Test DeploymentInfraWrapperWithRef', () => {
     const plusButton = await waitFor(() => container.querySelector('[icon="plus"]'))
     fireEvent.click(plusButton!)
 
+    const addStepTemplateBtn = await screen.getByText('cd.addStepTemplate')
+    expect(addStepTemplateBtn).toBeInTheDocument()
+    await act(async () => {
+      fireEvent.click(addStepTemplateBtn)
+    })
+
+    await act(async () => {
+      fireEvent.click(plusButton!)
+    })
+
+    const useStepTemplateBtn = await screen.getByText('cd.useStepTemplate')
+    expect(useStepTemplateBtn).toBeInTheDocument()
+    await act(async () => {
+      fireEvent.click(useStepTemplateBtn)
+    })
+
     const stepCardViewButton = await waitFor(() =>
       container.querySelector('[data-testid="step-card-http_project_level-0"]')
     )
@@ -92,7 +131,11 @@ describe('Test DeploymentInfraWrapperWithRef', () => {
 
     const crossButton = await waitFor(() => container.querySelector('[icon="cross"]'))
     fireEvent.click(crossButton!)
-
+    const dialogContainer = findDialogContainer() as HTMLElement
+    await waitFor(() => expect(dialogContainer).toBeDefined())
+    await act(async () => {
+      fireEvent.click(getByText(dialogContainer, 'yes'))
+    })
     expect(container).toMatchSnapshot()
   })
 })

@@ -23,7 +23,7 @@ import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { PageSpinner } from '@common/components'
 import { GIT_SYNC_ERROR_CODE, useGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import FlagElemAbout from './FlagElemAbout'
 import FlagElemBoolean from './FlagElemBoolean'
 import FlagElemMultivariate from './FlagElemMultivariate'
@@ -60,7 +60,7 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
 
   const { isAutoCommitEnabled, isGitSyncEnabled, gitSyncLoading, handleAutoCommit, getGitSyncFormMeta, handleError } =
     useGitSync()
-  const { gitSyncInitialValues } = getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.CREATED_FLAG)
+  const { gitSyncInitialValues } = getGitSyncFormMeta(GIT_COMMIT_MESSAGES.CREATED_FLAG)
 
   const { mutate: createFeatureFlag, loading: isLoadingCreateFeatureFlag } = useCreateFeatureFlag({
     queryParams: {

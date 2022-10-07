@@ -12,7 +12,7 @@ import { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import MonitoredServiceInputSetsTemplate from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { MonitoredTemplateCanvasWithRef } from './MonitoredServiceTemplateCanvas'
 
 export class MonitoredServiceTemplate extends Template {

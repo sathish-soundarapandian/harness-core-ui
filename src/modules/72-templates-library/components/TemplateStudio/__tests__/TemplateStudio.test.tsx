@@ -16,7 +16,7 @@ import { TemplateContextTestWrapper } from '@templates-library/utils/templateCon
 import { DefaultTemplate } from 'framework/Templates/templates'
 import { gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import * as cdng from 'services/cd-ng'
-import { TemplateStudio } from '../TemplateStudio'
+import { TemplateStudioInternal } from '../TemplateStudioInternal'
 import templateContextProps from './__mock__/templateContextProps.json'
 
 jest.spyOn(cdng, 'useListGitSync').mockImplementation((): any => {
@@ -83,7 +83,7 @@ describe('<TemplateStudio /> tests', () => {
     }
     const { container } = render(
       <TemplateContextTestWrapper {...(newTemplateProps as any)}>
-        <TemplateStudio />
+        <TemplateStudioInternal />
       </TemplateContextTestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -104,7 +104,7 @@ describe('<TemplateStudio /> tests', () => {
     }
     const { container } = render(
       <TemplateContextTestWrapper {...(newTemplateProps as any)} isGitSyncEnabled={false}>
-        <TemplateStudio />
+        <TemplateStudioInternal />
       </TemplateContextTestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -113,7 +113,7 @@ describe('<TemplateStudio /> tests', () => {
   test('snapshot test for template studio in visual view', () => {
     const { container } = render(
       <TemplateContextTestWrapper {...testWrapperProps}>
-        <TemplateStudio />
+        <TemplateStudioInternal />
       </TemplateContextTestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -133,7 +133,7 @@ describe('<TemplateStudio /> tests', () => {
           updateTemplateView: updateTemplateView
         }}
       >
-        <TemplateStudio />
+        <TemplateStudioInternal />
       </TemplateContextTestWrapper>
     )
 
@@ -158,7 +158,7 @@ describe('<TemplateStudio /> tests', () => {
   test('is template studio loading', async () => {
     const { container } = render(
       <TemplateContextTestWrapper {...testWrapperProps} templateContextValues={{ state: { isLoading: true } as any }}>
-        <TemplateStudio />
+        <TemplateStudioInternal />
       </TemplateContextTestWrapper>
     )
 
@@ -168,7 +168,7 @@ describe('<TemplateStudio /> tests', () => {
   test('navigation on unsaved changes should give warning', async () => {
     const { container, getByText } = render(
       <TemplateContextTestWrapper {...testWrapperProps} templateContextValues={{ ...(templateContextProps as any) }}>
-        <TemplateStudio />
+        <TemplateStudioInternal />
         <Link
           className="redirect"
           to={routes.toTriggersPage({
@@ -216,7 +216,7 @@ describe('yaml validation in template studio', () => {
           } as any
         }}
       >
-        <TemplateStudio />
+        <TemplateStudioInternal />
       </TemplateContextTestWrapper>
     )
 

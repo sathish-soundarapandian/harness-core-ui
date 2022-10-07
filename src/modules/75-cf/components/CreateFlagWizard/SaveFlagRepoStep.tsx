@@ -15,6 +15,7 @@ import type { StepProps } from '@common/components/WizardWithProgress/WizardWith
 import { useGitSync } from '@cf/hooks/useGitSync'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import type { FlagWizardFormValues } from './FlagWizard'
 import SaveFlagToGitSubForm from '../SaveFlagToGitSubForm/SaveFlagToGitSubForm'
 
@@ -32,7 +33,7 @@ const SaveFlagRepoStep = ({
 
   const { getGitSyncFormMeta, gitSyncLoading } = useGitSync()
 
-  const { gitSyncValidationSchema, gitSyncInitialValues } = getGitSyncFormMeta()
+  const { gitSyncValidationSchema, gitSyncInitialValues } = getGitSyncFormMeta(GIT_COMMIT_MESSAGES.CREATED_FLAG)
   const { trackEvent } = useTelemetry()
   useEffect(() => {
     trackEvent(FeatureActions.GitExperience, {

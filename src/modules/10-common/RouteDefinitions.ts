@@ -86,7 +86,7 @@ const routes = {
 
   toFreezeWindows: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
-      const path = `resources/freeze-windows`
+      const path = `freeze-windows`
       return getScopeBasedRoute({
         scope: {
           orgIdentifier,
@@ -105,17 +105,15 @@ const routes = {
       module,
       accountId: _accountId,
       windowIdentifier,
-      // templateType,
-      // templateIdentifier,
       ...rest
     }: Partial<{ windowIdentifier: string } & ProjectPathProps & ModulePathParams>) => {
       // TemplateStudioPathProps
       const queryString = qs.stringify(rest, { skipNulls: true })
       let path
       if (queryString.length > 0) {
-        path = `resources/freeze-window-studio/window/${windowIdentifier}/?${queryString}`
+        path = `freeze-window-studio/window/${windowIdentifier}/?${queryString}`
       } else {
-        path = `resources/freeze-window-studio/window/${windowIdentifier}/`
+        path = `freeze-window-studio/window/${windowIdentifier}/`
       }
       return getScopeBasedRoute({
         scope: {
@@ -1795,9 +1793,19 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs/${identifier}`
   ),
-  toChaosInfrastructures: withAccountId(
+
+  // chaos enviroments
+  toChaosEnvironments: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-delegate`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments`
+  ),
+  toChaosEnvironmentDetails: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      environmentIdentifier
+    }: Partial<ProjectPathProps> & { environmentIdentifier: string }) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments/${environmentIdentifier}`
   )
 }
 

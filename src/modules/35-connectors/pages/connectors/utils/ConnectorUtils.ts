@@ -76,7 +76,7 @@ export const DelegateInClusterType = {
 
 export const DockerProviderType = {
   DOCKERHUB: 'DockerHub',
-  HARBOUR: 'Harbor',
+  HARBOR: 'Harbor',
   QUAY: 'Quay',
   OTHER: 'Other'
 }

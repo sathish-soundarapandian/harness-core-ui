@@ -7,13 +7,12 @@
 
 import React from 'react'
 import { Classes, Icon, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { get, isEmpty, map } from 'lodash-es'
+import { get, map } from 'lodash-es'
 import cx from 'classnames'
 import { Button, ButtonVariation, Container, Layout, Popover, Text } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import { useStrings } from 'framework/strings'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import type { DeploymentConfigStepTemplateRefDetails } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { TemplateUsage } from '@templates-library/utils/templatesUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -32,6 +31,7 @@ function AddStepTemplate({ onAddStepClick }: { onAddStepClick: () => void }) {
   const { getString } = useStrings()
 
   const handleOnClick = () => {
+    /* istanbul ignore else */
     if (!isReadOnly) {
       onAddStepClick()
     }
@@ -64,11 +64,7 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
     templateDetailsByRef,
     setTemplateDetailsByRef
   } = useDeploymentContext()
-  const stepTemplateRefs = get(
-    deploymentConfig,
-    'execution.stepTemplateRefs',
-    []
-  ) as DeploymentConfigStepTemplateRefDetails[]
+  const stepTemplateRefs = get(deploymentConfig, 'execution.stepTemplateRefs', []) as string[]
 
   const { getTemplate } = useTemplateSelector()
 
@@ -94,12 +90,7 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
       })
       const templateRef = getScopeBasedTemplateRef(template)
 
-      const templateRefObj = {
-        templateRef,
-        versionLabel: template.versionLabel as string
-      }
-
-      const updatedDeploymentConfig = getUpdatedDeploymentConfig({ templateRefObj, deploymentConfig })
+      const updatedDeploymentConfig = getUpdatedDeploymentConfig({ templateRef, deploymentConfig })
       const updatedTemplateDetailsByRef = getUpdatedTemplateDetailsByRef({
         templateDetailsObj: template,
         templateRef,
@@ -117,9 +108,9 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
   }
 
   const renderLinkedStepTemplates = () =>
-    map(stepTemplateRefs, (stepTemplateRefObj: DeploymentConfigStepTemplateRefDetails, stepTemplateIndex: number) => {
-      return !isEmpty(stepTemplateRefObj) ? (
-        <StepTemplateCard stepTemplateRefObj={stepTemplateRefObj} stepTemplateIndex={stepTemplateIndex} />
+    map(stepTemplateRefs, (stepTemplateRef: string, stepTemplateIndex: number) => {
+      return stepTemplateRef ? (
+        <StepTemplateCard templateRef={stepTemplateRef} stepTemplateIndex={stepTemplateIndex} />
       ) : null
     })
 

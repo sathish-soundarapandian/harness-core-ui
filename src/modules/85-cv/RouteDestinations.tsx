@@ -30,7 +30,7 @@ import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import TemplatesPage from '@templates-library/pages/TemplatesPage/TemplatesPage'
-import { TemplateStudioWrapper } from '@templates-library/components/TemplateStudio/TemplateStudioWrapper'
+import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { CVChanges } from '@cv/pages/changes/CVChanges'
 import ConnectorsPage from '@connectors/pages/connectors/ConnectorsPage'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
@@ -299,7 +299,7 @@ export default (
       exact
       path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...cvModuleParams })}
     >
-      <TemplateStudioWrapper />
+      <TemplateStudio />
     </RouteWithLayout>
     {/* Replace above route once BE integration is complete */}
 

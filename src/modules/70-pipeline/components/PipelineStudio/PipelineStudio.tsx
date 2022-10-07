@@ -6,133 +6,126 @@
  */
 
 import React from 'react'
-import cx from 'classnames'
-import { Button, ButtonVariation, Container, Layout, Text } from '@wings-software/uicore'
+import { useHistory, useParams } from 'react-router-dom'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/StagesCollection'
+import routes from '@common/RouteDefinitions'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type {
+  AccountPathProps,
+  GitQueryParams,
   PipelinePathProps,
-  ProjectPathProps,
-  PathFn,
-  PipelineType,
-  PipelineStudioQueryParams
+  PipelineType
 } from '@common/interfaces/RouteInterfaces'
-
-import { String } from 'framework/strings'
+import { useStrings } from 'framework/strings'
+import { PipelineProvider } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import { PipelineStudioInternal } from '@pipeline/components/PipelineStudio/PipelineStudioInternal/PipelineStudioInternal'
+import { TrialType } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
-import { PipelineCanvas } from './PipelineCanvas/PipelineCanvas'
-import { PipelineContext } from './PipelineContext/PipelineContext'
-import { PipelineSchemaContextProvider } from './PipelineSchema/PipelineSchemaContext'
+import { useQueryParams } from '@common/hooks'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { FeatureFlag } from '@common/featureFlags'
+import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { getCDTrialDialog } from './CDTrial/useCDTrialModal'
+import { getCITrialDialog } from './CITrial/useCITrialModal'
+import { getPipelineStages } from './PipelineStagesUtils'
 import css from './PipelineStudio.module.scss'
 
-export interface PipelineStudioProps {
-  className?: string
-  title?: string
-  onClose?: () => void
-  routePipelineStudio: PathFn<PipelineType<PipelinePathProps> & PipelineStudioQueryParams>
-  routePipelineDetail: PathFn<PipelineType<PipelinePathProps>>
-  routePipelineList: PathFn<PipelineType<ProjectPathProps>>
-  routePipelineProject: PathFn<PipelineType<ProjectPathProps>>
-  // diagram?: DiagramFactory
-  getOtherModal?: (
+export default function PipelineStudio(): React.ReactElement {
+  const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } =
+    useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
+
+  const { branch, repoIdentifier, repoName, connectorRef, storeType } = useQueryParams<GitQueryParams>()
+
+  const history = useHistory()
+
+  const getTrialPipelineCreateForm = (
     onSubmit: (values: PipelineInfoConfig) => void,
     onClose: () => void
-  ) => React.ReactElement<OtherModalProps>
-}
-
-interface PipelineStudioState {
-  error?: Error
-}
-
-interface OtherModalProps {
-  onSubmit?: (values: PipelineInfoConfig) => void
-  initialValues?: PipelineInfoConfig
-  onClose?: () => void
-}
-
-export class PipelineStudio extends React.Component<PipelineStudioProps, PipelineStudioState> {
-  state: PipelineStudioState = { error: undefined }
-  context!: React.ContextType<typeof PipelineContext>
-  static contextType = PipelineContext
-
-  componentDidCatch(error: Error): boolean {
-    this.setState({ error })
-    if (window?.bugsnagClient?.notify) {
-      window?.bugsnagClient?.notify(error)
+  ): React.ReactElement => {
+    if (module === 'cd') {
+      return getCDTrialDialog({
+        actionProps: { onSuccess: onSubmit },
+        trialType: TrialType.SET_UP_PIPELINE,
+        onCloseModal: onClose
+      })
+    } else if (module === 'ci') {
+      return getCITrialDialog({
+        actionProps: { onSuccess: onSubmit },
+        trialType: TrialType.SET_UP_PIPELINE,
+        onCloseModal: onClose
+      })
+    } else {
+      return <>/</>
     }
-    return false
   }
 
-  render(): JSX.Element {
-    const { error } = this.state
-    const {
-      deletePipelineCache,
-      state: { gitDetails }
-    } = this.context
-    if (error) {
-      return (
-        <Layout.Vertical spacing="medium" padding="large">
-          <Text>
-            <String stringID="errorTitle" />
-          </Text>
-          <Text>
-            <String stringID="errorSubtitle" />
-          </Text>
-          <Layout.Horizontal style={{ alignItems: 'baseline' }}>
-            <Text>
-              <String stringID="please" />
-            </Text>
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              onClick={() => {
-                return deletePipelineCache(gitDetails).then(() => {
-                  window.location.reload()
-                })
-              }}
-              minimal
-            >
-              <String stringID="clickHere" />
-            </Button>
-            <Text>
-              <String stringID="errorHelp" />
-            </Text>
-          </Layout.Horizontal>
-          {__DEV__ && (
-            <React.Fragment>
-              <Text font="small">Error Message</Text>
-              <Container>
-                <details>
-                  <summary>Stacktrace</summary>
-                  <pre>{error.stack}</pre>
-                </details>
-              </Container>
-            </React.Fragment>
-          )}
-        </Layout.Vertical>
-      )
-    }
-    const {
-      className = '',
-      routePipelineStudio,
-      routePipelineDetail,
-      routePipelineList,
-      routePipelineProject,
-      getOtherModal
-    } = this.props
-    return (
-      <PipelineSchemaContextProvider>
-        <GitSyncStoreProvider>
-          <div className={cx(css.container, className)}>
-            <PipelineCanvas
-              // diagram={diagram}
-              toPipelineStudio={routePipelineStudio}
-              toPipelineDetail={routePipelineDetail}
-              toPipelineList={routePipelineList}
-              toPipelineProject={routePipelineProject}
-              getOtherModal={getOtherModal}
-            />
-          </div>
-        </GitSyncStoreProvider>
-      </PipelineSchemaContextProvider>
+  const { modal } = useQueryParams<{ modal?: ModuleLicenseType }>()
+
+  const getOtherModal = modal ? getTrialPipelineCreateForm : undefined
+  const handleRunPipeline = (): void => {
+    history.push(
+      routes.toPipelineStudio({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier,
+        module,
+        branch,
+        repoIdentifier,
+        repoName,
+        connectorRef,
+        storeType,
+        runPipeline: true
+      })
     )
   }
+  const { licenseInformation } = useLicenseStore()
+  const isCFEnabled = useFeatureFlag(FeatureFlag.CFNG_ENABLED)
+  const isCIEnabled = useFeatureFlag(FeatureFlag.CING_ENABLED)
+  const isCDEnabled = useFeatureFlag(FeatureFlag.CDNG_ENABLED)
+  const isSTOEnabled = useFeatureFlag(FeatureFlag.SECURITY_STAGE)
+  const isPipelineChainingEnabled = useFeatureFlag(FeatureFlag.PIPELINE_CHAINING)
+  const { getString } = useStrings()
+
+  return (
+    <PipelineProvider
+      stagesMap={stagesCollection.getAllStagesAttributes(getString)}
+      queryParams={{
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        repoIdentifier,
+        branch,
+        repoName,
+        connectorRef,
+        storeType
+      }}
+      pipelineIdentifier={pipelineIdentifier}
+      renderPipelineStage={args =>
+        getPipelineStages({
+          args,
+          getString,
+          module,
+          isCIEnabled: licenseInformation['CI'] && isCIEnabled,
+          isCDEnabled: licenseInformation['CD'] && isCDEnabled,
+          isCFEnabled: licenseInformation['CF'] && isCFEnabled,
+          isSTOEnabled,
+          isApprovalStageEnabled: true,
+          isPipelineChainingEnabled
+        })
+      }
+      stepsFactory={factory}
+      runPipeline={handleRunPipeline}
+    >
+      <PipelineStudioInternal
+        className={css.container}
+        routePipelineStudio={routes.toPipelineStudio}
+        routePipelineProject={routes.toDeployments}
+        routePipelineDetail={routes.toPipelineDetail}
+        routePipelineList={routes.toPipelines}
+        getOtherModal={getOtherModal}
+      />
+    </PipelineProvider>
+  )
 }

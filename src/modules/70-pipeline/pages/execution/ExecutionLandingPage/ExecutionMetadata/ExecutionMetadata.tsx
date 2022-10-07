@@ -13,6 +13,7 @@ import { useStrings, String } from 'framework/strings'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { hasCDStage, hasCIStage, StageType } from '@pipeline/utils/stageHelpers'
 import factory from '@pipeline/factories/ExecutionFactory'
+import type { ExecutorInfoDTO } from 'services/pipeline-ng'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { UserLabel } from '@common/components/UserLabel/UserLabel'
 
@@ -27,7 +28,7 @@ function ExecutionMetadataTrigger(): React.ReactElement {
   const { pipelineExecutionDetail } = useExecutionContext()
   const { pipelineExecutionSummary } = pipelineExecutionDetail || {}
 
-  const type = pipelineExecutionSummary?.executionTriggerInfo?.triggerType
+  const type = pipelineExecutionSummary?.executionTriggerInfo?.triggerType as ExecutorInfoDTO['triggerType']
 
   if (type === 'WEBHOOK' || type === 'WEBHOOK_CUSTOM' || type === 'SCHEDULER_CRON') {
     return (

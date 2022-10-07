@@ -69,6 +69,7 @@ import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTr
 import type { ResourceDTO } from 'services/audit'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import SettingsList from '@default-settings/pages/SettingsList'
+import ChaosEnvironments from '@chaos/pages/environments/EnvironmentsPage'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -134,7 +135,7 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
   resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
 
-    return routes.toChaosInfrastructures({
+    return routes.toChaosEnvironments({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier
@@ -565,6 +566,15 @@ export default function ChaosRoutes(): React.ReactElement {
         pageName={PAGE_NAME.ResourceGroupDetails}
       >
         <ResourceGroupDetails />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toChaosEnvironments({ ...projectPathProps, ...chaosModuleParams })}
+        pageName={PAGE_NAME.Environments}
+      >
+        <ChaosEnvironments />
       </RouteWithLayout>
 
       {/* Loads the Chaos MicroFrontend */}

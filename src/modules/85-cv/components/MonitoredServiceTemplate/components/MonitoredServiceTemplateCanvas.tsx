@@ -14,7 +14,7 @@ import type { MonitoredServiceForm } from '@cv/pages/monitored-service/component
 import type { JsonNode, NGTemplateInfoConfig } from 'services/template-ng'
 import { MonitoredServiceProvider } from '@cv/pages/monitored-service/MonitoredServiceContext'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { createdInitTemplateValue } from './MonitoredServiceTemplateCanvas.utils'
 

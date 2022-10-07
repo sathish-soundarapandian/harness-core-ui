@@ -29,15 +29,10 @@ export interface DeploymentInfra {
   instanceAttributes?: Array<InstanceAttributeVariable>
 }
 
-export interface DeploymentConfigStepTemplateRefDetails {
-  templateRef: string
-  versionLabel: string
-}
-
 export interface DeploymentConfig {
   infrastructure: DeploymentInfra
   execution: {
-    stepTemplateRefs: DeploymentConfigStepTemplateRefDetails[]
+    stepTemplateRefs: string[]
   }
 }
 

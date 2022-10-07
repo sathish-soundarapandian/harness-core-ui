@@ -9,7 +9,7 @@ import React from 'react'
 import { debounce, isEqual, set } from 'lodash-es'
 import { sanitize } from '@common/utils/JSONUtils'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { ScriptTemplateFormWithRef } from './ScriptTemplateForm/ScriptTemplateForm'
 import type { ShellScriptFormData } from '../PipelineSteps/ShellScriptStep/shellScriptTypes'
 

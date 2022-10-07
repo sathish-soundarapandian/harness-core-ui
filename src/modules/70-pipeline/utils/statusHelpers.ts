@@ -91,6 +91,7 @@ export function isExecutionWaiting(status?: string): boolean {
   return (
     isExecutionOnlyWaiting(status) ||
     isExecutionWaitingForApproval(status) ||
+    isExecutionWaitingForWaitStep(status) ||
     isExecutionWaitingForIntervention(status) ||
     isExecutionWaitingForInput(status)
   )
@@ -102,6 +103,9 @@ export function isExecutionOnlyWaiting(status?: string): boolean {
 
 export function isExecutionWaitingForApproval(status?: string): boolean {
   return changeCase(status) === ExecutionStatusEnum.ApprovalWaiting
+}
+export function isExecutionWaitingForWaitStep(status?: string): boolean {
+  return changeCase(status) === ExecutionStatusEnum.WaitStepRunning
 }
 
 export function isExecutionWaitingForIntervention(status?: string): boolean {

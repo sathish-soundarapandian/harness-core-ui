@@ -169,9 +169,8 @@ export const getResolvedCustomDeploymentDetailsByRef = (
           const scopeBasedTemplateRef = getScopeBasedTemplateRef(item)
           set(resolvedCustomDeploymentDetailsByRef, scopeBasedTemplateRef, {
             name: item.name,
-            linkedTemplateRefs: map(
-              templateData?.spec?.execution?.stepTemplateRefs,
-              (stepTemplateRefObj: TemplateLinkConfig) => getIdentifierFromValue(stepTemplateRefObj.templateRef)
+            linkedTemplateRefs: map(templateData?.spec?.execution?.stepTemplateRefs, (stepTemplateRef: string) =>
+              getIdentifierFromValue(stepTemplateRef)
             )
           })
         })

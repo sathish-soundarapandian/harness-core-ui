@@ -9,7 +9,7 @@ import type React from 'react'
 import type { IconName } from '@wings-software/uicore'
 import type { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import type { TemplateInputsProps } from '../TemplateInputs/TemplateInputs'
 
 export abstract class Template {

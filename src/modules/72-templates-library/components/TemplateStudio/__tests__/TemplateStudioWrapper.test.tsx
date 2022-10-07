@@ -8,7 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { TemplateStudioWrapper } from '@templates-library/components/TemplateStudio/TemplateStudioWrapper'
+import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import * as TemplateContext from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
 
 const TemplateProviderMock = jest
@@ -19,7 +19,7 @@ describe('<TemplateStudioWrapper /> tests', () => {
   test('should call TemplateProvider with correct renderPipelineStage prop', () => {
     render(
       <TestWrapper>
-        <TemplateStudioWrapper />
+        <TemplateStudio />
       </TestWrapper>
     )
     expect(TemplateProviderMock).toBeCalledWith(

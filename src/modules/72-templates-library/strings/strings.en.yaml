@@ -15,6 +15,7 @@ inputsCount: 'Total Inputs: {{count}}'
 templateUpdatedError: The Template was updated by another user. If you update the Template their changes will overwrite your changes. Would you like to update the Template?
 openInTemplateStudio: Open in Template Studio
 templateHasBeenDeleted: The selected template has been deleted. Please refresh the page.
+templateDoesNotExist: The selected template does not exist or has been deleted.
 changeTemplate: 'Applying <b>{{name}}</b> to this {{entity}} might reset some fields.'
 copyTemplate: 'Configurations of <b>{{name}}</b> will be copied to this {{entity}} and made editable.'
 templatesPage:

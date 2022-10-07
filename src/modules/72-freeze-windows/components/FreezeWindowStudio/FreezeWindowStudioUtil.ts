@@ -10,7 +10,8 @@ import * as Yup from 'yup'
 import { defaultTo, isEmpty, once, pick, set } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import type { UseStringsReturn } from 'framework/strings'
+import { accountPathProps, modulePathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
+import type { UseStringsReturn, StringKeys } from 'framework/strings'
 import {
   EntityConfig,
   EntityType,
@@ -375,4 +376,30 @@ export const getValidationSchema = (freezeWindowLevel: FreezeWindowLevels) => {
     }
   }
   return {}
+}
+
+export function getContentAndTitleStringKeys(isYamlError: boolean): {
+  navigationContentText: StringKeys
+  navigationTitleText: StringKeys
+} {
+  return {
+    navigationContentText: isYamlError ? 'navigationYamlError' : 'navigationCheckText',
+    navigationTitleText: isYamlError ? 'navigationYamlErrorTitle' : 'navigationCheckTitle'
+  }
+}
+
+export const PATH_PARAMS = {
+  [FreezeWindowLevels.ACCOUNT]: {
+    ...accountPathProps,
+    windowIdentifier: ':windowIdentifier'
+  },
+  [FreezeWindowLevels.ORG]: {
+    ...orgPathProps,
+    windowIdentifier: ':windowIdentifier'
+  },
+  [FreezeWindowLevels.PROJECT]: {
+    ...projectPathProps,
+    ...modulePathProps,
+    windowIdentifier: ':windowIdentifier'
+  }
 }

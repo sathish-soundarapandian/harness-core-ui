@@ -24,7 +24,7 @@ export const initialValues = {
     instancesListPath: ''
   },
   execution: {
-    stepTemplateRefs: [{ templateRef: 'http_project_level', versionLabel: 'v1' }]
+    stepTemplateRefs: ['http_project_level']
   }
 }
 

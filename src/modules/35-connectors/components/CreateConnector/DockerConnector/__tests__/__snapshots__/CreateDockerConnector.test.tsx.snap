@@ -634,7 +634,7 @@ exports[`Create Docker Connector  Wizard Should render form 2`] = `
                       <span
                         class="RadioButton--radioIcon"
                       />
-                      connectors.docker.harbour
+                      connectors.docker.harbor
                     </label>
                     <label
                       class="RadioButton--radio StyledProps--main"
@@ -1586,7 +1586,7 @@ exports[`Create Docker Connector  Wizard Should render form for editing provider
                       <span
                         class="RadioButton--radioIcon"
                       />
-                      connectors.docker.harbour
+                      connectors.docker.harbor
                     </label>
                     <label
                       class="RadioButton--radio StyledProps--main"
@@ -2535,7 +2535,7 @@ exports[`Create Docker Connector  Wizard Should render form for editing provider
                       <span
                         class="RadioButton--radioIcon"
                       />
-                      connectors.docker.harbour
+                      connectors.docker.harbor
                     </label>
                     <label
                       class="RadioButton--radio StyledProps--main"

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
 import {
   Button,
@@ -148,13 +148,12 @@ export function QueryViewer(props: QueryViewerProps): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleFetchRecords = useCallback(() => {
+  const handleFetchRecords = () => {
     fetchRecords()
     if (postFetchingRecords) {
       postFetchingRecords()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query])
+  }
 
   return (
     <Container className={cx(css.main, className)}>

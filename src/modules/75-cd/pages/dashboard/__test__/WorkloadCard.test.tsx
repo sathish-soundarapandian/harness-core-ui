@@ -14,7 +14,7 @@ import WorkloadCard from '../DeploymentCards/WorkloadCard'
 
 const ServiceCardProps: ServiceCardWithChartProps = {
   title: 'serviceN',
-  message: 'test',
+  message: 'ARTIFACT',
   username: 'admin',
   startTime: 0,
   endTime: 0,

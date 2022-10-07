@@ -48,7 +48,7 @@ interface GitSyncFormMeta {
 interface SaveWithGitArgs {
   featureFlagName?: string
   featureFlagIdentifier?: string
-  autoCommitMessage: string
+  commitMessage: string
   patchInstructions: PatchOperation
   onSave: (reqData: PatchOperation) => Promise<void>
 }
@@ -63,7 +63,7 @@ export interface UseGitSync {
   saveWithGit: (reqData: SaveWithGitArgs) => void
   handleAutoCommit: (newAutoCommitValue: boolean) => Promise<void>
   handleGitPause: (newGitPauseValue: boolean) => Promise<void>
-  getGitSyncFormMeta: (autoCommitMessage?: string) => GitSyncFormMeta
+  getGitSyncFormMeta: (commitMessage: string) => GitSyncFormMeta
   handleError: (error: GitSyncErrorResponse) => void
 }
 
@@ -119,17 +119,14 @@ export const useGitSync = (): UseGitSync => {
 
   const gitSyncLoading = getGitRepo.loading || patchGitRepo.loading || isLoading
 
-  const getGitSyncFormMeta = (autoCommitMessage?: string): GitSyncFormMeta => ({
+  const getGitSyncFormMeta = (commitMessage: string): GitSyncFormMeta => ({
     gitSyncInitialValues: {
       gitDetails: {
         branch: getGitRepo?.data?.repoDetails?.branch || '',
         filePath: getGitRepo?.data?.repoDetails?.filePath || '',
         repoIdentifier: getGitRepo?.data?.repoDetails?.repoIdentifier || '',
         rootFolder: getGitRepo?.data?.repoDetails?.rootFolder || '',
-        commitMsg:
-          isAutoCommitEnabled && autoCommitMessage
-            ? getString('cf.gitSync.autoCommitMsg', { msg: autoCommitMessage })
-            : ''
+        commitMsg: commitMessage
       },
       autoCommit: isAutoCommitEnabled
     },
@@ -156,11 +153,13 @@ export const useGitSync = (): UseGitSync => {
   const entityDataRef = useRef<{
     featureFlagIdentifier?: string
     featureFlagName?: string
+    commitMessage: string
     instructions: PatchInstruction
     onSave?: (reqData: PatchOperation) => Promise<void>
   }>({
     featureFlagIdentifier: '',
     featureFlagName: '',
+    commitMessage: '',
     instructions: [],
     onSave: undefined
   })
@@ -181,7 +180,7 @@ export const useGitSync = (): UseGitSync => {
     setIsLoading(false)
   }
 
-  const onSaveAutoCommit = async (autoCommitMessage: string): Promise<void> => {
+  const onSaveAutoCommit = async (): Promise<void> => {
     const reqData = {
       instructions: entityDataRef.current.instructions,
       gitDetails: {
@@ -189,7 +188,7 @@ export const useGitSync = (): UseGitSync => {
         filePath: getGitRepo.data?.repoDetails?.filePath,
         repoIdentifier: getGitRepo?.data?.repoDetails?.repoIdentifier,
         rootFolder: getGitRepo?.data?.repoDetails?.rootFolder,
-        commitMsg: getString('cf.gitSync.autoCommitMsg', { msg: autoCommitMessage })
+        commitMsg: entityDataRef.current.commitMessage
       }
     }
     setIsLoading(true)
@@ -197,13 +196,14 @@ export const useGitSync = (): UseGitSync => {
     setIsLoading(false)
   }
 
+  const gitSyncFormMeta = getGitSyncFormMeta(entityDataRef.current.commitMessage)
   const [showGitSyncModal, hideGitSyncModal] = useModalHook(
     () => (
       <SaveFlagToGitModal
         flagName={entityDataRef.current.featureFlagName}
         flagIdentifier={entityDataRef.current.featureFlagIdentifier}
-        gitSyncInitialValues={getGitSyncFormMeta().gitSyncInitialValues}
-        gitSyncValidationSchema={getGitSyncFormMeta().gitSyncValidationSchema}
+        gitSyncInitialValues={gitSyncFormMeta.gitSyncInitialValues}
+        gitSyncValidationSchema={gitSyncFormMeta.gitSyncValidationSchema}
         onSubmit={onSaveGitSyncSubmit}
         onClose={hideGitSyncModal}
       />
@@ -276,7 +276,7 @@ export const useGitSync = (): UseGitSync => {
   const saveWithGit = async ({
     featureFlagName,
     featureFlagIdentifier,
-    autoCommitMessage,
+    commitMessage,
     patchInstructions,
     onSave
   }: SaveWithGitArgs): Promise<void> => {
@@ -284,12 +284,13 @@ export const useGitSync = (): UseGitSync => {
       featureFlagIdentifier,
       featureFlagName,
       instructions: patchInstructions.instructions,
+      commitMessage: commitMessage,
       onSave
     }
 
     if (isGitSyncEnabled) {
       if (isAutoCommitEnabled) {
-        onSaveAutoCommit(autoCommitMessage)
+        onSaveAutoCommit()
       } else {
         showGitSyncModal()
       }

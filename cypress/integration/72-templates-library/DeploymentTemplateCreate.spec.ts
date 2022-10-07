@@ -178,7 +178,6 @@ describe('Deployment Template creation and assertion', () => {
       cy.contains('span', 'stepTemplateRefs').should('be.visible')
       cy.contains('span', 'jsonPath').should('be.visible')
       cy.contains('span', 'instancesListPath').should('be.visible')
-      cy.contains('span', 'templateRef').should('be.visible')
       cy.contains('span', 'connnectorVar').should('be.visible')
       cy.contains('span', 'test1111').should('be.visible')
       cy.contains('span', 'this is description').should('be.visible')

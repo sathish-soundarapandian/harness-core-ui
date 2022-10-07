@@ -76,6 +76,7 @@ export function DeployServiceEntityInputStep({
 
     return []
   }, [serviceValue, servicesValue])
+
   const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
   const { servicesData, servicesList, loadingServicesData, loadingServicesList, updatingData } = useGetServicesData({
     gitOpsEnabled,
@@ -146,12 +147,22 @@ export function DeployServiceEntityInputStep({
       formik.setFieldValue(`${pathPrefix}values`, newServicesValues)
     } else {
       updateStageFormTemplate(
-        defaultTo(newServicesTemplate[0].serviceInputs, isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : {}),
+        defaultTo(
+          newServicesTemplate[0].serviceInputs,
+          isStageTemplateInputSetForm && getMultiTypeFromValue(serviceValue) === MultiTypeInputType.RUNTIME
+            ? RUNTIME_INPUT_VALUE
+            : null
+        ),
         `${pathPrefix}serviceInputs`
       )
       formik.setFieldValue(
         `${pathPrefix}serviceInputs`,
-        defaultTo(newServicesValues[0].serviceInputs, isStageTemplateInputSetForm ? RUNTIME_INPUT_VALUE : {})
+        defaultTo(
+          newServicesValues[0].serviceInputs,
+          isStageTemplateInputSetForm && getMultiTypeFromValue(serviceValue) === MultiTypeInputType.RUNTIME
+            ? RUNTIME_INPUT_VALUE
+            : null
+        )
       )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

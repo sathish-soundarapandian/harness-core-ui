@@ -71,7 +71,6 @@ export const FreezeWindowRouteDestinations: React.FC<{
       <RouteWithLayout
         sidebarProps={AccountSideNavProps}
         path={routes.toFreezeWindowStudio({
-          ...accountPathProps,
           ...projectPathProps,
           ...moduleParams,
           ...{

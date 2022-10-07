@@ -16,7 +16,7 @@ import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import CIPipelineDeploymentList from '@ci/pages/pipeline-deployment-list/CIPipelineDeploymentList'
-import CIPipelineStudio from '@ci/pages/pipeline-studio/CIPipelineStudio'
+import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { UserLabel } from '@common/components'
@@ -188,7 +188,7 @@ const RouteDestinations: React.FC = () => {
 
       <Route path="/account/:accountId/:module(sto)">
         <PipelineRouteDestinations
-          pipelineStudioComponent={CIPipelineStudio}
+          pipelineStudioComponent={PipelineStudio}
           pipelineDeploymentListComponent={CIPipelineDeploymentList}
           moduleParams={moduleParams}
           // licenseRedirectData={licenseRedirectData}
