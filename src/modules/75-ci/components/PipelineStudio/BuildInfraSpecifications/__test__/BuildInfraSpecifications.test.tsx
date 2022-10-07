@@ -58,7 +58,7 @@ export const ConnectorResponse: UseGetReturnData<ResponseConnectorResponse> = {
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
-  getConnectorListV2Promise: () =>
+  getConnectorListPromise: () =>
     Promise.resolve({
       data: {
         content: [

@@ -36,7 +36,7 @@ const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 jest.mock('services/cd-ng', () => ({
-  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
+  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorsData.data.content[1], refetch: fetchConnectors, loading: false }

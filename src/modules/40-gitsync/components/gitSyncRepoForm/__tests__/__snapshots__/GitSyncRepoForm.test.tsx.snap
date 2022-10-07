@@ -85,33 +85,10 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
               />
             </div>
             <div
-              aria-controls="bp3-tab-panel_selectScope_all"
+              aria-controls="bp3-tab-panel_selectScope_project"
               aria-disabled="false"
               aria-expanded="true"
               aria-selected="true"
-              class="bp3-tab"
-              data-tab-id="all"
-              id="bp3-tab-title_selectScope_all"
-              role="tab"
-              tabindex="0"
-            >
-              <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
-              >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
-                  style="--text-line-clamp: 1;"
-                >
-                  common.all
-                </p>
-                
-              </div>
-            </div>
-            <div
-              aria-controls="bp3-tab-panel_selectScope_project"
-              aria-disabled="false"
-              aria-expanded="false"
-              aria-selected="false"
               class="bp3-tab"
               data-tab-id="project"
               id="bp3-tab-title_selectScope_project"
@@ -239,9 +216,9 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
           </div>
           <div
             aria-hidden="false"
-            aria-labelledby="bp3-tab-title_selectScope_all"
+            aria-labelledby="bp3-tab-title_selectScope_project"
             class="bp3-tab-panel"
-            id="bp3-tab-panel_selectScope_all"
+            id="bp3-tab-panel_selectScope_project"
             role="tabpanel"
           >
             <div
@@ -2229,33 +2206,10 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
               />
             </div>
             <div
-              aria-controls="bp3-tab-panel_selectScope_all"
+              aria-controls="bp3-tab-panel_selectScope_project"
               aria-disabled="false"
               aria-expanded="true"
               aria-selected="true"
-              class="bp3-tab"
-              data-tab-id="all"
-              id="bp3-tab-title_selectScope_all"
-              role="tab"
-              tabindex="0"
-            >
-              <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
-              >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h6 StyledProps--font-weight-light"
-                  style="--text-line-clamp: 1;"
-                >
-                  common.all
-                </p>
-                
-              </div>
-            </div>
-            <div
-              aria-controls="bp3-tab-panel_selectScope_project"
-              aria-disabled="false"
-              aria-expanded="false"
-              aria-selected="false"
               class="bp3-tab"
               data-tab-id="project"
               id="bp3-tab-title_selectScope_project"
@@ -2383,9 +2337,9 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
           </div>
           <div
             aria-hidden="false"
-            aria-labelledby="bp3-tab-title_selectScope_all"
+            aria-labelledby="bp3-tab-title_selectScope_project"
             class="bp3-tab-panel"
-            id="bp3-tab-panel_selectScope_all"
+            id="bp3-tab-panel_selectScope_project"
             role="tabpanel"
           >
             <div
