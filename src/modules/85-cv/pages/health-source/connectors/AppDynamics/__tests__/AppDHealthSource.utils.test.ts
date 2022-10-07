@@ -24,7 +24,8 @@ import {
   convertStringMetricPathToObject,
   convertStringBasePathToObject,
   convertFullPathToBaseAndMetric,
-  initAppDCustomFormValue
+  initAppDCustomFormValue,
+  deriveBaseAndMetricPath
 } from '../AppDHealthSource.utils'
 import {
   appDMetricValue,
@@ -304,6 +305,49 @@ describe('Test Util funcitons', () => {
     expect(getBaseAndMetricPath(basePath, metricPath, null, 'manager')).toEqual({
       derivedBasePath: 'Overall Application Performance',
       derivedMetricPath: 'Exceptions per Minute'
+    })
+  })
+
+  test('should validate deriveBaseAndMetricPath', () => {
+    const defaultBasePath = {
+      basePathDropdown_0: {
+        path: '',
+        value: ''
+      },
+      basePathDropdown_1: {
+        path: '',
+        value: ''
+      }
+    }
+    const defaultMetricPath = {
+      metricPathDropdown_0: {
+        isMetric: true,
+        path: '',
+        value: ''
+      },
+      metricPathDropdown_1: {
+        isMetric: false,
+        path: '',
+        value: ''
+      }
+    }
+    expect(deriveBaseAndMetricPath('', '')).toEqual({
+      basePathObj: defaultBasePath,
+      metricPathObj: defaultMetricPath
+    })
+    expect(deriveBaseAndMetricPath('', 'Tier')).toEqual({
+      basePathObj: defaultBasePath,
+      metricPathObj: defaultMetricPath
+    })
+    expect(deriveBaseAndMetricPath('BaseFolder|Tier|Metric', 'Tier')).toEqual({
+      basePathObj: {
+        basePathDropdown_0: { ...defaultBasePath.basePathDropdown_0, value: 'BaseFolder' },
+        basePathDropdown_1: { ...defaultBasePath.basePathDropdown_1, path: 'BaseFolder' }
+      },
+      metricPathObj: {
+        metricPathDropdown_0: { ...defaultMetricPath.metricPathDropdown_0, value: 'Metric' },
+        metricPathDropdown_1: { ...defaultMetricPath.metricPathDropdown_1, path: 'Metric' }
+      }
     })
   })
 })

@@ -102,14 +102,7 @@ export const createAppDynamicsData = (sourceData: any): AppDynamicsData => {
 
   for (const metricDefinition of (payload?.spec as AppDynamicsHealthSourceSpec)?.metricDefinitions || []) {
     if (metricDefinition?.metricName) {
-      const pathArray = metricDefinition?.completeMetricPath?.split('|')
-      const tierIndex = pathArray?.indexOf(tierName) || 0
-      const basePathArray = pathArray?.slice(0, tierIndex) || []
-      const metricPathArray = pathArray?.slice(tierIndex + 1, pathArray.length) || []
-      const metricPath = metricPathArray?.length > 1 ? metricPathArray.join('|') : metricPathArray[0]
-      const baseFolder = basePathArray?.length > 1 ? basePathArray.join('|') : basePathArray[0]
-      const basePathObj = convertStringBasePathToObject(baseFolder || '')
-      const metricPathObj = convertStringMetricPathToObject(metricPath || '')
+      const { metricPathObj, basePathObj } = deriveBaseAndMetricPath(metricDefinition?.completeMetricPath, tierName)
 
       appdData.mappedServicesAndEnvs.set(metricDefinition.metricName, {
         metricPath: metricPathObj,
@@ -226,36 +219,45 @@ const validateCustomMetricFields = (
   }
 
   if (values.pathType === PATHTYPE.CompleteMetricPath) {
-    const isfullPathEmpty = !values.completeMetricPath?.length
-    const hasCompleteMetricPath =
-      Boolean(values?.completeMetricPath) &&
-      getMultiTypeFromValue(values?.completeMetricPath) !== MultiTypeInputType.FIXED
-
-    if (isfullPathEmpty) {
+    const { completeMetricPath = '', appDTier = '' } = values
+    const isCompleteMetricPathEmpty = !completeMetricPath?.length
+    const isCompleteMetricPathRuntimeOrExpression =
+      Boolean(completeMetricPath) && getMultiTypeFromValue(completeMetricPath) !== MultiTypeInputType.FIXED
+    const completeMetricPathArray = completeMetricPath?.split('|') || []
+    if (isCompleteMetricPathEmpty) {
       _error[PATHTYPE.CompleteMetricPath] = getString('cv.healthSource.connectors.AppDynamics.validation.fullPath')
-    } else if (hasCompleteMetricPath) {
-      const incorrectPairing = values.completeMetricPath
-        ?.split('|')
-        ?.filter((item: string) => !item?.trim()?.length)?.length
+    } else if (isCompleteMetricPathRuntimeOrExpression) {
+      const incorrectPairing = completeMetricPathArray?.filter((item: string) => !item?.trim()?.length)?.length
       if (incorrectPairing) {
         _error[PATHTYPE.CompleteMetricPath] = getString(
           'cv.healthSource.connectors.AppDynamics.validation.inCorrectMetricPath'
         )
       }
     } else {
-      const fullPathContainsTierInfo = values.completeMetricPath
-        ?.split('|')
+      const completeMetricPathContainsTierInfo = completeMetricPathArray
         ?.map((item: string) => item.trim())
-        ?.includes(values?.appDTier)
-      const incorrectPairing = values.completeMetricPath
-        ?.split('|')
-        ?.filter((item: string) => !item?.trim()?.length)?.length
-
-      if (incorrectPairing) {
+        ?.includes(appDTier)
+      const indexOfTierInCompleteMetricPath = completeMetricPathArray
+        ?.map((item: string) => item.trim())
+        ?.indexOf(appDTier)
+      const countOfSeparator = completeMetricPathArray?.length - 1
+      const incorrectPairing = completeMetricPathArray?.filter((item: string) => !item?.trim()?.length)?.length
+      if (!(countOfSeparator > 1)) {
         _error[PATHTYPE.CompleteMetricPath] = getString(
           'cv.healthSource.connectors.AppDynamics.validation.inCorrectMetricPath'
         )
-      } else if (!fullPathContainsTierInfo) {
+      } else if (
+        indexOfTierInCompleteMetricPath === 0 ||
+        indexOfTierInCompleteMetricPath === completeMetricPathArray.length - 1
+      ) {
+        _error[PATHTYPE.CompleteMetricPath] = getString(
+          'cv.healthSource.connectors.AppDynamics.validation.inCorrectOrderOfTierInPath'
+        )
+      } else if (incorrectPairing) {
+        _error[PATHTYPE.CompleteMetricPath] = getString(
+          'cv.healthSource.connectors.AppDynamics.validation.inCorrectMetricPath'
+        )
+      } else if (!completeMetricPathContainsTierInfo) {
         _error[PATHTYPE.CompleteMetricPath] = getString(
           'cv.healthSource.connectors.AppDynamics.validation.missingTierInFullPath'
         )
@@ -756,4 +758,19 @@ export const persistCustomMetric = ({
       setMappedMetrics({ selectedMetric: selectedMetric, mappedMetrics: clonedMappedMetrics })
     }
   }
+}
+
+export const deriveBaseAndMetricPath = (
+  completeMetricPath: AppDMetricDefinitions['completeMetricPath'],
+  tierName: string
+): { metricPathObj: MetricPathData; basePathObj: BasePathData } => {
+  const pathArray = completeMetricPath?.split('|')
+  const tierIndex = pathArray?.indexOf(tierName) || 0
+  const basePathArray = pathArray?.slice(0, tierIndex) || []
+  const metricPathArray = pathArray?.slice(tierIndex + 1, pathArray.length) || []
+  const metricPath = metricPathArray?.length > 1 ? metricPathArray.join('|') : metricPathArray[0]
+  const baseFolder = basePathArray?.length > 1 ? basePathArray.join('|') : basePathArray[0]
+  const basePathObj = convertStringBasePathToObject(baseFolder || '')
+  const metricPathObj = convertStringMetricPathToObject(metricPath || '')
+  return { metricPathObj, basePathObj }
 }

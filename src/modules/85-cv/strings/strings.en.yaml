@@ -699,6 +699,7 @@ healthSource:
         metricPathWithoutLeafNode: Please select metric in metric path
         fullPath: Please provide complete metric path
         missingTierInFullPath: Path should have Tier as well
+        inCorrectOrderOfTierInPath: Path should not start or end with tier
         inCorrectMetricPath: Please provide correct complete metric path
         missingServiceInstanceMetricPath: Service instance metric path is missing
       metricPathType:
