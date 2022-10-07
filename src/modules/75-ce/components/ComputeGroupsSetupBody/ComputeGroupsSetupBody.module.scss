@@ -88,6 +88,9 @@
       color: var(--green-700);
     }
   }
+  &.underlineItem {
+    border-bottom: 1px solid var(--grey-200);
+  }
   > p {
     flex: 1;
   }

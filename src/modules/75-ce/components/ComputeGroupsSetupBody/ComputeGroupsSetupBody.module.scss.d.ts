@@ -16,6 +16,7 @@ declare const styles: {
   readonly savingsRow: string
   readonly toggleHeader: string
   readonly toggleSectionContainer: string
+  readonly underlineItem: string
   readonly whiteCard: string
 }
 export default styles

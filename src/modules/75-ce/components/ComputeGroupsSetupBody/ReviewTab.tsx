@@ -16,6 +16,7 @@ interface PreviewDataRowProps {
   title: string
   value: string
   isSavingsRow?: boolean
+  underlineItem?: boolean
 }
 
 const ReviewTab: React.FC = () => {
@@ -53,17 +54,18 @@ const ReviewTab: React.FC = () => {
         </Container>
       </Layout.Horizontal>
       <SpotInstancesPreview />
+      <PreferencesPreview />
       <SchedulingAutoStoppingPreview />
     </Layout.Vertical>
   )
 }
 
-const PreviewDataRow: React.FC<PreviewDataRowProps> = ({ title, value, isSavingsRow }) => {
+const PreviewDataRow: React.FC<PreviewDataRowProps> = ({ title, value, isSavingsRow, underlineItem }) => {
   return (
     <Layout.Horizontal
       spacing={'small'}
       flex={{ alignItems: 'center' }}
-      className={cx(css.previewRow, { [css.savingsRow]: isSavingsRow })}
+      className={cx(css.previewRow, { [css.savingsRow]: isSavingsRow, [css.underlineItem]: underlineItem })}
     >
       <Text>{title}</Text>
       <Text font={{ variation: FontVariation.LEAD }}>{value}</Text>
@@ -91,13 +93,64 @@ const SpotInstancesPreview: React.FC = () => {
   )
 }
 
+const PreferencesPreview: React.FC = () => {
+  const { getString } = useStrings()
+  return (
+    <Layout.Vertical spacing={'xlarge'}>
+      <Text font={{ variation: FontVariation.H6 }}>{getString('preferences')}</Text>
+      <Container className={css.whiteCard}>
+        <Text font={{ variation: FontVariation.LEAD }}>
+          {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.header')}
+        </Text>
+        <PreviewDataRow
+          title={getString(
+            'ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.clusterBufferTitle'
+          )}
+          value={'On-Demand (xx% CPU , xx%GPU)       Spot (xx% CPU , xx%GPU)'}
+          underlineItem
+        />
+        <PreviewDataRow
+          title={getString(
+            'ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.reverseFallbackTitle'
+          )}
+          value={'1 hour'}
+          underlineItem
+        />
+        <PreviewDataRow
+          title={getString(
+            'ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.nodeDeletionDelayTitle'
+          )}
+          value={'10 minutes'}
+          underlineItem
+        />
+        <PreviewDataRow
+          title={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.binPackingTitle')}
+          value={''}
+          underlineItem
+        />
+        <PreviewDataRow
+          title={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.cpuLimitTitle')}
+          value={'CPU range (xx min, xx max)'}
+        />
+        <Text font={{ variation: FontVariation.LEAD }}>
+          {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.header')}
+        </Text>
+        <PreviewDataRow
+          title={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.nodeSelectionLabel')}
+          value={'Node constraints:   min(xx CPU , xx mem)                                  max(xx CPU , xx mem)'}
+        />
+      </Container>
+    </Layout.Vertical>
+  )
+}
+
 const SchedulingAutoStoppingPreview: React.FC = () => {
   const { getString } = useStrings()
   return (
     <Layout.Vertical spacing={'large'}>
       <Text font={{ variation: FontVariation.H6 }}>{getString('ce.computeGroups.setup.schedulingTab.title')}</Text>
       <Container className={css.whiteCard}>
-        <PreviewDataRow title={getString('common.scope')} value={'Entire Cluster'} />
+        <PreviewDataRow title={getString('common.scope')} value={'Entire Cluster'} underlineItem />
         <PreviewDataRow
           title={getString('ce.co.autoStoppingRule.configuration.step4.tabs.schedules.fixedSchedule')}
           value="2/11/2021-17/11/2021 | 12.00AM-6.00AM | S S M T W T F"
