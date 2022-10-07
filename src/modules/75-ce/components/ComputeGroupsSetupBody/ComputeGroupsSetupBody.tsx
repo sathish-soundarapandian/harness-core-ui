@@ -21,7 +21,7 @@ const ComputeGroupsSetupBody: React.FC = () => {
     <Container className={css.cgSetupBodyContainer}>
       <Tabs
         id={'horizontalTabs'}
-        defaultSelectedTabId={'tab5'}
+        defaultSelectedTabId={'tab3'}
         tabList={[
           {
             id: 'tab1',
@@ -37,7 +37,7 @@ const ComputeGroupsSetupBody: React.FC = () => {
           },
           {
             id: 'tab3',
-            title: getString('ce.computeGroups.setup.scalingLimitPoliciesTab.title'),
+            title: getString('ce.perspectives.createPerspective.tabHeaders.preferences'),
             panel: <ScaleAndLimitPoliciesTab />,
             iconProps: { name: 'gear' }
           },

@@ -1393,40 +1393,33 @@ computeGroups:
         allWorkloads: All workloads
         spotReadyWorkloads: Spot-ready workloads
     scalingLimitPoliciesTab:
-      title: '3. Scaling and Limit Policies'
-      instanceFamiliesSection:
-        header: Set Instance Family Preferences
-        subHeader: You can specify Preferred Instance Families for nodepools which otherwise is all families if not specfied. The alogrithm will orchestrate out of this pool of preferred instances.
-      unSchedPodsSection:
-        header: Unscheduled Pods Policy
-        subHeader: Automatically adjust the size of this cluster to ensure that all pods have a place to run.
-        clusterHeadroomTitle: Cluster headroom
-        clusterHeadroomSubtitle: These settings add a capacity buffer based on total avallable capacity. They are considered every time a node is added
-        spotNodeSettingsLabel: Spot node settings
-        onDemandFallbackTitle: 'On-demand Fallback'
+      clusterPreferencesSection:
+        header: Cluster Preferences
+        clusterBufferTitle: Cluster Buffer
+        clusterBufferSubtitle: This will be the buffer added to the total capacity of the cluster.
+        reverseFallbackTitle: Reverse Fallback Retry
+        reverseFallbackSubtitle: Interrupted spot nodes will be replaced with on-demand nodes when spot capacity is unavailable (fallback). The on-demand node will be replaced with a spot node once spot capacity is available again (reverse fallback). Select the retry interval to perform the  reverse fallback.
+        nodeDeletionDelayTitle: Node deletion delay
+        nodeDeletionDelaySubtitle: Nodes with no pods will be deleted after the specified time.
+        binPackingTitle: Bin-packing of single replica workloads
+        cpuLimitTitle: CPU limits
+        cpuLimitsSubtitle: Restrict cluster CPU resources within the configured limits.
+        onDemandNodesLabel: On-demand nodes
+        spotNodesLabel: Spot nodes
         retryTimeLabel: Retry time
-        nodeConstraintsTitle: Node constraints
-        nodeConstraintsSubtitle: Specify the smallest and the largest node to be added. All supported nodes within set boundaries will be considered.
+        delayTimeLabel: Delay time
+        min: Min
+        max: Max
+        cpuRangeLabel: CPU range
+      nodePreferencesSection:
+        header: Node Preferences
+        nodeSelectionLabel: Node selection
+        byInstanceFamilies: By node instance families
+        byInstanceFamiliesSubtitle: Cluster Orchestrator will provision nodes based on the selected instance families. This table is pre-populated with the instance families that we recommend for this cluster. Uncheck instance families that you do not want Cluster Orhcestrator to provision as cluster nodes.
+        byNodeConstraints: By node constraints
         minCpuLabel: Min CPU
         minMemoryLabel: Min Memory
         maxCpuLabel: Max CPU
-        rootVolRatioTitle: Root volumne ratio
-        rootVolRatioSubtitle: Set the number of GiBs to be added for every CPU on the node. The root volume will have a minimum of 100GIB and will he furthe Increased based on the CPU to storage ratio value
-      nodeDeletionPolicySection:
-        header: Node Deletion Policy
-        subHeader: Automatically remove nodes from this cluster when they no longer have scheduled workloads.
-        ttlSettingsTitle: TTL setting
-        ttleSettingsSubtitle: Set the amount of time an empty node should remain in the cluster.
-        emptyNodeAliveLabel: 'Keep empty node alive for:'
-        binPackingTitle: Bin packing
-        singleReplicaTitle: Single replica applications
-      cpuLimitPolicySection:
-        header: CPU Limit Policy
-        subHeader: Keep the cluster CPU resources within the defined limit. The cluster cannot be scaled un above the max or below the min limits
-        cpuRangeTitle: Set CPU range
-        cpuRangeSubtitle: The cluster will not scale down below the min limit and will not scale above the max even if there are pending pods.
-        minCoreLabel: Min cores
-        maxCoreLabel: Max cores
     schedulingTab:
       enableNote: Enable <b>Scheduling/AutoStopping</b>  to see detailed insights.
       title: 'Scheduling/AutoStopping'
