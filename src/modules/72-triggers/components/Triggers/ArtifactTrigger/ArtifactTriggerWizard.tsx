@@ -83,10 +83,8 @@ import type { AddConditionInterface } from '@triggers/pages/triggers/views/AddCo
 import {
   getConnectorName,
   getConnectorValue,
-  isArtifactOrManifestTrigger,
   clearNullUndefined,
   getArtifactWizardMap,
-  ResponseStatus,
   TriggerTypes,
   getValidationSchema,
   displayPipelineIntegrityResponse,
@@ -94,13 +92,13 @@ import {
   getModifiedTemplateValues,
   getErrorMessage,
   isHarnessExpression,
-  getArtifactManifestTriggerYaml,
+  getArtifactTriggerYaml,
   flattenKeys,
   getDefaultPipelineReferenceBranch,
-  EventConditionTypes,
-  getTriggerArtifactInitialSource
-} from './TriggersWizardPageUtils'
-
+  getTriggerArtifactInitialSource,
+  EventConditionTypes
+} from './ArtifactWizardPageUtils'
+import { ResponseStatus } from '../utils'
 import css from '@triggers/pages/triggers/TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
@@ -231,7 +229,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
   })
   const convertFormikValuesToYaml = (values: any): { trigger: TriggerConfigDTO } | undefined => {
     if (values.triggerType === TriggerTypes.MANIFEST || values.triggerType === TriggerTypes.ARTIFACT) {
-      const res = getArtifactManifestTriggerYaml({
+      const res = getArtifactTriggerYaml({
         values,
         persistIncomplete: true,
         manifestType,
@@ -659,7 +657,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
   }
 
   const handleArtifactSubmit = async (val: FlatValidArtifactFormikValuesInterface): Promise<void> => {
-    const triggerYaml = getArtifactManifestTriggerYaml({
+    const triggerYaml = getArtifactTriggerYaml({
       values: val,
       manifestType,
       enabledStatus,
@@ -671,7 +669,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     submitTrigger(triggerYaml)
   }
 
-  const getInitialValues = (triggerType: NGTriggerSourceV2['type']): FlatInitialValuesInterface | any => {
+  const getInitialValues = (): FlatInitialValuesInterface | any => {
     let newPipeline: any = { ...(currentPipeline?.pipeline || {}) }
     // only applied for CI, Not cloned codebase
     if (
@@ -683,32 +681,29 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
       newPipeline = getPipelineWithoutCodebaseInputs(newPipeline)
     }
 
-    if (isArtifactOrManifestTrigger(triggerType)) {
-      const inputSetTemplateYamlObj = parse(template?.data?.inputSetTemplateYaml || '')
-      return {
-        triggerType: triggerTypeOnNew,
-        identifier: '',
-        tags: {},
-        artifactType,
-        manifestType,
-        source: getTriggerArtifactInitialSource(triggerTypeOnNew!, artifactType!),
-        pipeline: newPipeline,
-        originalPipeline,
-        resolvedPipeline,
-        inputSetTemplateYamlObj,
-        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew),
-        selectedArtifact: {}
-      }
+    const inputSetTemplateYamlObj = parse(template?.data?.inputSetTemplateYaml || '')
+    return {
+      triggerType: triggerTypeOnNew,
+      identifier: '',
+      tags: {},
+      artifactType,
+      manifestType,
+      source: getTriggerArtifactInitialSource(triggerTypeOnNew!, artifactType!),
+      pipeline: newPipeline,
+      originalPipeline,
+      resolvedPipeline,
+      inputSetTemplateYamlObj,
+      pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew),
+      selectedArtifact: {}
     }
-    return {}
   }
 
   const [initialValues, setInitialValues] = useState<FlatInitialValuesInterface>(
-    Object.assign(getInitialValues(triggerTypeOnNew), onEditInitialValues)
+    Object.assign(getInitialValues(), onEditInitialValues)
   )
 
   useEffect(() => {
-    let newInitialValues = Object.assign(getInitialValues(triggerTypeOnNew), onEditInitialValues)
+    let newInitialValues = Object.assign(getInitialValues(), onEditInitialValues)
     if (onEditInitialValues?.identifier) {
       newInitialValues = newInitialValues?.pipeline?.template
         ? getModifiedTemplateValues(newInitialValues)
@@ -751,10 +746,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
           }
         } = {}
 
-        if (isArtifactOrManifestTrigger(initialValues?.triggerType)) {
-          const inputSetTemplateYamlObj = parse(template?.data?.inputSetTemplateYaml || '')
-          additionalValues.inputSetTemplateYamlObj = inputSetTemplateYamlObj
-        }
+        const inputSetTemplateYamlObj = parse(template?.data?.inputSetTemplateYaml || '')
+        additionalValues.inputSetTemplateYamlObj = inputSetTemplateYamlObj
 
         if (onEditInitialValues?.identifier) {
           const newPipeline = currentPipeline?.pipeline ? currentPipeline.pipeline : onEditInitialValues.pipeline || {}

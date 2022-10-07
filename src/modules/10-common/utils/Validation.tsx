@@ -213,3 +213,16 @@ export const getNumberFieldValidationSchema = (
 ): Yup.StringSchema<string | undefined> => {
   return Yup.string().test('Digits only', getString('common.validation.onlyDigitsAllowed'), digitsOnly)
 }
+
+export const NameIdSchema = (config?: {
+  nameRequiredErrorMsg?: string
+  identifierRequiredErrorMsg?: string
+  identifierRegexErrorMsg?: string
+}): Yup.ObjectSchema<{ name: string; identifier: string | undefined } | undefined> =>
+  Yup.object({
+    name: NameSchema({ requiredErrorMsg: config?.nameRequiredErrorMsg }),
+    identifier: IdentifierSchema({
+      requiredErrorMsg: config?.identifierRequiredErrorMsg,
+      regexErrorMsg: config?.identifierRegexErrorMsg
+    })
+  })

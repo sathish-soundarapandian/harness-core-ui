@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Color, Container, Text } from '@harness/uicore'
-import { ENABLED_ARTIFACT_TYPES } from '../ArtifactHelper'
+import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import type { ArtifactType } from '../ArtifactInterface'
 import css from '../ArtifactsSelection.module.scss'
 

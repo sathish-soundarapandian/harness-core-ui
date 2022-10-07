@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { HarnessDocTooltip, Layout, Text } from '@wings-software/uicore'
+import type { FormikProps } from 'formik'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
@@ -15,7 +16,7 @@ import { ConditionRow } from '@triggers/pages/triggers/views/AddConditionsSectio
 import css from '@triggers/pages/triggers/views/WebhookConditionsPanel.module.scss'
 
 interface ArtifactConditionsPanelProps {
-  formikProps?: any
+  formikProps?: FormikProps<any>
 }
 
 const ArtifactConditionsPanel: React.FC<ArtifactConditionsPanelProps> = ({ formikProps }): JSX.Element => {
@@ -46,11 +47,7 @@ const ArtifactConditionsPanel: React.FC<ArtifactConditionsPanelProps> = ({ formi
         <ConditionRow
           formikProps={formikProps}
           name="build"
-          label={
-            formikProps.values.selectedArtifact?.spec?.artifactPath
-              ? getString('pipeline.artifactPathLabel')
-              : getString('triggers.conditionsPanel.artifactBuild')
-          }
+          label={getString('triggers.conditionsPanel.artifactBuild')}
         />
       </Layout.Vertical>
     </Layout.Vertical>

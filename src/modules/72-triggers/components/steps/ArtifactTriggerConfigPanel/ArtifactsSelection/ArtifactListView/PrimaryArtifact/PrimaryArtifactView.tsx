@@ -12,10 +12,14 @@ import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { PageConnectorResponse, PrimaryArtifact } from 'services/cd-ng'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import { ArtifactIconByType, ArtifactTitleIdByType, ENABLED_ARTIFACT_TYPES } from '../../ArtifactHelper'
+import {
+  ArtifactIconByType,
+  ArtifactTitleIdByType,
+  ENABLED_ARTIFACT_TYPES
+} from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import { getArtifactLocation, showConnectorStep } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import ArtifactRepositoryTooltip from '../ArtifactRepositoryTooltip'
 import type { ArtifactType } from '../../ArtifactInterface'
-import { getArtifactLocation, showConnectorStep } from '../../ArtifactUtils'
 import css from '../../ArtifactsSelection.module.scss'
 
 interface PrimaryArtifactViewProps {

@@ -7,40 +7,38 @@
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, cloneDeep } from 'lodash-es'
 import { string, object, ObjectSchema } from 'yup'
+import { parse } from 'yaml'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { ConnectorResponse } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type {
+  NGTriggerSourceV2,
   PipelineInfoConfig,
   NGVariable,
   NGTriggerConfigV2,
-  HelmManifestSpec,
+  AcrSpec,
+  AmazonS3RegistrySpec,
+  NexusRegistrySpec,
+  DockerRegistrySpec,
+  ArtifactoryRegistrySpec,
+  EcrSpec,
+  GcrSpec,
+  JenkinsRegistrySpec,
   TriggerEventDataCondition,
-  BuildStore
+  ArtifactTriggerConfig
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
-import type { AddConditionInterface } from '@triggers/pages/triggers/views/AddConditionsSection'
-import type { TriggerConfigDTO } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
-import type {
-  ManifestBuildStoreType,
-  ManifestTriggerFormikValues,
-  ManifestTriggerSource
-} from '@triggers/components/steps/ManifestTriggerConfigPanel/ManifestSelection/ManifestInterface'
 import { NameIdSchema } from '@common/utils/Validation'
-
-export const eventTypes = {
-  PUSH: 'Push',
-  BRANCH: 'Branch',
-  TAG: 'Tag',
-  PULL_REQUEST: 'PullRequest',
-  MERGE_REQUEST: 'MergeRequest',
-  ISSUE_COMMENT: 'IssueComment',
-  PR_COMMENT: 'PRComment',
-  MR_COMMENT: 'MRComment'
-}
+import type {
+  TriggerConfigDTO,
+  FlatOnEditValuesInterface
+} from '@triggers/pages/triggers/interface/TriggersWizardInterface'
+import type { AddConditionInterface } from '@triggers/pages/triggers/views/AddConditionsSection'
+import type { ArtifactTriggerSpec } from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactsSelection/ArtifactInterface'
+import type { TriggerType } from '../TriggerInterface'
 
 export const TriggerTypes = {
   WEBHOOK: 'Webhook',
@@ -55,13 +53,7 @@ export const EventConditionTypes = {
   BUILD: 'build'
 }
 
-export const ResponseStatus = {
-  SUCCESS: 'SUCCESS',
-  FAILURE: 'FAILURE',
-  ERROR: 'ERROR'
-}
-
-const getTriggerTitle = ({
+const getArtifactTriggerTitle = ({
   triggerName,
   getString
 }: {
@@ -73,12 +65,18 @@ const getTriggerTitle = ({
   }
 
   return getString('triggers.onNewArtifactTitle', {
-    artifact: getString('manifestsText')
+    artifact: getString('pipeline.artifactTriggerConfigPanel.artifact')
   })
 }
 
 export const clearNullUndefined = /* istanbul ignore next */ (data: TriggerConfigDTO): TriggerConfigDTO =>
   omitBy(omitBy(data, isUndefined), isNull)
+
+const clearRuntimeInputValue = (template: PipelineInfoConfig): PipelineInfoConfig => {
+  return JSON.parse(
+    JSON.stringify(template || {}).replace(/"<\+input>.?(?:allowedValues\((.*?)\)|regex\((.*?)\))?"/g, '""')
+  )
+}
 
 const isUndefinedOrEmptyString = (str: string | undefined): boolean => isUndefined(str) || str?.trim() === ''
 
@@ -89,7 +87,7 @@ const isRowUnfilled = (payloadCondition: AddConditionInterface): boolean => {
   return truthyValuesLength > 0 && truthyValuesLength < 3
 }
 
-const isRowFilled = (payloadCondition: AddConditionInterface): boolean => {
+export const isRowFilled = (payloadCondition: AddConditionInterface): boolean => {
   const truthyValuesLength = Object.values(payloadCondition).filter(val => val?.trim?.())?.length
   return truthyValuesLength === 3
 }
@@ -123,20 +121,24 @@ const checkValidEventConditionsForNewArtifact = ({
   return true
 }
 
-const checkValidManifest = ({ formikValues }: { formikValues: { [key: string]: any } }): boolean => {
-  return !isEmpty(formikValues.source?.spec?.spec?.store?.spec?.connectorRef)
+const checkValidSelectedArtifact = ({ formikValues }: { formikValues: { [key: string]: any } }): boolean => {
+  return !isEmpty(formikValues?.source?.spec?.spec?.connectorRef)
 }
 
-const checkValidManifestTrigger = ({ formikValues }: { formikValues: { [key: string]: any } }): boolean => {
-  return isIdentifierIllegal(formikValues?.identifier) ? false : checkValidManifest({ formikValues })
+const checkValidArtifactTriggerConfig = ({ formikValues }: { formikValues: { [key: string]: any } }): boolean => {
+  return isIdentifierIllegal(formikValues?.identifier) ? false : checkValidSelectedArtifact({ formikValues })
 }
 
-const getPanels = ({ getString }: { getString: (key: StringKeys) => string }): PanelInterface[] | [] => {
+const getArtifactTriggersPanels = ({
+  getString
+}: {
+  getString: UseStringsReturn['getString']
+}): PanelInterface[] | [] => {
   return [
     {
       id: 'Trigger Configuration',
       tabTitle: getString('configuration'),
-      checkValidPanel: checkValidManifestTrigger,
+      checkValidPanel: checkValidArtifactTriggerConfig,
       requiredFields: ['name', 'identifier'] // conditional required validations checkValidTriggerConfiguration
     },
     {
@@ -152,42 +154,41 @@ const getPanels = ({ getString }: { getString: (key: StringKeys) => string }): P
   ]
 }
 
-export const getWizardMap = ({
+export const getArtifactWizardMap = ({
   getString,
   triggerName
 }: {
   triggerName?: string
   getString: UseStringsReturn['getString']
 }): { wizardLabel: string; panels: PanelInterface[] } => ({
-  wizardLabel: getTriggerTitle({
+  wizardLabel: getArtifactTriggerTitle({
     getString,
     triggerName
   }),
-  panels: getPanels({ getString })
+  panels: getArtifactTriggersPanels({ getString })
 })
 
-// requiredFields and checkValidPanel in getPanels() above to render warning icons related to this schema
 export const getValidationSchema = (
   getString: (key: StringKeys, params?: any) => string
 ): ObjectSchema<Record<string, any> | undefined> => {
   return NameIdSchema({ nameRequiredErrorMsg: getString('triggers.validation.triggerName') }).shape({
-    versionOperator: string().test(
+    buildOperator: string().test(
       getString('triggers.validation.operator'),
       getString('triggers.validation.operator'),
       function (operator) {
-        if (this.parent.versionValue?.trim()) {
+        if (this.parent.buildValue?.trim()) {
           return !!operator
         }
 
         return true
       }
     ),
-    versionValue: string().test(
+    buildValue: string().test(
       getString('triggers.validation.matchesValue'),
       getString('triggers.validation.matchesValue'),
       function (matchesValue) {
-        if (this.parent.versionOperator) {
-          return !!matchesValue
+        if (this.parent.buildOperator) {
+          return !!matchesValue?.trim()
         }
 
         return true
@@ -196,84 +197,39 @@ export const getValidationSchema = (
   })
 }
 
-export const ciCodebaseBuild = {
+const ciCodebaseBuild = {
   type: 'branch',
   spec: {
     branch: '<+trigger.branch>'
   }
 }
 
-export const ciCodebaseBuildPullRequest = {
-  type: 'PR',
-  spec: {
-    number: '<+trigger.prNumber>'
-  }
-}
+export const getConnectorName = (connector?: ConnectorResponse): string => {
+  let connectorName = ''
 
-export const ciCodebaseBuildIssueComment = {
-  type: 'tag',
-  spec: {
-    tag: '<+trigger.tag>'
-  }
-}
-
-export const getConnectorName = (connector?: ConnectorResponse): string =>
-  `${
-    connector?.connector?.orgIdentifier && connector?.connector?.projectIdentifier
-      ? `${connector?.connector?.type}: ${connector?.connector?.name}`
-      : connector?.connector?.orgIdentifier
-      ? `${connector?.connector?.type}[Org]: ${connector?.connector?.name}`
-      : `${connector?.connector?.type}[Account]: ${connector?.connector?.name}`
-  }` || ''
-
-export const getConnectorValue = (connector?: ConnectorResponse): string =>
-  `${
-    connector?.connector?.orgIdentifier && connector?.connector?.projectIdentifier
-      ? connector?.connector?.identifier
-      : connector?.connector?.orgIdentifier
-      ? `${Scope.ORG}.${connector?.connector?.identifier}`
-      : `${Scope.ACCOUNT}.${connector?.connector?.identifier}`
-  }` || ''
-
-export const getFilteredStage = (pipelineObj: any, stageId: string): any => {
-  for (const item of pipelineObj) {
-    if (Array.isArray(item.parallel)) {
-      return getFilteredStage(item.parallel, stageId)
-    } else if (item.stage.identifier === stageId) {
-      return item
-    }
-  }
-}
-
-// This is to filter the manifestIndex
-// with the selectedArtifact's index
-export const filterArtifactIndex = ({
-  runtimeData,
-  stageId,
-  artifactId,
-  isManifest
-}: {
-  runtimeData: any
-  stageId: any
-  artifactId: any
-  isManifest: boolean
-}): number => {
-  const filteredStage = getFilteredStage(runtimeData, stageId)
-  if (isManifest) {
-    return filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.manifests.findIndex(
-      (manifestObj: any) => manifestObj?.manifest?.identifier === artifactId
-    )
+  if (connector?.connector?.orgIdentifier && connector?.connector?.projectIdentifier) {
+    connectorName = `${connector?.connector?.type}: ${connector?.connector?.name}`
+  } else if (connector?.connector?.orgIdentifier) {
+    connectorName = `${connector?.connector?.type}[Org]: ${connector?.connector?.name}`
   } else {
-    return (
-      filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts.sidecars?.findIndex(
-        (artifactObj: any) => artifactObj?.sidecar?.identifier === artifactId
-      ) ||
-      filteredStage?.stage?.spec?.serviceConfig?.stageOverrides?.artifacts?.sidecars?.findIndex(
-        (artifactObj: any) => artifactObj?.sidecar?.identifier === artifactId
-      ) ||
-      -1
-    )
+    connectorName = `${connector?.connector?.type}[Account]: ${connector?.connector?.name}`
   }
+
+  return connectorName
+}
+
+export const getConnectorValue = (connector?: ConnectorResponse): string => {
+  let connectorValue = ''
+
+  if (connector?.connector?.orgIdentifier && connector?.connector?.projectIdentifier) {
+    connectorValue = connector?.connector?.identifier
+  } else if (connector?.connector?.orgIdentifier) {
+    connectorValue = `${Scope.ORG}.${connector?.connector?.identifier}`
+  } else {
+    connectorValue = `${Scope.ACCOUNT}.${connector?.connector?.identifier}`
+  }
+
+  return connectorValue
 }
 
 const TriggerDefaultFieldList = {
@@ -376,71 +332,29 @@ const clearUndefinedArtifactId = (newPipelineObj = {}): any => {
 }
 
 export const getModifiedTemplateValues = (
-  initialValuesForEdit: ManifestTriggerFormikValues
-): ManifestTriggerFormikValues => {
+  initialValuesForEdit: FlatOnEditValuesInterface
+): FlatOnEditValuesInterface => {
   const returnInitialValuesForEdit = { ...initialValuesForEdit }
-  const pipeline = returnInitialValuesForEdit?.pipeline as PipelineInfoConfig
   if (
-    pipeline?.template?.templateInputs?.properties?.ci?.codebase?.repoName === '' &&
-    !!pipeline.template.templateInputs.properties.ci.codebase.connectorRef
+    returnInitialValuesForEdit?.pipeline?.template?.templateInputs?.properties?.ci?.codebase?.repoName === '' &&
+    !!returnInitialValuesForEdit.pipeline.template.templateInputs.properties.ci.codebase.connectorRef
   ) {
     // for CI Codebase, remove repoName: "" onEdit since connector is repo url type
-    delete pipeline.template.templateInputs.properties.ci.codebase.repoName
+    delete returnInitialValuesForEdit.pipeline.template.templateInputs.properties.ci.codebase.repoName
   }
   return returnInitialValuesForEdit
-}
-
-const DEFAULT_TRIGGER_BRANCH = '<+trigger.branch>'
-
-/**
- * Get proper branch to fetch Trigger InputSets
- * If gitAwareForTriggerEnabled is true, pipelineBranchName is used only if it's not DEFAULT_TRIGGER_BRANCH
- * Otherwise, return branch which is the active pipeline branch
- */
-export function getTriggerInputSetsBranchQueryParameter({
-  gitAwareForTriggerEnabled,
-  pipelineBranchName = DEFAULT_TRIGGER_BRANCH,
-  branch = ''
-}: {
-  gitAwareForTriggerEnabled?: boolean
-  pipelineBranchName?: string
-  branch?: string
-}): string {
-  if (gitAwareForTriggerEnabled) {
-    if (
-      [
-        ciCodebaseBuildIssueComment.spec.tag,
-        ciCodebaseBuildPullRequest.spec.number,
-        ciCodebaseBuild.spec.branch
-      ].includes(pipelineBranchName)
-    ) {
-      return branch
-    } else {
-      return pipelineBranchName
-    }
-  }
-
-  return branch
 }
 
 export const getErrorMessage = (error: any): string =>
   get(error, 'data.error', get(error, 'data.message', error?.message))
 
-export enum TriggerGitEvent {
+enum TriggerGitEvent {
   PULL_REQUEST = 'PullRequest',
   ISSUE_COMMENT = 'IssueComment',
   PUSH = 'Push',
   MR_COMMENT = 'MRComment',
   PR_COMMENT = 'PRComment'
 }
-
-export const TriggerGitEventTypes: Readonly<string[]> = [
-  TriggerGitEvent.PULL_REQUEST,
-  TriggerGitEvent.ISSUE_COMMENT,
-  TriggerGitEvent.PUSH,
-  TriggerGitEvent.MR_COMMENT,
-  TriggerGitEvent.PR_COMMENT
-]
 
 export const isHarnessExpression = (str = ''): boolean => str.startsWith('<+') && str.endsWith('>')
 
@@ -557,7 +471,7 @@ export const getDefaultPipelineReferenceBranch = (triggerType = '', event = ''):
   return ''
 }
 
-export const getArtifactManifestTriggerYaml = ({
+export const getArtifactTriggerYaml = ({
   values: val,
   manifestType,
   orgIdentifier,
@@ -586,12 +500,13 @@ export const getArtifactManifestTriggerYaml = ({
     event,
     selectedArtifact,
     stageId,
-    // manifestType: onEditManifestType,
-    artifactType,
     pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
     inputSetRefs,
     source
   } = val
+
+  const { type: triggerType, spec: triggerSpec } = source ?? {}
+  const { type: artifactType, spec: artifactSpec } = triggerSpec ?? {}
 
   replaceRunTimeVariables({ manifestType, artifactType, selectedArtifact })
   let newPipeline = cloneDeep(pipelineRuntimeInput)
@@ -602,14 +517,69 @@ export const getArtifactManifestTriggerYaml = ({
   } else if (artifactType) {
     replaceStageArtifacts({ filteredStage, selectedArtifact })
   }
-
-  // Manually clear null or undefined artifact identifier
   newPipeline = clearUndefinedArtifactId(newPipeline)
-
-  // actions will be required thru validation
   const stringifyPipelineRuntimeInput = yamlStringify({
     pipeline: clearNullUndefined(newPipeline)
   })
+  const filteredStagesforStore = val?.resolvedPipeline?.stages
+  const filteredManifestforStore = filteredStagesforStore?.map((st: any) =>
+    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+    )
+  )
+  const storeManifest = filteredManifestforStore?.find((mani: undefined) => mani != undefined)
+  let storeVal = storeManifest?.manifest?.spec?.store
+  const filteredParallelManifestforStore =
+    filteredStagesforStore?.map((_st: { parallel: any[] }) =>
+      _st?.parallel
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        ?.map(st =>
+          get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+            (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+          )
+        )
+        ?.map(i => i?.manifest?.spec?.store)
+    ) ?? []
+
+  //further finding storeVal in parallel stage
+  for (let i = 0; i < filteredParallelManifestforStore.length; i++) {
+    if (filteredParallelManifestforStore[i] !== undefined) {
+      for (let j = 0; j < filteredParallelManifestforStore[i].length; j++) {
+        if (filteredParallelManifestforStore[i][j] != undefined) {
+          storeVal = filteredParallelManifestforStore[i][j]
+        }
+      }
+    }
+  }
+
+  // clears any runtime inputs and set values in source->spec->spec
+  let artifactSourceSpec = clearRuntimeInputValue(
+    cloneDeep(
+      parse(
+        JSON.stringify({
+          spec: { ...selectedArtifact?.spec, store: storeVal, ...artifactSpec }
+        }) || ''
+      )
+    )
+  )
+
+  //if connectorRef present in store is runtime then we need to fetch values from stringifyPipelineRuntimeInput
+  const filteredStageforRuntimeStore = parse(stringifyPipelineRuntimeInput)?.pipeline?.stages?.map((st: any) =>
+    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
+      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
+    )
+  )
+  const runtimeStoreManifest = filteredStageforRuntimeStore?.find((mani: undefined) => mani != undefined)
+  const newStoreVal = runtimeStoreManifest?.manifest?.spec?.store
+  if (storeVal?.spec?.connectorRef === '<+input>') {
+    artifactSourceSpec = cloneDeep(
+      parse(
+        JSON.stringify({
+          spec: { ...selectedArtifact?.spec, store: newStoreVal }
+        }) || ''
+      )
+    )
+  }
 
   const triggerYaml: NGTriggerConfigV2 = {
     name,
@@ -620,10 +590,23 @@ export const getArtifactManifestTriggerYaml = ({
     orgIdentifier,
     projectIdentifier,
     pipelineIdentifier,
-    source,
+    source: {
+      type: triggerType as NGTriggerSourceV2['type'],
+      spec: {
+        stageIdentifier: stageId,
+        manifestRef: selectedArtifact?.identifier,
+        type: artifactType,
+        ...artifactSourceSpec
+      }
+    },
     inputYaml: stringifyPipelineRuntimeInput,
     pipelineBranchName: _gitAwareForTriggerEnabled ? pipelineBranchName : null,
     inputSetRefs: _gitAwareForTriggerEnabled ? inputSetRefs : null
+  }
+  if (artifactType) {
+    if (triggerYaml?.source?.spec && Object.getOwnPropertyDescriptor(triggerYaml?.source?.spec, 'manifestRef')) {
+      delete triggerYaml.source.spec.manifestRef
+    }
   }
 
   replaceEventConditions({ values: val, persistIncomplete, triggerYaml })
@@ -631,33 +614,98 @@ export const getArtifactManifestTriggerYaml = ({
   return clearNullUndefined(triggerYaml)
 }
 
-const getHelmManifestSpecStoreSpec = (): ManifestBuildStoreType => {
-  return {
-    connectorRef: ''
-  }
-}
-
-const getHelmManifestSpecStore = (): BuildStore => {
-  return {
-    spec: getHelmManifestSpecStoreSpec()
-  }
-}
-
-export const getHelmManifestSpec = (): HelmManifestSpec => {
+export const getTriggerArtifactInitialSpec = (
+  artifactType: ArtifactTriggerConfig['type']
+): ArtifactTriggerSpec | undefined => {
+  const connectorRef = ''
+  const tag = '<+trigger.artifact.build>'
   const eventConditions: TriggerEventDataCondition[] = []
+  const imagePath = ''
 
-  return {
-    eventConditions,
-    helmVersion: 'V2',
-    store: getHelmManifestSpecStore(),
-    chartVersion: TriggerDefaultFieldList.chartVersion
+  switch (artifactType) {
+    case 'Gcr': {
+      return {
+        connectorRef,
+        eventConditions,
+        imagePath,
+        registryHostname: '',
+        tag
+      } as GcrSpec
+    }
+    case 'Ecr': {
+      return {
+        connectorRef,
+        eventConditions,
+        imagePath,
+        region: '',
+        tag
+      } as EcrSpec
+    }
+    case 'ArtifactoryRegistry': {
+      return {
+        artifactDirectory: '',
+        connectorRef,
+        eventConditions,
+        repository: '',
+        repositoryFormat: ''
+      } as ArtifactoryRegistrySpec
+    }
+    case 'AmazonS3': {
+      return {
+        bucketName: '',
+        connectorRef,
+        eventConditions,
+        filePathRegex: '',
+        region: ''
+      } as AmazonS3RegistrySpec
+    }
+    case 'DockerRegistry': {
+      return {
+        connectorRef,
+        eventConditions,
+        imagePath,
+        tag
+      } as DockerRegistrySpec
+    }
+    case 'Acr': {
+      return {
+        connectorRef,
+        eventConditions,
+        registry: '',
+        repository: '',
+        subscriptionId: '',
+        tag
+      } as AcrSpec
+    }
+    case 'Nexus3Registry': {
+      return {
+        connectorRef,
+        eventConditions,
+        imagePath,
+        repositoryFormat: 'repositoryUrl',
+        repositoryName: '',
+        repositoryUrl: '',
+        tag
+      } as NexusRegistrySpec
+    }
+    case 'Jenkins': {
+      return {
+        artifactPath: '',
+        connectorRef,
+        eventConditions,
+        jobName: ''
+      } as JenkinsRegistrySpec
+    }
   }
 }
 
-export const getManifestTriggerInitialSource = (): ManifestTriggerSource => ({
-  type: 'Manifest',
+export const getTriggerArtifactInitialSource = (
+  triggerType: TriggerType,
+  artifactType: ArtifactTriggerConfig['type']
+): NGTriggerSourceV2 => ({
+  type: triggerType,
   spec: {
-    type: 'HelmChart',
-    spec: getHelmManifestSpec()
+    type: artifactType,
+    spec: getTriggerArtifactInitialSpec(artifactType)
   }
 })
