@@ -93,7 +93,7 @@ describe('Unit tests for createAppd monitoring source', () => {
         () => ({ loading: false, error: null, data: { data: ['overall performane'] }, refetch: refetchMock } as any)
       )
     jest
-      .spyOn(cvServices, 'useGetServiceInstanceMetricPath')
+      .spyOn(cvServices, 'useGetCompleteServiceInstanceMetricPath')
       .mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: refetchMock } as any))
     jest
       .spyOn(cvServices, 'useGetAppdynamicsMetricDataByPath')
@@ -289,8 +289,10 @@ describe('Unit tests for createAppd monitoring source', () => {
       await waitFor(() => expect(screen.getByText('cv.monitoredServices.continuousVerification')).toBeInTheDocument())
       userEvent.click(container.querySelector('input[name="continuousVerification"]')!)
 
-      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
-      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
+      await waitFor(() => {
+        expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).toBeInTheDocument()
+        expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
+      })
     })
 
     test('should not render metric thresholds when feature flag is disabled', () => {

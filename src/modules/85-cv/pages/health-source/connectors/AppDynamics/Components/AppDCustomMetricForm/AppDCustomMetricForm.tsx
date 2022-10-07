@@ -19,6 +19,7 @@ import {
   getMultiTypeFromValue,
   RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
+import { debounce, defaultTo } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -31,12 +32,7 @@ import { SetupSourceCardHeader } from '@cv/components/CVSetupSourcesView/SetupSo
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
-import {
-  useGetMetricPacks,
-  useGetServiceInstanceMetricPath,
-  AppDMetricDefinitions,
-  useGetCompleteServiceInstanceMetricPath
-} from 'services/cv'
+import { useGetMetricPacks, AppDMetricDefinitions, useGetCompleteServiceInstanceMetricPath } from 'services/cv'
 import { AppDynamicsMonitoringSourceFieldNames } from '../../AppDHealthSource.constants'
 import { PATHTYPE } from './AppDCustomMetricForm.constants'
 import {
@@ -68,54 +64,39 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
   })
 
   const {
-    data: serviceInsanceData,
-    refetch: refetchServiceInsance,
-    error: serviceInstanceError
-  } = useGetServiceInstanceMetricPath({ lazy: true })
-
-  const {
     data: completeServiceInsanceData,
     refetch: refetchcompleteServiceInsance,
     error: completeServiceInstanceError
   } = useGetCompleteServiceInstanceMetricPath({ lazy: true })
 
   useEffect(() => {
-    if (serviceInstanceError) {
-      showError(getErrorMessage(serviceInstanceError))
-    } else if (completeServiceInstanceError) {
+    if (completeServiceInstanceError) {
       showError(getErrorMessage(completeServiceInstanceError))
     }
-  }, [serviceInstanceError])
+  }, [completeServiceInstanceError])
 
+  const debounceRefetch = useCallback(debounce(refetchcompleteServiceInsance, 500), [])
   useEffect(() => {
     const hasRuntimeField = checkRuntimeFields(formikValues)
-    if (formikValues?.continuousVerification && !hasRuntimeField && !isTemplate) {
-      refetchServiceInsance({
+    const shouldRefetch = isTemplate
+      ? !hasRuntimeField && formikValues?.continuousVerification
+      : formikValues?.continuousVerification
+    if (shouldRefetch) {
+      let derivedCompleteMetricPath = defaultTo(formikValues.completeMetricPath, '')
+      const { basePath, metricPath, appDTier } = formikValues
+      if (formikValues.pathType === PATHTYPE.DropdownPath) {
+        derivedCompleteMetricPath = `${
+          basePath[Object.keys(basePath)[Object.keys(basePath).length - 1]]?.path
+        }|${appDTier}|${metricPath[Object.keys(metricPath)[Object.keys(metricPath).length - 1]]?.path}`
+      }
+      debounceRefetch({
         queryParams: {
           accountId,
           orgIdentifier,
           projectIdentifier,
           connectorIdentifier,
           appName: formikValues.appdApplication,
-          baseFolder: getBasePathValue(formikValues?.basePath),
-          tier: formikValues.appDTier,
-          metricPath: getMetricPathValue(formikValues?.metricPath)
-        }
-      })
-    } else if (
-      isTemplate &&
-      formikValues?.continuousVerification &&
-      formikValues?.completeMetricPath &&
-      !hasRuntimeField
-    ) {
-      refetchcompleteServiceInsance({
-        queryParams: {
-          accountId,
-          orgIdentifier,
-          projectIdentifier,
-          connectorIdentifier,
-          appName: formikValues.appdApplication,
-          completeMetricPath: formikValues.completeMetricPath
+          completeMetricPath: derivedCompleteMetricPath
         }
       })
     }
@@ -127,16 +108,18 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
     formikValues?.continuousVerification,
     formikValues.appdApplication,
     formikValues?.basePath,
-    formikValues?.metricPath
+    formikValues?.metricPath,
+    formikValues?.appDTier,
+    formikValues.completeMetricPath
   ])
 
   useEffect(() => {
     setServiceIntance({
-      serviceInsanceData: serviceInsanceData || completeServiceInsanceData,
+      serviceInsanceData: completeServiceInsanceData,
       formikValues,
       formikSetField
     })
-  }, [serviceInsanceData, completeServiceInsanceData, formikValues?.continuousVerification])
+  }, [completeServiceInsanceData, formikValues?.continuousVerification])
 
   const [appdGroupName, setAppdGroupName] = useState<SelectOption[]>(initializeGroupNames(mappedMetrics, getString))
   const basePathValue = getBasePathValue(formikValues?.basePath)
