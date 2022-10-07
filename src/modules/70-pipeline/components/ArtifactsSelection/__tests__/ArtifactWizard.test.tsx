@@ -31,7 +31,7 @@ import { awsRegionsData, bucketListData } from '../ArtifactRepository/ArtifactLa
 const fetchConnector = jest.fn().mockReturnValue({ data: connectorsData.data?.content?.[1] })
 const fetchBuckets = jest.fn().mockReturnValue(bucketListData)
 jest.mock('services/cd-ng', () => ({
-  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
+  getConnectorListV2Promise: jest.fn().mockImplementation(() => Promise.resolve(connectorsData)),
   useGetConnector: jest.fn().mockImplementation(() => {
     return { data: connectorsData.data?.content?.[1], refetch: fetchConnector, loading: false }
   }),
