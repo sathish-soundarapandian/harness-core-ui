@@ -5674,7 +5674,10 @@ export interface StringsMap {
   'ce.computeGroups.clusterDetails.podDetails': string
   'ce.computeGroups.clusterDetails.totalPods': string
   'ce.computeGroups.clusterDetails.workloads': string
+  'ce.computeGroups.commitments': string
   'ce.computeGroups.efficiencyScore': string
+  'ce.computeGroups.fallback': string
+  'ce.computeGroups.idle': string
   'ce.computeGroups.setup.clusterPermissionsTab.info1': string
   'ce.computeGroups.setup.clusterPermissionsTab.info2': string
   'ce.computeGroups.setup.clusterPermissionsTab.info3': string
@@ -5738,6 +5741,7 @@ export interface StringsMap {
   'ce.computeGroups.table.headers.name': string
   'ce.computeGroups.totalNodes': string
   'ce.computeGroups.totalSpotSavings': string
+  'ce.computeGroups.utilized': string
   'ce.connector.AWS.crossAccountRole.arn': string
   'ce.connector.AWS.crossAccountRole.externalID': string
   'ce.connector.AWS.crossAccountRole.instructionLabel': string

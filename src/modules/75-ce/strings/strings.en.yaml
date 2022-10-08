@@ -1355,6 +1355,10 @@ computeGroups:
   sideNavText: Compute Groups
   addNewClusterCtaText: Add new cluster
   totalSpotSavings: Total spot savings
+  fallback: Fallback
+  commitments: Commitments
+  utilized: Utilized
+  idle: Idle
   table:
     headers:
       name: Cluster name & id

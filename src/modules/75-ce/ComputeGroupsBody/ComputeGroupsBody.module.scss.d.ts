@@ -11,11 +11,13 @@ declare const styles: {
   readonly cgBodyContainer: string
   readonly dataRowContainer: string
   readonly efficiencyScoreContainer: string
+  readonly enableCell: string
   readonly filterPanel: string
   readonly flexSpace1: string
   readonly flexSpace2: string
   readonly infoContainer: string
   readonly legendMarker: string
   readonly spacedContainer: string
+  readonly tableValuePopover: string
 }
 export default styles

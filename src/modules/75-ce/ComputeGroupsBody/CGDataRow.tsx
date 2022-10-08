@@ -7,6 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
+import { get } from 'lodash-es'
 import { Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
@@ -46,8 +47,47 @@ const MOCK_NODES_DATA = [
   }
 ]
 
-const CGDataRow: React.FC = () => {
+interface CGDataRowProps {
+  data: any // TODO: replace with actual type
+}
+
+const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
   const { getString } = useStrings()
+  const onDemandCost = get(data, 'nodes.on-demand_cost', 0)
+  const spotCost = get(data, 'nodes.spot_cost', 0)
+  const committedCost = get(data, 'nodes.committed_cost', 0)
+  const fallbackCost = get(data, 'nodes.fallback_cost', 0)
+  const totalNodesCost = onDemandCost + spotCost + committedCost + fallbackCost
+  const nodesData = [
+    {
+      color: Color.GREY_200,
+      legendText: `On-demand (${get(data, 'nodes.on-demand', 0)})`,
+      name: 'On-demand',
+      value: formatCost(onDemandCost),
+      graphPercentage: (onDemandCost / totalNodesCost) * 100
+    },
+    {
+      color: Color.PRIMARY_2,
+      legendText: `Spot (${get(data, 'nodes.spot', 0)})`,
+      name: 'Spot',
+      value: formatCost(spotCost),
+      graphPercentage: (spotCost / totalNodesCost) * 100
+    },
+    {
+      color: Color.PRIMARY_4,
+      legendText: `Fallback (${get(data, 'nodes.fallback', 0)})`,
+      name: 'Fallback',
+      value: formatCost(fallbackCost),
+      graphPercentage: (fallbackCost / totalNodesCost) * 100
+    },
+    {
+      color: Color.PRIMARY_7,
+      legendText: `Commitments (${get(data, 'nodes.committed', 0)})`,
+      name: 'Commitments',
+      value: formatCost(committedCost),
+      graphPercentage: (committedCost / totalNodesCost) * 100
+    }
+  ]
   return (
     <Container className={css.dataRowContainer}>
       <Container>
@@ -121,7 +161,11 @@ const CGDataRow: React.FC = () => {
       <Container className={cx(css.infoContainer, css.spacedContainer)}>
         <DonughtChartDataDistributionCard
           header={getString('ce.overview.cardtitles.clusterBreakdown')}
-          data={MOCK_NODES_DATA}
+          data={nodesData}
+          title={{
+            style: { fontSize: '20px', fontWeight: '700' },
+            text: (data.nodes.committed + data.nodes.fallback + data.nodes['on-demand'] + data.nodes.spot).toString()
+          }}
         />
       </Container>
       <Container className={cx(css.infoContainer, css.spacedContainer)}>
@@ -129,6 +173,10 @@ const CGDataRow: React.FC = () => {
           header={getString('ce.overview.cardtitles.clusterBreakdown')}
           data={MOCK_NODES_DATA}
           efficiencyScore={44}
+          title={{
+            text: formatCost(22135.13),
+            style: { fontSize: '12px', fontWeight: '700' }
+          }}
         />
       </Container>
       {/* <Container className={cx(css.infoContainer, css.spacedContainer)}>

@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { Color, Container, FontVariation, Layout, Text, Utils } from '@harness/uicore'
+import type { TitleOptions } from 'highcharts'
 import CEChart from '@ce/components/CEChart/CEChart'
 import { getRadialChartOptions } from '@ce/components/CEChart/CEChartOptions'
 import { useStrings } from 'framework/strings'
@@ -16,12 +17,14 @@ interface DonughtChartDataDistributionCardProps {
   header: string
   data: { name: string; legendText: string; color: Color; value: string | number; graphPercentage: number }[]
   efficiencyScore?: number
+  title?: TitleOptions
 }
 
 const DonughtChartDataDistributionCard: React.FC<DonughtChartDataDistributionCardProps> = ({
   header,
   data,
-  efficiencyScore
+  efficiencyScore,
+  title
 }) => {
   const { getString } = useStrings()
   return (
@@ -37,15 +40,17 @@ const DonughtChartDataDistributionCard: React.FC<DonughtChartDataDistributionCar
                 data.map(item => ({ name: item.name, value: item.graphPercentage })),
                 data.map(item => Utils.getRealCSSColor(item.color)),
                 {
-                  chart: { height: 160, width: 160 }
+                  chart: { height: 160, width: 160 },
+                  tooltipDisabled: false
                 },
                 '70%'
               ),
               title: {
-                text: '10',
+                text: '',
                 align: 'center',
                 verticalAlign: 'middle',
-                style: { fontSize: '15px', fontWeight: '700' }
+                style: { fontSize: '15px', fontWeight: '700' },
+                ...title
               }
             }}
           />

@@ -51,3 +51,23 @@
   padding: var(--spacing-small) !important;
   margin-top: var(--spacing-medium) !important;
 }
+
+.tableValuePopover {
+  padding: var(--spacing-large) !important;
+  p {
+    color: var(--white) !important;
+  }
+}
+
+.enableCell {
+  padding: 0 var(--spacing-medium) !important;
+  background: var(--green-50) !important;
+  width: fit-content;
+  border-radius: 4px;
+  p {
+    color: var(--green-800) !important;
+    svg path {
+      fill: var(--green-800);
+    }
+  }
+}
