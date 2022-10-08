@@ -5680,6 +5680,7 @@ export interface StringsMap {
   'ce.computeGroups.fallback': string
   'ce.computeGroups.idle': string
   'ce.computeGroups.leastInterrupted': string
+  'ce.computeGroups.onDemandSpend': string
   'ce.computeGroups.replicas': string
   'ce.computeGroups.setup.clusterPermissionsTab.info1': string
   'ce.computeGroups.setup.clusterPermissionsTab.info2': string
@@ -5739,6 +5740,7 @@ export interface StringsMap {
   'ce.computeGroups.setup.spotInstancesTab.useSpotSection.subHeader': string
   'ce.computeGroups.setup.spotInstancesTab.workloadToRunOnSpot': string
   'ce.computeGroups.sideNavText': string
+  'ce.computeGroups.spotSpend': string
   'ce.computeGroups.strategy': string
   'ce.computeGroups.table.headers.managedBy': string
   'ce.computeGroups.table.headers.memory': string

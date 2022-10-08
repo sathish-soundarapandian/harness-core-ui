@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import type { Column } from 'react-table'
 import { Color, Container, FontVariation, Layout, TableV2, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -14,6 +14,34 @@ import css from './CGClusterDetailsBody.module.scss'
 
 const NodepoolDetails: React.FC = () => {
   const { getString } = useStrings()
+  const [, setSummaryData] = useState({})
+
+  useEffect(() => {
+    setSummaryData({
+      committed: 0,
+      committed_cost: 98.2,
+      cpu: {
+        total: 10,
+        un_allocated: 4,
+        utilized: 6
+      },
+      fallback: 0,
+      fallback_cost: 45.3,
+      harness_mgd: 0,
+      memory: {
+        total: 10,
+        un_allocated: 4,
+        utilized: 6
+      },
+      on_demand: 1,
+      on_demand_cost: 23.53,
+      spot: 0,
+      spot_cost: 98.23,
+      total: 1
+    })
+    // setLoading(false)
+  }, [])
+
   return (
     <Container padding={'xlarge'}>
       <Layout.Vertical className={css.infoCard} spacing="large">
@@ -49,7 +77,9 @@ const NodepoolDetails: React.FC = () => {
         </Layout.Horizontal>
         <Layout.Vertical spacing={'large'}>
           <Layout.Horizontal flex>
-            <Text>{getString('ce.perspectives.workloadDetails.workloadDetailsText')}</Text>
+            <Text font={{ variation: FontVariation.H4 }}>
+              {getString('ce.perspectives.nodeDetails.nodeDetailsText')}
+            </Text>
           </Layout.Horizontal>
           <WorkloadDetailsTable />
         </Layout.Vertical>
@@ -60,33 +90,46 @@ const NodepoolDetails: React.FC = () => {
 
 const WorkloadDetailsTable: React.FC = () => {
   const { getString } = useStrings()
-  const data = [
-    {
-      name: 'Workload 1',
-      id: 'ID 1',
-      replicas: 4,
-      current: {
-        spot: 2,
-        onDemand: 2
+  const [data, setData] = useState<any[]>([]) // TODO: replace type here
+
+  useEffect(() => {
+    setData([
+      {
+        account_id: 'accID',
+        allocatable_cpu: 0,
+        allocatable_mem: 0,
+        architecture: 'amd64',
+        cloud_account_id: 'cloudAccID',
+        cluster_id: 'cloudAccID',
+        cluster_name: 'shalinlk-dashboard-RnD',
+        created_at: '2022-10-08T09:38:38.663912Z',
+        created_time: '2022-09-28T10:50:55Z',
+        fulfillment: 'on_demand',
+        id: 'nod-cd0ka7lvqc7kvv4u7p60',
+        name: 'ip-192-168-45-149.us-west-2.compute.internal',
+        node_group: 'shalinlk-dashboard-RnD-ng',
+        on_demand_spend: 43.16236143192069,
+        os: 'linux',
+        region: 'us-west-2',
+        resource_version: 2314770,
+        spot_spend: 31.023693823021738,
+        total_cost: 74.18605525494243,
+        total_cpu: 0,
+        total_mem: 0,
+        type: 'm5.large',
+        workloads: 6,
+        zone: 'us-west-2d'
       }
-    },
-    {
-      name: 'Workload 2',
-      id: 'ID 2',
-      replicas: 3,
-      current: {
-        spot: 4,
-        onDemand: 4
-      }
-    }
-  ]
+    ])
+  }, [])
+
   const columns: Column<any>[] = useMemo(
     () => [
       {
         accessor: 'name',
         Header: getString('name'),
         width: '15%',
-        Cell: tableProps => <Text>{tableProps.value}</Text>
+        Cell: tableProps => <Text lineClamp={1}>{tableProps.value}</Text>
         // serverSortProps: getServerSortProps({
         //   enableServerSort: true,
         //   accessor: 'name',
@@ -95,38 +138,32 @@ const WorkloadDetailsTable: React.FC = () => {
         // })
       },
       {
-        accessor: 'type',
-        Header: getString('typeLabel'),
+        accessor: 'workloads',
+        Header: getString('pipeline.dashboards.workloads'),
         width: '15%',
         Cell: tableProps => <Text>{tableProps.value}</Text>
       },
       {
-        accessor: 'namespace',
-        Header: getString('common.namespace'),
+        accessor: 'on_demand_spend',
+        Header: getString('ce.computeGroups.onDemandSpend'),
         width: '15%',
-        Cell: tableProps => <Text>{tableProps.value}</Text>
+        Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
       },
       {
-        accessor: 'replicas',
-        Header: getString('delegates.replicaText'),
+        accessor: 'spot_spend',
+        Header: getString('ce.computeGroups.spotSpend'),
         width: '15%',
-        Cell: tableProps => <Text>{tableProps.value}</Text>
+        Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
       },
       {
-        accessor: 'id',
-        Header: getString('ce.nodeRecommendation.distribution'),
+        accessor: 'total_cost',
+        Header: getString('ce.overview.totalCost'),
         width: '15%',
-        Cell: tableProps => <Text>{tableProps.value}</Text>
-      },
-      {
-        accessor: 'some',
-        Header: getString('delegates.replicaText'),
-        width: '15%',
-        Cell: tableProps => <Text>{tableProps.value}</Text>
+        Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
       },
       {
         accessor: 'someother',
-        Header: getString('delegates.replicaText'),
+        Header: getString('ce.recommendation.sideNavText'),
         width: '15%',
         Cell: tableProps => <Text>{tableProps.value}</Text>
       }
@@ -134,7 +171,7 @@ const WorkloadDetailsTable: React.FC = () => {
     []
   )
   return (
-    <Layout.Vertical spacing={'medium'}>
+    <Layout.Vertical spacing={'medium'} margin={{ top: 'huge' }}>
       <TableV2 columns={columns} data={data} />
     </Layout.Vertical>
   )

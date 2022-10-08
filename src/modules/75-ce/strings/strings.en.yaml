@@ -1363,6 +1363,8 @@ computeGroups:
   strategy: Strategy
   leastInterrupted: Least interrupted
   baseOnDemandCapacity: Base on-demand capacity
+  onDemandSpend: On-Demand spend (/mo)
+  spotSpend: Spot Spend (/mo)
   table:
     headers:
       name: Cluster name & id
