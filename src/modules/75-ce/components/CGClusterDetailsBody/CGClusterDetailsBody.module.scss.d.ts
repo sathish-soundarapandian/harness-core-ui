@@ -9,5 +9,8 @@
 declare const styles: {
   readonly clusterDetailsBody: string
   readonly infoCard: string
+  readonly inlineBold: string
+  readonly podOnDemandTag: string
+  readonly podSpotTag: string
 }
 export default styles

@@ -6,9 +6,10 @@
  */
 
 import React from 'react'
+import { get } from 'lodash-es'
 import { Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import DonughtChartDataDistributionCard from '@ce/ComputeGroupsBody/DonughtChartDataDistributionCard'
+import DonughtChartDataDistributionCard from '@ce/components/ComputeGroupsBody/DonughtChartDataDistributionCard'
 import formatCost from '@ce/utils/formatCost'
 import css from './CGClusterDetailsBody.module.scss'
 
@@ -17,39 +18,95 @@ interface ClusterDetailsItemProps {
   value: string
 }
 
-const MOCK_NODES_DATA = [
-  {
-    color: Color.GREY_200,
-    legendText: 'On-demand (1)',
-    name: 'On-demand',
-    value: formatCost(645.75),
-    graphPercentage: 20
-  },
-  {
-    color: Color.PRIMARY_2,
-    legendText: 'Spot (2)',
-    name: 'Spot',
-    value: formatCost(64.93),
-    graphPercentage: 25
-  },
-  {
-    color: Color.PRIMARY_4,
-    legendText: 'Fallback (4)',
-    name: 'Fallback',
-    value: formatCost(27.83),
-    graphPercentage: 30
-  },
-  {
-    color: Color.PRIMARY_7,
-    legendText: 'Commitments (2)',
-    name: 'Commitments',
-    value: formatCost(119.27),
-    graphPercentage: 25
-  }
-]
+interface CGClusterDetailsBodyProps {
+  data: any // TODO: replace with correct type
+}
 
-const CGClusterDetailsBody: React.FC = () => {
+const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => {
   const { getString } = useStrings()
+  const onDemandCost = get(data, 'nodes.on-demand_cost', 0)
+  const spotCost = get(data, 'nodes.spot_cost', 0)
+  const committedCost = get(data, 'nodes.committed_cost', 0)
+  const fallbackCost = get(data, 'nodes.fallback_cost', 0)
+  const totalNodesCost = onDemandCost + spotCost + committedCost + fallbackCost
+  const nodesData = [
+    {
+      color: Color.GREY_200,
+      legendText: `On-demand (${get(data, 'nodes.on-demand', 0)})`,
+      name: 'On-demand',
+      value: formatCost(onDemandCost),
+      graphPercentage: (onDemandCost / totalNodesCost) * 100
+    },
+    {
+      color: Color.PRIMARY_2,
+      legendText: `Spot (${get(data, 'nodes.spot', 0)})`,
+      name: 'Spot',
+      value: formatCost(spotCost),
+      graphPercentage: (spotCost / totalNodesCost) * 100
+    },
+    {
+      color: Color.PRIMARY_4,
+      legendText: `Fallback (${get(data, 'nodes.fallback', 0)})`,
+      name: 'Fallback',
+      value: formatCost(fallbackCost),
+      graphPercentage: (fallbackCost / totalNodesCost) * 100
+    },
+    {
+      color: Color.PRIMARY_7,
+      legendText: `Commitments (${get(data, 'nodes.committed', 0)})`,
+      name: 'Commitments',
+      value: formatCost(committedCost),
+      graphPercentage: (committedCost / totalNodesCost) * 100
+    }
+  ]
+
+  const cpuBreakdownData = [
+    {
+      color: Color.PRIMARY_2,
+      legendText: `Utilized (${get(data, 'cpu.utilized', 0)})`,
+      name: 'Utilized',
+      value: `${((get(data, 'cpu.utilized', 0) / get(data, 'cpu.total', 0)) * 100).toFixed(2)}%`,
+      graphPercentage: (get(data, 'cpu.utilized', 0) / get(data, 'cpu.total', 0)) * 100
+    },
+    {
+      color: Color.PRIMARY_4,
+      legendText: `Idle (${get(data, 'cpu.idle', 0)})`,
+      name: 'Idle',
+      value: `${((get(data, 'cpu.idle', 0) / get(data, 'cpu.total', 0)) * 100).toFixed(2)}%`,
+      graphPercentage: (get(data, 'cpu.idle', 0) / get(data, 'cpu.total', 0)) * 100
+    },
+    {
+      color: Color.PRIMARY_7,
+      legendText: `Unallocated (${get(data, 'cpu.un_allocated', 0)})`,
+      name: 'Unallocated',
+      value: `${((get(data, 'cpu.un_allocated', 0) / get(data, 'cpu.total', 0)) * 100).toFixed(2)}%`,
+      graphPercentage: (get(data, 'cpu.un_allocated', 0) / get(data, 'cpu.total', 0)) * 100
+    }
+  ]
+
+  const memoryBreakdownData = [
+    {
+      color: Color.PRIMARY_2,
+      legendText: `Utilized (${get(data, 'memory.utilized', 0)})`,
+      name: 'Utilized',
+      value: `${((get(data, 'memory.utilized', 0) / get(data, 'memory.total', 0)) * 100).toFixed(2)}%`,
+      graphPercentage: (get(data, 'memory.utilized', 0) / get(data, 'memory.total', 0)) * 100
+    },
+    {
+      color: Color.PRIMARY_4,
+      legendText: `Idle (${get(data, 'memory.idle', 0)})`,
+      name: 'Idle',
+      value: `${((get(data, 'memory.idle', 0) / get(data, 'memory.total', 0)) * 100).toFixed(2)}%`,
+      graphPercentage: (get(data, 'memory.idle', 0) / get(data, 'memory.total', 0)) * 100
+    },
+    {
+      color: Color.PRIMARY_7,
+      legendText: `Unallocated (${get(data, 'memory.un_allocated', 0)})`,
+      name: 'Unallocated',
+      value: `${((get(data, 'memory.un_allocated', 0) / get(data, 'memory.total', 0)) * 100).toFixed(2)}%`,
+      graphPercentage: (get(data, 'memory.un_allocated', 0) / get(data, 'memory.total', 0)) * 100
+    }
+  ]
   return (
     <Container className={css.clusterDetailsBody}>
       <Layout.Vertical spacing={'large'}>
@@ -67,9 +124,15 @@ const CGClusterDetailsBody: React.FC = () => {
             <Text font={{ variation: FontVariation.H6 }}>
               {getString('ce.computeGroups.clusterDetails.k8sClusterDetailsHeader')}
             </Text>
-            <ClusterDetailsItem title={getString('connectors.name')} value="My Kubernetes Connector 1" />
-            <ClusterDetailsItem title={getString('regionLabel')} value="us-east-1" />
-            <ClusterDetailsItem title={getString('identifier')} value="mykubernetes_connector1" />
+            <ClusterDetailsItem
+              title={getString('connectors.name')}
+              value={get(data, 'cloud_account_id', 'My Kubernetes Connector 1')}
+            />
+            <ClusterDetailsItem title={getString('regionLabel')} value={get(data, 'region', '')} />
+            <ClusterDetailsItem
+              title={getString('identifier')}
+              value={get(data, 'cloud_account_id', 'My Kubernetes Connector 1')}
+            />
             <Layout.Vertical spacing={'medium'}>
               <Text inline>Tag1</Text>
               <Text inline>Tag2</Text>
@@ -82,7 +145,12 @@ const CGClusterDetailsBody: React.FC = () => {
         <Container className={css.infoCard}>
           <DonughtChartDataDistributionCard
             header={getString('ce.computeGroups.clusterDetails.nodesBreakdown')}
-            data={MOCK_NODES_DATA}
+            data={nodesData}
+            title={{
+              text: `<p>${totalNodesCost}</p><p><b>Nodes</b></p>`,
+              useHTML: true,
+              style: { fontWeight: '700', textAlign: 'center', fontSize: '14px' }
+            }}
           />
         </Container>
         <Layout.Vertical className={css.infoCard} spacing="large">
@@ -90,11 +158,13 @@ const CGClusterDetailsBody: React.FC = () => {
           <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
             {getString('ce.computeGroups.totalNodes')}
           </Text>
-          <Layout.Horizontal spacing={'large'}>
-            <Text>10</Text>
-            <Text>2</Text>
-            <Text icon="harness">8</Text>
-          </Layout.Horizontal>
+          <Container>
+            <Layout.Horizontal spacing={'huge'}>
+              <Text>10</Text>
+              <Text icon="elastic-kubernetes-service">2</Text>
+              <Text icon="harness">8</Text>
+            </Layout.Horizontal>
+          </Container>
         </Layout.Vertical>
         <Layout.Vertical className={css.infoCard} spacing="large">
           <Layout.Horizontal spacing={'large'}>
@@ -102,11 +172,11 @@ const CGClusterDetailsBody: React.FC = () => {
               {getString('ce.computeGroups.clusterDetails.podDetails')}
             </Text>
             <Layout.Horizontal spacing={'small'}>
-              <Container>
-                <Text>{`${getString('ce.nodeRecommendation.spot')} 2`}</Text>
+              <Container className={css.podSpotTag}>
+                <Text>{`${getString('ce.nodeRecommendation.spot')} ${get(data, 'pods.spot', 0)}`}</Text>
               </Container>
-              <Container>
-                <Text>{`${getString('ce.nodeRecommendation.onDemand')} 2`}</Text>
+              <Container className={css.podOnDemandTag}>
+                <Text>{`${getString('ce.nodeRecommendation.onDemand')} ${get(data, 'pods.on-demand', 0)}`}</Text>
               </Container>
             </Layout.Horizontal>
           </Layout.Horizontal>
@@ -114,9 +184,13 @@ const CGClusterDetailsBody: React.FC = () => {
             {getString('ce.computeGroups.clusterDetails.totalPods')}
           </Text>
           <Layout.Horizontal spacing="large">
-            <Text>10</Text>
-            <Text icon="time">{`${getString('triggers.scheduledLabel')} 2`}</Text>
-            <Text icon="time">{`${getString('ce.common.unScheduled')} 8`}</Text>
+            <Text font={{ variation: FontVariation.LEAD }}>{get(data, 'pods.total', 0)}</Text>
+            <Text icon="time" iconProps={{ size: 12, color: Color.PRIMARY_4 }} className={css.inlineBold}>
+              {`${getString('triggers.scheduledLabel')} `} <b>{get(data, 'pods.scheduled', 0)}</b>
+            </Text>
+            <Text icon="time" iconProps={{ size: 12, color: Color.ORANGE_900 }} className={css.inlineBold}>
+              {`${getString('ce.common.unScheduled')} `} <b>{get(data, 'pods.unscheduled', 0)}</b>
+            </Text>
           </Layout.Horizontal>
         </Layout.Vertical>
       </Layout.Vertical>
@@ -124,13 +198,23 @@ const CGClusterDetailsBody: React.FC = () => {
         <Container className={css.infoCard}>
           <DonughtChartDataDistributionCard
             header={getString('ce.computeGroups.clusterDetails.cpuBreakdown')}
-            data={MOCK_NODES_DATA}
+            data={cpuBreakdownData}
+            title={{
+              text: `<p>${get(data, 'cpu.total', 0)}</p><p><b>CPU</b></p>`,
+              useHTML: true,
+              style: { fontWeight: '700', textAlign: 'center', fontSize: '14px' }
+            }}
           />
         </Container>
         <Container className={css.infoCard}>
           <DonughtChartDataDistributionCard
             header={getString('ce.computeGroups.clusterDetails.memoryBreakdown')}
-            data={MOCK_NODES_DATA}
+            data={memoryBreakdownData}
+            title={{
+              text: `<p>${get(data, 'cpu.total', 0)}</p><p><b>Gib</b></p>`,
+              useHTML: true,
+              style: { fontWeight: '700', textAlign: 'center', fontSize: '14px' }
+            }}
           />
         </Container>
       </Layout.Vertical>

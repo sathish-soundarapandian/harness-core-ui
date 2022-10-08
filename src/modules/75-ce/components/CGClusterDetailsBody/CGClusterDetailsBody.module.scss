@@ -18,3 +18,22 @@
   border-radius: 4px;
   padding: var(--spacing-large) var(--spacing-medium) !important;
 }
+
+.inlineBold {
+  b {
+    color: var(--grey-800) !important;
+    margin-left: var(--spacing-small) !important;
+  }
+}
+
+.podSpotTag {
+  background: var(--primary-1) !important;
+  padding: 0 var(--spacing-small) !important;
+  border-radius: 4px;
+}
+
+.podOnDemandTag {
+  background: var(--grey-100) !important;
+  padding: 0 var(--spacing-small) !important;
+  border-radius: 4px;
+}

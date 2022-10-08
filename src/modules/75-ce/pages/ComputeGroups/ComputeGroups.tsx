@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { Container, FontVariation, PageHeader, PageSpinner, Text } from '@harness/uicore'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useStrings } from 'framework/strings'
-import ComputeGroupsBody from '@ce/ComputeGroupsBody/ComputeGroupsBody'
+import ComputeGroupsBody from '@ce/components/ComputeGroupsBody/ComputeGroupsBody'
 
 const ComputeGroups: React.FC = () => {
   const { getString } = useStrings()
