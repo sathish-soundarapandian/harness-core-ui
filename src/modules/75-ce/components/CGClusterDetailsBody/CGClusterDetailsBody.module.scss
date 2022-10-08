@@ -37,3 +37,19 @@
   padding: 0 var(--spacing-small) !important;
   border-radius: 4px;
 }
+
+.distributionCell {
+  .head {
+    color: var(--grey-600) !important;
+  }
+  .value {
+    color: var(--grey-800) !important;
+  }
+}
+
+.strategyCell {
+  padding-right: var(--spacing-large) !important;
+  > div {
+    flex: 1;
+  }
+}

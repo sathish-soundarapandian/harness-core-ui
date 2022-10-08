@@ -5666,6 +5666,7 @@ export interface StringsMap {
   'ce.common.unScheduled': string
   'ce.common.updated': string
   'ce.computeGroups.addNewClusterCtaText': string
+  'ce.computeGroups.baseOnDemandCapacity': string
   'ce.computeGroups.clusterDetails.comparedText': string
   'ce.computeGroups.clusterDetails.cpuBreakdown': string
   'ce.computeGroups.clusterDetails.k8sClusterDetailsHeader': string
@@ -5678,6 +5679,8 @@ export interface StringsMap {
   'ce.computeGroups.efficiencyScore': string
   'ce.computeGroups.fallback': string
   'ce.computeGroups.idle': string
+  'ce.computeGroups.leastInterrupted': string
+  'ce.computeGroups.replicas': string
   'ce.computeGroups.setup.clusterPermissionsTab.info1': string
   'ce.computeGroups.setup.clusterPermissionsTab.info2': string
   'ce.computeGroups.setup.clusterPermissionsTab.info3': string
@@ -5736,6 +5739,7 @@ export interface StringsMap {
   'ce.computeGroups.setup.spotInstancesTab.useSpotSection.subHeader': string
   'ce.computeGroups.setup.spotInstancesTab.workloadToRunOnSpot': string
   'ce.computeGroups.sideNavText': string
+  'ce.computeGroups.strategy': string
   'ce.computeGroups.table.headers.managedBy': string
   'ce.computeGroups.table.headers.memory': string
   'ce.computeGroups.table.headers.name': string
