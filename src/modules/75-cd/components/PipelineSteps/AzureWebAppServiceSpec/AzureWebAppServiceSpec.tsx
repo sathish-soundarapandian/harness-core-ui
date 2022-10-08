@@ -12,7 +12,13 @@ import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/ui
 import { parse } from 'yaml'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import type { FormikErrors } from 'formik'
-import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
+import {
+  StepViewType,
+  ValidateInputSetProps,
+  Step,
+  StepProps,
+  InputSetData
+} from '@pipeline/components/AbstractSteps/Step'
 import {
   ServiceSpec,
   getConnectorListV2Promise,
@@ -56,6 +62,7 @@ const allowedArtifactTypes: Array<ArtifactType> = [
 export class AzureWebAppServiceSpec extends Step<ServiceSpec> {
   protected type = StepType.AzureWebAppServiceSpec
   protected defaultValues: ServiceSpec = {}
+  protected inputSetData: InputSetData<AzureWebAppServiceStep> | undefined = undefined
 
   protected stepIcon: IconName = 'azurewebapp'
   protected stepName = 'Deplyment Service'
@@ -305,11 +312,11 @@ export class AzureWebAppServiceSpec extends Step<ServiceSpec> {
 
   validateInputSet({
     data,
-    template,
     getString,
     viewType
   }: ValidateInputSetProps<AzureWebAppServiceStep>): FormikErrors<AzureWebAppServiceStep> {
     const errors: FormikErrors<AzureWebAppServiceStep> = {}
+    const template = this.inputSetData?.template
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     const artifactType = !isEmpty(data?.artifacts?.primary?.sources?.[0]?.spec)
       ? 'artifacts.primary.sources[0].type'
@@ -723,6 +730,8 @@ export class AzureWebAppServiceSpec extends Step<ServiceSpec> {
   renderStep(props: StepProps<AzureWebAppServiceStep>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, inputSetData, factory, customStepProps, readonly, allowableTypes } =
       props
+
+    this.inputSetData = inputSetData
     if (stepViewType === StepViewType.InputVariable) {
       return (
         <AzureWebAppServiceSpecVariablesForm

@@ -13,7 +13,13 @@ import { CompletionItemKind } from 'vscode-languageserver-types'
 
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 
-import { StepViewType, ValidateInputSetProps, Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
+import {
+  StepViewType,
+  ValidateInputSetProps,
+  Step,
+  StepProps,
+  InputSetData
+} from '@pipeline/components/AbstractSteps/Step'
 import {
   ServiceSpec,
   getConnectorListV2Promise,
@@ -51,6 +57,7 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
   protected type = StepType.CustomDeploymentServiceSpec
   protected defaultValues: ServiceSpec = {}
 
+  protected inputSetData: InputSetData<K8SDirectServiceStep> | undefined = undefined
   protected stepIcon: IconName = 'template-library'
   protected stepName = 'Deplyment Template Type'
   protected stepPaletteVisible = false
@@ -166,12 +173,12 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
 
   validateInputSet({
     data,
-    template,
     getString,
     viewType
   }: ValidateInputSetProps<K8SDirectServiceStep>): FormikErrors<K8SDirectServiceStep> {
     const errors: FormikErrors<K8SDirectServiceStep> = {}
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+    const template = this.inputSetData?.template
     if (
       isEmpty(data?.artifacts?.primary?.spec?.connectorRef) &&
       isRequired &&
@@ -223,6 +230,7 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
     const { initialValues, onUpdate, stepViewType, inputSetData, factory, customStepProps, readonly, allowableTypes } =
       props
 
+    this.inputSetData = inputSetData
     if (stepViewType === StepViewType.InputVariable) {
       return (
         <CustomDeploymentSpecVariablesForm
