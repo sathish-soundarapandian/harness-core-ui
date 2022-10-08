@@ -5,33 +5,43 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
+import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import type { Column } from 'react-table'
-import { Color, Container, FontVariation, Icon, Layout, Select, TableV2, Text, TextInput } from '@harness/uicore'
+import {
+  Color,
+  Container,
+  FontVariation,
+  Icon,
+  Layout,
+  PageSpinner,
+  Select,
+  TableV2,
+  Text,
+  TextInput
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
+import { useGetClusterWorkloadsList, useGetClusterWorkloadsSummary } from 'services/lw'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './CGClusterDetailsBody.module.scss'
 
 const WorkloadDetails: React.FC = () => {
+  const { accountId, id, cloudId } = useParams<AccountPathProps & { id: string; cloudId: string }>()
   const { getString } = useStrings()
-  const [summaryData, setSummaryData] = useState({})
-  // const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    setSummaryData({
-      account_id: 'accID',
-      cloud_account_id: 'cloudAccID',
-      cluster_id: 'cloudAccID',
-      cost: {
-        savings: 2352.23,
-        spend: 130,
-        spot_savings: 762.1
-      },
-      replicas: 3
-    })
-    // setLoading(false)
-  }, [])
+  const { data, loading } = useGetClusterWorkloadsSummary({
+    account_id: accountId,
+    clusterId: id,
+    queryParams: { accountIdentifier: accountId, cloud_account_id: cloudId }
+  })
+
+  const summaryData = get(data, 'response', {})
+
+  if (loading) {
+    return <PageSpinner />
+  }
 
   return (
     <Container padding={'xlarge'}>
@@ -114,35 +124,16 @@ const StrategyCell = () => {
 }
 
 const WorkloadDetailsTable: React.FC = () => {
+  const { accountId, id, cloudId } = useParams<AccountPathProps & { id: string; cloudId: string }>()
   const { getString } = useStrings()
-  const [data, setData] = useState<any[]>([]) // TODO: replace type here
-
-  useEffect(() => {
-    setData([
-      {
-        account_id: 'accID',
-        cloud_account_id: 'cloudAccID',
-        cluster_id: 'cloudAccID',
-        name: 'kube-system',
-        namespace: 'kube-system',
-        replica: 1,
-        total_cost: 0,
-        type: 'Deployment'
-      },
-      {
-        account_id: 'accID',
-        cloud_account_id: 'cloudAccID',
-        cluster_id: 'cloudAccID',
-        name: 'kube-system',
-        namespace: 'kube-system',
-        replica: 2,
-        total_cost: 0,
-        type: 'StatefulSet'
-      }
-    ])
-  }, [])
+  const { data, loading } = useGetClusterWorkloadsList({
+    account_id: accountId,
+    clusterId: id,
+    queryParams: { accountIdentifier: accountId, cloud_account_id: cloudId }
+  })
 
   const columns: Column<any>[] = useMemo(
+    // TODO: replace type here
     () => [
       {
         accessor: 'name',
@@ -202,7 +193,13 @@ const WorkloadDetailsTable: React.FC = () => {
   )
   return (
     <Layout.Vertical spacing={'medium'} margin={{ top: 'huge' }}>
-      <TableV2 columns={columns} data={data} />
+      {loading ? (
+        <Layout.Vertical flex>
+          <Icon name="spinner" size={30} />
+        </Layout.Vertical>
+      ) : (
+        <TableV2 className={css.listTableContainer} columns={columns} data={get(data, 'response.workloads', [])} />
+      )}
     </Layout.Vertical>
   )
 }

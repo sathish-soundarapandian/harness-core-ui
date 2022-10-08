@@ -1742,9 +1742,15 @@ const routes = {
   toCommitmentOrchestration: withAccountId(() => `/ce/commitment-orchestration`),
   toCommitmentOrchestrationSetup: withAccountId(() => `/ce/commitment-orchestration/setup`),
   toComputeGroups: withAccountId(() => `/ce/compute-groups`),
-  toClusterDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}/overview`),
-  toClusterWorkloadsDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}/workloads`),
-  toClusterNodepoolDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}/nodepool`),
+  toClusterDetailsPage: withAccountId(
+    ({ id, cloudId }: { id: string; cloudId: string }) => `/ce/compute-groups/${id}/cloudAccountId/${cloudId}/overview`
+  ),
+  toClusterWorkloadsDetailsPage: withAccountId(
+    ({ id, cloudId }: { id: string; cloudId: string }) => `/ce/compute-groups/${id}/cloudAccountId/${cloudId}/workloads`
+  ),
+  toClusterNodepoolDetailsPage: withAccountId(
+    ({ id, cloudId }: { id: string; cloudId: string }) => `/ce/compute-groups/${id}/cloudAccountId/${cloudId}/nodepool`
+  ),
   toComputeGroupsSetup: withAccountId(() => `/ce/compute-groups/setup/steps`),
   toCECloudIntegration: withAccountId(() => `/ce/cloud-integrations/`),
   toCCMMFE: withAccountId(() => `/ce/new`),

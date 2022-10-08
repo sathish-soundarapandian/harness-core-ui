@@ -147,7 +147,7 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
             header={getString('ce.computeGroups.clusterDetails.nodesBreakdown')}
             data={nodesData}
             title={{
-              text: `<p>${totalNodesCost}</p><p><b>Nodes</b></p>`,
+              text: `<p>${get(data, 'nodes.total', 0)}</p><p><b>Nodes</b></p>`,
               useHTML: true,
               style: { fontWeight: '700', textAlign: 'center', fontSize: '14px' }
             }}

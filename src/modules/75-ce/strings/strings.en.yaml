@@ -1352,7 +1352,7 @@ serviceDetails:
   title: '{{ $.common.serviceDetails }}'
   launchType: Launch Type
 computeGroups:
-  sideNavText: Compute Groups
+  sideNavText: Cluster Orchestrator
   addNewClusterCtaText: Add new cluster
   totalSpotSavings: Total spot savings
   fallback: Fallback

@@ -53,3 +53,9 @@
     flex: 1;
   }
 }
+
+.listTableContainer {
+  :global(.TableV2--header) {
+    background: var(--grey-100);
+  }
+}

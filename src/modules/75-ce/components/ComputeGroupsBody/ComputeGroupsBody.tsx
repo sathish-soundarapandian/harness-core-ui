@@ -5,58 +5,25 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+import { get } from 'lodash-es'
 import { Container, Page, PageSpinner } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
+import { useGetClusterSummary } from 'services/lw'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import CGTopPanel from './CGTopPanel'
 import CGDataRow from './CGDataRow'
 import ClusterTable from './ClusterTable'
 import css from './ComputeGroupsBody.module.scss'
 
 const ComputeGroupsBody: React.FC = () => {
-  const [data, setData] = useState({})
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    // TODO: fetch data for overview page
-    setTimeout(() => {
-      setData({
-        account_id: 'accID',
-        cpu: {
-          total: 10,
-          un_allocated: 4,
-          utilized: 6
-        },
-        memory: {
-          total: 10,
-          un_allocated: 4,
-          utilized: 6
-        },
-        nodes: {
-          committed: 0,
-          fallback: 0,
-          harness_mgd: 0,
-          'on-demand': 1,
-          spot: 0,
-          committed_cost: 0,
-          fallback_cost: 0,
-          harness_mgd_cost: 153.21,
-          'on-demand_cost': 10.2,
-          spot_cost: 4.6,
-          cpu: {
-            total: 10,
-            un_allocated: 4,
-            utilized: 6
-          },
-          memory: {
-            total: 10,
-            un_allocated: 4,
-            utilized: 6
-          }
-        }
-      })
-      setLoading(false)
-    }, 1000)
-  }, [])
+  const { accountId } = useParams<AccountPathProps>()
+  // const [data, setData] = useState({})
+  // const [loading, setLoading] = useState(true)
+  const { data, loading } = useGetClusterSummary({
+    account_id: accountId,
+    queryParams: { accountIdentifier: accountId }
+  })
 
   if (loading) {
     return <PageSpinner />
@@ -66,7 +33,7 @@ const ComputeGroupsBody: React.FC = () => {
     <Page.Body className={css.cgBodyContainer}>
       <CGTopPanel />
       <Container className={css.bodyWidgetsContainer}>
-        <CGDataRow data={data} />
+        <CGDataRow data={get(data, 'response', {})} />
         <ClusterTable />
       </Container>
     </Page.Body>

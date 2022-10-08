@@ -2546,6 +2546,269 @@
         }
       }
     },
+    "/accounts/{account_id}/clusters/summary": {
+      "get": {
+        "parameters": [
+          {
+            "name": "account_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["getClusterSummary"],
+        "summary": "Fetches Cluster summary",
+        "description": "Fetches Cluster summary",
+        "operationId": "getClusterSummary",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "/accounts/{account_id}/clusters": {
+      "get": {
+        "parameters": [
+          {
+            "name": "account_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["getClustersList"],
+        "summary": "Fetches Cluster list for a given account",
+        "description": "Fetches Cluster list for a given account",
+        "operationId": "getClustersList",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "/accounts/{account_id}/clusters/{clusterId}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "account_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cloud_account_id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["getClusterDetails"],
+        "summary": "Fetches cluster details",
+        "description": "Fetches cluster details",
+        "operationId": "getClusterDetails",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "/accounts/{account_id}/clusters/{clusterId}/workloads/summary": {
+      "get": {
+        "parameters": [
+          {
+            "name": "account_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cloud_account_id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["getClusterWorkloadsSummary"],
+        "summary": "Fetches workload summary for a cluster",
+        "description": "Fetches workload summary for a cluster",
+        "operationId": "getClusterWorkloadsSummary",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "/accounts/{account_id}/clusters/{clusterId}/workloads": {
+      "get": {
+        "parameters": [
+          {
+            "name": "account_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cloud_account_id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["getClusterWorkloadsList"],
+        "summary": "Fetches workload list for a cluster",
+        "description": "Fetches workload list for a cluster",
+        "operationId": "getClusterWorkloadsList",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "/accounts/{account_id}/clusters/{clusterId}/nodes/summary": {
+      "get": {
+        "parameters": [
+          {
+            "name": "account_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cloud_account_id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["getClusterNodesSummary"],
+        "summary": "Fetches nodes summary for a cluster",
+        "description": "Fetches nodes summary for a cluster",
+        "operationId": "getClusterNodesSummary",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object"
+          }
+        }
+      }
+    },
+    "accounts/{account_id}/clusters/{clusterId}/nodes": {
+      "get": {
+        "parameters": [
+          {
+            "name": "account_id",
+            "required": true,
+            "in": "path",
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cloud_account_id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "clusterId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": ["getClusterNodes"],
+        "summary": "Fetches nodes details for cluster",
+        "description": "Fetches nodes details for cluster",
+        "operationId": "getClusterNodes",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object"
+          }
+        }
+      }
+    },
     "/app_id": {
       "get": {
         "tags": ["appId"],

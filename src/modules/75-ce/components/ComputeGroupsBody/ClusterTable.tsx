@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import type { CellProps, Column } from 'react-table'
 import { useHistory, useParams } from 'react-router-dom'
 import {
@@ -21,41 +21,18 @@ import {
   TableV2,
   Text
 } from '@harness/uicore'
+import { get } from 'lodash-es'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { TableCell } from '@ce/components/COGatewayConfig/steps/ManageResources/common'
 import formatCost from '@ce/utils/formatCost'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useGetClustersList } from 'services/lw'
 import css from './ComputeGroupsBody.module.scss'
 
-interface ClusterRow {
-  name: string
-  id: string
-  region: string
-  nodeCount: number
-  cpu: number
-  memory: number
-  spend: number
-  managedBy: string[]
-  status: string
-}
-
-// const clusterData = {
-//   name: 'myK8sCluster',
-//   id: 'ID',
-//   region: 'us-east-1',
-//   nodeCount: 7,
-//   cpu: 11.82,
-//   memory: 6.37,
-//   spend: 27.83,
-//   managedBy: [],
-//   status: 'enabled'
-// }
-
-// const data = [clusterData, clusterData, clusterData]
-
 const NameIdCell = (tableProps: CellProps<any>) => {
+  // TODO: correct type here
   return (
     <Container>
       <Text>{tableProps.row.original.name}</Text>
@@ -67,7 +44,7 @@ const NameIdCell = (tableProps: CellProps<any>) => {
 const ValueWithBreakdown = (tableProps: CellProps<any>) => {
   const { getString } = useStrings()
   const data = tableProps.row.original
-  const nodes = data.nodes.committed + data.nodes.fallback + data.nodes['on-demand'] + data.nodes.spot
+  const nodes = data.nodes.total
   return (
     <Popover
       position={Position.RIGHT_TOP}
@@ -221,9 +198,11 @@ const ClusterTable: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
-  const [data, setData] = useState<any[]>([]) // TODO: change to correct type
-  const [loading, setLoading] = useState(true)
-  const columns: Column<ClusterRow>[] = useMemo(
+  const { data, loading } = useGetClustersList({
+    account_id: accountId,
+    queryParams: { accountIdentifier: accountId }
+  })
+  const columns: Column<any>[] = useMemo(
     () => [
       {
         accessor: 'id',
@@ -240,7 +219,7 @@ const ClusterTable: React.FC = () => {
         disableSortBy: true
       },
       {
-        accessor: 'nodeCount',
+        accessor: 'nodes',
         Header: getString('ce.nodeRecommendation.nodeCount'),
         width: '12%',
         Cell: ValueWithBreakdown,
@@ -264,7 +243,7 @@ const ClusterTable: React.FC = () => {
         accessor: 'spend',
         Header: getString('ce.commitmentOrchestration.computeSpend'),
         width: '12%',
-        Cell: tableProps => (
+        Cell: (tableProps: any) => (
           <Text font={{ variation: FontVariation.LEAD }}>
             {formatCost(tableProps.row.original.spend, { decimalPoints: 2 })}
           </Text>
@@ -287,52 +266,6 @@ const ClusterTable: React.FC = () => {
     []
   )
 
-  useEffect(() => {
-    setData([
-      {
-        account_id: 'accID',
-        cloud_account_id: 'cloudAccID',
-        cpu: {
-          total: 10,
-          un_allocated: 4,
-          utilized: 6
-        },
-        create_time: '0001-01-01T00:00:00Z',
-        created_at: '0001-01-01T00:00:00Z',
-        id: 'cloudAccID',
-        memory: {
-          total: 10,
-          un_allocated: 4,
-          utilized: 6
-        },
-        name: 'shalinlk-dashboard-RnD',
-        nodes: {
-          committed: 0,
-          cpu: {
-            total: 10,
-            un_allocated: 4,
-            utilized: 6
-          },
-          fallback: 0,
-          harness_mgd: 0,
-          memory: {
-            total: 10,
-            un_allocated: 4,
-            utilized: 6
-          },
-          'on-demand': 1,
-          spot: 0
-        },
-        region: 'us-west-2',
-        resource_version: 0,
-        cluster_orch_id: 'co-asejfh234kasf',
-        spend: 27.83,
-        status: 'enabled'
-      }
-    ])
-    setLoading(false)
-  }, [])
-
   if (loading) {
     return (
       <Layout.Vertical flex>
@@ -345,8 +278,10 @@ const ClusterTable: React.FC = () => {
     <Container margin={{ top: 'huge' }}>
       <TableV2
         columns={columns}
-        data={data}
-        onRowClick={({ id }) => history.push(routes.toClusterDetailsPage({ accountId, id }))}
+        data={get(data, 'response.clusters', [])}
+        onRowClick={({ id, cloud_account_id }) =>
+          history.push(routes.toClusterDetailsPage({ accountId, id, cloudId: cloud_account_id }))
+        }
       />
     </Container>
   )

@@ -57,7 +57,7 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
   const spotCost = get(data, 'nodes.spot_cost', 0)
   const committedCost = get(data, 'nodes.committed_cost', 0)
   const fallbackCost = get(data, 'nodes.fallback_cost', 0)
-  const totalNodesCost = onDemandCost + spotCost + committedCost + fallbackCost
+  const totalNodesCost = get(data, 'nodes.total', 0)
   const nodesData = [
     {
       color: Color.GREY_200,
@@ -114,50 +114,6 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
           <Text font={{ variation: FontVariation.SMALL }}>{getString('ce.commitmentOrchestration.monthToDate')}</Text>
         </Layout.Vertical>
       </Container>
-      {/* <Container className={cx(css.infoContainer, css.spacedContainer)}>
-        <Text margin={{ bottom: 'medium' }} font={{ variation: FontVariation.H6 }}>
-          {getString('ce.overview.cardtitles.clusterBreakdown')}
-        </Text>
-        <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
-          <Layout.Horizontal flex className={css.flexSpace1}>
-            <CEChart
-              options={{
-                ...getRadialChartOptions(
-                  [
-                    {
-                      name: 'onDemand',
-                      value: 20
-                    },
-                    { name: 'spot', value: 25 },
-                    {
-                      name: 'fallback',
-                      value: 30
-                    },
-                    {
-                      name: 'commitments',
-                      value: 25
-                    }
-                  ],
-                  ['#D9DAE5', '#CDF4FE', '#3DC7F6', '#0092E4'],
-                  {
-                    chart: { height: 160, width: 160 }
-                  },
-                  '70%'
-                ),
-                title: {
-                  text: '10',
-                  align: 'center',
-                  verticalAlign: 'middle',
-                  style: { fontSize: '15px', fontWeight: '700' }
-                }
-              }}
-            />
-          </Layout.Horizontal>
-          <Container className={css.flexSpace2}>
-            <Legends data={MOCK_NODES_DATA} />
-          </Container>
-        </Layout.Horizontal>
-      </Container> */}
       <Container className={cx(css.infoContainer, css.spacedContainer)}>
         <DonughtChartDataDistributionCard
           header={getString('ce.overview.cardtitles.clusterBreakdown')}

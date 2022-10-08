@@ -2383,6 +2383,286 @@ export const useGetCloudFormationTemplate = ({ account_id, ...props }: UseGetClo
     { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
   )
 
+export interface GetClustersListQueryParams {
+  accountIdentifier: string
+}
+
+export interface GetClustersListPathParams {
+  account_id: string
+}
+
+export type GetClustersListProps = Omit<
+  GetProps<void, unknown, GetClustersListQueryParams, GetClustersListPathParams>,
+  'path'
+> &
+  GetClustersListPathParams
+
+/**
+ * Fetches Cluster list for a given account
+ *
+ * Fetches Cluster list for a given account
+ */
+export const GetClustersList = ({ account_id, ...props }: GetClustersListProps) => (
+  <Get<void, unknown, GetClustersListQueryParams, GetClustersListPathParams>
+    path={`/accounts/${account_id}/clusters`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseGetClustersListProps = Omit<
+  UseGetProps<void, unknown, GetClustersListQueryParams, GetClustersListPathParams>,
+  'path'
+> &
+  GetClustersListPathParams
+
+/**
+ * Fetches Cluster list for a given account
+ *
+ * Fetches Cluster list for a given account
+ */
+export const useGetClustersList = ({ account_id, ...props }: UseGetClustersListProps) =>
+  useGet<void, unknown, GetClustersListQueryParams, GetClustersListPathParams>(
+    (paramsInPath: GetClustersListPathParams) => `/accounts/${paramsInPath.account_id}/clusters`,
+    { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
+  )
+
+export interface GetClusterSummaryQueryParams {
+  accountIdentifier: string
+}
+
+export interface GetClusterSummaryPathParams {
+  account_id: string
+}
+
+export type GetClusterSummaryProps = Omit<
+  GetProps<void, unknown, GetClusterSummaryQueryParams, GetClusterSummaryPathParams>,
+  'path'
+> &
+  GetClusterSummaryPathParams
+
+/**
+ * Fetches Cluster summary
+ *
+ * Fetches Cluster summary
+ */
+export const GetClusterSummary = ({ account_id, ...props }: GetClusterSummaryProps) => (
+  <Get<void, unknown, GetClusterSummaryQueryParams, GetClusterSummaryPathParams>
+    path={`/accounts/${account_id}/clusters/summary`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterSummaryProps = Omit<
+  UseGetProps<void, unknown, GetClusterSummaryQueryParams, GetClusterSummaryPathParams>,
+  'path'
+> &
+  GetClusterSummaryPathParams
+
+/**
+ * Fetches Cluster summary
+ *
+ * Fetches Cluster summary
+ */
+export const useGetClusterSummary = ({ account_id, ...props }: UseGetClusterSummaryProps) =>
+  useGet<void, unknown, GetClusterSummaryQueryParams, GetClusterSummaryPathParams>(
+    (paramsInPath: GetClusterSummaryPathParams) => `/accounts/${paramsInPath.account_id}/clusters/summary`,
+    { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
+  )
+
+export interface GetClusterDetailsQueryParams {
+  accountIdentifier: string
+  cloud_account_id: string
+}
+
+export interface GetClusterDetailsPathParams {
+  account_id: string
+  clusterId: string
+}
+
+export type GetClusterDetailsProps = Omit<
+  GetProps<void, unknown, GetClusterDetailsQueryParams, GetClusterDetailsPathParams>,
+  'path'
+> &
+  GetClusterDetailsPathParams
+
+/**
+ * Fetches cluster details
+ *
+ * Fetches cluster details
+ */
+export const GetClusterDetails = ({ account_id, clusterId, ...props }: GetClusterDetailsProps) => (
+  <Get<void, unknown, GetClusterDetailsQueryParams, GetClusterDetailsPathParams>
+    path={`/accounts/${account_id}/clusters/${clusterId}`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterDetailsProps = Omit<
+  UseGetProps<void, unknown, GetClusterDetailsQueryParams, GetClusterDetailsPathParams>,
+  'path'
+> &
+  GetClusterDetailsPathParams
+
+/**
+ * Fetches cluster details
+ *
+ * Fetches cluster details
+ */
+export const useGetClusterDetails = ({ account_id, clusterId, ...props }: UseGetClusterDetailsProps) =>
+  useGet<void, unknown, GetClusterDetailsQueryParams, GetClusterDetailsPathParams>(
+    (paramsInPath: GetClusterDetailsPathParams) =>
+      `/accounts/${paramsInPath.account_id}/clusters/${paramsInPath.clusterId}`,
+    { base: getConfig('lw/api'), pathParams: { account_id, clusterId }, ...props }
+  )
+
+export interface GetClusterNodesSummaryQueryParams {
+  accountIdentifier: string
+  cloud_account_id: string
+}
+
+export interface GetClusterNodesSummaryPathParams {
+  account_id: string
+  clusterId: string
+}
+
+export type GetClusterNodesSummaryProps = Omit<
+  GetProps<void, unknown, GetClusterNodesSummaryQueryParams, GetClusterNodesSummaryPathParams>,
+  'path'
+> &
+  GetClusterNodesSummaryPathParams
+
+/**
+ * Fetches nodes summary for a cluster
+ *
+ * Fetches nodes summary for a cluster
+ */
+export const GetClusterNodesSummary = ({ account_id, clusterId, ...props }: GetClusterNodesSummaryProps) => (
+  <Get<void, unknown, GetClusterNodesSummaryQueryParams, GetClusterNodesSummaryPathParams>
+    path={`/accounts/${account_id}/clusters/${clusterId}/nodes/summary`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterNodesSummaryProps = Omit<
+  UseGetProps<void, unknown, GetClusterNodesSummaryQueryParams, GetClusterNodesSummaryPathParams>,
+  'path'
+> &
+  GetClusterNodesSummaryPathParams
+
+/**
+ * Fetches nodes summary for a cluster
+ *
+ * Fetches nodes summary for a cluster
+ */
+export const useGetClusterNodesSummary = ({ account_id, clusterId, ...props }: UseGetClusterNodesSummaryProps) =>
+  useGet<void, unknown, GetClusterNodesSummaryQueryParams, GetClusterNodesSummaryPathParams>(
+    (paramsInPath: GetClusterNodesSummaryPathParams) =>
+      `/accounts/${paramsInPath.account_id}/clusters/${paramsInPath.clusterId}/nodes/summary`,
+    { base: getConfig('lw/api'), pathParams: { account_id, clusterId }, ...props }
+  )
+
+export interface GetClusterWorkloadsListQueryParams {
+  accountIdentifier: string
+  cloud_account_id: string
+}
+
+export interface GetClusterWorkloadsListPathParams {
+  account_id: string
+  clusterId: string
+}
+
+export type GetClusterWorkloadsListProps = Omit<
+  GetProps<void, unknown, GetClusterWorkloadsListQueryParams, GetClusterWorkloadsListPathParams>,
+  'path'
+> &
+  GetClusterWorkloadsListPathParams
+
+/**
+ * Fetches workload list for a cluster
+ *
+ * Fetches workload list for a cluster
+ */
+export const GetClusterWorkloadsList = ({ account_id, clusterId, ...props }: GetClusterWorkloadsListProps) => (
+  <Get<void, unknown, GetClusterWorkloadsListQueryParams, GetClusterWorkloadsListPathParams>
+    path={`/accounts/${account_id}/clusters/${clusterId}/workloads`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterWorkloadsListProps = Omit<
+  UseGetProps<void, unknown, GetClusterWorkloadsListQueryParams, GetClusterWorkloadsListPathParams>,
+  'path'
+> &
+  GetClusterWorkloadsListPathParams
+
+/**
+ * Fetches workload list for a cluster
+ *
+ * Fetches workload list for a cluster
+ */
+export const useGetClusterWorkloadsList = ({ account_id, clusterId, ...props }: UseGetClusterWorkloadsListProps) =>
+  useGet<void, unknown, GetClusterWorkloadsListQueryParams, GetClusterWorkloadsListPathParams>(
+    (paramsInPath: GetClusterWorkloadsListPathParams) =>
+      `/accounts/${paramsInPath.account_id}/clusters/${paramsInPath.clusterId}/workloads`,
+    { base: getConfig('lw/api'), pathParams: { account_id, clusterId }, ...props }
+  )
+
+export interface GetClusterWorkloadsSummaryQueryParams {
+  accountIdentifier: string
+  cloud_account_id: string
+}
+
+export interface GetClusterWorkloadsSummaryPathParams {
+  account_id: string
+  clusterId: string
+}
+
+export type GetClusterWorkloadsSummaryProps = Omit<
+  GetProps<void, unknown, GetClusterWorkloadsSummaryQueryParams, GetClusterWorkloadsSummaryPathParams>,
+  'path'
+> &
+  GetClusterWorkloadsSummaryPathParams
+
+/**
+ * Fetches workload summary for a cluster
+ *
+ * Fetches workload summary for a cluster
+ */
+export const GetClusterWorkloadsSummary = ({ account_id, clusterId, ...props }: GetClusterWorkloadsSummaryProps) => (
+  <Get<void, unknown, GetClusterWorkloadsSummaryQueryParams, GetClusterWorkloadsSummaryPathParams>
+    path={`/accounts/${account_id}/clusters/${clusterId}/workloads/summary`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterWorkloadsSummaryProps = Omit<
+  UseGetProps<void, unknown, GetClusterWorkloadsSummaryQueryParams, GetClusterWorkloadsSummaryPathParams>,
+  'path'
+> &
+  GetClusterWorkloadsSummaryPathParams
+
+/**
+ * Fetches workload summary for a cluster
+ *
+ * Fetches workload summary for a cluster
+ */
+export const useGetClusterWorkloadsSummary = ({
+  account_id,
+  clusterId,
+  ...props
+}: UseGetClusterWorkloadsSummaryProps) =>
+  useGet<void, unknown, GetClusterWorkloadsSummaryQueryParams, GetClusterWorkloadsSummaryPathParams>(
+    (paramsInPath: GetClusterWorkloadsSummaryPathParams) =>
+      `/accounts/${paramsInPath.account_id}/clusters/${paramsInPath.clusterId}/workloads/summary`,
+    { base: getConfig('lw/api'), pathParams: { account_id, clusterId }, ...props }
+  )
+
 export interface GetContainerClustersOfRegionQueryParams {
   cloud_account_id: string
   accountIdentifier: string
@@ -3610,6 +3890,53 @@ export const useGetRulesMetadata = ({ account_id, ...props }: UseGetRulesMetadat
     (paramsInPath: GetRulesMetadataPathParams) =>
       `accounts/${paramsInPath.account_id}/autostopping/rules/list/metadata`,
     { base: getConfig('lw/api'), pathParams: { account_id }, ...props }
+  )
+
+export interface GetClusterNodesQueryParams {
+  accountIdentifier: string
+  cloud_account_id: string
+}
+
+export interface GetClusterNodesPathParams {
+  account_id: string
+  clusterId: string
+}
+
+export type GetClusterNodesProps = Omit<
+  GetProps<void, unknown, GetClusterNodesQueryParams, GetClusterNodesPathParams>,
+  'path'
+> &
+  GetClusterNodesPathParams
+
+/**
+ * Fetches nodes details for cluster
+ *
+ * Fetches nodes details for cluster
+ */
+export const GetClusterNodes = ({ account_id, clusterId, ...props }: GetClusterNodesProps) => (
+  <Get<void, unknown, GetClusterNodesQueryParams, GetClusterNodesPathParams>
+    path={`accounts/${account_id}/clusters/${clusterId}/nodes`}
+    base={getConfig('lw/api')}
+    {...props}
+  />
+)
+
+export type UseGetClusterNodesProps = Omit<
+  UseGetProps<void, unknown, GetClusterNodesQueryParams, GetClusterNodesPathParams>,
+  'path'
+> &
+  GetClusterNodesPathParams
+
+/**
+ * Fetches nodes details for cluster
+ *
+ * Fetches nodes details for cluster
+ */
+export const useGetClusterNodes = ({ account_id, clusterId, ...props }: UseGetClusterNodesProps) =>
+  useGet<void, unknown, GetClusterNodesQueryParams, GetClusterNodesPathParams>(
+    (paramsInPath: GetClusterNodesPathParams) =>
+      `accounts/${paramsInPath.account_id}/clusters/${paramsInPath.clusterId}/nodes`,
+    { base: getConfig('lw/api'), pathParams: { account_id, clusterId }, ...props }
   )
 
 export interface GetMachineListForZoneResponse {

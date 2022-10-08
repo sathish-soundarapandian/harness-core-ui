@@ -12,6 +12,7 @@ declare const styles: {
   readonly head: string
   readonly infoCard: string
   readonly inlineBold: string
+  readonly listTableContainer: string
   readonly podOnDemandTag: string
   readonly podSpotTag: string
   readonly strategyCell: string

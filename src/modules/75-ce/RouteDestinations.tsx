@@ -849,9 +849,9 @@ const CERoutes: React.FC = () => {
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CESideNavProps}
           path={[
-            routes.toClusterDetailsPage({ ...accountPathProps, id: ':id' }),
-            routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id' }),
-            routes.toClusterNodepoolDetailsPage({ ...accountPathProps, id: ':id' })
+            routes.toClusterDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' }),
+            routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' }),
+            routes.toClusterNodepoolDetailsPage({ ...accountPathProps, id: ':id', cloudId: ':cloudId' })
           ]}
           exact
           pageName={PAGE_NAME.CEClusterDetailsPage}
