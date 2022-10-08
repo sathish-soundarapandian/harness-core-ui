@@ -18,27 +18,30 @@ import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@comm
 import * as templateService from 'services/template-ng'
 import { parse } from '@common/utils/YamlHelperMethods'
 import type { ResponseString } from 'services/template-ng'
+import type { TemplateLinkConfig } from 'services/pipeline-ng'
 
 export const pipelineTemplateInputYaml: ResponseString = {
   status: 'SUCCESS',
   data:
-    'stages:\n' +
-    '- stage:\n' +
-    '    identifier: "Stage_1"\n' +
-    '    type: "Approval"\n' +
-    '    spec:\n' +
-    '      execution:\n' +
-    '        steps:\n' +
-    '        - step:\n' +
-    '            identifier: "Step_1"\n' +
-    '            type: "ShellScript"\n' +
-    '            spec:\n' +
-    '              source:\n' +
-    '                type: "Inline"\n' +
-    '                spec:\n' +
-    '                  script: "<+input>"\n' +
-    '            timeout: "<+input>"\n' +
-    'delegateSelectors: "<+input>"\n'
+    'templateInputs:' +
+    '\n    stages:' +
+    '\n    - stage:' +
+    '\n        identifier: "Stage_1"' +
+    '\n        type: "Approval"' +
+    '\n        spec:' +
+    '\n          execution:' +
+    '\n            steps:' +
+    '\n            - step:' +
+    '\n                identifier: "Step_1"' +
+    '\n                type: "ShellScript"' +
+    '\n                spec:' +
+    '\n                  source:' +
+    '\n                    type: "Inline"' +
+    '\n                    spec:' +
+    '\n                      script: "<+input>"' +
+    '\n                timeout: "<+input>"' +
+    '\n    delegateSelectors: "<+input>"' +
+    '\n'
 }
 
 const useGetTemplateInputSetYamlMock = jest.spyOn(templateService, 'useGetTemplateInputSetYaml').mockImplementation(
@@ -150,6 +153,8 @@ describe('<TemplatePipelineSpecifications/> tests', () => {
   test('should call updatePipeline correctly when input values is changed', async () => {
     const { container } = render(<WrappedComponent />)
 
+    expect(container).toMatchSnapshot()
+
     const timeoutInputBefore = container.querySelector(
       '[name="template.templateInputs.stages[0].stage.spec.execution.steps[0].step.timeout"]'
     ) as HTMLElement
@@ -177,8 +182,13 @@ describe('<TemplatePipelineSpecifications/> tests', () => {
     await waitFor(() => {
       expect(contextMock.updatePipeline).toBeCalledWith(
         produce(contextMock.state.pipeline, draft => {
-          set(draft, 'template.templateInputs', parse(pipelineTemplateInputYaml.data || ''))
+          set(
+            draft,
+            'template.templateInputs',
+            parse<TemplateLinkConfig>(pipelineTemplateInputYaml.data || '').templateInputs
+          )
           set(draft, 'template.templateInputs.stages[0].stage.spec.execution.steps[0].step.timeout', '10s')
+          set(draft, 'template.variables', {})
         })
       )
     })

@@ -1,0 +1,398 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<TemplatePipelineSpecifications/> tests should call updatePipeline correctly when input values is changed 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main contentSection StyledProps--background-form"
+    style="height: 100%;"
+  >
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <form
+        action="#"
+        class="FormikForm--main"
+      >
+        <div>
+          <div
+            class="StyledProps--font StyledProps--main inputsContainer"
+          >
+            <div
+              class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main StyledProps--padding-bottom-large"
+            >
+              <h5
+                class="StyledProps--font StyledProps--font-h5 StyledProps--main StyledProps--color StyledProps--color-black"
+                level="5"
+              >
+                pipeline.templateInputs
+              </h5>
+              <div
+                class="StyledProps--font StyledProps--main"
+              >
+                <div
+                  class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container"
+                >
+                  <div
+                    class="formGroup sm delegate"
+                  >
+                    <div
+                      class="bp3-form-group"
+                      data-id="template.templateInputs.delegateSelectors-0"
+                    >
+                      <div
+                        class="bp3-form-content"
+                      >
+                        <div
+                          class="StyledProps--font StyledProps--main fieldSelectorContainer"
+                        >
+                          <div
+                            class="bp3-form-group formGroup"
+                            data-id="template.templateInputs.delegateSelectors-1"
+                            style="flex-grow: 1; margin-bottom: 0px;"
+                          >
+                            <label
+                              class="bp3-label"
+                              for="template.templateInputs.delegateSelectors"
+                            >
+                              <div
+                                class="formLabel"
+                              >
+                                <span
+                                  class="Tooltip--acenter"
+                                  data-tooltip-id="templateStageOverview_template.templateInputs.delegateSelectors"
+                                >
+                                  common.defineDelegateSelector
+                                </span>
+                                <div
+                                  class="bp3-popover-wrapper typeSelectorWrapper"
+                                >
+                                  <div
+                                    class="bp3-popover-target typeSelector"
+                                  >
+                                    <button
+                                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                                      type="button"
+                                    >
+                                      <span
+                                        class="bp3-button-text"
+                                      >
+                                        <span
+                                          class="bp3-icon StyledProps--main icon runtime"
+                                          data-icon="runtime-input"
+                                        >
+                                          <svg
+                                            height="12"
+                                            viewBox="0 0 10 7.97"
+                                            width="12"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                                              fill="current-color"
+                                            />
+                                          </svg>
+                                        </span>
+                                      </span>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                               
+                              <span
+                                class="bp3-text-muted"
+                              />
+                            </label>
+                            <div
+                              class="bp3-form-content"
+                            >
+                              <div
+                                class="bp3-form-group bp3-disabled runtimeDisabled"
+                                data-id="template.templateInputs.delegateSelectors-2"
+                              >
+                                
+                                <div
+                                  class="bp3-form-content"
+                                >
+                                  <div
+                                    class="bp3-input-group bp3-disabled"
+                                  >
+                                    <input
+                                      autocomplete="off"
+                                      class="bp3-input"
+                                      disabled=""
+                                      name="template.templateInputs.delegateSelectors"
+                                      type="text"
+                                      value="<+input>"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="Layout--vertical StyledProps--main"
+                  >
+                    <div
+                      id="Stage.Stage_1"
+                    >
+                      <div
+                        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-medium StyledProps--padding-left-large"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main"
+                          data-icon="approval-stage-icon"
+                        >
+                          <svg
+                            height="18"
+                            viewBox="0 0 33 33"
+                            width="18"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M24.695 13.426l2.025 2.026a1 1 0 010 1.414l-9.871 9.871a1 1 0 01-1.414 0L5.248 16.551a1 1 0 010-1.414l9.844-9.844a1 1 0 011.428.014l3.95 4.106 1.441-1.386-3.95-4.106a3 3 0 00-4.283-.042l-9.844 9.844a3 3 0 000 4.242L14.02 28.152a3 3 0 004.243 0l9.871-9.872a3 3 0 000-4.243l-2.025-2.025-1.415 1.414zm1.4-4.114a1 1 0 00-1.413-1.414l-9.271 9.27-3.783-3.782a1 1 0 10-1.414 1.414l5.197 5.197L26.096 9.312z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                        <p
+                          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black100 StyledProps--font-weight-semi-bold"
+                        >
+                          Stage: 
+                          Stage 1
+                        </p>
+                      </div>
+                      <div
+                        class="topAccordion"
+                      >
+                        <div
+                          class="accordionSummary"
+                          id="Stage.Stage_1.Execution"
+                        >
+                          <div
+                            class="inputheader"
+                          >
+                            executionText
+                          </div>
+                          <div
+                            class="nestedAccordions"
+                          >
+                            <div
+                              class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-medium"
+                            >
+                              <label
+                                class="Label--main"
+                              >
+                                <span
+                                  class="bp3-icon StyledProps--main StyledProps--padding-right-small StyledProps--color StyledProps--color-grey700"
+                                  data-icon="command-shell-script"
+                                >
+                                  <svg
+                                    height="16"
+                                    viewBox="0 0 14 11"
+                                    width="16"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M4.2 2.8c0-.4-.3-.7-.7-.7-.2 0-.4 0-.5.2L.2 5c-.1.1-.2.3-.2.5s.1.4.2.5L3 8.7c.1.1.3.2.5.2.4 0 .7-.3.7-.7 0-.2-.1-.4-.2-.5L1.7 5.5 4 3.2c.1-.1.2-.3.2-.4zM8.4 0c-.3 0-.6.2-.7.5l-2.8 9.6v.2c0 .4.3.7.7.7.3 0 .6-.2.7-.5L9.1.9V.7c0-.4-.3-.7-.7-.7zm5.4 5L11 2.3c-.1-.1-.3-.2-.5-.2-.4 0-.7.3-.7.7 0 .2.1.4.2.5l2.3 2.3L10 7.8c-.1.1-.2.3-.2.4 0 .4.3.7.7.7.2 0 .4-.1.5-.2L13.8 6c.1-.1.2-.3.2-.5s-.1-.4-.2-.5z"
+                                      fill="currentColor"
+                                    />
+                                  </svg>
+                                </span>
+                                pipeline.execution.stepTitlePrefix
+                                pipeline.stepLabel
+                              </label>
+                              <div>
+                                <form
+                                  action="#"
+                                  class="FormikForm--main"
+                                >
+                                  <div>
+                                    <div
+                                      class="formGroup sm"
+                                    >
+                                      <div
+                                        class="bp3-form-group"
+                                        data-id="template.templateInputs.stages[0].stage.spec.execution.steps[0].step.timeout-3"
+                                      >
+                                        <label
+                                          class="bp3-label"
+                                          for="template.templateInputs.stages[0].stage.spec.execution.steps[0].step.timeout"
+                                        >
+                                          <span
+                                            class="Tooltip--acenter"
+                                            data-tooltip-id="templateStageOverview_template.templateInputs.stages[0].stage.spec.execution.steps[0].step.timeout"
+                                          >
+                                            pipelineSteps.timeoutLabel
+                                          </span>
+                                           
+                                          <span
+                                            class="bp3-text-muted"
+                                          />
+                                        </label>
+                                        <div
+                                          class="bp3-form-content"
+                                        >
+                                          <div
+                                            class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                                            style="flex-grow: 1;"
+                                          >
+                                            <div
+                                              class="TextInput--main MultiTypeInput--input"
+                                            >
+                                              <div
+                                                class="bp3-input-group bp3-disabled"
+                                              >
+                                                <input
+                                                  class="bp3-input"
+                                                  disabled=""
+                                                  name="template.templateInputs.stages[0].stage.spec.execution.steps[0].step.timeout"
+                                                  placeholder="<+input>"
+                                                  type="text"
+                                                  value="<+input>"
+                                                />
+                                              </div>
+                                            </div>
+                                            <span
+                                              class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                                            >
+                                              <span
+                                                class="bp3-popover-target"
+                                              >
+                                                <button
+                                                  class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                                                >
+                                                  <span
+                                                    class="bp3-icon StyledProps--main"
+                                                    data-icon="runtime-input"
+                                                  >
+                                                    <svg
+                                                      height="12"
+                                                      viewBox="0 0 10 7.97"
+                                                      width="12"
+                                                      xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                      <path
+                                                        d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                                                        fill="current-color"
+                                                      />
+                                                    </svg>
+                                                  </span>
+                                                </button>
+                                              </span>
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      class="formGroup alignStart md"
+                                    >
+                                      <div
+                                        class="bp3-form-group formGroup"
+                                        data-id="template.templateInputs.stages[0].stage.spec.execution.steps[0].step.spec.source.spec.script-4"
+                                      >
+                                        <label
+                                          class="bp3-label"
+                                          for="template.templateInputs.stages[0].stage.spec.execution.steps[0].step.spec.source.spec.script"
+                                        >
+                                          <div
+                                            class="formLabel"
+                                          >
+                                            <span
+                                              class="Tooltip--acenter"
+                                              data-tooltip-id="templateStageOverview_template.templateInputs.stages[0].stage.spec.execution.steps[0].step.spec.source.spec.script"
+                                            >
+                                              common.script
+                                            </span>
+                                            <div
+                                              class="bp3-popover-wrapper typeSelectorWrapper"
+                                            >
+                                              <div
+                                                class="bp3-popover-target typeSelector"
+                                              >
+                                                <button
+                                                  class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
+                                                  type="button"
+                                                >
+                                                  <span
+                                                    class="bp3-button-text"
+                                                  >
+                                                    <span
+                                                      class="bp3-icon StyledProps--main icon runtime"
+                                                      data-icon="runtime-input"
+                                                    >
+                                                      <svg
+                                                        height="12"
+                                                        viewBox="0 0 10 7.97"
+                                                        width="12"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                      >
+                                                        <path
+                                                          d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                                                          fill="current-color"
+                                                        />
+                                                      </svg>
+                                                    </span>
+                                                  </span>
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                           
+                                          <span
+                                            class="bp3-text-muted"
+                                          />
+                                        </label>
+                                        <div
+                                          class="bp3-form-content"
+                                        >
+                                          <div
+                                            class="bp3-form-group bp3-disabled runtimeDisabled"
+                                            data-id="template.templateInputs.stages[0].stage.spec.execution.steps[0].step.spec.source.spec.script-5"
+                                          >
+                                            
+                                            <div
+                                              class="bp3-form-content"
+                                            >
+                                              <div
+                                                class="bp3-input-group bp3-disabled"
+                                              >
+                                                <input
+                                                  autocomplete="off"
+                                                  class="bp3-input"
+                                                  disabled=""
+                                                  name="template.templateInputs.stages[0].stage.spec.execution.steps[0].step.spec.source.spec.script"
+                                                  type="text"
+                                                  value="<+input>"
+                                                />
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;
