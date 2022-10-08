@@ -61,7 +61,7 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
   const nodesData = [
     {
       color: Color.GREY_200,
-      legendText: `On-demand (${get(data, 'nodes.on-demand', 0)})`,
+      legendText: `On-demand (${get(data, 'nodes.on_demand', 0)})`,
       name: 'On-demand',
       value: formatCost(onDemandCost),
       graphPercentage: (onDemandCost / totalNodesCost) * 100
@@ -120,7 +120,7 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
           data={nodesData}
           title={{
             style: { fontSize: '20px', fontWeight: '700' },
-            text: (data.nodes.committed + data.nodes.fallback + data.nodes['on-demand'] + data.nodes.spot).toString()
+            text: (data.nodes.committed + data.nodes.fallback + data.node.on_demand + data.nodes.spot).toString()
           }}
         />
       </Container>

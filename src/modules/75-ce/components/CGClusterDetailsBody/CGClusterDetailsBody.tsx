@@ -9,6 +9,7 @@ import React from 'react'
 import { get } from 'lodash-es'
 import { Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import DonughtChartDataDistributionCard from '@ce/components/ComputeGroupsBody/DonughtChartDataDistributionCard'
 import formatCost from '@ce/utils/formatCost'
 import css from './CGClusterDetailsBody.module.scss'
@@ -20,43 +21,40 @@ interface ClusterDetailsItemProps {
 
 interface CGClusterDetailsBodyProps {
   data: any // TODO: replace with correct type
+  connectorDetails?: ConnectorInfoDTO
 }
 
-const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => {
+const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data, connectorDetails }) => {
   const { getString } = useStrings()
-  const onDemandCost = get(data, 'nodes.on-demand_cost', 0)
-  const spotCost = get(data, 'nodes.spot_cost', 0)
-  const committedCost = get(data, 'nodes.committed_cost', 0)
-  const fallbackCost = get(data, 'nodes.fallback_cost', 0)
-  const totalNodesCost = onDemandCost + spotCost + committedCost + fallbackCost
+  const totalNodes = get(data, 'nodes.total', 0)
   const nodesData = [
     {
       color: Color.GREY_200,
-      legendText: `On-demand (${get(data, 'nodes.on-demand', 0)})`,
+      legendText: `On-demand (${get(data, 'nodes.on_demand', 0)})`,
       name: 'On-demand',
-      value: formatCost(onDemandCost),
-      graphPercentage: (onDemandCost / totalNodesCost) * 100
+      value: formatCost(get(data, 'nodes.on-demand_cost', 0)),
+      graphPercentage: (get(data, 'nodes.on_demand', 0) / totalNodes) * 100
     },
     {
       color: Color.PRIMARY_2,
       legendText: `Spot (${get(data, 'nodes.spot', 0)})`,
       name: 'Spot',
-      value: formatCost(spotCost),
-      graphPercentage: (spotCost / totalNodesCost) * 100
+      value: formatCost(get(data, 'nodes.spot_cost', 0)),
+      graphPercentage: (get(data, 'nodes.spot', 0) / totalNodes) * 100
     },
     {
       color: Color.PRIMARY_4,
       legendText: `Fallback (${get(data, 'nodes.fallback', 0)})`,
       name: 'Fallback',
-      value: formatCost(fallbackCost),
-      graphPercentage: (fallbackCost / totalNodesCost) * 100
+      value: formatCost(get(data, 'nodes.fallback_cost', 0)),
+      graphPercentage: (get(data, 'nodes.fallback', 0) / totalNodes) * 100
     },
     {
       color: Color.PRIMARY_7,
       legendText: `Commitments (${get(data, 'nodes.committed', 0)})`,
       name: 'Commitments',
-      value: formatCost(committedCost),
-      graphPercentage: (committedCost / totalNodesCost) * 100
+      value: formatCost(get(data, 'nodes.committed_cost', 0)),
+      graphPercentage: (get(data, 'nodes.committed', 0) / totalNodes) * 100
     }
   ]
 
@@ -124,20 +122,17 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
             <Text font={{ variation: FontVariation.H6 }}>
               {getString('ce.computeGroups.clusterDetails.k8sClusterDetailsHeader')}
             </Text>
-            <ClusterDetailsItem
-              title={getString('connectors.name')}
-              value={get(data, 'cloud_account_id', 'My Kubernetes Connector 1')}
-            />
+            <ClusterDetailsItem title={getString('connectors.name')} value={get(connectorDetails, 'name', '')} />
             <ClusterDetailsItem title={getString('regionLabel')} value={get(data, 'region', '')} />
             <ClusterDetailsItem
               title={getString('identifier')}
               value={get(data, 'cloud_account_id', 'My Kubernetes Connector 1')}
             />
-            <Layout.Vertical spacing={'medium'}>
+            {/* <Layout.Vertical spacing={'medium'}>
               <Text inline>Tag1</Text>
               <Text inline>Tag2</Text>
               <Text inline>Tag3</Text>
-            </Layout.Vertical>
+            </Layout.Vertical> */}
           </Layout.Vertical>
         </Container>
       </Layout.Vertical>
@@ -160,9 +155,11 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
           </Text>
           <Container>
             <Layout.Horizontal spacing={'huge'}>
-              <Text>10</Text>
-              <Text icon="elastic-kubernetes-service">2</Text>
-              <Text icon="harness">8</Text>
+              <Text>{get(data, 'nodes.total', 0)}</Text>
+              <Text icon="elastic-kubernetes-service">
+                {get(data, 'nodes.total', 0) - get(data, 'nodes.harness_mgd', 0)}
+              </Text>
+              <Text icon="harness">{get(data, 'nodes.harness_mgd', 0)}</Text>
             </Layout.Horizontal>
           </Container>
         </Layout.Vertical>
@@ -176,7 +173,7 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
                 <Text>{`${getString('ce.nodeRecommendation.spot')} ${get(data, 'pods.spot', 0)}`}</Text>
               </Container>
               <Container className={css.podOnDemandTag}>
-                <Text>{`${getString('ce.nodeRecommendation.onDemand')} ${get(data, 'pods.on-demand', 0)}`}</Text>
+                <Text>{`${getString('ce.nodeRecommendation.onDemand')} ${get(data, 'pods.on_demand', 0)}`}</Text>
               </Container>
             </Layout.Horizontal>
           </Layout.Horizontal>
@@ -189,7 +186,7 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
               {`${getString('triggers.scheduledLabel')} `} <b>{get(data, 'pods.scheduled', 0)}</b>
             </Text>
             <Text icon="time" iconProps={{ size: 12, color: Color.ORANGE_900 }} className={css.inlineBold}>
-              {`${getString('ce.common.unScheduled')} `} <b>{get(data, 'pods.unscheduled', 0)}</b>
+              {`${getString('ce.common.unScheduled')} `} <b>{get(data, 'pods.un_scheduled', 0)}</b>
             </Text>
           </Layout.Horizontal>
         </Layout.Vertical>

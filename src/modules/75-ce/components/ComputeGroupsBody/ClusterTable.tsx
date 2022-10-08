@@ -58,7 +58,7 @@ const ValueWithBreakdown = (tableProps: CellProps<any>) => {
           </Layout.Horizontal>
           <Layout.Horizontal flex spacing={'xlarge'}>
             <Text>{getString('ce.nodeRecommendation.onDemand')}</Text>
-            <Text>{data.nodes['on-demand']}</Text>
+            <Text>{data.nodes['on_demand']}</Text>
           </Layout.Horizontal>
           <Layout.Horizontal flex spacing={'xlarge'}>
             <Text>{getString('ce.nodeRecommendation.spot')}</Text>

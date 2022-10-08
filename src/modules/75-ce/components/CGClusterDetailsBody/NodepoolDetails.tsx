@@ -6,6 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
+import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { get } from 'lodash-es'
@@ -33,13 +34,13 @@ const NodepoolDetails: React.FC = () => {
     <Container padding={'xlarge'}>
       <Layout.Vertical className={css.infoCard} spacing="large">
         <Layout.Horizontal spacing={'large'}>
-          <Layout.Vertical spacing={'large'} className={css.infoCard}>
+          <Layout.Vertical spacing={'large'} className={cx(css.infoCard, css.elongatedCard)}>
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
               {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.totalSpend')}
             </Text>
             <Text font={{ variation: FontVariation.H3 }}>{formatCost(get(data, 'response.total_spend', 0))}</Text>
           </Layout.Vertical>
-          <Layout.Vertical spacing={'large'} className={css.infoCard}>
+          <Layout.Vertical spacing={'large'} className={cx(css.infoCard, css.elongatedCard)}>
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
               {getString('ce.computeGroups.setup.clusterPermissionsTab.totalReplicas')}
             </Text>
@@ -64,9 +65,7 @@ const NodepoolDetails: React.FC = () => {
         </Layout.Horizontal>
         <Layout.Vertical spacing={'large'}>
           <Layout.Horizontal flex>
-            <Text font={{ variation: FontVariation.H4 }}>
-              {getString('ce.perspectives.nodeDetails.nodeDetailsText')}
-            </Text>
+            <Text font={{ variation: FontVariation.H4 }}>{getString('ce.computeGroups.nodeDetailsHeader')}</Text>
           </Layout.Horizontal>
           <WorkloadDetailsTable />
         </Layout.Vertical>
@@ -94,7 +93,11 @@ const WorkloadDetailsTable: React.FC = () => {
         accessor: 'name',
         Header: getString('name'),
         width: '15%',
-        Cell: tableProps => <Text lineClamp={1}>{tableProps.value}</Text>
+        Cell: tableProps => (
+          <Text lineClamp={1} style={{ width: '70%' }}>
+            {tableProps.value}
+          </Text>
+        )
         // serverSortProps: getServerSortProps({
         //   enableServerSort: true,
         //   accessor: 'name',
@@ -105,6 +108,12 @@ const WorkloadDetailsTable: React.FC = () => {
       {
         accessor: 'workloads',
         Header: getString('pipeline.dashboards.workloads'),
+        width: '15%',
+        Cell: tableProps => <Text>{tableProps.value}</Text>
+      },
+      {
+        accessor: 'fulfillment',
+        Header: getString('ce.computeGroups.fulfillment'),
         width: '15%',
         Cell: tableProps => <Text>{tableProps.value}</Text>
       },

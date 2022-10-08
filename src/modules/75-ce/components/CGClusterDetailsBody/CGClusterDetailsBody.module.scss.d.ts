@@ -9,6 +9,7 @@
 declare const styles: {
   readonly clusterDetailsBody: string
   readonly distributionCell: string
+  readonly elongatedCard: string
   readonly head: string
   readonly infoCard: string
   readonly inlineBold: string

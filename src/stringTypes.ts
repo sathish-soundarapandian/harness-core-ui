@@ -5678,8 +5678,10 @@ export interface StringsMap {
   'ce.computeGroups.commitments': string
   'ce.computeGroups.efficiencyScore': string
   'ce.computeGroups.fallback': string
+  'ce.computeGroups.fulfillment': string
   'ce.computeGroups.idle': string
   'ce.computeGroups.leastInterrupted': string
+  'ce.computeGroups.nodeDetailsHeader': string
   'ce.computeGroups.onDemandSpend': string
   'ce.computeGroups.replicas': string
   'ce.computeGroups.setup.clusterPermissionsTab.info1': string

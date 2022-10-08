@@ -6,6 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
+import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import type { Column } from 'react-table'
@@ -47,13 +48,13 @@ const WorkloadDetails: React.FC = () => {
     <Container padding={'xlarge'}>
       <Layout.Vertical className={css.infoCard} spacing="large">
         <Layout.Horizontal spacing={'large'}>
-          <Layout.Vertical spacing={'large'} className={css.infoCard}>
+          <Layout.Vertical spacing={'large'} className={cx(css.infoCard, css.elongatedCard)}>
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
               {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.totalSpend')}
             </Text>
             <Text font={{ variation: FontVariation.H3 }}>{formatCost(get(summaryData, 'cost.spend', 0))}</Text>
           </Layout.Vertical>
-          <Layout.Vertical spacing={'large'} className={css.infoCard}>
+          <Layout.Vertical spacing={'large'} className={cx(css.infoCard, css.elongatedCard)}>
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
               {getString('ce.computeGroups.setup.clusterPermissionsTab.totalReplicas')}
             </Text>

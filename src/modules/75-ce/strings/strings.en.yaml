@@ -1365,6 +1365,7 @@ computeGroups:
   baseOnDemandCapacity: Base on-demand capacity
   onDemandSpend: On-Demand spend (/mo)
   spotSpend: Spot Spend (/mo)
+  fulfillment: Fulfillment
   table:
     headers:
       name: Cluster name & id
@@ -1372,6 +1373,7 @@ computeGroups:
       managedBy: Managed by
   totalNodes: Total Nodes
   efficiencyScore: Efficiency score
+  nodeDetailsHeader: Node details
   clusterDetails:
     workloads: '{{$.pipeline.dashboards.workloads}}'
     k8sClusterDetailsHeader: Kubernetes Cluster Details

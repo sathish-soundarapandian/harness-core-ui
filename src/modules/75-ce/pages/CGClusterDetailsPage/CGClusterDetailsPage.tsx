@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import {
   Color,
   Container,
@@ -25,6 +25,7 @@ import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import { useGetClusterDetails } from 'services/lw'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useGetConnector } from 'services/cd-ng'
 import CopyButton from '@ce/common/CopyButton'
 import CGClusterDetailsBody from '@ce/components/CGClusterDetailsBody/CGClusterDetailsBody'
 import WorkloadDetails from '@ce/components/CGClusterDetailsBody/WorkloadDetails'
@@ -54,63 +55,23 @@ const CGClusterDetailsPage: React.FC = () => {
     [accountId]
   )
 
-  // const [data, setData] = useState({})
-  // const [loading, setLoading] = useState(true)
   const { data, loading } = useGetClusterDetails({
     account_id: accountId,
     clusterId: id,
     queryParams: { accountIdentifier: accountId, cloud_account_id: cloudId }
   })
 
-  // useEffect(() => {
-  //   setData({
-  //     account_id: 'accID',
-  //     cloud_account_id: 'cloudAccID',
-  //     cpu: {
-  //       total: 10,
-  //       un_allocated: 4,
-  //       utilized: 6
-  //     },
-  //     create_time: '0001-01-01T00:00:00Z',
-  //     created_at: '0001-01-01T00:00:00Z',
-  //     id: 'cloudAccID',
-  //     memory: {
-  //       total: 10,
-  //       un_allocated: 4,
-  //       utilized: 6
-  //     },
-  //     name: 'riyasyash-karpenter-demo',
-  //     nodes: {
-  //       committed: 0,
-  //       cpu: {
-  //         total: 10,
-  //         un_allocated: 4,
-  //         utilized: 6
-  //       },
-  //       fallback: 0,
-  //       harness_mgd: 0,
-  //       memory: {
-  //         total: 10,
-  //         un_allocated: 4,
-  //         utilized: 6
-  //       },
-  //       'on-demand': 1,
-  //       spot: 0
-  //     },
-  //     pods: {
-  //       committed: 0,
-  //       'on-demand': 15,
-  //       scheduled: 15,
-  //       spot: 0,
-  //       total: 15,
-  //       un_scheduled: 0
-  //     },
-  //     region: 'us-west-2',
-  //     resource_version: 0,
-  //     status: 'enabled'
-  //   })
-  //   setLoading(false)
-  // }, [])
+  const { data: connectorData, refetch: refetchConnector } = useGetConnector({
+    identifier: get(data, 'response.cloud_account_id', ''),
+    queryParams: { accountIdentifier: accountId },
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (!isEmpty(get(data, 'response'))) {
+      refetchConnector()
+    }
+  }, [data])
 
   const navigationLinks: NavigationLink[] = useMemo(
     () => [
@@ -123,7 +84,7 @@ const CGClusterDetailsPage: React.FC = () => {
         to: routes.toClusterWorkloadsDetailsPage({ accountId, id, cloudId })
       },
       {
-        label: getString('ce.nodeRecommendation.nodepool'),
+        label: getString('pipeline.nodesLabel'),
         to: routes.toClusterNodepoolDetailsPage({ accountId, id, cloudId })
       }
     ],
@@ -169,7 +130,12 @@ const CGClusterDetailsPage: React.FC = () => {
         toolbar={<TabNavigation size="small" links={navigationLinks} />}
       />
       <Page.Body>
-        {isOverviewTab && <CGClusterDetailsBody data={get(data, 'response', '')} />}
+        {isOverviewTab && (
+          <CGClusterDetailsBody
+            data={get(data, 'response', '')}
+            connectorDetails={get(connectorData, 'data.connector')}
+          />
+        )}
         {isWorkloadsTab && <WorkloadDetails />}
         {isNodepoolTab && <NodepoolDetails />}
       </Page.Body>
