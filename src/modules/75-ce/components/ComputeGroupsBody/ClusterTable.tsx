@@ -34,9 +34,9 @@ import css from './ComputeGroupsBody.module.scss'
 const NameIdCell = (tableProps: CellProps<any>) => {
   // TODO: correct type here
   return (
-    <Container>
-      <Text>{tableProps.row.original.name}</Text>
-      <Text>{tableProps.row.original.id}</Text>
+    <Container style={{ width: '80%' }}>
+      <Text lineClamp={1}>{tableProps.row.original.name}</Text>
+      <Text lineClamp={1}>{tableProps.row.original.id}</Text>
     </Container>
   )
 }
@@ -155,8 +155,10 @@ const MemoryValueWithBreakdown = (tableProps: CellProps<any>) => {
 }
 
 const StatusCell = (tableProps: CellProps<any>) => {
+  const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
-  if (tableProps.value === 'enabled') {
+  const history = useHistory()
+  if (tableProps.value === true) {
     return (
       <Container className={css.enableCell}>
         <Text font={{ variation: FontVariation.LEAD }} iconProps={{ size: 14 }} icon="command-artifact-check">
@@ -165,7 +167,17 @@ const StatusCell = (tableProps: CellProps<any>) => {
       </Container>
     )
   }
-  return <Button variation={ButtonVariation.SECONDARY} icon="plus" text={getString('enable')} />
+  return (
+    <Button
+      variation={ButtonVariation.SECONDARY}
+      icon="plus"
+      text={getString('enable')}
+      onClick={e => {
+        e.stopPropagation()
+        history.push(routes.toComputeGroupsSetup({ accountId }))
+      }}
+    />
+  )
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -245,13 +257,13 @@ const ClusterTable: React.FC = () => {
         width: '12%',
         Cell: (tableProps: any) => (
           <Text font={{ variation: FontVariation.LEAD }}>
-            {formatCost(tableProps.row.original.spend, { decimalPoints: 2 })}
+            {formatCost(get(tableProps, 'row.original.nodes.total_spend', 0), { decimalPoints: 2 })}
           </Text>
         ),
         disableSortBy: true
       },
       {
-        accessor: 'status',
+        accessor: 'opt_enabled',
         width: '17%',
         Cell: StatusCell,
         disableSortBy: true

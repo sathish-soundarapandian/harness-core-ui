@@ -10,8 +10,10 @@ declare const styles: {
   readonly cgSetupBodyContainer: string
   readonly collapsibleBody: string
   readonly copyCommand: string
+  readonly ctaContainer: string
   readonly independentSection: string
   readonly noteContainer: string
+  readonly page: string
   readonly previewRow: string
   readonly savingsRow: string
   readonly toggleHeader: string

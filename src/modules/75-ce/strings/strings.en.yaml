@@ -1366,6 +1366,7 @@ computeGroups:
   onDemandSpend: On-Demand spend (/mo)
   spotSpend: Spot Spend (/mo)
   fulfillment: Fulfillment
+  spotSavingsInfo: '*compared to the On-Demand Equivalent'
   table:
     headers:
       name: Cluster name & id

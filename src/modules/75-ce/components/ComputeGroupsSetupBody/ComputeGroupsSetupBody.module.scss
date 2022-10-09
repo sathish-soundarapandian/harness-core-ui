@@ -6,10 +6,24 @@
  */
 
 .cgSetupBodyContainer {
+  position: relative;
   :global {
     .bp3-tab-panel {
       padding: var(--spacing-large);
     }
+  }
+  .ctaContainer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: var(--white);
+    box-shadow: 0px -4px 4px rgba(0, 0, 0, 0.1);
+  }
+  .page {
+    --page-header-height: 92px;
+    overflow: scroll;
+    height: calc(var(--page-min-height) - var(--page-header-height));
+    padding-bottom: 144px !important;
   }
 }
 

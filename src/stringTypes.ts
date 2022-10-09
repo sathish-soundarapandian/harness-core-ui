@@ -5742,6 +5742,7 @@ export interface StringsMap {
   'ce.computeGroups.setup.spotInstancesTab.useSpotSection.subHeader': string
   'ce.computeGroups.setup.spotInstancesTab.workloadToRunOnSpot': string
   'ce.computeGroups.sideNavText': string
+  'ce.computeGroups.spotSavingsInfo': string
   'ce.computeGroups.spotSpend': string
   'ce.computeGroups.strategy': string
   'ce.computeGroups.table.headers.managedBy': string

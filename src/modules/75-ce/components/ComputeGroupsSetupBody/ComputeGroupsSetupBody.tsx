@@ -5,9 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Container, Tabs } from '@harness/uicore'
+import React, { useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import { Button, ButtonVariation, Container, Layout, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
+import routes from '@common/RouteDefinitions'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import ScaleAndLimitPoliciesTab from './ScaleAndLimitPoliciesTab/ScaleAndLimitPoliciesTab'
 import SchedulingAutostoppingTab from './SchedulingAutostoppingTab'
 import ClusterPermissionsTab from './ClusterPermissionsTab'
@@ -16,45 +19,99 @@ import ReviewTab from './ReviewTab'
 import css from './ComputeGroupsSetupBody.module.scss'
 
 const ComputeGroupsSetupBody: React.FC = () => {
+  const { accountId } = useParams<AccountPathProps>()
+  const history = useHistory()
   const { getString } = useStrings()
+  const [selectedTabId, setSelectedTabId] = useState(1)
+
+  const handleBack = () => {
+    setSelectedTabId(prevId => prevId - 1)
+  }
+
+  const handleNext = () => {
+    if (selectedTabId === 5) {
+      history.push(routes.toComputeGroups({ accountId }))
+      return
+    }
+    setSelectedTabId(prevId => prevId + 1)
+  }
+
   return (
     <Container className={css.cgSetupBodyContainer}>
       <Tabs
         id={'horizontalTabs'}
-        defaultSelectedTabId={'tab3'}
+        selectedTabId={selectedTabId}
         tabList={[
           {
-            id: 'tab1',
+            id: 1,
             title: `1. ${getString('ce.cloudIntegration.clusterPermissions')}`,
-            panel: <ClusterPermissionsTab />,
+            panel: (
+              <Container className={css.page}>
+                <ClusterPermissionsTab />
+              </Container>
+            ),
             iconProps: { name: 'gear' }
           },
           {
-            id: 'tab2',
+            id: 2,
             title: `2. ${getString('ce.computeGroups.setup.spotInstancesTab.title')}`,
-            panel: <SpotInstancesTab />,
+            panel: (
+              <Container className={css.page}>
+                <SpotInstancesTab />
+              </Container>
+            ),
             iconProps: { name: 'gear' }
           },
           {
-            id: 'tab3',
+            id: 3,
             title: getString('ce.perspectives.createPerspective.tabHeaders.preferences'),
-            panel: <ScaleAndLimitPoliciesTab />,
+            panel: (
+              <Container className={css.page}>
+                <ScaleAndLimitPoliciesTab />
+              </Container>
+            ),
             iconProps: { name: 'gear' }
           },
           {
-            id: 'tab4',
+            id: 4,
             title: `4. ${getString('ce.computeGroups.setup.schedulingTab.title')}`,
-            panel: <SchedulingAutostoppingTab />,
+            panel: (
+              <Container className={css.page}>
+                <SchedulingAutostoppingTab />
+              </Container>
+            ),
             iconProps: { name: 'gear' }
           },
           {
-            id: 'tab5',
+            id: 5,
             title: `5. ${getString('review')}`,
-            panel: <ReviewTab />,
+            panel: (
+              <Container className={css.page}>
+                <ReviewTab />
+              </Container>
+            ),
             iconProps: { name: 'gear' }
           }
         ]}
+        onChange={tabId => setSelectedTabId(tabId as number)}
       ></Tabs>
+      <Layout.Horizontal spacing={'large'} padding="large" className={css.ctaContainer}>
+        <Button
+          text={getString('back')}
+          icon="chevron-left"
+          iconProps={{ size: 12 }}
+          variation={ButtonVariation.SECONDARY}
+          disabled={selectedTabId === 1}
+          onClick={handleBack}
+        />
+        <Button
+          text={selectedTabId === 5 ? getString('save') : getString('next')}
+          rightIcon="chevron-right"
+          iconProps={{ size: 12 }}
+          variation={ButtonVariation.PRIMARY}
+          onClick={handleNext}
+        />
+      </Layout.Horizontal>
     </Container>
   )
 }

@@ -24,7 +24,7 @@ interface CGClusterDetailsBodyProps {
   connectorDetails?: ConnectorInfoDTO
 }
 
-const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data, connectorDetails }) => {
+const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => {
   const { getString } = useStrings()
   const totalNodes = get(data, 'nodes.total', 0)
   const nodesData = [
@@ -61,21 +61,21 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data, conne
   const cpuBreakdownData = [
     {
       color: Color.PRIMARY_2,
-      legendText: `Utilized (${get(data, 'cpu.utilized', 0)})`,
+      legendText: `Utilized (${get(data, 'cpu.utilized', 0).toFixed(2)})`,
       name: 'Utilized',
       value: `${((get(data, 'cpu.utilized', 0) / get(data, 'cpu.total', 0)) * 100).toFixed(2)}%`,
       graphPercentage: (get(data, 'cpu.utilized', 0) / get(data, 'cpu.total', 0)) * 100
     },
     {
       color: Color.PRIMARY_4,
-      legendText: `Idle (${get(data, 'cpu.idle', 0)})`,
+      legendText: `Idle (${get(data, 'cpu.idle', 0).toFixed(2)})`,
       name: 'Idle',
       value: `${((get(data, 'cpu.idle', 0) / get(data, 'cpu.total', 0)) * 100).toFixed(2)}%`,
       graphPercentage: (get(data, 'cpu.idle', 0) / get(data, 'cpu.total', 0)) * 100
     },
     {
       color: Color.PRIMARY_7,
-      legendText: `Unallocated (${get(data, 'cpu.un_allocated', 0)})`,
+      legendText: `Unallocated (${get(data, 'cpu.un_allocated', 0).toFixed(2)})`,
       name: 'Unallocated',
       value: `${((get(data, 'cpu.un_allocated', 0) / get(data, 'cpu.total', 0)) * 100).toFixed(2)}%`,
       graphPercentage: (get(data, 'cpu.un_allocated', 0) / get(data, 'cpu.total', 0)) * 100
@@ -85,21 +85,21 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data, conne
   const memoryBreakdownData = [
     {
       color: Color.PRIMARY_2,
-      legendText: `Utilized (${get(data, 'memory.utilized', 0)})`,
+      legendText: `Utilized (${get(data, 'memory.utilized', 0).toFixed(2)})`,
       name: 'Utilized',
       value: `${((get(data, 'memory.utilized', 0) / get(data, 'memory.total', 0)) * 100).toFixed(2)}%`,
       graphPercentage: (get(data, 'memory.utilized', 0) / get(data, 'memory.total', 0)) * 100
     },
     {
       color: Color.PRIMARY_4,
-      legendText: `Idle (${get(data, 'memory.idle', 0)})`,
+      legendText: `Idle (${get(data, 'memory.idle', 0).toFixed(2)})`,
       name: 'Idle',
       value: `${((get(data, 'memory.idle', 0) / get(data, 'memory.total', 0)) * 100).toFixed(2)}%`,
       graphPercentage: (get(data, 'memory.idle', 0) / get(data, 'memory.total', 0)) * 100
     },
     {
       color: Color.PRIMARY_7,
-      legendText: `Unallocated (${get(data, 'memory.un_allocated', 0)})`,
+      legendText: `Unallocated (${get(data, 'memory.un_allocated', 0).toFixed(2)})`,
       name: 'Unallocated',
       value: `${((get(data, 'memory.un_allocated', 0) / get(data, 'memory.total', 0)) * 100).toFixed(2)}%`,
       graphPercentage: (get(data, 'memory.un_allocated', 0) / get(data, 'memory.total', 0)) * 100
@@ -113,7 +113,7 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data, conne
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
               {getString('ce.common.totalComputeSpend')}
             </Text>
-            <Text font={{ variation: FontVariation.H3 }}>$23,154</Text>
+            <Text font={{ variation: FontVariation.H3 }}>{formatCost(get(data, 'nodes.total_spend', 0))}</Text>
             <Text font={{ variation: FontVariation.SMALL }}>{getString('ce.commitmentOrchestration.monthToDate')}</Text>
           </Layout.Vertical>
         </Container>
@@ -122,7 +122,7 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data, conne
             <Text font={{ variation: FontVariation.H6 }}>
               {getString('ce.computeGroups.clusterDetails.k8sClusterDetailsHeader')}
             </Text>
-            <ClusterDetailsItem title={getString('connectors.name')} value={get(connectorDetails, 'name', '')} />
+            <ClusterDetailsItem title={getString('connectors.name')} value={get(data, 'id', '')} />
             <ClusterDetailsItem title={getString('regionLabel')} value={get(data, 'region', '')} />
             <ClusterDetailsItem
               title={getString('identifier')}

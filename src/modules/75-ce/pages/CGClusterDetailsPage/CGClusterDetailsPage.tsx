@@ -55,7 +55,11 @@ const CGClusterDetailsPage: React.FC = () => {
     [accountId]
   )
 
-  const { data, loading } = useGetClusterDetails({
+  const {
+    data,
+    loading,
+    refetch: fetchClusterDetails
+  } = useGetClusterDetails({
     account_id: accountId,
     clusterId: id,
     queryParams: { accountIdentifier: accountId, cloud_account_id: cloudId }
@@ -66,6 +70,13 @@ const CGClusterDetailsPage: React.FC = () => {
     queryParams: { accountIdentifier: accountId },
     lazy: true
   })
+
+  // Temp implemenation for demo purpose. Rectify afterwards
+  useEffect(() => {
+    if (isOverviewTab) {
+      fetchClusterDetails()
+    }
+  }, [isOverviewTab])
 
   useEffect(() => {
     if (!isEmpty(get(data, 'response'))) {
@@ -92,8 +103,9 @@ const CGClusterDetailsPage: React.FC = () => {
   )
 
   const clusterId = get(data, 'response.id', '')
+  const isEnabled = get(data, 'opt_enabled') === true
 
-  if (loading) {
+  if (loading && !(data as any)?.response) {
     return <PageSpinner />
   }
 
@@ -108,15 +120,17 @@ const CGClusterDetailsPage: React.FC = () => {
             <Layout.Vertical spacing={'small'}>
               <Layout.Horizontal spacing={'huge'} flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
                 <Text font={{ variation: FontVariation.H4 }}>{defaultTo(get(data, 'response.name'), '')}</Text>
-                <Container className={css.enableCell}>
-                  <Text
-                    font={{ variation: FontVariation.LEAD }}
-                    icon="command-artifact-check"
-                    iconProps={{ color: Color.GREEN_700, size: 12 }}
-                  >
-                    {getString('enabledLabel')}
-                  </Text>
-                </Container>
+                {isEnabled && (
+                  <Container className={css.enableCell}>
+                    <Text
+                      font={{ variation: FontVariation.LEAD }}
+                      icon="command-artifact-check"
+                      iconProps={{ color: Color.GREEN_700, size: 12 }}
+                    >
+                      {getString('enabledLabel')}
+                    </Text>
+                  </Container>
+                )}
               </Layout.Horizontal>
               {clusterId && (
                 <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>

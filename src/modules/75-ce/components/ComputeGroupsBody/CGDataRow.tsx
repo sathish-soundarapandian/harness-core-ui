@@ -14,80 +14,73 @@ import formatCost from '@ce/utils/formatCost'
 import DonughtChartDataDistributionCard from './DonughtChartDataDistributionCard'
 import css from './ComputeGroupsBody.module.scss'
 
-const DEFAULT_VALUE = 22135.13
-
-const MOCK_NODES_DATA = [
-  {
-    color: Color.GREY_200,
-    legendText: 'On-demand (1)',
-    name: 'On-demand',
-    value: formatCost(645.75),
-    graphPercentage: 20
-  },
-  {
-    color: Color.PRIMARY_2,
-    legendText: 'Spot (2)',
-    name: 'Spot',
-    value: formatCost(64.93),
-    graphPercentage: 25
-  },
-  {
-    color: Color.PRIMARY_4,
-    legendText: 'Fallback (4)',
-    name: 'Fallback',
-    value: formatCost(27.83),
-    graphPercentage: 30
-  },
-  {
-    color: Color.PRIMARY_7,
-    legendText: 'Commitments (2)',
-    name: 'Commitments',
-    value: formatCost(119.27),
-    graphPercentage: 25
-  }
-]
-
 interface CGDataRowProps {
   data: any // TODO: replace with actual type
 }
 
 const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
   const { getString } = useStrings()
-  const onDemandCost = get(data, 'nodes.on-demand_cost', 0)
-  const spotCost = get(data, 'nodes.spot_cost', 0)
-  const committedCost = get(data, 'nodes.committed_cost', 0)
-  const fallbackCost = get(data, 'nodes.fallback_cost', 0)
-  const totalNodesCost = get(data, 'nodes.total', 0)
+  const utilizedNodesCost = get(data, 'cost.utilized', 0)
+  const idleNodesCost = get(data, 'cost.idle', 0)
+  const unAllocatedNodesCost = get(data, 'cost.un_allocated', 0)
+  const totalNodesCost = utilizedNodesCost + idleNodesCost + unAllocatedNodesCost
+
+  const nodesCostBreakdownData = [
+    {
+      color: Color.PRIMARY_7,
+      legendText: `Utilized (${((utilizedNodesCost / totalNodesCost) * 100).toFixed(2)}%)`,
+      name: 'Utilized',
+      value: formatCost(utilizedNodesCost),
+      graphPercentage: (utilizedNodesCost / totalNodesCost) * 100
+    },
+    {
+      color: Color.PRIMARY_2,
+      legendText: `Idle (${((idleNodesCost / totalNodesCost) * 100).toFixed(2)}%)`,
+      name: 'Idle',
+      value: formatCost(idleNodesCost),
+      graphPercentage: (idleNodesCost / totalNodesCost) * 100
+    },
+    {
+      color: Color.GREY_200,
+      legendText: `Unallocated (${((unAllocatedNodesCost / totalNodesCost) * 100).toFixed(2)}%)`,
+      name: 'Unallocated',
+      value: formatCost(unAllocatedNodesCost),
+      graphPercentage: (unAllocatedNodesCost / totalNodesCost) * 100
+    }
+  ]
+
+  const totalNodes = get(data, 'nodes.total', 0)
   const nodesData = [
     {
       color: Color.GREY_200,
       legendText: `On-demand (${get(data, 'nodes.on_demand', 0)})`,
       name: 'On-demand',
-      value: formatCost(onDemandCost),
-      graphPercentage: (onDemandCost / totalNodesCost) * 100
+      value: formatCost(get(data, 'nodes.on-demand_cost', 0)),
+      graphPercentage: (get(data, 'nodes.on_demand', 0) / totalNodes) * 100
     },
     {
       color: Color.PRIMARY_2,
       legendText: `Spot (${get(data, 'nodes.spot', 0)})`,
       name: 'Spot',
-      value: formatCost(spotCost),
-      graphPercentage: (spotCost / totalNodesCost) * 100
+      value: formatCost(get(data, 'nodes.spot_cost', 0)),
+      graphPercentage: (get(data, 'nodes.spot', 0) / totalNodes) * 100
     },
     {
       color: Color.PRIMARY_4,
       legendText: `Fallback (${get(data, 'nodes.fallback', 0)})`,
       name: 'Fallback',
-      value: formatCost(fallbackCost),
-      graphPercentage: (fallbackCost / totalNodesCost) * 100
+      value: formatCost(get(data, 'nodes.fallback_cost', 0)),
+      graphPercentage: (get(data, 'nodes.fallback', 0) / totalNodes) * 100
     },
     {
       color: Color.PRIMARY_7,
       legendText: `Commitments (${get(data, 'nodes.committed', 0)})`,
       name: 'Commitments',
-      value: formatCost(committedCost),
-      graphPercentage: (committedCost / totalNodesCost) * 100
+      value: formatCost(get(data, 'nodes.committed_cost', 0)),
+      graphPercentage: (get(data, 'nodes.committed', 0) / totalNodes) * 100
     }
   ]
+
   return (
     <Container className={css.dataRowContainer}>
       <Container>
@@ -96,7 +89,7 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
             {getString('ce.commitmentOrchestration.computeSpend')}
           </Text>
           <Text font={{ variation: FontVariation.H3 }}>
-            {formatCost(DEFAULT_VALUE, {
+            {formatCost(get(data, 'cost.spend', 0), {
               decimalPoints: 2
             })}
           </Text>
@@ -106,17 +99,17 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
           <Text font={{ variation: FontVariation.H6 }} color={Color.GREY_600}>
             {getString('ce.computeGroups.totalSpotSavings')}
           </Text>
-          <Text font={{ variation: FontVariation.H3 }}>
-            {formatCost(DEFAULT_VALUE, {
+          <Text font={{ variation: FontVariation.H3 }} color={Color.GREEN_700}>
+            {formatCost(get(data, 'cost.savings', 0), {
               decimalPoints: 2
-            })}
+            }) + '*'}
           </Text>
-          <Text font={{ variation: FontVariation.SMALL }}>{getString('ce.commitmentOrchestration.monthToDate')}</Text>
+          <Text font={{ variation: FontVariation.SMALL }}>{getString('ce.computeGroups.spotSavingsInfo')}</Text>
         </Layout.Vertical>
       </Container>
       <Container className={cx(css.infoContainer, css.spacedContainer)}>
         <DonughtChartDataDistributionCard
-          header={getString('ce.overview.cardtitles.clusterBreakdown')}
+          header={getString('ce.computeGroups.totalNodes')}
           data={nodesData}
           title={{
             style: { fontSize: '20px', fontWeight: '700' },
@@ -127,10 +120,10 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
       <Container className={cx(css.infoContainer, css.spacedContainer)}>
         <DonughtChartDataDistributionCard
           header={getString('ce.overview.cardtitles.clusterBreakdown')}
-          data={MOCK_NODES_DATA}
+          data={nodesCostBreakdownData}
           efficiencyScore={44}
           title={{
-            text: formatCost(22135.13),
+            text: formatCost(totalNodesCost),
             style: { fontSize: '12px', fontWeight: '700' }
           }}
         />
