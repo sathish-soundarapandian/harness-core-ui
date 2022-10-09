@@ -119,7 +119,7 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
           }}
           handleViewChange={handleConnectorViewChange}
           showConnectorStep={showConnectorStep(selectedArtifactType as ArtifactType)}
-          initialStep={2}
+          showArtifactoryRepoType={false}
         />
       </Dialog>
     ),

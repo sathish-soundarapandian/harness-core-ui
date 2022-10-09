@@ -29,6 +29,7 @@ describe('ManifestSelection tests', () => {
           handleConnectorViewChange={jest.fn()}
           handleStoreChange={jest.fn()}
           initialValues={{} as ManifestStepInitData}
+          showBackButton={true}
         />
       </TestWrapper>
     )
@@ -91,6 +92,7 @@ describe('ManifestSelection tests', () => {
               selectedManifest: 'K8sManifest'
             } as ManifestStepInitData
           }
+          showBackButton={true}
         />
       </TestWrapper>
     )

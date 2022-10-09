@@ -40,6 +40,7 @@ interface ManifestWizardStepsProps<T, U> {
   manifestStoreTypes: ManifestStores[]
   changeManifestType: (data: U | null) => void
   types: ManifestTypes[]
+  showManifestRepoTypes?: boolean
 }
 
 const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null) => {
@@ -70,7 +71,8 @@ export function ManifestWizard<T, U>({
   lastSteps,
   changeManifestType,
   iconsProps,
-  isReadonly
+  isReadonly,
+  showManifestRepoTypes = true
 }: ManifestWizardStepsProps<T, U>): React.ReactElement {
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
@@ -113,14 +115,16 @@ export function ManifestWizard<T, U>({
       onStepChange={onStepChange}
       initialStep={showManifestStoreStepDirectly(selectedManifest) ? 2 : undefined}
     >
-      <ManifestRepoTypes
-        manifestTypes={types}
-        name={getString('pipeline.manifestType.manifestRepoType')}
-        stepName={labels.firstStepName}
-        selectedManifest={selectedManifest}
-        changeManifestType={changeManifestTypeRef}
-        initialValues={initialValues}
-      />
+      {showManifestRepoTypes && (
+        <ManifestRepoTypes
+          manifestTypes={types}
+          name={getString('pipeline.manifestType.manifestRepoType')}
+          stepName={labels.firstStepName}
+          selectedManifest={selectedManifest}
+          changeManifestType={changeManifestTypeRef}
+          initialValues={initialValues}
+        />
+      )}
       <ManifestStore
         name={getString('pipeline.manifestType.manifestSource')}
         stepName={labels.secondStepName}
@@ -131,6 +135,7 @@ export function ManifestWizard<T, U>({
         handleConnectorViewChange={() => handleConnectorViewChange(true)}
         handleStoreChange={handleStoreChangeRef}
         initialValues={initialValues}
+        showBackButton={showManifestRepoTypes}
       />
       {newConnectorView ? newConnectorSteps : null}
 

@@ -18,7 +18,7 @@ export interface ArtifactTriggerConfigPanelPropsInterface {
 const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterface> = ({ formikProps }) => {
   const { getString } = useStrings()
   const artifactText = getString('pipeline.artifactTriggerConfigPanel.artifact')
-
+  const artifactSelectionError = formikProps?.errors?.source?.spec?.spec?.connectorRef
   return (
     <Layout.Vertical className={css.artifactTriggerConfigContainer} padding="xxlarge">
       <Text className={css.formContentTitle} inline={true} tooltipProps={{ dataTooltipId: 'artifactLabel' }}>
@@ -42,6 +42,7 @@ const ArtifactTriggerConfigPanel: React.FC<ArtifactTriggerConfigPanelPropsInterf
       </Text>
       <div className={css.formContent}>
         <ArtifactsSelection formikProps={formikProps} />
+        {artifactSelectionError && <Text intent="danger">{artifactSelectionError}</Text>}
       </div>
     </Layout.Vertical>
   )

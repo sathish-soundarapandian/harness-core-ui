@@ -4391,12 +4391,14 @@ export interface StringsMap {
   'triggers.updateTrigger': string
   'triggers.updateTriggerDetails': string
   'triggers.validation.actions': string
+  'triggers.validation.artifactSource': string
   'triggers.validation.connector': string
   'triggers.validation.cronExpression': string
   'triggers.validation.event': string
   'triggers.validation.eventConditions': string
   'triggers.validation.headerConditions': string
   'triggers.validation.identifier': string
+  'triggers.validation.manifestSource': string
   'triggers.validation.matchesValue': string
   'triggers.validation.operator': string
   'triggers.validation.payloadConditions': string

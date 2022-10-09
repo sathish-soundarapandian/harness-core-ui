@@ -32,31 +32,25 @@ import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnect
 import type { ConnectorConfigDTO, PageConnectorResponse } from 'services/cd-ng'
 import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import { CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
-import {
-  buildAWSPayload,
-  buildGcpPayload,
-  buildHelmPayload,
-  buildOCIHelmPayload
-} from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { buildAWSPayload, buildGcpPayload, buildHelmPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getConnectorNameFromValue, getStatus } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import {
-  getHelmManifestSpec,
-  getManifestTriggerInitialSource
-} from '@triggers/components/Triggers/ManifestTrigger/ManifestWizardPageUtils'
+import { getManifestTriggerInitialSource } from '@triggers/components/Triggers/ManifestTrigger/ManifestWizardPageUtils'
 import {
   ManifestDataType,
   ManifestToConnectorMap,
   ManifestStoreMap,
   manifestTypeIcons,
-  getManifestLocation
+  getManifestLocation,
+  manifestTypeLabels
 } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestTypes, ManifestStores } from '@pipeline/components/ManifestSelection/ManifestInterface'
-import { ManifestWizard } from '../ManifestWizard/ManifestWizard'
+import { ManifestWizard } from '@pipeline/components/ManifestSelection/ManifestWizard/ManifestWizard'
+import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import HelmWithHttp from '../ManifestWizardSteps/HelmWithHttp/HelmWithHttp'
 import HelmWithGcs from '../ManifestWizardSteps/HelmWithGcs/HelmWithGcs'
 import HelmWithS3 from '../ManifestWizardSteps/HelmWithS3/HelmWithS3'
@@ -89,7 +83,7 @@ export default function ManifestListView({
 }: ManifestListViewProps): JSX.Element {
   const { source: triggerSource } = formikProps.values
   const { spec: triggerSpec } = triggerSource ?? getManifestTriggerInitialSource()
-  const { type: selectedManifest, spec: manifestSpec } = triggerSpec ?? getHelmManifestSpec()
+  const { type: selectedManifest, spec: manifestSpec } = triggerSpec
   const { store } = manifestSpec
   const [connectorView, setConnectorView] = useState(false)
   const [manifestStore, setManifestStore] = useState(store.type ?? '')
@@ -203,10 +197,7 @@ export default function ManifestListView({
           <StepWizard title={getString('connectors.createNewConnector')}>
             <ConnectorDetailsStep {...connectorDetailStepProps} />
             <StepHelmAuth {...authenticationStepProps} isOCIHelm={manifestStore === ManifestStoreMap.OciHelmChart} />
-            <DelegateSelectorStep
-              {...delegateSelectorStepProps}
-              buildPayload={manifestStore === ManifestStoreMap.Http ? buildHelmPayload : buildOCIHelmPayload}
-            />
+            <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildHelmPayload} />
             <ConnectorTestConnection {...ConnectorTestConnectionProps} />
           </StepWizard>
         )
@@ -241,21 +232,41 @@ export default function ManifestListView({
       setIsEditMode(false)
     }
 
+    const getLabels = (): ConnectorRefLabelType => {
+      return {
+        firstStepName: getString('pipeline.manifestType.specifyManifestRepoType'),
+        secondStepName: `${getString('common.specify')} ${
+          selectedManifest && getString(manifestTypeLabels[selectedManifest as ManifestTypes])
+        } ${getString('store')}`
+      }
+    }
+
+    const initialValues = {
+      connectorRef: store.spec.connectorRef,
+      store: manifestStore || store.type,
+      selectedManifest: selectedManifest
+    }
+
     return (
       <Dialog onClose={onClose} {...DIALOG_PROPS} className={cx(css.modal, Classes.DIALOG)}>
         <div className={css.createConnectorWizard}>
           <ManifestWizard
-            manifestStores={['Http', 'S3', 'Gcs']} // Update list once we start supporting more ManifestStores
+            types={['HelmChart']}
+            manifestStoreTypes={['Http', 'S3', 'Gcs']}
+            labels={getLabels()}
+            selectedManifest={selectedManifest}
             newConnectorView={connectorView}
             expressions={expressions}
             allowableTypes={allowableTypes}
+            changeManifestType={noop}
             handleConnectorViewChange={handleConnectorViewChange}
             handleStoreChange={handleStoreChange}
-            initialValues={triggerSpec}
+            initialValues={initialValues}
             newConnectorSteps={getNewConnectorSteps()}
-            lastStep={lastStep}
+            lastSteps={[lastStep]}
             iconsProps={getIconProps()}
             isReadonly={isReadonly}
+            showManifestRepoTypes={false}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />

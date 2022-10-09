@@ -192,7 +192,24 @@ export const getValidationSchema = (
 
         return true
       }
-    )
+    ),
+    source: object().shape({
+      spec: object().shape({
+        spec: object().shape({
+          store: object().shape({
+            spec: object().shape({
+              connectorRef: string().test(
+                getString('triggers.validation.manifestSource'),
+                getString('triggers.validation.manifestSource'),
+                function (connectorRef) {
+                  return !!connectorRef
+                }
+              )
+            })
+          })
+        })
+      })
+    })
   })
 }
 

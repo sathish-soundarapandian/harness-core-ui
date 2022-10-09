@@ -9,6 +9,7 @@ import React from 'react'
 import type { FormikProps } from 'formik'
 import { Layout, Text } from '@wings-software/uicore'
 import { NameIdDescriptionTags } from '@common/components'
+import type { BuildStore } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import type { ManifestTriggerFormikValues } from './ManifestSelection/ManifestInterface'
 import ManifestSelection from './ManifestSelection/ManifestSelection'
@@ -25,6 +26,7 @@ export default function ManifestTriggerConfigPanel({
 }: ManifestTriggerConfigPanelProps): React.ReactElement {
   const { getString } = useStrings()
   const manifestText = getString('manifestsText')
+  const manifestSelectionError = (formikProps?.errors?.source?.spec?.spec?.store as BuildStore)?.spec?.connectorRef
 
   return (
     <Layout.Vertical className={css.artifactTriggerConfigContainer} padding="xxlarge">
@@ -57,6 +59,7 @@ export default function ManifestTriggerConfigPanel({
       </Text>
       <div className={css.formContent}>
         <ManifestSelection formikProps={formikProps!} />
+        {manifestSelectionError && <Text intent="danger">{manifestSelectionError}</Text>}
       </div>
     </Layout.Vertical>
   )

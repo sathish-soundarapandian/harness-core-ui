@@ -58,7 +58,7 @@ interface ArtifactWizardProps {
   allowableTypes: AllowedTypes
   showConnectorStep: boolean
   newConnectorProps: any
-  initialStep?: number
+  showArtifactoryRepoType?: boolean
 }
 
 function ArtifactWizard({
@@ -77,7 +77,7 @@ function ArtifactWizard({
   iconsProps,
   showConnectorStep,
   isReadonly,
-  initialStep = 1
+  showArtifactoryRepoType = true
 }: ArtifactWizardProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -163,20 +163,17 @@ function ArtifactWizard({
   }
 
   return (
-    <StepWizard
-      className={css.existingDocker}
-      subtitle={renderSubtitle()}
-      onStepChange={onStepChange}
-      initialStep={initialStep}
-    >
-      <ArtifactoryRepoType
-        artifactTypes={types}
-        name={getString('connectors.artifactRepoType')}
-        stepName={labels.firstStepName}
-        selectedArtifact={selectedArtifact}
-        artifactInitialValue={artifactInitialValue}
-        changeArtifactType={changeArtifactType}
-      />
+    <StepWizard className={css.existingDocker} subtitle={renderSubtitle()} onStepChange={onStepChange}>
+      {showArtifactoryRepoType ? (
+        <ArtifactoryRepoType
+          artifactTypes={types}
+          name={getString('connectors.artifactRepoType')}
+          stepName={labels.firstStepName}
+          selectedArtifact={selectedArtifact}
+          artifactInitialValue={artifactInitialValue}
+          changeArtifactType={changeArtifactType}
+        />
+      ) : null}
       {showConnectorStep ? (
         <ArtifactConnector
           name={getString('connectors.artifactRepository')}
@@ -187,7 +184,7 @@ function ArtifactWizard({
           initialValues={artifactInitialValue}
           selectedArtifact={selectedArtifact}
           allowableTypes={allowableTypes}
-          showBackButton={initialStep === 1}
+          showBackButton={showArtifactoryRepoType}
         />
       ) : null}
 

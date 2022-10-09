@@ -57,6 +57,7 @@ interface ManifestStorePropType {
   initialValues: ManifestStepInitData
   handleConnectorViewChange: () => void
   handleStoreChange: (store: ManifestStores) => void
+  showBackButton: boolean
 }
 
 function ManifestStore({
@@ -70,7 +71,8 @@ function ManifestStore({
   expressions,
   allowableTypes,
   prevStepData,
-  nextStep
+  nextStep,
+  showBackButton
 }: StepProps<ConnectorConfigDTO> & ManifestStorePropType): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -264,12 +266,14 @@ function ManifestStore({
               </Layout.Vertical>
 
               <Layout.Horizontal spacing="medium" className={css.saveBtn}>
-                <Button
-                  text={getString('back')}
-                  icon="chevron-left"
-                  variation={ButtonVariation.SECONDARY}
-                  onClick={() => previousStep?.(prevStepData)}
-                />
+                {showBackButton && (
+                  <Button
+                    text={getString('back')}
+                    icon="chevron-left"
+                    variation={ButtonVariation.SECONDARY}
+                    onClick={() => previousStep?.(prevStepData)}
+                  />
+                )}
                 <Button
                   variation={ButtonVariation.PRIMARY}
                   type="submit"
