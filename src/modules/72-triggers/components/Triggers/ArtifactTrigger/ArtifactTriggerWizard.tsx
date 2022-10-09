@@ -121,7 +121,6 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
     branch,
     storeType,
     triggerType: triggerTypeOnNew,
-    manifestType,
     artifactType
   } = useQueryParams<TriggerGitQueryParams>()
   const history = useHistory()
@@ -232,7 +231,6 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
       const res = getArtifactTriggerYaml({
         values,
         persistIncomplete: true,
-        manifestType,
         enabledStatus,
         orgIdentifier,
         projectIdentifier,
@@ -468,7 +466,6 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
         source,
         pipeline: pipelineJson,
         triggerType: triggerType as unknown as NGTriggerSourceV2['type'],
-        manifestType: selectedArtifact?.type,
         stageId: source?.spec?.stageIdentifier,
         inputSetTemplateYamlObj: parse(template?.data?.inputSetTemplateYaml || ''),
         pipelineBranchName,
@@ -483,10 +480,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
             eventCondition.key !== EventConditionTypes.BUILD && eventCondition.key !== EventConditionTypes.VERSION
         )
       }
-      if (type === TriggerTypes.ARTIFACT) {
-        delete newOnEditInitialValues['manifestType']
-        newOnEditInitialValues.artifactType = selectedArtifact?.type
-      }
+      newOnEditInitialValues.artifactType = selectedArtifact?.type
       return newOnEditInitialValues
     } catch (e) {
       // set error
@@ -659,7 +653,6 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
   const handleArtifactSubmit = async (val: FlatValidArtifactFormikValuesInterface): Promise<void> => {
     const triggerYaml = getArtifactTriggerYaml({
       values: val,
-      manifestType,
       enabledStatus,
       orgIdentifier,
       projectIdentifier,
@@ -687,7 +680,6 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
       identifier: '',
       tags: {},
       artifactType,
-      manifestType,
       source: getTriggerArtifactInitialSource(triggerTypeOnNew!, artifactType!),
       pipeline: newPipeline,
       originalPipeline,

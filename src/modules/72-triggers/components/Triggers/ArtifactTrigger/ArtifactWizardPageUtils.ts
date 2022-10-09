@@ -7,14 +7,12 @@
 
 import { isNull, isUndefined, omitBy, isEmpty, get, set, cloneDeep } from 'lodash-es'
 import { string, object, ObjectSchema } from 'yup'
-import { parse } from 'yaml'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { ConnectorResponse } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type {
   NGTriggerSourceV2,
-  PipelineInfoConfig,
   NGVariable,
   NGTriggerConfigV2,
   AcrSpec,
@@ -71,12 +69,6 @@ const getArtifactTriggerTitle = ({
 
 export const clearNullUndefined = /* istanbul ignore next */ (data: TriggerConfigDTO): TriggerConfigDTO =>
   omitBy(omitBy(data, isUndefined), isNull)
-
-const clearRuntimeInputValue = (template: PipelineInfoConfig): PipelineInfoConfig => {
-  return JSON.parse(
-    JSON.stringify(template || {}).replace(/"<\+input>.?(?:allowedValues\((.*?)\)|regex\((.*?)\))?"/g, '""')
-  )
-}
 
 const isUndefinedOrEmptyString = (str: string | undefined): boolean => isUndefined(str) || str?.trim() === ''
 
@@ -250,23 +242,6 @@ const TriggerDefaultFieldList = {
   build: '<+trigger.artifact.build>'
 }
 
-const replaceTriggerDefaultBuild = ({
-  build,
-  chartVersion,
-  artifactPath
-}: {
-  build?: string
-  chartVersion?: string
-  artifactPath?: string
-}): string => {
-  if (chartVersion === '<+input>') {
-    return TriggerDefaultFieldList.chartVersion
-  } else if (build === '<+input>' || artifactPath === '<+input>') {
-    return TriggerDefaultFieldList.build
-  }
-  return build || chartVersion || artifactPath || ''
-}
-
 const getPipelineIntegrityMessage = (errorObject: { [key: string]: string }): string =>
   `${errorObject.fieldName}: ${errorObject.message}`
 
@@ -372,38 +347,14 @@ enum TriggerGitEvent {
 export const isHarnessExpression = (str = ''): boolean => str.startsWith('<+') && str.endsWith('>')
 
 const replaceRunTimeVariables = ({
-  manifestType,
   artifactType,
   selectedArtifact
 }: {
   artifactType: string
   selectedArtifact: any
-  manifestType?: string
 }) => {
-  if (manifestType) {
-    if (selectedArtifact?.spec?.chartVersion) {
-      // hardcode manifest chart version to default
-      selectedArtifact.spec.chartVersion = replaceTriggerDefaultBuild({
-        chartVersion: selectedArtifact?.spec?.chartVersion
-      })
-    } else if (!isEmpty(selectedArtifact) && selectedArtifact?.spec?.chartVersion === '') {
-      selectedArtifact.spec.chartVersion = TriggerDefaultFieldList.chartVersion
-    }
-  } else if (artifactType && selectedArtifact?.spec?.tag) {
+  if (artifactType && selectedArtifact?.spec?.tag) {
     selectedArtifact.spec.tag = TriggerDefaultFieldList.build
-  }
-}
-
-const replaceStageManifests = ({ filteredStage, selectedArtifact }: { filteredStage: any; selectedArtifact: any }) => {
-  const stageArtifacts = filteredStage?.stage?.template
-    ? filteredStage?.stage?.template?.templateInputs?.spec?.serviceConfig?.serviceDefinition?.spec?.manifests
-    : filteredStage?.stage?.spec?.serviceConfig?.serviceDefinition?.spec?.manifests
-  const stageArtifactIdx = stageArtifacts?.findIndex(
-    (item: any) => item.manifest?.identifier === selectedArtifact?.identifier
-  )
-
-  if (stageArtifactIdx >= 0) {
-    stageArtifacts[stageArtifactIdx].manifest = selectedArtifact
   }
 }
 
@@ -486,7 +437,6 @@ export const getDefaultPipelineReferenceBranch = (triggerType = '', event = ''):
 
 export const getArtifactTriggerYaml = ({
   values: val,
-  manifestType,
   orgIdentifier,
   enabledStatus,
   projectIdentifier,
@@ -499,7 +449,6 @@ export const getArtifactTriggerYaml = ({
   enabledStatus: boolean
   projectIdentifier: string
   pipelineIdentifier: string
-  manifestType?: string
   persistIncomplete?: boolean
   gitAwareForTriggerEnabled: boolean | undefined
 }): TriggerConfigDTO => {
@@ -518,81 +467,19 @@ export const getArtifactTriggerYaml = ({
     source
   } = val
 
-  const { type: triggerType, spec: triggerSpec } = source ?? {}
-  const { type: artifactType, spec: artifactSpec } = triggerSpec ?? {}
+  const { spec: triggerSpec } = source ?? {}
+  const { type: artifactType } = triggerSpec ?? {}
 
-  replaceRunTimeVariables({ manifestType, artifactType, selectedArtifact })
+  replaceRunTimeVariables({ artifactType, selectedArtifact })
   let newPipeline = cloneDeep(pipelineRuntimeInput)
   const newPipelineObj = newPipeline.template ? newPipeline.template.templateInputs : newPipeline
   const filteredStage = newPipelineObj.stages?.find((item: any) => item.stage?.identifier === stageId)
-  if (manifestType) {
-    replaceStageManifests({ filteredStage, selectedArtifact })
-  } else if (artifactType) {
-    replaceStageArtifacts({ filteredStage, selectedArtifact })
-  }
+
+  replaceStageArtifacts({ filteredStage, selectedArtifact })
   newPipeline = clearUndefinedArtifactId(newPipeline)
   const stringifyPipelineRuntimeInput = yamlStringify({
     pipeline: clearNullUndefined(newPipeline)
   })
-  const filteredStagesforStore = val?.resolvedPipeline?.stages
-  const filteredManifestforStore = filteredStagesforStore?.map((st: any) =>
-    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
-      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
-    )
-  )
-  const storeManifest = filteredManifestforStore?.find((mani: undefined) => mani != undefined)
-  let storeVal = storeManifest?.manifest?.spec?.store
-  const filteredParallelManifestforStore =
-    filteredStagesforStore?.map((_st: { parallel: any[] }) =>
-      _st?.parallel
-        // eslint-disable-next-line @typescript-eslint/no-shadow
-        ?.map(st =>
-          get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
-            (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
-          )
-        )
-        ?.map(i => i?.manifest?.spec?.store)
-    ) ?? []
-
-  //further finding storeVal in parallel stage
-  for (let i = 0; i < filteredParallelManifestforStore.length; i++) {
-    if (filteredParallelManifestforStore[i] !== undefined) {
-      for (let j = 0; j < filteredParallelManifestforStore[i].length; j++) {
-        if (filteredParallelManifestforStore[i][j] != undefined) {
-          storeVal = filteredParallelManifestforStore[i][j]
-        }
-      }
-    }
-  }
-
-  // clears any runtime inputs and set values in source->spec->spec
-  let artifactSourceSpec = clearRuntimeInputValue(
-    cloneDeep(
-      parse(
-        JSON.stringify({
-          spec: { ...selectedArtifact?.spec, store: storeVal, ...artifactSpec }
-        }) || ''
-      )
-    )
-  )
-
-  //if connectorRef present in store is runtime then we need to fetch values from stringifyPipelineRuntimeInput
-  const filteredStageforRuntimeStore = parse(stringifyPipelineRuntimeInput)?.pipeline?.stages?.map((st: any) =>
-    get(st, 'stage.spec.serviceConfig.serviceDefinition.spec.manifests' || [])?.find(
-      (mani: { manifest: { identifier: any } }) => mani?.manifest?.identifier === selectedArtifact?.identifier
-    )
-  )
-  const runtimeStoreManifest = filteredStageforRuntimeStore?.find((mani: undefined) => mani != undefined)
-  const newStoreVal = runtimeStoreManifest?.manifest?.spec?.store
-  if (storeVal?.spec?.connectorRef === '<+input>') {
-    artifactSourceSpec = cloneDeep(
-      parse(
-        JSON.stringify({
-          spec: { ...selectedArtifact?.spec, store: newStoreVal }
-        }) || ''
-      )
-    )
-  }
 
   const triggerYaml: NGTriggerConfigV2 = {
     name,
@@ -603,15 +490,7 @@ export const getArtifactTriggerYaml = ({
     orgIdentifier,
     projectIdentifier,
     pipelineIdentifier,
-    source: {
-      type: triggerType as NGTriggerSourceV2['type'],
-      spec: {
-        stageIdentifier: stageId,
-        manifestRef: selectedArtifact?.identifier,
-        type: artifactType,
-        ...artifactSourceSpec
-      }
-    },
+    source,
     inputYaml: stringifyPipelineRuntimeInput,
     pipelineBranchName: _gitAwareForTriggerEnabled ? pipelineBranchName : null,
     inputSetRefs: _gitAwareForTriggerEnabled ? inputSetRefs : null
