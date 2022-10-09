@@ -120,7 +120,7 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
           data={nodesData}
           title={{
             style: { fontSize: '20px', fontWeight: '700' },
-            text: (data.nodes.committed + data.nodes.fallback + data.node.on_demand + data.nodes.spot).toString()
+            text: data.nodes.total.toString()
           }}
         />
       </Container>
