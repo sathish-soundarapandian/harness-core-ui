@@ -6,10 +6,8 @@
  */
 
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
 import MainNav from '@common/navigation/MainNav'
 import SideNav from '@common/navigation/SideNav'
-
 import { useSidebar } from '@common/navigation/SidebarProvider'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { TrialLicenseBanner } from '@common/layouts/TrialLicenseBanner'
@@ -17,10 +15,9 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePage } from '@common/pages/pageContext/PageProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
-import { GetLicensesAndSummaryQueryParams, useGetLicensesAndSummary } from 'services/cd-ng'
 import FeatureBanner from './FeatureBanner'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './layouts.module.scss'
+import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
 
 export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { title, subtitle, icon, navComponent: NavComponent } = useSidebar()
@@ -29,16 +26,12 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
   const { trackPage, identifyUser } = useTelemetry()
   const { currentUserInfo } = useAppStore()
-  const { accountId } = useParams<AccountPathProps>()
   const {
     data: limitData,
     loading: loadingLimit,
     error: limitError,
     refetch: refetchLimit
-  } = useGetLicensesAndSummary({
-    queryParams: { moduleType: moduleName as GetLicensesAndSummaryQueryParams['moduleType'] },
-    accountIdentifier: accountId
-  })
+  } = fetchLicenseUseAndSummary(moduleName)
   useEffect(() => {
     if (pageName) {
       identifyUser(currentUserInfo.email)

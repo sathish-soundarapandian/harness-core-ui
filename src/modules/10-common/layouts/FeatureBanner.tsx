@@ -23,7 +23,7 @@ import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
-import type { ResponseLicensesWithSummaryDTO } from 'services/cd-ng'
+import type { ResponseLicensesWithSummaryDTO, Failure } from 'services/cd-ng'
 import {
   ViewUsageLink,
   ExplorePlansBtn,
@@ -34,6 +34,7 @@ import {
 } from './FeatureUtils'
 import { BannerType } from './Constants'
 import css from './layouts.module.scss'
+import type { GetDataError } from 'restful-react'
 
 export const BANNER_KEY = 'feature_banner_dismissed'
 
@@ -172,7 +173,7 @@ export default function FeatureBanner(props: FeatureBannerProps): React.ReactEle
   const features = useFeatures({ featuresRequest: { featureNames: defaultTo(activeModuleFeatures?.features, []) } })
 
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
-  const usageAndLimitInfo = useGetUsageAndLimit(moduleName, props.data, props.loading, props.refetch, props.limitError)
+  const usageAndLimitInfo = useGetUsageAndLimit(moduleName, props.data, props.limitError, props.loading, props.refetch)
 
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = isFreePlan(licenseInformation, moduleName)

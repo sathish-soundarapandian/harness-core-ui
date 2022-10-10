@@ -9,8 +9,6 @@ import { useState } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
 import {
-  useGetLicensesAndSummary,
-  GetLicensesAndSummaryQueryParams,
   CILicenseSummaryDTO,
   CFLicenseSummaryDTO,
   CELicenseSummaryDTO,
@@ -90,12 +88,11 @@ interface LimitReturn {
 function useGetLimit(
   module: ModuleName,
   data: ResponseLicensesWithSummaryDTO | null,
-  loading: boolean,
-  refetch: () => void,
-  limitError: GetDataError<Failure | Error> | null
+  limitError: GetDataError<Failure | Error> | null,
+  loading?: boolean,
+  refetch?: () => void
 ): LimitReturn {
   const limitData = data
-
   function getLimitByModule(): LimitProps | undefined {
     let moduleLimit
     switch (module) {
@@ -315,11 +312,11 @@ function useGetUsage(module: ModuleName): UsageReturn {
 export function useGetUsageAndLimit(
   module: ModuleName,
   data: ResponseLicensesWithSummaryDTO | null,
-  loading: boolean,
-  refetch: () => void,
-  limitError: GetDataError<Failure | Error> | null
+  limitError: GetDataError<Failure | Error> | null,
+  loading?: boolean,
+  refetch?: () => void
 ): UsageAndLimitReturn {
-  const limit = useGetLimit(module, data, loading, refetch, limitError)
+  const limit = useGetLimit(module, data, limitError, loading, refetch)
   const usage = useGetUsage(module)
   return { limitData: limit, usageData: usage }
 }

@@ -25,7 +25,8 @@ import {
   StartTrialDTO,
   useSaveFeedback,
   FeedbackFormDTO,
-  ResponseLicensesWithSummaryDTO
+  ResponseLicensesWithSummaryDTO,
+  Failure
 } from 'services/cd-ng'
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -38,6 +39,7 @@ import { Editions } from '@common/constants/SubscriptionTypes'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, LicenseActions } from '@common/constants/TrackingConstants'
 import css from './layouts.module.scss'
+import type { GetDataError } from 'restful-react'
 
 export const BANNER_KEY = 'license_banner_dismissed'
 

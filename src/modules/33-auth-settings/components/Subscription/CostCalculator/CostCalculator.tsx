@@ -34,6 +34,7 @@ import { Footer } from './Footer'
 import { PremiumSupport } from './PremiumSupport'
 import { Header } from '../Header'
 import css from './CostCalculator.module.scss'
+import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
 
 interface CostCalculatorProps {
   module: Module
@@ -54,7 +55,15 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
 }) => {
   const { licenseInformation } = useLicenseStore()
   const currentPlan = (licenseInformation[module.toUpperCase()]?.edition || Editions.FREE) as Editions
-  const usageAndLimitInfo = useGetUsageAndLimit(module.toUpperCase() as ModuleName)
+
+  const { data: dataFetched, loading, error, refetch } = fetchLicenseUseAndSummary(module.toUpperCase())
+  const usageAndLimitInfo = useGetUsageAndLimit(
+    module.toUpperCase() as ModuleName,
+    dataFetched,
+    error,
+    loading,
+    refetch
+  )
   const { accountId } = useParams<AccountPathProps>()
   const [quantities, setQuantities] = useState<SubscriptionProps['quantities'] | undefined>(
     subscriptionProps.quantities
@@ -79,6 +88,7 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
     lazy: true
   })
   const prices = data?.data?.prices
+
   React.useEffect(() => {
     if (usageAndLimitInfo.usageData.usage?.ff) {
       fetchRecommendations()
