@@ -101,5 +101,44 @@ export const memoryOptimisedInstances = {
     'metal'
   ],
   r6g: ['medium', 'large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', 'metal'],
-  r6i: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge', '32xlarge', 'metal']
+  r6i: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge', '32xlarge', 'metal'],
+  r5: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge', 'metal'],
+  r5a: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge'],
+  r5b: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge', 'metal'],
+  r5n: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge', 'metal'],
+  r4: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '16xlarge'],
+  x2gd: ['medium', 'large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', 'metal'],
+  x2idn: ['16xlarge', '24xlarge', '32xlarge', 'metal'],
+  x2iedn: ['xlarge', '2xlarge', '4xlarge', '8xlarge', '16xlarge', '24xlarge', '32xlarge', 'metal'],
+  x2iezn: ['2xlarge', '4xlarge', '6xlarge', '8xlarge', '12xlarge', 'metal'],
+  x1e: ['xlarge', '2xlarge', '4xlarge', '8xlarge', '16xlarge', '32xlarge'],
+  x1: ['16xlarge', '32xlarge'],
+  z1d: ['large', 'xlarge', '2xlarge', '3xlarge', '6xlarge', '12xlarge', 'metal']
+}
+
+export const acceleratedComputingInstances = {
+  p4: ['24xlarge'],
+  p3: ['2xlarge', '8xlarge', '16xlarge'],
+  p2: ['xlarge', '8xlarge', '16xlarge'],
+  dl1: ['24xlarge'],
+  g5: ['xlarge', '2xlarge', '4xlarge', '8xlarge', '16xlarge', '12xlarge', '24xlarge', '48xlarge'],
+  g5g: ['xlarge', '2xlarge', '4xlarge', '8xlarge', '16xlarge', 'metal'],
+  g4dn: ['xlarge', '2xlarge', '4xlarge', '8xlarge', '16xlarge', '12xlarge', 'metal'],
+  g4ad: ['xlarge', '2xlarge', '4xlarge', '8xlarge', '16xlarge'],
+  g3: ['4xlarge', '8xlarge', '16xlarge'],
+  g3s: ['xlarge'],
+  f1: ['2xlarge', '4xlarge', '16xlarge'],
+  vt1: ['3xlarge', '6xlarge', '24xlarge']
+}
+
+export const storageOptimisedInstances = {
+  Im4gn: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '16xlarge'],
+  Is4gen: ['medium', 'large', 'xlarge', '2xlarge', '4xlarge', '8xlarge'],
+  i4i: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '16xlarge', '32xlarge', 'metal'],
+  i3: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '16xlarge', 'metal'],
+  i3en: ['large', 'xlarge', '2xlarge', '3xlarge', '6xlarge', '12xlarge', '24xlarge<br> ', 'metal'],
+  d2: ['xlarge', '2xlarge', '4xlarge', '8xlarge'],
+  d3: ['xlarge', '2xlarge', '4xlarge', '8xlarge'],
+  d3en: ['xlarge', '2xlarge', '4xlarge', '6xlarge', '8xlarge', '12xlarge'],
+  h1: ['2xlarge', '4xlarge', '8xlarge', '16xlarge']
 }

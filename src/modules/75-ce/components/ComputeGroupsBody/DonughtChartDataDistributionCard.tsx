@@ -74,7 +74,9 @@ const DonughtChartDataDistributionCard: React.FC<DonughtChartDataDistributionCar
           {efficiencyScore !== undefined && (
             <Layout.Horizontal className={css.efficiencyScoreContainer} flex={{ justifyContent: 'space-between' }}>
               <Text>{getString('ce.computeGroups.efficiencyScore')}</Text>
-              <Text color={Color.ORANGE_900}>{efficiencyScore}</Text>
+              <Text color={Color.GREEN_900} font={{ variation: FontVariation.LEAD }}>
+                {efficiencyScore}
+              </Text>
             </Layout.Horizontal>
           )}
         </Container>

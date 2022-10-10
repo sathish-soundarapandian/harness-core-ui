@@ -103,7 +103,7 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
             {getString('ce.computeGroups.totalSpotSavings')}
           </Text>
           <Text font={{ variation: FontVariation.H3 }} color={Color.GREEN_700}>
-            {formatCost(get(data, 'cost.savings', 0), {
+            {formatCost(get(data, 'cost.spot_savings', 0), {
               decimalPoints: 2
             }) + '*'}
           </Text>
@@ -126,7 +126,7 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
         <DonughtChartDataDistributionCard
           header={getString('ce.overview.cardtitles.clusterBreakdown')}
           data={nodesCostBreakdownData}
-          efficiencyScore={44}
+          efficiencyScore={74}
           title={{
             text: formatCost(totalNodesCost),
             style: { fontSize: '12px', fontWeight: '700' }

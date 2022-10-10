@@ -7,7 +7,13 @@
 
 import React, { useMemo } from 'react'
 import { Checkbox, Layout, Tabs } from '@harness/uicore'
-import { computeOptimisedInstances, generalPurposeInstances, sizes } from './data'
+import {
+  acceleratedComputingInstances,
+  computeOptimisedInstances,
+  generalPurposeInstances,
+  sizes,
+  storageOptimisedInstances
+} from './data'
 import css from './ScaleAndLimitPoliciesTab.module.scss'
 
 interface InstanceFamiliesSelectorTableProps {
@@ -81,6 +87,16 @@ const InstanceFamililesByCategories: React.FC = () => {
           id: 2,
           title: 'Compute Optimized',
           panel: <InstanceFamiliesSelectorTable gridData={computeOptimisedInstances} />
+        },
+        {
+          id: 3,
+          title: 'Accelerated Computing',
+          panel: <InstanceFamiliesSelectorTable gridData={acceleratedComputingInstances} />
+        },
+        {
+          id: 4,
+          title: 'Storage Optimised',
+          panel: <InstanceFamiliesSelectorTable gridData={storageOptimisedInstances} />
         }
       ]}
     />
