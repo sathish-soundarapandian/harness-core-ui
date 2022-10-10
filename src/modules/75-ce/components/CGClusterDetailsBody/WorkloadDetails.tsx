@@ -11,8 +11,11 @@ import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import type { CellProps, Column } from 'react-table'
 import {
+  Button,
+  ButtonVariation,
   Color,
   Container,
+  ExpandingSearchInput,
   FontVariation,
   Icon,
   Layout,
@@ -82,6 +85,26 @@ const WorkloadDetails: React.FC = () => {
         <Layout.Vertical spacing={'large'}>
           <Layout.Horizontal flex>
             <Text font={{ variation: FontVariation.H4 }}>{getString('pipeline.dashboards.workloads')}</Text>
+            <Layout.Horizontal spacing={'huge'}>
+              <Layout.Horizontal
+                spacing={'large'}
+                flex
+                padding={{ right: 'large' }}
+                style={{ borderRight: '1px solid var(--grey-200)' }}
+              >
+                <ExpandingSearchInput alwaysExpanded />
+                <Icon name="ng-filter" size={20} color={Color.PRIMARY_7} />
+              </Layout.Horizontal>
+              <Container>
+                <Button
+                  text={getString('viewDetails')}
+                  rightIcon="main-share"
+                  iconProps={{ size: 12, color: Color.PRIMARY_7 }}
+                  variation={ButtonVariation.SECONDARY}
+                  font={{ variation: FontVariation.SMALL }}
+                />
+              </Container>
+            </Layout.Horizontal>
           </Layout.Horizontal>
           <WorkloadDetailsTable />
         </Layout.Vertical>

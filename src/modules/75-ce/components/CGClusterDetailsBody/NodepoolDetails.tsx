@@ -10,7 +10,19 @@ import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { get } from 'lodash-es'
-import { Color, Container, FontVariation, Icon, Layout, PageSpinner, TableV2, Text } from '@harness/uicore'
+import {
+  Button,
+  ButtonVariation,
+  Color,
+  Container,
+  ExpandingSearchInput,
+  FontVariation,
+  Icon,
+  Layout,
+  PageSpinner,
+  TableV2,
+  Text
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
 import { useGetClusterNodes, useGetClusterNodesSummary } from 'services/lw'
@@ -32,7 +44,7 @@ const NodepoolDetails: React.FC = () => {
 
   return (
     <Container padding={'xlarge'}>
-      <Layout.Vertical className={css.infoCard} spacing="large">
+      <Layout.Vertical className={css.infoCard} spacing="huge">
         <Layout.Horizontal spacing={'large'}>
           <Layout.Vertical spacing={'large'} className={cx(css.infoCard, css.elongatedCard)}>
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
@@ -66,6 +78,26 @@ const NodepoolDetails: React.FC = () => {
         <Layout.Vertical spacing={'large'}>
           <Layout.Horizontal flex>
             <Text font={{ variation: FontVariation.H4 }}>{getString('pipeline.nodesLabel')}</Text>
+            <Layout.Horizontal spacing={'huge'}>
+              <Layout.Horizontal
+                spacing={'large'}
+                flex
+                padding={{ right: 'large' }}
+                style={{ borderRight: '1px solid var(--grey-200)' }}
+              >
+                <ExpandingSearchInput alwaysExpanded />
+                <Icon name="ng-filter" size={20} color={Color.PRIMARY_7} />
+              </Layout.Horizontal>
+              <Container>
+                <Button
+                  text={getString('viewDetails')}
+                  rightIcon="main-share"
+                  iconProps={{ size: 12, color: Color.PRIMARY_7 }}
+                  variation={ButtonVariation.SECONDARY}
+                  font={{ variation: FontVariation.SMALL }}
+                />
+              </Container>
+            </Layout.Horizontal>
           </Layout.Horizontal>
           <WorkloadDetailsTable />
         </Layout.Vertical>
