@@ -55,7 +55,7 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
       color: Color.GREY_200,
       legendText: `On-demand (${get(data, 'nodes.on_demand', 0)})`,
       name: 'On-demand',
-      value: formatCost(get(data, 'nodes.on-demand_cost', 0)),
+      value: formatCost(get(data, 'nodes.on_demand_cost', 0)),
       graphPercentage: (get(data, 'nodes.on_demand', 0) / totalNodes) * 100
     },
     {
@@ -86,7 +86,7 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
       <Container>
         <Layout.Vertical spacing={'small'} margin={{ bottom: 'small' }} className={css.infoContainer}>
           <Text font={{ variation: FontVariation.H6 }} color={Color.GREY_600}>
-            {getString('ce.commitmentOrchestration.computeSpend')}
+            {getString('ce.computeGroups.clusterSpend')}
           </Text>
           <Text font={{ variation: FontVariation.H3 }}>
             {formatCost(get(data, 'cost.spend', 0), {
@@ -104,12 +104,14 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
               decimalPoints: 2
             }) + '*'}
           </Text>
-          <Text font={{ variation: FontVariation.SMALL }}>{getString('ce.computeGroups.spotSavingsInfo')}</Text>
+          <Text font={{ variation: FontVariation.SMALL }}>
+            {getString('ce.computeGroups.clusterDetails.comparedText')}
+          </Text>
         </Layout.Vertical>
       </Container>
       <Container className={cx(css.infoContainer, css.spacedContainer)}>
         <DonughtChartDataDistributionCard
-          header={getString('ce.computeGroups.totalNodes')}
+          header={getString('pipeline.nodesLabel')}
           data={nodesData}
           title={{
             style: { fontSize: '20px', fontWeight: '700' },

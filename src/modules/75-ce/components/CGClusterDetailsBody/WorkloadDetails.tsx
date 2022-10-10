@@ -9,7 +9,7 @@ import React, { useMemo } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
-import type { Column } from 'react-table'
+import type { CellProps, Column } from 'react-table'
 import {
   Color,
   Container,
@@ -20,12 +20,14 @@ import {
   Select,
   TableV2,
   Text,
-  TextInput
+  TextInput,
+  Utils
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
 import { useGetClusterWorkloadsList, useGetClusterWorkloadsSummary } from 'services/lw'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import CEChart from '../CEChart/CEChart'
 import css from './CGClusterDetailsBody.module.scss'
 
 const WorkloadDetails: React.FC = () => {
@@ -50,13 +52,13 @@ const WorkloadDetails: React.FC = () => {
         <Layout.Horizontal spacing={'large'}>
           <Layout.Vertical spacing={'large'} className={cx(css.infoCard, css.elongatedCard)}>
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
-              {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.totalSpend')}
+              {getString('ce.computeGroups.clusterSpend')}
             </Text>
             <Text font={{ variation: FontVariation.H3 }}>{formatCost(get(summaryData, 'cost.spend', 0))}</Text>
           </Layout.Vertical>
           <Layout.Vertical spacing={'large'} className={cx(css.infoCard, css.elongatedCard)}>
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
-              {getString('ce.computeGroups.setup.clusterPermissionsTab.totalReplicas')}
+              {getString('ce.computeGroups.replicas')}
             </Text>
             <Text font={{ variation: FontVariation.H3 }}>{get(summaryData, 'replicas', 0)}</Text>
           </Layout.Vertical>
@@ -68,7 +70,7 @@ const WorkloadDetails: React.FC = () => {
               <Text font={{ variation: FontVariation.H3 }} color={Color.GREEN_700}>
                 {formatCost(get(summaryData, 'cost.spot_savings')) + '*'}
               </Text>
-              <Text font={{ variation: FontVariation.SMALL }} color={Color.GREEN_700}>
+              <Text font={{ variation: FontVariation.H6 }} color={Color.GREEN_700}>
                 (61%)
               </Text>
             </Layout.Horizontal>
@@ -79,9 +81,7 @@ const WorkloadDetails: React.FC = () => {
         </Layout.Horizontal>
         <Layout.Vertical spacing={'large'}>
           <Layout.Horizontal flex>
-            <Text font={{ variation: FontVariation.H4 }}>
-              {getString('ce.perspectives.workloadDetails.workloadDetailsText')}
-            </Text>
+            <Text font={{ variation: FontVariation.H4 }}>{getString('pipeline.dashboards.workloads')}</Text>
           </Layout.Horizontal>
           <WorkloadDetailsTable />
         </Layout.Vertical>
@@ -112,14 +112,60 @@ const DistributionCell = () => {
 const StrategyCell = () => {
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal spacing={'small'} className={css.strategyCell}>
+    <Layout.Vertical spacing={'small'} className={css.strategyCell}>
       <Select
+        defaultSelectedItem={{
+          label: getString('ce.recommendation.detailsPage.costOptimized'),
+          value: 'costOptimized'
+        }}
         items={[
           { label: getString('ce.recommendation.detailsPage.costOptimized'), value: 'costOptimized' },
           { label: getString('ce.computeGroups.leastInterrupted'), value: 'leastInterrupted' }
         ]}
       />
       <TextInput placeholder={getString('ce.computeGroups.baseOnDemandCapacity')} />
+    </Layout.Vertical>
+  )
+}
+
+const ReplicasCell = (tableProps: CellProps<any>) => {
+  return (
+    <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing={'small'}>
+      <Text>{tableProps.value}</Text>
+      <CEChart
+        options={{
+          chart: { height: 100, width: 100 },
+          tooltip: {
+            useHTML: true,
+            enabled: true,
+            headerFormat: '',
+            pointFormatter: function (this: Record<string, string | any>) {
+              return `<b>${this.name}</b>: ${this.y}`
+            }
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: false
+              }
+            }
+          },
+          series: [
+            {
+              name: 'Cost',
+              innerSize: 0,
+              type: 'pie',
+              data: [
+                { name: 'Spot', id: 'spot', y: get(tableProps, 'row.original.spot_count', 0) as number },
+                { name: 'On-demand', id: 'on-demand', y: get(tableProps, 'row.original.on_demand_count', 0) as number }
+              ]
+            }
+          ],
+          colors: [Utils.getRealCSSColor(Color.PRIMARY_2), Utils.getRealCSSColor(Color.PRIMARY_4)]
+        }}
+      />
     </Layout.Horizontal>
   )
 }
@@ -139,7 +185,7 @@ const WorkloadDetailsTable: React.FC = () => {
       {
         accessor: 'name',
         Header: getString('name'),
-        width: '15%',
+        width: '20%',
         Cell: tableProps => (
           <Layout.Vertical>
             <Text font={{ variation: FontVariation.LEAD }}>{tableProps.value}</Text>
@@ -162,8 +208,8 @@ const WorkloadDetailsTable: React.FC = () => {
       {
         accessor: 'replica',
         Header: getString('ce.computeGroups.replicas'),
-        width: '10%',
-        Cell: tableProps => <Text>{tableProps.value}</Text>
+        width: '15%',
+        Cell: ReplicasCell
       },
       {
         accessor: 'id',
@@ -174,7 +220,7 @@ const WorkloadDetailsTable: React.FC = () => {
       {
         accessor: 'type',
         Header: getString('ce.computeGroups.strategy'),
-        width: '25%',
+        width: '20%',
         Cell: StrategyCell
       },
       {
@@ -187,7 +233,13 @@ const WorkloadDetailsTable: React.FC = () => {
         accessor: 'someother',
         Header: getString('ce.recommendation.sideNavText'),
         width: '15%',
-        Cell: tableProps => <Text>{tableProps.value}</Text>
+        Cell: () => (
+          <Text
+            rightIcon="main-share"
+            rightIconProps={{ size: 12, color: Color.PRIMARY_7 }}
+            color={Color.PRIMARY_7}
+          >{`Save upto $323`}</Text>
+        )
       }
     ],
     []

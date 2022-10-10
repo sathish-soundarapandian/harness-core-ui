@@ -20,6 +20,10 @@
     display: grid;
     grid-template-columns: 1fr repeat(2, 2fr);
   }
+
+  :global(.TableV2--header) {
+    background: var(--grey-100);
+  }
 }
 
 .infoContainer {
@@ -44,6 +48,19 @@
   width: 5px;
   height: auto;
   border-radius: 3px;
+}
+.subText {
+  margin-left: 13px !important;
+}
+
+.copyBtnSmall {
+  button {
+    padding: var(--spacing-small) !important;
+    height: 16px !important;
+    line-height: 16px !important;
+    min-height: 16px !important;
+    min-width: 16px !important;
+  }
 }
 
 .efficiencyScoreContainer {

@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Checkbox, Layout } from '@harness/uicore'
+import { Checkbox, Layout, Tabs } from '@harness/uicore'
 import css from './ScaleAndLimitPoliciesTab.module.scss'
 
 const sizes = ['nano', 'micro', 'small', 'medium', 'large', 'xlarge', '2xlarge', '4xlarge', '8xlarge']
@@ -72,4 +72,20 @@ const InstanceFamiliesSelectorTable: React.FC<InstanceFamiliesSelectorTableProps
   )
 }
 
-export default InstanceFamiliesSelectorTable
+const InstanceFamililesByCategories: React.FC = () => {
+  return (
+    <Tabs
+      id="instanceFamilies"
+      defaultSelectedTabId={1}
+      tabList={[
+        {
+          id: 1,
+          title: 'General Purpose',
+          panel: <InstanceFamiliesSelectorTable />
+        }
+      ]}
+    />
+  )
+}
+
+export default InstanceFamililesByCategories

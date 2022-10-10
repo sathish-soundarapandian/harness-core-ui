@@ -1354,19 +1354,21 @@ serviceDetails:
 computeGroups:
   sideNavText: Cluster Orchestrator
   addNewClusterCtaText: Add new cluster
-  totalSpotSavings: Total spot savings
+  totalSpotSavings: Spot savings
   fallback: Fallback
   commitments: Commitments
   utilized: Utilized
   idle: Idle
   replicas: Replicas
-  strategy: Strategy
+  strategy: Distribution Strategy
   leastInterrupted: Least interrupted
   baseOnDemandCapacity: Base on-demand capacity
   onDemandSpend: On-Demand spend (/mo)
   spotSpend: Spot Spend (/mo)
   fulfillment: Fulfillment
-  spotSavingsInfo: '*compared to the On-Demand Equivalent'
+  clusterSpend: Cluster spend
+  pods: Pods
+  savingsPlanRis: Savings Plans/RIs
   table:
     headers:
       name: Cluster name & id
@@ -1382,7 +1384,7 @@ computeGroups:
     memoryBreakdown: Memory breakdown
     nodesBreakdown: Nodes breakdown
     podDetails: Pod Details
-    totalPods: Total pods
+    totalPods: Total Pods
     comparedText: '*compared to on-demand equivalent'
   setup:
     clusterPermissionsTab:

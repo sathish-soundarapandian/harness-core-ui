@@ -18,8 +18,6 @@ import css from './ComputeGroupsBody.module.scss'
 
 const ComputeGroupsBody: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
-  // const [data, setData] = useState({})
-  // const [loading, setLoading] = useState(true)
   const { data, loading } = useGetClusterSummary({
     account_id: accountId,
     queryParams: { accountIdentifier: accountId }

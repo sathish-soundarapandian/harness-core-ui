@@ -98,15 +98,15 @@ const CPUValueWithBreakdown = (tableProps: CellProps<any>) => {
           </Layout.Horizontal>
           <Layout.Horizontal flex spacing={'xlarge'}>
             <Text>{getString('ce.computeGroups.utilized')}</Text>
-            <Text>{data.cpu.utilized}</Text>
+            <Text>{get(data, 'cpu.utilized', 0).toFixed(2)}</Text>
           </Layout.Horizontal>
           <Layout.Horizontal flex spacing={'xlarge'}>
             <Text>{getString('ce.computeGroups.idle')}</Text>
-            <Text>{0}</Text>
+            <Text>{get(data, 'cpu.idle', 0).toFixed(2)}</Text>
           </Layout.Horizontal>
           <Layout.Horizontal flex spacing={'xlarge'}>
             <Text>{getString('ce.businessMapping.tableHeadings.unallocated')}</Text>
-            <Text>{data.cpu.un_allocated}</Text>
+            <Text>{get(data, 'cpu.un_allocated', 0).toFixed(2)}</Text>
           </Layout.Horizontal>
         </Container>
       }
@@ -130,19 +130,19 @@ const MemoryValueWithBreakdown = (tableProps: CellProps<any>) => {
         <Container className={css.tableValuePopover}>
           <Layout.Horizontal flex spacing={'xlarge'}>
             <Text font={{ variation: FontVariation.LEAD }}>{getString('delegate.totalCpu')}</Text>
-            <Text>{data.memory.total}</Text>
+            <Text>{get(data, 'memory.total', 0).toFixed(2)}</Text>
           </Layout.Horizontal>
           <Layout.Horizontal flex spacing={'xlarge'}>
             <Text>{getString('ce.computeGroups.utilized')}</Text>
-            <Text>{data.memory.utilized}</Text>
+            <Text>{get(data, 'memory.utilized', 0).toFixed(2)}</Text>
           </Layout.Horizontal>
           <Layout.Horizontal flex spacing={'xlarge'}>
             <Text>{getString('ce.computeGroups.idle')}</Text>
-            <Text>{0}</Text>
+            <Text>{get(data, 'memory.idle', 0).toFixed(2)}</Text>
           </Layout.Horizontal>
           <Layout.Horizontal flex spacing={'xlarge'}>
             <Text>{getString('ce.businessMapping.tableHeadings.unallocated')}</Text>
-            <Text>{data.memory.un_allocated}</Text>
+            <Text>{get(data, 'memory.un_allocated', 0).toFixed(2)}</Text>
           </Layout.Horizontal>
         </Container>
       }
@@ -253,7 +253,7 @@ const ClusterTable: React.FC = () => {
       },
       {
         accessor: 'spend',
-        Header: getString('ce.commitmentOrchestration.computeSpend'),
+        Header: getString('ce.computeGroups.clusterSpend'),
         width: '12%',
         Cell: (tableProps: any) => (
           <Text font={{ variation: FontVariation.LEAD }}>

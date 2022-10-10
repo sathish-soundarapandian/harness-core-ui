@@ -15,7 +15,14 @@ import css from './ComputeGroupsBody.module.scss'
 
 interface DonughtChartDataDistributionCardProps {
   header: string
-  data: { name: string; legendText: string; color: Color; value: string | number; graphPercentage: number }[]
+  data: {
+    name: string
+    legendText: string
+    legendSubText?: string
+    color: Color
+    value: string | number
+    graphPercentage: number
+  }[]
   efficiencyScore?: number
   title?: TitleOptions
 }
@@ -56,7 +63,14 @@ const DonughtChartDataDistributionCard: React.FC<DonughtChartDataDistributionCar
           />
         </Layout.Horizontal>
         <Container style={{ flex: 2 }}>
-          <Legends data={data.map(item => ({ color: item.color, text: item.legendText, value: item.value }))} />
+          <Legends
+            data={data.map(item => ({
+              color: item.color,
+              text: item.legendText,
+              subText: item.legendSubText,
+              value: item.value
+            }))}
+          />
           {efficiencyScore !== undefined && (
             <Layout.Horizontal className={css.efficiencyScoreContainer} flex={{ justifyContent: 'space-between' }}>
               <Text>{getString('ce.computeGroups.efficiencyScore')}</Text>
@@ -70,7 +84,7 @@ const DonughtChartDataDistributionCard: React.FC<DonughtChartDataDistributionCar
 }
 
 interface LegendsProps {
-  data: { color: Color; text: string; value: string | number }[]
+  data: { color: Color; text: string; value: string | number; subText?: string }[]
 }
 
 const Legends: React.FC<LegendsProps> = ({ data }) => {
@@ -80,10 +94,17 @@ const Legends: React.FC<LegendsProps> = ({ data }) => {
         return (
           <Container key={item.text}>
             <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
-              <Layout.Horizontal spacing="small">
-                <span className={css.legendMarker} style={{ backgroundColor: Utils.getRealCSSColor(item.color) }} />
-                <Text color={Color.GREY_800}>{item.text}</Text>
-              </Layout.Horizontal>
+              <Container>
+                <Layout.Horizontal spacing="small">
+                  <span className={css.legendMarker} style={{ backgroundColor: Utils.getRealCSSColor(item.color) }} />
+                  <Text color={Color.GREY_800}>{item.text}</Text>
+                </Layout.Horizontal>
+                {item.subText && (
+                  <Text font={{ variation: FontVariation.SMALL }} className={css.subText}>
+                    {item.subText}
+                  </Text>
+                )}
+              </Container>
               <Text color={Color.GREY_800}>{item.value}</Text>
             </Layout.Horizontal>
           </Container>

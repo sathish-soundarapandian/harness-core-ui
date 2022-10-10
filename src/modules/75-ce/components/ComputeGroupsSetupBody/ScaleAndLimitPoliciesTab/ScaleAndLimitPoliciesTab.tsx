@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { Checkbox, Color, Container, FontVariation, FormInput, Layout, Radio, Text, useToggle } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import ToggleSection from '../ToggleSection'
-import InstanceFamiliesSelectorTable from './InstanceFamiliesSelectorTable'
+import InstanceFamililesByCategories from './InstanceFamiliesSelectorTable'
 import css from './ScaleAndLimitPoliciesTab.module.scss'
 
 interface FieldContainerWithCheckboxProps {
@@ -190,7 +190,7 @@ const NodePreferences: React.FC = () => {
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
         {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.byInstanceFamiliesSubtitle')}
       </Text>
-      {selectedOption === 'instanceFamily' && <InstanceFamiliesSelectorTable />}
+      {selectedOption === 'instanceFamily' && <InstanceFamililesByCategories />}
       <Radio
         label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.byNodeConstraints')}
         checked={selectedOption === 'constraint'}

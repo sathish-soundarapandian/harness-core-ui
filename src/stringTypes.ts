@@ -5675,6 +5675,7 @@ export interface StringsMap {
   'ce.computeGroups.clusterDetails.podDetails': string
   'ce.computeGroups.clusterDetails.totalPods': string
   'ce.computeGroups.clusterDetails.workloads': string
+  'ce.computeGroups.clusterSpend': string
   'ce.computeGroups.commitments': string
   'ce.computeGroups.efficiencyScore': string
   'ce.computeGroups.fallback': string
@@ -5683,7 +5684,9 @@ export interface StringsMap {
   'ce.computeGroups.leastInterrupted': string
   'ce.computeGroups.nodeDetailsHeader': string
   'ce.computeGroups.onDemandSpend': string
+  'ce.computeGroups.pods': string
   'ce.computeGroups.replicas': string
+  'ce.computeGroups.savingsPlanRis': string
   'ce.computeGroups.setup.clusterPermissionsTab.info1': string
   'ce.computeGroups.setup.clusterPermissionsTab.info2': string
   'ce.computeGroups.setup.clusterPermissionsTab.info3': string
@@ -5742,7 +5745,6 @@ export interface StringsMap {
   'ce.computeGroups.setup.spotInstancesTab.useSpotSection.subHeader': string
   'ce.computeGroups.setup.spotInstancesTab.workloadToRunOnSpot': string
   'ce.computeGroups.sideNavText': string
-  'ce.computeGroups.spotSavingsInfo': string
   'ce.computeGroups.spotSpend': string
   'ce.computeGroups.strategy': string
   'ce.computeGroups.table.headers.managedBy': string

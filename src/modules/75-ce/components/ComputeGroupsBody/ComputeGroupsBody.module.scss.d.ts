@@ -9,6 +9,7 @@
 declare const styles: {
   readonly bodyWidgetsContainer: string
   readonly cgBodyContainer: string
+  readonly copyBtnSmall: string
   readonly dataRowContainer: string
   readonly efficiencyScoreContainer: string
   readonly enableCell: string
@@ -18,6 +19,7 @@ declare const styles: {
   readonly infoContainer: string
   readonly legendMarker: string
   readonly spacedContainer: string
+  readonly subText: string
   readonly tableValuePopover: string
 }
 export default styles

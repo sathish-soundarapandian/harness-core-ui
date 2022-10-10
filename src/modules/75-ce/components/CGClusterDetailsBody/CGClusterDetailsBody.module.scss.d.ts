@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly clusterDetailsBody: string
+  readonly clusterDetailsItem: string
   readonly distributionCell: string
   readonly elongatedCard: string
   readonly head: string
@@ -17,6 +18,7 @@ declare const styles: {
   readonly podOnDemandTag: string
   readonly podSpotTag: string
   readonly strategyCell: string
+  readonly underlineItem: string
   readonly value: string
 }
 export default styles

@@ -36,13 +36,13 @@ const NodepoolDetails: React.FC = () => {
         <Layout.Horizontal spacing={'large'}>
           <Layout.Vertical spacing={'large'} className={cx(css.infoCard, css.elongatedCard)}>
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
-              {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.totalSpend')}
+              {getString('ce.computeGroups.clusterSpend')}
             </Text>
             <Text font={{ variation: FontVariation.H3 }}>{formatCost(get(data, 'response.total_spend', 0))}</Text>
           </Layout.Vertical>
           <Layout.Vertical spacing={'large'} className={cx(css.infoCard, css.elongatedCard)}>
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
-              {getString('ce.computeGroups.setup.clusterPermissionsTab.totalReplicas')}
+              {getString('ce.computeGroups.replicas')}
             </Text>
             <Text font={{ variation: FontVariation.H3 }}>{get(data, 'response.replicas', 0)}</Text>
           </Layout.Vertical>
@@ -65,7 +65,7 @@ const NodepoolDetails: React.FC = () => {
         </Layout.Horizontal>
         <Layout.Vertical spacing={'large'}>
           <Layout.Horizontal flex>
-            <Text font={{ variation: FontVariation.H4 }}>{getString('ce.computeGroups.nodeDetailsHeader')}</Text>
+            <Text font={{ variation: FontVariation.H4 }}>{getString('pipeline.nodesLabel')}</Text>
           </Layout.Horizontal>
           <WorkloadDetailsTable />
         </Layout.Vertical>
@@ -92,7 +92,7 @@ const WorkloadDetailsTable: React.FC = () => {
       {
         accessor: 'name',
         Header: getString('name'),
-        width: '15%',
+        width: '16%',
         Cell: tableProps => (
           <Text lineClamp={1} style={{ width: '70%' }}>
             {tableProps.value}
@@ -108,38 +108,50 @@ const WorkloadDetailsTable: React.FC = () => {
       {
         accessor: 'workloads',
         Header: getString('pipeline.dashboards.workloads'),
-        width: '15%',
+        width: '12%',
+        Cell: tableProps => <Text>{tableProps.value}</Text>
+      },
+      {
+        accessor: 'type',
+        Header: getString('ce.co.gatewayReview.instanceType'),
+        width: '12%',
         Cell: tableProps => <Text>{tableProps.value}</Text>
       },
       {
         accessor: 'fulfillment',
         Header: getString('ce.computeGroups.fulfillment'),
-        width: '15%',
+        width: '12%',
         Cell: tableProps => <Text>{tableProps.value}</Text>
       },
       {
         accessor: 'on_demand_spend',
         Header: getString('ce.computeGroups.onDemandSpend'),
-        width: '15%',
+        width: '12%',
         Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
       },
       {
         accessor: 'spot_spend',
         Header: getString('ce.computeGroups.spotSpend'),
-        width: '15%',
+        width: '12%',
         Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
       },
       {
         accessor: 'total_cost',
         Header: getString('ce.overview.totalCost'),
-        width: '15%',
+        width: '12%',
         Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
       },
       {
         accessor: 'someother',
         Header: getString('ce.recommendation.sideNavText'),
-        width: '15%',
-        Cell: tableProps => <Text>{tableProps.value}</Text>
+        width: '12%',
+        Cell: () => (
+          <Text
+            rightIcon="main-share"
+            rightIconProps={{ size: 12, color: Color.PRIMARY_7 }}
+            color={Color.PRIMARY_7}
+          >{`Save upto $323`}</Text>
+        )
       }
     ],
     []

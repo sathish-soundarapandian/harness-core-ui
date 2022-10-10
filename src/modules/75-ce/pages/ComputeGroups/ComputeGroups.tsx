@@ -23,7 +23,9 @@ const ComputeGroups: React.FC = () => {
         breadcrumbs={<NGBreadcrumbs />}
         title={
           <Container>
-            <Text font={{ variation: FontVariation.H4 }}>{getString('ce.computeGroups.sideNavText')}</Text>
+            <Text font={{ variation: FontVariation.H4 }}>
+              {getString('ce.computeGroups.sideNavText') + ' ' + 'for EKS'}
+            </Text>
           </Container>
         }
       />

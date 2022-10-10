@@ -117,7 +117,7 @@ const CGClusterDetailsPage: React.FC = () => {
         title={
           <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">
             <Icon name={'app-kubernetes'} size={50} />
-            <Layout.Vertical spacing={'small'}>
+            <Container>
               <Layout.Horizontal spacing={'huge'} flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
                 <Text font={{ variation: FontVariation.H4 }}>{defaultTo(get(data, 'response.name'), '')}</Text>
                 {isEnabled && (
@@ -135,10 +135,12 @@ const CGClusterDetailsPage: React.FC = () => {
               {clusterId && (
                 <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
                   <Text>{`ID: ${clusterId}`}</Text>
-                  <CopyButton textToCopy={clusterId} />
+                  <Container className={css.copyBtnSmall}>
+                    <CopyButton textToCopy={clusterId} />
+                  </Container>
                 </Layout.Horizontal>
               )}
-            </Layout.Vertical>
+            </Container>
           </Layout.Horizontal>
         }
         toolbar={<TabNavigation size="small" links={navigationLinks} />}

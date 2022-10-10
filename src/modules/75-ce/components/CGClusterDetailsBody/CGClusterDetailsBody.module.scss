@@ -52,6 +52,7 @@
 
 .strategyCell {
   padding-right: var(--spacing-large) !important;
+  max-width: 70%;
   > div {
     flex: 1;
   }
@@ -60,5 +61,12 @@
 .listTableContainer {
   :global(.TableV2--header) {
     background: var(--grey-100);
+  }
+}
+
+.clusterDetailsItem {
+  &.underlineItem {
+    border-bottom: 1px solid var(--grey-200);
+    padding-bottom: var(--spacing-medium);
   }
 }

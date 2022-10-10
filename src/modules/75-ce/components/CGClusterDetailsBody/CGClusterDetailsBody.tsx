@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import cx from 'classnames'
 import { get } from 'lodash-es'
 import { Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
@@ -17,6 +18,7 @@ import css from './CGClusterDetailsBody.module.scss'
 interface ClusterDetailsItemProps {
   title: string
   value: string
+  underlineItem?: boolean
 }
 
 interface CGClusterDetailsBodyProps {
@@ -52,6 +54,7 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
     {
       color: Color.PRIMARY_7,
       legendText: `Commitments (${get(data, 'nodes.committed', 0)})`,
+      legendSubText: getString('ce.computeGroups.savingsPlanRis'),
       name: 'Commitments',
       value: formatCost(get(data, 'nodes.committed_cost', 0)),
       graphPercentage: (get(data, 'nodes.committed', 0) / totalNodes) * 100
@@ -111,7 +114,7 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
         <Container className={css.infoCard}>
           <Layout.Vertical spacing={'medium'}>
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
-              {getString('ce.common.totalComputeSpend')}
+              {getString('ce.computeGroups.clusterSpend')}
             </Text>
             <Text font={{ variation: FontVariation.H3 }}>{formatCost(get(data, 'nodes.total_spend', 0))}</Text>
             <Text font={{ variation: FontVariation.SMALL }}>{getString('ce.commitmentOrchestration.monthToDate')}</Text>
@@ -119,11 +122,11 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
         </Container>
         <Container className={css.infoCard}>
           <Layout.Vertical spacing={'large'}>
-            <Text font={{ variation: FontVariation.H6 }}>
+            <Text font={{ variation: FontVariation.H6 }} padding={{ bottom: 'medium' }}>
               {getString('ce.computeGroups.clusterDetails.k8sClusterDetailsHeader')}
             </Text>
-            <ClusterDetailsItem title={getString('connectors.name')} value={get(data, 'id', '')} />
-            <ClusterDetailsItem title={getString('regionLabel')} value={get(data, 'region', '')} />
+            <ClusterDetailsItem title={getString('connectors.name')} value={get(data, 'id', '')} underlineItem />
+            <ClusterDetailsItem title={getString('regionLabel')} value={get(data, 'region', '')} underlineItem />
             <ClusterDetailsItem
               title={getString('identifier')}
               value={get(data, 'cloud_account_id', 'My Kubernetes Connector 1')}
@@ -149,25 +152,25 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
           />
         </Container>
         <Layout.Vertical className={css.infoCard} spacing="large">
-          <Text font={{ variation: FontVariation.H6 }}>{getString('ce.perspectives.nodeDetails.header')}</Text>
+          <Text font={{ variation: FontVariation.H6 }}>{getString('pipeline.nodesLabel')}</Text>
           <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
             {getString('ce.computeGroups.totalNodes')}
           </Text>
           <Container>
             <Layout.Horizontal spacing={'huge'}>
-              <Text>{get(data, 'nodes.total', 0)}</Text>
-              <Text icon="elastic-kubernetes-service">
+              <Text font={{ variation: FontVariation.LEAD }}>{get(data, 'nodes.total', 0)}</Text>
+              <Text icon="elastic-kubernetes-service" font={{ variation: FontVariation.LEAD }}>
                 {get(data, 'nodes.total', 0) - get(data, 'nodes.harness_mgd', 0)}
               </Text>
-              <Text icon="harness">{get(data, 'nodes.harness_mgd', 0)}</Text>
+              <Text icon="harness" font={{ variation: FontVariation.LEAD }}>
+                {get(data, 'nodes.harness_mgd', 0)}
+              </Text>
             </Layout.Horizontal>
           </Container>
         </Layout.Vertical>
         <Layout.Vertical className={css.infoCard} spacing="large">
           <Layout.Horizontal spacing={'large'}>
-            <Text font={{ variation: FontVariation.H6 }}>
-              {getString('ce.computeGroups.clusterDetails.podDetails')}
-            </Text>
+            <Text font={{ variation: FontVariation.H6 }}>{getString('ce.computeGroups.pods')}</Text>
             <Layout.Horizontal spacing={'small'}>
               <Container className={css.podSpotTag}>
                 <Text>{`${getString('ce.nodeRecommendation.spot')} ${get(data, 'pods.spot', 0)}`}</Text>
@@ -208,7 +211,7 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
             header={getString('ce.computeGroups.clusterDetails.memoryBreakdown')}
             data={memoryBreakdownData}
             title={{
-              text: `<p>${get(data, 'cpu.total', 0)}</p><p><b>Gib</b></p>`,
+              text: `<p>${get(data, 'memory.total', 0).toFixed(2)}</p><p><b>Gib</b></p>`,
               useHTML: true,
               style: { fontWeight: '700', textAlign: 'center', fontSize: '14px' }
             }}
@@ -219,11 +222,18 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
   )
 }
 
-const ClusterDetailsItem: React.FC<ClusterDetailsItemProps> = ({ title, value }) => {
+const ClusterDetailsItem: React.FC<ClusterDetailsItemProps> = ({ title, value, underlineItem }) => {
   return (
-    <Layout.Vertical spacing={'medium'}>
-      <Text font={{ variation: FontVariation.SMALL }}>{title}</Text>
-      <Text>{value}</Text>
+    <Layout.Vertical
+      spacing={'small'}
+      className={cx(css.clusterDetailsItem, {
+        [css.underlineItem]: underlineItem
+      })}
+    >
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+        {title}
+      </Text>
+      <Text color={Color.GREY_900}>{value}</Text>
     </Layout.Vertical>
   )
 }
