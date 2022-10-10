@@ -23,6 +23,7 @@ import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+import type { ResponseLicensesWithSummaryDTO } from 'services/cd-ng'
 import {
   ViewUsageLink,
   ExplorePlansBtn,
@@ -33,7 +34,6 @@ import {
 } from './FeatureUtils'
 import { BannerType } from './Constants'
 import css from './layouts.module.scss'
-import type { ResponseLicensesWithSummaryDTO } from 'services/cd-ng'
 
 export const BANNER_KEY = 'feature_banner_dismissed'
 
@@ -101,7 +101,7 @@ export const getPercentageNumber = (feature?: CheckFeatureReturn) => {
 interface FeatureBannerProps {
   data: ResponseLicensesWithSummaryDTO | null
   loading: boolean
-  refetch: () => {}
+  refetch: () => void
 }
 
 function getBannerClassNameByType(type: BannerType): string {
