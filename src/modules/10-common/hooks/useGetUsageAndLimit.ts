@@ -16,7 +16,8 @@ import {
   CELicenseSummaryDTO,
   CDLicenseSummaryDTO,
   useGetCDLicenseUsageForServiceInstances,
-  useGetCDLicenseUsageForServices
+  useGetCDLicenseUsageForServices,
+  ResponseLicensesWithSummaryDTO
 } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetLicenseUsage as useGetFFUsage } from 'services/cf'
@@ -84,7 +85,8 @@ interface LimitReturn {
   refetchLimit?: () => void
 }
 
-function useGetLimit(module: ModuleName): LimitReturn {
+function useGetLimit(module: ModuleName, data: ResponseLicensesWithSummaryDTO | null): LimitReturn {
+  const limitData = data
   const { accountId } = useParams<AccountPathProps>()
 
   function getLimitByModule(): LimitProps | undefined {
@@ -129,30 +131,18 @@ function useGetLimit(module: ModuleName): LimitReturn {
     return moduleLimit
   }
 
-  const {
-    data: limitData,
-    loading: loadingLimit,
-    error: limitError,
-    refetch: refetchLimit
-  } = useGetLicensesAndSummary({
-    queryParams: { moduleType: module as GetLicensesAndSummaryQueryParams['moduleType'] },
-    accountIdentifier: accountId
-  })
+  // const {
+  //   data: limitData,
+  //   loading: loadingLimit,
+  //   error: limitError,
+  //   refetch: refetchLimit
+  // } = useGetLicensesAndSummary({
+  //   queryParams: { moduleType: module as GetLicensesAndSummaryQueryParams['moduleType'] },
+  //   accountIdentifier: accountId
+  // })
 
   const [limitReturn, setLimitReturn] = useState<LimitReturn>({})
-
   const limit = getLimitByModule()
-
-  useDeepCompareEffect(() => {
-    setLimitReturn({
-      limit,
-      limitErrorMsg: limitError?.message,
-      loadingLimit,
-      refetchLimit
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [limitData, loadingLimit, limitError])
-
   return limitReturn
 }
 
@@ -313,8 +303,11 @@ function useGetUsage(module: ModuleName): UsageReturn {
   return usageData
 }
 
-export function useGetUsageAndLimit(module: ModuleName): UsageAndLimitReturn {
-  const limit = useGetLimit(module)
+export function useGetUsageAndLimit(
+  module: ModuleName,
+  data: ResponseLicensesWithSummaryDTO | null
+): UsageAndLimitReturn {
+  const limit = useGetLimit(module, data)
   const usage = useGetUsage(module)
   return { limitData: limit, usageData: usage }
 }

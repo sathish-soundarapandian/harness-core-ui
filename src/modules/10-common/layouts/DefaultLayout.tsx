@@ -20,14 +20,29 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import FeatureBanner from './FeatureBanner'
 
 import css from './layouts.module.scss'
+import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import { GetLicensesAndSummaryQueryParams, useGetLicensesAndSummary } from 'services/cd-ng'
+import { useParams } from 'react-router'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { title, subtitle, icon, navComponent: NavComponent } = useSidebar()
   const { pageName } = usePage()
   const { module } = useModuleInfo()
+  debugger
+  const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
   const { trackPage, identifyUser } = useTelemetry()
   const { currentUserInfo } = useAppStore()
-
+  const { accountId } = useParams<AccountPathProps>()
+  const {
+    data: limitData,
+    loading: loadingLimit,
+    error: limitError,
+    refetch: refetchLimit
+  } = useGetLicensesAndSummary({
+    queryParams: { moduleType: moduleName as GetLicensesAndSummaryQueryParams['moduleType'] },
+    accountIdentifier: accountId
+  })
   useEffect(() => {
     if (pageName) {
       identifyUser(currentUserInfo.email)
@@ -43,8 +58,8 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
         <NavComponent />
       </SideNav>
       <div className={css.rhs}>
-        {module && <TrialLicenseBanner />}
-        {module && <FeatureBanner />}
+        {module && <TrialLicenseBanner data={limitData} loading={loadingLimit} refetch={refetchLimit} />}
+        {module && <FeatureBanner data={limitData} loading={loadingLimit} refetch={refetchLimit} />}
         <div className={css.children}>{props.children}</div>
       </div>
     </div>

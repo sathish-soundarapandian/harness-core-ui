@@ -33,6 +33,7 @@ import {
 } from './FeatureUtils'
 import { BannerType } from './Constants'
 import css from './layouts.module.scss'
+import type { ResponseLicensesWithSummaryDTO } from 'services/cd-ng'
 
 export const BANNER_KEY = 'feature_banner_dismissed'
 
@@ -97,6 +98,12 @@ export const getPercentageNumber = (feature?: CheckFeatureReturn) => {
   )
 }
 
+interface FeatureBannerProps {
+  data: ResponseLicensesWithSummaryDTO | null
+  loading: boolean
+  refetch: () => {}
+}
+
 function getBannerClassNameByType(type: BannerType): string {
   switch (type) {
     case BannerType.INFO:
@@ -150,7 +157,7 @@ function getBannerBodyByType({
   )
 }
 
-export default function FeatureBanner(): React.ReactElement | null {
+export default function FeatureBanner(props: FeatureBannerProps): React.ReactElement | null {
   const { module } = useModuleInfo()
   const { getString } = useStrings()
 
@@ -164,7 +171,7 @@ export default function FeatureBanner(): React.ReactElement | null {
   const features = useFeatures({ featuresRequest: { featureNames: defaultTo(activeModuleFeatures?.features, []) } })
 
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
-  const usageAndLimitInfo = useGetUsageAndLimit(moduleName)
+  const usageAndLimitInfo = useGetUsageAndLimit(moduleName, props.data)
 
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = isFreePlan(licenseInformation, moduleName)

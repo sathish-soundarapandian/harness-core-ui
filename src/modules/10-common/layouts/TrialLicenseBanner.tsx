@@ -25,8 +25,7 @@ import {
   StartTrialDTO,
   useSaveFeedback,
   FeedbackFormDTO,
-  useGetLicensesAndSummary,
-  GetLicensesAndSummaryQueryParams
+  ResponseLicensesWithSummaryDTO
 } from 'services/cd-ng'
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -59,7 +58,11 @@ const moduleNameMap: Record<string, keyof StringsMap> = {
   cv: 'common.module.cv',
   sto: 'common.module.sto'
 }
-
+interface TrialLicenseBannerProps {
+  data: ResponseLicensesWithSummaryDTO | null
+  loading: boolean
+  refetch: () => {}
+}
 const getModuleDescriptions: (
   getString: UseStringsReturn['getString'],
   module?: Module
@@ -219,7 +222,7 @@ const ExtendOrFeedBackBtn: React.FC<{
   )
 }
 
-export const TrialLicenseBanner: React.FC = () => {
+export const TrialLicenseBanner: React.FC<TrialLicenseBannerProps> = props => {
   const { getString } = useStrings()
   const { module } = useModuleInfo()
   const { currentUserInfo } = useAppStore()
@@ -233,15 +236,7 @@ export const TrialLicenseBanner: React.FC = () => {
   )
   const [extendingTrial, setExtendingTrial] = useState<boolean>(false)
 
-  const {
-    data,
-    refetch,
-    loading: gettingLicense
-  } = useGetLicensesAndSummary({
-    queryParams: { moduleType: module?.toUpperCase() as GetLicensesAndSummaryQueryParams['moduleType'] },
-    accountIdentifier: accountId,
-    lazy: module === undefined || isBannerDismissed[module]
-  })
+  const { data, refetch, loading: gettingLicense } = props
 
   const { maxExpiryTime, edition, licenseType } = data?.data || {}
   const updatedLicenseInfo = data?.data &&
