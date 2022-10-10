@@ -36,7 +36,7 @@ export default async function render(): Promise<void> {
   }
 
   ReactDOM.render(
-    <BrowserRouter>
+    <BrowserRouter basename="/pl-28468-router-1/ng">
       <Switch>
         <Route
           path={[
