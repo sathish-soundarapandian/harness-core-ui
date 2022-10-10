@@ -9,7 +9,7 @@ import React, { useMemo } from 'react'
 import { Button, ButtonVariation, ButtonSize, Layout } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import cx from 'classnames'
-
+import type { GetDataError } from 'restful-react'
 import featuresFactory from 'framework/featureStore/FeaturesFactory'
 import type { FeatureProps } from 'framework/featureStore/FeaturesFactory'
 import type { CheckFeatureReturn } from 'framework/featureStore/featureStoreUtil'
@@ -34,7 +34,6 @@ import {
 } from './FeatureUtils'
 import { BannerType } from './Constants'
 import css from './layouts.module.scss'
-import type { GetDataError } from 'restful-react'
 
 export const BANNER_KEY = 'feature_banner_dismissed'
 

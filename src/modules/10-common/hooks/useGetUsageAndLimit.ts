@@ -8,6 +8,7 @@
 import { useState } from 'react'
 import moment from 'moment'
 import { useParams } from 'react-router-dom'
+import type { GetDataError } from 'restful-react'
 import {
   CILicenseSummaryDTO,
   CFLicenseSummaryDTO,
@@ -25,7 +26,6 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import type { GetDataError } from 'restful-react'
 
 export interface UsageAndLimitReturn {
   limitData: LimitReturn

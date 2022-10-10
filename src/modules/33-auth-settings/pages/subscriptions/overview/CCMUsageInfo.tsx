@@ -6,7 +6,9 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { Layout, PageError } from '@wings-software/uicore'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
@@ -41,7 +43,8 @@ const ActiveCloudSpend: React.FC<{
 }
 
 const CCMUsageInfo: React.FC = () => {
-  const { data: dataFetched, loading, error, refetch } = fetchLicenseUseAndSummary(ModuleName.CE)
+  const { accountId } = useParams<AccountPathProps>()
+  const { data: dataFetched, loading, error, refetch } = fetchLicenseUseAndSummary(ModuleName.CE, accountId)
   const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CE, dataFetched, error, loading, refetch)
   const { usageErrorMsg, refetchUsage, usage } = usageData
   const { limitErrorMsg, refetchLimit, limit } = limitData

@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import MainNav from '@common/navigation/MainNav'
 import SideNav from '@common/navigation/SideNav'
 import { useSidebar } from '@common/navigation/SidebarProvider'
@@ -15,9 +16,10 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePage } from '@common/pages/pageContext/PageProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
 import FeatureBanner from './FeatureBanner'
 import css from './layouts.module.scss'
-import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { title, subtitle, icon, navComponent: NavComponent } = useSidebar()
@@ -26,12 +28,13 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
   const { trackPage, identifyUser } = useTelemetry()
   const { currentUserInfo } = useAppStore()
+  const { accountId } = useParams<AccountPathProps>()
   const {
     data: limitData,
     loading: loadingLimit,
     error: limitError,
     refetch: refetchLimit
-  } = fetchLicenseUseAndSummary(moduleName)
+  } = fetchLicenseUseAndSummary(moduleName, accountId)
   useEffect(() => {
     if (pageName) {
       identifyUser(currentUserInfo.email)

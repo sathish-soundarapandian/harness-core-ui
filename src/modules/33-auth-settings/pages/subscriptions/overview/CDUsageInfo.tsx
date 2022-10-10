@@ -6,7 +6,9 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { Layout, PageError } from '@wings-software/uicore'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
@@ -65,7 +67,8 @@ const ActiveServices: React.FC<{ subscribedService: number; activeService: numbe
 }
 
 const CDUsageInfo: React.FC = () => {
-  const { data: dataFetched, loading, error, refetch } = fetchLicenseUseAndSummary(ModuleName.CD)
+  const { accountId } = useParams<AccountPathProps>()
+  const { data: dataFetched, loading, error, refetch } = fetchLicenseUseAndSummary(ModuleName.CD, accountId)
   const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CE, dataFetched, error, loading, refetch)
   const isLoading = limitData.loadingLimit || usageData.loadingUsage
 

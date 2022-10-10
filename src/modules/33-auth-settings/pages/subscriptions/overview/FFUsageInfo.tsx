@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { Layout, PageError } from '@wings-software/uicore'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -113,7 +115,8 @@ const FeatureFlags: React.FC<FeatureFlagsProps> = ({ featureFlags, error, refetc
 
 const FFUsageInfo: React.FC = () => {
   const { getString } = useStrings()
-  const { data: dataFetched, loading, error, refetch } = fetchLicenseUseAndSummary(ModuleName.CF)
+  const { accountId } = useParams<AccountPathProps>()
+  const { data: dataFetched, loading, error, refetch } = fetchLicenseUseAndSummary(ModuleName.CF, accountId)
   const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CF, dataFetched, error, loading, refetch)
 
   const isLoading = limitData.loadingLimit || usageData.loadingUsage

@@ -6,23 +6,25 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { TrialLicenseBanner } from '@common/layouts/TrialLicenseBanner'
+import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
 import FeatureBanner from './FeatureBanner'
 import css from './layouts.module.scss'
 import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
-import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 export function EmptyLayout(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { module } = useModuleInfo()
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
-
+  const { accountId } = useParams<AccountPathProps>()
   const {
     data: limitData,
     loading: loadingLimit,
     error: limitError,
     refetch: refetchLimit
-  } = fetchLicenseUseAndSummary(moduleName)
+  } = fetchLicenseUseAndSummary(moduleName, accountId)
   return (
     <div className={css.main} data-layout="empty">
       {module && (
