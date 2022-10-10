@@ -72,7 +72,7 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
       legendText: `Fallback`,
       name: 'Fallback',
       // value: formatCost(get(data, 'nodes.fallback_cost', 0)),
-      value: get(data, 'nodes.fallback_cost', 0),
+      value: get(data, 'nodes.fallback', 0),
       graphPercentage: (get(data, 'nodes.fallback', 0) / totalNodes) * 100
     }
     // {

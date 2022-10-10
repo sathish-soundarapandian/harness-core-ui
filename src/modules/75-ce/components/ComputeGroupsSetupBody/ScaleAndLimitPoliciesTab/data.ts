@@ -63,5 +63,43 @@ export const computeOptimisedInstances = {
   c6gd: ['medium', 'large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', 'metal'],
   c6gn: ['medium', 'large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge'],
   c6i: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge', '32xlarge', 'metal'],
-  c6id: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge', '32xlarge', 'metal']
+  c6id: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge', '32xlarge', 'metal'],
+  c6a: [
+    'large',
+    'xlarge',
+    '2xlarge',
+    '4xlarge',
+    '8xlarge',
+    '12xlarge',
+    '16xlarge',
+    '24xlarge',
+    '32xlarge',
+    '48xlarge',
+    'metal'
+  ],
+  Hpc6a: ['48xlarge'],
+  c5: ['large', 'xlarge', '2xlarge', '4xlarge', '9xlarge', '12xlarge', '18xlarge', '24xlarge', 'metal'],
+  c5d: ['large', 'xlarge', '2xlarge', '4xlarge', '9xlarge', '12xlarge', '18xlarge', '24xlarge', 'metal'],
+  c5a: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge'],
+  c5ad: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge'],
+  c5n: ['large', 'xlarge', '2xlarge', '4xlarge', '9xlarge', '18xlarge', 'metal'],
+  c4: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge']
+}
+
+export const memoryOptimisedInstances = {
+  r6a: [
+    'large',
+    'xlarge',
+    '2xlarge',
+    '4xlarge',
+    '8xlarge',
+    '12xlarge',
+    '16xlarge',
+    '24xlarge',
+    '32xlarge',
+    '48xlarge',
+    'metal'
+  ],
+  r6g: ['medium', 'large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', 'metal'],
+  r6i: ['large', 'xlarge', '2xlarge', '4xlarge', '8xlarge', '12xlarge', '16xlarge', '24xlarge', '32xlarge', 'metal']
 }
