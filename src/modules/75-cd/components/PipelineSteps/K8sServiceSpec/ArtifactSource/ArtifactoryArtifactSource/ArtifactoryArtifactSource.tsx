@@ -298,7 +298,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             : artifactPath,
           ''
         ),
-        isGenericArtifactory
+        isGenericArtifactory ? 'artifactPath' : 'tag'
       )
     },
     lazy: true
@@ -371,7 +371,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               : artifactPath,
             ''
           ),
-          isGenericArtifactory
+          'artifactPath'
         )
       }
     }
@@ -397,7 +397,8 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
             : artifactPath,
           ''
-        )
+        ),
+        'tag'
       )
     }
   }, [

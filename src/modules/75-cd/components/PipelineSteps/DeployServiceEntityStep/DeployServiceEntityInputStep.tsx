@@ -121,7 +121,7 @@ export function DeployServiceEntityInputStep({
         formik.setFieldValue(`${pathPrefix}values`, [])
       } else {
         updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}serviceInputs`)
-        formik.setFieldValue(`${pathPrefix}serviceInputs`, {})
+        formik.setFieldValue(`${pathPrefix}serviceInputs`, RUNTIME_INPUT_VALUE)
       }
       return
     }
@@ -142,7 +142,7 @@ export function DeployServiceEntityInputStep({
             ?.serviceInputs
         : get(formik.values, `${pathPrefix}serviceInputs`)
 
-      if (isValueRuntimeInput(serviceInputs)) {
+      if (!serviceInputs || isValueRuntimeInput(serviceInputs)) {
         serviceInputs = svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
       }
 

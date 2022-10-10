@@ -995,6 +995,7 @@ mySecurityTestsText: My Security Tests
 myPipelineRunsText: My Pipeline Runs
 noRegions: No regions found
 noBuckets: No buckets found with given region
+noBucketsFound: No buckets found
 gitRepo: Git Repo
 buildRepo: Build Repo
 failureTypetext: Select Failure Type

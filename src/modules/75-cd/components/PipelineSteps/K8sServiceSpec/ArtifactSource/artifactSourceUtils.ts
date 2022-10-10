@@ -186,9 +186,8 @@ export function getFqnPath(
   isPropagatedStage: boolean,
   stageIdentifier: string,
   artifactPath: string,
-  isServerlessDeploymentTypeSelected?: boolean
+  fieldName: string
 ): string {
-  const fieldName = isServerlessDeploymentTypeSelected ? 'artifactPath' : 'tag'
   if (isNewServiceEnvEntity(path)) {
     return `pipeline.stages.${stageIdentifier}.spec.service.serviceInputs.serviceDefinition.spec.artifacts.${artifactPath}.spec.${fieldName}`
   } else {

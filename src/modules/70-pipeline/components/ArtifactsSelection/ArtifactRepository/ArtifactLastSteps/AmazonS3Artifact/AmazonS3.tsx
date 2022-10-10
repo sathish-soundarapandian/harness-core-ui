@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, memoize, merge } from 'lodash-es'
@@ -70,7 +70,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
 
   const [regions, setRegions] = React.useState<SelectOption[]>([])
-  const [bucketList, setBucketList] = React.useState<SelectOption[]>([])
 
   const {
     data: regionData,
@@ -81,6 +80,15 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
       accountId
     }
   })
+
+  React.useEffect(() => {
+    const regionValues = (regionData?.resource || []).map(region => ({
+      value: region.value,
+      label: region.name
+    }))
+
+    setRegions(regionValues as SelectOption[])
+  }, [regionData?.resource])
 
   const {
     data: bucketData,
@@ -103,32 +111,22 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     })
   }
 
-  useEffect(() => {
-    const bucketOptions: SelectOption[] = defaultTo(
+  const selectItems = useMemo(() => {
+    return defaultTo(
       bucketData?.data?.map((bucket: BucketResponse) => ({
         value: defaultTo(bucket.bucketName, ''),
         label: defaultTo(bucket.bucketName, '')
       })),
       []
     )
-    setBucketList(bucketOptions)
   }, [bucketData?.data])
 
-  React.useEffect(() => {
-    const regionValues = (regionData?.resource || []).map(region => ({
-      value: region.value,
-      label: region.name
-    }))
-
-    setRegions(regionValues as SelectOption[])
-  }, [regionData?.resource])
-
-  const getBuckets = (): SelectOption[] => {
+  const bucketList = React.useMemo((): { label: string; value: string }[] => {
     if (loading) {
       return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
     }
-    return defaultTo(bucketList, [])
-  }
+    return defaultTo(selectItems, [])
+  }, [loading, selectItems])
 
   const schemaObject = {
     region: Yup.string(),
@@ -247,7 +245,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     return (
       <div className={css.imagePathContainer}>
         <FormInput.MultiTypeInput
-          selectItems={getBuckets()}
+          selectItems={bucketList}
           label={getString('pipeline.manifestType.bucketName')}
           placeholder={getString('pipeline.manifestType.bucketPlaceHolder')}
           name="bucketName"
@@ -257,19 +255,17 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             allowableTypes,
             selectProps: {
               noResults: (
-                <Text lineClamp={1} width={500} height={100}>
-                  {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}
+                <Text lineClamp={1} width={500} height={100} padding="small">
+                  {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBucketsFound')}
                 </Text>
               ),
               itemRenderer: itemRenderer,
-              items: getBuckets(),
+              items: bucketList,
               allowCreatingNewItems: true
             },
             onFocus: () => {
-              if (getMultiTypeFromValue(formik.values.region) !== MultiTypeInputType.RUNTIME) {
+              if (!loading) {
                 fetchBuckets(formik.values.region)
-              } else {
-                setBucketList([])
               }
             }
           }}

@@ -3732,6 +3732,7 @@ export interface StringsMap {
   'pipeline.noApprovalInstanceCreated': string
   'pipeline.noArtifactPaths': string
   'pipeline.noBuckets': string
+  'pipeline.noBucketsFound': string
   'pipeline.noBuildsLabel': string
   'pipeline.noBuildsText': string
   'pipeline.noDeploymentText': string
