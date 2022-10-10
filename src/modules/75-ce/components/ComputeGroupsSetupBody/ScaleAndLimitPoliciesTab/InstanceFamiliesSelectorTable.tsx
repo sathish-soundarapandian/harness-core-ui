@@ -7,20 +7,14 @@
 
 import React, { useMemo } from 'react'
 import { Checkbox, Layout, Tabs } from '@harness/uicore'
+import { computeOptimisedInstances, generalPurposeInstances, sizes } from './data'
 import css from './ScaleAndLimitPoliciesTab.module.scss'
 
-const sizes = ['nano', 'micro', 'small', 'medium', 'large', 'xlarge', '2xlarge', '4xlarge', '8xlarge']
-
-const instances = {
-  mac: ['nano', 'micro'],
-  t4g: ['small', 'medium', 'large', '8xlarge']
-}
-
 interface InstanceFamiliesSelectorTableProps {
-  gridData?: Record<string, string[]>
+  gridData: Record<string, string[]>
 }
 
-const InstanceFamiliesSelectorTable: React.FC<InstanceFamiliesSelectorTableProps> = ({ gridData = instances }) => {
+const InstanceFamiliesSelectorTable: React.FC<InstanceFamiliesSelectorTableProps> = ({ gridData }) => {
   const modifiedGridData = useMemo(() => {
     const map: Record<string, Record<string, boolean>> = {}
     Object.entries(gridData).forEach(([key, arr]) => {
@@ -81,7 +75,12 @@ const InstanceFamililesByCategories: React.FC = () => {
         {
           id: 1,
           title: 'General Purpose',
-          panel: <InstanceFamiliesSelectorTable />
+          panel: <InstanceFamiliesSelectorTable gridData={generalPurposeInstances} />
+        },
+        {
+          id: 2,
+          title: 'Compute Optimized',
+          panel: <InstanceFamiliesSelectorTable gridData={computeOptimisedInstances} />
         }
       ]}
     />

@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import type { Column } from 'react-table'
+import type { CellProps, Column } from 'react-table'
 import { get } from 'lodash-es'
 import {
   Button,
@@ -117,6 +117,19 @@ const NodepoolDetails: React.FC = () => {
   )
 }
 
+const CPUCell = (tableProps: CellProps<any>) => {
+  const convertedAllocatedCpu = tableProps.row.original.allocatable_cpu / 1000
+  const convertedTotalCpu = tableProps.value / 1000
+  return <Text>{`${convertedAllocatedCpu.toFixed(2)}/${convertedTotalCpu}`}</Text>
+}
+
+const MemoryCell = (tableProps: CellProps<any>) => {
+  const conversionDen = Math.pow(1024, 3)
+  const convertedAllocatedCpu = tableProps.row.original.allocatable_mem / conversionDen
+  const convertedTotalCpu = tableProps.value / conversionDen
+  return <Text>{`${convertedAllocatedCpu.toFixed(2)}/${convertedTotalCpu.toFixed(2)}`}</Text>
+}
+
 const WorkloadDetailsTable: React.FC = () => {
   const { accountId, id, cloudId } = useParams<AccountPathProps & { id: string; cloudId: string }>()
   const { getString } = useStrings()
@@ -167,35 +180,66 @@ const WorkloadDetailsTable: React.FC = () => {
         Cell: tableProps => <Text>{tableProps.value}</Text>
       },
       {
-        accessor: 'on_demand_spend',
-        Header: getString('ce.computeGroups.onDemandSpend'),
+        accessor: 'total_cpu',
+        Header: getString('ce.common.cpu'),
         width: '12%',
-        Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
+        Cell: CPUCell
       },
       {
-        accessor: 'spot_spend',
-        Header: getString('ce.computeGroups.spotSpend'),
+        accessor: 'total_mem',
+        Header: getString('ce.computeGroups.table.headers.memory'),
         width: '12%',
-        Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
+        Cell: MemoryCell
       },
       {
-        accessor: 'total_cost',
-        Header: getString('ce.overview.totalCost'),
+        accessor: 'age',
+        Header: getString('ce.computeGroups.age'),
         width: '12%',
-        Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
+        Cell: tableProps => <Text>{tableProps.value}</Text>
       },
       {
-        accessor: 'someother',
-        Header: getString('ce.recommendation.sideNavText'),
+        accessor: 'status',
+        Header: getString('status'),
         width: '12%',
-        Cell: () => (
-          <Text
-            rightIcon="main-share"
-            rightIconProps={{ size: 12, color: Color.PRIMARY_7 }}
-            color={Color.PRIMARY_7}
-          >{`Save upto $323`}</Text>
-        )
+        Cell: tableProps =>
+          tableProps.value.toLowerCase() === 'ready' ? (
+            <Text color={Color.GREEN_700} font={{ variation: FontVariation.LEAD }}>
+              {tableProps.value}
+            </Text>
+          ) : (
+            <Text>{tableProps.value}</Text>
+          )
       }
+      // {
+      //   accessor: 'on_demand_spend',
+      //   Header: getString('ce.computeGroups.onDemandSpend'),
+      //   width: '12%',
+      //   Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
+      // },
+      // {
+      //   accessor: 'spot_spend',
+      //   Header: getString('ce.computeGroups.spotSpend'),
+      //   width: '12%',
+      //   Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
+      // },
+      // {
+      //   accessor: 'total_cost',
+      //   Header: getString('ce.overview.totalCost'),
+      //   width: '12%',
+      //   Cell: tableProps => <Text>{formatCost(tableProps.value, { decimalPoints: 2 })}</Text>
+      // },
+      // {
+      //   accessor: 'someother',
+      //   Header: getString('ce.recommendation.sideNavText'),
+      //   width: '12%',
+      //   Cell: () => (
+      //     <Text
+      //       rightIcon="main-share"
+      //       rightIconProps={{ size: 12, color: Color.PRIMARY_7 }}
+      //       color={Color.PRIMARY_7}
+      //     >{`Save upto $323`}</Text>
+      //   )
+      // }
     ],
     []
   )

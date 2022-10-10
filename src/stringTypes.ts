@@ -5666,6 +5666,7 @@ export interface StringsMap {
   'ce.common.unScheduled': string
   'ce.common.updated': string
   'ce.computeGroups.addNewClusterCtaText': string
+  'ce.computeGroups.age': string
   'ce.computeGroups.baseOnDemandCapacity': string
   'ce.computeGroups.clusterDetails.comparedText': string
   'ce.computeGroups.clusterDetails.cpuBreakdown': string

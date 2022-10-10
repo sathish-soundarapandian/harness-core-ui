@@ -1370,6 +1370,7 @@ computeGroups:
   pods: Pods
   savingsPlanRis: Savings Plans/RIs
   noneLabel: '{{$.none}}'
+  age: Age
   table:
     headers:
       name: Cluster name & id
