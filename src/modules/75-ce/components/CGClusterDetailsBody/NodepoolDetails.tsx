@@ -32,7 +32,7 @@ import css from './CGClusterDetailsBody.module.scss'
 const NodepoolDetails: React.FC = () => {
   const { accountId, id, cloudId } = useParams<AccountPathProps & { id: string; cloudId: string }>()
   const { getString } = useStrings()
-  const { data, loading } = useGetClusterNodesSummary({
+  const { data, loading, refetch } = useGetClusterNodesSummary({
     account_id: accountId,
     clusterId: id,
     queryParams: { accountIdentifier: accountId, cloud_account_id: cloudId }
@@ -44,6 +44,17 @@ const NodepoolDetails: React.FC = () => {
 
   return (
     <Container padding={'xlarge'}>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-end' }} padding={'large'}>
+        <Text
+          icon="refresh"
+          iconProps={{ size: 12, color: Color.PRIMARY_7 }}
+          color={Color.PRIMARY_7}
+          style={{ cursor: 'pointer' }}
+          onClick={() => refetch()}
+        >
+          {getString('common.refresh')}
+        </Text>
+      </Layout.Horizontal>
       <Layout.Vertical className={css.infoCard} spacing="huge">
         <Layout.Horizontal spacing={'large'}>
           <Layout.Vertical spacing={'large'} className={cx(css.infoCard, css.elongatedCard)}>

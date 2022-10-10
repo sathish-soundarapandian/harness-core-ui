@@ -280,14 +280,14 @@ const ClusterTable: React.FC = () => {
 
   if (loading) {
     return (
-      <Layout.Vertical flex>
+      <Layout.Vertical flex padding={{ top: 'large' }}>
         <Icon name="spinner" size={30} />
       </Layout.Vertical>
     )
   }
 
   return (
-    <Container margin={{ top: 'huge' }}>
+    <Layout.Vertical padding={{ top: 'large' }}>
       <TableV2
         columns={columns}
         data={get(data, 'response.clusters', [])}
@@ -295,7 +295,7 @@ const ClusterTable: React.FC = () => {
           history.push(routes.toClusterDetailsPage({ accountId, id, cloudId: cloud_account_id }))
         }
       />
-    </Container>
+    </Layout.Vertical>
   )
 }
 

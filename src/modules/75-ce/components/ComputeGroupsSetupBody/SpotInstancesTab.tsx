@@ -8,7 +8,19 @@
 import React, { FormEvent, useMemo, useState } from 'react'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import { get } from 'lodash-es'
-import { Color, Container, FontVariation, Icon, Layout, Select, TableV2, Text, TextInput, Utils } from '@harness/uicore'
+import {
+  Button,
+  Color,
+  Container,
+  FontVariation,
+  Icon,
+  Layout,
+  Select,
+  TableV2,
+  Text,
+  TextInput,
+  Utils
+} from '@harness/uicore'
 import type { CellProps, Column } from 'react-table'
 import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
@@ -267,22 +279,53 @@ const SpotInstancesTab: React.FC = () => {
   )
 }
 
-const DistributionCell = () => {
+const DistributionCell = (tableProps: CellProps<any>) => {
   const { getString } = useStrings()
+  const [isEditable, setIsEditable] = useState(false)
+  const [spotVal, setSpotVal] = useState<number>(get(tableProps, 'row.original.spot_count', 0) as number)
+  const [onDemandVal, setOnDemandVal] = useState<number>(get(tableProps, 'row.original.on_demand_count', 0) as number)
+  const total = spotVal + onDemandVal
+  const spotPercentage = ((spotVal / total) * 100).toFixed(2)
+  const onDemandPercentage = ((onDemandVal / total) * 100).toFixed(2)
   return (
-    <Layout.Horizontal spacing={'large'} className={cgBodyCss.distributionCell}>
-      <Container>
-        <Text className={cgBodyCss.head}>{getString('ce.nodeRecommendation.spot')}</Text>
-        <Text className={cgBodyCss.value}>{`0 (0%)`}</Text>
-      </Container>
-      <Container>
-        <Text className={cgBodyCss.head}>{getString('ce.nodeRecommendation.onDemand')}</Text>
-        <Text className={cgBodyCss.value}>{`1 (100%)`}</Text>
-      </Container>
-      <Container flex={{ justifyContent: 'center' }}>
-        <Icon name="Edit" />
-      </Container>
-    </Layout.Horizontal>
+    <Container>
+      <Layout.Horizontal spacing={'large'} className={cgBodyCss.distributionCell}>
+        <Container>
+          <Text className={cgBodyCss.head}>{getString('ce.nodeRecommendation.spot')}</Text>
+          {isEditable ? (
+            <TextInput
+              value={`${spotVal}`}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const updatedSpotVal = Number(e.target.value)
+                setSpotVal(updatedSpotVal)
+                setOnDemandVal(total - updatedSpotVal)
+              }}
+            />
+          ) : (
+            <Text className={cgBodyCss.value}>{`${spotVal} (${spotPercentage}%)`}</Text>
+          )}
+        </Container>
+        <Container>
+          <Text className={cgBodyCss.head}>{getString('ce.nodeRecommendation.onDemand')}</Text>
+          {isEditable ? (
+            <TextInput
+              value={`${onDemandVal}`}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const updatedOnDemandVal = Number(e.target.value)
+                setOnDemandVal(updatedOnDemandVal)
+                setSpotVal(total - updatedOnDemandVal)
+              }}
+            />
+          ) : (
+            <Text className={cgBodyCss.value}>{`${onDemandVal} (${onDemandPercentage}%)`}</Text>
+          )}
+        </Container>
+        <Container flex={{ justifyContent: 'center' }}>
+          {!isEditable && <Icon name="Edit" onClick={() => setIsEditable(true)} style={{ cursor: 'pointer' }} />}
+        </Container>
+      </Layout.Horizontal>
+      {isEditable && <Button text={getString('save')} onClick={() => setIsEditable(false)} />}
+    </Container>
   )
 }
 

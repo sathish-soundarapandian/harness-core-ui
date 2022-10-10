@@ -52,33 +52,36 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
   const totalNodes = get(data, 'nodes.total', 0)
   const nodesData = [
     {
-      color: Color.GREY_200,
-      legendText: `On-demand (${get(data, 'nodes.on_demand', 0)})`,
+      color: Color.PRIMARY_7,
+      legendText: `On-demand`,
       name: 'On-demand',
-      value: formatCost(get(data, 'nodes.on_demand_cost', 0)),
+      // value: formatCost(get(data, 'nodes.on_demand_cost', 0)),
+      value: get(data, 'nodes.on_demand', 0),
       graphPercentage: (get(data, 'nodes.on_demand', 0) / totalNodes) * 100
     },
     {
-      color: Color.PRIMARY_2,
-      legendText: `Spot (${get(data, 'nodes.spot', 0)})`,
+      color: Color.PRIMARY_4,
+      legendText: `Spot`,
       name: 'Spot',
-      value: formatCost(get(data, 'nodes.spot_cost', 0)),
+      // value: formatCost(get(data, 'nodes.spot_cost', 0)),
+      value: get(data, 'nodes.spot', 0),
       graphPercentage: (get(data, 'nodes.spot', 0) / totalNodes) * 100
     },
     {
-      color: Color.PRIMARY_4,
-      legendText: `Fallback (${get(data, 'nodes.fallback', 0)})`,
+      color: Color.PRIMARY_2,
+      legendText: `Fallback`,
       name: 'Fallback',
-      value: formatCost(get(data, 'nodes.fallback_cost', 0)),
+      // value: formatCost(get(data, 'nodes.fallback_cost', 0)),
+      value: get(data, 'nodes.fallback_cost', 0),
       graphPercentage: (get(data, 'nodes.fallback', 0) / totalNodes) * 100
-    },
-    {
-      color: Color.PRIMARY_7,
-      legendText: `Commitments (${get(data, 'nodes.committed', 0)})`,
-      name: 'Commitments',
-      value: formatCost(get(data, 'nodes.committed_cost', 0)),
-      graphPercentage: (get(data, 'nodes.committed', 0) / totalNodes) * 100
     }
+    // {
+    //   color: Color.PRIMARY_7,
+    //   legendText: `Commitments (${get(data, 'nodes.committed', 0)})`,
+    //   name: 'Commitments',
+    //   value: formatCost(get(data, 'nodes.committed_cost', 0)),
+    //   graphPercentage: (get(data, 'nodes.committed', 0) / totalNodes) * 100
+    // }
   ]
 
   return (

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import {
@@ -55,6 +55,8 @@ const CGClusterDetailsPage: React.FC = () => {
     [accountId]
   )
 
+  const [refreshLoading, setRefreshLoading] = useState(false)
+
   const {
     data,
     loading,
@@ -102,6 +104,12 @@ const CGClusterDetailsPage: React.FC = () => {
     [accountId]
   )
 
+  const handleRefresh = async () => {
+    setRefreshLoading(true)
+    await fetchClusterDetails()
+    setRefreshLoading(false)
+  }
+
   const clusterId = get(data, 'response.id', '')
   const isEnabled = get(data, 'opt_enabled') === true
 
@@ -146,12 +154,30 @@ const CGClusterDetailsPage: React.FC = () => {
         toolbar={<TabNavigation size="small" links={navigationLinks} />}
       />
       <Page.Body>
-        {isOverviewTab && (
-          <CGClusterDetailsBody
-            data={get(data, 'response', '')}
-            connectorDetails={get(connectorData, 'data.connector')}
-          />
-        )}
+        {isOverviewTab &&
+          (refreshLoading ? (
+            <Layout.Vertical padding={'large'} flex>
+              <Icon name="spinner" size={25} />
+            </Layout.Vertical>
+          ) : (
+            <Container>
+              <Layout.Horizontal flex={{ justifyContent: 'flex-end' }} padding={'large'}>
+                <Text
+                  icon="refresh"
+                  iconProps={{ size: 12, color: Color.PRIMARY_7 }}
+                  color={Color.PRIMARY_7}
+                  style={{ cursor: 'pointer' }}
+                  onClick={handleRefresh}
+                >
+                  {getString('common.refresh')}
+                </Text>
+              </Layout.Horizontal>
+              <CGClusterDetailsBody
+                data={get(data, 'response', '')}
+                connectorDetails={get(connectorData, 'data.connector')}
+              />
+            </Container>
+          ))}
         {isWorkloadsTab && <WorkloadDetails />}
         {isNodepoolTab && <NodepoolDetails />}
       </Page.Body>

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
@@ -37,7 +37,7 @@ const WorkloadDetails: React.FC = () => {
   const { accountId, id, cloudId } = useParams<AccountPathProps & { id: string; cloudId: string }>()
   const { getString } = useStrings()
 
-  const { data, loading } = useGetClusterWorkloadsSummary({
+  const { data, loading, refetch } = useGetClusterWorkloadsSummary({
     account_id: accountId,
     clusterId: id,
     queryParams: { accountIdentifier: accountId, cloud_account_id: cloudId }
@@ -51,6 +51,17 @@ const WorkloadDetails: React.FC = () => {
 
   return (
     <Container padding={'xlarge'}>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-end' }} padding={'large'}>
+        <Text
+          icon="refresh"
+          iconProps={{ size: 12, color: Color.PRIMARY_7 }}
+          color={Color.PRIMARY_7}
+          style={{ cursor: 'pointer' }}
+          onClick={() => refetch()}
+        >
+          {getString('common.refresh')}
+        </Text>
+      </Layout.Horizontal>
       <Layout.Vertical className={css.infoCard} spacing="large">
         <Layout.Horizontal spacing={'large'}>
           <Layout.Vertical spacing={'large'} className={cx(css.infoCard, css.elongatedCard)}>
@@ -113,22 +124,53 @@ const WorkloadDetails: React.FC = () => {
   )
 }
 
-const DistributionCell = () => {
+const DistributionCell = (tableProps: CellProps<any>) => {
   const { getString } = useStrings()
+  const [isEditable, setIsEditable] = useState(false)
+  const [spotVal, setSpotVal] = useState<number>(get(tableProps, 'row.original.spot_count', 0) as number)
+  const [onDemandVal, setOnDemandVal] = useState<number>(get(tableProps, 'row.original.on_demand_count', 0) as number)
+  const total = spotVal + onDemandVal
+  const spotPercentage = ((spotVal / total) * 100).toFixed(2)
+  const onDemandPercentage = ((onDemandVal / total) * 100).toFixed(2)
   return (
-    <Layout.Horizontal spacing={'large'} className={css.distributionCell}>
-      <Container>
-        <Text className={css.head}>{getString('ce.nodeRecommendation.spot')}</Text>
-        <Text className={css.value}>{`0 (0%)`}</Text>
-      </Container>
-      <Container>
-        <Text className={css.head}>{getString('ce.nodeRecommendation.onDemand')}</Text>
-        <Text className={css.value}>{`1 (100%)`}</Text>
-      </Container>
-      <Container flex={{ justifyContent: 'center' }}>
-        <Icon name="Edit" />
-      </Container>
-    </Layout.Horizontal>
+    <Container>
+      <Layout.Horizontal spacing={'large'} className={css.distributionCell}>
+        <Container>
+          <Text className={css.head}>{getString('ce.nodeRecommendation.spot')}</Text>
+          {isEditable ? (
+            <TextInput
+              value={`${spotVal}`}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const updatedSpotVal = Number(e.target.value)
+                setSpotVal(updatedSpotVal)
+                setOnDemandVal(total - updatedSpotVal)
+              }}
+            />
+          ) : (
+            <Text className={css.value}>{`${spotVal} (${spotPercentage}%)`}</Text>
+          )}
+        </Container>
+        <Container>
+          <Text className={css.head}>{getString('ce.nodeRecommendation.onDemand')}</Text>
+          {isEditable ? (
+            <TextInput
+              value={`${onDemandVal}`}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const updatedOnDemandVal = Number(e.target.value)
+                setOnDemandVal(updatedOnDemandVal)
+                setSpotVal(total - updatedOnDemandVal)
+              }}
+            />
+          ) : (
+            <Text className={css.value}>{`${onDemandVal} (${onDemandPercentage}%)`}</Text>
+          )}
+        </Container>
+        <Container flex={{ justifyContent: 'center' }}>
+          {!isEditable && <Icon name="Edit" onClick={() => setIsEditable(true)} style={{ cursor: 'pointer' }} />}
+        </Container>
+      </Layout.Horizontal>
+      {isEditable && <Button text={getString('save')} onClick={() => setIsEditable(false)} />}
+    </Container>
   )
 }
 
