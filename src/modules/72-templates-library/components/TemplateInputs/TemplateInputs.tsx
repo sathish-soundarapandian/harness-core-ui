@@ -77,6 +77,8 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
     (template as NGTemplateInfoConfigWithGitDetails).repo
   const branch =
     (template as TemplateSummaryResponse).gitDetails?.branch || (template as NGTemplateInfoConfigWithGitDetails).branch
+  const [inputSetTemplate, setInputSetTemplate] =
+    React.useState<{ template: Omit<TemplateLinkConfig, 'templateRef'> }>()
 
   const {
     data: templateInputYaml,
@@ -94,9 +96,9 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
     }
   })
 
-  const inputSetTemplate: { template: Omit<TemplateLinkConfig, 'templateRef'> } | undefined = React.useMemo(() => {
+  React.useEffect(() => {
     if (templateInputYaml?.data) {
-      return { template: parse(templateInputYaml.data) }
+      setInputSetTemplate({ template: parse(templateInputYaml.data) })
     }
   }, [templateInputYaml?.data])
 

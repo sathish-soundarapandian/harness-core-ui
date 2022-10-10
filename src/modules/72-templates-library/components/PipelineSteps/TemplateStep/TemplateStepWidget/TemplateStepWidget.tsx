@@ -170,7 +170,14 @@ function TemplateStepWidget(
 
   React.useEffect(() => {
     if (stepTemplateInputSetLoading) {
+<<<<<<< HEAD
       setAllTemplateInputs(undefined)
+=======
+      setFormValues({
+        name: initialValues.name,
+        identifier: initialValues.identifier
+      } as TemplateStepNode)
+>>>>>>> 3c7f325823d8 (feat: [CDS-42781]: template variables support)
       setAllValues(undefined)
     } else {
       const newAllTemplateInputs = {
@@ -223,10 +230,7 @@ function TemplateStepWidget(
         onSubmit={values => {
           onUpdate?.(values)
         }}
-        initialValues={defaultTo(formValues, {
-          name: initialValues.name,
-          identifier: initialValues.identifier
-        } as TemplateStepNode)}
+        initialValues={formValues}
         formName="templateStepWidget"
         validationSchema={Yup.object().shape({
           name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
