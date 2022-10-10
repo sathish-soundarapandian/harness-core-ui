@@ -92,7 +92,10 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
       {template?.variables?.map?.(variable => {
         // find Index from values, not from template variables
         // because the order of the variables might not be the same
-        const index = formikVariables.findIndex((fVar: AllNGVariables) => variable.name === fVar.name)
+        const _index = Array.isArray(formikVariables)
+          ? formikVariables.findIndex((fVar: AllNGVariables) => variable.name === fVar.name)
+          : 0
+        const index = _index < 0 ? formikVariables.length : _index
 
         const value = defaultTo(variable.value, '')
         if (getMultiTypeFromValue(value as string) !== MultiTypeInputType.RUNTIME) {
