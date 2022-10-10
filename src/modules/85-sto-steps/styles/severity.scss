@@ -6,10 +6,10 @@
  */
 
 @mixin severityColors() {
-  --critical-bg: var(--red-800);
-  --high-bg: var(--orange-900);
-  --medium-bg: var(--orange-600);
-  --low-bg: var(--purple-500);
+  --critical-bg: var(--red-700);
+  --high-bg: var(--orange-700);
+  --medium-bg: var(--yellow-700);
+  --low-bg: var(--purple-300);
   --info-bg: var(--grey-600);
   --unassigned-bg: var(--grey-600);
 }
