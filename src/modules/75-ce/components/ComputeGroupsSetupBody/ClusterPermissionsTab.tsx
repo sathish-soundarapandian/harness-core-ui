@@ -6,18 +6,21 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Color, Container, FontVariation, Layout, Text } from '@harness/uicore'
-import { String, useStrings } from 'framework/strings'
-import type { StringsMap } from 'stringTypes'
+import {
+  Button,
+  ButtonVariation,
+  Color,
+  Container,
+  FontVariation,
+  Label,
+  Layout,
+  Text,
+  TextInput
+} from '@harness/uicore'
+import { useStrings } from 'framework/strings'
+
 import CopyButton from '@ce/common/CopyButton'
 import css from './ComputeGroupsSetupBody.module.scss'
-
-const infoSteps = [
-  'ce.computeGroups.setup.clusterPermissionsTab.info1',
-  'ce.computeGroups.setup.clusterPermissionsTab.info2',
-  'ce.computeGroups.setup.clusterPermissionsTab.info3',
-  'ce.computeGroups.setup.clusterPermissionsTab.info4'
-]
 
 interface CopyCodeSectionProps {
   snippet: string
@@ -27,19 +30,27 @@ const ClusterPermissionsTab: React.FC = () => {
   const { getString } = useStrings()
   return (
     <Layout.Vertical spacing={'large'}>
-      <Container className={css.noteContainer}>
+      {/* <Container className={css.noteContainer}>
         <Text icon="info-messaging" iconProps={{ size: 28, margin: { right: 'medium' } }} color={Color.GREY_800}>
           <String stringID="ce.computeGroups.setup.clusterPermissionsTab.note" useRichText />
         </Text>
-      </Container>
+      </Container> */}
       <Layout.Vertical className={css.independentSection} spacing="xlarge">
         <Layout.Vertical spacing={'medium'}>
-          <Text font={{ variation: FontVariation.LEAD }}>
+          {/* <Text font={{ variation: FontVariation.LEAD }}>
             {getString('connectors.ceK8.providePermissionsStep.fileDescription.heading')}
           </Text>
           {infoSteps.map((stepId, i) => (
             <Text key={stepId}>{`${i + 1}. ${getString(stepId as keyof StringsMap)}`}</Text>
-          ))}
+          ))} */}
+          <Container>
+            <Label>{getString('common.clusterName')}</Label>
+            <TextInput name="clusterName" style={{ width: '160px' }} />
+          </Container>
+          <Text font={{ variation: FontVariation.LEAD }}>
+            Download and apply the YAML to add additional cluster permissions required to manage pods and nodes of the
+            EKS cluster.
+          </Text>
         </Layout.Vertical>
         <Container>
           <Layout.Vertical spacing={'large'}>
@@ -64,16 +75,17 @@ const ClusterPermissionsTab: React.FC = () => {
                 </Text>
                 <Container>
                   <Text>{getString('ce.cloudIntegration.autoStoppingModal.installComponents.step2')}</Text>
-                  <CopyCodeSection snippet="kubectl create namespace harness-autostopping" />
+                  <CopyCodeSection snippet="kubectl apply -f cluster-orchestrator-enable.yaml" />
                 </Container>
               </Layout.Horizontal>
             </Container>
             <Container>
-              <Layout.Horizontal spacing={'medium'}>
+              <Layout.Horizontal spacing={'medium'} flex={{ justifyContent: 'flex-start' }}>
                 <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7}>
                   STEP 3
                 </Text>
                 <Text>{getString('ce.computeGroups.setup.clusterPermissionsTab.testConnection')}</Text>
+                <Button text={getString('common.smtp.testConnection')} variation={ButtonVariation.PRIMARY} />
               </Layout.Horizontal>
             </Container>
           </Layout.Vertical>

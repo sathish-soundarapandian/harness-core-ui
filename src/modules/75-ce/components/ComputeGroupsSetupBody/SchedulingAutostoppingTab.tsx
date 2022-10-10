@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 import { Button, ButtonVariation, Color, Container, FontVariation, Layout, TableV2, Text } from '@harness/uicore'
 import type { CellProps, Column } from 'react-table'
 import { Radio, RadioGroup } from '@blueprintjs/core'
-import { String, useStrings } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
 import CopyButton from '@ce/common/CopyButton'
 import routes from '@common/RouteDefinitions'
@@ -19,19 +19,20 @@ import ToggleSection from './ToggleSection'
 import FixedSchedules from '../COGatewayConfig/steps/AdvancedConfiguration/FixedSchedules'
 import type { FixedScheduleClient } from '../COCreateGateway/models'
 import css from './ComputeGroupsSetupBody.module.scss'
+import cgBodyCss from '../ComputeGroupsBody/ComputeGroupsBody.module.scss'
 
 const SchedulingAutostoppingTab: React.FC = () => {
   const { getString } = useStrings()
   const [selectedVal, setSelectedVal] = useState<string>('none')
   return (
     <Container>
-      {selectedVal === 'none' && (
+      {/* {selectedVal === 'none' && (
         <Container className={css.noteContainer}>
           <Text icon="info-messaging" iconProps={{ size: 28, margin: { right: 'medium' } }} color={Color.GREY_800}>
             <String stringID="ce.computeGroups.setup.schedulingTab.enableNote" useRichText />
           </Text>
         </Container>
-      )}
+      )} */}
       <ToggleSection
         title={getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.setupHeader')}
         alwaysOpen={selectedVal !== 'none'}
@@ -46,7 +47,7 @@ const SchedulingAutostoppingTab: React.FC = () => {
               selectedValue={selectedVal}
               onChange={(e: FormEvent<HTMLInputElement>) => setSelectedVal(e.currentTarget.value)}
             >
-              <Radio label={getString('ce.anomalyDetection.filters.groupByNoneValue')} value="none" />
+              <Radio label={getString('ce.computeGroups.noneLabel')} value="none" />
               <Radio
                 label={getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.entireCluster')}
                 value="all"
@@ -60,26 +61,26 @@ const SchedulingAutostoppingTab: React.FC = () => {
         }
         secondaryContent={
           <Layout.Horizontal spacing={'large'}>
-            <Container className={css.whiteCard}>
+            <Layout.Vertical spacing={'medium'} className={css.whiteCard}>
               <Text font={{ variation: FontVariation.H6 }}>
                 {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.totalSpend')}
               </Text>
-              <Text font={{ variation: FontVariation.H3 }}>{'$2345'}</Text>
-            </Container>
-            <Container className={css.whiteCard}>
+              <Text font={{ variation: FontVariation.H3 }}>{formatCost(2345)}</Text>
+            </Layout.Vertical>
+            <Layout.Vertical spacing={'medium'} className={css.whiteCard}>
               <Text font={{ variation: FontVariation.H6 }}>
-                {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.potentialSpendByPolicies')}
+                {getString('ce.computeGroups.setup.schedulingTab.potentialSpendByScheduling')}
               </Text>
               <Text font={{ variation: FontVariation.H3 }} icon="money-icon" iconProps={{ size: 30 }}>
                 {formatCost(16500, { decimalPoints: 0 })}
               </Text>
-            </Container>
-            <Container className={css.whiteCard}>
+            </Layout.Vertical>
+            <Layout.Vertical spacing={'medium'} className={css.whiteCard}>
               <Text font={{ variation: FontVariation.H6 }}>
                 {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.savingsPercentage')}
               </Text>
-              <Text font={{ variation: FontVariation.H3 }}>{'72.38 %'}</Text>
-            </Container>
+              <Text font={{ variation: FontVariation.H3 }}>{'72.38%'}</Text>
+            </Layout.Vertical>
           </Layout.Horizontal>
         }
       >
@@ -124,9 +125,11 @@ const AutoStoppingStatusCell = (tableProps: CellProps<any>) => {
   return (
     <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
       {tableProps.value ? (
-        <Text icon="command-artifact-check">
-          {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.autoStoppingEnabledLabel')}
-        </Text>
+        <Container className={cgBodyCss.enableCell}>
+          <Text font={{ variation: FontVariation.LEAD }} iconProps={{ size: 14 }} icon="command-artifact-check">
+            {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.autoStoppingEnabledLabel')}
+          </Text>
+        </Container>
       ) : (
         <Button
           text={getString('ce.cloudIntegration.enableAutoStopping')}
@@ -149,14 +152,14 @@ const SpecificWorkloadsAutostopping: React.FC = () => {
   const { getString } = useStrings()
   const data = [
     {
-      name: 'Workload 1',
+      name: 'ui-server',
       id: 'ID 1',
       replicas: 4,
       cost: 234,
       status: true
     },
     {
-      name: 'Workload 2',
+      name: 'redis-cache',
       id: 'ID 2',
       replicas: 3,
       cost: 644,
@@ -167,7 +170,7 @@ const SpecificWorkloadsAutostopping: React.FC = () => {
     () => [
       {
         accessor: 'name',
-        Header: getString('ce.overview.workload'),
+        Header: getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.workloadHeader'),
         width: '25%',
         Cell: NameIdCell
         // serverSortProps: getServerSortProps({
@@ -179,7 +182,7 @@ const SpecificWorkloadsAutostopping: React.FC = () => {
       },
       {
         accessor: 'replicas',
-        Header: getString('delegates.replicaText'),
+        Header: getString('ce.computeGroups.replicas'),
         width: '25%',
         Cell: tableProps => <Text>{tableProps.value}</Text>
       },

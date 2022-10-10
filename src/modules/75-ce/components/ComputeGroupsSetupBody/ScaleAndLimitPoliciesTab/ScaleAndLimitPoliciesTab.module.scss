@@ -17,6 +17,15 @@
       margin-top: var(--spacing-large) !important;
     }
   }
+
+  :global {
+    .bp3-input {
+      width: 100px;
+    }
+    .Select--main {
+      width: fit-content;
+    }
+  }
 }
 
 .instanceFamiliesTable {

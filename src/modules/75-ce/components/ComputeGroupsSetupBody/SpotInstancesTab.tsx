@@ -7,28 +7,69 @@
 
 import React, { FormEvent, useMemo, useState } from 'react'
 import { Radio, RadioGroup } from '@blueprintjs/core'
-import { Color, Container, FontVariation, Label, Layout, Select, TableV2, Text } from '@harness/uicore'
+import { get } from 'lodash-es'
+import { Color, Container, FontVariation, Icon, Layout, Select, TableV2, Text, TextInput, Utils } from '@harness/uicore'
 import type { CellProps, Column } from 'react-table'
-import { String, useStrings } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import formatCost from '@ce/utils/formatCost'
-import CopyButton from '@ce/common/CopyButton'
 import ToggleSection from './ToggleSection'
+import CEChart from '../CEChart/CEChart'
 import css from './ComputeGroupsSetupBody.module.scss'
+import cgBodyCss from '../CGClusterDetailsBody/CGClusterDetailsBody.module.scss'
+
+const dummyData = [
+  {
+    name: 'ui-server',
+    account_id: 'kmpySmUISimoRrJL6NL73w',
+    cloud_account_id: 'ccm-demo-1',
+    cluster_id: 'clust-ccm-demo-1',
+    type: 'Deployment',
+    namespace: 'default',
+    replica: 3,
+    total_cost: 0,
+    spot_count: 0,
+    on_demand_count: 3
+  },
+  {
+    name: 'redis-cache',
+    account_id: 'kmpySmUISimoRrJL6NL73w',
+    cloud_account_id: 'ccm-demo-1',
+    cluster_id: 'clust-ccm-demo-1',
+    type: 'Deployment',
+    namespace: 'default',
+    replica: 3,
+    total_cost: 0,
+    spot_count: 1,
+    on_demand_count: 2
+  },
+  {
+    name: 'postgres',
+    account_id: 'kmpySmUISimoRrJL6NL73w',
+    cloud_account_id: 'ccm-demo-1',
+    cluster_id: 'clust-ccm-demo-1',
+    type: 'Deployment',
+    namespace: 'default',
+    replica: 3,
+    total_cost: 0,
+    spot_count: 2,
+    on_demand_count: 1
+  }
+]
 
 const SpotInstancesTab: React.FC = () => {
   const { getString } = useStrings()
   const [selectedVal, setSelectedVal] = useState<string>('none')
   return (
     <Container>
-      <Container className={css.noteContainer}>
+      {/* <Container className={css.noteContainer}>
         <Text icon="info-messaging" iconProps={{ size: 28, margin: { right: 'medium' } }} color={Color.GREY_800}>
           <String stringID="ce.computeGroups.setup.spotInstancesTab.enableNote" useRichText />
         </Text>
-      </Container>
+      </Container> */}
       <ToggleSection
         title={getString('ce.computeGroups.setup.spotInstancesTab.useSpotSection.header')}
         subTitle={getString('ce.computeGroups.setup.spotInstancesTab.useSpotSection.subHeader')}
-        alwaysOpen={selectedVal === 'specific'}
+        alwaysOpen={selectedVal !== 'none'}
         hideCollapseIcon={true}
         hideToggle={true}
         mainContent={
@@ -40,7 +81,7 @@ const SpotInstancesTab: React.FC = () => {
               selectedValue={selectedVal}
               onChange={(e: FormEvent<HTMLInputElement>) => setSelectedVal(e.currentTarget.value)}
             >
-              <Radio label={getString('ce.anomalyDetection.filters.groupByNoneValue')} value="none" />
+              <Radio label={getString('ce.computeGroups.noneLabel')} value="none" />
               <Radio
                 label={getString('ce.computeGroups.setup.spotInstancesTab.useSpotSection.allWorkloads')}
                 value="all"
@@ -55,16 +96,19 @@ const SpotInstancesTab: React.FC = () => {
         secondaryContent={
           <Layout.Horizontal spacing={'large'}>
             <Layout.Horizontal className={css.whiteCard} spacing="large">
-              <Layout.Vertical spacing={'large'}>
-                <Container>
+              <Layout.Vertical
+                flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+                style={{ marginRight: 'var(--spacing-xlarge)' }}
+              >
+                <Layout.Vertical spacing={'medium'}>
                   <Text font={{ variation: FontVariation.H6 }}>
                     {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.totalSpend')}
                   </Text>
-                  <Text font={{ variation: FontVariation.H3 }}>{'$2345'}</Text>
-                </Container>
-                <Container>
+                  <Text font={{ variation: FontVariation.H3 }}>{formatCost(2345)}</Text>
+                </Layout.Vertical>
+                <Layout.Vertical spacing={'medium'}>
                   <Text font={{ variation: FontVariation.H6 }}>
-                    {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.potentialSpendByPolicies')}
+                    {getString('ce.computeGroups.setup.spotInstancesTab.potentialSpendBySpot')}
                   </Text>
                   <Text
                     font={{ variation: FontVariation.H3 }}
@@ -74,21 +118,84 @@ const SpotInstancesTab: React.FC = () => {
                   >
                     {formatCost(16500, { decimalPoints: 0 })}
                   </Text>
-                </Container>
+                </Layout.Vertical>
               </Layout.Vertical>
-              <Container>
+              <Layout.Vertical flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text font={{ variation: FontVariation.H6 }}>
                   {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.savingsPercentage')}
                 </Text>
-                <Text font={{ variation: FontVariation.H3 }}>{'72.38 %'}</Text>
-              </Container>
+                <Container flex={{ justifyContent: 'center', alignItems: 'flex-end' }}>
+                  <CEChart
+                    options={
+                      {
+                        chart: {
+                          type: 'pie',
+                          width: 180,
+                          height: 150
+                        },
+                        title: {
+                          text: `${72.3}%`,
+                          align: 'center',
+                          verticalAlign: 'middle',
+                          y: 85,
+                          x: 0
+                        },
+                        plotOptions: {
+                          pie: {
+                            slicedOffset: 0,
+                            size: '100%',
+                            center: ['50%', '120%'],
+                            borderWidth: 0,
+                            startAngle: -90,
+                            dataLabels: {
+                              enabled: false
+                            },
+                            endAngle: 90
+                          },
+                          series: {
+                            states: {
+                              hover: {
+                                enabled: false,
+                                brightness: 0
+                              }
+                            },
+                            enableMouseTracking: false
+                          }
+                        },
+                        tooltip: {
+                          enabled: false
+                        },
+                        series: [
+                          {
+                            innerSize: '75%',
+                            data: [
+                              {
+                                name: 'Savings',
+                                y: 72.3,
+                                borderWidth: 0,
+                                borderColor: '#00ADE4',
+                                color: '#06B7C3'
+                              },
+                              {
+                                name: 'Total',
+                                y: 100 - 72.3,
+                                color: '#F3F3F3'
+                              }
+                            ]
+                          }
+                        ]
+                      } as unknown as Highcharts.Options
+                    }
+                  />
+                </Container>
+              </Layout.Vertical>
             </Layout.Horizontal>
             <Container className={css.whiteCard}>
-              <Layout.Vertical flex={{ alignItems: 'baseline' }} spacing="xlarge">
+              <Layout.Vertical flex={{ alignItems: 'baseline' }} spacing="medium">
                 <Text font={{ variation: FontVariation.H6 }}>
                   {getString('ce.computeGroups.setup.spotInstancesTab.workloadToRunOnSpot')}
                 </Text>
-                <Container flex>
+                <Layout.Horizontal flex style={{ width: '100%' }}>
                   <Container>
                     <Text font={{ variation: FontVariation.H2 }} inline>
                       3/
@@ -97,94 +204,165 @@ const SpotInstancesTab: React.FC = () => {
                       24
                     </Text>
                   </Container>
-                </Container>
+                  <CEChart
+                    options={{
+                      chart: { height: 100, width: 100 },
+                      tooltip: {
+                        useHTML: true,
+                        enabled: true,
+                        headerFormat: '',
+                        pointFormatter: function (this: Record<string, string | any>) {
+                          return `<b>${this.name}</b>: ${this.y}`
+                        }
+                      },
+                      plotOptions: {
+                        pie: {
+                          allowPointSelect: true,
+                          cursor: 'pointer',
+                          dataLabels: {
+                            enabled: false
+                          }
+                        }
+                      },
+                      series: [
+                        {
+                          name: 'Cost',
+                          innerSize: 0,
+                          type: 'pie',
+                          data: [
+                            { name: 'Spot-friendly', id: 'spot', y: 3 },
+                            { name: 'Not spot-friendly', id: 'noSpot', y: 21 }
+                          ]
+                        }
+                      ],
+                      colors: [Utils.getRealCSSColor(Color.PRIMARY_2), Utils.getRealCSSColor(Color.PRIMARY_4)]
+                    }}
+                  />
+                </Layout.Horizontal>
                 <Container flex>
-                  <Text font={{ variation: FontVariation.SMALL }}>
+                  <Text
+                    font={{ variation: FontVariation.SMALL }}
+                    icon="full-circle"
+                    iconProps={{ size: 12, color: Color.PRIMARY_4 }}
+                    margin={{ right: 'large' }}
+                  >
                     {getString('ce.computeGroups.setup.spotInstancesTab.notSpotFriendly') + '(21)'}
                   </Text>
-                  <Text font={{ variation: FontVariation.SMALL }}>
+                  <Text
+                    font={{ variation: FontVariation.SMALL }}
+                    icon="full-circle"
+                    iconProps={{ size: 12, color: Color.PRIMARY_2 }}
+                  >
                     {getString('ce.computeGroups.setup.spotInstancesTab.spotFriendly') + '(3)'}
                   </Text>
                 </Container>
-                <Container></Container>
               </Layout.Vertical>
             </Container>
           </Layout.Horizontal>
         }
       >
-        {selectedVal === 'specific' && <SpotReadyWorkloads />}
+        {selectedVal !== 'none' && <SpotReadyWorkloads />}
       </ToggleSection>
     </Container>
   )
 }
 
-const NameIdCell = (tableProps: CellProps<any>) => {
-  return (
-    <Container>
-      <Text>{tableProps.row.original.name}</Text>
-      <Layout.Horizontal spacing={'small'} flex={{ justifyContent: 'flex-start' }}>
-        <Text>{tableProps.row.original.id}</Text>
-        <CopyButton textToCopy={tableProps.row.original.id} />
-      </Layout.Horizontal>
-    </Container>
-  )
-}
-
-const CurrentWorkloadDistribution = (tableProps: CellProps<any>) => {
+const DistributionCell = () => {
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal spacing={'medium'}>
-      <Text>{`${tableProps.row.original.current.spot} ${getString('ce.nodeRecommendation.spot')}`}</Text>
-      <Text>{`${tableProps.row.original.current.onDemand} ${getString('ce.nodeRecommendation.onDemand')}`}</Text>
+    <Layout.Horizontal spacing={'large'} className={cgBodyCss.distributionCell}>
+      <Container>
+        <Text className={cgBodyCss.head}>{getString('ce.nodeRecommendation.spot')}</Text>
+        <Text className={cgBodyCss.value}>{`0 (0%)`}</Text>
+      </Container>
+      <Container>
+        <Text className={cgBodyCss.head}>{getString('ce.nodeRecommendation.onDemand')}</Text>
+        <Text className={cgBodyCss.value}>{`1 (100%)`}</Text>
+      </Container>
+      <Container flex={{ justifyContent: 'center' }}>
+        <Icon name="Edit" />
+      </Container>
     </Layout.Horizontal>
   )
 }
 
-const UpdatedWorkloadDistribution = () => {
+const StrategyCell = () => {
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal>
-      <Container>
-        <Label>{getString('ce.nodeRecommendation.spot')}</Label>
-        <Select items={[]} />
-      </Container>
-      <Container>
-        <Label>{getString('ce.nodeRecommendation.onDemand')}</Label>
-        <Select items={[]} />
-      </Container>
+    <Layout.Vertical spacing={'small'} className={cgBodyCss.strategyCell}>
+      <Select
+        defaultSelectedItem={{
+          label: getString('ce.recommendation.detailsPage.costOptimized'),
+          value: 'costOptimized'
+        }}
+        items={[
+          { label: getString('ce.recommendation.detailsPage.costOptimized'), value: 'costOptimized' },
+          { label: getString('ce.computeGroups.leastInterrupted'), value: 'leastInterrupted' }
+        ]}
+      />
+      <TextInput placeholder={getString('ce.computeGroups.baseOnDemandCapacity')} />
+    </Layout.Vertical>
+  )
+}
+
+const ReplicasCell = (tableProps: CellProps<any>) => {
+  return (
+    <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing={'small'}>
+      <Text>{tableProps.value}</Text>
+      <CEChart
+        options={{
+          chart: { height: 100, width: 100 },
+          tooltip: {
+            useHTML: true,
+            enabled: true,
+            headerFormat: '',
+            pointFormatter: function (this: Record<string, string | any>) {
+              return `<b>${this.name}</b>: ${this.y}`
+            }
+          },
+          plotOptions: {
+            pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                enabled: false
+              }
+            }
+          },
+          series: [
+            {
+              name: 'Cost',
+              innerSize: 0,
+              type: 'pie',
+              data: [
+                { name: 'Spot', id: 'spot', y: get(tableProps, 'row.original.spot_count', 0) as number },
+                { name: 'On-demand', id: 'on-demand', y: get(tableProps, 'row.original.on_demand_count', 0) as number }
+              ]
+            }
+          ],
+          colors: [Utils.getRealCSSColor(Color.PRIMARY_2), Utils.getRealCSSColor(Color.PRIMARY_4)]
+        }}
+      />
     </Layout.Horizontal>
   )
 }
 
 const SpotReadyWorkloads: React.FC = () => {
   const { getString } = useStrings()
-  const data = [
-    {
-      name: 'Workload 1',
-      id: 'ID 1',
-      replicas: 4,
-      current: {
-        spot: 2,
-        onDemand: 2
-      }
-    },
-    {
-      name: 'Workload 2',
-      id: 'ID 2',
-      replicas: 3,
-      current: {
-        spot: 4,
-        onDemand: 4
-      }
-    }
-  ]
+
   const columns: Column<any>[] = useMemo(
+    // TODO: replace type here
     () => [
       {
         accessor: 'name',
-        Header: getString('ce.overview.workload'),
-        width: '25%',
-        Cell: NameIdCell
+        Header: getString('name'),
+        width: '20%',
+        Cell: tableProps => (
+          <Layout.Vertical>
+            <Text font={{ variation: FontVariation.LEAD }}>{tableProps.value}</Text>
+            <Text>{`${getString('typeLabel')}: ${tableProps.row.original.type}`}</Text>
+          </Layout.Vertical>
+        )
         // serverSortProps: getServerSortProps({
         //   enableServerSort: true,
         //   accessor: 'name',
@@ -193,29 +371,54 @@ const SpotReadyWorkloads: React.FC = () => {
         // })
       },
       {
-        accessor: 'replicas',
-        Header: getString('delegates.replicaText'),
-        width: '25%',
+        accessor: 'namespace',
+        Header: getString('common.namespace'),
+        width: '10%',
         Cell: tableProps => <Text>{tableProps.value}</Text>
       },
       {
-        accessor: 'current',
-        Header: getString('common.current'),
-        width: '25%',
-        Cell: CurrentWorkloadDistribution
+        accessor: 'replica',
+        Header: getString('ce.computeGroups.replicas'),
+        width: '15%',
+        Cell: ReplicasCell
       },
       {
         accessor: 'id',
-        Header: getString('ce.common.updated'),
-        width: '25%',
-        Cell: UpdatedWorkloadDistribution
+        Header: getString('ce.nodeRecommendation.distribution'),
+        width: '20%',
+        Cell: DistributionCell
+      },
+      {
+        accessor: 'type',
+        Header: getString('ce.computeGroups.strategy'),
+        width: '20%',
+        Cell: StrategyCell
+      },
+      {
+        accessor: 'total_cost',
+        Header: getString('ce.overview.totalCost'),
+        width: '10%',
+        Cell: tableProps => <Text>{formatCost(tableProps.value)}</Text>
+      },
+      {
+        accessor: 'someother',
+        Header: getString('ce.recommendation.sideNavText'),
+        width: '15%',
+        Cell: () => (
+          <Text
+            rightIcon="main-share"
+            rightIconProps={{ size: 12, color: Color.PRIMARY_7 }}
+            color={Color.PRIMARY_7}
+          >{`Save upto $323`}</Text>
+        )
       }
     ],
     []
   )
+
   return (
     <Layout.Vertical spacing={'medium'}>
-      <TableV2 columns={columns} data={data} />
+      <TableV2 columns={columns} data={dummyData} />
     </Layout.Vertical>
   )
 }

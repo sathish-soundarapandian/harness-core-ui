@@ -5683,6 +5683,7 @@ export interface StringsMap {
   'ce.computeGroups.idle': string
   'ce.computeGroups.leastInterrupted': string
   'ce.computeGroups.nodeDetailsHeader': string
+  'ce.computeGroups.noneLabel': string
   'ce.computeGroups.onDemandSpend': string
   'ce.computeGroups.pods': string
   'ce.computeGroups.replicas': string
@@ -5722,6 +5723,7 @@ export interface StringsMap {
   'ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.minMemoryLabel': string
   'ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.nodeSelectionLabel': string
   'ce.computeGroups.setup.schedulingTab.enableNote': string
+  'ce.computeGroups.setup.schedulingTab.potentialSpendByScheduling': string
   'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.autoStoppingEnabledLabel': string
   'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.costPerMonthHeader': string
   'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.entireCluster': string
@@ -5733,9 +5735,11 @@ export interface StringsMap {
   'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.specifyScheduleHeader': string
   'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.specifyScheduleSubheader': string
   'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.totalSpend': string
+  'ce.computeGroups.setup.schedulingTab.setupSchedulingSection.workloadHeader': string
   'ce.computeGroups.setup.schedulingTab.title': string
   'ce.computeGroups.setup.spotInstancesTab.enableNote': string
   'ce.computeGroups.setup.spotInstancesTab.notSpotFriendly': string
+  'ce.computeGroups.setup.spotInstancesTab.potentialSpendBySpot': string
   'ce.computeGroups.setup.spotInstancesTab.spotFriendly': string
   'ce.computeGroups.setup.spotInstancesTab.title': string
   'ce.computeGroups.setup.spotInstancesTab.useSpotSection.allWorkloads': string

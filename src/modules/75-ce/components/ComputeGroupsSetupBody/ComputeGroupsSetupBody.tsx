@@ -15,7 +15,7 @@ import ScaleAndLimitPoliciesTab from './ScaleAndLimitPoliciesTab/ScaleAndLimitPo
 import SchedulingAutostoppingTab from './SchedulingAutostoppingTab'
 import ClusterPermissionsTab from './ClusterPermissionsTab'
 import SpotInstancesTab from './SpotInstancesTab'
-import ReviewTab from './ReviewTab'
+// import ReviewTab from './ReviewTab'
 import css from './ComputeGroupsSetupBody.module.scss'
 
 const ComputeGroupsSetupBody: React.FC = () => {
@@ -29,7 +29,7 @@ const ComputeGroupsSetupBody: React.FC = () => {
   }
 
   const handleNext = () => {
-    if (selectedTabId === 5) {
+    if (selectedTabId === 4) {
       history.push(routes.toComputeGroups({ accountId }))
       return
     }
@@ -49,8 +49,7 @@ const ComputeGroupsSetupBody: React.FC = () => {
               <Container className={css.page}>
                 <ClusterPermissionsTab />
               </Container>
-            ),
-            iconProps: { name: 'gear' }
+            )
           },
           {
             id: 2,
@@ -59,8 +58,7 @@ const ComputeGroupsSetupBody: React.FC = () => {
               <Container className={css.page}>
                 <SpotInstancesTab />
               </Container>
-            ),
-            iconProps: { name: 'gear' }
+            )
           },
           {
             id: 3,
@@ -69,8 +67,7 @@ const ComputeGroupsSetupBody: React.FC = () => {
               <Container className={css.page}>
                 <ScaleAndLimitPoliciesTab />
               </Container>
-            ),
-            iconProps: { name: 'gear' }
+            )
           },
           {
             id: 4,
@@ -79,19 +76,17 @@ const ComputeGroupsSetupBody: React.FC = () => {
               <Container className={css.page}>
                 <SchedulingAutostoppingTab />
               </Container>
-            ),
-            iconProps: { name: 'gear' }
-          },
-          {
-            id: 5,
-            title: `5. ${getString('review')}`,
-            panel: (
-              <Container className={css.page}>
-                <ReviewTab />
-              </Container>
-            ),
-            iconProps: { name: 'gear' }
+            )
           }
+          // {
+          //   id: 5,
+          //   title: `5. ${getString('review')}`,
+          //   panel: (
+          //     <Container className={css.page}>
+          //       <ReviewTab />
+          //     </Container>
+          //   )
+          // }
         ]}
         onChange={tabId => setSelectedTabId(tabId as number)}
       ></Tabs>
@@ -105,7 +100,7 @@ const ComputeGroupsSetupBody: React.FC = () => {
           onClick={handleBack}
         />
         <Button
-          text={selectedTabId === 5 ? getString('save') : getString('next')}
+          text={selectedTabId === 4 ? getString('save') : getString('next')}
           rightIcon="chevron-right"
           iconProps={{ size: 12 }}
           variation={ButtonVariation.PRIMARY}

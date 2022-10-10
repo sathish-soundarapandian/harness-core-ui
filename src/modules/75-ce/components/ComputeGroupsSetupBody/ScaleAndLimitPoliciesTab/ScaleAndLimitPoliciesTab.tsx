@@ -6,7 +6,20 @@
  */
 
 import React, { useState } from 'react'
-import { Checkbox, Color, Container, FontVariation, FormInput, Layout, Radio, Text, useToggle } from '@harness/uicore'
+import {
+  Checkbox,
+  Color,
+  Container,
+  FontVariation,
+  // FormInput,
+  Label,
+  Layout,
+  Radio,
+  Select,
+  Text,
+  TextInput,
+  useToggle
+} from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import ToggleSection from '../ToggleSection'
 import InstanceFamililesByCategories from './InstanceFamiliesSelectorTable'
@@ -95,31 +108,33 @@ const ClusterBuffer: React.FC<FieldConfigProps> = ({ enable }) => {
   return (
     <Layout.Horizontal spacing={'huge'}>
       <Container>
+        <Label>
+          {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.onDemandNodesLabel')}
+        </Label>
         <Layout.Horizontal flex={{ alignItems: 'flex-end' }} spacing="large">
-          <FormInput.Text
+          <TextInput
             name="defaultClusterCpu"
             placeholder={'% ' + getString('ce.common.cpu')}
-            label={getString(
-              'ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.onDemandNodesLabel'
-            )}
+            // label={getString(
+            //   'ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.onDemandNodesLabel'
+            // )}
             disabled={!enable}
           />
-          <FormInput.Text
-            name="defaultClusterMemory"
-            placeholder={'% ' + getString('ce.common.gib')}
-            disabled={!enable}
-          />
+          <TextInput name="defaultClusterMemory" placeholder={'% ' + getString('ce.common.gib')} disabled={!enable} />
         </Layout.Horizontal>
       </Container>
       <Container>
+        <Label>
+          {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.spotNodesLabel')}
+        </Label>
         <Layout.Horizontal flex={{ alignItems: 'flex-end' }} spacing="large">
-          <FormInput.Text
+          <TextInput
             name="spotClusterCpu"
             placeholder={'% ' + getString('ce.common.cpu')}
-            label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.spotNodesLabel')}
+            // label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.spotNodesLabel')}
             disabled={!enable}
           />
-          <FormInput.Text name="spotClusterMemory" placeholder={'% ' + getString('ce.common.gib')} disabled={!enable} />
+          <TextInput name="spotClusterMemory" placeholder={'% ' + getString('ce.common.gib')} disabled={!enable} />
         </Layout.Horizontal>
       </Container>
     </Layout.Horizontal>
@@ -129,26 +144,49 @@ const ClusterBuffer: React.FC<FieldConfigProps> = ({ enable }) => {
 const OnDemandFallback: React.FC<FieldConfigProps> = () => {
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'end' }} spacing={'large'}>
-      <FormInput.Text
-        name="retryTimeValue"
-        label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.retryTimeLabel')}
-      />
-      <FormInput.Select name="retryTimeUnit" items={[]} />
-    </Layout.Horizontal>
+    <Container>
+      <Label>
+        {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.retryTimeLabel')}
+      </Label>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }} spacing={'large'}>
+        <TextInput
+          name="retryTimeValue"
+          // label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.retryTimeLabel')}
+        />
+        <Select
+          name="retryTimeUnit"
+          items={[
+            { label: 'Minutes', value: 'minutes' },
+            { label: 'Hours', value: 'hours' }
+          ]}
+        />
+      </Layout.Horizontal>
+    </Container>
   )
 }
 
 const NodeDeletionDelay: React.FC<FieldConfigProps> = () => {
   const { getString } = useStrings()
   return (
-    <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'end' }} spacing={'large'}>
-      <FormInput.Text
-        name="delayTimeValue"
-        label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.delayTimeLabel')}
-      />
-      <FormInput.Select name="delayTimeUnit" items={[]} />
-    </Layout.Horizontal>
+    <Container>
+      <Label>
+        {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.delayTimeLabel')}
+      </Label>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }} spacing={'large'}>
+        <TextInput
+          name="delayTimeValue"
+          // label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.delayTimeLabel')}
+        />
+        <Select
+          name="delayTimeUnit"
+          items={[
+            { label: 'Seconds', value: 'seconds' },
+            { label: 'Minutes', value: 'minutes' },
+            { label: 'Hours', value: 'hours' }
+          ]}
+        />
+      </Layout.Horizontal>
+    </Container>
   )
 }
 
@@ -157,13 +195,16 @@ const RootVolumeRatio: React.FC<FieldConfigProps> = () => {
   return (
     <Layout.Horizontal spacing="huge">
       <Container>
+        <Label>
+          {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.cpuRangeLabel')}
+        </Label>
         <Layout.Horizontal flex={{ alignItems: 'flex-end' }} spacing="large">
-          <FormInput.Text
+          <TextInput
             name="nodeMinCpu"
             placeholder={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.min')}
-            label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.cpuRangeLabel')}
+            // label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.cpuRangeLabel')}
           />
-          <FormInput.Text
+          <TextInput
             name="nodeMaxCpu"
             placeholder={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.clusterPreferencesSection.max')}
           />
@@ -211,27 +252,45 @@ const NodeConstraints: React.FC = () => {
     <Layout.Horizontal spacing={'huge'}>
       <Container>
         <Layout.Horizontal flex={{ alignItems: 'flex-end' }} spacing="large">
-          <FormInput.Text
-            name="nodeMinCpu"
-            placeholder={getString('ce.common.cpu')}
-            label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.minCpuLabel')}
-          />
-          <FormInput.Text
-            name="nodeMinMemory"
-            placeholder={getString(
-              'ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.minMemoryLabel'
-            )}
-          />
+          <Container>
+            <Label>
+              {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.minCpuLabel')}
+            </Label>
+            <TextInput
+              name="nodeMinCpu"
+              placeholder={getString('ce.common.cpu')}
+              // label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.minCpuLabel')}
+            />
+          </Container>
+          <Container>
+            <Label>
+              {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.minMemoryLabel')}
+            </Label>
+            <TextInput
+              name="nodeMinMemory"
+              placeholder={getString(
+                'ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.minMemoryLabel'
+              )}
+            />
+          </Container>
         </Layout.Horizontal>
       </Container>
       <Container>
         <Layout.Horizontal flex={{ alignItems: 'flex-end' }} spacing="large">
-          <FormInput.Text
-            name="nodeMaxCpu"
-            placeholder={getString('ce.common.cpu')}
-            label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.maxCpuLabel')}
-          />
-          <FormInput.Text name="nodeMaxMemory" placeholder={getString('ce.nodeRecommendation.item4')} />
+          <Container>
+            <Label>
+              {getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.maxCpuLabel')}
+            </Label>
+            <TextInput
+              name="nodeMaxCpu"
+              placeholder={getString('ce.common.cpu')}
+              // label={getString('ce.computeGroups.setup.scalingLimitPoliciesTab.nodePreferencesSection.maxCpuLabel')}
+            />
+          </Container>
+          <Container>
+            <Label>{getString('ce.nodeRecommendation.item4')}</Label>
+            <TextInput name="nodeMaxMemory" placeholder={getString('ce.nodeRecommendation.item4')} />
+          </Container>
         </Layout.Horizontal>
       </Container>
     </Layout.Horizontal>
@@ -292,7 +351,7 @@ const FieldContainerWithCheckbox: React.FC<FieldContainerWithCheckboxProps> = ({
   return (
     <Layout.Horizontal>
       <Checkbox checked={enable} onChange={toggleEnable} />
-      <Layout.Vertical spacing={'small'}>
+      <Layout.Vertical spacing={'small'} style={{ width: '100%' }}>
         <Container>
           <Text font={{ variation: FontVariation.LEAD }}>{title}</Text>
           <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} style={{ width: '60%' }}>

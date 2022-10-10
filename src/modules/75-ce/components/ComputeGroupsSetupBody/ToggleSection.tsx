@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { Collapse } from '@blueprintjs/core'
-import { Color, Container, FlexExpander, FontVariation, Icon, Layout, Text, Toggle, useToggle } from '@harness/uicore'
+import { Color, Container, FontVariation, Icon, Layout, Text, Toggle, useToggle } from '@harness/uicore'
 import css from './ComputeGroupsSetupBody.module.scss'
 
 interface ToggleSectionProps {
@@ -61,13 +61,13 @@ const ToggleSection: React.FC<ToggleSectionProps> = ({
             {title}
           </Text>
           {subTitle && (
-            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600}>
+            <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_600} style={{ width: '70%' }}>
               {subTitle}
             </Text>
           )}
           {mainContent}
         </Layout.Vertical>
-        <FlexExpander />
+        {/* <FlexExpander /> */}
         <Layout.Horizontal flex spacing={'large'}>
           {secondaryContent}
           {!hideCollapseIcon && <Icon name="main-chevron-down" color={Color.PRIMARY_7} />}
