@@ -8,9 +8,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
-
-import type { StringsMap } from 'framework/strings/StringsContext'
 import { queryByNameAttribute } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import type { CompletionItemInterface } from '@common/interfaces/YAMLBuilderProps'
@@ -22,8 +19,6 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { pipelineContextECSManifests } from '@pipeline/components/PipelineStudio/PipelineContext/__tests__/helper'
-import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { getYaml, mockBuildList, initialManifestRuntimeValues, ecsManifestTemplate } from './helpers/helper'
 import { ECSServiceSpec } from '../ECSServiceSpec'
 
@@ -52,10 +47,6 @@ const TEST_PATH_PARAMS: ModulePathParams & PipelinePathProps = {
   projectIdentifier: 'testProject',
   pipelineIdentifier: 'Pipeline_1',
   module: 'cd'
-}
-
-const getString = (str: keyof StringsMap, vars?: Record<string, any> | undefined) => {
-  return vars?.stringToAppend ? `${str}_${vars.stringToAppend}` : str
 }
 
 factory.registerStep(new ECSServiceSpec())
@@ -203,134 +194,6 @@ describe('ECSInfraSpec tests', () => {
 
     const connectorRefInput = queryByText('connector')
     expect(connectorRefInput).not.toBeInTheDocument()
-  })
-
-  test('check manifest form errors', async () => {
-    const initialValues = {
-      manifests: [
-        {
-          manifest: {
-            identifier: 'TaskDefinition_Manifest',
-            type: ManifestDataType.EcsTaskDefinition,
-            spec: {
-              store: {
-                type: 'Git',
-                spec: {
-                  connectorRef: '',
-                  branch: '',
-                  paths: ''
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
-
-    const step = new ECSServiceSpec() as any
-    const errors = await step.validateInputSet({
-      data: initialValues,
-      template: ecsManifestTemplate,
-      getString,
-      viewType: StepViewType.DeploymentForm
-    })
-    expect(errors.manifests[0].manifest.spec.store.spec.connectorRef).toBe('fieldRequired')
-    expect(errors.manifests[0].manifest.spec.store.spec.branch).toBe('fieldRequired')
-    expect(errors.manifests[0].manifest.spec.store.spec.paths).toBe('fieldRequired')
-  })
-
-  test('check primary artifact form errors', async () => {
-    const initialValues = {
-      artifacts: {
-        primary: {
-          type: ENABLED_ARTIFACT_TYPES.DockerRegistry,
-          spec: {
-            connectorRef: '',
-            imagePath: '',
-            tag: '',
-            tagRegex: ''
-          }
-        }
-      }
-    }
-
-    const primaryArtifactTemplate = {
-      artifacts: {
-        primary: {
-          type: ENABLED_ARTIFACT_TYPES.DockerRegistry,
-          spec: {
-            connectorRef: RUNTIME_INPUT_VALUE,
-            imagePath: RUNTIME_INPUT_VALUE,
-            tag: RUNTIME_INPUT_VALUE,
-            tagRegex: RUNTIME_INPUT_VALUE
-          }
-        }
-      }
-    }
-
-    const step = new ECSServiceSpec() as any
-    const errors = await step.validateInputSet({
-      data: initialValues,
-      template: primaryArtifactTemplate,
-      getString,
-      viewType: StepViewType.DeploymentForm
-    })
-    expect(errors.artifacts.primary.spec.connectorRef).toBe('fieldRequired')
-    expect(errors.artifacts.primary.spec.imagePath).toBe('fieldRequired')
-    expect(errors.artifacts.primary.spec.tag).toBe('fieldRequired')
-    expect(errors.artifacts.primary.spec.tagRegex).toBe('fieldRequired')
-  })
-
-  test('check sidecar artifact form errors', async () => {
-    const initialValues = {
-      artifacts: {
-        sidecars: [
-          {
-            sidecar: {
-              identifier: 'Test_Sidecar',
-              type: ENABLED_ARTIFACT_TYPES.DockerRegistry,
-              spec: {
-                connectorRef: '',
-                imagePath: '',
-                tag: '',
-                tagRegex: ''
-              }
-            }
-          }
-        ]
-      }
-    }
-
-    const sidecarArtifactTemplate = {
-      artifacts: {
-        sidecars: [
-          {
-            sidecar: {
-              identifier: 'Test_Sidecar',
-              type: ENABLED_ARTIFACT_TYPES.DockerRegistry,
-              spec: {
-                connectorRef: RUNTIME_INPUT_VALUE,
-                imagePath: RUNTIME_INPUT_VALUE,
-                tag: RUNTIME_INPUT_VALUE,
-                tagRegex: RUNTIME_INPUT_VALUE
-              }
-            }
-          }
-        ]
-      }
-    }
-
-    const step = new ECSServiceSpec() as any
-    const errors = await step.validateInputSet({
-      data: initialValues,
-      template: sidecarArtifactTemplate,
-      getString,
-      viewType: StepViewType.DeploymentForm
-    })
-    expect(errors.artifacts.sidecars[0].sidecar.spec.connectorRef).toBe('fieldRequired')
-    expect(errors.artifacts.sidecars[0].sidecar.spec.imagePath).toBe('fieldRequired')
-    expect(errors.artifacts.sidecars[0].sidecar.spec.tag).toBe('fieldRequired')
-    expect(errors.artifacts.sidecars[0].sidecar.spec.tagRegex).toBe('fieldRequired')
   })
 
   test('Variables view renders fine', async () => {
