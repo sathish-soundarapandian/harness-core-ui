@@ -17,7 +17,8 @@ import {
   CDLicenseSummaryDTO,
   useGetCDLicenseUsageForServiceInstances,
   useGetCDLicenseUsageForServices,
-  ResponseLicensesWithSummaryDTO
+  ResponseLicensesWithSummaryDTO,
+  Failure
 } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetLicenseUsage as useGetFFUsage } from 'services/cf'
@@ -26,6 +27,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import type { GetDataError } from 'restful-react'
 
 export interface UsageAndLimitReturn {
   limitData: LimitReturn
@@ -85,9 +87,14 @@ interface LimitReturn {
   refetchLimit?: () => void
 }
 
-function useGetLimit(module: ModuleName, data: ResponseLicensesWithSummaryDTO | null): LimitReturn {
+function useGetLimit(
+  module: ModuleName,
+  data: ResponseLicensesWithSummaryDTO | null,
+  loading: boolean,
+  refetch: () => void,
+  limitError: GetDataError<Failure | Error> | null
+): LimitReturn {
   const limitData = data
-  const { accountId } = useParams<AccountPathProps>()
 
   function getLimitByModule(): LimitProps | undefined {
     let moduleLimit
@@ -131,18 +138,20 @@ function useGetLimit(module: ModuleName, data: ResponseLicensesWithSummaryDTO | 
     return moduleLimit
   }
 
-  // const {
-  //   data: limitData,
-  //   loading: loadingLimit,
-  //   error: limitError,
-  //   refetch: refetchLimit
-  // } = useGetLicensesAndSummary({
-  //   queryParams: { moduleType: module as GetLicensesAndSummaryQueryParams['moduleType'] },
-  //   accountIdentifier: accountId
-  // })
-
   const [limitReturn, setLimitReturn] = useState<LimitReturn>({})
+
   const limit = getLimitByModule()
+
+  useDeepCompareEffect(() => {
+    setLimitReturn({
+      limit,
+      loadingLimit: loading,
+      limitErrorMsg: limitError?.message,
+      refetchLimit: refetch
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [limitData, loading, limitError])
+
   return limitReturn
 }
 
@@ -305,9 +314,12 @@ function useGetUsage(module: ModuleName): UsageReturn {
 
 export function useGetUsageAndLimit(
   module: ModuleName,
-  data: ResponseLicensesWithSummaryDTO | null
+  data: ResponseLicensesWithSummaryDTO | null,
+  loading: boolean,
+  refetch: () => void,
+  limitError: GetDataError<Failure | Error> | null
 ): UsageAndLimitReturn {
-  const limit = useGetLimit(module, data)
+  const limit = useGetLimit(module, data, loading, refetch, limitError)
   const usage = useGetUsage(module)
   return { limitData: limit, usageData: usage }
 }

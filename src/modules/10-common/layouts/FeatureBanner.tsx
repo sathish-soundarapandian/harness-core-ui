@@ -102,6 +102,7 @@ interface FeatureBannerProps {
   data: ResponseLicensesWithSummaryDTO | null
   loading: boolean
   refetch: () => void
+  limitError: GetDataError<Failure | Error> | null
 }
 
 function getBannerClassNameByType(type: BannerType): string {
@@ -171,7 +172,7 @@ export default function FeatureBanner(props: FeatureBannerProps): React.ReactEle
   const features = useFeatures({ featuresRequest: { featureNames: defaultTo(activeModuleFeatures?.features, []) } })
 
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
-  const usageAndLimitInfo = useGetUsageAndLimit(moduleName, props.data)
+  const usageAndLimitInfo = useGetUsageAndLimit(moduleName, props.data, props.loading, props.refetch, props.limitError)
 
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = isFreePlan(licenseInformation, moduleName)

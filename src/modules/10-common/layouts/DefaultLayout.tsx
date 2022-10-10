@@ -33,6 +33,7 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
   const {
     data: limitData,
     loading: loadingLimit,
+    error: limitError,
     refetch: refetchLimit
   } = useGetLicensesAndSummary({
     queryParams: { moduleType: moduleName as GetLicensesAndSummaryQueryParams['moduleType'] },
@@ -53,8 +54,12 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
         <NavComponent />
       </SideNav>
       <div className={css.rhs}>
-        {module && <TrialLicenseBanner data={limitData} loading={loadingLimit} refetch={refetchLimit} />}
-        {module && <FeatureBanner data={limitData} loading={loadingLimit} refetch={refetchLimit} />}
+        {module && (
+          <TrialLicenseBanner data={limitData} loading={loadingLimit} refetch={refetchLimit} limitError={limitError} />
+        )}
+        {module && (
+          <FeatureBanner data={limitData} loading={loadingLimit} refetch={refetchLimit} limitError={limitError} />
+        )}
         <div className={css.children}>{props.children}</div>
       </div>
     </div>
