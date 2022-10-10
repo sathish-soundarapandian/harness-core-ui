@@ -14,7 +14,13 @@ import executionList from '@pipeline/pages/execution-list/__tests__/mocks/execut
 import pipelines from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-list.json'
 import filters from '@pipeline/pages/execution-list/__tests__/mocks/filters.json'
 import CDDashboardPage from '../CDDashboardPage'
-import { deploymentExecutionMock, deploymentHealthMock, deploymentsMock, workloadsMock } from './mocks'
+import {
+  deploymentExecutionMock,
+  deploymentHealthMock,
+  deploymentsMock,
+  workloadsMock,
+  reportSummaryMock
+} from './mocks'
 
 jest.mock('@common/utils/YamlUtils', () => ({}))
 jest.mock('framework/exports', () => ({
@@ -47,6 +53,17 @@ jest.mock('services/cd-ng', () => ({
     data: workloadsMock
   })
 }))
+
+jest.mock('services/ti-service', () => ({
+  TestReportSummary: () => ({
+    data: reportSummaryMock,
+    refetch: jest.fn()
+  }),
+  useGetToken: () => ({
+    data: 'some-token'
+  })
+}))
+
 const mockGetCallFunction = jest.fn()
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),

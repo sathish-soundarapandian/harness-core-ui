@@ -14,6 +14,7 @@ import pipelines from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-l
 import filters from '@pipeline/pages/execution-list/__tests__/mocks/filters.json'
 import * as hooksMock from '@common/hooks'
 import CIDashboardPage from '../CIDashboardPage'
+import reportSummaryMock from './mocks/report-summary.json'
 
 jest.mock('@common/utils/YamlUtils', () => ({}))
 
@@ -98,6 +99,16 @@ const buildHealthMock = {
     }
   }
 }
+
+jest.mock('services/ti-service', () => ({
+  TestReportSummary: () => ({
+    data: reportSummaryMock,
+    refetch: jest.fn()
+  }),
+  useGetToken: () => ({
+    data: 'some-token'
+  })
+}))
 
 jest.mock('services/ci', () => ({
   useGetBuilds: () => ({

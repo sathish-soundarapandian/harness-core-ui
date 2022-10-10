@@ -272,3 +272,11 @@ export const workloadsMock = {
     ]
   }
 }
+
+export const reportSummaryMock = {
+  total_tests: 378,
+  duration_ms: 18470378,
+  successful_tests: 300,
+  failed_tests: 70,
+  skipped_tests: 8
+}

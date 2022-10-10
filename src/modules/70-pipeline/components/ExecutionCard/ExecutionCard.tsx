@@ -35,6 +35,7 @@ import {
   hasSTOStage,
   StageType
 } from '@pipeline/utils/stageHelpers'
+import { useGetToken, getReportSummaryPromise, TestReportSummary } from 'services/ti-service'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import { CardVariant } from '@pipeline/utils/constants'
@@ -165,6 +166,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
   const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
   const { supportingGitSimplification } = useAppStore()
   const { isCompareMode, compareItems, addToCompare, removeFromCompare } = useExecutionCompareContext()
+  const CI_TESTTAB_NAVIGATION = useFeatureFlag(FeatureFlag.CI_TESTTAB_NAVIGATION)
 
   const checkboxRef = useRef<HTMLDivElement>(null)
   const [canEdit, canExecute] = usePermission(
@@ -185,25 +187,73 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
   const disabled = isExecutionNotStarted(pipelineExecution.status)
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
 
-  const handleClick = (e: any) => {
-    if (checkboxRef.current?.contains(e.target)) return
-    const { pipelineIdentifier: cardPipelineId, planExecutionId } = pipelineExecution
-    if (!disabled && cardPipelineId && planExecutionId) {
-      const route = routes.toExecutionPipelineView({
-        orgIdentifier,
-        pipelineIdentifier: cardPipelineId,
-        executionIdentifier: planExecutionId,
-        projectIdentifier,
-        accountId,
-        module,
-        source
-      })
+  const { data: serviceToken } = useGetToken({
+    queryParams: { accountId }
+  })
+  const { pipelineIdentifier: cardPipelineId, runSequence } = pipelineExecution
 
-      //opening in new tab is required for cards present in dashboards
-      if (IS_SERVICEDETAIL || IS_OVERVIEWPAGE) {
-        window.open(`#${route}`)
+  const handleClick = async (e: any) => {
+    if (checkboxRef.current?.contains(e.target)) return
+    const { planExecutionId } = pipelineExecution
+    const queryParams = {
+      accountId,
+      orgId: orgIdentifier,
+      projectId: projectIdentifier,
+      pipelineId: cardPipelineId || '',
+      buildId: runSequence?.toString() || '',
+      stageId: '',
+      report: 'junit' as const
+    }
+    let route = ''
+    if (!disabled && cardPipelineId && planExecutionId) {
+      if (HAS_CI && CI_TESTTAB_NAVIGATION) {
+        getReportSummaryPromise({
+          queryParams: queryParams,
+          requestOptions: { headers: { 'X-Harness-Token': serviceToken || '' } }
+        }).then((reportSummary: TestReportSummary) => {
+          if (reportSummary.failed_tests) {
+            route = routes.toExecutionTestsView({
+              orgIdentifier,
+              pipelineIdentifier: cardPipelineId,
+              executionIdentifier: planExecutionId,
+              projectIdentifier,
+              accountId,
+              module,
+              source
+            })
+          } else {
+            route = routes.toExecutionPipelineView({
+              orgIdentifier,
+              pipelineIdentifier: cardPipelineId,
+              executionIdentifier: planExecutionId,
+              projectIdentifier,
+              accountId,
+              module,
+              source
+            })
+          }
+          if (IS_SERVICEDETAIL || IS_OVERVIEWPAGE) {
+            window.open(`#${route}`)
+          } else {
+            history.push(route)
+          }
+        })
       } else {
-        history.push(route)
+        route = routes.toExecutionPipelineView({
+          orgIdentifier,
+          pipelineIdentifier: cardPipelineId,
+          executionIdentifier: planExecutionId,
+          projectIdentifier,
+          accountId,
+          module,
+          source
+        })
+        //opening in new tab is required for cards present in dashboards
+        if (IS_SERVICEDETAIL || IS_OVERVIEWPAGE) {
+          window.open(`#${route}`)
+        } else {
+          history.push(route)
+        }
       }
     }
   }
@@ -341,7 +391,7 @@ export default function ExecutionCard(props: ExecutionCardProps): React.ReactEle
                   !!pipelineExecution.stagesExecutedNames &&
                   Object.values(pipelineExecution.stagesExecutedNames).join(', ')
                 }
-                 `}</Tag>
+                `}</Tag>
               ) : null}
               {HAS_CI && ciInfo ? (
                 <div className={css.moduleData}>
