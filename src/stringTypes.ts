@@ -820,6 +820,7 @@ export interface StringsMap {
   'common.smtp.validationBody': string
   'common.smtp.validationSubject': string
   'common.smtp.validationTo': string
+  'common.sortedByCreatedTime': string
   'common.sourceBranch': string
   'common.sourceBranchPlaceholder': string
   'common.specified': string

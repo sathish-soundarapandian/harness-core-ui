@@ -85,6 +85,9 @@ export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProp
             compName: componentName
           })}
         </Text>
+        <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
+          {getString('common.sortedByCreatedTime')}
+        </Text>
       </Layout.Vertical>
 
       {createNewBtnComponent
