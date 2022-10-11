@@ -87,8 +87,8 @@ interface LimitReturn {
 
 function useGetLimit(
   module: ModuleName,
-  data: ResponseLicensesWithSummaryDTO | null,
-  limitError: GetDataError<Failure | Error> | null,
+  limitError?: GetDataError<Failure | Error>,
+  data?: ResponseLicensesWithSummaryDTO,
   loading?: boolean,
   refetch?: () => void
 ): LimitReturn {
@@ -311,12 +311,12 @@ function useGetUsage(module: ModuleName): UsageReturn {
 
 export function useGetUsageAndLimit(
   module: ModuleName,
-  data: ResponseLicensesWithSummaryDTO | null,
-  limitError: GetDataError<Failure | Error> | null,
+  limitError?: GetDataError<Failure | Error>,
+  data?: ResponseLicensesWithSummaryDTO,
   loading?: boolean,
   refetch?: () => void
 ): UsageAndLimitReturn {
-  const limit = useGetLimit(module, data, limitError, loading, refetch)
+  const limit = useGetLimit(module, limitError, data, loading, refetch)
   const usage = useGetUsage(module)
   return { limitData: limit, usageData: usage }
 }

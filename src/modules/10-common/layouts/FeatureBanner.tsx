@@ -172,7 +172,13 @@ export default function FeatureBanner(props: FeatureBannerProps): React.ReactEle
   const features = useFeatures({ featuresRequest: { featureNames: defaultTo(activeModuleFeatures?.features, []) } })
 
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
-  const usageAndLimitInfo = useGetUsageAndLimit(moduleName, props.data, props.limitError, props.loading, props.refetch)
+  const usageAndLimitInfo = useGetUsageAndLimit(
+    moduleName,
+    props.limitError,
+    props.data || undefined,
+    props.loading,
+    props.refetch
+  )
 
   const { licenseInformation } = useLicenseStore()
   const isFreeEdition = isFreePlan(licenseInformation, moduleName)

@@ -110,11 +110,10 @@ describe('useGetUsageAndLimit', () => {
       }
     })
 
-
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper>{children}</TestWrapper>
     )
-    const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CI,response,null,false,undefined)
+    const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CI), { wrapper })
     expect(result.current.limitData.limit?.ci?.totalDevelopers).toBe(100)
     expect(result.current.limitData.limit?.ff).toBeUndefined()
     expect(result.current.usageData.usage?.ci?.activeCommitters?.count).toBe(23)
