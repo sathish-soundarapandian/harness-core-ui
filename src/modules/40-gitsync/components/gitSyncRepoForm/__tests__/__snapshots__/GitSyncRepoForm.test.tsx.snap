@@ -21,6 +21,11 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
           >
             common.entityReferenceTitle
           </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey500"
+          >
+            common.sortedByCreatedTime
+          </p>
         </div>
         <button
           class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--variation Button--variation-secondary"
@@ -2141,6 +2146,11 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
             class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
           >
             common.entityReferenceTitle
+          </p>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey500"
+          >
+            common.sortedByCreatedTime
           </p>
         </div>
         <button
