@@ -109,7 +109,7 @@ export const getErrorMessageFromException = (e: any, fallbackMessage?: string): 
     : [{ level: 'ERROR', message: e.data?.message || e.message || fallbackMessage }]
 }
 
-export const DEFAULT_LDAP_SYNC_CRON_EXPRESSION = '0/15 * * * *' // Every 15 minutes
+export const DEFAULT_LDAP_SYNC_CRON_EXPRESSION = '0 0/15 * 1/1 * ? *' // Every 15 minutes
 
 export const getDateIterationsList = (dates: number[]): ReactElement => {
   const datesHTML = dates.map(date => {

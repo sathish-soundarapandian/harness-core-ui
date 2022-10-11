@@ -2660,88 +2660,10 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  2`
                           />
                         </div>
                         <div
-                          aria-controls="bp3-tab-panel_Wizard_Minutes"
-                          aria-disabled="false"
-                          aria-expanded="false"
-                          aria-selected="false"
-                          class="bp3-tab"
-                          data-tab-id="Minutes"
-                          id="bp3-tab-title_Wizard_Minutes"
-                          role="tab"
-                          tabindex="0"
-                        >
-                          common.schedulePanel.minutesLabel
-                        </div>
-                        <div
-                          aria-controls="bp3-tab-panel_Wizard_Hourly"
-                          aria-disabled="false"
-                          aria-expanded="false"
-                          aria-selected="false"
-                          class="bp3-tab"
-                          data-tab-id="Hourly"
-                          id="bp3-tab-title_Wizard_Hourly"
-                          role="tab"
-                          tabindex="0"
-                        >
-                          common.schedulePanel.hourlyTabTitle
-                        </div>
-                        <div
-                          aria-controls="bp3-tab-panel_Wizard_Daily"
-                          aria-disabled="false"
-                          aria-expanded="false"
-                          aria-selected="false"
-                          class="bp3-tab"
-                          data-tab-id="Daily"
-                          id="bp3-tab-title_Wizard_Daily"
-                          role="tab"
-                          tabindex="0"
-                        >
-                          common.schedulePanel.dailyTabTitle
-                        </div>
-                        <div
-                          aria-controls="bp3-tab-panel_Wizard_Weekly"
+                          aria-controls="bp3-tab-panel_Wizard_Custom"
                           aria-disabled="false"
                           aria-expanded="true"
                           aria-selected="true"
-                          class="bp3-tab"
-                          data-tab-id="Weekly"
-                          id="bp3-tab-title_Wizard_Weekly"
-                          role="tab"
-                          tabindex="0"
-                        >
-                          common.schedulePanel.weeklyTabTitle
-                        </div>
-                        <div
-                          aria-controls="bp3-tab-panel_Wizard_Monthly"
-                          aria-disabled="false"
-                          aria-expanded="false"
-                          aria-selected="false"
-                          class="bp3-tab"
-                          data-tab-id="Monthly"
-                          id="bp3-tab-title_Wizard_Monthly"
-                          role="tab"
-                          tabindex="0"
-                        >
-                          common.schedulePanel.monthlyTabTitle
-                        </div>
-                        <div
-                          aria-controls="bp3-tab-panel_Wizard_Yearly"
-                          aria-disabled="false"
-                          aria-expanded="false"
-                          aria-selected="false"
-                          class="bp3-tab"
-                          data-tab-id="Yearly"
-                          id="bp3-tab-title_Wizard_Yearly"
-                          role="tab"
-                          tabindex="0"
-                        >
-                          common.schedulePanel.yearlyTabTitle
-                        </div>
-                        <div
-                          aria-controls="bp3-tab-panel_Wizard_Custom"
-                          aria-disabled="false"
-                          aria-expanded="false"
-                          aria-selected="false"
                           class="bp3-tab"
                           data-tab-id="Custom"
                           id="bp3-tab-title_Wizard_Custom"
@@ -2753,673 +2675,217 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  2`
                       </div>
                       <div
                         aria-hidden="false"
-                        aria-labelledby="bp3-tab-title_Wizard_Weekly"
+                        aria-labelledby="bp3-tab-title_Wizard_Custom"
                         class="bp3-tab-panel"
-                        id="bp3-tab-panel_Wizard_Weekly"
+                        id="bp3-tab-panel_Wizard_Custom"
                         role="tabpanel"
                       >
                         <div
-                          class="weeklyTab"
+                          class="bp3-form-group"
+                          data-id="expression-0"
+                          style="margin: 0px;"
                         >
+                          <label
+                            class="bp3-label"
+                            for="expression"
+                          >
+                            <span
+                              class="Tooltip--acenter"
+                              data-tooltip-id="ldapSyncScheduleForm_expression"
+                            >
+                              common.schedulePanel.enterCustomCron
+                            </span>
+                             
+                            <span
+                              class="bp3-text-muted"
+                            />
+                          </label>
                           <div
-                            class="Layout--vertical StyledProps--main"
-                            style="align-items: flex-start;"
+                            class="bp3-form-content"
                           >
                             <div
-                              class="StyledProps--font StyledProps--main"
+                              class="bp3-input-group"
                             >
-                              <p
-                                class="StyledProps--font StyledProps--main label"
-                              >
-                                 
-                                common.schedulePanel.runOn
-                              </p>
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday activeDay Button--with-current-color Button--iconOnly"
-                                data-testid="day-MON"
-                                type="button"
-                              >
-                                <span
-                                  class="bp3-button-text"
-                                >
-                                  <div
-                                    class="Layout--horizontal StyledProps--main weekdayText"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main checked"
-                                      data-icon="execution-success"
-                                      style="visibility: visible;"
-                                    >
-                                      <svg
-                                        height="16"
-                                        viewBox="0 0 17 17"
-                                        width="16"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <circle
-                                          color="var(--white)"
-                                          cx="8.5"
-                                          cy="8.5"
-                                          r="8.5"
-                                        />
-                                        <path
-                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
-                                        />
-                                      </svg>
-                                    </span>
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      triggers.schedulePanel.MON
-                                    </p>
-                                  </div>
-                                </span>
-                              </button>
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
-                                data-testid="day-TUE"
-                                type="button"
-                              >
-                                <span
-                                  class="bp3-button-text"
-                                >
-                                  <div
-                                    class="Layout--horizontal StyledProps--main weekdayText"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main checked"
-                                      data-icon="execution-success"
-                                      style="visibility: hidden;"
-                                    >
-                                      <svg
-                                        height="16"
-                                        viewBox="0 0 17 17"
-                                        width="16"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <circle
-                                          color="var(--white)"
-                                          cx="8.5"
-                                          cy="8.5"
-                                          r="8.5"
-                                        />
-                                        <path
-                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
-                                        />
-                                      </svg>
-                                    </span>
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      triggers.schedulePanel.TUE
-                                    </p>
-                                  </div>
-                                </span>
-                              </button>
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
-                                data-testid="day-WED"
-                                type="button"
-                              >
-                                <span
-                                  class="bp3-button-text"
-                                >
-                                  <div
-                                    class="Layout--horizontal StyledProps--main weekdayText"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main checked"
-                                      data-icon="execution-success"
-                                      style="visibility: hidden;"
-                                    >
-                                      <svg
-                                        height="16"
-                                        viewBox="0 0 17 17"
-                                        width="16"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <circle
-                                          color="var(--white)"
-                                          cx="8.5"
-                                          cy="8.5"
-                                          r="8.5"
-                                        />
-                                        <path
-                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
-                                        />
-                                      </svg>
-                                    </span>
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      triggers.schedulePanel.WED
-                                    </p>
-                                  </div>
-                                </span>
-                              </button>
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
-                                data-testid="day-THU"
-                                type="button"
-                              >
-                                <span
-                                  class="bp3-button-text"
-                                >
-                                  <div
-                                    class="Layout--horizontal StyledProps--main weekdayText"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main checked"
-                                      data-icon="execution-success"
-                                      style="visibility: hidden;"
-                                    >
-                                      <svg
-                                        height="16"
-                                        viewBox="0 0 17 17"
-                                        width="16"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <circle
-                                          color="var(--white)"
-                                          cx="8.5"
-                                          cy="8.5"
-                                          r="8.5"
-                                        />
-                                        <path
-                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
-                                        />
-                                      </svg>
-                                    </span>
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      triggers.schedulePanel.THU
-                                    </p>
-                                  </div>
-                                </span>
-                              </button>
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
-                                data-testid="day-FRI"
-                                type="button"
-                              >
-                                <span
-                                  class="bp3-button-text"
-                                >
-                                  <div
-                                    class="Layout--horizontal StyledProps--main weekdayText"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main checked"
-                                      data-icon="execution-success"
-                                      style="visibility: hidden;"
-                                    >
-                                      <svg
-                                        height="16"
-                                        viewBox="0 0 17 17"
-                                        width="16"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <circle
-                                          color="var(--white)"
-                                          cx="8.5"
-                                          cy="8.5"
-                                          r="8.5"
-                                        />
-                                        <path
-                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
-                                        />
-                                      </svg>
-                                    </span>
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      triggers.schedulePanel.FRI
-                                    </p>
-                                  </div>
-                                </span>
-                              </button>
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
-                                data-testid="day-SAT"
-                                type="button"
-                              >
-                                <span
-                                  class="bp3-button-text"
-                                >
-                                  <div
-                                    class="Layout--horizontal StyledProps--main weekdayText"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main checked"
-                                      data-icon="execution-success"
-                                      style="visibility: hidden;"
-                                    >
-                                      <svg
-                                        height="16"
-                                        viewBox="0 0 17 17"
-                                        width="16"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <circle
-                                          color="var(--white)"
-                                          cx="8.5"
-                                          cy="8.5"
-                                          r="8.5"
-                                        />
-                                        <path
-                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
-                                        />
-                                      </svg>
-                                    </span>
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      triggers.schedulePanel.SAT
-                                    </p>
-                                  </div>
-                                </span>
-                              </button>
-                              <button
-                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
-                                data-testid="day-SUN"
-                                type="button"
-                              >
-                                <span
-                                  class="bp3-button-text"
-                                >
-                                  <div
-                                    class="Layout--horizontal StyledProps--main weekdayText"
-                                  >
-                                    <span
-                                      class="bp3-icon StyledProps--main checked"
-                                      data-icon="execution-success"
-                                      style="visibility: hidden;"
-                                    >
-                                      <svg
-                                        height="16"
-                                        viewBox="0 0 17 17"
-                                        width="16"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <circle
-                                          color="var(--white)"
-                                          cx="8.5"
-                                          cy="8.5"
-                                          r="8.5"
-                                        />
-                                        <path
-                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
-                                        />
-                                      </svg>
-                                    </span>
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      triggers.schedulePanel.SUN
-                                    </p>
-                                  </div>
-                                </span>
-                              </button>
-                              <div
-                                class="StyledProps--font StyledProps--main"
-                                data-name="timeselect"
-                              >
-                                <p
-                                  class="StyledProps--font StyledProps--main label"
-                                >
-                                  common.schedulePanel.runAt
-                                </p>
-                                <div
-                                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
-                                >
-                                  <div
-                                    class="bp3-popover-wrapper selectStyle Select--main bp3-fill"
-                                  >
-                                    <div
-                                      class="bp3-popover-target"
-                                    >
-                                      <div
-                                        class="bp3-input-group"
-                                      >
-                                        <input
-                                          autocomplete="off"
-                                          class="bp3-input"
-                                          placeholder="- Select -"
-                                          style="padding-right: 0px;"
-                                          type="text"
-                                          value="01"
-                                        />
-                                        <span
-                                          class="bp3-input-action"
-                                        >
-                                          <span
-                                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                            icon="chevron-down"
-                                          >
-                                            <svg
-                                              data-icon="chevron-down"
-                                              height="14"
-                                              viewBox="0 0 16 16"
-                                              width="14"
-                                            >
-                                              <desc>
-                                                chevron-down
-                                              </desc>
-                                              <path
-                                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                                fill-rule="evenodd"
-                                              />
-                                            </svg>
-                                          </span>
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="bp3-popover-wrapper selectStyle Select--main bp3-fill"
-                                  >
-                                    <div
-                                      class="bp3-popover-target"
-                                    >
-                                      <div
-                                        class="bp3-input-group"
-                                      >
-                                        <input
-                                          autocomplete="off"
-                                          class="bp3-input"
-                                          placeholder="- Select -"
-                                          style="padding-right: 0px;"
-                                          type="text"
-                                          value="00"
-                                        />
-                                        <span
-                                          class="bp3-input-action"
-                                        >
-                                          <span
-                                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                            icon="chevron-down"
-                                          >
-                                            <svg
-                                              data-icon="chevron-down"
-                                              height="14"
-                                              viewBox="0 0 16 16"
-                                              width="14"
-                                            >
-                                              <desc>
-                                                chevron-down
-                                              </desc>
-                                              <path
-                                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                                fill-rule="evenodd"
-                                              />
-                                            </svg>
-                                          </span>
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="bp3-popover-wrapper selectStyle Select--main bp3-fill"
-                                  >
-                                    <div
-                                      class="bp3-popover-target"
-                                    >
-                                      <div
-                                        class="bp3-input-group"
-                                      >
-                                        <input
-                                          autocomplete="off"
-                                          class="bp3-input"
-                                          placeholder="- Select -"
-                                          style="padding-right: 0px;"
-                                          type="text"
-                                          value=""
-                                        />
-                                        <span
-                                          class="bp3-input-action"
-                                        >
-                                          <span
-                                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                            icon="chevron-down"
-                                          >
-                                            <svg
-                                              data-icon="chevron-down"
-                                              height="14"
-                                              viewBox="0 0 16 16"
-                                              width="14"
-                                            >
-                                              <desc>
-                                                chevron-down
-                                              </desc>
-                                              <path
-                                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                                fill-rule="evenodd"
-                                              />
-                                            </svg>
-                                          </span>
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="bp3-popover-wrapper selectStyle Select--main bp3-fill"
-                                  >
-                                    <div
-                                      class="bp3-popover-target"
-                                    >
-                                      <div
-                                        class="bp3-input-group"
-                                      >
-                                        <input
-                                          autocomplete="off"
-                                          class="bp3-input"
-                                          placeholder="- Select -"
-                                          style="padding-right: 0px;"
-                                          type="text"
-                                          value="AM"
-                                        />
-                                        <span
-                                          class="bp3-input-action"
-                                        >
-                                          <span
-                                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                                            icon="chevron-down"
-                                          >
-                                            <svg
-                                              data-icon="chevron-down"
-                                              height="14"
-                                              viewBox="0 0 16 16"
-                                              width="14"
-                                            >
-                                              <desc>
-                                                chevron-down
-                                              </desc>
-                                              <path
-                                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                                fill-rule="evenodd"
-                                              />
-                                            </svg>
-                                          </span>
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div
-                              class="StyledProps--font StyledProps--main spacer"
-                              style="padding-bottom: 0px; margin-left: 0px; width: 100%;"
-                            >
-                              <div
-                                class="StyledProps--font StyledProps--main"
+                              <input
+                                autocomplete="off"
+                                class="bp3-input"
+                                name="expression"
+                                type="text"
+                                value="0 0/15 * 1/1 * ? *"
                               />
                             </div>
+                          </div>
+                        </div>
+                        <div
+                          class="StyledProps--font StyledProps--main spacer"
+                          style="margin-left: 0px; width: 100%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main"
+                          />
+                        </div>
+                        <div
+                          class="StyledProps--font StyledProps--main expressionBreakdown"
+                          data-name="expressionBreakdown"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main title"
+                            data-tooltip-id="expressionBreakdown"
+                          >
+                            common.schedulePanel.expressionBreakdown
+                          </p>
+                          <div
+                            class="Layout--horizontal StyledProps--main"
+                          >
                             <div
-                              class="StyledProps--font StyledProps--main expressionBreakdown"
-                              data-name="expressionBreakdown"
-                            >
-                              <p
-                                class="StyledProps--font StyledProps--main title"
-                                data-tooltip-id="expressionBreakdown"
-                              >
-                                common.schedulePanel.expressionBreakdown
-                              </p>
-                              <div
-                                class="Layout--horizontal StyledProps--main"
-                              >
-                                <div
-                                  class="Layout--vertical StyledProps--main column"
-                                  data-name="column"
-                                  style="width: 100px;"
-                                >
-                                  <div
-                                    class="StyledProps--font StyledProps--main label"
-                                  >
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      common.schedulePanel.minutesLabel
-                                    </p>
-                                  </div>
-                                  <div
-                                    class="StyledProps--font StyledProps--main value"
-                                  >
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      0
-                                    </p>
-                                  </div>
-                                </div>
-                                <div
-                                  class="Layout--vertical StyledProps--main column"
-                                  data-name="column"
-                                  style="width: 100px;"
-                                >
-                                  <div
-                                    class="StyledProps--font StyledProps--main label"
-                                  >
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      common.schedulePanel.hoursLabel
-                                    </p>
-                                  </div>
-                                  <div
-                                    class="StyledProps--font StyledProps--main value"
-                                  >
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      1
-                                    </p>
-                                  </div>
-                                </div>
-                                <div
-                                  class="Layout--vertical StyledProps--main column"
-                                  data-name="column"
-                                  style="width: 125px;"
-                                >
-                                  <div
-                                    class="StyledProps--font StyledProps--main label"
-                                  >
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      common.schedulePanel.dayOfMonthLabel
-                                    </p>
-                                  </div>
-                                  <div
-                                    class="StyledProps--font StyledProps--main value inactive"
-                                  >
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      *
-                                    </p>
-                                  </div>
-                                </div>
-                                <div
-                                  class="Layout--vertical StyledProps--main column"
-                                  data-name="column"
-                                  style="width: 100px;"
-                                >
-                                  <div
-                                    class="StyledProps--font StyledProps--main label"
-                                  >
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      common.schedulePanel.monthLabel
-                                    </p>
-                                  </div>
-                                  <div
-                                    class="StyledProps--font StyledProps--main value inactive"
-                                  >
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      *
-                                    </p>
-                                  </div>
-                                </div>
-                                <div
-                                  class="Layout--vertical StyledProps--main column"
-                                  data-name="column"
-                                  style="width: 250px;"
-                                >
-                                  <div
-                                    class="StyledProps--font StyledProps--main label"
-                                  >
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      common.schedulePanel.dayOfWeekLabel
-                                    </p>
-                                  </div>
-                                  <div
-                                    class="StyledProps--font StyledProps--main value"
-                                  >
-                                    <p
-                                      class="StyledProps--font StyledProps--main"
-                                    >
-                                      MON
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div
-                              class="StyledProps--font StyledProps--main spacer"
-                              style="padding-top: 0px; padding-bottom: 0px; margin-left: 0px; width: 100%;"
+                              class="Layout--vertical StyledProps--main column"
+                              data-name="column"
+                              style="width: 100px;"
                             >
                               <div
-                                class="StyledProps--font StyledProps--main"
-                              />
-                            </div>
-                            <div
-                              class="StyledProps--font StyledProps--main expression"
-                              data-name="expression"
-                            >
-                              <p
                                 class="StyledProps--font StyledProps--main label"
-                                data-tooltip-id="cronExpression"
-                              >
-                                common.schedulePanel.cronExpression
-                              </p>
-                              <div
-                                class="StyledProps--font StyledProps--main field"
                               >
                                 <p
                                   class="StyledProps--font StyledProps--main"
-                                  data-testid="cron-expression"
                                 >
-                                  0 1 * * MON
+                                  common.schedulePanel.minutesLabel
+                                </p>
+                              </div>
+                              <div
+                                class="StyledProps--font StyledProps--main value"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                >
+                                  0/15
                                 </p>
                               </div>
                             </div>
+                            <div
+                              class="Layout--vertical StyledProps--main column"
+                              data-name="column"
+                              style="width: 100px;"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main label"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                >
+                                  common.schedulePanel.hoursLabel
+                                </p>
+                              </div>
+                              <div
+                                class="StyledProps--font StyledProps--main value"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                >
+                                  *
+                                </p>
+                              </div>
+                            </div>
+                            <div
+                              class="Layout--vertical StyledProps--main column"
+                              data-name="column"
+                              style="width: 125px;"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main label"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                >
+                                  common.schedulePanel.dayOfMonthLabel
+                                </p>
+                              </div>
+                              <div
+                                class="StyledProps--font StyledProps--main value"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                >
+                                  1/1
+                                </p>
+                              </div>
+                            </div>
+                            <div
+                              class="Layout--vertical StyledProps--main column"
+                              data-name="column"
+                              style="width: 100px;"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main label"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                >
+                                  common.schedulePanel.monthLabel
+                                </p>
+                              </div>
+                              <div
+                                class="StyledProps--font StyledProps--main value"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                >
+                                  *
+                                </p>
+                              </div>
+                            </div>
+                            <div
+                              class="Layout--vertical StyledProps--main column"
+                              data-name="column"
+                              style="width: 250px;"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main label"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                >
+                                  common.schedulePanel.dayOfWeekLabel
+                                </p>
+                              </div>
+                              <div
+                                class="StyledProps--font StyledProps--main value"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                >
+                                  ?
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="StyledProps--font StyledProps--main spacer"
+                          style="padding-bottom: 0px; margin-left: 0px; width: 100%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main"
+                          />
+                        </div>
+                        <div
+                          class="StyledProps--font StyledProps--main expression"
+                          data-name="expression"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main label"
+                            data-tooltip-id="cronExpression"
+                          >
+                            common.schedulePanel.cronExpression
+                          </p>
+                          <div
+                            class="StyledProps--font StyledProps--main field"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main"
+                              data-testid="cron-expression"
+                            >
+                              0 0/15 * 1/1 * ? *
+                            </p>
                           </div>
                         </div>
                       </div>

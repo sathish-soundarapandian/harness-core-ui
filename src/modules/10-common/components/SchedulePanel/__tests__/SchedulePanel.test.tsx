@@ -411,15 +411,6 @@ describe('SchedulePanel Triggers tests', () => {
 
       await waitFor(() => expect(queryByText(container, '0/5 * * * *')).not.toBeNull()) // persists last
 
-      setFieldValue({ container, type: InputTypes.TEXTFIELD, fieldId: 'expression', value: '' })
-
-      await waitFor(() => expect(document.body.querySelector('[class*="errorField"]')).not.toBeNull())
-      expect(queryByText(container, result.current.getString('invalidText'))).toBeNull() // all invalid text hidden
-
-      setFieldValue({ container, type: InputTypes.TEXTFIELD, fieldId: 'expression', value: '0 1 1 1/1' })
-
-      await waitFor(() => expect(queryByText(container, result.current.getString('invalidText'))).not.toBeNull())
-
       setFieldValue({ container, type: InputTypes.TEXTFIELD, fieldId: 'expression', value: '0 1 1 1/1 SAT' })
 
       await waitFor(() => expect(queryByText(container, result.current.getString('invalidText'))).toBeNull())

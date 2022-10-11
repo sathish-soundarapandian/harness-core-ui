@@ -14,16 +14,18 @@ import css from './Expression.module.scss'
 
 interface ExpressionInterface {
   formikProps: any
+  validateCron?: boolean
 }
 
 export default function Expression(props: ExpressionInterface): JSX.Element {
   const {
     formikProps: {
       values: { expression, selectedScheduleTab }
-    }
+    },
+    validateCron = false
   } = props
   const { getString } = useStrings()
-  const showError = selectedScheduleTab === scheduleTabsId.CUSTOM && !isCronValid(expression)
+  const showError = validateCron && selectedScheduleTab === scheduleTabsId.CUSTOM && !isCronValid(expression)
   return (
     <Container data-name="expression" className={css.expression}>
       <Text className={css.label} data-tooltip-id="cronExpression">
