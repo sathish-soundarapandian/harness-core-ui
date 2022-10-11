@@ -12,7 +12,22 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { useGetLicensesAndSummary, useExtendTrialLicense, useSaveFeedback } from 'services/cd-ng'
 
 import { TrialLicenseBanner } from '../TrialLicenseBanner'
+enum LicenseType {
+  PAID = 'PAID',
+  TRIAL = 'TRIAL'
+}
 
+enum Status {
+  SUCCESS = 'SUCCESS'
+}
+
+enum Editions {
+  TEAM = 'TEAM'
+}
+
+enum ModuleType {
+  CD = 'CD'
+}
 jest.mock('services/cd-ng')
 const useGetLicensesAndSummaryMock = useGetLicensesAndSummary as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
@@ -45,9 +60,18 @@ describe('TrialLicenseBanner', () => {
         }
       }
     })
+    const limitData = {
+      data: {
+        edition: 'TEAM' as Editions,
+        licenseType: 'TRIAL' as LicenseType,
+        maxExpiryTime: moment.now() + 24 * 60 * 60 * 1000,
+        moduleType: 'CD' as ModuleType
+      },
+      status: 'SUCCESS' as Status
+    }
     const { container, getByText, queryByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
-        <TrialLicenseBanner />
+        <TrialLicenseBanner data={limitData} loading={false} limitError={null} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -70,9 +94,18 @@ describe('TrialLicenseBanner', () => {
         }
       }
     })
+    const limitData = {
+      data: {
+        edition: 'TEAM' as Editions,
+        licenseType: 'PAID' as LicenseType,
+        maxExpiryTime: moment.now() + 24 * 60 * 60 * 1000,
+        moduleType: 'CD' as ModuleType
+      },
+      status: 'SUCCESS' as Status
+    }
     const { container, queryByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
-        <TrialLicenseBanner />
+        <TrialLicenseBanner data={limitData} loading={false} limitError={null} />
       </TestWrapper>
     )
     expect(queryByText('common.banners.trial.contactSales')).not.toBeInTheDocument()
@@ -93,9 +126,18 @@ describe('TrialLicenseBanner', () => {
         }
       }
     })
+    const limitData = {
+      data: {
+        edition: 'TEAM' as Editions,
+        licenseType: 'TRIAL' as LicenseType,
+        maxExpiryTime: moment.now() - 24 * 60 * 60 * 1000,
+        moduleType: 'CD' as ModuleType
+      },
+      status: 'SUCCESS' as Status
+    }
     const { container, queryByText, getByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
-        <TrialLicenseBanner />
+        <TrialLicenseBanner data={limitData} loading={false} limitError={null} />
       </TestWrapper>
     )
     expect(queryByText('common.banners.trial.description')).not.toBeInTheDocument()
@@ -118,9 +160,18 @@ describe('TrialLicenseBanner', () => {
         }
       }
     })
+    const limitData = {
+      data: {
+        edition: 'TEAM' as Editions,
+        licenseType: 'TRIAL' as LicenseType,
+        maxExpiryTime: moment.now() - 24 * 60 * 60 * 1000 * 15,
+        moduleType: 'CD' as ModuleType
+      },
+      status: 'SUCCESS' as Status
+    }
     const { container, queryByText, getByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
-        <TrialLicenseBanner />
+        <TrialLicenseBanner data={limitData} loading={false} limitError={null} />
       </TestWrapper>
     )
     expect(getByText('common.banners.trial.expired.contactSales')).toBeInTheDocument()
@@ -144,9 +195,18 @@ describe('TrialLicenseBanner', () => {
         }
       }
     })
+    const limitData = {
+      data: {
+        edition: 'TEAM' as Editions,
+        licenseType: 'TRIAL' as LicenseType,
+        maxExpiryTime: moment.now() - 24 * 60 * 60 * 1000,
+        moduleType: 'CD' as ModuleType
+      },
+      status: 'SUCCESS' as Status
+    }
     const { getByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
-        <TrialLicenseBanner />
+        <TrialLicenseBanner data={limitData} loading={false} limitError={null} />
       </TestWrapper>
     )
     fireEvent.click(getByText('common.banners.trial.expired.extendTrial'))
@@ -169,9 +229,18 @@ describe('TrialLicenseBanner', () => {
         }
       }
     })
+    const limitData = {
+      data: {
+        edition: 'TEAM' as Editions,
+        licenseType: 'TRIAL' as LicenseType,
+        maxExpiryTime: moment.now() + 24 * 60 * 60 * 1000,
+        moduleType: 'CD' as ModuleType
+      },
+      status: 'SUCCESS' as Status
+    }
     const { getByText } = render(
       <TestWrapper path="/account/my_account_id/cd/orgs/my_org/projects/my_project">
-        <TrialLicenseBanner />
+        <TrialLicenseBanner data={limitData} loading={false} limitError={null} />
       </TestWrapper>
     )
     fireEvent.click(getByText('common.banners.trial.provideFeedback'))

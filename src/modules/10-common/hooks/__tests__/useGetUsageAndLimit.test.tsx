@@ -18,7 +18,6 @@ import { useGetUsage } from 'services/ci'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetUsageAndLimit } from '../useGetUsageAndLimit'
-import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import type { ModuleType } from 'framework/featureStore/featureStoreUtil'
 
 enum status {

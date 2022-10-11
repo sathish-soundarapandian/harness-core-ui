@@ -63,7 +63,7 @@ const moduleNameMap: Record<string, keyof StringsMap> = {
 interface TrialLicenseBannerProps {
   data: ResponseLicensesWithSummaryDTO | null
   loading: boolean
-  refetch: () => void
+  refetch?: () => void
   limitError: GetDataError<Failure | Error> | null
 }
 const getModuleDescriptions: (
