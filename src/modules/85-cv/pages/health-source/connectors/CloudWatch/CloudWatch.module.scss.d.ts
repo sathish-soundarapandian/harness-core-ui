@@ -10,5 +10,6 @@ declare const styles: {
   readonly awsRegionSelector: string
   readonly cloudWatch: string
   readonly expressionContainer: string
+  readonly groupNamePopover: string
 }
 export default styles

@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from 'react'
 import type { IDialogProps } from '@blueprintjs/core'
-import type { SelectOption } from '@harness/uicore'
+import type { SelectOption, SelectProps } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
 
 export interface GroupNameProps {
@@ -9,10 +9,13 @@ export interface GroupNameProps {
   groupNames?: SelectOption[]
   onChange: (name: string, value: SelectOption) => void
   item?: SelectOption
-  setGroupNames: Dispatch<SetStateAction<SelectOption[]>>
+  setGroupNames?: Dispatch<SetStateAction<SelectOption[]>>
   label?: string
   title?: string
   disabled?: boolean
+  allowAddGroup?: boolean
+  selectProps?: Pick<SelectProps, 'popoverClassName'>
+  usePortal?: boolean
 }
 
 export const DialogProps: IDialogProps = {

@@ -166,7 +166,9 @@ describe('CloudWatch', () => {
     userEvent.click(screen.getByText('cv.addNew'))
 
     //expect modal to show and fill out new name
-    await waitFor(() => expect(screen.getByText('cv.monitoringSources.appD.newGroupName')).not.toBeNull())
+    await waitFor(() =>
+      expect(screen.getByText('cv.monitoringSources.prometheus.newPrometheusGroupName')).not.toBeNull()
+    )
     await setFieldValue({
       container: document.body,
       type: InputTypes.TEXTFIELD,

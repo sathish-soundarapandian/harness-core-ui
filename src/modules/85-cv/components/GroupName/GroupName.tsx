@@ -6,17 +6,42 @@
  */
 
 import React from 'react'
-import { FormInput, Formik, FormikForm, Text, Container, Layout, Button } from '@wings-software/uicore'
+import { FormInput, Formik, FormikForm, Text, Container, Layout, Button, SelectOption } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import { CreateGroupName, DialogProps, GroupNameProps } from './GroupName.types'
 import { validate } from './GroupName.utils'
+import { defaultGroupName } from './GroupName.constants'
 
 export default function GroupName(props: GroupNameProps): JSX.Element {
-  const { fieldName, disabled, groupNames = [], onChange, item, setGroupNames, label, title } = props
+  const {
+    fieldName,
+    disabled,
+    groupNames = [],
+    onChange,
+    item,
+    setGroupNames,
+    label,
+    title,
+    allowAddGroup,
+    selectProps,
+    usePortal
+  } = props
   const { getString } = useStrings()
   const addNewOption = { label: getString('cv.addNew'), value: '' }
+
+  const dropdownOptions: SelectOption[] = groupNames
+
+  // Adding "+ Add New" option based on  "allowAddGroup" prop
+  if (allowAddGroup) {
+    const isAddNewOptionPresent = groupNames.find(groupName => groupName.label === addNewOption.label)
+    if (!isAddNewOptionPresent) {
+      dropdownOptions.unshift(addNewOption)
+    }
+  }
+
+  const dropdownFieldName = fieldName ?? defaultGroupName
 
   const [openModal, hideModal] = useModalHook(
     () => (
@@ -27,9 +52,9 @@ export default function GroupName(props: GroupNameProps): JSX.Element {
           formName="groupName"
           onSubmit={values => {
             const createdGroupName = { label: values.name, value: values.name }
-            setGroupNames(oldNames => [...oldNames, createdGroupName])
+            setGroupNames?.(oldNames => [...oldNames, createdGroupName])
             hideModal()
-            onChange(fieldName, createdGroupName)
+            onChange(dropdownFieldName, createdGroupName)
           }}
         >
           <FormikForm>
@@ -52,16 +77,20 @@ export default function GroupName(props: GroupNameProps): JSX.Element {
 
   return (
     <FormInput.Select
+      usePortal={usePortal}
+      selectProps={selectProps}
       label={label ?? getString('cv.monitoringSources.prometheus.groupName')}
       disabled={disabled}
       value={item}
-      name={fieldName}
+      name={dropdownFieldName}
       items={groupNames || []}
       onChange={selectedItem => {
         if (selectedItem?.label === addNewOption.label) {
+          onChange(dropdownFieldName, item as SelectOption)
           openModal()
+        } else {
+          onChange(dropdownFieldName, selectedItem)
         }
-        onChange(fieldName, selectedItem)
       }}
     />
   )

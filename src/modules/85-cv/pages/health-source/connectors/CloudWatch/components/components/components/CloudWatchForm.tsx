@@ -8,7 +8,7 @@ import {
 } from '@cv/pages/health-source/common/CustomMetricV2/CustomMetric.utils'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import HealthSourceServicesV2 from '@cv/pages/health-source/common/CustomMetricV2/components/HealthSourceServicesV2'
-import { GroupName } from '@cv/pages/health-source/common/GroupName/GroupName'
+import GroupName from '@cv/components/GroupName/GroupName'
 import type { CloudWatchFormType } from '../../../CloudWatch.types'
 import { getSelectedGroupItem } from '../../../CloudWatch.utils'
 import CloudWatchQuery from './components/CloudWatchQuery'
@@ -49,7 +49,9 @@ export default function CloudWatchForm(): JSX.Element {
                   }}
                 />
                 <GroupName
+                  usePortal
                   groupNames={customMetricGroupOptions}
+                  selectProps={{ popoverClassName: css.groupNamePopover }}
                   onChange={setFieldValue}
                   fieldName={`customMetrics.${selectedCustomMetricIndex}.groupName`}
                   item={getSelectedGroupItem(customMetrics, selectedCustomMetricIndex)}
