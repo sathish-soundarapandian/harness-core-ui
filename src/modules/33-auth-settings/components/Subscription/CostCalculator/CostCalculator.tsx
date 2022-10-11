@@ -59,8 +59,8 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   const { data: dataFetched, loading, error, refetch } = useFetchLicenseUseAndSummary(module.toUpperCase(), accountId)
   const usageAndLimitInfo = useGetUsageAndLimit(
     module.toUpperCase() as ModuleName,
-    dataFetched,
-    error,
+    error || undefined,
+    dataFetched || undefined,
     loading,
     refetch
   )

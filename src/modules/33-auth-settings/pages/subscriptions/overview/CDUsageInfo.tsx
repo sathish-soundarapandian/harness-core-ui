@@ -69,7 +69,13 @@ const ActiveServices: React.FC<{ subscribedService: number; activeService: numbe
 const CDUsageInfo: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { data: dataFetched, loading, error, refetch } = useFetchLicenseUseAndSummary(ModuleName.CD, accountId)
-  const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CE, dataFetched, error, loading, refetch)
+  const { limitData, usageData } = useGetUsageAndLimit(
+    ModuleName.CE,
+    error || undefined,
+    dataFetched || undefined,
+    loading,
+    refetch
+  )
   const isLoading = limitData.loadingLimit || usageData.loadingUsage
 
   if (isLoading) {

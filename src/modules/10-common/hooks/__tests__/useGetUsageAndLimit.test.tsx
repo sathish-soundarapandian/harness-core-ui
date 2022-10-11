@@ -18,7 +18,18 @@ import { useGetUsage } from 'services/ci'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetUsageAndLimit } from '../useGetUsageAndLimit'
+import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import type { ModuleType } from 'framework/featureStore/featureStoreUtil'
 
+enum status {
+  SUCCESS = 'SUCCESS',
+  FAILURE = 'FAILURE',
+  ERROR = 'ERROR'
+}
+enum LicenseType {
+  PAID = 'PAID',
+  TRIAL = 'TRIAL'
+}
 jest.mock('services/cd-ng')
 const useGetLicensesAndSummaryMock = useGetLicensesAndSummary as jest.MockedFunction<any>
 const useGetCDLicenseUsageForServiceInstancesMock = useGetCDLicenseUsageForServiceInstances as jest.MockedFunction<any>
@@ -113,7 +124,21 @@ describe('useGetUsageAndLimit', () => {
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper>{children}</TestWrapper>
     )
-    const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CI), { wrapper })
+    const data = {
+      status: status.SUCCESS,
+      data: {
+        totalDevelopers: 100,
+        edition: 'ENTERPRISE' as Editions,
+        licenseType: LicenseType.PAID,
+        moduleType: 'CI' as ModuleType,
+        maxExpiryTime: 1766494425000,
+        totalWorkload: 100,
+        totalServiceInstances: 1000
+      },
+      metaData: undefined,
+      correlationId: '002d4b3d-d594-4cf8-bb01-609a16b91a12'
+    }
+    const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CI, undefined, data, false), { wrapper })
     expect(result.current.limitData.limit?.ci?.totalDevelopers).toBe(100)
     expect(result.current.limitData.limit?.ff).toBeUndefined()
     expect(result.current.usageData.usage?.ci?.activeCommitters?.count).toBe(23)
@@ -131,10 +156,25 @@ describe('useGetUsageAndLimit', () => {
         }
       }
     })
+    const data = {
+      status: status.SUCCESS,
+      data: {
+        totalClientMAUs: 200,
+        totalFeatureFlagUnits: 300,
+        edition: 'ENTERPRISE' as Editions,
+        licenseType: LicenseType.PAID,
+        moduleType: 'CF' as ModuleType,
+        maxExpiryTime: 1766494425000,
+        totalWorkload: 100,
+        totalServiceInstances: 1000
+      },
+      metaData: undefined,
+      correlationId: '002d4b3d-d594-4cf8-bb01-609a16b91a12'
+    }
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper>{children}</TestWrapper>
     )
-    const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CF), { wrapper })
+    const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CF, undefined, data), { wrapper })
     expect(result.current.limitData.limit?.ci).toBeUndefined()
     expect(result.current.limitData.limit?.ff?.totalClientMAUs).toBe(200)
     expect(result.current.limitData.limit?.ff?.totalFeatureFlagUnits).toBe(300)
@@ -154,10 +194,24 @@ describe('useGetUsageAndLimit', () => {
         }
       }
     })
+    const data = {
+      status: status.SUCCESS,
+      data: {
+        totalSpendLimit: 1000,
+        edition: 'ENTERPRISE' as Editions,
+        licenseType: LicenseType.PAID,
+        moduleType: 'CE' as ModuleType,
+        maxExpiryTime: 1766494425000,
+        totalWorkload: 100,
+        totalServiceInstances: 1000
+      },
+      metaData: undefined,
+      correlationId: '002d4b3d-d594-4cf8-bb01-609a16b91a12'
+    }
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper>{children}</TestWrapper>
     )
-    const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CE), { wrapper })
+    const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CE, undefined, data), { wrapper })
     expect(result.current.limitData.limit?.ci).toBeUndefined()
     expect(result.current.limitData.limit?.ff).toBeUndefined()
     expect(result.current.limitData.limit?.ccm?.totalSpendLimit).toBe(1000)
@@ -178,10 +232,24 @@ describe('useGetUsageAndLimit', () => {
         }
       }
     })
+
+    const data = {
+      status: status.SUCCESS,
+      data: {
+        edition: 'ENTERPRISE' as Editions,
+        licenseType: LicenseType.PAID,
+        moduleType: 'CD' as ModuleType,
+        maxExpiryTime: 1766494425000,
+        totalWorkload: 100,
+        totalServiceInstances: 1000
+      },
+      metaData: undefined,
+      correlationId: '002d4b3d-d594-4cf8-bb01-609a16b91a12'
+    }
     const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper>{children}</TestWrapper>
     )
-    const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CD), { wrapper })
+    const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CD, undefined, data, false), { wrapper })
     expect(result.current.limitData.limit?.ci).toBeUndefined()
     expect(result.current.limitData.limit?.ff).toBeUndefined()
     expect(result.current.limitData.limit?.cd?.totalServiceInstances).toBe(1000)

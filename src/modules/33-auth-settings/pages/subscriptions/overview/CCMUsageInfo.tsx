@@ -45,7 +45,13 @@ const ActiveCloudSpend: React.FC<{
 const CCMUsageInfo: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { data: dataFetched, loading, error, refetch } = useFetchLicenseUseAndSummary(ModuleName.CE, accountId)
-  const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CE, dataFetched, error, loading, refetch)
+  const { limitData, usageData } = useGetUsageAndLimit(
+    ModuleName.CE,
+    error || undefined,
+    dataFetched || undefined,
+    loading,
+    refetch
+  )
   const { usageErrorMsg, refetchUsage, usage } = usageData
   const { limitErrorMsg, refetchLimit, limit } = limitData
 

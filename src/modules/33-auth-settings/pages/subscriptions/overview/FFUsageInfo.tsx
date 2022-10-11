@@ -117,7 +117,13 @@ const FFUsageInfo: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { data: dataFetched, loading, error, refetch } = useFetchLicenseUseAndSummary(ModuleName.CF, accountId)
-  const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CF, dataFetched, error, loading, refetch)
+  const { limitData, usageData } = useGetUsageAndLimit(
+    ModuleName.CF,
+    error || undefined,
+    dataFetched || undefined,
+    loading,
+    refetch
+  )
 
   const isLoading = limitData.loadingLimit || usageData.loadingUsage
 

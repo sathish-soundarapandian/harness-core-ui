@@ -44,7 +44,13 @@ const ActiveDevelopers: React.FC<ActiveDevelopersProps> = ({ subscribedUsers, ac
 const CIUsageInfo: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const { data: dataFetched, loading, error, refetch } = useFetchLicenseUseAndSummary(ModuleName.CI, accountId)
-  const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CI, dataFetched, error, loading, refetch)
+  const { limitData, usageData } = useGetUsageAndLimit(
+    ModuleName.CI,
+    error || undefined,
+    dataFetched || undefined,
+    loading,
+    refetch
+  )
   const isLoading = limitData.loadingLimit || usageData.loadingUsage
 
   if (isLoading) {

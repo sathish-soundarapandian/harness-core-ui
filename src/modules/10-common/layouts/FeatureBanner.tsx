@@ -174,7 +174,7 @@ export default function FeatureBanner(props: FeatureBannerProps): React.ReactEle
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON
   const usageAndLimitInfo = useGetUsageAndLimit(
     moduleName,
-    props.limitError,
+    props.limitError || undefined,
     props.data || undefined,
     props.loading,
     props.refetch
