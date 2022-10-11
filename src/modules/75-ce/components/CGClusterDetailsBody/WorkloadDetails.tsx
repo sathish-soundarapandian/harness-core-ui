@@ -130,8 +130,8 @@ const DistributionCell = (tableProps: CellProps<any>) => {
   const [spotVal, setSpotVal] = useState<number>(get(tableProps, 'row.original.spot_count', 0) as number)
   const [onDemandVal, setOnDemandVal] = useState<number>(get(tableProps, 'row.original.on_demand_count', 0) as number)
   const total = spotVal + onDemandVal
-  const spotPercentage = ((spotVal / total) * 100).toFixed(2)
-  const onDemandPercentage = ((onDemandVal / total) * 100).toFixed(2)
+  const spotPercentage = spotVal === 0 ? '0' : ((spotVal / total) * 100).toFixed(2)
+  const onDemandPercentage = onDemandVal === 0 ? '0' : ((onDemandVal / total) * 100).toFixed(2)
   return (
     <Container>
       <Layout.Horizontal spacing={'large'} className={css.distributionCell}>

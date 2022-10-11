@@ -72,14 +72,14 @@ const SchedulingAutostoppingTab: React.FC = () => {
                 {getString('ce.computeGroups.setup.schedulingTab.potentialSpendByScheduling')}
               </Text>
               <Text font={{ variation: FontVariation.H3 }} icon="money-icon" iconProps={{ size: 30 }}>
-                {formatCost(1688, { decimalPoints: 0 })}
+                {formatCost(1594.6, { decimalPoints: 2 })}
               </Text>
             </Layout.Vertical>
             <Layout.Vertical spacing={'medium'} className={css.whiteCard}>
               <Text font={{ variation: FontVariation.H6 }}>
                 {getString('ce.computeGroups.setup.schedulingTab.setupSchedulingSection.savingsPercentage')}
               </Text>
-              <Text font={{ variation: FontVariation.H3 }}>{'72.38%'}</Text>
+              <Text font={{ variation: FontVariation.H3 }}>{'68%'}</Text>
             </Layout.Vertical>
           </Layout.Horizontal>
         }
