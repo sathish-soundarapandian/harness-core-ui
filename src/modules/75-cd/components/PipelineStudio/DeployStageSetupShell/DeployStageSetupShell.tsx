@@ -129,22 +129,26 @@ export default function DeployStageSetupShell(): JSX.Element {
   const setDefaultServiceSchema = useCallback((): Promise<void> => {
     const stageData = produce(selectedStage, draft => {
       if (draft) {
-        set(draft, 'stage.spec', {
-          ...selectedStage?.stage?.spec,
-          serviceConfig: {
+        if (isNewService) {
+          set(draft, 'stage.spec.service', {
+            serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
+            serviceInputs: scope === Scope.PROJECT ? undefined : RUNTIME_INPUT_VALUE
+          })
+        } else {
+          set(draft, 'stage.spec.serviceConfig', {
             serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
             serviceDefinition: {
               spec: {
                 variables: []
               }
             }
-          }
-        })
+          })
+        }
       }
     })
 
     return debounceUpdateStage(stageData?.stage)
-  }, [debounceUpdateStage, scope, selectedStage])
+  }, [debounceUpdateStage, scope, selectedStage, isNewService])
 
   React.useEffect(() => {
     const sectionId = (query as any).sectionId || ''
@@ -420,7 +424,9 @@ export default function DeployStageSetupShell(): JSX.Element {
           }
           panel={
             isNewService ? (
-              <DeployServiceEntitySpecifications>{navBtns}</DeployServiceEntitySpecifications>
+              <DeployServiceEntitySpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
+                {navBtns}
+              </DeployServiceEntitySpecifications>
             ) : (
               <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
                 {navBtns}
