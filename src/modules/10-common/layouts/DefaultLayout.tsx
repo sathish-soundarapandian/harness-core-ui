@@ -16,7 +16,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePage } from '@common/pages/pageContext/PageProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
-import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
 import FeatureBanner from './FeatureBanner'
 import css from './layouts.module.scss'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -34,7 +34,7 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
     loading: loadingLimit,
     error: limitError,
     refetch: refetchLimit
-  } = fetchLicenseUseAndSummary(moduleName, accountId)
+  } = useFetchLicenseUseAndSummary(moduleName, accountId)
   useEffect(() => {
     if (pageName) {
       identifyUser(currentUserInfo.email)

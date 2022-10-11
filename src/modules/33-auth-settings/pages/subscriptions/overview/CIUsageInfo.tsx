@@ -14,7 +14,7 @@ import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { ModuleName } from 'framework/types/ModuleName'
 import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
-import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
 
 interface ActiveDevelopersProps {
   subscribedUsers: number
@@ -43,7 +43,7 @@ const ActiveDevelopers: React.FC<ActiveDevelopersProps> = ({ subscribedUsers, ac
 
 const CIUsageInfo: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
-  const { data: dataFetched, loading, error, refetch } = fetchLicenseUseAndSummary(ModuleName.CI, accountId)
+  const { data: dataFetched, loading, error, refetch } = useFetchLicenseUseAndSummary(ModuleName.CI, accountId)
   const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CI, dataFetched, error, loading, refetch)
   const isLoading = limitData.loadingLimit || usageData.loadingUsage
 

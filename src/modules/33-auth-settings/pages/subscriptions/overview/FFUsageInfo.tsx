@@ -15,7 +15,7 @@ import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ModuleName } from 'framework/types/ModuleName'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
-import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
 
 export interface FFUsageInfoProps {
   subscribedUsers: number
@@ -116,7 +116,7 @@ const FeatureFlags: React.FC<FeatureFlagsProps> = ({ featureFlags, error, refetc
 const FFUsageInfo: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { data: dataFetched, loading, error, refetch } = fetchLicenseUseAndSummary(ModuleName.CF, accountId)
+  const { data: dataFetched, loading, error, refetch } = useFetchLicenseUseAndSummary(ModuleName.CF, accountId)
   const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CF, dataFetched, error, loading, refetch)
 
   const isLoading = limitData.loadingLimit || usageData.loadingUsage

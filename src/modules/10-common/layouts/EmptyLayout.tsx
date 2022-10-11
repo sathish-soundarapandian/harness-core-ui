@@ -9,7 +9,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { TrialLicenseBanner } from '@common/layouts/TrialLicenseBanner'
-import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
 import FeatureBanner from './FeatureBanner'
 import css from './layouts.module.scss'
 import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
@@ -24,7 +24,7 @@ export function EmptyLayout(props: React.PropsWithChildren<unknown>): React.Reac
     loading: loadingLimit,
     error: limitError,
     refetch: refetchLimit
-  } = fetchLicenseUseAndSummary(moduleName, accountId)
+  } = useFetchLicenseUseAndSummary(moduleName, accountId)
   return (
     <div className={css.main} data-layout="empty">
       {module && (
