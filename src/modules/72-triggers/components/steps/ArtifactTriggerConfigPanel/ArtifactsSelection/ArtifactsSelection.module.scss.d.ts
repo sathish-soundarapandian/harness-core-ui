@@ -8,22 +8,12 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly addArtifact: string
-  readonly artifactId: string
   readonly artifactList: string
   readonly borderRadius: string
-  readonly connectorDialog: string
   readonly connectorName: string
   readonly connectorNameField: string
-  readonly crossButton: string
-  readonly editForm: string
   readonly listHeader: string
-  readonly modal: string
   readonly noWrap: string
-  readonly paddingVertical: string
-  readonly primaryArtifactRef: string
   readonly rowItem: string
-  readonly sideCarBtn: string
-  readonly sidecarList: string
-  readonly type: string
 }
 export default styles

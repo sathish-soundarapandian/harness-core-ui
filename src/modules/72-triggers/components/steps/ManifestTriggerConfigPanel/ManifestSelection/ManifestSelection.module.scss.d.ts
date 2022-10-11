@@ -8,23 +8,14 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly addManifest: string
-  readonly addManifestPathBtn: string
-  readonly addValuesYaml: string
   readonly borderRadius: string
-  readonly columnId: string
   readonly connectorName: string
   readonly connectorNameField: string
   readonly createConnectorWizard: string
   readonly crossIcon: string
   readonly listHeader: string
   readonly manifestList: string
-  readonly manifestLocation: string
   readonly modal: string
-  readonly noWrap: string
   readonly rowItem: string
-  readonly type: string
-  readonly valuesList: string
-  readonly valuesListItem: string
-  readonly valuesPathList: string
 }
 export default styles

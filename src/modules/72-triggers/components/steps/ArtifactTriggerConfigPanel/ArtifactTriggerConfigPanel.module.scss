@@ -26,19 +26,4 @@
     box-shadow: 0px 0px 1px rgb(40 41 61 / 8%), 0px 0.5px 2px rgb(96 97 112 / 16%);
     margin-bottom: var(--spacing-xlarge);
   }
-
-  .footer {
-    position: fixed;
-    bottom: 0px;
-    width: 100%;
-    background-color: var(--white);
-    z-index: 1;
-    box-shadow: 4px 0px 2px 0 rgba(0, 0, 0, 0.13);
-  }
-}
-
-.modal {
-  [class*='bp3-dialog-header'] button {
-    z-index: 2;
-  }
 }

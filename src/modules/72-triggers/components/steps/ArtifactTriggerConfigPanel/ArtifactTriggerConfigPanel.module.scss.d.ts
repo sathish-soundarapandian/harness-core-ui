@@ -8,10 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly artifactTriggerConfigContainer: string
-  readonly footer: string
   readonly formContent: string
   readonly formContentTitle: string
-  readonly modal: string
   readonly nameIdDescriptionTags: string
 }
 export default styles
