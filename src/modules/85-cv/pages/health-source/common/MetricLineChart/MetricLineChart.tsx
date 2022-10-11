@@ -5,29 +5,35 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import type { GetDataError } from 'restful-react'
 import { Container, NoDataCard, Icon, Text } from '@wings-software/uicore'
 import { FontVariation } from '@harness/design-system'
-import Highcharts from 'highcharts'
+import Highcharts, { SeriesLineOptions } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { useStrings } from 'framework/strings'
 import type { Failure } from 'services/cd-ng'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import noDataImage from '@cv/assets/noData.svg'
-import { chartsConfig } from './ChartConfig'
+import { getChartSeriesValues } from './MetricLineChart.utils'
 import css from './MetricLineChart.module.scss'
 
 export default function MetricLineChart({
   options,
   loading,
-  error
+  error,
+  series
 }: {
-  options: any[]
+  options?: any[]
   loading: boolean
   error: GetDataError<Failure | Error> | null
+  series?: SeriesLineOptions[]
 }): JSX.Element {
   const { getString } = useStrings()
+
+  const chartSeriesValues = useMemo(() => {
+    return getChartSeriesValues(series, options)
+  }, [options, series])
 
   if (loading) {
     return (
@@ -45,24 +51,17 @@ export default function MetricLineChart({
     )
   }
 
+  if (!options?.length && !series?.length) {
+    return (
+      <Container className={css.noDataContainer}>
+        <NoDataCard message={getString('cv.changeSource.noDataAvaiableForCard')} image={noDataImage} />
+      </Container>
+    )
+  }
+
   return (
     <Container>
-      {options.length ? (
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={chartsConfig([
-            {
-              name: '',
-              data: options,
-              type: 'line'
-            }
-          ])}
-        />
-      ) : (
-        <Container className={css.noDataContainer}>
-          <NoDataCard message={getString('cv.changeSource.noDataAvaiableForCard')} image={noDataImage} />
-        </Container>
-      )}
+      {(options?.length || series) && <HighchartsReact highcharts={Highcharts} options={chartSeriesValues} />}
     </Container>
   )
 }

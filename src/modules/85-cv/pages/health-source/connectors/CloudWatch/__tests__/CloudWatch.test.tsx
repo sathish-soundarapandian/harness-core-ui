@@ -8,6 +8,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import CloudWatch from '../CloudWatch'
 import {
   emptyHealthSource,
+  emptySampleDataMockResponse,
   metricPack,
   mockData,
   sampleDataMockResponse,
@@ -427,6 +428,173 @@ describe('CloudWatch', () => {
     expect(refetch).toHaveBeenCalled()
 
     await waitFor(() => {
+      expect(screen.getByText(/cv.monitoringSources.prometheus.validation.recordCount/)).toBeInTheDocument()
+      expect(container.querySelector('.metricChartHolder')).toBeInTheDocument()
+    })
+  })
+
+  test('should show no data available, if response returns empty data for sample data', async () => {
+    const refetch = jest.fn()
+
+    const getRegionsSpy = jest.spyOn(cvService, 'useGetSampleDataForQuery')
+    getRegionsSpy.mockReturnValue({
+      data: { data: emptySampleDataMockResponse },
+      loading: false,
+      absolutePath: '',
+      cancel: () => Promise.resolve(void 0),
+      refetch: refetch,
+      response: null,
+      error: null
+    })
+
+    const { container } = render(
+      <TestWrapper pathParams={testPathParams}>
+        <CloudWatch data={emptyHealthSource} onSubmit={() => Promise.resolve()} />
+      </TestWrapper>
+    )
+
+    act(() => {
+      userEvent.click(screen.getByTestId('addCustomMetricButton'))
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/)).toBeInTheDocument()
+    })
+
+    expect(screen.getByText(/cv.healthSource.connectors.CloudWatch.validationMessage.submitQuery/)).toBeInTheDocument()
+    const fetchDataButton = screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/)
+
+    expect(fetchDataButton).toBeInTheDocument()
+
+    act(() => {
+      userEvent.click(fetchDataButton)
+    })
+
+    expect(refetch).not.toHaveBeenCalled()
+
+    const regionDropdown = screen.getByPlaceholderText(
+      '- cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder -'
+    )
+
+    act(() => {
+      userEvent.click(regionDropdown)
+    })
+
+    await waitFor(() => {
+      expect(document.querySelector('ul.bp3-menu')).toBeInTheDocument()
+      expect(screen.getByText(/region 1/)).toBeInTheDocument()
+    })
+
+    act(() => {
+      userEvent.click(screen.getByText('region 1'))
+    })
+
+    expect(regionDropdown).toHaveValue('region 1')
+
+    const expressionInput = container.querySelector('textarea[name="customMetrics.0.expression"]')
+
+    expect(expressionInput).toBeInTheDocument()
+
+    act(() => {
+      userEvent.type(expressionInput!, 'SELECT *')
+    })
+
+    expect(expressionInput).toHaveValue('SELECT *')
+
+    await waitFor(() => {
+      expect(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/)).not.toBeDisabled()
+    })
+
+    act(() => {
+      userEvent.click(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/))
+    })
+
+    expect(refetch).toHaveBeenCalled()
+
+    await waitFor(() => {
+      expect(screen.getByText(/cv.changeSource.noDataAvaiableForCard/)).toBeInTheDocument()
+    })
+  })
+  test('should test query section features', async () => {
+    const refetch = jest.fn()
+
+    const getRegionsSpy = jest.spyOn(cvService, 'useGetSampleDataForQuery')
+    getRegionsSpy.mockReturnValue({
+      data: { data: sampleDataMockResponse },
+      loading: false,
+      absolutePath: '',
+      cancel: () => Promise.resolve(void 0),
+      refetch: refetch,
+      response: null,
+      error: null
+    })
+
+    const { container } = render(
+      <TestWrapper pathParams={testPathParams}>
+        <CloudWatch data={emptyHealthSource} onSubmit={() => Promise.resolve()} />
+      </TestWrapper>
+    )
+
+    act(() => {
+      userEvent.click(screen.getByTestId('addCustomMetricButton'))
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/)).toBeInTheDocument()
+    })
+
+    expect(screen.getByText(/cv.healthSource.connectors.CloudWatch.validationMessage.submitQuery/)).toBeInTheDocument()
+    const fetchDataButton = screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/)
+
+    expect(fetchDataButton).toBeInTheDocument()
+
+    act(() => {
+      userEvent.click(fetchDataButton)
+    })
+
+    expect(refetch).not.toHaveBeenCalled()
+
+    const regionDropdown = screen.getByPlaceholderText(
+      '- cv.healthSource.connectors.CloudWatch.awsSelectorPlaceholder -'
+    )
+
+    act(() => {
+      userEvent.click(regionDropdown)
+    })
+
+    await waitFor(() => {
+      expect(document.querySelector('ul.bp3-menu')).toBeInTheDocument()
+      expect(screen.getByText(/region 1/)).toBeInTheDocument()
+    })
+
+    act(() => {
+      userEvent.click(screen.getByText('region 1'))
+    })
+
+    expect(regionDropdown).toHaveValue('region 1')
+
+    const expressionInput = container.querySelector('textarea[name="customMetrics.0.expression"]')
+
+    expect(expressionInput).toBeInTheDocument()
+
+    act(() => {
+      userEvent.type(expressionInput!, 'SELECT *')
+    })
+
+    expect(expressionInput).toHaveValue('SELECT *')
+
+    await waitFor(() => {
+      expect(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/)).not.toBeDisabled()
+    })
+
+    act(() => {
+      userEvent.click(screen.getByText(/cv.healthSource.connectors.CloudWatch.fetchDataButtonText/))
+    })
+
+    expect(refetch).toHaveBeenCalled()
+
+    await waitFor(() => {
+      expect(screen.getByText(/cv.monitoringSources.prometheus.validation.recordCount/)).toBeInTheDocument()
       expect(container.querySelector('.metricChartHolder')).toBeInTheDocument()
     })
   })

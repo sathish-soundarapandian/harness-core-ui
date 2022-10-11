@@ -12,7 +12,9 @@ import {
   awsRegionsResponse,
   longInvalidName,
   metricPackCall,
-  monitoredServicePostCall
+  monitoredServicePostCall,
+  sampleDataCall,
+  sampleDataMockResponse
 } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 
 describe('Cloud watch health source without feature flag enabled tests', () => {
@@ -82,6 +84,7 @@ describe('Cloud watch health source', () => {
   it('should add cloud watch health source, if correct values are given', () => {
     cy.intercept('GET', metricPackCall, metricPackResponse).as('MetricPackCall')
     cy.intercept('GET', awsRegionsCall, awsRegionsResponse).as('regionsCall')
+    cy.intercept('GET', sampleDataCall, sampleDataMockResponse).as('sampleDataCall')
 
     cy.addNewMonitoredServiceWithServiceAndEnv()
 
@@ -101,7 +104,15 @@ describe('Cloud watch health source', () => {
 
     cy.get('input[name="customMetrics.0.metricName"]').should('have.value', 'customMetric 1')
 
-    cy.get('textarea[name="customMetrics.0.expression"]').type('SELECT *')
+    cy.get('textarea[name="customMetrics.0.expression"]').type('SELECT * test')
+
+    cy.contains('button', 'Fetch data').should('exist')
+    cy.contains('button', 'Fetch data').should('not.be.disabled')
+    cy.contains('button', 'Fetch data').click({ force: true })
+
+    cy.findByText('Current query yields too many records. Please change query to yield one record.').should('exist')
+
+    cy.get('textarea[name="customMetrics.0.expression"]').clear().type('SELECT *')
 
     cy.get('input[name="customMetrics.0.groupName"]').click()
     cy.contains('p', '+ Add New').click({ force: true })

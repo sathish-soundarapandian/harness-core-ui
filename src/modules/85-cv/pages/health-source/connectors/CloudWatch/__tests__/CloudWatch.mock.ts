@@ -412,9 +412,64 @@ export const sampleDataMockResponse = {
       StatusCode: 'Complete',
       Timestamps: [1662468780, 1662468600, 1662468540],
       Values: [3.5346635639371526, 0.04333333333333329, 0.2668356951002362]
+    },
+    {
+      Id: 'q2',
+      Label: 'q2',
+      StatusCode: 'Complete',
+      Timestamps: [1662468780, 1662468600, 1662468540],
+      Values: [2.5346635639371526, 1.0433333333333332, 3.266835695100236]
     }
   ]
 }
+
+export const emptySampleDataMockResponse = {
+  Messages: [],
+  MetricDataResults: []
+}
+
+export const sampleDataForTest = {
+  data: {
+    Messages: [],
+    MetricDataResults: [
+      {
+        Id: 'q1',
+        Label: 'q1',
+        StatusCode: 'Complete',
+        Timestamps: [1662468780, 1662468600, 1662468540],
+        Values: [3.5346635639371526, 0.04333333333333329, 0.2668356951002362]
+      },
+      {
+        Id: 'q2',
+        Label: 'q2',
+        StatusCode: 'Complete',
+        Timestamps: [1662468780, 1662468600, 1662468540],
+        Values: [2.5346635639371526, 1.0433333333333332, 3.266835695100236]
+      }
+    ]
+  }
+}
+
+export const chartSeriesValue = [
+  {
+    data: [
+      { x: 1662468780000, y: 3.5346635639371526 },
+      { x: 1662468600000, y: 0.04333333333333329 },
+      { x: 1662468540000, y: 0.2668356951002362 }
+    ],
+    type: 'line',
+    name: 'q1'
+  },
+  {
+    data: [
+      { x: 1662468780000, y: 2.5346635639371526 },
+      { x: 1662468600000, y: 1.0433333333333332 },
+      { x: 1662468540000, y: 3.266835695100236 }
+    ],
+    type: 'line',
+    name: 'q2'
+  }
+]
 
 export const testPathParams = {
   accountId: 'accountId',

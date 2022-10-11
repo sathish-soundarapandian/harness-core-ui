@@ -21,7 +21,7 @@ export default function AWSRegionSelector(): JSX.Element {
   const items = loading ? [] : regionDropdownItems
 
   return (
-    <CardWithOuterTitle title={getString('cd.serviceDashboard.awsRegion')}>
+    <CardWithOuterTitle title={getString('cd.serviceDashboard.awsRegion')} dataTooltipId="cloudWatchMetricsAWSRegion">
       <Container width={300}>
         <FormInput.Select
           className={css.awsRegionSelector}

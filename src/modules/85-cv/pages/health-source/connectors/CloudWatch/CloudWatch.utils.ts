@@ -1,4 +1,5 @@
 import type { SelectOption } from '@harness/uicore'
+import type { SeriesLineOptions } from 'highcharts'
 import { cloneDeep } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type {
@@ -22,6 +23,7 @@ import type {
   CloudWatchSetupSource,
   CreatePayloadUtilParams,
   HealthSourceListData,
+  IsMultiRecordDataErrorParameters,
   MetricSamplePointsData
 } from './CloudWatch.types'
 import {
@@ -218,7 +220,7 @@ export const getDefaultValuesForNewCustomMetric = (): CloudWatchMetricDefinition
   return cloneDeep(newCloudWatchCustomMetricValues)
 }
 
-const isRequiredSampleDataPresent = (sampleData: MetricSamplePointsData | null): boolean => {
+export const isRequiredSampleDataPresent = (sampleData: MetricSamplePointsData | null): boolean => {
   return Boolean(
     sampleData &&
       sampleData?.MetricDataResults &&
@@ -227,20 +229,34 @@ const isRequiredSampleDataPresent = (sampleData: MetricSamplePointsData | null):
   )
 }
 
-export const getSampleDataHightchartPoints = (sampleData: MetricSamplePointsData | null): Array<Array<number>> => {
-  const options: Array<Array<number>> = []
+export const getSampleDataHightchartPoints = (sampleData: MetricSamplePointsData | null): SeriesLineOptions[] => {
+  const options: SeriesLineOptions[] = []
 
   if (!isRequiredSampleDataPresent(sampleData) || !sampleData) {
     return options
   }
 
-  const [pointsData] = sampleData.MetricDataResults
-
-  if (pointsData && pointsData?.Timestamps) {
-    pointsData?.Timestamps?.forEach((timeStamp, index) => {
-      options.push([timeStamp * 1000, pointsData?.Values[index]])
-    })
-  }
+  sampleData.MetricDataResults.forEach(pointsData => {
+    if (pointsData && pointsData?.Timestamps) {
+      const points: SeriesLineOptions['data'] = []
+      pointsData?.Timestamps?.forEach((timeStamp, index) => {
+        points.push({ x: timeStamp * 1000, y: pointsData?.Values[index] })
+      })
+      options.push({
+        data: points,
+        type: 'line',
+        name: pointsData.Label
+      })
+    }
+  })
 
   return options
+}
+
+export const isMultiRecordDataError = (params: IsMultiRecordDataErrorParameters): boolean => {
+  const { isDataPressent, isMultipleSampleData, isUpdatedExpression, loading, expression, isQueryExectuted } = params
+
+  return Boolean(
+    expression && isQueryExectuted && !loading && isDataPressent && isMultipleSampleData && isUpdatedExpression
+  )
 }

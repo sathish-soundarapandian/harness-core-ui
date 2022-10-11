@@ -1,10 +1,35 @@
 const accountId = 'accountId'
+const project = 'project1'
+const org = 'default'
 
 export const longInvalidName = Array.from({ length: 63 }).fill('a').join('')
 
 export const awsRegionsCall = `/cv/api/cloudwatch/metrics/regions?routingId=${accountId}`
+export const sampleDataCall = `/cv/api/cloudwatch/metrics/fetch-sample-data?*`
 export const metricPackCall = '/cv/api/metric-pack?*&dataSourceType=CLOUDWATCH_METRICS'
 export const monitoredServicePostCall = `/cv/api/monitored-service?routingId=${accountId}&accountId=${accountId}`
+
+export const sampleDataMockResponse = {
+  data: {
+    Messages: [],
+    MetricDataResults: [
+      {
+        Id: 'q1',
+        Label: 'q1',
+        StatusCode: 'Complete',
+        Timestamps: [1662468780, 1662468600, 1662468540],
+        Values: [3.5346635639371526, 0.04333333333333329, 0.2668356951002362]
+      },
+      {
+        Id: 'q2',
+        Label: 'q2',
+        StatusCode: 'Complete',
+        Timestamps: [1662468780, 1662468600, 1662468540],
+        Values: [2.5346635639371526, 1.04333333333333329, 3.2668356951002362]
+      }
+    ]
+  }
+}
 
 export const awsRegionsResponse = {
   status: 'SUCCESS',

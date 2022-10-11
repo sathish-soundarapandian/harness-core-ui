@@ -42,3 +42,5 @@ export const newCloudWatchCustomMetricValues: CloudWatchMetricDefinition = {
     }
   }
 }
+
+export const multipleRecordsError = 'multipleRecordsError' as keyof CloudWatchFormType
