@@ -316,10 +316,6 @@ export function useGetUsageAndLimit(
   loading?: boolean,
   refetch?: () => void
 ): UsageAndLimitReturn {
-  console.log(data, 'hello')
-  console.log(limitError, 'hello2')
-  console.log(loading, 'hello3')
-  console.log(refetch, 'hello4')
   const limit = useGetLimit(module, limitError, data, loading, refetch)
   const usage = useGetUsage(module)
   return { limitData: limit, usageData: usage }

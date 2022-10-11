@@ -17,14 +17,18 @@ import { useGetLicenseUsage } from 'services/cf'
 import { useGetUsage } from 'services/ci'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { ModuleName } from 'framework/types/ModuleName'
-import { useGetUsageAndLimit } from '../useGetUsageAndLimit'
 import type { ModuleType } from 'framework/featureStore/featureStoreUtil'
+import { useGetUsageAndLimit } from '../useGetUsageAndLimit'
 
 enum status {
   SUCCESS = 'SUCCESS',
   FAILURE = 'FAILURE',
   ERROR = 'ERROR'
 }
+enum Editions {
+  ENTERPRISE = 'ENTERPRISE'
+}
+
 enum LicenseType {
   PAID = 'PAID',
   TRIAL = 'TRIAL'
