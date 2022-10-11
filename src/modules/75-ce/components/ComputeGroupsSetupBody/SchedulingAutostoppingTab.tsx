@@ -72,7 +72,7 @@ const SchedulingAutostoppingTab: React.FC = () => {
                 {getString('ce.computeGroups.setup.schedulingTab.potentialSpendByScheduling')}
               </Text>
               <Text font={{ variation: FontVariation.H3 }} icon="money-icon" iconProps={{ size: 30 }}>
-                {formatCost(16500, { decimalPoints: 0 })}
+                {formatCost(1688, { decimalPoints: 0 })}
               </Text>
             </Layout.Vertical>
             <Layout.Vertical spacing={'medium'} className={css.whiteCard}>

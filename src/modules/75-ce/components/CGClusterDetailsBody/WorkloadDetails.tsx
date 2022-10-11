@@ -298,12 +298,12 @@ const WorkloadDetailsTable: React.FC = () => {
         accessor: 'someother',
         Header: getString('ce.recommendation.sideNavText'),
         width: '15%',
-        Cell: () => (
+        Cell: tableProps => (
           <Text
             rightIcon="main-share"
             rightIconProps={{ size: 12, color: Color.PRIMARY_7 }}
             color={Color.PRIMARY_7}
-          >{`Save upto $323`}</Text>
+          >{`Save upto ${formatCost(get(tableProps, 'row.original.predicted_savings', 0) as number)}`}</Text>
         )
       }
     ],

@@ -257,7 +257,7 @@ const ClusterTable: React.FC = () => {
         width: '12%',
         Cell: (tableProps: any) => (
           <Text font={{ variation: FontVariation.LEAD }}>
-            {formatCost(get(tableProps, 'row.original.nodes.total_spend', 0), { decimalPoints: 2 })}
+            {formatCost(get(tableProps, 'row.original.cost.spend', 0), { decimalPoints: 2 })}
           </Text>
         ),
         disableSortBy: true

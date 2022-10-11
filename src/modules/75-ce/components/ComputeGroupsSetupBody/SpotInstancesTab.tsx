@@ -128,7 +128,7 @@ const SpotInstancesTab: React.FC = () => {
                     iconProps={{ size: 30 }}
                     color={Color.GREEN_700}
                   >
-                    {formatCost(16500, { decimalPoints: 0 })}
+                    {formatCost(1688, { decimalPoints: 0 })}
                   </Text>
                 </Layout.Vertical>
               </Layout.Vertical>

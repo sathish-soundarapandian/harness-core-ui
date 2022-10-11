@@ -118,7 +118,7 @@ const CGDataRow: React.FC<CGDataRowProps> = ({ data }) => {
           data={nodesData}
           title={{
             style: { fontSize: '20px', fontWeight: '700' },
-            text: data.nodes.total.toString()
+            text: (data.nodes.total || 0).toString()
           }}
         />
       </Container>

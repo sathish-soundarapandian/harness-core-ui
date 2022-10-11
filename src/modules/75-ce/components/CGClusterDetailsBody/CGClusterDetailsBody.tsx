@@ -119,7 +119,7 @@ const CGClusterDetailsBody: React.FC<CGClusterDetailsBodyProps> = ({ data }) => 
             <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_600}>
               {getString('ce.computeGroups.clusterSpend')}
             </Text>
-            <Text font={{ variation: FontVariation.H3 }}>{formatCost(get(data, 'nodes.total_spend', 0))}</Text>
+            <Text font={{ variation: FontVariation.H3 }}>{formatCost(get(data, 'cost.spend', 0))}</Text>
             <Text font={{ variation: FontVariation.SMALL }}>{getString('ce.commitmentOrchestration.monthToDate')}</Text>
           </Layout.Vertical>
         </Container>
