@@ -11,6 +11,12 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as useGetUsageAndLimit from '@common/hooks/useGetUsageAndLimit'
 import CCMUsageInfo from '../overview/CCMUsageInfo'
 
+const mockDetailResponse = {}
+
+jest.mock('services/cd-ng', () => ({
+  useGetLicensesAndSummary: jest.fn(() => mockDetailResponse)
+}))
+
 const useGetUsageAndLimitReturnMock = {
   limitData: {
     limit: {

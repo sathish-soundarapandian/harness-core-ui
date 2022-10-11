@@ -11,6 +11,12 @@ import { TestWrapper } from '@common/utils/testUtils'
 
 import CDUsageInfo from '../overview/CDUsageInfo'
 
+const mockDetailResponse = {}
+
+jest.mock('services/cd-ng', () => ({
+  useGetLicensesAndSummary: jest.fn(() => mockDetailResponse)
+}))
+
 jest.mock('@common/hooks/useGetUsageAndLimit', () => {
   return {
     useGetUsageAndLimit: () => {

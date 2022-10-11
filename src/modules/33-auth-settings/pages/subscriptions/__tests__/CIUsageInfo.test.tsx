@@ -10,6 +10,11 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import CIUsageInfo from '../overview/CIUsageInfo'
+const mockDetailResponse = {}
+
+jest.mock('services/cd-ng', () => ({
+  useGetLicensesAndSummary: jest.fn(() => mockDetailResponse)
+}))
 
 jest.mock('@common/hooks/useGetUsageAndLimit', () => {
   return {

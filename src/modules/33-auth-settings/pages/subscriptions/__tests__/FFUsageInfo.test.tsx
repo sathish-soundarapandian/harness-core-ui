@@ -13,6 +13,12 @@ import FFUsageInfo from '../overview/FFUsageInfo'
 
 jest.mock('moment', () => () => ({ format: () => 'DUMMY_DATE' }))
 
+const mockDetailResponse = {}
+
+jest.mock('services/cd-ng', () => ({
+  useGetLicensesAndSummary: jest.fn(() => mockDetailResponse)
+}))
+
 jest.mock('@common/hooks/useGetUsageAndLimit', () => {
   return {
     useGetUsageAndLimit: () => {
