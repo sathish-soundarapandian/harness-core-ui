@@ -1,0 +1,9 @@
+.supportTemplateImport {
+  :global {
+    .bp3-menu {
+      li:first-child {
+        border-bottom: 1px solid grey !important;
+      }
+    }
+  }
+}

@@ -10,6 +10,7 @@ import { Position } from '@blueprintjs/core'
 import { Button, ButtonVariation } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { merge, noop } from 'lodash-es'
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { getAllowedTemplateTypes, TemplateType } from '@templates-library/utils/templatesUtils'
 import routes from '@common/RouteDefinitions'
@@ -29,7 +30,7 @@ import { FeatureWarningTooltip } from '@common/components/FeatureWarning/Feature
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-
+import css from './NewTemplatePopover.module.scss'
 export interface NewTemplatePopoverWrapperProps {
   onImportTemplateClick?: () => void
 }
@@ -111,6 +112,7 @@ function NewTemplatePopoverWrapper({ onImportTemplateClick }: NewTemplatePopover
       disabled={!canEdit || !templatesEnabled}
       setMenuOpen={setMenuOpen}
       usePortal={false}
+      className={cx({ [css.supportTemplateImport]: supportingTemplatesGitx })}
     >
       <Button
         variation={ButtonVariation.PRIMARY}
