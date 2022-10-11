@@ -11,56 +11,23 @@ import userEvent from '@testing-library/user-event'
 import { TestWrapper, findDialogContainer } from '@common/utils/testUtils'
 import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
 import * as useGetUsageAndLimit from '@common/hooks/useGetUsageAndLimit'
-import { useRetrieveProductPrices, useCreateFfSubscription, useRetrieveRecommendation } from 'services/cd-ng/index'
 import { useSubscribeModal } from '../useSubscriptionModal'
 
-jest.mock('services/cd-ng')
-const useRetrieveProductPricesMock = useRetrieveProductPrices as jest.MockedFunction<any>
-const useRetrieveRecommendationMock = useRetrieveRecommendation as jest.MockedFunction<any>
-
-const subscriptionData = {
-  clientSecret: 'pi_3L9E7qIqk5P9Eha30B1Vpt0Z_secret_qXFya58HXLP0e3rIQEVzK3iyd'
-}
-const createNewSubscriptionMock = jest.fn(() => Promise.resolve({ data: subscriptionData }))
-
-const useCreateFfSubscriptionMock = useCreateFfSubscription as jest.MockedFunction<any>
-useCreateFfSubscriptionMock.mockImplementation(() => {
-  return {
-    mutate: createNewSubscriptionMock,
-    loading: false
-  }
-})
-
-const useGetUsageAndLimitReturnMock = {
-  limitData: {
-    limit: {
-      ff: {
-        totalFeatureFlagUnits: 250,
-        totalClientMAUs: 100000
-      }
-    }
-  },
-  usageData: {
-    usage: {
-      ff: {
-        activeFeatureFlagUsers: {
-          count: 20
-        },
-        activeClientMAUs: {
-          count: 10000
-        }
-      }
-    }
-  }
-}
-
-jest.spyOn(useGetUsageAndLimit, 'useGetUsageAndLimit').mockReturnValue(useGetUsageAndLimitReturnMock)
-
-const defaultLicenseStoreValues = {
-  licenseInformation: {
-    CF: {
-      edition: Editions.FREE
-    }
+const mockDetailResponse = {
+  loading: false,
+  refetch: jest.fn(),
+  data: {
+    correlationId: '2e4bc08d-9ffb-4d6f-8541-f1f82d27af8e',
+    data: {
+      edition: 'ENTERPRISE',
+      licenseType: 'PAID',
+      moduleType: 'CD',
+      maxExpiryTime: 1766494425000,
+      totalWorkload: 100,
+      totalServiceInstances: 0
+    },
+    metaData: null,
+    status: 'SUCCESS'
   }
 }
 
@@ -150,21 +117,62 @@ const priceData = {
     ]
   }
 }
-useRetrieveProductPricesMock.mockImplementation(() => {
-  return {
-    refetch: jest.fn(),
-    data: priceData,
-    loading: false
-  }
-})
+const mockDetailResponseProductPrices = {
+  refetch: jest.fn(),
+  data: priceData,
+  loading: false
+}
 
-useRetrieveRecommendationMock.mockImplementation(() => {
-  return {
-    refetch: jest.fn(),
-    data: null,
-    loading: false
+const mockDetailResponseRecommendation = {
+  refetch: jest.fn(),
+  data: null,
+  loading: false
+}
+const subscriptionData = {
+  clientSecret: 'pi_3L9E7qIqk5P9Eha30B1Vpt0Z_secret_qXFya58HXLP0e3rIQEVzK3iyd'
+}
+const mutate = jest.fn(() => Promise.resolve({ data: subscriptionData }))
+jest.mock('services/cd-ng/index', () => ({
+  useRetrieveProductPrices: jest.fn(() => mockDetailResponseProductPrices),
+  useRetrieveRecommendation: jest.fn(() => mockDetailResponseRecommendation),
+  useGetLicensesAndSummary: jest.fn(() => mockDetailResponse),
+  useCreateFfSubscription: jest.fn(() => {
+    mutate
+  })
+}))
+
+const useGetUsageAndLimitReturnMock = {
+  limitData: {
+    limit: {
+      ff: {
+        totalFeatureFlagUnits: 250,
+        totalClientMAUs: 100000
+      }
+    }
+  },
+  usageData: {
+    usage: {
+      ff: {
+        activeFeatureFlagUsers: {
+          count: 20
+        },
+        activeClientMAUs: {
+          count: 10000
+        }
+      }
+    }
   }
-})
+}
+
+jest.spyOn(useGetUsageAndLimit, 'useGetUsageAndLimit').mockReturnValue(useGetUsageAndLimitReturnMock)
+
+const defaultLicenseStoreValues = {
+  licenseInformation: {
+    CF: {
+      edition: Editions.FREE
+    }
+  }
+}
 
 const TestComponent = (): React.ReactElement => {
   const { openSubscribeModal } = useSubscribeModal({})
