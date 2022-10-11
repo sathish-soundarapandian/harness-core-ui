@@ -292,7 +292,7 @@ export const validateStage = ({
         serviceInputs &&
         ((templateStageConfig as DeployStageConfig).service?.serviceInputs as unknown as string) !== RUNTIME_INPUT_VALUE
       ) {
-        const serviceStep = factory.getStep(getStepTypeByDeploymentType(serviceInputs.serviceDefinition.type))
+        const serviceStep = factory.getStep(getStepTypeByDeploymentType(serviceInputs?.serviceDefinition?.type))
         const serviceStepErrorResponse = serviceStep?.validateInputSet({
           data: serviceInputs.serviceDefinition.spec,
           template: (templateStageConfig as DeployStageConfig).service?.serviceInputs?.serviceDefinition.spec,
@@ -336,7 +336,7 @@ export const validateStage = ({
       ) {
         serviceInputs.forEach((serviceInput: ServiceYamlV2, index: number) => {
           const serviceStep = factory.getStep(
-            getStepTypeByDeploymentType(serviceInput.serviceInputs?.serviceDefinition.type)
+            getStepTypeByDeploymentType(serviceInput?.serviceInputs?.serviceDefinition?.type)
           )
           const serviceStepErrorResponse = serviceStep?.validateInputSet({
             data: serviceInput.serviceInputs?.serviceDefinition.spec,
