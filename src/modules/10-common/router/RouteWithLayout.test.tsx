@@ -22,6 +22,12 @@ jest.mock('@common/navigation/MainNav', () => {
   }
 })
 
+const mockDetailResponse = {}
+
+jest.mock('services/cd-ng', () => ({
+  useGetLicensesAndSummary: jest.fn(() => mockDetailResponse)
+}))
+
 jest.mock('@common/hooks/useGetUsageAndLimit', () => {
   return {
     useGetUsageAndLimit: () => {
