@@ -171,35 +171,27 @@ export const getValidationSchema = (
   getString: (key: StringKeys, params?: any) => string
 ): ObjectSchema<Record<string, any> | undefined> => {
   return NameIdSchema({ nameRequiredErrorMsg: getString('triggers.validation.triggerName') }).shape({
-    versionOperator: string().test(
-      getString('triggers.validation.operator'),
-      getString('triggers.validation.operator'),
-      function (operator) {
-        if (this.parent.versionValue?.trim()) {
-          return !!operator
-        }
-
-        return true
+    versionOperator: string().test('versionOperator', getString('triggers.validation.operator'), function (operator) {
+      if (this.parent.versionValue?.trim()) {
+        return !!operator
       }
-    ),
-    versionValue: string().test(
-      getString('triggers.validation.matchesValue'),
-      getString('triggers.validation.matchesValue'),
-      function (matchesValue) {
-        if (this.parent.versionOperator) {
-          return !!matchesValue
-        }
 
-        return true
+      return true
+    }),
+    versionValue: string().test('versionValue', getString('triggers.validation.matchesValue'), function (matchesValue) {
+      if (this.parent.versionOperator) {
+        return !!matchesValue
       }
-    ),
+
+      return true
+    }),
     source: object().shape({
       spec: object().shape({
         spec: object().shape({
           store: object().shape({
             spec: object().shape({
               connectorRef: string().test(
-                getString('triggers.validation.manifestSource'),
+                'connectorRef',
                 getString('triggers.validation.manifestSource'),
                 function (connectorRef) {
                   return !!connectorRef
