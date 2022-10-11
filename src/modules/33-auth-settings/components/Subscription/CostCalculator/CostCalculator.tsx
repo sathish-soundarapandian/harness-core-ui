@@ -24,7 +24,7 @@ import {
   LookUpKeyFrequencyType
 } from '@common/constants/SubscriptionTypes'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -56,7 +56,7 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   const { licenseInformation } = useLicenseStore()
   const { accountId } = useParams<AccountPathProps>()
   const currentPlan = (licenseInformation[module.toUpperCase()]?.edition || Editions.FREE) as Editions
-  const { data: dataFetched, loading, error, refetch } = fetchLicenseUseAndSummary(module.toUpperCase(), accountId)
+  const { data: dataFetched, loading, error, refetch } = useFetchLicenseUseAndSummary(module.toUpperCase(), accountId)
   const usageAndLimitInfo = useGetUsageAndLimit(
     module.toUpperCase() as ModuleName,
     dataFetched,

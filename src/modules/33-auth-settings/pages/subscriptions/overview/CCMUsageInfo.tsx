@@ -13,7 +13,7 @@ import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
-import { fetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
 
 const ActiveCloudSpend: React.FC<{
   activeCloudSpend: number
@@ -44,7 +44,7 @@ const ActiveCloudSpend: React.FC<{
 
 const CCMUsageInfo: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
-  const { data: dataFetched, loading, error, refetch } = fetchLicenseUseAndSummary(ModuleName.CE, accountId)
+  const { data: dataFetched, loading, error, refetch } = useFetchLicenseUseAndSummary(ModuleName.CE, accountId)
   const { limitData, usageData } = useGetUsageAndLimit(ModuleName.CE, dataFetched, error, loading, refetch)
   const { usageErrorMsg, refetchUsage, usage } = usageData
   const { limitErrorMsg, refetchLimit, limit } = limitData
