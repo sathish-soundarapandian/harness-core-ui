@@ -22,6 +22,7 @@ oneLogin: OneLogin
 samlProviderAddedSuccessfully: SAML provider added successfully
 samlProviderUpdatedSuccessfully: SAML provider updated successfully
 authorizationEnabledFor: 'Authorization enabled for: '
+authorizationEnabled: Authorization is enabled
 authorizationNotEnabled: Authorization not enabled
 plusSAMLProvider: + SAML Provider
 loginViaSAML: Login via SAML
@@ -89,9 +90,9 @@ enableSamlProvider: Enable SAML Provider
 enableSamlProviderDescription: Before you change the SSO provider to SAML, please use the Test button to ensure your settings are correct.
 samlLoginEnabled: SAML login enabled successfully
 enableHarnessAccountOrOauthLogin: Enable Harness account or Oauth login
-changeLoginToHarnessAccountOrOauth: Do you want to change Login via SAML Provider to Harness Account or Public OAuth Providers?
+changeLoginToHarnessAccountOrOauth: Do you want to change Login via {{currentAuthMechanism}} Provider to Harness Account or Public OAuth Providers?
 accountOrOAuthLoginEnabledSuccessfully: '{{ $.authSettings.accountOrOAuthLogin }} enabled successfully'
-changeLoginToHarnessAccountOrOauthDescription: Some Users may not have set their Harness password. They will need to reset their password using this
+changeLoginToHarnessAccountOrOauthDescription: <strong> Note :</strong> Some Users may not have set their Harness password. They will need to reset their password using this <a href={{forgotPasswordURL}} target="_blank" rel="noreferrer">link</a>
 samlTestSuccessful: SAML test successful
 samlTestFailed: SAML test failed. Please check your credentials
 disableWhitelistedDomains: Disable email restrictions
@@ -168,9 +169,11 @@ costCalculator:
   developer:
     title: How many developers will use Feature Flags?
     developer: Who is a developer?
+    developerDefinition: A Developer is an active Feature Flags user with create/edit/delete permissions on Feature Flags, Targets, or Segments.
   mau:
     title: How many Monthly Active Users will view Feature Flags?
     mau: Who is a Monthly Active User?
+    mauDefinition: '"MAUs" refers to the Monthly Active Users viewing your Feature Flags'
     perkMau: 'per {{quantity}}K / month'
     kMauFree: (first 100k included free)
     permMau: 'per {{quantity}}M / month'
@@ -197,6 +200,8 @@ pricePreview:
   calculatedNextStep: Calculated in final review
   discount: ' (2 months free)'
 ldap:
+  reviewLdapSyncExpression: Review the LDAP User Sync Schedule
+  nextIterations: Scheduled Next Executions as per applied Cron Expression <strong>{{cronExpression}}</strong>
   authChangeSuccessful: Authentication mechanism changed to LDAP successfuly
   ldapTestSuccessful: LDAP connection test successful
   verifyAndEnableConfig: Verify and Enable LDAP Configuration
@@ -206,11 +211,17 @@ ldap:
   groupQueries: Group Queries
   scheduledSyncs: Scheduled Syncs
   baseDN: Base DN
+  baseDNRequired: Base DN is required
   searchFilter: Search Filter
+  searchFilterRequired: Search Filter is required
   nameAttributes: Name Attribute
+  nameAttributesRequired: Name Attribute is required
   emailAttributes: Email Attribute
+  emailAttributesRequired: Email Attribute is required
   descriptionAttributes: Description Attribute
+  descriptionAttributesRequired: Description Attribute is required
   groupMembershipAttributes: Group Membership Attribute
+  groupMembershipAttributesRequired: Group Membership Attribute is required
   userQueryTitle: User Query {{index}}
   groupQueryTitle: Group Query {{index}}
   setScopeForUserQuery: Set the scope of any searches for LDAP users
@@ -256,6 +267,7 @@ ldap:
     validateBindDN: 'Bind Distinguished Name is required'
   updateStepFailMessage: 'Update failed'
   discardChanges: 'Discard changes'
+  userSyncSchedule: 'LDAP User Sync Schedule'
 billingInfo:
   address: Address
   billingContact: '{{$.common.billing}} Contact'

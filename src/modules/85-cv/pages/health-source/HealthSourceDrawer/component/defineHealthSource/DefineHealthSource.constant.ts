@@ -49,6 +49,10 @@ export const HEALTHSOURCE_LIST = [
   {
     name: HealthSourceTypes.ErrorTracking,
     icon: getConnectorIconByType(Connectors.ERROR_TRACKING)
+  },
+  {
+    name: HealthSourceTypes.CloudWatch,
+    icon: getConnectorIconByType(Connectors.AWS)
   }
 ]
 
@@ -63,6 +67,10 @@ export const DynatraceProductNames = {
 export const SplunkProduct = {
   SPLUNK_LOGS: 'Splunk Cloud Logs',
   SPLUNK_METRICS: 'Splunk Metric'
+}
+
+export const ElkProduct = {
+  ELK_LOGS: 'ELK Logs'
 }
 
 export const ConnectorRefFieldName = 'connectorRef'

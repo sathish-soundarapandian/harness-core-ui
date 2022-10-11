@@ -6,11 +6,12 @@
  */
 
 import { v4 as uuid } from 'uuid'
-import type { NewRelicHealthSourceSpec, NewRelicMetricDefinition, RiskProfile } from 'services/cv'
+import type { NewRelicHealthSourceSpec, NewRelicMetricDefinition } from 'services/cv'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
 import type { NewRelicData } from './NewRelicHealthSource.types'
 import { getMetricPacksForPayload } from '../../common/MetricThresholds/MetricThresholds.utils'
+import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
 
 export const createNewRelicPayload = (formData: any, isMetricThresholdEnabled: boolean): UpdatedHealthSource | null => {
   const specPayload = {
@@ -39,15 +40,14 @@ export const createNewRelicPayload = (formData: any, isMetricThresholdEnabled: b
         higherBaselineDeviation
       } = entry[1]
 
-      const [category, metricType] = riskCategory?.split('/') || []
-      const thresholdTypes: RiskProfile['thresholdTypes'] = []
-
-      if (lowerBaselineDeviation) {
-        thresholdTypes.push('ACT_WHEN_LOWER')
-      }
-      if (higherBaselineDeviation) {
-        thresholdTypes.push('ACT_WHEN_HIGHER')
-      }
+      const assignComponentPayload = createPayloadForAssignComponent({
+        sli,
+        riskCategory,
+        healthScore,
+        continuousVerification,
+        lowerBaselineDeviation,
+        higherBaselineDeviation
+      })
 
       specPayload?.newRelicMetricDefinitions?.push({
         identifier: metricIdentifier || uuid(),
@@ -60,16 +60,7 @@ export const createNewRelicPayload = (formData: any, isMetricThresholdEnabled: b
           timestampFormat: timestampFormat,
           timestampJsonPath: timestamp
         },
-        sli: { enabled: Boolean(sli) },
-        analysis: {
-          riskProfile: {
-            category,
-            metricType,
-            thresholdTypes
-          },
-          liveMonitoring: { enabled: Boolean(healthScore) },
-          deploymentVerification: { enabled: Boolean(continuousVerification) }
-        }
+        ...assignComponentPayload
       })
     }
   }

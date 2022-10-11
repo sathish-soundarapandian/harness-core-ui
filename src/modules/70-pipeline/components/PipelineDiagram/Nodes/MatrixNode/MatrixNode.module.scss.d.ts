@@ -20,6 +20,8 @@ declare const styles: {
   readonly firstnode: string
   readonly graphNode: string
   readonly hasMoreChild: string
+  readonly headerStatus: string
+  readonly headerTitle: string
   readonly horizontalBar: string
   readonly isNodeCollapsed: string
   readonly marginBottom: string
@@ -27,13 +29,13 @@ declare const styles: {
   readonly markerStart: string
   readonly matrixBorderWrapper: string
   readonly matrixFooter: string
+  readonly matrixNode: string
   readonly nestedGroup: string
   readonly nodeNameText: string
   readonly readonly: string
   readonly showNodeText: string
   readonly showNodes: string
   readonly stageName: string
-  readonly stepGroup: string
   readonly stepGroupBody: string
   readonly stepGroupHeader: string
   readonly stepGroupNode: string

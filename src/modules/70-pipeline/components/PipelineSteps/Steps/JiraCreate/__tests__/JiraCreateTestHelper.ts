@@ -33,6 +33,18 @@ export const getJiraCreateEditModeProps = (): JiraCreateStepModeProps => ({
       fields: []
     }
   },
+  unprocessedInitialValues: {
+    name: '',
+    identifier: '',
+    type: 'JiraCreate',
+    timeout: '5s',
+    spec: {
+      connectorRef: '',
+      projectKey: '',
+      issueType: '',
+      fields: []
+    }
+  },
   onUpdate: jest.fn(),
   allowableTypes: [
     MultiTypeInputType.FIXED,
@@ -55,6 +67,18 @@ export const getJiraCreateEditModePropsWithConnectorId = (): JiraCreateStepModeP
       fields: []
     }
   },
+  unprocessedInitialValues: {
+    name: '',
+    identifier: '',
+    type: 'JiraCreate',
+    timeout: '5s',
+    spec: {
+      connectorRef: 'cid',
+      projectKey: '',
+      issueType: '',
+      fields: []
+    }
+  },
   onUpdate: jest.fn(),
   allowableTypes: [
     MultiTypeInputType.FIXED,
@@ -66,6 +90,24 @@ export const getJiraCreateEditModePropsWithConnectorId = (): JiraCreateStepModeP
 
 export const getJiraCreateEditModePropsWithValues = (): JiraCreateStepModeProps => ({
   initialValues: {
+    name: '',
+    identifier: '',
+    type: 'JiraCreate',
+    timeout: '1d',
+    spec: {
+      connectorRef: 'c1d1',
+      projectKey: 'pid1',
+      issueType: 'itd1',
+      fields: [
+        { name: 'Summary', value: 'summary' },
+        { name: 'Description', value: 'descriptionval' },
+        { name: 'f21', value: 'value1' },
+        { name: 'f2', value: 2233 },
+        { name: 'date', value: '23-march' }
+      ]
+    }
+  },
+  unprocessedInitialValues: {
     name: '',
     identifier: '',
     type: 'JiraCreate',

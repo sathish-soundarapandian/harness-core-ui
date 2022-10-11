@@ -93,6 +93,7 @@ declare global {
       fillName(name: string): void
       initializeRoute(): void
       clickSubmit(): void
+      isChildVisible(): void
       fillField(fieldName: string, value: string): void
       addNewMonitoredServiceWithServiceAndEnv(): void
       mapMetricToServices(hasServiceIndentifier?: boolean): void
@@ -258,7 +259,7 @@ Cypress.Commands.add('visitSRMMonitoredServicePage', () => {
 Cypress.Commands.add('addNewMonitoredServiceWithServiceAndEnv', () => {
   cy.intercept('GET', servicesCall, servicesResponse).as('ServiceCall')
   cy.intercept('GET', environmentsCall, environmentResponse).as('EnvCall')
-
+  cy.wait(1000)
   cy.contains('span', 'New Monitored Service').click()
   cy.wait('@ServiceCall')
   cy.wait('@EnvCall')
@@ -577,3 +578,14 @@ Cypress.Commands.add('configureStaticFieldsVerifyStepInStepTemplate', () => {
 Cypress.Commands.add('checkIfMetricThresholdsExists', () => {
   cy.contains('.Accordion--label', 'Advanced (Optional)').scrollIntoView().should('exist')
 })
+
+Cypress.Commands.add(
+  'isChildVisible',
+  {
+    prevSubject: true
+  },
+  subject => {
+    const isChildVisible = elem => !!(elem.offsetWidth || elem.offsetHeight || elem.getClientRects().length)
+    expect(isChildVisible(subject[0]), 'Element Visible').to.be.true
+  }
+)

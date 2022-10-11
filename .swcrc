@@ -23,7 +23,6 @@
       "@default-settings/*": ["modules/23-default-settings/*"],
       "@governance/*": ["modules/25-governance/*"],
       "@scm/*": ["modules/60-scm/*"],
-      "@sto/*": ["modules/27-sto/*"],
       "@et/*": ["modules/28-et/*"],
       "@auth-settings/*": ["modules/33-auth-settings/*"],
       "@secrets/*": ["modules/30-secrets/*"],
@@ -44,6 +43,7 @@
       "@ci/*": ["modules/75-ci/*"],
       "@cv/*": ["modules/85-cv/*"],
       "@ce/*": ["modules/75-ce/*"],
+      "@sto/*": ["modules/85-sto/*"],
       "@gitops/*": ["modules/90-gitops/*"],
       "@wings-software/*": ["../node_modules/@harness/*"]
     }

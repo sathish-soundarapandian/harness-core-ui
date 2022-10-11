@@ -46,8 +46,9 @@ export const DependencyBase = (
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
 
-  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
-
+  const buildInfrastructureType: CIBuildInfrastructureType =
+    get(currentStage, 'stage.spec.infrastructure.type') ||
+    (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
   return (
     <Formik<DependencyDataUI>
       initialValues={getInitialValuesInCorrectFormat<DependencyData, DependencyDataUI>(
@@ -136,9 +137,11 @@ export const DependencyBase = (
                           'spec.envVariables': { tooltipId: 'dependencyEnvironmentVariables' },
                           'spec.entrypoint': {},
                           'spec.args': {},
-                          ...([CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
-                            buildInfrastructureType
-                          ) && {
+                          ...([
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.Cloud,
+                            CIBuildInfrastructureType.Docker
+                          ].includes(buildInfrastructureType) && {
                             'spec.portBindings': {}
                           })
                         }}

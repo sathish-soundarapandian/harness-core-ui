@@ -36,7 +36,7 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
   const activityId = useMemo(() => getActivityId(step), [step])
   const { type } = useQueryParams<{ type?: string }>()
   const defaultTabId = useMemo(() => getDefaultTabId(getString, type), [type])
-  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
+  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
 
   const { openLogContentHook } = useLogContentHook({ verifyStepExecutionId: activityId })
 

@@ -223,6 +223,17 @@ export const moveFolderType = {
   EXISTING: 'EXISTING'
 }
 
+export enum CustomHandlerType {
+  exclude = 'exclude',
+  include = 'include'
+}
+
+export enum HandlerKind {
+  path = 'path',
+  ip = 'iprange',
+  header = 'header'
+}
+
 export const ruleServiceStatusLabelMap = new Map<
   string,
   { labelStringId: keyof StringsMap; intent: 'running' | 'stopped' | 'load'; icon?: IconName }
@@ -268,3 +279,18 @@ export const ruleServiceStatusLabelMap = new Map<
     }
   ]
 ])
+
+export const featureNames = {
+  OVERVIEW_FEATURE: 'CCM Overview',
+  PERSPECTIVES_FEATURE: 'Perspectives',
+  BUDGETS_FEATURE: 'Budgets',
+  ANOMALIES_FEATURE: 'Anomalies',
+  RECOMMENDATIONS_FEATURE: 'Recommendations',
+  COMMITMENT_ORCHESTRATOR_FEATURE: 'Commitment Orchestrator',
+  AUTOSTOPPING_FEATURE: 'Autostopping Rules',
+  BI_DASHBOARD_FEATURE: 'BI Dashboard',
+  AUTOSTROPPING_FEATURE: 'Auto Stopping',
+  CLOUD_INTEGRATION_FEATURE: 'Cloud Integration',
+  LOAD_BALANCER_FEATURE: 'Load Balancer',
+  COST_CATEGORY_FEATURE: 'Cost Categories'
+}

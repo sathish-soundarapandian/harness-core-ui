@@ -8,24 +8,35 @@
 import type { Dispatch, SetStateAction } from 'react'
 import type { FormikProps } from 'formik'
 import type { IOptionProps } from '@blueprintjs/core'
-import { isNumber, isEmpty, defaultTo } from 'lodash-es'
+import { isNumber, isEmpty, cloneDeep, isEqual, defaultTo } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type {
-  RiskProfile,
   MetricPackDTO,
   TimeSeriesSampleDTO,
   StackdriverMetricHealthSourceSpec,
   StackdriverDefinition,
-  StackdriverDashboardDetail
+  StackdriverDashboardDetail,
+  PrometheusHealthSourceSpec
 } from 'services/cv'
 import type { MetricWidget } from '@cv/components/MetricDashboardWidgetNav/MetricDashboardWidgetNav.type'
-import type { StringKeys } from 'framework/strings'
-import type { GCOMetricInfo, GCOMetricSetupSource } from './GCOMetricsHealthSource.type'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
+import type { GCOMetricInfo, GCOMetricSetupSource, PersistMappedMetricsType } from './GCOMetricsHealthSource.type'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { HealthSourceTypes } from '../../types'
 import { chartsConfig } from './GCOWidgetChartConfig'
 import { OVERALL } from './GCOMetricsHealthSource.constants'
 import { MANUAL_INPUT_QUERY } from './components/ManualInputQueryModal/ManualInputQueryModal'
+import { createPayloadForAssignComponent } from '../../common/utils/HealthSource.utils'
+import {
+  getFilteredMetricThresholdValues,
+  validateCommonFieldsForMetricThreshold
+} from '../../common/MetricThresholds/MetricThresholds.utils'
+import {
+  MetricThresholdPropertyName,
+  MetricThresholdTypes,
+  MetricTypeValues
+} from '../../common/MetricThresholds/MetricThresholds.constants'
+import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 
 export const GCOProduct = {
   CLOUD_METRICS: 'Cloud Metrics',
@@ -75,7 +86,10 @@ export const getSelectedDashboards = (sourceData: any) => {
   return selectedDashboards
 }
 
-export function transformGCOMetricHealthSourceToGCOMetricSetupSource(sourceData: any): GCOMetricSetupSource {
+export function transformGCOMetricHealthSourceToGCOMetricSetupSource(
+  sourceData: any,
+  isMetricThresholdEnabled: boolean
+): GCOMetricSetupSource {
   const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
   )
@@ -89,7 +103,9 @@ export function transformGCOMetricHealthSourceToGCOMetricSetupSource(sourceData:
     healthSourceName: sourceData.healthSourceName,
     healthSourceIdentifier: sourceData.healthSourceIdentifier,
     connectorRef: sourceData.connectorRef,
-    product: sourceData.product
+    product: sourceData.product,
+    ignoreThresholds: [],
+    failFastThresholds: []
   }
 
   if (!healthSource) {
@@ -130,14 +146,32 @@ export function transformGCOMetricHealthSourceToGCOMetricSetupSource(sourceData:
       sli: metricDefinition.sli?.enabled,
       continuousVerification: metricDefinition.analysis?.deploymentVerification?.enabled,
       healthScore: metricDefinition.analysis?.liveMonitoring?.enabled,
-      serviceInstanceField: metricDefinition.serviceInstanceField
+      serviceInstanceField: metricDefinition.serviceInstanceField,
+      ignoreThresholds: [],
+      failFastThresholds: []
     })
+  }
+
+  // Update spec type after swagger update, backend is not ready yet
+  if (isMetricThresholdEnabled) {
+    setupSource.ignoreThresholds = getFilteredMetricThresholdValues(
+      MetricThresholdTypes.IgnoreThreshold,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+    )
+
+    setupSource.failFastThresholds = getFilteredMetricThresholdValues(
+      MetricThresholdTypes.FailImmediately,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+    )
   }
 
   return setupSource
 }
 
-export function transformGCOMetricSetupSourceToGCOHealthSource(setupSource: GCOMetricSetupSource): UpdatedHealthSource {
+export function transformGCOMetricSetupSourceToGCOHealthSource(
+  setupSource: GCOMetricSetupSource,
+  isMetricThresholdEnabled: boolean
+): UpdatedHealthSource {
   const healthSource: UpdatedHealthSource = {
     type: HealthSourceTypes.StackdriverMetrics as UpdatedHealthSource['type'],
     identifier: setupSource.healthSourceIdentifier,
@@ -146,21 +180,26 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(setupSource: GCOM
       connectorRef:
         typeof setupSource.connectorRef === 'string' ? setupSource.connectorRef : setupSource.connectorRef?.value,
       feature: GCOProduct.CLOUD_METRICS,
-      metricDefinitions: []
+      metricDefinitions: [],
+      metricPacks: []
     }
   }
   for (const selectedMetricInfo of setupSource.metricDefinition) {
     const [selectedMetric, metricInfo] = selectedMetricInfo
     if (!selectedMetric || !metricInfo) continue
-    const [category, metricType] = metricInfo.riskCategory?.split('/') || []
 
-    const thresholdTypes: RiskProfile['thresholdTypes'] = []
-    if (metricInfo.lowerBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_LOWER')
-    }
-    if (metricInfo.higherBaselineDeviation) {
-      thresholdTypes.push('ACT_WHEN_HIGHER')
-    }
+    const { sli, riskCategory, healthScore, continuousVerification, lowerBaselineDeviation, higherBaselineDeviation } =
+      metricInfo
+
+    const assignComponentPayload = createPayloadForAssignComponent({
+      sli,
+      riskCategory,
+      healthScore,
+      continuousVerification,
+      lowerBaselineDeviation,
+      higherBaselineDeviation
+    })
+
     const regexExpression = /^\{/
     const spec: StackdriverMetricHealthSourceSpec = healthSource.spec || []
     const isFixed = getMultiTypeFromValue(metricInfo.query) === MultiTypeInputType.FIXED
@@ -175,24 +214,19 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(setupSource: GCOM
       isManualQuery: metricInfo.isManualQuery,
       jsonMetricDefinition: shouldParseQuery ? JSON.parse(metricInfo.query || '') : metricInfo.query,
       riskProfile: {
-        metricType: metricType as RiskProfile['metricType'],
-        category: category as RiskProfile['category'],
-        thresholdTypes
+        ...assignComponentPayload.analysis?.riskProfile
       },
-      sli: { enabled: metricInfo?.sli || false },
       serviceInstanceField: metricInfo.continuousVerification ? metricInfo.serviceInstanceField : null,
-      analysis: {
-        riskProfile: {
-          category: category as RiskProfile['category'],
-          metricType: metricType,
-          thresholdTypes
-        },
-        liveMonitoring: { enabled: metricInfo.healthScore || false },
-        deploymentVerification: {
-          enabled: metricInfo.continuousVerification || false
-        }
-      }
+      ...assignComponentPayload
     } as StackdriverDefinition)
+  }
+
+  if (isMetricThresholdEnabled) {
+    // Needs to be updated with GCO's spec once the swagger is ready
+    ;(healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks?.push({
+      identifier: MetricTypeValues.Custom,
+      metricThresholds: [...setupSource.ignoreThresholds, ...setupSource.failFastThresholds]
+    })
   }
 
   return healthSource
@@ -262,12 +296,41 @@ export function ensureFieldsAreFilled(
   return ret
 }
 
+const validateMetricThresholds = (
+  errors: Record<string, string>,
+  values: GCOMetricInfo,
+  getString: UseStringsReturn['getString']
+): void => {
+  // ignoreThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.IgnoreThreshold,
+    errors,
+    values[MetricThresholdPropertyName.IgnoreThreshold] as MetricThresholdType[],
+    getString,
+    false
+  )
+
+  // failFastThresholds Validation
+  validateCommonFieldsForMetricThreshold(
+    MetricThresholdPropertyName.FailFastThresholds,
+    errors,
+    values[MetricThresholdPropertyName.FailFastThresholds] as MetricThresholdType[],
+    getString,
+    false
+  )
+}
+
 export function validate(
   values: GCOMetricInfo,
   selectedMetrics: Map<string, GCOMetricInfo>,
-  getString: (key: StringKeys) => string
+  getString: (key: StringKeys) => string,
+  isMetricThresholdEnabled: boolean
 ): { [key: string]: string } | undefined {
   const errors = ensureFieldsAreFilled(values, getString, selectedMetrics)
+
+  if (isMetricThresholdEnabled) {
+    validateMetricThresholds(errors, values, getString)
+  }
 
   if (selectedMetrics.size === 1) {
     return errors
@@ -416,7 +479,9 @@ export const onSelectNavItem = ({
       metricTags: widget ? { [widget]: '' } : {},
       isManualQuery: query === MANUAL_INPUT_QUERY,
       dashboardName: dashboardTitle,
-      dashboardPath: dashboardId
+      dashboardPath: dashboardId,
+      ignoreThresholds: formikProps?.values?.ignoreThresholds || [],
+      failFastThresholds: formikProps?.values?.failFastThresholds || []
     }
   }
 
@@ -438,3 +503,30 @@ export const getNoDataMessage = (getString: (key: StringKeys) => string, query?:
 
 export const getIsQueryExecuted = (shouldShowChart: boolean, query?: string): boolean =>
   shouldShowChart && getMultiTypeFromValue(query) === MultiTypeInputType.FIXED
+export const persistCustomMetric = ({
+  mappedMetrics,
+  selectedMetric,
+  metricThresholds,
+  formikValues,
+  setMappedMetrics
+}: PersistMappedMetricsType): void => {
+  const mapValue = mappedMetrics.get(selectedMetric || '')
+  if (!isEmpty(mapValue)) {
+    const nonCustomValuesFromSelectedMetric = {
+      ignoreThresholds: mapValue?.ignoreThresholds,
+      failFastThresholds: mapValue?.failFastThresholds
+    }
+
+    if (selectedMetric === formikValues?.metricName && !isEqual(metricThresholds, nonCustomValuesFromSelectedMetric)) {
+      const clonedMappedMetrics = cloneDeep(mappedMetrics)
+      clonedMappedMetrics.forEach((data, key) => {
+        if (selectedMetric === data.metricName) {
+          clonedMappedMetrics.set(selectedMetric as string, { ...formikValues, ...metricThresholds })
+        } else {
+          clonedMappedMetrics.set(key, { ...data, ...metricThresholds })
+        }
+      })
+      setMappedMetrics(clonedMappedMetrics)
+    }
+  }
+}

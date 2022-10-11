@@ -12,7 +12,7 @@ import { pick } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER, TESTCONNECTION_STEP_INDEX } from '@connectors/constants'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, ResponseBoolean } from 'services/cd-ng'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 
 import { getConnectorTitleIdByType, getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useStrings } from 'framework/strings'
@@ -73,7 +73,7 @@ const OCIHelmConnector: React.FC<CreateOCIHelmConnectorProps> = props => {
         connectorInfo={props.connectorInfo}
         gitDetails={props.gitDetails}
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep={true}

@@ -157,7 +157,7 @@ function ElkConfigStep(props: ConnectionConfigProps): JSX.Element {
           ...initialValues
         }}
         validationSchema={Yup.object().shape({
-          url: Yup.string().trim().required(getString('connectors.appD.validation.controllerURL')),
+          url: Yup.string().trim().required(getString('UrlLabel')),
           authType: Yup.string().trim(),
           username: Yup.string()
             .nullable()
@@ -189,7 +189,7 @@ function ElkConfigStep(props: ConnectionConfigProps): JSX.Element {
         {formikProps => (
           <FormikForm className={styles.connectionForm}>
             <Layout.Vertical spacing="large" className={styles.elkContainer}>
-              <FormInput.Text label={getString('connectors.appD.controllerURL')} name="url" />
+              <FormInput.Text label={getString('UrlLabel')} name="url" />
               <UsernamePasswordAndApiKeyOption
                 accountIdentifier={props.accountId}
                 projectIdentifier={props.projectIdentifier}

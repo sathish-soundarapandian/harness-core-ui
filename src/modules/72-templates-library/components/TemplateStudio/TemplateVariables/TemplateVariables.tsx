@@ -35,6 +35,7 @@ import css from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineV
 const TemplateVariables: React.FC = (): JSX.Element => {
   const {
     state: { template, templateView },
+    isReadonly,
     updateTemplate,
     updateTemplateView
   } = React.useContext(TemplateContext)
@@ -89,6 +90,7 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                     allowableTypes={allowableTypes}
                     stepsFactory={factory}
                     updatePipeline={onUpdate}
+                    readonly={isReadonly}
                   />
                 )}
                 {originalTemplate.type === TemplateType.Stage && (
@@ -101,6 +103,7 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                     allowableTypes={allowableTypes}
                     stepsFactory={factory}
                     updateStage={onUpdate}
+                    readonly={isReadonly}
                   />
                 )}
                 {originalTemplate.type === TemplateType.Step && (
@@ -108,7 +111,7 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                     step={variablesTemplate as StepElementConfig}
                     originalStep={originalTemplate.spec as StepElementConfig}
                     metadataMap={metadataMap}
-                    readonly={true}
+                    readonly={isReadonly}
                     stepPath="template"
                     allowableTypes={allowableTypes}
                     stageIdentifier={DefaultNewStageId}
@@ -127,7 +130,7 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                       } as any
                     }
                     metadataMap={metadataMap}
-                    readonly={true}
+                    readonly={isReadonly}
                     path="template"
                     allowableTypes={allowableTypes}
                     updateSceretManager={onUpdate}
@@ -152,6 +155,7 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                     allowableTypes={allowableTypes}
                     stepsFactory={factory}
                     updateMonitoredService={onUpdate}
+                    readonly={isReadonly}
                   />
                 )}
                 {originalTemplate.type === TemplateType.CustomDeployment && (
@@ -172,6 +176,7 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                     allowableTypes={allowableTypes}
                     stepsFactory={factory}
                     updateDeploymentTemplate={onUpdate}
+                    readonly={isReadonly}
                   />
                 )}
               </GitSyncStoreProvider>

@@ -17,7 +17,8 @@ import {
   ButtonVariation,
   useToaster,
   PageSpinner,
-  useConfirmationDialog
+  useConfirmationDialog,
+  FormInput
 } from '@wings-software/uicore'
 import { Intent } from '@harness/design-system'
 import type { HideModal } from '@harness/use-modal'
@@ -25,7 +26,8 @@ import type { HideModal } from '@harness/use-modal'
 import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import { Error, importInputSetPromise, importPipelinePromise, ResponsePipelineSaveResponse } from 'services/pipeline-ng'
-import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import { importTemplatePromise, ResponseTemplateImportSaveResponse } from 'services/template-ng'
+import { IdentifierSchema, NameSchema, TemplateVersionLabelSchema } from '@common/utils/Validation'
 import { NameIdDescriptionTags } from '@common/components'
 import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import type { ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
@@ -67,12 +69,15 @@ export default function ImportResource({
   const formikRef = useRef<FormikProps<ModifiedInitialValuesType>>(null)
   const [isForceImport, setIsForceImport] = useState<boolean>()
 
-  const getReourceTypeText = () => {
+  const getReourceTypeText = (): string => {
     if (resourceType === ResourceType.PIPELINES) {
       return getString('common.pipeline')
     }
     if (resourceType === ResourceType.INPUT_SETS) {
       return getString('inputSets.inputSetLabel')
+    }
+    if (resourceType === ResourceType.TEMPLATE) {
+      return getString('common.templates')
     }
     return getString('common.resourceLabel')
   }
@@ -84,10 +89,13 @@ export default function ImportResource({
     if (resourceType === ResourceType.INPUT_SETS) {
       return getString('pipeline.duplicateImportInputset')
     }
+    if (resourceType === ResourceType.TEMPLATE) {
+      return getString('pipeline.duplicateImportTemplate')
+    }
     return getString('pipeline.duplicateImport')
   }
 
-  const handleResponse = (response: ResponsePipelineSaveResponse) => {
+  const handleResponse = (response: ResponsePipelineSaveResponse | ResponseTemplateImportSaveResponse): void => {
     setIsLoading(false)
     if (response.status === 'SUCCESS') {
       showSuccess(getString('pipeline.importSuccessMessage', { resourceType: getReourceTypeText() }))
@@ -106,7 +114,7 @@ export default function ImportResource({
     }
   }
 
-  const handleError = (err: Error) => {
+  const handleError = (err: Error): void => {
     if (!isEmpty(err.responseMessages)) {
       setIsLoading(false)
       setErrorResponse(err.responseMessages)
@@ -192,17 +200,60 @@ export default function ImportResource({
       .catch(handleError)
   }
 
+  const importTemplate = (formValues: ModifiedInitialValuesType): void => {
+    const { identifier, name, description, connectorRef, repo, branch, filePath, versionLabel } = formValues
+    setIsLoading(true)
+    importTemplatePromise({
+      templateIdentifier: identifier,
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        connectorRef: typeof connectorRef === 'string' ? connectorRef : (connectorRef as any).value,
+        repoName: repo,
+        branch,
+        filePath,
+        isForceImport
+      },
+      requestOptions: {
+        headers: {
+          'content-type': 'application/json'
+        }
+      },
+      body: {
+        templateDescription: description,
+        templateVersion: versionLabel,
+        templateName: name
+      }
+    })
+      .then(handleResponse)
+      .catch(handleError)
+  }
+
   const importEntity = (formValues: ModifiedInitialValuesType): void => {
-    if (resourceType === ResourceType.PIPELINES) {
-      importPipeline(formValues)
-    } else if (resourceType === ResourceType.INPUT_SETS) {
-      importInputSet(formValues)
+    switch (resourceType) {
+      case ResourceType.PIPELINES:
+        importPipeline(formValues)
+        break
+      case ResourceType.INPUT_SETS:
+        importInputSet(formValues)
+        break
+      case ResourceType.TEMPLATE:
+        importTemplate(formValues)
     }
   }
+
+  const getVersionLabelSchema =
+    resourceType === ResourceType.TEMPLATE
+      ? {
+          versionLabel: TemplateVersionLabelSchema()
+        }
+      : {}
 
   const validationSchema = Yup.object().shape({
     name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
     identifier: IdentifierSchema(),
+    ...getVersionLabelSchema,
     ...gitSyncFormSchema(getString)
   })
 
@@ -229,6 +280,13 @@ export default function ImportResource({
             ) : (
               <>
                 <NameIdDescriptionTags formikProps={formikProps} tooltipProps={{ dataTooltipId: 'createEntity' }} />
+                {resourceType === ResourceType.TEMPLATE && (
+                  <FormInput.Text
+                    name="versionLabel"
+                    placeholder={getString('common.template.createNewModal.versionPlaceholder')}
+                    label={getString('common.versionLabel')}
+                  />
+                )}
                 <GitSyncForm
                   formikProps={formikProps as any}
                   initialValues={{
@@ -246,6 +304,7 @@ export default function ImportResource({
                       : undefined
                   }
                 />
+
                 <Container padding={{ top: 'xlarge' }}>
                   <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('common.import')} />
                   &nbsp; &nbsp;

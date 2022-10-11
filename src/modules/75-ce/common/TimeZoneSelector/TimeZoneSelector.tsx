@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { Virtuoso } from 'react-virtuoso'
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Container, Icon, TextInput, Text } from '@wings-software/uicore'
-import { ALL_TIME_ZONES } from '@ce/utils/momentUtils'
+import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import { useStrings } from 'framework/strings'
 
 interface Props {

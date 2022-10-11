@@ -93,6 +93,12 @@ export enum PermissionIdentifier {
   DELETE_TEMPLATE = 'core_template_delete',
   ACCESS_TEMPLATE = 'core_template_access',
 
+  // This is edit, delete, access permission
+  // There is no view permission for deployment freeze
+  MANAGE_DEPLOYMENT_FREEZE = 'core_deploymentfreeze_manage',
+  GLOBAL_DEPLOYMENT_FREEZE = 'core_deploymentfreeze_global',
+  OVERRIDE_DEPLOYMENT_FREEZE = 'core_deploymentfreeze_override',
+
   // CHANGE INTELLIGENCE Permissions
   EDIT_MONITORED_SERVICE = 'chi_monitoredservice_edit',
   VIEW_MONITORED_SERVICE = 'chi_monitoredservice_view',
@@ -137,14 +143,14 @@ export enum PermissionIdentifier {
   VIEW_CHAOS_HUB = 'chaos_chaoshub_view',
   EDIT_CHAOS_HUB = 'chaos_chaoshub_edit',
   DELETE_CHAOS_HUB = 'chaos_chaoshub_delete',
-  VIEW_CHAOS_SCENARIO = 'chaos_chaosscenario_view',
-  EDIT_CHAOS_SCENARIO = 'chaos_chaosscenario_edit',
-  DELETE_CHAOS_SCENARIO = 'chaos_chaosscenario_delete',
-  VIEW_CHAOS_DELEGATE = 'chaos_chaosdelegate_view',
-  EDIT_CHAOS_DELEGATE = 'chaos_chaosdelegate_edit',
-  DELETE_CHAOS_DELEGATE = 'chaos_chaosdelegate_delete',
-  VIEW_CHAOS_GITOPS = 'chaos_chaosgitops_view',
-  EDIT_CHAOS_GITOPS = 'chaos_chaosgitops_edit',
+  VIEW_CHAOS_EXPERIMENT = 'chaos_chaosexperiment_view',
+  EDIT_CHAOS_EXPERIMENT = 'chaos_chaosexperiment_edit',
+  DELETE_CHAOS_EXPERIMENT = 'chaos_chaosexperiment_delete',
+  VIEW_CHAOS_INFRASTRUCTURE = 'chaos_chaosinfrastructure_view',
+  EDIT_CHAOS_INFRASTRUCTURE = 'chaos_chaosinfrastructure_edit',
+  DELETE_CHAOS_INFRASTRUCTURE = 'chaos_chaosinfrastructure_delete',
+  VIEW_CHAOS_GAMEDAY = 'chaos_chaosgameday_view',
+  EDIT_CHAOS_GAMEDAY = 'chaos_chaosgameday_edit',
 
   // STO Permissions
   VIEW_STO_ISSUE = 'sto_issue_view',

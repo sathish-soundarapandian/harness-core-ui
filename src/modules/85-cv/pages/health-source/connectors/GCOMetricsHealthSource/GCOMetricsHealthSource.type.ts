@@ -7,6 +7,8 @@
 
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { StackdriverDashboardDTO } from 'services/cv'
+import type { GroupedCreatedMetrics } from '../../common/CustomMetric/CustomMetric.types'
+import type { MetricThresholdsState, MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 
 export interface GCOMetricInfo {
@@ -27,6 +29,8 @@ export interface GCOMetricInfo {
   healthScore?: boolean
   serviceInstanceField?: string
   identifier?: string
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
 }
 
 export interface GCOMetricSetupSource {
@@ -37,6 +41,8 @@ export interface GCOMetricSetupSource {
   healthSourceName: string
   product: SelectOption
   connectorRef?: string | { value: string }
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
 }
 
 export interface GCOMetricsHealthSourceProps {
@@ -55,4 +61,20 @@ export interface ValidationChartProps {
   setAsTooManyMetrics?: (_: boolean) => void
   isQueryExecuted?: boolean
   noDataMessage?: string
+}
+
+export interface MetricThresholdCommonProps {
+  formikValues: GCOMetricInfo
+  groupedCreatedMetrics: GroupedCreatedMetrics
+  setThresholdState: React.Dispatch<React.SetStateAction<MetricThresholdsState>>
+}
+
+export type MetricThresholdContextType = MetricThresholdCommonProps
+
+export interface PersistMappedMetricsType {
+  mappedMetrics: Map<string, GCOMetricInfo>
+  selectedMetric?: string
+  metricThresholds: MetricThresholdsState
+  formikValues: GCOMetricInfo
+  setMappedMetrics: React.Dispatch<React.SetStateAction<Map<string, GCOMetricInfo>>>
 }

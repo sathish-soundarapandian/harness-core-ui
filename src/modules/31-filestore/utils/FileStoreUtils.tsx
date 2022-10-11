@@ -16,9 +16,18 @@ import type { Item as NodeMenuOptionItem } from '@filestore/common/NodeMenu/Node
 import type { FileStorePopoverItem } from '@filestore/common/FileStorePopover/FileStorePopover'
 import type { ScopedObjectDTO } from '@filestore/common/useFileStoreScope/useFileStoreScope'
 import { FileStoreNodeTypes, FileUsage } from '@filestore/interfaces/FileStore'
+
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { ExtensionType, LanguageType, FSErrosType, FileStoreActionTypes } from './constants'
+
+import {
+  ExtensionType,
+  LanguageType,
+  FSErrosType,
+  FileStoreActionTypes,
+  FILE_STORE_ROOT,
+  SEARCH_FILES
+} from './constants'
 
 export const firstLetterToUpperCase = (value: string): string => `${value.charAt(0).toUpperCase()}${value.slice(1)}`
 
@@ -182,4 +191,44 @@ export const getParamsByScope = (scope: string, params: ScopedObjectDTOParam): S
         projectIdentifier
       }
   }
+}
+
+export const prepareFileValues = (values: any, currentNode: any, notCurrentNode: any) => {
+  const data = new FormData()
+
+  Object.keys(values).forEach(prop => {
+    if (prop === 'fileUsage' && !values.fileUsage) return
+    if (prop === 'tags') {
+      data.append(
+        prop,
+        JSON.stringify(
+          Object.keys(values[prop]).map(key => ({
+            key,
+            value: values[prop][key]
+          }))
+        )
+      )
+      return
+    }
+    if (notCurrentNode && prop === 'content') return
+    if (!notCurrentNode && prop === 'content') {
+      const blobContent = new Blob([values[prop]], { type: 'plain/text' })
+      data.append('content', blobContent)
+    }
+    data.append(prop, values[prop])
+  })
+  data.append('type', FileStoreNodeTypes.FILE)
+
+  if (currentNode?.parentIdentifier && currentNode.type !== FileStoreNodeTypes.FOLDER) {
+    data.append('parentIdentifier', currentNode.parentIdentifier)
+  } else {
+    if (currentNode.identifier === SEARCH_FILES) {
+      data.append('parentIdentifier', FILE_STORE_ROOT)
+    } else {
+      data.append('parentIdentifier', currentNode.identifier)
+    }
+  }
+
+  data.append('mimeType', getMimeTypeByName(values.name))
+  return data
 }

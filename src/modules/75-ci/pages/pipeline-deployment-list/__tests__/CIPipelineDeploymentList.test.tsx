@@ -143,7 +143,7 @@ describe('CIPipelineDeploymentList', () => {
   test('should render pipelines', async () => {
     renderExecutionPage()
     const pipeline = await screen.findByRole('link', {
-      name: 'Sonar PR CI webhook PR : 6'
+      name: 'Sonar PR CI webhook PR'
     })
     expect(pipeline).toHaveAttribute(
       'href',

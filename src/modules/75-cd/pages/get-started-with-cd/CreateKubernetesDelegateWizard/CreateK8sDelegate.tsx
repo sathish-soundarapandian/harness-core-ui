@@ -31,20 +31,23 @@ import YamlBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import { useStrings } from 'framework/strings'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { Category, DelegateActions } from '@common/constants/TrackingConstants'
+import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import StepProcessing from './StepProcessing'
+import type { DelegateSuccessHandler } from '../CDOnboardingUtils'
 import css from './CreateK8sDelegate.module.scss'
 
 export interface CreateK8sDelegateProps {
-  onSuccessHandler: () => void
+  onSuccessHandler: (data: DelegateSuccessHandler) => void
   handleHelpPanel: () => void
   successRef: React.MutableRefObject<(() => void) | null>
+  delegateNameRef: React.MutableRefObject<string | undefined>
 }
 
 export const CreateK8sDelegate = ({
   onSuccessHandler,
   handleHelpPanel,
-  successRef
+  successRef,
+  delegateNameRef
 }: CreateK8sDelegateProps): JSX.Element => {
   const [delegateName, setDelegateName] = React.useState<string>('')
   const [isYamlVisible, setYamlVisible] = React.useState<boolean>(false)
@@ -92,6 +95,14 @@ export const CreateK8sDelegate = ({
       const delegateToken = get(delegateTokens, 'resource[0].name')
       const delegateName1 = `sample-${uuid()}-delegate`
       setDelegateName(delegateName1)
+      delegateNameRef.current = delegateName1
+      trackEvent(CDOnboardingActions.StartOnboardingDelegateCreation, {
+        category: Category.DELEGATE,
+        data: {
+          delegateName: delegateName1,
+          delegateType: delegateType
+        }
+      })
       const createParams1 = {
         name: delegateName1,
         identifier: StringUtils.getIdentifierFromName(delegateName1),
@@ -116,7 +127,7 @@ export const CreateK8sDelegate = ({
       if (get(createKubernetesYamlResponse, 'responseMessages', []).length) {
         showError(getString('somethingWentWrong'))
       } else {
-        trackEvent(DelegateActions.SetupDelegate, {
+        trackEvent(CDOnboardingActions.SetupOnboardingDelegate, {
           category: Category.DELEGATE,
           data: createParams1
         })
@@ -147,8 +158,8 @@ export const CreateK8sDelegate = ({
             })
             setVisibleYaml(generatedYamlResponse as any)
             setLoader(false)
-            onSuccessHandler()
-            trackEvent(DelegateActions.SaveCreateDelegate, {
+            onSuccessHandler({ delegateCreated: true })
+            trackEvent(CDOnboardingActions.SaveCreateOnboardingDelegate, {
               category: Category.DELEGATE,
               data: { ...stepPrevData, generatedYaml: generatedYamlResponse }
             })
@@ -191,8 +202,11 @@ export const CreateK8sDelegate = ({
                   className={css.downloadButton}
                   onClick={() => {
                     onDownload()
-                    trackEvent(DelegateActions.DownloadYAML, {
-                      category: Category.DELEGATE
+                    trackEvent(CDOnboardingActions.DownloadOnboardingYAML, {
+                      category: Category.DELEGATE,
+                      data: {
+                        delegateName: delegateName
+                      }
                     })
                   }}
                   outlined
@@ -275,6 +289,7 @@ export const CreateK8sDelegate = ({
                 delegateType={delegateType}
                 replicas={replicas}
                 successRef={successRef}
+                onSuccessHandler={onSuccessHandler}
               />
             </Layout.Vertical>
           </li>

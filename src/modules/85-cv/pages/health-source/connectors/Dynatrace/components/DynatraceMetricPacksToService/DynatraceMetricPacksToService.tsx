@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useMemo, useState, useCallback } from 'react'
+import { isNull } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import {
   Container,
@@ -147,6 +148,19 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
       onValidate(dynatraceMetricData.serviceMethods || [], createMetricDataFormik(selectedMetricPacks))
     }
   }, [selectedMetricPacks, dynatraceMetricData.selectedService, dynatraceMetricData.serviceMethods])
+
+  useEffect(() => {
+    if (servicesListData?.data && isNull(metricValues.serviceMethods)) {
+      const selectedServiceValue =
+        typeof metricValues.selectedService === 'string'
+          ? metricValues.selectedService
+          : metricValues.selectedService.value
+      setDynatraceMetricData({
+        ...metricValues,
+        serviceMethods: extractServiceMethods(servicesListData?.data || [], selectedServiceValue as string)
+      })
+    }
+  }, [servicesListData?.data])
 
   const onChangeDynatraceService = useCallback(
     item => {

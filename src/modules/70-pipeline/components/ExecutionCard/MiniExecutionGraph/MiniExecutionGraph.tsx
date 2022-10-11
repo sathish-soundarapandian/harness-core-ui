@@ -10,12 +10,10 @@ import { Icon, Button, Text } from '@wings-software/uicore'
 import { ResizeSensor } from '@blueprintjs/core'
 import cx from 'classnames'
 import { throttle } from 'lodash-es'
-
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
 import { isExecutionRunning, isExecutionCompletedWithBadState } from '@pipeline/utils/statusHelpers'
 import { processLayoutNodeMap, ExecutionStatusIconMap as IconMap } from '@pipeline/utils/executionUtils'
 import type { ProjectPathProps, ModulePathParams, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
-
 import { StageNode, RunningIcon } from './StageNode'
 import { ParallelStageNode } from './ParallelStageNode'
 import css from './MiniExecutionGraph.module.scss'

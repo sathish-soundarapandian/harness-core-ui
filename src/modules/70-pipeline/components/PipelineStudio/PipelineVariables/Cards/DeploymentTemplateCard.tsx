@@ -25,7 +25,6 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { VariableType } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableUtils'
 import { useStrings } from 'framework/strings'
 import type { StoreConfigWrapper } from 'services/cd-ng'
-import { Connectors } from '@connectors/constants'
 import VariableAccordionSummary from '../VariableAccordionSummary'
 import type { DeploymentInfra, DeploymentTemplateConfig, PipelineVariablesData } from '../types'
 import css from '../PipelineVariables.module.scss'
@@ -64,11 +63,12 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
     <div className={moduleCss.infraVarHeader}>
       <div>{getString('name')}</div>
       <div>{getString('description')}</div>
-      <div>{getString('common.configureOptions.defaultValue')}</div>
+      <div>{getString('valueLabel')}</div>
     </div>
   )
   const onUpdateInfrastructureVariables = React.useCallback(
     ({ variables }: CustomVariablesData) => {
+      /* istanbul ignore next */
       updateDeploymentTemplate(
         produce(unresolvedDeploymentTemplate, (draft: DeploymentTemplateConfig) => {
           set(draft, 'infrastructure.variables', variables)
@@ -153,7 +153,8 @@ export default function DeploymentTemplateCard(props: DeploymentTemplateCardProp
                       ],
                       isDescriptionEnabled: true,
                       headerComponent: headerComponent,
-                      allowedConnectorTypes: Object.values(Connectors)
+                      addVariableLabel: 'variables.newVariable',
+                      isDrawerMode: true
                     }}
                   />
                 ) : /* istanbul ignore next */ null}

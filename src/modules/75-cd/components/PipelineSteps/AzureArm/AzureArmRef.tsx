@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { get } from 'lodash-es'
+import { get, omit } from 'lodash-es'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import {
@@ -270,7 +270,7 @@ export const AzureArmRef = (
             </Layout.Vertical>
             <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
               <div
-                className={cx(css.center, css.scopeField, css.addMarginBottom)}
+                className={cx(css.scopeField, css.addMarginBottom)}
                 onClick={() => {
                   /* istanbul ignore next */
                   setShowModal(true)
@@ -278,7 +278,7 @@ export const AzureArmRef = (
                 data-testid="azureTemplate"
               >
                 <>
-                  <a className={css.configPlaceHolder}>
+                  <a className={cx(css.fullWidth, css.configPlaceHolder)}>
                     {
                       /* istanbul ignore next */
                       getMultiTypeFromValue(templatePath) === MultiTypeInputType.RUNTIME
@@ -319,19 +319,19 @@ export const AzureArmRef = (
               </Label>
             </Layout.Vertical>
             <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
-              <div
-                className={cx(css.center, css.scopeField, css.addMarginBottom)}
-                onClick={
-                  /* istanbul ignore next */
-                  () => {
-                    setIsParam(true)
-                    setShowModal(true)
-                  }
-                }
-                data-testid="azureTemplate"
-              >
+              <div className={cx(css.scopeField, css.addMarginBottom)}>
                 <>
-                  <a className={css.configPlaceHolder}>
+                  <a
+                    className={cx(css.configPlaceHolder, css.fullWidth)}
+                    onClick={
+                      /* istanbul ignore next */
+                      () => {
+                        setIsParam(true)
+                        setShowModal(true)
+                      }
+                    }
+                    data-testid="azureTemplate"
+                  >
                     {
                       /* istanbul ignore next */
                       getMultiTypeFromValue(paramPath) === MultiTypeInputType.RUNTIME
@@ -341,14 +341,33 @@ export const AzureArmRef = (
                         : getString('cd.azureArm.specifyParameterFile')
                     }
                   </a>
-                  <Button
-                    minimal
-                    icon="Edit"
-                    withoutBoxShadow
-                    iconProps={{ size: 16 }}
-                    data-name="config-edit"
-                    withoutCurrentColor={true}
-                  />
+                  <>
+                    {paramType && (
+                      <Button
+                        onClick={() => setFieldValue('spec.configuration', omit(config, 'parameters'))}
+                        minimal
+                        icon="cross"
+                        withoutBoxShadow
+                        iconProps={{ size: 16 }}
+                        withoutCurrentColor={true}
+                      />
+                    )}
+                    <Button
+                      minimal
+                      icon="Edit"
+                      withoutBoxShadow
+                      iconProps={{ size: 16 }}
+                      data-name="config-edit"
+                      withoutCurrentColor={true}
+                      onClick={
+                        /* istanbul ignore next */
+                        () => {
+                          setIsParam(true)
+                          setShowModal(true)
+                        }
+                      }
+                    />
+                  </>
                 </>
               </div>
             </Layout.Horizontal>

@@ -42,6 +42,7 @@ import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemp
 import { useAddStepTemplate } from '@pipeline/hooks/useAddStepTemplate'
 import {
   getServiceDefinitionType,
+  isCustomDeploymentType,
   isServerlessDeploymentType,
   ServiceDeploymentType,
   StageType
@@ -128,22 +129,26 @@ export default function DeployStageSetupShell(): JSX.Element {
   const setDefaultServiceSchema = useCallback((): Promise<void> => {
     const stageData = produce(selectedStage, draft => {
       if (draft) {
-        set(draft, 'stage.spec', {
-          ...selectedStage?.stage?.spec,
-          serviceConfig: {
+        if (isNewService) {
+          set(draft, 'stage.spec.service', {
+            serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
+            serviceInputs: scope === Scope.PROJECT ? undefined : RUNTIME_INPUT_VALUE
+          })
+        } else {
+          set(draft, 'stage.spec.serviceConfig', {
             serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
             serviceDefinition: {
               spec: {
                 variables: []
               }
             }
-          }
-        })
+          })
+        }
       }
     })
 
     return debounceUpdateStage(stageData?.stage)
-  }, [debounceUpdateStage, scope, selectedStage])
+  }, [debounceUpdateStage, scope, selectedStage, isNewService])
 
   React.useEffect(() => {
     const sectionId = (query as any).sectionId || ''
@@ -185,6 +190,8 @@ export default function DeployStageSetupShell(): JSX.Element {
       return ExecutionType.GITOPS
     } else if (selectedDeploymentType === ServiceDeploymentType.ServerlessAwsLambda) {
       return ExecutionType.BASIC
+    } else if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment) {
+      return ExecutionType.DEFAULT
     }
     return ExecutionType.ROLLING
   }
@@ -206,9 +213,12 @@ export default function DeployStageSetupShell(): JSX.Element {
     }
   }, [selectedDeploymentType, refetchYamlSnippet])
 
+  const fetchDefaultStep =
+    isServerlessDeploymentType(selectedDeploymentType || '') || isCustomDeploymentType(selectedDeploymentType || '')
+
   React.useEffect(() => {
     if (
-      (isServerlessDeploymentType(selectedDeploymentType || '') || selectedStage?.stage?.spec?.gitOpsEnabled) &&
+      (fetchDefaultStep || selectedStage?.stage?.spec?.gitOpsEnabled) &&
       yamlSnippet?.data &&
       selectedStage &&
       isEmpty(selectedStage.stage?.spec?.execution)
@@ -353,6 +363,11 @@ export default function DeployStageSetupShell(): JSX.Element {
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const { addTemplate } = useAddStepTemplate({ executionRef: executionRef.current })
 
+  const addLinkedTemplatesLabel = React.useMemo(() => {
+    const isCustomDeploymentConfigPresent = !isEmpty(get(selectedStage, 'stage.spec.customDeploymentRef'))
+    return isCustomDeploymentConfigPresent ? getString('common.deploymentTemplateSteps') : ''
+  }, [selectedStage, getString])
+
   const navBtns = (
     <Layout.Horizontal className={css.navigationBtns}>
       {selectedTabId !== DeployTabs.OVERVIEW && (
@@ -409,7 +424,9 @@ export default function DeployStageSetupShell(): JSX.Element {
           }
           panel={
             isNewService ? (
-              <DeployServiceEntitySpecifications>{navBtns}</DeployServiceEntitySpecifications>
+              <DeployServiceEntitySpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
+                {navBtns}
+              </DeployServiceEntitySpecifications>
             ) : (
               <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
                 {navBtns}
@@ -462,6 +479,7 @@ export default function DeployStageSetupShell(): JSX.Element {
               hasRollback={true}
               isReadonly={isReadonly}
               hasDependencies={false}
+              addLinkedTemplatesLabel={addLinkedTemplatesLabel}
               stepsFactory={stepsFactory}
               originalStage={originalStage}
               ref={executionRef}

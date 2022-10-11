@@ -16,14 +16,16 @@ export const defaultInitialValues = {
     fetchInstancesScript: {},
     instanceAttributes: [
       {
-        name: 'hostName',
+        name: 'hostname',
         jsonPath: '',
         description: ''
       }
     ],
     instancesListPath: ''
   },
-  execution: {}
+  execution: {
+    stepTemplateRefs: []
+  }
 }
 
 export const defaultInitialValuesWithFileStore = {
@@ -39,14 +41,16 @@ export const defaultInitialValuesWithFileStore = {
     },
     instanceAttributes: [
       {
-        name: 'hostName',
+        name: 'hostname',
         jsonPath: '',
         description: ''
       }
     ],
     instancesListPath: ''
   },
-  execution: {}
+  execution: {
+    stepTemplateRefs: []
+  }
 }
 
 export const initialValues = {

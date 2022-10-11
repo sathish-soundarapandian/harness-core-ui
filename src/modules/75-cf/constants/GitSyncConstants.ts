@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const AUTO_COMMIT_MESSAGES: Record<string, string> = {
+export const GIT_COMMIT_MESSAGES: Record<string, string> = {
   CREATED_FLAG: 'Created feature flag',
   TOGGLED_FLAG: 'Toggled feature flag',
   UPDATED_FLAG_DETAILS: 'Updated feature flag details',

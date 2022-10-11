@@ -14,17 +14,19 @@ import {
   RUNTIME_INPUT_VALUE,
   SelectOption
 } from '@harness/uicore'
-import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, merge } from 'lodash-es'
 import { Spinner } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { ServiceDefinition, ServiceYamlV2 } from 'services/cd-ng'
-import { useRunPipelineFormContext } from '@pipeline/context/RunPipelineFormContext'
+import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { useDeepCompareEffect } from '@common/hooks'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import type { DeployServiceEntityData, DeployServiceEntityCustomProps } from './DeployServiceEntityUtils'
 import { useGetServicesData } from './useGetServicesData'
@@ -46,14 +48,19 @@ export function DeployServiceEntityInputStep({
   inputSetData,
   allowableTypes,
   deploymentType,
-  gitOpsEnabled
+  gitOpsEnabled,
+  customDeploymentData
 }: DeployServiceEntityInputStepProps): React.ReactElement | null {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const { updateTemplate } = useRunPipelineFormContext()
+  const { updateStageFormTemplate } = useStageFormContext()
   const isStageTemplateInputSetForm = inputSetData?.path?.startsWith('template.templateInputs')
   const formik = useFormikContext()
   const pathPrefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
+
+  const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentData || {}
+  const shouldAddCustomDeploymentData =
+    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier
 
   const serviceValue = get(initialValues, `service.serviceRef`)
   const servicesValue: ServiceYamlV2[] = get(initialValues, `services.values`, [])
@@ -70,11 +77,13 @@ export function DeployServiceEntityInputStep({
 
     return []
   }, [serviceValue, servicesValue])
+
   const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
   const { servicesData, servicesList, loadingServicesData, loadingServicesList, updatingData } = useGetServicesData({
     gitOpsEnabled,
     deploymentType: deploymentType as ServiceDefinition['type'],
-    serviceIdentifiers
+    serviceIdentifiers,
+    ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
   })
   const isMultiSvcTemplate =
     getMultiTypeFromValue(servicesTemplate as unknown as string) === MultiTypeInputType.RUNTIME ||
@@ -108,11 +117,11 @@ export function DeployServiceEntityInputStep({
     // if no value is selected, clear the inputs and template
     if (serviceIdentifiers.length === 0) {
       if (isMultiSvcTemplate) {
-        updateTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}values`)
+        updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}values`)
         formik.setFieldValue(`${pathPrefix}values`, [])
       } else {
-        updateTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}serviceInputs`)
-        formik.setFieldValue(`${pathPrefix}serviceInputs`, {})
+        updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${pathPrefix}serviceInputs`)
+        formik.setFieldValue(`${pathPrefix}serviceInputs`, RUNTIME_INPUT_VALUE)
       }
       return
     }
@@ -128,34 +137,51 @@ export function DeployServiceEntityInputStep({
     // updated values based on selected services
     const newServicesValues: ServiceYamlV2[] = serviceIdentifiers.map(svcId => {
       const svcTemplate = servicesData.find(svcTpl => svcTpl.service.identifier === svcId)?.serviceInputs
+      let serviceInputs = isMultiSvcTemplate
+        ? get(formik.values, `${pathPrefix}values`)?.find((svc: ServiceYamlV2) => svc.serviceRef === svcId)
+            ?.serviceInputs
+        : get(formik.values, `${pathPrefix}serviceInputs`)
+
+      if (!serviceInputs || isValueRuntimeInput(serviceInputs)) {
+        serviceInputs = svcTemplate ? clearRuntimeInput(svcTemplate) : undefined
+      } else {
+        serviceInputs = merge(svcTemplate ? clearRuntimeInput(svcTemplate) : undefined, serviceInputs)
+      }
+
       return {
         serviceRef: svcId,
-        serviceInputs: svcTemplate ? clearRuntimeInput(svcTemplate) : {}
+        serviceInputs
       }
     })
 
     if (isMultiSvcTemplate) {
-      updateTemplate(newServicesTemplate, `${pathPrefix}values`)
+      updateStageFormTemplate(newServicesTemplate, `${pathPrefix}values`)
       formik.setFieldValue(`${pathPrefix}values`, newServicesValues)
     } else {
-      updateTemplate(defaultTo(newServicesTemplate[0].serviceInputs, {}), `${pathPrefix}serviceInputs`)
-      formik.setFieldValue(`${pathPrefix}serviceInputs`, defaultTo(newServicesValues[0].serviceInputs, {}))
+      updateStageFormTemplate(
+        defaultTo(
+          newServicesTemplate[0].serviceInputs,
+          isStageTemplateInputSetForm && getMultiTypeFromValue(serviceValue) === MultiTypeInputType.RUNTIME
+            ? RUNTIME_INPUT_VALUE
+            : undefined
+        ),
+        `${pathPrefix}serviceInputs`
+      )
+      formik.setFieldValue(
+        `${pathPrefix}serviceInputs`,
+        defaultTo(
+          newServicesValues[0].serviceInputs,
+          isStageTemplateInputSetForm && getMultiTypeFromValue(serviceValue) === MultiTypeInputType.RUNTIME
+            ? RUNTIME_INPUT_VALUE
+            : undefined
+        )
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [servicesData, serviceIdentifiers])
 
-  const onServiceRefChange = (value: SelectOption): void => {
-    if (
-      isStageTemplateInputSetForm &&
-      getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME &&
-      inputSetData?.path
-    ) {
-      formik.setFieldValue(inputSetData.path, {
-        serviceRef: RUNTIME_INPUT_VALUE,
-        serviceInputs: RUNTIME_INPUT_VALUE
-      })
-      return
-    }
+  const onServiceRefChange = (): void => {
+    formik.setFieldValue(`${pathPrefix}serviceInputs`, RUNTIME_INPUT_VALUE)
   }
 
   function handleServicesChange(values: SelectOption[]): void {
@@ -184,7 +210,7 @@ export function DeployServiceEntityInputStep({
               expressions,
               allowableTypes: allowableTypes,
               selectProps: {
-                addClearBtn: true && !inputSetData?.readonly,
+                addClearBtn: !inputSetData?.readonly,
                 items: selectOptions
               },
               onChange: onServiceRefChange

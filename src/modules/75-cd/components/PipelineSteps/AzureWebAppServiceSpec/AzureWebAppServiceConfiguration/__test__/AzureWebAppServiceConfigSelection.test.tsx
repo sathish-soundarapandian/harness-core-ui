@@ -18,6 +18,7 @@ import {
 import connectorsData from '@pipeline/components/ManifestSelection/__tests__/connectors_mock.json'
 import AzureWebAppConfigSelection from '../AzureWebAppServiceConfigSelection'
 import { fetchConnectors, mockErrorHandler, props } from './AppServiceConfigTestUtils'
+import { AzureWebAppSelectionTypes } from '../AzureWebAppServiceConfig.types'
 
 jest.mock('services/cd-ng', () => ({
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
@@ -54,7 +55,7 @@ describe('AzureWebAppConfigSelection', () => {
     const { container } = render(
       <TestWrapper path={testPath} pathParams={testPathParams}>
         <PipelineContext.Provider value={getContextValue()}>
-          <AzureWebAppConfigSelection {...props} />
+          <AzureWebAppConfigSelection {...props} showApplicationSettings={true} showConnectionStrings={true} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
@@ -95,6 +96,9 @@ describe('AzureWebAppConfigSelection', () => {
             isReadonlyServiceMode
             readonly
             isPropagating={false}
+            selectionType={AzureWebAppSelectionTypes.PIPELINE}
+            showApplicationSettings={true}
+            showConnectionStrings={true}
           />
         </PipelineContext.Provider>
       </TestWrapper>
@@ -110,6 +114,9 @@ describe('AzureWebAppConfigSelection', () => {
             isReadonlyServiceMode
             readonly={false}
             isPropagating={false}
+            selectionType={AzureWebAppSelectionTypes.PIPELINE}
+            showApplicationSettings={true}
+            showConnectionStrings={true}
           />
         </PipelineContext.Provider>
       </TestWrapper>
@@ -138,6 +145,9 @@ describe('AzureWebAppConfigSelection', () => {
           isReadonlyServiceMode
           readonly
           isPropagating={false}
+          selectionType={AzureWebAppSelectionTypes.PIPELINE}
+          showApplicationSettings={true}
+          showConnectionStrings={true}
         />
       </TestWrapper>
     )
@@ -153,7 +163,7 @@ describe('AzureWebAppConfigSelection', () => {
     render(
       <TestWrapper path={testPath} pathParams={testPathParams}>
         <PipelineContext.Provider value={getContextValue()}>
-          <AzureWebAppConfigSelection {...props} />
+          <AzureWebAppConfigSelection {...props} showApplicationSettings={true} showConnectionStrings={true} />
         </PipelineContext.Provider>
       </TestWrapper>
     )

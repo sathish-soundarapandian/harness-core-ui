@@ -12,6 +12,7 @@ import {
   Button,
   ButtonVariation,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   Layout,
@@ -20,7 +21,6 @@ import {
   Text
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { Form } from 'formik'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import * as Yup from 'yup'
 import cx from 'classnames'
@@ -131,7 +131,7 @@ function InheritFromManifest({
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: InheritFromManifestDataType }) => {
           return (
-            <Form>
+            <FormikForm>
               <Layout.Vertical
                 flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
                 className={css.manifestForm}
@@ -189,7 +189,7 @@ function InheritFromManifest({
                   />
                 </Layout.Horizontal>
               </Layout.Vertical>
-            </Form>
+            </FormikForm>
           )
         }}
       </Formik>

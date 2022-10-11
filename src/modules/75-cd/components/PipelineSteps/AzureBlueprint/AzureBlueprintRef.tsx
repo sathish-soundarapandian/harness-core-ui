@@ -86,17 +86,19 @@ export const AzureBlueprintRef = (
             connectorRef: Yup.string().required(getString('pipelineSteps.build.create.connectorRequiredError')),
             assignmentName: Yup.string().required(getString('cd.azureBlueprint.assignmentNameError')),
             scope: Yup.string(),
-            template: Yup.object().shape({
-              store: Yup.object({
-                type: Yup.string(),
-                spec: Yup.object().when('type', {
-                  is: value => value !== 'Harness',
-                  then: Yup.object().shape({
-                    connectorRef: Yup.string().required(getString('cd.cloudFormation.errors.templateRequired'))
+            template: Yup.object()
+              .shape({
+                store: Yup.object({
+                  type: Yup.string(),
+                  spec: Yup.object().when('type', {
+                    is: value => value !== 'Harness',
+                    then: Yup.object().shape({
+                      connectorRef: Yup.string().required(getString('cd.cloudFormation.errors.templateRequired'))
+                    })
                   })
                 })
               })
-            })
+              .required()
           })
         })
       })}
@@ -184,6 +186,7 @@ export const AzureBlueprintRef = (
                 disabled={readonly}
                 name="spec.configuration.assignmentName"
                 label={getString('cd.azureBlueprint.assignmentName')}
+                multiTextInputProps={{ expressions }}
               />
               {
                 /* istanbul ignore next */

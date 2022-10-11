@@ -30,8 +30,6 @@ import { useStrings } from 'framework/strings'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
 import { connectorGovernanceModalProps } from '@connectors/utils/utils'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { OPTIMIZATION_FEATURE, CROSS_ACCOUNT_ACCESS, FEATURES_ENABLED } from '../constants'
 import type { feature } from '../constants'
 import css from './Steps.module.scss'
@@ -65,7 +63,6 @@ const ConnectionDetailsStep: React.FC<StepProps<ConnectorInfoDTO>> = props => {
       accountIdentifier: accountId
     }
   })
-  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
 
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
 
@@ -112,7 +109,7 @@ const ConnectionDetailsStep: React.FC<StepProps<ConnectorInfoDTO>> = props => {
       modalErrorHandler?.hide()
       const connector: ConnectorRequestBody = { connector: connectorInfo }
       const res = await createConnector(connector)
-      if (opaFlagEnabled && res.data?.governanceMetadata) {
+      if (res.data?.governanceMetadata) {
         conditionallyOpenGovernanceErrorModal(res.data?.governanceMetadata, () => {
           nextStep?.(connectorInfo)
         })

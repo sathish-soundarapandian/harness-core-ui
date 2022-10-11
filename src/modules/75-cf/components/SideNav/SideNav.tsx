@@ -51,7 +51,7 @@ export default function CFSideNav(): React.ReactElement {
       })
     } else {
       history.push(
-        routes.toCFFeatureFlags({
+        routes.toCFConfigurePath({
           projectIdentifier: data.identifier,
           orgIdentifier: data.orgIdentifier || '',
           accountId

@@ -8,4 +8,8 @@
 .inputsContainer {
   position: relative;
   min-height: 300px;
+
+  .errorHandler {
+    margin-top: 16px !important;
+  }
 }

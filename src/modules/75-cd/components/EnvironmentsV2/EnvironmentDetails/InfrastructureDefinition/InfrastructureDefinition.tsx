@@ -22,6 +22,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 
+import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import InfrastructureList from './InfrastructureList/InfrastructureList'
 import InfrastructureModal from './InfrastructureModal'
 
@@ -44,6 +45,7 @@ export default function InfrastructureDefinition(): JSX.Element {
     }
   })
 
+  const { getTemplate } = useTemplateSelector()
   const onClose = (): void => {
     setSelectedInfrastructure('')
     hideModal()
@@ -68,6 +70,7 @@ export default function InfrastructureDefinition(): JSX.Element {
           refetch={refetch}
           environmentIdentifier={environmentIdentifier}
           selectedInfrastructure={selectedInfrastructure}
+          getTemplate={getTemplate}
         />
       </ModalDialog>
     ),

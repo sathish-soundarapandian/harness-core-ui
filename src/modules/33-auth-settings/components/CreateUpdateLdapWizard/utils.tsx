@@ -6,7 +6,7 @@
  */
 
 import { FontVariation, Text, Icon, Color, Layout } from '@harness/uicore'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useStrings } from 'framework/strings'
 import type { LdapConnectionSettings, ResponseMessage } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
@@ -107,4 +107,15 @@ export const getErrorMessageFromException = (e: any, fallbackMessage?: string): 
   return hasResponseMessages
     ? e.data?.responseMessages
     : [{ level: 'ERROR', message: e.data?.message || e.message || fallbackMessage }]
+}
+
+export const DEFAULT_LDAP_SYNC_CRON_EXPRESSION = '0/15 * * * *' // Every 15 minutes
+
+export const getDateIterationsList = (dates: number[]): ReactElement => {
+  const datesHTML = dates.map(date => {
+    const dateObject = new Date(date)
+    return <li key={date}>{dateObject.toString()}</li>
+  })
+
+  return <ul>{datesHTML}</ul>
 }

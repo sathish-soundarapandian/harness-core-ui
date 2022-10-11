@@ -65,7 +65,7 @@ const ResourceGroupDetails: React.FC = () => {
   const resourceGroupScope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const [includedScopes, setIncludedScopes] = useState<ScopeSelector[]>([])
   const [selectionType, setSelectionType] = useState<SelectionType>(SelectionType.SPECIFIED)
-  const [selectedScope, setSelectedScope] = useState<SelectorScope>(SelectorScope.CURRENT)
+  const [selectedScope, setSelectedScope] = useState<SelectorScope | null>(null) // Initializing to non null value might render wrong data momentarily
   const [selectedResourcesMap, setSelectedResourceMap] = useState<Map<ResourceType, ResourceSelectorValue>>(new Map())
   const [resourceTypes, setResourceTypes] = useState<ResourceType[]>([])
   const [resourceCategoryMap, setResourceCategoryMap] =
@@ -104,7 +104,16 @@ const ResourceGroupDetails: React.FC = () => {
     }
   })
 
+  // Following is to be triggered only once after fetch call response data is updated
   useEffect(() => {
+    if (selectedScope === null && resourceGroupDetails?.data?.resourceGroup) {
+      setSelectedScope(
+        getSelectedScopeType(
+          getScopeFromDTO({ accountId, orgIdentifier, projectIdentifier }),
+          resourceGroupDetails?.data?.resourceGroup.includedScopes
+        )
+      )
+    }
     setSelectedResourceMap(
       getSelectedResourcesMap(resourceTypes, resourceGroupDetails?.data?.resourceGroup.resourceFilter)
     )
@@ -118,14 +127,20 @@ const ResourceGroupDetails: React.FC = () => {
       )
     )
     setSelectionType(getSelectionType(resourceGroupDetails?.data?.resourceGroup))
-  }, [resourceGroupDetails?.data?.resourceGroup, accountId, orgIdentifier, projectIdentifier, resourceTypes])
+  }, [resourceGroupDetails?.data?.resourceGroup])
 
   useDeepCompareEffect(() => {
+    if (!selectedScope) {
+      // Wait for resourceGroupDetails response and selectedScope initialization
+      return
+    }
     const types = getFilteredResourceTypes(resourceTypeData, selectedScope)
     setResourceTypes(types)
     setResourceCategoryMap(_map => RbacFactory.getResourceCategoryList(types))
-    setSelectedResourceMap(_selectedResourcesMap => cleanUpResourcesMap(types, _selectedResourcesMap, selectionType))
-  }, [selectedScope, resourceTypeData])
+    setSelectedResourceMap(_selectedResourcesMap =>
+      cleanUpResourcesMap(types, _selectedResourcesMap, selectionType, selectedScope)
+    )
+  }, [selectedScope, resourceTypeData, includedScopes])
 
   const { mutate: updateResourceGroup, loading: updating } = useUpdateResourceGroupV2({
     identifier: defaultTo(resourceGroupIdentifier, ''),

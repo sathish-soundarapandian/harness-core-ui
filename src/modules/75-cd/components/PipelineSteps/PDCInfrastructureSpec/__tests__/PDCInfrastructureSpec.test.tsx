@@ -147,6 +147,21 @@ describe('Test PDCInfrastructureSpec behavior - No Preconfigured', () => {
     factory.registerStep(new PDCInfrastructureSpec())
   })
 
+  test('test empty initial values', async () => {
+    const onUpdateHandler = jest.fn()
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={{}}
+        type={StepType.PDC}
+        stepViewType={StepViewType.Edit}
+        onUpdate={onUpdateHandler}
+      />
+    )
+    await checkForFormInit(container)
+    await openPreviewHosts(getByText)
+    expect(getByText('1.2.3.4')).toBeDefined()
+  })
+
   test('should call onUpdate if valid values entered - inputset', async () => {
     const onUpdateHandler = jest.fn()
     const { container } = render(

@@ -19,6 +19,7 @@ import { PipelineGraphType, NodeType, BaseReactComponentProps } from '../../type
 import SVGMarker from '../SVGMarker'
 import { getPositionOfAddIcon } from '../utils'
 import AddLinkNode from '../DefaultNode/AddLinkNode/AddLinkNode'
+import MatrixNodeNameLabelWrapper from '../MatrixNodeNameLabelWrapper'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './DiamondNode.module.scss'
 
@@ -37,6 +38,8 @@ export function DiamondNodeWidget(props: any): JSX.Element {
   )
   const isTemplateNode = props?.data?.isTemplateNode
   const showMarkers = defaultTo(props?.showMarkers, true)
+
+  const matrixNodeName = defaultTo(props?.matrixNodeName, props?.data?.matrixNodeName)
   return (
     <div
       className={cx(cssDefault.defaultNode, 'diamond-node')}
@@ -237,8 +240,9 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
             lineClamp={2}
+            tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {props.name}
+            {matrixNodeName ? <MatrixNodeNameLabelWrapper matrixLabel={props?.name as string} /> : props.name}
           </Text>
         </div>
       )}
@@ -259,7 +263,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
               [cssDefault.show]: showAddLink
             },
             {
-              [cssDefault.stepAddIcon]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+              ['stepAddIcon']: props.data?.graphType === PipelineGraphType.STEP_GRAPH
             },
             {
               [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH
@@ -285,7 +289,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             className={cx(
               cssDefault.addNodeIcon,
               {
-                [cssDefault.stepAddIcon]: props.data?.graphType === PipelineGraphType.STEP_GRAPH
+                ['stepAddIcon']: props.data?.graphType === PipelineGraphType.STEP_GRAPH
               },
               {
                 [cssDefault.stageAddIcon]: props.data?.graphType === PipelineGraphType.STAGE_GRAPH

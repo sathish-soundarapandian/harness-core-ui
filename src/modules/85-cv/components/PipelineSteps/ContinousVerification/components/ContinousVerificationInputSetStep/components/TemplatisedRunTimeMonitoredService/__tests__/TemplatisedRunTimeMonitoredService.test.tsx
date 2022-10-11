@@ -8,6 +8,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import type { AllowedTypesWithRunTime } from '@harness/uicore'
+import * as formik from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 
 import type {
@@ -44,6 +45,14 @@ jest.mock('@cv/components/HarnessServiceAndEnvironment/HarnessServiceAndEnvironm
 }))
 
 describe('Unit tests for TemplatisedRunTimeMonitoredService', () => {
+  const useFormikContextMock = jest.spyOn(formik, 'useFormikContext')
+
+  beforeEach(() => {
+    useFormikContextMock.mockReturnValue({
+      setFieldValue: jest.fn()
+    } as unknown as any)
+  })
+
   test('Verify if correct runtime fields are rendered in runtime screen of templatised monitored service', async () => {
     const props = {
       prefix:

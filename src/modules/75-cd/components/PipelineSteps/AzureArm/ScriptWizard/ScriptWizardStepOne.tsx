@@ -58,7 +58,6 @@ export const ScriptWizardStepOne = ({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
-  const [isLoadingConnectors, setIsLoadingConnectors] = useState<boolean>(true)
   /* istanbul ignore next */
   const [selectedStore, setSelectedStore] = useState(prevStepData?.store ?? initialValues?.store)
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
@@ -84,12 +83,17 @@ export const ScriptWizardStepOne = ({
   const shouldGotoNextStep = /* istanbul ignore next */ (
     connectorRefValue: ConnectorSelectedValue | string
   ): boolean => {
+    if (selectedStore === 'Harness') {
+      return true
+    } else if (getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.RUNTIME) {
+      return true
+    } else if (getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.EXPRESSION) {
+      return !isEmpty(connectorRefValue)
+    }
+
     return (
-      !isLoadingConnectors &&
-      !!selectedStore &&
-      ((getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
-        !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)) ||
-        !isEmpty(connectorRefValue))
+      getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED &&
+      !isEmpty((connectorRefValue as ConnectorSelectedValue)?.connector)
     )
   }
   const handleOptionSelection = /* istanbul ignore next */ (formikData: any, storeSelected: ConnectorTypes): void => {
@@ -111,18 +115,14 @@ export const ScriptWizardStepOne = ({
       `spec.configuration.${isParam ? 'parameters' : 'template'}.store.spec.connectorRef`,
       ''
     )
-    const initValues = {
-      store: selectedStore,
-      connectorRef: connectorRef
-    }
+    const store = get(initialValues, `spec.configuration.${isParam ? 'parameters' : 'template'}.store.type`, '')
+    const initValues = { store, connectorRef }
     /* istanbul ignore next */
-    if (prevStepData?.connectorRef) {
-      initValues.connectorRef = prevStepData.connectorRef
-      handleStoreChange(selectedStore)
-    }
-    /* istanbul ignore next */
-    if (selectedStore !== initValues.store && selectedStore !== prevStepData?.store) {
-      initValues.connectorRef = ''
+    if (!isEmpty(selectedStore) && selectedStore !== store) {
+      return {
+        store: selectedStore,
+        connectorRef: ''
+      }
     }
     return initValues
   }, [selectedStore])
@@ -184,9 +184,6 @@ export const ScriptWizardStepOne = ({
                     >
                       <FormMultiTypeConnectorField
                         key={values.store}
-                        onLoadingFinish={() => {
-                          setIsLoadingConnectors(false)
-                        }}
                         name="connectorRef"
                         label={`${getString('connector')}`}
                         placeholder={`${getString('select')} ${getString('connector')}`}
@@ -259,9 +256,7 @@ export const ScriptWizardStepOne = ({
                     rightIcon="chevron-right"
                     disabled={
                       /* istanbul ignore next */
-                      selectedStore !== 'Harness'
-                        ? !shouldGotoNextStep(values?.connectorRef as ConnectorSelectedValue | string)
-                        : false
+                      !shouldGotoNextStep(values?.connectorRef as ConnectorSelectedValue | string)
                     }
                   />
                 </Layout.Horizontal>

@@ -77,6 +77,23 @@
       }
     }
   }
+
+  .view {
+    display: inline-flex;
+    column-gap: var(--spacing-2);
+    color: var(--primary-7);
+    border: 1px solid currentColor;
+    padding: var(--spacing-1) var(--spacing-4);
+    border-radius: 4px;
+
+    :global(.bp3-icon path) {
+      fill: var(--primary-7) !important;
+    }
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 }
 .viewLatest {
   cursor: pointer !important;

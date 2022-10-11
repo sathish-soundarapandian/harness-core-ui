@@ -281,7 +281,11 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                       <div
                         className={css.tabHeading}
                         id="advanced"
-                        style={{ paddingLeft: 'var(--spacing-small)', marginBottom: 0 }}
+                        style={{
+                          paddingLeft: 'var(--spacing-small)',
+                          paddingRight: 'var(--spacing-4)',
+                          marginBottom: 0
+                        }}
                       >
                         {getString('advancedTitle')}
                       </div>

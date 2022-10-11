@@ -39,13 +39,15 @@ export interface NewSegmentButtonProps {
   orgIdentifier: string
   projectIdentifier: string
   onCreated: (segmentIdentifier: string) => void
+  isLinkVariation?: boolean
 }
 
 export const NewSegmentButton: React.FC<NewSegmentButtonProps> = ({
   accountIdentifier,
   orgIdentifier,
   projectIdentifier,
-  onCreated
+  onCreated,
+  isLinkVariation
 }) => {
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -154,7 +156,7 @@ export const NewSegmentButton: React.FC<NewSegmentButtonProps> = ({
     <RbacButton
       icon="plus"
       intent="primary"
-      variation={ButtonVariation.PRIMARY}
+      variation={isLinkVariation ? ButtonVariation.LINK : ButtonVariation.PRIMARY}
       text={getString('cf.segments.create')}
       onClick={openModal}
       permission={{

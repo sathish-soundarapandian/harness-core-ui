@@ -651,7 +651,7 @@ exports[`Test K8sDeleteStep should render edit view -with ReleaseName selected 1
       id="warning-deletenamespace"
     >
       <span
-        class="bp3-icon StyledProps--main StyledProps--intent-danger StyledProps--margin-right-small"
+        class="bp3-icon StyledProps--main StyledProps--intent-warning StyledProps--margin-right-small"
         data-icon="warning-icon"
       >
         <svg

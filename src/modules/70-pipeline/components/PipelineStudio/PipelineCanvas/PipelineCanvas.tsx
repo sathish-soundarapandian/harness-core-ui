@@ -714,7 +714,7 @@ export function PipelineCanvas({
   )
 
   const onGitBranchChange = React.useMemo(
-    () => (selectedFilter: GitFilterScope) => {
+    () => (selectedFilter: GitFilterScope, defaultSelected?: boolean) => {
       setSelectedBranch(selectedFilter.branch as string)
       if (isUpdated && branch !== selectedFilter.branch) {
         setBlockNavigation(true)
@@ -740,7 +740,10 @@ export function PipelineCanvas({
                   : {})
               })
             )
-            location.reload()
+            // Avoid page reload when default branch is auto selected for GitX
+            if (!defaultSelected) {
+              location.reload()
+            }
           }
         )
       }
@@ -775,26 +778,6 @@ export function PipelineCanvas({
         <div /> {/* this empty div is required for rendering layout correctly */}
       </React.Fragment>
     )
-  }
-
-  const getPipelineNameTextContainerWidth = (): number | undefined => {
-    if (isPipelineRemote) {
-      return 100
-    }
-
-    if (isGitSyncEnabled) {
-      if (pipelineIdentifier === DefaultNewPipelineId) {
-        if (!isEmpty(pipeline?.tags)) {
-          return 150
-        }
-        return 175
-      }
-      if (!isEmpty(pipeline?.tags)) {
-        return 125
-      }
-      return 155
-    }
-    return 400
   }
 
   if (templateError?.data && !isGitSyncEnabled && !isPipelineRemote) {
@@ -874,58 +857,55 @@ export function PipelineCanvas({
         />
         <Layout.Vertical height={'100%'}>
           <div className={css.titleBar}>
-            <div className={css.breadcrumbsMenu}>
-              <div className={css.pipelineMetadataContainer}>
-                <Layout.Horizontal className={css.pipelineNameContainer}>
-                  <Icon className={css.pipelineIcon} padding={{ right: 'small' }} name="pipeline" size={32} />
-                  <Text
-                    className={css.pipelineName}
-                    style={{
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      maxWidth: getPipelineNameTextContainerWidth()
+            <div className={css.titleSubheader}>
+              <div
+                className={cx(css.breadcrumbsMenu, {
+                  [css.remotePipelineName]: isPipelineRemote
+                })}
+              >
+                <div className={css.pipelineMetadataContainer}>
+                  <Layout.Horizontal className={css.pipelineNameContainer}>
+                    <Icon className={css.pipelineIcon} padding={{ right: 'small' }} name="pipeline" size={32} />
+                    <Text className={css.pipelineName} lineClamp={1}>
+                      {pipeline?.name}
+                    </Text>
+                    {!isEmpty(pipeline?.tags) && pipeline.tags && (
+                      <Container className={css.tagsContainer}>
+                        <TagsPopover tags={pipeline.tags} />
+                      </Container>
+                    )}
+                    {isGitSyncEnabled && (
+                      <StudioGitPopover
+                        gitDetails={gitDetails}
+                        identifier={pipelineIdentifier}
+                        isReadonly={isReadonly}
+                        entityData={{ ...pipeline, versionLabel: '', type: 'Step' }} // Just to avoid type issues
+                        onGitBranchChange={onGitBranchChange}
+                        entityType={'Pipeline'}
+                      />
+                    )}
+                    {isYaml || isReadonly ? null : (
+                      <Button variation={ButtonVariation.ICON} icon="Edit" onClick={showModal} />
+                    )}
+                  </Layout.Horizontal>
+                </div>
+              </div>
+              {isPipelineRemote && (
+                <div className={css.gitRemoteDetailsWrapper}>
+                  <GitRemoteDetails
+                    connectorRef={connectorRef}
+                    repoName={repoName || gitDetails.repoName || gitDetails.repoIdentifier || ''}
+                    filePath={gitDetails.filePath || ''}
+                    fileUrl={gitDetails.fileUrl || ''}
+                    branch={branch || ''}
+                    onBranchChange={onGitBranchChange}
+                    flags={{
+                      readOnly: pipelineIdentifier === DefaultNewPipelineId
                     }}
-                    tooltip={pipeline?.name}
-                  >
-                    {pipeline?.name}
-                  </Text>
-                  {!isEmpty(pipeline?.tags) && pipeline.tags && (
-                    <Container className={css.tagsContainer}>
-                      <TagsPopover tags={pipeline.tags} />
-                    </Container>
-                  )}
-                  {isGitSyncEnabled && (
-                    <StudioGitPopover
-                      gitDetails={gitDetails}
-                      identifier={pipelineIdentifier}
-                      isReadonly={isReadonly}
-                      entityData={{ ...pipeline, versionLabel: '', type: 'Step' }} // Just to avoid type issues
-                      onGitBranchChange={onGitBranchChange}
-                      entityType={'Pipeline'}
-                    />
-                  )}
-                  {isYaml || isReadonly ? null : (
-                    <Button variation={ButtonVariation.ICON} icon="Edit" onClick={showModal} />
-                  )}
-                </Layout.Horizontal>
-              </div>
+                  />
+                </div>
+              )}
             </div>
-            {isPipelineRemote && (
-              <div className={css.gitRemoteDetailsWrapper}>
-                <GitRemoteDetails
-                  connectorRef={connectorRef}
-                  repoName={repoName || gitDetails.repoName || gitDetails.repoIdentifier || ''}
-                  filePath={gitDetails.filePath || ''}
-                  fileUrl={gitDetails.fileUrl || ''}
-                  branch={branch || ''}
-                  onBranchChange={onGitBranchChange}
-                  flags={{
-                    readOnly: pipelineIdentifier === DefaultNewPipelineId
-                  }}
-                />
-              </div>
-            )}
             <VisualYamlToggle
               className={css.visualYamlToggle}
               selectedView={isYaml || disableVisualView ? SelectedView.YAML : SelectedView.VISUAL}

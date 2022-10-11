@@ -76,6 +76,7 @@ export enum NodeType {
   INFRASTRUCTURE_SECTION = 'INFRASTRUCTURE_SECTION',
   DEPLOYMENT_STAGE_STEP = 'DEPLOYMENT_STAGE_STEP',
   APPROVAL_STAGE = 'APPROVAL_STAGE',
+  CUSTOM_STAGE = 'CUSTOM_STAGE',
   NG_SECTION_WITH_ROLLBACK_INFO = 'NG_SECTION_WITH_ROLLBACK_INFO',
   NG_EXECUTION = 'NG_EXECUTION',
   StepGroupNode = 'StepGroupNode',
@@ -92,6 +93,7 @@ export const NonSelectableNodes: NodeType[] = [
   NodeType.FORK,
   NodeType.DEPLOYMENT_STAGE_STEP,
   NodeType.APPROVAL_STAGE,
+  NodeType.CUSTOM_STAGE,
   NodeType.NG_EXECUTION
 ]
 
@@ -120,6 +122,7 @@ export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
   NG_FORK: 'fork',
   DEPLOYMENT_STAGE_STEP: 'circle',
   APPROVAL_STAGE: 'approval-stage-icon',
+  CUSTOM_STAGE: 'custom-stage-icon',
   StepGroupNode: 'step-group',
   'GITOPS CLUSTERS': 'gitops-clusters',
   STRATEGY: 'step-group',
@@ -148,7 +151,8 @@ export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
   InterventionWaiting: 'waiting',
   ApprovalWaiting: 'waiting',
   Pausing: 'pause',
-  InputWaiting: 'waiting'
+  InputWaiting: 'waiting',
+  WaitStepRunning: 'waiting'
 }
 
 /**
@@ -867,9 +871,8 @@ export const getChildNodeDataForMatrix = (
   if (isNodeTypeMatrixOrFor(parentNode?.nodeType)) {
     parentNode?.edgeLayoutList?.currentNodeChildren?.forEach(item => {
       const nodeDataItem = layoutNodeMap[item]
-      const matrixNodeName =
-        nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues &&
-        `(${Object.values(nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(', ')}): `
+      const matrixNodeName = nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues
+
       childData.push({
         id: nodeDataItem.nodeExecutionId as string, // matrix node nodeExecId(unique) + stageNodeId (nodeUUID) commo
         stageNodeId: nodeDataItem?.nodeUuid as string,
@@ -958,9 +961,7 @@ export const processLayoutNodeMapV1 = (executionSummary?: PipelineExecutionSumma
         const childData: PipelineGraphState[] = []
         currentNodeChildren.forEach(item => {
           const nodeDataItem = layoutNodeMap[item]
-          const matrixNodeName =
-            nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues &&
-            `(${Object.values(nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues)?.join(' ')}): `
+          const matrixNodeName = nodeDataItem?.strategyMetadata?.matrixmetadata?.matrixvalues
           childData.push({
             id: nodeDataItem.nodeExecutionId as string,
             stageNodeId: nodeDataItem?.nodeUuid as string,

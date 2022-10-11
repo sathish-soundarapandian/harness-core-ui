@@ -6,35 +6,52 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Container } from '@harness/uicore'
-import { NoData } from '@cf/components/NoData/NoData'
-import { String, useStrings } from 'framework/strings'
+import EnvironmentDialog from '@cf/components/CreateEnvironmentDialog/EnvironmentDialog'
+import routes from '@common/RouteDefinitions'
 import { NewTargets } from './NewTarget'
-import imageURL from './target.svg'
+import TargetsSectionNoData from './TargetsSectionNoData'
 
 export interface NoTargetsViewProps {
   onNewTargetsCreated: () => void
+  noEnvironment?: boolean
 }
 
-export const NoTargetsView: React.FC<NoTargetsViewProps> = ({ onNewTargetsCreated }) => {
+export const NoTargetsView: React.FC<NoTargetsViewProps> = ({ onNewTargetsCreated, noEnvironment }) => {
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
-  const { getString } = useStrings()
+  const history = useHistory()
 
   return (
     <Container width="100%" height="100%" flex={{ align: 'center-center' }}>
-      <NoData
-        imageURL={imageURL}
-        message={getString('cf.targets.noTargetForEnv')}
-        description={<String useRichText stringID="cf.targets.noTargetDescription" />}
-      >
-        <NewTargets
-          accountIdentifier={accountIdentifier}
-          orgIdentifier={orgIdentifier}
-          projectIdentifier={projectIdentifier}
-          onCreated={onNewTargetsCreated}
-        />
-      </NoData>
+      <TargetsSectionNoData>
+        {noEnvironment ? (
+          <EnvironmentDialog
+            onCreate={response => {
+              setTimeout(() => {
+                history.push(
+                  routes.toCFEnvironmentDetails({
+                    environmentIdentifier: response?.data?.identifier as string,
+                    projectIdentifier,
+                    orgIdentifier,
+                    accountId: accountIdentifier
+                  })
+                )
+              }, 1000)
+            }}
+            isLinkVariation
+            buttonText={'cf.targets.newEnvironmentTarget'}
+          />
+        ) : (
+          <NewTargets
+            accountIdentifier={accountIdentifier}
+            orgIdentifier={orgIdentifier}
+            projectIdentifier={projectIdentifier}
+            onCreated={onNewTargetsCreated}
+            isLinkVariation
+          />
+        )}
+      </TargetsSectionNoData>
     </Container>
   )
 }

@@ -40,7 +40,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
@@ -273,7 +273,7 @@ function ConfigFilesListView({
               buildPayload={buildPayload}
               connectorInfo={undefined}
             />
-            <VerifyOutOfClusterDelegate
+            <ConnectorTestConnection
               name={getString('connectors.stepThreeName')}
               connectorInfo={undefined}
               isStep={true}

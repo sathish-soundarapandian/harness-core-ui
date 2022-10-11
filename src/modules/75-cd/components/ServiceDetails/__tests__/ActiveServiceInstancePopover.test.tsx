@@ -10,7 +10,12 @@ import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import { ActiveServiceInstancePopover } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancePopover'
 import * as cdngServices from 'services/cd-ng'
-import { mockserviceInstanceDetails, mockGitopsServiceInstanceDetails } from './mocks'
+import {
+  mockserviceInstanceDetails,
+  mockGitopsServiceInstanceDetails,
+  mockServiceInstanceDetailsWithContainerList,
+  mockServiceInstanceDetailsForCustomDeployment
+} from './mocks'
 
 describe('ActiveServiceInstancePopover', () => {
   beforeEach(() => {
@@ -71,5 +76,40 @@ describe('ActiveServiceInstancePopover', () => {
     )
 
     expect(getByText('common.cluster:')).toBeDefined()
+  })
+
+  test('should render container list images', () => {
+    jest
+      .spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds')
+      .mockImplementation(() => mockServiceInstanceDetailsWithContainerList as any)
+
+    const { getByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={0} />
+      </TestWrapper>
+    )
+    expect(getByText('cd.serviceDashboard.containerList:')!).toBeDefined()
+  })
+
+  test('should render instances info for custom deployment', () => {
+    jest
+      .spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds')
+      .mockImplementation(() => mockServiceInstanceDetailsForCustomDeployment as any)
+
+    const { getByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={0} />
+      </TestWrapper>
+    )
+    expect(getByText('hostname:')!).toBeDefined()
+    expect(getByText('instance2')!).toBeDefined()
+    expect(getByText('version:')!).toBeDefined()
+    expect(getByText('2021.07.10_app_2.war')!).toBeDefined()
   })
 })

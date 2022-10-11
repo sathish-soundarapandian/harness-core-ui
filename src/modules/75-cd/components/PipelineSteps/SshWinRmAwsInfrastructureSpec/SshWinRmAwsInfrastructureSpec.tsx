@@ -66,6 +66,12 @@ const logger = loggerFor(ModuleName.CD)
 
 const errorMessage = 'data.message'
 
+const hostConnectionTypes = ['PublicIP', 'PrivateIP'] as SshWinRmAwsInfrastructure['hostConnectionType'][]
+const hostConnectionTypeOptions = hostConnectionTypes.map(type => ({
+  value: type,
+  label: type
+}))
+
 export type SshWinRmAwsInfrastructureTemplate = { [key in keyof SshWinRmAwsInfrastructure]: string }
 
 function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
@@ -222,7 +228,8 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                   ? get(value, 'credentialsRef', '')
                   : get(value, 'credentialsRef.referenceString', ''),
               region: typeof value.region === 'string' ? value.region : get(value, 'region.value', ''),
-              awsInstanceFilter: value.awsInstanceFilter
+              awsInstanceFilter: value.awsInstanceFilter,
+              hostConnectionType: value.hostConnectionType
             }
             delayedOnUpdate(data as SshWinRmAwsInfrastructure)
           }}
@@ -306,7 +313,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       }}
                     />
                   </Layout.Vertical>
-                  <Layout.Vertical className={css.inputWidth}>
+                  <Layout.Vertical className={css.inputWidth} margin={{ bottom: 'medium' }}>
                     <MultiTypeTagSelector
                       name="awsInstanceFilter.tags"
                       className="tags-select"
@@ -334,6 +341,16 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                         }
                       }}
                       expressions={expressions}
+                    />
+                  </Layout.Vertical>
+                  <Layout.Vertical className={css.inputWidth}>
+                    <FormInput.Select
+                      items={hostConnectionTypeOptions}
+                      tooltipProps={{
+                        dataTooltipId: 'sshWinrmAzureHostConnectionType'
+                      }}
+                      name={'hostConnectionType'}
+                      label={getString('cd.infrastructure.sshWinRmAzure.hostConnectionType')}
                     />
                   </Layout.Vertical>
                 </Layout.Vertical>
@@ -376,7 +393,8 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
     awsInstanceFilter: { tags: {}, vpcs: [] },
     connectorRef: '',
     credentialsRef: '',
-    region: ''
+    region: '',
+    hostConnectionType: hostConnectionTypes[0]
   }
 
   /* istanbul ignore next */

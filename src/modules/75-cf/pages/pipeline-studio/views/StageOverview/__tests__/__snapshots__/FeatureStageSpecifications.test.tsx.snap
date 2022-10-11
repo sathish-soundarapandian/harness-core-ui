@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StepWidget tests renders DeployStageSpecifications without crashing  1`] = `
+exports[`StepWidget tests it renders StageOverview 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main StyledProps--padding-top-small StyledProps--padding-right-xxlarge StyledProps--padding-bottom-xxlarge StyledProps--padding-left-xxlarge"
+    class="StyledProps--font StyledProps--main StyledProps--padding-huge"
   >
     <h3
       class="StyledProps--font StyledProps--font-h3 StyledProps--main StyledProps--color StyledProps--color-black"

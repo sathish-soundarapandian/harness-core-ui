@@ -17,8 +17,9 @@ import {
   Container
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import type { FormikProps } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 import get from 'lodash/get'
+import merge from 'lodash/merge'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -77,10 +78,15 @@ export const RunStepBase = (
       )}
       formName="ciRunStep"
       validate={valuesToValidate => {
+        let errors: FormikErrors<any> = {}
         /* If a user configures AWS VMs as an infra, the steps can be executed directly on the VMS or in a container on a VM. 
         For the latter case, even though Container Registry and Image are optional for AWS VMs infra, they both need to be specified for container to be spawned properly */
-        if ([CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType)) {
-          return validateConnectorRefAndImageDepdendency(
+        if (
+          [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+            buildInfrastructureType
+          )
+        ) {
+          errors = validateConnectorRefAndImageDepdendency(
             get(valuesToValidate, 'spec.connectorRef', ''),
             get(valuesToValidate, 'spec.image', ''),
             getString
@@ -91,17 +97,21 @@ export const RunStepBase = (
           transformValuesFieldsConfig
         )
         onChange?.(schemaValues)
-        return validate(
-          valuesToValidate,
-          getEditViewValidateFieldsConfig(buildInfrastructureType),
-          {
-            initialValues,
-            steps: currentStage?.stage?.spec?.execution?.steps || {},
-            serviceDependencies: currentStage?.stage?.spec?.serviceDependencies || [],
-            getString
-          },
-          stepViewType
+        errors = merge(
+          errors,
+          validate(
+            valuesToValidate,
+            getEditViewValidateFieldsConfig(buildInfrastructureType),
+            {
+              initialValues,
+              steps: currentStage?.stage?.spec?.execution?.steps || {},
+              serviceDependencies: currentStage?.stage?.spec?.serviceDependencies || [],
+              getString
+            },
+            stepViewType
+          )
         )
+        return errors
       }}
       onSubmit={(_values: RunStepDataUI) => {
         const schemaValues = getFormValuesInCorrectFormat<RunStepDataUI, RunStepData>(
@@ -127,7 +137,11 @@ export const RunStepBase = (
                 description: {}
               }}
             />
-            {![CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType) ? (
+            {![
+              CIBuildInfrastructureType.VM,
+              CIBuildInfrastructureType.Cloud,
+              CIBuildInfrastructureType.Docker
+            ].includes(buildInfrastructureType) ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -215,9 +229,11 @@ export const RunStepBase = (
                 summary={getString('common.optionalConfig')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {[CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
-                      buildInfrastructureType
-                    ) ? (
+                    {[
+                      CIBuildInfrastructureType.VM,
+                      CIBuildInfrastructureType.Cloud,
+                      CIBuildInfrastructureType.Docker
+                    ].includes(buildInfrastructureType) ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}
@@ -232,7 +248,8 @@ export const RunStepBase = (
                           shouldHide: [
                             CIBuildInfrastructureType.Cloud,
                             CIBuildInfrastructureType.VM,
-                            CIBuildInfrastructureType.KubernetesHosted
+                            CIBuildInfrastructureType.KubernetesHosted,
+                            CIBuildInfrastructureType.Docker
                           ].includes(buildInfrastructureType)
                         },
                         'spec.reportPaths': {},

@@ -286,7 +286,7 @@ export class ShellScriptStep extends PipelineStep<ShellScriptData> {
       ...initialValues,
       spec: {
         ...initialValues.spec,
-        shell: 'Bash',
+        shell: initialValues.spec?.shell || 'Bash',
         onDelegate: initialValues.spec?.onDelegate ? 'delegate' : 'targethost',
         source: {
           type: 'Inline',

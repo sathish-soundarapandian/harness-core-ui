@@ -9,6 +9,7 @@
 declare const styles: {
   readonly contentSection: string
   readonly error: string
+  readonly errorHandler: string
   readonly inputsContainer: string
   readonly sectionCard: string
   readonly serviceOverrides: string

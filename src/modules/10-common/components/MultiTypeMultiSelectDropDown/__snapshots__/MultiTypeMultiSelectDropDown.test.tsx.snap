@@ -19,70 +19,78 @@ exports[`<MultiTypeMultiSelectDropDown /> tests Expression Input 1`] = `
       class="bp3-form-content"
     >
       <div
-        class="Layout--horizontal StyledProps--main multitype"
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <div
-          class="bp3-popover-wrapper MultiTypeInput--input"
+          class="StyledProps--font StyledProps--main"
         >
           <div
-            class="bp3-popover-target"
+            class="Layout--horizontal StyledProps--main multitype"
           >
             <div
-              class="bp3-input-group"
+              class="bp3-popover-wrapper MultiTypeInput--input"
             >
-              <input
-                autocomplete="off"
-                class="bp3-input"
-                name="foo"
-                placeholder="<+expression>"
-                type="text"
-                value="<+pipeline.name>"
-              />
+              <div
+                class="bp3-popover-target"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="foo"
+                    placeholder="<+expression>"
+                    type="text"
+                    value="<+pipeline.name>"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <span
-          class="bp3-popover-wrapper MultiTypeInput--wrapper"
-        >
-          <span
-            class="bp3-popover-target"
-          >
-            <button
-              class="MultiTypeInput--btn MultiTypeInput--EXPRESSION"
+            <span
+              class="bp3-popover-wrapper MultiTypeInput--wrapper"
             >
               <span
-                class="bp3-icon StyledProps--main"
-                data-icon="expression-input"
+                class="bp3-popover-target"
               >
-                <svg
-                  height="16"
-                  viewBox="0 0 16 16"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
+                <button
+                  class="MultiTypeInput--btn MultiTypeInput--EXPRESSION"
                 >
-                  <path
-                    clip-rule="evenodd"
-                    d="M4.875 2.588C5.305 2.218 5.889 2 6.647 2a.5.5 0 110 1c-.556 0-.898.155-1.12.346-.228.197-.374.472-.462.784a3.18 3.18 0 00-.106.86h1.449a.5.5 0 010 1H4.992v5.505a.5.5 0 01-1 0V5.99h-.936a.5.5 0 010-1h.903a4.173 4.173 0 01.143-1.13c.123-.435.35-.907.773-1.27zm.111 2.823c0 .001 0 .001 0 0m0 0zm7.059 5.019c-.242.268-.455.59-.553.786-.17.341-.472.705-.766.994-.285.281-.635.565-.932.684a.5.5 0 11-.371-.929c.102-.04.335-.204.6-.467.258-.253.475-.528.575-.729.142-.283.407-.68.704-1.009.15-.165.32-.33.5-.456.168-.118.406-.248.68-.248a.5.5 0 01.013 1c-.004.002-.042.012-.118.066a2.152 2.152 0 00-.332.307z"
-                    fill="#CurrentColor"
-                    fill-rule="evenodd"
-                  />
-                  <path
-                    clip-rule="evenodd"
-                    d="M10.045 10.43c.242.268.455.59.553.786.17.341.473.705.766.994.285.281.635.565.932.684a.5.5 0 10.372-.929c-.103-.04-.335-.204-.602-.467-.257-.253-.473-.528-.574-.729a5.003 5.003 0 00-.704-1.009 3.08 3.08 0 00-.5-.456c-.168-.118-.406-.248-.68-.248a.5.5 0 00-.012 1c.003.002.041.012.118.066a2.1 2.1 0 01.33.307z"
-                    fill="#CurrentColor"
-                    fill-rule="evenodd"
-                  />
-                  <path
-                    clip-rule="evenodd"
-                    d="M8.367 7.805a.5.5 0 01.186.682c-.854 1.494-.652 3.467.013 4.797a.5.5 0 11-.895.447c-.771-1.543-1.049-3.881.013-5.74a.5.5 0 01.683-.186zm5.273 0a.5.5 0 01.683.186c1.062 1.859.784 4.197.013 5.74a.5.5 0 11-.895-.447c.665-1.33.867-3.303.013-4.797a.5.5 0 01.186-.682z"
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                  />
-                </svg>
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="expression-input"
+                  >
+                    <svg
+                      height="16"
+                      viewBox="0 0 16 16"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M4.875 2.588C5.305 2.218 5.889 2 6.647 2a.5.5 0 110 1c-.556 0-.898.155-1.12.346-.228.197-.374.472-.462.784a3.18 3.18 0 00-.106.86h1.449a.5.5 0 010 1H4.992v5.505a.5.5 0 01-1 0V5.99h-.936a.5.5 0 010-1h.903a4.173 4.173 0 01.143-1.13c.123-.435.35-.907.773-1.27zm.111 2.823c0 .001 0 .001 0 0m0 0zm7.059 5.019c-.242.268-.455.59-.553.786-.17.341-.472.705-.766.994-.285.281-.635.565-.932.684a.5.5 0 11-.371-.929c.102-.04.335-.204.6-.467.258-.253.475-.528.575-.729.142-.283.407-.68.704-1.009.15-.165.32-.33.5-.456.168-.118.406-.248.68-.248a.5.5 0 01.013 1c-.004.002-.042.012-.118.066a2.152 2.152 0 00-.332.307z"
+                        fill="#CurrentColor"
+                        fill-rule="evenodd"
+                      />
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.045 10.43c.242.268.455.59.553.786.17.341.473.705.766.994.285.281.635.565.932.684a.5.5 0 10.372-.929c-.103-.04-.335-.204-.602-.467-.257-.253-.473-.528-.574-.729a5.003 5.003 0 00-.704-1.009 3.08 3.08 0 00-.5-.456c-.168-.118-.406-.248-.68-.248a.5.5 0 00-.012 1c.003.002.041.012.118.066a2.1 2.1 0 01.33.307z"
+                        fill="#CurrentColor"
+                        fill-rule="evenodd"
+                      />
+                      <path
+                        clip-rule="evenodd"
+                        d="M8.367 7.805a.5.5 0 01.186.682c-.854 1.494-.652 3.467.013 4.797a.5.5 0 11-.895.447c-.771-1.543-1.049-3.881.013-5.74a.5.5 0 01.683-.186zm5.273 0a.5.5 0 01.683.186c1.062 1.859.784 4.197.013 5.74a.5.5 0 11-.895-.447c.665-1.33.867-3.303.013-4.797a.5.5 0 01.186-.682z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                </button>
               </span>
-            </button>
-          </span>
-        </span>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -108,83 +116,232 @@ exports[`<MultiTypeMultiSelectDropDown /> tests Fixed Input 1`] = `
       class="bp3-form-content"
     >
       <div
-        class="Layout--horizontal StyledProps--main multitype foo"
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <div
-          class="bp3-popover-wrapper MultiSelectDropDown--main dropdown"
+          class="StyledProps--font StyledProps--main"
         >
           <div
-            class="bp3-popover-target"
+            class="Layout--horizontal StyledProps--main multitype foo"
           >
             <div
-              class="Layout--horizontal StyledProps--main MultiSelectDropDown--dropdownButton MultiSelectDropDown--withBorder MultiSelectDropDown--selected MultiSelectDropDown--minWidth StyledProps--flex"
-              data-testid="multi-select-dropdown-button"
-              style="min-width: 130px;"
+              class="bp3-popover-wrapper MultiSelectDropDown--main dropdown"
             >
               <div
-                class="Layout--horizontal StyledProps--main MultiSelectDropDown--labelWrapper StyledProps--flex"
+                class="bp3-popover-target"
               >
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main MultiSelectDropDown--label"
-                  data-testid="dropdown-value"
-                  style="--text-line-clamp: 1;"
+                <div
+                  class="Layout--horizontal StyledProps--main MultiSelectDropDown--dropdownButton MultiSelectDropDown--withBorder MultiSelectDropDown--selected MultiSelectDropDown--minWidth StyledProps--flex"
+                  data-testid="multi-select-dropdown-button"
+                  style="min-width: 130px;"
                 >
-                  Select
-                </p>
-                <p
-                  class="StyledProps--font StyledProps--main MultiSelectDropDown--counter"
-                >
-                  0
-                  2
-                </p>
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiSelectDropDown--labelWrapper StyledProps--flex"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main MultiSelectDropDown--label"
+                      data-testid="dropdown-value"
+                      style="--text-line-clamp: 1;"
+                    >
+                      Select
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main MultiSelectDropDown--counter"
+                    >
+                      0
+                      2
+                    </p>
+                  </div>
+                  <span
+                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                    data-icon="main-chevron-down"
+                  >
+                    <svg
+                      height="8"
+                      viewBox="0 0 14 8"
+                      width="8"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                        fill="#4d5969"
+                      />
+                    </svg>
+                  </span>
+                </div>
               </div>
-              <span
-                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
-                data-icon="main-chevron-down"
-              >
-                <svg
-                  height="8"
-                  viewBox="0 0 14 8"
-                  width="8"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
-                    fill="#4d5969"
-                  />
-                </svg>
-              </span>
             </div>
-          </div>
-        </div>
-        <span
-          class="bp3-popover-wrapper MultiTypeInput--wrapper"
-        >
-          <span
-            class="bp3-popover-target"
-          >
-            <button
-              class="MultiTypeInput--btn MultiTypeInput--FIXED"
+            <span
+              class="bp3-popover-wrapper MultiTypeInput--wrapper"
             >
               <span
-                class="bp3-icon StyledProps--main"
-                data-icon="fixed-input"
+                class="bp3-popover-target"
               >
-                <svg
-                  height="12"
-                  viewBox="0 0 9 9"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
+                <button
+                  class="MultiTypeInput--btn MultiTypeInput--FIXED"
                 >
-                  <path
-                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                    fill="currentColor"
-                  />
-                </svg>
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="fixed-input"
+                  >
+                    <svg
+                      height="12"
+                      viewBox="0 0 9 9"
+                      width="12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
               </span>
-            </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<MultiTypeMultiSelectDropDown /> tests Fixed Input with error 1`] = `
+<div>
+  <div
+    class="bp3-form-group bp3-intent-danger main"
+  >
+    <label
+      class="bp3-label"
+      for="foo"
+    >
+      Foo
+       
+      <span
+        class="bp3-text-muted"
+      />
+    </label>
+    <div
+      class="bp3-form-content"
+    >
+      <div
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
+      >
+        <div
+          class="StyledProps--font StyledProps--main"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main multitype foo hasError"
+          >
+            <div
+              class="bp3-popover-wrapper MultiSelectDropDown--main dropdown"
+            >
+              <div
+                class="bp3-popover-target"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main MultiSelectDropDown--dropdownButton MultiSelectDropDown--withBorder MultiSelectDropDown--selected MultiSelectDropDown--minWidth StyledProps--flex"
+                  data-testid="multi-select-dropdown-button"
+                  style="min-width: 130px;"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiSelectDropDown--labelWrapper StyledProps--flex"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main MultiSelectDropDown--label"
+                      data-testid="dropdown-value"
+                      style="--text-line-clamp: 1;"
+                    >
+                      Select
+                    </p>
+                    <p
+                      class="StyledProps--font StyledProps--main MultiSelectDropDown--counter"
+                    >
+                      0
+                      2
+                    </p>
+                  </div>
+                  <span
+                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                    data-icon="main-chevron-down"
+                  >
+                    <svg
+                      height="8"
+                      viewBox="0 0 14 8"
+                      width="8"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                        fill="#4d5969"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <span
+              class="bp3-popover-wrapper MultiTypeInput--wrapper"
+            >
+              <span
+                class="bp3-popover-target"
+              >
+                <button
+                  class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="fixed-input"
+                  >
+                    <svg
+                      height="12"
+                      viewBox="0 0 9 9"
+                      width="12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bp3-form-helper-text"
+      >
+        <div
+          class="FormError--errorDiv"
+          data-name="foo"
+        >
+          <span
+            class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+            data-icon="circle-cross"
+          >
+            <svg
+              height="12"
+              viewBox="0 0 13 13"
+              width="12"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                fill-rule="evenodd"
+              />
+            </svg>
           </span>
-        </span>
+          <span
+            class="FormError--error"
+          >
+            required
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -210,46 +367,88 @@ exports[`<MultiTypeMultiSelectDropDown /> tests Runtime Input - Configuration Op
       class="bp3-form-content"
     >
       <div
-        class="Layout--horizontal StyledProps--main multitype"
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <div
-          class="TextInput--main MultiTypeInput--input"
+          class="StyledProps--font StyledProps--main"
         >
           <div
-            class="bp3-input-group bp3-disabled"
+            class="Layout--horizontal StyledProps--main multitype"
           >
-            <input
-              class="bp3-input"
-              disabled=""
-              name="foo"
-              placeholder="<+input>"
-              type="text"
-              value="<+input>"
-            />
+            <div
+              class="TextInput--main MultiTypeInput--input"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  class="bp3-input"
+                  disabled=""
+                  name="foo"
+                  placeholder="<+input>"
+                  type="text"
+                  value="<+input>"
+                />
+              </div>
+            </div>
+            <span
+              class="bp3-popover-wrapper MultiTypeInput--wrapper"
+            >
+              <span
+                class="bp3-popover-target"
+              >
+                <button
+                  class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="runtime-input"
+                  >
+                    <svg
+                      height="12"
+                      viewBox="0 0 10 7.97"
+                      width="12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                        fill="current-color"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </span>
+            </span>
           </div>
         </div>
         <span
-          class="bp3-popover-wrapper MultiTypeInput--wrapper"
+          class="bp3-popover-wrapper bp3-dark"
         >
           <span
             class="bp3-popover-target"
           >
             <button
-              class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
+              id="configureOptions_foo"
+              tabindex="0"
+              type="button"
             >
               <span
-                class="bp3-icon StyledProps--main"
-                data-icon="runtime-input"
+                class="bp3-icon bp3-icon-cog StyledProps--main"
+                icon="cog"
               >
                 <svg
-                  height="12"
-                  viewBox="0 0 10 7.97"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
+                  data-icon="cog"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
                 >
+                  <desc>
+                    cog
+                  </desc>
                   <path
-                    d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
-                    fill="current-color"
+                    d="M15.19 6.39h-1.85c-.11-.37-.27-.71-.45-1.04l1.36-1.36c.31-.31.31-.82 0-1.13l-1.13-1.13a.803.803 0 00-1.13 0l-1.36 1.36c-.33-.17-.67-.33-1.04-.44V.79c0-.44-.36-.8-.8-.8h-1.6c-.44 0-.8.36-.8.8v1.86c-.39.12-.75.28-1.1.47l-1.3-1.3c-.3-.3-.79-.3-1.09 0L1.82 2.91c-.3.3-.3.79 0 1.09l1.3 1.3c-.2.34-.36.7-.48 1.09H.79c-.44 0-.8.36-.8.8v1.6c0 .44.36.8.8.8h1.85c.11.37.27.71.45 1.04l-1.36 1.36c-.31.31-.31.82 0 1.13l1.13 1.13c.31.31.82.31 1.13 0l1.36-1.36c.33.18.67.33 1.04.44v1.86c0 .44.36.8.8.8h1.6c.44 0 .8-.36.8-.8v-1.86c.39-.12.75-.28 1.1-.47l1.3 1.3c.3.3.79.3 1.09 0l1.09-1.09c.3-.3.3-.79 0-1.09l-1.3-1.3c.19-.35.36-.71.48-1.1h1.85c.44 0 .8-.36.8-.8v-1.6a.816.816 0 00-.81-.79zm-7.2 4.6c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
+                    fill-rule="evenodd"
                   />
                 </svg>
               </span>
@@ -257,40 +456,6 @@ exports[`<MultiTypeMultiSelectDropDown /> tests Runtime Input - Configuration Op
           </span>
         </span>
       </div>
-      <span
-        class="bp3-popover-wrapper bp3-dark"
-      >
-        <span
-          class="bp3-popover-target"
-        >
-          <button
-            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
-            id="configureOptions_foo"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="bp3-icon bp3-icon-cog StyledProps--main"
-              icon="cog"
-            >
-              <svg
-                data-icon="cog"
-                height="16"
-                viewBox="0 0 16 16"
-                width="16"
-              >
-                <desc>
-                  cog
-                </desc>
-                <path
-                  d="M15.19 6.39h-1.85c-.11-.37-.27-.71-.45-1.04l1.36-1.36c.31-.31.31-.82 0-1.13l-1.13-1.13a.803.803 0 00-1.13 0l-1.36 1.36c-.33-.17-.67-.33-1.04-.44V.79c0-.44-.36-.8-.8-.8h-1.6c-.44 0-.8.36-.8.8v1.86c-.39.12-.75.28-1.1.47l-1.3-1.3c-.3-.3-.79-.3-1.09 0L1.82 2.91c-.3.3-.3.79 0 1.09l1.3 1.3c-.2.34-.36.7-.48 1.09H.79c-.44 0-.8.36-.8.8v1.6c0 .44.36.8.8.8h1.85c.11.37.27.71.45 1.04l-1.36 1.36c-.31.31-.31.82 0 1.13l1.13 1.13c.31.31.82.31 1.13 0l1.36-1.36c.33.18.67.33 1.04.44v1.86c0 .44.36.8.8.8h1.6c.44 0 .8-.36.8-.8v-1.86c.39-.12.75-.28 1.1-.47l1.3 1.3c.3.3.79.3 1.09 0l1.09-1.09c.3-.3.3-.79 0-1.09l-1.3-1.3c.19-.35.36-.71.48-1.1h1.85c.44 0 .8-.36.8-.8v-1.6a.816.816 0 00-.81-.79zm-7.2 4.6c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
-          </button>
-        </span>
-      </span>
     </div>
   </div>
 </div>
@@ -315,52 +480,60 @@ exports[`<MultiTypeMultiSelectDropDown /> tests Runtime Input 1`] = `
       class="bp3-form-content"
     >
       <div
-        class="Layout--horizontal StyledProps--main multitype"
+        class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
       >
         <div
-          class="TextInput--main MultiTypeInput--input"
+          class="StyledProps--font StyledProps--main"
         >
           <div
-            class="bp3-input-group bp3-disabled"
+            class="Layout--horizontal StyledProps--main multitype"
           >
-            <input
-              class="bp3-input"
-              disabled=""
-              name="foo"
-              placeholder="<+input>"
-              type="text"
-              value="<+input>"
-            />
-          </div>
-        </div>
-        <span
-          class="bp3-popover-wrapper MultiTypeInput--wrapper"
-        >
-          <span
-            class="bp3-popover-target"
-          >
-            <button
-              class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+            <div
+              class="TextInput--main MultiTypeInput--input"
+            >
+              <div
+                class="bp3-input-group bp3-disabled"
+              >
+                <input
+                  class="bp3-input"
+                  disabled=""
+                  name="foo"
+                  placeholder="<+input>"
+                  type="text"
+                  value="<+input>"
+                />
+              </div>
+            </div>
+            <span
+              class="bp3-popover-wrapper MultiTypeInput--wrapper"
             >
               <span
-                class="bp3-icon StyledProps--main"
-                data-icon="runtime-input"
+                class="bp3-popover-target"
               >
-                <svg
-                  height="12"
-                  viewBox="0 0 10 7.97"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
+                <button
+                  class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
                 >
-                  <path
-                    d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
-                    fill="current-color"
-                  />
-                </svg>
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="runtime-input"
+                  >
+                    <svg
+                      height="12"
+                      viewBox="0 0 10 7.97"
+                      width="12"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                        fill="current-color"
+                      />
+                    </svg>
+                  </span>
+                </button>
               </span>
-            </button>
-          </span>
-        </span>
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -387,77 +560,85 @@ exports[`<MultiTypeMultiSelectDropDown /> tests validation 1`] = `
         class="bp3-form-content"
       >
         <div
-          class="Layout--horizontal StyledProps--main multitype foo hasError"
+          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
         >
           <div
-            class="bp3-popover-wrapper MultiSelectDropDown--main dropdown"
+            class="StyledProps--font StyledProps--main"
           >
             <div
-              class="bp3-popover-target"
+              class="Layout--horizontal StyledProps--main multitype foo hasError"
             >
               <div
-                class="Layout--horizontal StyledProps--main MultiSelectDropDown--dropdownButton MultiSelectDropDown--withBorder MultiSelectDropDown--minWidth StyledProps--flex"
-                data-testid="multi-select-dropdown-button"
-                style="min-width: 130px;"
+                class="bp3-popover-wrapper MultiSelectDropDown--main dropdown"
               >
                 <div
-                  class="Layout--horizontal StyledProps--main MultiSelectDropDown--labelWrapper StyledProps--flex"
+                  class="bp3-popover-target"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main MultiSelectDropDown--label"
-                    data-testid="dropdown-value"
-                    style="--text-line-clamp: 1;"
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiSelectDropDown--dropdownButton MultiSelectDropDown--withBorder MultiSelectDropDown--minWidth StyledProps--flex"
+                    data-testid="multi-select-dropdown-button"
+                    style="min-width: 130px;"
                   >
-                    Select
-                  </p>
+                    <div
+                      class="Layout--horizontal StyledProps--main MultiSelectDropDown--labelWrapper StyledProps--flex"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main MultiSelectDropDown--label"
+                        data-testid="dropdown-value"
+                        style="--text-line-clamp: 1;"
+                      >
+                        Select
+                      </p>
+                    </div>
+                    <span
+                      class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                      data-icon="main-chevron-down"
+                    >
+                      <svg
+                        height="8"
+                        viewBox="0 0 14 8"
+                        width="8"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                          fill="#4d5969"
+                        />
+                      </svg>
+                    </span>
+                  </div>
                 </div>
-                <span
-                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
-                  data-icon="main-chevron-down"
-                >
-                  <svg
-                    height="8"
-                    viewBox="0 0 14 8"
-                    width="8"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
-                      fill="#4d5969"
-                    />
-                  </svg>
-                </span>
               </div>
-            </div>
-          </div>
-          <span
-            class="bp3-popover-wrapper MultiTypeInput--wrapper"
-          >
-            <span
-              class="bp3-popover-target"
-            >
-              <button
-                class="MultiTypeInput--btn MultiTypeInput--FIXED"
+              <span
+                class="bp3-popover-wrapper MultiTypeInput--wrapper"
               >
                 <span
-                  class="bp3-icon StyledProps--main"
-                  data-icon="fixed-input"
+                  class="bp3-popover-target"
                 >
-                  <svg
-                    height="12"
-                    viewBox="0 0 9 9"
-                    width="12"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <button
+                    class="MultiTypeInput--btn MultiTypeInput--FIXED"
                   >
-                    <path
-                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                      fill="currentColor"
-                    />
-                  </svg>
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="fixed-input"
+                    >
+                      <svg
+                        height="12"
+                        viewBox="0 0 9 9"
+                        width="12"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </span>
+                  </button>
                 </span>
-              </button>
-            </span>
-          </span>
+              </span>
+            </div>
+          </div>
         </div>
         <div
           class="bp3-form-helper-text"

@@ -16,18 +16,15 @@ import {
   MultiTypeInputType,
   SelectOption,
   getMultiTypeFromValue,
-  FormInput
+  FormInput,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, isNil } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import {
-  getConnectorIdValue,
-  getGithubPackageRegistryFormData
-} from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getConnectorIdValue, getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import {
   ArtifactType,
   GithubPackageRegistryProps,
@@ -72,7 +69,7 @@ function FormComponent({
   }, [formik.values?.version])
 
   return (
-    <Form>
+    <FormikForm>
       <div className={css.connectorForm}>
         {isMultiArtifactSource && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -213,7 +210,7 @@ function FormComponent({
           rightIcon="chevron-right"
         />
       </Layout.Horizontal>
-    </Form>
+    </FormikForm>
   )
 }
 
@@ -224,7 +221,7 @@ export function GithubPackageRegistry(
   const { context, handleSubmit, initialValues, prevStepData, selectedArtifact, artifactIdentifiers } = props
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
   const getInitialValues = (): GithubPackageRegistryInitialValuesType => {
-    return getGithubPackageRegistryFormData(
+    return getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed

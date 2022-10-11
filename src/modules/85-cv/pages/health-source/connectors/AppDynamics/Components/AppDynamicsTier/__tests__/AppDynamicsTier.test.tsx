@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import AppDynamicsTier from '../AppDynamicsTier'
@@ -24,6 +24,8 @@ describe('AppDynamicsTier', () => {
           formikValues={{}}
           onValidate={onValidate}
           setAppDTierCustomField={setCustomField}
+          tierMultiType={MultiTypeInputType.FIXED}
+          setTierMultiType={jest.fn()}
         />
       </TestWrapper>
     )

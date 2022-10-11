@@ -55,6 +55,7 @@ import {
   OAuthEventProcessingResponse,
   OAUTH_PLACEHOLDER_VALUE
 } from '../../CreateConnectorUtils'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepGitlabAuthentication.module.scss'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
@@ -74,6 +75,7 @@ interface GitlabAuthenticationProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 interface GitlabFormInterface {
@@ -215,6 +217,10 @@ const StepGitlabAuthentication: React.FC<StepProps<StepGitlabAuthenticationProps
       //   value: GitAuthTypes.KERBEROS
       // }
     ]
+
+    useConnectorWizard({
+      helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+    })
 
     enabledHostedBuildsForFreeUsers &&
       authOptions.push({ label: getString('common.oAuthLabel'), value: GitAuthTypes.OAUTH })

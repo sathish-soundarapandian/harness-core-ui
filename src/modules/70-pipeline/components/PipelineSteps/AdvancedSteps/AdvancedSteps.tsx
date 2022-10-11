@@ -24,6 +24,7 @@ import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStra
 import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
 import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { TemplateStepNode } from 'services/pipeline-ng'
+import type { StageType } from '@pipeline/utils/stageHelpers'
 import DelegateSelectorPanel from './DelegateSelectorPanel/DelegateSelectorPanel'
 import FailureStrategyPanel from './FailureStrategyPanel/FailureStrategyPanel'
 import type { AllFailureStrategyConfig } from './FailureStrategyPanel/utils'
@@ -38,6 +39,7 @@ export type FormValues = Pick<Values, 'delegateSelectors' | 'when' | 'strategy'>
 
 export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTemplate' | 'onRemoveTemplate'> {
   stepType?: StepType
+  stageType?: StageType
 }
 
 type Step = StepElementConfig | StepGroupElementConfig

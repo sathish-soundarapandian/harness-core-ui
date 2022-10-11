@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, set, get } from 'lodash-es'
+import { defaultTo, set, get, pick } from 'lodash-es'
 import produce from 'immer'
 import { useHistory, useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
@@ -171,12 +171,13 @@ export function ClonePipelineFormInternal(props: ClonePipelineFormProps): React.
       )
 
       history.push(
-        routes.toPipelineDetail({
+        routes.toPipelineStudio({
           module,
           pipelineIdentifier: defaultTo(data.destinationConfig.pipelineIdentifier, ''),
           orgIdentifier: defaultTo(data.destinationConfig.orgIdentifier, ''),
           projectIdentifier: defaultTo(data.destinationConfig.projectIdentifier, ''),
-          accountId
+          accountId,
+          ...pick(queryParams, 'storeType', 'repoName', 'branch', 'connectorRef')
         })
       )
 

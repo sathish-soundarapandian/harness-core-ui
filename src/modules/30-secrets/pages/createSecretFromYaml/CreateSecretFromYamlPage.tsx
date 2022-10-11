@@ -36,7 +36,6 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useGovernanceMetaDataModal } from '@governance/hooks/useGovernanceMetaDataModal'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 export const AUTHORIZATION_ERROR_CODE = 403
 
@@ -47,7 +46,6 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
   useDocumentTitle(getString('createSecretYAML.createSecret'))
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const history = useHistory()
-  const { OPA_SECRET_GOVERNANCE } = useFeatureFlags()
   const { showSuccess, showError } = useToaster()
   const [snippetFetchResponse, setSnippetFetchResponse] = React.useState<SnippetFetchResponse>()
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
@@ -93,21 +91,18 @@ const CreateSecretFromYamlPage: React.FC<{ mockSchemaData?: UseGetMockData<Respo
     if (yamlData && jsonData) {
       try {
         const response = await createSecret(yamlData as any)
-        conditionallyOpenGovernanceErrorModal(
-          OPA_SECRET_GOVERNANCE ? response.data?.governanceMetadata : undefined,
-          () => {
-            showSuccess(getString('createSecretYAML.secretCreated'))
-            history.push(
-              routes.toSecretDetails({
-                secretId: jsonData['identifier'],
-                accountId,
-                orgIdentifier,
-                projectIdentifier,
-                module
-              })
-            )
-          }
-        )
+        conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, () => {
+          showSuccess(getString('createSecretYAML.secretCreated'))
+          history.push(
+            routes.toSecretDetails({
+              secretId: jsonData['identifier'],
+              accountId,
+              orgIdentifier,
+              projectIdentifier,
+              module
+            })
+          )
+        })
       } catch (err) {
         if (err.status === AUTHORIZATION_ERROR_CODE) {
           showError(getRBACErrorMessage(err))

@@ -29,6 +29,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ReleaseRepoManifest } from 'services/cd-ng'
+import { NameSchema } from '@common/utils/Validation'
 
 import GitRepositoryName from '../../ManifestWizardSteps/GitRepositoryName/GitRepositoryName'
 import { gitFetchTypeList, GitFetchTypes, GitRepoName, ManifestStoreMap } from '../../Manifesthelper'
@@ -228,6 +229,7 @@ function RepoDetails({
         initialValues={getInitialValues()}
         formName="releaseRepoDetails"
         validationSchema={Yup.object().shape({
+          identifier: NameSchema(),
           branch: Yup.string().when('gitFetchType', {
             is: 'Branch',
             then: Yup.string().trim().required(getString('validation.branchName'))

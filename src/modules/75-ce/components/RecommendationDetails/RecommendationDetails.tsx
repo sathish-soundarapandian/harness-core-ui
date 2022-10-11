@@ -25,7 +25,7 @@ import { RecommendationItem, TimeRangeValue, ResourceObject, QualityOfService, C
 import type { RecommendationOverviewStats } from 'services/ce/services'
 
 import formatCost from '@ce/utils/formatCost'
-import { getTimePeriodString } from '@ce/utils/momentUtils'
+import { DATE_RANGE_SHORTCUTS, getTimePeriodString } from '@ce/utils/momentUtils'
 import { addBufferToValue, addBufferWithoutPrecision, calculateSavingsPercentage } from '@ce/utils/recommendationUtils'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { RecommendationType, ChartColors, PercentileValues } from './constants'
@@ -48,7 +48,6 @@ interface RecommendationDetailsProps {
   timeRange: TimeRangeValue
   recommendationStats: RecommendationOverviewStats
   qualityOfService: QualityOfService
-  timeRangeFilter: string[]
   cpuAndMemoryValueBuffer: number
   currentContainer: number
   totalContainers: number
@@ -60,7 +59,6 @@ const RecommendationDetails: React.FC<RecommendationDetailsProps> = ({
   timeRange,
   recommendationStats,
   qualityOfService,
-  timeRangeFilter,
   cpuAndMemoryValueBuffer: buffer,
   currentContainer,
   totalContainers
@@ -264,7 +262,7 @@ const RecommendationDetails: React.FC<RecommendationDetailsProps> = ({
                   ? getString('ce.recommendation.detailsPage.workloadMonthlyPotentialCostText')
                   : getString('ce.recommendation.listPage.monthlyPotentialCostText')
               }
-              spentBy={getTimePeriodString(timeRangeFilter[1], 'MMM DD')}
+              spentBy={getTimePeriodString(+DATE_RANGE_SHORTCUTS.THIS_MONTH[1], 'MMM DD')}
             />
           </Container>
           <Container width="100%">
@@ -276,8 +274,8 @@ const RecommendationDetails: React.FC<RecommendationDetailsProps> = ({
                   : getString('ce.recommendation.listPage.monthlySavingsText')
               }
               amountSubTitle={calculateSavingsPercentage(currentSavings, recommendationStats?.totalMonthlyCost)}
-              subTitle={`${getTimePeriodString(timeRangeFilter[0], 'MMM DD')} - ${getTimePeriodString(
-                timeRangeFilter[1],
+              subTitle={`${getTimePeriodString(+DATE_RANGE_SHORTCUTS.THIS_MONTH[0], 'MMM DD')} - ${getTimePeriodString(
+                +DATE_RANGE_SHORTCUTS.THIS_MONTH[1],
                 'MMM DD'
               )}`}
             />

@@ -603,6 +603,12 @@ exports[`Configuration Configuration page 1`] = `
                   >
                     ldap11223355
                   </p>
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800"
+                    style="width: 70%;"
+                  >
+                    authSettings.authorizationEnabled
+                  </p>
                   <button
                     class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary"
                     data-testid="ldap-config-test"

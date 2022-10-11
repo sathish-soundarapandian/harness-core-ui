@@ -43,8 +43,8 @@ const ConnectorActivityDetails: React.FC<ConnectorActivityDetailsProp> = activit
         <Icon
           inline={true}
           name={status === 'SUCCESS' ? 'deployment-success-new' : 'warning-sign'}
-          size={18}
-          padding={{ left: 'medium' }}
+          size={16}
+          padding={{ left: 'medium', top: 'xsmall' }}
           color={status === 'SUCCESS' ? Color.GREEN_500 : Color.RED_500}
         ></Icon>
         <Text inline={true} font={{ size: 'medium' }} color={status === 'SUCCESS' ? Color.GREEN_500 : Color.RED_500}>

@@ -30,6 +30,7 @@ import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection
 import type { AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
 import AzureWebAppConfigSelection from './AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
 import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
+import { AzureWebAppSelectionTypes } from './AzureWebAppServiceConfiguration/AzureWebAppServiceConfig.types'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const getStartupScriptHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
@@ -116,6 +117,9 @@ const AzureWebAppServiceSpecEditable: React.FC<AzureWebAppServiceSpecFormProps> 
               isReadonlyServiceMode={isReadonlyServiceMode as boolean}
               readonly={readonly || loading}
               updateStage={updateStageData}
+              showApplicationSettings={true}
+              showConnectionStrings={true}
+              selectionType={AzureWebAppSelectionTypes.PIPELINE}
             />
           </Card>
 

@@ -29,7 +29,7 @@ import { NoDataFoundRow } from '@cf/components/NoDataFoundRow/NoDataFoundRow'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 
 import SaveFlagToGitModal from '@cf/components/SaveFlagToGitModal/SaveFlagToGitModal'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import { GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import usePlanEnforcement from '@cf/hooks/usePlanEnforcement'
 import { DetailHeading } from '../DetailHeading'
@@ -130,7 +130,7 @@ export const FlagsUseSegment = ({ gitSync }: FlagsUseSegmentProps): ReactElement
   ): Promise<void> => {
     let gitDetails
     if (gitSync) {
-      const { gitSyncInitialValues } = gitSync.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.DELETED_FLAG_FROM_SEGMENT)
+      const { gitSyncInitialValues } = gitSync.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.DELETED_FLAG_FROM_SEGMENT)
 
       if (gitSync.isGitSyncEnabled) {
         if (gitSync.isAutoCommitEnabled) {
@@ -333,7 +333,9 @@ const FlagItem: React.FC<FlagItemProps> = ({
   ...props
 }) => {
   const { name, description, variation } = flag
-  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta()
+  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta(
+    GIT_COMMIT_MESSAGES.UPDATED_FLAG_DETAILS
+  )
 
   const variationTextWidth = onRemoveRule ? '88px' : '135px'
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)

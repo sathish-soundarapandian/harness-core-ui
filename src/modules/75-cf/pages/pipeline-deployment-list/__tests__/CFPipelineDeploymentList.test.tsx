@@ -144,7 +144,7 @@ describe('CFPipelineDeploymentList', () => {
     renderExecutionPage()
 
     const pipeline = await screen.findByRole('link', {
-      name: 'PR Harness Env - CD Selective Stage : 3'
+      name: 'PR Harness Env - CD Selective Stage'
     })
     expect(pipeline).toHaveAttribute(
       'href',

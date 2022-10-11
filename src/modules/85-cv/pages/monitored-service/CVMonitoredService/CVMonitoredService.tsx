@@ -33,6 +33,7 @@ import { useQueryParams } from '@common/hooks'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RbacButton from '@rbac/components/Button/Button'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { TemplateUsage } from '@templates-library/utils/templatesUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import { getCVMonitoringServicesSearchParam, getErrorMessage, getEnvironmentOptions } from '@cv/utils/CommonUtils'
@@ -101,7 +102,7 @@ const MonitoredService: React.FC = () => {
   const { getTemplate } = useTemplateSelector()
 
   const onUseTemplate = async () => {
-    const { template } = await getTemplate({ templateType: 'MonitoredService' })
+    const { template } = await getTemplate({ templateType: 'MonitoredService', allowedUsages: [TemplateUsage.USE] })
     const templateRefData = {
       identifier: template?.identifier,
       accountId: template?.accountId,

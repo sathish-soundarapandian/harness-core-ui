@@ -161,7 +161,7 @@ exports[`Variables Page render page at account level 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 25%;"
+          style="width: 30%;"
         >
           <div
             class="Text--withDocsTooltip"
@@ -178,7 +178,7 @@ exports[`Variables Page render page at account level 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 20%;"
         >
           <div
             class="Text--withDocsTooltip"
@@ -195,7 +195,7 @@ exports[`Variables Page render page at account level 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 20%;"
         >
           <div
             class="Text--withDocsTooltip"
@@ -212,7 +212,7 @@ exports[`Variables Page render page at account level 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 20%;"
+          style="width: 25%;"
         >
           <div
             class="Text--withDocsTooltip"
@@ -222,23 +222,6 @@ exports[`Variables Page render page at account level 1`] = `
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
             >
               valueLabel
-            </p>
-          </div>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 20%;"
-        >
-          <div
-            class="Text--withDocsTooltip"
-            data-tooltip-id="VariableListViewdefaultValue"
-          >
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-            >
-              variables.defaultValue
             </p>
           </div>
         </div>
@@ -273,7 +256,7 @@ exports[`Variables Page render page at account level 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 25%;"
+              style="width: 30%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main"
@@ -305,7 +288,7 @@ exports[`Variables Page render page at account level 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 20%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
@@ -316,7 +299,7 @@ exports[`Variables Page render page at account level 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 20%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
@@ -327,7 +310,7 @@ exports[`Variables Page render page at account level 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 20%;"
+              style="width: 25%;"
             >
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text"
@@ -335,15 +318,6 @@ exports[`Variables Page render page at account level 1`] = `
               >
                 CUSTOM
               </p>
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
-              style="width: 20%;"
-            >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text"
-              />
             </div>
             <div
               class="TableV2--cell"
@@ -758,85 +732,41 @@ exports[`Variables Page render page at project level - click new variable button
             </div>
           </div>
           <div
-            class="bp3-form-group"
-            data-id="valueType-2"
+            class="StyledProps--font StyledProps--main StyledProps--padding-top-small"
           >
-            <label
-              class="bp3-label"
-              for="valueType"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="variable-form_valueType"
-              >
-                common.configureOptions.validation
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
             <div
-              class="bp3-form-content"
+              class="bp3-form-group"
+              data-id="fixedValue-2"
             >
-              <div
-                class="StyledProps--main"
+              <label
+                class="bp3-label"
+                for="fixedValue"
               >
-                
-                <div
-                  class="RadioButtonGroup--inline"
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="variable-form_fixedValue"
                 >
-                  <label
-                    class="RadioButton--radio StyledProps--main"
-                  >
-                    <input
-                      checked=""
-                      class="RadioButton--input"
-                      name="valueType"
-                      type="radio"
-                      value="FIXED"
-                    />
-                    <span
-                      class="RadioButton--radioIcon"
-                    />
-                    inputTypes.FIXED
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="bp3-form-group"
-            data-id="fixedValue-3"
-          >
-            <label
-              class="bp3-label"
-              for="fixedValue"
-            >
-              <span
-                class="Tooltip--acenter"
-                data-tooltip-id="variable-form_fixedValue"
-              >
-                Fixed Value
-              </span>
-               
-              <span
-                class="bp3-text-muted"
-              />
-            </label>
-            <div
-              class="bp3-form-content"
-            >
-              <div
-                class="bp3-input-group"
-              >
-                <input
-                  autocomplete="off"
-                  class="bp3-input"
-                  name="fixedValue"
-                  type="text"
-                  value=""
+                  variables.fixedValue
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
                 />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="fixedValue"
+                    type="text"
+                    value=""
+                  />
+                </div>
               </div>
             </div>
           </div>

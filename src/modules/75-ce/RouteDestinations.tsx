@@ -143,7 +143,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.AUTOSTOPPINGRULE, {
 
 RbacFactory.registerResourceTypeHandler(ResourceType.LOADBALANCER, {
   icon: 'ccm-solid',
-  label: 'ce.co.accessPoint.loadbalancer',
+  label: 'common.loadBalancer',
   category: ResourceCategory.CLOUD_COSTS,
   permissionLabels: {
     [PermissionIdentifier.VIEW_CCM_LOADBALANCER]: <LocaleString stringID="rbac.permissionLabels.view" />,
@@ -506,6 +506,104 @@ const CENonMFERoutes = (
     >
       <CORuleDetailsPage />
     </RouteWithLayout>
+    <RouteWithLayout
+      sidebarProps={CESideNavProps}
+      path={routes.toPerspectiveDetails({
+        ...accountPathProps,
+        perspectiveId: ':perspectiveId',
+        perspectiveName: ':perspectiveName'
+      })}
+      exact
+      pageName={PAGE_NAME.CEPerspectiveDetailsPage}
+    >
+      <PerspectiveDetailsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCEPerspectiveWorkloadDetails({
+        ...accountPathProps,
+        perspectiveId: ':perspectiveId',
+        perspectiveName: ':perspectiveName',
+        clusterName: ':clusterName',
+        namespace: ':namespace',
+        workloadName: ':workloadName'
+      })}
+      exact
+      pageName={PAGE_NAME.CEWorkloadDetailsPage}
+    >
+      <WorkloadDetailsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCERecommendationWorkloadDetails({
+        ...accountPathProps,
+        recommendation: ':recommendation',
+        recommendationName: ':recommendationName',
+        clusterName: ':clusterName',
+        namespace: ':namespace',
+        workloadName: ':workloadName'
+      })}
+      exact
+      pageName={PAGE_NAME.CEWorkloadDetailsPage}
+    >
+      <WorkloadDetailsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCEPerspectiveServiceDetails({
+        ...accountPathProps,
+        perspectiveId: ':perspectiveId',
+        perspectiveName: ':perspectiveName',
+        clusterName: ':clusterName',
+        serviceName: ':serviceName'
+      })}
+      exact
+      pageName={PAGE_NAME.CEServiceDetailsPage}
+    >
+      <ServiceDetailsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCERecommendationServiceDetails({
+        ...accountPathProps,
+        recommendation: ':recommendation',
+        recommendationName: ':recommendationName',
+        clusterName: ':clusterName',
+        serviceName: ':serviceName'
+      })}
+      exact
+      pageName={PAGE_NAME.CEServiceDetailsPage}
+    >
+      <ServiceDetailsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCEPerspectiveNodeDetails({
+        ...accountPathProps,
+        perspectiveId: ':perspectiveId',
+        perspectiveName: ':perspectiveName',
+        clusterName: ':clusterName',
+        nodeId: ':nodeId'
+      })}
+      exact
+      pageName={PAGE_NAME.CENodeDetailsPage}
+    >
+      <NodeDetailsPage />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCEDashboards({ ...accountPathProps })}
+      exact
+      pageName={PAGE_NAME.CEDashboards}
+    >
+      <BIDashboard />
+    </RouteWithLayout>
   </>
 )
 
@@ -552,7 +650,50 @@ const CERoutes: React.FC = () => {
         routes.toCEAnomalyDetection({ ...accountPathProps }),
         routes.toCEPerspectives({ ...accountPathProps }),
         routes.toCECreatePerspective({ ...accountPathProps, perspectiveId: ':perspectiveId' }),
-        routes.toCECORuleDetails({ ...accountPathProps, id: ':ruleId' })
+        routes.toCECORuleDetails({ ...accountPathProps, id: ':ruleId' }),
+        routes.toPerspectiveDetails({
+          ...accountPathProps,
+          perspectiveId: ':perspectiveId',
+          perspectiveName: ':perspectiveName'
+        }),
+        routes.toCEPerspectiveWorkloadDetails({
+          ...accountPathProps,
+          perspectiveId: ':perspectiveId',
+          perspectiveName: ':perspectiveName',
+          clusterName: ':clusterName',
+          namespace: ':namespace',
+          workloadName: ':workloadName'
+        }),
+        routes.toCERecommendationWorkloadDetails({
+          ...accountPathProps,
+          recommendation: ':recommendation',
+          recommendationName: ':recommendationName',
+          clusterName: ':clusterName',
+          namespace: ':namespace',
+          workloadName: ':workloadName'
+        }),
+        routes.toCEPerspectiveServiceDetails({
+          ...accountPathProps,
+          perspectiveId: ':perspectiveId',
+          perspectiveName: ':perspectiveName',
+          clusterName: ':clusterName',
+          serviceName: ':serviceName'
+        }),
+        routes.toCERecommendationServiceDetails({
+          ...accountPathProps,
+          recommendation: ':recommendation',
+          recommendationName: ':recommendationName',
+          clusterName: ':clusterName',
+          serviceName: ':serviceName'
+        }),
+        routes.toCEPerspectiveNodeDetails({
+          ...accountPathProps,
+          perspectiveId: ':perspectiveId',
+          perspectiveName: ':perspectiveName',
+          clusterName: ':clusterName',
+          nodeId: ':nodeId'
+        }),
+        routes.toCEDashboards({ ...accountPathProps })
       ]
     : []
 
@@ -639,107 +780,6 @@ const CERoutes: React.FC = () => {
           exact
         >
           <RedirectToNewNodeRecommendationDetailsRoute />
-        </RouteWithLayout>
-
-        <RouteWithLayout
-          sidebarProps={CESideNavProps}
-          path={routes.toPerspectiveDetails({
-            ...accountPathProps,
-            perspectiveId: ':perspectiveId',
-            perspectiveName: ':perspectiveName'
-          })}
-          exact
-          pageName={PAGE_NAME.CEPerspectiveDetailsPage}
-        >
-          <PerspectiveDetailsPage />
-        </RouteWithLayout>
-
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCEPerspectiveWorkloadDetails({
-            ...accountPathProps,
-            perspectiveId: ':perspectiveId',
-            perspectiveName: ':perspectiveName',
-            clusterName: ':clusterName',
-            namespace: ':namespace',
-            workloadName: ':workloadName'
-          })}
-          exact
-          pageName={PAGE_NAME.CEWorkloadDetailsPage}
-        >
-          <WorkloadDetailsPage />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCERecommendationWorkloadDetails({
-            ...accountPathProps,
-            recommendation: ':recommendation',
-            recommendationName: ':recommendationName',
-            clusterName: ':clusterName',
-            namespace: ':namespace',
-            workloadName: ':workloadName'
-          })}
-          exact
-          pageName={PAGE_NAME.CEWorkloadDetailsPage}
-        >
-          <WorkloadDetailsPage />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCEPerspectiveServiceDetails({
-            ...accountPathProps,
-            perspectiveId: ':perspectiveId',
-            perspectiveName: ':perspectiveName',
-            clusterName: ':clusterName',
-            serviceName: ':serviceName'
-          })}
-          exact
-          pageName={PAGE_NAME.CEServiceDetailsPage}
-        >
-          <ServiceDetailsPage />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCERecommendationServiceDetails({
-            ...accountPathProps,
-            recommendation: ':recommendation',
-            recommendationName: ':recommendationName',
-            clusterName: ':clusterName',
-            serviceName: ':serviceName'
-          })}
-          exact
-          pageName={PAGE_NAME.CEServiceDetailsPage}
-        >
-          <ServiceDetailsPage />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCEPerspectiveNodeDetails({
-            ...accountPathProps,
-            perspectiveId: ':perspectiveId',
-            perspectiveName: ':perspectiveName',
-            clusterName: ':clusterName',
-            nodeId: ':nodeId'
-          })}
-          exact
-          pageName={PAGE_NAME.CENodeDetailsPage}
-        >
-          <NodeDetailsPage />
-        </RouteWithLayout>
-
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCEDashboards({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CEDashboards}
-        >
-          <BIDashboard />
         </RouteWithLayout>
         <RouteWithLayout
           licenseRedirectData={licenseRedirectData}

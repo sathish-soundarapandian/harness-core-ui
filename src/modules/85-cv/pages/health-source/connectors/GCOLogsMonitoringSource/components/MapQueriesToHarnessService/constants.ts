@@ -10,6 +10,7 @@ export const MapGCPLogsToServiceFieldNames = {
   QUERY: 'query',
   SERVICE_INSTANCE: 'serviceInstance',
   MESSAGE_IDENTIFIER: 'messageIdentifier',
+  IDENTIFY_TIMESTAMP: 'identifyTimestamp',
   RECORD_COUNT: 'recordCount'
 }
 

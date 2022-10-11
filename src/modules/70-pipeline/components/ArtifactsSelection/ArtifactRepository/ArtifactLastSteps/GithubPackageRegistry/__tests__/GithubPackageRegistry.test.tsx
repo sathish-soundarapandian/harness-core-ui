@@ -8,7 +8,6 @@
 import React from 'react'
 import {
   act,
-  findByText,
   fireEvent,
   queryByAttribute,
   render,
@@ -26,7 +25,6 @@ import {
   GithubPackageRegistryInitialValuesType,
   GithubPackageRegistryProps
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { GithubPackageRegistry } from '../GithubPackageRegistry'
 
 const commonInitialValues: GithubPackageRegistryInitialValuesType = {
@@ -133,8 +131,7 @@ describe('GithubPackageRegistry tests', () => {
     })
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip(`renders fine for sidecar artifact`, async () => {
+  test(`renders fine for sidecar artifact`, async () => {
     const initialValues = {
       type: 'GithubPackageRegistry',
       ...commonInitialValues,
@@ -150,7 +147,7 @@ describe('GithubPackageRegistry tests', () => {
     }
     const { container, getByText } = render(
       <TestWrapper>
-        <GithubPackageRegistry initialValues={initialValues as any} {...props} context={ModalViewFor.SIDECAR} />
+        <GithubPackageRegistry initialValues={initialValues as any} {...props} isMultiArtifactSource={true} />
       </TestWrapper>
     )
 
@@ -165,9 +162,6 @@ describe('GithubPackageRegistry tests', () => {
 
     const submitBtn = getByText('submit')
     fireEvent.click(submitBtn)
-
-    const identifierRequiredErr = await findByText(container, 'validation.identifierRequired')
-    expect(identifierRequiredErr).toBeDefined()
 
     // change value of identifier
     act(() => {

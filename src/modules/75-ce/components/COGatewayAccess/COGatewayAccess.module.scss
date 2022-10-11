@@ -283,3 +283,27 @@
     color: var(--primary-7) !important;
   }
 }
+
+.customExclusion {
+  .toggle {
+    width: fit-content;
+  }
+  .kindSelector {
+    width: 200px;
+  }
+  .valueContainer {
+    margin-left: var(--spacing-medium) !important;
+    flex: 1;
+    :global {
+      .TextInput--main {
+        width: 100%;
+      }
+    }
+  }
+  .addBtn {
+    cursor: pointer;
+    &:hover {
+      color: var(--primary-8);
+    }
+  }
+}

@@ -15,6 +15,7 @@ export function translateEvents(
 ): string[] {
   return instructionSet.map(({ Kind, Parameters }) => {
     let message = Kind
+    const target: string = Parameters?.targets?.map((t: string) => t).join(', ') || ''
 
     switch (Kind) {
       case 'updateClause':
@@ -22,6 +23,26 @@ export function translateEvents(
         break
       case 'removeClause':
         message = getString('cf.auditLogs.events.removeClause')
+        break
+
+      case 'addClause':
+        message = getString('cf.auditLogs.events.addClause')
+        break
+
+      case 'addToIncludeList':
+        message = getString('cf.auditLogs.events.addToIncludeList', { target })
+        break
+
+      case 'addToExcludeList':
+        message = getString('cf.auditLogs.events.addToExcludeList', { target })
+        break
+
+      case 'removeFromIncludeList':
+        message = getString('cf.auditLogs.events.removeFromIncludeList', { target })
+        break
+
+      case 'removeFromExcludeList':
+        message = getString('cf.auditLogs.events.removeFromExcludeList', { target })
         break
 
       case 'addRule':

@@ -14,7 +14,7 @@ import {
 } from '@connectors/constants'
 import { useStrings } from 'framework/strings'
 import type { ConnectorInfoDTO, ConnectorConfigDTO } from 'services/cd-ng'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { getConnectorIconByType, getConnectorIconPropsByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
 import DelegateSelectorStep, { DelegateSelectorProps } from '../commonSteps/DelegateSelectorStep/DelegateSelectorStep'
@@ -90,7 +90,7 @@ export function cvConnectorHOC(hocInput: CVConnectorHOCInput): (props: CreateCon
           setIsEditMode={setIsEditMode}
           buildPayload={buildSubmissionPayload}
         />
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={`${getString('verify')} ${getString('connection')}`}
           connectorInfo={props.connectorInfo}
           onClose={onClose}

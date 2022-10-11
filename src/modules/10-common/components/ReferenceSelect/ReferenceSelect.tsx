@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { FC, ReactNode, useMemo, useRef, useState } from 'react'
 import {
   Button,
   ExpressionAndRuntimeTypeProps,
@@ -15,16 +15,25 @@ import {
   Text,
   FixedTypeComponentProps,
   MultiTypeInputType,
-  ButtonVariation
+  ButtonVariation,
+  Container,
+  Icon
 } from '@wings-software/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 
 import { Classes, Dialog } from '@blueprintjs/core'
 import cx from 'classnames'
 import type { Scope } from '@common/interfaces/SecretsInterface'
 import { useStrings } from 'framework/strings'
-import { EntityReferenceProps, EntityReference } from '../EntityReference/EntityReference'
+import {
+  EntityReferenceProps,
+  EntityReference,
+  getScopeFromValue,
+  getIdentifierFromValue
+} from '../EntityReference/EntityReference'
+import type { ScopeAndIdentifier } from '../MultiSelectEntityReference/MultiSelectEntityReference'
 import css from './ReferenceSelect.module.scss'
+
 export interface MinimalObject {
   identifier?: string
   name?: string
@@ -43,12 +52,12 @@ export interface ReferenceSelectDialogTitleProps {
   isNewConnectorLabelVisible?: boolean
 }
 export interface ReferenceSelectProps<T extends MinimalObject>
-  extends Omit<EntityReferenceProps<T>, 'onSelect'>,
+  extends Omit<EntityReferenceProps<T>, 'onSelect' | 'onMultiSelect' | 'selectedRecords'>,
     ReferenceSelectDialogTitleProps {
   name: string
   placeholder: string
   selectAnReferenceLabel: string
-  selected?: Item
+  selected?: string | Item
   createNewLabel?: string
   createNewBtnComponent?: JSX.Element
   createNewHandler?: () => void
@@ -60,6 +69,9 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   onChange: (record: T, scope: Scope) => void
   disabled?: boolean
   componentName?: string
+  isMultiSelect?: boolean
+  selectedReferences?: string[] | Item[]
+  onMultiSelectChange?: (records: ScopeAndIdentifier[]) => void
 }
 
 export const ReferenceSelectDialogTitle = (props: ReferenceSelectDialogTitleProps): JSX.Element => {
@@ -113,15 +125,58 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
     componentName = '',
     disabled,
     createNewBtnComponent,
+    isMultiSelect,
+    selectedReferences,
+    onMultiSelectChange,
     ...referenceProps
   } = props
-  const [isOpen, setOpen] = React.useState(false)
+  const [isOpen, setOpen] = useState(false)
+
   React.useEffect(() => {
     isOpen && setOpen(!hideModal) //this will hide modal if hideModal changes to true in open state
   }, [hideModal])
 
-  return (
-    <>
+  const showEditRenderer = editRenderer && selected && typeof selected === 'object' && selected.value
+
+  // selectedRecords is used by <EntityReference /> when isMultiSelect is true
+  const selectedRecords = useMemo(() => {
+    if (!selectedReferences) return []
+    return (selectedReferences as (string | Item)[])
+      .filter(el => !!el)
+      .map(el => {
+        if (typeof el === 'string') return { scope: getScopeFromValue(el), identifier: getIdentifierFromValue(el) }
+        return { scope: el.scope, identifier: getIdentifierFromValue(el.value) }
+      })
+  }, [selectedReferences])
+
+  const defaultScopeRef = useRef(referenceProps.defaultScope)
+
+  const getPlaceholderElement = (): ReactNode => {
+    if (isMultiSelect) {
+      return (
+        <MultiReferenceSelectPlaceholder
+          placeholder={placeholder}
+          disabled={!!disabled}
+          onClear={() => onMultiSelectChange?.([])}
+          onClick={scope => {
+            defaultScopeRef.current = scope
+            setOpen(true)
+          }}
+          selected={selectedRecords}
+        />
+      )
+    }
+
+    let singleSelectPlaceholder: ReactNode = <span className={css.placeholder}>{placeholder}</span>
+    if (selected) {
+      if (selectedRenderer) {
+        singleSelectPlaceholder = selectedRenderer
+      } else if (typeof selected === 'object') {
+        singleSelectPlaceholder = selected.label
+      }
+    }
+
+    return (
       <Button
         minimal
         data-testid={`cr-field-${name}`}
@@ -139,8 +194,14 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
           }
         }}
       >
-        {selected ? selectedRenderer || selected.label : <span className={css.placeholder}>{placeholder}</span>}
+        {singleSelectPlaceholder}
       </Button>
+    )
+  }
+
+  return (
+    <>
+      {getPlaceholderElement()}
       <Dialog
         isOpen={isOpen}
         enforceFocus={false}
@@ -157,23 +218,31 @@ export function ReferenceSelect<T extends MinimalObject>(props: ReferenceSelectP
         })}
       >
         <div className={cx(css.contentContainer)}>
-          {editRenderer && selected && selected.value && <Layout.Horizontal>{editRenderer}</Layout.Horizontal>}
+          {showEditRenderer && <Layout.Horizontal>{editRenderer}</Layout.Horizontal>}
           <EntityReference<T>
             {...referenceProps}
             onSelect={(record, scope) => {
               setOpen(false)
               onChange(record, scope)
             }}
+            onMultiSelect={records => {
+              setOpen(false)
+              onMultiSelectChange?.(records)
+            }}
             onCancel={() => {
               setOpen(false)
             }}
             renderTabSubHeading
+            defaultScope={defaultScopeRef.current}
+            isMultiSelect={isMultiSelect}
+            selectedRecords={selectedRecords}
           />
         </div>
       </Dialog>
     </>
   )
 }
+
 export interface MultiTypeReferenceInputProps<T extends MinimalObject>
   extends Omit<ExpressionAndRuntimeTypeProps, 'fixedTypeComponent' | 'fixedTypeComponentProps'> {
   referenceSelectProps: Omit<ReferenceSelectProps<T>, 'onChange'>
@@ -202,5 +271,111 @@ export function MultiTypeReferenceInput<T extends MinimalObject>(props: MultiTyp
       fixedTypeComponentProps={referenceSelectProps}
       fixedTypeComponent={MultiTypeReferenceInputFixedTypeComponent}
     />
+  )
+}
+
+export interface MultiReferenceSelectPlaceholderProps {
+  disabled: boolean
+  placeholder: string
+  selected: ScopeAndIdentifier[]
+  onClear: () => void
+  onClick: (arg?: Scope) => void
+}
+
+export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholderProps> = ({
+  disabled,
+  placeholder,
+  selected,
+  onClear,
+  onClick
+}) => {
+  const groupedReferences = useMemo(() => {
+    return Object.values(
+      selected.reduce((acc, el) => {
+        acc[el.scope] = acc[el.scope] ?? { scope: el.scope, count: 0 }
+        acc[el.scope].count++
+        return acc
+      }, {} as { [K in Scope]: { scope: Scope; count: number } })
+    )
+  }, [selected])
+
+  return (
+    <Container
+      border
+      padding="xsmall"
+      className={cx('bp3-input', disabled ? 'bp3-disabled' : '', css.placeholderContainer)}
+    >
+      {groupedReferences?.length ? (
+        <Layout.Horizontal
+          spacing="xsmall"
+          flex={{ alignItems: 'center', justifyContent: 'space-between' }}
+          className={css.layoutHeight}
+        >
+          <Layout.Horizontal
+            width={'95%'}
+            spacing="xsmall"
+            flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+          >
+            {groupedReferences
+              .filter(el => el.count)
+              .map(({ scope, count }) => {
+                return (
+                  <Container
+                    padding={{ top: 'xsmall', right: 'small', bottom: 'xsmall', left: 'small' }}
+                    width={'33%'}
+                    background={Color.PRIMARY_2}
+                    key={scope}
+                    onClick={() => {
+                      onClick(scope)
+                    }}
+                    border={{ radius: 100 }}
+                    className={css.pointer}
+                  >
+                    <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Text font={{ size: 'small' }} color={Color.BLACK}>
+                        {scope.toUpperCase()}
+                      </Text>
+                      <Text
+                        font={{ size: 'small' }}
+                        padding={{ left: 'xsmall', right: 'xsmall' }}
+                        flex={{ align: 'center-center' }}
+                        background={Color.PRIMARY_7}
+                        color={Color.WHITE}
+                        border={{ radius: 100 }}
+                      >
+                        {count}
+                      </Text>
+                    </Layout.Horizontal>
+                  </Container>
+                )
+              })}
+          </Layout.Horizontal>
+          <Icon
+            className={css.pointer}
+            margin={{ left: 'medium' }}
+            name="cross"
+            color={Color.GREY_500}
+            size={14}
+            onClick={onClear}
+          />
+        </Layout.Horizontal>
+      ) : (
+        <Container
+          className={css.pointer}
+          onClick={() => {
+            onClick()
+          }}
+        >
+          <Text
+            color={Color.PRIMARY_7}
+            className={css.selectBtn}
+            flex={{ alignItems: 'center', justifyContent: 'flex-start', inline: false }}
+            padding="xsmall"
+          >
+            {placeholder}
+          </Text>
+        </Container>
+      )}
+    </Container>
   )
 }

@@ -11,6 +11,11 @@
   overflow-y: scroll;
 }
 
+.drawer-content {
+  display: flex;
+  flex: 1;
+}
+
 .footer {
   position: fixed;
   bottom: 0;
@@ -25,6 +30,12 @@
   grid-template-columns: 1fr 1fr 1fr;
   grid-auto-rows: 250px;
   gap: var(--spacing-xxlarge);
+}
+
+.no-data-container {
+  justify-content: center;
+  display: flex;
+  flex: 1;
 }
 
 .env-tag {

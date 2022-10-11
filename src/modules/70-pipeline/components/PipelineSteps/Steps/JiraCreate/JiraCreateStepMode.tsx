@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { isEmpty, get, defaultTo } from 'lodash-es'
+import { isEmpty, get, defaultTo, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Dialog, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -91,6 +91,8 @@ function FormContent({
   formik,
   refetchProjects,
   refetchProjectMetadata,
+  refetchIssueMetadata,
+  issueMetaResponse,
   projectsResponse,
   projectMetadataFetchError,
   projectsFetchError,
@@ -110,6 +112,7 @@ function FormContent({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [projectOptions, setProjectOptions] = useState<JiraProjectSelectOption[]>([])
   const [projectMetadata, setProjectMetadata] = useState<JiraProjectNG>()
+  const [issueMetadata, setIssueMetadata] = useState<JiraProjectNG>()
   const [unsupportedRequiredFields, setUnsupportedRequiredFields] = useState<JiraFieldNGWithValue[]>([])
   const [count, setCount] = React.useState(0)
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
@@ -197,9 +200,31 @@ function FormContent({
   }, [projectKeyFixedValue])
 
   useEffect(() => {
+    if (connectorRefFixedValue && projectKeyFixedValue && issueTypeFixedValue) {
+      refetchIssueMetadata({
+        queryParams: {
+          ...commonParams,
+          connectorRef: connectorRefFixedValue.toString(),
+          projectKey: projectKeyFixedValue.toString(),
+          issueType: issueTypeFixedValue.toString()
+        }
+      })
+    } else if (
+      (connectorRefFixedValue !== undefined &&
+        projectKeyFixedValue !== undefined &&
+        issueTypeFixedValue !== undefined) ||
+      isRuntimeOrExpressionType(projectValueType)
+    ) {
+      // Undefined check is needed so that form is not set to dirty as soon as we open
+      formik.setFieldValue('spec.selectedRequiredFields', [])
+      formik.setFieldValue('spec.selectedOptionalFields', [])
+    }
+  }, [issueTypeFixedValue])
+
+  useEffect(() => {
     // If issuetype changes in form, set status and field list
-    if (issueTypeFixedValue) {
-      const issueTypeData = projectMetadata?.issuetypes[issueTypeFixedValue]
+    if (issueTypeFixedValue && issueMetadata?.issuetypes[issueTypeFixedValue]?.fields) {
+      const issueTypeData = issueMetadata?.issuetypes[issueTypeFixedValue]
       const fieldKeys = Object.keys(issueTypeData?.fields || {})
       const formikOptionalFields: JiraFieldNGWithValue[] = []
       const formikRequiredFields: JiraFieldNGWithValue[] = []
@@ -237,16 +262,16 @@ function FormContent({
       formik.setFieldValue('spec.selectedRequiredFields', [])
       formik.setFieldValue('spec.selectedOptionalFields', [])
     }
-  }, [issueTypeFixedValue, projectMetadata])
+  }, [issueTypeFixedValue, issueMetadata])
 
   useEffect(() => {
     let options: JiraProjectSelectOption[] = []
     const projectResponseList: JiraProjectBasicNG[] = projectsResponse?.data || []
     options =
       projectResponseList.map((project: JiraProjectBasicNG) => ({
-        label: project.name || '',
-        value: project.id || '',
-        key: project.key || ''
+        label: defaultTo(project.name, ''),
+        value: defaultTo(project.id, ''),
+        key: defaultTo(project.key, '')
       })) || []
 
     setProjectOptions(options)
@@ -258,6 +283,13 @@ function FormContent({
       setProjectMetadata(projectMD)
     }
   }, [projectMetaResponse?.data])
+
+  useEffect(() => {
+    if (projectKeyFixedValue && issueTypeFixedValue && issueMetaResponse?.data?.projects) {
+      const issuesMD: JiraProjectNG = issueMetaResponse?.data?.projects[projectKeyFixedValue]
+      setIssueMetadata(issuesMD)
+    }
+  }, [issueMetaResponse?.data])
 
   const [showDynamicFieldsModal, hideDynamicFieldsModal] = useModalHook(() => {
     return (
@@ -616,7 +648,7 @@ function FormContent({
 }
 
 function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormikFowardRef<JiraCreateData>) {
-  const { onUpdate, isNewStep, readonly, onChange, stepViewType, allowableTypes } = props
+  const { onUpdate, isNewStep, readonly, onChange, stepViewType, allowableTypes, unprocessedInitialValues } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps & GitQueryParams>>()
@@ -656,6 +688,29 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
     }
   })
 
+  const {
+    refetch: refetchIssueMetadata,
+    data: issueMetaResponse,
+    error: issueMetadataFetchError
+  } = useGetJiraIssueCreateMetadata({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: '',
+      projectKey: '',
+      issueType: ''
+    }
+  })
+
+  // formik's dirty prop is computed by comparing initialValues and values,
+  // but this step needs a custom dirty prop as the type of submitted/initial values is different from values
+  const updateDirty = (ref: StepFormikFowardRef<JiraCreateData>): void => {
+    if (!ref || typeof ref === 'function') return
+
+    const formikProps = ref.current as Mutable<FormikProps<JiraCreateData>>
+    formikProps.dirty = !isEqual(unprocessedInitialValues, processFormData(formikProps.values))
+  }
+
   return (
     <Formik<JiraCreateData>
       onSubmit={values => {
@@ -683,6 +738,8 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
     >
       {(formik: FormikProps<JiraCreateData>) => {
         setFormikRef(formikRef, formik)
+        updateDirty(formikRef)
+
         return (
           <FormikForm>
             <FormContent
@@ -691,9 +748,12 @@ function JiraCreateStepMode(props: JiraCreateStepModeProps, formikRef: StepFormi
               stepViewType={stepViewType}
               refetchProjects={refetchProjects}
               refetchProjectMetadata={refetchProjectMetadata}
+              refetchIssueMetadata={refetchIssueMetadata}
               fetchingProjects={fetchingProjects}
               fetchingProjectMetadata={fetchingProjectMetadata}
               projectMetaResponse={projectMetaResponse}
+              issueMetaResponse={issueMetaResponse}
+              issueMetadataFetchError={issueMetadataFetchError}
               projectsResponse={projectsResponse}
               projectsFetchError={projectsFetchError}
               projectMetadataFetchError={projectMetadataFetchError}

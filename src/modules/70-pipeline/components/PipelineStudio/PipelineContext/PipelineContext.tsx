@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map } from 'lodash-es'
 import {
   AllowedTypes,
   AllowedTypesWithRunTime,
@@ -52,7 +52,11 @@ import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { getTemplateTypesByRef, TemplateServiceDataType } from '@pipeline/utils/templateUtils'
+import {
+  getResolvedCustomDeploymentDetailsByRef,
+  getTemplateTypesByRef,
+  TemplateServiceDataType
+} from '@pipeline/utils/templateUtils'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { Pipeline } from '@pipeline/utils/types'
 import {
@@ -273,6 +277,8 @@ export interface PipelineContextInterface {
   setSelectedSectionId: (selectedSectionId: string | undefined) => void
   setSelection: (selectionState: PipelineSelectionState) => void
   getStagePathFromPipeline(stageId: string, prefix?: string, pipeline?: PipelineInfoConfig): string
+  /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
+  setIntermittentLoading: (isIntermittentLoading: boolean) => void
 }
 
 interface PipelinePayload {
@@ -325,6 +331,22 @@ export const findAllByKey = (keyToFind: string, obj?: PipelineInfoConfig): strin
         []
       )
     : []
+}
+
+const getResolvedCustomDeploymentDetailsMap = (pipeline: PipelineInfoConfig, queryParams: GetPipelineQueryParams) => {
+  const templateRefs = map(findAllByKey('customDeploymentRef', pipeline), 'templateRef')
+  return getResolvedCustomDeploymentDetailsByRef(
+    {
+      accountIdentifier: queryParams.accountIdentifier,
+      orgIdentifier: queryParams.orgIdentifier,
+      projectIdentifier: queryParams.projectIdentifier,
+      templateListType: 'Stable',
+      repoIdentifier: queryParams.repoIdentifier,
+      branch: queryParams.branch,
+      getDefaultFromOtherRepo: true
+    },
+    templateRefs
+  )
 }
 
 const getTemplateType = (pipeline: PipelineInfoConfig, queryParams: GetPipelineQueryParams) => {
@@ -448,6 +470,11 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
       const { templateTypes, templateServiceData } = data.pipeline
         ? await getTemplateType(data.pipeline, templateQueryParams)
         : { templateTypes: {}, templateServiceData: {} }
+
+      const { resolvedCustomDeploymentDetailsByRef } = data.pipeline
+        ? await getResolvedCustomDeploymentDetailsMap(data.pipeline, templateQueryParams)
+        : { resolvedCustomDeploymentDetailsByRef: {} }
+
       dispatch(
         PipelineContextActions.success({
           error: '',
@@ -461,6 +488,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
               : defaultTo(data?.gitDetails, {}),
           templateTypes,
           templateServiceData,
+          resolvedCustomDeploymentDetailsByRef,
           entityValidityDetails: defaultTo(
             pipelineWithGitDetails?.entityValidityDetails,
             defaultTo(data?.entityValidityDetails, {})
@@ -473,12 +501,17 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         })
       )
     } else {
+      // try_catch to update IDBPipeline only if IdbPipeline is defined
       try {
         await IdbPipeline?.put(IdbPipelineStoreName, payload)
       } catch (_) {
         logger.info(DBNotFoundErrorMessage)
       }
       const { templateTypes, templateServiceData } = await getTemplateType(pipeline, templateQueryParams)
+      const { resolvedCustomDeploymentDetailsByRef } = await getResolvedCustomDeploymentDetailsMap(
+        pipeline,
+        templateQueryParams
+      )
       dispatch(
         PipelineContextActions.success({
           error: '',
@@ -490,6 +523,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           entityValidityDetails: payload.entityValidityDetails,
           templateTypes,
           templateServiceData,
+          resolvedCustomDeploymentDetailsByRef,
           templateInputsErrorNodeSummary,
           yamlSchemaErrorWrapper: payload?.yamlSchemaErrorWrapper
         })
@@ -506,7 +540,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           orgIdentifier: queryParams.orgIdentifier
         }),
         originalPipeline: defaultTo(
-          cloneDeep(data?.pipeline),
+          cloneDeep(data?.originalPipeline),
           cloneDeep({
             ...DefaultPipeline,
             projectIdentifier: queryParams.projectIdentifier,
@@ -883,7 +917,8 @@ export const PipelineContext = React.createContext<PipelineContextInterface>({
   setSelectedStepId: (_selectedStepId: string | undefined) => undefined,
   setSelectedSectionId: (_selectedSectionId: string | undefined) => undefined,
   setSelection: (_selectedState: PipelineSelectionState | undefined) => undefined,
-  getStagePathFromPipeline: () => ''
+  getStagePathFromPipeline: () => '',
+  setIntermittentLoading: () => undefined
 })
 
 export interface PipelineProviderProps {
@@ -1064,6 +1099,26 @@ export function PipelineProvider({
       setTemplateTypes(merge(state.templateTypes, templateTypes))
       setTemplateServiceData(merge(state.templateServiceData, templateServiceData))
     })
+
+    const unresolvedCustomDeploymentRefs = map(
+      findAllByKey('customDeploymentRef', state.pipeline),
+      'templateRef'
+    )?.filter(customDeploymentRef => isEmpty(get(state.resolvedCustomDeploymentDetailsByRef, customDeploymentRef)))
+
+    getResolvedCustomDeploymentDetailsByRef(
+      {
+        ...queryParams,
+        templateListType: 'Stable',
+        repoIdentifier: state.gitDetails.repoIdentifier,
+        branch: state.gitDetails.branch,
+        getDefaultFromOtherRepo: true
+      },
+      unresolvedCustomDeploymentRefs
+    ).then(({ resolvedCustomDeploymentDetailsByRef }) => {
+      setResolvedCustomDeploymentDetailsByRef(
+        merge(state.resolvedCustomDeploymentDetailsByRef, resolvedCustomDeploymentDetailsByRef)
+      )
+    })
   }, [state.pipeline])
 
   const getStageFromPipeline = React.useCallback(
@@ -1094,8 +1149,16 @@ export function PipelineProvider({
     dispatch(PipelineContextActions.setTemplateServiceData({ templateServiceData }))
   }, [])
 
+  const setResolvedCustomDeploymentDetailsByRef = React.useCallback(resolvedCustomDeploymentDetailsByRef => {
+    dispatch(PipelineContextActions.setResolvedCustomDeploymentDetailsByRef({ resolvedCustomDeploymentDetailsByRef }))
+  }, [])
+
   const setSchemaErrorView = React.useCallback(flag => {
     dispatch(PipelineContextActions.updateSchemaErrorsFlag({ schemaErrors: flag }))
+  }, [])
+
+  const setIntermittentLoading = React.useCallback((isIntermittentLoading: boolean) => {
+    dispatch(PipelineContextActions.setIntermittentLoading({ isIntermittentLoading }))
   }, [])
 
   const updateStage = React.useCallback(
@@ -1136,14 +1199,12 @@ export function PipelineProvider({
   })
 
   React.useEffect(() => {
-    if (state.isDBInitialized) {
-      abortControllerRef.current = new AbortController()
-      fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
+    abortControllerRef.current = new AbortController()
+    fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
 
-      return () => {
-        if (abortControllerRef.current) {
-          abortControllerRef.current.abort()
-        }
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1192,7 +1253,8 @@ export function PipelineProvider({
         setSelection,
         getStagePathFromPipeline,
         setTemplateTypes,
-        setTemplateServiceData
+        setTemplateServiceData,
+        setIntermittentLoading
       }}
     >
       {children}

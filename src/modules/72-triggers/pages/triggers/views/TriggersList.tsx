@@ -54,11 +54,18 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
   const [searchParam, setSearchParam] = useState('')
   const { getString } = useStrings()
 
-  const { NG_SVC_ENV_REDESIGN = false } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN = false, CD_TRIGGERS_REFACTOR = false } = useFeatureFlags()
   const isNewService = isNewServiceEnvEntity(
     NG_SVC_ENV_REDESIGN,
     pipeline?.stages?.[0]?.stage as DeploymentStageElementConfig
   )
+
+  /*
+   *  Show artifact and manifest selection only if:
+   *   1: CD_TRIGGERS_REFACTOR is enabled
+   *   2: If its not newService
+   */
+  const hideArtifactManifestSelection = CD_TRIGGERS_REFACTOR || !isNewService ? false : true
 
   const {
     data: triggerListResponse,
@@ -182,7 +189,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
 
     return (
       <AddDrawer
-        addDrawerMap={getCategoryItems(getString, isNewService)}
+        addDrawerMap={getCategoryItems(getString, hideArtifactManifestSelection)}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.STUDIO}

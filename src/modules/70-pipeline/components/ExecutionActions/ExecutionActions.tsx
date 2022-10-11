@@ -39,6 +39,7 @@ import type { StringKeys } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
+import { killEvent } from '@common/utils/eventUtils'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
@@ -317,11 +318,6 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/
 
-  function killEvent(e: React.MouseEvent<HTMLDivElement>): void {
-    e.preventDefault()
-    e.stopPropagation()
-  }
-
   return (
     <Layout.Horizontal onClick={killEvent}>
       {!menuOnlyActions && (
@@ -382,7 +378,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
                 featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
                 text={getString('pipeline.retryPipeline')}
                 onClick={retryPipeline}
-                disabled={isPipelineInvalid}
+                disabled={!canRerun || isPipelineInvalid}
               />
             )}
             {!isExecutionDetailsView && (
@@ -395,7 +391,11 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               hidden={!showEditButton}
               disabled={!canEdit}
               className={css.link}
-              text={<Link to={pipelineDetailsView}>{getString('pipeline.viewPipeline')}</Link>}
+              text={
+                <Link to={pipelineDetailsView}>
+                  {canEdit ? getString('editPipeline') : getString('pipeline.viewPipeline')}
+                </Link>
+              }
             />
             {!stageId && (
               <RbacMenuItem

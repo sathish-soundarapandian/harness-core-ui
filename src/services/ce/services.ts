@@ -908,6 +908,7 @@ export const FetchRecommendationDocument = gql`
       }
       ... on ECSRecommendationDTO {
         clusterName
+        launchType
         id
         percentileBased
         serviceArn
@@ -2087,6 +2088,7 @@ export type FetchRecommendationQuery = {
     | {
         __typename?: 'ECSRecommendationDTO'
         clusterName: string | null
+        launchType: LaunchType | null
         id: string | null
         percentileBased: any | null
         serviceArn: string | null
@@ -2883,6 +2885,7 @@ export type EcsRecommendationDto = {
   current: Maybe<Scalars['Map_String_StringScalar']>
   id: Maybe<Scalars['String']>
   lastDayCost: Maybe<Cost>
+  launchType: Maybe<LaunchType>
   memoryHistogram: Maybe<HistogramExp>
   percentileBased: Maybe<Scalars['Map_String_Map_String_StringScalar']>
   serviceArn: Maybe<Scalars['String']>
@@ -3015,6 +3018,12 @@ export type K8sRecommendationFilterDtoInput = {
   offset: InputMaybe<Scalars['Long']>
   perspectiveFilters: InputMaybe<Array<InputMaybe<QlceViewFilterWrapperInput>>>
   resourceTypes: InputMaybe<Array<InputMaybe<ResourceType>>>
+}
+
+export enum LaunchType {
+  Ec2 = 'EC2',
+  External = 'EXTERNAL',
+  Fargate = 'FARGATE'
 }
 
 export type NodePool = {
@@ -3426,6 +3435,7 @@ export type QueryPerspectivesArgs = {
 
 /** Query root */
 export type QueryRecommendationDetailsArgs = {
+  bufferPercentage?: InputMaybe<Scalars['Int']>
   endTime: InputMaybe<Scalars['OffsetDateTime']>
   id: Scalars['String']
   resourceType: ResourceType
@@ -3492,6 +3502,7 @@ export type RecommendationItemDto = {
 }
 
 export type RecommendationItemDtoRecommendationDetailsArgs = {
+  bufferPercentage?: InputMaybe<Scalars['Int']>
   endTime: InputMaybe<Scalars['OffsetDateTime']>
   startTime: InputMaybe<Scalars['OffsetDateTime']>
 }

@@ -8,7 +8,7 @@
 import type { IconName } from '@wings-software/uicore'
 import type Highcharts from 'highcharts'
 import { get } from 'lodash-es'
-import type { ViewRule, ViewIdCondition, CEView } from 'services/ce'
+import type { ViewRule, ViewIdCondition, CEView, BusinessMapping } from 'services/ce'
 import type { UseStringsReturn } from 'framework/strings'
 import {
   QlceViewTimeFilterOperator,
@@ -316,4 +316,26 @@ export enum ClusterFieldNames {
   WorkloadId = 'Workload Id',
   Node = 'Node',
   EcsServiceId = 'ECS Service Id'
+}
+
+export const getBmDataSources = (
+  data: BusinessMapping[] | undefined | null,
+  filters: QlceViewFilterInput[],
+  groupBy: QlceViewFieldInputInput
+): string[] => {
+  const dataSources: BusinessMapping['dataSources'] = []
+
+  data?.forEach(businessMapping => {
+    filters.forEach(filter => {
+      if (filter.field?.fieldId === businessMapping.uuid) {
+        dataSources?.push(...(businessMapping.dataSources || []))
+      }
+    })
+
+    if (groupBy.fieldId === businessMapping.uuid) {
+      dataSources?.push(...(businessMapping.dataSources || []))
+    }
+  })
+
+  return [...new Set(dataSources)]
 }

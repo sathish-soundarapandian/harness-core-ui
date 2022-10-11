@@ -14,7 +14,6 @@ import { useStrings } from 'framework/strings'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import useAddResourceModal from '@rbac/modals/AddResourceModal/useAddResourceModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isAtrributeFilterSelector, isDynamicResourceSelector } from '@rbac/utils/utils'
 import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
 import type { AttributeFilter } from 'services/resourcegroups'
@@ -52,13 +51,12 @@ const ResourcesCard: React.FC<ResourcesCardProps> = ({
       }
     }
   })
-  const { ATTRIBUTE_TYPE_ACL_ENABLED } = useFeatureFlags()
 
   const resourceDetails = RbacFactory.getResourceTypeHandler(resourceType)
   if (!resourceDetails) return null
   const { label, icon, addResourceModalBody, addAttributeModalBody, staticResourceRenderer, attributeRenderer } =
     resourceDetails
-  const attributeSelectionEnabled = ATTRIBUTE_TYPE_ACL_ENABLED && addAttributeModalBody
+  const attributeSelectionEnabled = addAttributeModalBody
   const staticResourcesSelectionEnabled = !disableSpecificResourcesSelection && addResourceModalBody
   const hideRadioBtnSet = disableSpecificResourcesSelection && !attributeSelectionEnabled
   const staticResourceValues = isAtrributeFilterEnabled

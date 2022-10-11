@@ -11,8 +11,10 @@ import { render, act, fireEvent } from '@testing-library/react'
 import type { Failure } from 'services/cd-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
+import { getFullRepoName } from '@ci/utils/HostedBuildsUtils'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
-import { getFullRepoName, InfraProvisiongWizardStepId } from '../Constants'
+import { InfraProvisiongWizardStepId } from '../Constants'
+
 import { repos } from '../mocks/repositories'
 
 jest.mock('services/pipeline-ng', () => ({
@@ -85,9 +87,9 @@ describe('Test SelectRepository component', () => {
         <InfraProvisioningWizard lastConfiguredWizardStepId={InfraProvisiongWizardStepId.SelectRepository} />
       </TestWrapper>
     )
-    const createPipelineBtn = getByText('ci.getStartedWithCI.createPipeline')
+    const configurePipelineBtn = getByText('next: ci.getStartedWithCI.configurePipeline')
     await act(async () => {
-      fireEvent.click(createPipelineBtn)
+      fireEvent.click(configurePipelineBtn)
     })
     // Schema validation error should show up for if Repository is not selected
     const repositoryValidationError = container.querySelector(
@@ -126,9 +128,9 @@ describe('Test SelectRepository component', () => {
     await act(async () => {
       fireEvent.click(testRepository)
     })
-    const createPipelineBtn = getByText('ci.getStartedWithCI.createPipeline')
+    const configurePipelineBtn = getByText('next: ci.getStartedWithCI.configurePipeline')
     await act(async () => {
-      fireEvent.click(createPipelineBtn)
+      fireEvent.click(configurePipelineBtn)
     })
     expect(routesToPipelineStudio).not.toHaveBeenCalled()
   })

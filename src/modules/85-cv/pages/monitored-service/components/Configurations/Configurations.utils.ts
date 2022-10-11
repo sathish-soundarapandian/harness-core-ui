@@ -18,7 +18,7 @@ import type {
 } from 'services/cv'
 import type { UseStringsReturn } from 'framework/strings'
 import { CVObjectStoreNames } from '@cv/hooks/IndexedDBHook/IndexedDBHook'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import type { MonitoredServiceForm } from './components/Service/Service.types'
 
 export const isUpdated = (

@@ -5,6 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.providerScreenContainer {
+  --page-header-height: 30px;
+  position: relative;
+  height: calc(var(--page-min-height) - var(--page-header-height));
+}
+
 .providersViewGrid {
   display: grid;
   grid-template-columns: repeat(4, 70px);

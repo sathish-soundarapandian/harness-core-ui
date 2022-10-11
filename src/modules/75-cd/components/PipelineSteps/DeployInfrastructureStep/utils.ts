@@ -25,6 +25,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { TemplateLinkConfig } from 'services/pipeline-ng'
 
 export interface DeployInfrastructureProps {
   initialValues: DeployStageConfig
@@ -48,6 +49,7 @@ export interface CustomStepProps extends DeployStageConfig {
   environmentRef?: string
   infrastructureRef?: string
   clusterRef?: string
+  customDeploymentData?: TemplateLinkConfig
 }
 
 export function isEditEnvironment(data?: EnvironmentResponseDTO): boolean {
@@ -345,7 +347,7 @@ export function processInputSetInitialValues(
       ...(initialValues.environment?.serviceOverrideInputs && {
         serviceOverrideInputs: initialValues.environment?.serviceOverrideInputs
       }),
-      ...(initialValues.environment?.infrastructureDefinitions?.[0]?.identifier && {
+      ...(initialValues.environment?.infrastructureDefinitions && {
         infrastructureDefinitions: initialValues.environment?.infrastructureDefinitions
       }),
       ...(initialValues.environment?.gitOpsClusters?.[0]?.identifier && {
@@ -376,6 +378,7 @@ export function processInputSetInitialValues(
                 value: cluster.identifier
               }
             })
-    })
+    }),
+    isEnvInputLoaded: initialValues?.isEnvInputLoaded
   } as DeployStageConfig
 }

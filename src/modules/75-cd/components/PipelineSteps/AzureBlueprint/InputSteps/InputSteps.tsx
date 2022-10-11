@@ -57,8 +57,8 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
         isValueRuntimeInput(inputSetData?.template?.spec?.configuration?.connectorRef as string) && (
           <div className={cx(stepCss.formGroup, stepCss.md)}>
             <FormMultiTypeConnectorField
-              label={<Text color={Color.GREY_900}>{getString('pipelineSteps.awsConnectorLabel')}</Text>}
-              type={Connectors.AWS}
+              label={<Text color={Color.GREY_900}>{getString('common.azureConnector')}</Text>}
+              type={Connectors.AZURE}
               name={`${path}.spec.configuration.connectorRef`}
               placeholder={getString('select')}
               accountIdentifier={accountId}

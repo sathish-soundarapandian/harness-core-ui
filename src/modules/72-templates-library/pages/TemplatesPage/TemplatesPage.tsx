@@ -44,6 +44,8 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import FeatureWarningBanner from '@common/components/FeatureWarning/FeatureWarningBanner'
+import useImportResource from '@pipeline/components/ImportResource/useImportResource'
+import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import css from './TemplatesPage.module.scss'
 
 export default function TemplatesPage(): React.ReactElement {
@@ -151,6 +153,12 @@ export default function TemplatesPage(): React.ReactElement {
     [templateIdentifierToSettings, reloadTemplates]
   )
 
+  const { showImportResourceModal } = useImportResource({
+    resourceType: ResourceType.TEMPLATE,
+    modalTitle: getString('common.importEntityFromGit', { resourceType: getString('common.templates') }),
+    onSuccess: reloadTemplates
+  })
+
   const goToTemplateStudio = (template: TemplateSummaryResponse): void => {
     history.push(
       routes.toTemplateStudio({
@@ -189,7 +197,7 @@ export default function TemplatesPage(): React.ReactElement {
       />
       <Page.SubHeader className={css.templatesPageSubHeader}>
         <Layout.Horizontal spacing={'medium'}>
-          <NewTemplatePopover />
+          <NewTemplatePopover onImportTemplateClick={showImportResourceModal} />
           <DropDown
             onChange={item => {
               updateQueryParams({ templateType: (item.value || []) as TemplateType })

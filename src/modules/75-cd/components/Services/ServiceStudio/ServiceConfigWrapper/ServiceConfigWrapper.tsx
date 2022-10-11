@@ -15,21 +15,26 @@ import type { GitQueryParams, ProjectPathProps, ServicePathProps } from '@common
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
+import {
+  PipelineContextType,
+  usePipelineContext
+} from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { sanitize } from '@common/utils/JSONUtils'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { NGServiceConfig } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import {
-  initialServiceState,
-  DefaultNewStageName,
   DefaultNewStageId,
-  setNameIDDescription,
+  DefaultNewStageName,
+  initialServiceState,
   newServiceState,
-  ServicePipelineConfig
+  ServicePipelineConfig,
+  setNameIDDescription
 } from '../../utils/ServiceUtils'
 import ServiceStudioDetails from '../ServiceStudioDetails'
 
@@ -42,6 +47,15 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
   const { serviceResponse, isServiceCreateModalView, selectedDeploymentType, gitOpsEnabled } = useServiceContext()
+
+  const {
+    state: {
+      selectionState: { selectedStageId }
+    },
+    getStageFromPipeline
+  } = usePipelineContext()
+
+  const { stage: pipelineStage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
 
   const [isEdit] = usePermission({
     resource: {
@@ -62,6 +76,13 @@ function ServiceConfigurationWrapper(props: ServiceConfigurationWrapperProps): R
     if (isServiceCreateModalView) {
       return produce(newServiceState, draft => {
         set(draft, 'service.serviceDefinition.type', selectedDeploymentType)
+        if (selectedDeploymentType === ServiceDeploymentType.CustomDeployment) {
+          set(
+            draft,
+            'service.serviceDefinition.spec.customDeploymentRef',
+            pipelineStage?.stage?.spec?.customDeploymentRef
+          )
+        }
         set(draft, 'service.gitOpsEnabled', gitOpsEnabled)
       })
     } else {

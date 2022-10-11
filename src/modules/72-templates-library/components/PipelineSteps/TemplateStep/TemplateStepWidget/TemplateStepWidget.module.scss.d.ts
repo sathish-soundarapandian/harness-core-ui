@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly errorHandler: string
   readonly inputsContainer: string
 }
 export default styles

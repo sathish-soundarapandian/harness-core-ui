@@ -33,6 +33,7 @@ declare const styles: {
   readonly profileSelectorsItemsContainer: string
   readonly replicaText: string
   readonly rightPanel: string
+  readonly runAsRootCheckbox: string
   readonly sizeTag: string
   readonly small: string
   readonly submitBtn: string

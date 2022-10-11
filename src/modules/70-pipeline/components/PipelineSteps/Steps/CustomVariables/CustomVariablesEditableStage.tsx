@@ -28,8 +28,8 @@ import type { UseStringsReturn } from 'framework/strings'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import type { NGVariable } from 'services/cd-ng'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { CustomDeploymentNGVariable, NGVariable } from 'services/cd-ng'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import type { AllNGVariables } from '@pipeline/utils/types'
@@ -43,9 +43,16 @@ import { VariableType, labelStringMap } from './CustomVariableUtils'
 import AddEditCustomVariable, { VariableState } from './AddEditCustomVariable'
 import css from './CustomVariables.module.scss'
 
-const getValidationSchema = (getString: UseStringsReturn['getString']): Yup.Schema<unknown> =>
+export type VariablesCustomValidationSchemaType = (
+  getString: UseStringsReturn['getString']
+) => Record<string, Yup.Schema<unknown>>
+
+const getValidationSchema = (
+  getString: UseStringsReturn['getString'],
+  validationSchema?: VariablesCustomValidationSchemaType
+): Yup.Schema<unknown> =>
   Yup.object().shape({
-    ...getVariablesValidationField(getString)
+    ...(validationSchema ? validationSchema(getString) : getVariablesValidationField(getString))
   })
 
 export function CustomVariablesEditableStage(props: CustomVariableEditableProps): React.ReactElement {
@@ -62,8 +69,10 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
     allowableTypes,
     allowedVarialblesTypes,
     isDescriptionEnabled,
-    allowedConnectorTypes,
-    addVariableLabel
+    validationSchema,
+    isDrawerMode,
+    addVariableLabel,
+    fromEnvironmentConfiguration
   } = props
   const uids = React.useRef<string[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -107,7 +116,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
       initialValues={initialValues}
       onSubmit={data => onUpdate?.(data)}
       validate={debouncedUpdate}
-      validationSchema={enableValidation ? getValidationSchema(getString) : undefined}
+      validationSchema={enableValidation ? getValidationSchema(getString, validationSchema) : undefined}
     >
       {formik => {
         const { values, setFieldValue } = formik
@@ -180,7 +189,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                         )}
 
                         <div className={css.valueColumn} data-type={getMultiTypeFromValue(variable.value as string)}>
-                          {(variable.type as any) === VariableType.Connector ? (
+                          {(variable.type as CustomDeploymentNGVariable) === VariableType.Connector ? (
                             <FormMultiTypeConnectorField
                               name={`variables[${index}].value`}
                               label=""
@@ -194,7 +203,8 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                               setRefValue
                               connectorLabelClass="connectorVariableField"
                               enableConfigureOptions={false}
-                              type={allowedConnectorTypes}
+                              isDrawerMode={isDrawerMode}
+                              type={[]}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput name={`variables[${index}].value`} label="" disabled={readonly} />
@@ -226,6 +236,9 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                                 setFieldValue(`variables[${index}].default`, defaultValue)
                               }}
                               isReadonly={readonly}
+                              allowedValuesType={
+                                variable.type === VariableType.Number ? ALLOWED_VALUES_TYPE.NUMBER : undefined
+                              }
                             />
                           ) : null}
                           <div className={css.actionButtons}>
@@ -260,7 +273,13 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                       size={ButtonSize.SMALL}
                       variation={ButtonVariation.LINK}
                       onClick={addNew}
-                      text={defaultTo(addVariableLabel, getString('common.addVariable'))}
+                      text={
+                        fromEnvironmentConfiguration
+                          ? `${getString('common.newName', {
+                              name: getString('variableLabel')
+                            })} ${getString('common.override')}`
+                          : getString(defaultTo(addVariableLabel, 'common.addVariable'))
+                      }
                     />
                   )}
                 </div>

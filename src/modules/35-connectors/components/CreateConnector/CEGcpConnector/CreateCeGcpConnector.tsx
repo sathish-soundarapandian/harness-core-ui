@@ -11,7 +11,7 @@ import { Connectors, CreateConnectorModalProps } from '@connectors/constants'
 import DialogExtention from '@connectors/common/ConnectorExtention/DialogExtention'
 import { getConnectorIconByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useStrings } from 'framework/strings'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CCM_CONNECTOR_SAVE_EVENT, CCM_CONNECTOR_SAVE_SUCCESS } from '@connectors/trackingConstants'
 import OverviewStep, { CEGcpConnectorDTO } from './steps/OverviewStep'
@@ -39,7 +39,7 @@ const CreateCeGcpConnector: React.FC<CreateConnectorModalProps> = props => {
         <BillingExport name={getString('connectors.ceGcp.billingExport.heading')} />
         <ChooseRequirements name={getString('connectors.ceGcp.chooseRequirements.name')} />
         <GrantPermission name={getString('connectors.ceGcp.grantPermission.heading')}></GrantPermission>
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.ceGcp.testConnection.heading')}
           connectorInfo={props.connectorInfo}
           isStep={true}

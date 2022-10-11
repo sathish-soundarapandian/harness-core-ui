@@ -48,7 +48,7 @@ const moduleDescriptionMap: Record<string, keyof StringsMap> = {
   cf: 'cf.continuous',
   ci: 'ci.continuous',
   cv: 'cv.continuous',
-  sto: 'stoSteps.continuous'
+  sto: 'sto.continuous'
 }
 
 const moduleNameMap: Record<string, keyof StringsMap> = {

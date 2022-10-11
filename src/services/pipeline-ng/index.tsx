@@ -131,7 +131,17 @@ export type ArtifactTriggerConfig = NGTriggerSpecV2 & {
   artifactRef?: string
   spec?: ArtifactTypeSpec
   stageIdentifier?: string
-  type?: 'Gcr' | 'Ecr' | 'DockerRegistry' | 'Nexus3Registry' | 'ArtifactoryRegistry' | 'Acr' | 'AmazonS3' | 'Jenkins'
+  type?:
+    | 'Gcr'
+    | 'Ecr'
+    | 'DockerRegistry'
+    | 'Nexus3Registry'
+    | 'ArtifactoryRegistry'
+    | 'Acr'
+    | 'AmazonS3'
+    | 'Jenkins'
+    | 'GoogleArtifactRegistry'
+    | 'GithubPackageRegistry'
 }
 
 export interface ArtifactTypeSpec {
@@ -459,6 +469,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
   )[]
 }
 
@@ -950,12 +961,16 @@ export interface Error {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1299,12 +1314,16 @@ export interface ErrorMetadata {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   errorMessage?: string
 }
 
@@ -1374,6 +1393,7 @@ export interface ExecutionInfo {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -1450,6 +1470,7 @@ export interface ExecutionNode {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -1498,7 +1519,15 @@ export interface ExecutionWrapperConfig {
 
 export interface ExecutorInfoDTO {
   email?: string
-  triggerType?: 'NOOP' | 'MANUAL' | 'WEBHOOK' | 'WEBHOOK_CUSTOM' | 'SCHEDULER_CRON' | 'UNRECOGNIZED'
+  triggerType?:
+    | 'NOOP'
+    | 'MANUAL'
+    | 'WEBHOOK'
+    | 'WEBHOOK_CUSTOM'
+    | 'SCHEDULER_CRON'
+    | 'ARTIFACT'
+    | 'MANIFEST'
+    | 'UNRECOGNIZED'
   username?: string
 }
 
@@ -1837,12 +1866,16 @@ export interface Failure {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1860,7 +1893,7 @@ export interface FailureInfoDTO {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   message?: string
   responseMessages?: ResponseMessage[]
@@ -1874,8 +1907,9 @@ export interface FailureStrategyActionConfig {
     | 'Abort'
     | 'StageRollback'
     | 'StepGroupRollback'
+    | 'PipelineRollback'
     | 'ManualIntervention'
-    | 'ProceedWithDefaultValue'
+    | 'ProceedWithDefaultValues'
 }
 
 export interface FailureStrategyConfig {
@@ -1927,6 +1961,16 @@ export interface FlowControlConfig {
   barriers?: BarrierInfoConfig[]
 }
 
+export type GarSpec = ArtifactTypeSpec & {
+  connectorRef?: string
+  eventConditions?: TriggerEventDataCondition[]
+  pkg?: string
+  project?: string
+  region?: string
+  repositoryName?: string
+  version?: string
+}
+
 export type GcrSpec = ArtifactTypeSpec & {
   connectorRef?: string
   eventConditions?: TriggerEventDataCondition[]
@@ -1963,6 +2007,14 @@ export type GithubPRSpec = GithubEventSpec & {
   jexlCondition?: string
   payloadConditions?: TriggerEventDataCondition[]
   repoName?: string
+}
+
+export type GithubPackagesSpec = ArtifactTypeSpec & {
+  connectorRef?: string
+  eventConditions?: TriggerEventDataCondition[]
+  org?: string
+  packageName?: string
+  packageType?: string
 }
 
 export type GithubPushSpec = GithubEventSpec & {
@@ -2061,6 +2113,7 @@ export interface GraphLayoutNode {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -2132,6 +2185,7 @@ export type HelmManifestSpec = ManifestTypeSpec & {
   chartName?: string
   chartVersion?: string
   eventConditions?: TriggerEventDataCondition[]
+  helmVersion?: 'V2' | 'V3' | 'V380'
   store?: BuildStore
 }
 
@@ -2156,6 +2210,15 @@ export type HttpStepInfo = StepSpecType & {
 
 export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Ignore'
+}
+
+export interface ImportDataSpec {
+  [key: string]: any
+}
+
+export interface ImportDataSpecWrapper {
+  spec: ImportDataSpec
+  type: 'Json' | 'KeyValues'
 }
 
 export interface InputSetError {
@@ -2333,6 +2396,7 @@ export type JiraApprovalStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   issueKey: string
   issueType?: string
+  projectKey?: string
   rejectionCriteria?: CriteriaSpecWrapper
 }
 
@@ -2362,6 +2426,10 @@ export type JiraUpdateStepInfo = StepSpecType & {
   transitionTo?: TransitionTo
 }
 
+export type JsonImportDataSpec = ImportDataSpec & {
+  jsonBody: string
+}
+
 export interface JsonNode {
   [key: string]: any
 }
@@ -2369,6 +2437,10 @@ export interface JsonNode {
 export type KeyValuesCriteriaSpec = CriteriaSpec & {
   conditions: Condition[]
   matchAnyCondition?: boolean
+}
+
+export type KeyValuesImportDataSpec = ImportDataSpec & {
+  fields: ServiceNowField[]
 }
 
 export interface LandingDashboardRequestPMS {
@@ -2597,7 +2669,7 @@ export interface OnFailureConfig {
     | 'Verification'
     | 'DelegateProvisioning'
     | 'PolicyEvaluationFailure'
-    | 'ExecutionInputTimeoutError'
+    | 'InputTimeoutError'
   )[]
 }
 
@@ -2650,6 +2722,7 @@ export interface PMSPipelineResponseDTO {
   governanceMetadata?: GovernanceMetadata
   modules?: string[]
   resolvedTemplatesPipelineYaml?: string
+  validateTemplateInputsResponse?: ValidateTemplateInputsResponseDTO
   yamlPipeline?: string
   yamlSchemaErrorWrapper?: YamlSchemaErrorWrapperDTO
 }
@@ -2875,6 +2948,7 @@ export type PipelineExecutionFilterProperties = FilterProperties & {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -2947,6 +3021,7 @@ export interface PipelineExecutionSummary {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -3025,9 +3100,21 @@ export interface PipelineOpaEvaluationContext {
   user?: UserOpaEvaluationContext
 }
 
+export type PipelineRollbackFailureActionConfig = FailureStrategyActionConfig & {
+  type: 'PipelineRollback'
+}
+
 export interface PipelineSaveResponse {
   governanceMetadata?: GovernanceMetadata
   identifier?: string
+}
+
+export type PipelineStageConfig = StageInfoConfig & {
+  inputSetReferences?: string[]
+  org: string
+  pipeline: string
+  pipelineInputs?: JsonNode
+  project: string
 }
 
 export interface PipelineWrapperResponse {
@@ -3078,6 +3165,7 @@ export interface PlanExecution {
     | 'RESOURCE_WAITING'
     | 'APPROVAL_REJECTED'
     | 'INPUT_WAITING'
+    | 'WAIT_STEP_RUNNING'
     | 'UNRECOGNIZED'
   uuid?: string
   validUntil?: string
@@ -3172,7 +3260,7 @@ export interface Principal {
 }
 
 export type ProceedWithDefaultValuesFailureActionConfig = FailureStrategyActionConfig & {
-  type: 'ProceedWithDefaultValue'
+  type: 'ProceedWithDefaultValues'
 }
 
 export type QueueStepInfo = StepSpecType & {
@@ -3203,6 +3291,7 @@ export interface RecentExecutionInfoDTO {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -3296,11 +3385,11 @@ export interface ResourceDTO {
     | 'VARIABLE'
     | 'CHAOS_HUB'
     | 'MONITORED_SERVICE'
-    | 'CHAOS_DELEGATE'
-    | 'CHAOS_SCENARIO'
+    | 'CHAOS_INFRASTRUCTURE'
+    | 'CHAOS_EXPERIMENT'
     | 'STO_TARGET'
     | 'STO_EXEMPTION'
-    | 'CHAOS_GITOPS'
+    | 'CHAOS_GAMEDAY'
     | 'SERVICE_LEVEL_OBJECTIVE'
     | 'PERSPECTIVE'
     | 'PERSPECTIVE_BUDGET'
@@ -3948,12 +4037,16 @@ export interface ResponseMessage {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -3965,7 +4058,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -4202,6 +4295,20 @@ export interface ResponseVariableMergeServiceResponse {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseWaitStepExecutionDetailsDto {
+  correlationId?: string
+  data?: WaitStepExecutionDetailsDto
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseWaitStepResponseDto {
+  correlationId?: string
+  data?: WaitStepResponseDto
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseWebhookEventProcessingDetails {
   correlationId?: string
   data?: WebhookEventProcessingDetails
@@ -4305,6 +4412,7 @@ export interface RetryStageInfo {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -4406,8 +4514,15 @@ export type ServiceNowCreateStepInfo = StepSpecType & {
 }
 
 export interface ServiceNowField {
-  name?: string
+  name: string
   value: string
+}
+
+export type ServiceNowImportSetStepInfo = StepSpecType & {
+  connectorRef: string
+  delegateSelectors?: string[]
+  importData: ImportDataSpecWrapper
+  stagingTableName: string
 }
 
 export interface ServiceNowTicketKeyNG {
@@ -4634,13 +4749,14 @@ export interface StepData {
     | 'AZURE_CREATE_ARM_RESOURCE'
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
+    | 'SHELL_SCRIPT_PROVISION'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'JENKINS_ARTIFACT'
     | 'STRATEGY_MAX_CONCURRENT'
-    | 'MAX_CHAOS_SCENARIO_RUNS_PER_MONTH'
-    | 'MAX_CHAOS_DELEGATES'
+    | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
+    | 'MAX_CHAOS_INFRASTRUCTURES'
   name?: string
   type?: string
 }
@@ -4720,13 +4836,28 @@ export type TagBuildSpec = BuildSpec & {
 export type TemplateFilterProperties = FilterProperties & {
   childTypes?: string[]
   description?: string
-  templateEntityTypes?: ('Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager')[]
+  templateEntityTypes?: (
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
+  )[]
   templateIdentifiers?: string[]
   templateNames?: string[]
 }
 
 export interface TemplateInfo {
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
   templateIdentifier?: string
   versionLabel?: string
 }
@@ -4747,6 +4878,7 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 export interface TemplateLinkConfig {
   templateInputs?: JsonNode
   templateRef: string
+  templateVariables?: JsonNode
   versionLabel?: string
 }
 
@@ -4767,7 +4899,14 @@ export interface TemplateResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -4895,6 +5034,25 @@ export interface VariationYamlSpec {
   weight: number
 }
 
+export interface WaitStepExecutionDetailsDto {
+  createdAt?: number
+  duration?: number
+  nodeExecutionId?: string
+}
+
+export type WaitStepInfo = StepSpecType & {
+  duration?: string
+  metadata?: string
+}
+
+export interface WaitStepRequestDto {
+  action?: 'MARK_AS_SUCCESS' | 'MARK_AS_FAIL'
+}
+
+export interface WaitStepResponseDto {
+  status?: boolean
+}
+
 export interface WebhookAutoRegistrationStatus {
   detailedMessage?: string
   registrationResult?: 'SUCCESS' | 'FAILED' | 'ERROR' | 'TIMEOUT' | 'UNAVAILABLE'
@@ -5000,6 +5158,7 @@ export interface ExecutionSummaryInfo {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -6459,6 +6618,8 @@ export interface GetOverlayInputSetForPipelineQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   pipelineIdentifier: string
+  pipelineBranch?: string
+  pipelineRepoID?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -6814,6 +6975,8 @@ export interface GetInputSetForPipelineQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   pipelineIdentifier: string
+  pipelineBranch?: string
+  pipelineRepoID?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -9677,6 +9840,7 @@ export interface GetListOfExecutionsQueryParams {
     | 'ResourceWaiting'
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
+    | 'WaitStepRunning'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -11974,6 +12138,7 @@ export interface CreateTriggerQueryParams {
   projectIdentifier: string
   targetIdentifier: string
   ignoreError?: boolean
+  withServiceV2?: boolean
 }
 
 export type CreateTriggerProps = Omit<
@@ -12426,6 +12591,172 @@ export const updateTriggerStatusPromise = (
     void,
     UpdateTriggerStatusPathParams
   >('PUT', getConfig('pipeline/api'), `/triggers/${triggerIdentifier}/status`, props, signal)
+
+export interface ExecutionDetailsQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface ExecutionDetailsPathParams {
+  nodeExecutionId: string
+}
+
+export type ExecutionDetailsProps = Omit<
+  GetProps<
+    ResponseWaitStepExecutionDetailsDto,
+    Failure | Error,
+    ExecutionDetailsQueryParams,
+    ExecutionDetailsPathParams
+  >,
+  'path'
+> &
+  ExecutionDetailsPathParams
+
+/**
+ * Get Wait Step execution details
+ */
+export const ExecutionDetails = ({ nodeExecutionId, ...props }: ExecutionDetailsProps) => (
+  <Get<ResponseWaitStepExecutionDetailsDto, Failure | Error, ExecutionDetailsQueryParams, ExecutionDetailsPathParams>
+    path={`/waitStep/executionDetails/${nodeExecutionId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseExecutionDetailsProps = Omit<
+  UseGetProps<
+    ResponseWaitStepExecutionDetailsDto,
+    Failure | Error,
+    ExecutionDetailsQueryParams,
+    ExecutionDetailsPathParams
+  >,
+  'path'
+> &
+  ExecutionDetailsPathParams
+
+/**
+ * Get Wait Step execution details
+ */
+export const useExecutionDetails = ({ nodeExecutionId, ...props }: UseExecutionDetailsProps) =>
+  useGet<ResponseWaitStepExecutionDetailsDto, Failure | Error, ExecutionDetailsQueryParams, ExecutionDetailsPathParams>(
+    (paramsInPath: ExecutionDetailsPathParams) => `/waitStep/executionDetails/${paramsInPath.nodeExecutionId}`,
+    { base: getConfig('pipeline/api'), pathParams: { nodeExecutionId }, ...props }
+  )
+
+/**
+ * Get Wait Step execution details
+ */
+export const executionDetailsPromise = (
+  {
+    nodeExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseWaitStepExecutionDetailsDto,
+    Failure | Error,
+    ExecutionDetailsQueryParams,
+    ExecutionDetailsPathParams
+  > & { nodeExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseWaitStepExecutionDetailsDto,
+    Failure | Error,
+    ExecutionDetailsQueryParams,
+    ExecutionDetailsPathParams
+  >(getConfig('pipeline/api'), `/waitStep/executionDetails/${nodeExecutionId}`, props, signal)
+
+export interface MarkWaitStepQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface MarkWaitStepPathParams {
+  nodeExecutionId: string
+}
+
+export type MarkWaitStepProps = Omit<
+  MutateProps<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepRequestDto,
+    MarkWaitStepPathParams
+  >,
+  'path' | 'verb'
+> &
+  MarkWaitStepPathParams
+
+/**
+ * Marks the Wait Step as fail or success
+ */
+export const MarkWaitStep = ({ nodeExecutionId, ...props }: MarkWaitStepProps) => (
+  <Mutate<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepRequestDto,
+    MarkWaitStepPathParams
+  >
+    verb="POST"
+    path={`/waitStep/${nodeExecutionId}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseMarkWaitStepProps = Omit<
+  UseMutateProps<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepRequestDto,
+    MarkWaitStepPathParams
+  >,
+  'path' | 'verb'
+> &
+  MarkWaitStepPathParams
+
+/**
+ * Marks the Wait Step as fail or success
+ */
+export const useMarkWaitStep = ({ nodeExecutionId, ...props }: UseMarkWaitStepProps) =>
+  useMutate<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepRequestDto,
+    MarkWaitStepPathParams
+  >('POST', (paramsInPath: MarkWaitStepPathParams) => `/waitStep/${paramsInPath.nodeExecutionId}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { nodeExecutionId },
+    ...props
+  })
+
+/**
+ * Marks the Wait Step as fail or success
+ */
+export const markWaitStepPromise = (
+  {
+    nodeExecutionId,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepRequestDto,
+    MarkWaitStepPathParams
+  > & { nodeExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseWaitStepResponseDto,
+    Failure | Error,
+    MarkWaitStepQueryParams,
+    WaitStepRequestDto,
+    MarkWaitStepPathParams
+  >('POST', getConfig('pipeline/api'), `/waitStep/${nodeExecutionId}`, props, signal)
 
 export interface GetActionsListQueryParams {
   sourceRepo: 'AZURE_REPO' | 'GITHUB' | 'GITLAB' | 'BITBUCKET' | 'AWS_CODECOMMIT' | 'CUSTOM'
@@ -13307,9 +13638,11 @@ export interface GetSchemaYamlQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
+    | 'CustomDeployment'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -13317,6 +13650,7 @@ export interface GetSchemaYamlQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -13345,6 +13679,7 @@ export interface GetSchemaYamlQueryParams {
     | 'StrategyNode'
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
+    | 'FetchInstanceScript'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
@@ -13357,6 +13692,12 @@ export interface GetSchemaYamlQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
+    | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -13509,9 +13850,11 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
+    | 'CustomDeployment'
     | 'Triggers'
     | 'MonitoredService'
     | 'GitRepositories'
@@ -13519,6 +13862,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -13547,6 +13891,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'StrategyNode'
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
+    | 'FetchInstanceScript'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
@@ -13559,6 +13904,12 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
+    | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

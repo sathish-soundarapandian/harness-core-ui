@@ -19,6 +19,10 @@ jest.mock('@common/hooks/useFeatureFlag')
 jest.mock('react-router-dom', () => ({
   useParams: () => jest.fn()
 }))
+jest.mock('framework/strings', () => ({
+  useStrings: () => ({ getString: () => 'TEST_STRING' })
+}))
+
 const setUseGitRepoMock = (repoDetails: Partial<GitRepo> = {}, repoSet = false): void => {
   jest.spyOn(cfServiceMock, 'useGetGitRepo').mockReturnValue({
     loading: false,
@@ -64,13 +68,13 @@ describe('useGitSync', () => {
 
     const { result } = renderHookUnderTest()
 
-    const data = result.current.getGitSyncFormMeta()
+    const data = result.current.getGitSyncFormMeta('TEST')
     expect(data.gitSyncInitialValues).toEqual({
       gitDetails: {
         repoIdentifier: 'harnesstest',
         rootFolder: '/.harness/',
         branch: 'main',
-        commitMsg: '',
+        commitMsg: 'TEST',
         filePath: '/flags.yaml'
       },
       autoCommit: false

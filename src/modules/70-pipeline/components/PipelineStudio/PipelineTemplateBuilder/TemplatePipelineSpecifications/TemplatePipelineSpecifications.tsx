@@ -8,11 +8,11 @@
 import React from 'react'
 import { debounce, defaultTo, isEmpty, isEqual, noop, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { Container, Formik, FormikForm, Heading, Layout, PageError, Text } from '@wings-software/uicore'
+import { Container, Formik, FormikForm, Heading, Layout, PageError } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import type { FormikProps, FormikErrors } from 'formik'
 import { produce } from 'immer'
-import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
+import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   getsMergedTemplateInputYamlPromise,
@@ -29,7 +29,7 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { PageSpinner } from '@common/components'
 import { PipelineInputSetFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { validatePipeline } from '@pipeline/components/PipelineStudio/StepUtil'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
@@ -39,15 +39,13 @@ import type { Pipeline } from '@pipeline/utils/types'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import css from './TemplatePipelineSpecifications.module.scss'
 
-const getTemplateRuntimeInputsCount = (templateInfo: { [key: string]: any }): number =>
-  (JSON.stringify(templateInfo || {}).match(/<\+input>/g) || []).length
-
 export function TemplatePipelineSpecifications(): JSX.Element {
   const {
     state: { pipeline, schemaErrors, gitDetails, storeMetadata },
     allowableTypes,
     updatePipeline,
-    isReadonly
+    isReadonly,
+    setIntermittentLoading
   } = usePipelineContext()
   const queryParams = useParams<ProjectPathProps>()
   const templateRef = getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, ''))
@@ -111,11 +109,9 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     [templateInputSetYaml?.data]
   )
 
-  const templateInputsCount = React.useMemo(() => getTemplateRuntimeInputsCount(templateInputs), [templateInputs])
-
   const updateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
     const updatedPipeline = produce(pipeline, draft => {
-      set(draft, 'template.templateInputs', newTemplateInputs)
+      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
     })
     setFormValues(updatedPipeline)
     updatePipeline(updatedPipeline)
@@ -157,10 +153,12 @@ export function TemplatePipelineSpecifications(): JSX.Element {
   }, [templateInputs])
 
   React.useEffect(() => {
-    setFormikErrors({})
-    setAllValues(undefined)
-    setFormValues(undefined)
-  }, [templateRef, templateVersionLabel])
+    if (templateInputSetLoading) {
+      setFormikErrors({})
+      setAllValues(undefined)
+      setFormValues(undefined)
+    }
+  }, [templateInputSetLoading])
 
   React.useEffect(() => {
     if (schemaErrors) {
@@ -198,16 +196,29 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     refetchTemplateInputSet()
   }
 
-  const isLoading =
-    pipelineLoading || templateInputSetLoading || loadingMergedTemplateInputs || (isEmpty(allValues) && !pipelineError)
+  const isLoading = pipelineLoading || templateInputSetLoading || loadingMergedTemplateInputs
 
   const error = defaultTo(templateInputSetError, pipelineError)
+
+  /**
+   * This effect disables/enables Save button on Pipeline and Template Studio
+   * For gitx, template resolution takes a long time
+   * If user clicks on Save button before resolution, template exception occurs
+   */
+  React.useEffect(() => {
+    setIntermittentLoading(isLoading)
+
+    // cleanup
+    return () => {
+      setIntermittentLoading(false)
+    }
+  }, [isLoading, setIntermittentLoading])
 
   return (
     <Container className={css.contentSection} height={'100%'} background={Color.FORM_BG}>
       {isLoading && <PageSpinner />}
       {!isLoading && error && (
-        <PageError message={defaultTo((error?.data as Error)?.message, error?.message)} onClick={() => refetch()} />
+        <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
       )}
       {!isLoading && !error && templateInputs && allValues && formValues && (
         <>
@@ -229,19 +240,16 @@ export function TemplatePipelineSpecifications(): JSX.Element {
                     }}
                   >
                     <Layout.Vertical padding={{ bottom: 'large' }} spacing={'xlarge'}>
-                      <Layout.Horizontal flex={{ distribution: 'space-between' }}>
-                        <Heading level={5} color={Color.BLACK}>
-                          {getString('pipeline.templateInputs')}
-                        </Heading>
-                        <Text font={{ size: 'normal' }}>{`Total Inputs: ${templateInputsCount}`}</Text>
-                      </Layout.Horizontal>
+                      <Heading level={5} color={Color.BLACK}>
+                        {getString('pipeline.templateInputs')}
+                      </Heading>
                       <Container>
                         <PipelineInputSetFormInternal
                           template={templateInputs}
                           originalPipeline={allValues}
                           path={TEMPLATE_INPUT_PATH}
                           readonly={isReadonly}
-                          viewType={StepViewType.InputSet}
+                          viewType={StepViewType.TemplateUsage}
                           allowableTypes={allowableTypes}
                           viewTypeMetadata={viewTypeMetadata}
                         />

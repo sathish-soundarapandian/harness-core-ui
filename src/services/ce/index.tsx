@@ -131,6 +131,7 @@ export type ArtifactoryConnector = ConnectorConfigDTO & {
   artifactoryServerUrl: string
   auth?: ArtifactoryAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
@@ -180,10 +181,12 @@ export type AwsCodeCommitSecretKeyAccessKeyDTO = AwsCodeCommitHttpsCredentialsSp
 export type AwsConnector = ConnectorConfigDTO & {
   credential: AwsCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface AwsCredential {
   crossAccountAccess?: CrossAccountAccess
+  region?: string
   spec?: AwsCredentialSpec
   type: 'InheritFromDelegate' | 'ManualConfig' | 'Irsa'
 }
@@ -289,6 +292,7 @@ export type AzureConnector = ConnectorConfigDTO & {
   azureEnvironmentType: 'AZURE' | 'AZURE_US_GOVERNMENT'
   credential: AzureCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface AzureCredential {
@@ -343,6 +347,7 @@ export type AzureRepoConnector = ConnectorConfigDTO & {
   apiAccess?: AzureRepoApiAccess
   authentication: AzureRepoAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Project' | 'Repo'
   url: string
   validationRepo?: string
@@ -416,6 +421,7 @@ export type BitbucketConnector = ConnectorConfigDTO & {
   apiAccess?: BitbucketApiAccess
   authentication: BitbucketAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -498,6 +504,7 @@ export interface BusinessMapping {
   costTargets?: CostTarget[]
   createdAt?: number
   createdBy?: EmbeddedUser
+  dataSources?: ('CLUSTER' | 'AWS' | 'GCP' | 'AZURE' | 'COMMON' | 'CUSTOM' | 'BUSINESS_MAPPING' | 'LABEL')[]
   lastUpdatedAt?: number
   lastUpdatedBy?: EmbeddedUser
   name?: string
@@ -874,6 +881,7 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
@@ -1188,6 +1196,9 @@ export interface ConnectorInfoDTO {
     | 'AzureRepo'
     | 'Jenkins'
     | 'OciHelmRepo'
+    | 'CustomSecretManager'
+    | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export interface ConnectorResponse {
@@ -1340,6 +1351,16 @@ export interface CustomHealthKeyAndValue {
   valueEncrypted?: boolean
 }
 
+export type CustomSecretManager = ConnectorConfigDTO & {
+  connectorRef?: string
+  default?: boolean
+  delegateSelectors?: string[]
+  host?: string
+  onDelegate?: boolean
+  template: TemplateLinkConfigForCustomSecretManager
+  workingDirectory?: string
+}
+
 export interface DataPoint {
   key?: Reference
   value?: Number
@@ -1365,6 +1386,7 @@ export type DockerConnectorDTO = ConnectorConfigDTO & {
   auth?: DockerAuthenticationDTO
   delegateSelectors?: string[]
   dockerRegistryUrl: string
+  executeOnDelegate?: boolean
   providerType: 'DockerHub' | 'Harbor' | 'Quay' | 'Other'
 }
 
@@ -1388,6 +1410,7 @@ export interface ECSRecommendationDTO {
   }
   id?: string
   lastDayCost?: Cost
+  launchType?: 'EC2' | 'FARGATE' | 'EXTERNAL'
   memoryHistogram?: HistogramExp
   percentileBased?: {
     [key: string]: {
@@ -1398,8 +1421,14 @@ export interface ECSRecommendationDTO {
   serviceName?: string
 }
 
-export type EmailChannel = NotificationChannel & {
-  recipients?: string[]
+export type ELKConnectorDTO = ConnectorConfigDTO & {
+  apiKeyId?: string
+  apiKeyRef?: string
+  authType?: 'UsernamePassword' | 'ApiClientToken' | 'None'
+  delegateSelectors?: string[]
+  passwordRef?: string
+  url: string
+  username?: string
 }
 
 export type EmailNotificationChannel = CCMNotificationChannel & {
@@ -1421,6 +1450,7 @@ export interface EntityGitDetails {
   objectId?: string
   repoIdentifier?: string
   repoName?: string
+  repoUrl?: string
   rootFolder?: string
 }
 
@@ -1607,7 +1637,6 @@ export interface Error {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -1701,6 +1730,7 @@ export interface Error {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -1784,6 +1814,18 @@ export interface Error {
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1964,7 +2006,6 @@ export interface Failure {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -2058,6 +2099,7 @@ export interface Failure {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -2141,6 +2183,18 @@ export interface Failure {
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2201,6 +2255,7 @@ export type GcpCloudCostConnector = ConnectorConfigDTO & {
 export type GcpConnector = ConnectorConfigDTO & {
   credential: GcpConnectorCredential
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
 }
 
 export interface GcpConnectorCredential {
@@ -2224,6 +2279,12 @@ export type GcpKmsConnectorDTO = ConnectorConfigDTO & {
 
 export type GcpManualDetails = GcpCredentialSpec & {
   secretKeyRef: string
+}
+
+export type GcpSecretManager = ConnectorConfigDTO & {
+  credentialsRef: string
+  default?: boolean
+  delegateSelectors?: string[]
 }
 
 export interface GitAuthenticationDTO {
@@ -2336,6 +2397,7 @@ export type GitlabConnector = ConnectorConfigDTO & {
   apiAccess?: GitlabApiAccess
   authentication: GitlabAuthentication
   delegateSelectors?: string[]
+  executeOnDelegate?: boolean
   type: 'Account' | 'Repo' | 'Project'
   url: string
   validationRepo?: string
@@ -2596,13 +2658,6 @@ export type LocalConnectorDTO = ConnectorConfigDTO & {
   default?: boolean
 }
 
-export type MSTeamChannel = NotificationChannel & {
-  expressionFunctorToken?: number
-  msTeamKeys?: string[]
-  orgIdentifier?: string
-  projectIdentifier?: string
-}
-
 export type MicrosoftTeamsNotificationChannel = CCMNotificationChannel & {
   microsoftTeamsUrl?: string
 }
@@ -2610,6 +2665,13 @@ export type MicrosoftTeamsNotificationChannel = CCMNotificationChannel & {
 export interface MovePerspectiveDTO {
   newFolderId?: string
   perspectiveIds?: string[]
+}
+
+export interface NameValuePairWithDefault {
+  name?: string
+  type: string
+  useAsDefault?: boolean
+  value: string
 }
 
 export type NewRelicConnectorDTO = ConnectorConfigDTO & {
@@ -2662,14 +2724,16 @@ export interface NodeRecommendationDTO {
   totalResourceUsage?: TotalResourceUsage
 }
 
-export interface NotificationChannel {
+export interface NotificationChannelDTO {
   accountId?: string
+  emailRecipients?: string[]
   team?: 'OTHER' | 'CD' | 'CV' | 'CI' | 'FFM' | 'PIPELINE' | 'PL' | 'GTM' | 'UNRECOGNIZED'
   templateData?: {
     [key: string]: string
   }
   templateId?: string
   userGroups?: UserGroup[]
+  webhookUrls?: string[]
 }
 
 export interface NotificationResult {
@@ -2719,13 +2783,6 @@ export interface PageFilterDTO {
   pageSize?: number
   totalItems?: number
   totalPages?: number
-}
-
-export type PagerDutyChannel = NotificationChannel & {
-  expressionFunctorToken?: number
-  integrationKeys?: string[]
-  orgIdentifier?: string
-  projectIdentifier?: string
 }
 
 export type PagerDutyConnectorDTO = ConnectorConfigDTO & {
@@ -3322,7 +3379,6 @@ export interface ResponseMessage {
     | 'VAULT_OPERATION_ERROR'
     | 'AWS_SECRETS_MANAGER_OPERATION_ERROR'
     | 'AZURE_KEY_VAULT_OPERATION_ERROR'
-    | 'CYBERARK_OPERATION_ERROR'
     | 'UNSUPPORTED_OPERATION_EXCEPTION'
     | 'FEATURE_UNAVAILABLE'
     | 'GENERAL_ERROR'
@@ -3416,6 +3472,7 @@ export interface ResponseMessage {
     | 'GIT_UNSEEN_REMOTE_HEAD_COMMIT'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'NO_AVAILABLE_DELEGATES'
+    | 'NO_GLOBAL_DELEGATE_ACCOUNT'
     | 'NO_INSTALLED_DELEGATES'
     | 'DUPLICATE_DELEGATE_EXCEPTION'
     | 'GCP_MARKETPLACE_EXCEPTION'
@@ -3499,6 +3556,18 @@ export interface ResponseMessage {
     | 'INVALID_IDENTIFIER_REF'
     | 'SPOTINST_NULL_ERROR'
     | 'SCM_UNEXPECTED_ERROR'
+    | 'DUPLICATE_FILE_IMPORT'
+    | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
+    | 'MEDIA_NOT_SUPPORTED'
+    | 'AWS_ECS_ERROR'
+    | 'AWS_APPLICATION_AUTO_SCALING'
+    | 'AWS_ECS_SERVICE_NOT_ACTIVE'
+    | 'AWS_ECS_CLIENT_ERROR'
+    | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -3510,6 +3579,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
+    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -3678,13 +3748,6 @@ export interface SharedCostSplit {
   percentageContribution?: number
 }
 
-export type SlackChannel = NotificationChannel & {
-  expressionFunctorToken?: number
-  orgIdentifier?: string
-  projectIdentifier?: string
-  webhookUrls?: string[]
-}
-
 export type SlackNotificationChannel = CCMNotificationChannel & {
   slackWebHookUrl?: string
 }
@@ -3745,6 +3808,14 @@ export type SumoLogicConnectorDTO = ConnectorConfigDTO & {
   url: string
 }
 
+export interface TemplateLinkConfigForCustomSecretManager {
+  templateInputs?: {
+    [key: string]: NameValuePairWithDefault[]
+  }
+  templateRef: string
+  versionLabel: string
+}
+
 export interface Throwable {
   cause?: Throwable
   localizedMessage?: string
@@ -3798,6 +3869,7 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
   k8sAuthEndpoint?: string
   namespace?: string
   readOnly?: boolean
+  renewAppRoleToken?: boolean
   renewalIntervalMinutes: number
   secretEngineManuallyConfigured?: boolean
   secretEngineName?: string
@@ -4821,6 +4893,23 @@ export const useCCMK8SMetadata = (props: UseCCMK8SMetadataProps) =>
     { base: getConfig('ccm/api'), ...props }
   )
 
+export type GetCENGMicroserviceVersionProps = Omit<GetProps<ResponseString, unknown, void, void>, 'path'>
+
+/**
+ * Get CE-NG Manager version
+ */
+export const GetCENGMicroserviceVersion = (props: GetCENGMicroserviceVersionProps) => (
+  <Get<ResponseString, unknown, void, void> path={`/cenghealth`} base={getConfig('ccm/api')} {...props} />
+)
+
+export type UseGetCENGMicroserviceVersionProps = Omit<UseGetProps<ResponseString, unknown, void, void>, 'path'>
+
+/**
+ * Get CE-NG Manager version
+ */
+export const useGetCENGMicroserviceVersion = (props: UseGetCENGMicroserviceVersionProps) =>
+  useGet<ResponseString, unknown, void, void>(`/cenghealth`, { base: getConfig('ccm/api'), ...props })
+
 export interface AwsaccountconnectiondetailQueryParams {
   accountIdentifier?: string
 }
@@ -5475,7 +5564,7 @@ export interface SendNotificationQueryParams {
 }
 
 export type SendNotificationProps = Omit<
-  MutateProps<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannel, void>,
+  MutateProps<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannelDTO, void>,
   'path' | 'verb'
 >
 
@@ -5483,7 +5572,7 @@ export type SendNotificationProps = Omit<
  * Send Notification
  */
 export const SendNotification = (props: SendNotificationProps) => (
-  <Mutate<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannel, void>
+  <Mutate<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannelDTO, void>
     verb="POST"
     path={`/notification`}
     base={getConfig('ccm/api')}
@@ -5492,7 +5581,7 @@ export const SendNotification = (props: SendNotificationProps) => (
 )
 
 export type UseSendNotificationProps = Omit<
-  UseMutateProps<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannel, void>,
+  UseMutateProps<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannelDTO, void>,
   'path' | 'verb'
 >
 
@@ -5500,7 +5589,7 @@ export type UseSendNotificationProps = Omit<
  * Send Notification
  */
 export const useSendNotification = (props: UseSendNotificationProps) =>
-  useMutate<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannel, void>(
+  useMutate<ResponseNotificationResult, unknown, SendNotificationQueryParams, NotificationChannelDTO, void>(
     'POST',
     `/notification`,
     { base: getConfig('ccm/api'), ...props }
@@ -6661,6 +6750,7 @@ export interface EcsRecommendationDetailQueryParams {
   id: string
   from?: string
   to?: string
+  bufferPercentage?: number
 }
 
 export type EcsRecommendationDetailProps = Omit<

@@ -42,6 +42,7 @@ declare const styles: {
   readonly profileDetailsContainer: string
   readonly search: string
   readonly section1: string
+  readonly statusPadding: string
   readonly statusText: string
   readonly successIcon: string
   readonly tickerContainer: string

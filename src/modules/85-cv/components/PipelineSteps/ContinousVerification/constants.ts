@@ -36,6 +36,13 @@ export const durationOptions: SelectOption[] = [
   { label: '30 min', value: '30m' }
 ]
 
+export const extendedDurationOptions: SelectOption[] = [
+  { label: '45 min', value: '45m' },
+  { label: '1 hr', value: '60m' },
+  { label: '1 hr 30 min', value: '90m' },
+  { label: '2 hrs', value: '120m' }
+]
+
 export const trafficSplitPercentageOptions: SelectOption[] = [
   { label: '5%', value: 5 },
   { label: '10%', value: 10 },

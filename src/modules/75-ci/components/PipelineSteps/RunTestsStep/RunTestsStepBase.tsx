@@ -21,8 +21,9 @@ import {
   AllowedTypes
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import type { FormikProps } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 import get from 'lodash/get'
+import merge from 'lodash/merge'
 import cx from 'classnames'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -84,7 +85,8 @@ const BuildTool = {
   MAVEN: 'Maven',
   GRADLE: 'Gradle',
   DOTNET: 'Dotnet',
-  NUNITCONSOLE: 'Nunitconsole'
+  NUNITCONSOLE: 'Nunitconsole',
+  SBT: 'SBT'
 }
 
 const ET_COMMANDS_START = '#ET-SETUP-BEGIN'
@@ -100,6 +102,7 @@ const ET_COMMANDS =
   '    wget -qO- https://get.et.harness.io/releases/latest/alpine/harness-et-agent.tar.gz | tar -xz\n' +
   '  else\n' +
   '    wget -qO- https://get.et.harness.io/releases/latest/nix/harness-et-agent.tar.gz | tar -xz\n' +
+  '  fi\n' +
   'elif [ $arch = "aarch64" ]; then\n' +
   '  wget -qO- https://get.et.harness.io/releases/latest/arm/harness-et-agent.tar.gz | tar -xz\n' +
   'fi\n' +
@@ -121,10 +124,18 @@ interface RadioButtonOption {
   label: string
   value: string
 }
-const getJavaBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+
+const getJavaKotlinBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
   { label: getString('ci.runTestsStep.bazel'), value: BuildTool.BAZEL },
   { label: getString('ci.runTestsStep.maven'), value: BuildTool.MAVEN },
   { label: getString('ci.runTestsStep.gradle'), value: BuildTool.GRADLE }
+]
+
+const getScalaBuildToolOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('ci.runTestsStep.bazel'), value: BuildTool.BAZEL },
+  { label: getString('ci.runTestsStep.maven'), value: BuildTool.MAVEN },
+  { label: getString('ci.runTestsStep.gradle'), value: BuildTool.GRADLE },
+  { label: getString('ci.runTestsStep.sbt'), value: BuildTool.SBT }
 ]
 
 export const getBuildEnvironmentOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
@@ -148,22 +159,34 @@ export const getErrorTrackingOptions = (getString: UseStringsReturn['getString']
 
 const enum Language {
   Java = 'Java',
-  Csharp = 'Csharp'
+  Csharp = 'Csharp',
+  Kotlin = 'Kotlin',
+  Scala = 'Scala'
 }
 
 const getLanguageOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
   { label: getString('ci.runTestsStep.csharp'), value: Language.Csharp },
-  { label: getString('ci.runTestsStep.java'), value: Language.Java }
+  { label: getString('ci.runTestsStep.java'), value: Language.Java },
+  { label: getString('ci.runTestsStep.kotlin'), value: Language.Kotlin },
+  { label: getString('ci.runTestsStep.scala'), value: Language.Scala }
+]
+
+const getSubsetLanguageOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
+  { label: getString('ci.runTestsStep.java'), value: Language.Java },
+  { label: getString('ci.runTestsStep.kotlin'), value: Language.Kotlin },
+  { label: getString('ci.runTestsStep.scala'), value: Language.Scala }
 ]
 
 const getBuildToolOptions = (
   getString: UseStringsReturn['getString'],
   language?: string
 ): SelectOption[] | undefined => {
-  if (language === Language.Java) {
-    return getJavaBuildToolOptions(getString)
+  if (language === Language.Java || language === Language.Kotlin) {
+    return getJavaKotlinBuildToolOptions(getString)
   } else if (language === Language.Csharp) {
     return getCSharpBuildToolOptions(getString)
+  } else if (language === Language.Scala) {
+    return getScalaBuildToolOptions(getString)
   }
   return undefined
 }
@@ -221,7 +244,7 @@ export const RunTestsStepBase = (
       selectionState: { selectedStageId }
     }
   } = usePipelineContext()
-  const { TI_DOTNET, ERROR_TRACKING_ENABLED } = useFeatureFlags()
+  const { TI_DOTNET, CVNG_ENABLED } = useFeatureFlags()
   // temporary enable in QA for docs
   const isQAEnvironment = window.location.origin === qaLocation
   const [mavenSetupQuestionAnswer, setMavenSetupQuestionAnswer] = React.useState('yes')
@@ -443,8 +466,13 @@ export const RunTestsStepBase = (
       )}
       formName="ciRunTests"
       validate={valuesToValidate => {
-        if ([CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType)) {
-          return validateConnectorRefAndImageDepdendency(
+        let errors: FormikErrors<any> = {}
+        if (
+          [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+            buildInfrastructureType
+          )
+        ) {
+          errors = validateConnectorRefAndImageDepdendency(
             get(valuesToValidate, 'spec.connectorRef', ''),
             get(valuesToValidate, 'spec.image', ''),
             getString
@@ -455,20 +483,24 @@ export const RunTestsStepBase = (
           transformValuesFieldsConfig
         )
         onChange?.(schemaValues)
-        return validate(
-          valuesToValidate,
-          getEditViewValidateFieldsConfig(
-            buildInfrastructureType,
-            (valuesToValidate?.spec?.language as any)?.value === Language.Csharp
-          ),
-          {
-            initialValues,
-            steps: currentStage?.stage?.spec?.execution?.steps || {},
-            serviceDependencies: currentStage?.stage?.spec?.serviceDependencies || {},
-            getString
-          },
-          stepViewType
+        errors = merge(
+          errors,
+          validate(
+            valuesToValidate,
+            getEditViewValidateFieldsConfig(
+              buildInfrastructureType,
+              (valuesToValidate?.spec?.language as any)?.value === Language.Csharp
+            ),
+            {
+              initialValues,
+              steps: currentStage?.stage?.spec?.execution?.steps || {},
+              serviceDependencies: currentStage?.stage?.spec?.serviceDependencies || {},
+              getString
+            },
+            stepViewType
+          )
         )
+        return errors
       }}
       onSubmit={(_values: RunTestsStepDataUI) => {
         const schemaValues = getFormValuesInCorrectFormat<RunTestsStepDataUI, RunTestsStepData>(
@@ -501,7 +533,11 @@ export const RunTestsStepBase = (
                 description: {}
               }}
             />
-            {![CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(buildInfrastructureType) ? (
+            {![
+              CIBuildInfrastructureType.VM,
+              CIBuildInfrastructureType.Cloud,
+              CIBuildInfrastructureType.Docker
+            ].includes(buildInfrastructureType) ? (
               <ConnectorRefWithImage showOptionalSublabel={false} readonly={readonly} stepViewType={stepViewType} />
             ) : null}
             <Container className={cx(css.formGroup, css.lg, css.bottomMargin5)}>
@@ -510,9 +546,7 @@ export const RunTestsStepBase = (
                 fieldLabelKey: 'languageLabel',
                 tooltipId: 'runTestsLanguage',
                 selectFieldOptions:
-                  isQAEnvironment || TI_DOTNET
-                    ? getLanguageOptions(getString)
-                    : getLanguageOptions(getString).slice(1, 2),
+                  isQAEnvironment || TI_DOTNET ? getLanguageOptions(getString) : getSubsetLanguageOptions(getString),
                 onSelectChange: option => {
                   const newBuildToolOptions = getBuildToolOptions(getString, option?.value as string)
                   const newValues = { ...formik.values }
@@ -535,7 +569,7 @@ export const RunTestsStepBase = (
                 allowableTypes: [MultiTypeInputType.FIXED]
               })}
             </Container>
-            {ERROR_TRACKING_ENABLED && selectedLanguageValue === Language.Java && (
+            {CVNG_ENABLED && selectedLanguageValue === Language.Java && (
               <>
                 <Text tooltipProps={{ dataTooltipId: 'runTestErrorTracking' }} font={{ size: 'small' }}>
                   {getString('ci.runTestsErrorTrackingSetupText')}
@@ -739,9 +773,11 @@ gradle.projectsEvaluated {
                 summary={getString('pipeline.additionalConfiguration')}
                 details={
                   <Container margin={{ top: 'medium' }}>
-                    {[CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
-                      buildInfrastructureType
-                    ) ? (
+                    {[
+                      CIBuildInfrastructureType.VM,
+                      CIBuildInfrastructureType.Cloud,
+                      CIBuildInfrastructureType.Docker
+                    ].includes(buildInfrastructureType) ? (
                       <ConnectorRefWithImage
                         showOptionalSublabel={true}
                         readonly={readonly}

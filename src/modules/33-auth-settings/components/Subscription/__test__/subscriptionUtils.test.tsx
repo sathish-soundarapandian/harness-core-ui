@@ -264,6 +264,7 @@ describe.skip('subscriptionUtils', () => {
             }
           }
         },
+        updateQuantities: jest.fn(),
         recommendation: null
       })
       const { container } = render(<TestWrapper>{body}</TestWrapper>)
@@ -293,6 +294,7 @@ describe.skip('subscriptionUtils', () => {
             }
           }
         },
+        updateQuantities: jest.fn(),
         recommendation: null
       })
       const { container } = render(<TestWrapper>{body}</TestWrapper>)
@@ -331,6 +333,7 @@ describe.skip('subscriptionUtils', () => {
             }
           }
         },
+        updateQuantities: jest.fn(),
         recommendation: null
       })
       const { container } = render(<TestWrapper>{body}</TestWrapper>)

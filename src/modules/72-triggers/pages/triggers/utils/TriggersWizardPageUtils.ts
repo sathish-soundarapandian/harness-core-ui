@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep } from 'lodash-es'
+import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep, omit } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
 import { parse } from 'yaml'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
@@ -13,7 +13,13 @@ import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import type { NGTriggerSourceV2, PipelineInfoConfig, NGVariable, NGTriggerConfigV2 } from 'services/pipeline-ng'
+import type {
+  NGTriggerSourceV2,
+  PipelineInfoConfig,
+  NGVariable,
+  NGTriggerConfigV2,
+  NGTriggerSpecV2
+} from 'services/pipeline-ng'
 import { connectorUrlType } from '@connectors/constants'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -126,7 +132,7 @@ const getTriggerTitle = ({
 export const clearNullUndefined = /* istanbul ignore next */ (data: TriggerConfigDTO): TriggerConfigDTO =>
   omitBy(omitBy(data, isUndefined), isNull)
 
-export const clearRuntimeInputValue = (template: PipelineInfoConfig): PipelineInfoConfig => {
+export const clearRuntimeInputValue = <T>(template: T): T => {
   return JSON.parse(
     JSON.stringify(template || {}).replace(/"<\+input>.?(?:allowedValues\((.*?)\)|regex\((.*?)\))?"/g, '""')
   )
@@ -283,7 +289,7 @@ const getPanels = ({
       },
       {
         id: 'Schedule',
-        tabTitle: getString('triggers.schedulePanel.title'),
+        tabTitle: getString('common.schedule'),
         checkValidPanel: checkValidCronExpression,
         requiredFields: ['expression']
       },
@@ -1866,8 +1872,11 @@ export function updatePipelineManifest({
     (item: any) => item.manifest?.identifier === selectedArtifact?.identifier
   )
 
+  // Update the pipeline data without eventConditions
+  const newArtifactData = omit(newArtifact, 'spec.eventConditions')
+
   if (stageArtifactIdx >= 0) {
-    stageArtifacts[stageArtifactIdx].manifest = newArtifact
+    stageArtifacts[stageArtifactIdx].manifest = newArtifactData
   }
 
   return newPipeline
@@ -1900,20 +1909,23 @@ export function updatePipelineArtifact({
     (item: any) => item.sidecar?.identifier === selectedArtifact?.identifier
   )
 
+  // Update the pipeline data without eventConditions
+  const newArtifactData = omit(newArtifact, 'spec.eventConditions')
+
   if (selectedArtifact) {
     if (stageArtifacts?.sidecars || stageArtifacts?.primary) {
       if (stageArtifactIdx >= 0) {
         const { sidecars } = stageArtifacts
-        sidecars[stageArtifactIdx].sidecar = newArtifact
-      } else if (stageArtifacts?.primary && !newArtifact?.identifier) {
-        stageArtifacts['primary'] = newArtifact
+        sidecars[stageArtifactIdx].sidecar = newArtifactData
+      } else if (stageArtifacts?.primary && !newArtifactData?.identifier) {
+        stageArtifacts['primary'] = newArtifactData
       }
     } else if (stageOverrideArtifacts?.sidecars || stageOverrideArtifacts?.primary) {
       if (stageOverrideArtifactIdx >= 0) {
         const { sidecars } = stageOverrideArtifacts
-        sidecars[stageArtifactIdx].sidecar = newArtifact
-      } else if (stageOverrideArtifacts?.primary && !newArtifact?.identifier) {
-        stageOverrideArtifacts['primary'] = newArtifact
+        sidecars[stageArtifactIdx].sidecar = newArtifactData
+      } else if (stageOverrideArtifacts?.primary && !newArtifactData?.identifier) {
+        stageOverrideArtifacts['primary'] = newArtifactData
       }
     }
   }
@@ -2261,7 +2273,7 @@ export const getArtifactManifestTriggerYaml = ({
   }
 
   // clears any runtime inputs and set values in source->spec->spec
-  let artifactSourceSpec = clearRuntimeInputValue(
+  let artifactSourceSpec = clearRuntimeInputValue<NGTriggerSpecV2>(
     cloneDeep(
       parse(
         JSON.stringify({

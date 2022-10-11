@@ -13,7 +13,7 @@ import { Container, MultiTypeInputType, Tab, Tabs } from '@wings-software/uicore
 
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 
 import { useStrings } from 'framework/strings'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'

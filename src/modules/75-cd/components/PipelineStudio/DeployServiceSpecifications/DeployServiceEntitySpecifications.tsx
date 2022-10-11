@@ -9,7 +9,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import cx from 'classnames'
 import { AllowedTypes, Container, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import produce from 'immer'
-import { debounce, defaultTo, get, isEmpty, isNil, pick, set, unset } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, isEqual, isNil, pick, set, unset } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { StageElementConfig } from 'services/cd-ng'
@@ -24,6 +24,7 @@ import DeployServiceErrors from '@cd/components/PipelineStudio/DeployServiceSpec
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { setupMode } from '@cd/components/PipelineSteps/PipelineStepsUtil'
@@ -35,10 +36,12 @@ import PropagateFromServiceV2 from './PropagateWidget/PropagateFromServiceV2'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export interface DeployServiceEntitySpecificationsProps {
+  setDefaultServiceSchema: () => Promise<void>
   children: React.ReactNode
 }
 
 export default function DeployServiceEntitySpecifications({
+  setDefaultServiceSchema,
   children
 }: DeployServiceEntitySpecificationsProps): JSX.Element {
   const {
@@ -90,10 +93,21 @@ export default function DeployServiceEntitySpecifications({
         const isSingleSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef)
         const isMultiSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.services?.values)
 
+        const prevStageItemDeploymentType = (stageItem.stage as DeploymentStageElementConfig)?.spec?.deploymentType
+        const prevStageItemCustomDeploymentConfig = (stageItem.stage as DeploymentStageElementConfig)?.spec
+          ?.customDeploymentRef
+        const currentStageCustomDeploymentConfig = stage?.stage?.spec?.customDeploymentRef
+
+        const areDeploymentDetailsSame =
+          currentStageDeploymentType === ServiceDeploymentType.CustomDeployment
+            ? prevStageItemDeploymentType === currentStageDeploymentType &&
+              isEqual(prevStageItemCustomDeploymentConfig, currentStageCustomDeploymentConfig)
+            : prevStageItemDeploymentType === currentStageDeploymentType
+
         return (
           (!isSingleSvcEmpty || !isMultiSvcEmpty) &&
           currentStageType === stageItem?.stage?.type &&
-          (stageItem.stage as DeploymentStageElementConfig)?.spec?.deploymentType === currentStageDeploymentType
+          areDeploymentDetailsSame
         )
       }
     },
@@ -128,13 +142,7 @@ export default function DeployServiceEntitySpecifications({
 
   useEffect(() => {
     if (typeof stage !== 'undefined' && scope !== Scope.PROJECT) {
-      const stageData = produce(stage, draft => {
-        set(draft, 'stage.spec.service.serviceRef', RUNTIME_INPUT_VALUE)
-        set(draft, 'stage.spec.service.serviceInputs', RUNTIME_INPUT_VALUE)
-      })
-      if (stageData.stage) {
-        updateStage(stageData.stage)
-      }
+      setDefaultServiceSchema()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -169,7 +177,12 @@ export default function DeployServiceEntitySpecifications({
   )
 
   const getDeployServiceWidgetInitValues = useCallback((): DeployServiceEntityData => {
-    return pick(stage?.stage?.spec, ['service', 'services'])
+    return {
+      ...pick(stage?.stage?.spec, ['service', 'services']),
+      ...(scope !== Scope.PROJECT && {
+        service: { serviceRef: RUNTIME_INPUT_VALUE }
+      })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

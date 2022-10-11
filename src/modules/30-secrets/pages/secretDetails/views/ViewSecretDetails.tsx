@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { Layout } from '@wings-software/uicore'
+import { ButtonVariation, Container, Layout, VisualYamlToggle } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
+import type { VisualYamlSelectedView as SelectedView } from '@wings-software/uicore/dist/components/VisualYamlToggle/VisualYamlToggle'
 import type {
   KerberosConfigDTO,
   SecretResponseWrapper,
@@ -33,15 +34,26 @@ import {
   RenderDetailsTable
 } from '@common/components/RenderDetailsTable/RenderDetailsTable'
 import { useStrings } from 'framework/strings'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import css from './ViewSecretDetails.module.scss'
 
 interface ViewSecretDetailsProps {
   secret: SecretResponseWrapper
+  edit: boolean | undefined
+  handleEdit: () => void
+  setMode: (nextMode: SelectedView) => void
+  mode: SelectedView
 }
 
 const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
   const {
-    secret: { secret }
+    secret: { secret },
+    edit,
+    handleEdit,
+    setMode,
+    mode
   } = props
   const { getString } = useStrings()
 
@@ -220,6 +232,31 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
   return (
     <Layout.Horizontal>
       <Layout.Vertical width="60%" spacing="large">
+        <Container padding={{ bottom: 'large' }}>
+          {edit ? null : (
+            <Layout.Horizontal flex>
+              <VisualYamlToggle
+                selectedView={mode}
+                onChange={nextMode => {
+                  setMode(nextMode)
+                }}
+              />
+              <RbacButton
+                text={getString('editDetails')}
+                icon="edit"
+                onClick={handleEdit}
+                permission={{
+                  permission: PermissionIdentifier.UPDATE_SECRET,
+                  resource: {
+                    resourceType: ResourceType.SECRET,
+                    resourceIdentifier: secret.identifier
+                  }
+                }}
+                variation={ButtonVariation.SECONDARY}
+              />
+            </Layout.Horizontal>
+          )}
+        </Container>
         <Layout.Horizontal spacing="medium">
           <RenderDetailsTable
             title={getString('overview')}
@@ -230,7 +267,12 @@ const ViewSecretDetails: React.FC<ViewSecretDetailsProps> = props => {
         </Layout.Horizontal>
       </Layout.Vertical>
       {secret.type === 'SSHKey' || secret.type === 'WinRmCredentials' ? (
-        <Layout.Vertical width="40%" spacing="xxxlarge" border={{ left: true }} padding={{ left: 'xxxlarge' }}>
+        <Layout.Vertical
+          width="40%"
+          spacing="xxxlarge"
+          border={{ left: true, color: Color.GREY_300 }}
+          padding={{ left: 'xxxlarge' }}
+        >
           <ConnectorStats
             createdAt={props.secret.createdAt as number}
             lastUpdated={props.secret.updatedAt}

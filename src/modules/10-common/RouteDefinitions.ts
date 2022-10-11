@@ -86,7 +86,7 @@ const routes = {
 
   toFreezeWindows: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
-      const path = `resources/freeze-windows`
+      const path = `freeze-windows`
       return getScopeBasedRoute({
         scope: {
           orgIdentifier,
@@ -105,17 +105,15 @@ const routes = {
       module,
       accountId: _accountId,
       windowIdentifier,
-      // templateType,
-      // templateIdentifier,
       ...rest
     }: Partial<{ windowIdentifier: string } & ProjectPathProps & ModulePathParams>) => {
       // TemplateStudioPathProps
       const queryString = qs.stringify(rest, { skipNulls: true })
       let path
       if (queryString.length > 0) {
-        path = `resources/freeze-window-studio/window/${windowIdentifier}/?${queryString}`
+        path = `freeze-window-studio/window/${windowIdentifier}/?${queryString}`
       } else {
-        path = `resources/freeze-window-studio/window/${windowIdentifier}/`
+        path = `freeze-window-studio/window/${windowIdentifier}/`
       }
       return getScopeBasedRoute({
         scope: {
@@ -1329,6 +1327,11 @@ const routes = {
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/onboarding/detail`
   ),
 
+  toCFConfigurePath: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/configurePath`
+  ),
+
   // SCM Module (https://harness.atlassian.net/wiki/spaces/SCM/overview?homepageId=21144371782)
   toSCM: withAccountId(() => `/scm`),
   toSCMHome: withAccountId(() => `/scm/home`),
@@ -1455,6 +1458,11 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
       return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices`
     }
+  ),
+
+  toCVCodeErrors: withAccountId(
+    ({ projectIdentifier, orgIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) =>
+      `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/CodeErrors`
   ),
 
   toCVMonitoringServicesInputSets: withAccountId(
@@ -1774,13 +1782,13 @@ const routes = {
   ),
 
   // These RoutesDestinations are defined in the MicroFrontend
-  toChaosScenarios: withAccountId(
+  toChaosExperiments: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/scenarios`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments`
   ),
-  toChaosScenario: withAccountId(
+  toChaosExperiment: withAccountId(
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/scenarios/${identifier}`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${identifier}`
   ),
   toChaosHubs: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
@@ -1790,9 +1798,19 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-hubs/${identifier}`
   ),
-  toChaosDelegates: withAccountId(
+
+  // chaos enviroments
+  toChaosEnvironments: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
-      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/chaos-delegates`
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments`
+  ),
+  toChaosEnvironmentDetails: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      environmentIdentifier
+    }: Partial<ProjectPathProps> & { environmentIdentifier: string }) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments/${environmentIdentifier}`
   )
 }
 

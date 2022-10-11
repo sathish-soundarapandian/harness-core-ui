@@ -104,6 +104,13 @@ export function getStepPaletteModuleInfosFromStage(
     case ServiceDeploymentType.ECS:
       category = 'ECS'
       break
+    case ServiceDeploymentType.WinRm:
+    case ServiceDeploymentType.Ssh:
+      category = 'SshWinRM'
+      break
+    case ServiceDeploymentType.CustomDeployment:
+      category = 'CustomDeployment'
+      break
   }
   switch (stageType) {
     case StageType.BUILD:
@@ -149,23 +156,37 @@ export function getStepPaletteModuleInfosFromStage(
         }
       ]
     case StageType.DEPLOY:
-      return [
-        {
-          module: 'cd',
-          category: category,
-          shouldShowCommonSteps: true
-        },
-        {
-          module: 'cd',
-          category: 'Builds',
-          shouldShowCommonSteps: false
-        },
-        {
-          module: 'cv',
-          shouldShowCommonSteps: false
-        }
-      ]
-
+      if (deploymentType === ServiceDeploymentType.CustomDeployment) {
+        return [
+          {
+            module: 'cd',
+            category: category,
+            shouldShowCommonSteps: true
+          },
+          {
+            module: 'cd',
+            category: 'Provisioner',
+            shouldShowCommonSteps: false
+          }
+        ]
+      } else {
+        return [
+          {
+            module: 'cd',
+            category: category,
+            shouldShowCommonSteps: true
+          },
+          {
+            module: 'cd',
+            category: 'Builds',
+            shouldShowCommonSteps: false
+          },
+          {
+            module: 'cv',
+            shouldShowCommonSteps: false
+          }
+        ]
+      }
     default:
       return [
         {

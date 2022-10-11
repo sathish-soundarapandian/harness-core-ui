@@ -156,7 +156,8 @@ export const pipelineContext: PipelineContextInterface = {
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
   setTemplateTypes: jest.fn(),
-  setTemplateServiceData: jest.fn()
+  setTemplateServiceData: jest.fn(),
+  setIntermittentLoading: jest.fn()
 }
 
 describe('RightBar', () => {

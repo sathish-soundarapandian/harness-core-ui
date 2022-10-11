@@ -154,7 +154,7 @@ describe('Execution List', () => {
     // should navigate to execution details as primary link
     expect(
       within(cdExecutionRow).getByRole('link', {
-        name: 'MultipleStage CD Running : 4'
+        name: 'MultipleStage CD Running'
       })
     ).toHaveAttribute(
       'href',
@@ -311,7 +311,7 @@ describe('Execution List', () => {
       name: 'pipeline.viewExecution'
     })
     const viewPipelineFromMenu = within(menuContent).getByRole('link', {
-      name: 'pipeline.viewPipeline'
+      name: 'editPipeline'
     })
 
     expect(viewExecutionFromMenu).toHaveAttribute(

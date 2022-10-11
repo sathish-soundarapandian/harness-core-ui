@@ -35,6 +35,7 @@ interface ManifestDetailsCoreSectionProps {
   allowableTypes: AllowedTypes
   selectedManifest: ManifestTypes | null
   isReadonly?: boolean
+  showIdentifierField?: boolean
 }
 
 const getAccountUrl = (prevStepData?: ConnectorConfigDTO): string => {
@@ -47,7 +48,8 @@ export function ManifestDetailsCoreSection({
   expressions,
   allowableTypes,
   prevStepData,
-  isReadonly = false
+  isReadonly = false,
+  showIdentifierField = true
 }: StepProps<ConnectorConfigDTO> & ManifestDetailsCoreSectionProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -62,13 +64,15 @@ export function ManifestDetailsCoreSection({
 
   return (
     <>
-      <div className={css.halfWidth}>
-        <FormInput.Text
-          name="identifier"
-          label={getString('pipeline.manifestType.manifestIdentifier')}
-          placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
-        />
-      </div>
+      {showIdentifierField && (
+        <div className={css.halfWidth}>
+          <FormInput.Text
+            name="identifier"
+            label={getString('pipeline.manifestType.manifestIdentifier')}
+            placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
+          />
+        </div>
+      )}
 
       {!!(connectionType === GitRepoName.Account && accountUrl) && (
         <GitRepositoryName

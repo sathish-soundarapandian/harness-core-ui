@@ -15,16 +15,22 @@ import { TestWrapper } from '@common/utils/testUtils'
 import AddEditServiceOverride from '../AddEditServiceOverride'
 import mockServicesListForOverride from './__mocks__/mockServicesListForOverrides.json'
 
+jest.mock('services/cd-ng', () => ({
+  ...jest.requireActual('services/cd-ng'),
+  useUpsertServiceOverride: jest.fn().mockImplementation(() => {
+    return {
+      loading: false,
+      mutate: jest.fn().mockResolvedValue({}),
+      cancel: jest.fn(),
+      error: null
+    }
+  }),
+  useGetService: jest.fn().mockImplementation(() => ({ loading: false, data: {}, refetch: jest.fn() }))
+}))
+
 describe('Add Edit Service Override Test', () => {
   test('add new service override', async () => {
-    jest.spyOn(cdNgServices, 'useUpsertServiceOverride').mockImplementation(() => {
-      return {
-        loading: false,
-        mutate: jest.fn().mockResolvedValue({}),
-        cancel: jest.fn(),
-        error: null
-      }
-    })
+    jest.spyOn(cdNgServices, 'useUpsertServiceOverride')
 
     const { container } = render(
       <TestWrapper
@@ -64,7 +70,7 @@ describe('Add Edit Service Override Test', () => {
     })
     userEvent.click(screen.getByText('variableLabel'))
 
-    const newOverrideText = screen.getByText('common.plusNewName')
+    const newOverrideText = screen.getByText('common.newName common.override')
     expect(newOverrideText).toBeDefined()
     userEvent.click(newOverrideText)
 

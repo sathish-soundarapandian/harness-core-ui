@@ -37,7 +37,9 @@ export enum HealthSourceTypes {
   CustomHealth = 'CustomHealth',
   ErrorTracking = 'ErrorTracking',
   Dynatrace = 'Dynatrace',
-  Elk = 'ELK'
+  CloudWatch = 'CloudWatch',
+  CloudWatchMetrics = 'CloudWatchMetrics',
+  Elk = 'ELKLog'
 }
 
 export type CommonNonCustomMetricFieldsType = {

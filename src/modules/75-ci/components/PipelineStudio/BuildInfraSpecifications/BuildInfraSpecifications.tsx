@@ -76,7 +76,8 @@ import type {
   EmptyDirYaml,
   PersistentVolumeClaimYaml,
   HostPathYaml,
-  Platform
+  Platform,
+  Runtime
 } from 'services/ci'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
@@ -379,9 +380,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
-  const { CI_VM_INFRASTRUCTURE, CIE_HOSTED_VMS } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
-  const showThumbnailSelect = CI_VM_INFRASTRUCTURE || enabledHostedBuildsForFreeUsers
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
 
   const BuildInfraTypes: ThumbnailSelectProps['items'] = [
@@ -389,7 +389,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       ? [
           {
             label: getString('ci.buildInfra.cloud'),
-            icon: 'main-cloud-providers',
+            icon: 'harness',
             value: CIBuildInfrastructureType.Cloud
           } as Item
         ]
@@ -408,15 +408,20 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       icon: 'service-kubernetes',
       value: CIBuildInfrastructureType.KubernetesDirect
     },
-    ...(CI_VM_INFRASTRUCTURE
+    ...(CI_DOCKER_INFRASTRUCTURE
       ? [
           {
-            label: getString('ci.buildInfra.vMs'),
-            icon: 'service-vm',
-            value: CIBuildInfrastructureType.VM
+            label: getString('delegate.cardData.docker.name'),
+            icon: 'docker-step',
+            value: CIBuildInfrastructureType.Docker
           } as Item
         ]
-      : [])
+      : []),
+    {
+      label: getString('ci.buildInfra.vMs'),
+      icon: 'service-vm',
+      value: CIBuildInfrastructureType.VM
+    } as Item
   ]
   const [showInfraProvisioningCarousel, setShowInfraProvisioningCarousel] = useState<boolean>(false)
 
@@ -436,9 +441,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     (stage?.stage?.spec?.infrastructure as UseFromStageInfraYaml)?.useFromStage || ''
   )
 
-  const [buildInfraType, setBuildInfraType] = useState<CIBuildInfrastructureType | undefined>(
-    showThumbnailSelect ? undefined : CIBuildInfrastructureType.KubernetesDirect
-  )
+  const [buildInfraType, setBuildInfraType] = useState<CIBuildInfrastructureType | undefined>(undefined)
 
   React.useEffect(() => {
     if (
@@ -466,17 +469,15 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   }, [delegateProvisioningStatus])
 
   React.useEffect(() => {
-    if (showThumbnailSelect) {
-      const stageBuildInfraType =
-        (stage?.stage?.spec?.infrastructure?.type as CIBuildInfrastructureType) ||
-        (stage?.stage?.spec?.runtime?.type as CIBuildInfrastructureType)
-      const propagatedStageType =
-        (propagatedStage?.stage?.spec?.infrastructure?.type as CIBuildInfrastructureType) ||
-        (propagatedStage?.stage?.spec?.runtime?.type as CIBuildInfrastructureType)
-      currentMode === Modes.NewConfiguration
-        ? setBuildInfraType(stageBuildInfraType)
-        : setBuildInfraType(propagatedStageType)
-    }
+    const stageBuildInfraType =
+      (stage?.stage?.spec?.infrastructure?.type as CIBuildInfrastructureType) ||
+      (stage?.stage?.spec?.runtime?.type as CIBuildInfrastructureType)
+    const propagatedStageType =
+      (propagatedStage?.stage?.spec?.infrastructure?.type as CIBuildInfrastructureType) ||
+      (propagatedStage?.stage?.spec?.runtime?.type as CIBuildInfrastructureType)
+    currentMode === Modes.NewConfiguration
+      ? setBuildInfraType(stageBuildInfraType)
+      : setBuildInfraType(propagatedStageType)
   }, [stage, propagatedStage, currentMode])
 
   /* If a stage A propagates it's infra from another stage B and number of stages in the pipeline change due to deletion of propagated stage B, then infra for stage A needs to be reset */
@@ -647,7 +648,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     }
     if (stage?.stage?.spec?.runtime) {
       return {
-        buildInfraType: CIBuildInfrastructureType.Cloud,
+        buildInfraType: (stage?.stage?.spec?.runtime as Runtime)?.type as CIBuildInfrastructureType,
         os: (stage?.stage?.spec?.platform as Platform)?.os || OsTypes.Linux,
         arch: (stage?.stage?.spec?.platform as Platform)?.arch || ArchTypes.Amd64
       }
@@ -669,7 +670,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
 
   const handleValidate = (values: any): void => {
     if (stage) {
-      const _buildInfraType: CIBuildInfrastructureType = values.buildInfraType || BuildInfraTypes[0].value
+      const _buildInfraType: CIBuildInfrastructureType = values.buildInfraType || buildInfraType
       const errors: { [key: string]: string } = {}
       const stageData = produce(stage, draft => {
         if (currentMode === Modes.Propagate && values.useFromStage) {
@@ -688,13 +689,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             set(draft, 'stage.spec.platform', validationPropagatedStage?.stage?.spec?.platform)
             set(draft, 'stage.spec.runtime', validationPropagatedStage?.stage?.spec?.runtime)
           }
-        } else if (_buildInfraType === CIBuildInfrastructureType.Cloud) {
+        } else if ([CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(_buildInfraType)) {
           set(draft, 'stage.spec.platform', {
             os: values.os,
             arch: values.arch
           })
           set(draft, 'stage.spec.runtime', {
-            type: CIBuildInfrastructureType.Cloud,
+            type: _buildInfraType,
             spec: {}
           })
           set(draft, 'stage.spec.infrastructure', undefined)
@@ -923,7 +924,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
 
   const renderMultiTypeMap = React.useCallback(
     ({ fieldName, stringKey }: { fieldName: string; stringKey: keyof StringsMap }): React.ReactElement => (
-      <Container className={cx(css.bottomMargin7, css.formGroup, { [css.md]: CI_VM_INFRASTRUCTURE })}>
+      <Container className={cx(css.bottomMargin7, css.formGroup)}>
         <MultiTypeMap
           appearance={'minimal'}
           cardStyle={{ width: '50%' }}
@@ -1204,36 +1205,40 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
         }}
         useValue
       />
-      <MultiTypeSelectField
-        label={
-          <Text
-            tooltipProps={{ dataTooltipId: 'arch' }}
-            font={{ variation: FontVariation.FORM_LABEL }}
-            margin={{ bottom: 'xsmall' }}
-          >
-            {getString('pipeline.infraSpecifications.selectArchitecture')}
-          </Text>
-        }
-        name={'arch'}
-        style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
-        multiTypeInputProps={{
-          selectItems: [
-            {
-              label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
-              value: ArchTypes.Amd64
-            },
-            {
-              label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
-              value: ArchTypes.Arm64
-            }
-          ],
-          multiTypeInputProps: {
-            allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
-            disabled: isReadonly
+      {[CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+        buildInfraType as CIBuildInfrastructureType
+      ) && (
+        <MultiTypeSelectField
+          label={
+            <Text
+              tooltipProps={{ dataTooltipId: 'arch' }}
+              font={{ variation: FontVariation.FORM_LABEL }}
+              margin={{ bottom: 'xsmall' }}
+            >
+              {getString('pipeline.infraSpecifications.selectArchitecture')}
+            </Text>
           }
-        }}
-        useValue
-      />
+          name={'arch'}
+          style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
+          multiTypeInputProps={{
+            selectItems: [
+              {
+                label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
+                value: ArchTypes.Amd64
+              },
+              {
+                label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
+                value: ArchTypes.Arm64
+              }
+            ],
+            multiTypeInputProps: {
+              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
+              disabled: isReadonly
+            }
+          }}
+          useValue
+        />
+      )}
     </>
   )
 
@@ -1330,7 +1335,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             }}
           />
         </div>
-        {!CIE_HOSTED_VMS && (
+        {!CIE_HOSTED_VMS && !CI_DOCKER_INFRASTRUCTURE && (
           <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
             <MultiTypeSelectField
               label={
@@ -1404,7 +1409,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             }}
           />
         </div>
-        {!CIE_HOSTED_VMS && (
+        {!CIE_HOSTED_VMS && !CI_DOCKER_INFRASTRUCTURE && (
           <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
             <MultiTypeSelectField
               label={
@@ -1735,6 +1740,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             )
         })
       case CIBuildInfrastructureType.Cloud:
+      case CIBuildInfrastructureType.Docker:
         return yup.object().shape({
           os: yup
             .string()
@@ -2102,7 +2108,8 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                   propagatedStage,
                   getString
                 })}
-              {buildInfraType === CIBuildInfrastructureType.Cloud &&
+              {buildInfraType &&
+                [CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(buildInfraType) &&
                 renderUseFromStageCloud({
                   propagatedStage,
                   getString
@@ -2157,47 +2164,31 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               }}
             >
               <>
-                {showThumbnailSelect ? (
-                  <>
-                    <Text className={css.cardTitle} color="black" margin={{ bottom: 'large' }}>
-                      {getString('ci.buildInfra.useNewInfra')}
-                    </Text>
-                    <ThumbnailSelect
-                      name={'buildInfraType'}
-                      items={BuildInfraTypes}
-                      isReadonly={isReadonly}
-                      onChange={val => {
-                        const infraType = val as CIBuildInfrastructureType
-                        setFieldValue('buildInfraType', infraType)
-                        setBuildInfraType(infraType)
-                      }}
-                    />
-                  </>
-                ) : (
-                  <Text className={css.cardTitle} color="black" margin={{ bottom: 'large' }}>
-                    {getString('pipelineSteps.build.infraSpecifications.newConfiguration')}
-                  </Text>
-                )}
-                {showThumbnailSelect ? null : (
-                  <>
-                    {renderKubernetesBuildInfraForm()}
-                    {renderKubernetesBuildInfraAdvancedSection({ formik })}
-                  </>
-                )}
+                <Text className={css.cardTitle} color="black" margin={{ bottom: 'large' }}>
+                  {getString('ci.buildInfra.useNewInfra')}
+                </Text>
+                <ThumbnailSelect
+                  name={'buildInfraType'}
+                  items={BuildInfraTypes}
+                  isReadonly={isReadonly}
+                  onChange={val => {
+                    const infraType = val as CIBuildInfrastructureType
+                    setFieldValue('buildInfraType', infraType)
+                    setBuildInfraType(infraType)
+                  }}
+                />
               </>
             </div>
           </Layout.Horizontal>
-          {showThumbnailSelect && currentMode === Modes.NewConfiguration ? (
+          {currentMode === Modes.NewConfiguration ? (
             <>
-              {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted && <Separator topSeparation={30} />}
+              {buildInfraType ? <Separator topSeparation={30} /> : null}
               {CIE_HOSTED_VMS && <Container margin={{ top: 'large' }}>{renderPlatformInfraSection()}</Container>}
               <Container margin={{ top: 'large' }}>{renderBuildInfraMainSection()}</Container>
             </>
           ) : null}
         </Card>
-        {showThumbnailSelect &&
-        currentMode === Modes.NewConfiguration &&
-        buildInfraType === CIBuildInfrastructureType.KubernetesDirect
+        {currentMode === Modes.NewConfiguration && buildInfraType === CIBuildInfrastructureType.KubernetesDirect
           ? renderKubernetesBuildInfraAdvancedSection({ showCardView: true, formik })
           : null}
       </>
@@ -2242,53 +2233,45 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                           <>
                             <Card disabled={isReadonly} className={cx(css.sectionCard)}>
                               <Layout.Vertical spacing="small">
-                                {showThumbnailSelect ? (
-                                  <>
-                                    <Text
-                                      font={{ variation: FontVariation.FORM_INPUT_TEXT }}
-                                      padding={{ bottom: 'medium' }}
-                                    >
-                                      {getString('ci.buildInfra.selectInfra')}
-                                    </Text>
-                                    <ThumbnailSelect
-                                      name={'buildInfraType'}
-                                      items={BuildInfraTypes}
-                                      isReadonly={isReadonly}
-                                      onChange={val => {
-                                        const infraType = val as CIBuildInfrastructureType
-                                        setBuildInfraType(infraType)
-                                        if (infraType === CIBuildInfrastructureType.KubernetesHosted) {
-                                          fetchDelegateDetails()
-                                        }
+                                <>
+                                  <Text
+                                    font={{ variation: FontVariation.FORM_INPUT_TEXT }}
+                                    padding={{ bottom: 'medium' }}
+                                  >
+                                    {getString('ci.buildInfra.selectInfra')}
+                                  </Text>
+                                  <ThumbnailSelect
+                                    name={'buildInfraType'}
+                                    items={BuildInfraTypes}
+                                    isReadonly={isReadonly}
+                                    onChange={val => {
+                                      const infraType = val as CIBuildInfrastructureType
+                                      setBuildInfraType(infraType)
+                                      if (infraType === CIBuildInfrastructureType.KubernetesHosted) {
+                                        fetchDelegateDetails()
+                                      }
 
-                                        // macOs is only supported for VMs - default to linux
-                                        const os =
-                                          formik?.values?.os === OsTypes.MacOS &&
-                                          infraType !== CIBuildInfrastructureType.VM
-                                            ? OsTypes.Linux
-                                            : formik?.values?.os
+                                      // macOs is only supported for VMs - default to linux
+                                      const os =
+                                        formik?.values?.os === OsTypes.MacOS &&
+                                        infraType !== CIBuildInfrastructureType.VM
+                                          ? OsTypes.Linux
+                                          : formik?.values?.os
 
-                                        formik.setValues({
-                                          ...formik.values,
-                                          buildInfraType: infraType,
-                                          automountServiceAccountToken:
-                                            infraType === CIBuildInfrastructureType.KubernetesDirect ? true : undefined,
-                                          os
-                                        })
-                                      }}
-                                    />
-                                  </>
-                                ) : null}
-                                {showThumbnailSelect ? (
-                                  <>
-                                    {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted ? (
-                                      <Separator topSeparation={10} />
-                                    ) : null}
-                                    {renderBuildInfraMainSection()}
-                                  </>
-                                ) : (
-                                  renderKubernetesBuildInfraForm()
-                                )}
+                                      formik.setValues({
+                                        ...formik.values,
+                                        buildInfraType: infraType,
+                                        automountServiceAccountToken:
+                                          infraType === CIBuildInfrastructureType.KubernetesDirect ? true : undefined,
+                                        os
+                                      })
+                                    }}
+                                  />
+                                </>
+                                <>
+                                  {buildInfraType ? <Separator topSeparation={10} /> : null}
+                                  {renderBuildInfraMainSection()}
+                                </>
                               </Layout.Vertical>
                             </Card>
                             {buildInfraType === CIBuildInfrastructureType.KubernetesDirect
@@ -2297,7 +2280,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                           </>
                         )}
                       </Layout.Vertical>
-                      {CI_VM_INFRASTRUCTURE || enabledHostedBuildsForFreeUsers ? (
+                      {enabledHostedBuildsForFreeUsers ? (
                         <Container
                           className={css.helptext}
                           margin={{ top: 'medium' }}
@@ -2334,17 +2317,15 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                               {getString('ci.buildInfra.kubernetesHelpText')}
                             </Text>
                           </>
-                          {CI_VM_INFRASTRUCTURE ? (
-                            <>
-                              <Separator />
-                              <Text font={{ variation: FontVariation.BODY2 }} padding={{ bottom: 'xsmall' }}>
-                                {getString('ci.buildInfra.vmLabel')}
-                              </Text>
-                              <Text font={{ variation: FontVariation.SMALL }}>
-                                {getString('ci.buildInfra.awsHelpText')}
-                              </Text>
-                            </>
-                          ) : null}
+                          <>
+                            <Separator />
+                            <Text font={{ variation: FontVariation.BODY2 }} padding={{ bottom: 'xsmall' }}>
+                              {getString('ci.buildInfra.vmLabel')}
+                            </Text>
+                            <Text font={{ variation: FontVariation.SMALL }}>
+                              {getString('ci.buildInfra.awsHelpText')}
+                            </Text>
+                          </>
                         </Container>
                       ) : null}
                     </Layout.Horizontal>
@@ -2388,12 +2369,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                   ) : (
                     <FormikForm>
                       <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
-                        {getString('auditTrail.Platform')}
-                      </Text>
-                      <Card disabled={isReadonly} className={cx(css.sectionCard)}>
-                        {renderPlatformInfraSection()}
-                      </Card>
-                      <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
                         {getString('infrastructureText')}
                       </Text>
                       <Card disabled={isReadonly} className={cx(css.sectionCard)}>
@@ -2410,6 +2385,19 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                           }}
                           expandAllByDefault
                         />
+                      </Card>
+                      <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
+                        {getString('auditTrail.Platform')}
+                      </Text>
+                      <Card disabled={isReadonly} className={cx(css.sectionCard)}>
+                        {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted && renderPlatformInfraSection()}
+                        {![
+                          CIBuildInfrastructureType.Cloud,
+                          CIBuildInfrastructureType.Docker,
+                          CIBuildInfrastructureType.KubernetesHosted
+                        ].includes(buildInfraType as CIBuildInfrastructureType) ? (
+                          <Separator topSeparation={10} bottomSeparation={0} />
+                        ) : null}
                         <Container margin={{ top: 'large' }}>{renderBuildInfraMainSection()}</Container>
                       </Card>
                       {buildInfraType === CIBuildInfrastructureType.KubernetesDirect
@@ -2427,5 +2415,5 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     )
   }
 
-  return CIE_HOSTED_VMS ? renderNewInfraSection() : renderOldInfraSection()
+  return CIE_HOSTED_VMS || CI_DOCKER_INFRASTRUCTURE ? renderNewInfraSection() : renderOldInfraSection()
 }

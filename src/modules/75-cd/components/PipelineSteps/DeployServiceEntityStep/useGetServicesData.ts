@@ -26,6 +26,8 @@ export interface UseGetServicesDataProps {
   deploymentType: ServiceDefinition['type']
   gitOpsEnabled?: boolean
   serviceIdentifiers: string[]
+  deploymentTemplateIdentifier?: string
+  versionLabel?: string
 }
 
 export interface UseGetServicesDataReturn {
@@ -40,7 +42,7 @@ export interface UseGetServicesDataReturn {
 }
 
 export function useGetServicesData(props: UseGetServicesDataProps): UseGetServicesDataReturn {
-  const { deploymentType, gitOpsEnabled, serviceIdentifiers } = props
+  const { deploymentType, gitOpsEnabled, serviceIdentifiers, deploymentTemplateIdentifier, versionLabel } = props
   const [servicesList, setServicesList] = useState<ServiceYaml[]>([])
   const [servicesData, setServicesData] = useState<ServiceData[]>([])
   const { showError } = useToaster()
@@ -58,7 +60,9 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
       orgIdentifier,
       projectIdentifier,
       type: deploymentType as ServiceDefinition['type'],
-      gitOpsEnabled
+      gitOpsEnabled,
+      deploymentTemplateIdentifier,
+      versionLabel
     }
   })
 

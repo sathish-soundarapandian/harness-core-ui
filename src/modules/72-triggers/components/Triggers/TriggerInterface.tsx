@@ -5,9 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { ArtifactTriggerConfig, ManifestTriggerConfig, NGTriggerSourceV2 } from 'services/pipeline-ng'
+
 export enum TriggerBaseType {
   WEBHOOK = 'Webhook',
-  SCHEDULE = 'Scheduled'
+  SCHEDULE = 'Scheduled',
+  ARTIFACT = 'Artifact',
+  MANIFEST = 'Manifest'
 }
 
 export enum SourceRepo {
@@ -22,5 +26,10 @@ export enum ScheduleType {
   Cron = 'Cron'
 }
 
-export const TriggerSubType = { ...SourceRepo, ...ScheduleType }
-export type TriggerSubType = SourceRepo | ScheduleType
+export type TriggerType = Required<NGTriggerSourceV2>['type']
+
+export type TriggerArtifactType = Required<ArtifactTriggerConfig>['type']
+
+export type ManifestType = Required<ManifestTriggerConfig>['type']
+
+export type TriggerSubType = SourceRepo | ScheduleType | TriggerArtifactType | ManifestType

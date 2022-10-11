@@ -7,22 +7,19 @@
 
 import produce from 'immer'
 import { set } from 'lodash-es'
-import type {
-  DeploymentConfig,
-  DeploymentConfigStepTemplateRefDetails
-} from '@pipeline/components/PipelineStudio/PipelineVariables/types'
+import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { TemplateDetailsByRef } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 
 interface Params {
-  templateRefObj: DeploymentConfigStepTemplateRefDetails
+  templateRef: string
   deploymentConfig: DeploymentConfig
 }
 
-export const getUpdatedDeploymentConfig = ({ templateRefObj, deploymentConfig }: Params) =>
+export const getUpdatedDeploymentConfig = ({ templateRef, deploymentConfig }: Params) =>
   produce(deploymentConfig, draft => {
-    const stepTemplateRefs = deploymentConfig?.execution?.stepTemplateRefs || []
-    const updatedStepTemplateRefs = [...stepTemplateRefs, templateRefObj]
+    const stepTemplateRefs = deploymentConfig.execution?.stepTemplateRefs || /* istanbul ignore next */ []
+    const updatedStepTemplateRefs = [...stepTemplateRefs, templateRef]
 
     set(draft, 'execution.stepTemplateRefs', updatedStepTemplateRefs)
   })

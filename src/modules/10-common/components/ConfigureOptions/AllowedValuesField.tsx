@@ -114,6 +114,17 @@ export const RenderField = ({
       })
       break
     }
+
+    case ALLOWED_VALUES_TYPE.NUMBER: {
+      extraProps.tagsProps = getTagProps({
+        formik,
+        inputValue,
+        setInputValue,
+        allowedValuesValidator: allowedValuesValidator || VALIDATORS[allowedValuesType](getString),
+        fieldKey: 'numberTypeField'
+      })
+      break
+    }
   }
 
   return (

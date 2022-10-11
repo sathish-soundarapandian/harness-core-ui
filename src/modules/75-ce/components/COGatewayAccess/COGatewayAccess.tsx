@@ -139,7 +139,8 @@ const COGatewayAccess: React.FC<COGatewayAccessProps> = props => {
     serviceDescribeData?.response,
     props.gatewayDetails.routing.database,
     domainsToOverlap,
-    overrideRoute53
+    overrideRoute53,
+    props.gatewayDetails.routing.source_filters
   ])
 
   useEffect(() => {

@@ -26,6 +26,8 @@ import DynatraceHealthSourceContainer from '@cv/pages/health-source/connectors/D
 import CustomHealthLogSource from '@cv/pages/health-source/connectors/CustomHealthLogSource/CustomHealthLogSource'
 import { CustomHealthProduct } from '@cv/pages/health-source/connectors/CustomHealthSource/CustomHealthSource.constants'
 import { SplunkMetricsHealthSource } from '@cv/pages/health-source/connectors/SplunkMetricsHealthSourceV2/SplunkMetricsHealthSource'
+import ElkHealthSource from '@cv/pages/health-source/connectors/ElkHealthSource/ElkHealthSource'
+import CloudWatch from '@cv/pages/health-source/connectors/CloudWatch/CloudWatch'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawerContent.types'
 import { SplunkProduct } from '../defineHealthSource/DefineHealthSource.constant'
 
@@ -43,6 +45,7 @@ export const LoadSourceByType = ({
   expressions?: string[]
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
+  const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
 
   switch (type) {
     case HealthSourceTypes.AppDynamics:
@@ -121,6 +124,9 @@ export const LoadSourceByType = ({
       } else {
         return <SplunkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
       }
+    case HealthSourceTypes.Elk:
+      return <ElkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
+
     case HealthSourceTypes.SplunkMetric:
       if (!isSplunkMetricEnabled) {
         return null
@@ -134,6 +140,13 @@ export const LoadSourceByType = ({
       }
     case Connectors.ERROR_TRACKING:
       return <ErrorTrackingHealthSource data={data} onSubmit={onSubmit} />
+    case Connectors.AWS:
+    case HealthSourceTypes.CloudWatchMetrics:
+      if (!isCloudWatchEnabled) {
+        return null
+      }
+      return <CloudWatch data={data} onSubmit={onSubmit} />
+
     default:
       return <></>
   }

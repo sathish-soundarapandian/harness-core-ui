@@ -20,6 +20,7 @@ declare const styles: {
   readonly manifestForm: string
   readonly manifestStepWidth: string
   readonly optionsViewContainer: string
+  readonly pathLabel: string
   readonly runtimeInput: string
   readonly saveBtn: string
   readonly text: string

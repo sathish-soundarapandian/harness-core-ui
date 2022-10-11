@@ -118,6 +118,26 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
     []
   )
 
+  const publishTemplate = async (
+    latestTemplate: NGTemplateInfoConfig,
+    updatedGitDetails?: SaveToGitFormInterface
+  ): Promise<void> => {
+    // If new template creation
+    if (templateIdentifier === DefaultNewTemplateId) {
+      await deleteTemplateCache?.(updatedGitDetails)
+
+      navigateToLocation(latestTemplate, updatedGitDetails)
+    } else {
+      // Update template in existing branch
+      if (updatedGitDetails?.isNewBranch === false) {
+        await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
+      } else {
+        // Update template in new branch
+        navigateToLocation(latestTemplate, updatedGitDetails)
+      }
+    }
+  }
+
   const updateExistingLabel = async (
     latestTemplate: NGTemplateInfoConfig,
     comments?: string,
@@ -144,15 +164,19 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
       requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
     })
     if (response && response.status === 'SUCCESS') {
-      if (isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE) {
+      const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
+      if (isInlineTemplate) {
         clear()
         showSuccess(getString('common.template.updateTemplate.templateUpdated'))
+        await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
       }
-      await fetchTemplate?.({ forceFetch: true, forceUpdate: true })
-      if (updatedGitDetails?.isNewBranch) {
-        navigateToLocation(latestTemplate, updatedGitDetails)
+
+      return {
+        status: response.status,
+        nextCallback: () => {
+          publishTemplate(latestTemplate, updatedGitDetails)
+        }
       }
-      return { status: response.status }
     } else {
       throw response
     }
@@ -188,15 +212,23 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
         if (!isTemplateStudio && response.data?.templateResponseDTO) {
           window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: response.data.templateResponseDTO }))
         }
-        if (isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE) {
+
+        const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
+        if (isInlineTemplate) {
           clear()
           showSuccess(getString('common.template.saveTemplate.publishTemplate'))
+          await deleteTemplateCache?.()
+          if (isTemplateStudio) {
+            navigateToLocation(latestTemplate, updatedGitDetails)
+          }
         }
-        await deleteTemplateCache?.()
-        if (isTemplateStudio) {
-          navigateToLocation(latestTemplate, updatedGitDetails)
+
+        return {
+          status: response.status,
+          nextCallback: () => {
+            publishTemplate(latestTemplate, updatedGitDetails)
+          }
         }
-        return { status: response.status }
       } else {
         throw response
       }
@@ -230,9 +262,7 @@ export function useSaveTemplate(TemplateContextMetadata: TemplateContextMetadata
       templateIdentifier !== DefaultNewTemplateId ? { lastObjectId: objectId, lastCommitId } : {},
       storeMetadata
     )
-    return {
-      status: response?.status
-    }
+    return response
   }
 
   const { openSaveToGitDialog } = useSaveToGitDialog<SaveTemplateObj>({

@@ -514,7 +514,7 @@ exports[`AzureWebAppConfigSelection readonly mode 1`] = `
         class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
       >
         <div
-          class="serviceConfigList"
+          class="serviceConfigList listHeader pipelineView"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -541,7 +541,7 @@ exports[`AzureWebAppConfigSelection readonly mode 1`] = `
               class="rowItem"
             >
               <section
-                class="serviceConfigList"
+                class="serviceConfigList pipelineView"
               >
                 <div
                   class="columnId"
@@ -568,7 +568,7 @@ exports[`AzureWebAppConfigSelection readonly mode 1`] = `
               class="rowItem"
             >
               <section
-                class="serviceConfigList"
+                class="serviceConfigList pipelineView"
               >
                 <div
                   class="columnId"

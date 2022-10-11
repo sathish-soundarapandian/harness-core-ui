@@ -117,6 +117,12 @@ export interface AzureWebAppListViewProps {
   connectionStrings?: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
   selectedOption: ModalViewOption | undefined
   setSelectedOption: (option: ModalViewOption | undefined) => void
+  showApplicationSettings?: boolean
+  showConnectionStrings?: boolean
+  selectionType: AzureWebAppSelectionTypes
+  handleSubmitConfig?: (config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration) => void
+  handleDeleteConfig?: (index: number) => void
+  editServiceOverride?: () => void
 }
 
 export interface StepChangeData<SharedObject> {
@@ -186,8 +192,23 @@ export interface ConnectorFieldPropType {
 
 export interface AzureWebAppSelectionProps {
   isPropagating?: boolean
-  deploymentType: ServiceDefinition['type']
-  isReadonlyServiceMode: boolean
+  deploymentType?: ServiceDefinition['type']
+  isReadonlyServiceMode?: boolean
   readonly: boolean
   updateStage?: (stage: any) => Promise<void>
+  showApplicationSettings?: boolean
+  showConnectionStrings?: boolean
+  data?: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
+  selectionType: AzureWebAppSelectionTypes
+  handleSubmitConfig?: (config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration) => void
+  handleDeleteConfig?: (index: number) => void
+  editServiceOverride?: () => void
+  environmentAllowableTypes?: MultiTypeAllowedTypes
+}
+
+export enum AzureWebAppSelectionTypes {
+  PIPELINE = 'PIPELINE',
+  ENV_CONFIG = 'ENV_CONFIG',
+  SERVICE_OVERRIDE = 'SERVICE_OVERRIDE',
+  SERVICE_OVERRIDE_WIDGET = 'SERVICE_OVERRIDE_WIDGET'
 }

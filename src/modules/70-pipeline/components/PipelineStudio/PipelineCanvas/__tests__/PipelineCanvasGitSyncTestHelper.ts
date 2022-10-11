@@ -239,7 +239,8 @@ const pipelineContextMock: PipelineContextInterface = {
   setSelection: (_selectedState: PipelineSelectionState) => undefined,
   getStagePathFromPipeline: () => '',
   setTemplateTypes: () => undefined,
-  setTemplateServiceData: () => undefined
+  setTemplateServiceData: () => undefined,
+  setIntermittentLoading: () => undefined
 }
 
 export const updateStageFnArg1 = {

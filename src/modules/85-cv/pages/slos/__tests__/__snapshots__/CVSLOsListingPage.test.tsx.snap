@@ -2,6 +2,7 @@
 
 exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
 <div>
+  Help Panel
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
   >
@@ -91,12 +92,16 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
       <div
         class="Layout--vertical StyledProps--main"
       >
-        <h3
-          class="StyledProps--font StyledProps--font-h3 StyledProps--main StyledProps--font-variation-h4"
-          level="3"
+        <div
+          class="Text--withDocsTooltip"
+          data-tooltip-id="sloHeader"
         >
-          cv.slos.completeTitle
-        </h3>
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
+          >
+            cv.slos.completeTitle
+          </p>
+        </div>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-align-left StyledProps--font-size-small"
           title="cv.slos.subTitle"
@@ -155,7 +160,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
         class="Layout--horizontal StyledProps--main sloFiltersRow1"
       >
         <div
-          class="StyledProps--font StyledProps--main"
+          class="StyledProps--font StyledProps--main StyledProps--flex"
         >
           <div
             class="Layout--horizontal StyledProps--main sloFilters"
@@ -356,6 +361,39 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            class="bp3-input-group ui-search-box ExpandingSearchInput--main    ExpandingSearchInput--light"
+            data-name=""
+            style="max-width: 250px;"
+          >
+            <span
+              class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+              data-icon="thinner-search"
+            >
+              <svg
+                fill="none"
+                height="14"
+                viewBox="0 0 16 16"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <input
+              class="bp3-input  ExpandingSearchInput--filter"
+              dir="auto"
+              placeholder="cv.slos.searchSLO"
+              style="padding-right: 0px;"
+              type="search"
+              value=""
+            />
           </div>
         </div>
       </div>

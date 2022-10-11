@@ -17,9 +17,9 @@ import {
   SelectOption,
   getMultiTypeFromValue,
   FormInput,
-  MultiSelectOption
+  MultiSelectOption,
+  FormikForm
 } from '@wings-software/uicore'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { cloneDeep, defaultTo, isEqual } from 'lodash-es'
@@ -37,7 +37,7 @@ import {
   useGetBuildsForJenkins,
   BuildDetails
 } from 'services/cd-ng'
-import { getConnectorIdValue, getJenkinsFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getConnectorIdValue, getArtifactFormData } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
   JenkinsArtifactProps,
@@ -237,7 +237,7 @@ function FormComponent({
   }, [jobsResponse])
 
   return (
-    <Form>
+    <FormikForm>
       <div className={css.connectorForm}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -432,7 +432,7 @@ function FormComponent({
           rightIcon="chevron-right"
         />
       </Layout.Horizontal>
-    </Form>
+    </FormikForm>
   )
 }
 
@@ -442,7 +442,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!props.isMultiArtifactSource
 
   const getInitialValues = (): JenkinsArtifactType => {
-    return getJenkinsFormData(
+    return getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed

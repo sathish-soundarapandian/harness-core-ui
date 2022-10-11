@@ -9,6 +9,5 @@
 declare const styles: {
   readonly marginTop: string
   readonly matrixLabel: string
-  readonly stepGroupMatrixLabel: string
 }
 export default styles

@@ -17,13 +17,14 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   MultiSelectOption,
-  SelectOption
+  SelectOption,
+  FormikForm
 } from '@harness/uicore'
 import { FieldArray, Form, FormikProps } from 'formik'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { cloneDeep, get, merge, set } from 'lodash-es'
+import { cloneDeep, get, set } from 'lodash-es'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type {
@@ -34,7 +35,7 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { getCustomArtifactFormData, shellScriptType } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getArtifactFormData, shellScriptType } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
@@ -65,9 +66,9 @@ function FormContent({
   const { getString } = useStrings()
 
   const scriptType: ScriptType =
-    formik.values?.spec?.scripts.fetchAllArtifacts?.spec?.shell || (getString('common.bash') as ScriptType)
+    formik.values?.spec?.scripts?.fetchAllArtifacts?.spec?.shell || (getString('common.bash') as ScriptType)
   return (
-    <Form>
+    <FormikForm>
       <div className={css.artifactForm}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -240,7 +241,7 @@ function FormContent({
         />
         <Button variation={ButtonVariation.PRIMARY} type="submit" text={getString('next')} rightIcon="chevron-right" />
       </Layout.Horizontal>
-    </Form>
+    </FormikForm>
   )
 }
 
@@ -271,7 +272,11 @@ export function CustomArtifact(
     if (prevStepData?.spec) {
       currentValue = { ...prevStepData, type: 'CustomArtifact' }
     }
-    return getCustomArtifactFormData(currentValue || {}, selectedArtifact as ArtifactType, isIdentifierAllowed)
+    return getArtifactFormData(
+      currentValue || {},
+      selectedArtifact as ArtifactType,
+      isIdentifierAllowed
+    ) as CustomArtifactSource
   }
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
@@ -314,14 +319,11 @@ export function CustomArtifactOptionalConfiguration(
           )
         : formData?.spec?.delegateSelectors
     set(artifactObj, 'spec.delegateSelectors', delegateSelectorsStrings)
-    if (isIdentifierAllowed) {
-      merge(artifactObj, { identifier: formData?.identifier })
-    }
     handleSubmit(artifactObj)
   }
 
   const getInitialValues = (): CustomArtifactSource => {
-    const initialValuesWithDelegates = cloneDeep(initialValues)
+    const initialValuesWithDelegates: CustomArtifactSource = cloneDeep(initialValues)
     if (getMultiTypeFromValue(get(initialValuesWithDelegates, `spec.delegateSelectors`)) === MultiTypeInputType.FIXED) {
       set(
         initialValuesWithDelegates,
@@ -334,7 +336,7 @@ export function CustomArtifactOptionalConfiguration(
         })
       )
     }
-    return getCustomArtifactFormData(
+    return getArtifactFormData(
       initialValuesWithDelegates,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed

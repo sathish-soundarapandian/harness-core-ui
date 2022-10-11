@@ -247,16 +247,20 @@ exports[`useSubscriptionModal render 1`] = `
                     <div
                       class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
                     >
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                      <span
+                        class="bp3-popover-wrapper"
                       >
-                        authSettings.costCalculator.developer.developer
-                      </p>
-                      <p
-                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
-                      >
-                        authSettings.unitPrice: $0.00 common.perDeveloper common.perMonth
-                      </p>
+                        <span
+                          class="bp3-popover-target Text--targetClass"
+                        >
+                          <p
+                            class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall"
+                            tabindex="0"
+                          >
+                            authSettings.costCalculator.developer.developer
+                          </p>
+                        </span>
+                      </span>
                     </div>
                   </div>
                   <div
@@ -329,11 +333,11 @@ exports[`useSubscriptionModal render 1`] = `
                         />
                         <div
                           class="bp3-slider-progress bp3-intent-primary"
-                          style="left: 0.00%; right: 60.00%; top: 0px;"
+                          style="left: 0.00%; right: 98.00%; top: 0px;"
                         />
                         <div
                           class="bp3-slider-progress"
-                          style="left: 40.00%; right: 0.00%; top: 0px;"
+                          style="left: 2.00%; right: 0.00%; top: 0px;"
                         />
                       </div>
                       <div
@@ -378,13 +382,13 @@ exports[`useSubscriptionModal render 1`] = `
                       </div>
                       <span
                         class="bp3-slider-handle"
-                        style="left: calc(40.00% - 0px);"
+                        style="left: calc(2.00% - 0px);"
                         tabindex="0"
                       >
                         <span
                           class="bp3-slider-label"
                         >
-                          20
+                          1
                         </span>
                       </span>
                     </div>
@@ -398,7 +402,7 @@ exports[`useSubscriptionModal render 1`] = `
                           class="bp3-input"
                           data-testid="slider-input"
                           type="text"
-                          value="20"
+                          value="1"
                         />
                       </div>
                     </div>
@@ -437,8 +441,7 @@ exports[`useSubscriptionModal render 1`] = `
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
                         >
-                          100000
-                          k
+                          100K
                         </p>
                         <p
                           class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--font-size-xsmall StyledProps--font-weight-bold"
@@ -458,7 +461,7 @@ exports[`useSubscriptionModal render 1`] = `
                       <p
                         class="StyledProps--font StyledProps--main StyledProps--font-weight-bold"
                       >
-                        Infinity
+                        InfinityM
                       </p>
                     </div>
                     <div
@@ -668,9 +671,7 @@ exports[`useSubscriptionModal render 1`] = `
             </div>
           </div>
           <button
-            class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withRightIcon Button--variation Button--variation-primary"
-            disabled=""
-            tabindex="-1"
+            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--withRightIcon Button--variation Button--variation-primary"
             type="button"
           >
             <span
@@ -784,7 +785,7 @@ exports[`useSubscriptionModal render 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main"
                 >
-                  0 x $0.00 common.perDeveloper
+                  1 x $0.00 common.perDeveloper
                 </p>
                 0
               </div>

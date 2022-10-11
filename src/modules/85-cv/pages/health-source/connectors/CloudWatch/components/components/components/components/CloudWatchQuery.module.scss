@@ -1,0 +1,17 @@
+.metricChartHolder {
+  height: 300px;
+  margin-top: var(--spacing-medium) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .fetchDataMessage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    border: 1px solid var(--grey-200);
+    border-radius: 4px;
+  }
+}

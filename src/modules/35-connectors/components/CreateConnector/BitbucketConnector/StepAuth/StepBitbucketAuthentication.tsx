@@ -35,6 +35,7 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
 import { getCommonConnectorsValidationSchema } from '../../CreateConnectorUtils'
+import { useConnectorWizard } from '../../../CreateConnectorWizard/ConnectorWizardContext'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './StepBitbucketAuthentication.module.scss'
 import commonCss from '../../commonSteps/ConnectorCommonStyles.module.scss'
@@ -53,6 +54,7 @@ interface BitbucketAuthenticationProps {
   accountId: string
   orgIdentifier: string
   projectIdentifier: string
+  helpPanelReferenceId?: string
 }
 
 interface BitbucketFormInterface {
@@ -135,6 +137,10 @@ const StepBitbucketAuthentication: React.FC<
   const { prevStepData, nextStep, accountId } = props
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(true && props.isEditMode)
+
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
+  })
 
   const authOptions: Array<SelectOption> = [
     {

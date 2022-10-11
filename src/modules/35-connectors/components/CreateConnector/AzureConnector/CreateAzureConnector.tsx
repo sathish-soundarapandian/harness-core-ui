@@ -15,7 +15,7 @@ import {
   CreateConnectorModalProps,
   TESTCONNECTION_STEP_INDEX
 } from '@connectors/constants'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { buildAzurePayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useStrings } from 'framework/strings'
@@ -80,7 +80,7 @@ function CreateAzureConnector(props: React.PropsWithChildren<CreateConnectorModa
           gitDetails={props.gitDetails}
         />
       ) : null}
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep={true}

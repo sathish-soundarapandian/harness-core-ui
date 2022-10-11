@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test DeploymentConfigStepDrawer initial render - drawer type - add step 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+  />
+</div>
+`;
+
+exports[`Test DeploymentConfigStepDrawer initial render - drawer type - step config 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+  />
+</div>
+`;
+
+exports[`Test DeploymentConfigStepDrawer initial render - drawer type - view template details with template 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+  />
+</div>
+`;
+
+exports[`Test DeploymentConfigStepDrawer initial render - drawer type - view template details without template 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+  />
+</div>
+`;

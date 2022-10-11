@@ -57,7 +57,16 @@ function SaveTemplatePopover(
   ref: React.ForwardedRef<SaveTemplateHandle>
 ): React.ReactElement {
   const {
-    state: { template, originalTemplate, yamlHandler, gitDetails, storeMetadata, isUpdated, lastPublishedVersion },
+    state: {
+      template,
+      originalTemplate,
+      yamlHandler,
+      gitDetails,
+      storeMetadata,
+      isUpdated,
+      lastPublishedVersion,
+      isIntermittentLoading
+    },
     fetchTemplate,
     deleteTemplateCache,
     view,
@@ -111,7 +120,7 @@ function SaveTemplatePopover(
 
   const triggerSave = async (latestTemplate: NGTemplateInfoConfig, comment?: string) => {
     try {
-      if (isEmpty(gitDetails)) {
+      if (isEmpty(gitDetails?.branch)) {
         setLoading(true)
       }
       await saveAndPublish(latestTemplate, {
@@ -123,7 +132,7 @@ function SaveTemplatePopover(
     } catch (error) {
       onError(error, comment)
     } finally {
-      if (isEmpty(gitDetails)) {
+      if (isEmpty(gitDetails?.branch)) {
         setLoading(false)
       }
     }
@@ -176,7 +185,7 @@ function SaveTemplatePopover(
   }
 
   const getComment = (): Promise<string | undefined> => {
-    if (!isEmpty(gitDetails) || storeMetadata?.storeType === StoreType.REMOTE) {
+    if (!isEmpty(gitDetails?.branch) || storeMetadata?.storeType === StoreType.REMOTE) {
       return Promise.resolve(undefined)
     }
     const templateName = getTemplateNameWithLabel(template)
@@ -288,12 +297,20 @@ function SaveTemplatePopover(
   }
 
   if (templateIdentifier === DefaultNewTemplateId) {
-    return <Button variation={ButtonVariation.PRIMARY} text={getString('save')} onClick={onSave} icon="send-data" />
+    return (
+      <Button
+        variation={ButtonVariation.PRIMARY}
+        text={getString('save')}
+        onClick={onSave}
+        icon="send-data"
+        disabled={isIntermittentLoading}
+      />
+    )
   }
 
   return (
     <SplitButton
-      disabled={!isUpdated || isReadonly}
+      disabled={!isUpdated || isReadonly || isIntermittentLoading}
       variation={ButtonVariation.PRIMARY}
       text={getString('save')}
       onClick={onSave}
@@ -302,12 +319,12 @@ function SaveTemplatePopover(
       <SplitButtonOption
         onClick={onSaveAsNewLabel}
         text={getString('templatesLibrary.saveAsNewLabelModal.heading')}
-        disabled={isReadonly}
+        disabled={isReadonly || isIntermittentLoading}
       />
       <SplitButtonOption
         onClick={onSaveAsNewTemplate}
         text={getString('common.template.saveAsNewTemplateHeading')}
-        disabled={isReadonly}
+        disabled={isReadonly || isIntermittentLoading}
       />
     </SplitButton>
   )

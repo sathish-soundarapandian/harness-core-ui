@@ -30,7 +30,7 @@ import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import TemplatesPage from '@templates-library/pages/TemplatesPage/TemplatesPage'
-import { TemplateStudioWrapper } from '@templates-library/components/TemplateStudio/TemplateStudioWrapper'
+import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { CVChanges } from '@cv/pages/changes/CVChanges'
 import ConnectorsPage from '@connectors/pages/connectors/ConnectorsPage'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
@@ -51,6 +51,7 @@ import CVSLODetailsPage from './pages/slos/CVSLODetailsPage/CVSLODetailsPage'
 import CVCreateSLO from './pages/slos/components/CVCreateSLO/CVCreateSLO'
 import { MonitoredServiceProvider } from './pages/monitored-service/MonitoredServiceContext'
 import MonitoredServiceInputSetsTemplate from './pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
+import { CVCodeErrors } from './pages/code-errors/CVCodeErrors'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -221,6 +222,14 @@ export default (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
+      path={routes.toCVCodeErrors({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+    >
+      <CVCodeErrors />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
       path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
       <CVSLOsListingPage />
@@ -299,7 +308,7 @@ export default (
       exact
       path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...cvModuleParams })}
     >
-      <TemplateStudioWrapper />
+      <TemplateStudio />
     </RouteWithLayout>
     {/* Replace above route once BE integration is complete */}
 

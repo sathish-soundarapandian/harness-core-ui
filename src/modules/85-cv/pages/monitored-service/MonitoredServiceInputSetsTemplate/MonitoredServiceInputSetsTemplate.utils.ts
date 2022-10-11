@@ -5,14 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, defaultTo, isEmpty } from 'lodash-es'
+import { cloneDeep, defaultTo, get, set, isEmpty } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
-import type { ConnectorInfoDTO } from 'services/cv'
+import type { MonitoredServiceDTO } from 'services/cv'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getValidationLabelByNameForTemplateInputs } from '../CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
-import type { MonitoredServiceInputSetInterface } from './MonitoredServiceInputSetsTemplate.types'
+import type {
+  MonitoredServiceInputSetInterface,
+  TemplateDataInterface
+} from './MonitoredServiceInputSetsTemplate.types'
+import { GcoQueryKey } from './MonitoredServiceInputSetsTemplate.constants'
 
 export const getLabelByName = (name: string, getString: UseStringsReturn['getString']): string => {
   switch (name) {
@@ -74,6 +79,34 @@ export const getNestedByCondition = (
   return clonedList
 }
 
+export const getPathForKey = (
+  spec: { [key: string]: any },
+  list: { name: string; path: string }[],
+  basePath: string,
+  key: string
+): { name: string; path: string }[] => {
+  let clonedList = cloneDeep(list)
+  Object.entries(defaultTo(spec, {})).forEach(item => {
+    if (item[0] === key) {
+      clonedList.push({ name: item[0], path: `${basePath}.${item[0]}` })
+    } else if (typeof item[1] === 'object') {
+      if (Array.isArray(item[1])) {
+        item[1].forEach((metric, index) => {
+          clonedList = getPathForKey(
+            metric,
+            clonedList,
+            basePath ? `${basePath}.${item[0]}.${index}` : `${item[0]}.${index}`,
+            key
+          )
+        })
+      } else {
+        clonedList = getPathForKey(spec[item[0]], clonedList, basePath ? `${basePath}.${item[0]}` : `${item[0]}`, key)
+      }
+    }
+  })
+  return clonedList
+}
+
 export const getNestedRuntimeInputs = (
   spec: any,
   list: { name: string; path: string }[],
@@ -103,6 +136,17 @@ export const healthSourceTypeMapping = (type: ConnectorInfoDTO['type']): Connect
     case HealthSourceTypes.StackdriverLog as ConnectorInfoDTO['type']:
     case HealthSourceTypes.StackdriverMetrics as ConnectorInfoDTO['type']:
       return Connectors.GCP
+    case HealthSourceTypes.Elk as ConnectorInfoDTO['type']:
+      return Connectors.ELK
+    default:
+      return type
+  }
+}
+
+export const healthSourceTypeMappingForReferenceField = (type: ConnectorInfoDTO['type']): ConnectorInfoDTO['type'] => {
+  switch (type) {
+    case HealthSourceTypes.Elk as ConnectorInfoDTO['type']:
+      return Connectors.ELK
     default:
       return type
   }
@@ -118,4 +162,38 @@ export const validateInputSet = (
     errors[item.path.slice(1)] = getValidationLabelByNameForTemplateInputs(item.name, getString)
   })
   return errors
+}
+
+export const getPopulateSource = (
+  value: MonitoredServiceInputSetInterface
+): { sources?: MonitoredServiceDTO['sources'] } => {
+  const clonedSource = cloneDeep(value.sources)
+  const populateSource = clonedSource ? { sources: clonedSource } : {}
+  const valueList = getPathForKey(populateSource, [], '', GcoQueryKey)
+  if (valueList.length) {
+    valueList.forEach(item => {
+      let stringToObjectValue = {}
+      try {
+        stringToObjectValue = JSON.parse(get(populateSource, item.path))
+      } catch (_) {
+        stringToObjectValue = get(populateSource, item.path)
+      }
+      set(populateSource, item.path, stringToObjectValue)
+    })
+  }
+  return populateSource
+}
+
+export const getQueryParamsForTemplateInputSetYaml = (
+  templateQuery: TemplateDataInterface
+): { accountIdentifier: string; orgIdentifier?: string; projectIdentifier?: string } => {
+  const { accountId, orgIdentifier, projectIdentifier } = templateQuery
+  const accountIdQuery = { accountIdentifier: accountId }
+  const orgIdentifierQuery = orgIdentifier ? { orgIdentifier } : {}
+  const projectIdentifierQuery = projectIdentifier ? { projectIdentifier } : {}
+  return {
+    ...accountIdQuery,
+    ...orgIdentifierQuery,
+    ...projectIdentifierQuery
+  }
 }

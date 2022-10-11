@@ -316,67 +316,39 @@ exports[`Test OptionalConfigurations Switch the tabs with data 1`] = `
                 <div
                   class="formGroup"
                 >
-                  <div
-                    class="bp3-form-group radioGroup"
-                    data-id="spec.onDelegate-4"
-                  >
+                  <div>
                     <label
                       class="bp3-label"
-                      for="spec.onDelegate"
                     >
-                      <span
-                        class="Tooltip--acenter"
-                        data-tooltip-id="scriptOptionalForm_spec.onDelegate"
-                      >
-                        pipeline.executionTarget common.optionalLabel
-                      </span>
-                       
-                      <span
-                        class="bp3-text-muted"
-                      />
+                      pipeline.executionTarget common.optionalLabel
                     </label>
-                    <div
-                      class="bp3-form-content"
+                    <label
+                      class="bp3-control bp3-radio bp3-inline"
                     >
-                      <div
-                        class="StyledProps--main"
-                      >
-                        
-                        <div
-                          class="RadioButtonGroup--inline"
-                        >
-                          <label
-                            class="RadioButton--radio StyledProps--main"
-                          >
-                            <input
-                              class="RadioButton--input"
-                              name="spec.onDelegate"
-                              type="radio"
-                              value="targethost"
-                            />
-                            <span
-                              class="RadioButton--radioIcon"
-                            />
-                            Specify Target Host
-                          </label>
-                          <label
-                            class="RadioButton--radio StyledProps--main"
-                          >
-                            <input
-                              checked=""
-                              class="RadioButton--input"
-                              name="spec.onDelegate"
-                              type="radio"
-                              value="delegate"
-                            />
-                            <span
-                              class="RadioButton--radioIcon"
-                            />
-                            On Delegate
-                          </label>
-                        </div>
-                      </div>
-                    </div>
+                      <input
+                        name="Blueprint3.RadioGroup-0"
+                        type="radio"
+                        value="targethost"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      Specify Target Host
+                    </label>
+                    <label
+                      class="bp3-control bp3-radio bp3-inline"
+                    >
+                      <input
+                        checked=""
+                        name="Blueprint3.RadioGroup-0"
+                        type="radio"
+                        value="delegate"
+                      />
+                      <span
+                        class="bp3-control-indicator"
+                      />
+                      On Delegate
+                    </label>
                   </div>
                 </div>
               </div>
@@ -450,7 +422,7 @@ exports[`Test OptionalConfigurations initial render 1`] = `
             class="formGroup sm"
           >
             <div
-              class="bp3-form-group bp3-disabled"
+              class="bp3-form-group"
             >
               <label
                 class="bp3-label"
@@ -477,12 +449,11 @@ exports[`Test OptionalConfigurations initial render 1`] = `
                     class="bp3-popover-target"
                   >
                     <div
-                      class="bp3-input-group bp3-disabled"
+                      class="bp3-input-group"
                     >
                       <input
                         autocomplete="off"
                         class="bp3-input"
-                        disabled=""
                         name="spec.shell"
                         placeholder="- common.scriptType -"
                         style="padding-right: 0px;"

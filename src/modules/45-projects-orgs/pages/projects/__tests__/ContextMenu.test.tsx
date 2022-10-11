@@ -89,6 +89,6 @@ describe('Context Menu test', () => {
     }),
     test('Go to CF ', async () => {
       fireEvent.click(getByText('projectsOrgs.gotoCF'))
-      expect(getByTestId('location').innerHTML.endsWith(routes.toCFFeatureFlags(routeParams))).toBeTruthy()
+      expect(getByTestId('location').innerHTML.endsWith(routes.toCFConfigurePath(routeParams))).toBeTruthy()
     })
 })

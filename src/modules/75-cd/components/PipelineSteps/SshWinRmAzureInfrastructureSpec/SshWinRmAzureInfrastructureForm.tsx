@@ -60,6 +60,11 @@ import {
 import css from './SshWinRmAzureInfrastructureSpec.module.scss'
 const errorMessage = 'data.message'
 
+const hostConnectionTypes = ['Hostname', 'PublicIP', 'PrivateIP']
+const hostConnectionTypeOptions = hostConnectionTypes.map(type => ({
+  value: type,
+  label: type
+}))
 interface AzureInfrastructureUI extends Omit<SshWinRmAzureInfrastructure, 'subscriptionId' | 'resourceGroup'> {
   subscriptionId?: any
   resourceGroup?: any
@@ -276,7 +281,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                 ? /* istanbul ignore next */ undefined
                 : getValue(value.resourceGroup),
             tags: value.tags,
-            usePublicDns: value.usePublicDns,
+            hostConnectionType: value.hostConnectionType,
             allowSimultaneousDeployments: value.allowSimultaneousDeployments
           }
           if (value.connectorRef) {
@@ -552,15 +557,16 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                     expressions={expressions}
                   />
                 </Layout.Vertical>
-                <FormInput.CheckBox
-                  className={css.simultaneousDeployment}
-                  tooltipProps={{
-                    dataTooltipId: 'sshWinrmAzureUsePublicDns'
-                  }}
-                  name={'usePublicDns'}
-                  label={getString('cd.infrastructure.sshWinRmAzure.usePublicDns')}
-                  disabled={readonly}
-                />
+                <Layout.Vertical className={css.inputWidth}>
+                  <FormInput.Select
+                    items={hostConnectionTypeOptions}
+                    tooltipProps={{
+                      dataTooltipId: 'sshWinrmAzureHostConnectionType'
+                    }}
+                    name={'hostConnectionType'}
+                    label={getString('cd.infrastructure.sshWinRmAzure.hostConnectionType')}
+                  />
+                </Layout.Vertical>
               </Layout.Vertical>
               <Layout.Vertical className={css.simultaneousDeployment}>
                 <FormInput.CheckBox

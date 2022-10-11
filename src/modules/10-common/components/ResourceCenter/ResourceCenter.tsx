@@ -39,7 +39,11 @@ import css from './ResourceCenter.module.scss'
 const refinerProjectId = window.refinerProjectToken
 const refinerSurveryId = window.refinerFeedbackToken
 
-export const ResourceCenter = (): React.ReactElement => {
+interface ResourceCenterProps {
+  link?: boolean
+}
+
+export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
   const { getString } = useStrings()
   const { currentUserInfo } = useAppStore()
   const [buttonDisabled, setButtonDisabled] = useState(false)
@@ -102,7 +106,7 @@ export const ResourceCenter = (): React.ReactElement => {
     return finalTiles
   }, [SHOW_NG_REFINER_FEEDBACK, currentUserInfo, buttonDisabled])
 
-  if (!show) {
+  if (!show && !link) {
     return (
       <Layout.Vertical
         flex
@@ -119,6 +123,20 @@ export const ResourceCenter = (): React.ReactElement => {
           <String stringID="common.help" />
         </Text>
       </Layout.Vertical>
+    )
+  } else if (link && !show) {
+    return (
+      <Button
+        className={css.contactLink}
+        onClick={e => {
+          e.stopPropagation()
+          e.preventDefault()
+          setShow(true)
+        }}
+        variation={ButtonVariation.LINK}
+      >
+        {getString('common.resourceCenter.link')}
+      </Button>
     )
   }
 

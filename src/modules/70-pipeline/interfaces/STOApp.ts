@@ -9,14 +9,16 @@ import type React from 'react'
 import type { CardRailViewProps } from '@pipeline/components/Dashboards/CardRailView/CardRailView'
 import type { ExecutionCardProps } from '@pipeline/components/ExecutionCard/ExecutionCard'
 import type { PipelineExecutionDetail } from 'services/pipeline-ng'
+import type { UserLabelProps } from '@common/exports'
 
 export interface STOAppCustomProps {
   stoApiPath?: string
   lang?: string
-  customComponents: {
+  customComponents: Partial<{
     ExecutionCard: React.ComponentType<ExecutionCardProps>
     CardRailView: React.ComponentType<CardRailViewProps>
-  }
+    UserLabel: React.ComponentType<UserLabelProps>
+  }>
 }
 
 export interface PipelineSecurityViewProps {

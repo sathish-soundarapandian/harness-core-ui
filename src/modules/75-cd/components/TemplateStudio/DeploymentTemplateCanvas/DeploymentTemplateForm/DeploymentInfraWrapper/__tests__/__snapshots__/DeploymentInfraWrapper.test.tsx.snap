@@ -13,22 +13,28 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="infraVariablesTitleDT"
           >
-            common.variables
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              common.variables
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div
               class="Layout--vertical StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main labelText"
+              <span
+                class="StyledProps--font StyledProps--main labelText ng-tooltip-native StyledProps--inline"
+                data-tooltip-id="infraVariablesDT"
               >
                 pipeline.customDeployment.infraVariablesTitle
-              </p>
+              </span>
               <div
                 class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
               >
@@ -72,17 +78,22 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="fetchInstancesScriptTitleDT"
           >
-            pipeline.customDeployment.fetchInstancesScript
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.fetchInstancesScript
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div>
               <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
               />
               <div
                 class="bp3-popover-wrapper templateDropdown Select--main bp3-fill"
@@ -134,11 +145,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceObjectArrayPathDT"
           >
-            pipeline.customDeployment.hostObjectArrayPath
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceObjectArrayPath
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -178,11 +194,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
         <div
           class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceAttributesDT"
           >
-            pipeline.customDeployment.hostAttributes
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceAttributes
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -226,8 +247,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
-                      description
-                      common.optionalLabel
+                      description common.optionalLabel
                     </p>
                   </div>
                   <div
@@ -250,7 +270,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render 1`] = `
                             name="instanceAttributes[0].name"
                             placeholder="pipeline.customDeployment.fieldNamePlaceholder"
                             type="text"
-                            value="hostName"
+                            value="hostname"
                           />
                         </div>
                       </div>
@@ -360,22 +380,28 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="infraVariablesTitleDT"
           >
-            common.variables
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              common.variables
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div
               class="Layout--vertical StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main labelText"
+              <span
+                class="StyledProps--font StyledProps--main labelText ng-tooltip-native StyledProps--inline"
+                data-tooltip-id="infraVariablesDT"
               >
                 pipeline.customDeployment.infraVariablesTitle
-              </p>
+              </span>
               <div
                 class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
               >
@@ -419,17 +445,22 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="fetchInstancesScriptTitleDT"
           >
-            pipeline.customDeployment.fetchInstancesScript
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.fetchInstancesScript
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div>
               <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
               >
                 <div
                   class="group"
@@ -452,43 +483,11 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                           class="Layout--vertical StyledProps--main"
                         >
                           <label
-                            class="Label--main configLabel"
+                            class="Label--main configLabel ng-tooltip-native"
+                            data-tooltip-id="fetchInstanceScriptDT"
                           >
                             pipeline.customDeployment.fetchInstanceScriptHeader
                           </label>
-                        </div>
-                        <div
-                          class="bp3-popover-wrapper typeSelectorWrapper"
-                        >
-                          <div
-                            class="bp3-popover-target typeSelector"
-                          >
-                            <button
-                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                              type="button"
-                            >
-                              <span
-                                class="bp3-button-text"
-                              >
-                                <span
-                                  class="bp3-icon StyledProps--main icon fixed"
-                                  data-icon="fixed-input"
-                                >
-                                  <svg
-                                    height="12"
-                                    viewBox="0 0 9 9"
-                                    width="12"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                      fill="currentColor"
-                                    />
-                                  </svg>
-                                </span>
-                              </span>
-                            </button>
-                          </div>
                         </div>
                       </div>
                        
@@ -509,6 +508,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="0"
                           data-rbd-draggable-id="0"
+                          data-testid="fetchInstancesScript.store.spec.files[0]"
                           draggable="false"
                           role="button"
                           tabindex="0"
@@ -584,9 +584,11 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                                           >
                                             <div
                                               class="Layout--vertical StyledProps--main"
+                                              data-testid="file-store-select"
                                             >
                                               <div
                                                 class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                                data-testid="container-fs"
                                               >
                                                 <div
                                                   class="StyledProps--font StyledProps--main pathWrapper StyledProps--flex"
@@ -599,7 +601,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                                                   </p>
                                                 </div>
                                                 <div
-                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
                                                 >
                                                   <span
                                                     class="Tag--main"
@@ -615,14 +617,14 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                                                     </span>
                                                   </span>
                                                   <span
-                                                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--margin-right-small StyledProps--margin-left-small"
+                                                    class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
                                                     icon="chevron-down"
                                                   >
                                                     <svg
                                                       data-icon="chevron-down"
-                                                      height="16"
+                                                      height="15"
                                                       viewBox="0 0 16 16"
-                                                      width="16"
+                                                      width="15"
                                                     >
                                                       <desc>
                                                         chevron-down
@@ -637,39 +639,6 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                                               </div>
                                             </div>
                                           </div>
-                                        </div>
-                                      </div>
-                                      <div
-                                        class="bp3-popover-wrapper typeSelectorWrapper"
-                                      >
-                                        <div
-                                          class="bp3-popover-target typeSelector"
-                                        >
-                                          <button
-                                            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                                            type="button"
-                                          >
-                                            <span
-                                              class="bp3-button-text"
-                                            >
-                                              <span
-                                                class="bp3-icon StyledProps--main icon fixed"
-                                                data-icon="fixed-input"
-                                              >
-                                                <svg
-                                                  height="12"
-                                                  viewBox="0 0 9 9"
-                                                  width="12"
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                  <path
-                                                    d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                                    fill="currentColor"
-                                                  />
-                                                </svg>
-                                              </span>
-                                            </span>
-                                          </button>
                                         </div>
                                       </div>
                                     </div>
@@ -713,18 +682,6 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                           </div>
                         </div>
                       </div>
-                      <button
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--without-shadow"
-                        data-testid="add-fetchInstancesScript.store.spec.files"
-                        style="padding: 0px; margin-top: 24px;"
-                        type="button"
-                      >
-                        <span
-                          class="bp3-button-text"
-                        >
-                          common.plusNewName
-                        </span>
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -779,11 +736,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceObjectArrayPathDT"
           >
-            pipeline.customDeployment.hostObjectArrayPath
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceObjectArrayPath
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -823,11 +785,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
         <div
           class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceAttributesDT"
           >
-            pipeline.customDeployment.hostAttributes
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceAttributes
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -871,8 +838,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
-                      description
-                      common.optionalLabel
+                      description common.optionalLabel
                     </p>
                   </div>
                   <div
@@ -895,7 +861,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                             name="instanceAttributes[0].name"
                             placeholder="pipeline.customDeployment.fieldNamePlaceholder"
                             type="text"
-                            value="hostName"
+                            value="hostname"
                           />
                         </div>
                       </div>
@@ -1005,22 +971,28 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="infraVariablesTitleDT"
           >
-            common.variables
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              common.variables
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div
               class="Layout--vertical StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main labelText"
+              <span
+                class="StyledProps--font StyledProps--main labelText ng-tooltip-native StyledProps--inline"
+                data-tooltip-id="infraVariablesDT"
               >
                 pipeline.customDeployment.infraVariablesTitle
-              </p>
+              </span>
               <div
                 class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
               >
@@ -1306,17 +1278,22 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="fetchInstancesScriptTitleDT"
           >
-            pipeline.customDeployment.fetchInstancesScript
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.fetchInstancesScript
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div>
               <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
               >
                 <div
                   class="halfWidth"
@@ -1336,43 +1313,11 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                           class="Layout--vertical StyledProps--main"
                         >
                           <label
-                            class="Label--main configLabel"
+                            class="Label--main configLabel ng-tooltip-native"
+                            data-tooltip-id="fetchInstanceScriptDT"
                           >
                             pipeline.customDeployment.fetchInstanceScriptHeader
                           </label>
-                        </div>
-                        <div
-                          class="bp3-popover-wrapper typeSelectorWrapper"
-                        >
-                          <div
-                            class="bp3-popover-target typeSelector"
-                          >
-                            <button
-                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                              type="button"
-                            >
-                              <span
-                                class="bp3-button-text"
-                              >
-                                <span
-                                  class="bp3-icon StyledProps--main icon fixed"
-                                  data-icon="fixed-input"
-                                >
-                                  <svg
-                                    height="12"
-                                    viewBox="0 0 9 9"
-                                    width="12"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                      fill="currentColor"
-                                    />
-                                  </svg>
-                                </span>
-                              </span>
-                            </button>
-                          </div>
                         </div>
                       </div>
                        
@@ -1470,11 +1415,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceObjectArrayPathDT"
           >
-            pipeline.customDeployment.hostObjectArrayPath
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceObjectArrayPath
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -1514,11 +1464,16 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
         <div
           class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceAttributesDT"
           >
-            pipeline.customDeployment.hostAttributes
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceAttributes
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -1562,8 +1517,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - inline sc
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
-                      description
-                      common.optionalLabel
+                      description common.optionalLabel
                     </p>
                   </div>
                   <div
@@ -1696,22 +1650,28 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="infraVariablesTitleDT"
           >
-            common.variables
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              common.variables
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div
               class="Layout--vertical StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main labelText"
+              <span
+                class="StyledProps--font StyledProps--main labelText ng-tooltip-native StyledProps--inline"
+                data-tooltip-id="infraVariablesDT"
               >
                 pipeline.customDeployment.infraVariablesTitle
-              </p>
+              </span>
               <div
                 class="Layout--horizontal Layout--layout-spacing-large StyledProps--main"
               >
@@ -1997,17 +1957,22 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="fetchInstancesScriptTitleDT"
           >
-            pipeline.customDeployment.fetchInstancesScript
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.fetchInstancesScript
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
             <div>
               <div
-                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-bottom-medium"
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--margin-top-medium StyledProps--margin-bottom-medium"
               >
                 <div
                   class="halfWidth"
@@ -2027,43 +1992,11 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                           class="Layout--vertical StyledProps--main"
                         >
                           <label
-                            class="Label--main configLabel"
+                            class="Label--main configLabel ng-tooltip-native"
+                            data-tooltip-id="fetchInstanceScriptDT"
                           >
                             pipeline.customDeployment.fetchInstanceScriptHeader
                           </label>
-                        </div>
-                        <div
-                          class="bp3-popover-wrapper typeSelectorWrapper"
-                        >
-                          <div
-                            class="bp3-popover-target typeSelector"
-                          >
-                            <button
-                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main btn Button--iconOnly Button--without-shadow"
-                              type="button"
-                            >
-                              <span
-                                class="bp3-button-text"
-                              >
-                                <span
-                                  class="bp3-icon StyledProps--main icon fixed"
-                                  data-icon="fixed-input"
-                                >
-                                  <svg
-                                    height="12"
-                                    viewBox="0 0 9 9"
-                                    width="12"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                  >
-                                    <path
-                                      d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                      fill="currentColor"
-                                    />
-                                  </svg>
-                                </span>
-                              </span>
-                            </button>
-                          </div>
                         </div>
                       </div>
                        
@@ -2161,11 +2094,16 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
         <div
           class="Layout--vertical StyledProps--main tooltipStyle infraSections StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceObjectArrayPathDT"
           >
-            pipeline.customDeployment.hostObjectArrayPath
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceObjectArrayPath
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -2205,11 +2143,16 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
         <div
           class="Layout--vertical StyledProps--main tooltipStyle instanceAttributes StyledProps--margin-medium"
         >
-          <p
-            class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="instanceAttributesDT"
           >
-            pipeline.customDeployment.hostAttributes
-          </p>
+            <p
+              class="StyledProps--font StyledProps--main header headerText StyledProps--color StyledProps--color-black"
+            >
+              pipeline.customDeployment.instanceAttributes
+            </p>
+          </div>
           <div
             class="bp3-card bp3-elevation-0 Card--card sectionCard shadow"
           >
@@ -2253,8 +2196,7 @@ exports[`Test DeploymentInfraWrapperWithRef should match inputs and labels for D
                     <p
                       class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
                     >
-                      description
-                      common.optionalLabel
+                      description common.optionalLabel
                     </p>
                   </div>
                   <div

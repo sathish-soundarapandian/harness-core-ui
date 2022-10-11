@@ -10,15 +10,7 @@ import { useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { defaultTo } from 'lodash-es'
 
-import {
-  ButtonVariation,
-  Container,
-  getErrorInfoFromErrorObject,
-  Heading,
-  Layout,
-  TableV2,
-  useToaster
-} from '@harness/uicore'
+import { ButtonVariation, Container, Heading, Layout, TableV2, useToaster } from '@harness/uicore'
 
 import { InfrastructureResponse, useDeleteInfrastructure } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -28,6 +20,7 @@ import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 
 import { InfrastructureMenu, InfrastructureName, LastUpdatedBy, withInfrastructure } from './InfrastructureListColumns'
 
@@ -49,6 +42,7 @@ export default function InfrastructureList({
   >()
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
 
   const { mutate: deleteInfrastructure } = useDeleteInfrastructure({
     queryParams: {
@@ -68,8 +62,8 @@ export default function InfrastructureList({
       await deleteInfrastructure(identifier, { headers: { 'content-type': 'application/json' } })
       showSuccess(getString('cd.infrastructure.deleted', { identifier }))
       refetch()
-    } catch (e: any) {
-      showError(getErrorInfoFromErrorObject(e))
+    } catch (error) {
+      showError(getRBACErrorMessage(error))
     }
   }
 
@@ -109,7 +103,12 @@ export default function InfrastructureList({
     <>
       {hasInfrastructure && (
         <Container padding={{ top: 'small' }} margin={{ top: 'medium' }} border={{ top: true }}>
-          <TableV2<InfrastructureResponse> columns={infrastructureColumns} data={defaultTo(list, [])} sortable />
+          <TableV2<InfrastructureResponse>
+            columns={infrastructureColumns}
+            data={defaultTo(list, [])}
+            sortable
+            onRowClick={rowItem => onEdit(defaultTo(rowItem.infrastructure?.yaml, '{}'))}
+          />
         </Container>
       )}
       {emptyEnvironment && (

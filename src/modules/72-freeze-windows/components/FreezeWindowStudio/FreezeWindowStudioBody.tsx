@@ -14,15 +14,16 @@ import css from './FreezeWindowStudio.module.scss'
 
 interface FreezeWindowStudioBodyProps {
   error?: any
+  resources: any
 }
 
-export const FreezeWindowStudioBody = ({ error }: FreezeWindowStudioBodyProps) => {
+export const FreezeWindowStudioBody = ({ error, resources }: FreezeWindowStudioBodyProps) => {
   const { view } = React.useContext(FreezeWindowContext)
   if (error) {
     return <div>Error</div>
   }
   const isYaml = view === SelectedView.YAML
-  const content = isYaml ? <FreezeWindowStudioYAMLView /> : <FreezeWindowStudioVisualView />
+  const content = isYaml ? <FreezeWindowStudioYAMLView /> : <FreezeWindowStudioVisualView resources={resources} />
 
   return <Container className={css.canvasContainer}>{content}</Container>
 }

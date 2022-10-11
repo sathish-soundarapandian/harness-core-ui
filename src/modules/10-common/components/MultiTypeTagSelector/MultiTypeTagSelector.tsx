@@ -20,7 +20,7 @@ import {
   DataTooltipInterface
 } from '@wings-software/uicore'
 import type { FormikContextType } from 'formik'
-import { get, set } from 'lodash-es'
+import { get, isEmpty, set } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import css from './MultiTypeTagSelector.module.scss'
@@ -91,6 +91,12 @@ const MultiTypeTagSelector = ({
 
   const isFixedValueSetted = typeof get(formik.values, name) === 'object'
 
+  useEffect(() => {
+    const tagsObject = {}
+    selectedTags.forEach(tag => set(tagsObject, tag.key, tag.value))
+    !isEmpty(tagsObject) ? formik.setFieldValue(name, tagsObject) : null
+  }, [selectedTags])
+
   return (
     <MultiTypeFieldSelector
       className={className}
@@ -108,7 +114,7 @@ const MultiTypeTagSelector = ({
         /* istanbul ignore next */ () => (
           <ExpressionInput
             name={name}
-            value={get(formik.values, name)}
+            value={isFixedValueSetted ? '' : get(formik.values, name)}
             onChange={express => formik.setFieldValue(name, express)}
             inputProps={{
               placeholder: '<+expression>'
@@ -133,6 +139,7 @@ const MultiTypeTagSelector = ({
                   /* istanbul ignore next */ option => {
                     const newSelTags = [...selectedTags]
                     newSelTags[index].key = option.value as string
+                    newSelTags[index].value = ''
                     setSelectedTags(newSelTags)
                   }
                 }

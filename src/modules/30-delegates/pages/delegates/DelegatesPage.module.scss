@@ -226,7 +226,6 @@
   width: fit-content !important;
   padding: 2px 6px !important;
   border-radius: 4px;
-  margin-right: var(--spacing-small) !important;
   margin-bottom: auto !important;
   margin-top: auto !important;
 }
@@ -237,7 +236,7 @@
 
 .instanceStatus {
   height: fit-content;
-  padding-left: 6px !important;
+  padding-left: 8px !important;
 }
 
 .paddingLeft {
@@ -246,4 +245,8 @@
 
 .marginLeft {
   margin-left: 8px !important;
+}
+
+.statusPadding {
+  padding-left: 18px !important;
 }

@@ -54,8 +54,6 @@ import { connectorGovernanceModalProps } from '@connectors/utils/utils'
 import { useConnectorWizard } from '@connectors/components/CreateConnectorWizard/ConnectorWizardContext'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
 const defaultInitialFormData: SetupEngineFormData = {
   secretEngine: '',
@@ -82,7 +80,6 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
   const [secretEngineOptions, setSecretEngineOptions] = useState<SelectOption[]>([])
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding | undefined>()
 
-  const opaFlagEnabled = useFeatureFlag(FeatureFlag.OPA_CONNECTOR_GOVERNANCE)
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal(connectorGovernanceModalProps())
   const { mutate: getMetadata, loading } = useGetMetadata({ queryParams: { accountIdentifier: accountId } })
   const { mutate: createConnector, loading: creating } = useCreateConnector({
@@ -214,7 +211,7 @@ const SetupEngine: React.FC<StepProps<StepDetailsProps> & ConnectorDetailsProps>
             ? showSuccess(getString('connectors.updatedSuccessfully'))
             : showSuccess(getString('connectors.createdSuccessfully'))
         }
-        if (opaFlagEnabled && response.data?.governanceMetadata) {
+        if (response.data?.governanceMetadata) {
           conditionallyOpenGovernanceErrorModal(response.data?.governanceMetadata, onSuccessCreateOrUpdate)
         } else {
           onSuccessCreateOrUpdate()

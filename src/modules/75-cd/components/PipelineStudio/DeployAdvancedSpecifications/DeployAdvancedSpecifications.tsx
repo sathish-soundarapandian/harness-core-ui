@@ -8,7 +8,7 @@
 import React from 'react'
 import { Card, Container, HarnessDocTooltip, Layout } from '@wings-software/uicore'
 import { produce } from 'immer'
-import { set, isEmpty, unset } from 'lodash-es'
+import { set, isEmpty, unset, get } from 'lodash-es'
 import cx from 'classnames'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import { StepActions } from '@common/constants/TrackingConstants'
@@ -49,7 +49,11 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
 
   const getSshOrWinRmType = React.useCallback(() => {
     const { deploymentType } = stage?.stage?.spec as DeploymentStageConfig
-    return isSSHWinRMDeploymentType(deploymentType as string)
+    if (deploymentType) {
+      return isSSHWinRMDeploymentType(deploymentType as string)
+    }
+    const type = get(stage, 'stage.spec.serviceConfig.serviceDefinition.type', '')
+    return isSSHWinRMDeploymentType(type)
   }, [stage])
 
   const { SSH_NG } = useFeatureFlags()

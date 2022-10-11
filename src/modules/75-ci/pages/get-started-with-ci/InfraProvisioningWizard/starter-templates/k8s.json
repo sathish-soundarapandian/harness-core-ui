@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Dot NET Core",
+    "label": ".Net Core",
+    "description": "Build and test a .NET or ASP.NET Core project",
+    "pipelineYaml": "pipeline:\n  name: Build .NET Core App\n  identifier: Build_reactcalculator_1663793074386\n  projectIdentifier: Default_Project_1663793031057\n  orgIdentifier: default\n  properties:\n    ci:\n      codebase:\n        connectorRef: GitHub\n        repoName: PowerShell/PowerShell\n        build: <+input>\n  stages:\n    - stage:\n        name: Build Dot NET Core App\n        identifier: Build_NET_Core_App\n        description: \"\"\n        type: CI\n        spec:\n          cloneCodebase: true\n          infrastructure:\n            type: KubernetesHosted\n            spec:\n              identifier: k8s-hosted-infra\n          execution:\n            steps:\n              - step:\n                  type: Run\n                  name: Build Dot NET Core App\n                  identifier: Build_NET_Core_App\n                  spec:\n                    connectorRef: account.harnessImage\n                    image: mcr.microsoft.com/dotnet/sdk:6.0\n                    shell: Sh\n                    command: |-\n                      echo \"Welcome to Harness CI\"\n                      dotnet restore\n                      dotnet build --no-restore\n                      dotnet test --no-build --verbosity normal",
+    "icon": "dotnet",
+    "id": "dot-net-core"
+  },
+  {
+    "name": "Java with Maven",
+    "description": "Build and test a Java project with Apache Maven",
+    "pipelineYaml": "pipeline:\n  name: Build Java App with Maven\n  identifier: Build_reactcalculator_1663793074386\n  projectIdentifier: Default_Project_1663793031057\n  orgIdentifier: default\n  stages:\n    - stage:\n        name: Build Java App with Maven\n        identifier: Build_Java_App_with_Maven\n        description: \"\"\n        type: CI\n        spec:\n          cloneCodebase: true\n          infrastructure:\n            type: KubernetesHosted\n            spec:\n              identifier: k8s-hosted-infra\n          execution:\n            steps:\n              - step:\n                  type: Run\n                  name: Build Java App\n                  identifier: Build_Java_App\n                  spec:\n                    connectorRef: account.harnessImage\n                    image: maven:3-jdk-10\n                    shell: Sh\n                    command: |-\n                      echo \"Welcome to Harness CI\"\n                      mvn -B package --file pom.xml\n  properties:\n    ci:\n      codebase:\n        connectorRef: account.Github_OAuth_1663793054861\n        repoName: rustd/reactcalculator\n        build: <+input>",
+    "icon": "java",
+    "id": "java-with-maven"
+  },
+  {
+    "name": "Go",
+    "description": "Build and test a Go project",
+    "pipelineYaml": "pipeline:\n  name: Build Go App\n  identifier: Build_reactcalculator_1663793074386\n  projectIdentifier: Default_Project_1663793031057\n  orgIdentifier: default\n  stages:\n    - stage:\n        name: Build Go App\n        identifier: Build\n        type: CI\n        spec:\n          cloneCodebase: true\n          infrastructure:\n            type: KubernetesHosted\n            spec:\n              identifier: k8s-hosted-infra\n          execution:\n            steps:\n              - step:\n                  type: Run\n                  name: Build Go App\n                  identifier: Run\n                  spec:\n                    connectorRef: account.harnessImage\n                    image: golang\n                    shell: Sh\n                    command: |-\n                      echo \"Welcome to Harness CI\"\n                      go build                             \n                      go test\n  properties:\n    ci:\n      codebase:\n        connectorRef: account.Github_OAuth_1663793054861\n        repoName: rustd/reactcalculator\n        build: <+input>",
+    "icon": "golang",
+    "id": "go"
+  },
+  {
+    "name": "NodeJS",
+    "label": "Node.js",
+    "description": "Build and test a NodeJS project with npm",
+    "pipelineYaml": "\n\npipeline:\n  name: Build Node App\n  identifier: Build_reactcalculator_1663793074386\n  projectIdentifier: Default_Project_1663793031057\n  orgIdentifier: default\n  stages:\n    - stage:\n        name: Build Node App\n        identifier: Build_Node_App\n        description: \"\"\n        type: CI\n        spec:\n          cloneCodebase: true\n          infrastructure:\n            type: KubernetesHosted\n            spec:\n              identifier: k8s-hosted-infra\n          execution:\n            steps:\n              - step:\n                  type: Run\n                  name: Build Node App\n                  identifier: Build_Node_App\n                  spec:\n                    connectorRef: account.harnessImage\n                    image: node\n                    shell: Sh\n                    command: |-\n                      echo \"Welcome to Harness CI\"\n                      npm install\n                      npm run build --if-present\n                      npm test\n  properties:\n    ci:\n      codebase:\n        connectorRef: account.Github_OAuth_1663793054861\n        repoName: rustd/reactcalculator\n        build: <+input>",
+    "icon": "nodejs",
+    "id": "nodejs"
+  },
+  {
+    "name": "Python",
+    "description": "Build and test a Python project",
+    "pipelineYaml": "pipeline:\n  name:  Build Python App\n  identifier: Build_reactcalculator_1663793074386\n  projectIdentifier: Default_Project_1663793031057\n  orgIdentifier: default\n  stages:\n    - stage:\n        name: Build Python App\n        identifier: Build_Python_App\n        description: \"\"\n        type: CI\n        spec:\n          cloneCodebase: true\n          infrastructure:\n            type: KubernetesHosted\n            spec:\n              identifier: k8s-hosted-infra\n          execution:\n            steps:\n              - step:\n                  type: Run\n                  name: Build Python App\n                  identifier: Build_Python_App\n                  spec:\n                    connectorRef: account.harnessImage\n                    image: python\n                    shell: Sh\n                    command: |-\n                      echo \"Welcome to Harness CI\"\n                      pip install -r requirements.txt\n                      pytest\n  properties:\n    ci:\n      codebase:\n        connectorRef: account.Github_OAuth_1663793054861\n        repoName: rustd/reactcalculator\n        build: <+input>",
+    "icon": "python",
+    "id": "python"
+  }
+]

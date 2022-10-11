@@ -45,7 +45,7 @@ describe('Triggers for Pipeline', () => {
     }
   })
 
-  it.skip('Triggers Drawer & List Assertion', () => {
+  it('Triggers Drawer & List Assertion', () => {
     cy.wait(1000)
     cy.wait('@emptyTriggersList')
     cy.contains('span', '+ New Trigger').should('be.visible')
@@ -80,7 +80,7 @@ describe('Triggers for Pipeline', () => {
       })
   })
 
-  it.skip('Cron Trigger Flow', () => {
+  it('Cron Trigger Flow', () => {
     cy.visitPageAssertion()
     cy.wait('@emptyTriggersList')
     cy.contains('span', 'Add New Trigger').should('be.visible').click()

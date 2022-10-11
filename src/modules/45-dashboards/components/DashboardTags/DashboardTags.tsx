@@ -18,6 +18,7 @@ export interface DashboardTagProps {
 
 const DashboardTags: React.FC<DashboardTagProps> = ({ dashboard }) => {
   const { getString } = useStrings()
+  let hasDeploymentTag = false
   return (
     <Container className={moduleTagCss.predefinedTags}>
       {dashboard?.type === DashboardType.SHARED && (
@@ -40,7 +41,8 @@ const DashboardTags: React.FC<DashboardTagProps> = ({ dashboard }) => {
             </section>
           )
         }
-        if (tag === 'CD') {
+        if (!hasDeploymentTag && (tag === 'CD' || tag == 'CG_CD')) {
+          hasDeploymentTag = true
           return (
             <section key={`tag-${tag.toLowerCase()}-${dashboard.id}`} className={moduleTagCss.cdTag}>
               {getString('deploymentsText')}

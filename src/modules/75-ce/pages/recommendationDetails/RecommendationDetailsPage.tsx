@@ -322,7 +322,6 @@ const RecommendationDetailsPage: React.FC = () => {
                     timeRange={timeRange}
                     recommendationStats={recommendationStats}
                     qualityOfService={qualityOfService}
-                    timeRangeFilter={timeRangeFilter}
                     cpuAndMemoryValueBuffer={cpuAndMemoryValueBuffer}
                     currentContainer={index + 1}
                     totalContainers={Object.keys(recommendationDetails.containerRecommendations || {}).length}

@@ -6,10 +6,11 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, getAllByText, render, waitFor } from '@testing-library/react'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import type { AuthenticationSettingsResponse } from 'services/cd-ng'
 import * as cdngServices from 'services/cd-ng'
+import * as portalServices from 'services/portal'
 import { fillAtForm } from '@common/utils/JestFormHelper'
 import LDAPProvider from '../LDAPProvider'
 import {
@@ -18,6 +19,7 @@ import {
   mockAuthSettingsResponseWithoutLdap,
   permissionRequest,
   successTestConnectionSettingsResponse,
+  testCronIteration,
   testQuerySuccessFailure,
   testQuerySuccessResponse
 } from './mock'
@@ -305,7 +307,7 @@ describe('LDAP Provider', () => {
           mutate: mockLdapLoginTest
         } as any)
     )
-    const { getByTestId, getByText, getAllByText } = render(
+    const { getByTestId, getByText } = render(
       <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
         <LDAPProvider
           authSettings={mockAuthSettingsResponse as AuthenticationSettingsResponse}
@@ -333,7 +335,11 @@ describe('LDAP Provider', () => {
     await act(async () => {
       testLdapConfigBtn && fireEvent.click(testLdapConfigBtn)
     })
-    await waitFor(() => expect(getAllByText('authSettings.ldap.ldapTestSuccessful')).toBeDefined())
+    await waitFor(() =>
+      expect(
+        getAllByText(document.getElementsByTagName('html')[0], 'authSettings.ldap.ldapTestSuccessful')
+      ).toBeDefined()
+    )
   })
   test('LDAP Provider test config fail', async () => {
     jest.spyOn(cdngServices, 'usePostLdapAuthenticationTest').mockImplementation(
@@ -679,6 +685,145 @@ describe('LDAP setup Wizard', () => {
     await act(async () => {
       fireEvent.click(getByTestId('submit-group-query-step'))
     })
+    waitFor(() => expect(getByTestId('submit-cron-expression-step')).toBeVisible())
+    expect(getByText('common.schedulePanel.weeklyTabTitle')).toBeVisible()
+
+    await act(async () => {
+      fireEvent.click(getByText('common.schedulePanel.dailyTabTitle'))
+    })
+    expect(getByTestId('cron-expression')).not.toBeNull()
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-cron-expression-step'))
+    })
+    await act(async () => {
+      fireEvent.click(getByText('common.schedulePanel.monthlyTabTitle'))
+    })
+    expect(getByTestId('cron-expression')).not.toBeNull()
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-cron-expression-step'))
+    })
+    await act(async () => {
+      fireEvent.click(getByText('common.schedulePanel.yearlyTabTitle'))
+    })
+    expect(getByTestId('cron-expression')).not.toBeNull()
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-cron-expression-step'))
+    })
+    await act(async () => {
+      fireEvent.click(getByText('common.schedulePanel.weeklyTabTitle'))
+    })
+
+    expect(getByTestId('cron-expression')).not.toBeNull()
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-cron-expression-step'))
+    })
+    expect(wizardDialog).toMatchSnapshot()
+  })
+
+  test('Queries persist after going to previous step and coming back', async () => {
+    const { getByTestId, getByText } = render(
+      <TestWrapper pathParams={{ accountId: 'testAcc' }} defaultFeatureFlagValues={{ NG_ENABLE_LDAP_CHECK: true }}>
+        <LDAPProvider
+          authSettings={mockAuthSettingsResponseWithoutLdap}
+          canEdit={true}
+          refetchAuthSettings={refetchAuthSettings}
+          permissionRequest={permissionRequest}
+          setUpdating={mockDispatch}
+        />
+      </TestWrapper>
+    )
+    const openLdapWizardLabel = getByText('authSettings.ldap.addLdap')
+    await act(async () => {
+      fireEvent.click(openLdapWizardLabel)
+    })
+    await waitFor(() => expect(getByTestId('close-ldap-setup-wizard')).toBeVisible())
+
+    const wizardDialog = findDialogContainer() as HTMLElement
+    const overviewDisplayNameEl = wizardDialog?.querySelector('[name="displayName"]')
+    await act(async () => {
+      overviewDisplayNameEl && fireEvent.change(overviewDisplayNameEl, { target: { value: 'LDAP0002' } })
+    })
+
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-overview-step'))
+    })
+
+    fillAtForm(getConnectionFormFieldValues(wizardDialog))
+
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-connection-step'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByTestId('add-first-user-query-btn'))
+    })
+
+    // There are no errors when form rendered at first
+    expect(wizardDialog.querySelectorAll('.FormError--error').length).toEqual(0)
+
+    await act(async () => {
+      const testUserQueryBtn = wizardDialog.querySelector('[data-testid="test-user-query-btn"')
+      testUserQueryBtn && fireEvent.click(testUserQueryBtn)
+    })
+
+    // The form shows errors when we try to test user query
+    expect(wizardDialog.querySelectorAll('.FormError--error').length).toEqual(5)
+    fillAtForm(getUserQueryFormFieldValues(wizardDialog))
+
+    await act(async () => {
+      fireEvent.click(getByTestId('commit-query-btn'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByTestId('back-to-connection-step'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-connection-step'))
+    })
+
+    expect(getByText('ou=Users,o=611a119873e7186e37f75599,dc=jumpcloud,dc=com')).toBeVisible()
+
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-usery-query-step'))
+    })
+
+    const addFirstGroupQueryBtn = wizardDialog.querySelector('[data-testid="add-first-group-query-btn"')
+
+    await act(async () => {
+      addFirstGroupQueryBtn && fireEvent.click(addFirstGroupQueryBtn)
+    })
+
+    // There are no errors when form rendered at first
+    expect(wizardDialog.querySelectorAll('.FormError--error').length).toEqual(0)
+
+    await act(async () => {
+      const testGroupQueryBtn = wizardDialog.querySelector('[data-testid="test-group-query-btn"')
+      testGroupQueryBtn && fireEvent.click(testGroupQueryBtn)
+    })
+
+    // The form shows errors when we try to test user query
+    expect(wizardDialog.querySelectorAll('.FormError--error').length).toEqual(4)
+
+    fillAtForm(getGroupQueryFormFieldValues(wizardDialog))
+
+    await act(async () => {
+      fireEvent.click(getByTestId('commit-group-query-btn'))
+    })
+
+    expect(getByText('authSettings.ldap.descriptionAttributes:')).toBeVisible()
+
+    await act(async () => {
+      fireEvent.click(getByTestId('back-to-user-query-step'))
+    })
+
+    expect(getByText('ou=Users,o=611a119873e7186e37f75599,dc=jumpcloud,dc=com')).toBeVisible()
+
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-usery-query-step'))
+    })
+
+    expect(getByText('authSettings.ldap.descriptionAttributes:')).toBeVisible()
   })
 })
 
@@ -771,6 +916,7 @@ describe('LDAP Wizard in edit mode', () => {
       fireEvent.click(getByTestId('add-another-user-query-btn'))
     })
     await waitFor(() => expect(getByTestId('commit-query-btn')).toBeVisible())
+    wizardDialog && fillAtForm(getUserQueryFormFieldValues(wizardDialog))
     expect(getByTestId('add-another-user-query-btn')).toBeDisabled()
     await act(async () => {
       fireEvent.click(getByTestId('commit-query-btn'))
@@ -803,6 +949,7 @@ describe('LDAP Wizard in edit mode', () => {
       fireEvent.click(getByTestId('add-another-group-query-btn'))
     })
     await waitFor(() => expect(getByTestId('commit-group-query-btn')).toBeVisible())
+    wizardDialog && fillAtForm(getGroupQueryFormFieldValues(wizardDialog))
     expect(getByTestId('add-another-group-query-btn')).toBeDisabled()
     await act(async () => {
       fireEvent.click(getByTestId('commit-group-query-btn'))
@@ -845,6 +992,13 @@ describe('LDAP Wizard in edit mode', () => {
       loading: false,
       refetch: jest.fn().mockReturnValue(testQuerySuccessFailure),
       mutate: jest.fn().mockReturnValue(testQuerySuccessFailure),
+      error: null
+    } as any)
+
+    jest.spyOn(portalServices, 'useGetIterationsFromCron').mockReturnValue({
+      loading: false,
+      refetch: jest.fn().mockReturnValue(testCronIteration),
+      mutate: jest.fn().mockReturnValue(testCronIteration),
       error: null
     } as any)
 
@@ -911,6 +1065,31 @@ describe('LDAP Wizard in edit mode', () => {
     await act(async () => {
       fireEvent.click(getByTestId('submit-group-query-step'))
     })
+    waitFor(() => expect(getByTestId('submit-cron-expression-step')).toBeVisible())
+    await act(async () => {
+      fireEvent.click(getByTestId('back-to-group-query-step'))
+    })
+    await waitFor(() => expect(getByTestId('edit-group-query-btn')).toBeVisible())
+
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-group-query-step'))
+    })
+    expect(getByTestId('cron-expression')).not.toBeNull()
+    const customExpressionEl = document.getElementsByName('expression')[0]
+    fireEvent.change(customExpressionEl, { target: { value: '' } })
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-cron-expression-step'))
+    })
+
+    fireEvent.change(customExpressionEl, { target: { value: '0 0/15 * 1/1 * ? *' } })
+    await act(async () => {
+      fireEvent.click(getByTestId('submit-cron-expression-step'))
+    })
     expect(container).toMatchSnapshot()
+    await act(async () => {
+      const dialogCtr = findDialogContainer()
+      dialogCtr && fireEvent.click(getByText('confirm'))
+    })
+    waitFor(() => expect(expect(getByTestId('cron-expression')).toBeNull()))
   })
 })

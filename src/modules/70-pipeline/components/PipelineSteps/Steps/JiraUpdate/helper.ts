@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiSelectOption, MultiTypeInputType, SelectOption } from '@wings-software/uicore'
+import type { MultiSelectOption, SelectOption } from '@wings-software/uicore'
 import type { JiraCreateFieldType, JiraFieldNGWithValue } from '../JiraCreate/types'
 import type { JiraUpdateData } from './types'
 
@@ -43,10 +43,7 @@ export const processFormData = (values: JiraUpdateData): JiraUpdateData => {
         values.spec.transitionTo?.transitionName || values.spec.transitionTo?.status
           ? {
               transitionName: values.spec.transitionTo.transitionName,
-              status:
-                getMultiTypeFromValue(values.spec.transitionTo.status as SelectOption) === MultiTypeInputType.FIXED
-                  ? (values.spec.transitionTo.status as SelectOption).value?.toString()
-                  : values.spec.transitionTo.status
+              status: values.spec.transitionTo.status
             }
           : undefined,
       fields: processFieldsForSubmit(values),
@@ -64,14 +61,7 @@ export const processInitialValues = (values: JiraUpdateData): JiraUpdateData => 
       issueKey: values.spec.issueKey,
       transitionTo: values.spec.transitionTo
         ? {
-            status:
-              getMultiTypeFromValue(values.spec.transitionTo.status as string) === MultiTypeInputType.FIXED &&
-              values.spec.transitionTo.status
-                ? {
-                    label: values.spec.transitionTo.status.toString(),
-                    value: values.spec.transitionTo.status.toString()
-                  }
-                : values.spec.transitionTo.status,
+            status: values.spec.transitionTo.status,
             transitionName: values.spec.transitionTo.transitionName
           }
         : undefined,

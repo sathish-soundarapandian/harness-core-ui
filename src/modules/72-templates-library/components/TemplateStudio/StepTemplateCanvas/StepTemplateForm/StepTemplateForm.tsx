@@ -17,7 +17,7 @@ import {
 import type { StepElementConfig } from 'services/cd-ng'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { Values } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { getStepDataFromValues } from '@pipeline/utils/stepUtils'
 import { TemplateContext } from '../../TemplateContext/TemplateContext'
 import css from './StepTemplateForm.module.scss'

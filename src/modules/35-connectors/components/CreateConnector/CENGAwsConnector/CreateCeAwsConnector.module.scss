@@ -91,20 +91,22 @@
 
   .cards {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: repeat(3, 1fr);
     column-gap: var(--spacing-small);
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: var(--spacing-small);
-      [class*='bp3-card'] {
-        box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04), 0px 8px 16px rgba(96, 97, 112, 0.16) !important;
-      }
+    [class*='bp3-card'] {
+      box-shadow: 0px 2px 4px rgba(40, 41, 61, 0.04), 0px 8px 16px rgba(96, 97, 112, 0.16) !important;
+      padding: var(--spacing-large) 0 0 0;
     }
 
-    [class*='bp3-card'] {
-      padding: var(--spacing-large) 0 0 0;
+    .defaultCard {
+      box-shadow: none;
+      background-color: var(--grey-50);
+      opacity: 80%;
+      cursor: not-allowed;
+      &:hover {
+        box-shadow: none !important;
+      }
     }
   }
 
@@ -156,21 +158,6 @@
 
   .noAccountLink {
     font-size: var(--font-size-small);
-  }
-
-  .defaultCard {
-    box-shadow: none;
-    background-color: var(--grey-50);
-    opacity: 80%;
-    cursor: not-allowed;
-    &:hover {
-      box-shadow: none !important;
-    }
-    :global {
-      .Card--badge {
-        opacity: 50%;
-      }
-    }
   }
 
   .infoCard {
@@ -259,5 +246,18 @@
   .footer {
     border-top: 1px solid rgba(176, 177, 195, 0.3);
     padding: var(--spacing-medium) var(--spacing-xxlarge) !important;
+  }
+}
+
+.govCloudContainer {
+  .govCloudLabel {
+    color: var(--grey-600);
+    font-size: var(--form-input-font-size) !important;
+    font-weight: 500 !important;
+  }
+  :global {
+    .bp3-control-indicator {
+      margin-left: 0 !important;
+    }
   }
 }

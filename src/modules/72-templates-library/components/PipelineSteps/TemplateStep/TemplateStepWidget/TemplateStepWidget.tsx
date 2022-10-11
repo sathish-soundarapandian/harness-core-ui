@@ -14,8 +14,7 @@ import {
   Layout,
   AllowedTypes,
   Heading,
-  PageError,
-  Text
+  PageError
 } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
@@ -41,8 +40,7 @@ import {
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep } from '@pipeline/components/PipelineStudio/StepUtil'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
-import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
-import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
+import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useQueryParams } from '@common/hooks'
 import { stringify } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -66,7 +64,8 @@ function TemplateStepWidget(
   formikRef: StepFormikFowardRef<TemplateStepNode>
 ): React.ReactElement {
   const {
-    state: { storeMetadata }
+    state: { storeMetadata },
+    setIntermittentLoading
   } = usePipelineContext()
   const { initialValues, onUpdate, isNewStep, readonly, allowableTypes } = props
   const { getString } = useStrings()
@@ -94,10 +93,6 @@ function TemplateStepWidget(
   })
 
   React.useEffect(() => {
-    setAllValues(undefined)
-  }, [stepTemplateRef, stepTemplateVersionLabel])
-
-  React.useEffect(() => {
     setAllValues(parse(defaultTo(stepTemplateResponse?.data?.yaml, ''))?.template.spec)
   }, [stepTemplateResponse?.data?.yaml])
 
@@ -120,11 +115,9 @@ function TemplateStepWidget(
     [stepTemplateInputSetYaml?.data]
   )
 
-  const templateInputsCount = React.useMemo(() => getTemplateRuntimeInputsCount(templateInputs), [templateInputs])
-
   const updateFormValues = (newTemplateInputs?: StepElementConfig) => {
     const updateValues = produce(initialValues, draft => {
-      set(draft, 'template.templateInputs', newTemplateInputs)
+      set(draft, 'template.templateInputs', replaceDefaultValues(newTemplateInputs))
     })
     setFormValues(updateValues)
     onUpdate?.(updateValues)
@@ -159,6 +152,12 @@ function TemplateStepWidget(
     }
   }, [templateInputs])
 
+  React.useEffect(() => {
+    if (stepTemplateInputSetLoading) {
+      setAllValues(undefined)
+    }
+  }, [stepTemplateInputSetLoading])
+
   const validateForm = (values: TemplateStepNode) => {
     const errorsResponse = validateStep({
       step: values.template?.templateInputs as StepElementConfig,
@@ -182,6 +181,18 @@ function TemplateStepWidget(
   const isLoading = stepTemplateLoading || stepTemplateInputSetLoading || loadingMergedTemplateInputs
 
   const error = defaultTo(stepTemplateInputSetError, stepTemplateError)
+
+  /**
+   * This effect disables/enables "Apply Changes" button on Pipeline and Template Studio
+   */
+  React.useEffect(() => {
+    setIntermittentLoading(isLoading)
+
+    // cleanup
+    return () => {
+      setIntermittentLoading(false)
+    }
+  }, [isLoading, setIntermittentLoading])
 
   return (
     <div className={stepCss.stepPanel}>
@@ -212,29 +223,21 @@ function TemplateStepWidget(
               <Container className={css.inputsContainer}>
                 {isLoading && <PageSpinner />}
                 {!isLoading && error && (
-                  <Container height={300}>
-                    <PageError
-                      message={defaultTo((error?.data as Error)?.message, error?.message)}
-                      onClick={() => refetch()}
-                    />
+                  <Container height={isEmpty((error?.data as Error)?.responseMessages) ? 300 : 600}>
+                    <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
                   </Container>
                 )}
                 {!isLoading && !error && templateInputs && allValues && (
                   <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} spacing={'large'}>
-                    <Layout.Horizontal flex={{ distribution: 'space-between' }}>
-                      <Heading level={5} color={Color.BLACK}>
-                        {getString('pipeline.templateInputs')}
-                      </Heading>
-                      <Text font={{ size: 'normal' }}>
-                        {getString('templatesLibrary.inputsCount', { count: templateInputsCount })}
-                      </Text>
-                    </Layout.Horizontal>
+                    <Heading level={5} color={Color.BLACK}>
+                      {getString('pipeline.templateInputs')}
+                    </Heading>
                     <StepForm
                       template={{ step: templateInputs }}
                       values={{ step: formik.values.template?.templateInputs as StepElementConfig }}
                       allValues={{ step: allValues }}
                       readonly={readonly}
-                      viewType={StepViewType.InputSet}
+                      viewType={StepViewType.TemplateUsage}
                       path={TEMPLATE_INPUT_PATH}
                       allowableTypes={allowableTypes}
                       onUpdate={noop}

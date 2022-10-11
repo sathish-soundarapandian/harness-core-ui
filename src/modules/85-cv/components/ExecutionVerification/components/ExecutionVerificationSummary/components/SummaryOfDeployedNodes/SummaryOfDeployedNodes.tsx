@@ -67,7 +67,7 @@ export function SummaryOfDeployedNodes(props: SummaryOfDeployedNodesProps): JSX.
   const { metricsInViolation, totalMetrics, logClustersInViolation, totalLogClusters } = props
   const { errorClustersInViolation, totalErrorClusters } = props
   const { getString } = useStrings()
-  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
+  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
 
   return (
     <Container className={css.main}>

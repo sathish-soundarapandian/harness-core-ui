@@ -21,7 +21,7 @@ import StepGithubAuthentication from '@connectors/components/CreateConnector/Git
 import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import {
   buildBitbucketPayload,
   buildGithubPayload,
@@ -102,6 +102,7 @@ export const ScriptWizard = ({
         handleSubmit={onSubmit}
         isReadonly={isReadonly}
         isParam={isParam}
+        name={stepTwoName}
       />
     ),
     [initialValues, isParam]
@@ -203,7 +204,7 @@ export const ScriptWizard = ({
             buildPayload={buildPayload}
             connectorInfo={undefined}
           />
-          <VerifyOutOfClusterDelegate
+          <ConnectorTestConnection
             name={getString('connectors.stepThreeName')}
             connectorInfo={undefined}
             isStep={true}

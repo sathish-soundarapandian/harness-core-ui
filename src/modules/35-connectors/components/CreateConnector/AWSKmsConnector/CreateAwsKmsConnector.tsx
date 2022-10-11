@@ -18,7 +18,7 @@ import {
 import { useStrings } from 'framework/strings'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
 import { buildAWSKmsSMPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import ConnectorDetailsStep from '../commonSteps/ConnectorDetailsStep'
@@ -68,7 +68,7 @@ const CreateAwsKmsConnector: React.FC<CreateConnectorModalProps> = props => {
         disableGitSync={true}
         helpPanelReferenceId="ConnectorDelegatesSetup"
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep

@@ -88,7 +88,7 @@ exports[`Default View Test error in step evaluation 1`] = `
             <tbody>
               <tr>
                 <th>
-                  startedAt
+                  startedAt:
                 </th>
                 <td>
                   -
@@ -96,7 +96,7 @@ exports[`Default View Test error in step evaluation 1`] = `
               </tr>
               <tr>
                 <th>
-                  endedAt
+                  endedAt:
                 </th>
                 <td>
                   -
@@ -104,7 +104,7 @@ exports[`Default View Test error in step evaluation 1`] = `
               </tr>
               <tr>
                 <th>
-                  pipeline.duration
+                  pipeline.duration:
                 </th>
                 <td>
                   <span
@@ -295,7 +295,7 @@ exports[`Default View Test failure responses 1`] = `
             <tbody>
               <tr>
                 <th>
-                  startedAt
+                  startedAt:
                 </th>
                 <td>
                   -
@@ -303,7 +303,7 @@ exports[`Default View Test failure responses 1`] = `
               </tr>
               <tr>
                 <th>
-                  endedAt
+                  endedAt:
                 </th>
                 <td>
                   -
@@ -311,7 +311,7 @@ exports[`Default View Test failure responses 1`] = `
               </tr>
               <tr>
                 <th>
-                  pipeline.duration
+                  pipeline.duration:
                 </th>
                 <td>
                   <span

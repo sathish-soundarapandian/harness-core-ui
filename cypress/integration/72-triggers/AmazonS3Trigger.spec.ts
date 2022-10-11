@@ -36,7 +36,7 @@ describe('AmazonS3 Trigger', () => {
       fixture: 'pipeline/api/triggers/amazonS3PipelineDetailWithRoutingIdCall.json'
     }).as('pipelineDetailWithRoutingIdCall')
 
-    cy.intercept('GET', s3bucketData, {
+    cy.intercept('POST', s3bucketData, {
       fixture: 'pipeline/api/triggers/s3BucketResponse.json'
     }).as('s3bucketData')
 
@@ -54,7 +54,8 @@ describe('AmazonS3 Trigger', () => {
     cy.contains('span', 'Select').click()
     cy.wait(1000)
     cy.findByPlaceholderText('Select or Add bucket name').click()
-    cy.contains('p', 'tdp-tdp1-vzx7j8k9faso').click()
+    cy.wait('@s3bucketData')
+    cy.contains('p', 'testBucket').click()
     cy.get(
       'input[name="stages[0].stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary.spec.filePathRegex"]'
     )
@@ -94,7 +95,8 @@ describe('AmazonS3 Trigger', () => {
     cy.contains('span', 'Select').click()
     cy.wait(1000)
     cy.findByPlaceholderText('Select or Add bucket name').click()
-    cy.contains('p', 'tdp-tdp1-vzx7j8k9faso').click()
+    cy.wait('@s3bucketData')
+    cy.contains('p', 'testBucket').click()
     cy.get('input[disabled]').should('be.visible')
     cy.contains('span', 'Apply').click()
     cy.contains('span', 'Continue').click()

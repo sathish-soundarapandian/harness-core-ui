@@ -21,14 +21,9 @@ import {
   serviceDependencyIdRegex
 } from '@common/utils/StringUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import {
-  IdentifierSchema,
-  IdentifierSchemaWithoutHook,
-  NameSchema,
-  NameSchemaWithoutHook
-} from '@common/utils/Validation'
+import { IdentifierSchema, IdentifierSchemaWithoutHook, NameSchema } from '@common/utils/Validation'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType, stepNameRegex, stepIdentifierRegex } from '@pipeline/utils/constants'
 
 export enum Types {
   Text,
@@ -116,7 +111,11 @@ function generateSchemaForIdentifier({
 }
 
 function generateSchemaForName({ getString }: GenerateSchemaDependencies): StringSchema {
-  return NameSchemaWithoutHook(getString) as StringSchema
+  return yup
+    .string()
+    .trim()
+    .required(getString('common.validation.nameIsRequired'))
+    .matches(stepNameRegex, getString('pipeline.step.validation.namePatternIsNotValid')) as StringSchema
 }
 
 function generateSchemaForList(
@@ -491,7 +490,12 @@ export function generateSchemaFields(
           getString('fieldRequired', { field: getString(label as StringKeys) })
         )
         if (type === Types.Identifier) {
-          if (buildInfrastructureType === 'VM') {
+          if (
+            buildInfrastructureType &&
+            [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
+              buildInfrastructureType
+            )
+          ) {
             validationRule = validationRule.matches(
               serviceDependencyIdRegex,
               getString('pipeline.ci.validations.serviceDependencyIdentifier', {
@@ -499,7 +503,7 @@ export function generateSchemaFields(
               })
             )
           } else {
-            validationRule = validationRule.matches(regexIdentifier, getString('validation.validIdRegex'))
+            validationRule = validationRule.matches(stepIdentifierRegex, getString('validation.validIdRegex'))
           }
           validationRule = validationRule.notOneOf(illegalIdentifiers)
         }

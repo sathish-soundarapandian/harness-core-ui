@@ -20,6 +20,7 @@ validationPDKey: PagerDuty Key is required
 notificationName: Give your notification a name
 nameOftheRule: Name of the Rule
 pipelineEvents: Pipeline Events
+configureConditions: Configure the conditions for which you want to be notified
 selectPipelineEvents: Select Pipeline Events
 selectStagesPlaceholder: 'Select Stages'
 notificationMethod: '{{$.notificationMethod}}'

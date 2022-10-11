@@ -92,9 +92,9 @@ describe('useImportEntity tests', () => {
 
     const dummyButton = getElementByText(container, 'My Button')
     fireEvent.click(dummyButton)
-    const portalDivs = document.getElementsByClassName('bp3-portal')
-    await waitFor(() => expect(portalDivs).toHaveLength(1))
-    const importPipelineDiv = portalDivs[0] as HTMLElement
+    const dialogDivs = document.getElementsByClassName('bp3-dialog')
+    await waitFor(() => expect(dialogDivs).toHaveLength(1))
+    const importPipelineDiv = dialogDivs[0] as HTMLElement
     await waitFor(() => expect(getElementByText(importPipelineDiv, 'common.importEntityFromGit')).toBeInTheDocument())
     expect(importPipelineDiv).toMatchSnapshot()
   })

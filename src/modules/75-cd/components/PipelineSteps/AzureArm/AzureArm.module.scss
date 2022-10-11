@@ -13,6 +13,10 @@
   margin-bottom: var(--spacing-medium) !important;
 }
 
+.fullWidth {
+  width: 100%;
+}
+
 .divider {
   width: 100%;
   margin-top: var(--spacing-3);
@@ -22,6 +26,10 @@
 
 .configPlaceHolder {
   color: var(--primary-7) !important;
+  overflow: hidden;
+  display: inline-block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .center {
@@ -31,7 +39,6 @@
 
 .scopeField {
   display: flex;
-  justify-content: space-between;
   width: 100% !important;
   height: 32px;
   background: var(--white);
@@ -56,7 +63,6 @@
 }
 
 .scopeDropdown {
-  width: 100%;
   border: none;
   background-color: unset;
   font-size: var(--font-size-normal);
@@ -82,4 +88,9 @@
 
 .connectorConfigOptions {
   margin-left: 0 !important;
+}
+
+.end {
+  display: flex;
+  justify-content: flex-end;
 }

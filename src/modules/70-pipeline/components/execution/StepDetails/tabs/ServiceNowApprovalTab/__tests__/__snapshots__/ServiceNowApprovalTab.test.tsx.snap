@@ -233,7 +233,7 @@ exports[`<ServiceNowApprovalTab/> tests not isWaiting test - rejected 1`] = `
       <tbody>
         <tr>
           <th>
-            startedAt
+            startedAt:
           </th>
           <td>
             -
@@ -241,7 +241,7 @@ exports[`<ServiceNowApprovalTab/> tests not isWaiting test - rejected 1`] = `
         </tr>
         <tr>
           <th>
-            endedAt
+            endedAt:
           </th>
           <td>
             -
@@ -249,7 +249,7 @@ exports[`<ServiceNowApprovalTab/> tests not isWaiting test - rejected 1`] = `
         </tr>
         <tr>
           <th>
-            pipeline.duration
+            pipeline.duration:
           </th>
           <td>
             <div>
@@ -462,7 +462,7 @@ exports[`<ServiceNowApprovalTab/> tests not isWaiting test 1`] = `
       <tbody>
         <tr>
           <th>
-            startedAt
+            startedAt:
           </th>
           <td>
             -
@@ -470,7 +470,7 @@ exports[`<ServiceNowApprovalTab/> tests not isWaiting test 1`] = `
         </tr>
         <tr>
           <th>
-            endedAt
+            endedAt:
           </th>
           <td>
             -
@@ -478,7 +478,7 @@ exports[`<ServiceNowApprovalTab/> tests not isWaiting test 1`] = `
         </tr>
         <tr>
           <th>
-            pipeline.duration
+            pipeline.duration:
           </th>
           <td>
             <div>

@@ -10,13 +10,8 @@ exports[`AzureWebAppListView renders AzureWebAppListView 1`] = `
       class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
     >
       <div
-        class="serviceConfigList"
+        class="serviceConfigList listHeader environmentView"
       >
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-        >
-          TYPELABEL
-        </p>
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
         >
@@ -37,18 +32,8 @@ exports[`AzureWebAppListView renders AzureWebAppListView 1`] = `
             class="rowItem"
           >
             <section
-              class="serviceConfigList"
+              class="serviceConfigList environmentView"
             >
-              <div
-                class="columnId"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main"
-                  style="width: 200px;"
-                >
-                  pipeline.appServiceConfig.applicationSettings.name
-                </p>
-              </div>
               <div
                 class="columnId"
               >
@@ -129,9 +114,9 @@ exports[`AzureWebAppListView renders AzureWebAppListView 1`] = `
                       data-icon="Edit"
                     >
                       <svg
-                        height="18"
+                        height="16"
                         viewBox="0 0 16 16"
-                        width="18"
+                        width="16"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
@@ -159,9 +144,9 @@ exports[`AzureWebAppListView renders AzureWebAppListView 1`] = `
                       data-icon="main-trash"
                     >
                       <svg
-                        height="18"
+                        height="16"
                         viewBox="0 0 16 20"
-                        width="18"
+                        width="16"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
@@ -190,18 +175,8 @@ exports[`AzureWebAppListView renders AzureWebAppListView 1`] = `
             class="rowItem"
           >
             <section
-              class="serviceConfigList"
+              class="serviceConfigList environmentView"
             >
-              <div
-                class="columnId"
-              >
-                <p
-                  class="StyledProps--font StyledProps--main"
-                  style="width: 200px;"
-                >
-                  pipeline.appServiceConfig.connectionStrings.name
-                </p>
-              </div>
               <div
                 class="columnId"
               >
@@ -282,9 +257,9 @@ exports[`AzureWebAppListView renders AzureWebAppListView 1`] = `
                       data-icon="Edit"
                     >
                       <svg
-                        height="18"
+                        height="16"
                         viewBox="0 0 16 16"
-                        width="18"
+                        width="16"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
@@ -312,9 +287,9 @@ exports[`AzureWebAppListView renders AzureWebAppListView 1`] = `
                       data-icon="main-trash"
                     >
                       <svg
-                        height="18"
+                        height="16"
                         viewBox="0 0 16 20"
-                        width="18"
+                        width="16"
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
@@ -367,25 +342,63 @@ exports[`AzureWebAppListView renders empty 1`] = `
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
     >
       <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addServiceConfig Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+        class="bp3-button Button--button StyledProps--font StyledProps--main addServiceConfig Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         id="add-applicationSetting"
         type="button"
       >
         <span
+          class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+          icon="plus"
+        >
+          <svg
+            data-icon="plus"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              plus
+            </desc>
+            <path
+              d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
           class="bp3-button-text"
         >
-          common.plusAddName
+          common.newName common.override
         </span>
       </button>
       <button
-        class="bp3-button Button--button StyledProps--font StyledProps--main addServiceConfig Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+        class="bp3-button Button--button StyledProps--font StyledProps--main addServiceConfig Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link Button--size Button--small"
         id="add-connectionString"
         type="button"
       >
         <span
+          class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+          icon="plus"
+        >
+          <svg
+            data-icon="plus"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              plus
+            </desc>
+            <path
+              d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span
           class="bp3-button-text"
         >
-          common.plusAddName
+          common.newName common.override
         </span>
       </button>
     </div>

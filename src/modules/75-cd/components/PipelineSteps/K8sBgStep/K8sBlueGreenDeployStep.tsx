@@ -18,6 +18,7 @@ import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
+import { Accordion } from '@harness/uicore'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
@@ -125,19 +126,36 @@ function K8BGDeployWidget(props: K8BGDeployProps, formikRef: StepFormikFowardRef
                   />
                 )}
               </div>
-              <div className={stepCss.divider} />
-              <div className={cx(stepCss.formGroup, stepCss.sm)}>
-                <FormMultiTypeCheckboxField
-                  name="spec.skipDryRun"
-                  label={getString('pipelineSteps.skipDryRun')}
-                  disabled={readonly}
-                  multiTypeTextbox={{
-                    expressions,
-                    disabled: readonly,
-                    allowableTypes
-                  }}
+              <Accordion className={stepCss.accordion}>
+                <Accordion.Panel
+                  id="optional-config"
+                  summary={getString('common.optionalConfig')}
+                  details={
+                    <>
+                      <div className={cx(stepCss.formGroup, stepCss.sm)}>
+                        <FormMultiTypeCheckboxField
+                          name="spec.skipDryRun"
+                          label={getString('pipelineSteps.skipDryRun')}
+                          disabled={readonly}
+                          multiTypeTextbox={{
+                            expressions,
+                            disabled: readonly,
+                            allowableTypes
+                          }}
+                        />
+                      </div>
+                      <div className={cx(stepCss.formGroup, stepCss.md)}>
+                        <FormMultiTypeCheckboxField
+                          multiTypeTextbox={{ expressions, allowableTypes }}
+                          name="spec.pruningEnabled"
+                          label={getString('cd.steps.common.enableKubernetesPruning')}
+                          disabled={readonly}
+                        />
+                      </div>
+                    </>
+                  }
                 />
-              </div>
+              </Accordion>
             </>
           )
         }}
@@ -176,8 +194,21 @@ const K8BGDeployInputStep: React.FC<K8BGDeployProps> = ({ inputSetData, allowabl
               allowableTypes
             }}
             name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.skipDryRun`}
-            className={stepCss.checkbox}
             label={getString('pipelineSteps.skipDryRun')}
+            disabled={inputSetData?.readonly}
+            setToFalseWhenEmpty={true}
+          />
+        </div>
+      )}
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.pruningEnabled) === MultiTypeInputType.RUNTIME && (
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes
+            }}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.pruningEnabled`}
+            label={getString('cd.steps.common.enableKubernetesPruning')}
             disabled={inputSetData?.readonly}
             setToFalseWhenEmpty={true}
           />
@@ -309,7 +340,8 @@ export class K8sBlueGreenDeployStep extends PipelineStep<K8sBGDeployData> {
     name: '',
     type: StepType.K8sBlueGreenDeploy,
     spec: {
-      skipDryRun: false
+      skipDryRun: false,
+      pruningEnabled: false
     }
   }
 }

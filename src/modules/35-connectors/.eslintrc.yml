@@ -20,7 +20,7 @@ rules:
         - modules/75-chaos/*
         - modules/75-ci/*
         - modules/85-cv/*
-        - modules/85-sto-steps/*
+        - modules/85-sto/*
         - modules/90-gitops/*
         - '@user-profile/*'
         - '@gitsync/*'
@@ -37,7 +37,7 @@ rules:
         - '@chaos/*'
         - '@ci/*'
         - '@cv/*'
-        - '@sto-steps/*'
+        - '@sto/*'
         - '@gitops/*'
       paths:
         - lodash

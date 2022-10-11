@@ -76,8 +76,9 @@ interface GetCostCalculatorBodyByModuleProps {
   usageAndLimitInfo: UsageAndLimitReturn
   productPrices: ProductPricesProp
   subscriptionDetails: SubscriptionProps
-  setSubscriptionDetails: (props: SubscriptionProps) => void
+  setSubscriptionDetails: (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
   recommendation: { [key: string]: number } | null
+  updateQuantities: ({ maus, devs }: { maus?: number; devs?: number | undefined }) => void
 }
 
 export function getCostCalculatorBodyByModule({
@@ -88,7 +89,8 @@ export function getCostCalculatorBodyByModule({
   paymentFrequency,
   subscriptionDetails,
   setSubscriptionDetails,
-  recommendation
+  recommendation,
+  updateQuantities
 }: GetCostCalculatorBodyByModuleProps): React.ReactElement {
   const { edition, paymentFreq } = subscriptionDetails
   const productPricesByPayFreq = getProductPrices(edition, paymentFreq, productPrices)
@@ -124,15 +126,8 @@ export function getCostCalculatorBodyByModule({
             usage={usageAndLimitInfo.usageData.usage?.ff?.activeFeatureFlagUsers?.count || 0}
             toggledNumberOfDevelopers={subscriptionDetails.quantities?.featureFlag?.numberOfDevelopers}
             setNumberOfDevelopers={(value: number) => {
-              setSubscriptionDetails({
-                ...subscriptionDetails,
-                quantities: {
-                  ...subscriptionDetails.quantities,
-                  featureFlag: {
-                    numberOfMau: subscriptionDetails.quantities?.featureFlag?.numberOfMau || sampleData.minValue,
-                    numberOfDevelopers: value || 1
-                  }
-                }
+              updateQuantities({
+                devs: value || 1
               })
             }}
           />
@@ -154,15 +149,8 @@ export function getCostCalculatorBodyByModule({
               sampleData.minValue
             )}
             setNumberOfMAUs={(value: number) => {
-              setSubscriptionDetails({
-                ...subscriptionDetails,
-                quantities: {
-                  ...subscriptionDetails.quantities,
-                  featureFlag: {
-                    numberOfMau: value || sampleData.minValue,
-                    numberOfDevelopers: subscriptionDetails.quantities?.featureFlag?.numberOfDevelopers || 1
-                  }
-                }
+              updateQuantities({
+                maus: value || sampleData.minValue
               })
             }}
           />

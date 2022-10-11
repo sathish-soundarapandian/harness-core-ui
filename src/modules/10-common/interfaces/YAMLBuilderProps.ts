@@ -54,6 +54,7 @@ export interface YamlBuilderProps {
   onErrorCallback?: (error: Record<string, any>) => void
   renderCustomHeader?: () => React.ReactElement | null
   openDialogProp?: () => void
+  showCopyIcon?: boolean
 }
 
 export interface CompletionItemInterface {

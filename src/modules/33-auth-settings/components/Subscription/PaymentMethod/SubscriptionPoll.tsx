@@ -23,7 +23,7 @@ interface SubscriptionPollProps {
 }
 const MAX_POLL_COUNT = 10
 const getTaxItem = (items: ItemDTO[]): ItemDTO | undefined =>
-  items.find((item: ItemDTO) => item.description === 'Sales Tax (Avatax)')
+  items.find((item: ItemDTO) => item.description?.includes('Sales Tax'))
 function SubscriptionPoll({
   subscriptionProps,
   setInvoiceData,

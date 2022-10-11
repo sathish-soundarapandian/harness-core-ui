@@ -49,7 +49,7 @@ const getStepData = () => {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const renderComponent = (stepData?: any, onSubmit?: () => void) => {
+const renderComponent = ({ stepData, onSubmit }: { stepData?: any; context?: string; onSubmit?: () => void }) => {
   const pipelineContextMockValue = getDummyPipelineContextValue()
   return render(
     <TestWrapper
@@ -69,11 +69,11 @@ const renderComponent = (stepData?: any, onSubmit?: () => void) => {
 
 describe('EditStageView snapshot test', () => {
   test('should render properly', async () => {
-    const { container } = renderComponent(getStepData())
+    const { container } = renderComponent({ stepData: getStepData() })
     expect(container).toMatchSnapshot()
   })
   test('should render properly without data', async () => {
-    const { container } = renderComponent()
+    const { container } = renderComponent({})
     expect(container).toMatchSnapshot()
   })
 })
@@ -81,7 +81,7 @@ describe('EditStageView snapshot test', () => {
 describe('EditStageView save', () => {
   test('should call save when data are valid', async () => {
     const submitFn = jest.fn()
-    const { getByText } = renderComponent(getStepData(), submitFn)
+    const { getByText } = renderComponent({ stepData: getStepData(), onSubmit: submitFn })
 
     await act(async () => {
       fireEvent.click(getByText('pipelineSteps.build.create.setupStage'))
@@ -91,7 +91,7 @@ describe('EditStageView save', () => {
   })
   test('should not call save when data are not valid', async () => {
     const submitFn = jest.fn()
-    const { getByText } = renderComponent(undefined, submitFn)
+    const { getByText } = renderComponent({ onSubmit: submitFn })
 
     await act(async () => {
       fireEvent.click(getByText('pipelineSteps.build.create.setupStage'))

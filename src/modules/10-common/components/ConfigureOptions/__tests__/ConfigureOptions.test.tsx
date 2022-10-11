@@ -11,11 +11,16 @@ import {
   fireEvent,
   waitFor,
   getByText as getByTextBody,
-  getAllByText as getAllByTextBody
+  getAllByText as getAllByTextBody,
+  getByDisplayValue,
+  queryByPlaceholderText,
+  findByText,
+  queryByText
 } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@wings-software/uicore'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
-import { ConfigureOptions, ConfigureOptionsProps } from '../ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions, ConfigureOptionsProps } from '../ConfigureOptions'
 
 const onChange = jest.fn()
 
@@ -237,6 +242,57 @@ describe('Test ConfigureOptions', () => {
       '',
       true
     )
+  })
+
+  test('allowed values field should allow only numbers when allowedValuesType is passed as NUMBER', async () => {
+    onChange.mockReset()
+    const { container } = render(
+      <TestWrapper>
+        <ConfigureOptions
+          value={RUNTIME_INPUT_VALUE}
+          variableName={'test'}
+          type={'number'}
+          showDefaultField={false}
+          allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}
+          onChange={onChange}
+          defaultValue={''}
+          isRequired={true}
+        />
+      </TestWrapper>
+    )
+
+    const btn = container.querySelector('#configureOptions_test')
+    userEvent.click(btn as Element)
+    const dialog = findDialogContainer() as HTMLElement
+    await waitFor(() => getByTextBody(dialog, 'test'))
+
+    // Click on Allowed Values radio
+    const allowedValuesRadio = getByDisplayValue(dialog, 'AllowedValues')
+    userEvent.click(allowedValuesRadio)
+
+    // Check for Allowed Values input box
+    const allowedValuesField = queryByPlaceholderText(
+      dialog,
+      'Type and press enter to create a tag'
+    ) as HTMLInputElement
+    await waitFor(() => expect(allowedValuesField).toBeInTheDocument())
+    // Error case
+    userEvent.type(allowedValuesField, '20s')
+    fireEvent.keyDown(allowedValuesField, { key: 'enter', keyCode: 13 })
+    const errorText = 'common.validation.onlyDigitsAllowed'
+    const errorEl = await findByText(dialog, errorText)
+    expect(errorEl).toBeInTheDocument()
+    // Valid case - enter number here
+    userEvent.clear(allowedValuesField)
+    userEvent.type(allowedValuesField, '200')
+    fireEvent.keyDown(allowedValuesField, { key: 'enter', keyCode: 13 })
+    await waitFor(() => expect(queryByText(dialog, errorText)).not.toBeInTheDocument())
+
+    // Click Submit
+    const submitBtn = getByTextBody(dialog, 'submit')
+    userEvent.click(submitBtn)
+    await waitFor(() => expect(onChange).toBeCalledTimes(1))
+    expect(onChange).toHaveBeenCalledWith('<+input>.allowedValues(200)', '', true)
   })
 
   test('test dialog open and close', async () => {

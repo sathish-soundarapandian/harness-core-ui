@@ -33,9 +33,16 @@ export default function SelectHealthSourceServices({
   expressions,
   showOnlySLI = false,
   isConnectorRuntimeOrExpression,
-  customServiceInstanceName
+  customServiceInstanceName,
+  fieldNames = {}
 }: SelectHealthSourceServicesProps): JSX.Element {
   const { getString } = useStrings()
+
+  const { sli, deploymentVerification, serviceHealth } = fieldNames
+
+  const sliFieldName = sli ?? HealthSourceServices.SLI
+  const healthScoreFieldName = serviceHealth ?? HealthSourceServices.HEALTHSCORE
+  const cvFieldName = deploymentVerification ?? HealthSourceServices.CONTINUOUS_VERIFICATION
 
   const [metricPathMultiType, setMetricPathMultiType] = useState<MultiTypeInputType>(() =>
     getMultiTypeFromValue(values.serviceInstanceMetricPath)
@@ -48,6 +55,7 @@ export default function SelectHealthSourceServices({
   }, [values.serviceInstanceMetricPath])
 
   const { continuousVerification, healthScore, serviceInstance, riskCategory } = values
+
   return (
     <Container className={css.main}>
       <Container className={css.checkBoxGroup}>
@@ -56,19 +64,16 @@ export default function SelectHealthSourceServices({
         </Text>
         {!hideSLIAndHealthScore ? (
           <>
-            <FormInput.CheckBox label={getString('cv.slos.sli')} name={HealthSourceServices.SLI} />
+            <FormInput.CheckBox label={getString('cv.slos.sli')} name={sliFieldName} />
             <FormInput.CheckBox
               label={getString('cv.monitoredServices.monitoredServiceTabs.serviceHealth')}
-              name={HealthSourceServices.HEALTHSCORE}
+              name={healthScoreFieldName}
             />
           </>
         ) : null}
-        {showOnlySLI && <FormInput.CheckBox label={getString('cv.slos.sli')} name={HealthSourceServices.SLI} />}
+        {showOnlySLI && <FormInput.CheckBox label={getString('cv.slos.sli')} name={sliFieldName} />}
         {!hideCV ? (
-          <FormInput.CheckBox
-            label={getString('cv.monitoredServices.continuousVerification')}
-            name={HealthSourceServices.CONTINUOUS_VERIFICATION}
-          />
+          <FormInput.CheckBox label={getString('cv.monitoredServices.continuousVerification')} name={cvFieldName} />
         ) : null}
         {isTemplate && values.continuousVerification && Boolean(labelNamesResponse) === false && (
           <FormInput.MultiTextInput
@@ -101,6 +106,7 @@ export default function SelectHealthSourceServices({
           continuousVerificationEnabled={continuousVerification && !hideServiceIdentifier}
           serviceInstance={typeof serviceInstance === 'string' ? serviceInstance : (serviceInstance?.value as string)}
           riskCategory={riskCategory}
+          fieldNames={fieldNames}
           isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
         />
       )}

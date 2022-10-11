@@ -13,11 +13,13 @@ import cx from 'classnames'
 import { Button, Container, Text, PageHeader, PageBody, Icon, useToaster } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Popover, PopoverInteractionKind, Position, Switch } from '@blueprintjs/core'
+import { union } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
 import {
   PerspectiveAnomalyData,
   QLCEViewFilterWrapper,
   QLCEViewGroupBy,
+  useGetBusinessMappingList,
   useGetPerspective,
   useGetReportSetting,
   useListPerspectiveAnomalies
@@ -34,7 +36,8 @@ import {
   ViewType,
   QlceViewAggregateOperation,
   QlceViewPreferencesInput,
-  QlceViewFilterWrapperInput
+  QlceViewFilterWrapperInput,
+  ViewFieldIdentifier
 } from 'services/ce/services'
 import { useStrings } from 'framework/strings'
 import PerspectiveGrid from '@ce/components/PerspectiveGrid/PerspectiveGrid'
@@ -53,7 +56,8 @@ import {
   resetNodeState,
   clusterInfoUtil,
   getQueryFiltersFromPerspectiveResponse,
-  UnallocatedCostClusterFields
+  UnallocatedCostClusterFields,
+  getBmDataSources
 } from '@ce/utils/perspectiveUtils'
 import { AGGREGATE_FUNCTION, getGridColumnsByGroupBy } from '@ce/components/PerspectiveGrid/Columns'
 import { getGMTStartDateTime, getGMTEndDateTime, DEFAULT_TIME_RANGE } from '@ce/utils/momentUtils'
@@ -236,6 +240,17 @@ const PerspectiveDetailsPage: React.FC = () => {
     }
   })
 
+  const isBusinessMappingQuery =
+    filters.some(filter => filter.field.identifier === ViewFieldIdentifier.BusinessMapping) ||
+    groupBy.identifier === ViewFieldIdentifier.BusinessMapping
+
+  const { loading: bmDataLoading, data: bmData } = useGetBusinessMappingList({
+    queryParams: { accountIdentifier: accountId },
+    lazy: !isBusinessMappingQuery
+  })
+
+  const bmDataSources = getBmDataSources(bmData?.resource, filters, groupBy)
+
   const [anomaliesCountData, setAnomaliesCountData] = useState<PerspectiveAnomalyData[]>([])
 
   const chartRef = useRef<Highcharts.Chart>()
@@ -244,7 +259,7 @@ const PerspectiveDetailsPage: React.FC = () => {
 
   const isPageReady = !loading && perspectiveData
 
-  const { isClusterOnly, hasClusterAsSource } = clusterInfoUtil(perspectiveData?.dataSources)
+  const { isClusterOnly, hasClusterAsSource } = clusterInfoUtil(union(perspectiveData?.dataSources, bmDataSources))
 
   const [gridPageOffset, setGridPageOffset] = useState(0) // This tells us the starting point of next data fetching(used in the api call)
   const [gridPageIndex, setPageIndex] = useState(0) // [Pagination] tells us the current page we are in the grid
@@ -409,7 +424,7 @@ const PerspectiveDetailsPage: React.FC = () => {
       offset: gridPageOffset,
       groupBy: [getGroupByFilter(groupBy)]
     },
-    pause: !isPageReady
+    pause: !isPageReady || bmDataLoading
   })
 
   const { data: chartData, fetching: chartFetching } = chartResult
@@ -569,7 +584,7 @@ const PerspectiveDetailsPage: React.FC = () => {
             goToServiceDetails={goToServiceDetails}
             isClusterOnly={isClusterOnly}
             gridData={gridData?.perspectiveGrid?.data as any}
-            gridFetching={gridFetching}
+            gridFetching={gridFetching || bmDataLoading}
             columnSequence={columnSequence}
             highlightNode={
               /* istanbul ignore next */

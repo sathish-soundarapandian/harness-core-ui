@@ -274,6 +274,7 @@ exports[`Unit tests for NewRelic health source Template should work with custom 
                           >
                             <div
                               class="StyledProps--font StyledProps--main seletedAppContainer"
+                              data-testid="sideNav-New Relic Custom Metric"
                             >
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main selectedApp isSelected"

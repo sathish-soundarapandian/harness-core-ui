@@ -28,7 +28,8 @@ export default function FailFastThresholdsFieldArray<T>({
   formValues,
   groupedCreatedMetrics,
   metricPacks,
-  isOnlyCustomMetricHealthSource
+  isOnlyCustomMetricHealthSource,
+  alwaysShowCustomMetricType
 }: FailFasthresholdsFieldArrayInterface<T>): JSX.Element {
   const { getString } = useStrings()
 
@@ -151,7 +152,8 @@ export default function FailFastThresholdsFieldArray<T>({
                       groupedCreatedMetrics,
                       metricPacks,
                       formValues.metricData,
-                      isOnlyCustomMetricHealthSource
+                      isOnlyCustomMetricHealthSource,
+                      alwaysShowCustomMetricType
                     )}
                     key={`${data?.metricType}`}
                     disabled={isOnlyCustomMetricHealthSource}

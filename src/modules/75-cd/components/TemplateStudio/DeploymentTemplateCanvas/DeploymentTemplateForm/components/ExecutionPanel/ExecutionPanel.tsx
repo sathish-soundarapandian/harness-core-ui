@@ -7,18 +7,15 @@
 
 import React from 'react'
 import { Classes, Icon, PopoverInteractionKind, Position } from '@blueprintjs/core'
-import { get, map, isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { get, map } from 'lodash-es'
 import cx from 'classnames'
 import { Button, ButtonVariation, Container, Layout, Popover, Text } from '@wings-software/uicore'
 import { Color } from '@wings-software/design-system'
 import { useStrings } from 'framework/strings'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
-import type { DeploymentConfigStepTemplateRefDetails } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
-import { StepCategory, useGetStepsV2 } from 'services/pipeline-ng'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useMutateAsGet } from '@common/hooks'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
+import { TemplateUsage } from '@templates-library/utils/templatesUtils'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
   getUpdatedDeploymentConfig,
@@ -34,6 +31,7 @@ function AddStepTemplate({ onAddStepClick }: { onAddStepClick: () => void }) {
   const { getString } = useStrings()
 
   const handleOnClick = () => {
+    /* istanbul ignore else */
     if (!isReadOnly) {
       onAddStepClick()
     }
@@ -55,21 +53,7 @@ function AddStepTemplate({ onAddStepClick }: { onAddStepClick: () => void }) {
   )
 }
 
-const getStepTypesFromCategories = (stepCategories: StepCategory[]): string[] => {
-  const validStepTypes: string[] = []
-  stepCategories.forEach(category => {
-    if (category.stepCategories?.length) {
-      validStepTypes.push(...getStepTypesFromCategories(category.stepCategories))
-    } else if (category.stepsData?.length) {
-      category.stepsData.forEach(stepData => {
-        if (stepData.type) {
-          validStepTypes.push(stepData.type)
-        }
-      })
-    }
-  })
-  return validStepTypes
-}
+const ALLOWED_STEP_TEMPLATE_TYPES = [StepType.SHELLSCRIPT, StepType.HTTP]
 
 export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
   const {
@@ -80,35 +64,11 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
     templateDetailsByRef,
     setTemplateDetailsByRef
   } = useDeploymentContext()
-  const stepTemplateRefs = get(
-    deploymentConfig,
-    'execution.stepTemplateRefs',
-    []
-  ) as DeploymentConfigStepTemplateRefDetails[]
+  const stepTemplateRefs = get(deploymentConfig, 'execution.stepTemplateRefs', []) as string[]
 
   const { getTemplate } = useTemplateSelector()
-  const { accountId } = useParams<ProjectPathProps>()
 
   const [isDeploymentStepPopoverOpen, setIsDeploymentStepPopoverOpen] = React.useState(false)
-  const [allChildTypes, setAllChildTypes] = React.useState<string[]>([])
-
-  const { data: stepsData } = useMutateAsGet(useGetStepsV2, {
-    queryParams: { accountId },
-    body: {
-      stepPalleteModuleInfos: [
-        {
-          module: 'cd',
-          shouldShowCommonSteps: true
-        }
-      ]
-    }
-  })
-
-  React.useEffect(() => {
-    if (stepsData?.data?.stepCategories) {
-      setAllChildTypes(getStepTypesFromCategories(stepsData.data.stepCategories))
-    }
-  }, [stepsData?.data?.stepCategories])
 
   const openDeploymentStepPopover = () => {
     setIsDeploymentStepPopoverOpen(true)
@@ -122,15 +82,17 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
 
   const onUseTemplate = async (): Promise<void> => {
     try {
-      const { template } = await getTemplate({ templateType: 'Step', allChildTypes })
+      const { template } = await getTemplate({
+        templateType: 'Step',
+        filterProperties: {
+          childTypes: ALLOWED_STEP_TEMPLATE_TYPES
+        },
+        disableVersionChange: true,
+        allowedUsages: [TemplateUsage.USE]
+      })
       const templateRef = getScopeBasedTemplateRef(template)
 
-      const templateRefObj = {
-        templateRef,
-        versionLabel: template.versionLabel as string
-      }
-
-      const updatedDeploymentConfig = getUpdatedDeploymentConfig({ templateRefObj, deploymentConfig })
+      const updatedDeploymentConfig = getUpdatedDeploymentConfig({ templateRef, deploymentConfig })
       const updatedTemplateDetailsByRef = getUpdatedTemplateDetailsByRef({
         templateDetailsObj: template,
         templateRef,
@@ -148,9 +110,9 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
   }
 
   const renderLinkedStepTemplates = () =>
-    map(stepTemplateRefs, (stepTemplateRefObj: DeploymentConfigStepTemplateRefDetails, stepTemplateIndex: number) => {
-      return !isEmpty(stepTemplateRefObj) ? (
-        <StepTemplateCard stepTemplateRefObj={stepTemplateRefObj} stepTemplateIndex={stepTemplateIndex} />
+    map(stepTemplateRefs, (stepTemplateRef: string, stepTemplateIndex: number) => {
+      return stepTemplateRef ? (
+        <StepTemplateCard templateRef={stepTemplateRef} stepTemplateIndex={stepTemplateIndex} />
       ) : null
     })
 
@@ -159,10 +121,10 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
     closeDeploymentStepPopover()
   }, [])
 
-  const handleUseTemplateClick = React.useCallback(() => {
+  const handleUseTemplateClick = () => {
     onUseTemplate()
     closeDeploymentStepPopover()
-  }, [])
+  }
 
   return (
     <Container className={css.executionWidgetWrapper}>
@@ -170,10 +132,11 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
         title={getString('cd.deploymentSteps')}
         className={css.deploymentStepsCard}
         headerClassName={css.headerText}
+        dataTooltipId="deploymentStepsDT"
       >
         <Layout.Vertical spacing="medium" width={'100%'}>
           <Text color={Color.GREY_500} font={{ size: 'small', weight: 'semi-bold' }}>
-            {getString('cd.addStepTemplatesForYourDeploymentType')}
+            {getString('cd.useStepTemplatesForYourDeploymentType')}
           </Text>
           <Container className={css.stepsContainer}>
             <Popover
@@ -189,14 +152,14 @@ export function ExecutionPanel({ children }: React.PropsWithChildren<unknown>) {
                     minimal
                     variation={ButtonVariation.PRIMARY}
                     icon="plus"
-                    text={getString('cd.addStepTemplate')}
+                    text={getString('cd.createAndUseTemplate')}
                     onClick={handleAddStepClick}
                   />
                   <Button
                     minimal
                     variation={ButtonVariation.PRIMARY}
                     icon="template-library"
-                    text={getString('cd.useStepTemplate')}
+                    text={getString('templatesLibrary.useTemplateLabel')}
                     onClick={handleUseTemplateClick}
                   />
                 </Layout.Vertical>

@@ -10,24 +10,27 @@ import { connect, FormikContextType } from 'formik'
 import { get } from 'lodash-es'
 import { errorCheck } from '@common/utils/formikHelpers'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { getReference } from '@common/utils/utils'
 import { ConnectorReferenceFieldProps, ConnectorReferenceField } from './ConnectorReferenceField'
-export interface FormConnectorFieldProps extends Omit<ConnectorReferenceFieldProps, 'onChange' | 'error'> {
+export interface FormConnectorFieldProps
+  extends Omit<ConnectorReferenceFieldProps, 'onChange' | 'error' | 'onMultiSelectChange'> {
   formik?: FormikContextType<any>
 }
 
 const FormConnectorReference = (props: FormConnectorFieldProps): React.ReactElement => {
-  const { name, formik, placeholder, disabled, ...restProps } = props
+  const { name, formik, placeholder, disabled, isMultiSelect, ...restProps } = props
   const hasError = errorCheck(name, formik)
   const error = hasError ? get(formik?.errors, name) : undefined
-
-  const selected = get(formik?.values, name, '')
+  const selected = get(formik?.values, name, isMultiSelect ? [] : '') as
+    | ConnectorReferenceFieldProps['selected']
+    | ConnectorReferenceFieldProps['selectedConnectors']
 
   return (
     <ConnectorReferenceField
       {...restProps}
       name={name}
       placeholder={placeholder}
-      selected={selected as ConnectorReferenceFieldProps['selected']}
+      selected={Array.isArray(selected) ? '' : selected}
       onChange={(record, scope) => {
         formik?.setFieldValue(
           name,
@@ -36,6 +39,14 @@ const FormConnectorReference = (props: FormConnectorFieldProps): React.ReactElem
       }}
       error={error as string}
       disabled={disabled}
+      isMultiSelect={isMultiSelect}
+      selectedConnectors={Array.isArray(selected) ? selected : []}
+      onMultiSelectChange={records => {
+        formik?.setFieldValue(
+          name,
+          records.map(record => getReference(record.scope, record.identifier))
+        )
+      }}
     />
   )
 }

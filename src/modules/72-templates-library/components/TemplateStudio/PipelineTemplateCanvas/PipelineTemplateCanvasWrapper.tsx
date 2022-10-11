@@ -31,27 +31,23 @@ type EventDetailType = PipelineDrawerTypes.PipelineVariables | PipelineDrawerTyp
 
 const PipelineTemplateCanvasWrapper = (): JSX.Element => {
   const {
-    state: { template, templateView, isLoading, isUpdated, gitDetails, storeMetadata },
+    state: { template, templateView, gitDetails, storeMetadata },
     updateTemplate,
     updateTemplateView,
     isReadonly,
-    renderPipelineStage
+    renderPipelineStage,
+    setIntermittentLoading
   } = React.useContext(TemplateContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
 
-  const createPipelineFromTemplate = (): PipelineInfoConfig =>
-    merge({}, template.spec, {
-      name: DefaultNewPipelineName,
-      identifier: DefaultNewPipelineId
-    })
-
-  const [pipeline, setPipeline] = React.useState<PipelineInfoConfig>(createPipelineFromTemplate())
-
-  React.useEffect(() => {
-    if (!isLoading && !isUpdated) {
-      setPipeline(createPipelineFromTemplate())
-    }
-  }, [isLoading, isUpdated])
+  const pipeline = React.useMemo(
+    () =>
+      merge({}, template.spec, {
+        name: DefaultNewPipelineName,
+        identifier: DefaultNewPipelineId
+      }),
+    [template.spec]
+  )
 
   const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig) => {
     const processNode = omit(pipelineConfig, 'name', 'identifier', 'description', 'tags')
@@ -81,6 +77,7 @@ const PipelineTemplateCanvasWrapper = (): JSX.Element => {
       contextType={PipelineContextType.PipelineTemplate}
       isReadOnly={isReadonly}
       renderPipelineStage={renderPipelineStage}
+      setIntermittentLoading={setIntermittentLoading}
     >
       <PipelineTemplateCanvasWithRef />
     </TemplatePipelineProvider>

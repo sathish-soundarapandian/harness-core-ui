@@ -39,13 +39,12 @@ import { logsCache } from '@pipeline/components/LogsContent/LogsState/utils'
 import { EvaluationModal } from '@governance/EvaluationModal'
 import ExecutionContext, { GraphCanvasState } from '@pipeline/context/ExecutionContext'
 import { ModuleName } from 'framework/types/ModuleName'
-import useTabVisible from '@common/hooks/useTabVisible'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { usePolling } from '@common/hooks/usePolling'
 import { ExecutionHeader } from './ExecutionHeader/ExecutionHeader'
 import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
 import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
 import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
-
 import css from './ExecutionLandingPage.module.scss'
 
 export const POLL_INTERVAL = 2 /* sec */ * 1000 /* ms */
@@ -236,21 +235,12 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     })
   }, [data?.data?.executionGraph?.nodeMap, data?.data?.executionGraph?.nodeAdjacencyListMap])
 
-  const visibility = useTabVisible()
-  // setup polling
-  React.useEffect(() => {
-    if (!loading && data && !isExecutionComplete(data.data?.pipelineExecutionSummary?.status)) {
-      const timerId = window.setTimeout(() => {
-        if (visibility) {
-          refetch()
-        }
-      }, POLL_INTERVAL)
-
-      return () => {
-        window.clearTimeout(timerId)
-      }
-    }
-  }, [data, refetch, loading, visibility])
+  // Do polling after initial default loading and has some data, stop if execution is in complete status
+  usePolling(refetch, {
+    pollingInterval: POLL_INTERVAL,
+    startPolling: !loading && !!data && !isExecutionComplete(data.data?.pipelineExecutionSummary?.status),
+    pollOnInactiveTab: !isExecutionComplete(data?.data?.pipelineExecutionSummary?.status)
+  })
 
   // show the current running stage and steps automatically
   React.useEffect(() => {

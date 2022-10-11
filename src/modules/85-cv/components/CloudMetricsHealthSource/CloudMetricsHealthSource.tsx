@@ -56,7 +56,8 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
     serviceInstanceList,
     isTemplate,
     expressions,
-    showMetricDetailsContent = true
+    showMetricDetailsContent = true,
+    onDeleteManualMetric
   } = props
   const { getString } = useStrings()
   const { onPrevious } = useContext(SetupSourceTabsContext)
@@ -123,6 +124,7 @@ export default function CloudMetricsHealthSource<T>(props: CloudMetricsHealthSou
                 dashboardId
               })
             }}
+            onDeleteManualMetric={onDeleteManualMetric}
           />
         }
         content={

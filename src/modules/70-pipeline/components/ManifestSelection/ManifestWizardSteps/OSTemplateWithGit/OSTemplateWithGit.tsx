@@ -17,10 +17,10 @@ import {
   StepProps,
   Accordion,
   ButtonVariation,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
-import { Form } from 'formik'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { FontVariation } from '@harness/design-system'
@@ -203,7 +203,7 @@ function OpenShiftTemplateWithGit({
         }}
       >
         {(formik: { setFieldValue: (a: string, b: string) => void; values: OpenShiftTemplateGITDataType }) => (
-          <Form>
+          <FormikForm>
             <div className={templateCss.templateForm}>
               <FormInput.Text
                 name="identifier"
@@ -397,7 +397,7 @@ function OpenShiftTemplateWithGit({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

@@ -6,15 +6,25 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { Button, ButtonSize, ButtonVariation, Container, TableV2, Text } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import {
+  Button,
+  ButtonSize,
+  ButtonVariation,
+  Container,
+  getErrorInfoFromErrorObject,
+  TableV2,
+  Text,
+  useConfirmationDialog,
+  useToaster
+} from '@harness/uicore'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import { Menu, Popover, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import { defaultTo, isUndefined } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
-import { ConnectorResponse, PageConnectorResponse, useGetConnectorListV2 } from 'services/cd-ng'
+import { ConnectorResponse, PageConnectorResponse, useDeleteConnector, useGetConnectorListV2 } from 'services/cd-ng'
 import type { CcmMetaData } from 'services/ce/services'
 import { getIconByType } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { Connectors } from '@connectors/constants'
@@ -105,15 +115,13 @@ const ConnectorStatusCell: CustomCloudCell = ({ row, column }) => {
       >
         <ReactTimeago date={status?.lastTestedAt || status?.testedAt || ''} />
       </Text>
-      {!isStatusSuccess ? (
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          size={ButtonSize.SMALL}
-          text={getString('common.smtp.testConnection')}
-          className={css.testBtn}
-          onClick={() => (column as any).openTestConnectionModal({ connector })}
-        />
-      ) : null}
+      <Button
+        variation={ButtonVariation.SECONDARY}
+        size={ButtonSize.SMALL}
+        text={getString('common.smtp.testConnection')}
+        className={css.testBtn}
+        onClick={() => (column as any).openTestConnectionModal({ connector })}
+      />
     </div>
   )
 }
@@ -157,6 +165,8 @@ const ViewCostsCell: CustomCloudCell = ({ row, column }) => {
 
 const MenuCell: CustomCloudCell = ({ row, column }) => {
   const { getString } = useStrings()
+  const { accountId } = useParams<{ accountId: string }>()
+  const { showSuccess, showError } = useToaster()
   const connector = row.original.connector
 
   const [menuOpen, setMenuOpen] = useState(false)
@@ -165,13 +175,43 @@ const MenuCell: CustomCloudCell = ({ row, column }) => {
     ;(column as any).openConnectorModal(true, row.original.connector?.type, { connectorInfo: connector })
   }
 
-  const [canUpdate] = usePermission(
+  const { mutate: deleteConnector } = useDeleteConnector({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
+  const { openDialog } = useConfirmationDialog({
+    titleText: getString('connectors.confirmDeleteTitle'),
+    contentText: `${getString('connectors.confirmDelete')} ${connector?.name}?`,
+    confirmButtonText: getString('delete'),
+    cancelButtonText: getString('cancel'),
+    onCloseDialog: async isConfirmed => {
+      if (isConfirmed) {
+        try {
+          const isDeleted = await deleteConnector(connector?.identifier || '')
+
+          if (isDeleted) {
+            showSuccess(getString('connectors.deletedSuccssMessage', { name: connector?.name }))
+          }
+        } catch (error) {
+          showError(getErrorInfoFromErrorObject(error))
+        } finally {
+          ;(column as any).refectchConnectorList()
+        }
+      }
+    },
+    buttonIntent: Intent.DANGER,
+    intent: Intent.DANGER
+  })
+
+  const [canUpdate, canDelete] = usePermission(
     {
       resource: {
         resourceType: ResourceType.CONNECTOR,
         resourceIdentifier: connector?.identifier || ''
       },
-      permissions: [PermissionIdentifier.UPDATE_CONNECTOR]
+      permissions: [PermissionIdentifier.UPDATE_CONNECTOR, PermissionIdentifier.DELETE_CONNECTOR]
     },
     [connector?.identifier]
   )
@@ -192,6 +232,12 @@ const MenuCell: CustomCloudCell = ({ row, column }) => {
           text={getString('ce.cloudIntegration.editConnector')}
           onClick={handleEditConnector}
           disabled={!canUpdate}
+        />
+        <Menu.Item
+          icon="trash"
+          text={getString('ce.cloudIntegration.deleteConnector')}
+          onClick={openDialog}
+          disabled={!canDelete}
         />
       </Menu>
     </Popover>
@@ -275,7 +321,8 @@ const CloudAccountsTab: React.FC<CloudAccountsTabProps> = ({ ccmMetaData, search
         Header: '',
         Cell: MenuCell,
         width: '5%',
-        openConnectorModal
+        openConnectorModal,
+        refectchConnectorList: getCloudAccounts
       }
     ],
     [ccmMetaData, getString]

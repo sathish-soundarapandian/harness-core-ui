@@ -32,7 +32,9 @@ import {
   getTwoSLODashboardWidgets,
   getTwoSLOsRiskCountResponse,
   getSLODetails,
-  responseSLODashboardDetail
+  responseSLODashboardDetail,
+  listMonitoredServicesForSLOs,
+  listMonitoredServicesCallResponseForSLOs
 } from '../../../support/85-cv/slos/constants'
 
 describe('Create SLO', () => {
@@ -49,6 +51,7 @@ describe('Create SLO', () => {
     cy.intercept('GET', getUserJourneysCall, listUserJourneysCallResponse)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse)
     cy.intercept('GET', listMonitoredServices, listMonitoredServicesCallResponse)
+    cy.intercept('GET', listMonitoredServicesForSLOs, listMonitoredServicesCallResponseForSLOs)
     cy.intercept('GET', getSLOMetrics, listSLOMetricsCallResponse)
 
     cy.visitChangeIntelligenceForSLOs()
@@ -111,12 +114,12 @@ describe('Create SLO', () => {
 
     cy.wait('@updatedListSLOsCallResponse')
 
-    cy.contains('p', 'SLO-1').should('be.visible')
     cy.contains('p', 'cvng').should('be.visible')
     cy.contains('p', 'prod').should('be.visible')
-    cy.contains('p', '100.00%').should('be.visible')
+    cy.contains('p', '287.00%').should('be.visible')
+    cy.contains('p', '-2196.04%').should('be.visible')
     cy.contains('p', '99%').should('be.visible')
-    cy.contains('p', '138.44%').should('be.visible')
+    cy.contains('p', 'UserJoruney-1').should('be.visible')
   })
 
   it('should render all the edit steps and update the SLO', () => {
@@ -131,8 +134,6 @@ describe('Create SLO', () => {
     cy.intercept('GET', getServiceLevelObjective, getServiceLevelObjectiveResponse)
 
     cy.contains('span', 'Retry').click()
-
-    cy.contains('SLO: SLO-1').should('be.visible')
 
     cy.get('input[name="name"]').should('have.value', 'SLO-1')
     cy.get('input[name="User Journey"]').should('have.value', 'new-one')

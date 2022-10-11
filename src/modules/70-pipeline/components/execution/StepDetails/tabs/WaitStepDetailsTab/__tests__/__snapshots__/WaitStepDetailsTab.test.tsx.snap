@@ -1,0 +1,492 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<WaitStepDetailsTab /> tests snapshot test 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-orange400 StyledProps--background-yellow100 StyledProps--padding-top-xxlarge StyledProps--padding-bottom-xxlarge StyledProps--padding-left-large StyledProps--padding-right-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            duration
+          </th>
+          <td>
+            0 Sec
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.execution.elapsedTime
+          </th>
+          <td>
+            <div>
+              <span
+                class="StyledProps--font StyledProps--main timer StyledProps--inline StyledProps--color StyledProps--color-orange400"
+              >
+                
+                0s
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div
+    class="manualInterventionTab"
+  >
+    <div
+      class="title"
+    >
+      common.PermissibleActions
+    </div>
+    <div
+      class="actionRow"
+    >
+      <label
+        class="Thumbnail--squareCardContainer thumbnail"
+      >
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+          tabindex="0"
+        >
+          <span
+            class="bp3-icon bp3-icon-tick StyledProps--main"
+            icon="tick"
+          >
+            <svg
+              data-icon="tick"
+              height="26"
+              viewBox="0 0 20 20"
+              width="26"
+            >
+              <desc>
+                tick
+              </desc>
+              <path
+                d="M17 4c-.28 0-.53.11-.71.29L7 13.59 3.71 10.3A.965.965 0 003 10a1.003 1.003 0 00-.71 1.71l4 4c.18.18.43.29.71.29s.53-.11.71-.29l10-10A1.003 1.003 0 0017 4z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+        >
+          pipeline.failureStrategies.strategiesLabel.MarkAsSuccess
+        </p>
+        <input
+          name="MarkAsSuccess"
+          type="checkbox"
+          value="MarkAsSuccess"
+        />
+      </label>
+      <label
+        class="Thumbnail--squareCardContainer thumbnail"
+      >
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+          tabindex="0"
+        >
+          <span
+            class="bp3-icon bp3-icon-ban-circle StyledProps--main"
+            icon="ban-circle"
+          >
+            <svg
+              data-icon="ban-circle"
+              height="26"
+              viewBox="0 0 20 20"
+              width="26"
+            >
+              <desc>
+                ban-circle
+              </desc>
+              <path
+                d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm5 11H5c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+        >
+          pipeline.failureStrategies.strategiesLabel.MarkAsFail
+        </p>
+        <input
+          name="MarkAsFailure"
+          type="checkbox"
+          value="MarkAsFailure"
+        />
+      </label>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<WaitStepDetailsTab /> tests snapshot test after completion 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-orange400 StyledProps--background-yellow100 StyledProps--padding-top-xxlarge StyledProps--padding-bottom-xxlarge StyledProps--padding-left-large StyledProps--padding-right-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            duration
+          </th>
+          <td>
+            0 Sec
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.execution.elapsedTime
+          </th>
+          <td>
+            <div>
+              <span
+                class="StyledProps--font StyledProps--main timer StyledProps--inline StyledProps--color StyledProps--color-orange400"
+              >
+                
+                0s
+              </span>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            action
+          </th>
+          <td>
+            MARK_AS_SUCCESS
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;
+
+exports[`<WaitStepDetailsTab /> tests snapshot test completed 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-orange400 StyledProps--background-yellow100 StyledProps--padding-top-xxlarge StyledProps--padding-bottom-xxlarge StyledProps--padding-left-large StyledProps--padding-right-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            duration
+          </th>
+          <td>
+            0 Sec
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.execution.elapsedTime
+          </th>
+          <td>
+            <div>
+              <span
+                class="StyledProps--font StyledProps--main timer StyledProps--inline StyledProps--color StyledProps--color-orange400"
+              >
+                
+                0s
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div
+    class="manualInterventionTab"
+  >
+    <div
+      class="title"
+    >
+      common.PermissibleActions
+    </div>
+    <div
+      class="actionRow"
+    >
+      <label
+        class="Thumbnail--squareCardContainer thumbnail"
+      >
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+          tabindex="0"
+        >
+          <span
+            class="bp3-icon bp3-icon-tick StyledProps--main"
+            icon="tick"
+          >
+            <svg
+              data-icon="tick"
+              height="26"
+              viewBox="0 0 20 20"
+              width="26"
+            >
+              <desc>
+                tick
+              </desc>
+              <path
+                d="M17 4c-.28 0-.53.11-.71.29L7 13.59 3.71 10.3A.965.965 0 003 10a1.003 1.003 0 00-.71 1.71l4 4c.18.18.43.29.71.29s.53-.11.71-.29l10-10A1.003 1.003 0 0017 4z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+        >
+          pipeline.failureStrategies.strategiesLabel.MarkAsSuccess
+        </p>
+        <input
+          name="MarkAsSuccess"
+          type="checkbox"
+          value="MarkAsSuccess"
+        />
+      </label>
+      <label
+        class="Thumbnail--squareCardContainer thumbnail"
+      >
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+          tabindex="0"
+        >
+          <span
+            class="bp3-icon bp3-icon-ban-circle StyledProps--main"
+            icon="ban-circle"
+          >
+            <svg
+              data-icon="ban-circle"
+              height="26"
+              viewBox="0 0 20 20"
+              width="26"
+            >
+              <desc>
+                ban-circle
+              </desc>
+              <path
+                d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm5 11H5c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+        >
+          pipeline.failureStrategies.strategiesLabel.MarkAsFail
+        </p>
+        <input
+          name="MarkAsFailure"
+          type="checkbox"
+          value="MarkAsFailure"
+        />
+      </label>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<WaitStepDetailsTab /> tests snapshot test with no startTs and endTs 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-orange400 StyledProps--background-yellow100 StyledProps--padding-top-xxlarge StyledProps--padding-bottom-xxlarge StyledProps--padding-left-large StyledProps--padding-right-large"
+  >
+    <table
+      class="detailsTable"
+    >
+      <tbody>
+        <tr>
+          <th>
+            startedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            endedAt
+          </th>
+          <td>
+            -
+          </td>
+        </tr>
+        <tr>
+          <th>
+            duration
+          </th>
+          <td>
+            0 Sec
+          </td>
+        </tr>
+        <tr>
+          <th>
+            pipeline.execution.elapsedTime
+          </th>
+          <td>
+            <div>
+              <span
+                class="StyledProps--font StyledProps--main timer StyledProps--inline StyledProps--color StyledProps--color-orange400"
+              >
+                
+                0s
+              </span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div
+    class="manualInterventionTab"
+  >
+    <div
+      class="title"
+    >
+      common.PermissibleActions
+    </div>
+    <div
+      class="actionRow"
+    >
+      <label
+        class="Thumbnail--squareCardContainer thumbnail"
+      >
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+          tabindex="0"
+        >
+          <span
+            class="bp3-icon bp3-icon-tick StyledProps--main"
+            icon="tick"
+          >
+            <svg
+              data-icon="tick"
+              height="26"
+              viewBox="0 0 20 20"
+              width="26"
+            >
+              <desc>
+                tick
+              </desc>
+              <path
+                d="M17 4c-.28 0-.53.11-.71.29L7 13.59 3.71 10.3A.965.965 0 003 10a1.003 1.003 0 00-.71 1.71l4 4c.18.18.43.29.71.29s.53-.11.71-.29l10-10A1.003 1.003 0 0017 4z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+        >
+          pipeline.failureStrategies.strategiesLabel.MarkAsSuccess
+        </p>
+        <input
+          name="MarkAsSuccess"
+          type="checkbox"
+          value="MarkAsSuccess"
+        />
+      </label>
+      <label
+        class="Thumbnail--squareCardContainer thumbnail"
+      >
+        <div
+          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+          tabindex="0"
+        >
+          <span
+            class="bp3-icon bp3-icon-ban-circle StyledProps--main"
+            icon="ban-circle"
+          >
+            <svg
+              data-icon="ban-circle"
+              height="26"
+              viewBox="0 0 20 20"
+              width="26"
+            >
+              <desc>
+                ban-circle
+              </desc>
+              <path
+                d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm5 11H5c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+        >
+          pipeline.failureStrategies.strategiesLabel.MarkAsFail
+        </p>
+        <input
+          name="MarkAsFailure"
+          type="checkbox"
+          value="MarkAsFailure"
+        />
+      </label>
+    </div>
+  </div>
+</div>
+`;

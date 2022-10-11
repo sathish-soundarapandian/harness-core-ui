@@ -6,35 +6,52 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Container } from '@harness/uicore'
-import { NoData } from '@cf/components/NoData/NoData'
-import { String, useStrings } from 'framework/strings'
+import EnvironmentDialog from '@cf/components/CreateEnvironmentDialog/EnvironmentDialog'
+import routes from '@common/RouteDefinitions'
 import { NewSegmentButton } from './NewSegmentButton'
-import imageURL from '../../../images/segment.svg'
+import SegmentsSectionNoData from './SegmentsSectionNoData'
 
 export interface NoSegmentsViewProps {
   onNewSegmentCreated: (segmentIdentifier: string) => void
+  noEnvironment?: boolean
 }
 
-export const NoSegmentsView: React.FC<NoSegmentsViewProps> = ({ onNewSegmentCreated }) => {
+export const NoSegmentsView: React.FC<NoSegmentsViewProps> = ({ onNewSegmentCreated, noEnvironment }) => {
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
-  const { getString } = useStrings()
+  const history = useHistory()
 
   return (
     <Container width="100%" height="100%" flex={{ align: 'center-center' }}>
-      <NoData
-        imageURL={imageURL}
-        message={getString('cf.segments.noTargetGroupsForEnv')}
-        description={<String useRichText stringID="cf.segments.noTargetGroupsDescription" />}
-      >
-        <NewSegmentButton
-          accountIdentifier={accountIdentifier}
-          orgIdentifier={orgIdentifier}
-          projectIdentifier={projectIdentifier}
-          onCreated={onNewSegmentCreated}
-        />
-      </NoData>
+      <SegmentsSectionNoData>
+        {noEnvironment ? (
+          <EnvironmentDialog
+            onCreate={response => {
+              setTimeout(() => {
+                history.push(
+                  routes.toCFEnvironmentDetails({
+                    environmentIdentifier: response?.data?.identifier as string,
+                    projectIdentifier,
+                    orgIdentifier,
+                    accountId: accountIdentifier
+                  })
+                )
+              }, 1000)
+            }}
+            isLinkVariation
+            buttonText={'cf.targets.newEnvironmentTarget'}
+          />
+        ) : (
+          <NewSegmentButton
+            accountIdentifier={accountIdentifier}
+            orgIdentifier={orgIdentifier}
+            projectIdentifier={projectIdentifier}
+            onCreated={onNewSegmentCreated}
+            isLinkVariation
+          />
+        )}
+      </SegmentsSectionNoData>
     </Container>
   )
 }

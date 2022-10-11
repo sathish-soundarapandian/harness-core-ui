@@ -10,6 +10,7 @@ import { render, waitFor, fireEvent, act, screen } from '@testing-library/react'
 import { fillAtForm, InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as cvService from 'services/cv'
+import * as useFeatureFlagMock from '@common/hooks/useFeatureFlag'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { GCOMetricsHealthSource } from '../GCOMetricsHealthSource'
 import {
@@ -19,7 +20,8 @@ import {
   MockQueryWithGroupBy,
   MockValidationResponse,
   MockValidationResponseWithMultipleTxns,
-  sourceDataUpdated
+  sourceDataUpdated,
+  sourceDataWithMetricPacks
 } from './GCOMetricsHealthSource.mock'
 import { FieldNames } from '../GCOMetricsHealthSource.constants'
 import type { GCOMetricsHealthSourceProps } from '../GCOMetricsHealthSource.type'
@@ -360,5 +362,37 @@ describe('Test GCOMetricsHealthSource', () => {
     }
 
     fireEvent.click(submitFormButton)
+  })
+  describe('Metric thresholds', () => {
+    test('should render metric thresholds', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      render(<WrapperComponent data={sourceDataWithMetricPacks} onSubmit={jest.fn()} />)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
+      expect(screen.getByText('cv.monitoringSources.appD.failFastThresholds (1)')).toBeInTheDocument()
+      const addButton = screen.getByTestId('AddThresholdButton')
+
+      expect(addButton).toBeInTheDocument()
+
+      fireEvent.click(addButton)
+
+      expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (2)')).toBeInTheDocument()
+    })
+
+    test('should not render metric thresholds when feature flag is turned off', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
+      render(<WrapperComponent data={sourceDataUpdated} onSubmit={jest.fn()} />)
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
+
+    test('should not render metric thresholds there is not custom metric', () => {
+      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
+      render(<WrapperComponent data={{}} onSubmit={jest.fn()} />)
+
+      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
+      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
+    })
   })
 })

@@ -66,7 +66,7 @@ describe('test <CommandEdit />', () => {
   })
 
   test('should render relevant fields when command type is changed to Script', async () => {
-    const { container, findByTestId } = render(
+    const { container, findByTestId, queryByText, getByText } = render(
       <TestWrapper>
         <CommandEdit
           isEdit
@@ -80,11 +80,12 @@ describe('test <CommandEdit />', () => {
 
     userEvent.click(queryByNameAttribute('type', container)!)
     userEvent.click(within(findPopoverContainer()!).getByText(CommandType.Script))
+    userEvent.click(getByText('cd.steps.commands.locationFileStore'))
 
     expect(await findByTestId('tail-files-edit')).toBeInTheDocument()
     expect(queryByNameAttribute('spec.workingDirectory', container)).toBeInTheDocument()
     expect(queryByNameAttribute('spec.shell', container)).toBeInTheDocument()
-    expect(queryByNameAttribute('spec.source.spec.script', container)).toBeInTheDocument()
+    expect(queryByText('common.git.filePath')).toBeInTheDocument()
   })
 
   test('can select Script Type when command type is script', async () => {
@@ -121,8 +122,8 @@ describe('test <CommandEdit />', () => {
     expect(await findByDisplayValue(/bash/i)).toBeInTheDocument()
   })
 
-  test('renders a field for updating expression when script is an expression', async () => {
-    const { container } = render(
+  test('renders a field for selecting file store path', async () => {
+    const { getByText } = render(
       <TestWrapper>
         <CommandEdit
           isEdit
@@ -147,10 +148,10 @@ describe('test <CommandEdit />', () => {
         />
       </TestWrapper>
     )
-    const scriptField = queryByNameAttribute('spec.source.spec.script', container)
+    userEvent.click(getByText('cd.steps.commands.locationFileStore'))
+    const fileStoreField = getByText('common.git.filePath')
 
-    expect(scriptField).toBeInTheDocument()
-    expect(scriptField).toHaveDisplayValue('<+expression>')
+    expect(fileStoreField).toBeInTheDocument()
   })
 
   test('can use <ConfigureOptions /> when script is a runtime input', async () => {
@@ -179,6 +180,7 @@ describe('test <CommandEdit />', () => {
         />
       </TestWrapper>
     )
+    userEvent.click(getByText('inline'))
     expect(queryByNameAttribute('spec.source.spec.script', container)).toHaveDisplayValue(RUNTIME_INPUT_VALUE)
 
     const configureOptionsButton = queryByAttribute('id', container, 'configureOptions_spec.source.spec.script')

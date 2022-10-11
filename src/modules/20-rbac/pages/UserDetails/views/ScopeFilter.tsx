@@ -22,7 +22,7 @@ import {
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { useGetOrganizationList, useGetProjectList, UserAggregate } from 'services/cd-ng'
+import { getOrganizationListPromise, useGetProjectList, UserAggregate } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ScopeSelector } from 'services/rbac'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -110,36 +110,52 @@ interface OrgSelectProps {
   accountIdentifier: string
   orgFilter?: string
   onChange: (opt: SelectOption) => void
+  onError?: (error?: any) => void
 }
-const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onChange }) => {
+const OrgSelect: React.FC<OrgSelectProps> = ({ accountIdentifier, orgFilter, onChange, onError }) => {
   const [orgQuery, setOrgQuery] = useState<string>('')
+  const [loadingOrgs, setLoadingOrgs] = useState<boolean>(false)
   const { getString } = useStrings()
-  const { data: orgsData, loading } = useGetOrganizationList({
-    queryParams: {
-      accountIdentifier,
-      searchTerm: orgQuery
-    }
-  })
-  const organizations: SelectOption[] = defaultTo(
-    orgsData?.data?.content?.map(org => {
-      return {
-        label: org.organization.name,
-        value: org.organization.identifier
+
+  const orgsPromise = async (): Promise<SelectOption[]> => {
+    setLoadingOrgs(true)
+    let organizations: SelectOption[] = []
+    try {
+      const orgsData = await getOrganizationListPromise({
+        queryParams: {
+          accountIdentifier,
+          searchTerm: orgQuery
+        }
+      })
+      const orgsList = defaultTo(orgsData?.data?.content, [])
+      organizations = orgsList?.map(org => {
+        return {
+          label: org.organization.name,
+          value: org.organization.identifier
+        }
+      }) as SelectOption[]
+      if (!orgsList) {
+        onError?.()
       }
-    }),
-    []
-  )
+    } catch (error) {
+      onError?.(error)
+    } finally {
+      setLoadingOrgs(false)
+    }
+    return organizations
+  }
 
   return (
     <DropDown
-      disabled={loading}
+      disabled={loadingOrgs}
       placeholder={getString('rbac.resourceScope.selectOrg')}
       value={orgFilter}
-      items={organizations}
+      items={orgsPromise}
       onQueryChange={query => {
         setOrgQuery(query)
       }}
       onChange={onChange}
+      query={orgQuery}
     />
   )
 }
@@ -154,6 +170,7 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
   const { getString } = useStrings()
   const [accountFilter, setAccountFilter] = useState(getDefaultSelectedFilter(scope))
   const [orgFilter, setOrgFilter] = useState<string | undefined>(orgIdentifier)
+  const [orgFetchError, setOrgFetchError] = useState<boolean>(false)
   const getScopeDropDownItems = (): SelectOption[] => {
     switch (scope) {
       case Scope.ACCOUNT:
@@ -300,17 +317,25 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
 
   const getPageBody = (): React.ReactElement => {
     if (
-      !orgFilter &&
-      (accountFilter === ScopeFilterItems.ORG_ONLY || accountFilter === ScopeFilterItems.ORG_WITH_PROJECTS)
+      (!orgFilter &&
+        (accountFilter === ScopeFilterItems.ORG_ONLY || accountFilter === ScopeFilterItems.ORG_WITH_PROJECTS)) ||
+      orgFetchError
     ) {
+      let message = getString('rbac.userDetails.invalidScopeText', { scope: getString('rbac.scopeItems.orgOnly') })
+      let btnText = getString('rbac.userDetails.scopeAll')
+      if (orgFetchError) {
+        message = getString('rbac.userDetails.errorFetchingOrgs')
+        btnText = getString('retry')
+      }
       return (
         <Page.NoDataCard
-          message={getString('rbac.userDetails.invalidScopeText', { scope: getString('rbac.scopeItems.orgOnly') })}
+          message={message}
           button={
             <Button
-              text={getString('rbac.userDetails.scopeAll')}
+              text={btnText}
               variation={ButtonVariation.SECONDARY}
               onClick={() => {
+                setOrgFetchError(false)
                 setAccountFilter(ScopeFilterItems.ALL)
                 setScopeFilters(getScopeFilter(ScopeFilterItems.ALL))
               }}
@@ -325,6 +350,10 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
         return <UserGroupTable user={userData} scopeFilters={scopeFilters} />
       }
     }
+  }
+
+  const onOrgFetchError = (): void => {
+    setOrgFetchError(true)
   }
 
   return (
@@ -345,6 +374,7 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
           )}
           filterable={false}
           onChange={item => {
+            setOrgFetchError(false)
             setAccountFilter(item.value as ScopeFilterItems)
             if (scope === Scope.ACCOUNT) {
               setOrgFilter(DEFAULT_ORG_ID)
@@ -358,9 +388,11 @@ const ScopeFilter: React.FC<ScopeFilterProps> = ({ view, userData }) => {
               accountIdentifier={accountId}
               orgFilter={orgFilter}
               onChange={item => {
+                setOrgFetchError(false)
                 setOrgFilter(item.value.toString())
                 setScopeFilters(getScopeFilter(accountFilter, item.value.toString()))
               }}
+              onError={onOrgFetchError}
             />
           )}
         {orgFilter && accountFilter === ScopeFilterItems.ORG_WITH_PROJECTS ? (

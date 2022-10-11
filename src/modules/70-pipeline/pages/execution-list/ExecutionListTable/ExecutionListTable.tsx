@@ -9,6 +9,7 @@ import React, { memo } from 'react'
 import { TableV2 } from '@harness/uicore'
 import type { Column } from 'react-table'
 import { isEqual } from 'lodash-es'
+import { useHistory, useParams } from 'react-router-dom'
 import type {
   GetListOfExecutionsQueryParams,
   PagePipelineExecutionSummary,
@@ -18,9 +19,11 @@ import { useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
+import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import {
   DurationCell,
   ExecutionCell,
+  getExecutionPipelineViewLink,
   MenuCell,
   PipelineNameCell,
   RowSelectCell,
@@ -47,6 +50,7 @@ export function ExecutionListTable({
   isPipelineInvalid,
   onViewCompiledYaml
 }: ExecutionListTableProps): React.ReactElement {
+  const history = useHistory()
   const { updateQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
   const {
     queryParams: { sort }
@@ -93,14 +97,14 @@ export function ExecutionListTable({
       {
         Header: 'status',
         accessor: 'status',
-        width: '8%',
+        width: '10%',
         Cell: StatusCell,
         serverSortProps: getServerSortProps('status')
       },
       {
         Header: '',
         accessor: 'moduleInfo',
-        width: '43%',
+        width: '41%',
         Cell: TriggerInfoCell,
         disableSortBy: true
       },
@@ -132,6 +136,8 @@ export function ExecutionListTable({
 
   const renderRowSubComponent = React.useCallback(({ row }) => <ExecutionStageList row={row} />, [])
 
+  const pathParams = useParams<PipelineType<PipelinePathProps>>()
+
   return (
     <TableV2<PipelineExecutionSummary>
       className={css.table}
@@ -150,6 +156,7 @@ export function ExecutionListTable({
       }
       sortable
       renderRowSubComponent={renderRowSubComponent}
+      onRowClick={rowDetails => history.push(getExecutionPipelineViewLink(rowDetails, pathParams))}
     />
   )
 }

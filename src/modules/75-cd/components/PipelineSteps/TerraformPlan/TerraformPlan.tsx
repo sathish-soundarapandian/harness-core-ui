@@ -70,7 +70,7 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
@@ -81,6 +81,7 @@ import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/c
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import {
   CommandTypes,
   onSubmitTFPlanData,
@@ -252,7 +253,7 @@ function TerraformPlanWidget(
           buildPayload={buildPayload}
           connectorInfo={undefined}
         />
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.stepThreeName')}
           connectorInfo={undefined}
           isStep={true}
@@ -290,9 +291,15 @@ function TerraformPlanWidget(
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
-          provisionerIdentifier: Yup.string()
-            .required(getString('pipelineSteps.provisionerIdentifierRequired'))
-            .nullable(),
+          provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return IdentifierSchemaWithOutName(getString, {
+                requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
+                regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
+              })
+            }
+            return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
+          }),
           configuration: Yup.object().shape({
             command: Yup.string().required(getString('pipelineSteps.commandRequired')),
             secretManagerRef: Yup.string().required(getString('cd.secretManagerRequired')).nullable()

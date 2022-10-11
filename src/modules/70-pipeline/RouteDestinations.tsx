@@ -60,6 +60,7 @@ import { HarnessApprovalLogsView } from '@pipeline/components/execution/StepDeta
 import { JiraApprovalView } from '@pipeline/components/execution/StepDetails/views/JiraApprovalView/JiraApprovalView'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ServiceNowApprovalView } from '@pipeline/components/execution/StepDetails/views/ServiceNowApprovalView/ServiceNowApprovalView'
+import { WaitStepView } from '@pipeline/components/execution/StepDetails/views/WaitStepView/WaitStepView'
 import { CustomApprovalView } from '@pipeline/components/execution/StepDetails/views/CustomApprovalView/CustomApprovalView'
 import { PolicyEvaluationView } from '@pipeline/components/execution/StepDetails/views/PolicyEvaluationView/PolicyEvaluationView'
 import { QueueStepView } from '@pipeline/components/execution/StepDetails/views/QueueStepView/QueueStepView'
@@ -68,6 +69,7 @@ import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTr
 import routes from '@common/RouteDefinitions'
 import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepDetails/views/ServiceNowCreateUpdateView/ServiceNowCreateUpdateView'
 import { ModuleName } from 'framework/types/ModuleName'
+import { ServiceNowImportSetView } from '@pipeline/components/execution/StepDetails/views/ServiceNowImportSetView/ServiceNowImportSetView'
 import PipelineResourceRenderer from './components/RbacResourceModals/PipelineResourceRenderer/PipelineResourceRenderer'
 import { JiraCreateUpdateView } from './components/execution/StepDetails/views/JiraCreateUpdateView/JiraCreateUpdateView'
 import ExecutionErrorTrackingView from './pages/execution/ExecutionErrorTrackingView/ExecutionErrorTrackingView'
@@ -108,6 +110,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SERVICE, {
 RbacFactory.registerResourceTypeHandler(ResourceType.ENVIRONMENT, {
   icon: 'environment',
   label: 'environments',
+  labelSingular: 'environment',
   permissionLabels: {
     [PermissionIdentifier.VIEW_ENVIRONMENT]: <String stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.EDIT_ENVIRONMENT]: <String stringID="rbac.permissionLabels.createEdit" />,
@@ -156,6 +159,10 @@ ExecFactory.registerStepDetails(StepType.JiraApproval, {
   component: JiraApprovalView
 })
 
+ExecFactory.registerStepDetails(StepType.Wait, {
+  component: WaitStepView
+})
+
 ExecFactory.registerStepDetails(StepType.ServiceNowApproval, {
   component: ServiceNowApprovalView
 })
@@ -169,6 +176,10 @@ ExecFactory.registerStepDetails(StepType.ServiceNowCreate, {
 })
 ExecFactory.registerStepDetails(StepType.ServiceNowUpdate, {
   component: ServiceNowCreateUpdateView
+})
+
+ExecFactory.registerStepDetails(StepType.ServiceNowImportSet, {
+  component: ServiceNowImportSetView
 })
 
 ExecFactory.registerStepDetails(StepType.Policy, {

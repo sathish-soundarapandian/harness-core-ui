@@ -68,6 +68,8 @@ import { FeatureFlag } from '@common/featureFlags'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
+import SettingsList from '@default-settings/pages/SettingsList'
+import ChaosEnvironments from '@chaos/pages/environments/EnvironmentsPage'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -106,16 +108,16 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_HUB, {
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_SCENARIO, {
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_EXPERIMENT, {
   moduleIcon: {
     name: 'chaos-main'
   },
-  moduleLabel: 'chaos.chaosScenario',
-  resourceLabel: 'chaos.chaosScenario',
+  moduleLabel: 'chaos.chaosExperiment',
+  resourceLabel: 'chaos.chaosExperiment',
   resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
 
-    return routes.toChaosScenario({
+    return routes.toChaosExperiment({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier,
@@ -124,16 +126,16 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_SCENARIO, {
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_DELEGATE, {
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
   moduleIcon: {
     name: 'chaos-main'
   },
-  moduleLabel: 'chaos.chaosDelegate',
-  resourceLabel: 'chaos.chaosDelegate',
+  moduleLabel: 'chaos.chaosInfrastructure',
+  resourceLabel: 'chaos.chaosInfrastructure',
   resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
 
-    return routes.toChaosDelegates({
+    return routes.toChaosEnvironments({
       accountId: accountIdentifier,
       orgIdentifier,
       projectIdentifier
@@ -141,12 +143,12 @@ AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_DELEGATE, {
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_GITOPS, {
+AuditTrailFactory.registerResourceHandler(ResourceType.CHAOS_GAMEDAY, {
   moduleIcon: {
     name: 'chaos-main'
   },
-  moduleLabel: 'chaos.chaosGitops',
-  resourceLabel: 'chaos.chaosGitops'
+  moduleLabel: 'chaos.chaosGameday',
+  resourceLabel: 'chaos.chaosGameday'
 })
 
 // RedirectToAccessControlHome: redirects to users page in access control
@@ -198,37 +200,43 @@ export default function ChaosRoutes(): React.ReactElement {
       }
     })
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_SCENARIO, {
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_EXPERIMENT, {
       icon: 'chaos-main',
-      label: 'chaos.chaosScenario',
+      label: 'chaos.chaosExperiment',
       category: ResourceCategory.CHAOS,
       permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_SCENARIO]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_SCENARIO]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_SCENARIO]: <LocaleString stringID="delete" />
+        [PermissionIdentifier.VIEW_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_EXPERIMENT]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.DELETE_CHAOS_EXPERIMENT]: <LocaleString stringID="delete" />
       }
     })
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_DELEGATE, {
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_INFRASTRUCTURE, {
       icon: 'chaos-main',
-      label: 'chaos.chaosDelegate',
+      label: 'chaos.chaosInfrastructure',
       category: ResourceCategory.CHAOS,
       permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_DELEGATE]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_DELEGATE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
-        [PermissionIdentifier.DELETE_CHAOS_DELEGATE]: <LocaleString stringID="delete" />
+        [PermissionIdentifier.VIEW_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+        [PermissionIdentifier.DELETE_CHAOS_INFRASTRUCTURE]: <LocaleString stringID="delete" />
       }
     })
 
-    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GITOPS, {
+    RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_GAMEDAY, {
       icon: 'chaos-main',
-      label: 'chaos.chaosGitops',
+      label: 'chaos.chaosGameday',
       category: ResourceCategory.CHAOS,
       permissionLabels: {
-        [PermissionIdentifier.VIEW_CHAOS_GITOPS]: <LocaleString stringID="rbac.permissionLabels.view" />,
-        [PermissionIdentifier.EDIT_CHAOS_GITOPS]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
+        [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
+        [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
       }
     })
+  }
+
+  const RedirectToDelegatesHome = (): React.ReactElement => {
+    const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
+    return <Redirect to={routes.toDelegateList({ accountId, projectIdentifier, orgIdentifier, module })} />
   }
 
   return (
@@ -341,6 +349,15 @@ export default function ChaosRoutes(): React.ReactElement {
           <SecretReferences />
         </SecretDetailsHomePage>
       </RouteWithLayout>
+
+      <RouteWithLayout
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toDelegates({ ...accountPathProps, ...projectPathProps, ...chaosModuleParams })}
+        exact
+      >
+        <RedirectToDelegatesHome />
+      </RouteWithLayout>
+
       <RouteWithLayout
         exact
         sidebarProps={ChaosSideNavProps}
@@ -523,6 +540,18 @@ export default function ChaosRoutes(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
+        exact
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toDefaultSettings({
+          ...accountPathProps,
+          ...projectPathProps,
+          ...chaosModuleParams
+        })}
+      >
+        <SettingsList />
+      </RouteWithLayout>
+
+      <RouteWithLayout
         sidebarProps={ChaosSideNavProps}
         path={[routes.toRoleDetails({ ...projectPathProps, ...chaosModuleParams, ...rolePathProps })]}
         exact
@@ -537,6 +566,15 @@ export default function ChaosRoutes(): React.ReactElement {
         pageName={PAGE_NAME.ResourceGroupDetails}
       >
         <ResourceGroupDetails />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        sidebarProps={ChaosSideNavProps}
+        path={routes.toChaosEnvironments({ ...projectPathProps, ...chaosModuleParams })}
+        pageName={PAGE_NAME.Environments}
+      >
+        <ChaosEnvironments />
       </RouteWithLayout>
 
       {/* Loads the Chaos MicroFrontend */}

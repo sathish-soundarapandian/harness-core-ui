@@ -12,6 +12,15 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { metaMap, originalDeploymentTemplate, deploymentTemplate } from './deploymentTemplateMocks'
 import DeploymentTemplateCard from '../Cards/DeploymentTemplateCard'
 
+jest.mock('@connectors/pages/connectors/hooks/useGetConnectorsListHook/useGetConectorsListHook', () => ({
+  useGetConnectorsListHook: jest.fn().mockReturnValue({
+    loading: false,
+    categoriesMap: {},
+    connectorsList: ['K8sCluster'],
+    connectorCatalogueOrder: ['CLOUD_PROVIDER']
+  })
+}))
+
 describe('DeploymentTemplateCard test', () => {
   test('renders init', async () => {
     const { container } = render(

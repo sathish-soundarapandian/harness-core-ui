@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Form, FormikValues } from 'formik'
+import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, memoize, merge } from 'lodash-es'
 import * as Yup from 'yup'
@@ -17,6 +17,7 @@ import {
   ButtonVariation,
   FontVariation,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   Layout,
@@ -80,14 +81,22 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     }
   })
 
+  React.useEffect(() => {
+    const regionValues = (regionData?.resource || []).map(region => ({
+      value: region.value,
+      label: region.name
+    }))
+
+    setRegions(regionValues as SelectOption[])
+  }, [regionData?.resource])
+
   const {
     data: bucketData,
     error,
     loading,
     refetch: refetchBuckets
   } = useGetV2BucketListForS3({
-    lazy: true,
-    debounce: 300
+    lazy: true
   })
 
   const fetchBuckets = (region: string): void => {
@@ -103,27 +112,21 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   }
 
   const selectItems = useMemo(() => {
-    return bucketData?.data?.map((bucket: BucketResponse) => ({
-      value: defaultTo(bucket.bucketName, ''),
-      label: defaultTo(bucket.bucketName, '')
-    }))
+    return defaultTo(
+      bucketData?.data?.map((bucket: BucketResponse) => ({
+        value: defaultTo(bucket.bucketName, ''),
+        label: defaultTo(bucket.bucketName, '')
+      })),
+      []
+    )
   }, [bucketData?.data])
 
-  React.useEffect(() => {
-    const regionValues = (regionData?.resource || []).map(region => ({
-      value: region.value,
-      label: region.name
-    }))
-
-    setRegions(regionValues as SelectOption[])
-  }, [regionData?.resource])
-
-  const getBuckets = (): { label: string; value: string }[] => {
+  const bucketList = React.useMemo((): { label: string; value: string }[] => {
     if (loading) {
       return [{ label: 'Loading Buckets...', value: 'Loading Buckets...' }]
     }
     return defaultTo(selectItems, [])
-  }
+  }, [loading, selectItems])
 
   const schemaObject = {
     region: Yup.string(),
@@ -208,8 +211,11 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     </div>
   ))
 
-  const renderS3BucketField = (formik: FormikValues): JSX.Element => {
-    if (getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED) {
+  const renderS3BucketField = (formik: FormikProps<AmazonS3InitialValuesType>): JSX.Element => {
+    if (
+      getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED ||
+      getMultiTypeFromValue(formik.values.region) !== MultiTypeInputType.FIXED
+    ) {
       return (
         <div className={css.imagePathContainer}>
           <FormInput.MultiTextInput
@@ -239,7 +245,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
     return (
       <div className={css.imagePathContainer}>
         <FormInput.MultiTypeInput
-          selectItems={getBuckets()}
+          selectItems={bucketList}
           label={getString('pipeline.manifestType.bucketName')}
           placeholder={getString('pipeline.manifestType.bucketPlaceHolder')}
           name="bucketName"
@@ -249,16 +255,18 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
             allowableTypes,
             selectProps: {
               noResults: (
-                <Text lineClamp={1} width={500} height={100}>
-                  {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}
+                <Text lineClamp={1} width={500} height={100} padding="small">
+                  {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBucketsFound')}
                 </Text>
               ),
               itemRenderer: itemRenderer,
-              items: getBuckets(),
+              items: bucketList,
               allowCreatingNewItems: true
             },
             onFocus: () => {
-              fetchBuckets(formik?.values?.region)
+              if (!loading) {
+                fetchBuckets(formik.values.region)
+              }
             }
           }}
         />
@@ -299,7 +307,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
         }}
       >
         {formik => (
-          <Form>
+          <FormikForm>
             <div className={css.connectorForm}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -323,7 +331,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                       )
                     }
                   }}
-                  label={getString('regionLabel')}
+                  label={getString('optionalField', { name: getString('regionLabel') })}
                   placeholder={loadingRegions ? getString('loading') : getString('select')}
                 />
 
@@ -448,7 +456,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

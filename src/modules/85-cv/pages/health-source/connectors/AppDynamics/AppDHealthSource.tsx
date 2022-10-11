@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { noop } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import {
   Text,
@@ -220,7 +220,9 @@ export default function AppDMonitoredSource({
     }
   }, [selectedMetricPacks, tierLoading, appDynamicsData.isEdit])
 
-  const [showCustomMetric, setShowCustomMetric] = useState(!!Array.from(appDynamicsData?.mappedServicesAndEnvs)?.length)
+  const [showCustomMetric, setShowCustomMetric] = useState(
+    !!Array.from(defaultTo(appDynamicsData?.mappedServicesAndEnvs, []))?.length
+  )
 
   const {
     createdMetrics,
@@ -299,6 +301,9 @@ export default function AppDMonitoredSource({
     [isMetricThresholdEnabled, nonCustomFeilds]
   )
 
+  const [tierMultiType, setTierMultiType] = useState(() => getMultiTypeFromValue(initPayload?.appDTier))
+  const [appdMultiType, setAppdMultiType] = useState(() => getMultiTypeFromValue(initPayload?.appdApplication))
+
   useEffect(() => {
     if (!appDynamicsData.isEdit) {
       setAppAndTierAsInputIfConnectorIsInput(isConnectorRuntimeOrExpression, nonCustomFeilds, setNonCustomFeilds)
@@ -348,16 +353,18 @@ export default function AppDMonitoredSource({
         return (
           <FormikForm className={css.formFullheight}>
             <CardWithOuterTitle title={getString('cv.healthSource.connectors.AppDynamics.applicationsAndTiers')}>
-              <Layout.Horizontal spacing={'large'}>
+              <Layout.Horizontal spacing={'large'} flex={{ alignItems: 'center', justifyContent: 'start' }}>
                 <Container margin={{ bottom: 'small' }} width={'300px'} color={Color.BLACK}>
                   <AppDApplications
                     allowedTypes={getAllowedTypes(isConnectorRuntimeOrExpression)}
                     applicationOptions={applicationOptions}
                     applicationLoading={applicationLoading}
-                    applicationError={formik?.errors?.appdApplication}
+                    applicationError={formik.touched.appdApplication ? formik?.errors?.appdApplication : ''}
                     connectorIdentifier={connectorIdentifier}
                     formikAppDynamicsValue={formik?.values?.appdApplication}
                     refetchTier={refetchTier}
+                    appdMultiType={appdMultiType}
+                    setAppdMultiType={setAppdMultiType}
                     setCustomFieldAndValidation={(value: string, validate = false) =>
                       setCustomFieldAndValidation(
                         value,
@@ -376,12 +383,15 @@ export default function AppDMonitoredSource({
                     <AppDynamicsTier
                       isTemplate={isTemplate}
                       expressions={expressions}
-                      tierOptions={tierOptions}
+                      tierOptions={appdMultiType !== MultiTypeInputType.FIXED ? [] : tierOptions}
                       tierLoading={tierLoading}
                       formikValues={formik?.values}
                       onValidate={onValidate}
-                      tierError={formik?.errors?.appDTier}
+                      appdMultiType={appdMultiType}
+                      tierError={formik.touched.appDTier ? formik?.errors?.appDTier : ''}
                       setAppDTierCustomField={setAppDTierCustomField}
+                      tierMultiType={tierMultiType}
+                      setTierMultiType={setTierMultiType}
                     />
                   </Container>
                 )}
@@ -464,6 +474,7 @@ export default function AppDMonitoredSource({
                     connectorIdentifier={connectorIdentifier}
                     isTemplate={isTemplate}
                     expressions={expressions}
+                    appdMultiType={appdMultiType}
                   />
                 </CustomMetric>
               </>

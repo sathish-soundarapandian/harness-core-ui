@@ -45,6 +45,7 @@ export interface ServerlessArtifactoryRepositoryProps {
   fqnPath?: string
   template?: ServiceSpec
   fieldPath?: string
+  repoFormat?: string
 }
 
 export default function ServerlessArtifactoryRepository(
@@ -60,7 +61,8 @@ export default function ServerlessArtifactoryRepository(
     fqnPath,
     serviceId,
     template,
-    fieldPath
+    fieldPath,
+    repoFormat
   } = props
   const { getString } = useStrings()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>([])
@@ -77,7 +79,7 @@ export default function ServerlessArtifactoryRepository(
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      repositoryType: 'generic',
+      repositoryType: repoFormat,
       serviceId,
       fqnPath
     },
@@ -100,13 +102,27 @@ export default function ServerlessArtifactoryRepository(
   }, [artifactRepoLoading, artifactRepoError])
 
   useEffect(() => {
-    if (getMultiTypeFromValue(connectorRef) === MultiTypeInputType.FIXED && !artifactRepoData) {
-      getArtifactRepos()
-    }
     if (artifactRepoData) {
       setConnectorRepos(map(artifactRepoData.data?.repositories, repo => ({ label: repo, value: repo })))
     }
   }, [artifactRepoData, connectorRef])
+
+  useEffect(() => {
+    setConnectorRepos([])
+  }, [repoFormat])
+
+  const hasRepositoryData = () => {
+    if (
+      (artifactRepoError?.data as Failure)?.status === 'ERROR' ||
+      (artifactRepoError?.data as Failure)?.status === 'FAILURE'
+    ) {
+      return false
+    }
+    if (connectorRepos.length > 0) {
+      return true
+    }
+    return false
+  }
 
   const itemRenderer = memoize((item: { label: string }, { handleClick }) => (
     <div key={item.label.toString()}>
@@ -157,7 +173,8 @@ export default function ServerlessArtifactoryRepository(
           onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
             if (
               e?.target?.type !== 'text' ||
-              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+              (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+              hasRepositoryData()
             ) {
               return
             }

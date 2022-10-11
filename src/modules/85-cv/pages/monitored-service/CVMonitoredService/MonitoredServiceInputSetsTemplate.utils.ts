@@ -8,6 +8,7 @@
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { cloneDeep } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
+import { INDEXES } from '@cv/components/PipelineSteps/ContinousVerification/components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
 
 export const getNestedRuntimeInputs = (
   spec: any,
@@ -37,8 +38,11 @@ export const getNestedFields = (
   basePath: string
 ): { name: string; path: string; value: string }[] => {
   let clonedList = cloneDeep(list)
+
   Object.entries(spec).forEach(item => {
-    if (typeof item[1] === 'object') {
+    if (item[0] === INDEXES && Array.isArray(item[1])) {
+      clonedList.push({ name: item[0], path: `${basePath}.${item[0]}`, value: item[1]?.join('') })
+    } else if (typeof item[1] === 'object') {
       if (Array.isArray(item[1])) {
         item[1].forEach((metric, index) => {
           clonedList = getNestedFields(metric, clonedList, `${basePath}.${item[0]}.${index}`)

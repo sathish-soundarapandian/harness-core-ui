@@ -34,7 +34,7 @@ exports[`Test PipelineNotifications should test render 1`] = `
         <span
           class="bp3-button-text"
         >
-          pipeline.discard
+          common.discard
         </span>
       </button>
     </div>

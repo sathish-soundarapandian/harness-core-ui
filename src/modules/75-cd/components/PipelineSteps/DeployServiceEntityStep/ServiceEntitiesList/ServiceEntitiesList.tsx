@@ -41,6 +41,7 @@ export interface ServiceEntitiesListProps {
   stageIdentifier?: string
   allowableTypes: AllowedTypes
   onServiceEntityUpdate: (val: ServiceYaml) => void
+  isMultiSvc?: boolean
 }
 
 export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.ReactElement {
@@ -53,7 +54,8 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
     readonly,
     stageIdentifier,
     onServiceEntityUpdate,
-    allowableTypes
+    allowableTypes,
+    isMultiSvc
   } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
@@ -109,7 +111,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
               allowableTypes={allowableTypes}
               readonly={readonly}
               deploymentType={selectedDeploymentType}
-              defaultExpanded={servicesData.length === 1}
+              defaultExpanded={!isMultiSvc}
             />
           )
         })}

@@ -28,7 +28,7 @@ exports[`Secret Resource Modal Body test initializes ok  1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 25%;"
+          style="width: 30%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -40,7 +40,7 @@ exports[`Secret Resource Modal Body test initializes ok  1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 20%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -52,7 +52,7 @@ exports[`Secret Resource Modal Body test initializes ok  1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 15%;"
+          style="width: 20%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -64,24 +64,12 @@ exports[`Secret Resource Modal Body test initializes ok  1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 20%;"
+          style="width: 25%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
             valueLabel
-          </p>
-        </div>
-        <div
-          class="TableV2--cell"
-          colspan="1"
-          role="columnheader"
-          style="width: 20%;"
-        >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
-          >
-            variables.defaultValue
           </p>
         </div>
       </div>
@@ -114,7 +102,7 @@ exports[`Secret Resource Modal Body test initializes ok  1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 25%;"
+              style="width: 30%;"
             >
               <div
                 class="Layout--horizontal StyledProps--main"
@@ -146,7 +134,7 @@ exports[`Secret Resource Modal Body test initializes ok  1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 20%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
@@ -157,7 +145,7 @@ exports[`Secret Resource Modal Body test initializes ok  1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 15%;"
+              style="width: 20%;"
             >
               <p
                 class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-variation-body"
@@ -168,7 +156,7 @@ exports[`Secret Resource Modal Body test initializes ok  1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 20%;"
+              style="width: 25%;"
             >
               <p
                 class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text"
@@ -176,15 +164,6 @@ exports[`Secret Resource Modal Body test initializes ok  1`] = `
               >
                 CUSTOM
               </p>
-            </div>
-            <div
-              class="TableV2--cell"
-              role="cell"
-              style="width: 20%;"
-            >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--font-variation-form-input-text"
-              />
             </div>
           </div>
         </div>

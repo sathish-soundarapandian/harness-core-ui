@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { SecretManagerTemplate } from '../SecretManagerTemplate'
 
 jest.mock('@cd/components/ScriptTemplateCanvas/ScriptTemplateCanvas', () => ({

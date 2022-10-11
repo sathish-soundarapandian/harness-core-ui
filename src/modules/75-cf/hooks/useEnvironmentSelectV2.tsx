@@ -62,6 +62,7 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
         <Select
           value={selectedEnvironment}
           items={selectOptions}
+          name="environmentSelectEl"
           onChange={opt => {
             if (selectedEnvironment?.value !== opt.value) {
               setSelectedEnvironment(opt)

@@ -37,9 +37,11 @@ export const getPipelineContext = (): PipelineContextInterface => ({
     isDBInitialized: true,
     isInitialized: true,
     isLoading: false,
+    isIntermittentLoading: false,
     isUpdated: false,
     templateTypes: {},
-    templateServiceData: {}
+    templateServiceData: {},
+    resolvedCustomDeploymentDetailsByRef: {}
   },
   contextType: PipelineContextType.Pipeline,
   allowableTypes: [
@@ -73,7 +75,8 @@ export const getPipelineContext = (): PipelineContextInterface => ({
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
   setTemplateTypes: jest.fn(),
-  setTemplateServiceData: jest.fn()
+  setTemplateServiceData: jest.fn(),
+  setIntermittentLoading: jest.fn()
 })
 
 export const getEditPipelineContext = (): PipelineContextInterface => ({
@@ -96,9 +99,11 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
     isDBInitialized: true,
     isInitialized: true,
     isLoading: false,
+    isIntermittentLoading: false,
     isUpdated: true,
     templateTypes: {},
-    templateServiceData: {}
+    templateServiceData: {},
+    resolvedCustomDeploymentDetailsByRef: {}
   },
   contextType: PipelineContextType.Pipeline,
   allowableTypes: [
@@ -132,7 +137,8 @@ export const getEditPipelineContext = (): PipelineContextInterface => ({
   setSelection: jest.fn(),
   getStagePathFromPipeline: jest.fn(),
   setTemplateTypes: jest.fn(),
-  setTemplateServiceData: jest.fn()
+  setTemplateServiceData: jest.fn(),
+  setIntermittentLoading: jest.fn()
 })
 
 export const showError = jest.fn()

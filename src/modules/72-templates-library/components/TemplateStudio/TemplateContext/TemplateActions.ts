@@ -26,7 +26,8 @@ export enum TemplateActions {
   UpdateTemplate = 'UpdateTemplate',
   SetYamlHandler = 'SetYamlHandler',
   Success = 'Success',
-  Error = 'Error'
+  Error = 'Error',
+  IntermittentLoading = 'IntermittentLoading'
 }
 
 export enum DrawerTypes {
@@ -51,6 +52,7 @@ export interface ActionResponse {
   lastPublishedVersion?: string
   versions?: string[]
   isLoading?: boolean
+  isIntermittentLoading?: boolean
   gitDetails?: EntityGitDetails
   storeMetadata?: StoreMetadata
   entityValidityDetails?: EntityValidityDetails
@@ -79,6 +81,10 @@ const updating = (): ActionReturnType => ({ type: TemplateActions.UpdateTemplate
 const fetching = (): ActionReturnType => ({ type: TemplateActions.Fetching })
 const success = (response: ActionResponse): ActionReturnType => ({ type: TemplateActions.Success, response })
 const error = (response: ActionResponse): ActionReturnType => ({ type: TemplateActions.Error, response })
+const setIntermittentLoading = (response: ActionResponse): ActionReturnType => ({
+  type: TemplateActions.IntermittentLoading,
+  response
+})
 
 export const TemplateContextActions = {
   dbInitialized,
@@ -87,6 +93,7 @@ export const TemplateContextActions = {
   fetching,
   updateTemplateView,
   setYamlHandler,
+  setIntermittentLoading,
   success,
   error
 }

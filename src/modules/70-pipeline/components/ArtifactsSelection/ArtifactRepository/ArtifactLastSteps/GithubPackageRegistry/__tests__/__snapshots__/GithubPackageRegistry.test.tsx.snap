@@ -15,28 +15,104 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
     >
       <form
         action="#"
+        class="FormikForm--main"
       >
-        <div
-          class="connectorForm"
-        >
+        <div>
           <div
-            class="jenkinsFieldContainer"
+            class="connectorForm"
           >
             <div
-              class="formGroup sm"
+              class="jenkinsFieldContainer"
+            >
+              <div
+                class="formGroup sm"
+              >
+                <div
+                  class="bp3-form-group"
+                  data-id="spec.packageType-0"
+                >
+                  <label
+                    class="bp3-label"
+                    for="spec.packageType"
+                  >
+                    <span
+                      class="Tooltip--acenter"
+                      data-tooltip-id="imagePath_spec.packageType"
+                    >
+                      pipeline.packageType
+                    </span>
+                     
+                    <span
+                      class="bp3-text-muted"
+                    />
+                  </label>
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-popover-wrapper Select--main bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.packageType"
+                            placeholder="- pipeline.packageTypePlaceholder -"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="jenkinsFieldContainer"
             >
               <div
                 class="bp3-form-group"
+                data-id="spec.org-1"
               >
                 <label
                   class="bp3-label"
-                  for="spec.packageType"
+                  for="spec.org"
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_spec.packageType"
+                    data-tooltip-id="imagePath_spec.org"
                   >
-                    pipeline.packageType
+                    projectsOrgs.orgName
                   </span>
                    
                   <span
@@ -47,393 +123,325 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
                   class="bp3-form-content"
                 >
                   <div
-                    class="bp3-popover-wrapper Select--main bp3-fill"
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
                     <div
-                      class="bp3-popover-target"
+                      class="bp3-input-group MultiTypeInput--input"
                     >
-                      <div
-                        class="bp3-input-group"
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.org"
+                        placeholder="pipeline.artifactsSelection.orgNamePlaceholder"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
                       >
-                        <input
-                          autocomplete="off"
-                          class="bp3-input"
-                          name="spec.packageType"
-                          placeholder="- pipeline.packageTypePlaceholder -"
-                          style="padding-right: 0px;"
-                          type="text"
-                          value=""
-                        />
-                        <span
-                          class="bp3-input-action"
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
                         >
                           <span
-                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                            icon="chevron-down"
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
                           >
                             <svg
-                              data-icon="chevron-down"
-                              height="14"
-                              viewBox="0 0 16 16"
-                              width="14"
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
                             >
-                              <desc>
-                                chevron-down
-                              </desc>
                               <path
-                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                fill-rule="evenodd"
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
                               />
                             </svg>
                           </span>
-                        </span>
-                      </div>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="jenkinsFieldContainer"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="spec.packageName-2"
+              >
+                <label
+                  class="bp3-label"
+                  for="spec.packageName"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_spec.packageName"
+                  >
+                    pipeline.artifactsSelection.packageName
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.packageName"
+                        placeholder="pipeline.manifestType.packagePlaceholder"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="tagGroup"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="versionType-3"
+              >
+                <label
+                  class="bp3-label"
+                  for="versionType"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_versionType"
+                  >
+                    pipeline.artifactsSelection.versionDetails
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="versionType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="versionType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="jenkinsFieldContainer"
-          >
             <div
-              class="bp3-form-group"
+              class="jenkinsFieldContainer"
             >
-              <label
-                class="bp3-label"
-                for="spec.org"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_spec.org"
-                >
-                  projectsOrgs.orgName
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
               <div
-                class="bp3-form-content"
+                class="bp3-form-group"
+                data-id="spec.version-4"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                <label
+                  class="bp3-label"
+                  for="spec.version"
                 >
-                  <div
-                    class="bp3-input-group MultiTypeInput--input"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.org"
-                      placeholder="pipeline.artifactsSelection.orgNamePlaceholder"
-                      type="text"
-                      value=""
-                    />
-                  </div>
                   <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_spec.version"
                   >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
+                    version
                   </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="jenkinsFieldContainer"
-          >
-            <div
-              class="bp3-form-group"
-            >
-              <label
-                class="bp3-label"
-                for="spec.packageName"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_spec.packageName"
-                >
-                  pipeline.artifactsSelection.packageName
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                >
-                  <div
-                    class="bp3-input-group MultiTypeInput--input"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.packageName"
-                      placeholder="pipeline.manifestType.packagePlaceholder"
-                      type="text"
-                      value=""
-                    />
-                  </div>
+                   
                   <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="tagGroup"
-          >
-            <div
-              class="bp3-form-group radioGroup"
-            >
-              <label
-                class="bp3-label"
-                for="versionType"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_versionType"
-                >
-                  pipeline.artifactsSelection.versionDetails
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
+                    class="bp3-text-muted"
+                  />
+                </label>
                 <div
-                  class="StyledProps--main"
+                  class="bp3-form-content"
                 >
-                  
                   <div
-                    class="RadioButtonGroup--inline"
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
-                    <label
-                      class="RadioButton--radio StyledProps--main"
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
                     >
                       <input
-                        checked=""
-                        class="RadioButton--input"
-                        name="versionType"
-                        type="radio"
-                        value="value"
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.version"
+                        placeholder="pipeline.artifactsSelection.versionPlaceholder"
+                        type="text"
+                        value=""
                       />
-                      <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Value
-                    </label>
-                    <label
-                      class="RadioButton--radio StyledProps--main"
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
                     >
-                      <input
-                        class="RadioButton--input"
-                        name="versionType"
-                        type="radio"
-                        value="regex"
-                      />
                       <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Regex
-                    </label>
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div
-            class="jenkinsFieldContainer"
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
-            <div
-              class="bp3-form-group"
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
+              type="button"
             >
-              <label
-                class="bp3-label"
-                for="spec.version"
+              <span
+                class="bp3-icon bp3-icon-chevron-left StyledProps--main StyledProps--padding-right-xsmall"
+                icon="chevron-left"
               >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_spec.version"
+                <svg
+                  data-icon="chevron-left"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
                 >
-                  version
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
+                  <desc>
+                    chevron-left
+                  </desc>
+                  <path
+                    d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                back
+              </span>
+            </button>
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+              type="submit"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                submit
+              </span>
+              <span
+                class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                icon="chevron-right"
+              >
+                <svg
+                  data-icon="chevron-right"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
                 >
-                  <div
-                    class="bp3-input-group MultiTypeInput--input"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.version"
-                      placeholder="pipeline.artifactsSelection.versionPlaceholder"
-                      type="text"
-                      value=""
-                    />
-                  </div>
-                  <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
+                  <desc>
+                    chevron-right
+                  </desc>
+                  <path
+                    d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
           </div>
-        </div>
-        <div
-          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-        >
-          <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
-            type="button"
-          >
-            <span
-              class="bp3-icon bp3-icon-chevron-left StyledProps--main StyledProps--padding-right-xsmall"
-              icon="chevron-left"
-            >
-              <svg
-                data-icon="chevron-left"
-                height="16"
-                viewBox="0 0 16 16"
-                width="16"
-              >
-                <desc>
-                  chevron-left
-                </desc>
-                <path
-                  d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
-            <span
-              class="bp3-button-text"
-            >
-              back
-            </span>
-          </button>
-          <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
-            type="submit"
-          >
-            <span
-              class="bp3-button-text"
-            >
-              submit
-            </span>
-            <span
-              class="bp3-icon bp3-icon-chevron-right StyledProps--main"
-              icon="chevron-right"
-            >
-              <svg
-                data-icon="chevron-right"
-                height="16"
-                viewBox="0 0 16 16"
-                width="16"
-              >
-                <desc>
-                  chevron-right
-                </desc>
-                <path
-                  d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
-          </button>
         </div>
       </form>
     </div>
@@ -456,28 +464,104 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
     >
       <form
         action="#"
+        class="FormikForm--main"
       >
-        <div
-          class="connectorForm"
-        >
+        <div>
           <div
-            class="jenkinsFieldContainer"
+            class="connectorForm"
           >
             <div
-              class="formGroup sm"
+              class="jenkinsFieldContainer"
+            >
+              <div
+                class="formGroup sm"
+              >
+                <div
+                  class="bp3-form-group"
+                  data-id="spec.packageType-0"
+                >
+                  <label
+                    class="bp3-label"
+                    for="spec.packageType"
+                  >
+                    <span
+                      class="Tooltip--acenter"
+                      data-tooltip-id="imagePath_spec.packageType"
+                    >
+                      pipeline.packageType
+                    </span>
+                     
+                    <span
+                      class="bp3-text-muted"
+                    />
+                  </label>
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-popover-wrapper Select--main bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.packageType"
+                            placeholder="- pipeline.packageTypePlaceholder -"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value="npm"
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="jenkinsFieldContainer"
             >
               <div
                 class="bp3-form-group"
+                data-id="spec.org-1"
               >
                 <label
                   class="bp3-label"
-                  for="spec.packageType"
+                  for="spec.org"
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_spec.packageType"
+                    data-tooltip-id="imagePath_spec.org"
                   >
-                    pipeline.packageType
+                    projectsOrgs.orgName
                   </span>
                    
                   <span
@@ -488,393 +572,325 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
                   class="bp3-form-content"
                 >
                   <div
-                    class="bp3-popover-wrapper Select--main bp3-fill"
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
                     <div
-                      class="bp3-popover-target"
+                      class="bp3-input-group MultiTypeInput--input"
                     >
-                      <div
-                        class="bp3-input-group"
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.org"
+                        placeholder="pipeline.artifactsSelection.orgNamePlaceholder"
+                        type="text"
+                        value="testOrg"
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
                       >
-                        <input
-                          autocomplete="off"
-                          class="bp3-input"
-                          name="spec.packageType"
-                          placeholder="- pipeline.packageTypePlaceholder -"
-                          style="padding-right: 0px;"
-                          type="text"
-                          value="npm"
-                        />
-                        <span
-                          class="bp3-input-action"
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
                         >
                           <span
-                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                            icon="chevron-down"
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
                           >
                             <svg
-                              data-icon="chevron-down"
-                              height="14"
-                              viewBox="0 0 16 16"
-                              width="14"
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
                             >
-                              <desc>
-                                chevron-down
-                              </desc>
                               <path
-                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                fill-rule="evenodd"
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
                               />
                             </svg>
                           </span>
-                        </span>
-                      </div>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="jenkinsFieldContainer"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="spec.packageName-2"
+              >
+                <label
+                  class="bp3-label"
+                  for="spec.packageName"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_spec.packageName"
+                  >
+                    pipeline.artifactsSelection.packageName
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.packageName"
+                        placeholder="pipeline.manifestType.packagePlaceholder"
+                        type="text"
+                        value="testPackage"
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="tagGroup"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="versionType-3"
+              >
+                <label
+                  class="bp3-label"
+                  for="versionType"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_versionType"
+                  >
+                    pipeline.artifactsSelection.versionDetails
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="versionType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="versionType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="jenkinsFieldContainer"
-          >
             <div
-              class="bp3-form-group"
+              class="jenkinsFieldContainer"
             >
-              <label
-                class="bp3-label"
-                for="spec.org"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_spec.org"
-                >
-                  projectsOrgs.orgName
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
               <div
-                class="bp3-form-content"
+                class="bp3-form-group"
+                data-id="spec.versionRegex-4"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                <label
+                  class="bp3-label"
+                  for="spec.versionRegex"
                 >
-                  <div
-                    class="bp3-input-group MultiTypeInput--input"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.org"
-                      placeholder="pipeline.artifactsSelection.orgNamePlaceholder"
-                      type="text"
-                      value="testOrg"
-                    />
-                  </div>
                   <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_spec.versionRegex"
                   >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
+                    pipeline.artifactsSelection.versionRegex
                   </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="jenkinsFieldContainer"
-          >
-            <div
-              class="bp3-form-group"
-            >
-              <label
-                class="bp3-label"
-                for="spec.packageName"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_spec.packageName"
-                >
-                  pipeline.artifactsSelection.packageName
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                >
-                  <div
-                    class="bp3-input-group MultiTypeInput--input"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.packageName"
-                      placeholder="pipeline.manifestType.packagePlaceholder"
-                      type="text"
-                      value="testPackage"
-                    />
-                  </div>
+                   
                   <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="tagGroup"
-          >
-            <div
-              class="bp3-form-group radioGroup"
-            >
-              <label
-                class="bp3-label"
-                for="versionType"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_versionType"
-                >
-                  pipeline.artifactsSelection.versionDetails
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
+                    class="bp3-text-muted"
+                  />
+                </label>
                 <div
-                  class="StyledProps--main"
+                  class="bp3-form-content"
                 >
-                  
                   <div
-                    class="RadioButtonGroup--inline"
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
-                    <label
-                      class="RadioButton--radio StyledProps--main"
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
                     >
                       <input
-                        class="RadioButton--input"
-                        name="versionType"
-                        type="radio"
-                        value="value"
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.versionRegex"
+                        placeholder="pipeline.artifactsSelection.versionRegexPlaceholder"
+                        type="text"
+                        value="*.zip"
                       />
-                      <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Value
-                    </label>
-                    <label
-                      class="RadioButton--radio StyledProps--main"
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
                     >
-                      <input
-                        checked=""
-                        class="RadioButton--input"
-                        name="versionType"
-                        type="radio"
-                        value="regex"
-                      />
                       <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Regex
-                    </label>
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div
-            class="jenkinsFieldContainer"
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
-            <div
-              class="bp3-form-group"
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
+              type="button"
             >
-              <label
-                class="bp3-label"
-                for="spec.versionRegex"
+              <span
+                class="bp3-icon bp3-icon-chevron-left StyledProps--main StyledProps--padding-right-xsmall"
+                icon="chevron-left"
               >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_spec.versionRegex"
+                <svg
+                  data-icon="chevron-left"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
                 >
-                  pipeline.artifactsSelection.versionRegex
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
+                  <desc>
+                    chevron-left
+                  </desc>
+                  <path
+                    d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                back
+              </span>
+            </button>
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+              type="submit"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                submit
+              </span>
+              <span
+                class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                icon="chevron-right"
+              >
+                <svg
+                  data-icon="chevron-right"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
                 >
-                  <div
-                    class="bp3-input-group MultiTypeInput--input"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.versionRegex"
-                      placeholder="pipeline.artifactsSelection.versionRegexPlaceholder"
-                      type="text"
-                      value="*.zip"
-                    />
-                  </div>
-                  <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
+                  <desc>
+                    chevron-right
+                  </desc>
+                  <path
+                    d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
           </div>
-        </div>
-        <div
-          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-        >
-          <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
-            type="button"
-          >
-            <span
-              class="bp3-icon bp3-icon-chevron-left StyledProps--main StyledProps--padding-right-xsmall"
-              icon="chevron-left"
-            >
-              <svg
-                data-icon="chevron-left"
-                height="16"
-                viewBox="0 0 16 16"
-                width="16"
-              >
-                <desc>
-                  chevron-left
-                </desc>
-                <path
-                  d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
-            <span
-              class="bp3-button-text"
-            >
-              back
-            </span>
-          </button>
-          <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
-            type="submit"
-          >
-            <span
-              class="bp3-button-text"
-            >
-              submit
-            </span>
-            <span
-              class="bp3-icon bp3-icon-chevron-right StyledProps--main"
-              icon="chevron-right"
-            >
-              <svg
-                data-icon="chevron-right"
-                height="16"
-                viewBox="0 0 16 16"
-                width="16"
-              >
-                <desc>
-                  chevron-right
-                </desc>
-                <path
-                  d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
-          </button>
         </div>
       </form>
     </div>
@@ -897,28 +913,104 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
     >
       <form
         action="#"
+        class="FormikForm--main"
       >
-        <div
-          class="connectorForm"
-        >
+        <div>
           <div
-            class="jenkinsFieldContainer"
+            class="connectorForm"
           >
             <div
-              class="formGroup sm"
+              class="jenkinsFieldContainer"
+            >
+              <div
+                class="formGroup sm"
+              >
+                <div
+                  class="bp3-form-group"
+                  data-id="spec.packageType-0"
+                >
+                  <label
+                    class="bp3-label"
+                    for="spec.packageType"
+                  >
+                    <span
+                      class="Tooltip--acenter"
+                      data-tooltip-id="imagePath_spec.packageType"
+                    >
+                      pipeline.packageType
+                    </span>
+                     
+                    <span
+                      class="bp3-text-muted"
+                    />
+                  </label>
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-popover-wrapper Select--main bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.packageType"
+                            placeholder="- pipeline.packageTypePlaceholder -"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value="npm"
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="jenkinsFieldContainer"
             >
               <div
                 class="bp3-form-group"
+                data-id="spec.org-1"
               >
                 <label
                   class="bp3-label"
-                  for="spec.packageType"
+                  for="spec.org"
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_spec.packageType"
+                    data-tooltip-id="imagePath_spec.org"
                   >
-                    pipeline.packageType
+                    projectsOrgs.orgName
                   </span>
                    
                   <span
@@ -929,393 +1021,325 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
                   class="bp3-form-content"
                 >
                   <div
-                    class="bp3-popover-wrapper Select--main bp3-fill"
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
                     <div
-                      class="bp3-popover-target"
+                      class="bp3-input-group MultiTypeInput--input"
                     >
-                      <div
-                        class="bp3-input-group"
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.org"
+                        placeholder="pipeline.artifactsSelection.orgNamePlaceholder"
+                        type="text"
+                        value="testOrg"
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
                       >
-                        <input
-                          autocomplete="off"
-                          class="bp3-input"
-                          name="spec.packageType"
-                          placeholder="- pipeline.packageTypePlaceholder -"
-                          style="padding-right: 0px;"
-                          type="text"
-                          value="npm"
-                        />
-                        <span
-                          class="bp3-input-action"
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
                         >
                           <span
-                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
-                            icon="chevron-down"
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
                           >
                             <svg
-                              data-icon="chevron-down"
-                              height="14"
-                              viewBox="0 0 16 16"
-                              width="14"
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
                             >
-                              <desc>
-                                chevron-down
-                              </desc>
                               <path
-                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
-                                fill-rule="evenodd"
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
                               />
                             </svg>
                           </span>
-                        </span>
-                      </div>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="jenkinsFieldContainer"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="spec.packageName-2"
+              >
+                <label
+                  class="bp3-label"
+                  for="spec.packageName"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_spec.packageName"
+                  >
+                    pipeline.artifactsSelection.packageName
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.packageName"
+                        placeholder="pipeline.manifestType.packagePlaceholder"
+                        type="text"
+                        value="testPackage"
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="tagGroup"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="versionType-3"
+              >
+                <label
+                  class="bp3-label"
+                  for="versionType"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_versionType"
+                  >
+                    pipeline.artifactsSelection.versionDetails
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="versionType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="versionType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="jenkinsFieldContainer"
-          >
             <div
-              class="bp3-form-group"
+              class="jenkinsFieldContainer"
             >
-              <label
-                class="bp3-label"
-                for="spec.org"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_spec.org"
-                >
-                  projectsOrgs.orgName
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
               <div
-                class="bp3-form-content"
+                class="bp3-form-group"
+                data-id="spec.version-4"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                <label
+                  class="bp3-label"
+                  for="spec.version"
                 >
-                  <div
-                    class="bp3-input-group MultiTypeInput--input"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.org"
-                      placeholder="pipeline.artifactsSelection.orgNamePlaceholder"
-                      type="text"
-                      value="testOrg"
-                    />
-                  </div>
                   <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    class="Tooltip--acenter"
+                    data-tooltip-id="imagePath_spec.version"
                   >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
+                    version
                   </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="jenkinsFieldContainer"
-          >
-            <div
-              class="bp3-form-group"
-            >
-              <label
-                class="bp3-label"
-                for="spec.packageName"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_spec.packageName"
-                >
-                  pipeline.artifactsSelection.packageName
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                >
-                  <div
-                    class="bp3-input-group MultiTypeInput--input"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.packageName"
-                      placeholder="pipeline.manifestType.packagePlaceholder"
-                      type="text"
-                      value="testPackage"
-                    />
-                  </div>
+                   
                   <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="tagGroup"
-          >
-            <div
-              class="bp3-form-group radioGroup"
-            >
-              <label
-                class="bp3-label"
-                for="versionType"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_versionType"
-                >
-                  pipeline.artifactsSelection.versionDetails
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
+                    class="bp3-text-muted"
+                  />
+                </label>
                 <div
-                  class="StyledProps--main"
+                  class="bp3-form-content"
                 >
-                  
                   <div
-                    class="RadioButtonGroup--inline"
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   >
-                    <label
-                      class="RadioButton--radio StyledProps--main"
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
                     >
                       <input
-                        checked=""
-                        class="RadioButton--input"
-                        name="versionType"
-                        type="radio"
-                        value="value"
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.version"
+                        placeholder="pipeline.artifactsSelection.versionPlaceholder"
+                        type="text"
+                        value="xyz.zip"
                       />
-                      <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Value
-                    </label>
-                    <label
-                      class="RadioButton--radio StyledProps--main"
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
                     >
-                      <input
-                        class="RadioButton--input"
-                        name="versionType"
-                        type="radio"
-                        value="regex"
-                      />
                       <span
-                        class="RadioButton--radioIcon"
-                      />
-                      Regex
-                    </label>
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           <div
-            class="jenkinsFieldContainer"
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
           >
-            <div
-              class="bp3-form-group"
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
+              type="button"
             >
-              <label
-                class="bp3-label"
-                for="spec.version"
+              <span
+                class="bp3-icon bp3-icon-chevron-left StyledProps--main StyledProps--padding-right-xsmall"
+                icon="chevron-left"
               >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="imagePath_spec.version"
+                <svg
+                  data-icon="chevron-left"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
                 >
-                  version
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
+                  <desc>
+                    chevron-left
+                  </desc>
+                  <path
+                    d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                back
+              </span>
+            </button>
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+              type="submit"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                submit
+              </span>
+              <span
+                class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                icon="chevron-right"
+              >
+                <svg
+                  data-icon="chevron-right"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
                 >
-                  <div
-                    class="bp3-input-group MultiTypeInput--input"
-                  >
-                    <input
-                      autocomplete="off"
-                      class="bp3-input"
-                      name="spec.version"
-                      placeholder="pipeline.artifactsSelection.versionPlaceholder"
-                      type="text"
-                      value="xyz.zip"
-                    />
-                  </div>
-                  <span
-                    class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                      >
-                        <span
-                          class="bp3-icon StyledProps--main"
-                          data-icon="fixed-input"
-                        >
-                          <svg
-                            height="12"
-                            viewBox="0 0 9 9"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                      </button>
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
+                  <desc>
+                    chevron-right
+                  </desc>
+                  <path
+                    d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
           </div>
-        </div>
-        <div
-          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-        >
-          <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
-            type="button"
-          >
-            <span
-              class="bp3-icon bp3-icon-chevron-left StyledProps--main StyledProps--padding-right-xsmall"
-              icon="chevron-left"
-            >
-              <svg
-                data-icon="chevron-left"
-                height="16"
-                viewBox="0 0 16 16"
-                width="16"
-              >
-                <desc>
-                  chevron-left
-                </desc>
-                <path
-                  d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
-            <span
-              class="bp3-button-text"
-            >
-              back
-            </span>
-          </button>
-          <button
-            class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
-            type="submit"
-          >
-            <span
-              class="bp3-button-text"
-            >
-              submit
-            </span>
-            <span
-              class="bp3-icon bp3-icon-chevron-right StyledProps--main"
-              icon="chevron-right"
-            >
-              <svg
-                data-icon="chevron-right"
-                height="16"
-                viewBox="0 0 16 16"
-                width="16"
-              >
-                <desc>
-                  chevron-right
-                </desc>
-                <path
-                  d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
-          </button>
         </div>
       </form>
     </div>

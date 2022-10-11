@@ -16,6 +16,7 @@ import { InfraDeploymentType } from '@cd/components/PipelineSteps/PipelineStepsU
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import {
   isAzureWebAppDeploymentType,
+  isCustomDeploymentType,
   isServerlessDeploymentType,
   isSSHWinRMDeploymentType,
   ServiceDeploymentType
@@ -139,6 +140,16 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.CustomDeployment: {
+      const variables = infrastructure?.spec?.variables
+      const customDeploymentRef = infrastructure?.spec?.customDeploymentRef
+
+      return {
+        customDeploymentRef,
+        variables,
+        allowSimultaneousDeployments
+      }
+    }
     case InfraDeploymentType.PDC: {
       const { connectorRef, credentialsRef, delegateSelectors, hostFilter, hosts } = infrastructure?.spec || {}
 
@@ -153,7 +164,7 @@ export const getInfrastructureDefaultValue = (
       }
     }
     case InfraDeploymentType.SshWinRmAzure: {
-      const { credentialsRef, connectorRef, resourceGroup, tags, usePublicDns, subscriptionId } =
+      const { credentialsRef, connectorRef, resourceGroup, tags, hostConnectionType, subscriptionId } =
         infrastructure?.spec || {}
       return {
         credentialsRef,
@@ -161,19 +172,20 @@ export const getInfrastructureDefaultValue = (
         resourceGroup,
         subscriptionId,
         tags,
-        usePublicDns,
+        hostConnectionType,
         allowSimultaneousDeployments,
         serviceType
       }
     }
     case InfraDeploymentType.SshWinRmAws: {
-      const { credentialsRef, connectorRef, region, awsInstanceFilter } = infrastructure?.spec || {}
+      const { credentialsRef, connectorRef, region, awsInstanceFilter, hostConnectionType } = infrastructure?.spec || {}
       return {
         credentialsRef,
         connectorRef,
         region,
         awsInstanceFilter,
-        serviceType
+        serviceType,
+        hostConnectionType
       }
     }
     case InfraDeploymentType.ECS: {
@@ -204,8 +216,11 @@ export interface InfrastructureGroup {
 
 export const getInfraGroups = (
   deploymentType: ServiceDefinition['type'],
-  getString: UseStringsReturn['getString']
+  getString: UseStringsReturn['getString'],
+  featureFlags: Record<string, boolean>
 ): InfrastructureGroup[] => {
+  const { NG_DEPLOYMENT_TEMPLATE } = featureFlags
+
   const serverlessInfraGroups: InfrastructureGroup[] = [
     {
       groupLabel: '',
@@ -224,6 +239,13 @@ export const getInfraGroups = (
     {
       groupLabel: '',
       items: []
+    }
+  ]
+
+  const customDeploymentInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: '',
+      items: NG_DEPLOYMENT_TEMPLATE ? getInfraGroupItems([InfraDeploymentType.CustomDeployment], getString) : []
     }
   ]
 
@@ -270,6 +292,8 @@ export const getInfraGroups = (
       return sshWinRMInfraGroups
     case deploymentType === ServiceDeploymentType.ECS:
       return ecsInfraGroups
+    case isCustomDeploymentType(deploymentType):
+      return customDeploymentInfraGroups
     default:
       return kuberntesInfraGroups
   }
@@ -359,6 +383,9 @@ export const isServerlessInfrastructureType = (infrastructureType?: string): boo
 
 export const isAzureWebAppInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.AzureWebApp
+}
+export const isCustomDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
+  return infrastructureType === InfraDeploymentType.CustomDeployment
 }
 
 export const getInfraDefinitionDetailsHeaderTooltipId = (selectedInfrastructureType: string): string => {

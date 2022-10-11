@@ -120,9 +120,11 @@ export const ACRStepBase = (
                       readonly={readonly}
                       enableFields={{
                         'spec.optimize': {
-                          shouldHide: [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
-                            buildInfrastructureType
-                          )
+                          shouldHide: [
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.Cloud,
+                            CIBuildInfrastructureType.Docker
+                          ].includes(buildInfrastructureType)
                         },
                         'spec.dockerfile': {},
                         'spec.context': {},
@@ -130,9 +132,11 @@ export const ACRStepBase = (
                         'spec.buildArgs': {},
                         'spec.target': { tooltipId: 'target' },
                         'spec.remoteCacheImage': {
-                          shouldHide: [CIBuildInfrastructureType.VM, CIBuildInfrastructureType.Cloud].includes(
-                            buildInfrastructureType
-                          )
+                          shouldHide: [
+                            CIBuildInfrastructureType.VM,
+                            CIBuildInfrastructureType.Cloud,
+                            CIBuildInfrastructureType.Docker
+                          ].includes(buildInfrastructureType)
                         }
                       }}
                     />

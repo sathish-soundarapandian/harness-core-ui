@@ -19,6 +19,7 @@ gnupgKeys: GnuPG Keys
 featureComingSoon: This feature is coming soon.
 skip: Skip
 sync: Sync
+schedule: Schedule
 selectService: Select Service
 selectServices: Select Services
 inputVariables: Input Variables
@@ -26,7 +27,7 @@ confirmAction: Confirm action
 accountSetup: Account Setup
 projectSetup: Project Setup
 additionalAttributes: Additional Attributes
-addAttribute: + Add Attribute
+addAttribute: Add Attribute
 orgSetup: Org Setup
 delegateForTask: '{{delegate}} for {{taskName}}'
 defineDelegateSelector: 'Define Delegate Selector'
@@ -44,7 +45,10 @@ templateStartLabel: Start with Template
 duplicateId: 'Duplicate Identifier'
 createPipeline: Create a Pipeline
 importFromGit: Import From Git
+allEnvironments: All Environments
+allServices: All Services
 production: Production
+preProduction: 'Pre-Production'
 addVariable: Add Variable
 advanced: '{{ $.advancedTitle }}'
 editVariable: Edit variable
@@ -204,6 +208,7 @@ validation:
   subscription: 'Subscription is required'
   repository: 'Repository is required'
   projectIsRequired: Project is required
+  onlyDigitsAllowed: Only digits are allowed
 specify: Specify
 role: Role
 projectViewer: Project Viewer
@@ -564,7 +569,7 @@ clientId: Client Id
 filters:
   saveNewFilter: Save New Filter
   unsavedFilter: Unsaved Filter
-  noMatchingFilterData: No Results found matching the Filter criteria
+  noMatchingFilterData: No results found matching the filter criteria
   noResultsFound: No results found
   clearFilters: Clear Filters
   noFilterSaved: No Filter Saved
@@ -716,6 +721,7 @@ plans:
   subscription: Subscription
   manageSubscription: Manage Subscription
 useTemplate: Use template
+deploymentTemplateSteps: Deployment Template Steps
 saveAsTemplate: Save as Template
 comingSoon: Coming Soon
 comingSoon2: Coming Soon!
@@ -795,6 +801,8 @@ template:
     templateDeleted: 'Template "{{ name }}" Deleted'
     errorWhileDeletingTemplates: Error occurred deleting Templates
     errorWhileDeletingTemplate: Error occurred deleting Template
+  createNewModal:
+    versionPlaceholder: 'Ex: Version1'
 viewLatest: View latest
 viewUsage: View Usage
 selected: 'Selected:'
@@ -860,6 +868,7 @@ scope: '{{ $.delegate.Scope }}'
 community: Community
 resourceCenter:
   title: 'RESOURCE CENTER'
+  link: 'contact our support'
   productUpdates:
     title: Product Updates
     whatsnew: 'What’s New'
@@ -958,6 +967,21 @@ invalidIdentifiers: 'Identifier must not be one of the following values: {{ident
 repositoryFormat: Repository Format
 hostLabel: Host
 useSSL: Use SSL
+moduleList:
+  title: Select a module
+  buildAndTest: Build & Test
+  deployChanges: Deploy Changes
+  manageImpact: Manage Impact
+  optimize: Optimize
+moduleConfig:
+  customize: Customize your navigation
+  selectModules: Select which modules you want readily available on
+  your: your
+  navigation: navigation
+  autoSaved: Changes are automatically saved
+  restoreDefault: Restore Default Settings
+selectModules: Select Modules
+configureModuleList: Configure Module List
 
 # Chaos Module
 chaosText: Chaos
@@ -1012,3 +1036,44 @@ serviceName: Service Name
 assignedAt: Assigned at
 assignedThrough: Assigned Through
 directly: Directly
+loadBalancer: Load Balancer
+environmentInputs: Environment inputs
+infrastructures: Infrastructures
+infrastructureInputs: Infrastructure inputs
+environmentPrefix: 'Environment: {{ name }}'
+infrastructurePrefix: 'Infrastructure: {{ name }}'
+schedulePanel:
+  minutesLabel: 'Minutes'
+  hourlyTabTitle: '{{$.common.hourly}}'
+  dailyTabTitle: '{{$.common.daily}}'
+  weeklyTabTitle: 'Weekly'
+  monthlyTabTitle: '{{$.common.monthly}}'
+  yearlyTabTitle: '{{$.common.yearly}}'
+  runEvery: 'Run every'
+  runDailyAt: 'Run daily at'
+  runAt: 'Run at'
+  runOn: 'Run on'
+  runOnSpecificDay: 'Run on a specific day at monthly interval'
+  runOnSpecificDayMonth: 'Run on a specific day and month'
+  startingWith: 'Starting with'
+  enterCustomCron: 'Enter a custom cron expression'
+  minutesParentheses: 'minute(s)'
+  minutesAfterTheHour: 'minute(s) after the hour'
+  hoursAnd: 'hours(s) and'
+  ofEvery: 'of every'
+  onThe: 'on the'
+  monthsParentheses: 'month(s)'
+  hoursLabel: 'Hours'
+  dayOfMonthLabel: 'Day of month'
+  monthLabel: 'Month'
+  dayOfWeekLabel: 'Day of week'
+  MON: 'MON'
+  TUE: 'TUE'
+  WED: 'WED'
+  THU: 'THU'
+  FRI: 'FRI'
+  SAT: 'SAT'
+  SUN: 'SUN'
+  expressionBreakdown: 'Expression Breakdown'
+  cronExpression: 'Cron Expression'
+  cronExpressionRequired: 'Cron Expression required'

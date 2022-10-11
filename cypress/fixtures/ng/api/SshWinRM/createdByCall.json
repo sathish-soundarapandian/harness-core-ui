@@ -1,0 +1,19 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "name": "admin@harness.io",
+      "email": "admin@harness.io"
+    },
+    {
+      "name": "admin2@harness.io",
+      "email": "admin2@harness.io"
+    },
+    {
+      "name": "admin3@harness.io",
+      "email": "admin3@harness.io"
+    }
+  ],
+  "metaData": null,
+  "correlationId": "206cc3aa-cc76-4335-be9a-85fd68f392ae"
+}

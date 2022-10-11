@@ -35,7 +35,8 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
     !(
       deploymentType === ServiceDeploymentType.WinRm ||
       deploymentType === ServiceDeploymentType.Ssh ||
-      deploymentType === ServiceDeploymentType.AzureWebApp
+      deploymentType === ServiceDeploymentType.AzureWebApp ||
+      deploymentType === ServiceDeploymentType.CustomDeployment
     )
   )
 }
@@ -54,6 +55,7 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   Gcr: 'service-gcp',
   Ecr: 'ecr-step',
   Nexus3Registry: 'service-nexus',
+  Nexus2Registry: 'service-nexus',
   ArtifactoryRegistry: 'service-artifactory',
   CustomArtifact: 'custom-artifact',
   Acr: 'service-azure',
@@ -61,7 +63,8 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   AmazonS3: 'service-service-s3',
   GoogleArtifactRegistry: 'service-gar',
   GithubPackageRegistry: 'service-github',
-  AzureArtifactsRegistry: 'service-github'
+  AzureArtifacts: 'service-github',
+  AmazonMachineImage: 'service-github'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -69,6 +72,7 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   Gcr: 'connectors.GCR.name',
   Ecr: 'connectors.ECR.name',
   Nexus3Registry: 'connectors.nexus.nexusLabel',
+  Nexus2Registry: 'connectors.nexus.nexus2Label',
   ArtifactoryRegistry: 'connectors.artifactory.artifactoryLabel',
   CustomArtifact: 'common.repo_provider.customLabel',
   Acr: 'pipeline.ACR.name',
@@ -76,7 +80,8 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   AmazonS3: 'pipeline.artifactsSelection.amazonS3Title',
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
   GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
-  AzureArtifactsRegistry: 'pipeline.artifactsSelection.azureArtifactRegistryTitle'
+  AzureArtifacts: 'pipeline.artifactsSelection.azureArtifactRegistryTitle',
+  AmazonMachineImage: 'pipeline.artifactsSelection.azureArtifactRegistryTitle'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -84,6 +89,7 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   Gcr: 'Gcr',
   Ecr: 'Ecr',
   Nexus3Registry: 'Nexus3Registry',
+  Nexus2Registry: 'Nexus2Registry',
   ArtifactoryRegistry: 'ArtifactoryRegistry',
   CustomArtifact: 'CustomArtifact',
   Acr: 'Acr',
@@ -98,6 +104,7 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   Gcr: Connectors.GCP,
   Ecr: Connectors.AWS,
   Nexus3Registry: Connectors.NEXUS,
+  Nexus2Registry: Connectors.NEXUS,
   ArtifactoryRegistry: Connectors.ARTIFACTORY,
   Acr: Connectors.AZURE,
   Jenkins: Connectors.JENKINS,
@@ -110,7 +117,8 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   DockerRegistry: 'Docker Registry',
   Gcr: 'GCP',
   Ecr: 'AWS',
-  Nexus3Registry: 'Nexus',
+  Nexus3Registry: 'Nexus3',
+  Nexus2Registry: 'Nexus2',
   ArtifactoryRegistry: 'Artifactory',
   Acr: 'Azure',
   Jenkins: 'Jenkins',
@@ -145,13 +153,15 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Jenkins,
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
-    ENABLED_ARTIFACT_TYPES.Nexus3Registry
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.AmazonS3
   ],
   WinRm: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Jenkins,
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
-    ENABLED_ARTIFACT_TYPES.Nexus3Registry
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.AmazonS3
   ],
   AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
@@ -159,7 +169,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Acr
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.AmazonS3
   ],
   ECS: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
@@ -169,7 +180,17 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Acr
   ],
-  CustomDeployment: []
+  CustomDeployment: [
+    ENABLED_ARTIFACT_TYPES.CustomArtifact,
+    ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
+    ENABLED_ARTIFACT_TYPES.Jenkins,
+    ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.AmazonS3,
+    ENABLED_ARTIFACT_TYPES.DockerRegistry,
+    ENABLED_ARTIFACT_TYPES.Ecr,
+    ENABLED_ARTIFACT_TYPES.Gcr,
+    ENABLED_ARTIFACT_TYPES.Acr
+  ]
 }
 
 export const tagOptions: IOptionProps[] = [

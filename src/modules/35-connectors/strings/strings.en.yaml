@@ -57,6 +57,7 @@ loginToMasterAccount: and login to your master account
 roleARN: Create Cross Account Role
 ifReq: if required.
 selectConnector: Select Connector
+selectConnectors: Select Connectors
 showInstructions: Show instructions
 apiKey: '{{$.common.apikey}}'
 apiKeyOrPassword: Password/Api Key
@@ -83,6 +84,7 @@ connectivityMode:
   selectText: 'Select how you would like to connect to the provider'
 title:
   customSecretManager: 'Custom Secrets Manager'
+  gcpSecretManager: 'GCP Secrets Manager'
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'
@@ -252,9 +254,9 @@ hashiCorpVault:
   serviceAccountTokenPath: Service Account Token Path
   vaultK8sAuthRoleRequired: Role Required
   serviceAccountRequired: Service Account Token Path Required
-  preventDefaultWhenReadOnly: Read only secret manager cannot be set as default
 nexus:
-  nexusLabel: Nexus
+  nexusLabel: Nexus3
+  nexus2Label: Nexus2
   nexusServerUrl: 'Nexus Repository URL'
 artifactory:
   artifactoryLabel: Artifactory
@@ -292,7 +294,7 @@ docker:
   dockerRegistryURL: 'Docker Registry URL'
   dockerProvideType: 'Provider Type'
   dockerHub: 'DockerHub'
-  harbour: 'Harbour'
+  harbor: 'Harbor'
   quay: 'Quay'
   other: 'Other (Docker V2 compliant)'
   dockerRepository: Docker Repository
@@ -347,7 +349,7 @@ newRelic:
 elk:
   elkConnectorDetails: 'ELK Connector Details'
   testConnectionStepValidation: 'Validating ELK authentication and permissions'
-  elkLabel: Elk
+  elkLabel: ELK
   apiId: API ID
   noAuthentication: No Authentication
   validation:
@@ -554,6 +556,7 @@ ceAws:
     trySuggestion: '{{ $.common.errorHandler.tryTheseSuggestions }}'
     editConnector: '{{ $.connectors.editConnector }}'
     ifReq: '{{ $.connectors.ifReq }}'
+    govCloudHeader: 'Is this an AWS GovCloud account?'
     validation:
       numeric: 'AWS Account Id must be numeric'
       positive: 'AWS Account Id must be a positive number'
@@ -933,3 +936,7 @@ customSM:
   sshKey: SSH Key Reference
   validation:
     template: Please select a template
+gcpSecretManager:
+  gcpSMSecretFile: Google Secrets Manager Credentials File
+  validation:
+    credFileRequired: Credentials File is required

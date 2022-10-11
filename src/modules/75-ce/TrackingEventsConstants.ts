@@ -8,7 +8,6 @@
 const PREFIX_CCM_EVENTS = 'ccm_'
 
 const RECOMMENDATION_EVENTS = {
-  RECOMMENDATIONS_NAV_CLICK: PREFIX_CCM_EVENTS + 'recommendations_nav_click',
   RECOMMENDATIONS_SEE_ALL_OVERVIEW_PAGE: PREFIX_CCM_EVENTS + 'recommendations_see_all_overview_page',
   RECOMMENDATION_CLICK: PREFIX_CCM_EVENTS + 'recommendation_click',
   RECOMMENDATION_COST_PERFORMANCE_OPTIMISED_CLICK:
@@ -22,7 +21,6 @@ const RECOMMENDATION_EVENTS = {
 }
 
 const PERSPECTIVE_EVENTS = {
-  PERSPECTIVE_NAV_CLICK: PREFIX_CCM_EVENTS + 'perspective_nav_click',
   CREATE_NEW_PERSPECTIVE: PREFIX_CCM_EVENTS + 'create_new_perspective',
   ADD_PERSPECTIVE_RULE: PREFIX_CCM_EVENTS + 'add_perspective_rule',
   PERSPECTIVE_STEP1_NEXT: PREFIX_CCM_EVENTS + 'create_perspective_step1_next',
@@ -50,12 +48,9 @@ const ANOMALY_EVENTS = {
   SAVE_ANOMALY_ALERTS: PREFIX_CCM_EVENTS + 'save_anomaly_alerts'
 }
 
-const BI_DASHBOARD_EVENTS = {
-  BI_DASHBOARD_NAV_CLICK: PREFIX_CCM_EVENTS + 'bi_dashboard_nav_click'
-}
-
 export const USER_JOURNEY_EVENTS = {
-  AS_NAV_CLICK: PREFIX_CCM_EVENTS + 'as_nav_click',
+  CCM_FEATURE_NAVIGATION: 'CCM Feature Navigation',
+  ONBOARDING_CONNECTOR_CLICK: 'Onboarding Connector Click',
   LOAD_AS_LANDING_PAGE: PREFIX_CCM_EVENTS + 'load_as_landing_page',
   CREATE_NEW_AS_CLICK: PREFIX_CCM_EVENTS + 'create_new_as_button_click',
   SELECT_CLOUD_PROVIDER: PREFIX_CCM_EVENTS + 'select_cloud_provider',
@@ -71,8 +66,7 @@ export const USER_JOURNEY_EVENTS = {
   ...PERSPECTIVE_EVENTS,
   ...RECOMMENDATION_EVENTS,
   ...BUDGET_EVENTS,
-  ...ANOMALY_EVENTS,
-  ...BI_DASHBOARD_EVENTS
+  ...ANOMALY_EVENTS
 }
 
 export const PAGE_NAMES = {

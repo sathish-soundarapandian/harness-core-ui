@@ -15,7 +15,8 @@ import {
   MultiTypeInputType,
   Text,
   ButtonVariation,
-  AllowedTypes as MultiTypeAllowedTypes
+  AllowedTypes as MultiTypeAllowedTypes,
+  StepProps
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
@@ -48,7 +49,7 @@ interface StartupScriptWizardStepTwoProps {
   isParam: boolean
 }
 
-export const ScriptWizardStepTwo = ({
+export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardStepTwoProps> = ({
   stepName,
   expressions,
   allowableTypes,
@@ -58,7 +59,7 @@ export const ScriptWizardStepTwo = ({
   previousStep,
   isReadonly = false,
   isParam
-}: StartupScriptWizardStepTwoProps): React.ReactElement => {
+}) => {
   const { getString } = useStrings()
 
   /* istanbul ignore next */
@@ -172,7 +173,10 @@ export const ScriptWizardStepTwo = ({
             'repoName',
             getString('common.validation.repositoryName'),
             /* istanbul ignore next */ value => {
-              if (connectionType === GitRepoName.Repo) {
+              if (
+                connectionType === GitRepoName.Repo ||
+                getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+              ) {
                 return true
               }
               return !isEmpty(value) && value?.length > 0
@@ -203,7 +207,10 @@ export const ScriptWizardStepTwo = ({
                 className={cx(css.startupScriptForm, css.scriptWizard)}
               >
                 <div className={css.scriptWizard}>
-                  {!!(connectionType === GitRepoName.Account) && (
+                  {!!(
+                    connectionType === GitRepoName.Account &&
+                    getMultiTypeFromValue(prevStepData?.connectorRef) === MultiTypeInputType.FIXED
+                  ) && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
                         multiTextInputProps={{ expressions, allowableTypes }}

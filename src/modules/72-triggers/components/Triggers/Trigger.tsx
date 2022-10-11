@@ -9,18 +9,18 @@ import type { StringsMap } from 'stringTypes'
 
 import type { NGTriggerResponse } from 'services/pipeline-ng'
 
-import type { ScheduleType, SourceRepo, TriggerBaseType } from './TriggerInterface'
+import type { TriggerBaseType, TriggerSubType } from './TriggerInterface'
 export interface TriggerProps<T> {
   isNewTrigger: boolean
   baseType?: TriggerBaseType
-  type?: SourceRepo | ScheduleType
+  type?: TriggerSubType
   triggerData?: NGTriggerResponse
   initialValues: T
 }
 
 export abstract class Trigger<T> {
   protected abstract baseType: TriggerBaseType
-  protected abstract type: SourceRepo | ScheduleType
+  protected abstract type: TriggerSubType
   protected abstract triggerDescription: keyof StringsMap | undefined
   protected abstract defaultValues: T
 
@@ -28,7 +28,7 @@ export abstract class Trigger<T> {
     return this.baseType
   }
 
-  getType(): SourceRepo | ScheduleType {
+  getType(): TriggerSubType {
     return this.type
   }
 

@@ -159,7 +159,7 @@ describe('Unit tests for PrometheusHealthSource', () => {
               analysis: {
                 deploymentVerification: { enabled: false, serviceInstanceFieldName: 'serviceInstanceFieldName' },
                 liveMonitoring: { enabled: false },
-                riskProfile: { category: '', metricType: undefined, thresholdTypes: [] }
+                riskProfile: {}
               },
               envFilter: [{ labelName: 'namespace', labelValue: 'cv-demo' }],
               groupName: 'group1',
@@ -308,7 +308,9 @@ describe('Unit tests for PrometheusHealthSource', () => {
       fireEvent.click(screen.getByText('cv.addNew'))
 
       //expect modal to show and fill out new name
-      await waitFor(() => expect(screen.getByText('cv.monitoringSources.appD.newGroupName')).not.toBeNull())
+      await waitFor(() =>
+        expect(screen.getByText('cv.monitoringSources.prometheus.newPrometheusGroupName')).not.toBeNull()
+      )
       await setFieldValue({
         container: document.body,
         type: InputTypes.TEXTFIELD,

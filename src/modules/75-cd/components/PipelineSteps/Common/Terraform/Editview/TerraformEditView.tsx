@@ -53,7 +53,7 @@ import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
 import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
 import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
@@ -258,7 +258,7 @@ export default function TerraformEditView(
           buildPayload={buildPayload}
           connectorInfo={undefined}
         />
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.stepThreeName')}
           connectorInfo={undefined}
           isStep={true}

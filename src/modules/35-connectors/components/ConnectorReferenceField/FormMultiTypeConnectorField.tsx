@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import cx from 'classnames'
 import {
   ExpressionAndRuntimeTypeProps,
@@ -17,11 +17,13 @@ import {
   FormError,
   FormikTooltipContext,
   useToaster,
-  ButtonVariation
+  ButtonVariation,
+  SelectOption
 } from '@wings-software/uicore'
 import { connect, FormikContextType } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
 import { get, isEmpty } from 'lodash-es'
+import { useModalHook } from '@harness/use-modal'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import useCreateConnectorMultiTypeModal from '@connectors/modals/ConnectorModal/useCreateConnectorMultiTypeModal'
 import {
@@ -31,7 +33,7 @@ import {
   ResponsePageConnectorResponse,
   useGetConnector
 } from 'services/cd-ng'
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useStrings } from 'framework/strings'
 import { errorCheck } from '@common/utils/formikHelpers'
@@ -49,6 +51,8 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
+import type { ItemInterface } from '@common/components/AddDrawer/AddDrawer'
+import { InpuSetFunction, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import {
   ConnectorReferenceFieldProps,
   getReferenceFieldProps,
@@ -58,6 +62,8 @@ import {
   getSelectedRenderer,
   getConnectorStatusCall
 } from './ConnectorReferenceField'
+import AddConnectorsDrawer from './AddConnectorsDrawer'
+import { ConnectorConfigureOptions } from '../ConnectorConfigureOptions/ConnectorConfigureOptions'
 import css from './ConnectorReferenceField.module.scss'
 
 export interface MultiTypeConnectorFieldConfigureOptionsProps
@@ -80,6 +86,11 @@ export interface MultiTypeConnectorFieldProps extends Omit<ConnectorReferenceFie
   onLoadingFinish?: () => void
   setConnector?: any
   mini?: boolean
+  isDrawerMode?: boolean
+  templateProps?: {
+    isTemplatizedView: true
+    templateValue: string | SelectOption | undefined
+  }
 }
 export interface ConnectorReferenceDTO extends ConnectorInfoDTO {
   status: ConnectorResponse['status']
@@ -111,6 +122,8 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     createNewLabel,
     setConnector,
     mini,
+    isDrawerMode = false,
+    templateProps,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -343,8 +356,30 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
       { accountIdentifier, projectIdentifier, orgIdentifier }
     )
   }
+
+  const [openDrawer, hideDrawer] = useModalHook(() => {
+    const onSelect = (val: ItemInterface): void => {
+      openConnectorModal(false, val?.value as ConnectorInfoDTO['type'], undefined)
+      hideDrawer()
+    }
+
+    return <AddConnectorsDrawer onSelect={onSelect} onClose={hideDrawer} />
+  }, [])
+
   const [pagedConnectorData, setPagedConnectorData] = useState<ResponsePageConnectorResponse>({})
   const [page, setPage] = useState(0)
+
+  const connectorIdentifiers = useMemo(() => {
+    if (!templateProps?.isTemplatizedView || !templateProps.templateValue) return
+
+    const input =
+      typeof templateProps.templateValue === 'string' ? templateProps.templateValue : templateProps.templateValue.value
+
+    if (typeof input !== 'string') return
+
+    return parseInput(input)?.[InpuSetFunction.ALLOWED_VALUES]?.values?.map(getIdentifierFromValue)
+  }, [templateProps?.isTemplatizedView, templateProps?.templateValue])
+
   const getReferenceFieldPropsValues = getReferenceFieldProps({
     defaultScope,
     gitScope,
@@ -358,6 +393,12 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     width,
     placeholder: placeHolderLocal,
     label,
+    ...(Array.isArray(connectorIdentifiers) && {
+      connectorFilterProperties: {
+        connectorIdentifiers,
+        types: Array.isArray(type) ? type : [type]
+      }
+    }),
     getString,
     openConnectorModal,
     setPagedConnectorData
@@ -390,7 +431,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
             <RbacButton
               variation={ButtonVariation.SECONDARY}
               onClick={() => {
-                optionalReferenceSelectProps.createNewHandler?.()
+                isDrawerMode ? openDrawer() : optionalReferenceSelectProps.createNewHandler?.()
               }}
               text={`+ ${createNewLabel || getString('newConnector')}`}
               margin={{ right: 'small' }}
@@ -450,7 +491,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         <div style={{ display: 'flex', alignItems: 'center' }}>
           {component}
           {getMultiTypeFromValue(selected) === MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
+            <ConnectorConfigureOptions
               value={selected}
               type={getString('string')}
               variableName={name}
@@ -464,6 +505,17 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
               style={{ marginLeft: 'var(--spacing-medium)' }}
               {...configureOptionsProps}
               isReadonly={props.disabled}
+              connectorReferenceFieldProps={{
+                accountIdentifier,
+                projectIdentifier,
+                orgIdentifier,
+                type,
+                label,
+                disabled,
+                gitScope,
+                category,
+                tooltipProps: { dataTooltipId }
+              }}
             />
           )}
         </div>

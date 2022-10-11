@@ -12,7 +12,8 @@ import {
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
-  AllowedTypes
+  AllowedTypes,
+  FormikForm
 } from '@wings-software/uicore'
 import cx from 'classnames'
 import * as Yup from 'yup'
@@ -90,7 +91,7 @@ function ServerlessLambdaDeployWidget(
           setFormikRef(formikRef, formik)
           const { values, setFieldValue } = formik
           return (
-            <>
+            <FormikForm>
               {stepViewType !== StepViewType.Template && (
                 <div className={cx(stepCss.formGroup, stepCss.lg)}>
                   <FormInput.InputWithIdentifier
@@ -132,10 +133,9 @@ function ServerlessLambdaDeployWidget(
                   />
                 )}
               </div>
-              <div className={stepCss.divider} />
 
               <ServerlessDeployCommandOptions isReadonly={readonly} stepViewType={props.stepViewType} />
-            </>
+            </FormikForm>
           )
         }}
       </Formik>

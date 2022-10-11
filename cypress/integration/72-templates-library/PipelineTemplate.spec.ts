@@ -10,7 +10,7 @@ import {
   versionLabel,
   pipelineTemplateName,
   pipelineMadeFromTemplate,
-  incompletePipelineCreationResponse,
+  incompleteTemplateCreationResponse,
   pipelineTemplatePublishResponse,
   selectedPipelineTemplateResponse,
   applyTemplateResponse,
@@ -22,7 +22,7 @@ import {
   afterUseTemplatePipelineTemplateInputsResponse
 } from '../../support/72-templates-library/constants'
 
-describe('Pipeline Template creation and assertion', () => {
+describe.skip('Pipeline Template creation and assertion', () => {
   const templateDetailsCall =
     '/template/api/templates/templateInputs/testPipelineTemplate?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&versionLabel=v1.0&getDefaultFromOtherRepo=true'
   const pipelineTemplatePublishCall =
@@ -59,7 +59,7 @@ describe('Pipeline Template creation and assertion', () => {
       timeout: 30000
     })
 
-    cy.intercept('POST', pipelineTemplateCreationCall, incompletePipelineCreationResponse).as(
+    cy.intercept('POST', pipelineTemplateCreationCall, incompleteTemplateCreationResponse).as(
       'pipelineTemplateCreation'
     )
     cy.intercept('POST', pipelineTemplatePublishCall, pipelineTemplatePublishResponse).as('pipelineTemplatePublish')

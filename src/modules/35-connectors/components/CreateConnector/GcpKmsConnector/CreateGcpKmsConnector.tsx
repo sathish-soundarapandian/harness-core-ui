@@ -10,7 +10,7 @@ import { StepWizard } from '@wings-software/uicore'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { useStrings } from 'framework/strings'
 import { buildGcpKmsPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import {
   Connectors,
   CONNECTOR_CREDENTIALS_STEP_IDENTIFIER,
@@ -48,7 +48,7 @@ const CreateGcpKmsConnector: React.FC<CreateConnectorModalProps> = props => {
         {...props}
         helpPanelReferenceId="ConnectorDelegatesSetup"
       />
-      <VerifyOutOfClusterDelegate
+      <ConnectorTestConnection
         name={getString('connectors.stepThreeName')}
         connectorInfo={props.connectorInfo}
         isStep

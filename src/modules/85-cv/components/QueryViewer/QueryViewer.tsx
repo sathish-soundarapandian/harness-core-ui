@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import cx from 'classnames'
 import {
   Button,
@@ -41,7 +41,9 @@ export function QueryContent(props: QueryContentProps): JSX.Element {
     textAreaPlaceholder,
     isTemplate,
     expressions,
-    isConnectorRuntimeOrExpression
+    isConnectorRuntimeOrExpression,
+    fetchButtonText,
+    isFetchButtonDisabled = false
   } = props
   const { getString } = useStrings()
 
@@ -98,9 +100,9 @@ export function QueryContent(props: QueryContentProps): JSX.Element {
             <Layout.Horizontal spacing={'large'}>
               <Button
                 intent="primary"
-                text={getString('cv.monitoringSources.gcoLogs.fetchRecords')}
+                text={fetchButtonText || getString('cv.monitoringSources.gcoLogs.fetchRecords')}
                 onClick={handleFetchRecords}
-                disabled={isEmpty(query) || loading}
+                disabled={isEmpty(query) || loading || isFetchButtonDisabled}
               />
               {staleRecordsWarning && <Text className={css.warningText}>{staleRecordsWarning}</Text>}
             </Layout.Horizontal>
@@ -132,7 +134,8 @@ export function QueryViewer(props: QueryViewerProps): JSX.Element {
     dataTooltipId,
     isTemplate,
     expressions,
-    isConnectorRuntimeOrExpression
+    isConnectorRuntimeOrExpression,
+    queryTextareaName
   } = props
   const { getString } = useStrings()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -145,13 +148,12 @@ export function QueryViewer(props: QueryViewerProps): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleFetchRecords = useCallback(() => {
+  const handleFetchRecords = () => {
     fetchRecords()
     if (postFetchingRecords) {
       postFetchingRecords()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query])
+  }
 
   return (
     <Container className={cx(css.main, className)}>
@@ -183,6 +185,7 @@ export function QueryViewer(props: QueryViewerProps): JSX.Element {
           staleRecordsWarning={staleRecordsWarning}
           isAutoFetch={isAutoFetch}
           mandatoryFields={queryContentMandatoryProps}
+          textAreaName={queryTextareaName}
         />
       )}
 

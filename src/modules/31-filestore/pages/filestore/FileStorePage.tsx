@@ -565,7 +565,7 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
         }
       />
 
-      <Page.Body>
+      <Page.Body className={cx(!isModalView && !fileStore?.length ? css.fsPageWrapper : undefined)}>
         {loading ? (
           <PageSpinner />
         ) : /* istanbul ignore next */ filesFetchError && shouldShowError(filesFetchError) ? (

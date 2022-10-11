@@ -25,7 +25,8 @@ import StepOverview, { LdapOverview } from './views/StepOverview'
 import StepConnectionSettings from './views/StepConnectionSettings'
 import StepUserQueries from './views/StepUserQueries'
 import StepGroupQueries from './views/StepGroupQueries'
-import { getErrorMessageFromException } from './utils'
+import StepSyncSchedule from './views/StepSyncSchedule'
+import { DEFAULT_LDAP_SYNC_CRON_EXPRESSION, getErrorMessageFromException } from './utils'
 import css from './CreateUpdateLdapWizard.module.scss'
 
 export interface CreateUpdateLdapWizardProps {
@@ -73,17 +74,29 @@ export interface LdapWizardStepProps<T> {
   auxilliaryData?: Partial<LDAPSettings>
 }
 
+interface LdapOverviewBackend {
+  disabled?: boolean
+  displayName?: string
+}
+
 const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
   const { getString } = useStrings()
   const { ldapSettings, isEdit } = props
-  const { connectionSettings, displayName, identifier, userSettingsList, groupSettingsList } = ldapSettings || {}
-  const [ldapOverviewState, setLdapOverviewState] = useState<LdapOverview>({ displayName })
+  const { connectionSettings, displayName, disabled, identifier, userSettingsList, groupSettingsList } =
+    ldapSettings || {}
+  const [ldapOverviewState, setLdapOverviewState] = useState<LdapOverviewBackend>({
+    displayName,
+    disabled
+  })
   const [connectionSettingsState, setConnectionSettingsState] = useState<LdapConnectionSettings | undefined>(
     connectionSettings
   )
   const [userSettingsListState, setUserSettingsListState] = useState<LdapUserSettings[] | undefined>(userSettingsList)
   const [groupSettingsListState, setGroupSettingsListState] = useState<LdapGroupSettings[] | undefined>(
     groupSettingsList
+  )
+  const [cronExpression, setCronExpression] = useState<string>(
+    ldapSettings?.cronExpression || DEFAULT_LDAP_SYNC_CRON_EXPRESSION
   )
   const [triggerSaveData, setTriggerSaveData] = useState<boolean>(false)
   const [wiardUpdateError, setWizardUpdateError] = useState<ReactElement>()
@@ -106,6 +119,7 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
       connectionSettings: connectionSettingsState,
       userSettingsList: userSettingsListState,
       groupSettingsList: groupSettingsListState,
+      cronExpression,
       settingsType: 'LDAP'
     } as LDAPSettings)
 
@@ -151,8 +165,10 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
     >
       <StepOverview
         name={getString('overview')}
-        stepData={ldapOverviewState}
-        updateStepData={(val: LdapOverview) => setLdapOverviewState(val)}
+        stepData={{ displayName: ldapOverviewState.displayName, authorizationEnabled: !ldapOverviewState.disabled }}
+        updateStepData={(val: LdapOverview) =>
+          setLdapOverviewState({ displayName: val.displayName, disabled: !val.authorizationEnabled })
+        }
         closeWizard={props.closeWizard}
       />
       <StepConnectionSettings
@@ -176,6 +192,11 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
         stepData={groupSettingsListState}
         updateStepData={(val: LdapGroupSettings[]) => setGroupSettingsListState(val)}
         auxilliaryData={{ ...ldapOverviewState, connectionSettings: connectionSettingsState, identifier }}
+      />
+      <StepSyncSchedule
+        name={getString('authSettings.ldap.userSyncSchedule')}
+        stepData={{ cronExpression, isEdit }}
+        updateStepData={(val: { cronExpression: string }) => setCronExpression(val.cronExpression)}
         createUpdateActionProps={{
           isUpdateInProgress,
           createUpdateError: wiardUpdateError,

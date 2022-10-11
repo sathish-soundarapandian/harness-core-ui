@@ -146,7 +146,11 @@ describe('Targeting GitSync', () => {
 
     await waitFor(() => expect(screen.getByTestId('save-flag-to-git-modal-body')).toBeInTheDocument())
 
-    // add commit message and
+    // clear prepopulated messsage and add commit message
+    await waitFor(() =>
+      expect(screen.getByPlaceholderText('common.git.commitMessage')).toHaveValue('Updated feature flag variations')
+    )
+    userEvent.clear(screen.getByPlaceholderText('common.git.commitMessage'))
     userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'MY COMMIT MESSAGE')
 
     // select autocommit checkbox
@@ -195,7 +199,7 @@ describe('Targeting GitSync', () => {
       expect(patchTargetMock).toBeCalledWith({
         gitDetails: {
           branch: 'main',
-          commitMsg: 'cf.gitSync.autoCommitMsg',
+          commitMsg: 'Updated feature flag variations',
           filePath: '/flags.yaml',
           repoIdentifier: 'harnesstest',
           rootFolder: '/.harness/'

@@ -120,7 +120,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     onChange,
     onErrorCallback,
     renderCustomHeader,
-    openDialogProp
+    openDialogProp,
+    showCopyIcon = true
   } = props
   setUpEditor(theme)
   const params = useParams()
@@ -527,7 +528,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           {fileName && entityType ? <Tag className={css.entityTag}>{entityType}</Tag> : null}
           {yamlRef.current ? (
             <Container padding={{ left: 'medium' }}>
-              <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} />
+              {showCopyIcon ? <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} /> : null}
             </Container>
           ) : null}
         </div>

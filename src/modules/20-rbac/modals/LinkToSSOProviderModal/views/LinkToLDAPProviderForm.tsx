@@ -6,21 +6,22 @@
  */
 
 import React, { useState } from 'react'
-import { Button, Layout, FormInput, Radio, TableV2, Text, ButtonVariation, PageError } from '@wings-software/uicore'
+import { Button, Layout, FormInput, Radio, TableV2, Text, ButtonVariation } from '@wings-software/uicore'
 import type { CellProps, Renderer } from 'react-table'
 import { Color, FontVariation } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { LdapGroupResponse, useSearchLdapGroups } from 'services/cd-ng'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { Error } from 'services/cd-ng'
 import css from '../useLinkToSSOProviderModal.module.scss'
 
 const LinkToLDAPProviderForm: React.FC = () => {
   const { setFieldValue, getFieldProps } = useFormikContext()
   const { getString } = useStrings()
-  const { getRBACErrorMessage } = useRBACError()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [groupSearchText, setGroupSearchText] = useState<string>('')
 
@@ -41,6 +42,11 @@ const LinkToLDAPProviderForm: React.FC = () => {
   })
 
   const groupSearchData = groupSearchDataResponse?.resource as LdapGroupResponse[]
+  const responseMessages = errorGroupSearch
+    ? defaultTo((errorGroupSearch.data as Error)?.responseMessages, [
+        { level: 'ERROR', message: errorGroupSearch?.message }
+      ])
+    : null
 
   const RenderColumnName: Renderer<CellProps<LdapGroupResponse>> = ({ row }) => {
     const data = row.original
@@ -99,7 +105,11 @@ const LinkToLDAPProviderForm: React.FC = () => {
       <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_400}>
         {getString('rbac.userDetails.linkToSSOProviderModal.groupSearchInfo')}
       </Text>
-      {errorGroupSearch && <PageError message={getRBACErrorMessage(errorGroupSearch as any)} />}
+      {responseMessages && (
+        <Layout.Vertical>
+          <ErrorHandler responseMessages={responseMessages} className={css.layoutErrorMessage} />
+        </Layout.Vertical>
+      )}
       {groupSearchData && groupSearchData.length === 0 && (
         <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_700} padding="medium">
           {getString('common.filters.noResultsFound')}

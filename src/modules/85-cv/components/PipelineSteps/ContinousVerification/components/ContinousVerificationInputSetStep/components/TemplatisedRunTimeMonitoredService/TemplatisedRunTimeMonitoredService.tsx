@@ -8,6 +8,7 @@
 import { AllowedTypes, Card, Color, FormInput, Layout, Text } from '@harness/uicore'
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import { useFormikContext } from 'formik'
 import type { VerifyStepMonitoredService } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -25,12 +26,14 @@ import {
   checkIfRunTimeInput,
   doesHealthSourceHasQueries,
   getMetricDefinitionPath,
-  getMetricDefinitions
+  getMetricDefinitions,
+  setCommaSeperatedList
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import type { ConnectorInfoDTO } from 'services/cv'
 import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
+import { INDEXES } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
 import css from './TemplatisedRunTimeMonitoredService.module.scss'
 
 export interface TemplatisedRunTimeMonitoredServiceProps {
@@ -52,6 +55,7 @@ export default function TemplatisedRunTimeMonitoredService(
   const healthSourcesVariables = monitoredService?.spec?.templateInputs?.variables || []
   const { serviceRef, environmentRef } = monitoredService?.spec?.templateInputs || {}
   const areRunTimeVariablesPresent = healthSourcesVariables?.some(variable => checkIfRunTimeInput(variable?.value))
+  const { setFieldValue: onChange } = useFormikContext()
 
   return (
     <Layout.Vertical>
@@ -138,17 +142,38 @@ export default function TemplatisedRunTimeMonitoredService(
                       {getString('cv.monitoringSources.metricLabel')}: {item?.metricName}
                     </Text>
                     {runtimeItems.map(input => {
-                      return (
-                        <FormInput.MultiTextInput
-                          key={input.name}
-                          name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                          label={getFieldLabelForVerifyTemplate(input.name, getString)}
-                          multiTextInputProps={{
-                            expressions,
-                            allowableTypes
-                          }}
-                        />
-                      )
+                      if (input.name === INDEXES) {
+                        return (
+                          <FormInput.MultiTextInput
+                            key={input.name}
+                            name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
+                            label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                            onChange={value => {
+                              setCommaSeperatedList(
+                                value as string,
+                                onChange,
+                                `${prefix}spec.monitoredService.spec.templateInputs.${input.path}`
+                              )
+                            }}
+                            multiTextInputProps={{
+                              expressions,
+                              allowableTypes
+                            }}
+                          />
+                        )
+                      } else {
+                        return (
+                          <FormInput.MultiTextInput
+                            key={input.name}
+                            name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
+                            label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                            multiTextInputProps={{
+                              expressions,
+                              allowableTypes
+                            }}
+                          />
+                        )
+                      }
                     })}
                   </>
                 )

@@ -1,5 +1,346 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`FlowControl tests should call editItem when edit icon is clicked 1`] = `
+<div>
+  <div
+    class="drawer-mock"
+  >
+    <button
+      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main almostFullScreenCloseBtn Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+      type="button"
+    >
+      <span
+        class="bp3-icon bp3-icon-cross StyledProps--main"
+        icon="cross"
+      >
+        <svg
+          data-icon="cross"
+          height="16"
+          viewBox="0 0 16 16"
+          width="16"
+        >
+          <desc>
+            cross
+          </desc>
+          <path
+            d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </button>
+    <div
+      class="flowControlPanelHeader"
+    >
+      <div
+        class="flowControlTitle"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main"
+        >
+          <div
+            class="Text--withDocsTooltip"
+            data-tooltip-id="pipelineVariables"
+          >
+            <p
+              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-h4"
+              style="--text-line-clamp: 1; width: 300px;"
+            >
+              stage1
+              : 
+              pipeline.barriers.flowControl
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="mainActions"
+      >
+        <button
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-secondary Button--size Button--small"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            applyChanges
+          </span>
+        </button>
+        <button
+          class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--without-shadow Button--size Button--small"
+          type="button"
+        >
+          <span
+            class="bp3-button-text"
+          >
+            pipeline.discard
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="container"
+    >
+      <div
+        class="OverlaySpinner--overlaySpinner"
+      >
+        <div
+          class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-h5"
+          >
+            pipeline.barriers.syncBarriers
+          </p>
+          <div>
+            <div
+              class="barrierList"
+            >
+              <div
+                class="rowItem"
+              >
+                <div
+                  class="newBarrier"
+                >
+                   
+                  <br />
+                  <div
+                    class="InputWithIdentifier--txtNameContainer TextInput--main"
+                  >
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
+                    >
+                      <div
+                        class="Text--withDocsTooltip"
+                        data-tooltip-id="universalInputNameWithId"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          Id
+                        </p>
+                      </div>
+                      <p
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        :
+                      </p>
+                      <span
+                        class="bp3-popover-wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <div
+                            class="bp3-editable-text bp3-disabled InputWithIdentifier--idValue"
+                          >
+                            <span
+                              class="bp3-editable-text-content"
+                              style="height: 1px; line-height: 1px; min-width: 0;"
+                            >
+                              demo
+                            </span>
+                          </div>
+                        </span>
+                      </span>
+                    </div>
+                    <div
+                      class="bp3-form-group"
+                    >
+                      <label
+                        class="bp3-label"
+                        for="barriers[0].name"
+                      >
+                        <span
+                          class="Tooltip--acenter"
+                          data-tooltip-id="flowControl_barriers[0].name"
+                        >
+                          Barrier Name
+                        </span>
+                         
+                        <span
+                          class="bp3-text-muted"
+                        />
+                      </label>
+                      <div
+                        class="bp3-form-content"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="barriers[0].name"
+                            type="text"
+                            value="demoId"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="barrierAction"
+                >
+                  <button
+                    class="bp3-button Button--button StyledProps--font StyledProps--main actionIcon Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main StyledProps--color"
+                      data-icon="main-trash"
+                    >
+                      <svg
+                        height="16"
+                        viewBox="0 0 16 20"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                          opacity="0.3"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="rowItem"
+              >
+                <div>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main rowHeader"
+                    style="--text-line-clamp: 1;"
+                  >
+                    dem2
+                  </p>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main"
+                    style="--text-line-clamp: 1;"
+                  >
+                    demo2
+                  </p>
+                </div>
+                <div />
+                <div
+                  class="barrierAction"
+                >
+                  <button
+                    class="bp3-button Button--button StyledProps--font StyledProps--main actionIcon Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon bp3-icon-edit StyledProps--main StyledProps--color"
+                      icon="edit"
+                    >
+                      <svg
+                        data-icon="edit"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        width="16"
+                      >
+                        <desc>
+                          edit
+                        </desc>
+                        <path
+                          d="M3.25 10.26l2.47 2.47 6.69-6.69-2.46-2.48-6.7 6.7zM.99 14.99l3.86-1.39-2.46-2.44-1.4 3.83zm12.25-14c-.48 0-.92.2-1.24.51l-1.44 1.44 2.47 2.47 1.44-1.44c.32-.32.51-.75.51-1.24.01-.95-.77-1.74-1.74-1.74z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                  <span
+                    class="bp3-popover-wrapper"
+                  >
+                    <span
+                      class="bp3-popover-target"
+                    >
+                      <button
+                        class="bp3-button Button--button StyledProps--font StyledProps--main actionIcon Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--color"
+                          data-icon="main-trash"
+                        >
+                          <svg
+                            height="16"
+                            viewBox="0 0 16 20"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clip-rule="evenodd"
+                              d="M1.143 8.48a1.2 1.2 0 011.189-1.36h10.649a1.2 1.2 0 011.194 1.321l-1.039 10.208a1.2 1.2 0 01-1.193 1.079H3.716a1.2 1.2 0 01-1.189-1.04L1.143 8.48zm11.837-.16H2.332l1.385 10.207h8.226L12.98 8.32zM5.916 1.594a.6.6 0 01.719-.452l4.224.965a.6.6 0 01.452.719L11 4.179l3.86.882a.6.6 0 01-.267 1.17L1.535 3.248a.6.6 0 11.267-1.17l3.805.87.309-1.354zm.86 1.62l3.056.698.175-.768-3.055-.698-.175.768z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                            />
+                            <path
+                              clip-rule="evenodd"
+                              d="M8 10.808a.5.5 0 01.5.5v5a.5.5 0 01-1 0v-5a.5.5 0 01.5-.5zm-2.761.012a.5.5 0 01.541.454l.436 4.981a.5.5 0 11-.996.087l-.436-4.98a.5.5 0 01.455-.542zM10.762 10.82a.5.5 0 01.455.541l-.436 4.981a.5.5 0 11-.996-.087l.435-4.98a.5.5 0 01.542-.455z"
+                              fill="currentColor"
+                              fill-rule="evenodd"
+                              opacity="0.3"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main addbarrier StyledProps--intent-primary Button--withLeftIcon Button--variation Button--variation-link"
+              type="button"
+            >
+              <span
+                class="bp3-icon bp3-icon-plus StyledProps--main"
+                icon="plus"
+              >
+                <svg
+                  data-icon="plus"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    plus
+                  </desc>
+                  <path
+                    d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
+              >
+                <span>
+                  pipeline.barriers.addBarrier
+                </span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`FlowControl tests should render fine 1`] = `
 <div>
   <div

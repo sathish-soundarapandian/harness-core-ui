@@ -48,6 +48,17 @@ const mockErrorSearchResponse = {
   status: 'ERROR',
   resource: undefined,
   metaData: undefined,
+  message: 'Please make sure that your delegates are connected',
+  responseMessages: [
+    {
+      code: 'HINT',
+      level: 'INFO',
+      message:
+        'Please make sure that your delegates are connected. For more information refer on delegate Installation',
+      exception: null,
+      failureTypes: []
+    }
+  ],
   correlationId: ''
 }
 
@@ -186,7 +197,7 @@ describe('Create LinkToLDAPProviderModal', () => {
     const results = container.querySelector('[class*="wrapper"]')
     expect(results).toBeNull
 
-    const errorData = container.querySelector('[class*="bp3-icon-error"]')
+    const errorData = container.querySelector('[class*="layoutErrorMessage"]')
     expect(errorData).toBeTruthy()
 
     expect(container).toMatchSnapshot()

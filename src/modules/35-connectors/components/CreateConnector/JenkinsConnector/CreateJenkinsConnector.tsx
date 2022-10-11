@@ -9,7 +9,7 @@ import React from 'react'
 import { StepWizard } from '@wings-software/uicore'
 import { pick } from 'lodash-es'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
-import VerifyOutOfClusterDelegate from '@connectors/common/VerifyOutOfClusterDelegate/VerifyOutOfClusterDelegate'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER, TESTCONNECTION_STEP_INDEX } from '@connectors/constants'
 import { getConnectorIconByType, getConnectorTitleIdByType } from '@connectors/pages/connectors/utils/ConnectorHelper'
 import { buildJenkinsPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
@@ -66,7 +66,7 @@ const CreateJenkinsConnector: React.FC<CreateJenkinsConnectorProps> = props => {
           connectorInfo={props.connectorInfo}
           gitDetails={props.gitDetails}
         />
-        <VerifyOutOfClusterDelegate
+        <ConnectorTestConnection
           name={getString('connectors.stepThreeName')}
           connectorInfo={props.connectorInfo}
           isStep={true}

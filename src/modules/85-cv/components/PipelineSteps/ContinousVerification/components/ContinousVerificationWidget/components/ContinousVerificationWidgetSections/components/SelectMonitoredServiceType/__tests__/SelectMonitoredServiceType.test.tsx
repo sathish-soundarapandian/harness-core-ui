@@ -8,8 +8,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import type { AllowedTypesWithRunTime } from '@harness/uicore'
+import * as formik from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
-
 import * as templateService from 'services/template-ng'
 import SelectMonitoredServiceType, { SelectMonitoredServiceTypeProps } from '../SelectMonitoredServiceType'
 import {
@@ -82,6 +82,14 @@ const WrapperComponent = (props: SelectMonitoredServiceTypeProps): JSX.Element =
 }
 
 describe('Unit tests for SelectMonitoredServiceType', () => {
+  const useFormikContextMock = jest.spyOn(formik, 'useFormikContext')
+
+  beforeEach(() => {
+    useFormikContextMock.mockReturnValue({
+      setFieldValue: jest.fn()
+    } as unknown as any)
+  })
+
   test('Verify if correct template inputs are rendered in the verify step', async () => {
     const props = {
       formik: mockedFormikWithTemplatesData,

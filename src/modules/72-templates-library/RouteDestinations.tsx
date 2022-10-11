@@ -14,7 +14,7 @@ import { AccountSideNavProps } from '@common/RouteDestinations'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps, projectPathProps, templatePathProps } from '@common/utils/routeUtils'
 import TemplatesPage from '@templates-library/pages/TemplatesPage/TemplatesPage'
-import { TemplateStudioWrapper } from '@templates-library/components/TemplateStudio/TemplateStudioWrapper'
+import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { String } from 'framework/strings'
@@ -87,7 +87,7 @@ export default (
       })}
       exact
     >
-      <TemplateStudioWrapper />
+      <TemplateStudio />
     </RouteWithLayout>
     <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toTemplates({ ...orgPathProps })} exact>
       <TemplatesPage />
@@ -103,7 +103,7 @@ export default (
       })}
       exact
     >
-      <TemplateStudioWrapper />
+      <TemplateStudio />
     </RouteWithLayout>
   </>
 )
@@ -115,7 +115,7 @@ export const TemplateRouteDestinations: React.FC<{
   licenseRedirectData?: LicenseRedirectProps
   sidebarProps?: SidebarContext
 }> = ({
-  templateStudioComponent: TemplateStudio = TemplateStudioWrapper,
+  templateStudioComponent: TemplateStudioWrapper = TemplateStudio,
   templateStudioPageName = PAGE_NAME.TemplateStudioWrapper,
   moduleParams,
   licenseRedirectData,
@@ -138,7 +138,7 @@ export const TemplateRouteDestinations: React.FC<{
       path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...moduleParams })}
       pageName={templateStudioPageName}
     >
-      <TemplateStudio />
+      <TemplateStudioWrapper />
     </RouteWithLayout>
   </>
 )

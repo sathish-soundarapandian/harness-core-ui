@@ -10,7 +10,8 @@ import type {
   ApprovalStageConfig,
   FeatureFlagStageConfig,
   StageElementWrapperConfig,
-  CustomStageConfig
+  CustomStageConfig,
+  PipelineStageConfig
 } from 'services/pipeline-ng'
 import type {
   IntegrationStageConfig,
@@ -50,6 +51,10 @@ export interface BuildStageElementConfig extends Omit<StageElementConfig, 'spec'
   spec?: IntegrationStageConfig & {
     infrastructure: K8sDirectInfraYaml | UseFromStageInfraYaml | VmPoolYaml | K8sHostedInfraYaml
   }
+}
+
+export interface PipelineStageElementConfig extends Omit<StageElementConfig, 'spec'> {
+  spec?: PipelineStageConfig
 }
 
 export interface PipelineStageWrapper<T extends StageElementConfig = StageElementConfig> {

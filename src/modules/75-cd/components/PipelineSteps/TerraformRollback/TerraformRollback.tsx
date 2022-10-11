@@ -34,6 +34,7 @@ import {
 } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions, VALIDATORS } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { IdentifierSchemaWithOutName } from '@common/utils/Validation'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { StringsMap } from 'stringTypes'
@@ -101,7 +102,15 @@ function TerraformRollbackWidget(
           ),
 
           spec: Yup.object().shape({
-            provisionerIdentifier: Yup.string().required(getString('pipelineSteps.provisionerIdentifierRequired'))
+            provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
+              if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+                return IdentifierSchemaWithOutName(getString, {
+                  requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
+                  regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
+                })
+              }
+              return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
+            })
           })
         })}
       >

@@ -492,17 +492,12 @@ export const dataforMS = {
                   riskProfile: { category: 'Errors', metricType: null, thresholdTypes: [] },
                   analysis: {
                     liveMonitoring: { enabled: false },
-                    deploymentVerification: {
-                      enabled: false,
-                      serviceInstanceFieldName: null,
-                      serviceInstanceMetricPath: null
-                    },
+                    deploymentVerification: { enabled: false },
                     riskProfile: { category: 'Errors', metricType: null, thresholdTypes: [] }
                   },
                   sli: { enabled: true },
                   groupName: 'Group 1',
-                  baseFolder: 'Overall Application Performance',
-                  metricPath: 'Calls per Minute'
+                  completeMetricPath: 'Overall Application Performance|docker-tier|Calls per Minute'
                 },
                 {
                   identifier: 'appdMetric_10',
@@ -510,17 +505,12 @@ export const dataforMS = {
                   riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] },
                   analysis: {
                     liveMonitoring: { enabled: true },
-                    deploymentVerification: {
-                      enabled: false,
-                      serviceInstanceFieldName: null,
-                      serviceInstanceMetricPath: null
-                    },
+                    deploymentVerification: { enabled: false },
                     riskProfile: { category: 'Errors', metricType: 'ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] }
                   },
                   sli: { enabled: true },
                   groupName: 'Group 2',
-                  baseFolder: 'Overall Application Performance',
-                  metricPath: 'Calls per Minute'
+                  completeMetricPath: 'Overall Application Performance|docker-tier|Calls per Minute'
                 }
               ]
             }

@@ -20,6 +20,7 @@ import SVGMarker from '../../SVGMarker'
 import { BaseReactComponentProps, NodeType } from '../../../types'
 import AddLinkNode from '../AddLinkNode/AddLinkNode'
 import { getPositionOfAddIcon } from '../../utils'
+import MatrixNodeNameLabelWrapper from '../../MatrixNodeNameLabelWrapper'
 import defaultCss from '../DefaultNode.module.scss'
 
 const CODE_ICON: IconName = 'command-echo'
@@ -27,6 +28,8 @@ const CODE_ICON: IconName = 'command-echo'
 const TEMPLATE_ICON: IconName = 'template-library'
 interface PipelineStepNodeProps extends BaseReactComponentProps {
   status: string
+  isNodeCollapsed?: boolean
+  matrixNodeName?: boolean
 }
 
 function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
@@ -36,6 +39,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   const stepType = props.type || props?.data?.step?.stepType || ''
   const stepData = stepsfactory.getStepData(stepType)
   const stepIconSize = stepsfactory.getStepIconSize(stepType)
+  const isStepNonDeletable = stepsfactory.getIsStepNonDeletable(stepType)
   let stepIconColor = stepsfactory.getStepIconColor(stepType)
   if (stepIconColor && Object.values(Color).includes(stepIconColor)) {
     stepIconColor = Utils.getRealCSSColor(stepIconColor)
@@ -43,6 +47,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const showMarkers = defaultTo(props?.showMarkers, true)
 
+  const matrixNodeName = defaultTo(props?.matrixNodeName, props?.data?.matrixNodeName)
   const stepStatus = defaultTo(props?.status, props?.data?.step?.status as ExecutionStatus)
   const { secondaryIconProps, secondaryIcon, secondaryIconStyle } = getStatusProps(
     stepStatus as ExecutionStatus,
@@ -132,6 +137,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         id={props.id}
         data-nodeid={props.id}
         draggable={!props.readonly}
+        data-collapsedNode={props?.isNodeCollapsed}
         className={cx(defaultCss.defaultCard, {
           [defaultCss.selected]: isSelectedNode(),
           [defaultCss.failed]: stepStatus === ExecutionStatusEnum.Failed,
@@ -260,22 +266,24 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             name={CODE_ICON}
           />
         )}
-        <Button
-          className={cx(defaultCss.closeNode, { [defaultCss.readonly]: props.readonly })}
-          minimal
-          icon="cross"
-          variation={ButtonVariation.PRIMARY}
-          iconProps={{ size: 10 }}
-          onMouseDown={e => {
-            e.stopPropagation()
-            props?.fireEvent?.({
-              type: Event.RemoveNode,
-              target: e.target,
-              data: { identifier: props?.identifier, node: props }
-            })
-          }}
-          withoutCurrentColor={true}
-        />
+        {!isStepNonDeletable && (
+          <Button
+            className={cx(defaultCss.closeNode, { [defaultCss.readonly]: props.readonly })}
+            minimal
+            icon="cross"
+            variation={ButtonVariation.PRIMARY}
+            iconProps={{ size: 10 }}
+            onMouseDown={e => {
+              e.stopPropagation()
+              props?.fireEvent?.({
+                type: Event.RemoveNode,
+                target: e.target,
+                data: { identifier: props?.identifier, node: props }
+              })
+            }}
+            withoutCurrentColor={true}
+          />
+        )}
       </div>
       {!isServiceStep && showMarkers && (
         <div className={cx(defaultCss.markerEnd, defaultCss.stepMarker, defaultCss.stepMarkerRight)}>
@@ -290,8 +298,13 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
             color={props.defaultSelected ? Color.GREY_900 : Color.GREY_600}
             padding={'small'}
             lineClamp={2}
+            tooltipProps={{ popoverClassName: matrixNodeName ? 'matrixNodeNameLabel' : '' }}
           >
-            {props.name}
+            {defaultTo(matrixNodeName, props?.data?.matrixNodeName) ? (
+              <MatrixNodeNameLabelWrapper matrixLabel={props?.name as string} />
+            ) : (
+              props.name
+            )}
           </Text>
         </div>
       )}
@@ -333,7 +346,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           className={cx(
             defaultCss.addNodeIcon,
             // { [defaultCss.left]: !isPrevNodeParallel, [defaultCss.stepGroupLeft]: isPrevNodeParallel },
-            defaultCss.stepAddIcon
+            'stepAddIcon'
             // { [defaultCss.stepGroupLeftAddLink]: !!props.parentIdentifier }
           )}
         />
@@ -350,7 +363,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
           isRightAddIcon={true}
           identifier={props.identifier}
           prevNodeIdentifier={props.prevNodeIdentifier as string}
-          className={cx(defaultCss.addNodeIcon, defaultCss.stepAddIcon)}
+          className={cx(defaultCss.addNodeIcon, 'stepAddIcon')}
         />
       )}
     </div>

@@ -20,10 +20,10 @@ import {
 import { Formik, FieldArray } from 'formik'
 import { v4 as uuid } from 'uuid'
 import cx from 'classnames'
-import { debounce, escape, isEmpty } from 'lodash-es'
+import { debounce, defaultTo, escape, isEmpty } from 'lodash-es'
 
 import { useParams } from 'react-router-dom'
-import { String, useStrings } from 'framework/strings'
+import { String, StringKeys, useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { TextInputWithCopyBtn } from '@common/components/TextInputWithCopyBtn/TextInputWithCopyBtn'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
@@ -45,6 +45,7 @@ import { isValueRuntimeInput } from '@common/utils/utils'
 import AddEditCustomVariable from './AddEditCustomVariable'
 import type { VariableState } from './AddEditCustomVariable'
 import { VariableType } from './CustomVariableUtils'
+import type { VariablesCustomValidationSchemaType } from './CustomVariablesEditableStage'
 import css from './CustomVariables.module.scss'
 
 export interface CustomVariablesData {
@@ -69,7 +70,9 @@ export interface CustomVariableEditableExtraProps {
   isDescriptionEnabled?: boolean
   headerComponent?: JSX.Element
   allowedConnectorTypes?: ConnectorInfoDTO['type'] | ConnectorInfoDTO['type'][]
-  addVariableLabel?: string
+  addVariableLabel?: StringKeys
+  validationSchema?: VariablesCustomValidationSchemaType
+  isDrawerMode?: boolean
 }
 
 export interface CustomVariableEditableProps extends CustomVariableEditableExtraProps {
@@ -78,6 +81,7 @@ export interface CustomVariableEditableProps extends CustomVariableEditableExtra
   stepViewType?: StepViewType
   readonly?: boolean
   allowableTypes: AllowedTypes
+  fromEnvironmentConfiguration?: boolean
 }
 
 export function CustomVariableEditable(props: CustomVariableEditableProps): React.ReactElement {
@@ -96,7 +100,8 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
     allowedVarialblesTypes,
     isDescriptionEnabled,
     headerComponent,
-    allowedConnectorTypes
+    addVariableLabel,
+    isDrawerMode = false
   } = props
   const uids = React.useRef<string[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
@@ -191,7 +196,7 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                       size={ButtonSize.SMALL}
                       disabled={readonly}
                     >
-                      <String stringID="common.addVariable" />
+                      <String stringID={defaultTo(addVariableLabel, 'common.addVariable')} />
                     </Button>
                   </div>
                 ) : /* istanbul ignore next */ null}
@@ -288,7 +293,8 @@ export function CustomVariableEditable(props: CustomVariableEditableProps): Reac
                               connectorLabelClass="connectorVariableField"
                               enableConfigureOptions={false}
                               mini={true}
-                              type={allowedConnectorTypes}
+                              isDrawerMode={isDrawerMode}
+                              type={[]}
                             />
                           ) : variable.type === VariableType.Secret ? (
                             <MultiTypeSecretInput

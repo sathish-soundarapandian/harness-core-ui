@@ -45,6 +45,9 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
     fetchingProjectMetadata,
     showProjectDisclaimer,
     jiraType,
+    refetchIssueMetadata,
+    issueMetaResponse,
+    fetchingIssueMetadata,
     selectedProjectKey: selectedProjectKeyInit,
     selectedIssueTypeKey: selectedIssueTypeKeyInit
   } = props
@@ -69,6 +72,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
   })
 
   const [projectMetadata, setProjectMetadata] = useState<JiraProjectNG>()
+  const [issueMetadata, setIssueMetadata] = useState<JiraProjectNG>()
   const [fieldList, setFieldList] = useState<JiraFieldNG[]>([])
 
   const selectedProjectKey = projectValue?.key?.toString()
@@ -87,9 +91,22 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
   }, [selectedProjectKey])
 
   useEffect(() => {
+    if (connectorRef && selectedProjectKey && selectedIssueTypeKey) {
+      refetchIssueMetadata({
+        queryParams: {
+          ...commonParams,
+          connectorRef,
+          projectKey: selectedProjectKey,
+          issueType: selectedIssueTypeKey
+        }
+      })
+    }
+  }, [selectedIssueTypeKey])
+
+  useEffect(() => {
     // If issuetype changes in form, set status and field list
-    if (selectedIssueTypeKey) {
-      const issueTypeData = projectMetadata?.issuetypes[selectedIssueTypeKey || '']
+    if (selectedIssueTypeKey && issueMetadata?.issuetypes[selectedIssueTypeKey]?.fields) {
+      const issueTypeData = issueMetadata?.issuetypes[selectedIssueTypeKey || '']
       const fieldListToSet: JiraFieldNG[] = []
       const fieldKeys = Object.keys(issueTypeData?.fields || {})
       fieldKeys.sort().forEach(keyy => {
@@ -101,7 +118,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
       })
       setFieldList(fieldListToSet)
     }
-  }, [selectedIssueTypeKey, projectMetadata])
+  }, [selectedIssueTypeKey, issueMetadata])
 
   useEffect(() => {
     if (selectedProjectKey && projectMetaResponse?.data?.projects) {
@@ -109,6 +126,13 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
       setProjectMetadata(projectMD)
     }
   }, [projectMetaResponse?.data, selectedProjectKey])
+
+  useEffect(() => {
+    if (selectedProjectKey && issueMetaResponse?.data?.projects) {
+      const issueMD: JiraProjectNG = issueMetaResponse?.data?.projects[selectedProjectKey]
+      setIssueMetadata(issueMD)
+    }
+  }, [issueMetaResponse?.data, selectedProjectKey, selectedIssueTypeKey])
 
   return (
     <div>
@@ -123,6 +147,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
           }}
           onChange={value => {
             setProjectValue(value as JiraProjectSelectOption)
+            setIssueTypeValue({ label: '', value: '', key: '' } as JiraProjectSelectOption)
           }}
           inputProps={{
             placeholder: getString('pipeline.jiraCreateStep.selectProject')
@@ -133,6 +158,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
       <div className={css.select}>
         <Text className={css.selectLabel}>{getString('pipeline.jiraApprovalStep.issueType')}</Text>
         <Select
+          value={issueTypeValue}
           items={
             fetchingProjectMetadata
               ? [{ label: 'Fetching Issue Types...', value: '' }]
@@ -153,7 +179,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
         />
       </div>
 
-      {fetchingProjectMetadata ? (
+      {fetchingIssueMetadata ? (
         <PageSpinner
           message={getString('pipeline.jiraCreateStep.fetchingFields')}
           className={css.fetchingPageSpinner}
@@ -315,6 +341,21 @@ export function JiraDynamicFieldsSelector(props: JiraDynamicFieldsSelectorInterf
     }
   })
 
+  const {
+    refetch: refetchIssueMetadata,
+    data: issueMetaResponse,
+    error: issueMetadataFetchError,
+    loading: fetchingIssueMetadata
+  } = useGetJiraIssueCreateMetadata({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: '',
+      projectKey: '',
+      issueType: ''
+    }
+  })
+
   return (
     <Content
       {...props}
@@ -322,6 +363,10 @@ export function JiraDynamicFieldsSelector(props: JiraDynamicFieldsSelectorInterf
       projectMetaResponse={projectMetaResponse}
       projectMetadataFetchError={projectMetadataFetchError}
       fetchingProjectMetadata={fetchingProjectMetadata}
+      fetchingIssueMetadata={fetchingIssueMetadata}
+      refetchIssueMetadata={refetchIssueMetadata}
+      issueMetaResponse={issueMetaResponse}
+      issueMetadataFetchError={issueMetadataFetchError}
     />
   )
 }

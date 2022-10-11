@@ -12,17 +12,19 @@ import type Highcharts from 'highcharts'
 import { Utils, SelectOption } from '@wings-software/uicore'
 import type { GetDataError } from 'restful-react'
 import { Color } from '@harness/design-system'
+import { compact, filter, values, isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import type {
   UserJourneyResponse,
   UserJourneyDTO,
   SLODashboardWidget,
-  ResponseListMonitoredServiceWithHealthSources,
-  GetSLODashboardWidgetsQueryParams,
   RiskCount,
   MonitoredServiceDTO,
-  GetAllJourneysQueryParams
+  GetAllJourneysQueryParams,
+  ResponsePageMSDropdownResponse,
+  GetSLOHealthListViewQueryParams,
+  ResponseSLORiskCountResponse
 } from 'services/cv'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
 import { DAYS, HOURS } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.constants'
@@ -197,7 +199,7 @@ export const getUserJourneyOptionsForFilter = (
 }
 
 export const getMonitoredServicesOptionsForFilter = (
-  monitoredServiceData: ResponseListMonitoredServiceWithHealthSources | null,
+  monitoredServiceData: ResponsePageMSDropdownResponse | null,
   getString: UseStringsReturn['getString']
 ): SelectOption[] => {
   return [getAllOption(getString), ...getMonitoredServicesOptions(monitoredServiceData)]
@@ -452,7 +454,7 @@ export const getIsMonitoresServicePageClearFilterDisabled = (
 }
 
 interface SLODashboardWidgetsParams {
-  queryParams: GetSLODashboardWidgetsQueryParams
+  queryParams: GetSLOHealthListViewQueryParams
   queryParamStringifyOptions: QueryString.IStringifyOptions
 }
 
@@ -466,7 +468,8 @@ export const getSLODashboardWidgetsParams = (
   pathParams: PathParams,
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
   filterState: SLOFilterState,
-  pageNumber?: number
+  pageNumber?: number,
+  search?: string
 ): SLODashboardWidgetsParams => {
   return {
     queryParams: {
@@ -477,6 +480,7 @@ export const getSLODashboardWidgetsParams = (
       userJourneyIdentifiers: getFilterValueForSLODashboardParams(getString, filterState.userJourney),
       targetTypes: getFilterValueForSLODashboardParams(getString, filterState.targetTypes) as TargetTypesParams[],
       sliTypes: getFilterValueForSLODashboardParams(getString, filterState.sliTypes) as SLITypesParams[],
+      filter: search,
       errorBudgetRisks: getRiskFilterForSLODashboardParams(
         getString,
         filterState.sloRiskFilter?.identifier as string | null
@@ -554,3 +558,40 @@ export const isSLOFilterApplied = (
   getFilterValueForSLODashboardParams(getString, filterState.userJourney) ||
   getFilterValueForSLODashboardParams(getString, filterState.targetTypes) ||
   getFilterValueForSLODashboardParams(getString, filterState.sliTypes)
+
+export function getSLOsNoDataMessageTitle({
+  monitoredServiceIdentifier,
+  getString,
+  riskCountResponse,
+  filterState,
+  search
+}: {
+  monitoredServiceIdentifier: string | undefined
+  getString: UseStringsReturn['getString']
+  riskCountResponse: ResponseSLORiskCountResponse | null
+  filterState: SLOFilterState
+  search: string
+}): string | undefined {
+  if (monitoredServiceIdentifier) {
+    return getString('cv.slos.noDataMS')
+  } else {
+    if (ifNoSLOsAreCreated(riskCountResponse, filterState, search)) {
+      return getString('cv.slos.noData')
+    } else if (!isEmpty(search)) {
+      return getString('cv.slos.noMatchingDataForSearch')
+    } else {
+      return getString('cv.slos.noMatchingData')
+    }
+  }
+}
+
+function ifNoSLOsAreCreated(
+  riskCountResponse: ResponseSLORiskCountResponse | null,
+  filterState: SLOFilterState,
+  search: string
+) {
+  return (
+    !riskCountResponse?.data?.riskCounts ||
+    (isEmpty(filter(compact(values(filterState)), ({ label }: SelectOption) => label !== 'All')) && isEmpty(search))
+  )
+}

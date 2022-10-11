@@ -31,7 +31,7 @@ export class AzureBlueprintStep extends PipelineStep<AzureBlueprintStepInfo> {
 
   protected type = StepType.AzureBlueprint
   protected stepIcon: IconName = 'azure-blueprints'
-  protected stepName = 'Azure Blueprint Create'
+  protected stepName = 'Create Azure BP Resources'
   protected stepDescription: keyof StringsMap = 'cd.azureBlueprint.description'
 
   protected defaultValues = {

@@ -8,10 +8,12 @@
 import React from 'react'
 import type { Column } from 'react-table'
 import { Text, TableV2, Color, FontVariation, Icon, Layout } from '@harness/uicore'
+import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
-import type { SortBy } from '../types'
+import routes from '@common/RouteDefinitions'
+import type { PipelineListPagePathParams, SortBy } from '../types'
 import {
   CodeSourceCell,
   LastExecutionCell,
@@ -20,6 +22,7 @@ import {
   RecentExecutionsCell,
   LastModifiedCell
 } from './PipelineListCells'
+import { getRouteProps } from '../PipelineListUtils'
 import css from './PipelineListTable.module.scss'
 
 export interface PipelineListColumnActions {
@@ -42,7 +45,9 @@ export function PipelineListTable({
   sortBy,
   setSortBy
 }: PipelineListTableProps): React.ReactElement {
+  const history = useHistory()
   const { getString } = useStrings()
+  const pathParams = useParams<PipelineListPagePathParams>()
   const {
     content = [],
     totalElements = 0,
@@ -140,6 +145,7 @@ export function PipelineListTable({
       }
       sortable
       getRowClassName={() => css.tableRow}
+      onRowClick={rowDetails => history.push(routes.toPipelineStudio(getRouteProps(pathParams, rowDetails)))}
     />
   )
 }

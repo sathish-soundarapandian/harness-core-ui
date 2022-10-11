@@ -21,6 +21,8 @@ declare const styles: {
   readonly connectorForm: string
   readonly encOption: string
   readonly existingDocker: string
+  readonly fileTypeLabel: string
+  readonly filesLabel: string
   readonly firstep: string
   readonly headerContainer: string
   readonly heading: string

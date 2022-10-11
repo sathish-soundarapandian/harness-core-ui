@@ -36,7 +36,8 @@ export const iconMap: Record<ExecutionStatus, IconProps> = {
   Queued: { name: 'queued', size: 14 },
   InputWaiting: { name: 'loading', size: 14 },
   Paused: { name: 'pause', size: 14 },
-  Pausing: { name: 'pause', size: 14 }
+  Pausing: { name: 'pause', size: 14 },
+  WaitStepRunning: { name: 'time', size: 14 }
 }
 
 export interface ExecutionStatusIconProps {

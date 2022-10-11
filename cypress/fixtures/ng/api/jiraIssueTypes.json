@@ -12,32 +12,7 @@
             "name": "Bug",
             "description": "A problem or error.",
             "statuses": [],
-            "fields": {
-              "Description": {
-                "key": "description",
-                "name": "Description",
-                "required": true,
-                "schema": {
-                  "array": false,
-                  "typeStr": "string",
-                  "type": "string",
-                  "customType": null
-                },
-                "allowedValues": [],
-                "custom": false
-              },
-              "Summary": {
-                "key": "summary",
-                "name": "Summary",
-                "required": true,
-                "schema": {
-                  "array": false,
-                  "typeStr": "string",
-                  "type": "string",
-                  "customType": null
-                }
-              }
-            }
+            "fields": {}
           }
         }
       }

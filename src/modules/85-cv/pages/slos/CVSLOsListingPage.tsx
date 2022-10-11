@@ -15,17 +15,16 @@ import {
   Layout,
   FlexExpander,
   Container,
-  Heading,
-  HarnessDocTooltip,
-  SelectOption,
   TableV2,
   Text,
-  IconName
+  IconName,
+  ExpandingSearchInput
 } from '@wings-software/uicore'
 
 import { Color, FontVariation } from '@harness/design-system'
-import { filter, isEmpty, compact, values, defaultTo } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import type { CellProps, Renderer } from 'react-table'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import slosEmptyState from '@cv/assets/slosEmptyState.svg'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -37,10 +36,10 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import {
   useDeleteSLOData,
   useGetAllJourneys,
-  useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetServiceLevelObjectivesRiskCount,
   RiskCount,
-  useGetSLOHealthListView
+  useGetSLOHealthListView,
+  useGetSLOAssociatedMonitoredServices
 } from 'services/cv'
 import RbacButton from '@rbac/components/Button/Button'
 import { getErrorMessage, getRiskColorLogo, getRiskColorValue, getSearchString } from '@cv/utils/CommonUtils'
@@ -63,7 +62,8 @@ import {
   getInitialFilterState,
   getClassNameForMonitoredServicePage,
   isSLOFilterApplied,
-  getServiceTitle
+  getServiceTitle,
+  getSLOsNoDataMessageTitle
 } from './CVSLOListingPage.utils'
 import SLODashbordFilters from './components/SLODashbordFilters/SLODashbordFilters'
 import SLOActions from './components/SLOActions/SLOActions'
@@ -82,16 +82,13 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     getInitialFilterStateLazy(passedInitialState, monitoredService)
   )
   const [pageNumber, setPageNumber] = useState(0)
+  const [search, setSearch] = useState<string>('')
 
   useEffect(() => {
     if (monitoredService && monitoredServiceIdentifier) {
       dispatch(SLODashboardFilterActions.updateMonitoredServices(getMonitoredServicesInitialState(monitoredService)))
     }
   }, [monitoredService])
-
-  useEffect(() => {
-    setPageNumber(0)
-  }, [projectIdentifier])
 
   const pathParams = useMemo(() => {
     return {
@@ -101,12 +98,16 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     }
   }, [accountId, orgIdentifier, projectIdentifier])
 
+  const sloDashboardWidgetsParams = useMemo(() => {
+    return getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber, search)
+  }, [pathParams, filterState, pageNumber, search])
+
   const {
     data: dashboardWidgetsResponse,
     loading: dashboardWidgetsLoading,
     refetch: refetchDashboardWidgets,
     error: dashboardWidgetsError
-  } = useGetSLOHealthListView(getSLODashboardWidgetsParams(pathParams, getString, filterState, pageNumber))
+  } = useGetSLOHealthListView(sloDashboardWidgetsParams)
 
   const {
     data: riskCountResponse,
@@ -122,7 +123,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     loading: monitoredServicesLoading,
     error: monitoredServicesDataError,
     refetch: refetchMonitoredServicesData
-  } = useGetAllMonitoredServicesWithTimeSeriesHealthSources({
+  } = useGetSLOAssociatedMonitoredServices({
     queryParams: pathParams
   })
 
@@ -382,16 +383,16 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   }
   return (
     <>
+      <HelpPanel referenceId="sloDetails" type={HelpPanelType.FLOATING_CONTAINER} />
       {!monitoredServiceIdentifier && hasSloFilterApplied && (
         <>
           <Page.Header
             breadcrumbs={<NGBreadcrumbs />}
             title={
               <Layout.Vertical>
-                <Heading level={3} font={{ variation: FontVariation.H4 }}>
+                <Text font={{ variation: FontVariation.H4 }} tooltipProps={{ dataTooltipId: 'sloHeader' }}>
                   {getString('cv.slos.completeTitle')}
-                  <HarnessDocTooltip tooltipId={'sloDashboardTitle'} useStandAlone />
-                </Heading>
+                </Text>
                 <Text title={getString('cv.slos.subTitle')} font={{ align: 'left', size: 'small' }}>
                   {getString('cv.slos.subTitle')}
                 </Text>
@@ -442,6 +443,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
             {monitoredServiceIdentifier && getAddSLOButton()}
             {hasSloFilterApplied && (
               <Container
+                flex
                 className={getClassNameForMonitoredServicePage(css.sloDropdownFilters, monitoredServiceIdentifier)}
               >
                 <SLODashbordFilters
@@ -449,6 +451,12 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   dispatch={dispatch}
                   filterItemsData={filterItemsData}
                   hideMonitoresServicesFilter={Boolean(monitoredService)}
+                />
+                <ExpandingSearchInput
+                  width={250}
+                  throttle={500}
+                  onChange={setSearch}
+                  placeholder={getString('cv.slos.searchSLO')}
                 />
               </Container>
             )}
@@ -530,7 +538,6 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   itemCount: totalItems,
                   gotoPage: nextPage => {
                     setPageNumber(nextPage)
-                    refetchDashboardWidgets()
                   }
                 }}
               />
@@ -541,14 +548,13 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           {getIsWidgetDataEmpty(content?.length, dashboardWidgetsLoading) && (
             <NoDataCard
               image={slosEmptyState}
-              messageTitle={
-                monitoredServiceIdentifier
-                  ? getString('cv.slos.noDataMS')
-                  : !riskCountResponse?.data?.riskCounts ||
-                    isEmpty(filter(compact(values(filterState)), ({ label }: SelectOption) => label !== 'All'))
-                  ? getString('cv.slos.noData')
-                  : getString('cv.slos.noMatchingData')
-              }
+              messageTitle={getSLOsNoDataMessageTitle({
+                monitoredServiceIdentifier,
+                getString,
+                riskCountResponse,
+                filterState,
+                search
+              })}
               message={getString('cv.slos.noSLOsStateMessage')}
               className={css.noSloData}
             />

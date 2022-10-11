@@ -146,11 +146,12 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
 
   const handleSubmit = async (values: any): Promise<void> => {
     const formData = new FormData()
+    const blobContentEditor = new Blob([values.fileEditor], { type: 'text/plain' })
 
     const defaultMimeType = currentNode?.mimeType ? currentNode.mimeType : ExtensionType.TEXT
 
     formData.append('type', FileStoreNodeTypes.FILE)
-    formData.append('content', values.fileEditor)
+    formData.append('content', blobContentEditor)
     formData.append('mimeType', defaultMimeType)
     formData.append('name', currentNode.name)
     formData.append('identifier', currentNode.identifier)
@@ -192,7 +193,7 @@ function FileDetails({ handleError }: FileDetailsProps): React.ReactElement {
   }
 
   useEffect(() => {
-    if (data && !isCachedNode(currentNode?.identifier)) {
+    if (data && !isCachedNode(currentNode.identifier)) {
       ;(data as unknown as Response)
         .clone()
         .text()

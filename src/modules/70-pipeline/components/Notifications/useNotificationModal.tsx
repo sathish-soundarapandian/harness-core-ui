@@ -7,7 +7,7 @@
 
 import React, { useCallback, useState } from 'react'
 import { isNil } from 'lodash-es'
-import { StepWizard, Button, MultiSelectOption } from '@wings-software/uicore'
+import { StepWizard, Button, MultiSelectOption, StepProps } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, Classes } from '@blueprintjs/core'
 import cx from 'classnames'
@@ -27,6 +27,7 @@ export interface UseNotificationModalProps {
   stagesOptions?: MultiSelectOption[]
   getExistingNotificationNames?: (skipIndex?: number) => string[]
   expressions?: string[]
+  EventsTabComponent?: React.FC<StepProps<NotificationRules>>
 }
 
 export interface UseNotificationModalReturn {
@@ -44,7 +45,8 @@ export const useNotificationModal = ({
   onCloseModal,
   stagesOptions,
   getExistingNotificationNames,
-  expressions
+  expressions,
+  EventsTabComponent
 }: UseNotificationModalProps): UseNotificationModalReturn => {
   const [view, setView] = useState(Views.CREATE)
   const [index, setIndex] = useState<number>()
@@ -78,7 +80,12 @@ export const useNotificationModal = ({
             data={notificationRules}
             existingNotificationNames={getExistingNotificationNames?.(index)}
           />
-          <PipelineEvents name={getString('notifications.pipelineEvents')} stagesOptions={stagesOptions} />
+          {EventsTabComponent ? (
+            <EventsTabComponent name={getString('conditions')} />
+          ) : (
+            <PipelineEvents name={getString('notifications.pipelineEvents')} stagesOptions={stagesOptions} />
+          )}
+
           <NotificationMethods
             name={getString('notifications.notificationMethod')}
             typeOptions={NotificationTypeSelectOptions}

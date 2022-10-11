@@ -164,7 +164,7 @@ export function useSaveToGitDialog<T = Record<string, string>>(
   }
 
   const handleCreateUpdateError = (e: any, data: SaveToGitFormInterface | SaveToGitFormV2Interface): void => {
-    if (e.code === SCHEMA_VALIDATION_FAILED) {
+    if (e.code === SCHEMA_VALIDATION_FAILED && resource.type === Entities.PIPELINES) {
       if (data?.createPr) {
         hideCreateUpdateWithPRCreationModal()
       } else {

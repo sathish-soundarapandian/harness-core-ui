@@ -39,7 +39,6 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
   const history = useHistory()
   const { getString } = useStrings()
   const { NG_FILE_STORE, NG_SETTINGS } = useFeatureFlags()
-  const DEPLOYMENT_FREEZE = false
 
   const { isOpen: showGitOpsEntities, toggle: toggleShowGitOpsEntities } = useToggleOpen()
   const { loading, data, refetch } = useGetSmtpConfig({ queryParams: { accountId } })
@@ -104,16 +103,6 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
     } as ResourceOption
   ]
 
-  const deploymentFreezeCard: ResourceOption[] = [
-    {
-      label: <String stringID="common.freezeWindows" />,
-      icon: 'nav-settings',
-      colorClass: css.freezeWindows,
-      route: routes.toFreezeWindows({ accountId, orgIdentifier }),
-      selectable: true
-    } as ResourceOption
-  ]
-
   const options: ResourceOption[] = items || [
     {
       label: <String stringID="connectorsLabel" />,
@@ -158,8 +147,7 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
       route: routes.toVariables({ accountId, orgIdentifier })
     } as ResourceOption,
     ...(showGitOpsCard ? gitOpsCard : []),
-    ...(NG_SETTINGS ? defaultSettingsCard : []),
-    ...(DEPLOYMENT_FREEZE && !orgIdentifier ? deploymentFreezeCard : [])
+    ...(NG_SETTINGS ? defaultSettingsCard : [])
   ]
 
   const gitOpsEntities = [

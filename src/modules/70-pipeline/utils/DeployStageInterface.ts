@@ -72,6 +72,7 @@ export interface DeployStageConfig
   isEnvGroup?: boolean
   deploymentType?: ServiceDefinition['type']
   deployToAll?: boolean
+  isEnvInputLoaded?: boolean
 }
 
 export interface ServiceInputsConfig {

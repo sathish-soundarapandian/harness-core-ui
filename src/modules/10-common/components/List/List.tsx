@@ -174,6 +174,7 @@ export const List = (props: ListProps): React.ReactElement => {
                     onChange={val => {
                       changeValue(id, (val as string)?.trim())
                     }}
+                    disabled={disabled}
                   />
                 )}
               </div>

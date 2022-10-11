@@ -5,10 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, Layout, Text } from '@wings-software/uicore'
+import { Button, Layout, Text } from '@harness/uicore'
 import React, { useState } from 'react'
 import cx from 'classnames'
-import type { StringsMap } from 'stringTypes'
 import type { StringKeys } from 'framework/strings'
 
 import nodejs from '@cf/images/icons/nodejs.svg'
@@ -24,17 +23,6 @@ import css from './LanguageSelection.module.scss'
 export enum PlatformEntryType {
   CLIENT = 'client',
   SERVER = 'server'
-}
-
-export enum CodeSetupStringType {
-  HEADER = 'HEADER',
-  CODE = 'CODE',
-  TEXT = 'TEXT'
-}
-
-export interface CodeSetupDocEntry {
-  stringId: keyof StringsMap
-  stringType: CodeSetupStringType
 }
 
 export interface PlatformEntry {
@@ -112,6 +100,8 @@ export const LanguageSelection: React.FC<LanguageSelectionProps> = ({ selected, 
           <li key={name} className={css.item}>
             <Layout.Vertical spacing="small">
               <Button
+                data-testid="selectLanguageBtn"
+                aria-label={name}
                 noStyling
                 className={cx(css.button, selectedEntry?.name === name && css.selected)}
                 onClick={() => {

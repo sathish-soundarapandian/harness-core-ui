@@ -68,7 +68,8 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
         selectProps: {
           items: getUserValuesOptions(defaultTo(userData?.data, [])),
           onQueryChange: handleQueryChange,
-          resetOnSelect: false
+          resetOnSelect: false,
+          loadingItems: fetchUsers
         }
       }}
     />

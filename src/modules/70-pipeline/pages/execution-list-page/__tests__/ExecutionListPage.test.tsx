@@ -133,9 +133,9 @@ describe('ExecutionListPage', () => {
       </TestWrapper>
     )
     await waitForElementToBeRemoved(() => screen.getByText('Loading, please wait...'))
-    const noScansText = await screen.findByText('stoSteps.noScansText')
+    const noScansText = await screen.findByText('sto.noScansText')
     expect(noScansText).toBeInTheDocument()
-    expect(screen.getByText('stoSteps.noScansRunPipelineText')).toBeInTheDocument()
+    expect(screen.getByText('sto.noScansRunPipelineText')).toBeInTheDocument()
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(
       expect.objectContaining({ queryParams: expect.objectContaining({ module: 'sto' }) })
     )

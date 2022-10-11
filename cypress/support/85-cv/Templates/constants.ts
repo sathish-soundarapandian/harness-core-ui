@@ -1,3 +1,12 @@
+import { Connectors } from '../../../utils/connctors-utils'
+
+export const servicesCallV1 = '/ng/api/services?*'
+export const environmentsV1 = '/ng/api/environments?*'
+export const saveTemplateCall = '/template/api/templates?*'
+export const templateListCall = '/template/api/templates/list?*'
+export const templateDataCall = '/template/api/templates/AppD_Template?*'
+export const templateInputSetCall = '/template/api/templates/templateInputs/AppD_Template?*'
+export const RuntimeValue = '<+input>'
 export const variablesResponse = {
   status: 'SUCCESS',
   data: {
@@ -165,4 +174,122 @@ export const variablesResponseWithAppDVariable = {
   },
   metaData: null,
   correlationId: 'a63bd126-2dc6-4f02-8708-84895e4db7bf'
+}
+
+export const HealthSourceDetails = {
+  template: {
+    name: 'AppD Template',
+    identifier: 'AppD_Template',
+    version: '1'
+  },
+  name: 'AppD',
+  connector: Connectors.APP_DYNAMICS,
+  group: 'Group 1',
+  metricName: 'appdMetric'
+}
+
+export const yamlTemplate = `template:
+  name: AppD Template
+  identifier: AppD_Template
+  versionLabel: "1"
+  type: MonitoredService
+  projectIdentifier: project1
+  orgIdentifier: default
+  tags: {}
+  spec:
+    serviceRef: <+input>
+    environmentRef: <+input>
+    type: Application
+    sources:
+      healthSources:
+        - name: AppD
+          identifier: AppD
+          type: AppDynamics
+          spec:
+            applicationName: <+input>
+            tierName: <+input>
+            metricData:
+              Errors: true
+              Performance: true
+            metricDefinitions:
+              - identifier: appdMetric
+                metricName: appdMetric
+                baseFolder: ""
+                metricPath: ""
+                completeMetricPath: <+input>
+                groupName: Group 1
+                sli:
+                  enabled: true
+                analysis:
+                  riskProfile:
+                    category: Errors
+                    metricType: ERROR
+                    thresholdTypes:
+                      - ACT_WHEN_HIGHER
+                  liveMonitoring:
+                    enabled: false
+                  deploymentVerification:
+                    enabled: true
+                    serviceInstanceMetricPath: <+input>
+            feature: Application Monitoring
+            connectorRef: <+input>
+            metricPacks:
+              - identifier: Errors
+              - identifier: Performance
+`
+export const templateListValue = {
+  status: 'SUCCESS',
+  data: {
+    content: [
+      {
+        accountId: 'accountId',
+        orgIdentifier: 'default',
+        projectIdentifier: 'project1',
+        identifier: HealthSourceDetails.template.identifier,
+        name: HealthSourceDetails.template.name,
+        description: '',
+        tags: {},
+        yaml: yamlTemplate.toString(),
+        versionLabel: HealthSourceDetails.template.version,
+        templateEntityType: 'MonitoredService',
+        childType: 'Application',
+        templateScope: 'project',
+        version: 0,
+        gitDetails: {
+          objectId: null,
+          branch: null,
+          repoIdentifier: null,
+          rootFolder: null,
+          filePath: null,
+          repoName: null,
+          commitId: null,
+          fileUrl: null,
+          repoUrl: null
+        },
+        entityValidityDetails: { valid: true, invalidYaml: null },
+        lastUpdatedAt: 1661838047936,
+        createdAt: 1661838047936,
+        stableTemplate: true
+      }
+    ],
+    pageable: {
+      sort: { sorted: true, unsorted: false, empty: false },
+      pageSize: 20,
+      pageNumber: 0,
+      offset: 0,
+      paged: true,
+      unpaged: false
+    },
+    totalElements: 1,
+    last: true,
+    totalPages: 1,
+    sort: { sorted: true, unsorted: false, empty: false },
+    number: 0,
+    first: true,
+    numberOfElements: 1,
+    size: 20,
+    empty: false
+  },
+  metaData: null,
+  correlationId: '02ba45bb-c4e4-4885-a3ed-08ea2ef7ea8b'
 }

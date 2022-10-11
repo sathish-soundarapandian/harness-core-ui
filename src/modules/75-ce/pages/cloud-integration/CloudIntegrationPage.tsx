@@ -34,6 +34,8 @@ import {
 } from '@ce/utils/cloudIntegrationUtils'
 import { useCCMK8SMetadata } from 'services/ce'
 
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import css from './CloudIntegrationPage.module.scss'
 
 enum CloudIntegrationTabs {
@@ -44,6 +46,7 @@ enum CloudIntegrationTabs {
 const CloudIntegrationPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<{ accountId: string }>()
+  const { trackEvent } = useTelemetry()
 
   const [ccmMetaResult, refetchCCMMetaData] = useFetchCcmMetaDataQuery()
   const { data: ccmMetaDataRes, fetching: ccmMetaDataLoading } = ccmMetaResult
@@ -128,6 +131,7 @@ const CloudIntegrationPage: React.FC = () => {
     }
 
     if (connectorType) {
+      trackEvent(USER_JOURNEY_EVENTS.ONBOARDING_CONNECTOR_CLICK, { connector: connectorType })
       openConnectorModal(false, connectorType)
     }
   }

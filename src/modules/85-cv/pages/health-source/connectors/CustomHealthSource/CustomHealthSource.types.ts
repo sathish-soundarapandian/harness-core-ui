@@ -7,9 +7,13 @@
 
 import type { SelectOption } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
-import type { UseStringsReturn } from 'framework/strings'
 import type { CustomHealthRequestDefinition, CustomHealthMetricDefinition, TimestampInfo } from 'services/cv'
-import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
+import type {
+  CustomMappedMetric,
+  CustomSelectedAndMappedMetrics,
+  GroupedCreatedMetrics
+} from '../../common/CustomMetric/CustomMetric.types'
+import type { MetricThresholdsState, MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 
 export interface CustomHealthSourceSetupSource {
@@ -18,6 +22,8 @@ export interface CustomHealthSourceSetupSource {
   healthSourceIdentifier: string
   healthSourceName: string
   connectorRef?: string
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
 }
 
 export type MapCustomHealthToService = {
@@ -45,18 +51,19 @@ export type MapCustomHealthToService = {
   lowerBaselineDeviation?: boolean
   higherBaselineDeviation?: boolean
   serviceInstanceIdentifier?: string
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
 }
 
 export interface onSubmitCustomHealthSourceInterface {
   formikProps: FormikProps<MapCustomHealthToService>
-  createdMetrics: string[]
-  selectedMetricIndex: number
   mappedMetrics: Map<string, CustomMappedMetric>
   selectedMetric: string
   onSubmit: (formdata: CustomHealthSourceSetupSource, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
   sourceData: any
   transformedSourceData: CustomHealthSourceSetupSource
-  getString: UseStringsReturn['getString']
+  isMetricThresholdEnabled: boolean
+  metricThresholds: MetricThresholdsState
 }
 export interface InitCustomHealthSourceInterface {
   sli: boolean
@@ -73,4 +80,20 @@ export interface InitCustomHealthSourceInterface {
   query: string
   startTime: { timestampFormat: string }
   endTime: { timestampFormat: string }
+}
+
+export interface MetricThresholdCommonProps {
+  formikValues: MapCustomHealthToService
+  groupedCreatedMetrics: GroupedCreatedMetrics
+  setThresholdState: React.Dispatch<React.SetStateAction<MetricThresholdsState>>
+}
+
+export type CustomHealthThresholdContextType = MetricThresholdCommonProps
+
+export interface PersistMappedMetricsType {
+  mappedMetrics: Map<string, CustomMappedMetric>
+  selectedMetric: string
+  metricThresholds: MetricThresholdsState
+  formikValues: MapCustomHealthToService
+  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
 }

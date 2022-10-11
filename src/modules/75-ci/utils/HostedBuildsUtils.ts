@@ -6,11 +6,17 @@
  */
 
 import { set } from 'lodash-es'
-import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse } from 'services/cd-ng'
+import { parse } from 'yaml'
+import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse, UserRepoResponse } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
+import type { UseStringsReturn } from 'framework/strings'
+import { StringUtils } from '@common/exports'
 import { Connectors } from '@connectors/constants'
 import {
+  ACCOUNT_SCOPE_PREFIX,
   BitbucketPRTriggerActions,
+  getCloudPipelinePayloadWithCodebase,
+  getPipelinePayloadWithCodebase,
   GitHubPRTriggerActions,
   GitlabPRTriggerActions
 } from '../pages/get-started-with-ci/InfraProvisioningWizard/Constants'
@@ -138,4 +144,50 @@ export const addDetailsToPipeline = ({
     updatedPipeline = set(updatedPipeline, 'pipeline.properties.ci.codebase.repoName', repoName)
   }
   return updatedPipeline
+}
+
+export const getFullRepoName = (repository: UserRepoResponse): string => {
+  const { name: repositoryName, namespace } = repository
+  return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
+}
+
+export const getPayloadForPipelineCreation = ({
+  pipelineYaml,
+  pipelineName,
+  isUsingHostedVMsInfra,
+  isUsingAStarterPipeline,
+  getString,
+  projectIdentifier,
+  orgIdentifier,
+  repository,
+  configuredGitConnector
+}: {
+  pipelineYaml: string
+  pipelineName: string
+  isUsingHostedVMsInfra?: boolean
+  isUsingAStarterPipeline: boolean
+  getString: UseStringsReturn['getString']
+  projectIdentifier: string
+  orgIdentifier: string
+  repository: UserRepoResponse
+  configuredGitConnector: ConnectorInfoDTO
+}): PipelineConfig => {
+  const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
+  return addDetailsToPipeline({
+    originalPipeline: isUsingHostedVMsInfra
+      ? isUsingAStarterPipeline
+        ? parse(pipelineYaml)
+        : getCloudPipelinePayloadWithCodebase()
+      : isUsingAStarterPipeline
+      ? parse(pipelineYaml)
+      : getPipelinePayloadWithCodebase(),
+    name: `${getString('buildText')} ${isUsingAStarterPipeline ? pipelineName : repository.name}`,
+    identifier: `${getString('buildText')}_${
+      isUsingAStarterPipeline ? StringUtils.getIdentifierFromName(pipelineName) : repository.name?.replace(/-/g, '_')
+    }_${UNIQUE_PIPELINE_ID}`,
+    projectIdentifier,
+    orgIdentifier,
+    connectorRef: `${ACCOUNT_SCOPE_PREFIX}${configuredGitConnector?.identifier}`,
+    repoName: getFullRepoName(repository)
+  })
 }

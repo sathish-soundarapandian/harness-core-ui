@@ -43,7 +43,7 @@ const CreateWinRmCredWizard: React.FC<CreateWinRmCredWizardProps & WinRmCredShar
     <StepWizard<WinRmCredSharedObj>
       icon="command-winrm"
       iconProps={{ size: 37 }}
-      title={getString('secrets.secret.winrmCredential')}
+      title={getString('secrets.typeWinRM')}
     >
       <StepWinRmDetails name={getString('secrets.createWinRmCredWizard.titleDetails')} {...props} />
       <StepAuthentication name={getString('configuration')} onSuccess={props.onSuccess} isEdit={isEdit} />

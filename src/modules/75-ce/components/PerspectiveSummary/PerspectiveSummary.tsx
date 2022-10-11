@@ -140,10 +140,10 @@ const CostCard: (val: CostCardProps) => JSX.Element = ({
 const BAR_WIDTH = 298
 interface BudgetCardProps {
   budgetData: BudgetSummary
-  canEdit: boolean
+  canView: boolean
 }
 
-const BudgetCard: (props: BudgetCardProps) => JSX.Element | null = ({ budgetData, canEdit }) => {
+const BudgetCard: (props: BudgetCardProps) => JSX.Element | null = ({ budgetData, canView }) => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { actualCost, budgetAmount } = budgetData
@@ -189,8 +189,8 @@ const BudgetCard: (props: BudgetCardProps) => JSX.Element | null = ({ budgetData
           margin="none"
           font={FontVariation.SMALL}
           variation={ButtonVariation.LINK}
-          disabled={!canEdit}
-          tooltip={getToolTip(canEdit, PermissionIdentifier.EDIT_CCM_BUDGET, ResourceType.CCM_BUDGETS)}
+          disabled={!canView}
+          tooltip={getToolTip(canView, PermissionIdentifier.VIEW_CCM_BUDGET, ResourceType.CCM_BUDGETS)}
         >
           {getString('ce.perspectives.budgets.viewText')}
         </Link>
@@ -248,12 +248,12 @@ const BudgetCardsCarousel: () => JSX.Element | null = () => {
   const [activeSlide, setActiveSlide] = useState<number>(1)
   const { getString } = useStrings()
 
-  const [canEdit] = usePermission(
+  const [canView] = usePermission(
     {
       resource: {
         resourceType: ResourceType.CCM_BUDGETS
       },
-      permissions: [PermissionIdentifier.EDIT_CCM_BUDGET]
+      permissions: [PermissionIdentifier.VIEW_CCM_BUDGET]
     },
     []
   )
@@ -378,7 +378,7 @@ const BudgetCardsCarousel: () => JSX.Element | null = () => {
         }
       >
         {budgetData.map(bData => (
-          <BudgetCard key={bData?.id} budgetData={bData as BudgetSummary} canEdit={canEdit} />
+          <BudgetCard key={bData?.id} budgetData={bData as BudgetSummary} canView={canView} />
         ))}
       </Carousel>
     </Card>

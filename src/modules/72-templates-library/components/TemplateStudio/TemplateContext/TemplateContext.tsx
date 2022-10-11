@@ -14,7 +14,6 @@ import { parse } from 'yaml'
 import type { Color } from '@harness/design-system'
 import SessionToken from 'framework/utils/SessionToken'
 import { loggerFor } from 'framework/logging/logging'
-import { ModuleName } from 'framework/types/ModuleName'
 import type { GetPipelineQueryParams } from 'services/pipeline-ng'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
@@ -44,8 +43,15 @@ import { DefaultNewTemplateId, DefaultNewVersionLabel, DefaultTemplate } from 'f
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { PipelineContextInterface } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { ActionReturnType, TemplateContextActions } from './TemplateActions'
+import { getPipelineStages } from '@pipeline/components/PipelineStudio/PipelineStagesUtils'
+import type { PipelineStagesProps } from '@pipeline/components/PipelineStages/PipelineStages'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import type { Module } from '@common/interfaces/RouteInterfaces'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { useStrings } from 'framework/strings'
+import { ModuleName } from 'framework/types/ModuleName'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
+import { ActionReturnType, TemplateContextActions } from './TemplateActions'
 
 const logger = loggerFor(ModuleName.TEMPLATES)
 
@@ -735,6 +741,8 @@ export interface TemplateContextInterface {
   updateGitDetails: (gitDetails: EntityGitDetails) => Promise<void>
   updateStoreMetadata: (storeMetadata: StoreMetadata, gitDetails?: EntityGitDetails) => Promise<void>
   renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
+  /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
+  setIntermittentLoading: (isIntermittentLoading: boolean) => void
 }
 
 const _deleteTemplateCache = async (
@@ -857,18 +865,23 @@ export const TemplateContext = React.createContext<TemplateContextInterface>({
   deleteTemplateCache: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
   updateGitDetails: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
   updateStoreMetadata: /* istanbul ignore next */ () => new Promise<void>(() => undefined),
-  renderPipelineStage: () => <div />
+  renderPipelineStage: () => <div />,
+  /** Useful for setting any intermittent loading state. Eg. any API call loading, any custom loading, etc */
+  setIntermittentLoading: () => undefined
 })
 
 export const TemplateProvider: React.FC<{
   queryParams: GetPipelineQueryParams
+  module: Module
   templateIdentifier: string
   versionLabel?: string
   templateType: string
-  renderPipelineStage?: PipelineContextInterface['renderPipelineStage']
-}> = ({ queryParams, templateIdentifier, versionLabel, templateType, renderPipelineStage, children }) => {
+}> = ({ queryParams, module, templateIdentifier, versionLabel, templateType, children }) => {
   const { repoIdentifier, branch } = queryParams
   const { supportingTemplatesGitx } = useAppStore()
+  const { licenseInformation } = useLicenseStore()
+  const { CING_ENABLED, CDNG_ENABLED, CFNG_ENABLED, SECURITY_STAGE } = useFeatureFlags()
+  const { getString } = useStrings()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const isMounted = React.useRef(false)
   const [state, dispatch] = React.useReducer(
@@ -987,6 +1000,21 @@ export const TemplateProvider: React.FC<{
   const updateTemplateView = React.useCallback((data: TemplateViewData) => {
     dispatch(TemplateContextActions.updateTemplateView({ templateView: data }))
   }, [])
+  const setIntermittentLoading = React.useCallback((isIntermittentLoading: boolean) => {
+    dispatch(TemplateContextActions.setIntermittentLoading({ isIntermittentLoading }))
+  }, [])
+
+  const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) =>
+    getPipelineStages({
+      args,
+      getString,
+      module,
+      isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
+      isCDEnabled: licenseInformation['CD'] && CDNG_ENABLED,
+      isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
+      isSTOEnabled: SECURITY_STAGE,
+      isApprovalStageEnabled: true
+    })
 
   React.useEffect(() => {
     fetchTemplate({ forceFetch: true, forceUpdate: true })
@@ -1041,7 +1069,8 @@ export const TemplateProvider: React.FC<{
         setYamlHandler,
         updateGitDetails,
         updateStoreMetadata,
-        renderPipelineStage
+        renderPipelineStage,
+        setIntermittentLoading
       }}
     >
       {children}

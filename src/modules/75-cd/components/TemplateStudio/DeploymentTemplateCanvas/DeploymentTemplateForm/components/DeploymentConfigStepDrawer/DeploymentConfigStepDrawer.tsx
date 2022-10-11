@@ -13,11 +13,13 @@ import type { StepElementConfig } from 'services/cd-ng'
 import type { StepData } from 'services/pipeline-ng'
 import { StepPalette } from '@pipeline/components/PipelineStudio/StepPalette/StepPalette'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { useStrings } from 'framework/strings'
 import { TemplateDetails } from '@templates-library/components/TemplateDetails/TemplateDetails'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { DrawerSizes, DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
+import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import {
   StepCommandsWithRef as StepCommands,
   StepFormikRef
@@ -31,26 +33,26 @@ import { DeploymentConfigStepDrawerTitle } from './DeploymentConfigStepDrawerTit
 import css from './DeploymentConfigStepDrawer.module.scss'
 
 const DEFAULT_STEP_PALETTE_MODULE_INFO = [
-  {
-    module: 'cd',
-    shouldShowCommonSteps: true
-  }
+  { module: 'cd', category: 'Utilities', shouldShowCommonSteps: true, commonStepCategory: 'Utilities' }
 ]
 
 function TemplateDetailsWrapper() {
   const { drawerData } = useDeploymentContext()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
-  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const isGitSyncEnabled = isGitSyncEnabledForProject && /* istanbul ignore next */ !gitSyncEnabledOnlyForFF
   const templateDetailsToView = drawerData.data?.templateDetails
+  const { getString } = useStrings()
 
-  const templateDetailsComponent = <TemplateDetails template={templateDetailsToView as TemplateSummaryResponse} />
+  const templateDetailsComponent = (
+    <TemplateDetails disableVersionChange={true} template={templateDetailsToView as TemplateSummaryResponse} />
+  )
 
   if (isEmpty(templateDetailsToView)) {
-    return null
+    return <NoResultsView minimal text={getString('templatesLibrary.templateDoesNotExist')} />
   }
 
   return isGitSyncEnabled ? (
-    <GitSyncStoreProvider>{templateDetailsComponent}</GitSyncStoreProvider>
+    /* istanbul ignore next */ <GitSyncStoreProvider>{templateDetailsComponent}</GitSyncStoreProvider>
   ) : (
     templateDetailsComponent
   )

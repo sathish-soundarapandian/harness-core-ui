@@ -134,7 +134,7 @@ export interface BuildInfo {
 }
 
 export interface BuildJobEnvInfo {
-  type?: 'K8' | 'VM'
+  type?: 'K8' | 'VM' | 'DOCKER'
 }
 
 export interface BuildRepositoryCount {
@@ -403,6 +403,24 @@ export interface DependencySpecType {
 export interface DeprecatedImageInfo {
   tag?: string
   version?: string
+}
+
+export interface DockerInfraSpec {
+  platform: ParameterFieldPlatform
+}
+
+export type DockerInfraYaml = Infrastructure & {
+  spec: DockerInfraSpec
+  type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
+}
+
+export type DockerRuntime = Runtime & {
+  spec: DockerRuntimeSpec
+  type: 'Docker'
+}
+
+export interface DockerRuntimeSpec {
+  [key: string]: any
 }
 
 export type DockerStepInfo = StepSpecType & {
@@ -817,12 +835,16 @@ export interface Error {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1166,12 +1188,16 @@ export interface ErrorMetadata {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   errorMessage?: string
 }
 
@@ -1542,12 +1568,16 @@ export interface Failure {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1562,8 +1592,9 @@ export interface FailureStrategyActionConfig {
     | 'Abort'
     | 'StageRollback'
     | 'StepGroupRollback'
+    | 'PipelineRollback'
     | 'ManualIntervention'
-    | 'ProceedWithDefaultValue'
+    | 'ProceedWithDefaultValues'
 }
 
 export interface FailureStrategyConfig {
@@ -1871,7 +1902,7 @@ export interface OnFailureConfig {
     | 'Verification'
     | 'DelegateProvisioning'
     | 'PolicyEvaluationFailure'
-    | 'ExecutionInputTimeoutError'
+    | 'InputTimeoutError'
   )[]
 }
 
@@ -2042,6 +2073,10 @@ export interface PersistentVolumeClaimYamlSpec {
   readOnly?: boolean
 }
 
+export type PipelineRollbackFailureActionConfig = FailureStrategyActionConfig & {
+  type: 'PipelineRollback'
+}
+
 export interface Platform {
   arch?: 'Amd64'
   os?: 'Linux' | 'MacOS' | 'Windows'
@@ -2087,7 +2122,7 @@ export interface PodsSetupInfo {
 }
 
 export type ProceedWithDefaultValuesFailureActionConfig = FailureStrategyActionConfig & {
-  type: 'ProceedWithDefaultValue'
+  type: 'ProceedWithDefaultValues'
 }
 
 export interface ReferenceDTO {
@@ -2543,12 +2578,16 @@ export interface ResponseMessage {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
+    | 'AZURE_BP_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2560,7 +2599,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -2642,15 +2681,16 @@ export type RunStepInfo = StepSpecType & {
 export type RunTestsStepInfo = StepSpecType & {
   args: string
   buildEnvironment?: 'Core' | 'Framework'
-  buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole'
+  buildTool: 'Maven' | 'Bazel' | 'Gradle' | 'Dotnet' | 'Nunitconsole' | 'SBT'
   connectorRef?: string
+  enableTestSplitting?: boolean
   envVariables?: {
     [key: string]: string
   }
   frameworkVersion?: '5.0' | '6.0'
   image?: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
-  language: 'Java' | 'Csharp'
+  language: 'Java' | 'Kotlin' | 'Scala' | 'Csharp'
   namespaces?: string
   outputVariables?: OutputNGVariable[]
   packages?: string
@@ -2663,10 +2703,11 @@ export type RunTestsStepInfo = StepSpecType & {
   runOnlySelectedTests?: boolean
   shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh'
   testAnnotations?: string
+  testSplitStrategy?: 'ClassTiming' | 'TestCount'
 }
 
 export interface Runtime {
-  type?: 'Cloud'
+  type?: 'Docker' | 'Cloud'
 }
 
 export type SampleErrorMetadataDTO = ErrorMetadataDTO & {
@@ -2845,7 +2886,14 @@ export type TagBuildSpec = BuildSpec & {
 }
 
 export interface TemplateInfo {
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
   templateIdentifier?: string
   versionLabel?: string
 }
@@ -2866,6 +2914,7 @@ export type TemplateInputsErrorMetadataDTO = ErrorMetadataDTO & {
 export interface TemplateLinkConfig {
   templateInputs?: JsonNode
   templateRef: string
+  templateVariables?: JsonNode
   versionLabel?: string
 }
 
@@ -2886,7 +2935,14 @@ export interface TemplateResponse {
   tags?: {
     [key: string]: string
   }
-  templateEntityType?: 'Step' | 'Stage' | 'Pipeline' | 'CustomDeployment' | 'MonitoredService' | 'SecretManager'
+  templateEntityType?:
+    | 'Step'
+    | 'Stage'
+    | 'Pipeline'
+    | 'CustomDeployment'
+    | 'MonitoredService'
+    | 'SecretManager'
+    | 'ArtifactSource'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
@@ -3012,6 +3068,7 @@ export interface WebhookBaseAttributes {
   authorName?: string
   before?: string
   link?: string
+  mergeSha?: string
   message?: string
   ref?: string
   sender?: string
@@ -3444,7 +3501,7 @@ export const getExecutionConfigPromise = (
   )
 
 export interface GetCustomerConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM'
+  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
   overridesOnly: boolean
   accountIdentifier: string
 }
@@ -3494,7 +3551,7 @@ export const getCustomerConfigPromise = (
   )
 
 export interface GetDefaultConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM'
+  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
 }
 
 export type GetDefaultConfigProps = Omit<
@@ -3542,7 +3599,7 @@ export const getDefaultConfigPromise = (
   )
 
 export interface ResetExecutionConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM'
+  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
   accountIdentifier: string
 }
 
@@ -3600,7 +3657,7 @@ export const resetExecutionConfigPromise = (
   )
 
 export interface UpdateExecutionConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM'
+  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
   accountIdentifier: string
 }
 
@@ -3765,6 +3822,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeploymentSteps'
     | 'DeploymentStage'
     | 'ApprovalStage'
+    | 'PipelineStage'
     | 'FeatureFlagStage'
     | 'Template'
     | 'TemplateStage'
@@ -3776,6 +3834,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'ServiceNowApproval'
     | 'ServiceNowCreate'
     | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
     | 'GovernancePolicies'
     | 'POLICY_STEP'
     | 'Run'
@@ -3804,6 +3863,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'StrategyNode'
     | 'AZURE_SLOT_DEPLOYMENT_STEP'
     | 'AzureTrafficShift'
+    | 'FetchInstanceScript'
     | 'AzureSwapSlot'
     | 'AzureWebAppRollback'
     | 'JenkinsBuild'
@@ -3816,6 +3876,12 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AzureCreateBPResource'
     | 'AzureARMRollback'
     | 'Background'
+    | 'Wait'
+    | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
   yamlGroup?: string
 }
 

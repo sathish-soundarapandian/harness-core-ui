@@ -9,11 +9,29 @@ import React, { useState, useEffect } from 'react'
 import { capitalize, defaultTo } from 'lodash-es'
 import { Card, Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
 import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
+import { useStrings } from 'framework/strings'
 import { Item } from './FFDeveloperCard'
 import SliderBar from './SliderBar'
 import css from './CostCalculator.module.scss'
+
+const MILLION = 1000000
+const THOUSAND = 1000
+const NUMBER_UNITS: { [key: string]: string } = {
+  MILLION: 'M',
+  THOUSAND: 'K'
+}
+const getUnitWithNumbers = (num: number): string => {
+  let unit = ''
+  if (num >= MILLION) {
+    unit = `${num / MILLION}${NUMBER_UNITS.MILLION}`
+  } else if (num >= THOUSAND) {
+    unit = `${num / THOUSAND}${NUMBER_UNITS.THOUSAND}`
+  } else {
+    unit = `${num}`
+  }
+  return unit
+}
 
 const Header: React.FC<{ unitPrice: number; paymentFreq: TimeType }> = () => {
   const { getString } = useStrings()
@@ -33,20 +51,24 @@ const Header: React.FC<{ unitPrice: number; paymentFreq: TimeType }> = () => {
     <Layout.Vertical padding={{ bottom: 'medium' }}>
       <Text font={{ variation: FontVariation.H5 }}>{getString('authSettings.costCalculator.mau.title')}</Text>
       {/* <Layout.Horizontal spacing={'small'}>
-        <Text color={Color.PRIMARY_7} font={{ size: 'xsmall' }}>
+        <Text
+          color={Color.PRIMARY_7}
+          tooltip={getString('authSettings.costCalculator.mau.mauDefinition')}
+          font={{ size: 'xsmall' }}
+        >
           {getString('authSettings.costCalculator.mau.mau')}
-        </Text>
-        <Text font={{ size: 'xsmall' }}>{unitPriceDescr}</Text>
-      </Layout.Horizontal> */}
+        </Text> */}
+      {/* <Text font={{ size: 'xsmall' }}>{unitPriceDescr}</Text> */}
+      {/* </Layout.Horizontal> */}
     </Layout.Vertical>
   )
 }
 
 interface MAUSubscriptionInfoProps {
   currentSubscribed: number
-  usage: string
+  usage: number
   currentPlan: Editions
-  recommended: string
+  recommended: number
 }
 
 const MAUSubscriptionInfo: React.FC<MAUSubscriptionInfoProps> = ({
@@ -58,7 +80,7 @@ const MAUSubscriptionInfo: React.FC<MAUSubscriptionInfoProps> = ({
   const { getString } = useStrings()
   const currentPlanDescr = (
     <Layout.Horizontal spacing={'small'} flex={{ alignItems: 'baseline', justifyContent: 'start' }}>
-      <Text font={{ weight: 'bold' }}>{currentSubscribed}k</Text>
+      <Text font={{ weight: 'bold' }}>{getUnitWithNumbers(currentSubscribed)}</Text>
       <Text color={Color.PRIMARY_7} font={{ size: 'xsmall', weight: 'bold' }}>
         {`${capitalize(currentPlan)} ${getString('common.subscriptions.overview.plan')}`}
       </Text>
@@ -70,13 +92,13 @@ const MAUSubscriptionInfo: React.FC<MAUSubscriptionInfoProps> = ({
       <Item title={getString('authSettings.costCalculator.currentSubscribed')} value={currentPlanDescr} />
       <Item
         title={getString('authSettings.costCalculator.using')}
-        value={<Text font={{ weight: 'bold' }}>{usage}</Text>}
+        value={<Text font={{ weight: 'bold' }}>{getUnitWithNumbers(usage)}</Text>}
       />
       <Item
         title={getString('authSettings.recomendation')}
         value={
           <Text color={Color.PRIMARY_7} font={{ weight: 'bold' }}>
-            {recommended}
+            {getUnitWithNumbers(recommended)}
           </Text>
         }
       />
@@ -167,7 +189,7 @@ const FFMAUCard: React.FC<FFMAUCardProps> = ({
     const finalValue = mausRange.list[val]
     setNumberOfMAUs(finalValue)
   }
-  const recommendedValue = `${getRecommendedNumbers(recommended, sampleMultiplier, mausRange.list)}${unit}`
+  const recommendedValue = getRecommendedNumbers(recommended, sampleMultiplier, mausRange.list)
   const selectedValue = mausRange.list.findIndex((num: number) => num === numberOfMAUs)
   return (
     <Card>
@@ -175,7 +197,7 @@ const FFMAUCard: React.FC<FFMAUCardProps> = ({
         <Header unitPrice={unitPrice} paymentFreq={paymentFreq} />
         <MAUSubscriptionInfo
           currentSubscribed={currentSubscribed}
-          usage={`${usage === 0 ? usage : usage / defaultTo(sampleMultiplier, 1)}${unit}`}
+          usage={usage === 0 ? usage : usage / defaultTo(sampleMultiplier, 1)}
           currentPlan={currentPlan}
           recommended={recommendedValue}
         />

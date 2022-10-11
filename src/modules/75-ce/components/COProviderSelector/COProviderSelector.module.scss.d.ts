@@ -13,6 +13,7 @@ declare const styles: {
   readonly cardCard: string
   readonly footer: string
   readonly instanceTypeNameGrid: string
+  readonly providerScreenContainer: string
   readonly providersViewGrid: string
   readonly title: string
 }

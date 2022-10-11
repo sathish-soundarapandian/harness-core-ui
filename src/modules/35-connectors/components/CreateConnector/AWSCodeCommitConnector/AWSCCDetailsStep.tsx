@@ -25,11 +25,13 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { Connectors } from '@connectors/constants'
+import { useConnectorWizard } from '../../CreateConnectorWizard/ConnectorWizardContext'
 import css from '../commonSteps/ConnectorCommonStyles.module.scss'
 
 export interface AWSCCDetailsStepProps extends StepProps<ConnectorConfigDTO> {
   isEditMode: boolean
   connectorInfo?: ConnectorInfoDTO
+  helpPanelReferenceId?: string
 }
 
 export default function AWSCCDetailsStep(props: AWSCCDetailsStepProps) {
@@ -37,6 +39,10 @@ export default function AWSCCDetailsStep(props: AWSCCDetailsStepProps) {
   const [initialValues, setInitialValues] = useState<ConnectorConfigDTO>({
     urlType: 'Region',
     url: undefined
+  })
+
+  useConnectorWizard({
+    helpPanel: props.helpPanelReferenceId ? { referenceId: props.helpPanelReferenceId, contentWidth: 900 } : undefined
   })
 
   const handleSubmit = (formData: ConnectorConfigDTO) => {

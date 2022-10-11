@@ -10,7 +10,8 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import {
   clearRuntimeInput,
   getFeaturePropsForRunPipelineButton,
-  mergeTemplateWithInputSetData
+  mergeTemplateWithInputSetData,
+  getMergedVariables
 } from '../runPipelineUtils'
 import pipelineTemplate from './mockJson/pipelineTemplate.json'
 import pipelineInputSetPortion from './mockJson/pipelineInputSetPortion.json'
@@ -468,5 +469,41 @@ describe('clearRuntimeInput tests', () => {
         ],
       }
     `)
+  })
+})
+
+describe('getMergedVariables tests', () => {
+  test('works with old execution when variable is added to pipeline', () => {
+    const result = getMergedVariables({
+      variables: [
+        { name: 'var1', type: 'String', value: '' },
+        { name: 'var2', type: 'String', value: '' }
+      ],
+      inputSetVariables: [{ name: 'var1', type: 'String', value: 'val1' }],
+      allVariables: [],
+      shouldUseDefaultValues: false
+    })
+
+    expect(result).toEqual([
+      { name: 'var1', type: 'String', value: 'val1' },
+      { name: 'var2', type: 'String', value: '' }
+    ])
+  })
+
+  test('works with old execution when variable is removed from pipeline', () => {
+    const result = getMergedVariables({
+      variables: [{ name: 'var1', type: 'String', value: '' }],
+      inputSetVariables: [
+        { name: 'var1', type: 'String', value: 'val1' },
+        { name: 'var2', type: 'String', value: 'val2' }
+      ],
+      allVariables: [],
+      shouldUseDefaultValues: false
+    })
+
+    expect(result).toEqual([
+      { name: 'var1', type: 'String', value: 'val1' },
+      { name: 'var2', type: 'String', value: 'val2' }
+    ])
   })
 })

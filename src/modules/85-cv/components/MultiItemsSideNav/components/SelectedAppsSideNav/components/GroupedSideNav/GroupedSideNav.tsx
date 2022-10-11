@@ -66,7 +66,7 @@ export default function GroupedSideNav({
         }
         const [label, items] = groupItem
         return (
-          <CollapseList key={label} defaultOpenIndex={0}>
+          <CollapseList key={`${label}-${items.length}`} defaultOpenIndex={0}>
             <CollapseListPanel
               collapseHeaderProps={{
                 heading: (
@@ -92,6 +92,7 @@ export default function GroupedSideNav({
                     onClick={() => {
                       onSelect?.(selectedApp?.metricName || '', selectedApp.index as number)
                     }}
+                    data-testid={`sideNav-${selectedApp.metricName}`}
                   >
                     <Text
                       className={cx(

@@ -89,6 +89,9 @@ terraformStep:
   workspace: Enter Workspace
 kubernetesStep:
   workload: Enter Workload
+waitStep:
+  validation:
+    duration10SecMinimum: 'Minimum Duration is 10 seconds'
 approvalStep:
   message: 'Approval Message'
   approvers: 'Approver(s)'
@@ -267,6 +270,14 @@ serviceNowUpdateStep:
   fieldType:
     applyFromTemplate: Apply from template
     updateFields: Update Fields
+serviceNowImportSetStep:
+  stagingTable: Staging Table
+  jsonBody: JSON Body
+  validations:
+    stagingTableRequired: Staging Table is required
+    jsonRequired: JSON is required
+    invalidJson: JSON is not valid
+  fetchingStagingTableNamePlaceholder: Fetching Staging Table Name...
 commonApprovalStep:
   execution:
     allConditionsMsg: 'If all of the following conditions are met:'
@@ -348,6 +359,7 @@ manifestType:
   serverlessConfigFilePath: Serverless Config File Path
   serverlessConfigFilePathPlaceholder: Enter Serverless Config File Path
   valuesYamlPath: Values.yaml
+  addValuesYamlPath: Add Values.yaml
   customRemoteExtractionScript: Custom Remote Manifest Extraction Script
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
@@ -406,6 +418,9 @@ failureStrategies:
     StageRollback: Rollback Stage
     ManualIntervention: Manual Intervention
     MarkAsSuccess: Mark As Success
+    MarkedAsSuccess: Marked As Success
+    MarkAsFail: Mark As Fail
+    MarkedAsFail: Marked As Fail
   errorTypeLabels:
     Authentication: Authentication Errors
     Authorization: Authorization Errors
@@ -414,7 +429,7 @@ failureStrategies:
     DelegateProvisioning: Delegate Provisioning Errors
     Unknown: Unknown Errors
     PolicyEvaluationFailure: Policy Evaluation Failures
-    ExecutionInputTimeoutError: Execution-time Inputs Timeout Errors
+    InputTimeoutError: Execution-time Inputs Timeout Errors
   validation:
     arrayOrUndefined: Value must be an array if defined.
     strategyRequired: 'At least 1 strategy is required'
@@ -439,14 +454,15 @@ failureStrategies:
 loopingStrategy:
   title: Looping Strategy
   subTitle: 'Select 1 of the {{maxCount}} looping execution strategy below.'
-  warningText: All the configuration will be lost
+  warningText: All the configuration will be lost.
   learnMore: Learn more about Looping strategies
   deleteModal:
-    title: Are you sure, you want to remove the looping strategy?
-    content: '{{$.pipeline.loopingStrategy.warningText}}'
+    title: Remove looping strategy?
+    content: Are you sure you want to remove this looping strategy? {{$.pipeline.loopingStrategy.warningText}}
   toggleTypeModal:
-    title: Are you sure, you want to switch the looping strategy?
-    content: '{{$.pipeline.loopingStrategy.warningText}}'
+    title: Switch looping strategy?
+    content: Are you sure you want to switch lopping strategy? {{$.pipeline.loopingStrategy.warningText}}
+    switch: Switch
   matrix:
     label: Matrix
     helperText: Matrix gives the ability to execute the same set of tasks multiple times for a bunch of different configurations.
@@ -470,6 +486,7 @@ createPipeline:
 selectOrCreateForm:
   description: '{{$.common.selectAVersion.description}}'
 execution:
+  elapsedTime: 'Elapsed time'
   stagesExecuted: Stages executed (most recent first)
   upcomingStagesPrefix: 'Upcoming stages: '
   stepTitlePrefix: 'Step: '
@@ -571,8 +588,8 @@ conditionalExecution:
     success: Execute this {{entity}} if the {{parentEntity}} execution is successful thus far
     all: Always execute this {{entity}}
     failure: Execute this {{entity}} only if prior {{parentEntity}} or {{entity}} failed
-  condition: And execute this {{entity}} only if the following JEXL Condition evaluates to True
-  conditionLabel: Execute only if the following JEXL Condition evaluates to True
+  condition: And execute this {{entity}} only if the following JEXL Condition evaluates to true
+  conditionLabel: Execute only if the following JEXL Condition evaluates to true
   toolTip:
     stageTitle: Conditions for stage execution
     stepTitle: Conditions for step execution
@@ -609,6 +626,8 @@ artifactTriggerConfigPanel:
   configureInput: 'Configure Input'
   listenOnNewArtifact: 'Listen on New {{artifact}}'
   plusSelect: '+ Select {{artifact}}'
+  defineArtifactSource: 'Define Artifact Source'
+  defineManifestSource: 'Define Manifest Source'
   selectAnArtifact: 'Select an Artifact Reference'
   selectAManifest: 'Select a Manifest Reference'
   configureArtifactRuntimeInputs: 'Configure {{artifact}} Runtime Inputs'
@@ -724,8 +743,7 @@ testsReports:
   searchByTestName: Search by Test Name
   tiCallToAction:
     header: Did you know you can save time using Test Intelligence?
-    upsellSubText: 'Optimize your tests cycle and reduce build time by using machine learning based Test Intelligence.'
-    utilizeTISubText: 'Reduce test cycle time of your Java application by using machine learning based Test Intelligence.'
+    utilizeTISubText: 'Reduce test cycle time of your Java, .NET, Scala, Kotlin applications by using machine learning based Test Intelligence.'
     addRunTestsStep: Add 'Run Tests step' to your Pipeline
     requiresEnterprisePlan: Requires Enterprise Plan to access Test Intelligence
 uniqueIdentifier: Identifier must be unique
@@ -773,6 +791,8 @@ pipelineSteps:
   deployStageDescription: Deploy services, Serverless functions, or other workloads.
   featureStageDescription: Enable or disable functionality remotely without redeploying code.
   approvalStageDescription: Approve or reject changes during Pipeline progress.
+pipelineChaining:
+  selectPipeline: Select Pipeline
 aboutYourStage:
   stageNamePlaceholder: Enter Stage Name
 infraSpecifications:
@@ -795,9 +815,19 @@ infraSpecifications:
     arm64: ARM64
 imagePathLabel: Image Path
 artifactPathLabel: Artifact Path
+artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
+  artifactId: Artifact ID
+  artifactIdPlaceholder: Enter Artifact ID
+  groupId: Group ID
+  groupIdPlaceholder: Enter Group ID
+  extension: Extension
+  extensionPlaceholder: Enter Extension
+  classifier: Classifier
+  classifierPlaceholder: Enter Classifier
+  packageName: Package Name
   addPrimaryArtifact: Add Primary Artifact
   addArtifactSource: Add Artifact Source
   addSidecar: Add Sidecar
@@ -805,7 +835,6 @@ artifactsSelection:
   projectPlaceholder: Enter Project
   repositoryTypePlaceholder: Select Repository Type
   delegateselectionPlaceholder: Add specific selectors or leave empty to target any delegate
-  packageName: Package Name
   repositoryPort: Repository Port
   artifactsArrayPath: Artifacts Array Path
   versionPath: Version Path
@@ -843,11 +872,14 @@ artifactsSelection:
     packageName: Package Name is required
     imagePath: Image Path is required
     artifactPath: Artifact Path is required
+    artifactId: Artifact ID is required
+    groupId: Group ID is required
     region: '{{$.validation.regionRequired}}'
     tag: Tag is required
     tagRegex: Tag Regex is required
     sidecarId: Sidecar Identifier is required
     repositoryPort: Repository Port is required
+    repositoryFormat: Repository Format is required
     repositoryUrl: Repository URL is required
     repositoryType: Repository Type is required
     artifactDirectory: Artifact Directory is required
@@ -964,12 +996,15 @@ mySecurityTestsText: My Security Tests
 myPipelineRunsText: My Pipeline Runs
 noRegions: No regions found
 noBuckets: No buckets found with given region
+noBucketsFound: No buckets found
 gitRepo: Git Repo
 buildRepo: Build Repo
 failureTypetext: Select Failure Type
 stepDescription:
   HTTP: Run HTTP requests containing URLs, methods, headers, assertions, and variables.
+  ShellScriptProvision: The Shell Script Provisioner supports custom provisioners or your existing shell script implementations.
   SHELLSCRIPT: Execute scripts in the shell session. The scripts can be executed on the pod/instance running a Harness Delegate or on a remote host in the infrastructure.
+  Wait: Suspend/Wait the execution for the given amount of time.
   Barrier: Synchronize multiple Pipelines to coordinate deployments systematically.
   Queue: Queue pipeline executions to prevent multiple stages or pipelines from requesting the same deployment resources simultaneously.
   K8sRollingRollback: Roll back the workloads deployed by the stage.
@@ -1015,6 +1050,8 @@ stepDescription:
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
   createPR: Create PR
   mergePR: Merge PR
+  updateReleaseRepo: Update Release Repo
+  fetchInstanceScript: Fetch Instances
   AzureSlotDeployment: Select the Web App and source and target deployment slots for the deployment.
   CustomApproval: Custom Approval
   AzureTrafficShift: Shift network traffic to the new Web App version in the deployment slot.
@@ -1081,6 +1118,7 @@ deploymentFrequency: 'Deployment Frequency'
 executionFrequency: 'Execution Frequency'
 retryPipeline: Retry Failed Pipeline
 openInNewTab: Open in new tab
+openPipelineInNewTab: Open Pipeline in new tab
 stagetoRetryFrom: Select the stage that you would like to resume from
 runAllParallelstages: Run all parallel stages
 runFailedStages: Run only failed stages
@@ -1197,6 +1235,8 @@ serviceDeploymentTypes:
   azureFunctions: Azure Functions
   azureWebApp: Azure Web Apps
   customDeployment: Deployment Template
+  serverlessAwsType: Serverless Aws Lambda
+  customDeploy: Custom Deployment
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1283,6 +1323,7 @@ importSuccessMessage: '{{resourceType}} has been imported successfully'
 duplicateImport: This file is already in use. Do you still want to proceed?
 duplicateImportPipeline: This file is already in use by another pipeline. Do you still want to proceed?
 duplicateImportInputset: This file is already in use by another pipeline or input set. Do you still want to proceed?
+duplicateImportTemplate: This file is already in use by another Template. Do you still want to proceed?
 MatrixNode:
   maxConcurrency: 'Max Concurrency:'
 fieldLabels:
@@ -1310,6 +1351,7 @@ appServiceConfig:
     fileSource: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.applicationSettings.name}} File Path'
     subtitle: 'Specify {{$.pipeline.appServiceConfig.applicationSettings.name}} Script File Type'
+    overrides: '{{$.pipeline.appServiceConfig.applicationSettings.name}} Overrides'
   connectionStrings:
     name: Connection Strings
     file: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File'
@@ -1317,6 +1359,7 @@ appServiceConfig:
     fileSource: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Source'
     filePath: '{{$.pipeline.appServiceConfig.connectionStrings.name}} File Path'
     subtitle: 'Specify {{$.pipeline.appServiceConfig.connectionStrings.name}} Script File Type'
+    overrides: '{{$.pipeline.appServiceConfig.connectionStrings.name}} Overrides'
 startupCommand:
   name: Startup Command
   subtitle: 'Specify Azure Web App Startup Command Store Type'
@@ -1350,7 +1393,6 @@ draft: 'Draft'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
 warningForInvalidYAMLDiscard: Enabling this sets the YAML editor in read/write mode for the Pipelines you view. You can enable/disable this setting in any Pipeline.
-preProduction: 'Pre-Production'
 azureWebApp:
   strategy:
     basic: In a Basic deployment, a new Service/Artifact version is deployed to the deployment slot. Basic deployments are useful for development, learning Harness, and any non-mission critical workflows.
@@ -1360,9 +1402,13 @@ skipInstances:
   title: 'Skip instances with the same artifact version already deployed'
 selectiveStageExecution: 'Selective stage execution'
 customDeployment:
-  infraVariablesTitle: 'Define the variables to be used in your environment and infrastructure.'
-  hostObjectArrayPath: 'Host Object Array Path'
-  hostAttributes: 'Host Attributes'
+  infraDefinitionVariablesTitle: 'Infrastructure Properties'
+  infraVariablesTitle: 'Define the variables to be used in your infrastructure'
+  updateInfraVariablesTitle: 'Update values for variables defined as part of used template'
+  emptyInfraVariablesTitle: 'No variables are defined as part of used template'
+  seeOnlyTemplatesFor: See only templates for {{name}}
+  instanceObjectArrayPath: 'Instance Object Array Path'
+  instanceAttributes: 'Instance Attributes'
   newAttribute: 'New Attribute'
   fetchInstancesScript: 'Fetch Instance Script'
   fetchInstanceScriptHeader: 'Define your script inline or from File Store.'
@@ -1374,3 +1420,6 @@ customDeployment:
     fetchScriptBodyRequired: 'Fetch Instances Script body is required'
   validations:
     nameUnique: Field Name should be unique
+step:
+  validation:
+    namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'

@@ -47,7 +47,7 @@ export const delegateGroupsMock: any[] = [
     },
     groupName: 'delegate-1',
     lastHeartBeat: 1616541640941,
-    autoUpgrade: false
+    autoUpgrade: 'ON'
   },
   {
     activelyConnected: false,
@@ -62,7 +62,7 @@ export const delegateGroupsMock: any[] = [
     groupImplicitSelectors: {},
     groupName: 'Group1',
     lastHeartBeat: 20000,
-    autoUpgrade: false
+    autoUpgrade: 'ON'
   },
   {
     groupId: 'ACDJgpvbTeWslY9NrSKU6Q',
@@ -87,11 +87,43 @@ export const delegateGroupsMock: any[] = [
         delegateExpirationTime: 0
       }
     ],
+    groupVersion: '1.0.76600',
     tokenActive: true,
-    autoUpgrade: true,
+    autoUpgrade: 'OFF',
     delegateGroupExpirationTime: 0,
     upgraderLastUpdated: 0,
     immutable: false
+  },
+
+  {
+    groupId: 'test',
+    delegateGroupIdentifier: 'testold',
+    delegateType: 'KUBERNETES',
+    groupName: 'test-old',
+    groupImplicitSelectors: {
+      'test-old': 'GROUP_NAME'
+    },
+    lastHeartBeat: 1662461017905,
+    connectivityStatus: 'connected',
+    activelyConnected: true,
+    grpcActive: false,
+    delegateInstanceDetails: [
+      {
+        uuid: 'k70Mh9EeQ7SDlV9xPfxpHg',
+        lastHeartbeat: 1662461017905,
+        activelyConnected: true,
+        hostName: 'testold-0',
+        tokenActive: true,
+        version: '1.0.76200',
+        delegateExpirationTime: 0
+      }
+    ],
+    groupVersion: '1.0.76200',
+    tokenActive: true,
+    autoUpgrade: 'ON',
+    delegateGroupExpirationTime: 0,
+    upgraderLastUpdated: 0,
+    immutable: true
   }
 ]
 

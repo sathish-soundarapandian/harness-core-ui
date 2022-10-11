@@ -20,8 +20,9 @@ declare const styles: {
   readonly featureCard: string
   readonly features: string
   readonly footer: string
+  readonly govCloudContainer: string
+  readonly govCloudLabel: string
   readonly gray: string
-  readonly grid: string
   readonly header: string
   readonly hintsLineItem: string
   readonly info: string

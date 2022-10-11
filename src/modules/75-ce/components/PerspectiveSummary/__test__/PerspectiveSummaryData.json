@@ -1,0 +1,39 @@
+{
+  "data": {
+    "perspectiveTrendStats": {
+      "cost": {
+        "statsDescription": "of Sep 30 - Sep 30",
+        "statsLabel": "Total Cluster Cost",
+        "statsTrend": 39.18,
+        "statsValue": "$18,653.01",
+        "value": 18653.01,
+        "__typename": "StatsInfo"
+      },
+      "idleCost": { "statsLabel": "Idle Cost", "statsValue": "-", "value": null, "__typename": "StatsInfo" },
+      "unallocatedCost": {
+        "statsLabel": "Unallocated Cost",
+        "statsValue": "-",
+        "value": null,
+        "__typename": "StatsInfo"
+      },
+      "utilizedCost": { "statsLabel": "Utilized Cost", "statsValue": "-", "value": null, "__typename": "StatsInfo" },
+      "efficiencyScoreStats": {
+        "statsLabel": "Efficiency Score",
+        "statsTrend": -1.0,
+        "statsValue": "-1",
+        "__typename": "EfficiencyScoreStats"
+      },
+      "__typename": "PerspectiveTrendStats"
+    },
+    "perspectiveForecastCost": {
+      "cost": {
+        "statsLabel": "Forecasted Cost",
+        "statsTrend": 0.0,
+        "statsValue": "",
+        "statsDescription": "",
+        "__typename": "StatsInfo"
+      },
+      "__typename": "PerspectiveTrendStats"
+    }
+  }
+}

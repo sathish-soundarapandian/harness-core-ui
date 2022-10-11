@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Layout, PageError, Container } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { cloneDeep, defaultTo, isEmpty } from 'lodash-es'
 import type { Module, ModuleName } from 'framework/types/ModuleName'
 import {
   RetrieveProductPricesQueryParams,
@@ -26,6 +26,7 @@ import {
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
+import { useDeepCompareEffect } from '@common/hooks'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { getCostCalculatorBodyByModule, PLAN_TYPES } from '@auth-settings/components/Subscription/subscriptionUtils'
 import ChoosePlan from './ChoosePlan'
@@ -37,7 +38,7 @@ import css from './CostCalculator.module.scss'
 interface CostCalculatorProps {
   module: Module
   setView: (view: SubscribeViews) => void
-  setSubscriptionProps: (props: SubscriptionProps) => void
+  setSubscriptionProps: (props: SubscriptionProps | ((old: SubscriptionProps) => SubscriptionProps)) => void
   subscriptionProps: SubscriptionProps
   className: string
   onPriceSkewsLoad: (skews: { [key: string]: any }[]) => void
@@ -55,7 +56,9 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
   const currentPlan = (licenseInformation[module.toUpperCase()]?.edition || Editions.FREE) as Editions
   const usageAndLimitInfo = useGetUsageAndLimit(module.toUpperCase() as ModuleName)
   const { accountId } = useParams<AccountPathProps>()
-
+  const [quantities, setQuantities] = useState<SubscriptionProps['quantities'] | undefined>(
+    subscriptionProps.quantities
+  )
   const {
     data,
     loading: retrievingProductPrices,
@@ -105,6 +108,10 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prices])
 
+  useDeepCompareEffect(() => {
+    setSubscriptionProps({ ...subscriptionProps, quantities })
+  }, [quantities])
+
   if (retrievingProductPrices) {
     return <ContainerSpinner />
   }
@@ -117,6 +124,29 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
     )
   }
 
+  const updateQuantities = ({ maus, devs }: { maus?: number; devs?: number }): void => {
+    setQuantities((oldData: SubscriptionProps['quantities']) => {
+      let updatedQuantities = cloneDeep(oldData)
+      if (devs) {
+        updatedQuantities = {
+          ...oldData,
+          featureFlag: {
+            numberOfMau: oldData?.featureFlag?.numberOfMau as number,
+            numberOfDevelopers: devs as number
+          }
+        }
+      } else if (maus) {
+        updatedQuantities = {
+          ...oldData,
+          featureFlag: {
+            numberOfMau: maus as number,
+            numberOfDevelopers: oldData?.featureFlag?.numberOfDevelopers as number
+          }
+        }
+      }
+      return updatedQuantities
+    })
+  }
   return (
     <Layout.Vertical className={className}>
       <Header step={0} />
@@ -140,7 +170,8 @@ export const CostCalculator: React.FC<CostCalculatorProps> = ({
           paymentFrequency: subscriptionProps.paymentFreq,
           subscriptionDetails: subscriptionProps,
           setSubscriptionDetails: setSubscriptionProps,
-          recommendation: defaultTo(recommendation?.data, null)
+          recommendation: defaultTo(recommendation?.data, null),
+          updateQuantities
         })}
         <PremiumSupport
           premiumSupport={subscriptionProps.premiumSupport}

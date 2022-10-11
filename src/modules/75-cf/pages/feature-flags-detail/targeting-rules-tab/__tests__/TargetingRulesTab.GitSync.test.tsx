@@ -120,8 +120,11 @@ describe('TargetingRulesTab GitSync', () => {
     userEvent.click(saveButton)
     await waitFor(() => expect(screen.getByTestId('save-flag-to-git-modal-body')).toBeInTheDocument())
 
-    // add commit message and
-    userEvent.type(screen.getByPlaceholderText('common.git.commitMessage'), 'MY COMMIT MESSAGE')
+    // clear prepopulated messsage and add commit message
+    await waitFor(() =>
+      expect(screen.getByPlaceholderText('common.git.commitMessage')).toHaveValue('Updated feature flag targeting')
+    )
+    userEvent.clear(screen.getByPlaceholderText('common.git.commitMessage'))
 
     // select autocommit checkbox
     const autoCommitCheckbox = document.querySelector('input[name="autoCommit"]') as HTMLInputElement
@@ -134,7 +137,7 @@ describe('TargetingRulesTab GitSync', () => {
       expect(patchFeatureMock).toBeCalledWith({
         gitDetails: {
           branch: 'main',
-          commitMsg: 'MY COMMIT MESSAGE',
+          commitMsg: 'Updated feature flag targeting',
           filePath: '/flags.yaml',
           repoIdentifier: 'harnesstest',
           rootFolder: '/.harness/'
@@ -173,7 +176,7 @@ describe('TargetingRulesTab GitSync', () => {
       expect(patchFeatureMock).toBeCalledWith({
         gitDetails: {
           branch: 'main',
-          commitMsg: 'cf.gitSync.autoCommitMsg',
+          commitMsg: 'Updated feature flag targeting',
           filePath: '/flags.yaml',
           repoIdentifier: 'harnesstest',
           rootFolder: '/.harness/'

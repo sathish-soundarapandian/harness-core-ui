@@ -16,9 +16,9 @@ import {
   SelectOption,
   StepProps,
   Text,
-  ButtonVariation
+  ButtonVariation,
+  FormikForm
 } from '@wings-software/uicore'
-import { Form } from 'formik'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -165,7 +165,11 @@ export function ECRArtifact({
   }, [])
 
   const getInitialValues = useCallback((): ImagePathTypes => {
-    const values = getArtifactFormData(initialValues, selectedArtifact as ArtifactType, isIdentifierAllowed)
+    const values = getArtifactFormData(
+      initialValues,
+      selectedArtifact as ArtifactType,
+      isIdentifierAllowed
+    ) as ImagePathTypes
     const specValues = get(initialValues, 'spec', null)
     if (getMultiTypeFromValue(specValues?.region) === MultiTypeInputType.FIXED) {
       values.region = regions.find(regionData => regionData.value === specValues?.region)
@@ -199,7 +203,7 @@ export function ECRArtifact({
         enableReinitialize={true}
       >
         {formik => (
-          <Form>
+          <FormikForm>
             <div className={css.connectorForm}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
@@ -269,7 +273,7 @@ export function ECRArtifact({
                 rightIcon="chevron-right"
               />
             </Layout.Horizontal>
-          </Form>
+          </FormikForm>
         )}
       </Formik>
     </Layout.Vertical>

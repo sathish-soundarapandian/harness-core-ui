@@ -91,7 +91,7 @@ export const processFormData = (values: JiraCreateData): JiraCreateData => {
   return {
     ...values,
     spec: {
-      delegateSelectors: values.spec.delegateSelectors,
+      ...(values.spec.delegateSelectors && { delegateSelectors: values.spec.delegateSelectors }),
       connectorRef:
         getMultiTypeFromValue(values.spec.connectorRef as SelectOption) === MultiTypeInputType.FIXED
           ? (values.spec.connectorRef as SelectOption)?.value?.toString()

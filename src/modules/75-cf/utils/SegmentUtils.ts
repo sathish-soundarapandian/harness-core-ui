@@ -44,9 +44,6 @@ const makeTargetsToSegmentHook =
     }
   }
 
-/** Add targets to an include segment list */
-export const useAddTargetsToIncludeList = makeTargetsToSegmentHook('addToIncludeList')
-
 /** Remove targets to an include segment list */
 export const useRemoveTargetsFromIncludeList = makeTargetsToSegmentHook('removeFromIncludeList')
 

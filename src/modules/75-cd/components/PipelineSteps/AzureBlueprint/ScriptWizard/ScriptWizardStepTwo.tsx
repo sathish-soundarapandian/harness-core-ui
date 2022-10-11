@@ -115,7 +115,7 @@ export const ScriptWizardStepTwo = ({
     const values = get(initialValues, `spec.configuration.template.store`, '')
     return (
       <HarnessOption
-        initialValues={values}
+        initialValues={values?.type === 'Harness' ? values : { spec: '' }}
         stepName={name}
         handleSubmit={
           /* istanbul ignore next */
@@ -133,6 +133,7 @@ export const ScriptWizardStepTwo = ({
         prevStepData={prevStepData}
         previousStep={previousStep}
         expressions={expressions}
+        hideEncrypted
       />
     )
   }
@@ -201,7 +202,10 @@ export const ScriptWizardStepTwo = ({
               <div className={css.scriptWizard}>
                 {
                   /* istanbul ignore next */
-                  !!(connectionType === GitRepoName.Account) && (
+                  !!(
+                    connectionType === GitRepoName.Account &&
+                    getMultiTypeFromValue(prevStepData?.connectorRef) === MultiTypeInputType.FIXED
+                  ) && (
                     <div className={cx(stepCss.formGroup, stepCss.md)}>
                       <FormInput.MultiTextInput
                         multiTextInputProps={{ expressions, allowableTypes }}
