@@ -10,10 +10,10 @@ import { useParams } from 'react-router-dom'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { TrialLicenseBanner } from '@common/layouts/TrialLicenseBanner'
 import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
-import FeatureBanner from './FeatureBanner'
-import css from './layouts.module.scss'
 import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import FeatureBanner from './FeatureBanner'
+import css from './layouts.module.scss'
 
 export function EmptyLayout(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { module } = useModuleInfo()

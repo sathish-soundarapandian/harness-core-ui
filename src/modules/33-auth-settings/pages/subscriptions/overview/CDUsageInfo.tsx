@@ -13,8 +13,8 @@ import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { ModuleName } from 'framework/types/ModuleName'
-import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 
 const ActiveInstanceCard: React.FC<{ subscribedIns: number; activeIns: number; displayName?: string }> = ({
   subscribedIns,

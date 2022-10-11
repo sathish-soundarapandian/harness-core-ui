@@ -14,8 +14,8 @@ import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ModuleName } from 'framework/types/ModuleName'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 
 export interface FFUsageInfoProps {
   subscribedUsers: number

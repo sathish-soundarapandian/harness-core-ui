@@ -12,8 +12,8 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
-import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 
 const ActiveCloudSpend: React.FC<{
   activeCloudSpend: number

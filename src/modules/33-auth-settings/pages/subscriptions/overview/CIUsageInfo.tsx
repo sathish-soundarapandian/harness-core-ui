@@ -13,8 +13,8 @@ import { useStrings } from 'framework/strings'
 import { useGetUsageAndLimit } from '@common/hooks/useGetUsageAndLimit'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { ModuleName } from 'framework/types/ModuleName'
-import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import UsageInfoCard, { ErrorContainer } from './UsageInfoCard'
 
 interface ActiveDevelopersProps {
   subscribedUsers: number

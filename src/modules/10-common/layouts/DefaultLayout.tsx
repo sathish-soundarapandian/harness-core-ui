@@ -17,9 +17,9 @@ import { usePage } from '@common/pages/pageContext/PageProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName, moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { useFetchLicenseUseAndSummary } from '@common/hooks/getUsageAndLimitHelper'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import FeatureBanner from './FeatureBanner'
 import css from './layouts.module.scss'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { title, subtitle, icon, navComponent: NavComponent } = useSidebar()
