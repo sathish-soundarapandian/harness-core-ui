@@ -66,7 +66,7 @@ const MonitoredService: React.FC = () => {
 
   useEffect(() => {
     setPage(0)
-  }, [projectIdentifier])
+  }, [projectIdentifier, search])
 
   const { data: environmentDataList, loading: loadingEnvironments } = useGetMonitoredServiceListEnvironments({
     queryParams: pathParams
