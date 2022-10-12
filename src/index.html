@@ -48,7 +48,7 @@
     <!-- adding bugsnag for SAAS build -->
     <% if (!__DEV__) { %>
     <script>
-      window.nonhash = `${
+      window.NON_CDN_BASE_PATH = `${
         window.location.pathname.split('/ng').length > 1 ? window.location.pathname.split('/ng')[0] : ''
       }/ng/static/`
       if (window.deploymentType === 'SAAS') {
@@ -75,7 +75,7 @@
       window.helpPanelAccessToken = '<%= HELP_PANEL_ACCESS_TOKEN_DEV %>'
       window.helpPanelSpace = '<%= HELP_PANEL_SPACE_DEV %>'
       window.helpPanelEnvironment = '<%= HELP_PANEL_ENVIRONMENT_DEV %>'
-      window.nonhash = '/'
+      window.NON_CDN_BASE_PATH = '/'
     </script>
     <% } %>
     <!-- Enabling ng-auth-ui -->
@@ -107,7 +107,7 @@
       }
     </script>
     <script>
-      window.resourceBasePath = window.HARNESS_ENABLE_CDN ? '//static.harness.io/ng-static/' : window.nonhash
+      window.resourceBasePath = window.HARNESS_ENABLE_CDN ? '//static.harness.io/ng-static/' : window.NON_CDN_BASE_PATH
     </script>
 
     <!-- saberToken -->
