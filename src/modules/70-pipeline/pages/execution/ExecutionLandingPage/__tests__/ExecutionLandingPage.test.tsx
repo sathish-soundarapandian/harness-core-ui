@@ -6,7 +6,14 @@
  */
 
 import React from 'react'
-import { render, fireEvent, act, findByText as findByTextContainer, queryByAttribute } from '@testing-library/react'
+import {
+  render,
+  fireEvent,
+  act,
+  findByText as findByTextContainer,
+  queryByAttribute,
+  waitFor
+} from '@testing-library/react'
 
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -19,6 +26,7 @@ import { getActiveStageForPipeline, getActiveStep } from '@pipeline/utils/execut
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import ExecutionLandingPage, { POLL_INTERVAL } from '../ExecutionLandingPage'
 import mockData from './mock.json'
+import reportSummaryMock from './report-summary-mock.json'
 
 jest.mock('services/pipeline-ng', () => ({
   useGetExecutionDetailV2: jest.fn(() => ({
@@ -38,6 +46,16 @@ jest.mock('services/pipeline-ng', () => ({
     mutate: jest.fn()
   })),
   useGetInputsetYaml: jest.fn(() => ({ data: null }))
+}))
+
+jest.mock('services/ti-service', () => ({
+  useReportSummary: () => ({
+    data: reportSummaryMock,
+    refetch: jest.fn()
+  }),
+  useGetToken: () => ({
+    data: 'some-token'
+  })
 }))
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
@@ -265,5 +283,22 @@ describe('<ExecutionLandingPage /> tests for CI', () => {
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
+  })
+
+  test('reroute to tests view if tests are failing', async () => {
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
+      refetch: jest.fn(),
+      loading: true,
+      data: null
+    }))
+    const routesToExecutionTestsSpy = jest.spyOn(routes, 'toExecutionTestsView')
+    render(
+      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
+        <ExecutionLandingPage>
+          <div data-testid="children">Execution Landing Page</div>
+        </ExecutionLandingPage>
+      </TestWrapper>
+    )
+    await waitFor(() => expect(routesToExecutionTestsSpy).toHaveBeenCalled())
   })
 })
