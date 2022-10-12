@@ -5,22 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { pick } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { StartTrialTemplate } from '@rbac/components/TrialHomePageTemplate/StartTrialTemplate'
 import { useStartTrialLicense, useStartFreeLicense, ResponseModuleLicenseDTO } from 'services/cd-ng'
-import useCreateConnector from '@ce/components/CreateConnector/CreateConnector'
-import useCETrialModal from '@ce/modals/CETrialModal/useCETrialModal'
 import { useToaster } from '@common/components'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
-import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
+import { Editions } from '@common/constants/SubscriptionTypes'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
-import { useQueryParams } from '@common/hooks'
 import bgImage from './images/cehomebg.svg'
 
 const CETrialHomePage: React.FC = () => {
@@ -29,19 +26,9 @@ const CETrialHomePage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
   const history = useHistory()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
-  const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
   const module = 'ce'
   const moduleType = 'CE'
-
-  const { openModal } = useCreateConnector({
-    onSuccess: () => {
-      history.push(routes.toCEOverview({ accountId }))
-    },
-    onClose: () => {
-      history.push(routes.toCEOverview({ accountId }))
-    }
-  })
 
   const { mutate: startTrial } = useStartTrialLicense({
     queryParams: {
@@ -61,21 +48,6 @@ const CETrialHomePage: React.FC = () => {
     }
   })
 
-  function getExperience(): ModuleLicenseType {
-    if (experience) {
-      return experience
-    }
-    return isFreeEnabled ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL
-  }
-
-  const { showModal, hideModal } = useCETrialModal({
-    onContinue: () => {
-      hideModal()
-      openModal()
-    },
-    experience: getExperience()
-  })
-
   const { showError } = useToaster()
 
   function startPlan(): Promise<ResponseModuleLicenseDTO> {
@@ -85,17 +57,16 @@ const CETrialHomePage: React.FC = () => {
   const handleStartTrial = async (): Promise<void> => {
     try {
       const data = await startPlan()
-
       const expiryTime = data?.data?.expiryTime
-
       const updatedLicenseInfo = data?.data && {
         ...licenseInformation?.[moduleType],
         ...pick(data?.data, ['licenseType', 'edition']),
         expiryTime
       }
-
       handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module as Module, updatedLicenseInfo)
-      showModal()
+
+      // Navigate to overview page
+      history.push(routes.toCEOverview({ accountId }))
     } catch (error) {
       showError(error.data?.message)
     }
@@ -116,11 +87,6 @@ const CETrialHomePage: React.FC = () => {
       onClick: handleStartTrial
     }
   }
-
-  useEffect(() => {
-    experience && showModal()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [experience])
 
   return (
     <StartTrialTemplate
