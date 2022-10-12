@@ -63,7 +63,6 @@ const config = {
     filename: '[name].js',
     chunkFilename: '[name].[id].js',
     pathinfo: false,
-    publicPath: '/',
     assetModuleFilename: 'images/[hash:7][ext][query]'
   },
   devServer: isCI
@@ -116,6 +115,7 @@ const config = {
     new HTMLWebpackPlugin({
       template: 'src/index.html',
       filename: 'index.html',
+      publicPath: '/',
       minify: false,
       templateParameters: {
         __DEV__: true,

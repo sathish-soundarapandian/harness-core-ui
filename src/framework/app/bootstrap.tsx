@@ -34,9 +34,12 @@ export default async function render(): Promise<void> {
       }
     })
   }
-
   ReactDOM.render(
-    <BrowserRouter basename="/pl-28468-router-1/ng">
+    <BrowserRouter
+      basename={`${
+        window.location.pathname.split('/ng').length > 1 ? window.location.pathname.split('/ng')[0] : ''
+      }/ng`}
+    >
       <Switch>
         <Route
           path={[

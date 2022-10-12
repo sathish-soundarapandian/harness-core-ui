@@ -48,6 +48,9 @@
     <!-- adding bugsnag for SAAS build -->
     <% if (!__DEV__) { %>
     <script>
+      window.nonhash = `${
+        window.location.pathname.split('/ng').length > 1 ? window.location.pathname.split('/ng')[0] : ''
+      }/ng/static/`
       if (window.deploymentType === 'SAAS') {
         var e = document.createElement('script')
         e.setAttribute('type', 'text/javascript')
@@ -72,6 +75,7 @@
       window.helpPanelAccessToken = '<%= HELP_PANEL_ACCESS_TOKEN_DEV %>'
       window.helpPanelSpace = '<%= HELP_PANEL_SPACE_DEV %>'
       window.helpPanelEnvironment = '<%= HELP_PANEL_ENVIRONMENT_DEV %>'
+      window.nonhash = '/'
     </script>
     <% } %>
     <!-- Enabling ng-auth-ui -->
@@ -103,8 +107,6 @@
       }
     </script>
     <script>
-      window.nonhash = '/pl-28468-router-1/ng/static/'
-      window.swaraj = 'abd'
       window.resourceBasePath = window.HARNESS_ENABLE_CDN ? '//static.harness.io/ng-static/' : window.nonhash
     </script>
 
