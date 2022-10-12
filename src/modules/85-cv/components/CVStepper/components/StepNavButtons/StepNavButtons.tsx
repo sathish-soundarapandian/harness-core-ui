@@ -1,0 +1,27 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import React from 'react'
+import { Layout, Button, ButtonVariation } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
+import type { StepNavButtonsInterface } from '../../CVStepper.types'
+
+export const StepNavButtons = ({ index, isLastStep, onContinue }: StepNavButtonsInterface): JSX.Element => {
+  const { getString } = useStrings()
+  return (
+    <Layout.Horizontal spacing="small" padding={{ top: 'xlarge' }}>
+      <Button variation={ButtonVariation.SECONDARY} onClick={() => onContinue(0)}>
+        Cancel
+      </Button>
+      <Button
+        variation={ButtonVariation.PRIMARY}
+        text={isLastStep ? getString('save') : getString('continue')}
+        onClick={() => onContinue(index + 1)}
+      />
+    </Layout.Horizontal>
+  )
+}

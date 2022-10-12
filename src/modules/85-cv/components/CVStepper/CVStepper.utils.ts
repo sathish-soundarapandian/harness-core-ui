@@ -5,13 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-.alignContainerRight {
-  border-left: 2px solid var(--grey-900);
-  padding: 1em !important;
-  margin: 0 !important;
-  margin-left: 16px !important;
-}
-
-.card {
-  min-width: 100%;
+export const onChange = (index: number, length: number, callback: (index: number) => void) => {
+  const maxLength = length - 1
+  const canUpdate = 0 <= index && index <= maxLength
+  if (canUpdate) {
+    callback(index)
+  }
 }

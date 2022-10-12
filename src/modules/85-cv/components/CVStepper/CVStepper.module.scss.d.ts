@@ -9,7 +9,5 @@
 declare const styles: {
   readonly alignContainerRight: string
   readonly card: string
-  readonly circle: string
-  readonly divider: string
 }
 export default styles
