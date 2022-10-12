@@ -13,6 +13,7 @@ import { FontVariation } from '@harness/design-system'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { CVStepper } from '@cv/components/CVStepper/CVStepper'
 import { useStrings } from 'framework/strings'
 import {
   ServiceLevelIndicatorDTO,
@@ -153,6 +154,38 @@ const CreateSLOForm: React.FC<CreateSLOFormProps> = ({
 
   return (
     <Container className={css.createSloTabsContainer}>
+      <CVStepper
+        id="createSLOTabs"
+        selectedTabId={selectedTabId}
+        onChange={nextTabId => handleTabChange(nextTabId, formikProps, setSelectedTabId)}
+        stepList={[
+          {
+            id: CreateSLOTabs.NAME,
+            title: 'Define SLO Identification',
+            panel: <></>
+          },
+          {
+            id: CreateSLOTabs.SLI,
+            title: 'Set SLO Time Window',
+            panel: <></>
+          },
+          {
+            id: CreateSLOTabs.SLO_TARGET_BUDGET_POLICY,
+            title: 'Add SLOs',
+            panel: <></>
+          },
+          {
+            id: 'Set_SLO_Target',
+            title: 'Set SLO Target',
+            panel: <></>
+          },
+          {
+            id: 'Error_Budget_Policy',
+            title: 'Error Budget Policy',
+            panel: <></>
+          }
+        ]}
+      />
       <Tabs
         id="createSLOTabs"
         selectedTabId={selectedTabId}

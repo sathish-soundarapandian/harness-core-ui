@@ -1,0 +1,38 @@
+.alignContainerRight {
+  border-left: 2px solid lightgray;
+  padding: 1em !important;
+  margin: 0 !important;
+  margin-left: 19px !important;
+}
+
+.card {
+  min-width: 100%;
+}
+
+.circle {
+  // width: var(--spacing-xxxlarge);
+  // height: var(--spacing-xxxlarge);
+  // line-height: var(--spacing-xxxlarge);
+  // border-radius: 50%;
+  // font-size: 16px;
+  // color: #fff;
+  // text-align: center;
+
+  border: 1px solid lightgrey;
+
+  &:before {
+    content: '';
+    position: absolute;
+    right: 97.25%;
+    top: 5%;
+    height: 13%;
+    width: 2px;
+    /* left: 0px; */
+    background-color: lightgrey;
+  }
+}
+
+.divider {
+  flex-grow: 1;
+  border-color: blue;
+}
