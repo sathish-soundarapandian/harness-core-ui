@@ -50,7 +50,7 @@ const MonitoredServiceList: React.FC<MonitoredServiceListProps> = ({
     error: monitoredServiceListError
   } = useListMonitoredService({
     queryParams: {
-      offset: search ? 0 : page,
+      offset: page,
       pageSize: 10,
       ...pathParams,
       filter: search,

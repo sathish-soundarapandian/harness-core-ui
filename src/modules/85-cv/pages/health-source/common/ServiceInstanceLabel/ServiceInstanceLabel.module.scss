@@ -6,10 +6,11 @@
  */
 
 .main {
+  display: flex;
+  margin-bottom: var(--spacing-small) !important;
   p {
     color: var(--grey-600) !important;
     font-weight: 500;
-    margin-bottom: var(--spacing-small) !important;
     display: inline;
   }
   .primaryLabel {

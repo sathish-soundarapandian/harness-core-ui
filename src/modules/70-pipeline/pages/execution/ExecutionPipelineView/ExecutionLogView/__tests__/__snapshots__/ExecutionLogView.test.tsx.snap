@@ -26,27 +26,63 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                 <div
                   class="statusHeatMapCell"
                   data-id="google_1"
-                  data-primary-state="running"
+                  data-state="running"
                 >
                   <span
                     class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7"
-                    data-icon="spinner"
+                    data-icon="loading"
                   >
                     <svg
-                      fill="none"
                       height="12"
-                      viewBox="0 0 36 36"
+                      viewBox="0 0 10 8"
                       width="12"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path
-                        d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
-                        stroke="currentColor"
-                        stroke-dasharray="75,100"
-                        stroke-linecap="round"
-                        stroke-width="2.8"
-                        style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
-                      />
+                      <circle
+                        fill="currentColor"
+                        r="1"
+                        transform="translate(2 4)"
+                      >
+                        <animatetransform
+                          additive="sum"
+                          attributeName="transform"
+                          begin="0s"
+                          dur="1s"
+                          repeatCount="indefinite"
+                          type="scale"
+                          values="0; 1.25; 0"
+                        />
+                      </circle>
+                      <circle
+                        fill="currentColor"
+                        r="1"
+                        transform="translate(5 4)"
+                      >
+                        <animatetransform
+                          additive="sum"
+                          attributeName="transform"
+                          begin="0.2s"
+                          dur="1s"
+                          repeatCount="indefinite"
+                          type="scale"
+                          values="0; 1.25; 0"
+                        />
+                      </circle>
+                      <circle
+                        fill="currentColor"
+                        r="1"
+                        transform="translate(8 4)"
+                      >
+                        <animatetransform
+                          additive="sum"
+                          attributeName="transform"
+                          begin="0.4s"
+                          dur="1s"
+                          repeatCount="indefinite"
+                          type="scale"
+                          values="0; 1.25; 0"
+                        />
+                      </circle>
                     </svg>
                   </span>
                 </div>
@@ -61,27 +97,63 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                 <div
                   class="statusHeatMapCell"
                   data-id="google_2"
-                  data-primary-state="running"
+                  data-state="running"
                 >
                   <span
                     class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7"
-                    data-icon="spinner"
+                    data-icon="loading"
                   >
                     <svg
-                      fill="none"
                       height="12"
-                      viewBox="0 0 36 36"
+                      viewBox="0 0 10 8"
                       width="12"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path
-                        d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
-                        stroke="currentColor"
-                        stroke-dasharray="75,100"
-                        stroke-linecap="round"
-                        stroke-width="2.8"
-                        style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
-                      />
+                      <circle
+                        fill="currentColor"
+                        r="1"
+                        transform="translate(2 4)"
+                      >
+                        <animatetransform
+                          additive="sum"
+                          attributeName="transform"
+                          begin="0s"
+                          dur="1s"
+                          repeatCount="indefinite"
+                          type="scale"
+                          values="0; 1.25; 0"
+                        />
+                      </circle>
+                      <circle
+                        fill="currentColor"
+                        r="1"
+                        transform="translate(5 4)"
+                      >
+                        <animatetransform
+                          additive="sum"
+                          attributeName="transform"
+                          begin="0.2s"
+                          dur="1s"
+                          repeatCount="indefinite"
+                          type="scale"
+                          values="0; 1.25; 0"
+                        />
+                      </circle>
+                      <circle
+                        fill="currentColor"
+                        r="1"
+                        transform="translate(8 4)"
+                      >
+                        <animatetransform
+                          additive="sum"
+                          attributeName="transform"
+                          begin="0.4s"
+                          dur="1s"
+                          repeatCount="indefinite"
+                          type="scale"
+                          values="0; 1.25; 0"
+                        />
+                      </circle>
                     </svg>
                   </span>
                 </div>
@@ -96,7 +168,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                 <div
                   class="statusHeatMapCell"
                   data-id="qa stage"
-                  data-primary-state="default"
+                  data-state="default"
                 />
               </span>
             </span>
@@ -109,7 +181,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                 <div
                   class="statusHeatMapCell"
                   data-id="Random"
-                  data-primary-state="default"
+                  data-state="default"
                 />
               </span>
             </span>

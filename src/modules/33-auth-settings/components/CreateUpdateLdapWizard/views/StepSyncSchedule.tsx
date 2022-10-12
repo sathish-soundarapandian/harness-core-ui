@@ -23,12 +23,10 @@ import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import isEmpty from 'lodash-es/isEmpty'
 // eslint-disable-next-line no-restricted-imports
-import { useParams } from 'react-router'
 import { get } from 'lodash-es'
 import SchedulePanel from '@common/components/SchedulePanel/SchedulePanel'
-import { ExpressionBreakdownInterface, getBreakdownValues } from '@common/components/SchedulePanel/components/utils'
+import { ExpressionBreakdownInterface, scheduleTabsId } from '@common/components/SchedulePanel/components/utils'
 import { String, useStrings } from 'framework/strings'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetIterationsFromCron } from 'services/portal'
 import { getErrorMessage } from '@auth-settings/utils'
 import type { CreateUpdateLdapWizardProps, LdapWizardStepProps } from '../CreateUpdateLdapWizard'
@@ -42,27 +40,25 @@ export interface SyncSchedule {
 
 interface ExpressionFormData extends ExpressionBreakdownInterface {
   expression: string
+  selectedScheduleTab: string
 }
 
 export const StepSyncSchedule: React.FC<StepProps<CreateUpdateLdapWizardProps> & LdapWizardStepProps<SyncSchedule>> =
   props => {
+    const { stepData, createUpdateActionProps, name, updateStepData } = props
+    const { cronExpression = DEFAULT_LDAP_SYNC_CRON_EXPRESSION } = stepData || {}
+    const { isUpdateInProgress, createUpdateError, triggerSaveData, accountId } = createUpdateActionProps || {}
+
     const { showError } = useToaster()
-    const { accountId } = useParams<ProjectPathProps>()
     const { getString } = useStrings()
     const { mutate: getCronIterations } = useGetIterationsFromCron({
       queryParams: { accountId }
     })
 
-    const { stepData, createUpdateActionProps, name, updateStepData } = props
-    const { cronExpression = DEFAULT_LDAP_SYNC_CRON_EXPRESSION, isEdit = false } = stepData || {}
-    const { isUpdateInProgress, createUpdateError, triggerSaveData } = createUpdateActionProps || {}
-
     const cronExpressionFormRef = useRef<FormikProps<ExpressionFormData>>(null)
 
     const [updatedCronExpression, setUpdatedCronExpression] = useState<string>(cronExpression)
     const [cronIterationsList, setCronIterationsList] = useState<ReactElement>()
-
-    const breakdownValues = getBreakdownValues(cronExpression)
 
     const onSyncScheduleSubmit = async (formData: ExpressionFormData): Promise<ExpressionFormData> => {
       const { expression } = formData
@@ -112,13 +108,13 @@ export const StepSyncSchedule: React.FC<StepProps<CreateUpdateLdapWizardProps> &
           formName="ldapSyncScheduleForm"
           innerRef={cronExpressionFormRef}
           onSubmit={onSyncScheduleSubmit}
-          initialValues={{ expression: cronExpression, ...breakdownValues }}
+          initialValues={{ expression: cronExpression, selectedScheduleTab: scheduleTabsId.CUSTOM }}
           validationSchema={cronExpressionValidationSchema}
         >
           {formikProps => {
             return (
               <FormikForm>
-                <SchedulePanel formikProps={formikProps} isEdit={isEdit} renderFormTitle={false} hideSeconds={false} />
+                <SchedulePanel formikProps={formikProps} isEdit={true} renderFormTitle={false} hideSeconds={false} />
               </FormikForm>
             )
           }}

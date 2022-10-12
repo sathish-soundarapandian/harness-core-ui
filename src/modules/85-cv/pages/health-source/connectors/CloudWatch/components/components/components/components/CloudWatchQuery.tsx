@@ -107,9 +107,11 @@ export default function CloudWatchQuery(): JSX.Element {
 
   return (
     <>
-      <Text font={{ variation: FontVariation.SMALL_SEMI }} margin={{ bottom: 'small' }}>
-        {getString('cv.query')}
-      </Text>
+      <Container margin={{ bottom: 'small' }}>
+        <Text font={{ variation: FontVariation.SMALL_SEMI }} tooltipProps={{ dataTooltipId: 'cloudWatchMetricQuery' }}>
+          {getString('cv.query')}
+        </Text>
+      </Container>
       <QueryContent
         handleFetchRecords={fetchSampleDataForQuery}
         loading={loading}

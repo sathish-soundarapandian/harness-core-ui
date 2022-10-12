@@ -44,10 +44,10 @@ import css from './PipelineListTable.module.scss'
 export const LabeValue = ({ label, value }: { label: string; value: ReactNode }) => {
   return (
     <Layout.Horizontal spacing="xsmall">
-      <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }}>
+      <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
         {label}:
       </Text>
-      <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+      <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
         {value}
       </Text>
     </Layout.Horizontal>
@@ -144,13 +144,13 @@ export const CodeSourceCell: CellType = ({ row }) => {
           <Layout.Vertical spacing="small" padding="large" style={{ maxWidth: 400 }}>
             <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
               <Icon name="github" size={14} color={Color.GREY_200} />
-              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
                 {gitDetails?.repoName || gitDetails?.repoIdentifier}
               </Text>
             </Layout.Horizontal>
             <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
               <Icon name="remotefile" size={14} color={Color.GREY_200} />
-              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }}>
+              <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
                 {gitDetails?.filePath}
               </Text>
             </Layout.Horizontal>
@@ -179,33 +179,35 @@ export const LastExecutionCell: CellType = ({ row }) => {
 
   return (
     <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
-      <div className={cx(css.avatar, executor ? css.trigger : css.neverRan)} onClick={killEvent}>
-        {executor ? (
-          isAutoTrigger ? (
-            <Link
-              to={routes.toTriggersDetailPage({
-                ...getRouteProps(pathParams, data),
-                triggerIdentifier: executorInfo?.username || ''
-              })}
-            >
-              <Icon
-                size={12}
-                name={executorInfo?.triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
-                aria-label="trigger"
-                className={css.icon}
-              />
-            </Link>
+      <div>
+        <div className={cx(css.avatar, executor ? css.trigger : css.neverRan)} onClick={killEvent}>
+          {executor ? (
+            isAutoTrigger ? (
+              <Link
+                to={routes.toTriggersDetailPage({
+                  ...getRouteProps(pathParams, data),
+                  triggerIdentifier: executorInfo?.username || ''
+                })}
+              >
+                <Icon
+                  size={12}
+                  name={executorInfo?.triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
+                  aria-label="trigger"
+                  className={css.icon}
+                />
+              </Link>
+            ) : (
+              executor?.charAt(0)
+            )
           ) : (
-            executor?.charAt(0)
-          )
-        ) : (
-          <Icon size={12} name="ci-build-pipeline" aria-label="trigger" color={Color.GREY_400} />
-        )}
+            <Icon size={12} name="ci-build-pipeline" aria-label="trigger" color={Color.GREY_400} />
+          )}
+        </div>
       </div>
 
       {executor && startTs ? (
         <div>
-          <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }}>
+          <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
             {executor}
           </Text>
           <Text color={Color.GREY_600} font={{ variation: FontVariation.TINY }} className={css.timeAgo}>

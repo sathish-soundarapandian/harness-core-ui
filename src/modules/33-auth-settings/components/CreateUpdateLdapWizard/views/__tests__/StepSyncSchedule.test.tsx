@@ -19,7 +19,7 @@ describe('Step Sync Schedule', () => {
       </TestWrapper>
     )
     expect(getByTestId('cron-expression')).not.toBeNull()
-    expect(getByTestId('cron-expression').innerHTML).toEqual('0/15 * * * *')
+    expect(getByTestId('cron-expression').innerHTML).toEqual('0 0/15 * 1/1 * ? *')
     await act(async () => {
       fireEvent.click(getByTestId('submit-cron-expression-step'))
     })

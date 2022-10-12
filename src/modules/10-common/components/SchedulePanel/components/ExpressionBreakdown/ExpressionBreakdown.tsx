@@ -47,6 +47,9 @@ const getColumnValue = (formikValues: any, column: EXP_BREAKDOWN_INPUTS): string
   const isCustomTab = selectedScheduleTab === scheduleTabsId.CUSTOM
 
   const expressionArr = expression?.trim() && isCustomTab ? expression.trim().split(' ') : undefined
+  if (expressionArr?.length > 5) {
+    expressionArr.shift() // Remove the seconds part
+  }
   if (column === EXP_BREAKDOWN_INPUTS.MINUTES) {
     return isCustomTab ? expressionArr?.[0] : getSlashValue({ selectedScheduleTab, id: 'minutes', value: minutes })
   } else if (column === EXP_BREAKDOWN_INPUTS.HOURS) {

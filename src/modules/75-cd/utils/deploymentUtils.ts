@@ -44,10 +44,11 @@ export interface GetNgSupportedDeploymentTypesProps {
   SSH_NG?: boolean
   ECS_NG?: boolean
   NG_DEPLOYMENT_TEMPLATE?: boolean
+  NG_SVC_ENV_REDESIGN?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { SSH_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE } = props
+  const { SSH_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE, NG_SVC_ENV_REDESIGN } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -64,11 +65,6 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.serverlessAwsLambda',
       icon: deploymentIconMap[ServiceDeploymentType.ServerlessAwsLambda],
       value: ServiceDeploymentType.ServerlessAwsLambda
-    },
-    {
-      label: 'pipeline.serviceDeploymentTypes.azureWebApp',
-      icon: deploymentIconMap[ServiceDeploymentType.AzureWebApp],
-      value: ServiceDeploymentType.AzureWebApp
     }
   ]
 
@@ -96,6 +92,13 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.customDeployment',
       icon: deploymentIconMap[ServiceDeploymentType.CustomDeployment],
       value: ServiceDeploymentType.CustomDeployment
+    })
+  }
+  if (NG_SVC_ENV_REDESIGN) {
+    baseTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.azureWebApp',
+      icon: deploymentIconMap[ServiceDeploymentType.AzureWebApp],
+      value: ServiceDeploymentType.AzureWebApp
     })
   }
 
