@@ -150,7 +150,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                         <PipelineInputSetFormInternal
                           template={inputSetTemplate as PipelineInfoConfig}
                           originalPipeline={formikProps.values.template.templateInputs as PipelineInfoConfig}
-                          path={TEMPLATE_INPUT_PATH}
+                          path={''}
                           viewType={StepViewType.TemplateUsage}
                           readonly={true}
                           allowableTypes={allowableTypes}
