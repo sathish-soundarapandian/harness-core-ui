@@ -10,7 +10,11 @@ import { mapKeys } from 'lodash-es'
 import qs from 'qs'
 
 export const getConfig = (str: string): string => {
-  return `${window.apiUrl || ''}/${str}`
+  if (window.browserRouterEnabled) {
+    return `${window.apiUrl || ''}/${str}`
+  } else {
+    return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+  }
 }
 export interface GetUsingFetchProps<
   _TData = any,

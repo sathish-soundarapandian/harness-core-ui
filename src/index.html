@@ -30,8 +30,13 @@
     </style>
     <!-- apiurl -->
     <script type="text/javascript">
+      window.browserRouterEnabled = 'BROWSER_ROUTER_ENABLED_PLACEHOLDER' === 'true'
       window.getApiBaseUrl = str => {
-        return `${window.apiUrl || ''}/${str}`
+        if (window.browserRouterEnabled) {
+          return `${window.apiUrl || ''}/${str}`
+        } else {
+          return window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
+        }
       }
     </script>
     <!-- segmentToken -->

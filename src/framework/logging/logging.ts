@@ -9,7 +9,8 @@ import type { ModuleName } from 'framework/types/ModuleName'
 
 declare global {
   interface Window {
-    bugsnagClient: any // eslint-disable-line
+    bugsnagClient: any // eslint-disable-line,
+    browserRouterEnabled: any //eslint-disable-line
   }
 }
 

@@ -253,9 +253,9 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
 
 export function AppWithoutAuthentication(props: AppProps): React.ReactElement {
   const { pathname, hash } = window.location
-
+  const { browserRouterEnabled } = window
   // Redirect from `/#/account/...` to `/account/...`
-  if (hash && (pathname === '/' || pathname === '/ng')) {
+  if (browserRouterEnabled && hash && (pathname === '/' || pathname === '/ng')) {
     const targetUrl = window.location.href.replace('/#/', '/')
     window.location.href = targetUrl
   }

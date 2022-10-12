@@ -66,7 +66,6 @@ const config = {
       minify: false,
       templateParameters: {
         __DEV__: false,
-        __NON_CDN_BASE_PATH__: '/ng/static/'
       }
     }),
     new MiniCssExtractPlugin({
