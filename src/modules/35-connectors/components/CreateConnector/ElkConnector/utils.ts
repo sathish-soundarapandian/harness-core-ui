@@ -43,6 +43,8 @@ export function initializeElkConnector({
     clientSecretRef: prevData?.clientSecretRef || spec?.clientSecretRef,
     authType: prevData?.authType || spec?.authType || ElkAuthType.USERNAME_PASSWORD,
     username: prevData?.username || spec?.username || '',
-    clientId: prevData?.clientId || spec?.clientId
+    clientId: prevData?.clientId || spec?.clientId,
+    apiKeyId: prevData?.apiKeyId || spec?.apiKeyId,
+    apiKeyRef: prevData?.apiKeyRef || spec?.apiKeyRef
   }
 }

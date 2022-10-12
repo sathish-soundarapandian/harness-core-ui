@@ -136,7 +136,7 @@ export default function ConfigureMonitoredServiceAlertConditions({
   return (
     <>
       <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'medium' }}>
-        {getString('cv.notifications.configureAlertConditions')}
+        {getString('notifications.configureConditions')}
       </Text>
       <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'normal' }} padding={{ top: 'large' }}>
         {`Category:${getString('cv.notifications.serviceHealth')} `}

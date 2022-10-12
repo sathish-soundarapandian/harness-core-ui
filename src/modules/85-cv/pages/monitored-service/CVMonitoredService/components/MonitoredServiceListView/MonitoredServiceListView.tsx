@@ -10,6 +10,7 @@ import { useParams, Link } from 'react-router-dom'
 import type { CellProps, Renderer } from 'react-table'
 import { Container, Text, Layout, TableV2, NoDataCard, Heading, Utils } from '@wings-software/uicore'
 import { FontVariation, Color } from '@harness/design-system'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -217,47 +218,50 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
     }
 
     return (
-      <Layout.Horizontal flex={{ alignItems: 'center' }}>
-        <ToggleOnOff
-          disabled={!canToggle}
-          checked={Boolean(monitoredService.healthMonitoringEnabled)}
-          loading={healthMonitoringFlagLoading}
-          onChange={checked => {
-            onToggleService(monitoredService.identifier as string, checked)
-          }}
-        />
-        <ContextMenuActions
-          titleText={getString('common.delete', { name: monitoredService.serviceName })}
-          contentText={<ServiceDeleteContext serviceName={monitoredService.serviceName} />}
-          confirmButtonText={getString('yes')}
-          deleteLabel={getString('cv.monitoredServices.deleteService')}
-          onDelete={() => {
-            onDeleteService(monitoredService.identifier as string)
-          }}
-          editLabel={getString('cv.monitoredServices.editService')}
-          onEdit={() => {
-            onEditService(monitoredService.identifier as string)
-          }}
-          copyLabel={getString('cv.monitoredServices.copyET')}
-          onCopy={onCopy}
-          RbacPermissions={{
-            edit: {
-              permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-              resource: {
-                resourceType: ResourceType.MONITOREDSERVICE,
-                resourceIdentifier: projectIdentifier
+      <>
+        <HelpPanel referenceId="monitoredServiceDetails" type={HelpPanelType.FLOATING_CONTAINER} />
+        <Layout.Horizontal flex={{ alignItems: 'center' }}>
+          <ToggleOnOff
+            disabled={!canToggle}
+            checked={Boolean(monitoredService.healthMonitoringEnabled)}
+            loading={healthMonitoringFlagLoading}
+            onChange={checked => {
+              onToggleService(monitoredService.identifier as string, checked)
+            }}
+          />
+          <ContextMenuActions
+            titleText={getString('common.delete', { name: monitoredService.serviceName })}
+            contentText={<ServiceDeleteContext serviceName={monitoredService.serviceName} />}
+            confirmButtonText={getString('yes')}
+            deleteLabel={getString('cv.monitoredServices.deleteService')}
+            onDelete={() => {
+              onDeleteService(monitoredService.identifier as string)
+            }}
+            editLabel={getString('cv.monitoredServices.editService')}
+            onEdit={() => {
+              onEditService(monitoredService.identifier as string)
+            }}
+            copyLabel={getString('cv.monitoredServices.copyET')}
+            onCopy={onCopy}
+            RbacPermissions={{
+              edit: {
+                permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+                resource: {
+                  resourceType: ResourceType.MONITOREDSERVICE,
+                  resourceIdentifier: projectIdentifier
+                }
+              },
+              delete: {
+                permission: PermissionIdentifier.DELETE_MONITORED_SERVICE,
+                resource: {
+                  resourceType: ResourceType.MONITOREDSERVICE,
+                  resourceIdentifier: projectIdentifier
+                }
               }
-            },
-            delete: {
-              permission: PermissionIdentifier.DELETE_MONITORED_SERVICE,
-              resource: {
-                resourceType: ResourceType.MONITOREDSERVICE,
-                resourceIdentifier: projectIdentifier
-              }
-            }
-          }}
-        />
-      </Layout.Horizontal>
+            }}
+          />
+        </Layout.Horizontal>
+      </>
     )
   }
 

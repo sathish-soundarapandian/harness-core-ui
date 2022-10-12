@@ -36,16 +36,16 @@ import {
   FieldVisibility,
   getEmptyEntityConfig,
   getFieldsVisibility,
-  getInitialValuesForConfigSection
+  getInitialValuesForConfigSection,
+  getValidationSchema
 } from './FreezeWindowStudioUtil'
 import {
   EnvironmentTypeRenderer,
   Organizationfield,
-  OrgFieldViewMode,
   ProjectField,
-  ProjectFieldViewMode,
   ServiceFieldRenderer,
-  ServicesAndEnvRenderer
+  ServicesAndEnvRenderer,
+  OrgProjAndServiceRenderer
 } from './FreezeStudioConfigSectionRenderers'
 import css from './FreezeWindowStudio.module.scss'
 
@@ -55,6 +55,8 @@ interface ConfigViewModeRendererProps {
   setEditView: () => void
   deleteConfig: () => void
   fieldsVisibility: FieldVisibility
+  resources: ResourcesInterface
+  isReadOnly: boolean
 }
 
 const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
@@ -62,10 +64,12 @@ const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
   getString,
   setEditView,
   deleteConfig,
-  fieldsVisibility
+  fieldsVisibility,
+  resources,
+  isReadOnly
 }) => {
   const { name, entities } = config || {}
-  const entitiesMap =
+  const entitiesMap: Record<FIELD_KEYS, EntityType> =
     entities?.reduce((accum: any, item: EntityType) => {
       if (item?.type) {
         accum[item.type] = item as EntityType
@@ -82,21 +86,21 @@ const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
         >
           {name}
         </Heading>
-
-        <Layout.Horizontal>
-          {fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.PROJECT ? 'env' : ''}
-        </Layout.Horizontal>
-        <OrgFieldViewMode data={entitiesMap[FIELD_KEYS.Org]} getString={getString} />
-        <ProjectFieldViewMode data={entitiesMap[FIELD_KEYS.Proj]} getString={getString} />
+        <OrgProjAndServiceRenderer
+          entitiesMap={entitiesMap}
+          freezeWindowLevel={fieldsVisibility.freezeWindowLevel}
+          resources={resources}
+          getString={getString}
+        />
         <ServicesAndEnvRenderer
           freezeWindowLevel={fieldsVisibility.freezeWindowLevel}
           getString={getString}
-          envType={entitiesMap[FIELD_KEYS.EnvType]?.entityRefs?.[0] || EnvironmentType.All}
+          envType={(entitiesMap[FIELD_KEYS.EnvType]?.entityRefs?.[0] || EnvironmentType.All) as EnvironmentType}
         />
       </Layout.Vertical>
       <Layout.Horizontal>
-        <Button icon="edit" minimal withoutCurrentColor onClick={setEditView} />
-        <Button icon="trash" minimal withoutCurrentColor onClick={deleteConfig} />
+        <Button disabled={isReadOnly} icon="edit" minimal withoutCurrentColor onClick={setEditView} />
+        <Button disabled={isReadOnly} icon="trash" minimal withoutCurrentColor onClick={deleteConfig} />
       </Layout.Horizontal>
     </Layout.Horizontal>
   )
@@ -171,6 +175,7 @@ const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
 interface ConfigRendererProps {
   config: EntityConfig
   isEdit: boolean
+  setEditView: (index: number, isEdit: boolean) => void
   getString: UseStringsReturn['getString']
   index: number
   updateFreeze: (freeze: any) => void
@@ -178,12 +183,14 @@ interface ConfigRendererProps {
   entityConfigs: EntityConfig[]
   resources: ResourcesInterface
   fieldsVisibility: FieldVisibility
-  updateInitialValues: (entityonfigs: EntityConfig[]) => void
+  onDeleteRule: (index: number) => void
+  isReadOnly: boolean
 }
 
 const ConfigRenderer = ({
   config,
   isEdit,
+  setEditView,
   getString,
   index,
   updateFreeze,
@@ -191,12 +198,17 @@ const ConfigRenderer = ({
   entityConfigs,
   resources,
   fieldsVisibility,
-  updateInitialValues
+  onDeleteRule,
+  isReadOnly
 }: ConfigRendererProps) => {
-  const [isEditView, setEditView] = React.useState(isEdit)
   const saveEntity = async () => {
     const formErrors = await formikProps.validateForm()
     if (!isEmpty(formErrors?.entity?.[index])) {
+      formikProps.setErrors(formErrors)
+      const errorKeys = Object.keys(formErrors.entity[index])
+      const newTouchedObj: { [key: string]: boolean } = {}
+      errorKeys.forEach(k => (newTouchedObj[`entity[${index}].${k}`] = true))
+      formikProps.setTouched({ ...formikProps.touched, ...newTouchedObj }) // required to display
       return
     }
     const values = formikProps.values.entity
@@ -205,29 +217,29 @@ const ConfigRenderer = ({
     updatedEntityConfigs[index] = convertValuesToYamlObj(updatedEntityConfigs[index], values[index], fieldsVisibility)
 
     updateFreeze({ entityConfigs: updatedEntityConfigs })
-    setEditView(false)
+    setEditView(index, false)
   }
 
   const setVisualViewMode = React.useCallback(() => {
-    setEditView(false)
+    setEditView(index, false)
   }, [])
   const setEditViewMode = React.useCallback(() => {
-    setEditView(true)
+    setEditView(index, true)
   }, [])
 
   const deleteConfig = () => {
     const updatedEntityConfigs = entityConfigs.filter((_, i) => index !== i)
     updateFreeze({ entityConfigs: updatedEntityConfigs })
-    updateInitialValues(updatedEntityConfigs)
+    onDeleteRule(index)
   }
 
   return (
     <Container
       padding="large"
-      className={classnames(css.configFormContainer, { [css.isEditView]: isEditView })}
+      className={classnames(css.configFormContainer, { [css.isEditView]: isEdit })}
       margin={{ top: 'xlarge' }}
     >
-      {isEditView ? (
+      {isEdit ? (
         <ConfigEditModeRenderer
           index={index}
           getString={getString}
@@ -244,6 +256,8 @@ const ConfigRenderer = ({
           setEditView={setEditViewMode}
           deleteConfig={deleteConfig}
           fieldsVisibility={fieldsVisibility}
+          resources={resources}
+          isReadOnly={isReadOnly}
         />
       )}
     </Container>
@@ -256,30 +270,73 @@ interface ConfigsSectionProps {
   updateFreeze: (freeze: any) => void
   resources: ResourcesInterface
   fieldsVisibility: FieldVisibility
+  isReadOnly: boolean
 }
 const ConfigsSection = ({
   entityConfigs,
   getString,
   updateFreeze,
   resources,
-  fieldsVisibility
+  fieldsVisibility,
+  isReadOnly
 }: ConfigsSectionProps) => {
+  const formikRef = React.useRef()
+  const [editViews, setEditViews] = React.useState<boolean[]>(Array(entityConfigs?.length).fill(false))
   const [initialValues, setInitialValues] = React.useState(
     getInitialValuesForConfigSection(entityConfigs, getString, resources)
   )
   React.useEffect(() => {
     setInitialValues(getInitialValuesForConfigSection(entityConfigs, getString, resources))
-  }, [])
+  }, [
+    resources.orgs.length,
+    resources.projects.length,
+    resources.services.length,
+    Object.keys(resources.projectsByOrgId).length
+  ])
 
-  const updateInitialValues = React.useCallback((configs: EntityConfig[]) => {
-    setInitialValues(getInitialValuesForConfigSection(configs, getString, resources))
+  React.useEffect(() => {
+    if (editViews.length === 0 && entityConfigs.length > 0) {
+      setEditViews(Array(entityConfigs?.length).fill(false))
+    }
+  }, [entityConfigs.length])
+
+  const onDeleteRule = React.useCallback(index => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentValues = formikRef.current?.values
+    const updatedValues = [...(currentValues?.entity || [])]
+    updatedValues.splice(index, 1)
+    setInitialValues({ entity: updatedValues })
+    setEditViews(_editViews => {
+      const newEditViews = [..._editViews]
+      newEditViews.splice(index, 1)
+      return newEditViews
+    })
   }, [])
 
   const onAddRule = () => {
-    const updatedEntityConfigs = [...(entityConfigs || []), getEmptyEntityConfig(fieldsVisibility)]
-    setInitialValues(getInitialValuesForConfigSection(updatedEntityConfigs, getString, resources))
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const currentValues = formikRef.current?.values
+    const addedConfig = getEmptyEntityConfig(fieldsVisibility)
+    const updatedEntityConfigs = [...(entityConfigs || []), addedConfig]
+    const initValuesForAddedConfig = getInitialValuesForConfigSection([addedConfig], getString, resources)
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const updatedValues = [...(currentValues?.entity || []), ...(initValuesForAddedConfig?.entity || [])]
+    setInitialValues({ entity: updatedValues })
     updateFreeze({ entityConfigs: updatedEntityConfigs })
+    setEditViews(_editViews => [..._editViews, true])
   }
+
+  const setEditView = (index: number, isEdit: boolean) => {
+    setEditViews(_editViews => {
+      const newEditViews = [..._editViews]
+      newEditViews[index] = isEdit
+      return newEditViews
+    })
+  }
+
   return (
     <>
       <Formik
@@ -291,18 +348,21 @@ const ConfigsSection = ({
         validationSchema={Yup.object().shape({
           entity: Yup.array().of(
             Yup.object().shape({
-              name: Yup.string().required('Name is required')
+              name: Yup.string().required('Name is required'),
+              ...getValidationSchema(fieldsVisibility.freezeWindowLevel)
             })
           )
         })}
       >
-        {formikProps =>
-          entityConfigs.map((config: EntityConfig, index: number) => (
+        {formikProps => {
+          formikRef.current = formikProps as any
+          return entityConfigs.map((config: EntityConfig, index: number) => (
             <ConfigRenderer
               // key={config.uuid}
               key={index}
               config={config}
-              isEdit={false}
+              isEdit={editViews[index]}
+              setEditView={setEditView}
               getString={getString}
               index={index}
               updateFreeze={updateFreeze}
@@ -310,10 +370,11 @@ const ConfigsSection = ({
               entityConfigs={entityConfigs}
               resources={resources}
               fieldsVisibility={fieldsVisibility}
-              updateInitialValues={updateInitialValues}
+              onDeleteRule={onDeleteRule}
+              isReadOnly={isReadOnly}
             />
           ))
-        }
+        }}
       </Formik>
       <Button
         minimal
@@ -322,7 +383,7 @@ const ConfigsSection = ({
         text="Add rule"
         icon="plus"
         onClick={onAddRule}
-        // onClick={() => console.log('Hello World')}
+        disabled={isReadOnly}
         className={css.addNewRuleButton}
       />
     </>
@@ -340,7 +401,8 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
   const {
     state: { freezeObj },
     updateFreeze,
-    freezeWindowLevel
+    freezeWindowLevel,
+    isReadOnly
   } = React.useContext(FreezeWindowContext)
 
   const fieldsVisibility: FieldVisibility = React.useMemo(() => {
@@ -364,6 +426,7 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
           updateFreeze={updateFreeze}
           resources={resources}
           fieldsVisibility={fieldsVisibility}
+          isReadOnly={isReadOnly}
         />
       </Card>
       <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>

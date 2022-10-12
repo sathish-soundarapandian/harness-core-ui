@@ -23,6 +23,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useConfirmAction } from '@common/hooks'
 import { GitSyncFormValues, GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import { getErrorMessage, showToaster } from '@cf/utils/CFUtils'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import SaveFlagToGitModal from '../SaveFlagToGitModal/SaveFlagToGitModal'
 
 export interface FlagOptionsMenuButtonProps {
@@ -39,7 +40,7 @@ export interface FlagOptionsMenuButtonProps {
 
 const FlagOptionsMenuButton = (props: FlagOptionsMenuButtonProps): ReactElement => {
   const { environment, flagData, gitSync, deleteFlag, queryParams, refetchFlags } = props
-  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta()
+  const { gitSyncInitialValues, gitSyncValidationSchema } = gitSync.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.DELETED_FLAG)
 
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()

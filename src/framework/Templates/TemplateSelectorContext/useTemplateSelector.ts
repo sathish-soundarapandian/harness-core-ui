@@ -19,10 +19,9 @@ export interface GetTemplateResponse {
 
 export interface GetTemplateProps {
   templateType: TemplateType
-  allChildTypes?: string[]
-  linkedTemplate?: {
-    identifiers: string[]
-    checkboxLabel?: string
+  filterProperties?: {
+    childTypes?: string[]
+    templateIdentifiers?: string[]
   }
   disableVersionChange?: boolean
   allowedUsages?: TemplateUsage[]

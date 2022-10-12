@@ -223,7 +223,7 @@ describe('useSaveTemplate Test', () => {
         updateExistingTemplateVersionPromiseArg
       )
 
-      expect(props.fetchTemplate).toBeCalled()
+      expect(props.fetchTemplate).not.toBeCalled()
     })
 
     test('edit should work as expected', async () => {
@@ -309,7 +309,7 @@ describe('useSaveTemplate Test', () => {
       await waitFor(() => expect(templateNg.createTemplatePromise).toHaveBeenCalled())
       expect(templateNg.createTemplatePromise).toHaveBeenCalledWith(createTemplatePromiseArg)
 
-      expect(props.deleteTemplateCache).toBeCalled()
+      expect(props.deleteTemplateCache).not.toBeCalled()
     })
 
     test('error should be displayed in the progress modal when create API fails', async () => {

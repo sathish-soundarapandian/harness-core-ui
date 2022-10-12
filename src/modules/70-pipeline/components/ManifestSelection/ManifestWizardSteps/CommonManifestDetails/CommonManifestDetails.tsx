@@ -42,6 +42,7 @@ interface CommonManifestDetailsProps {
   handleSubmit: (data: ManifestConfigWrapper) => void
   manifestIdsList: Array<string>
   isReadonly?: boolean
+  showIdentifierField?: boolean
 }
 
 const showAdvancedSection = (selectedManifest: ManifestTypes | null): boolean => {
@@ -72,7 +73,8 @@ export function CommonManifestDetails({
   prevStepData,
   previousStep,
   manifestIdsList,
-  isReadonly = false
+  isReadonly = false,
+  showIdentifierField = true
 }: StepProps<ConnectorConfigDTO> & CommonManifestDetailsProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -158,7 +160,9 @@ export function CommonManifestDetails({
         initialValues={getInitialValues()}
         formName="manifestDetails"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          ...(showIdentifierField
+            ? ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName'))
+            : {}),
           branch: Yup.string().when('gitFetchType', {
             is: 'Branch',
             then: Yup.string().trim().required(getString('validation.branchName'))
@@ -168,7 +172,7 @@ export function CommonManifestDetails({
             then: Yup.string().trim().required(getString('validation.commitId'))
           }),
           paths: Yup.lazy((value): Yup.Schema<unknown> => {
-            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+            if (getMultiTypeFromValue(value as unknown as any) === MultiTypeInputType.FIXED) {
               return Yup.array().of(
                 Yup.object().shape({
                   path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
@@ -210,6 +214,7 @@ export function CommonManifestDetails({
                     allowableTypes={allowableTypes}
                     prevStepData={prevStepData}
                     isReadonly={isReadonly}
+                    showIdentifierField={showIdentifierField}
                   />
 
                   {showAdvancedSection(selectedManifest) && (

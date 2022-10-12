@@ -18,11 +18,11 @@ import type { StoreConfigWrapper } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { isTemplatizedView } from '@pipeline/utils/stepUtils'
-import { AzureWebAppConfigProps, AzureWebAppConfigType } from '../AzureWebAppServiceSpecInterface.types'
+import { ApplicationConfigProps, AzureWebAppConfigType } from '../AzureWebAppServiceSpecInterface.types'
 import { fileTypes } from '../AzureWebAppStartupScriptSelection/StartupScriptInterface.types'
 import css from './RuntimeAzureWebAppConfig.module.scss'
 
-const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.ReactElement | null => {
+const AzureWebAppConfigInputField = (props: ApplicationConfigProps): React.ReactElement | null => {
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
@@ -83,7 +83,7 @@ const AzureWebAppConfigInputField = (props: AzureWebAppConfigProps): React.React
     </div>
   )
 }
-export function AzureWebAppConfig(props: AzureWebAppConfigProps): React.ReactElement {
+export function ApplicationConfig(props: ApplicationConfigProps): React.ReactElement {
   const { getString } = useStrings()
 
   const getPathLabel = (type: AzureWebAppConfigType | undefined): string => {

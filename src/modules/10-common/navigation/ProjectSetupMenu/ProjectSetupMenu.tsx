@@ -33,9 +33,9 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
     NG_FILE_STORE,
     NG_SETTINGS,
     USE_OLD_GIT_SYNC,
-    CD_ONBOARDING_ENABLED
+    CD_ONBOARDING_ENABLED,
+    NG_DEPLOYMENT_FREEZE
   } = useFeatureFlags()
-  const NG_DEPLOYMENT_FREEZE = false
   const { showGetStartedTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const { isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF } = useAppStore()
@@ -79,7 +79,10 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module }) => {
           <SidebarLink label={getString('common.governance')} to={routes.toGovernance(params as GovernancePathProps)} />
         )}
         {NG_DEPLOYMENT_FREEZE ? (
-          <SidebarLink label={getString('common.freezeWindows')} to={routes.toFreezeWindows(params)} />
+          <SidebarLink
+            label={getString('common.freezeWindows')}
+            to={routes.toFreezeWindows({ ...params, module: params.module || 'cd' })}
+          />
         ) : null}
         {isCIorCD && NG_FILE_STORE && (
           <SidebarLink label={getString('resourcePage.fileStore')} to={routes.toFileStore(params)} />

@@ -71,3 +71,22 @@
     }
   }
 }
+
+.placeholderContainer {
+  background-color: var(--white) !important;
+}
+
+.layoutHeight {
+  height: 22px;
+  line-height: 13px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.selectBtn {
+  &:hover {
+    text-decoration: underline !important;
+  }
+}

@@ -15,10 +15,7 @@ import type { GetPipelineQueryParams, TemplateStepNode, StepElementConfig } from
 import { getResolvedTemplateDetailsByRef } from '@pipeline/utils/templateUtils'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-import type {
-  DeploymentConfig,
-  DeploymentConfigStepTemplateRefDetails
-} from '@pipeline/components/PipelineStudio/PipelineVariables/types'
+import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 
 export interface DrawerData {
   type: DrawerTypes
@@ -122,10 +119,7 @@ export function DeploymentContextProvider(props: React.PropsWithChildren<Deploym
 
   useEffect(() => {
     const allTemplateRefs = compact(
-      map(
-        get(deploymentConfig, 'execution.stepTemplateRefs'),
-        (stepTemplateRefObj: DeploymentConfigStepTemplateRefDetails) => stepTemplateRefObj.templateRef
-      )
+      map(get(deploymentConfig, 'execution.stepTemplateRefs'), (stepTemplateRef: string) => stepTemplateRef)
     ) as string[]
     const unresolvedTemplateRefs = allTemplateRefs.filter(templateRef => {
       return isEmpty(get(templateDetailsByRef, templateRef))

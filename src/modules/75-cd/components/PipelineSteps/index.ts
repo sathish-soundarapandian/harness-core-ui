@@ -25,6 +25,7 @@ import { K8sDeleteStep } from './K8sDelete/K8sDeleteStep'
 import { DeployEnvironmentStep } from './DeployEnvStep/DeployEnvStep'
 import { DeployEnvironmentEntityStep } from './DeployEnvironmentEntityStep/DeployEnvironmentEntityStep'
 import { DeployInfrastructureStep } from './DeployInfrastructureStep/DeployInfrastructureStep'
+import { DeployInfrastructureEntityStep } from './DeployInfrastructureEntityStep/DeployInfrastructureEntityStep'
 import { DeployServiceStep } from './DeployServiceStep/DeployServiceStep'
 import { HelmDeploy } from './HelmDeploy/HelmDeploy'
 import { HelmRollback } from './HelmRollback/HelmRollback'
@@ -70,9 +71,12 @@ import { ECSBlueGreenCreateServiceStep } from './ECSBlueGreenCreateServiceStep/E
 import { ECSBlueGreenSwapTargetGroupsStep } from './ECSBlueGreenSwapTargetGroupsStep/ECSBlueGreenSwapTargetGroupsStep'
 import { ECSBlueGreenRollbackStep } from './ECSBlueGreenRollbackStep/ECSBlueGreenRollbackStep'
 import { DeployServiceEntityStep } from './DeployServiceEntityStep/DeployServiceEntityStep'
+import { ECSRunTaskStep } from './ECSRunTaskStep/ECSRunTaskStep'
 import { AzureArmStep } from './AzureArm/AzureArm'
 import { CustomDeploymentServiceSpec } from './CustomDeploymentServiceSpec/CustomDeploymentServiceSpec'
 import { CustomDeploymentInfrastructureSpec } from './CustomDeploymentInfrastructureSpec/CustomDeploymentInfrastructureStep'
+import { UpdateReleaseRepo } from '../UpdateReleaseRepo/UpdateReleaseRepo'
+import { ShellScriptProvisionStep } from './ShellScriptProvision/ShellScriptProvisionStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new HttpStep())
@@ -97,6 +101,7 @@ factory.registerStep(new ServerlessGCPSpec())
 factory.registerStep(new DeployEnvironmentStep())
 factory.registerStep(new DeployEnvironmentEntityStep())
 factory.registerStep(new DeployInfrastructureStep())
+factory.registerStep(new DeployInfrastructureEntityStep())
 factory.registerStep(new DeployServiceStep())
 factory.registerStep(new DeployServiceEntityStep())
 factory.registerStep(new GenericServiceSpec())
@@ -120,6 +125,7 @@ factory.registerStep(new CFCreateStack())
 factory.registerStep(new SshServiceSpec())
 factory.registerStep(new WinRmServiceSpec())
 factory.registerStep(new CreatePr())
+factory.registerStep(new UpdateReleaseRepo())
 factory.registerStep(new MergePR())
 factory.registerStep(new FetchInstanceScript())
 factory.registerStep(new AzureWebAppRollback())
@@ -134,9 +140,11 @@ factory.registerStep(new ECSCanaryDeployStep())
 factory.registerStep(new ECSCanaryDeleteStep())
 factory.registerStep(new AzureArmRollback())
 factory.registerStep(new AzureBlueprintStep())
+factory.registerStep(new ECSRunTaskStep())
 factory.registerStep(new ECSBlueGreenCreateServiceStep())
 factory.registerStep(new ECSBlueGreenSwapTargetGroupsStep())
 factory.registerStep(new ECSBlueGreenRollbackStep())
 factory.registerStep(new AzureArmStep())
 factory.registerStep(new CustomDeploymentServiceSpec())
 factory.registerStep(new CustomDeploymentInfrastructureSpec())
+factory.registerStep(new ShellScriptProvisionStep())

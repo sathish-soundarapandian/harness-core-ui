@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { TabNavigation } from '@harness/uicore'
+import { TabNavigation, TabNavigationProps } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import { PermissionsRequest, usePermission } from '@rbac/hooks/usePermission'
@@ -20,7 +20,7 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 
-export default function EnvironmentTabs() {
+export default function EnvironmentTabs(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const isEnvGroupEnabled = useFeatureFlag(FeatureFlag.ENV_GROUP)
@@ -33,10 +33,10 @@ export default function EnvironmentTabs() {
     } as PermissionsRequest,
     []
   )
-  const [navLinks, setNavLinks] = useState([])
+  const [navLinks, setNavLinks] = useState<TabNavigationProps['links']>([])
 
   useEffect(() => {
-    const links: any = [
+    const links: TabNavigationProps['links'] = [
       {
         label: getString('environment'),
         to: routes.toEnvironment({
@@ -61,7 +61,8 @@ export default function EnvironmentTabs() {
     }
 
     setNavLinks(links)
-  }, [isEnvGroupEnabled])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEnvGroupEnabled, accountId, orgIdentifier, projectIdentifier, module, canViewEnvGroup])
 
   return <TabNavigation size={'small'} links={navLinks} />
 }

@@ -19,6 +19,8 @@ declare const styles: {
   readonly firstnode: string
   readonly graphNode: string
   readonly hasMoreChild: string
+  readonly headerStatus: string
+  readonly headerTitle: string
   readonly horizontalBar: string
   readonly isNodeCollapsed: string
   readonly marginBottom: string

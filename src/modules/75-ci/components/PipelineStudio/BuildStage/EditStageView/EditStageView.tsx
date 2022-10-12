@@ -338,6 +338,7 @@ export const EditStageView: React.FC<EditStageView> = ({
                     setCodebaseRuntimeInputs,
                     codebaseRuntimeInputs,
                     connectorWidth: 366,
+                    fixRepoNameWidth: true,
                     setConnectorType,
                     connectorType,
                     allowableTypes: [

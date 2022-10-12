@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { Dispatch, SetStateAction, useMemo } from 'react'
+import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import {
   SelectOption,
@@ -14,7 +15,6 @@ import {
   FormError,
   MultiTypeInput,
   Text,
-  RUNTIME_INPUT_VALUE,
   AllowedTypes
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
@@ -35,6 +35,8 @@ interface AppDApplicationsInterface {
   expressions?: string[]
   applicationError?: string
   allowedTypes?: AllowedTypes
+  appdMultiType: MultiTypeInputType
+  setAppdMultiType: Dispatch<SetStateAction<MultiTypeInputType>>
 }
 
 export default function AppDApplications({
@@ -47,7 +49,9 @@ export default function AppDApplications({
   isTemplate,
   expressions,
   allowedTypes,
-  applicationError
+  applicationError,
+  appdMultiType: inputType,
+  setAppdMultiType: setInputType
 }: AppDApplicationsInterface): JSX.Element {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -62,10 +66,6 @@ export default function AppDApplications({
       pageSize: 10000
     }
   }, [])
-
-  const [inputType, setInputType] = React.useState<MultiTypeInputType | undefined>(
-    getTypeOfInput(formikAppDynamicsValue)
-  )
 
   React.useEffect(() => {
     if (
@@ -103,8 +103,9 @@ export default function AppDApplications({
             setInputType(multiType)
           }
           const selectedItem = item as string | SelectOption
-          const selectedValue = typeof selectedItem === 'string' ? selectedItem : selectedItem?.label?.toString()
-          if (selectedValue && selectedValue !== RUNTIME_INPUT_VALUE && !/^</.test(selectedValue)) {
+          const selectedValue =
+            typeof selectedItem === 'string' ? selectedItem : defaultTo(selectedItem?.label?.toString(), '')
+          if (selectedValue && multiType === MultiTypeInputType.FIXED) {
             refetchTier({
               queryParams: {
                 appName: selectedValue,

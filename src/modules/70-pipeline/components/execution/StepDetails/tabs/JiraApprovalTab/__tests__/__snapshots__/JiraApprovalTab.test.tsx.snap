@@ -222,7 +222,7 @@ exports[`<JiraApprovalTab/> tests not isWaiting test - rejected 1`] = `
       <tbody>
         <tr>
           <th>
-            startedAt
+            startedAt:
           </th>
           <td>
             -
@@ -230,7 +230,7 @@ exports[`<JiraApprovalTab/> tests not isWaiting test - rejected 1`] = `
         </tr>
         <tr>
           <th>
-            endedAt
+            endedAt:
           </th>
           <td>
             -
@@ -238,7 +238,7 @@ exports[`<JiraApprovalTab/> tests not isWaiting test - rejected 1`] = `
         </tr>
         <tr>
           <th>
-            pipeline.duration
+            pipeline.duration:
           </th>
           <td>
             <div>
@@ -440,7 +440,7 @@ exports[`<JiraApprovalTab/> tests not isWaiting test 1`] = `
       <tbody>
         <tr>
           <th>
-            startedAt
+            startedAt:
           </th>
           <td>
             -
@@ -448,7 +448,7 @@ exports[`<JiraApprovalTab/> tests not isWaiting test 1`] = `
         </tr>
         <tr>
           <th>
-            endedAt
+            endedAt:
           </th>
           <td>
             -
@@ -456,7 +456,7 @@ exports[`<JiraApprovalTab/> tests not isWaiting test 1`] = `
         </tr>
         <tr>
           <th>
-            pipeline.duration
+            pipeline.duration:
           </th>
           <td>
             <div>

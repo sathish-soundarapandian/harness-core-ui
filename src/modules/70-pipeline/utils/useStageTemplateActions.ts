@@ -39,7 +39,9 @@ export function useStageTemplateActions(): TemplateActionsReturnType {
       try {
         const { template, isCopied } = await getTemplate({
           templateType: 'Stage',
-          allChildTypes: [getStageType(stage?.stage, templateTypes)],
+          filterProperties: {
+            childTypes: [getStageType(stage?.stage, templateTypes)]
+          },
           selectedTemplate,
           gitDetails,
           storeMetadata

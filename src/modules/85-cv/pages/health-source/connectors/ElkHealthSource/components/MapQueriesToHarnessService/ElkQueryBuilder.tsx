@@ -68,7 +68,7 @@ export function ElkQueryBuilder(props: ElkQueryBuilderProps): JSX.Element {
             <SetupSourceLayout
               leftPanelContent={
                 <MultiItemsSideNav
-                  defaultMetricName={`getString('cv.monitoringSources.Elk.ElkLogsQuery')`}
+                  defaultMetricName={getString('cv.monitoringSources.elk.elkLogsQuery')}
                   tooptipMessage={getString('cv.monitoringSources.gcoLogs.addQueryTooltip')}
                   addFieldLabel={getString('cv.monitoringSources.addQuery')}
                   createdMetrics={createdMetrics}

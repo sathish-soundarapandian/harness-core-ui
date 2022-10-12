@@ -31,4 +31,28 @@ describe('VALIDATORS', () => {
       expect(err).not.toBeDefined()
     }
   })
+
+  test('Number type field validator', () => {
+    const onlyDigitsAllowedError = 'Only digits are allowed'
+    const getStringMock = jest.fn().mockReturnValue(onlyDigitsAllowedError)
+    const numberFieldValidator = VALIDATORS[ALLOWED_VALUES_TYPE.NUMBER]
+    expect(numberFieldValidator).toBeDefined()
+    try {
+      numberFieldValidator(getStringMock).validateSync({ numberTypeField: 'abc' })
+    } catch (err) {
+      expect(err.message).toBe(onlyDigitsAllowedError)
+    }
+
+    try {
+      numberFieldValidator(getStringMock).validateSync({ numberTypeField: '20w' })
+    } catch (err) {
+      expect(err.message).toBe(onlyDigitsAllowedError)
+    }
+
+    try {
+      numberFieldValidator(getStringMock).validateSync({ numberTypeField: '200' })
+    } catch (err) {
+      expect(err).not.toBeDefined()
+    }
+  })
 })

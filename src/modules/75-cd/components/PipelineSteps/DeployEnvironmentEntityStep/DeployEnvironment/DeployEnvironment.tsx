@@ -6,10 +6,10 @@
  */
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isNil } from 'lodash-es'
-import { parse } from 'yaml'
 import { useFormikContext } from 'formik'
+import produce from 'immer'
+import { Divider } from '@blueprintjs/core'
 
 import {
   AllowedTypes,
@@ -21,281 +21,352 @@ import {
   ModalDialog,
   MultiTypeInputType,
   SelectOption,
-  useToaster
+  useToggleOpen
 } from '@harness/uicore'
-import { useModalHook } from '@harness/use-modal'
 
+import type { EnvironmentYaml } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { EnvironmentResponseDTO, useGetEnvironmentAccessList } from 'services/cd-ng'
 
-import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 
 import RbacButton from '@rbac/components/Button/Button'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { isTemplatizedView } from '@pipeline/utils/stepUtils'
-
-import { isEditEnvironment } from '../../DeployInfrastructureStep/utils'
-import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvironmentModal'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
-import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../utils'
+import type {
+  DeployEnvironmentEntityCustomStepProps,
+  DeployEnvironmentEntityFormState,
+  EnvironmentWithInputs
+} from '../types'
+import { useGetEnvironmentsData } from './useGetEnvironmentsData'
+import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvironmentModal'
+import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 
 import css from './DeployEnvironment.module.scss'
 
-interface DeployEnvironmentProps {
+interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomStepProps> {
   initialValues: DeployEnvironmentEntityFormState
   readonly: boolean
   allowableTypes: AllowedTypes
-  isMultiEnv: boolean
-  stepViewType?: StepViewType
-  serviceRef?: string
+  isMultiEnvironment: boolean
+  identifiersToLoad?: string[]
+  /** env group specific props */
+  isUnderEnvGroup?: boolean
+}
+
+export function getAllFixedEnvironments(data: DeployEnvironmentEntityFormState): string[] {
+  if (data.environment && getMultiTypeFromValue(data.environment) === MultiTypeInputType.FIXED) {
+    return [data.environment as string]
+  } else if (data.environments && Array.isArray(data.environments)) {
+    return data.environments.map(environment => environment.value as string)
+  }
+
+  return []
+}
+
+export function getSelectedEnvironmentsFromOptions(items: SelectOption | SelectOption[]): string[] {
+  if (Array.isArray(items)) {
+    return items.map(item => item.value as string)
+    /** If single environment, then items should contain some value.
+     * If it's empty or runtime or expression return empty array */
+  } else if (items && getMultiTypeFromValue(items) === MultiTypeInputType.FIXED) {
+    return [items.value as string]
+  }
+
+  return []
 }
 
 export default function DeployEnvironment({
   initialValues,
   readonly,
   allowableTypes,
-  isMultiEnv,
-  stepViewType
+  isMultiEnvironment,
+  identifiersToLoad,
+  isUnderEnvGroup,
+  stageIdentifier,
+  deploymentType,
+  customDeploymentRef,
+  gitOpsEnabled
 }: DeployEnvironmentProps): JSX.Element {
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
+  const { values, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
-  const { showError } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
-  const { values, setFieldValue } = useFormikContext<DeployEnvironmentEntityConfig>()
+  const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
 
-  const [environments, setEnvironments] = useState<EnvironmentResponseDTO[]>()
-  const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
-  const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
-  const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
-    getMultiTypeFromValue(initialValues.environment?.environmentRef)
-  )
+  // State
+  const [selectedEnvironments, setSelectedEnvironments] = useState<string[]>(getAllFixedEnvironments(initialValues))
 
-  const isFixed = useMemo(() => environmentRefType === MultiTypeInputType.FIXED, [environmentRefType])
-  const isTemplateView = useMemo(() => isTemplatizedView(stepViewType), [stepViewType])
+  // Constants
+  const isFixed =
+    getMultiTypeFromValue(isMultiEnvironment ? values.environments : values.environment) === MultiTypeInputType.FIXED
 
+  // API
   const {
-    data: environmentsResponse,
-    loading: environmentsLoading,
-    error: environmentsError
-  } = useGetEnvironmentAccessList({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier
-    }
+    environmentsList,
+    environmentsData,
+    loadingEnvironmentsList,
+    loadingEnvironmentsData,
+    // This is required only when updating the entities list
+    updatingEnvironmentsData,
+    refetchEnvironmentsList,
+    refetchEnvironmentsData,
+    prependEnvironmentToEnvironmentList
+  } = useGetEnvironmentsData({
+    envIdentifiers: defaultTo(identifiersToLoad, selectedEnvironments),
+    loadSpecificIdentifiers: !isEmpty(identifiersToLoad)
   })
 
-  useEffect(() => {
-    if (!environmentsLoading && environmentsResponse?.data?.length) {
-      setEnvironments(
-        defaultTo(
-          environmentsResponse.data.map(environmentObj => ({
-            ...environmentObj.environment
-          })),
-          []
-        )
-      )
+  const selectOptions = useMemo(() => {
+    /* istanbul ignore else */
+    if (!isNil(environmentsList)) {
+      return environmentsList.map(environment => ({ label: environment.name, value: environment.identifier }))
     }
-  }, [environmentsLoading, environmentsResponse])
+
+    return []
+  }, [environmentsList])
+
+  const loading = loadingEnvironmentsList || loadingEnvironmentsData
 
   useEffect(() => {
-    if (!isNil(environments)) {
-      setEnvironmentsSelectOptions(
-        environments.map(environment => {
-          return { label: defaultTo(environment.name, ''), value: defaultTo(environment.identifier, '') }
-        })
-      )
+    // This condition is required to clear the list when switching from multi environment to single environment
+    if (!isMultiEnvironment && !values.environment && selectedEnvironments.length) {
+      setSelectedEnvironments([])
     }
-  }, [environments])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMultiEnvironment])
 
   useEffect(() => {
-    if (
-      !isEmpty(environmentsSelectOptions) &&
-      !isNil(environmentsSelectOptions) &&
-      initialValues.environment?.environmentRef
-    ) {
-      if (getMultiTypeFromValue(initialValues.environment?.environmentRef) === MultiTypeInputType.FIXED) {
-        const existingEnvironment = environmentsSelectOptions.find(
-          env => env.value === initialValues.environment?.environmentRef
-        )
-
-        if (!existingEnvironment) {
-          if (!readonly) {
-            setFieldValue('environment.environmentRef', '')
-          } else {
-            const options = [...environmentsSelectOptions]
-            options.push({
-              label: initialValues.environment.environmentRef,
-              value: initialValues.environment.environmentRef
-            })
-            setEnvironmentsSelectOptions(options)
-          }
-        } else {
-          setSelectedEnvironment(
-            environments?.find(environment => environment.identifier === existingEnvironment?.value)
+    if (!loading) {
+      // update environments in formik
+      /* istanbul ignore else */
+      if (values && environmentsData.length > 0) {
+        if (values.environment && !values.environmentInputs?.[values.environment]) {
+          const environment = environmentsData.find(
+            environmentData => environmentData.environment.identifier === values.environment
           )
+
+          setValues({
+            ...values,
+            // if environment input is not found, add it, else use the existing one
+            environmentInputs: {
+              [values.environment]: get(values.environmentInputs, [values.environment], environment?.environmentInputs)
+            }
+          })
+        } else if (Array.isArray(values.environments)) {
+          const updatedEnvironments = values.environments.reduce<EnvironmentWithInputs>(
+            (p, c) => {
+              const environment = environmentsData.find(
+                environmentData => environmentData.environment.identifier === c.value
+              )
+
+              if (environment) {
+                p.environments.push({ label: environment.environment.name, value: environment.environment.identifier })
+                // if environment input is not found, add it, else use the existing one
+                const environmentInputs = get(
+                  values.environmentInputs,
+                  [environment.environment.identifier],
+                  environment?.environmentInputs
+                )
+
+                p.environmentInputs[environment.environment.identifier] = environmentInputs
+              } else {
+                p.environments.push(c)
+              }
+
+              return p
+            },
+            { environments: [], environmentInputs: {}, parallel: values.parallel }
+          )
+
+          setValues({ ...values, ...updatedEnvironments })
         }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [environmentsSelectOptions])
+  }, [loading, environmentsList, environmentsData])
 
-  useEffect(() => {
-    if (!isNil(environmentsError)) {
-      showError(getRBACErrorMessage(environmentsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [environmentsError])
-
-  const updateEnvironmentsList = (updatedValues: EnvironmentResponseDTO): void => {
-    const newEnvironmentsList = [...defaultTo(environments, [])]
-    const existingIndex = newEnvironmentsList.findIndex(item => item.identifier === updatedValues.identifier)
-
-    if (existingIndex >= 0) {
-      newEnvironmentsList.splice(existingIndex, 1, updatedValues)
-    } else {
-      newEnvironmentsList.unshift(updatedValues)
-    }
-
-    setEnvironments(newEnvironmentsList)
-    setSelectedEnvironment(
-      newEnvironmentsList?.find(environment => environment.identifier === updatedValues?.identifier)
-    )
-
-    setFieldValue('environment.environmentRef', updatedValues.identifier)
-    hideEnvironmentModal()
-  }
-
-  const [showEnvironmentModal, hideEnvironmentModal] = useModalHook(() => {
-    const environmentValues = parse(defaultTo(selectedEnvironment?.yaml, '{}'))
-    return (
-      <ModalDialog
-        isOpen={true}
-        enforceFocus={false}
-        onClose={hideEnvironmentModal}
-        title={isEditEnvironment(selectedEnvironment) ? getString('editEnvironment') : getString('newEnvironment')}
-        className={css.dialogStyles}
-        width={1024}
-      >
-        <AddEditEnvironmentModal
-          data={{
-            ...environmentValues
-          }}
-          onCreateOrUpdate={updateEnvironmentsList}
-          closeModal={hideEnvironmentModal}
-          isEdit={Boolean(selectedEnvironment)}
-        />
-      </ModalDialog>
-    )
-  }, [environments, updateEnvironmentsList])
+  const disabled = readonly || (isFixed && loading)
 
   let placeHolderForEnvironments =
     Array.isArray(values.environments) && values.environments
       ? getString('environments')
-      : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
+      : getString('cd.pipelineSteps.environmentTab.selectEnvironments')
 
-  if (environmentsLoading) {
+  if (loading) {
     placeHolderForEnvironments = getString('loading')
+  }
+
+  const placeHolderForEnvironment = loading
+    ? getString('loading')
+    : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
+
+  const updateFormikAndLocalState = (newFormValues: DeployEnvironmentEntityFormState): void => {
+    // this sets the form values
+    setValues(newFormValues)
+    // this updates the local state
+    setSelectedEnvironments(getAllFixedEnvironments(newFormValues))
+  }
+
+  const updateEnvironmentsList = (newEnvironmentInfo: EnvironmentYaml): void => {
+    prependEnvironmentToEnvironmentList(newEnvironmentInfo)
+    closeAddNewModal()
+
+    const newFormValues = produce(values, draft => {
+      if (draft.environment) {
+        draft.environment = newEnvironmentInfo.identifier
+        draft.infrastructure = ''
+      } else if (Array.isArray(draft.environments)) {
+        draft.environments.push({ label: newEnvironmentInfo.name, value: newEnvironmentInfo.identifier })
+        if (draft.infrastructures) {
+          draft.infrastructures[newEnvironmentInfo.identifier] = []
+        }
+      }
+    })
+
+    updateFormikAndLocalState(newFormValues)
+  }
+
+  const onEnvironmentEntityUpdate = (): void => {
+    refetchEnvironmentsList()
+    refetchEnvironmentsData()
+  }
+
+  const onRemoveEnvironmentFromList = (environmentToDelete: string): void => {
+    const newFormValues = produce(values, draft => {
+      if (draft.environment) {
+        draft.environment = ''
+        draft.infrastructure = ''
+        delete draft.environments
+      } else if (Array.isArray(draft.environments)) {
+        draft.environments = draft.environments.filter(env => env.value !== environmentToDelete)
+        if (draft.infrastructures?.[environmentToDelete] && Array.isArray(draft.infrastructures[environmentToDelete])) {
+          delete draft.infrastructures[environmentToDelete]
+        }
+      }
+    })
+
+    updateFormikAndLocalState(newFormValues)
   }
 
   return (
     <>
       <Layout.Horizontal spacing="medium" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
-        {isMultiEnv ? (
+        {isMultiEnvironment ? (
           <FormMultiTypeMultiSelectDropDown
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
-            name={'environments.values'}
-            // ? 2 disabled fields
-            disabled={readonly || (isFixed && environmentsLoading)}
+            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironments')}
+            tooltipProps={{ dataTooltipId: 'specifyYourEnvironments' }}
+            name={'environments'}
+            // Form group disabled
+            disabled={disabled}
             dropdownProps={{
               placeholder: placeHolderForEnvironments,
-              items: defaultTo(environmentsSelectOptions, []),
-              disabled: readonly || (isFixed && environmentsLoading)
+              items: selectOptions,
+              // Field disabled
+              disabled
+            }}
+            onChange={items => {
+              setSelectedEnvironments(getSelectedEnvironmentsFromOptions(items))
             }}
             multiTypeProps={{
-              onTypeChange: setEnvironmentRefType,
               width: 280,
-              onChange: item => {
-                setSelectedEnvironment(
-                  environments?.find(environment => environment.identifier === (item as SelectOption)?.value)
-                )
-              },
               allowableTypes
             }}
           />
         ) : (
           <FormInput.MultiTypeInput
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
             tooltipProps={{ dataTooltipId: 'specifyYourEnvironment' }}
-            name={'environment.environmentRef'}
+            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment')}
+            name="environment"
             useValue
-            disabled={readonly || (isFixed && environmentsLoading)}
-            placeholder={
-              environmentsLoading
-                ? getString('loading')
-                : getString('cd.pipelineSteps.environmentTab.selectEnvironment')
-            }
+            disabled={disabled}
+            placeholder={placeHolderForEnvironment}
             multiTypeInputProps={{
-              onTypeChange: setEnvironmentRefType,
-              width: 280,
+              width: 300,
+              selectProps: { items: selectOptions },
+              allowableTypes,
+              defaultValueToReset: '',
               onChange: item => {
-                setSelectedEnvironment(
-                  environments?.find(environment => environment.identifier === (item as SelectOption)?.value)
-                )
-
-                if (get(values, 'environment.infrastructureRef')) {
-                  setFieldValue('environment.infrastructureRef', '')
-                }
-              },
-              selectProps: {
-                addClearBtn: !readonly,
-                items: defaultTo(environmentsSelectOptions, [])
-              },
-              allowableTypes
+                setSelectedEnvironments(getSelectedEnvironmentsFromOptions(item as SelectOption))
+              }
             }}
-            selectItems={defaultTo(environmentsSelectOptions, [])}
+            selectItems={selectOptions}
           />
         )}
-        {!isTemplateView && isFixed && (
+        {isFixed && !isUnderEnvGroup && (
           <RbacButton
             margin={{ top: 'xlarge' }}
             size={ButtonSize.SMALL}
             variation={ButtonVariation.LINK}
             disabled={readonly}
-            onClick={showEnvironmentModal}
+            onClick={openAddNewModal}
             permission={{
               resource: {
                 resourceType: ResourceType.ENVIRONMENT
               },
               permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}
-            text={
-              isEditEnvironment(selectedEnvironment)
-                ? getString('edit')
-                : getString('common.plusNewName', { name: getString('environment') })
-            }
-            id={isEditEnvironment(selectedEnvironment) ? 'edit-environment' : 'add-new-environment'}
+            text={getString('common.plusNewName', { name: getString('environment') })}
           />
         )}
       </Layout.Horizontal>
-      {isFixed && selectedEnvironment && (
-        <EnvironmentEntitiesList
-          data={[selectedEnvironment]}
-          onEditClick={showEnvironmentModal}
-          onDeleteClick={() => {
-            setSelectedEnvironment(undefined)
-            setFieldValue('environment', {
-              environmentRef: ''
-            })
-          }}
+      {isMultiEnvironment && !isUnderEnvGroup ? (
+        <FormInput.CheckBox
+          label={getString('cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel')}
+          name="parallel"
         />
+      ) : null}
+      {isFixed && !isEmpty(selectedEnvironments) && (
+        <>
+          <EnvironmentEntitiesList
+            loading={loading || updatingEnvironmentsData}
+            environmentsData={environmentsData}
+            readonly={readonly}
+            allowableTypes={allowableTypes}
+            onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}
+            onRemoveEnvironmentFromList={onRemoveEnvironmentFromList}
+            initialValues={initialValues}
+            stageIdentifier={stageIdentifier}
+            deploymentType={deploymentType}
+            customDeploymentRef={customDeploymentRef}
+            gitOpsEnabled={gitOpsEnabled}
+          />
+
+          {!loading && !isMultiEnvironment && (
+            <>
+              <Divider />
+              <DeployInfrastructure
+                initialValues={initialValues}
+                readonly={readonly}
+                allowableTypes={allowableTypes}
+                environmentIdentifier={selectedEnvironments[0]}
+                stageIdentifier={stageIdentifier}
+                deploymentType={deploymentType}
+                customDeploymentRef={customDeploymentRef}
+              />
+            </>
+          )}
+        </>
       )}
+
+      <ModalDialog
+        isOpen={isAddNewModalOpen}
+        onClose={closeAddNewModal}
+        title={getString('newEnvironment')}
+        canEscapeKeyClose={false}
+        canOutsideClickClose={false}
+        enforceFocus={false}
+        lazy
+        width={1128}
+        height={840}
+        className={css.dialogStyles}
+      >
+        <AddEditEnvironmentModal
+          data={{}}
+          onCreateOrUpdate={updateEnvironmentsList}
+          closeModal={closeAddNewModal}
+          isEdit={false}
+        />
+      </ModalDialog>
     </>
   )
 }

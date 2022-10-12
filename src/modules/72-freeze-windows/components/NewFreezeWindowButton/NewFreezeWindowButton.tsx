@@ -5,14 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Button, ButtonVariation } from '@wings-software/uicore'
+import React, { FC } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
+import { ButtonVariation } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { DefaultFreezeId } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowReducer'
 
-export const NewFreezeWindowButton = () => {
+interface NewFreezeWindowButtonProps {
+  text?: string
+}
+
+export const NewFreezeWindowButton: FC<NewFreezeWindowButtonProps> = ({ text }) => {
   const { getString } = useStrings()
   const history = useHistory()
   const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
@@ -25,19 +33,31 @@ export const NewFreezeWindowButton = () => {
         orgIdentifier,
         accountId,
         module,
-        windowIdentifier: '-1'
+        windowIdentifier: DefaultFreezeId
       })
     )
   }, [projectIdentifier, orgIdentifier, accountId, module])
 
   return (
-    <Button
+    <RbacButton
       variation={ButtonVariation.PRIMARY}
       icon="plus"
-      text={getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
+      text={text || getString('freezeWindows.freezeWindowsPage.newFreezeWindow')}
       onClick={goToFreezeWindowStudio}
-      // disabled={!canEdit || !templatesEnabled}
-      // tooltip={tooltipBtn()}
+      permission={{
+        permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
+        resource: {
+          resourceType: ResourceType.DEPLOYMENTFREEZE
+        },
+        resourceScope: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier
+        }
+      }}
+      tooltipProps={{
+        dataTooltipId: 'createFreezeWindow'
+      }}
     />
   )
 }

@@ -5,10 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
+import { Collapse } from '@blueprintjs/core'
+import { useFormikContext } from 'formik'
+
 import {
-  Button,
   ButtonVariation,
   Card,
   Text,
@@ -16,33 +18,55 @@ import {
   AllowedTypes,
   Container,
   Layout,
-  TagsPopover
+  TagsPopover,
+  Button,
+  ButtonSize
 } from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
-import type { InfrastructureDefinitionConfig } from 'services/cd-ng'
+import type { Infrastructure } from 'services/cd-ng'
+
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RbacButton from '@rbac/components/Button/Button'
+
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
+import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { infraDefinitionTypeMapping } from '@pipeline/utils/stageHelpers'
+
+import type { DeployEnvironmentEntityFormState, InfrastructureData } from '../types'
+import type { DeployServiceEntityCustomProps } from '../../DeployServiceEntityStep/DeployServiceEntityUtils'
 
 import css from './InfrastructureEntitiesList.module.scss'
 
-export interface InfrastructureData {
-  infrastructure: InfrastructureDefinitionConfig & { yaml: string }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  infrastructureInputs?: any
+export interface InfrastructureEntityCardProps extends InfrastructureData, DeployServiceEntityCustomProps {
+  readonly: boolean
+  allowableTypes: AllowedTypes
+  onEditClick: (infrastructure: InfrastructureData) => void
+  onDeleteClick: (infrastructure: InfrastructureData) => void
+  environmentIdentifier: string
 }
 
-export interface InfrastructureEntityCardProps extends InfrastructureData {
-  defaultExpanded?: boolean
-  readonly?: boolean
-  stageIdentifier?: string
-  deploymentType?: string
-  allowableTypes?: AllowedTypes
-  onEditClick(svc: InfrastructureData): void
-  onDeleteClick(svc: InfrastructureData): void
-}
-
-export function InfrastructureEntityCard(props: InfrastructureEntityCardProps): React.ReactElement {
-  const { infrastructure, infrastructureInputs, readonly, onEditClick, onDeleteClick } = props
+export function InfrastructureEntityCard({
+  infrastructureDefinition,
+  infrastructureInputs,
+  readonly,
+  allowableTypes,
+  onEditClick,
+  onDeleteClick,
+  environmentIdentifier
+}: InfrastructureEntityCardProps): React.ReactElement {
   const { getString } = useStrings()
+  const { values } = useFormikContext<DeployEnvironmentEntityFormState>()
+  const { name, identifier, tags } = infrastructureDefinition
+
+  const [showInputs, setShowInputs] = useState(false)
+
+  function toggle(): void {
+    setShowInputs(show => !show)
+  }
 
   return (
     <Card className={css.card}>
@@ -53,34 +77,100 @@ export function InfrastructureEntityCard(props: InfrastructureEntityCardProps): 
             spacing="small"
             margin={{ bottom: 'xsmall' }}
           >
-            <Text color={Color.PRIMARY_7}>{infrastructure.name}</Text>
-            {!isEmpty(infrastructure.tags) && (
-              <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(infrastructure.tags, {})} />
+            <Text color={Color.PRIMARY_7}>{name}</Text>
+            {!isEmpty(tags) && (
+              <TagsPopover iconProps={{ size: 14, color: Color.GREY_600 }} tags={defaultTo(tags, {})} />
             )}
           </Layout.Horizontal>
 
           <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
-            {getString('common.ID')}: {infrastructure.identifier}
+            {getString('common.ID')}: {identifier}
           </Text>
         </Layout.Vertical>
 
         <Container>
-          <Button
+          <RbacButton
             variation={ButtonVariation.ICON}
             icon="edit"
-            data-testid={`edit-infrastructure-${infrastructure.identifier}`}
+            data-testid={`edit-infrastructure-${identifier}`}
             disabled={readonly}
-            onClick={() => onEditClick({ infrastructure, infrastructureInputs })}
+            onClick={() => onEditClick({ infrastructureDefinition, infrastructureInputs })}
+            permission={{
+              resource: {
+                resourceType: ResourceType.ENVIRONMENT,
+                resourceIdentifier: identifier
+              },
+              permission: PermissionIdentifier.EDIT_ENVIRONMENT
+            }}
           />
-          <Button
+          <RbacButton
             variation={ButtonVariation.ICON}
             icon="remove-minus"
-            data-testid={`delete-infrastructure-${infrastructure.identifier}`}
+            data-testid={`delete-infrastructure-${identifier}`}
             disabled={readonly}
-            onClick={() => onDeleteClick({ infrastructure, infrastructureInputs })}
+            onClick={() => onDeleteClick({ infrastructureDefinition, infrastructureInputs })}
+            permission={{
+              resource: {
+                resourceType: ResourceType.ENVIRONMENT,
+                resourceIdentifier: identifier
+              },
+              permission: PermissionIdentifier.DELETE_ENVIRONMENT
+            }}
           />
         </Container>
       </Layout.Horizontal>
+      {infrastructureInputs && values.infrastructureInputs?.[environmentIdentifier]?.[identifier] ? (
+        <>
+          <Container flex={{ justifyContent: 'center' }}>
+            <Button
+              icon={showInputs ? 'chevron-up' : 'chevron-down'}
+              data-testid="toggle-infrastructure-inputs"
+              text={getString(
+                showInputs
+                  ? 'cd.pipelineSteps.environmentTab.hideInfrastructureInputs'
+                  : 'cd.pipelineSteps.environmentTab.viewInfrastructureInputs'
+              )}
+              variation={ButtonVariation.LINK}
+              size={ButtonSize.SMALL}
+              onClick={toggle}
+            />
+          </Container>
+          <Collapse keepChildrenMounted={false} isOpen={showInputs}>
+            <Container border={{ top: true }} margin={{ top: 'medium' }} padding={{ top: 'large' }}>
+              <Text color={Color.GREY_800} font={{ size: 'normal', weight: 'bold' }} margin={{ bottom: 'medium' }}>
+                {getString('common.infrastructureInputs')}
+              </Text>
+              <StepWidget<Infrastructure>
+                key={`${environmentIdentifier}_${identifier}`}
+                factory={factory}
+                template={infrastructureInputs.spec}
+                initialValues={{
+                  ...(values.infrastructureInputs?.[environmentIdentifier]?.[identifier]?.spec || {}),
+                  environmentRef: environmentIdentifier,
+                  infrastructureRef: identifier
+                }}
+                allowableTypes={allowableTypes}
+                allValues={{
+                  environmentRef: environmentIdentifier,
+                  infrastructureRef: identifier
+                }}
+                type={
+                  (infraDefinitionTypeMapping[infrastructureInputs.type as StepType] ||
+                    infrastructureInputs?.type) as StepType
+                }
+                path={`infrastructureInputs.${environmentIdentifier}.${identifier}.spec`}
+                readonly={readonly}
+                stepViewType={StepViewType.TemplateUsage}
+                customStepProps={{
+                  // serviceRef: deploymentStage?.service?.serviceRef,
+                  environmentRef: environmentIdentifier,
+                  infrastructureRef: identifier
+                }}
+              />
+            </Container>
+          </Collapse>
+        </>
+      ) : null}
     </Card>
   )
 }

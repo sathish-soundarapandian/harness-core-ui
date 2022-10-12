@@ -14,6 +14,9 @@ import type { FreezeListUrlQueryParams } from '@freeze-windows/types'
 import { getQueryParamOptions } from '@freeze-windows/utils/queryUtils'
 import type { PageFreezeSummaryResponse, FreezeSummaryResponse } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFreezeWindowListContext } from '@freeze-windows/context/FreezeWindowListContext'
 import type { FreezeWindowListColumnActions } from './FreezeWindowListCells'
 
@@ -31,6 +34,17 @@ export const FreezeWindowList: FC<FreezeWindowList> = ({ data, onToggleFreezeRow
   const { updateQueryParams } = useUpdateQueryParams<Partial<FreezeListUrlQueryParams>>()
   const queryParams = useQueryParams<FreezeListUrlQueryParams>(getQueryParamOptions())
   const { sort } = queryParams
+  const [canEdit] = usePermission({
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    resource: {
+      resourceType: ResourceType.DEPLOYMENTFREEZE
+    },
+    permissions: [PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE]
+  })
 
   const getViewFreezeRowLink = (feezeWindowItem: FreezeSummaryResponse): string =>
     routes.toFreezeWindowStudio({
@@ -60,6 +74,7 @@ export const FreezeWindowList: FC<FreezeWindowList> = ({ data, onToggleFreezeRow
       gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
       setSortBy={appliedSort => updateQueryParams({ sort: appliedSort })}
       sortBy={sort}
+      disabled={!canEdit}
     />
   )
 }

@@ -10,8 +10,10 @@ declare const styles: {
   readonly authMethodBtn: string
   readonly bitbucketIcon: string
   readonly borderBottom: string
+  readonly branchSelector: string
   readonly card: string
   readonly comingSoonPill: string
+  readonly configOptionCard: string
   readonly connectorSelect: string
   readonly divider: string
   readonly footer: string
@@ -38,5 +40,6 @@ declare const styles: {
   readonly separator: string
   readonly testConnectionBtn: string
   readonly wizard: string
+  readonly yamlPathField: string
 }
 export default styles

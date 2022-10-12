@@ -16,10 +16,10 @@ export const useConfirmFreezeDelete = (action: (data?: string) => void) => {
 
   const { openDialog } = useConfirmationDialog({
     titleText: getString('freezeWindows.freezeWindowsPage.confirmDeleteTitle'),
-    contentText: getString('freezeWindows.freezeWindowsPage.confirmDeleteText'),
+    contentText: getString('freezeWindows.freezeWindowsPage.confirmDeleteText', { name: deleteId }),
     confirmButtonText: getString('confirm'),
     cancelButtonText: getString('cancel'),
-    intent: Intent.WARNING,
+    intent: Intent.DANGER,
     onCloseDialog: isConfirmed => {
       if (isConfirmed) {
         action(deleteId)

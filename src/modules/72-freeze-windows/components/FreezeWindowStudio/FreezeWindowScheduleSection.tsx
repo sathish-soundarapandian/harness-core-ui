@@ -5,21 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import noop from 'lodash-es/noop'
-import {
-  Card,
-  Container,
-  Heading,
-  FormikForm,
-  ButtonVariation,
-  Button,
-  Formik,
-  Layout,
-  Label
-} from '@wings-software/uicore'
-import { DateInput, Color } from '@harness/uicore'
+import React, { useCallback } from 'react'
+import { Card, Container, Heading, ButtonVariation, Button, Layout, Color } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
+import type { FreezeWindow } from 'services/cd-ng'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { WindowPathProps } from '@freeze-windows/types'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { ScheduleFreezeForm } from '../ScheduleFreezeForm/ScheduleFreezeForm'
+import { useFreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
+import { useSaveFreeze } from './useSaveFreeze'
 import css from './FreezeWindowStudio.module.scss'
 
 interface FreezeStudioOverviewSectionProps {
@@ -27,13 +24,17 @@ interface FreezeStudioOverviewSectionProps {
   onBack: () => void
 }
 
-interface ScheduleFormInterface {
-  startTime?: string
-  endTime?: string
-}
-
 export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionProps> = ({ onBack }) => {
   const { getString } = useStrings()
+  const {
+    state: { freezeObj },
+    updateFreeze
+  } = useFreezeWindowContext()
+  const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<WindowPathProps>()
+  const { onSave, isSaveDisabled, isSaveInProgress } = useSaveFreeze()
+  const validate = useCallback((formData: any) => {
+    updateFreeze({ ...freezeObj, windows: [formData] })
+  }, [])
 
   return (
     <Container padding={{ top: 'small', right: 'xxlarge', bottom: 'xxlarge', left: 'xxlarge' }}>
@@ -41,77 +42,45 @@ export const FreezeWindowScheduleSection: React.FC<FreezeStudioOverviewSectionPr
         {getString('freezeWindows.freezeStudio.freezeSchedule')}
       </Heading>
       <Card className={css.sectionCard}>
-        <Formik<ScheduleFormInterface>
-          enableReinitialize
-          onSubmit={noop}
-          formName="freezeWindowStudioOverviewForm"
-          initialValues={{ startTime: '', endTime: '' }}
-          // validate={debouncedUpdate}
-        >
-          {formikProps => {
-            const { values } = formikProps
-            const { startTime } = values
-            return (
-              <FormikForm>
-                <Layout.Vertical width={'400px'}>
-                  <div className="bp3-form-group">
-                    <Label className="bp3-label">Start time</Label>
-                    <DateInput
-                      timePrecision="minute"
-                      dateProps={{
-                        timePickerProps: { useAmPm: true },
-                        // defaultValue: new Date(),
-                        minDate: startTime ? new Date(startTime) : new Date()
-                      }}
-                      dateTimeFormat={'LLLL'}
-                      // value={startTime}
-                      onChange={(value: string | undefined) => {
-                        formikProps.setFieldValue('startTime', value)
-                      }}
-                      data-testid="startsOn"
-                      popoverProps={{ position: 'auto', usePortal: false }}
-                    />
-                  </div>
-                  <div className="bp3-form-group">
-                    <Label className="bp3-label">End time</Label>
-                    <DateInput
-                      timePrecision="minute"
-                      dateProps={{
-                        timePickerProps: { useAmPm: true },
-                        // defaultValue: new Date(),
-                        minDate: startTime ? new Date(startTime) : new Date()
-                      }}
-                      dateTimeFormat={'LLLL'}
-                      // value={startTime}
-                      onChange={(value: string | undefined) => {
-                        formikProps.setFieldValue('endTime', value)
-                      }}
-                      data-testid="endsOn"
-                      popoverProps={{ position: 'auto', usePortal: false }}
-                    />
-                  </div>
-                </Layout.Vertical>
-              </FormikForm>
-            )
-          }}
-        </Formik>
+        <ScheduleFreezeForm
+          freezeWindow={(freezeObj?.windows as FreezeWindow[])?.[0]}
+          onSubmit={onSave}
+          onChange={validate}
+          formActions={
+            <Layout.Horizontal
+              spacing="small"
+              margin={{ top: 'xxlarge' }}
+              flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+            >
+              <Button
+                icon="chevron-left"
+                onClick={onBack}
+                variation={ButtonVariation.SECONDARY}
+                text={getString('back')}
+              />
+              <RbacButton
+                type="submit"
+                disabled={isSaveDisabled}
+                variation={ButtonVariation.PRIMARY}
+                text={getString('save')}
+                icon="send-data"
+                loading={isSaveInProgress}
+                permission={{
+                  permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE,
+                  resource: {
+                    resourceType: ResourceType.DEPLOYMENTFREEZE
+                  },
+                  resourceScope: {
+                    accountIdentifier,
+                    orgIdentifier,
+                    projectIdentifier
+                  }
+                }}
+              />
+            </Layout.Horizontal>
+          }
+        />
       </Card>
-      <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>
-        <Button
-          margin={{ top: 'medium' }}
-          icon="chevron-left"
-          onClick={onBack}
-          variation={ButtonVariation.SECONDARY}
-          text={getString('back')}
-        />
-        <Button
-          margin={{ top: 'medium' }}
-          rightIcon="chevron-right"
-          // onClick={onNext}
-          variation={ButtonVariation.PRIMARY}
-          text={getString('continue')}
-        />
-      </Layout.Horizontal>
     </Container>
   )
 }

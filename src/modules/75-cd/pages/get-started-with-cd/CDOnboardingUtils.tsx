@@ -32,6 +32,11 @@ export interface PipelineRefPayload {
   deploymentType: string
 }
 
+export interface DelegateSuccessHandler {
+  delegateCreated: boolean
+  delegateInstalled?: boolean
+}
+
 export const DefaultNewStageName = 'Stage Name'
 export const DefaultNewStageId = 'stage_id'
 export const DefaultNewServiceId = '-1'

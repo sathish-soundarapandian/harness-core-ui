@@ -62,7 +62,7 @@ export function FreezeWindowListSubHeader(): ReactElement {
           width={200}
           placeholder={getString('search')}
           onChange={text => {
-            updateQueryParams({ searchTerm: text, page: DEFAULT_PAGE_INDEX })
+            updateQueryParams({ searchTerm: text ? text : undefined, page: DEFAULT_PAGE_INDEX })
           }}
           defaultValue={searchTerm}
         />

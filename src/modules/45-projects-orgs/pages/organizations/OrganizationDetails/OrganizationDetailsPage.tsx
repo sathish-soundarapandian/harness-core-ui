@@ -31,8 +31,7 @@ import css from './OrganizationDetailsPage.module.scss'
 
 const OrganizationDetailsPage: React.FC = () => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
-  const { OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE } = useFeatureFlags()
-  const NG_DEPLOYMENT_FREEZE = false
+  const { OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE, NG_DEPLOYMENT_FREEZE } = useFeatureFlags()
   const history = useHistory()
   const { getString } = useStrings()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
@@ -104,6 +103,17 @@ const OrganizationDetailsPage: React.FC = () => {
       selectable: true
     } as ResourceOption
   ]
+
+  const govFreezeCard: ResourceOption[] = [
+    {
+      label: <String stringID="common.governance" />,
+      icon: 'governance',
+      route: routes.toGovernance({ accountId, orgIdentifier }),
+      colorClass: css.governance
+    }
+  ]
+
+  const showGovCard = canUsePolicyEngine && (OPA_PIPELINE_GOVERNANCE || OPA_FF_GOVERNANCE)
 
   return (
     <>
@@ -229,21 +239,13 @@ const OrganizationDetailsPage: React.FC = () => {
             </Heading>
             <ResourceCardList items={getResourceCardList()} />
           </Layout.Vertical>
-          {canUsePolicyEngine && (OPA_PIPELINE_GOVERNANCE || OPA_FF_GOVERNANCE) && (
+          {(showGovCard || NG_DEPLOYMENT_FREEZE) && (
             <Layout.Vertical spacing="medium" padding={{ top: 'large' }}>
               <Heading font={{ size: 'medium', weight: 'bold' }} color={Color.BLACK}>
                 {getString('projectsOrgs.orgGovernance')}
               </Heading>
               <ResourceCardList
-                items={[
-                  {
-                    label: <String stringID="common.governance" />,
-                    icon: 'governance',
-                    route: routes.toGovernance({ accountId, orgIdentifier }),
-                    colorClass: css.governance
-                  },
-                  ...(NG_DEPLOYMENT_FREEZE ? deploymentFreezeCard : [])
-                ]}
+                items={[...(showGovCard ? govFreezeCard : []), ...(NG_DEPLOYMENT_FREEZE ? deploymentFreezeCard : [])]}
               />
             </Layout.Vertical>
           )}

@@ -42,8 +42,6 @@ describe('Edit stage view test', () => {
 
     expect(container).toMatchSnapshot()
     expect(errorContextProvider.subscribeForm).toBeCalled()
-    expect(container.getElementsByClassName('tabSubHeading')[0]).toBeInTheDocument()
-    expect(container.getElementsByClassName('thumbnailSelect')[0]).toBeInTheDocument()
     expect(container.getElementsByClassName('accordion')[0]).toBeInTheDocument()
   })
 

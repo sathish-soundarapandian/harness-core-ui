@@ -38,6 +38,17 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 const fetchConnectors = (): Promise<unknown> => Promise.resolve({})
 const fetchBuildDetails = jest.fn().mockResolvedValue(mockBuildList)
 jest.mock('services/cd-ng', () => ({
+  useGetImagePathsForArtifactory: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  }),
+  useGetRepositoriesDetailsForArtifactory: jest.fn().mockImplementation(() => {
+    return { data: {}, refetch: jest.fn(), error: null, loading: false }
+  }),
   useGetConnectorListV2: jest.fn().mockImplementation(() => ({ mutate: fetchConnectors })),
   getConnectorListV2Promise: () => Promise.resolve(mockManifestConnector),
   getBuildDetailsForArtifactoryArtifactWithYamlPromise: () => Promise.resolve(mockBuildList),

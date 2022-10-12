@@ -31,7 +31,7 @@ export function DeploymentConfigStepDrawerTitle(props: {
   const stepNode = drawerData.data?.stepConfig?.node
   const stepType =
     (stepNode as StepElementConfig)?.type ||
-    get(templateDetailsByRef, (stepNode as TemplateStepNode)?.template.templateRef)?.childType
+    get(templateDetailsByRef, (stepNode as TemplateStepNode)?.template?.templateRef)?.childType
   const { getString } = useStrings()
   return (
     <div className={css.stepConfig}>

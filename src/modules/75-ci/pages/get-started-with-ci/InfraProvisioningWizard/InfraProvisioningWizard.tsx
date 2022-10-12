@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import set from 'lodash-es/set'
 import get from 'lodash-es/get'
@@ -56,22 +56,28 @@ import {
   InfraProvisiongWizardStepId,
   StepStatus,
   ACCOUNT_SCOPE_PREFIX,
-  getPipelinePayloadWithoutCodebase,
   OAUTH2_USER_NAME,
-  getFullRepoName,
   Hosting,
-  GitAuthenticationMethod,
-  getPipelinePayloadWithCodebase,
-  getCloudPipelinePayloadWithCodebase,
-  getCloudPipelinePayloadWithoutCodebase
+  GitAuthenticationMethod
 } from './Constants'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
-import { addDetailsToPipeline, getPRTriggerActions } from '../../../utils/HostedBuildsUtils'
+import {
+  ConfigurePipeline,
+  ConfigurePipelineRef,
+  PipelineConfigurationOption,
+  StarterConfigIdToOptionMap,
+  StarterConfigurations
+} from './ConfigurePipeline'
+import { getPRTriggerActions, getFullRepoName, getPayloadForPipelineCreation } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
 export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = props => {
-  const { lastConfiguredWizardStepId = InfraProvisiongWizardStepId.SelectGitProvider, precursorData } = props
+  const {
+    lastConfiguredWizardStepId = InfraProvisiongWizardStepId.SelectGitProvider,
+    precursorData,
+    enableFieldsForTesting
+  } = props
   const { preSelectedGitConnector, connectorsEligibleForPreSelection, secretForPreSelectedConnector } =
     precursorData || {}
   const { getString } = useStrings()
@@ -85,6 +91,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const [configuredGitConnector, setConfiguredGitConnector] = useState<ConnectorInfoDTO>()
   const selectGitProviderRef = React.useRef<SelectGitProviderRef | null>(null)
   const selectRepositoryRef = React.useRef<SelectRepositoryRef | null>(null)
+  const configurePipelineRef = React.useRef<ConfigurePipelineRef | null>(null)
   const { setShowGetStartedTabInMainMenu } = useSideNavContext()
   const { showError: showErrorToaster } = useToaster()
   const [buttonLabel, setButtonLabel] = useState<string>('')
@@ -101,6 +108,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
 
   useEffect(() => {
     setConfiguredGitConnector(preSelectedGitConnector)
+    if (preSelectedGitConnector) {
+      updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
+    }
   }, [preSelectedGitConnector])
 
   const { mutate: createTrigger } = useCreateTrigger({
@@ -122,46 +132,32 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
 
   const constructPipelinePayloadWithCodebase = React.useCallback(
     (repository: UserRepoResponse): string => {
-      const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
       const { name: repoName, namespace } = repository
       if (!repoName || !namespace || !configuredGitConnector?.identifier) {
         return ''
       }
-      const payload = addDetailsToPipeline({
-        originalPipeline: CIE_HOSTED_VMS ? getCloudPipelinePayloadWithCodebase() : getPipelinePayloadWithCodebase(),
-        name: `${getString('buildText')} ${repoName}`,
-        identifier: `${getString('buildText')}_${repoName.replace(/-/g, '_')}_${UNIQUE_PIPELINE_ID}`,
-        projectIdentifier,
-        orgIdentifier,
-        connectorRef: `${ACCOUNT_SCOPE_PREFIX}${configuredGitConnector?.identifier}`,
-        repoName: getFullRepoName(repository)
-      })
       try {
-        return yamlStringify(payload)
+        const { id, pipelineYaml = '', name = '' } = configurePipelineRef.current?.configuredOption || {}
+        return yamlStringify(
+          getPayloadForPipelineCreation({
+            pipelineYaml,
+            pipelineName: name,
+            configuredGitConnector,
+            isUsingAStarterPipeline: id ? StarterConfigurations.includes(StarterConfigIdToOptionMap[id]) : false,
+            isUsingHostedVMsInfra: CIE_HOSTED_VMS,
+            orgIdentifier,
+            projectIdentifier,
+            repository,
+            getString
+          })
+        )
       } catch (e) {
         // Ignore error
       }
       return ''
     },
-    [projectIdentifier, orgIdentifier, configuredGitConnector?.identifier]
+    [projectIdentifier, orgIdentifier, configuredGitConnector?.identifier, configurePipelineRef]
   )
-
-  const constructPipelinePayloadWithoutCodebase = React.useCallback((): string => {
-    const UNIQUE_PIPELINE_ID = new Date().getTime().toString()
-    const payload = addDetailsToPipeline({
-      originalPipeline: CIE_HOSTED_VMS ? getCloudPipelinePayloadWithoutCodebase() : getPipelinePayloadWithoutCodebase(),
-      name: `${getString('buildText')} ${getString('common.pipeline').toLowerCase()}`,
-      identifier: `${getString('buildText')}_${getString('common.pipeline').toLowerCase()}_${UNIQUE_PIPELINE_ID}`,
-      projectIdentifier,
-      orgIdentifier
-    })
-    try {
-      return yamlStringify(payload)
-    } catch (e) {
-      // Ignore error
-    }
-    return ''
-  }, [projectIdentifier, orgIdentifier])
 
   const constructTriggerPayload = React.useCallback(
     ({
@@ -345,38 +341,6 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     }
   }, [selectRepositoryRef.current?.repository, configuredGitConnector, accountId, projectIdentifier, orgIdentifier])
 
-  const setupPipelineWithoutCodebase = useCallback(() => {
-    try {
-      setShowPageLoader(true)
-      createPipelineV2Promise({
-        body: constructPipelinePayloadWithoutCodebase(),
-        queryParams: {
-          accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier
-        },
-        requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      }).then((createPipelineRes: ResponsePipelineSaveResponse) => {
-        if (createPipelineRes?.data?.identifier) {
-          setShowPageLoader(false)
-          history.push(
-            routes.toPipelineStudio({
-              accountId: accountId,
-              module: 'ci',
-              orgIdentifier,
-              projectIdentifier,
-              pipelineIdentifier: createPipelineRes?.data?.identifier,
-              stageId: getString('buildText'),
-              sectionId: BuildTabs.EXECUTION
-            })
-          )
-        }
-      })
-    } catch (e) {
-      setShowPageLoader(false)
-    }
-  }, [accountId, projectIdentifier, orgIdentifier])
-
   const WizardSteps: Map<InfraProvisiongWizardStepId, WizardStep> = new Map([
     [
       InfraProvisiongWizardStepId.SelectGitProvider,
@@ -397,18 +361,16 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             setFieldTouched?.('gitProvider', true)
             return
           }
-          if (gitProvider.type === 'Other') {
-            setupPipelineWithoutCodebase()
-          } else {
-            if (!gitAuthenticationMethod) {
-              setFieldTouched?.('gitAuthenticationMethod', true)
-              return
-            }
-            if ((gitAuthenticationMethod === GitAuthenticationMethod.OAuth && validatedConnector) || validate?.()) {
-              setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
-              updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
-              updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
-            }
+          if (!gitAuthenticationMethod) {
+            setFieldTouched?.('gitAuthenticationMethod', true)
+            return
+          }
+          // For non-OAuth auth mechanism, auth fields in the form should validate to proceed here, for OAuth no form validation is needed
+          if ((gitAuthenticationMethod === GitAuthenticationMethod.OAuth && validatedConnector) || validate?.()) {
+            setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
+            setShowError(false)
+            updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
+            updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
           }
         },
         stepFooterLabel: `${getString('next')}: ${getString('ci.getStartedWithCI.selectRepo')}`
@@ -440,6 +402,52 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           const { repository, enableCloneCodebase } = selectRepositoryRef.current || {}
           if (enableCloneCodebase && repository && configuredGitConnector?.spec) {
             updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
+            setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
+            setShowError(false)
+          } else {
+            setShowError(true)
+          }
+        },
+        stepFooterLabel: `${getString('next')}: ${getString('ci.getStartedWithCI.configurePipeline')}`
+      }
+    ],
+    [
+      InfraProvisiongWizardStepId.ConfigurePipeline,
+      {
+        stepRender: (
+          <ConfigurePipeline
+            ref={configurePipelineRef}
+            configuredGitConnector={configuredGitConnector}
+            repoName={
+              selectRepositoryRef.current?.repository ? getFullRepoName(selectRepositoryRef.current.repository) : ''
+            }
+            showError={showError}
+            disableNextBtn={() => setDisableBtn(true)}
+            enableNextBtn={() => setDisableBtn(false)}
+            enableForTesting={enableFieldsForTesting}
+          />
+        ),
+        onClickBack: () => {
+          setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
+          updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
+          updateStepStatus([InfraProvisiongWizardStepId.ConfigurePipeline], StepStatus.ToDo)
+        },
+        onClickNext: () => {
+          const { repository, enableCloneCodebase } = selectRepositoryRef.current || {}
+          const { configuredOption, values, showValidationErrors } = configurePipelineRef.current || {}
+          const { branch, yamlPath } = values || {}
+          if (!configuredOption) {
+            setShowError(true)
+            return
+          }
+          if (
+            StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.ChooseExistingYAML &&
+            (!branch || !yamlPath)
+          ) {
+            showValidationErrors?.()
+            return
+          }
+          if (enableCloneCodebase && repository && configuredGitConnector?.spec) {
             setDisableBtn(true)
             setShowPageLoader(true)
             if (selectGitProviderRef.current?.values?.gitAuthenticationMethod !== GitAuthenticationMethod.OAuth) {
@@ -495,10 +503,6 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                   })
               }
             }
-          } else if (!enableCloneCodebase) {
-            setupPipelineWithoutCodebase()
-          } else {
-            setShowError(true)
           }
         },
         stepFooterLabel: getString('ci.getStartedWithCI.createPipeline')
@@ -532,7 +536,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           progressMap={
             new Map([
               [0, { StepStatus: wizardStepStatus.get(InfraProvisiongWizardStepId.SelectGitProvider) || 'TODO' }],
-              [1, { StepStatus: wizardStepStatus.get(InfraProvisiongWizardStepId.SelectRepository) || 'TODO' }]
+              [1, { StepStatus: wizardStepStatus.get(InfraProvisiongWizardStepId.SelectRepository) || 'TODO' }],
+              [2, { StepStatus: wizardStepStatus.get(InfraProvisiongWizardStepId.ConfigurePipeline) || 'TODO' }]
             ])
           }
         />

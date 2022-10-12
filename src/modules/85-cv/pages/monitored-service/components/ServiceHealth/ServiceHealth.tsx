@@ -57,7 +57,7 @@ export default function ServiceHealth({
   const [changeTimelineSummary, setChangeTimelineSummary] = useState<ChangesInfoCardData[] | null>(null)
   const [healthScoreData, setHealthScoreData] = useState<RiskData[]>()
   const containerRef = useRef<HTMLElement>(null)
-  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
+  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
 
   useEffect(() => {
     if (selectedTimePeriod?.value) {

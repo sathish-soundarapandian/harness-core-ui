@@ -10,6 +10,7 @@ import {
   service,
   queries
 } from '../../../support/85-cv/monitoredService/health-sources/Dynatrace/constants'
+import { RuntimeValue } from '../../../support/85-cv/Templates/constants'
 import { Connectors } from '../../../utils/connctors-utils'
 
 describe('Create empty monitored service', () => {
@@ -128,10 +129,8 @@ describe('Create empty monitored service', () => {
     cy.addingGroupName('Group 1')
 
     cy.contains('div', 'Query Specifications and mapping').click({ force: true })
+    cy.get('input[name="metricSelector"]').should('have.value', RuntimeValue)
     cy.contains('span', 'Submit').click({ force: true })
-    cy.contains('span', validations.query).scrollIntoView().should('be.visible')
-
-    cy.get('div[class="view-lines"]').type('builtin:service.cpu.time')
 
     cy.contains('div', 'Assign').click({ force: true })
     cy.contains('span', 'Submit').click({ force: true })

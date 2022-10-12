@@ -17,7 +17,6 @@ import {
   FormInput,
   HarnessDocTooltip,
   Text,
-  ThumbnailSelect,
   useConfirmationDialog
 } from '@harness/uicore'
 import type { Item } from '@wings-software/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
@@ -216,29 +215,6 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
     return () => unSubscribeForm({ tab: DeployTabs.OVERVIEW, form: formikRef })
   }, [])
 
-  const whatToDeploy = (
-    <>
-      {context ? (
-        <div className={stageCss.tabSubHeading}>{getString('whatToDeploy')}</div>
-      ) : (
-        <Text
-          color={Color.GREY_700}
-          font={{ size: 'normal', weight: 'semi-bold' }}
-          tooltipProps={{ dataTooltipId: 'whatToDeploy' }}
-        >
-          {getString('whatToDeploy')}
-        </Text>
-      )}
-
-      <ThumbnailSelect
-        name="serviceType"
-        items={newStageData}
-        className={context ? stageCss.thumbnailSelect : css.stageTypeThumbnail}
-        isReadonly={isReadonly}
-      />
-    </>
-  )
-
   const handleSubmit = (values: EditStageFormikType): void => {
     /* istanbul ignore else */
     if (data?.stage) {
@@ -402,7 +378,7 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                     </>
                   )}
 
-                  {template ? (
+                  {template && (
                     <Text
                       icon={'template-library'}
                       margin={{ top: 'medium', bottom: 'medium' }}
@@ -413,12 +389,6 @@ export const EditStageView: React.FC<EditStageViewProps> = ({
                     >
                       {`Using Template: ${getTemplateNameWithLabel(template)}`}
                     </Text>
-                  ) : !context ? (
-                    whatToDeploy
-                  ) : (
-                    <div>
-                      <Card className={stageCss.sectionCard}>{whatToDeploy}</Card>
-                    </div>
                   )}
 
                   {shouldRenderDeploymentType() && !template && (

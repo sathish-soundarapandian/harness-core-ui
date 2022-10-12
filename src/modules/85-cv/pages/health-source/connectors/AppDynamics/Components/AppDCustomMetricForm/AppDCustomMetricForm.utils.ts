@@ -38,9 +38,9 @@ export const setServiceIntance = ({
   }
 }
 
-export const checkRuntimeFields = (formikValues: AppDynamicsFomikFormInterface) =>
-  getMultiTypeFromValue(formikValues?.continuousVerification) !== MultiTypeInputType.FIXED ||
-  getMultiTypeFromValue(formikValues.appdApplication) !== MultiTypeInputType.FIXED ||
+export const checkRuntimeFields = (formikValues: AppDynamicsFomikFormInterface, appdMultiType?: MultiTypeInputType) =>
+  formikValues?.continuousVerification ||
+  appdMultiType !== MultiTypeInputType.FIXED ||
   getMultiTypeFromValue(formikValues.completeMetricPath) !== MultiTypeInputType.FIXED
 
 export const getDerivedCompleteMetricPath = (formikValues: AppDynamicsFomikFormInterface) => {
@@ -49,7 +49,7 @@ export const getDerivedCompleteMetricPath = (formikValues: AppDynamicsFomikFormI
   let derivedCompleteMetricPath = ''
   if (formikValues?.pathType === PATHTYPE.DropdownPath && baseFolder && formikValues.appDTier && metricPath) {
     derivedCompleteMetricPath = `${baseFolder?.trim()}|${formikValues?.appDTier?.trim()}|${metricPath?.trim()}`
-  } else if (formikValues?.pathType === PATHTYPE.FullPath || formikValues?.pathType === PATHTYPE.CompleteMetricPath) {
+  } else if (formikValues?.pathType === PATHTYPE.CompleteMetricPath) {
     derivedCompleteMetricPath = defaultTo(formikValues.completeMetricPath, '')
   }
   return derivedCompleteMetricPath

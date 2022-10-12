@@ -12,7 +12,7 @@ import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { PipelineTemplateCanvasWrapperWithRef } from '@templates-library/components/TemplateStudio/PipelineTemplateCanvas/PipelineTemplateCanvasWrapper'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { TemplateInputs, TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 
 export class PipelineTemplate extends Template {
   protected type = TemplateType.Pipeline

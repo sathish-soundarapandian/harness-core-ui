@@ -8,7 +8,7 @@
 import React from 'react'
 import type { FormikErrors } from 'formik'
 import { isEmpty } from 'lodash-es'
-import type { IconName } from '@wings-software/uicore'
+import type { AllowedTypes, IconName } from '@wings-software/uicore'
 
 import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -18,9 +18,25 @@ import { VariablesListTable } from '@pipeline/components/VariablesListTable/Vari
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateGenericFields } from '../Common/GenericExecutionStep/utils'
+import { ECSBlueGreenSwapTargetGroupsStepEditRef } from './ECSBlueGreenSwapTargetGroupsStepEdit'
 import { GenericExecutionStepInputSet } from '../Common/GenericExecutionStep/GenericExecutionStepInputSet'
-import { GenericExecutionStepEditRef } from '../Common/GenericExecutionStep/GenericExecutionStepEdit'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
+
+export interface ECSBlueGreenSwapTargetGroupsStepValues extends StepElementConfig {
+  spec: {
+    doNotDownsizeOldService?: boolean | string
+  }
+}
+
+export interface ECSBlueGreenSwapTargetGroupsStepProps {
+  initialValues: ECSBlueGreenSwapTargetGroupsStepValues
+  onUpdate?: (data: ECSBlueGreenSwapTargetGroupsStepValues) => void
+  stepViewType?: StepViewType
+  onChange?: (data: ECSBlueGreenSwapTargetGroupsStepValues) => void
+  allowableTypes: AllowedTypes
+  readonly?: boolean
+  isNewStep?: boolean
+}
 
 interface ECSBlueGreenCreateServiceVariableStepProps {
   initialValues: StepElementConfig
@@ -30,17 +46,20 @@ interface ECSBlueGreenCreateServiceVariableStepProps {
   variablesData: StepElementConfig
 }
 
-export class ECSBlueGreenSwapTargetGroupsStep extends PipelineStep<StepElementConfig> {
+export class ECSBlueGreenSwapTargetGroupsStep extends PipelineStep<ECSBlueGreenSwapTargetGroupsStepValues> {
   protected type = StepType.EcsBlueGreenSwapTargetGroups
   protected stepName = 'Configure Swap Target Groups'
   protected stepIcon: IconName = 'bluegreen'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.K8sBGSwapServices'
   protected isHarnessSpecific = true
-  protected defaultValues: StepElementConfig = {
+  protected defaultValues: ECSBlueGreenSwapTargetGroupsStepValues = {
     identifier: '',
     name: '',
     type: StepType.EcsBlueGreenSwapTargetGroups,
-    timeout: '10m'
+    timeout: '10m',
+    spec: {
+      doNotDownsizeOldService: false
+    }
   }
 
   constructor() {
@@ -49,7 +68,7 @@ export class ECSBlueGreenSwapTargetGroupsStep extends PipelineStep<StepElementCo
     this._hasDelegateSelectionVisible = true
   }
 
-  renderStep(props: StepProps<StepElementConfig>): JSX.Element {
+  renderStep(props: StepProps<ECSBlueGreenSwapTargetGroupsStepValues>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -67,7 +86,7 @@ export class ECSBlueGreenSwapTargetGroupsStep extends PipelineStep<StepElementCo
       return (
         <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
-          inputSetData={inputSetData as InputSetData<StepElementConfig>}
+          inputSetData={inputSetData as InputSetData<ECSBlueGreenSwapTargetGroupsStepValues>}
         />
       )
     } else if (stepViewType === StepViewType.InputVariable) {
@@ -83,7 +102,7 @@ export class ECSBlueGreenSwapTargetGroupsStep extends PipelineStep<StepElementCo
     }
 
     return (
-      <GenericExecutionStepEditRef
+      <ECSBlueGreenSwapTargetGroupsStepEditRef
         initialValues={initialValues}
         onUpdate={onUpdate}
         isNewStep={isNewStep}
@@ -101,7 +120,7 @@ export class ECSBlueGreenSwapTargetGroupsStep extends PipelineStep<StepElementCo
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<StepElementConfig>): FormikErrors<StepElementConfig> {
+  }: ValidateInputSetProps<ECSBlueGreenSwapTargetGroupsStepValues>): FormikErrors<ECSBlueGreenSwapTargetGroupsStepValues> {
     const errors = validateGenericFields({
       data,
       template,
@@ -113,6 +132,6 @@ export class ECSBlueGreenSwapTargetGroupsStep extends PipelineStep<StepElementCo
       delete errors.spec
     }
 
-    return errors
+    return errors as FormikErrors<ECSBlueGreenSwapTargetGroupsStepValues>
   }
 }

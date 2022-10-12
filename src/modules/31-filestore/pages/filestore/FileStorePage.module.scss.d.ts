@@ -9,5 +9,6 @@
 declare const styles: {
   readonly disableEvents: string
   readonly expandSearch: string
+  readonly fsPageWrapper: string
 }
 export default styles

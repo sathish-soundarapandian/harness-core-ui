@@ -16,9 +16,11 @@ declare const styles: {
   readonly connectorNameField: string
   readonly createConnectorWizard: string
   readonly crossIcon: string
+  readonly environmentView: string
   readonly listHeader: string
   readonly modal: string
   readonly optionsViewContainer: string
+  readonly pipelineView: string
   readonly rowItem: string
   readonly saveBtn: string
   readonly selectFileType: string

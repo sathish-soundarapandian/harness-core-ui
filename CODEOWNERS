@@ -38,7 +38,6 @@ src/modules/15-notifications @harness/ui-platform
 src/modules/18-audit-trail @harness/ui-platform
 src/modules/20-rbac @harness/ui-platform
 src/modules/20-rbac/components/TrialHomePageTemplate @harness/ui-plg
-src/modules/27-sto @harness/ui-sto
 src/modules/28-et @harness/error-tracking
 src/modules/33-auth-settings @harness/ui-platform
 src/modules/33-auth-settings/pages/subscriptions @harness/ui-plg
@@ -62,7 +61,7 @@ src/modules/75-cd/modals/CDTrial @harness/ui-plg
 src/modules/75-cd/pages/home @harness/ui-plg
 src/modules/85-cv @harness/ui-cv
 src/modules/85-cv/pages/home @harness/ui-plg
-src/modules/85-sto-steps @harness/ui-sto
+src/modules/85-sto @harness/ui-sto
 src/modules/75-ci @harness/ui-ci
 src/modules/75-ci/modals/CITrial @harness/ui-plg
 src/modules/75-ci/pages/home @harness/ui-plg

@@ -19,7 +19,7 @@ exports[`<StageTemplateCanvas /> tests should match snapshot in empty state 1`] 
           style="height: 100%;"
         >
           <p
-            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
+            class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-bottom-small"
           >
             Stage Type
           </p>
@@ -35,24 +35,19 @@ exports[`<StageTemplateCanvas /> tests should match snapshot in empty state 1`] 
               >
                 <div
                   class="defaultNode default-node"
-                  style="margin-left: -19px;"
                 >
                   <div
-                    class="defaultCard createNewModal"
+                    class="defaultCard"
+                    data-nodeid="s1"
                     draggable="false"
-                    style="width: 90px; height: 40px; margin-top: 12px; cursor: pointer; opacity: 1; border-width: 1px; border-style: solid;"
+                    id="s1"
+                    style="width: 90px; height: 40px; border-width: 1px; border-style: solid;"
                   >
                     <div
                       class="execution-running-animation"
                     />
-                    <div
-                      style="visibility: visible;"
-                    />
-                    <div
-                      style="visibility: visible;"
-                    />
                     <span
-                      class="bp3-icon StyledProps--main secondaryIcon"
+                      class="bp3-icon StyledProps--main codeIcon"
                       data-icon="command-echo"
                     >
                       <svg
@@ -67,12 +62,36 @@ exports[`<StageTemplateCanvas /> tests should match snapshot in empty state 1`] 
                         />
                       </svg>
                     </span>
+                    <button
+                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main closeNode readonly Button--iconOnly Button--without-shadow Button--withLeftIcon Button--variation Button--variation-primary"
+                      type="button"
+                    >
+                      <span
+                        class="bp3-icon bp3-icon-cross StyledProps--main"
+                        icon="cross"
+                      >
+                        <svg
+                          data-icon="cross"
+                          height="10"
+                          viewBox="0 0 16 16"
+                          width="10"
+                        >
+                          <desc>
+                            cross
+                          </desc>
+                          <path
+                            d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </button>
                   </div>
                   
                 </div>
               </div>
               <p
-                class="StyledProps--font StyledProps--main stageType StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
+                class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600"
               >
                 
               </p>

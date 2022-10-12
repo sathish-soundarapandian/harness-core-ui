@@ -60,6 +60,8 @@ const ECSBlueGreenCreateServiceStepInputSet = (
   const [stageListenerRules, setStageListenerRules] = useState<SelectOption[]>([])
   const [stageListenerRulesLoading, setStageListenerRulesLoading] = useState<boolean>(false)
 
+  const prefix = isEmpty(path) ? '' : `${path}.`
+
   // These are to be passed in API calls after Service/Env V2 redesign
   const environmentRef = defaultTo(
     selectedStage.stage?.spec?.environment?.environmentRef,
@@ -226,21 +228,19 @@ const ECSBlueGreenCreateServiceStepInputSet = (
         elasticLoadBalancer: selectedLoadBalancer
       }
     })
-    formik?.setFieldValue(`${prefix}.spec.loadBalancer`, selectedLoadBalancer)
-    formik?.setFieldValue(`${prefix}.spec.prodListener`, '')
-    formik?.setFieldValue(`${prefix}.spec.prodListenerRuleArn`, '')
-    formik?.setFieldValue(`${prefix}.spec.stageListener`, '')
-    formik?.setFieldValue(`${prefix}.spec.stageListenerRuleArn`, '')
+    formik?.setFieldValue(`${prefix}spec.loadBalancer`, selectedLoadBalancer)
+    formik?.setFieldValue(`${prefix}spec.prodListener`, '')
+    formik?.setFieldValue(`${prefix}spec.prodListenerRuleArn`, '')
+    formik?.setFieldValue(`${prefix}spec.stageListener`, '')
+    formik?.setFieldValue(`${prefix}spec.stageListenerRuleArn`, '')
   }
-
-  const prefix = isEmpty(path) ? '' : `${path}`
 
   return (
     <>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeDurationField
-            name={`${prefix}.timeout`}
+            name={`${prefix}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
               enableConfigureOptions: false,
@@ -255,7 +255,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
       {getMultiTypeFromValue(inputSetData.template?.spec?.loadBalancer) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <SelectInputSetView
-            name={`${prefix}.spec.loadBalancer`}
+            name={`${prefix}spec.loadBalancer`}
             selectItems={loadBalancerOptions}
             useValue
             multiTypeInputProps={{
@@ -280,7 +280,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
       {getMultiTypeFromValue(inputSetData.template?.spec?.prodListener) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <SelectInputSetView
-            name={`${prefix}.spec.prodListener`}
+            name={`${prefix}spec.prodListener`}
             selectItems={listenerOptions}
             useValue
             multiTypeInputProps={{
@@ -291,9 +291,9 @@ const ECSBlueGreenCreateServiceStepInputSet = (
               expressions,
               onChange: selectedValue => {
                 const selectedValueString = (selectedValue as SelectOption).value as string
-                fetchProdListenerRules(initialValues.spec.loadBalancer, selectedValueString)
-                formik?.setFieldValue(`${prefix}.spec.prodListener`, selectedValueString)
-                formik?.setFieldValue(`${prefix}.spec.prodListenerRuleArn`, '')
+                fetchProdListenerRules(get(formik?.values, `${prefix}spec.loadBalancer`), selectedValueString)
+                formik?.setFieldValue(`${prefix}spec.prodListener`, selectedValueString)
+                formik?.setFieldValue(`${prefix}spec.prodListenerRuleArn`, '')
               }
             }}
             label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')}
@@ -307,7 +307,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
       {getMultiTypeFromValue(inputSetData.template?.spec?.prodListenerRuleArn) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <SelectInputSetView
-            name={`${prefix}.spec.prodListenerRuleArn`}
+            name={`${prefix}spec.prodListenerRuleArn`}
             selectItems={prodListenerRules}
             useValue
             multiTypeInputProps={{
@@ -328,7 +328,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
       {getMultiTypeFromValue(inputSetData.template?.spec?.stageListener) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <SelectInputSetView
-            name={`${prefix}.spec.stageListener`}
+            name={`${prefix}spec.stageListener`}
             selectItems={listenerOptions}
             useValue
             multiTypeInputProps={{
@@ -339,9 +339,9 @@ const ECSBlueGreenCreateServiceStepInputSet = (
               expressions,
               onChange: selectedValue => {
                 const selectedValueString = (selectedValue as SelectOption).value as string
-                fetchStageListenerRules(initialValues.spec.loadBalancer, selectedValueString)
-                formik?.setFieldValue(`${prefix}.spec.stageListener`, selectedValueString)
-                formik?.setFieldValue(`${prefix}.spec.stageListenerRuleArn`, '')
+                fetchStageListenerRules(get(formik?.values, `${prefix}spec.loadBalancer`), selectedValueString)
+                formik?.setFieldValue(`${prefix}spec.stageListener`, selectedValueString)
+                formik?.setFieldValue(`${prefix}spec.stageListenerRuleArn`, '')
               }
             }}
             label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}
@@ -355,7 +355,7 @@ const ECSBlueGreenCreateServiceStepInputSet = (
       {getMultiTypeFromValue(inputSetData.template?.spec?.stageListenerRuleArn) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <SelectInputSetView
-            name={`${prefix}.spec.stageListenerRuleArn`}
+            name={`${prefix}spec.stageListenerRuleArn`}
             selectItems={stageListenerRules}
             useValue
             multiTypeInputProps={{

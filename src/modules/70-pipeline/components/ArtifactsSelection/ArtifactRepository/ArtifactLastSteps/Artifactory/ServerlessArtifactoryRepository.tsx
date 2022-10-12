@@ -45,6 +45,7 @@ export interface ServerlessArtifactoryRepositoryProps {
   fqnPath?: string
   template?: ServiceSpec
   fieldPath?: string
+  repoFormat?: string
 }
 
 export default function ServerlessArtifactoryRepository(
@@ -60,7 +61,8 @@ export default function ServerlessArtifactoryRepository(
     fqnPath,
     serviceId,
     template,
-    fieldPath
+    fieldPath,
+    repoFormat
   } = props
   const { getString } = useStrings()
   const [connectorRepos, setConnectorRepos] = useState<SelectOption[]>([])
@@ -77,7 +79,7 @@ export default function ServerlessArtifactoryRepository(
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      repositoryType: 'generic',
+      repositoryType: repoFormat,
       serviceId,
       fqnPath
     },
@@ -104,6 +106,10 @@ export default function ServerlessArtifactoryRepository(
       setConnectorRepos(map(artifactRepoData.data?.repositories, repo => ({ label: repo, value: repo })))
     }
   }, [artifactRepoData, connectorRef])
+
+  useEffect(() => {
+    setConnectorRepos([])
+  }, [repoFormat])
 
   const hasRepositoryData = () => {
     if (

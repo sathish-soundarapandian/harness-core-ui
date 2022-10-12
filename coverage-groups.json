@@ -18,7 +18,7 @@
     "Variables": ["src/modules/31-variables"],
     "Connectors": ["src/modules/35-connectors/**", "src/modules/10-common/components/YAMLBuilder/**"],
     "Delegates": ["src/modules/30-delegates/**"],
-    "STO": ["src/modules/85-sto-steps/**", "src/modules/27-sto/**"],
+    "STO": ["src/modules/85-sto/**"],
     "GitSync": [
       "src/modules/40-gitsync/**",
       "src/modules/10-common/components/SCMCheck/**",

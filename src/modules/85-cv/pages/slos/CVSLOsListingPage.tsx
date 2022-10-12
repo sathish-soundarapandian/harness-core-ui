@@ -15,7 +15,6 @@ import {
   Layout,
   FlexExpander,
   Container,
-  SelectOption,
   TableV2,
   Text,
   IconName,
@@ -23,8 +22,9 @@ import {
 } from '@wings-software/uicore'
 
 import { Color, FontVariation } from '@harness/design-system'
-import { filter, isEmpty, compact, values, defaultTo } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import type { CellProps, Renderer } from 'react-table'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import slosEmptyState from '@cv/assets/slosEmptyState.svg'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -62,7 +62,8 @@ import {
   getInitialFilterState,
   getClassNameForMonitoredServicePage,
   isSLOFilterApplied,
-  getServiceTitle
+  getServiceTitle,
+  getSLOsNoDataMessageTitle
 } from './CVSLOListingPage.utils'
 import SLODashbordFilters from './components/SLODashbordFilters/SLODashbordFilters'
 import SLOActions from './components/SLOActions/SLOActions'
@@ -382,6 +383,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
   }
   return (
     <>
+      <HelpPanel referenceId="sloDetails" type={HelpPanelType.FLOATING_CONTAINER} />
       {!monitoredServiceIdentifier && hasSloFilterApplied && (
         <>
           <Page.Header
@@ -546,14 +548,13 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
           {getIsWidgetDataEmpty(content?.length, dashboardWidgetsLoading) && (
             <NoDataCard
               image={slosEmptyState}
-              messageTitle={
-                monitoredServiceIdentifier
-                  ? getString('cv.slos.noDataMS')
-                  : !riskCountResponse?.data?.riskCounts ||
-                    isEmpty(filter(compact(values(filterState)), ({ label }: SelectOption) => label !== 'All'))
-                  ? getString('cv.slos.noData')
-                  : getString('cv.slos.noMatchingData')
-              }
+              messageTitle={getSLOsNoDataMessageTitle({
+                monitoredServiceIdentifier,
+                getString,
+                riskCountResponse,
+                filterState,
+                search
+              })}
               message={getString('cv.slos.noSLOsStateMessage')}
               className={css.noSloData}
             />

@@ -17,8 +17,7 @@ import type {
   ExecutionElementConfig,
   StepElementConfig,
   StepGroupElementConfig,
-  StageElementConfig,
-  DeploymentStageConfig
+  StageElementConfig
 } from 'services/cd-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StepActions } from '@common/constants/TrackingConstants'
@@ -34,7 +33,6 @@ import { PipelineGovernanceView } from '@governance/PipelineGovernanceView'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import type { TemplateStepNode } from 'services/pipeline-ng'
-import { getLinkedTemplateFromResolvedCustomDeploymentDetails } from '@pipeline/utils/stageHelpers'
 import type { StringsMap } from 'stringTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
@@ -461,7 +459,6 @@ export function RightDrawer(): React.ReactElement {
       gitDetails,
       storeMetadata,
       pipeline,
-      resolvedCustomDeploymentDetailsByRef,
       isIntermittentLoading
     },
     allowableTypes,
@@ -749,18 +746,14 @@ export function RightDrawer(): React.ReactElement {
         (data?.stepConfig?.node as StepElementConfig)?.type ||
         get(templateTypes, (data?.stepConfig?.node as TemplateStepNode).template.templateRef)
 
-      const customDeploymentTemplateRef = defaultTo(
-        (selectedStage?.stage?.spec as DeploymentStageConfig)?.customDeploymentRef?.templateRef,
-        ''
-      )
-      const resolvedCustomDeploymentDetails = get(resolvedCustomDeploymentDetailsByRef, customDeploymentTemplateRef, {})
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
-        allChildTypes: [stepType],
+        filterProperties: {
+          childTypes: [stepType]
+        },
         selectedTemplate,
         gitDetails,
-        storeMetadata,
-        ...getLinkedTemplateFromResolvedCustomDeploymentDetails({ resolvedCustomDeploymentDetails, getString })
+        storeMetadata
       })
       const node = drawerData.data?.stepConfig?.node as StepOrStepGroupOrTemplateStepData
       const processNode = isCopied

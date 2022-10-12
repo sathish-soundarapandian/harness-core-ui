@@ -181,6 +181,7 @@ exports[`Unit tests for PrometheusHealthSource Load in editmode for template wit
                                 >
                                   <div
                                     class="StyledProps--font StyledProps--main seletedAppContainer"
+                                    data-testid="sideNav-Prometheus Metric"
                                   >
                                     <p
                                       class="StyledProps--font Text--lineclamp StyledProps--main selectedApp isSelected"
@@ -832,6 +833,7 @@ exports[`Unit tests for PrometheusHealthSource load in edit case with fixed valu
                           >
                             <div
                               class="StyledProps--font StyledProps--main seletedAppContainer"
+                              data-testid="sideNav-Prometheus Metric"
                             >
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main selectedApp isSelected"
@@ -1478,6 +1480,7 @@ exports[`Unit tests for PrometheusHealthSource should render in create mode 1`] 
                           >
                             <div
                               class="StyledProps--font StyledProps--main seletedAppContainer"
+                              data-testid="sideNav-cv.monitoringSources.prometheus.prometheusMetric"
                             >
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main selectedApp isSelected"

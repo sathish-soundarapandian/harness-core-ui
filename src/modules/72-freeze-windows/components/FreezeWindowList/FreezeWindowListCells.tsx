@@ -6,9 +6,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Classes, Menu, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Checkbox, Switch } from '@harness/uicore'
+import { Classes, Switch, Menu, Position, PopoverInteractionKind } from '@blueprintjs/core'
+import { Button, Layout, Popover, Text, TagsPopover, ButtonVariation, Icon, Checkbox } from '@harness/uicore'
 import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
@@ -27,6 +27,7 @@ export interface FreezeWindowListColumnActions {
   onViewFreezeRow: (freezeWindow: FreezeSummaryResponse) => void
   getViewFreezeRowLink: (freezeWindow: FreezeSummaryResponse) => string
   selectedItems: string[]
+  disabled: boolean
 }
 
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
@@ -56,9 +57,9 @@ export const FreezeNameCell: CellType = ({ row, column }) => {
         </Link>
 
         {data.description && (
-          <Popover className={Classes.DARK} position={Position.LEFT}>
+          <Popover className={Classes.DARK} position={Position.LEFT} interactionKind={PopoverInteractionKind.HOVER}>
             <Icon name="description" width={16} height={20} />
-            <Layout.Vertical spacing="medium" padding="large" style={{ maxWidth: 400 }}>
+            <Layout.Vertical spacing="medium" padding="medium" style={{ maxWidth: 400 }}>
               <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }}>
                 Description
               </Text>
@@ -110,7 +111,7 @@ export const FreezeTimeCell: CellType = ({ row }) => {
 export const StatusCell: CellType = ({ row }) => {
   const { getString } = useStrings()
   const data = row.original
-  const { startTime, endTime } = data.currentOrUpcomingActiveWindow || {}
+  const { startTime, endTime } = (data as any).currentOrUpcomingActiveWindow || {}
   const isActive = useCurrentActiveTime(startTime, endTime, data.status === 'Enabled')
 
   return (
@@ -135,14 +136,19 @@ export const LastModifiedCell: CellType = ({ row }) => {
 
 export const MenuCell: CellType = ({ row, column }) => {
   const data = row.original
+  const disabled = column.disabled
 
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
       <Popover className={Classes.DARK} position={Position.LEFT}>
         <Button variation={ButtonVariation.ICON} icon="Options" aria-label="Freeze window menu actions" />
         <Menu style={{ backgroundColor: 'unset', minWidth: 'unset' }}>
-          <Menu.Item className={css.link} text={<Link to={column.getViewFreezeRowLink(data)}>Edit</Link>} />
           <Menu.Item
+            className={css.link}
+            text={<Link to={column.getViewFreezeRowLink(data)}>{disabled ? 'View' : 'Edit'}</Link>}
+          />
+          <Menu.Item
+            disabled={disabled}
             text={data.status === 'Disabled' ? 'Enable' : 'Disable'}
             onClick={() => {
               column.onToggleFreezeRow({
@@ -151,7 +157,7 @@ export const MenuCell: CellType = ({ row, column }) => {
               })
             }}
           />
-          <Menu.Item text="Delete" onClick={() => column.onDeleteRow(data.identifier!)} />
+          <Menu.Item disabled={disabled} text="Delete" onClick={() => column.onDeleteRow(data.identifier!)} />
         </Menu>
       </Popover>
     </Layout.Horizontal>
@@ -164,6 +170,7 @@ export const RowSelectCell: CellType = ({ row, column }) => {
   return (
     <div className={css.checkbox} onClick={killEvent}>
       <Checkbox
+        disabled={column.disabled}
         large
         checked={column.selectedItems.includes(data.identifier!)}
         onChange={event => {
@@ -180,15 +187,16 @@ export const FreezeToggleCell: CellType = ({ row, column }) => {
   return (
     <div onClick={killEvent}>
       <Switch
-        large
-        checked={data.status === 'Enabled'}
-        labelElement=""
+        disabled={column.disabled}
+        aria-label="Toggle freeze"
         onChange={event =>
           column.onToggleFreezeRow({
             freezeWindowId: data.identifier!,
             status: event.currentTarget.checked ? 'Enabled' : 'Disabled'
           })
         }
+        className={css.switch}
+        checked={data.status === 'Enabled'}
       />
     </div>
   )

@@ -26,6 +26,7 @@ import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type {
   DeploymentStageConfig,
+  EnvironmentYamlV2,
   ExecutionWrapperConfig,
   Infrastructure,
   PipelineInfrastructure,
@@ -81,6 +82,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
 export type DeployServiceEntityData = Pick<DeploymentStageConfig, 'service' | 'services'>
+export type DeployEnvironmentEntityData = Pick<DeploymentStageConfig, 'environment' | 'environments'>
 const harnessImageConnectorRef = 'connectors.title.harnessImageConnectorRef'
 const osLabel = 'pipeline.infraSpecifications.os'
 const archLabel = 'pipeline.infraSpecifications.architecture'
@@ -594,7 +596,15 @@ export function StageInputSetFormInternal({
   )
 
   const renderMultiTypeMapInputSet = React.useCallback(
-    ({ fieldName, stringKey }: { fieldName: string; stringKey: keyof StringsMap }): React.ReactElement => (
+    ({
+      fieldName,
+      stringKey,
+      hasValuesAsRuntimeInput
+    }: {
+      fieldName: string
+      stringKey: keyof StringsMap
+      hasValuesAsRuntimeInput: boolean
+    }): React.ReactElement => (
       <MultiTypeMapInputSet
         appearance={'minimal'}
         cardStyle={{ width: '50%' }}
@@ -611,6 +621,7 @@ export function StageInputSetFormInternal({
         }}
         disabled={readonly}
         formik={formik}
+        hasValuesAsRuntimeInput={hasValuesAsRuntimeInput}
       />
     ),
     []
@@ -793,6 +804,7 @@ export function StageInputSetFormInternal({
       }
     }
   }, [])
+
   return (
     <>
       {deploymentStageTemplate.serviceConfig && (
@@ -890,7 +902,8 @@ export function StageInputSetFormInternal({
                   stageIdentifier,
                   deploymentType: deploymentStage?.deploymentType,
                   gitOpsEnabled: deploymentStage?.gitOpsEnabled,
-                  allValues: pick(deploymentStage, ['service'])
+                  allValues: pick(deploymentStage, ['service']),
+                  customDeploymentData: deploymentStage?.customDeploymentRef
                 }}
               />
             )}
@@ -954,7 +967,8 @@ export function StageInputSetFormInternal({
                   stageIdentifier,
                   deploymentType: deploymentStage?.deploymentType,
                   gitOpsEnabled: deploymentStage?.gitOpsEnabled,
-                  allValues: pick(deploymentStage, ['services'])
+                  allValues: pick(deploymentStage, ['services']),
+                  customDeploymentData: deploymentStage?.customDeploymentRef
                 }}
               />
             ) : null}
@@ -1001,6 +1015,129 @@ export function StageInputSetFormInternal({
         </div>
       ) : null}
 
+      {!isSvcEnvEntityEnabled && deploymentStageTemplate.environment && (
+        <div id={`Stage.${stageIdentifier}.Environment`} className={cx(css.accordionSummary)}>
+          <div className={css.inputheader}>{getString('environment')}</div>
+          <div className={css.nestedAccordions}>
+            {/* if environment is marked as runtime, the below check handles everything */}
+            {deploymentStageTemplate.environment?.environmentRef ? (
+              <StepWidget<DeployEnvironmentEntityData>
+                factory={factory}
+                initialValues={pick(deploymentStageInputSet, 'environment')}
+                template={pick(deploymentStageTemplate, ['environment'])}
+                type={StepType.DeployEnvironmentEntity}
+                stepViewType={viewType}
+                path={path}
+                allowableTypes={allowableTypes}
+                readonly={readonly}
+                customStepProps={{
+                  stageIdentifier,
+                  deploymentType: deploymentStage?.deploymentType,
+                  gitOpsEnabled: deploymentStage?.gitOpsEnabled,
+                  customDeploymentRef: deploymentStage?.customDeploymentRef
+                }}
+              />
+            ) : // if infrastructure is marked as runtime and environment is selected, the below check handles everything
+            deploymentStageTemplate.environment?.infrastructureDefinitions &&
+              deploymentStage?.deploymentType &&
+              deploymentStage?.environment?.environmentRef ? (
+              <StepWidget
+                factory={factory}
+                initialValues={get(deploymentStageInputSet, 'environment')}
+                template={get(deploymentStageTemplate, ['environment'])}
+                type={StepType.DeployInfrastructureEntity}
+                stepViewType={viewType}
+                path={`${path}.environment`}
+                allowableTypes={allowableTypes}
+                readonly={readonly}
+                customStepProps={{
+                  deploymentType: deploymentStage.deploymentType,
+                  environmentIdentifier: deploymentStage.environment.environmentRef,
+                  customDeploymentRef: deploymentStage?.customDeploymentRef
+                }}
+              />
+            ) : null}
+          </div>
+        </div>
+      )}
+
+      {!isSvcEnvEntityEnabled && deploymentStageTemplate.environments && (
+        <div id={`Stage.${stageIdentifier}.Environment`} className={cx(css.accordionSummary)}>
+          <div className={css.inputheader}>{getString('environments')}</div>
+          <div className={css.nestedAccordions}>
+            {/* // if environments.values is marked as runtime, the below check handles everything */}
+            {getMultiTypeFromValue(deploymentStageTemplate.environments.values as unknown as string) ===
+              MultiTypeInputType.RUNTIME ||
+            (Array.isArray(deploymentStageTemplate.environments.values) &&
+              deploymentStageTemplate.environments.values.some(
+                env => getMultiTypeFromValue(env.environmentRef) === MultiTypeInputType.RUNTIME
+              )) ? (
+              <StepWidget
+                factory={factory}
+                initialValues={pick(deploymentStageInputSet, 'environments')}
+                template={pick(deploymentStageTemplate, ['environments'])}
+                type={StepType.DeployEnvironmentEntity}
+                stepViewType={viewType}
+                path={path}
+                allowableTypes={allowableTypes}
+                readonly={readonly}
+                customStepProps={{
+                  stageIdentifier,
+                  deploymentType: deploymentStage?.deploymentType,
+                  gitOpsEnabled: deploymentStage?.gitOpsEnabled,
+                  customDeploymentRef: deploymentStage?.customDeploymentRef
+                }}
+              />
+            ) : null}
+            {Array.isArray(deploymentStageTemplate.environments.values) ? (
+              <>
+                {/* // this is for infrastructures */}
+                {deploymentStageTemplate.environments.values.map((environmentTemplate, index) => {
+                  const deploymentType = deploymentStage?.deploymentType
+                  const environment: EnvironmentYamlV2 = get(
+                    deploymentStageInputSet,
+                    `environments.values[${index}]`,
+                    {}
+                  )
+
+                  if (deploymentType && environment.environmentRef) {
+                    return (
+                      <React.Fragment key={`${environment.environmentRef}_${index}`}>
+                        <Text
+                          font={{ size: 'normal', weight: 'bold' }}
+                          margin={{ top: 'medium', bottom: 'medium' }}
+                          color={Color.GREY_800}
+                        >
+                          {getString('common.environmentPrefix', { name: environment.environmentRef })}
+                        </Text>
+                        <StepWidget
+                          factory={factory}
+                          initialValues={environment}
+                          template={environmentTemplate}
+                          type={StepType.DeployInfrastructureEntity}
+                          stepViewType={viewType}
+                          path={`${path}.environments.values[${index}]`}
+                          allowableTypes={allowableTypes}
+                          readonly={readonly}
+                          customStepProps={{
+                            deploymentType,
+                            environmentIdentifier: environment.environmentRef,
+                            isMultipleInfrastructure: true,
+                            customDeploymentRef: deploymentStage?.customDeploymentRef
+                          }}
+                        />
+                      </React.Fragment>
+                    )
+                  }
+
+                  return null
+                })}
+              </>
+            ) : null}
+          </div>
+        </div>
+      )}
+
       {deploymentStageTemplate?.environmentGroup?.envGroupRef && (
         <div id={`Stage.${stageIdentifier}.EnvironmentGroup`} className={cx(css.accordionSummary)}>
           <StepWidget
@@ -1044,7 +1181,10 @@ export function StageInputSetFormInternal({
               // load cluster runtime inputs
               clusterRef: deploymentStage.environment?.gitOpsClusters?.[0].identifier,
               // required for artifact manifest inputs
-              stageIdentifier
+              stageIdentifier,
+              // required for filtering infrastructures
+              deploymentType: deploymentStage?.deploymentType,
+              customDeploymentData: deploymentStage?.customDeploymentRef
             }}
             onUpdate={values => {
               if (deploymentStageInputSet?.environment) {
@@ -1072,7 +1212,8 @@ export function StageInputSetFormInternal({
                           initialValues={{
                             ...deploymentStageInputSet?.environment?.infrastructureDefinitions?.[index]?.inputs?.spec,
                             environmentRef: deploymentStage?.environment?.environmentRef,
-                            infrastructureRef: infrastructureDefinition.identifier
+                            infrastructureRef: infrastructureDefinition.identifier,
+                            deploymentType: deploymentStage?.deploymentType
                           }}
                           allowableTypes={allowableTypes}
                           allValues={{
@@ -1087,10 +1228,12 @@ export function StageInputSetFormInternal({
                           path={`${path}.environment.infrastructureDefinitions.${index}.inputs.spec`}
                           readonly={readonly}
                           stepViewType={viewType}
-                          customStepProps={getCustomStepProps(
-                            (deploymentStage?.deploymentType as StepType) || '',
-                            getString
-                          )}
+                          customStepProps={{
+                            ...getCustomStepProps((deploymentStage?.deploymentType as StepType) || '', getString),
+                            serviceRef: deploymentStage?.service?.serviceRef,
+                            environmentRef: deploymentStage?.environment?.environmentRef,
+                            infrastructureRef: deploymentStage?.environment?.infrastructureDefinitions?.[0].identifier
+                          }}
                           onUpdate={data => {
                             /* istanbul ignore next */
                             if (
@@ -1287,13 +1430,15 @@ export function StageInputSetFormInternal({
             {(deploymentStageTemplate.infrastructure as any)?.spec?.labels &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.labels`,
-                stringKey: 'ci.labels'
+                stringKey: 'ci.labels',
+                hasValuesAsRuntimeInput: true
               })}
 
             {(deploymentStageTemplate.infrastructure as any)?.spec?.annotations &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.annotations`,
-                stringKey: 'ci.annotations'
+                stringKey: 'ci.annotations',
+                hasValuesAsRuntimeInput: true
               })}
 
             {hasContainerSecurityContextFields && (
@@ -1382,7 +1527,8 @@ export function StageInputSetFormInternal({
             {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml)?.spec?.nodeSelector &&
               renderMultiTypeMapInputSet({
                 fieldName: `${namePath}infrastructure.spec.nodeSelector`,
-                stringKey: 'pipeline.buildInfra.nodeSelector'
+                stringKey: 'pipeline.buildInfra.nodeSelector',
+                hasValuesAsRuntimeInput: true
               })}
             {(deploymentStageTemplate.infrastructure as K8sDirectInfraYaml)?.spec?.tolerations && (
               <Container data-name="100width" className={cx(stepCss.formGroup, stepCss.bottomMargin3)}>

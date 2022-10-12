@@ -9,11 +9,13 @@ import React, { useState } from 'react'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
+import produce from 'immer'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import {
   AllowedTypes,
   Formik,
+  FormikForm,
   FormInput,
   getMultiTypeFromValue,
   MultiTypeInputType,
@@ -214,16 +216,16 @@ const ECSBlueGreenCreateServiceStepEdit = (
       }
     })
     formik.setFieldValue('spec.loadBalancer', selectedLoadBalancer)
-    if (getMultiTypeFromValue(formik.values.spec.prodListener) !== MultiTypeInputType.FIXED) {
+    if (getMultiTypeFromValue(formik.values.spec.prodListener) === MultiTypeInputType.FIXED) {
       formik.setFieldValue('spec.prodListener', '')
     }
-    if (getMultiTypeFromValue(formik.values.spec.prodListenerRuleArn) !== MultiTypeInputType.FIXED) {
+    if (getMultiTypeFromValue(formik.values.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
       formik.setFieldValue('spec.prodListenerRuleArn', '')
     }
-    if (getMultiTypeFromValue(formik.values.spec.stageListener) !== MultiTypeInputType.FIXED) {
+    if (getMultiTypeFromValue(formik.values.spec.stageListener) === MultiTypeInputType.FIXED) {
       formik.setFieldValue('spec.stageListener', '')
     }
-    if (getMultiTypeFromValue(formik.values.spec.stageListenerRuleArn) !== MultiTypeInputType.FIXED) {
+    if (getMultiTypeFromValue(formik.values.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
       formik.setFieldValue('spec.stageListenerRuleArn', '')
     }
     setProdListenerRules([])
@@ -279,7 +281,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
           setFormikRef(formikRef, formik)
           const { values, setFieldValue } = formik
           return (
-            <>
+            <FormikForm>
               <NameTimeoutField
                 values={{ name: values.name, timeout: values.timeout }}
                 setFieldValue={setFieldValue}
@@ -296,7 +298,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: loadBalancerOptions
+                      items: loadBalancerOptions,
+                      popoverClassName: css.dropdownMenu
                     },
                     onChange: selectedValue => {
                       const selectedValueString =
@@ -337,7 +340,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: listenerOptions
+                      items: listenerOptions,
+                      popoverClassName: css.dropdownMenu
                     },
                     onChange: selectedValue => {
                       const selectedValueString =
@@ -345,10 +349,13 @@ const ECSBlueGreenCreateServiceStepEdit = (
                           ? selectedValue
                           : ((selectedValue as SelectOption).value as string)
                       fetchProdListenerRules(formik.values.spec.loadBalancer, selectedValueString)
-                      formik.setFieldValue('spec.prodListener', selectedValueString)
-                      if (getMultiTypeFromValue(formik.values.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
-                        formik.setFieldValue('spec.prodListenerRuleArn', '')
-                      }
+                      const updatedValues = produce(formik.values, draft => {
+                        draft.spec.prodListener = selectedValueString
+                        if (getMultiTypeFromValue(draft.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
+                          draft.spec.prodListenerRuleArn = ''
+                        }
+                      })
+                      formik.setValues(updatedValues)
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')}
@@ -366,10 +373,13 @@ const ECSBlueGreenCreateServiceStepEdit = (
                     showAdvanced={true}
                     onChange={value => {
                       fetchProdListenerRules(formik.values.spec.loadBalancer, value)
-                      formik.setFieldValue('spec.prodListener', value)
-                      if (getMultiTypeFromValue(formik.values.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
-                        formik.setFieldValue('spec.prodListenerRuleArn', '')
-                      }
+                      const updatedValues = produce(formik.values, draft => {
+                        draft.spec.prodListener = value
+                        if (getMultiTypeFromValue(draft.spec.prodListenerRuleArn) === MultiTypeInputType.FIXED) {
+                          draft.spec.prodListenerRuleArn = ''
+                        }
+                      })
+                      formik.setValues(updatedValues)
                     }}
                     isReadonly={readonly}
                   />
@@ -382,7 +392,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: prodListenerRules
+                      items: prodListenerRules,
+                      popoverClassName: css.dropdownMenu
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')}
@@ -417,7 +428,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: listenerOptions
+                      items: listenerOptions,
+                      popoverClassName: css.dropdownMenu
                     },
                     onChange: selectedValue => {
                       const selectedValueString =
@@ -425,10 +437,13 @@ const ECSBlueGreenCreateServiceStepEdit = (
                           ? selectedValue
                           : ((selectedValue as SelectOption).value as string)
                       fetchStageListenerRules(formik.values.spec.loadBalancer, selectedValueString)
-                      formik.setFieldValue('spec.stageListener', selectedValueString)
-                      if (getMultiTypeFromValue(formik.values.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
-                        formik.setFieldValue('spec.stageListenerRuleArn', '')
-                      }
+                      const updatedValues = produce(formik.values, draft => {
+                        draft.spec.stageListener = selectedValueString
+                        if (getMultiTypeFromValue(draft.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
+                          draft.spec.stageListenerRuleArn = ''
+                        }
+                      })
+                      formik.setValues(updatedValues)
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}
@@ -446,10 +461,13 @@ const ECSBlueGreenCreateServiceStepEdit = (
                     showAdvanced={true}
                     onChange={value => {
                       fetchProdListenerRules(formik.values.spec.loadBalancer, value)
-                      formik.setFieldValue('spec.stageListener', value)
-                      if (getMultiTypeFromValue(formik.values.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
-                        formik.setFieldValue('spec.stageListenerRuleArn', '')
-                      }
+                      const updatedValues = produce(formik.values, draft => {
+                        draft.spec.stageListener = value
+                        if (getMultiTypeFromValue(draft.spec.stageListenerRuleArn) === MultiTypeInputType.FIXED) {
+                          draft.spec.stageListenerRuleArn = ''
+                        }
+                      })
+                      formik.setValues(updatedValues)
                     }}
                     isReadonly={readonly}
                   />
@@ -462,7 +480,8 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   useValue
                   multiTypeInputProps={{
                     selectProps: {
-                      items: stageListenerRules
+                      items: stageListenerRules,
+                      popoverClassName: css.dropdownMenu
                     }
                   }}
                   label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')}
@@ -485,7 +504,7 @@ const ECSBlueGreenCreateServiceStepEdit = (
                   />
                 )}
               </div>
-            </>
+            </FormikForm>
           )
         }}
       </Formik>

@@ -55,12 +55,11 @@ describe('NoFeatureFlags', () => {
     jest.resetAllMocks()
   })
 
-  test('It should render "No Flags" image, message & New Flag button when the project has no feature flags', async () => {
+  test('It should render "No Flags" description & New Flag button when the project has no feature flags', async () => {
     renderComponent({ hasFeatureFlags: false, hasFlagFilter: false, hasSearchTerm: false })
 
     await waitFor(() => {
-      expect(screen.getByTestId('nodata-image')).toBeVisible()
-      expect(screen.getByText('cf.featureFlags.noFlagsInProject')).toBeVisible()
+      expect(screen.getByText('cf.featureFlags.noFeatureFlagsDescription')).toBeVisible()
       expect(screen.getByText('cf.featureFlags.newFlag')).toBeVisible()
     })
 

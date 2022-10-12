@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { getAllByText, getByText, render } from '@testing-library/react'
+import { getAllByText, getByText, render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import { FFGitSyncProvider } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
@@ -180,8 +180,8 @@ describe('FeatureFlagsDetailPage', () => {
       </TestWrapper>
     )
 
-    expect(getByText(container, 'cf.noEnvironment.title')).toBeDefined()
-    expect(getByText(container, 'cf.noEnvironment.message')).toBeDefined()
+    expect(screen.getByRole('heading', { name: 'environments' })).toBeInTheDocument()
+    expect(screen.getByText('cf.environments.noEnvironmentSection.message')).toBeInTheDocument()
     expect(getByText(container, 'newEnvironment')).toBeDefined()
   })
 

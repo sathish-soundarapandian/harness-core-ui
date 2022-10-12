@@ -27,7 +27,7 @@ export default function StoreView(): React.ReactElement {
 
   return (
     <Container padding={'medium'} flex>
-      <Text margin={{ right: 'xsmall' }} font={{ size: 'normal', weight: 'bold' }} color={Color.PRIMARY_7}>
+      <Text margin={{ right: 'xsmall' }} font={{ size: 'normal', weight: 'light' }} color={Color.GREY_600}>
         {currentNode.path}
       </Text>
     </Container>

@@ -27,6 +27,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import FileStoreSelectField from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import { CommandUnitType, CustomScriptCommandUnit, LocationType, scriptTypeOptions } from '../CommandScriptsTypes'
 import { TailFilesEdit } from './TailFilesEdit'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -111,6 +112,7 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
             onChange={newValue => {
               formik?.setFieldValue('spec.source.spec.file', newValue)
             }}
+            fileUsage={FileUsage.SCRIPT}
           />
         </div>
       )}

@@ -7,7 +7,7 @@
 
 import React, { useContext } from 'react'
 import { debounce, defaultTo, isEmpty, isEqual, noop, set } from 'lodash-es'
-import { Card, Container, Formik, FormikForm, Heading, Layout, PageError, Text } from '@wings-software/uicore'
+import { Card, Container, Formik, FormikForm, Heading, Layout, PageError } from '@wings-software/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
@@ -36,8 +36,7 @@ import { useGlobalEventListener, useQueryParams } from '@common/hooks'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { useStageTemplateActions } from '@pipeline/utils/useStageTemplateActions'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
-import { replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
-import { getTemplateRuntimeInputsCount } from '@templates-library/utils/templatesUtils'
+import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { stringify } from '@common/utils/YamlHelperMethods'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import css from './TemplateStageSpecifications.module.scss'
@@ -96,10 +95,6 @@ export const TemplateStageSpecifications = (): JSX.Element => {
   })
 
   React.useEffect(() => {
-    setAllValues(undefined)
-  }, [templateRef, templateVersionLabel])
-
-  React.useEffect(() => {
     setAllValues({
       ...parse(defaultTo(templateResponse?.data?.yaml, ''))?.template.spec,
       identifier: stage?.stage?.identifier
@@ -124,8 +119,6 @@ export const TemplateStageSpecifications = (): JSX.Element => {
     () => parse(defaultTo(templateInputSetYaml?.data, '')),
     [templateInputSetYaml?.data]
   )
-
-  const templateInputsCount = React.useMemo(() => getTemplateRuntimeInputsCount(templateInputs), [templateInputs])
 
   const updateFormValues = (newTemplateInputs?: StageElementConfig) => {
     const updatedStage = produce(stage?.stage as StageElementConfig, draft => {
@@ -163,6 +156,12 @@ export const TemplateStageSpecifications = (): JSX.Element => {
       updateFormValues(undefined)
     }
   }, [templateInputs])
+
+  React.useEffect(() => {
+    if (templateInputSetLoading) {
+      setAllValues(undefined)
+    }
+  }, [templateInputSetLoading])
 
   React.useEffect(() => {
     subscribeForm({ tab: TemplateTabs.OVERVIEW, form: formikRef })
@@ -270,11 +269,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                 <Container className={css.inputsContainer}>
                   {isLoading && <PageSpinner />}
                   {!isLoading && error && (
-                    <Container height={300}>
-                      <PageError
-                        message={defaultTo((error?.data as Error)?.message, error?.message)}
-                        onClick={() => refetch()}
-                      />
+                    <Container height={isEmpty((error?.data as Error)?.responseMessages) ? 300 : 600}>
+                      <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
                     </Container>
                   )}
                   {!isLoading && !error && templateInputs && allValues && (
@@ -283,20 +279,15 @@ export const TemplateStageSpecifications = (): JSX.Element => {
                       padding={{ top: 'large', bottom: 'large' }}
                       spacing={'large'}
                     >
-                      <Layout.Horizontal flex={{ distribution: 'space-between' }}>
-                        <Heading level={5} color={Color.BLACK}>
-                          {getString('pipeline.templateInputs')}
-                        </Heading>
-                        <Text font={{ size: 'normal' }}>
-                          {getString('templatesLibrary.inputsCount', { count: templateInputsCount })}
-                        </Text>
-                      </Layout.Horizontal>
+                      <Heading level={5} color={Color.BLACK}>
+                        {getString('pipeline.templateInputs')}
+                      </Heading>
                       <StageForm
                         template={{ stage: templateInputs }}
                         allValues={{ stage: allValues }}
                         path={TEMPLATE_INPUT_PATH}
                         readonly={isReadonly}
-                        viewType={StepViewType.InputSet}
+                        viewType={StepViewType.TemplateUsage}
                         hideTitle={true}
                         stageClassName={css.stageCard}
                         allowableTypes={allowableTypes}

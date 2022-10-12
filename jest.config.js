@@ -47,7 +47,8 @@ module.exports = {
     '!src/modules/70-pipeline/components/PipelineStudio/PipelineContext/PipelineContext.tsx',
     '!src/modules/70-pipeline/components/PipelineStudio/ExecutionGraph/**',
     '!src/modules/25-governance/**', // 25-governance will be moved to a separate micro-frontend repository shortly
-    '!src/modules/75-cd/factory/**'
+    '!src/modules/75-cd/factory/**',
+    '!src/framework/tooltip/TooltipContext.tsx'
   ],
   coverageReporters: ['lcov', 'json-summary', 'json'],
   transform: {

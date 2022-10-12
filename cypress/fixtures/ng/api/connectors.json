@@ -50,6 +50,61 @@
       },
       {
         "connector": {
+          "name": "testAWS",
+          "identifier": "testAWS",
+          "description": "",
+          "orgIdentifier": "cvng",
+          "projectIdentifier": "srmmetricthreshold",
+          "tags": {},
+          "type": "Aws",
+          "spec": {
+            "credential": {
+              "crossAccountAccess": null,
+              "type": "ManualConfig",
+              "spec": {
+                "accessKey": "AKIAYDOQJSKIWFJNEWWB",
+                "accessKeyRef": null,
+                "secretKeyRef": "testAWSSecret"
+              },
+              "region": "us-east-1"
+            },
+            "delegateSelectors": [],
+            "executeOnDelegate": true
+          }
+        },
+        "createdAt": 1663150618597,
+        "lastModifiedAt": 1663150618594,
+        "status": {
+          "status": "SUCCESS",
+          "errorSummary": null,
+          "errors": null,
+          "testedAt": 1663417632551,
+          "lastTestedAt": 0,
+          "lastConnectedAt": 1663417632551
+        },
+        "activityDetails": {
+          "lastActivityTime": 1663150618617
+        },
+        "harnessManaged": false,
+        "gitDetails": {
+          "objectId": null,
+          "branch": null,
+          "repoIdentifier": null,
+          "rootFolder": null,
+          "filePath": null,
+          "repoName": null,
+          "commitId": null,
+          "fileUrl": null,
+          "repoUrl": null
+        },
+        "entityValidityDetails": {
+          "valid": true,
+          "invalidYaml": null
+        },
+        "governanceMetadata": null
+      },
+      {
+        "connector": {
           "name": "customconnector",
           "identifier": "customconnector",
           "description": null,

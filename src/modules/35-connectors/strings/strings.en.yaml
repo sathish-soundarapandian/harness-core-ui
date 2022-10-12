@@ -57,6 +57,7 @@ loginToMasterAccount: and login to your master account
 roleARN: Create Cross Account Role
 ifReq: if required.
 selectConnector: Select Connector
+selectConnectors: Select Connectors
 showInstructions: Show instructions
 apiKey: '{{$.common.apikey}}'
 apiKeyOrPassword: Password/Api Key
@@ -83,6 +84,7 @@ connectivityMode:
   selectText: 'Select how you would like to connect to the provider'
 title:
   customSecretManager: 'Custom Secrets Manager'
+  gcpSecretManager: 'GCP Secrets Manager'
   k8sCluster: 'Kubernetes Cluster'
   gcpConnector: 'Google Cloud Provider'
   pdcConnector: 'Physical Data Center'
@@ -292,7 +294,7 @@ docker:
   dockerRegistryURL: 'Docker Registry URL'
   dockerProvideType: 'Provider Type'
   dockerHub: 'DockerHub'
-  harbour: 'Harbour'
+  harbor: 'Harbor'
   quay: 'Quay'
   other: 'Other (Docker V2 compliant)'
   dockerRepository: Docker Repository
@@ -934,3 +936,7 @@ customSM:
   sshKey: SSH Key Reference
   validation:
     template: Please select a template
+gcpSecretManager:
+  gcpSMSecretFile: Google Secrets Manager Credentials File
+  validation:
+    credFileRequired: Credentials File is required

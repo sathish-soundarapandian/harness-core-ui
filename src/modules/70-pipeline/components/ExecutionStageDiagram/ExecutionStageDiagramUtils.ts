@@ -134,6 +134,7 @@ export const getNodeStyles = (
 
       case ExecutionStatusEnum.Running:
       case ExecutionStatusEnum.AsyncWaiting:
+      case ExecutionStatusEnum.WaitStepRunning:
       case ExecutionStatusEnum.TaskWaiting:
       case ExecutionStatusEnum.TimedWaiting:
         style.borderColor = 'var(--execution-pipeline-color-blue)'
@@ -324,6 +325,7 @@ export const getStatusProps = (
         break
       case ExecutionStatusEnum.Running:
       case ExecutionStatusEnum.AsyncWaiting:
+      case ExecutionStatusEnum.WaitStepRunning:
       case ExecutionStatusEnum.TaskWaiting:
       case ExecutionStatusEnum.TimedWaiting:
         secondaryIcon = 'spinner'

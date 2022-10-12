@@ -63,7 +63,7 @@ export function validateMappings(
     ...(!values?.serviceInstance && {
       [MapElkToServiceFieldNames.SERVICE_INSTANCE]: getString('cv.monitoringSources.elk.serviceInstanceValidation')
     }),
-    ...(!values?.identify_timestamp && {
+    ...(!values?.identifyTimestamp && {
       [MapElkToServiceFieldNames.IDENTIFY_TIMESTAMP]: getString('cv.monitoringSources.elk.identifyTimeStampValidation')
     }),
     ...(!values?.timeStampFormat && {

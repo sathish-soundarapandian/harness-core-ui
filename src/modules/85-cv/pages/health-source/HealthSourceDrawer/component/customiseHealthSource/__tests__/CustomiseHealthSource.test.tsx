@@ -10,6 +10,7 @@ import { render, screen } from '@testing-library/react'
 import routes from '@common/RouteDefinitions'
 import * as hooks from '@common/hooks/useFeatureFlag'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
+import { mockData } from '@cv/pages/health-source/connectors/CloudWatch/__tests__/CloudWatch.mock'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { sourceData, sourceDataSplunkMetric } from './CustomiseHealthSource.mock'
@@ -20,6 +21,10 @@ import { LoadSourceByType } from '../CustomiseHealthSource.utils'
 jest.mock('@cv/pages/health-source/connectors/SplunkMetricsHealthSourceV2/SplunkMetricsHealthSource', () => ({
   SplunkMetricsHealthSource: () => <div data-testid="SplunkMetricsHealthSource" />
 }))
+
+jest.mock('@cv/pages/health-source/connectors/CloudWatch/CloudWatch', () => () => (
+  <div data-testid="cloudWatchComponent" />
+))
 
 const testWrapperProps: TestWrapperProps = {
   path: routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
@@ -130,5 +135,55 @@ describe('CustomiseHealthSource', () => {
     )
 
     expect(screen.getByTestId('SplunkMetricsHealthSource')).toBeInTheDocument()
+  })
+
+  test('should not load Cloud watch health source, if its feature flag is disabled', () => {
+    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlag')
+    useFeatureFlags.mockReturnValue(false)
+    jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', () => ({
+      ...(jest.requireActual('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs') as any),
+      get SetupSourceTabsContext() {
+        return React.createContext({
+          tabsInfo: [],
+          sourceData,
+          onNext: onNextMock,
+          onPrevious: onPrevious
+        })
+      }
+    }))
+
+    const { container } = render(
+      <TestWrapper {...testWrapperProps}>
+        <LoadSourceByType type="Aws" data={mockData} onSubmit={jest.fn()} />
+      </TestWrapper>
+    )
+
+    expect(screen.queryByTestId('cloudWatchComponent')).not.toBeInTheDocument()
+
+    expect(container.firstChild).toBeNull()
+  })
+
+  test('should render Cloud watch health source, if its feature flag is enabled', () => {
+    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlag')
+    useFeatureFlags.mockReturnValue(true)
+    jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', () => ({
+      ...(jest.requireActual('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs') as any),
+      get SetupSourceTabsContext() {
+        return React.createContext({
+          tabsInfo: [],
+          sourceData,
+          onNext: onNextMock,
+          onPrevious: onPrevious
+        })
+      }
+    }))
+
+    render(
+      <TestWrapper {...testWrapperProps}>
+        <LoadSourceByType type="Aws" data={mockData} onSubmit={jest.fn()} />
+      </TestWrapper>
+    )
+
+    expect(screen.queryByTestId('cloudWatchComponent')).toBeInTheDocument()
   })
 })

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, waitFor, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
 import type * as pipelineng from 'services/pipeline-ng'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -120,6 +121,29 @@ describe('FlowControl tests', () => {
 
     //check if deleted
     expect(container.querySelectorAll('[data-icon="main-trash"]').length).toBe(1)
+  })
+
+  test('should call editItem when edit icon is clicked', async () => {
+    initial()
+    pipelineContextMock.updatePipeline = jest.fn()
+
+    const { container } = render(
+      <PipelineContext.Provider value={pipelineContextMock}>
+        <TestWrapper>
+          <RightDrawer />
+        </TestWrapper>
+      </PipelineContext.Provider>
+    )
+
+    const editBarrierButtons = await screen.findAllByRole('button', { name: /edit/i })
+    expect(editBarrierButtons[0]).toBeTruthy()
+    userEvent.click(editBarrierButtons[0])
+    fireEvent.change(await screen.findByRole('textbox')!, { target: { value: 'demoId' } })
+    await waitFor(() => userEvent.click(screen.getByText('pipeline.barriers.syncBarriers')))
+    expect(container).toMatchSnapshot()
+    const applyChangeButton = await screen.findByText('applyChanges')
+    userEvent.click(applyChangeButton)
+    await waitFor(() => expect(pipelineContextMock.updatePipeline).toHaveBeenCalled())
   })
 
   test('discard button should exist', async () => {

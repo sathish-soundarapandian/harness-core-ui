@@ -21,7 +21,7 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import azureWebAppConfigBaseFactory from '@cd/factory/AzureWebAppConfigFactory/AzureWebAppConfigFactory'
 import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBaseFactory'
 import { KubernetesArtifacts } from '../K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
-import { AzureWebAppConfig } from './RuntimeAzureWebAppConfig/RuntimeAzureWebAppConfig'
+import { ApplicationConfig } from './RuntimeAzureWebAppConfig/RuntimeAzureWebAppConfig'
 import { AzureWebAppConfigType, AzureWebAppServiceSpecFormProps } from './AzureWebAppServiceSpecInterface.types'
 import PrimaryArtifactRef from '../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
@@ -74,7 +74,7 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
       )}
 
       {!!template?.startupCommand && (
-        <AzureWebAppConfig
+        <ApplicationConfig
           type={AzureWebAppConfigType.startupCommand}
           template={template}
           azureWebAppConfig={allValues?.startupCommand}
@@ -85,7 +85,7 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
       )}
 
       {!!template?.applicationSettings && (
-        <AzureWebAppConfig
+        <ApplicationConfig
           type={AzureWebAppConfigType.applicationSettings}
           template={template}
           azureWebAppConfig={allValues?.applicationSettings}
@@ -96,7 +96,7 @@ const AzureWebAppServiceSpecInputSet = (props: AzureWebAppServiceSpecFormProps):
       )}
 
       {!!template?.connectionStrings && (
-        <AzureWebAppConfig
+        <ApplicationConfig
           type={AzureWebAppConfigType.connectionStrings}
           template={template}
           azureWebAppConfig={allValues?.connectionStrings}

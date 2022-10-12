@@ -30,7 +30,7 @@ import { useStrings } from 'framework/strings'
 import { Feature, useGetAllFeatures } from 'services/cf'
 import { useToaster } from '@common/exports'
 
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import type { GitSyncFormValues, UseGitSync } from '@cf/hooks/useGitSync'
 import { FeatureFlagRow } from './FeatureFlagRow'
 import { NoDataFoundRow } from '../NoDataFoundRow/NoDataFoundRow'
@@ -86,7 +86,7 @@ export const SelectFeatureFlagsModalButton: React.FC<SelectFeatureFlagsModalButt
     const [sortByField] = useState(SegmentsSortByField.NAME)
     const [pageNumber, setPageNumber] = useState(0)
 
-    const gitSyncFormMeta = gitSync?.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.UPDATED_FLAG_TARGETS)
+    const gitSyncFormMeta = gitSync?.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.UPDATED_FLAG_TARGETS)
 
     const queryParams = useMemo(
       () => ({

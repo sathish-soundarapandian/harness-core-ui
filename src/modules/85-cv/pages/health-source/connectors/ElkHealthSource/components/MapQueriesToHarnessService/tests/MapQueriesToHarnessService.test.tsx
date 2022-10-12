@@ -29,7 +29,7 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
       serviceInstance: '',
       timeStampFormat: '',
       metricName: '',
-      identify_timestamp: '',
+      identifyTimestamp: '',
       logIndexes: '',
       messageIdentifier: ''
     })
@@ -41,7 +41,7 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
         metricName: 'adasd',
         serviceInstance: 'Service Instance is required field',
         timeStampFormat: 'TimeStamp Format is required field',
-        identify_timestamp: 'Identify TimeStamp is required field',
+        identifyTimestamp: 'Identify TimeStamp is required field',
         logIndexes: 'Log Index is required field',
         messageIdentifier: 'Message Identifier is required field'
       })
@@ -55,13 +55,12 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
         serviceInstance: '',
         timeStampFormat: '',
         logIndexes: '',
-        identify_timestamp: '',
+        identifyTimestamp: '',
         messageIdentifier: ''
       })
     ).toEqual({
-      //serviceInstance: MapElkToServiceFieldNames.SERVICE_INSTANCE,
       metricName: '',
-      identify_timestamp: '',
+      identifyTimestamp: '',
       logIndexes: '',
       messageIdentifier: '',
       serviceInstance: '',
@@ -85,7 +84,7 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
               recordCount: 0,
               timeStampFormat: '',
               logIndexes: '',
-              identify_timestamp: '',
+              identifyTimestamp: '',
               messageIdentifier: ''
             }
           ]
@@ -100,8 +99,7 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             metricName: 'metric4',
             query: '',
             serviceInstance: '',
-            //recordCount: 0
-            identify_timestamp: '',
+            identifyTimestamp: '',
             logIndexes: '',
             messageIdentifier: '',
             timeStampFormat: ''
@@ -133,7 +131,7 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
               recordCount: 0,
               timeStampFormat: '',
               logIndexes: '',
-              identify_timestamp: '',
+              identifyTimestamp: '',
               messageIdentifier: ''
             }
           ]
@@ -148,7 +146,7 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             metricName: 'metric4',
             query: '',
             serviceInstance: '',
-            identify_timestamp: '',
+            identifyTimestamp: '',
             logIndexes: '',
             messageIdentifier: '',
             timeStampFormat: ''
@@ -180,7 +178,7 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
               recordCount: 0,
               timeStampFormat: '',
               logIndexes: '',
-              identify_timestamp: '',
+              identifyTimestamp: '',
               messageIdentifier: ''
             }
           ]
@@ -190,7 +188,7 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             metricName: 'metric',
             query: 'test query',
             serviceInstance: 'service-instance',
-            identify_timestamp: '',
+            identifyTimestamp: '',
             logIndexes: '',
             messageIdentifier: '',
             timeStampFormat: ''
@@ -207,7 +205,7 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             metricName: 'metric',
             query: 'test query',
             serviceInstance: 'service-instance',
-            identify_timestamp: '',
+            identifyTimestamp: '',
             logIndexes: '',
             messageIdentifier: '',
             timeStampFormat: ''
@@ -221,7 +219,7 @@ describe('Unit tests for MapQueriesToHarnessService', () => {
             metricName: 'metric6',
             query: '',
             serviceInstance: '',
-            identify_timestamp: '',
+            identifyTimestamp: '',
             logIndexes: '',
             messageIdentifier: '',
             timeStampFormat: ''

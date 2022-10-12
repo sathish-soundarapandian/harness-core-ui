@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import { get } from 'lodash-es'
+import type { UseStringsReturn } from 'framework/strings'
+import type { ConnectorInfoDTO, UserRepoResponse } from 'services/cd-ng'
 import { Connectors } from '@connectors/constants'
 import {
   getBackendServerUrl,
@@ -12,7 +14,9 @@ import {
 } from '@connectors/components/CreateConnector/CreateConnectorUtils'
 import {
   addDetailsToPipeline,
+  getFullRepoName,
   getOAuthConnectorPayload,
+  getPayloadForPipelineCreation,
   getPRTriggerActions,
   sortConnectorsByLastConnectedAtTsDescOrder
 } from '../HostedBuildsUtils'
@@ -174,5 +178,81 @@ describe('Test HostedBuildsUtils methods', () => {
     expect(updatedPipeline.pipeline?.projectIdentifier).toBe('projectId')
     expect(updatedPipeline.pipeline?.properties?.ci?.codebase?.connectorRef).toBe('account.github_connector')
     expect(updatedPipeline.pipeline?.properties?.ci?.codebase?.repoName).toBe('test-repo')
+  })
+
+  test('Test getFullRepoName method', () => {
+    expect(getFullRepoName({ name: 'harness-core-ui', namespace: 'harness' })).toBe('harness/harness-core-ui')
+    expect(getFullRepoName({ name: '', namespace: 'harness' })).toBe('')
+    expect(getFullRepoName({ name: 'harness-core-ui', namespace: '' })).toBe('harness-core-ui')
+    expect(getFullRepoName({ name: '', namespace: '' })).toBe('')
+  })
+
+  test('Test getPayloadForPipelineCreation method', () => {
+    const args: {
+      pipelineYaml: string
+      pipelineName: string
+      isUsingHostedVMsInfra?: boolean
+      isUsingAStarterPipeline: boolean
+      getString: UseStringsReturn['getString']
+      projectIdentifier: string
+      orgIdentifier: string
+      repository: UserRepoResponse
+      configuredGitConnector: ConnectorInfoDTO
+    } = {
+      pipelineYaml:
+        'pipeline:\n  name: Build Dot NET Core\n  identifier: Build_Dot_NET_Core\n  projectIdentifier: testproj\n  orgIdentifier: default\n  stages:\n    - stage:\n        name: Build Dot NET Core App\n        identifier: Build\n        type: CI\n        spec:\n          cloneCodebase: true\n          execution:\n            steps:\n              - step:\n                  type: Run\n                  name: Build Dot NET Core App\n                  identifier: Run\n                  spec:\n                    connectorRef: account.harnessImage\n                    image: mcr.microsoft.com/dotnet/sdk:6.0\n                    shell: Sh\n                    command: echo "Welcome to Harness CI"\n          platform:\n            os: Linux\n            arch: Amd64\n          runtime:\n            type: Cloud\n            spec: {}\n  properties:\n    ci:\n      codebase:\n        connectorRef: account.Gitlab\n        repoName: vardan.bansal/test-project\n        build: <+input>\n',
+      isUsingHostedVMsInfra: true,
+      getString: (key: any): any => {
+        return key
+      },
+      isUsingAStarterPipeline: true,
+      orgIdentifier: 'orgId',
+      projectIdentifier: 'projectId',
+      pipelineName: 'Build Dot Net',
+      repository: { name: 'test-repo', namespace: 'harness' },
+      configuredGitConnector: { identifier: 'testconnector', name: 'test connector', type: 'Github', spec: {} }
+    }
+    let createdPipelinePayload = getPayloadForPipelineCreation(args)
+    const { name, identifier } = createdPipelinePayload?.pipeline || {}
+    expect(name).toBe('buildText Build Dot Net')
+    expect(identifier).toBe('buildText_Build_Dot_Net_1585699200000')
+    expect(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.runtime')).not.toBeUndefined()
+    expect(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.platform')).not.toBeUndefined()
+
+    createdPipelinePayload = getPayloadForPipelineCreation({ ...args, isUsingAStarterPipeline: false })
+    expect(createdPipelinePayload.pipeline?.name).toBe('buildText test-repo')
+    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_test_repo_1585699200000')
+
+    createdPipelinePayload = getPayloadForPipelineCreation({ ...args, isUsingAStarterPipeline: true })
+    expect(createdPipelinePayload.pipeline?.name).toBe('buildText Build Dot Net')
+    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_Build_Dot_Net_1585699200000')
+
+    const k8sArgs = {
+      ...args,
+      isUsingAStarterPipeline: false,
+      isUsingHostedVMsInfra: false,
+      pipelineYaml:
+        'pipeline:\n  name: Build .NET Core App\n  identifier: Build_reactcalculator_1663793074386\n  projectIdentifier: Default_Project_1663793031057\n  orgIdentifier: default\n  properties:\n    ci:\n      codebase:\n        connectorRef: GitHub\n        repoName: PowerShell/PowerShell\n        build: <+input>\n  stages:\n    - stage:\n        name: Build Dot NET Core App\n        identifier: Build_NET_Core_App\n        description: ""\n        type: CI\n        spec:\n          cloneCodebase: true\n          infrastructure:\n            type: KubernetesHosted\n            spec:\n              identifier: k8s-hosted-infra\n          execution:\n            steps:\n              - step:\n                  type: Run\n                  name: Build Dot NET Core App\n                  identifier: Build_NET_Core_App\n                  spec:\n                    connectorRef: account.harnessImage\n                    image: mcr.microsoft.com/dotnet/sdk:6.0\n                    shell: Sh\n                    command: |-\n                      echo "Welcome to Harness CI"\n                      dotnet restore\n                      dotnet build --no-restore\n                      dotnet test --no-build --verbosity normal'
+    }
+
+    createdPipelinePayload = getPayloadForPipelineCreation(k8sArgs)
+    expect(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.runtime')).toBeUndefined()
+    expect(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.platform')).toBeUndefined()
+    expect(JSON.stringify(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.infrastructure'))).toBe(
+      JSON.stringify({
+        type: 'KubernetesHosted',
+        spec: { identifier: 'k8s-hosted-infra' }
+      })
+    )
+
+    createdPipelinePayload = getPayloadForPipelineCreation({ ...k8sArgs, isUsingAStarterPipeline: true })
+    expect(createdPipelinePayload.pipeline?.name).toBe('buildText Build Dot Net')
+    expect(createdPipelinePayload.pipeline?.identifier).toBe('buildText_Build_Dot_Net_1585699200000')
+    expect(JSON.stringify(get(createdPipelinePayload, 'pipeline.stages.0.stage.spec.infrastructure'))).toBe(
+      JSON.stringify({
+        type: 'KubernetesHosted',
+        spec: { identifier: 'k8s-hosted-infra' }
+      })
+    )
   })
 })

@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
+import { Formik, FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
   mockedElkIndicesData,
@@ -36,38 +37,31 @@ jest.mock('services/cv', () => ({
 }))
 
 describe('Unit tests for MapELKQueriesToService', () => {
-  const initialProps = {
-    onChange: jest.fn(),
-    sampleRecord: null,
-    serviceInstance: 'serviceInstance',
-    isQueryExecuted: true,
-    loading: false,
-    messageIdentifier: '',
-    isConnectorRuntimeOrExpression: false,
-    isTemplate: false,
-    expressions: [],
-    connectorIdentifier: '',
-    identifyTimeStamp: ''
-  }
-
   test('Ensure that query name is present', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <ElkMetricNameAndHostIdentifier
-          {...{
-            onChange: jest.fn(),
-            sampleRecord: null,
-            serviceInstance: 'serviceInstance',
-            isQueryExecuted: true,
-            loading: false,
-            messageIdentifier: '',
-            isConnectorRuntimeOrExpression: true,
-            isTemplate: true,
-            expressions: [],
-            connectorIdentifier: '',
-            identifyTimeStamp: ''
-          }}
-        />
+        <Formik formName="allowedValueTest" onSubmit={jest.fn()} initialValues={{}}>
+          {formik => (
+            <FormikForm>
+              <ElkMetricNameAndHostIdentifier
+                {...{
+                  onChange: jest.fn(),
+                  sampleRecord: null,
+                  serviceInstance: 'serviceInstance',
+                  isQueryExecuted: true,
+                  loading: false,
+                  messageIdentifier: '',
+                  isConnectorRuntimeOrExpression: true,
+                  isTemplate: true,
+                  expressions: [],
+                  connectorIdentifier: '',
+                  identifyTimestamp: '',
+                  formikProps: formik
+                }}
+              />
+            </FormikForm>
+          )}
+        </Formik>
       </TestWrapper>
     )
     await waitFor(() => expect(getByText('cv.monitoringSources.queryNameLabel')).not.toBeNull())
@@ -76,7 +70,28 @@ describe('Unit tests for MapELKQueriesToService', () => {
   test('Ensure that service instance field is present', async () => {
     const { getByText } = render(
       <TestWrapper>
-        <ElkMetricNameAndHostIdentifier {...initialProps} />
+        <Formik formName="allowedValueTest" onSubmit={jest.fn()} initialValues={{}}>
+          {formik => (
+            <FormikForm>
+              <ElkMetricNameAndHostIdentifier
+                {...{
+                  onChange: jest.fn(),
+                  sampleRecord: null,
+                  serviceInstance: 'serviceInstance',
+                  isQueryExecuted: true,
+                  loading: false,
+                  messageIdentifier: '',
+                  isConnectorRuntimeOrExpression: true,
+                  isTemplate: true,
+                  expressions: [],
+                  connectorIdentifier: '',
+                  identifyTimestamp: '',
+                  formikProps: formik
+                }}
+              />
+            </FormikForm>
+          )}
+        </Formik>
       </TestWrapper>
     )
     await waitFor(() => expect(getByText('cv.monitoringSources.gcoLogs.serviceInstance')).not.toBeNull())

@@ -47,6 +47,12 @@ export const resetTag = (formik: FormikValues): void => {
     formik.setFieldValue('tag', '')
 }
 
+export const resetArtifactPath = (formik: FormikValues): void => {
+  getMultiTypeFromValue(formik.values.artifactPath?.value) === MultiTypeInputType.FIXED &&
+    formik.values.artifactPath?.value?.length &&
+    formik.setFieldValue('artifactPath', '')
+}
+
 export const getConnectorIdValue = (prevStepData: ConnectorConfigDTO | undefined): string => {
   if (getMultiTypeFromValue(prevStepData?.connectorId) !== MultiTypeInputType.FIXED) {
     return prevStepData?.connectorId
@@ -437,6 +443,8 @@ export const defaultArtifactInitialValues = (selectedArtifact: ArtifactType): an
     case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
       return {
         repositoryFormat: 'generic',
+        repository: '',
+        artifactPath: RUNTIME_INPUT_VALUE,
         identifier: '',
         tag: RUNTIME_INPUT_VALUE,
         tagType: TagTypes.Value,
@@ -461,7 +469,7 @@ export const getArtifactPathToFetchTags = (
   formik: FormikValues,
   isArtifactPath = false,
   isServerlessDeploymentTypeSelected = false
-): string => {
+): string & SelectOption => {
   if (isServerlessDeploymentTypeSelected) {
     return formik.values.artifactDirectory
   }

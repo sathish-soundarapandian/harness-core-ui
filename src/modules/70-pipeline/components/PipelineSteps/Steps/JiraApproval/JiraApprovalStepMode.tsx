@@ -21,6 +21,7 @@ import {
   MultiTypeInputType
 } from '@wings-software/uicore'
 import { Intent } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
@@ -65,10 +66,12 @@ function FormContent({
   formik,
   refetchProjects,
   refetchProjectMetadata,
+  refetchIssueMetadata,
   projectsResponse,
   projectsFetchError,
   projectMetadataFetchError,
   projectMetaResponse,
+  issueMetaResponse,
   fetchingProjects,
   fetchingProjectMetadata,
   isNewStep,
@@ -87,6 +90,7 @@ function FormContent({
   const [projectOptions, setProjectOptions] = useState<JiraProjectSelectOption[]>([])
   const [projectMetadata, setProjectMetadata] = useState<JiraProjectNG>()
   const [connectorValueType, setConnectorValueType] = useState<MultiTypeInputType>(MultiTypeInputType.FIXED)
+  const [issueMetadata, setIssueMetadata] = useState<JiraProjectNG>()
 
   const commonParams = {
     accountIdentifier: accountId,
@@ -135,9 +139,23 @@ function FormContent({
   }, [projectKeyFixedValue])
 
   useEffect(() => {
+    if (connectorRefFixedValue && projectKeyFixedValue && issueTypeFixedValue) {
+      refetchIssueMetadata({
+        queryParams: {
+          ...commonParams,
+          connectorRef: connectorRefFixedValue.toString(),
+          projectKey: projectKeyFixedValue.toString(),
+          issueType: issueTypeFixedValue.toString(),
+          fetchStatus: true
+        }
+      })
+    }
+  }, [issueTypeFixedValue])
+
+  useEffect(() => {
     // If issuetype changes in form, set status and field list
-    if (issueTypeFixedValue && projectMetadata) {
-      const issueTypeData = projectMetadata?.issuetypes[issueTypeFixedValue]
+    if (issueTypeFixedValue && issueMetadata?.issuetypes[issueTypeFixedValue]?.fields) {
+      const issueTypeData = issueMetadata?.issuetypes[issueTypeFixedValue]
       const statusListFromType = issueTypeData?.statuses || []
       setStatusList(statusListFromType)
       const fieldListToSet: JiraFieldNG[] = []
@@ -161,16 +179,16 @@ function FormContent({
       )
       formik.setFieldValue('spec.rejectionCriteria', rejectionCriteria)
     }
-  }, [issueTypeFixedValue, projectMetadata])
+  }, [issueTypeFixedValue, issueMetadata])
 
   useEffect(() => {
     let options: JiraProjectSelectOption[] = []
     const projectResponseList: JiraProjectBasicNG[] = projectsResponse?.data || []
     options =
       projectResponseList.map((project: JiraProjectBasicNG) => ({
-        label: project.name || '',
-        value: project.id || '',
-        key: project.key || ''
+        label: defaultTo(project.name, ''),
+        value: defaultTo(project.id, ''),
+        key: defaultTo(project.key, '')
       })) || []
 
     setProjectOptions(options)
@@ -182,6 +200,13 @@ function FormContent({
       setProjectMetadata(projectMD)
     }
   }, [projectMetaResponse?.data])
+
+  useEffect(() => {
+    if (projectKeyFixedValue && issueTypeFixedValue && issueMetaResponse?.data?.projects) {
+      const issuesMD: JiraProjectNG = issueMetaResponse?.data?.projects[projectKeyFixedValue]
+      setIssueMetadata(issuesMD)
+    }
+  }, [issueMetaResponse?.data])
 
   return (
     <React.Fragment>
@@ -478,6 +503,21 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
     }
   })
 
+  const {
+    refetch: refetchIssueMetadata,
+    data: issueMetaResponse,
+    error: issueMetadataFetchError
+  } = useGetJiraIssueCreateMetadata({
+    lazy: true,
+    queryParams: {
+      ...commonParams,
+      connectorRef: '',
+      projectKey: '',
+      issueType: '',
+      fetchStatus: true
+    }
+  })
+
   return (
     <Formik<JiraApprovalData>
       onSubmit={values => {
@@ -520,12 +560,15 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
               stepViewType={stepViewType}
               refetchProjects={refetchProjects}
               refetchProjectMetadata={refetchProjectMetadata}
+              refetchIssueMetadata={refetchIssueMetadata}
               fetchingProjects={fetchingProjects}
               fetchingProjectMetadata={fetchingProjectMetadata}
               projectMetaResponse={projectMetaResponse}
               projectsResponse={projectsResponse}
+              issueMetaResponse={issueMetaResponse}
               projectsFetchError={projectsFetchError}
               projectMetadataFetchError={projectMetadataFetchError}
+              issueMetadataFetchError={issueMetadataFetchError}
               readonly={readonly}
               isNewStep={isNewStep}
             />

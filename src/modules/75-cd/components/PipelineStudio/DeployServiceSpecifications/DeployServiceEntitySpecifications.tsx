@@ -36,10 +36,12 @@ import PropagateFromServiceV2 from './PropagateWidget/PropagateFromServiceV2'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export interface DeployServiceEntitySpecificationsProps {
+  setDefaultServiceSchema: () => Promise<void>
   children: React.ReactNode
 }
 
 export default function DeployServiceEntitySpecifications({
+  setDefaultServiceSchema,
   children
 }: DeployServiceEntitySpecificationsProps): JSX.Element {
   const {
@@ -140,13 +142,7 @@ export default function DeployServiceEntitySpecifications({
 
   useEffect(() => {
     if (typeof stage !== 'undefined' && scope !== Scope.PROJECT) {
-      const stageData = produce(stage, draft => {
-        set(draft, 'stage.spec.service.serviceRef', RUNTIME_INPUT_VALUE)
-        set(draft, 'stage.spec.service.serviceInputs', RUNTIME_INPUT_VALUE)
-      })
-      if (stageData.stage) {
-        updateStage(stageData.stage)
-      }
+      setDefaultServiceSchema()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -181,7 +177,12 @@ export default function DeployServiceEntitySpecifications({
   )
 
   const getDeployServiceWidgetInitValues = useCallback((): DeployServiceEntityData => {
-    return pick(stage?.stage?.spec, ['service', 'services'])
+    return {
+      ...pick(stage?.stage?.spec, ['service', 'services']),
+      ...(scope !== Scope.PROJECT && {
+        service: { serviceRef: RUNTIME_INPUT_VALUE }
+      })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

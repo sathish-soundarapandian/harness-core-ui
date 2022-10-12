@@ -28,17 +28,17 @@ interface OpenCommandModalArgs {
   initialModalValues?: CommandUnitType
   updateIndex?: number
 }
-interface UseImportResourceReturnType {
+interface UseCommandReturnType {
   openCommandModal: (args: OpenCommandModalArgs) => void
   hideCommandModal: HideModal
 }
 
-interface UseImportResourceProps {
+interface UseCommandProps {
   allowableTypes: AllowedTypes
   readonly?: boolean
 }
 
-export default function useCommands(props: UseImportResourceProps): UseImportResourceReturnType {
+export default function useCommands(props: UseCommandProps): UseCommandReturnType {
   const { allowableTypes, readonly = false } = props
   const [initialValues, setInitialValues] = useState<CommandUnitType>({
     identifier: '',

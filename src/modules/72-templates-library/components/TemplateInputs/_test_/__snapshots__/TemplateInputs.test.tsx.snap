@@ -15,24 +15,11 @@ exports[`<TemplateInputs /> tests snapshot test 1`] = `
         <div
           class="Layout--vertical Layout--layout-spacing-xlarge StyledProps--main"
         >
-          <div
-            class="StyledProps--font StyledProps--main"
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey800"
           >
-            <div
-              class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
-            >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey800"
-              >
-                manju-test-template-qq-12344 (v4)
-              </p>
-              <p
-                class="StyledProps--font StyledProps--main inputsCount StyledProps--font-size-small"
-              >
-                templatesLibrary.inputsCount
-              </p>
-            </div>
-          </div>
+            manju-test-template-qq-12344 (v4)
+          </p>
           <div
             class="OverlaySpinner--overlaySpinner"
           >

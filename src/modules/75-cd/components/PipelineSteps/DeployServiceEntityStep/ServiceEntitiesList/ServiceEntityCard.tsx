@@ -104,7 +104,7 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
           />
         </div>
       </div>
-      {serviceInputs && MULTI_SERVICE_INFRA ? (
+      {serviceInputs && MULTI_SERVICE_INFRA && get(formik?.values, `serviceInputs.${serviceIdentifier}`) ? (
         <>
           <div className={css.toggleWrapper}>
             <Button

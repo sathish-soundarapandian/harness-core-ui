@@ -85,7 +85,8 @@ export const renderConnectorAndRepoName = ({
   codeBaseInputFieldFormName,
   onConnectorChange,
   setConnectorType,
-  connectorType
+  connectorType,
+  fixRepoNameWidth
 }: {
   values: { [key: string]: any }
   setFieldValue: (field: string, value: any) => void
@@ -113,13 +114,16 @@ export const renderConnectorAndRepoName = ({
   onConnectorChange?: () => void // refetch onEdit connector
   setConnectorType?: Dispatch<SetStateAction<string>>
   connectorType?: string // required for getCompleteConnectorUrl on initial Add CI Stage
+  fixRepoNameWidth?: boolean
 }): JSX.Element => {
   const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
   const connectorValue = get(values, connectorFieldName)
   const repoNameFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.repoName` : 'repoName'
   const repoNameValue = get(values, repoNameFieldName)
   const repoNameWidth =
-    connectorWidth && isRuntimeInput(repoNameValue) ? connectorWidth + runtimeInputGearWidth : connectorWidth
+    connectorWidth && isRuntimeInput(repoNameValue) && !fixRepoNameWidth
+      ? connectorWidth + runtimeInputGearWidth
+      : connectorWidth
 
   return (
     <>

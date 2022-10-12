@@ -25,7 +25,8 @@ import StepOverview, { LdapOverview } from './views/StepOverview'
 import StepConnectionSettings from './views/StepConnectionSettings'
 import StepUserQueries from './views/StepUserQueries'
 import StepGroupQueries from './views/StepGroupQueries'
-import { getErrorMessageFromException } from './utils'
+import StepSyncSchedule from './views/StepSyncSchedule'
+import { DEFAULT_LDAP_SYNC_CRON_EXPRESSION, getErrorMessageFromException } from './utils'
 import css from './CreateUpdateLdapWizard.module.scss'
 
 export interface CreateUpdateLdapWizardProps {
@@ -94,6 +95,9 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
   const [groupSettingsListState, setGroupSettingsListState] = useState<LdapGroupSettings[] | undefined>(
     groupSettingsList
   )
+  const [cronExpression, setCronExpression] = useState<string>(
+    ldapSettings?.cronExpression || DEFAULT_LDAP_SYNC_CRON_EXPRESSION
+  )
   const [triggerSaveData, setTriggerSaveData] = useState<boolean>(false)
   const [wiardUpdateError, setWizardUpdateError] = useState<ReactElement>()
   const [isUpdateInProgress, setIsUpdateInProgress] = useState<boolean>(false)
@@ -115,6 +119,7 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
       connectionSettings: connectionSettingsState,
       userSettingsList: userSettingsListState,
       groupSettingsList: groupSettingsListState,
+      cronExpression,
       settingsType: 'LDAP'
     } as LDAPSettings)
 
@@ -187,6 +192,11 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
         stepData={groupSettingsListState}
         updateStepData={(val: LdapGroupSettings[]) => setGroupSettingsListState(val)}
         auxilliaryData={{ ...ldapOverviewState, connectionSettings: connectionSettingsState, identifier }}
+      />
+      <StepSyncSchedule
+        name={getString('authSettings.ldap.userSyncSchedule')}
+        stepData={{ cronExpression, isEdit }}
+        updateStepData={(val: { cronExpression: string }) => setCronExpression(val.cronExpression)}
         createUpdateActionProps={{
           isUpdateInProgress,
           createUpdateError: wiardUpdateError,

@@ -17,8 +17,9 @@ import {
   Container
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import type { FormikProps } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 import get from 'lodash/get'
+import merge from 'lodash/merge'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -77,6 +78,7 @@ export const RunStepBase = (
       )}
       formName="ciRunStep"
       validate={valuesToValidate => {
+        let errors: FormikErrors<any> = {}
         /* If a user configures AWS VMs as an infra, the steps can be executed directly on the VMS or in a container on a VM. 
         For the latter case, even though Container Registry and Image are optional for AWS VMs infra, they both need to be specified for container to be spawned properly */
         if (
@@ -84,7 +86,7 @@ export const RunStepBase = (
             buildInfrastructureType
           )
         ) {
-          return validateConnectorRefAndImageDepdendency(
+          errors = validateConnectorRefAndImageDepdendency(
             get(valuesToValidate, 'spec.connectorRef', ''),
             get(valuesToValidate, 'spec.image', ''),
             getString
@@ -95,17 +97,21 @@ export const RunStepBase = (
           transformValuesFieldsConfig
         )
         onChange?.(schemaValues)
-        return validate(
-          valuesToValidate,
-          getEditViewValidateFieldsConfig(buildInfrastructureType),
-          {
-            initialValues,
-            steps: currentStage?.stage?.spec?.execution?.steps || {},
-            serviceDependencies: currentStage?.stage?.spec?.serviceDependencies || [],
-            getString
-          },
-          stepViewType
+        errors = merge(
+          errors,
+          validate(
+            valuesToValidate,
+            getEditViewValidateFieldsConfig(buildInfrastructureType),
+            {
+              initialValues,
+              steps: currentStage?.stage?.spec?.execution?.steps || {},
+              serviceDependencies: currentStage?.stage?.spec?.serviceDependencies || [],
+              getString
+            },
+            stepViewType
+          )
         )
+        return errors
       }}
       onSubmit={(_values: RunStepDataUI) => {
         const schemaValues = getFormValuesInCorrectFormat<RunStepDataUI, RunStepData>(

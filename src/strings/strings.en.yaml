@@ -674,7 +674,7 @@ delegate:
   ReturnToDelegates: 'Return to list of Delegates'
   tagsFromDelegateConfig: 'Tags inherited from the Delegate configuration'
   LastHeartBeat: 'Last HeartBeat'
-  delegates_4_ways_title: 'Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform. You can run these Delegates in one of 4 ways:'
+  delegates_4_ways_title: 'Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform. You can run these Delegates in one of 2 ways:'
   kubernetes:
     prerequisites: 'Kubernetes Prerequisites'
     prerequisites_info1: 'You have access to your Kubernetes cluster and install Harness Delegates as YAML or Helm Chart'

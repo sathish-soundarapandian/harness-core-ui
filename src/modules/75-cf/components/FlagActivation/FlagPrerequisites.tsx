@@ -40,7 +40,7 @@ import {
   usePatchFeature,
   Variation
 } from 'services/cf'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 
 import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
@@ -73,7 +73,7 @@ export const FlagPrerequisites: React.FC<FlagPrerequisitesProps> = props => {
   } = useParams<Record<string, string>>()
   const [searchTerm, setSearchTerm] = useState<string>()
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
-  const gitSyncFormMeta = gitSync?.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.UPDATES_FLAG_PREREQS)
+  const gitSyncFormMeta = gitSync?.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.UPDATES_FLAG_PREREQS)
 
   const queryParams = useMemo(
     () => ({

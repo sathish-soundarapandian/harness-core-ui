@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Module Configuration screen should render correctly 1`] = `
+<div>
+  <div
+    class="Layout--vertical StyledProps--main container StyledProps--padding-left-xlarge"
+  >
+    <div
+      class="StyledProps--font StyledProps--main header"
+    >
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--margin-bottom-xsmall StyledProps--flex StyledProps--flex-justifyContent-flex-start"
+      >
+        <span
+          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-white StyledProps--font-variation-h2"
+        >
+          <span>
+            common.moduleConfig.selectModules
+          </span>
+        </span>
+        <span
+          class="StyledProps--font StyledProps--main blueText StyledProps--inline StyledProps--color StyledProps--color-primary5 StyledProps--margin-left-small StyledProps--margin-right-small"
+        >
+          <span>
+            common.moduleConfig.your
+          </span>
+        </span>
+        <span
+          class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--color StyledProps--color-white StyledProps--font-variation-h2"
+        >
+          <span>
+            common.moduleConfig.navigation
+          </span>
+        </span>
+      </span>
+      <p
+        class="StyledProps--font StyledProps--main defaultSettingsTextContainer"
+      >
+        <span
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey200 StyledProps--inline"
+        >
+          (
+          <span>
+            common.moduleConfig.autoSaved
+          </span>
+          )
+        </span>
+      </p>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main body StyledProps--padding-bottom-huge StyledProps--padding-right-huge StyledProps--margin-bottom-xxxlarge"
+    >
+      <div
+        class="StyledProps--font StyledProps--main sortableListContainer StyledProps--margin-right-xxlarge"
+      >
+        <div
+          data-testid="selected-modules-length"
+        >
+          1
+        </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main flex1"
+      >
+        <div
+          data-testid="test-active-module-CD"
+        />
+      </div>
+    </div>
+    <span
+      class="bp3-icon bp3-icon-cross StyledProps--main crossIcon StyledProps--color StyledProps--color-white"
+      icon="cross"
+    >
+      <svg
+        data-icon="cross"
+        height="18"
+        viewBox="0 0 16 16"
+        width="18"
+      >
+        <desc>
+          cross
+        </desc>
+        <path
+          d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+          fill-rule="evenodd"
+        />
+      </svg>
+    </span>
+  </div>
+</div>
+`;

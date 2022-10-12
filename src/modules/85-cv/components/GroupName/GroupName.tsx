@@ -5,56 +5,43 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction } from 'react'
-import { FormInput, SelectOption, Formik, FormikForm, Text, Container, Layout, Button } from '@wings-software/uicore'
+import React from 'react'
+import { FormInput, Formik, FormikForm, Text, Container, Layout, Button, SelectOption } from '@wings-software/uicore'
 import { useModalHook } from '@harness/use-modal'
-import { Dialog, IDialogProps } from '@blueprintjs/core'
-import { StringKeys, useStrings, UseStringsReturn } from 'framework/strings'
-
-export interface GroupNameProps {
-  fieldName: string
-  newGroupDialogTitle?: StringKeys
-  groupNames?: SelectOption[]
-  onChange: (name: string, value: SelectOption) => void
-  item?: SelectOption
-  setGroupNames: Dispatch<SetStateAction<SelectOption[]>>
-  label?: string
-  title?: string
-  disabled?: boolean
-}
-
-const DialogProps: IDialogProps = {
-  isOpen: true,
-  usePortal: true,
-  autoFocus: true,
-  canEscapeKeyClose: true,
-  canOutsideClickClose: true,
-  enforceFocus: false,
-  style: { width: 600, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
-}
-
-type CreateGroupName = {
-  name: string
-}
-
-export function validate(
-  values: CreateGroupName,
-  groupNames: SelectOption[],
-  getString: UseStringsReturn['getString']
-): { [key: string]: string } {
-  const errors: { [key: string]: string } = {}
-  if (!values.name?.trim().length) {
-    errors.name = getString('cv.onboarding.selectProductScreen.validationText.name')
-  } else if (groupNames.filter(name => name.value === values.name).length) {
-    errors.name = getString('cv.monitoringSources.prometheus.validation.uniqueName', { existingName: values.name })
-  }
-  return errors
-}
+import { Dialog } from '@blueprintjs/core'
+import { useStrings } from 'framework/strings'
+import { CreateGroupName, DialogProps, GroupNameProps } from './GroupName.types'
+import { validate } from './GroupName.utils'
+import { defaultGroupName } from './GroupName.constants'
 
 export default function GroupName(props: GroupNameProps): JSX.Element {
-  const { fieldName, disabled, groupNames = [], onChange, item, setGroupNames, label, title } = props
+  const {
+    fieldName,
+    disabled,
+    groupNames = [],
+    onChange,
+    item,
+    setGroupNames,
+    label,
+    title,
+    allowAddGroup,
+    selectProps,
+    usePortal
+  } = props
   const { getString } = useStrings()
   const addNewOption = { label: getString('cv.addNew'), value: '' }
+
+  const dropdownOptions: SelectOption[] = groupNames
+
+  // Adding "+ Add New" option based on  "allowAddGroup" prop
+  if (allowAddGroup) {
+    const isAddNewOptionPresent = groupNames.find(groupName => groupName.label === addNewOption.label)
+    if (!isAddNewOptionPresent) {
+      dropdownOptions.unshift(addNewOption)
+    }
+  }
+
+  const dropdownFieldName = fieldName ?? defaultGroupName
 
   const [openModal, hideModal] = useModalHook(
     () => (
@@ -65,9 +52,9 @@ export default function GroupName(props: GroupNameProps): JSX.Element {
           formName="groupName"
           onSubmit={values => {
             const createdGroupName = { label: values.name, value: values.name }
-            setGroupNames(oldNames => [...oldNames, createdGroupName])
+            setGroupNames?.(oldNames => [...oldNames, createdGroupName])
             hideModal()
-            onChange(fieldName, createdGroupName)
+            onChange(dropdownFieldName, createdGroupName)
           }}
         >
           <FormikForm>
@@ -90,16 +77,20 @@ export default function GroupName(props: GroupNameProps): JSX.Element {
 
   return (
     <FormInput.Select
+      usePortal={usePortal}
+      selectProps={selectProps}
       label={label ?? getString('cv.monitoringSources.prometheus.groupName')}
       disabled={disabled}
       value={item}
-      name={fieldName}
+      name={dropdownFieldName}
       items={groupNames || []}
       onChange={selectedItem => {
         if (selectedItem?.label === addNewOption.label) {
+          onChange(dropdownFieldName, item as SelectOption)
           openModal()
+        } else {
+          onChange(dropdownFieldName, selectedItem)
         }
-        onChange(fieldName, selectedItem)
       }}
     />
   )

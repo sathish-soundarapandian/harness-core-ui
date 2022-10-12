@@ -1,0 +1,115 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.stageSection {
+  :global(.bp3-collapse-body > div) {
+    background-color: transparent !important;
+  }
+
+  background-color: transparent;
+
+  &.stagePopover {
+    padding: var(--spacing-medium);
+  }
+
+  &.noPadVertical {
+    padding-top: 0px;
+    padding-bottom: 0;
+  }
+  .disabled {
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+    cursor: not-allowed !important;
+  }
+
+  .stageDetails {
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;
+
+    .stageOverridesTab {
+      justify-content: end;
+      display: grid;
+    }
+    :global {
+      .customVariables {
+        width: 700px !important;
+      }
+    }
+  }
+  .inputContainer {
+    display: grid;
+    grid-template-columns: none;
+    align-items: center;
+    button {
+      width: fit-content;
+      margin-bottom: var(--spacing-small);
+    }
+    &.sideDescription {
+      grid-template-columns: 1fr 40px;
+    }
+  }
+  .removeLink {
+    color: var(--blue-500);
+    cursor: pointer;
+    position: relative;
+    top: 16px;
+    left: 395px;
+    &.dialogView {
+      left: 276px;
+    }
+  }
+  .squareCardContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 64px;
+    margin-right: var(--spacing-small);
+  }
+}
+.content-section {
+  padding: 48px;
+  height: 100%;
+}
+.edit-stage-grid {
+  display: grid;
+  height: calc(100% - 70px);
+}
+
+.navigationButtons {
+  margin-bottom: 60px;
+  &.createModal {
+    margin-bottom: 0px;
+  }
+}
+
+.stage-create {
+  max-width: 1000px;
+}
+
+.tabHeading {
+  font-size: var(--font-size-medium);
+  color: var(--black-color-3);
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+.tabSubHeading {
+  font-size: var(--font-size-normal);
+  color: var(--black-color-3);
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+.sectionCard {
+  width: 1024px;
+  margin-bottom: 20px;
+  background-color: var(--grey-50);
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+.create-stage-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}

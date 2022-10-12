@@ -24,7 +24,8 @@ import {
   convertStringMetricPathToObject,
   convertStringBasePathToObject,
   convertFullPathToBaseAndMetric,
-  initAppDCustomFormValue
+  initAppDCustomFormValue,
+  deriveBaseAndMetricPath
 } from '../AppDHealthSource.utils'
 import {
   appDMetricValue,
@@ -87,7 +88,7 @@ describe('Test Util funcitons', () => {
     ).toEqual({ metricPath: 'cv.healthSource.connectors.AppDynamics.validation.metricPathWithoutLeafNode' })
 
     const fullPathMissingTierInfo = Object.assign({}, validateMappingNoError) as any
-    fullPathMissingTierInfo['pathType'] = PATHTYPE.FullPath
+    fullPathMissingTierInfo['pathType'] = PATHTYPE.CompleteMetricPath
     fullPathMissingTierInfo['fullPath'] = 'Overall Application Performance | docker-tier | Calls per Minute'
     expect(
       validateMapping({
@@ -102,7 +103,7 @@ describe('Test Util funcitons', () => {
 
   test('thresholds validation errors', () => {
     const fullPathMissingTierInfo = Object.assign({}, validateMappingNoError) as any
-    fullPathMissingTierInfo['pathType'] = PATHTYPE.FullPath
+    fullPathMissingTierInfo['pathType'] = PATHTYPE.CompleteMetricPath
     fullPathMissingTierInfo['fullPath'] = 'Overall Application Performance | docker-tier | Calls per Minute'
     fullPathMissingTierInfo.ignoreThresholds = [
       {
@@ -186,10 +187,7 @@ describe('Test Util funcitons', () => {
     formDataExpectedOutput.spec.metricData.Errors = false
     formDataExpectedOutput.spec.metricData.Performance = false
     formDataExpectedOutput.spec.metricDefinitions[1].sli = { enabled: true }
-    formDataExpectedOutput.spec.metricDefinitions[1].analysis.deploymentVerification = {
-      enabled: false,
-      serviceInstanceMetricPath: undefined
-    }
+    formDataExpectedOutput.spec.metricDefinitions[1].analysis.deploymentVerification = { enabled: false }
     formDataExpectedOutput.spec.metricDefinitions[1].analysis.riskProfile = {} as any
     expect(createAppDynamicsPayload(formData, false)).toEqual(formDataExpectedOutput)
 
@@ -307,6 +305,49 @@ describe('Test Util funcitons', () => {
     expect(getBaseAndMetricPath(basePath, metricPath, null, 'manager')).toEqual({
       derivedBasePath: 'Overall Application Performance',
       derivedMetricPath: 'Exceptions per Minute'
+    })
+  })
+
+  test('should validate deriveBaseAndMetricPath', () => {
+    const defaultBasePath = {
+      basePathDropdown_0: {
+        path: '',
+        value: ''
+      },
+      basePathDropdown_1: {
+        path: '',
+        value: ''
+      }
+    }
+    const defaultMetricPath = {
+      metricPathDropdown_0: {
+        isMetric: true,
+        path: '',
+        value: ''
+      },
+      metricPathDropdown_1: {
+        isMetric: false,
+        path: '',
+        value: ''
+      }
+    }
+    expect(deriveBaseAndMetricPath('', '')).toEqual({
+      basePathObj: defaultBasePath,
+      metricPathObj: defaultMetricPath
+    })
+    expect(deriveBaseAndMetricPath('', 'Tier')).toEqual({
+      basePathObj: defaultBasePath,
+      metricPathObj: defaultMetricPath
+    })
+    expect(deriveBaseAndMetricPath('BaseFolder|Tier|Metric', 'Tier')).toEqual({
+      basePathObj: {
+        basePathDropdown_0: { ...defaultBasePath.basePathDropdown_0, value: 'BaseFolder' },
+        basePathDropdown_1: { ...defaultBasePath.basePathDropdown_1, path: 'BaseFolder' }
+      },
+      metricPathObj: {
+        metricPathDropdown_0: { ...defaultMetricPath.metricPathDropdown_0, value: 'Metric' },
+        metricPathDropdown_1: { ...defaultMetricPath.metricPathDropdown_1, path: 'Metric' }
+      }
     })
   })
 })

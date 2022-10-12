@@ -37,7 +37,7 @@ export function createElkHealthSourcePayload(setupSource: ElkHealthSourceInfo): 
       messageIdentifier,
       logIndexes,
       timeStampFormat,
-      identify_timestamp
+      identifyTimestamp
     }: MapElkQueryToService = entry[1]
     ElkHealthSourcePayload.spec.queries.push({
       name: metricName,
@@ -46,7 +46,7 @@ export function createElkHealthSourcePayload(setupSource: ElkHealthSourceInfo): 
       query: query,
       serviceInstanceIdentifier: serviceInstance,
       timeStampFormat: timeStampFormat,
-      timeStampIdentifier: identify_timestamp
+      timeStampIdentifier: identifyTimestamp
     })
   }
   return ElkHealthSourcePayload
@@ -78,7 +78,7 @@ export const getMappedServicesAndEnvs = (data: any): Map<string, MapElkQueryToSe
         query: query?.query,
         timeStampFormat: query?.timeStampFormat,
         logIndexes: query?.index,
-        identify_timestamp: query?.timeStampIdentifier,
+        identifyTimestamp: query?.timeStampIdentifier,
         messageIdentifier: query?.messageIdentifier
       })
     }

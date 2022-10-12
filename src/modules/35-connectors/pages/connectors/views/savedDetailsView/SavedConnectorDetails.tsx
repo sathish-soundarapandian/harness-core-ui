@@ -324,6 +324,14 @@ const getJenkinsSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRow
   ]
 }
 
+const getGcpSMSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.gcpSecretManager.gcpSMSecretFile',
+      value: connector?.spec?.credentialsRef
+    }
+  ]
+}
 const getCustomSMSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
   return [
     {
@@ -867,6 +875,8 @@ const getSchemaByType = (
       return getJenkinsSchema(connector)
     case Connectors.CUSTOM_SECRET_MANAGER:
       return getCustomSMSchema(connector)
+    case Connectors.GcpSecretManager:
+      return getGcpSMSchema(connector)
     default:
       return []
   }

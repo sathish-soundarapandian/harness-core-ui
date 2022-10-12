@@ -12,8 +12,8 @@ import { getMultiTypeFromValue, MultiTypeInputType, AllowedTypes } from '@wings-
 
 import { useStrings } from 'framework/strings'
 import type { StepElementConfig } from 'services/cd-ng'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface GenericExecutionStepInputSetProps {
@@ -35,7 +35,7 @@ export const GenericExecutionStepInputSet: React.FC<GenericExecutionStepInputSet
     <>
       {getMultiTypeFromValue(inputSetData.template?.timeout) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <FormMultiTypeDurationField
+          <TimeoutFieldInputSetView
             name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
             label={getString('pipelineSteps.timeoutLabel')}
             multiTypeDurationProps={{
@@ -45,6 +45,8 @@ export const GenericExecutionStepInputSet: React.FC<GenericExecutionStepInputSet
               disabled: inputSetData.readonly
             }}
             disabled={inputSetData.readonly}
+            fieldPath={'timeout'}
+            template={inputSetData.template}
           />
         </div>
       )}

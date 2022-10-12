@@ -3,10 +3,23 @@ homepage:
   slogan: Take your software build process to the next level using our Harness Chaos Engineering.
   learnMore: Learn more about Chaos Engineering
 chaosHub: ChaosHub
-chaosScenario: Chaos Scenario
+chaosExperiment: Chaos Experiment
 chaosInfrastructure: Chaos Infrastructure
-chaosGitops: Chaos Gitops
+chaosGameday: Chaos Gameday
 navLabels:
   chaosExperiments: Chaos Experiments
   chaosHubs: Chaos Hubs
-  chaosInfrastructures: Chaos Infrastructures
+environments:
+  pageTitle: '[{{projectName}}] Environments'
+  create:
+    title: Create a new environment
+    description: An environment is the place where you will deploy your cluster for chaos testing
+    envTypeLabel: Select Environment Type
+    duplicateName: Environment with this name already exists. Please use another name
+  delete:
+    message: 'If you want to delete environment <strong>{{name}}</strong>, the chaos infrastructures for this environment will also be deleted. Delete environment <strong>{{name}}</strong>?'
+    title: '{{ $.common.deleteEnvironment.title }}?'
+    toastMessage: Successfully deleted environment {{environmentId}}
+noEnvironment:
+  title: There are no environments in this project
+  message: Environments are the different places you run your application where you can configure chaos infrastrutures

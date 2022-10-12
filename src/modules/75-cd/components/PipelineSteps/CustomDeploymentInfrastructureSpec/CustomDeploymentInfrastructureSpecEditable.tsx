@@ -10,7 +10,7 @@ import { Text, Layout, FormInput, Formik, FormikForm, HarnessDocTooltip } from '
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
-import { debounce, noop, defaultTo } from 'lodash-es'
+import { debounce, noop, defaultTo, isEmpty } from 'lodash-es'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -26,6 +26,7 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { CustomVariableEditableExtraProps } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
+import type { CustomDeploymentNGVariable } from 'services/cd-ng'
 import {
   CustomDeploymentInfrastructureSpecEditableProps,
   CustomDeploymentInfrastructureStep,
@@ -64,6 +65,11 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
 
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
+  const getInfraVariablesTitle = (variables: CustomDeploymentNGVariable[]): string => {
+    return isEmpty(variables)
+      ? getString('pipeline.customDeployment.emptyInfraVariablesTitle')
+      : getString('pipeline.customDeployment.updateInfraVariablesTitle')
+  }
   return (
     <Layout.Vertical spacing="medium">
       <Formik<CustomDeploymentInfrastructureStep>
@@ -72,7 +78,8 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
         validate={value => {
           const data: Partial<CustomDeploymentInfrastructureStep> = {
             variables: value?.variables,
-            customDeploymentRef: value?.customDeploymentRef
+            customDeploymentRef: value?.customDeploymentRef,
+            allowSimultaneousDeployments: value?.allowSimultaneousDeployments
           }
           delayedOnUpdate(data)
         }}
@@ -93,13 +100,13 @@ const CustomDeploymentInfrastructureSpecEditableNew: React.FC<CustomDeploymentIn
                 >
                   {isSvcEnvEnabled && (
                     <>
-                      {getString('common.variables')}
+                      {getString('pipeline.customDeployment.infraDefinitionVariablesTitle')}
                       <HarnessDocTooltip tooltipId="updateInfraVariablesDT" useStandAlone={true} />
                     </>
                   )}
                 </Text>
                 <Text font={{ variation: FontVariation.BODY2_SEMI }}>
-                  {isSvcEnvEnabled ? getString('pipeline.customDeployment.updateInfraVariablesTitle') : ''}
+                  {isSvcEnvEnabled ? getInfraVariablesTitle(formik.values?.variables) : ''}
                 </Text>
               </Layout.Vertical>
 

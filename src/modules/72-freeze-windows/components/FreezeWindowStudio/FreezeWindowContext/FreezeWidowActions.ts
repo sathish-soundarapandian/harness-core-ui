@@ -23,7 +23,9 @@ export interface ActionResponse {
   isYamlEditable?: boolean
   isUpdated?: boolean
   freezeObj?: Record<string, unknown>
+  oldFreezeObj?: Record<string, unknown>
   yamlHandler?: YamlBuilderHandlerBinding
+  status?: string
 }
 
 export interface ActionReturnType {

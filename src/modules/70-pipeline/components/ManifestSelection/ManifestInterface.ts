@@ -110,6 +110,7 @@ export interface ManifestLastStepProps {
   manifestIdsList: Array<string>
   isReadonly?: boolean
   deploymentType?: string
+  showIdentifierField?: boolean
 }
 export interface CommandFlags {
   commandType: string | SelectOption | undefined

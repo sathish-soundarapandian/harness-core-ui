@@ -29,8 +29,9 @@ import css from './useGetConnectorsListHook.module.scss'
 export const useGetConnectorsListHook = (
   catalogueMockData?: UseGetMockData<ResponseConnectorCatalogueResponse>
 ): UseGetConnectorsListHookReturn => {
-  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.ERROR_TRACKING_ENABLED)
+  const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const isCustomSMEnabled = useFeatureFlag(FeatureFlag.CUSTOM_SECRET_MANAGER_NG)
+  const isGcpSMEnabled = useFeatureFlag(FeatureFlag.PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG)
   // This list will control which categories will be displayed in UI and its order
   const connectorCatalogueOrder: Array<ConnectorCatalogueItem['category']> = [
     'CLOUD_PROVIDER',
@@ -73,6 +74,9 @@ export const useGetConnectorsListHook = (
       originalData.forEach(value => {
         if (value.category === 'SECRET_MANAGER') {
           value.connectors = ['Vault', 'AwsKms', 'AzureKeyVault', 'AwsSecretManager', 'GcpKms', 'CustomSecretManager']
+          if (isGcpSMEnabled) {
+            value.connectors.push('GcpSecretManager')
+          }
         }
       })
       const orderedCatalogue: ConnectorCatalogueItem[] | { category: string; connectors: string[] } = []

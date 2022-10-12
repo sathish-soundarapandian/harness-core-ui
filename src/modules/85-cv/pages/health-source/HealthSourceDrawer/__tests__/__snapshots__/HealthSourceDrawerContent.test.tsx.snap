@@ -106,8 +106,7 @@ exports[`HealthSource table Should Render all the componetns in edit mode for cl
                         class="bp3-form-content"
                       >
                         <div
-                          class="Layout--horizontal StyledProps--main disabled StyledProps--margin-left-xxxlarge StyledProps--margin-right-xxxlarge"
-                          style="height: 120px;"
+                          class="Layout--horizontal StyledProps--main healthSourceListContainer disabled"
                         >
                           <div
                             class="squareCardContainer disabled"
@@ -829,8 +828,7 @@ exports[`HealthSource table Should Render all the componetns in edit mode for lo
                         class="bp3-form-content"
                       >
                         <div
-                          class="Layout--horizontal StyledProps--main disabled StyledProps--margin-left-xxxlarge StyledProps--margin-right-xxxlarge"
-                          style="height: 120px;"
+                          class="Layout--horizontal StyledProps--main healthSourceListContainer disabled"
                         >
                           <div
                             class="squareCardContainer disabled"
@@ -1551,8 +1549,7 @@ exports[`HealthSource table should matchsnapshot 1`] = `
                         class="bp3-form-content"
                       >
                         <div
-                          class="Layout--horizontal StyledProps--main StyledProps--margin-left-xxxlarge StyledProps--margin-right-xxxlarge"
-                          style="height: 120px;"
+                          class="Layout--horizontal StyledProps--main healthSourceListContainer"
                         >
                           <div
                             class="squareCardContainer"

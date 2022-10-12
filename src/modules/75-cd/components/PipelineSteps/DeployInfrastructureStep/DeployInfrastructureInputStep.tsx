@@ -45,7 +45,15 @@ function DeployInfrastructureInputStepInternal({
   factory?: AbstractStepFactory
 }): JSX.Element {
   const { getString } = useStrings()
-  const { gitOpsEnabled, serviceRef, environmentRef, infrastructureRef, clusterRef } = customStepProps
+  const {
+    gitOpsEnabled,
+    serviceRef,
+    environmentRef,
+    infrastructureRef,
+    clusterRef,
+    deploymentType,
+    customDeploymentData
+  } = customStepProps
   const { serviceOverrideInputs } = inputSetData?.template?.environment || {}
 
   const shouldRenderInfrastructure =
@@ -205,6 +213,8 @@ function DeployInfrastructureInputStepInternal({
                     environmentRef={initialValues.environment?.environmentRef || environmentRef}
                     path={inputSetData?.path}
                     readonly={readonly}
+                    deploymentType={deploymentType}
+                    customDeploymentData={customDeploymentData}
                   />
                 </Container>
               )}

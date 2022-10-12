@@ -31,7 +31,7 @@ function ServiceConfigFileOverridesList({
 }: ServiceConfigFileOverridesListProps): React.ReactElement {
   const { getString } = useStrings()
   return (
-    <Layout.Vertical>
+    <Layout.Vertical width={'100%'}>
       {!!configFileOverrideList?.length && (
         <>
           <div className={cx(css.configFileList, css.listHeader)}>

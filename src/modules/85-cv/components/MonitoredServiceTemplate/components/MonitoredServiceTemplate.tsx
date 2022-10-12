@@ -12,14 +12,14 @@ import { TemplateType } from '@templates-library/utils/templatesUtils'
 import type { TemplateInputsProps } from '@templates-library/components/TemplateInputs/TemplateInputs'
 import MonitoredServiceInputSetsTemplate from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { MonitoredTemplateCanvasWithRef } from './MonitoredServiceTemplateCanvas'
 
 export class MonitoredServiceTemplate extends Template {
   protected label = 'Monitored Service'
   protected type = TemplateType.MonitoredService
   protected icon: IconName = 'cv-main'
-  protected allowedScopes = [Scope.PROJECT]
+  protected allowedScopes = [Scope.PROJECT, Scope.ORG, Scope.ACCOUNT]
   protected colorMap = {
     color: '#06B7C3',
     stroke: '#D4E7D1',

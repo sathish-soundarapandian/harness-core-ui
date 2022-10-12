@@ -149,15 +149,14 @@ describe('<TemplatePipelineCanvas/> tests', () => {
     jest.clearAllMocks()
   })
 
-  test('should match snapshot', async () => {
-    const { container } = render(
+  test('initial render', async () => {
+    render(
       <TestWrapper>
         <PipelineContext.Provider value={contextMock}>
           <TemplatePipelineCanvas />
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
     await waitFor(() => expect(contextMock.setTemplateTypes).toBeCalledWith({ Test_Stage_Template: 'Deployment' }))
     await waitFor(() =>
       expect(contextMock.setTemplateServiceData).toBeCalledWith({ Test_Template_Stage_Type: 'Kubernetes' })
@@ -173,7 +172,8 @@ describe('<TemplatePipelineCanvas/> tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    const node = container.querySelector('.default-node') as HTMLElement
+    expect(node).not.toBeInTheDocument()
   })
 
   test('should render error view correctly', async () => {
@@ -185,6 +185,7 @@ describe('<TemplatePipelineCanvas/> tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    const node = container.querySelector('.diamond-node') as HTMLElement
+    expect(node).not.toBeInTheDocument()
   })
 })

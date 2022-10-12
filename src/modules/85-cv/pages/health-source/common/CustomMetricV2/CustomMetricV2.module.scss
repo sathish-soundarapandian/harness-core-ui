@@ -1,0 +1,9 @@
+.customMetricV2 {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+
+  .sideNav {
+    padding-left: var(--spacing-medium) !important;
+    padding-top: 0 !important;
+  }
+}

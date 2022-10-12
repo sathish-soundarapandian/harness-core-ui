@@ -105,20 +105,7 @@ describe('ECSRollingDeployStep tests', () => {
     const submitBtn = getByText('Submit')
     const timeoutInput = queryByNameAttribute('timeout', container)
     expect(timeoutInput).toBeVisible()
-    const sameAsAlreadyRunningInstancesCheckbox = queryByNameAttribute(
-      'spec.sameAsAlreadyRunningInstances',
-      container
-    ) as HTMLInputElement
-    expect(sameAsAlreadyRunningInstancesCheckbox).toBeVisible()
-    const forceNewDeploymentCheckbox = queryByNameAttribute('spec.forceNewDeployment', container) as HTMLInputElement
-    expect(forceNewDeploymentCheckbox).toBeVisible()
-
-    userEvent.click(submitBtn)
-    await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
-    expect(onUpdate).not.toHaveBeenCalled()
     userEvent.type(timeoutInput!, '20m')
-    userEvent.click(sameAsAlreadyRunningInstancesCheckbox)
-    userEvent.click(forceNewDeploymentCheckbox)
 
     userEvent.click(submitBtn)
     await waitFor(() => expect(onUpdate).toHaveBeenCalled())
@@ -126,10 +113,6 @@ describe('ECSRollingDeployStep tests', () => {
       identifier: 'Step_1',
       name: 'Step 1',
       timeout: '20m',
-      spec: {
-        sameAsAlreadyRunningInstances: true,
-        forceNewDeployment: true
-      },
       type: StepType.EcsRollingDeploy
     })
   })

@@ -14,14 +14,13 @@ export const getQueryParamOptions = () => ({
   parseArrays: true,
   decoder: queryParamDecodeAll(),
   processQueryParams(params: FreezeListUrlQueryParams): FreezeListUrlQueryParams {
-    const [start, end] = getDefaultCalenderFilter()
     return {
       ...params,
       page: params.page ?? DEFAULT_PAGE_INDEX,
       size: params.size ?? DEFAULT_PAGE_SIZE,
       sort: params.sort ?? DEFAULT_PIPELINE_LIST_TABLE_SORT,
-      startTime: params.startTime || start.getTime(),
-      endTime: params.endTime || end.getTime()
+      startTime: params.startTime,
+      endTime: params.endTime
     }
   }
 })

@@ -44,297 +44,297 @@ exports[`Test GCOMetricsHealthSource Should show please Enter Query when ther is
         <div
           class="OverlaySpinner--overlaySpinner"
         >
-          <div
-            class="StyledProps--font StyledProps--main main"
+          <form
+            action="#"
+            class="FormikForm--main setupContainer"
           >
-            <div
-              class="StyledProps--font StyledProps--main contentContainer"
-            >
+            <div>
               <div
-                class="StyledProps--font StyledProps--main leftPanel"
+                class="StyledProps--font StyledProps--main main"
               >
                 <div
-                  class="StyledProps--font StyledProps--main main"
-                  style="width: 300px;"
+                  class="StyledProps--font StyledProps--main contentContainer"
                 >
-                  <a
-                    class="bp3-button Button--button StyledProps--font StyledProps--main inputQueryLink Button--with-current-color Button--link"
-                    href="javascript:void()"
-                    role="button"
-                    tabindex="0"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      cv.monitoringSources.gco.addManualInputQuery
-                    </span>
-                  </a>
                   <div
-                    class="bp3-tree treeNodeContainer"
+                    class="StyledProps--font StyledProps--main leftPanel"
                   >
-                    <ul
-                      class="bp3-tree-node-list bp3-tree-root"
+                    <div
+                      class="StyledProps--font StyledProps--main main"
+                      style="width: 300px;"
                     >
-                      <li
-                        class="bp3-tree-node"
+                      <a
+                        class="bp3-button Button--button StyledProps--font StyledProps--main inputQueryLink Button--with-current-color Button--link"
+                        href="javascript:void()"
+                        role="button"
+                        tabindex="0"
                       >
-                        <div
-                          class="bp3-tree-node-content bp3-tree-node-content-0"
+                        <span
+                          class="bp3-button-text"
                         >
-                          <span
-                            class="bp3-icon bp3-icon-chevron-right bp3-tree-node-caret bp3-tree-node-caret-closed"
-                            icon="chevron-right"
-                          >
-                            <svg
-                              data-icon="chevron-right"
-                              height="16"
-                              viewBox="0 0 16 16"
-                              width="16"
-                            >
-                              <desc>
-                                chevron-right
-                              </desc>
-                              <path
-                                d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
-                          </span>
-                          <span
-                            class="bp3-tree-node-label"
+                          cv.monitoringSources.gco.addManualInputQuery
+                        </span>
+                      </a>
+                      <div
+                        class="bp3-tree treeNodeContainer"
+                      >
+                        <ul
+                          class="bp3-tree-node-list bp3-tree-root"
+                        >
+                          <li
+                            class="bp3-tree-node"
                           >
                             <div
-                              class="Layout--horizontal StyledProps--main"
+                              class="bp3-tree-node-content bp3-tree-node-content-0"
                             >
-                              <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
-                                style="--text-line-clamp: 1; width: 192px;"
+                              <span
+                                class="bp3-icon bp3-icon-chevron-right bp3-tree-node-caret bp3-tree-node-caret-closed"
+                                icon="chevron-right"
                               >
-                                <span>
-                                  cv.monitoringSources.gco.mapMetricsToServicesPage.manuallyInputQueriesLabel
-                                </span>
-                              </p>
-                            </div>
-                          </span>
-                        </div>
-                        <div
-                          class="bp3-collapse"
-                        >
-                          <div
-                            aria-hidden="false"
-                            class="bp3-collapse-body"
-                            style="transform: translateY(-undefinedpx);"
-                          />
-                        </div>
-                      </li>
-                      <li
-                        class="bp3-tree-node bp3-tree-node-expanded"
-                      >
-                        <div
-                          class="bp3-tree-node-content bp3-tree-node-content-0"
-                        >
-                          <span
-                            class="bp3-icon bp3-icon-chevron-right bp3-tree-node-caret bp3-tree-node-caret-open"
-                            icon="chevron-right"
-                          >
-                            <svg
-                              data-icon="chevron-right"
-                              height="16"
-                              viewBox="0 0 16 16"
-                              width="16"
-                            >
-                              <desc>
-                                chevron-right
-                              </desc>
-                              <path
-                                d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
-                          </span>
-                          <span
-                            class="bp3-tree-node-label"
-                          >
-                            <div
-                              class="Layout--horizontal StyledProps--main"
-                            >
-                              <p
-                                class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
-                                style="--text-line-clamp: 1; width: 192px;"
-                              >
-                                Pod Traffic
-                              </p>
-                            </div>
-                          </span>
-                        </div>
-                        <div
-                          class="bp3-collapse"
-                          style="height: auto; overflow-y: visible; transition: none;"
-                        >
-                          <div
-                            aria-hidden="false"
-                            class="bp3-collapse-body"
-                            style="transform: translateY(0); transition: none;"
-                          >
-                            <ul
-                              class="bp3-tree-node-list"
-                            >
-                              <li
-                                class="bp3-tree-node bp3-tree-node-expanded"
+                                <svg
+                                  data-icon="chevron-right"
+                                  height="16"
+                                  viewBox="0 0 16 16"
+                                  width="16"
+                                >
+                                  <desc>
+                                    chevron-right
+                                  </desc>
+                                  <path
+                                    d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              <span
+                                class="bp3-tree-node-label"
                               >
                                 <div
-                                  class="bp3-tree-node-content bp3-tree-node-content-1"
+                                  class="Layout--horizontal StyledProps--main"
                                 >
-                                  <span
-                                    class="bp3-icon bp3-icon-chevron-right bp3-tree-node-caret bp3-tree-node-caret-open"
-                                    icon="chevron-right"
+                                  <p
+                                    class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
+                                    style="--text-line-clamp: 1; width: 192px;"
                                   >
-                                    <svg
-                                      data-icon="chevron-right"
-                                      height="16"
-                                      viewBox="0 0 16 16"
-                                      width="16"
-                                    >
-                                      <desc>
-                                        chevron-right
-                                      </desc>
-                                      <path
-                                        d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                                        fill-rule="evenodd"
-                                      />
-                                    </svg>
-                                  </span>
-                                  <span
-                                    class="bp3-tree-node-label"
+                                    <span>
+                                      cv.monitoringSources.gco.mapMetricsToServicesPage.manuallyInputQueriesLabel
+                                    </span>
+                                  </p>
+                                </div>
+                              </span>
+                            </div>
+                            <div
+                              class="bp3-collapse"
+                            >
+                              <div
+                                aria-hidden="false"
+                                class="bp3-collapse-body"
+                                style="transform: translateY(-undefinedpx);"
+                              />
+                            </div>
+                          </li>
+                          <li
+                            class="bp3-tree-node bp3-tree-node-expanded"
+                          >
+                            <div
+                              class="bp3-tree-node-content bp3-tree-node-content-0"
+                            >
+                              <span
+                                class="bp3-icon bp3-icon-chevron-right bp3-tree-node-caret bp3-tree-node-caret-open"
+                                icon="chevron-right"
+                              >
+                                <svg
+                                  data-icon="chevron-right"
+                                  height="16"
+                                  viewBox="0 0 16 16"
+                                  width="16"
+                                >
+                                  <desc>
+                                    chevron-right
+                                  </desc>
+                                  <path
+                                    d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                                    fill-rule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                              <span
+                                class="bp3-tree-node-label"
+                              >
+                                <div
+                                  class="Layout--horizontal StyledProps--main"
+                                >
+                                  <p
+                                    class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
+                                    style="--text-line-clamp: 1; width: 192px;"
+                                  >
+                                    Pod Traffic
+                                  </p>
+                                </div>
+                              </span>
+                            </div>
+                            <div
+                              class="bp3-collapse"
+                              style="height: auto; overflow-y: visible; transition: none;"
+                            >
+                              <div
+                                aria-hidden="false"
+                                class="bp3-collapse-body"
+                                style="transform: translateY(0); transition: none;"
+                              >
+                                <ul
+                                  class="bp3-tree-node-list"
+                                >
+                                  <li
+                                    class="bp3-tree-node bp3-tree-node-expanded"
                                   >
                                     <div
-                                      class="Layout--horizontal StyledProps--main"
+                                      class="bp3-tree-node-content bp3-tree-node-content-1"
                                     >
-                                      <p
-                                        class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
-                                        style="--text-line-clamp: 1; width: 170px;"
+                                      <span
+                                        class="bp3-icon bp3-icon-chevron-right bp3-tree-node-caret bp3-tree-node-caret-open"
+                                        icon="chevron-right"
                                       >
-                                        Restart count - Works
-                                      </p>
-                                    </div>
-                                  </span>
-                                </div>
-                                <div
-                                  class="bp3-collapse"
-                                  style="height: auto; overflow-y: visible; transition: none;"
-                                >
-                                  <div
-                                    aria-hidden="false"
-                                    class="bp3-collapse-body"
-                                    style="transform: translateY(0); transition: none;"
-                                  >
-                                    <ul
-                                      class="bp3-tree-node-list"
-                                    >
-                                      <li
-                                        class="bp3-tree-node bp3-tree-node-selected"
+                                        <svg
+                                          data-icon="chevron-right"
+                                          height="16"
+                                          viewBox="0 0 16 16"
+                                          width="16"
+                                        >
+                                          <desc>
+                                            chevron-right
+                                          </desc>
+                                          <path
+                                            d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                                            fill-rule="evenodd"
+                                          />
+                                        </svg>
+                                      </span>
+                                      <span
+                                        class="bp3-tree-node-label"
                                       >
                                         <div
-                                          class="bp3-tree-node-content bp3-tree-node-content-2"
+                                          class="Layout--horizontal StyledProps--main"
                                         >
-                                          <span
-                                            class="bp3-tree-node-caret-none"
-                                          />
-                                          <span
-                                            class="bp3-tree-node-label"
+                                          <p
+                                            class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
+                                            style="--text-line-clamp: 1; width: 170px;"
+                                          >
+                                            Restart count - Works
+                                          </p>
+                                        </div>
+                                      </span>
+                                    </div>
+                                    <div
+                                      class="bp3-collapse"
+                                      style="height: auto; overflow-y: visible; transition: none;"
+                                    >
+                                      <div
+                                        aria-hidden="false"
+                                        class="bp3-collapse-body"
+                                        style="transform: translateY(0); transition: none;"
+                                      >
+                                        <ul
+                                          class="bp3-tree-node-list"
+                                        >
+                                          <li
+                                            class="bp3-tree-node bp3-tree-node-selected"
                                           >
                                             <div
-                                              class="Layout--horizontal StyledProps--main"
+                                              class="bp3-tree-node-content bp3-tree-node-content-2"
                                             >
-                                              <p
-                                                class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
-                                                style="--text-line-clamp: 1; width: 140px;"
+                                              <span
+                                                class="bp3-tree-node-caret-none"
+                                              />
+                                              <span
+                                                class="bp3-tree-node-label"
                                               >
-                                                kubernetes.io/container/restart_count
-                                              </p>
+                                                <div
+                                                  class="Layout--horizontal StyledProps--main"
+                                                >
+                                                  <p
+                                                    class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
+                                                    style="--text-line-clamp: 1; width: 140px;"
+                                                  >
+                                                    kubernetes.io/container/restart_count
+                                                  </p>
+                                                </div>
+                                              </span>
                                             </div>
-                                          </span>
-                                        </div>
-                                        <div
-                                          class="bp3-collapse"
-                                        >
-                                          <div
-                                            aria-hidden="false"
-                                            class="bp3-collapse-body"
-                                            style="transform: translateY(-undefinedpx);"
-                                          />
-                                        </div>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </li>
-                              <li
-                                class="bp3-tree-node"
-                              >
-                                <div
-                                  class="bp3-tree-node-content bp3-tree-node-content-1"
-                                >
-                                  <span
-                                    class="bp3-icon bp3-icon-chevron-right bp3-tree-node-caret bp3-tree-node-caret-closed"
-                                    icon="chevron-right"
-                                  >
-                                    <svg
-                                      data-icon="chevron-right"
-                                      height="16"
-                                      viewBox="0 0 16 16"
-                                      width="16"
-                                    >
-                                      <desc>
-                                        chevron-right
-                                      </desc>
-                                      <path
-                                        d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
-                                        fill-rule="evenodd"
-                                      />
-                                    </svg>
-                                  </span>
-                                  <span
-                                    class="bp3-tree-node-label"
+                                            <div
+                                              class="bp3-collapse"
+                                            >
+                                              <div
+                                                aria-hidden="false"
+                                                class="bp3-collapse-body"
+                                                style="transform: translateY(-undefinedpx);"
+                                              />
+                                            </div>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </li>
+                                  <li
+                                    class="bp3-tree-node"
                                   >
                                     <div
-                                      class="Layout--horizontal StyledProps--main"
+                                      class="bp3-tree-node-content bp3-tree-node-content-1"
                                     >
-                                      <p
-                                        class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
-                                        style="--text-line-clamp: 1; width: 170px;"
+                                      <span
+                                        class="bp3-icon bp3-icon-chevron-right bp3-tree-node-caret bp3-tree-node-caret-closed"
+                                        icon="chevron-right"
                                       >
-                                        Kubernetes Container - Memory usage 
-                                      </p>
+                                        <svg
+                                          data-icon="chevron-right"
+                                          height="16"
+                                          viewBox="0 0 16 16"
+                                          width="16"
+                                        >
+                                          <desc>
+                                            chevron-right
+                                          </desc>
+                                          <path
+                                            d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                                            fill-rule="evenodd"
+                                          />
+                                        </svg>
+                                      </span>
+                                      <span
+                                        class="bp3-tree-node-label"
+                                      >
+                                        <div
+                                          class="Layout--horizontal StyledProps--main"
+                                        >
+                                          <p
+                                            class="StyledProps--font Text--lineclamp StyledProps--main textOverflow StyledProps--color StyledProps--color-black"
+                                            style="--text-line-clamp: 1; width: 170px;"
+                                          >
+                                            Kubernetes Container - Memory usage 
+                                          </p>
+                                        </div>
+                                      </span>
                                     </div>
-                                  </span>
-                                </div>
-                                <div
-                                  class="bp3-collapse"
-                                >
-                                  <div
-                                    aria-hidden="false"
-                                    class="bp3-collapse-body"
-                                    style="transform: translateY(-undefinedpx);"
-                                  />
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
+                                    <div
+                                      class="bp3-collapse"
+                                    >
+                                      <div
+                                        aria-hidden="false"
+                                        class="bp3-collapse-body"
+                                        style="transform: translateY(-undefinedpx);"
+                                      />
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div
-                class="StyledProps--font StyledProps--main content"
-              >
-                <form
-                  action="#"
-                  class="FormikForm--main setupContainer"
-                >
-                  <div>
+                  <div
+                    class="StyledProps--font StyledProps--main content"
+                  >
                     <h3
                       class="StyledProps--font StyledProps--font-h3 StyledProps--main sectionHeading StyledProps--color StyledProps--color-black"
                       level="3"
@@ -824,13 +824,16 @@ exports[`Test GCOMetricsHealthSource Should show please Enter Query when ther is
                       </button>
                     </div>
                   </div>
-                </form>
+                  <div
+                    class="StyledProps--font StyledProps--main rightPanel"
+                  />
+                </div>
               </div>
               <div
-                class="StyledProps--font StyledProps--main rightPanel"
+                class="StyledProps--font StyledProps--main spaceProvider"
               />
             </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

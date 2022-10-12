@@ -33,10 +33,11 @@ import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, CDOnboardingActions } from '@common/constants/TrackingConstants'
 import StepProcessing from './StepProcessing'
+import type { DelegateSuccessHandler } from '../CDOnboardingUtils'
 import css from './CreateK8sDelegate.module.scss'
 
 export interface CreateK8sDelegateProps {
-  onSuccessHandler: () => void
+  onSuccessHandler: (data: DelegateSuccessHandler) => void
   handleHelpPanel: () => void
   successRef: React.MutableRefObject<(() => void) | null>
   delegateNameRef: React.MutableRefObject<string | undefined>
@@ -157,7 +158,7 @@ export const CreateK8sDelegate = ({
             })
             setVisibleYaml(generatedYamlResponse as any)
             setLoader(false)
-            onSuccessHandler()
+            onSuccessHandler({ delegateCreated: true })
             trackEvent(CDOnboardingActions.SaveCreateOnboardingDelegate, {
               category: Category.DELEGATE,
               data: { ...stepPrevData, generatedYaml: generatedYamlResponse }
@@ -288,6 +289,7 @@ export const CreateK8sDelegate = ({
                 delegateType={delegateType}
                 replicas={replicas}
                 successRef={successRef}
+                onSuccessHandler={onSuccessHandler}
               />
             </Layout.Vertical>
           </li>

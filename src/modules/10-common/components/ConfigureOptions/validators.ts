@@ -12,6 +12,7 @@ import {
   getDurationValidationSchema,
   GetDurationValidationSchemaProps
 } from '@common/components/MultiTypeDuration/helper'
+import { getNumberFieldValidationSchema } from '@common/utils/Validation'
 
 export const VALIDATORS = {
   [ALLOWED_VALUES_TYPE.TIME]: (props?: GetDurationValidationSchemaProps) => {
@@ -23,5 +24,9 @@ export const VALIDATORS = {
     return Yup.object().shape({
       url: Yup.string().url(getString('validation.urlIsNotValid'))
     })
-  }
+  },
+  [ALLOWED_VALUES_TYPE.NUMBER]: (getString: UseStringsReturn['getString']) =>
+    Yup.object().shape({
+      numberTypeField: getNumberFieldValidationSchema(getString)
+    })
 }

@@ -7,6 +7,15 @@
 
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { KVPair } from '../types'
+import type { Dimension } from './NodeDimensionStore'
+
+export interface LayoutStyles extends Pick<Dimension, 'height' | 'width'> {
+  marginLeft?: string
+}
+
+export const COLLAPSED_MATRIX_NODE_LENGTH = 8
+export const MAX_ALLOWED_MATRIX_COLLAPSED_NODES = 4
+export const DEFAULT_MATRIX_PARALLELISM = 1
 
 export const getPositionOfAddIcon = (props: any, isRightNode?: boolean): string => {
   if (isRightNode) {
@@ -41,4 +50,36 @@ export const matrixNodeNameToJSON = (nodeName: KVPair): string => {
     return `(${Object.values(nodeName)?.join(', ')}): ` as string
   }
   return JSON.stringify(nodeName)
+}
+
+export function getSGDimensions(nodeDimensionMetaData: Dimension, index: number): LayoutStyles {
+  if (nodeDimensionMetaData?.isNodeCollapsed) {
+    return {
+      height: 118,
+      width: 134
+    }
+  }
+  const height = nodeDimensionMetaData?.height + 68 + (index > 0 ? 60 : 0)
+  const width = nodeDimensionMetaData?.width + 82 + (index > 0 ? 80 : 0)
+
+  return { height, width }
+}
+
+export const getMatrixHeight = (
+  nodeHeight: number,
+  maxChildLength: number,
+  parallelism: number,
+  showAllNodes: boolean
+): number => {
+  if (parallelism === 0) {
+    // parallel case
+    return maxChildLength * nodeHeight
+  } else if (!showAllNodes && maxChildLength < parallelism) {
+    // collapsed mode, single row
+    return nodeHeight
+  } else {
+    return (
+      (Math.floor(maxChildLength / parallelism) + Math.ceil((maxChildLength % parallelism) / parallelism)) * nodeHeight
+    )
+  }
 }

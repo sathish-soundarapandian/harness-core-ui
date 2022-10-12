@@ -187,7 +187,10 @@ function SavePipelinePopover(
     if (pipelineIdentifier === DefaultNewPipelineId) {
       await deletePipelineCache(gitDetails)
 
-      showSuccess(getString('pipelines-studio.publishPipeline'))
+      // Show toast only for Inline pipelines
+      if (!isPipelineRemote && isEmpty(updatedGitDetails)) {
+        showSuccess(getString('pipelines-studio.publishPipeline'))
+      }
 
       navigateToLocation(newPipelineId, updatedGitDetails)
       // note: without setTimeout does not redirect properly after save

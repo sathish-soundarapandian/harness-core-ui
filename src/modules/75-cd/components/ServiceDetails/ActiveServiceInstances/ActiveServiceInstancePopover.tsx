@@ -11,6 +11,7 @@ import { Card, Layout, Text } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
 import {
   AzureWebAppInstanceInfoDTO,
+  CustomDeploymentInstanceInfoDTO,
   EcsInstanceInfoDTO,
   GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams,
   GitOpsInstanceInfoDTO,
@@ -110,7 +111,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
   }
 
   const instanceData = data?.data?.instancesByBuildIdList?.[0]?.instances[instanceNum] || {}
-
+  const instanceInfoDTOProperties = (instanceData?.instanceInfoDTO as CustomDeploymentInstanceInfoDTO)?.properties || {}
   const defaultInstanceInfoData = [
     {
       label:
@@ -165,6 +166,11 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
             value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskArn || ''
           }
         ]
+      case ServiceDeploymentType.CustomDeployment:
+        return Object.keys(instanceInfoDTOProperties).map(instanceDetailsKey => ({
+          label: instanceDetailsKey,
+          value: instanceInfoDTOProperties?.[instanceDetailsKey]
+        }))
       default:
         return ((instanceData?.instanceInfoDTO as K8sInstanceInfoDTO)?.containerList || []).length
           ? [

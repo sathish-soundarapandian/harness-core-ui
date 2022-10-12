@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Container, Layout } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, Layout } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
@@ -28,6 +28,7 @@ export const GetStartedWithFF: React.FC<GetStartedWithFFProps> = ({ hidden }) =>
         <Button
           intent="primary"
           variation={ButtonVariation.PRIMARY}
+          size={ButtonSize.LARGE}
           text={getString('cf.featureFlags.getStartedWithFF')}
           onClick={() => {
             history.push(

@@ -2,6 +2,7 @@
 
 exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
 <div>
+  Help Panel
   <div
     class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
   >

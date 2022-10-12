@@ -25,6 +25,7 @@ import { useListAwsRegions } from 'services/portal'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { connectorTypes } from '@pipeline/utils/constants'
@@ -34,6 +35,7 @@ import {
   getSelectedConnectorValue,
   SelectedConnectorType
 } from '@cd/utils/connectorUtils'
+import type { ECSInfraSpecCustomStepProps } from './ECSInfraSpec'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export interface ECSInfraSpecInputFormProps {
@@ -44,22 +46,26 @@ export interface ECSInfraSpecInputFormProps {
   template?: EcsInfrastructure
   allowableTypes: AllowedTypes
   path: string
-  formik: FormikProps<EcsInfrastructure>
+  formik?: FormikProps<EcsInfrastructure>
+  customStepProps: ECSInfraSpecCustomStepProps
 }
 
-const ECSInfraSpecInputForm: React.FC<ECSInfraSpecInputFormProps> = ({
+const ECSInfraSpecInputForm = ({
   initialValues,
   allValues,
   template,
   readonly = false,
   path,
   allowableTypes,
-  formik
-}) => {
+  formik,
+  customStepProps
+}: ECSInfraSpecInputFormProps) => {
+  const { environmentRef, infrastructureRef } = customStepProps
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
   const { data: awsRegionsData } = useListAwsRegions({
     queryParams: {
@@ -83,12 +89,16 @@ const ECSInfraSpecInputForm: React.FC<ECSInfraSpecInputFormProps> = ({
       orgIdentifier,
       projectIdentifier,
       awsConnectorRef: defaultTo(initialValues.connectorRef, allValues.connectorRef),
-      region: defaultTo(initialValues.region, allValues.region)
+      region: defaultTo(initialValues.region, allValues.region),
+      envId: environmentRef,
+      infraDefinitionId: infrastructureRef
     },
-    lazy: defaultTo(
-      !(!!initialValues.connectorRef || !!initialValues.region),
-      allValues.connectorRef === RUNTIME_INPUT_VALUE || allValues.region === RUNTIME_INPUT_VALUE
-    )
+    lazy: NG_SVC_ENV_REDESIGN
+      ? !(!!environmentRef || !!infrastructureRef)
+      : defaultTo(
+          !(!!initialValues.connectorRef || !!initialValues.region),
+          allValues.connectorRef === RUNTIME_INPUT_VALUE || allValues.region === RUNTIME_INPUT_VALUE
+        )
   })
 
   const clusters: SelectOption[] = React.useMemo(() => {
@@ -123,7 +133,7 @@ const ECSInfraSpecInputForm: React.FC<ECSInfraSpecInputFormProps> = ({
             setRefValue
             gitScope={{ repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }}
             onChange={selectedConnector => {
-              formik.setFieldValue(clusterFieldName, '')
+              formik?.setFieldValue(clusterFieldName, '')
               if (!isEmpty(initialValues.region)) {
                 refetchClusters({
                   queryParams: {
@@ -152,7 +162,7 @@ const ECSInfraSpecInputForm: React.FC<ECSInfraSpecInputFormProps> = ({
               },
               onChange: selectedRegion => {
                 if (!isEmpty(initialValues.connectorRef)) {
-                  formik.setFieldValue(clusterFieldName, '')
+                  formik?.setFieldValue(clusterFieldName, '')
                   refetchClusters({
                     queryParams: {
                       accountIdentifier: accountId,

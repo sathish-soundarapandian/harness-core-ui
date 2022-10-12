@@ -13,7 +13,10 @@ import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { MonitoredServiceDTO } from 'services/cv'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getValidationLabelByNameForTemplateInputs } from '../CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
-import type { MonitoredServiceInputSetInterface } from './MonitoredServiceInputSetsTemplate.types'
+import type {
+  MonitoredServiceInputSetInterface,
+  TemplateDataInterface
+} from './MonitoredServiceInputSetsTemplate.types'
 import { GcoQueryKey } from './MonitoredServiceInputSetsTemplate.constants'
 
 export const getLabelByName = (name: string, getString: UseStringsReturn['getString']): string => {
@@ -179,4 +182,18 @@ export const getPopulateSource = (
     })
   }
   return populateSource
+}
+
+export const getQueryParamsForTemplateInputSetYaml = (
+  templateQuery: TemplateDataInterface
+): { accountIdentifier: string; orgIdentifier?: string; projectIdentifier?: string } => {
+  const { accountId, orgIdentifier, projectIdentifier } = templateQuery
+  const accountIdQuery = { accountIdentifier: accountId }
+  const orgIdentifierQuery = orgIdentifier ? { orgIdentifier } : {}
+  const projectIdentifierQuery = projectIdentifier ? { projectIdentifier } : {}
+  return {
+    ...accountIdQuery,
+    ...orgIdentifierQuery,
+    ...projectIdentifierQuery
+  }
 }

@@ -378,7 +378,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
                 featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
                 text={getString('pipeline.retryPipeline')}
                 onClick={retryPipeline}
-                disabled={isPipelineInvalid}
+                disabled={!canRerun || isPipelineInvalid}
               />
             )}
             {!isExecutionDetailsView && (

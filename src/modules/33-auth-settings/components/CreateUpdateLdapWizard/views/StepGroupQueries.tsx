@@ -334,8 +334,7 @@ export const StepGroupQueries: React.FC<
   StepProps<CreateUpdateLdapWizardProps> & LdapWizardStepProps<LdapGroupSettings[]>
 > = props => {
   const { getString } = useStrings()
-  const { stepData, name, updateStepData, auxilliaryData, createUpdateActionProps } = props
-  const { isUpdateInProgress, createUpdateError, triggerSaveData } = createUpdateActionProps || {}
+  const { stepData, name, updateStepData, auxilliaryData } = props
   const [groupSettingsList, setGroupSettingsList] = useState<LdapGroupSettingsDraft[]>(stepData || [])
   const [isAddSettingEnabled, setIsAddSettingEnabled] = useState<boolean>(true)
   const { accountId } = useParams<AccountPathProps>()
@@ -470,7 +469,6 @@ export const StepGroupQueries: React.FC<
           <Container className={css.settingsListCtr}>{GroupQueryListPreview}</Container>
         )}
       </Layout.Vertical>
-      {createUpdateError}
       <Layout.Horizontal className={css.stepCtaContainer}>
         <Button
           onClick={() => {
@@ -485,12 +483,11 @@ export const StepGroupQueries: React.FC<
         />
         <Button
           intent="primary"
-          disabled={isUpdateInProgress}
           onClick={() => {
             onGroupQueriesSave()
-            triggerSaveData?.()
+            props.nextStep?.()
           }}
-          text={getString('save')}
+          text={getString('continue')}
           rightIcon="chevron-right"
           data-testid="submit-group-query-step"
         />

@@ -15,7 +15,7 @@ import type {
   StageElementConfig,
   StageElementWrapperConfig
 } from 'services/pipeline-ng'
-import type { StringKeys, UseStringsReturn } from 'framework/strings'
+import type { StringKeys } from 'framework/strings'
 import type {
   GetExecutionStrategyYamlQueryParams,
   Infrastructure,
@@ -627,26 +627,4 @@ export const isSshOrWinrmDeploymentType = (deploymentType: string): boolean => {
 
 export const withoutSideCar = (deploymentType: string): boolean => {
   return isSshOrWinrmDeploymentType(deploymentType)
-}
-
-interface Params {
-  getString: UseStringsReturn['getString']
-  resolvedCustomDeploymentDetails?: { [key: string]: string | string[] }
-}
-
-export const getLinkedTemplateFromResolvedCustomDeploymentDetails = (params: Params) => {
-  const { resolvedCustomDeploymentDetails, getString } = params
-  const customDeploymentTemplateName = get(resolvedCustomDeploymentDetails, 'name', '') as string
-  const linkedTemplateRefs = get(resolvedCustomDeploymentDetails, 'linkedTemplateRefs', [])
-
-  return !isEmpty(linkedTemplateRefs)
-    ? {
-        linkedTemplate: {
-          identifiers: linkedTemplateRefs as string[],
-          checkboxLabel:
-            customDeploymentTemplateName &&
-            getString('pipeline.customDeployment.seeOnlyTemplatesFor', { name: customDeploymentTemplateName })
-        }
-      }
-    : {}
 }

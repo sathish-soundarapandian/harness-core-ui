@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudio'
+import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { DeploymentTemplate } from '../DeploymentTemplate'
 
 jest.mock('@templates-library/components/TemplateInputs/TemplateInputs', () => ({

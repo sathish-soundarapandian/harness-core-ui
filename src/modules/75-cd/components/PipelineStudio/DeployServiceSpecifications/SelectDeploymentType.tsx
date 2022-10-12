@@ -105,12 +105,12 @@ export default function SelectDeploymentType({
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
-  const { SSH_NG, AZURE_WEBAPP_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE } = useFeatureFlags()
+  const { SSH_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE } = useFeatureFlags()
 
   // Supported in NG (Next Gen - The one for which you are coding right now)
   const ngSupportedDeploymentTypes = React.useMemo(() => {
-    return getNgSupportedDeploymentTypes({ SSH_NG, AZURE_WEBAPP_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE })
-  }, [SSH_NG, AZURE_WEBAPP_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE])
+    return getNgSupportedDeploymentTypes({ SSH_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE })
+  }, [SSH_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE])
 
   // Suppported in CG (First Gen - Old Version of Harness App)
   const cgSupportedDeploymentTypes: DeploymentTypeItem[] = React.useMemo(() => {

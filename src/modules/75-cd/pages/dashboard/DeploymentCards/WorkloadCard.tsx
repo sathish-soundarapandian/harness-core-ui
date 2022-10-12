@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import type { WorkloadDateCountInfo, LastWorkloadInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ExecutorInfoDTO } from 'services/pipeline-ng'
 import ServiceCardWithChart from './CardWithChart'
 import css from '../CDDashboardPage.module.scss'
 export interface WorkloadCardProps {
@@ -51,7 +52,7 @@ export default function WorkloadCard({
   return (
     <ServiceCardWithChart
       title={serviceName}
-      message={lastExecuted?.triggerType}
+      message={lastExecuted?.triggerType as ExecutorInfoDTO['triggerType']}
       profileUrl={lastExecuted?.authorInfo?.url}
       username={lastExecuted?.authorInfo?.name}
       startTime={lastExecuted?.startTime as number}

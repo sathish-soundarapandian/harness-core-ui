@@ -7,18 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly canvas: string
-  readonly closeBtn: string
   readonly container: string
-  readonly content: string
-  readonly leftBar: string
-  readonly logoImage: string
-  readonly pipelineName: string
-  readonly savePublishBtn: string
-  readonly secondaryBar: string
-  readonly selected: string
-  readonly title: string
-  readonly topBar: string
-  readonly topButtons: string
 }
 export default styles

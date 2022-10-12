@@ -64,7 +64,10 @@ describe('EcsBlueGreenSwapTargetGroupsStep tests', () => {
         identifier: 'Step_1',
         name: 'Step 1',
         timeout: '30m',
-        type: StepType.EcsBlueGreenSwapTargetGroups
+        type: StepType.EcsBlueGreenSwapTargetGroups,
+        spec: {
+          doNotDownsizeOldService: false
+        }
       })
     )
   })

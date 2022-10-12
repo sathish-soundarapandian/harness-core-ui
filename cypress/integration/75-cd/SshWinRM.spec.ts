@@ -16,7 +16,7 @@ import {
   featureFlagsCall
 } from '../../support/70-pipeline/constants'
 
-describe('Ssh/WinRM -E2E flow', () => {
+describe.skip('Ssh/WinRM -E2E flow', () => {
   const serviceV2Ssh = `/ng/api/servicesV2/list/access?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&type=Ssh&gitOpsEnabled=false`
   const artifactoryConnectorsCall = `/ng/api/connectors?accountIdentifier=${accountId}&type=Artifactory&searchTerm=&pageIndex=0&pageSize=10&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}`
   const repositoriesDetailCall = `/ng/api/artifacts/artifactory/repositoriesDetails?routingId=accountId&connectorRef=artifactorytest&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&repositoryType=generic`

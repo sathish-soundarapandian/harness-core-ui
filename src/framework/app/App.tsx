@@ -5,18 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, Suspense } from 'react'
+import React, { useEffect, Suspense } from 'react'
 
 import { useParams } from 'react-router-dom'
 import { RestfulProvider } from 'restful-react'
 import { FocusStyleManager } from '@blueprintjs/core'
-import {
-  TooltipContextProvider,
-  PageSpinner,
-  useToaster,
-  MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY
-} from '@wings-software/uicore'
-import { tooltipDictionary } from '@wings-software/ng-tooltip'
+import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY } from '@wings-software/uicore'
 import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
@@ -30,7 +24,6 @@ import RouteDestinationsWithoutAuth from 'modules/RouteDestinationsWithoutAuth'
 import AppErrorBoundary from 'framework/utils/AppErrorBoundary/AppErrorBoundary'
 import { StringsContextProvider } from 'framework/strings/StringsContextProvider'
 import { useLogout } from 'framework/utils/SessionUtils'
-import { NGTooltipEditorPortal } from 'framework/tooltip/TooltipEditor'
 import SecureStorage from 'framework/utils/SecureStorage'
 import { SideNavProvider } from 'framework/SideNavStore/SideNavContext'
 import { useRefreshToken } from 'services/portal'
@@ -42,6 +35,7 @@ import { ThirdPartyIntegrations } from '3rd-party/ThirdPartyIntegrations'
 import { useGlobalEventListener } from '@common/hooks'
 import HelpPanelProvider from 'framework/utils/HelpPanelProvider'
 import './App.scss'
+import { ToolTipProvider } from 'framework/tooltip/TooltipContext'
 
 const RouteDestinations = React.lazy(() => import('modules/RouteDestinations'))
 
@@ -61,9 +55,6 @@ interface AppProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   strings: Record<string, any>
 }
-
-const Harness = (window.Harness = window.Harness || {})
-const PREVIEW_TOOLTIP_DATASET_KEY = 'previewTooltipDataset'
 
 export const getRequestOptions = (): Partial<RequestInit> => {
   const token = SessionToken.getToken()
@@ -122,12 +113,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     }
   }
 
-  const [showTooltipEditor, setShowTooltipEditor] = useState(false)
-  const [tooltipDictionaryContext, setTooltipDictionaryContext] = useState(tooltipDictionary)
-
-  Harness.openNgTooltipEditor = () => setShowTooltipEditor(true)
-  Harness.openTooltipEditor = () => setShowTooltipEditor(true)
-
   const globalResponseHandler = (response: Response): void => {
     if (!response.ok) {
       switch (response.status) {
@@ -184,32 +169,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     }
   })
 
-  const onEditorClose = React.useCallback(() => {
-    setShowTooltipEditor(false)
-    setTooltipDictionaryContext(tooltipDictionary)
-  }, [])
-
-  const onPreviewDatasetFromLocalStorage = React.useCallback(() => {
-    if (showTooltipEditor) {
-      const fromLocalStorage = localStorage.getItem(PREVIEW_TOOLTIP_DATASET_KEY)
-      if (typeof fromLocalStorage === 'string') {
-        try {
-          const parsed = JSON.parse(fromLocalStorage)
-          const isExpired = Date.now() > parsed?.expiry
-          if (!isExpired) {
-            setTooltipDictionaryContext(parsed.value)
-          } else {
-            setTooltipDictionaryContext(tooltipDictionary)
-            localStorage.removeItem(PREVIEW_TOOLTIP_DATASET_KEY)
-          }
-        } catch (e) {
-          setTooltipDictionaryContext(tooltipDictionary)
-          window.alert(`Error while parsing preview dataset - ${e}`)
-        }
-      }
-    }
-  }, [showTooltipEditor])
-
   return (
     <RestfulProvider
       base="/"
@@ -219,7 +178,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       onResponse={globalResponseHandler}
     >
       <StringsContextProvider initialStrings={props.strings}>
-        <TooltipContextProvider initialTooltipDictionary={tooltipDictionaryContext}>
+        <ToolTipProvider>
           <PreferenceStoreProvider>
             <AppStoreProvider>
               <AppErrorBoundary>
@@ -231,11 +190,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
                           <Suspense fallback={<PageSpinner />}>
                             <RouteDestinations />
                           </Suspense>
-                          <NGTooltipEditorPortal
-                            showTooltipEditor={showTooltipEditor}
-                            onEditorClose={onEditorClose}
-                            setPreviewDatasetFromLocalStorage={onPreviewDatasetFromLocalStorage}
-                          />
                         </SideNavProvider>
                       </PermissionsProvider>
                     </HelpPanelProvider>
@@ -245,7 +199,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
               </AppErrorBoundary>
             </AppStoreProvider>
           </PreferenceStoreProvider>
-        </TooltipContextProvider>
+        </ToolTipProvider>
       </StringsContextProvider>
     </RestfulProvider>
   )

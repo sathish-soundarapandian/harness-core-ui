@@ -45,7 +45,7 @@ jest.mock('@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout
             setFieldValue('timeStampFormat', '*')
             setFieldValue('serviceInstance', '*')
             setFieldValue('logIndexes', '*')
-            setFieldValue('identify_timestamp', '*')
+            setFieldValue('identifyTimestamp', '*')
             setFieldValue('messageIdentifier', '*')
           }}
         >

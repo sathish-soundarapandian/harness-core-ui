@@ -22,8 +22,7 @@ import { LaunchButton } from '../LaunchButton/LaunchButton'
 export default function AccountSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { NG_LICENSES_ENABLED, OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE } = useFeatureFlags()
-  const NG_DEPLOYMENT_FREEZE = false
+  const { NG_LICENSES_ENABLED, OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE, NG_DEPLOYMENT_FREEZE } = useFeatureFlags()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
   const { data: accountData } = useGetAccountNG({
     accountIdentifier: accountId,

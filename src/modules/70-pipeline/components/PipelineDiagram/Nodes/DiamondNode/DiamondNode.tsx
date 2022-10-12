@@ -66,7 +66,6 @@ export function DiamondNodeWidget(props: any): JSX.Element {
         className={cx(
           cssDefault.defaultCard,
           css.diamond,
-
           {
             [cssDefault.selected]: isSelected,
             [cssDefault.failed]: stepStatus === ExecutionStatusEnum.Failed,
@@ -76,6 +75,9 @@ export function DiamondNodeWidget(props: any): JSX.Element {
           },
           { [css.top]: props?.data?.graphType === PipelineGraphType.STAGE_GRAPH }
         )}
+        style={{
+          ...props?.customNodeStyle
+        }}
         draggable={true}
         onDragStart={event => {
           event.stopPropagation()
@@ -164,7 +166,7 @@ export function DiamondNodeWidget(props: any): JSX.Element {
             {...secondaryIconProps}
           />
         )}
-        {props.skipCondition && (
+        {props?.skipCondition && (
           <div className={css.conditional}>
             <Text
               tooltip={`Skip condition:\n${props.skipCondition}`}

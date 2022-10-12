@@ -14,10 +14,6 @@ import templateFactory from '@templates-library/components/Templates/TemplatesFa
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import { StageTemplate } from '@templates-library/components/Templates/StageTemplate/StageTemplate'
 import { PipelineTemplate } from '@templates-library/components/Templates/PipelineTemplate/PipelineTemplate'
-import { ServiceTemplate } from '@templates-library/components/Templates/ServiceTemplate/ServiceTemplate'
-import { InfrastructureTemplate } from '@templates-library/components/Templates/InfrastructureTemplate/InfrastructureTemplate'
-import { StepGroupTemplate } from '@templates-library/components/Templates/StepGroupTemplate/StepGroupTemplate'
-import { ExecutionTemplate } from '@templates-library/components/Templates/ExecutionTemplate/ExecutionTemplate'
 // eslint-disable-next-line no-restricted-imports
 import { MonitoredServiceTemplate } from '@cv/components/MonitoredServiceTemplate/components/MonitoredServiceTemplate'
 
@@ -30,10 +26,6 @@ describe('templatesUtils tests', () => {
     templateFactory.registerTemplate(new StepTemplate())
     templateFactory.registerTemplate(new StageTemplate())
     templateFactory.registerTemplate(new PipelineTemplate())
-    templateFactory.registerTemplate(new ServiceTemplate())
-    templateFactory.registerTemplate(new InfrastructureTemplate())
-    templateFactory.registerTemplate(new StepGroupTemplate())
-    templateFactory.registerTemplate(new ExecutionTemplate())
     templateFactory.registerTemplate(new MonitoredServiceTemplate())
   })
 
@@ -51,11 +43,7 @@ describe('templatesUtils tests', () => {
       { disabled: false, label: 'Step', value: 'Step' },
       { disabled: false, label: 'Stage', value: 'Stage' },
       { disabled: false, label: 'Pipeline', value: 'Pipeline' },
-      { disabled: false, label: 'Monitored Service', value: 'MonitoredService' },
-      { disabled: true, label: 'Service', value: 'Service' },
-      { disabled: true, label: 'Infrastructure', value: 'Infrastructure' },
-      { disabled: true, label: 'Step Group', value: 'StepGroup' },
-      { disabled: true, label: 'Execution', value: 'Execution' }
+      { disabled: false, label: 'Monitored Service', value: 'MonitoredService' }
     ])
     expect(getAllowedTemplateTypes(Scope.PROJECT, { [TemplateType.MonitoredService]: false })).toEqual(
       expect.arrayContaining([

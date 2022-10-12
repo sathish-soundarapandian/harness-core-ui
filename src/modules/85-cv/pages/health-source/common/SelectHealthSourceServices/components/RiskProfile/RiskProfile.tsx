@@ -15,6 +15,7 @@ import { ServiceInstanceLabel } from '@cv/pages/health-source/common/ServiceInst
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { getRiskCategoryOptions } from './RiskProfile.utils'
 import { FieldNames } from './RiskProfile.constant'
+import type { SelectHealthSourceServicesProps } from '../../SelectHealthSourceServices.types'
 import css from './RiskProfile.module.scss'
 
 interface RiskProfileProps {
@@ -26,6 +27,7 @@ interface RiskProfileProps {
   isTemplate?: boolean
   expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean
+  fieldNames?: SelectHealthSourceServicesProps['fieldNames']
 }
 
 export function RiskProfile(props: RiskProfileProps): JSX.Element {
@@ -37,12 +39,20 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
     riskCategory,
     isTemplate,
     expressions,
-    isConnectorRuntimeOrExpression
+    isConnectorRuntimeOrExpression,
+    fieldNames = {}
   } = props
   const { error, loading, data } = metricPackResponse
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
   const metricPackOptions = useMemo(() => getRiskCategoryOptions(data?.resource), [data])
+
+  const { riskProfileCategory, higherBaselineDeviation, lowerBaselineDeviation } = fieldNames
+
+  const riskProfileCategeoryName = riskProfileCategory ?? FieldNames.RISK_CATEGORY
+  const higherBaselineName = higherBaselineDeviation ?? FieldNames.HIGHER_BASELINE_DEVIATION
+  const lowerBaselineName = lowerBaselineDeviation ?? FieldNames.LOWER_BASELINE_DEVIATION
+
   useEffect(() => {
     if (error) {
       clear()
@@ -58,7 +68,7 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
   let metricPackContent: React.ReactNode = <Container />
   if (loading) {
     metricPackContent = (
-      <Container>
+      <Container data-testid="metricPackOptions-loading">
         <Text tooltipProps={{ dataTooltipId: 'riskProfileBaselineDeviation' }} className={css.groupLabel}>
           {getString('cv.monitoringSources.baselineDeviation')}
         </Text>
@@ -77,7 +87,7 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
     metricPackContent = (
       <FormInput.RadioGroup
         label={getString('cv.monitoringSources.riskCategoryLabel')}
-        name={FieldNames.RISK_CATEGORY}
+        name={riskProfileCategeoryName}
         items={metricPackOptions}
         key={riskCategory}
       />
@@ -87,17 +97,13 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
   return (
     <Container className={css.main}>
       {metricPackContent}
+
       <Container className={css.checkBoxGroup}>
         <Text className={css.groupLabel}>{getString('cv.monitoringSources.baselineDeviation')}</Text>
-        <FormInput.CheckBox
-          label={getString('cv.monitoringSources.higherCounts')}
-          name={FieldNames.HIGHER_BASELINE_DEVIATION}
-        />
-        <FormInput.CheckBox
-          label={getString('cv.monitoringSources.lowerCounts')}
-          name={FieldNames.LOWER_BASELINE_DEVIATION}
-        />
+        <FormInput.CheckBox label={getString('cv.monitoringSources.higherCounts')} name={higherBaselineName} />
+        <FormInput.CheckBox label={getString('cv.monitoringSources.lowerCounts')} name={lowerBaselineName} />
       </Container>
+
       {continuousVerificationEnabled ? (
         isTemplate ? (
           <>

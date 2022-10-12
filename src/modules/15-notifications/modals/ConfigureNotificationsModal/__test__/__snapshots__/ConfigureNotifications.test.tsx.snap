@@ -74,7 +74,7 @@ exports[`ConfigureNotifications Email 1`] = `
                     </p>
                   </div>
                   <div
-                    class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
+                    class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
                   >
                     <div
                       class="StyledProps--font StyledProps--main pointer"
@@ -301,7 +301,7 @@ exports[`ConfigureNotifications Microsoft Teams - edit case 1`] = `
                     </p>
                   </div>
                   <div
-                    class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
+                    class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
                   >
                     <div
                       class="StyledProps--font StyledProps--main pointer"
@@ -519,7 +519,7 @@ exports[`ConfigureNotifications Microsoft Teams - edit case 2`] = `
                     </p>
                   </div>
                   <div
-                    class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
+                    class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
                   >
                     <div
                       class="StyledProps--font StyledProps--main pointer"
@@ -736,7 +736,7 @@ exports[`ConfigureNotifications Microsoft Teams 1`] = `
                     </p>
                   </div>
                   <div
-                    class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
+                    class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
                   >
                     <div
                       class="StyledProps--font StyledProps--main pointer"
@@ -899,7 +899,7 @@ exports[`ConfigureNotifications PagerDuty 1`] = `
                   notifications.labelSlackUserGroups
                 </p>
                 <div
-                  class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
+                  class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
                 >
                   <div
                     class="StyledProps--font StyledProps--main pointer"
@@ -1092,7 +1092,7 @@ exports[`ConfigureNotifications Slack 1`] = `
                     </p>
                   </div>
                   <div
-                    class="StyledProps--font StyledProps--main bp3-input userGroupInputContainer StyledProps--border StyledProps--padding-xsmall"
+                    class="StyledProps--font StyledProps--main bp3-input placeholderContainer StyledProps--border StyledProps--padding-xsmall"
                   >
                     <div
                       class="StyledProps--font StyledProps--main pointer"

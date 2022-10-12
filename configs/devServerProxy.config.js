@@ -124,6 +124,10 @@ module.exports = {
     pathRewrite: { '^/chaos': '' },
     target: process.env.CHAOS_UI_URL || 'https://localhost:8184'
   },
+  '/et/api': {
+    pathRewrite: { '^/et': '' },
+    target: process.env.ERROR_TRACKING_URL || 'http://localhost:9191'
+  },
   '/et': {
     pathRewrite: { '^/et': '' },
     target: process.env.ERROR_TRACKING_URL || 'http://localhost:9191'

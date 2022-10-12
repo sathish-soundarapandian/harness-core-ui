@@ -70,3 +70,9 @@
   position: relative;
   overflow-y: scroll;
 }
+
+.healthSourceListContainer {
+  flex-wrap: wrap;
+  gap: var(--spacing-xxxlarge) var(--spacing-small);
+  margin: 0 var(--spacing-xxxlarge) var(--spacing-large) !important;
+}

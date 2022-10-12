@@ -44,8 +44,8 @@ export function ExecutionListEmpty({
     case 'sto':
       icon = 'sto-color-filled'
       illustration = stoExecutionListIllustration
-      noExecutionsText = 'stoSteps.noScansText'
-      noExecutionsSubText = 'stoSteps.noScansRunPipelineText'
+      noExecutionsText = 'sto.noScansText'
+      noExecutionsSubText = 'sto.noScansRunPipelineText'
       break
 
     default:

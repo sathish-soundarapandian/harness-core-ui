@@ -82,8 +82,8 @@ const TriggerTypes = {
 export enum ConnectionType {
   Repo = 'Repo',
   Account = 'Account',
-  Region = 'Region', // awscodecommit
-  Project = 'Project' // Azure Repos
+  Region = 'Region', // Used for AWS CodeCommit
+  Project = 'Project' // Project level Azure Repo connector is the same as an Account level GitHub/GitLab connector
 }
 
 export const buildTypeInputNames: Record<string, string> = {
@@ -472,11 +472,7 @@ function CICodebaseInputSetFormInternal({
           : connectorDetails?.data?.connector.spec.type
       )
       setConnectorUrl(connectorDetails?.data?.connector.spec.url)
-      if (
-        [ConnectionType.Project, ConnectionType.Repo, ConnectionType.Region].includes(
-          connectorDetails?.data?.connector?.spec?.type
-        )
-      ) {
+      if ([ConnectionType.Repo, ConnectionType.Region].includes(connectorDetails?.data?.connector?.spec?.type)) {
         formik.setFieldValue(codeBaseInputFieldFormName.repoName, undefined)
       }
     }

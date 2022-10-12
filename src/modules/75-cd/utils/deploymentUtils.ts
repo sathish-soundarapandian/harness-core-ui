@@ -42,13 +42,12 @@ export interface DeploymentTypeItem {
 
 export interface GetNgSupportedDeploymentTypesProps {
   SSH_NG?: boolean
-  AZURE_WEBAPP_NG?: boolean
   ECS_NG?: boolean
   NG_DEPLOYMENT_TEMPLATE?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { SSH_NG, AZURE_WEBAPP_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE } = props
+  const { SSH_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -65,6 +64,11 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.serverlessAwsLambda',
       icon: deploymentIconMap[ServiceDeploymentType.ServerlessAwsLambda],
       value: ServiceDeploymentType.ServerlessAwsLambda
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.azureWebApp',
+      icon: deploymentIconMap[ServiceDeploymentType.AzureWebApp],
+      value: ServiceDeploymentType.AzureWebApp
     }
   ]
 
@@ -78,13 +82,6 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.winrm',
       icon: deploymentIconMap[ServiceDeploymentType.WinRm],
       value: ServiceDeploymentType.WinRm
-    })
-  }
-  if (AZURE_WEBAPP_NG) {
-    baseTypes.push({
-      label: 'pipeline.serviceDeploymentTypes.azureWebApp',
-      icon: deploymentIconMap[ServiceDeploymentType.AzureWebApp],
-      value: ServiceDeploymentType.AzureWebApp
     })
   }
   if (ECS_NG) {

@@ -22,7 +22,8 @@ import {
 import type { GetNodeMethod, NodeDetails, NodeIds, PipelineGraphState, SVGPathRecord } from '../../types'
 import { NodeType } from '../../types'
 import GraphConfigStore from '../../PipelineGraph/GraphConfigStore'
-import { Dimension, Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
+import { Dimensions, useNodeDimensionContext } from '../NodeDimensionStore'
+import { getSGDimensions, LayoutStyles } from '../utils'
 import css from './StepGroupGraph.module.scss'
 
 interface StepGroupGraphProps {
@@ -44,10 +45,7 @@ interface StepGroupGraphProps {
   hideLinks?: boolean
   hideAdd?: boolean
   setVisibilityOfAdd: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-interface LayoutStyles extends Pick<Dimension, 'height' | 'width'> {
-  marginLeft?: string
+  isParentMatrix?: boolean
 }
 
 const getCalculatedStyles = (data: PipelineGraphState[], childrenDimensions: Dimensions): LayoutStyles => {
@@ -67,17 +65,17 @@ const getCalculatedStyles = (data: PipelineGraphState[], childrenDimensions: Dim
         // check all parallel nodes
         const dimensionMetaData = childrenDimensions[childNode]
 
-        let hh = dimensionMetaData?.height + (dimensionMetaData?.isNodeCollapsed ? 0 : 68) // padding for StepGroupNode
-        let ww = dimensionMetaData?.width + (dimensionMetaData?.isNodeCollapsed ? 0 : 82) // padding for StepGroupNode
+        let hh = dimensionMetaData?.height + (dimensionMetaData?.isNodeCollapsed ? 0 : 60) // padding for StepGroupNode
+        let ww = dimensionMetaData?.width + (dimensionMetaData?.isNodeCollapsed ? 0 : 80) // padding for StepGroupNode
 
         if (dimensionMetaData?.type === 'matrix') {
           hh += 45
-          ww -= 20
+          ww -= 25
         }
         nodeHeight += hh || 0 // height added for all child (68 -> padding of StepGroupNode)
         nodeWidth = Math.max(nodeWidth, ww || 0) // width is max of all child nodes
 
-        nodeHeight += index > 0 ? 120 : 20 //nodeGap for parallel nodes
+        nodeHeight += index > 0 ? 120 : 32 //nodeGap for parallel nodes
       })
       if (node.children?.length && data.length > 0) {
         width += 40 // for parallel node -> parallel link joint
@@ -91,12 +89,17 @@ const getCalculatedStyles = (data: PipelineGraphState[], childrenDimensions: Dim
       let nodeWidth = 0
       childNodesId.forEach((childNode, index) => {
         const dimensionMetaData = childrenDimensions[childNode]
-        const hh = dimensionMetaData?.height ? dimensionMetaData?.height + 68 : 138
-        const ww = dimensionMetaData?.width ? dimensionMetaData?.width + 82 + (index > 0 ? 80 : 0) : 150
+        const sgDimension = dimensionMetaData?.height ? getSGDimensions(dimensionMetaData, index) : undefined
+        const hh = defaultTo(sgDimension?.height, 118) // 118 (node+text)
+        let ww = defaultTo(sgDimension?.width, 134)
         nodeHeight += hh
+        if (index > 0) {
+          ww += 20
+          nodeHeight += 26 //26(padding beteween the text and next node)
+        }
         nodeWidth = Math.max(nodeWidth, ww)
       })
-      width += nodeWidth + 10
+      width += nodeWidth + 20
 
       maxChildLength = Math.max(maxChildLength, node?.children?.length || 0)
       finalHeight = Math.max(finalHeight, nodeHeight)
@@ -109,7 +112,7 @@ const getCalculatedStyles = (data: PipelineGraphState[], childrenDimensions: Dim
 function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   const [svgPath, setSvgPath] = useState<SVGPathRecord[]>([])
   const [treeRectangle, setTreeRectangle] = useState<DOMRect | void>()
-  const [layoutStyles, setLayoutStyles] = useState<LayoutStyles>({ height: 100, width: 70 })
+  const [layoutStyles, setLayoutStyles] = useState<LayoutStyles>({ height: 100, width: 64 })
   const [state, setState] = useState<PipelineGraphState[]>([])
   const graphRef = useRef<HTMLDivElement>(null)
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component

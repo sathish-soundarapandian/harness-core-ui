@@ -5,21 +5,18 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { HarnessDocTooltip, Page, Switch } from '@harness/uicore'
-import { noop } from 'lodash-es'
+import { HarnessDocTooltip, Page } from '@harness/uicore'
 import React, { ReactElement } from 'react'
 import { useParams } from 'react-router-dom'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 import { useStrings } from 'framework/strings'
+import { GlobalFreezeToggle } from '../GlobalFreezeToggle/GlobalFreezeToggle'
 
-export function FreezeWindowListHeader(): ReactElement {
+export function FreezeWindowListHeader({ freezeListLoading }: { freezeListLoading: boolean }): ReactElement {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
-
-  // TODO: integrate global toggle handling here
-  const onGlobalFreezeToggle = noop
 
   return (
     <Page.Header
@@ -32,14 +29,7 @@ export function FreezeWindowListHeader(): ReactElement {
       breadcrumbs={
         <NGBreadcrumbs links={getLinkForAccountResources({ accountId, orgIdentifier, projectIdentifier, getString })} />
       }
-      toolbar={
-        <Switch
-          large
-          checked
-          label={getString('freezeWindows.disableAllDeployments')}
-          onChange={() => onGlobalFreezeToggle()}
-        />
-      }
+      toolbar={<GlobalFreezeToggle freezeListLoading={freezeListLoading} />}
     />
   )
 }

@@ -113,10 +113,9 @@ export const InstanceCountHistory: React.FC = () => {
       .slice(0, 49)
       .map((envSeries, index) => ({
         custom: Object.keys(envSeries)
-          .slice(0, -1)
           .map(envKey => ({ x: parseInt(envKey), y: envSeries[envKey] }))
           .sort((valA, valB) => valA.x - valB.x),
-        data: Object.values(envSeries).slice(0, -1),
+        data: Object.values(envSeries),
         color: instanceCountHistoryChartColors[index % instanceCountHistoryChartColors.length]
       }))
   }, [data])

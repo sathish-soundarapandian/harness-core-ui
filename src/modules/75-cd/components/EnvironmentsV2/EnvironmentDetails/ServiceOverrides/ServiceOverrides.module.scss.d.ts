@@ -11,6 +11,8 @@ declare const styles: {
   readonly addOverrideBtn: string
   readonly dialogStyles: string
   readonly headerRow: string
+  readonly overridesAccordionDetails: string
+  readonly overridesAccordionPanel: string
   readonly rowValue: string
   readonly serviceOverrideDialog: string
   readonly serviceOverridesContainer: string
@@ -18,5 +20,6 @@ declare const styles: {
   readonly tooltip: string
   readonly valueColumn: string
   readonly valueString: string
+  readonly variableListButtons: string
 }
 export default styles

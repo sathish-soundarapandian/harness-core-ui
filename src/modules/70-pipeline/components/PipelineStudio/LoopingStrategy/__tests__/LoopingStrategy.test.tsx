@@ -231,7 +231,7 @@ describe('<LoopingStrategy /> tests', () => {
     await waitFor(() => findByTextGlobal(document.body, changeTypeModalTitle))
 
     // apply the changes
-    const apply = await findByTextGlobal(document.body, 'applyChanges')
+    const apply = await findByTextGlobal(document.body, 'pipeline.loopingStrategy.toggleTypeModal.switch')
     userEvent.click(apply)
 
     const editor2 = (await findByTestId('editor')) as HTMLTextAreaElement
@@ -261,7 +261,7 @@ describe('<LoopingStrategy /> tests', () => {
     await waitFor(() => findByTextGlobal(document.body, deleteModalTitle))
 
     // apply the changes
-    const apply = await findByTextGlobal(document.body, 'applyChanges')
+    const apply = await findByTextGlobal(document.body, 'common.remove')
     userEvent.click(apply)
 
     expect(queryByTestId('editor')).not.toBeInTheDocument()

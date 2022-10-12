@@ -40,6 +40,7 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import executionFactory from '@pipeline/factories/ExecutionFactory'
 
 import ExecutionLandingPage from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionLandingPage'
+import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
@@ -47,7 +48,7 @@ import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
-import CIPipelineStudio from '@ci/pages/pipeline-studio/CIPipelineStudio'
+import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import featureFactory from 'framework/featureStore/FeaturesFactory'
@@ -66,7 +67,6 @@ import CIDashboardPage from './pages/dashboard/CIDashboardPage'
 import GetStartedWithCI from './pages/get-started-with-ci/GetStartedWithCI'
 import CIHomePage from './pages/home/CIHomePage'
 import CITrialHomePage from './pages/home/CITrialHomePage'
-import { CITemplateStudioWrapper } from './components/TemplateStudio/CITemplateStudioWrapper/CITemplateStudioWrapper'
 
 executionFactory.registerCardInfo(StageType.BUILD, {
   icon: 'ci-main',
@@ -313,7 +313,7 @@ export default (
 
     {
       PipelineRouteDestinations({
-        pipelineStudioComponent: CIPipelineStudio,
+        pipelineStudioComponent: PipelineStudio,
         pipelineStudioPageName: PAGE_NAME.CIPipelineStudio,
         pipelineDeploymentListComponent: CIPipelineDeploymentList,
         pipelineDeploymentListPageName: PAGE_NAME.CIPipelineDeploymentList,
@@ -372,7 +372,7 @@ export default (
 
     {
       TemplateRouteDestinations({
-        templateStudioComponent: CITemplateStudioWrapper,
+        templateStudioComponent: TemplateStudio,
         templateStudioPageName: PAGE_NAME.CITemplateStudioWrapper,
         moduleParams,
         licenseRedirectData,

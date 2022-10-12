@@ -20,6 +20,7 @@ declare const styles: {
   readonly sampleDataSpinner: string
   readonly sectionHeading: string
   readonly setupContainer: string
+  readonly spaceProvider: string
   readonly textAreaLabel: string
   readonly tooManyRecords: string
   readonly validationContainer: string

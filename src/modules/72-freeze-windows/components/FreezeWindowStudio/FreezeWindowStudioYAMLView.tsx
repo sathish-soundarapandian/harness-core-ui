@@ -11,7 +11,6 @@ import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
 import { ButtonVariation, Tag } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
-import type { GetYamlSchemaQueryParams } from 'services/cd-ng'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import RbacButton from '@rbac/components/Button/Button'
@@ -32,13 +31,15 @@ export const FreezeWindowStudioYAMLView = () => {
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const {
     state: { isYamlEditable, freezeObj },
-    isReadonly,
+    isReadOnly,
     updateYamlView,
     updateFreeze,
+    drawerType,
     setYamlHandler: setYamlHandlerContext
   } = React.useContext(FreezeWindowContext)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
+  const isDrawerOpened = !!drawerType
 
   React.useEffect(() => {
     // Edit mode
@@ -52,7 +53,7 @@ export const FreezeWindowStudioYAMLView = () => {
   }, [yamlHandler, setYamlHandlerContext])
 
   React.useEffect(() => {
-    if (yamlHandler) {
+    if (yamlHandler && !isDrawerOpened) {
       Interval = window.setInterval(() => {
         try {
           const freezeFromYaml = parse(yamlHandler.getLatestYaml())?.freeze
@@ -74,14 +75,13 @@ export const FreezeWindowStudioYAMLView = () => {
       }
     }
   }, [yamlHandler, freezeObj])
-  const entityType = 'FreezeWindow' as GetYamlSchemaQueryParams['entityType']
-  return (
+  return isDrawerOpened ? null : (
     <div className={css.yamlBuilder}>
       <YamlBuilderMemo
         key={`${isYamlEditable.toString()}_${freezeObj.identifier}`}
         fileName={defaultTo(yamlFileName, defaultFileName)}
-        entityType={entityType} // should be Freeze Window
-        isReadOnlyMode={isReadonly || !isYamlEditable}
+        entityType={'Freeze'}
+        isReadOnlyMode={isReadOnly || !isYamlEditable}
         existingJSON={{ freeze: freezeObj }}
         // existingYaml
         bind={setYamlHandler}
@@ -89,17 +89,18 @@ export const FreezeWindowStudioYAMLView = () => {
         // schema
         // onExpressionTrigger
         // yamlSanityConfig
+        yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
         height={'calc(100vh - 200px)'}
         width="calc(100vw - 400px)"
         // invocationMap
         onEnableEditMode={() => {
           updateYamlView(true)
         }}
-        isEditModeSupported={!isReadonly}
+        isEditModeSupported={!isReadOnly}
       />
-      {isReadonly || !isYamlEditable ? (
+      {isReadOnly || !isYamlEditable ? (
         <div className={css.buttonsWrapper}>
-          {isReadonly ? <Tag>{getString('common.readOnly')}</Tag> : null}
+          {isReadOnly ? <Tag>{getString('common.readOnly')}</Tag> : null}
           <RbacButton
             permission={{
               resourceScope: {
@@ -108,10 +109,10 @@ export const FreezeWindowStudioYAMLView = () => {
                 projectIdentifier
               },
               resource: {
-                resourceType: ResourceType.TEMPLATE,
-                resourceIdentifier: '-1'
+                resourceType: ResourceType.DEPLOYMENTFREEZE,
+                resourceIdentifier: freezeObj.identifier as string
               },
-              permission: PermissionIdentifier.EDIT_TEMPLATE
+              permission: PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE
             }}
             variation={ButtonVariation.SECONDARY}
             text={getString('common.editYaml')}

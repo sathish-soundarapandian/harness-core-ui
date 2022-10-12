@@ -44,6 +44,8 @@ import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupS
 import { QueryContent } from '@cv/components/QueryViewer/QueryViewer'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import MetricDashboardWidgetNav from '@cv/components/MetricDashboardWidgetNav/MetricDashboardWidgetNav'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import {
   getManuallyCreatedQueries,
   formatJSON,
@@ -57,13 +59,18 @@ import {
   mapstackdriverDashboardDetailToMetricWidget,
   onSelectNavItem,
   getNoDataMessage,
-  getIsQueryExecuted
+  getIsQueryExecuted,
+  persistCustomMetric
 } from './GCOMetricsHealthSource.utils'
 import DrawerFooter from '../../common/DrawerFooter/DrawerFooter'
 import type { GCOMetricInfo, GCOMetricsHealthSourceProps, ValidationChartProps } from './GCOMetricsHealthSource.type'
 import { OVERALL, FieldNames, DrawerOptions } from './GCOMetricsHealthSource.constants'
 import SelectHealthSourceServices from '../../common/SelectHealthSourceServices/SelectHealthSourceServices'
 import MetricErrorAndLoading from '../../common/MetricErrorAndLoading/MetricErrorAndLoading'
+import MetricThresholdProvider from './components/MetricThresholds/MetricThresholdProvider'
+import { initGroupedCreatedMetrics } from '../../common/CustomMetric/CustomMetric.utils'
+import type { CustomMappedMetric } from '../../common/CustomMetric/CustomMetric.types'
+import type { MetricThresholdsState } from '../../common/MetricThresholds/MetricThresholds.types'
 import css from './GCOMetricsHealthSource.module.scss'
 
 const GroupByClause = 'groupByFields'
@@ -159,8 +166,19 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
 
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
 
+  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+
   const { getString } = useStrings()
-  const transformedData = useMemo(() => transformGCOMetricHealthSourceToGCOMetricSetupSource(data), [data])
+  const transformedData = useMemo(
+    () => transformGCOMetricHealthSourceToGCOMetricSetupSource(data, isMetricThresholdEnabled),
+    [data, isMetricThresholdEnabled]
+  )
+
+  const [metricThresholds, setMetricThresholds] = useState<MetricThresholdsState>({
+    ignoreThresholds: transformedData.ignoreThresholds,
+    failFastThresholds: transformedData.failFastThresholds
+  })
+
   const [updatedData, setUpdatedData] = useState(
     initializeSelectedMetrics(selectedDashboardsContextValue, transformedData.metricDefinition)
   )
@@ -237,7 +255,13 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
     queryParams: { projectIdentifier, orgIdentifier, accountId, dataSourceType: 'STACKDRIVER' }
   })
 
-  const formInitialValues: GCOMetricInfo = updatedData.get(selectedMetric || '') || {}
+  const metricFormData = updatedData.get(selectedMetric || '') || {}
+  const formInitialValues = {
+    ...metricFormData,
+    ...metricThresholds
+  }
+
+  const groupedCreatedMetrics = initGroupedCreatedMetrics(updatedData as Map<string, CustomMappedMetric>, getString)
 
   const handleOnManualMetricDelete = (metricIdToBeDeleted: string): void => {
     updatedData.delete(metricIdToBeDeleted)
@@ -258,7 +282,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
           return {}
         }
 
-        return validate(values, newMap, getString)
+        return validate(values, newMap, getString, isMetricThresholdEnabled)
       }}
     >
       {formikProps => {
@@ -266,8 +290,17 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
           sli = false,
           healthScore = false,
           continuousVerification = false,
-          riskCategory = ''
+          riskCategory = '',
+          query
         } = formikProps.values
+
+        persistCustomMetric({
+          mappedMetrics: updatedData,
+          selectedMetric,
+          metricThresholds,
+          formikValues: formikProps.values,
+          setMappedMetrics: setUpdatedData
+        })
 
         const currentSelectedMetricDetail = metricDefinitions?.find(
           (metricDefinition: StackdriverDefinition) =>
@@ -294,209 +327,228 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
         const isDashdoardEmpty = !Object.values(dashboard).filter(item => item.title).length
 
         return (
-          <SetupSourceLayout
-            content={
-              <FormikForm className={css.setupContainer}>
-                <Heading level={3} color={Color.BLACK} className={css.sectionHeading}>
-                  {getString('cv.monitoringSources.gco.mapMetricsToServicesPage.querySpecifications')}
-                </Heading>
-
-                <MetricErrorAndLoading isEmpty={isEmpty(formInitialValues)} loading={loadingDashBoardData}>
+          <FormikForm className={css.setupContainer}>
+            <>
+              <SetupSourceLayout
+                content={
                   <>
-                    <Container className={css.nameAndMetricTagContainer}>
-                      <FormInput.KVTagInput
-                        label={getString('cv.monitoringSources.gco.mapMetricsToServicesPage.metricTagsLabel')}
-                        name={FieldNames.METRIC_TAGS}
-                        tagsProps={{
-                          addOnBlur: true,
-                          addOnPaste: true,
-                          onChange: values => {
-                            const newTagObj: { [key: string]: any } = {}
-                            ;(values as string[])?.forEach(val => {
-                              newTagObj[val as string] = ''
-                            })
-                            formikProps.setFieldValue(FieldNames.METRIC_TAGS, newTagObj)
-                          }
-                        }}
-                      />
-                      {formikProps.errors['metricTags'] && (
-                        <FormError name="metricTags" errorMessage={formikProps.errors['metricTags']} />
-                      )}
-                      <NameId
-                        nameLabel={getString('cv.monitoringSources.metricNameLabel')}
-                        identifierProps={{
-                          inputName: FieldNames.METRIC_NAME,
-                          idName: FieldNames.IDENTIFIER,
-                          isIdentifierEditable: Boolean(!currentSelectedMetricDetail?.identifier)
-                        }}
-                      />
-                    </Container>
-                    <Container className={css.validationContainer}>
-                      <Container width={'500px'}>
-                        <QueryContent
-                          handleFetchRecords={() => {
-                            if (!shouldShowChart) {
-                              setShouldShowChart(true)
-                            }
-                            onQueryChange(formikProps.values.query)
-                          }}
-                          key={getMultiTypeFromValue(formikProps.values.query)}
-                          onClickExpand={setIsQueryExpanded}
-                          isDialogOpen={isQueryExpanded}
-                          query={formikProps.values.query}
-                          loading={loading}
-                          textAreaName={FieldNames.QUERY}
-                          isTemplate={isTemplate}
-                          expressions={expressions}
-                          isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
-                        />
-                      </Container>
-                      <ValidationChart
-                        loading={loading}
-                        error={error}
-                        sampleData={sampleData}
-                        queryValue={formikProps.values.query}
-                        setAsTooManyMetrics={isTooMany => {
-                          if (isTooMany) {
-                            formikProps.setFieldError('tooManyMetrics', 'invalid')
-                          } else {
-                            formikProps.setFieldError('tooManyMetrics', '')
-                          }
-                        }}
-                        noDataMessage={getNoDataMessage(getString, formikProps?.values?.query)}
-                        isQueryExecuted={getIsQueryExecuted(shouldShowChart, formikProps?.values?.query)}
-                        onRetry={async () => {
-                          if (!formikProps.values.query?.length) return
-                          onQueryChange(formikProps.values.query)
-                        }}
-                      />
-                      {isQueryExpanded && (
-                        <Drawer
-                          {...DrawerOptions}
-                          onClose={() => {
-                            setIsQueryExpanded(false)
-                          }}
-                        >
-                          <MonacoEditor
-                            language="javascript"
-                            value={formatJSON(formikProps.values.query)}
-                            data-testid="monaco-editor"
-                            onChange={val => formikProps.setFieldValue(FieldNames.QUERY, val)}
-                            options={
-                              {
-                                readOnly: false,
-                                wordBasedSuggestions: false,
-                                fontFamily: "'Roboto Mono', monospace",
-                                fontSize: 13
-                              } as any
-                            }
+                    <Heading level={3} color={Color.BLACK} className={css.sectionHeading}>
+                      {getString('cv.monitoringSources.gco.mapMetricsToServicesPage.querySpecifications')}
+                    </Heading>
+
+                    <MetricErrorAndLoading isEmpty={isEmpty(metricFormData)} loading={loadingDashBoardData}>
+                      <>
+                        <Container className={css.nameAndMetricTagContainer}>
+                          <FormInput.KVTagInput
+                            label={getString('cv.monitoringSources.gco.mapMetricsToServicesPage.metricTagsLabel')}
+                            name={FieldNames.METRIC_TAGS}
+                            tagsProps={{
+                              addOnBlur: true,
+                              addOnPaste: true,
+                              onChange: values => {
+                                const newTagObj: { [key: string]: any } = {}
+                                ;(values as string[])?.forEach(val => {
+                                  newTagObj[val as string] = ''
+                                })
+                                formikProps.setFieldValue(FieldNames.METRIC_TAGS, newTagObj)
+                              }
+                            }}
                           />
-                        </Drawer>
-                      )}
-                    </Container>
-                    <Container width={'500px'}>
-                      <SelectHealthSourceServices
-                        values={{
-                          sli,
-                          healthScore,
-                          riskCategory,
-                          continuousVerification,
-                          serviceInstanceMetricPath: formikProps.values?.serviceInstanceField
-                        }}
-                        hideServiceIdentifier
-                        metricPackResponse={metricPackResponse}
-                        isTemplate={isTemplate}
-                        expressions={expressions}
-                        customServiceInstanceName={FieldNames.SERVICE_INSTANCE_FIELD}
-                        isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
-                      />
-                    </Container>
-                    {!isTemplate && formikProps.values.continuousVerification && (
-                      <FormInput.Text
-                        name={FieldNames.SERVICE_INSTANCE_FIELD}
-                        label={getString('cv.monitoringSources.serviceInstanceIdentifier')}
-                      />
-                    )}
-                    <FormInput.Text name={OVERALL} className={css.hiddenField} />
+                          {formikProps.errors['metricTags'] && (
+                            <FormError name="metricTags" errorMessage={formikProps.errors['metricTags']} />
+                          )}
+                          <NameId
+                            nameLabel={getString('cv.monitoringSources.metricNameLabel')}
+                            identifierProps={{
+                              inputName: FieldNames.METRIC_NAME,
+                              idName: FieldNames.IDENTIFIER,
+                              isIdentifierEditable: Boolean(!currentSelectedMetricDetail?.identifier)
+                            }}
+                          />
+                        </Container>
+                        <Container className={css.validationContainer}>
+                          <Container width={'500px'}>
+                            <QueryContent
+                              handleFetchRecords={() => {
+                                if (!shouldShowChart) {
+                                  setShouldShowChart(true)
+                                }
+                                onQueryChange(query)
+                              }}
+                              key={getMultiTypeFromValue(query)}
+                              onClickExpand={setIsQueryExpanded}
+                              isDialogOpen={isQueryExpanded}
+                              query={query}
+                              loading={loading}
+                              textAreaName={FieldNames.QUERY}
+                              isTemplate={isTemplate}
+                              expressions={expressions}
+                              isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+                            />
+                          </Container>
+                          <ValidationChart
+                            loading={loading}
+                            error={error}
+                            sampleData={sampleData}
+                            queryValue={query}
+                            setAsTooManyMetrics={isTooMany => {
+                              if (isTooMany) {
+                                formikProps.setFieldError('tooManyMetrics', 'invalid')
+                              } else {
+                                formikProps.setFieldError('tooManyMetrics', '')
+                              }
+                            }}
+                            noDataMessage={getNoDataMessage(getString, formikProps?.values?.query)}
+                            isQueryExecuted={getIsQueryExecuted(shouldShowChart, formikProps?.values?.query)}
+                            onRetry={async () => {
+                              if (!query?.length) return
+                              onQueryChange(query)
+                            }}
+                          />
+                          {isQueryExpanded && (
+                            <Drawer
+                              {...DrawerOptions}
+                              onClose={() => {
+                                setIsQueryExpanded(false)
+                              }}
+                            >
+                              <MonacoEditor
+                                language="javascript"
+                                value={formatJSON(query)}
+                                data-testid="monaco-editor"
+                                onChange={val => formikProps.setFieldValue(FieldNames.QUERY, val)}
+                                options={
+                                  {
+                                    readOnly: false,
+                                    wordBasedSuggestions: false,
+                                    fontFamily: "'Roboto Mono', monospace",
+                                    fontSize: 13
+                                  } as any
+                                }
+                              />
+                            </Drawer>
+                          )}
+                        </Container>
+                        <Container width={'500px'}>
+                          <SelectHealthSourceServices
+                            values={{
+                              sli,
+                              healthScore,
+                              riskCategory,
+                              continuousVerification,
+                              serviceInstanceMetricPath: formikProps.values?.serviceInstanceField
+                            }}
+                            hideServiceIdentifier
+                            metricPackResponse={metricPackResponse}
+                            isTemplate={isTemplate}
+                            expressions={expressions}
+                            customServiceInstanceName={FieldNames.SERVICE_INSTANCE_FIELD}
+                            isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+                          />
+                        </Container>
+                        {!isTemplate && formikProps.values.continuousVerification && (
+                          <FormInput.Text
+                            name={FieldNames.SERVICE_INSTANCE_FIELD}
+                            label={getString('cv.monitoringSources.serviceInstanceIdentifier')}
+                          />
+                        )}
+                        <FormInput.Text name={OVERALL} className={css.hiddenField} />
+                      </>
+                    </MetricErrorAndLoading>
+
+                    <DrawerFooter
+                      onPrevious={onPrevious}
+                      isSubmit
+                      onNext={() => {
+                        formikProps.setTouched({
+                          ...formikProps.touched,
+                          [OVERALL]: true,
+                          [FieldNames.SLI]: true,
+                          [FieldNames.RISK_CATEGORY]: true,
+                          [FieldNames.HIGHER_BASELINE_DEVIATION]: true,
+                          [FieldNames.LOWER_BASELINE_DEVIATION]: true,
+                          [FieldNames.SERVICE_INSTANCE_FIELD]: true
+                        } as any)
+
+                        formikProps.submitForm()
+
+                        const errors = validate(formikProps.values, updatedData, getString, isMetricThresholdEnabled)
+                        if (!isEmpty(errors)) {
+                          formikProps.setErrors({ ...errors })
+                          return
+                        }
+
+                        if (selectedMetric) {
+                          updatedData.set(selectedMetric, { ...formikProps.values })
+                        }
+                        const filteredData = new Map()
+                        for (const metric of updatedData) {
+                          const [metricName, metricInfo] = metric
+                          if (isEmpty(ensureFieldsAreFilled(metricInfo, getString, new Map(updatedData)))) {
+                            filteredData.set(metricName, metricInfo)
+                          }
+                        }
+
+                        onSubmit(
+                          data,
+                          transformGCOMetricSetupSourceToGCOHealthSource(
+                            {
+                              ...transformedData,
+                              ...metricThresholds,
+                              metricDefinition: filteredData
+                            },
+                            isMetricThresholdEnabled
+                          )
+                        )
+                      }}
+                    />
                   </>
-                </MetricErrorAndLoading>
-                <DrawerFooter
-                  onPrevious={onPrevious}
-                  isSubmit
-                  onNext={async () => {
-                    formikProps.setTouched({
-                      ...formikProps.touched,
-                      [OVERALL]: true,
-                      [FieldNames.SLI]: true,
-                      [FieldNames.RISK_CATEGORY]: true,
-                      [FieldNames.HIGHER_BASELINE_DEVIATION]: true,
-                      [FieldNames.LOWER_BASELINE_DEVIATION]: true,
-                      [FieldNames.SERVICE_INSTANCE_FIELD]: true
-                    } as any)
-
-                    const errors = validate(formikProps.values, updatedData, getString)
-                    if (!isEmpty(errors)) {
-                      formikProps.setErrors({ ...errors })
-                      return
-                    }
-
-                    if (selectedMetric) {
-                      updatedData.set(selectedMetric, { ...formikProps.values })
-                    }
-                    const filteredData = new Map()
-                    for (const metric of updatedData) {
-                      const [metricName, metricInfo] = metric
-                      if (isEmpty(ensureFieldsAreFilled(metricInfo, getString, new Map(updatedData)))) {
-                        filteredData.set(metricName, metricInfo)
-                      }
-                    }
-
-                    await onSubmit(
-                      data,
-                      transformGCOMetricSetupSourceToGCOHealthSource({
-                        ...transformedData,
-                        metricDefinition: filteredData
-                      })
-                    )
-                  }}
-                />
-              </FormikForm>
-            }
-            leftPanelContent={
-              <MetricDashboardWidgetNav
-                dashboards={isDashdoardEmpty ? [] : dashboard}
-                dashboardWidgetMapper={mapstackdriverDashboardDetailToMetricWidget}
-                dashboardDetailsRequest={stackDriverDashBoardRequest}
-                addManualQueryTitle={'cv.monitoringSources.gco.manualInputQueryModal.modalTitle'}
-                connectorIdentifier={connectorIdentifier}
-                manuallyInputQueries={getManuallyCreatedQueries(updatedData)}
-                showSpinnerOnLoad={!selectedMetric}
-                onDeleteManualMetric={metricIdToBeDeleted =>
-                  metricIdToBeDeleted && handleOnManualMetricDelete(metricIdToBeDeleted)
                 }
-                onSelectMetric={(id, metricName, query, widget, dashboardId, dashboardTitle) => {
-                  onSelectNavItem({
-                    id,
-                    metricName,
-                    query,
-                    widget,
-                    dashboardId,
-                    dashboardTitle,
-                    updatedData,
-                    setUpdatedData,
-                    selectedMetric,
-                    formikProps
-                  })
-                  setSelectedMetric(metricName)
-                  setShouldShowChart(false)
-                  setError(undefined)
-                  setSampleData(transformSampleDataIntoHighchartOptions([]))
+                leftPanelContent={
+                  <MetricDashboardWidgetNav
+                    dashboards={isDashdoardEmpty ? [] : dashboard}
+                    dashboardWidgetMapper={mapstackdriverDashboardDetailToMetricWidget}
+                    dashboardDetailsRequest={stackDriverDashBoardRequest}
+                    addManualQueryTitle={'cv.monitoringSources.gco.manualInputQueryModal.modalTitle'}
+                    connectorIdentifier={connectorIdentifier}
+                    manuallyInputQueries={getManuallyCreatedQueries(updatedData)}
+                    showSpinnerOnLoad={!selectedMetric}
+                    onDeleteManualMetric={metricIdToBeDeleted =>
+                      metricIdToBeDeleted && handleOnManualMetricDelete(metricIdToBeDeleted)
+                    }
+                    onSelectMetric={(id, metricName, queryValue, widget, dashboardId, dashboardTitle) => {
+                      onSelectNavItem({
+                        id,
+                        metricName,
+                        query: queryValue,
+                        widget,
+                        dashboardId,
+                        dashboardTitle,
+                        updatedData,
+                        setUpdatedData,
+                        selectedMetric,
+                        formikProps
+                      })
+                      setSelectedMetric(metricName)
+                      setShouldShowChart(false)
+                      setError(undefined)
+                      setSampleData(transformSampleDataIntoHighchartOptions([]))
 
-                  formikProps.resetForm()
-                }}
+                      formikProps.resetForm()
+                    }}
+                  />
+                }
               />
-            }
-          />
+              {isMetricThresholdEnabled && !isEmpty(groupedCreatedMetrics) && (
+                <MetricThresholdProvider
+                  formikValues={formikProps.values}
+                  setThresholdState={setMetricThresholds}
+                  groupedCreatedMetrics={groupedCreatedMetrics}
+                />
+              )}
+              <Container className={css.spaceProvider} />
+            </>
+          </FormikForm>
         )
       }}
     </Formik>

@@ -14,6 +14,7 @@ import { useLogout } from 'framework/utils/SessionUtils'
 import { PermissionsContext } from 'framework/rbac/PermissionsContext'
 import { LicenseStoreContext } from 'framework/LicenseStore/LicenseStoreContext'
 import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
+import { TooltipContext } from 'framework/tooltip/TooltipContext'
 import { PageSpinner } from '@common/components'
 import RbacButton from '@rbac/components/Button/Button'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
@@ -83,7 +84,8 @@ export class ChildAppMounter<T = never> extends React.Component<
           parentContextObj={{
             appStoreContext: AppStoreContext,
             permissionsContext: PermissionsContext,
-            licenseStoreProvider: LicenseStoreContext
+            licenseStoreProvider: LicenseStoreContext,
+            tooltipContext: TooltipContext
           }}
           on401={() => {
             global401HandlerUtils(history)

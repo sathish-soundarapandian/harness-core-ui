@@ -93,7 +93,7 @@ describe('Unit tests for createAppd monitoring source', () => {
         () => ({ loading: false, error: null, data: { data: ['overall performane'] }, refetch: refetchMock } as any)
       )
     jest
-      .spyOn(cvServices, 'useGetServiceInstanceMetricPath')
+      .spyOn(cvServices, 'useGetCompleteServiceInstanceMetricPath')
       .mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: refetchMock } as any))
     jest
       .spyOn(cvServices, 'useGetAppdynamicsMetricDataByPath')
@@ -103,9 +103,7 @@ describe('Unit tests for createAppd monitoring source', () => {
       .mockImplementation(() => ({ error: null, data: validationData.data } as any))
   })
 
-  // Skipped as it is not checking the checkbox correctly, will be checked by Deepesh soon
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('Component renders in edit mode', async () => {
+  test('Component renders in edit mode', async () => {
     jest.spyOn(uuid, 'v4').mockReturnValue('MockedUUID')
     const submitData = jest.fn()
     const { container, getByText } = render(

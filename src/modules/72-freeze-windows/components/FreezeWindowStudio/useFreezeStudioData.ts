@@ -7,13 +7,14 @@
 
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import isEmpty from 'lodash-es/isEmpty'
 import type { SelectOption } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { useGetOrganizationAggregateDTOList, useGetProjectList, useGetServiceList } from 'services/cd-ng'
-import { ResourcesInterface, FreezeWindowLevels } from '@freeze-windows/types'
+import { FreezeWindowLevels, ResourcesInterface, ProjctsByOrgId } from '@freeze-windows/types'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
-import { allProjectsObj, allServicesObj } from './FreezeWindowStudioUtil'
+import { allOrgsObj, allProjectsObj, allServicesObj } from './FreezeWindowStudioUtil'
 
 export const useFreezeStudioData = (): ResourcesInterface => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -56,11 +57,28 @@ export const useFreezeStudioData = (): ResourcesInterface => {
     lazy: true
   })
 
+  const {
+    data: accountProjects,
+    loading: loadingAccountProjects,
+    refetch: refetchAllProjects
+  } = useGetProjectList({
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: true
+  })
+
   const [orgs, setOrgs] = React.useState<SelectOption[]>([])
+  const [orgsMap, setOrgsMap] = React.useState<Record<string, SelectOption>>({
+    All: allOrgsObj(getString)
+  })
+
   const [projects, setProjects] = React.useState<SelectOption[]>([])
   const [projectsMap, setProjectsMap] = React.useState<Record<string, SelectOption>>({
     All: allProjectsObj(getString)
   })
+  const [projectsByOrgId, setProjectsByOrgId] = React.useState<Record<string, ProjctsByOrgId>>({})
+
   const [services, setServices] = React.useState<SelectOption[]>([allServicesObj(getString)])
   const [servicesMap, setServicesMap] = React.useState<Record<string, SelectOption>>({
     All: allServicesObj(getString)
@@ -78,14 +96,20 @@ export const useFreezeStudioData = (): ResourcesInterface => {
 
   React.useEffect(() => {
     if (!loadingOrgs && orgsData?.data?.content) {
+      const orgsMapp: Record<string, SelectOption> = { All: allOrgsObj(getString) }
       const adaptedOrgsData = orgsData.data.content.map(org => {
         const organization = org?.organizationResponse?.organization
-        return {
-          label: organization?.name,
-          value: organization?.identifier
+        const label = organization?.name
+        const value = organization?.identifier
+        const obj = {
+          label,
+          value
         }
+        orgsMapp[value] = obj
+        return obj
       })
       setOrgs(adaptedOrgsData)
+      setOrgsMap(orgsMapp)
     }
   }, [loadingOrgs])
 
@@ -128,17 +152,50 @@ export const useFreezeStudioData = (): ResourcesInterface => {
   }, [loadingProjects])
 
   React.useEffect(() => {
+    if (!loadingAccountProjects && accountProjects?.data?.content) {
+      const accProjects = accountProjects?.data?.content
+      const accum: Record<string, ProjctsByOrgId> = {}
+
+      accProjects.map(datum => {
+        if (isEmpty(datum.project)) {
+          return
+        }
+        const { name, identifier, orgIdentifier: _orgIdentifier } = datum.project
+
+        const obj = { value: identifier, label: name }
+
+        accum[_orgIdentifier as string] = accum[_orgIdentifier as string] || {
+          projects: [],
+          projectsMap: { All: allProjectsObj(getString) }
+        }
+        accum[_orgIdentifier as string].projects.push(obj)
+        accum[_orgIdentifier as string].projectsMap[identifier] = obj
+      })
+
+      setProjectsByOrgId(accum)
+    }
+  }, [loadingAccountProjects])
+
+  React.useEffect(() => {
     if (freezeWindowLevel === FreezeWindowLevels.ORG && orgIdentifier) {
       refetchProjects()
     }
   }, [orgIdentifier, freezeWindowLevel])
 
+  React.useEffect(() => {
+    if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT && accountId) {
+      refetchAllProjects()
+    }
+  }, [accountId, freezeWindowLevel])
+
   return {
     orgs,
+    orgsMap,
     projects,
     projectsMap,
     services,
     servicesMap,
-    freezeWindowLevel
+    freezeWindowLevel,
+    projectsByOrgId
   }
 }

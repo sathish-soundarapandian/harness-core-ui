@@ -69,14 +69,14 @@ export interface InitialArtifactDataType {
 export interface ImagePathTypes {
   identifier: string
   imagePath?: string
-  artifactPath?: string
+  artifactPath?: SelectOption | string
   tag: any
   tagRegex: any
   tagType: TagTypes
   registryHostname?: string
   region?: any
   repositoryPort?: number | string
-  repository?: string | SelectOption
+  repository?: SelectOption | string
   repositoryUrl?: string
   repositoryPortorRepositoryURL?: string
   artifactDirectory?: string

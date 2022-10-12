@@ -163,6 +163,14 @@
       color: var(--primary-7) !important;
       cursor: pointer;
     }
+
+    .headerTitle {
+      flex: 3;
+    }
+    .headerStatus {
+      flex: 2;
+      justify-content: end;
+    }
   }
 
   .stepGroupBody {
@@ -171,7 +179,6 @@
     }
     padding: 0 var(--spacing-xlarge) 0 var(--spacing-xxlarge);
     padding-bottom: 0 !important;
-    // margin-right: -60px !important; // negative margin to compensate the gap 80px on last node in grid
 
     // reset margin-bottom inside matrix as node-gap accounted with height calculation
     :global(.default-node) {
@@ -179,6 +186,13 @@
     }
     :global(.diamond-node) {
       margin-bottom: 55px !important;
+    }
+
+    // override styles
+    :global {
+      .parentMatrix {
+        top: 0px !important;
+      }
     }
   }
 
@@ -309,6 +323,12 @@
       overflow-wrap: break-word;
       word-wrap: break-word;
       hyphens: auto;
+
+      br {
+        display: block;
+        content: '';
+        margin-top: var(--spacing-xsmall);
+      }
     }
   }
 }

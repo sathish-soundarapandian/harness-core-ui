@@ -33,7 +33,7 @@ import { showToaster } from '@cf/utils/CFUtils'
 import { GIT_SYNC_ERROR_CODE, UseGitSync } from '@cf/hooks/useGitSync'
 import { useGovernance } from '@cf/hooks/useGovernance'
 import { useStrings } from 'framework/strings'
-import { AUTO_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
+import { GIT_COMMIT_MESSAGES } from '@cf/constants/GitSyncConstants'
 import patch from '../../../utils/instructions'
 import SaveFlagToGitSubForm from '../../SaveFlagToGitSubForm/SaveFlagToGitSubForm'
 import css from '../FlagActivationDetails.module.scss'
@@ -62,7 +62,7 @@ const useEditFlagDetailsModal = (props: UseEditFlagDetailsModalProps): UseEditFl
   const { handleError: handleGovernanceError, isGovernanceError } = useGovernance()
 
   const [openEditDetailsModal, hideEditDetailsModal] = useModalHook(() => {
-    const gitSyncFormMeta = gitSync?.getGitSyncFormMeta(AUTO_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS)
+    const gitSyncFormMeta = gitSync?.getGitSyncFormMeta(GIT_COMMIT_MESSAGES.UPDATED_FLAG_VARIATIONS)
 
     const initialValues = {
       name: featureFlag.name.trim(),

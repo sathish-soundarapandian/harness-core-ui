@@ -64,6 +64,7 @@ export interface MultiTypeMapProps {
   allowableTypes?: AllowedTypes
   fileUsage?: FileUsage
   addFileLabel?: string
+  isAttachment?: boolean
 }
 
 export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactElement {
@@ -85,6 +86,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
     allowableTypes,
     fileUsage,
     addFileLabel,
+    isAttachment = false,
     ...restProps
   } = props
 
@@ -160,14 +162,17 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                     margin={{ top: 'small', bottom: hasError && 'medium' }}
                                     key={index}
                                     ref={providedDrag.innerRef}
+                                    data-testid={`${name}[${index}]`}
                                     {...providedDrag.draggableProps}
                                     {...providedDrag.dragHandleProps}
                                   >
                                     <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                                      <>
-                                        <Icon name="drag-handle-vertical" />
-                                        <Text className={css.text}>{`${index + 1}.`}</Text>
-                                      </>
+                                      {!restrictToSingleEntry && (
+                                        <>
+                                          <Icon name="drag-handle-vertical" />
+                                          <Text className={css.text}>{`${index + 1}.`}</Text>
+                                        </>
+                                      )}
 
                                       <div className={css.multiSelectField}>
                                         <div className={cx(css.group)}>
@@ -262,7 +267,8 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                             push('')
                           }}
                           disabled={disabled || isRunTime}
-                          style={{ padding: 0, marginTop: 24 }}
+                          style={{ padding: 0 }}
+                          margin={{ top: 'xlarge', bottom: isAttachment ? 'xxxlarge' : 'medium' }}
                         />
                       )}
                     </>

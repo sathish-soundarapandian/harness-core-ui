@@ -13,7 +13,8 @@ import * as cdngServices from 'services/cd-ng'
 import {
   mockserviceInstanceDetails,
   mockGitopsServiceInstanceDetails,
-  mockServiceInstanceDetailsWithContainerList
+  mockServiceInstanceDetailsWithContainerList,
+  mockServiceInstanceDetailsForCustomDeployment
 } from './mocks'
 
 describe('ActiveServiceInstancePopover', () => {
@@ -91,5 +92,24 @@ describe('ActiveServiceInstancePopover', () => {
       </TestWrapper>
     )
     expect(getByText('cd.serviceDashboard.containerList:')!).toBeDefined()
+  })
+
+  test('should render instances info for custom deployment', () => {
+    jest
+      .spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds')
+      .mockImplementation(() => mockServiceInstanceDetailsForCustomDeployment as any)
+
+    const { getByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={0} />
+      </TestWrapper>
+    )
+    expect(getByText('hostname:')!).toBeDefined()
+    expect(getByText('instance2')!).toBeDefined()
+    expect(getByText('version:')!).toBeDefined()
+    expect(getByText('2021.07.10_app_2.war')!).toBeDefined()
   })
 })

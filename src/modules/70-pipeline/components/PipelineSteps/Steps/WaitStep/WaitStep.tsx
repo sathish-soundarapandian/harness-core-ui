@@ -99,10 +99,10 @@ export class WaitStep extends PipelineStep<WaitStepData> {
       let durationSchema = getDurationValidationSchema({ minimum: '10s' })
       /* istanbul ignore else */
       if (isRequired) {
-        durationSchema = durationSchema.required(getString?.('validation.timeout10SecMinimum'))
+        durationSchema = durationSchema.required(getString?.('pipeline.waitStep.validation.duration10SecMinimum'))
       }
       const duration = Yup.object().shape({
-        duration: durationSchema
+        spec: Yup.object().shape({ duration: durationSchema })
       })
 
       try {

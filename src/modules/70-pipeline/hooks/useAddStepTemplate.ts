@@ -16,7 +16,6 @@ import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext
 import { addStepOrGroup } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraphUtil'
 import { StepCategory, useGetStepsV2 } from 'services/pipeline-ng'
 import { createStepNodeFromTemplate } from '@pipeline/utils/templateUtils'
-import { useStrings } from 'framework/strings'
 import { AdvancedPanels } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useMutateAsGet } from '@common/hooks'
@@ -24,7 +23,6 @@ import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { DeploymentStageConfig } from 'services/cd-ng'
-import { getLinkedTemplateFromResolvedCustomDeploymentDetails } from '@pipeline/utils/stageHelpers'
 
 interface AddStepTemplateReturnType {
   addTemplate: (event: ExecutionGraphAddStepEvent) => Promise<void>
@@ -56,7 +54,6 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     (selectedStage?.stage?.spec as DeploymentStageConfig)?.customDeploymentRef?.templateRef,
     ''
   )
-  const { getString } = useStrings()
   const resolvedCustomDeploymentDetails = get(
     resolvedCustomDeploymentDetailsByRef,
     customDeploymentTemplateRef,
@@ -97,10 +94,14 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     try {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
-        allChildTypes,
+        filterProperties: {
+          childTypes: allChildTypes,
+          ...(event.isLinkedTemplate && {
+            templateIdentifiers: get(resolvedCustomDeploymentDetails, 'linkedTemplateRefs') as string[]
+          })
+        },
         gitDetails,
-        storeMetadata,
-        ...getLinkedTemplateFromResolvedCustomDeploymentDetails({ resolvedCustomDeploymentDetails, getString })
+        storeMetadata
       })
       const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))

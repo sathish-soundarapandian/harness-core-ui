@@ -146,8 +146,11 @@ export default function DeployServiceEntityWidget({
   const { templateRef: deploymentTemplateIdentifier, versionLabel } =
     (get(stage, 'stage.spec.customDeploymentRef') as TemplateLinkConfig) || {}
   const shouldAddCustomDeploymentData =
-    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier && versionLabel
+    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier
 
+  const [serviceInputType, setServiceInputType] = React.useState<MultiTypeInputType>(
+    getMultiTypeFromValue(initialValues?.service?.serviceRef)
+  )
   const {
     servicesData,
     servicesList,
@@ -381,9 +384,7 @@ export default function DeployServiceEntityWidget({
           const { values } = formik
 
           const isMultiSvc = !isNil(values.services)
-          const isFixed = isMultiSvc
-            ? Array.isArray(values.services)
-            : getMultiTypeFromValue(values.service) === MultiTypeInputType.FIXED
+          const isFixed = isMultiSvc ? Array.isArray(values.services) : serviceInputType === MultiTypeInputType.FIXED
           let placeHolderForServices =
             Array.isArray(values.services) && values.services
               ? getString('services')
@@ -437,7 +438,8 @@ export default function DeployServiceEntityWidget({
                           expressions,
                           selectProps: { items: selectOptions },
                           allowableTypes,
-                          defaultValueToReset: ''
+                          defaultValueToReset: '',
+                          onTypeChange: setServiceInputType
                         }}
                         selectItems={selectOptions}
                       />

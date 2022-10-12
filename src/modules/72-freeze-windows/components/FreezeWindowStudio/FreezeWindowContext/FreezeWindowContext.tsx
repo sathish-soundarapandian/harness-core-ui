@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useContext } from 'react'
 import noop from 'lodash-es/noop'
 import { parse } from 'yaml'
 
@@ -14,35 +14,46 @@ import { useParams } from 'react-router-dom'
 import { useLocalStorage } from '@common/hooks'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { usePermission } from '@rbac/hooks/usePermission'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useGetFreeze } from 'services/cd-ng'
-import { FreezeWindowLevels, WindowPathProps } from '@freeze-windows/types'
-import { FreezeWindowContextActions } from './FreezeWidowActions'
+import { FreezeWindowLevels, WindowPathProps, FreezeNotificationRules } from '@freeze-windows/types'
+import { FreezeWindowContextActions, DrawerTypes } from './FreezeWidowActions'
 import { initialState, FreezeWindowReducerState, FreezeReducer, DefaultFreezeId } from './FreezeWindowReducer'
 
 export interface FreezeWindowContextInterface {
   state: FreezeWindowReducerState
   view: string
-  isReadonly?: boolean
+  drawerType?: string
+  setDrawerType: (drawerType?: DrawerTypes) => void
+  notificationRules?: FreezeNotificationRules[]
+  isReadOnly: boolean
   setView: (view: SelectedView) => void
   setYamlHandler: (yamlHandler: YamlBuilderHandlerBinding) => void
   updateYamlView: (isYamlEditable: boolean) => void
   updateFreeze: (response: any) => void
   freezeWindowLevel: FreezeWindowLevels
   loadingFreezeObj: boolean
+  isUpdatingFreeze: boolean
   refetchFreezeObj: () => void
   freezeObjError?: any
 }
 
 export const FreezeWindowContext = React.createContext<FreezeWindowContextInterface>({
   state: initialState,
-  isReadonly: false,
+  isReadOnly: false,
   view: SelectedView.VISUAL,
+  drawerType: '',
+  setDrawerType: noop,
+  notificationRules: [],
   setView: noop,
   setYamlHandler: noop,
   updateYamlView: noop,
   updateFreeze: noop,
   freezeWindowLevel: FreezeWindowLevels.ACCOUNT,
   loadingFreezeObj: false,
+  isUpdatingFreeze: false,
   refetchFreezeObj: noop
 })
 
@@ -58,8 +69,10 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
     'freeze_studio_view',
     isInvalidYAML ? SelectedView.YAML : SelectedView.VISUAL
   )
+  const [drawerType, setDrawerType] = React.useState<DrawerTypes>()
   const { accountId, projectIdentifier, orgIdentifier, windowIdentifier } = useParams<WindowPathProps>()
   const [freezeWindowLevel, setFreezeWindowLevel] = React.useState<FreezeWindowLevels>(FreezeWindowLevels.ORG)
+  const [isUpdatingFreeze, setIsUpdatingFreeze] = React.useState<boolean>(false)
 
   React.useEffect(() => {
     setFreezeWindowLevel(getFreezeWindowLevel({ accountId, projectIdentifier, orgIdentifier }))
@@ -90,17 +103,35 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
   })
 
   React.useEffect(() => {
-    if (windowIdentifier !== DefaultFreezeId && state.freezeObj.identifier === DefaultFreezeId) {
+    if (windowIdentifier !== DefaultFreezeId) {
       refetchFreezeObj()
     }
-  }, [windowIdentifier, state.freezeObj.identifier])
+  }, [windowIdentifier, accountId, orgIdentifier, projectIdentifier])
 
   React.useEffect(() => {
+    if (loadingFreezeObj) {
+      setIsUpdatingFreeze(true)
+      updateYamlView(false)
+    }
     if (!loadingFreezeObj && !freezeObjError && freezeObjData?.data?.yaml) {
       const freezeObj = parse(freezeObjData?.data?.yaml)?.freeze
-      updateFreeze(freezeObj)
+      updateFreeze({ ...freezeObj, oldFreezeObj: { ...freezeObj } })
+      setIsUpdatingFreeze(false)
     }
   }, [loadingFreezeObj])
+
+  const [canEdit] = usePermission({
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+
+    resource: {
+      resourceType: ResourceType.DEPLOYMENTFREEZE
+    },
+    permissions: [PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE]
+  })
 
   return (
     <FreezeWindowContext.Provider
@@ -113,11 +144,17 @@ export const FreezeWindowProvider: React.FC = ({ children }) => {
         setYamlHandler,
         freezeWindowLevel,
         loadingFreezeObj,
+        isUpdatingFreeze,
         freezeObjError,
-        refetchFreezeObj
+        refetchFreezeObj,
+        drawerType,
+        setDrawerType,
+        isReadOnly: !canEdit
       }}
     >
       {children}
     </FreezeWindowContext.Provider>
   )
 }
+
+export const useFreezeWindowContext = () => useContext(FreezeWindowContext)

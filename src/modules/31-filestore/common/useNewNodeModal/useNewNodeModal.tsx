@@ -41,7 +41,7 @@ const useNewNodeModal = ({
           label: getString('edit'),
           title: editMode ? getString('filestore.editFileDetails') : getString('filestore.newFile'),
           icon: FileAddIcon,
-          height: 460
+          height: 'auto'
         }
       case FileStoreNodeTypes.FOLDER:
         return {

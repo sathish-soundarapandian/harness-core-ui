@@ -11,6 +11,7 @@ import { render, RenderResult, screen, waitFor } from '@testing-library/react'
 import userEvent, { TargetElement } from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import { PlatformEntryType, SupportPlatforms } from '@cf/components/LanguageSelection/LanguageSelection'
+import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
 import mockImport from 'framework/utils/mockImport'
 import * as ffServices from 'services/cf'
 import mockFeatureFlags from '@cf/pages/feature-flags/__tests__/mockFeatureFlags'
@@ -35,23 +36,18 @@ describe('OnboardingDetailPage', () => {
   const refetchFlags = jest.fn()
 
   beforeEach(() => {
+    jest.clearAllMocks()
+
     jest.mock('@common/hooks/useTelemetry', () => ({
       useTelemetry: () => ({ identifyUser: jest.fn(), trackEvent: jest.fn() })
     }))
   })
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
-
   test('OnboardingDetailPage empty state should be rendered properly', () => {
     renderComponent()
 
-    // Breadcrumbs
-    expect(screen.getByTestId('getStartedBreadcrumb')).toHaveTextContent('cf.shared.getStarted/cf.shared.quickGuide/')
-    // First tab should be selected
-    expect(screen.getByText('cf.onboarding.oneCreateAFlag')).toBeVisible()
-    expect(screen.getByText('cf.onboarding.oneCreateAFlag').parentElement).toHaveAttribute('aria-selected', 'true')
+    // Progress Stepper
+    expect(screen.getByTestId('getStartedProgressStepper')).toBeVisible()
 
     // Footer buttons
     expect(screen.getByText('next')).toBeVisible()
@@ -101,6 +97,126 @@ describe('OnboardingDetailPage', () => {
       expect(createNewFlag).toBeCalled()
     }).then(() => {
       expect(refetchFlags).toBeCalled()
+    })
+  })
+
+  test('it should render each step as user progress through Onboarding', async () => {
+    const mutateMock = jest.fn().mockResolvedValue({})
+
+    mockImport('services/cd-ng', {
+      useGetEnvironmentListForProject: () => ({
+        data: mockEnvironments,
+        loading: false,
+        error: undefined,
+        refetch: jest.fn()
+      })
+    })
+
+    jest.spyOn(ffServices, 'useAddAPIKey').mockReturnValue({
+      cancel: jest.fn(),
+      error: null,
+      loading: false,
+      mutate: mutateMock
+    })
+
+    renderComponent()
+
+    const stepCompleted =
+      '[class="MultiStepProgressIndicator--dot MultiStepProgressIndicator--dotSuccess MultiStepProgressIndicator--spacing"]'
+
+    const barInProgress =
+      '[class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--barSuccess MultiStepProgressIndicator--halfBar"]'
+
+    const barCompleted =
+      '[class="MultiStepProgressIndicator--bar MultiStepProgressIndicator--barSuccess MultiStepProgressIndicator--fullBar"]'
+
+    expect(screen.getByRole('heading', { name: 'cf.onboarding.letsGetStarted' })).toBeInTheDocument()
+
+    // first step should be In Progress
+    expect(document.querySelector(stepCompleted)).toBeInTheDocument()
+
+    expect(document.querySelector(barInProgress)).toBeInTheDocument()
+
+    userEvent.click(screen.getByRole('textbox'))
+
+    // select a flag
+    await waitFor(() => expect(screen.getByText('ABC Flag')).toBeInTheDocument())
+    userEvent.click(screen.getByText('ABC Flag'))
+
+    // proceed to next step
+    userEvent.click(screen.getByRole('button', { name: 'next chevron-right' }))
+
+    await waitFor(() => {
+      // first step Complete
+      expect(document.querySelector(stepCompleted)).toBeInTheDocument()
+      expect(document.querySelector(barCompleted)).toBeInTheDocument()
+
+      // second step In Progress
+      expect(document.querySelector(barInProgress)).toBeInTheDocument()
+    })
+
+    // testing Previous button
+    userEvent.click(screen.getByRole('button', { name: 'chevron-left back' }))
+
+    await waitFor(() => {
+      // first step still Complete
+      expect(document.querySelector(stepCompleted)).toBeInTheDocument()
+
+      // second step back In Progress, no longer completed
+      expect(document.querySelector(barInProgress)).toBeInTheDocument()
+      expect(document.querySelector(barCompleted)).not.toBeInTheDocument()
+    })
+
+    userEvent.click(screen.getByRole('button', { name: 'next chevron-right' }))
+
+    // Second component replaces First component
+    expect(screen.getByTestId('ffOnboardingSelectedFlag')).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'cf.onboarding.letsGetStarted' })).not.toBeInTheDocument()
+
+    // select language and create sdk key
+    userEvent.click(screen.getByRole('button', { name: 'JavaScript' }))
+
+    userEvent.click(screen.getByRole('button', { name: 'plus cf.environments.apiKeys.addKeyTitle' }))
+
+    const sdkKeyInputBox = document.querySelector('input[name=name]') as HTMLInputElement
+
+    await waitFor(() => expect(sdkKeyInputBox).toBeInTheDocument())
+
+    userEvent.type(sdkKeyInputBox, 'dummy api key name', { allAtOnce: true })
+
+    userEvent.click(screen.getByRole('button', { name: 'createSecretYAML.create' }))
+
+    await waitFor(() => expect(mutateMock).toBeCalled())
+
+    // proceed to Third step and its component to appear
+    userEvent.click(screen.getByRole('button', { name: 'next chevron-right' }))
+
+    expect(screen.queryByTestId('ffOnboardingSelectedFlag')).not.toBeInTheDocument()
+
+    expect(screen.getByRole('heading', { name: 'cf.onboarding.validatingYourFlag' })).toBeInTheDocument()
+
+    await waitFor(() => {
+      // all Steps Completed
+      const allStepsCompleted = document.querySelectorAll(stepCompleted)
+      expect(allStepsCompleted.length).toEqual(3)
+
+      const barsCompleted = document.querySelectorAll(barCompleted)
+
+      // All progress bars Completed
+      expect(barsCompleted.length).toEqual(2)
+      expect(document.querySelector(barInProgress)).not.toBeInTheDocument()
+    })
+
+    userEvent.click(screen.getByRole('button', { name: 'chevron-left back' }))
+
+    await waitFor(() => {
+      const allStepsCompleted = document.querySelectorAll(stepCompleted)
+      expect(allStepsCompleted.length).toEqual(2)
+
+      const barsCompleted = document.querySelectorAll(barCompleted)
+
+      expect(barsCompleted.length).toEqual(1)
+      expect(document.querySelector(barInProgress)).toBeInTheDocument()
     })
   })
 

@@ -7,14 +7,13 @@
 
 import React from 'react'
 import cx from 'classnames'
-import type { CellProps, Column, Renderer } from 'react-table'
-import { Text, TableV2, FontVariation, Layout, Icon, Color, IconName } from '@harness/uicore'
+import type { Column } from 'react-table'
+import { TableV2, Icon } from '@harness/uicore'
 import { get } from 'lodash-es'
-import { String, useStrings } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
-import { getModuleIcon } from '@common/utils/utils'
-import { Module, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import { CodeSourceCell, PipelineNameIdTagCell, ViewPipelineButtonCell } from './utils'
 import css from './PipelineStageMinimalMode.module.scss'
 
 export interface PipelineListProps {
@@ -22,55 +21,19 @@ export interface PipelineListProps {
   gotoPage: (pageNumber: number) => void
   selectedRow: PMSPipelineSummaryResponse
   setSelectedRow: (data: PMSPipelineSummaryResponse) => void
-}
-
-// eslint-disable-next-line react/function-component-definition
-const PipelineNameIdTagCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row }) => {
-  const data = row.original
-  return (
-    <Layout.Horizontal spacing="xsmall">
-      <Layout.Vertical>
-        <Text font={{ variation: FontVariation.H6 }} lineClamp={1} color={Color.BLACK}>
-          {data?.name}
-        </Text>
-        <Text font={{ variation: FontVariation.BODY }} lineClamp={1} color={Color.GREY_600}>
-          <String stringID="idLabel" vars={{ id: data?.identifier }} />
-        </Text>
-      </Layout.Vertical>
-      {Object.keys(get(data, 'tags', {})).length > 0 && (
-        <>
-          <Icon name="main-tags" size={15} />
-          <Text color={Color.GREY_600}>{Object.keys(get(data, 'tags', {})).length}</Text>
-        </>
-      )}
-    </Layout.Horizontal>
-  )
-}
-
-// eslint-disable-next-line react/function-component-definition
-const ModuleCell: Renderer<CellProps<PMSPipelineSummaryResponse>> = ({ row }) => {
-  const data = row.original
-  const modules = get(data, 'modules', [])
-  const modulesIcon = modules.map((module: Module | string) =>
-    module === 'pms' ? 'pipeline' : getModuleIcon(moduleToModuleNameMapping[module as Module])
-  )
-
-  return (
-    <Layout.Horizontal spacing="xsmall">
-      {modulesIcon.length > 0 &&
-        modulesIcon.map((iconName: IconName, idx) => <Icon name={iconName} size={25} key={idx} />)}
-    </Layout.Horizontal>
-  )
+  orgIdentifier: string
+  projectIdentifier: string
 }
 
 export function PipelineList({
   pipelineData,
   gotoPage,
   selectedRow,
-  setSelectedRow
+  setSelectedRow,
+  orgIdentifier,
+  projectIdentifier
 }: PipelineListProps): React.ReactElement {
   const { getString } = useStrings()
-
   const content = get(pipelineData, 'content', [])
   const totalElements = get(pipelineData, 'totalElements', 0)
   const totalPages = get(pipelineData, 'totalPages', 0)
@@ -82,14 +45,22 @@ export function PipelineList({
       {
         Header: getString('common.pipeline'),
         accessor: 'pipeline',
-        width: '45%',
+        width: '40%',
         Cell: PipelineNameIdTagCell
       },
       {
-        Header: getString('modules'),
+        Header: getString('pipeline.codeSource'),
+        accessor: 'codeSource',
+        width: '30%',
+        Cell: CodeSourceCell
+      },
+      {
+        Header: getString('pipeline.openPipelineInNewTab'),
         accessor: 'modules',
-        width: '50%',
-        Cell: ModuleCell
+        width: '25%',
+        Cell: ViewPipelineButtonCell,
+        orgIdentifier,
+        projectIdentifier
       },
       {
         accessor: 'icon',

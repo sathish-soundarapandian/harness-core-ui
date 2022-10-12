@@ -126,7 +126,9 @@ export const InfraProvisioningBase = (
     try {
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
-        allChildTypes,
+        filterProperties: {
+          childTypes: allChildTypes
+        },
         gitDetails,
         storeMetadata
       })

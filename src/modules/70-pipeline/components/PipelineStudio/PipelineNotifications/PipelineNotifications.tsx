@@ -8,10 +8,10 @@
 import React, { useState } from 'react'
 import { isNil, isEqual } from 'lodash-es'
 import produce from 'immer'
-import { Layout, Button, ButtonVariation, ButtonSize, Text } from '@wings-software/uicore'
 import { useToggleOpen, ConfirmationDialog, Intent } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+
 import NotificationTable, { NotificationRulesItem } from '@pipeline/components/Notifications/NotificationTable'
+import { NotificationsHeader } from '@pipeline/components/Notifications/NotificationHeader'
 import type { NotificationRules, PipelineInfoConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { Actions } from '@pipeline/components/Notifications/NotificationUtils'
@@ -22,51 +22,11 @@ import css from './PipelineNotifications.module.scss'
 
 const PAGE_SIZE = 10
 
-interface NotificationsHeaderProps {
-  isReadonly: boolean
-  discardChanges: () => void
-  applyChanges: () => void
-  pipeline: PipelineInfoConfig
-  isPipelineUpdated: boolean
-}
-
 export interface PipelineNotificationsRef {
   onRequestClose(): void
 }
 
 export const PipelineNotifications = React.forwardRef(PipelineNotificationsWithRef)
-
-function NotificationsHeader(props: NotificationsHeaderProps): React.ReactElement {
-  const { applyChanges, discardChanges, pipeline, isPipelineUpdated, isReadonly } = props
-  const { getString } = useStrings()
-  return (
-    <Layout.Horizontal
-      padding={{ bottom: 'medium', top: 'medium', left: 'xlarge', right: 'xlarge' }}
-      flex={{ distribution: 'space-between' }}
-      border={{ bottom: true, color: Color.GREY_300 }}
-    >
-      <Text color={Color.BLACK} font={{ weight: 'bold', size: 'medium' }}>{`${pipeline.name} : ${getString(
-        'notifications.name'
-      )}`}</Text>
-      <Layout.Horizontal spacing="medium" flex={{ alignItems: 'center' }}>
-        <Button
-          variation={ButtonVariation.SECONDARY}
-          size={ButtonSize.SMALL}
-          text={getString('applyChanges')}
-          onClick={applyChanges}
-          disabled={!isPipelineUpdated || isReadonly}
-        />
-        <Button
-          minimal
-          size={ButtonSize.SMALL}
-          text={getString('pipeline.discard')}
-          onClick={discardChanges}
-          disabled={!isPipelineUpdated}
-        />
-      </Layout.Horizontal>
-    </Layout.Horizontal>
-  )
-}
 
 function PipelineNotificationsWithRef(
   _props: React.PropsWithChildren<unknown>,
@@ -163,8 +123,8 @@ function PipelineNotificationsWithRef(
         isReadonly={isReadonly}
         applyChanges={applyChanges}
         discardChanges={discardChanges}
-        pipeline={pipelineAsState}
-        isPipelineUpdated={isPipelineUpdated}
+        name={pipelineAsState.name}
+        isUpdated={isPipelineUpdated}
       />
       <div className={css.pipelineNotifications}>
         <NotificationTable

@@ -3267,8 +3267,8 @@ export interface ChangesetInformation {
 }
 
 export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
-  totalChaosDelegates?: number
-  totalChaosScenarioRun?: number
+  totalChaosInfrastructures?: number
+  totalChaosExperimentRun?: number
 }
 
 export interface CloneMetadata {
@@ -4034,6 +4034,7 @@ export interface ConnectorInfoDTO {
     | 'OciHelmRepo'
     | 'CustomSecretManager'
     | 'ELK'
+    | 'GcpSecretManager'
 }
 
 export interface ConnectorValidationResult {
@@ -5032,6 +5033,7 @@ export interface Delegate {
   status?: 'ENABLED' | 'WAITING_FOR_APPROVAL' | 'DISABLED' | 'DELETED'
   supportedTaskTypes?: string[]
   tags?: string[]
+  tagsFromYaml?: string[]
   taskExpiryCheckNextIteration?: number
   useCdn?: boolean
   useJreVersion?: string
@@ -5222,7 +5224,7 @@ export interface DelegateGroupDTO {
 
 export interface DelegateGroupDetails {
   activelyConnected?: boolean
-  autoUpgrade?: boolean
+  autoUpgrade?: 'ON' | 'OFF' | 'SYNCHRONIZING'
   connectivityStatus?: string
   delegateConfigurationId?: string
   delegateDescription?: string
@@ -5400,7 +5402,7 @@ export interface DelegateResponseData {
 }
 
 export interface DelegateScalingGroup {
-  autoUpgrade?: boolean
+  autoUpgrade?: 'ON' | 'OFF' | 'SYNCHRONIZING'
   delegateGroupExpirationTime?: number
   delegates?: DelegateInner[]
   groupName?: string
@@ -5988,9 +5990,6 @@ export interface DelegateTaskPackageV2 {
     | 'VALIDATE_CUSTOM_SECRET_MANAGER_SECRET_REFERENCE'
     | 'FETCH_CUSTOM_SECRET'
     | 'RESOLVE_CUSTOM_SM_CONFIG'
-    | 'CI_DOCKER_INITIALIZE_TASK'
-    | 'CI_DOCKER_EXECUTE_TASK'
-    | 'CI_DOCKER_CLEANUP_TASK'
     | 'NG_LDAP_TEST_USER_SETTINGS'
     | 'NG_LDAP_TEST_GROUP_SETTINGS'
     | 'DLITE_CI_VM_INITIALIZE_TASK'
@@ -6347,9 +6346,6 @@ export interface DelegateTaskResponse {
     | 'VALIDATE_CUSTOM_SECRET_MANAGER_SECRET_REFERENCE'
     | 'FETCH_CUSTOM_SECRET'
     | 'RESOLVE_CUSTOM_SM_CONFIG'
-    | 'CI_DOCKER_INITIALIZE_TASK'
-    | 'CI_DOCKER_EXECUTE_TASK'
-    | 'CI_DOCKER_CLEANUP_TASK'
     | 'NG_LDAP_TEST_USER_SETTINGS'
     | 'NG_LDAP_TEST_GROUP_SETTINGS'
     | 'DLITE_CI_VM_INITIALIZE_TASK'
@@ -6705,9 +6701,6 @@ export interface DelegateTaskResponseV2 {
     | 'VALIDATE_CUSTOM_SECRET_MANAGER_SECRET_REFERENCE'
     | 'FETCH_CUSTOM_SECRET'
     | 'RESOLVE_CUSTOM_SM_CONFIG'
-    | 'CI_DOCKER_INITIALIZE_TASK'
-    | 'CI_DOCKER_EXECUTE_TASK'
-    | 'CI_DOCKER_CLEANUP_TASK'
     | 'NG_LDAP_TEST_USER_SETTINGS'
     | 'NG_LDAP_TEST_GROUP_SETTINGS'
     | 'DLITE_CI_VM_INITIALIZE_TASK'
@@ -9074,6 +9067,12 @@ export interface GcpOrganization {
   uuid?: string
 }
 
+export type GcpSecretManager = ConnectorConfigDTO & {
+  credentialsRef: string
+  default?: boolean
+  delegateSelectors?: string[]
+}
+
 export interface GenericEntityFilter {
   filterType?: string
   ids?: string[]
@@ -11144,12 +11143,15 @@ export interface InstanceExecutionHistory {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   executionInterruptType?:
     | 'ABORT'
     | 'ABORT_ALL'
@@ -14206,6 +14208,7 @@ export interface PerpetualTaskClientContext {
 export interface PerpetualTaskRecord {
   accountId?: string
   assignAfterMs?: number
+  assignIteration?: number
   assignTryCount?: number
   assignerIterations?: number[]
   clientContext?: PerpetualTaskClientContext
@@ -15321,12 +15324,15 @@ export interface ResponseMessage {
     | 'SCM_UNEXPECTED_ERROR'
     | 'DUPLICATE_FILE_IMPORT'
     | 'AZURE_APP_SERVICES_TASK_EXCEPTION'
+    | 'AZURE_ARM_TASK_EXCEPTION'
     | 'MEDIA_NOT_SUPPORTED'
     | 'AWS_ECS_ERROR'
     | 'AWS_APPLICATION_AUTO_SCALING'
     | 'AWS_ECS_SERVICE_NOT_ACTIVE'
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
+    | 'FREEZE_EXCEPTION'
+    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -16209,6 +16215,7 @@ export interface RestResponseInviteOperationResponse {
     | 'FAIL'
     | 'INVITE_EXPIRED'
     | 'INVITE_INVALID'
+    | 'USER_INVITE_NOT_REQUIRED'
   responseMessages?: ResponseMessage[]
 }
 
@@ -16940,6 +16947,7 @@ export interface RestResponseListInviteOperationResponse {
     | 'FAIL'
     | 'INVITE_EXPIRED'
     | 'INVITE_INVALID'
+    | 'USER_INVITE_NOT_REQUIRED'
   )[]
   responseMessages?: ResponseMessage[]
 }
@@ -23238,8 +23246,6 @@ export type GcpBillingAccountRequestBody = GcpBillingAccount
 
 export type GcpOrganizationRequestBody = GcpOrganization
 
-export type GraphQLQueryRequestBody = GraphQLQuery
-
 export type HarnessTagRequestBody = HarnessTag
 
 export type HarnessTagLinkRequestBody = HarnessTagLink
@@ -23358,9 +23364,9 @@ export type GetDelegatePropertiesBodyRequestBody = string[]
 
 export type ImportAccountDataRequestBody = void
 
-export type SaveGcpSecretsManagerConfig1RequestBody = void
+export type SaveGcpSecretsManagerConfigRequestBody = void
 
-export type SaveGlobalKmsConfigRequestBody = void
+export type SaveGcpSecretsManagerConfig1RequestBody = void
 
 export interface SaveMessageComparisonListBodyRequestBody {
   [key: string]: string

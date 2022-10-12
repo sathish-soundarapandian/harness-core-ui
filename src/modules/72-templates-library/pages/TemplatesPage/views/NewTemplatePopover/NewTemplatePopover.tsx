@@ -10,6 +10,7 @@ import { Position } from '@blueprintjs/core'
 import { Button, ButtonVariation } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { merge, noop } from 'lodash-es'
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { getAllowedTemplateTypes, TemplateType } from '@templates-library/utils/templatesUtils'
 import routes from '@common/RouteDefinitions'
@@ -28,8 +29,14 @@ import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import css from './NewTemplatePopover.module.scss'
 
-function NewTemplatePopoverWrapper(): React.ReactElement {
+export interface NewTemplatePopoverWrapperProps {
+  onImportTemplateClick?: () => void
+}
+
+function NewTemplatePopoverWrapper({ onImportTemplateClick }: NewTemplatePopoverWrapperProps): React.ReactElement {
   const { getString } = useStrings()
   const history = useHistory()
   const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
@@ -40,6 +47,7 @@ function NewTemplatePopoverWrapper(): React.ReactElement {
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE,
     [TemplateType.CustomDeployment]: !!NG_DEPLOYMENT_TEMPLATE
   })
+  const { supportingTemplatesGitx } = useAppStore()
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { enabled: templatesEnabled } = useFeature({
     featureRequest: {
@@ -72,11 +80,18 @@ function NewTemplatePopoverWrapper(): React.ReactElement {
   )
 
   const getMenu = (): TemplateMenuItem[] => {
-    return allowedTemplateTypes.map(templateType => {
+    const allowedTemplates = allowedTemplateTypes.map(templateType => {
       return merge(templateType, {
         onClick: () => goToTemplateStudio(templateType.value as TemplateType)
       })
     })
+
+    return [
+      ...(supportingTemplatesGitx
+        ? [{ label: getString('common.importFromGit'), onClick: onImportTemplateClick }]
+        : []),
+      ...allowedTemplates
+    ] as TemplateMenuItem[]
   }
 
   const tooltipBtn = React.useCallback(
@@ -98,6 +113,7 @@ function NewTemplatePopoverWrapper(): React.ReactElement {
       disabled={!canEdit || !templatesEnabled}
       setMenuOpen={setMenuOpen}
       usePortal={false}
+      className={cx({ [css.supportTemplateImport]: supportingTemplatesGitx })}
     >
       <Button
         variation={ButtonVariation.PRIMARY}

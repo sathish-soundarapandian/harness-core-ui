@@ -34,7 +34,7 @@ describe('Unit tests for ConfigureSLOAlertConditions ', () => {
   }
   test('Verify if ConfigureSLOAlertConditionsProps renders', async () => {
     const { getByText } = render(<WrapperComponent {...props} />)
-    expect(getByText('cv.notifications.configureAlertConditions')).toBeInTheDocument()
+    expect(getByText('notifications.configureConditions')).toBeInTheDocument()
     expect(getByText('Category: cv.SLO')).toBeInTheDocument()
     expect(getByText('cv.notifications.sloDescription')).toBeInTheDocument()
   })

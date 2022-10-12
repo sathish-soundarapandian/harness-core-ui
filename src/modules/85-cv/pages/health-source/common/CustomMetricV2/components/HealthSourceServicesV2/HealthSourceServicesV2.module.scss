@@ -1,0 +1,25 @@
+.main {
+  margin-bottom: var(--spacing-medium);
+  background-color: var(--grey-50);
+  padding: var(--spacing-medium);
+
+  .groupLabel {
+    color: var(--grey-600) !important;
+    font-size: var(--form-input-font-size) !important;
+    font-weight: 500;
+    margin-bottom: var(--spacing-small) !important;
+  }
+
+  .checkBoxGroup {
+    > div {
+      position: relative;
+      left: 27px;
+      label {
+        font-size: var(--font-size-small) !important;
+        color: var(--black) !important;
+      }
+    }
+    border-bottom: 1px solid var(--grey-200);
+    margin-bottom: var(--spacing-medium) !important;
+  }
+}

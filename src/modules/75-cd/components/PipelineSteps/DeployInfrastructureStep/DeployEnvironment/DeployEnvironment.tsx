@@ -156,26 +156,39 @@ function DeployEnvironment({
           )
 
           const values = { ...formik?.values }
+
+          const hasEnvChanged =
+            get(values, 'environment.environmentRef') !== get(values, 'environment.environmentInputs.identifier')
+
           if (parsedEnvironmentYaml.environmentInputs) {
-            set(values, 'environment.environmentInputs', {
-              ...clearRuntimeInput(parsedEnvironmentYaml.environmentInputs)
-            })
+            ;(getMultiTypeFromValue(get(values, 'environment.environmentInputs')) === MultiTypeInputType.RUNTIME ||
+              hasEnvChanged) &&
+              set(values, 'environment.environmentInputs', {
+                ...clearRuntimeInput(parsedEnvironmentYaml.environmentInputs)
+              })
           } else {
             unset(values, 'environment.environmentInputs')
           }
 
           if (parsedServiceOverridesYaml.serviceOverrideInputs) {
-            set(values, 'environment.serviceOverrideInputs', {
-              ...clearRuntimeInput(parsedServiceOverridesYaml.serviceOverrideInputs)
-            })
+            ;(getMultiTypeFromValue(get(values, 'environment.serviceOverrideInputs')) === MultiTypeInputType.RUNTIME ||
+              hasEnvChanged) &&
+              set(values, 'environment.serviceOverrideInputs', {
+                ...clearRuntimeInput(parsedServiceOverridesYaml.serviceOverrideInputs)
+              })
           } else {
             unset(values, `environment.serviceOverrideInputs`)
           }
 
           if (gitOpsEnabled) {
-            set(values, `environment.gitOpsClusters`, '')
+            ;(getMultiTypeFromValue(get(values, 'environment.gitOpsClusters')) === MultiTypeInputType.RUNTIME ||
+              get(formik?.values, 'clusterRef') === '') &&
+              set(values, `environment.gitOpsClusters`, '')
           } else {
-            set(values, `environment.infrastructureDefinitions`, '')
+            ;(getMultiTypeFromValue(get(values, 'environment.infrastructureDefinitions')) ===
+              MultiTypeInputType.RUNTIME ||
+              get(formik?.values, 'infrastructureRef') === '') &&
+              set(values, `environment.infrastructureDefinitions`, '')
           }
           formik?.setValues({ ...values, isEnvInputLoaded: true })
         } else {
@@ -261,6 +274,16 @@ function DeployEnvironment({
       }
     } else if (path && !firstRender) {
       updateStageFormTemplate({ environmentRef: RUNTIME_INPUT_VALUE }, `${path}`)
+      formik?.setValues(
+        produce(formik?.values, draft => {
+          set(draft, 'environment', {
+            environmentRef: RUNTIME_INPUT_VALUE,
+            environmentInputs: RUNTIME_INPUT_VALUE,
+            serviceOverrideInputs: RUNTIME_INPUT_VALUE,
+            infrastructureDefinitions: RUNTIME_INPUT_VALUE
+          })
+        })
+      )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedEnvironment])

@@ -44,7 +44,9 @@ describe('Add Stage View', () => {
       </TestWrapper>
     )
     const cards = container.getElementsByClassName('cardNew')
-    expect(cards.length).toBe(6)
+    // Chained Pipeline is behind the FF
+    // Because of this condition -> (stage.type !== StageType.PIPELINE || isPipelineChainingEnabled), Chained Pipeline Card is not visible!
+    expect(cards.length).toBe(5)
   })
 
   test('Different Stage card rendered', () => {
@@ -142,13 +144,13 @@ describe('Add Stage View', () => {
       </TestWrapper>
     )
     expect(getByText('Feature Flag')).toBeDefined()
-    const chanedPipelineStageCard = container.querySelector(`[data-icon="chained-pipeline"]`)
+    const customStageCard = container.querySelector(`[data-icon="custom-stage-icon"]`)
     act(() => {
-      fireEvent.mouseOver(chanedPipelineStageCard as Element)
+      fireEvent.mouseOver(customStageCard as Element)
     })
 
     expect(container.getElementsByClassName('hoverStageSection')).toBeTruthy()
-    const emptyStageDescription = await waitFor(() => findByText('pipeline.pipelineSteps.chainedPipeline'))
+    const emptyStageDescription = await waitFor(() => findByText('pipeline.pipelineSteps.customStage'))
     expect(emptyStageDescription).toBeDefined()
     const comingSoonText = findByText('common.comingSoon2')
     expect(comingSoonText).toBeDefined()

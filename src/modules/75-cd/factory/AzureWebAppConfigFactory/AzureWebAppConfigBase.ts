@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AzureWebAppConfigProps } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceSpecInterface.types'
+import type { ApplicationConfigProps } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceSpecInterface.types'
 
-export interface AzureWebAppConfigRenderProps extends AzureWebAppConfigProps {
+export interface AzureWebAppConfigRenderProps extends ApplicationConfigProps {
   isAzureWebAppConfigRuntime: boolean
   projectIdentifier: string
   orgIdentifier: string

@@ -7,6 +7,7 @@
 
 import React from 'react'
 import * as Yup from 'yup'
+import { useParams } from 'react-router-dom'
 import noop from 'lodash-es/noop'
 import isEmpty from 'lodash-es/isEmpty'
 import { Card, Container, Heading, FormikForm, ButtonVariation, Button, Formik } from '@wings-software/uicore'
@@ -14,6 +15,7 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { NameIdDescriptionTags } from '@common/components'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import type { WindowPathProps } from '@freeze-windows/types'
 import { DefaultFreezeId } from './FreezeWindowContext/FreezeWindowReducer'
 import { FreezeWindowContext } from './FreezeWindowContext/FreezeWindowContext'
 import { getInitialValues } from './FreezeWindowStudioUtil'
@@ -30,13 +32,19 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
     state: { freezeObj },
     updateFreeze
   } = React.useContext(FreezeWindowContext)
+  const { windowIdentifier } = useParams<WindowPathProps>()
 
   const [initialValues, setInitialValues] = React.useState({ identifier: DefaultFreezeId })
-  const validate = React.useCallback((formData: any) => updateFreeze({ ...freezeObj, ...formData }), [])
+  const validate = React.useCallback(
+    (formData: any) => {
+      updateFreeze({ ...freezeObj, ...formData })
+    },
+    [freezeObj.identifier, freezeObj.name, freezeObj.description, freezeObj.tags]
+  )
 
   React.useEffect(() => {
     setInitialValues(getInitialValues(freezeObj))
-  }, [freezeObj.identifier])
+  }, [freezeObj.identifier, freezeObj.name, freezeObj.description, freezeObj.tags])
 
   return (
     <Formik
@@ -61,7 +69,7 @@ export const FreezeStudioOverviewSection: React.FC<FreezeStudioOverviewSectionPr
                 formikProps={formikProps}
                 identifierProps={{
                   inputLabel: getString('name'),
-                  isIdentifierEditable: true, // todo: edit case, not editable
+                  isIdentifierEditable: windowIdentifier === DefaultFreezeId && !isReadOnly,
                   inputGroupProps: { disabled: isReadOnly, inputGroup: { autoFocus: true } }
                 }}
                 descriptionProps={{ disabled: isReadOnly }}

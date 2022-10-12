@@ -200,6 +200,8 @@ pricePreview:
   calculatedNextStep: Calculated in final review
   discount: ' (2 months free)'
 ldap:
+  reviewLdapSyncExpression: Review the LDAP User Sync Schedule
+  nextIterations: Scheduled Next Executions as per applied Cron Expression <strong>{{cronExpression}}</strong>
   authChangeSuccessful: Authentication mechanism changed to LDAP successfuly
   ldapTestSuccessful: LDAP connection test successful
   verifyAndEnableConfig: Verify and Enable LDAP Configuration
@@ -265,6 +267,7 @@ ldap:
     validateBindDN: 'Bind Distinguished Name is required'
   updateStepFailMessage: 'Update failed'
   discardChanges: 'Discard changes'
+  userSyncSchedule: 'LDAP User Sync Schedule'
 billingInfo:
   address: Address
   billingContact: '{{$.common.billing}} Contact'

@@ -23,8 +23,9 @@ export type MapElkQueryToService = {
   timeStampFormat: string
   logIndexes: string
   query: string
-  identify_timestamp: string
+  identifyTimestamp: string
   messageIdentifier: string
+  isStaleRecord?: boolean
 }
 
 export interface ElkQueryDefinition {

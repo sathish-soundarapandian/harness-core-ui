@@ -508,6 +508,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                           data-rbd-drag-handle-draggable-id="0"
                           data-rbd-draggable-context-id="0"
                           data-rbd-draggable-id="0"
+                          data-testid="fetchInstancesScript.store.spec.files[0]"
                           draggable="false"
                           role="button"
                           tabindex="0"
@@ -516,30 +517,6 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                             class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
                             style="align-items: center;"
                           >
-                            <span
-                              class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
-                              icon="drag-handle-vertical"
-                            >
-                              <svg
-                                data-icon="drag-handle-vertical"
-                                height="16"
-                                viewBox="0 0 16 16"
-                                width="16"
-                              >
-                                <desc>
-                                  drag-handle-vertical
-                                </desc>
-                                <path
-                                  d="M6 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4-6c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zM6 13c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
-                                  fill-rule="evenodd"
-                                />
-                              </svg>
-                            </span>
-                            <p
-                              class="StyledProps--font StyledProps--main text"
-                            >
-                              1.
-                            </p>
                             <div
                               class="multiSelectField"
                             >
@@ -583,9 +560,11 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                                           >
                                             <div
                                               class="Layout--vertical StyledProps--main"
+                                              data-testid="file-store-select"
                                             >
                                               <div
                                                 class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                                data-testid="container-fs"
                                               >
                                                 <div
                                                   class="StyledProps--font StyledProps--main pathWrapper StyledProps--flex"
@@ -598,7 +577,7 @@ exports[`Test DeploymentInfraWrapperWithRef initial render with data - file stor
                                                   </p>
                                                 </div>
                                                 <div
-                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+                                                  class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
                                                 >
                                                   <span
                                                     class="Tag--main"

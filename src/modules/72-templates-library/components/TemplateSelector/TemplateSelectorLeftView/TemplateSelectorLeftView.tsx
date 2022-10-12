@@ -5,9 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-  Checkbox,
   Container,
   DropDown,
   ExpandingSearchInput,
@@ -20,7 +19,7 @@ import {
   Views
 } from '@wings-software/uicore'
 import { Color } from '@harness/design-system'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Breadcrumbs } from '@common/components/Breadcrumbs/Breadcrumbs'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -52,16 +51,10 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   const {
     state: { selectorData }
   } = useTemplateSelectorContext()
-  const {
-    templateType = '',
-    allChildTypes = [],
-    linkedTemplate,
-    selectedTemplate: defaultTemplate,
-    gitDetails = {}
-  } = selectorData || {}
+  const { templateType = '', filterProperties, selectedTemplate: defaultTemplate, gitDetails = {} } = selectorData || {}
+  const { childTypes = [], templateIdentifiers } = filterProperties || {}
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateSummaryResponse | undefined>()
   const { getString } = useStrings()
-  const { identifiers, checkboxLabel = getString('templatesLibrary.seeLinkedTemplate') } = linkedTemplate || {}
   const [page, setPage] = useState(0)
   const [view, setView] = useState<Views>(Views.GRID)
   const [searchParam, setSearchParam] = useState('')
@@ -75,9 +68,9 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [selectedChildType, setSelectedChildType] = React.useState<string | undefined>(
-    allChildTypes.length === 1 ? allChildTypes[0] : undefined
+    childTypes.length === 1 ? childTypes[0] : undefined
   )
-  const [selectedTemplateRefs, setSelectedTemplateRefs] = React.useState<string[] | undefined>(identifiers)
+  const [selectedTemplateRefs, setSelectedTemplateRefs] = React.useState<string[] | undefined>(templateIdentifiers)
   const scopeOptions: SelectOption[] = React.useMemo(
     () => getScopeOptions(getScopeFromDTO(params), getString),
     [params]
@@ -100,10 +93,10 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     return {
       filterType: 'Template',
       templateEntityTypes: [templateType],
-      childTypes: selectedChildType ? [selectedChildType] : allChildTypes,
+      childTypes: selectedChildType ? [selectedChildType] : childTypes,
       templateIdentifiers: selectedTemplateRefs
     }
-  }, [templateType, selectedChildType, allChildTypes, selectedTemplateRefs])
+  }, [templateType, selectedChildType, childTypes, selectedTemplateRefs])
 
   const queryParams = React.useMemo(() => {
     return {
@@ -128,10 +121,10 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     if (searchParam) {
       searchRef.current.clear()
     }
-    setSelectedChildType(allChildTypes.length === 1 ? allChildTypes[0] : undefined)
+    setSelectedChildType(childTypes.length === 1 ? childTypes[0] : undefined)
     setSelectedScope(scopeOptions[0])
-    setSelectedTemplateRefs(identifiers)
-  }, [searchParam, searchRef.current, allChildTypes, identifiers])
+    setSelectedTemplateRefs(templateIdentifiers)
+  }, [searchParam, searchRef.current, childTypes, templateIdentifiers])
 
   const getName = React.useCallback(
     (item: string): string => {
@@ -149,13 +142,13 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
 
   const dropdownItems = React.useMemo(
     (): SelectOption[] =>
-      allChildTypes
+      childTypes
         .map(item => ({
           label: getName(item),
           value: item
         }))
         .sort((a, b) => a.label.localeCompare(b.label)),
-    [allChildTypes, getName]
+    [childTypes, getName]
   )
 
   const {
@@ -169,17 +162,6 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     queryParamStringifyOptions: { arrayFormat: 'comma' },
     debounce: true
   })
-
-  const onLinkedTemplateChange = React.useCallback(
-    (e: FormEvent<HTMLInputElement>) => {
-      if (e.currentTarget.checked) {
-        setSelectedTemplateRefs(identifiers)
-      } else {
-        setSelectedTemplateRefs(undefined)
-      }
-    },
-    [identifiers]
-  )
 
   useEffect(() => {
     if (areTemplatesSame(selectedTemplate, defaultTemplate)) {
@@ -255,18 +237,6 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
                 </Text>
                 <Container>
                   <Layout.Horizontal flex={{ alignItems: 'center' }} spacing={'medium'}>
-                    {!isEmpty(identifiers) && (
-                      <Checkbox
-                        checked={!isEmpty(selectedTemplateRefs)}
-                        labelElement={
-                          <Text lineClamp={1} font={{ size: 'small' }} className={css.linkedTemplateCheckboxLabel}>
-                            {checkboxLabel}
-                          </Text>
-                        }
-                        onChange={onLinkedTemplateChange}
-                        className={css.linkedTemplateCheckbox}
-                      />
-                    )}
                     {dropdownItems.length > 1 && (
                       <DropDown
                         onChange={item => {

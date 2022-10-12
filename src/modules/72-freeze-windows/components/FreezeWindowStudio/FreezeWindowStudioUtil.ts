@@ -6,17 +6,19 @@
  */
 
 import { parse } from 'yaml'
-import { defaultTo, isEmpty, pick, set, once } from 'lodash-es'
+import * as Yup from 'yup'
+import { defaultTo, isEmpty, once, pick, set } from 'lodash-es'
 import type { SelectOption } from '@wings-software/uicore'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import type { UseStringsReturn } from 'framework/strings'
+import { accountPathProps, modulePathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
+import type { UseStringsReturn, StringKeys } from 'framework/strings'
 import {
   EntityConfig,
   EntityType,
+  EnvironmentType,
   FIELD_KEYS,
   FreezeWindowLevels,
-  ResourcesInterface,
-  EnvironmentType
+  ResourcesInterface
 } from '@freeze-windows/types'
 
 export const isAllOptionSelected = (selected?: SelectOption[]) => {
@@ -122,7 +124,7 @@ const selectedValueForFilterTypeAll = (type: string, getString: UseStringsReturn
 }
 
 const makeOptions = (dataMap: Record<string, SelectOption>, keys?: string[]) => {
-  return keys?.map(key => dataMap[key])
+  return keys?.map(key => dataMap[key]).filter(optn => optn)
 }
 
 const equalsOptions = (type: FIELD_KEYS, entityRefs: string[], resources: ResourcesInterface) => {
@@ -131,6 +133,9 @@ const equalsOptions = (type: FIELD_KEYS, entityRefs: string[], resources: Resour
   }
   if (type === FIELD_KEYS.Proj) {
     return makeOptions(resources.projectsMap, entityRefs)
+  }
+  if (type === FIELD_KEYS.Org) {
+    return makeOptions(resources.orgsMap, entityRefs)
   }
 
   // Single Select Field
@@ -149,6 +154,17 @@ export const getInitialValuesForConfigSection = (
     set(initialValues, `entity[${i}].name`, c.name)
 
     const entities = c.entities
+
+    let projectResourcesMap: Record<string, SelectOption> | null = null
+    if (resources.freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+      const orgObj = entities.find(entity => entity.type === FIELD_KEYS.Org) || {}
+      const orgIds = (orgObj as EntityType).entityRefs
+      const filterType = (orgObj as EntityType).filterType
+      if (orgIds?.length === 1 && filterType && filterType !== 'All') {
+        projectResourcesMap = resources.projectsByOrgId[orgIds[0]]?.projectsMap
+      }
+    }
+
     entities?.forEach(entity => {
       const { type, filterType, entityRefs } = entity
       if (filterType === 'All') {
@@ -159,7 +175,20 @@ export const getInitialValuesForConfigSection = (
           SINGLE_SELECT_FIELDS[type as FIELD_KEYS.EnvType] ? filterType : selectedValueForFilterTypeAll(type, getString)
         )
       } else if (filterType === 'Equals') {
-        set(initialValues, `entity[${i}].${type}`, equalsOptions(type, entityRefs || [], resources))
+        set(
+          initialValues,
+          `entity[${i}].${type}`,
+          equalsOptions(
+            type,
+            entityRefs || [],
+            type === FIELD_KEYS.Proj && projectResourcesMap
+              ? {
+                  ...resources,
+                  projectsMap: projectResourcesMap
+                }
+              : resources
+          )
+        )
         // equals
       } else if (filterType === 'NotEquals') {
         const excludeFieldKeys = ExcludeFieldKeys[type as 'Org' | 'Project']
@@ -167,7 +196,20 @@ export const getInitialValuesForConfigSection = (
           const { CheckboxKey, ExcludeFieldKey } = excludeFieldKeys
           set(initialValues, `entity[${i}].${type}`, selectedValueForFilterTypeAll(type, getString))
           set(initialValues, `entity[${i}].${CheckboxKey}`, true)
-          set(initialValues, `entity[${i}].${ExcludeFieldKey}`, equalsOptions(type, entityRefs || [], resources))
+          set(
+            initialValues,
+            `entity[${i}].${ExcludeFieldKey}`,
+            equalsOptions(
+              type,
+              entityRefs || [],
+              type === FIELD_KEYS.Proj && projectResourcesMap
+                ? {
+                    ...resources,
+                    projectsMap: projectResourcesMap
+                  }
+                : resources
+            )
+          )
         }
       }
     })
@@ -242,7 +284,8 @@ const adaptForProjectField = (newValues: any, entities: EntityType[]) => {
   const fieldKey = FIELD_KEYS.Proj
   const { isAllSelected, obj, index, isNewValueEmpty } = getMetaDataForField(fieldKey, entities, newValues)
 
-  if (index < 0 && newValues[fieldKey]) {
+  // Value is empty initially and later also
+  if (index < 0 && !newValues[fieldKey]) {
     return
   }
 
@@ -284,6 +327,7 @@ export const convertValuesToYamlObj = (currentValues: any, newValues: any, field
   adaptForEnvField(newValues, entities as EntityType[])
   if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
     adaptForOrgField(newValues, entities)
+    adaptForProjectField(newValues, entities)
   }
 
   if (fieldsVisibility.freezeWindowLevel === FreezeWindowLevels.PROJECT) {
@@ -316,5 +360,46 @@ export const getEmptyEntityConfig = (fieldsVisibility: FieldVisibility): EntityC
   return {
     name: '',
     entities: entities as EntityType[]
+  }
+}
+
+export const getValidationSchema = (freezeWindowLevel: FreezeWindowLevels) => {
+  if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
+    // service and env type reqd
+    return {
+      [FIELD_KEYS.Service]: Yup.string().required('Service is required')
+    }
+  }
+  if (freezeWindowLevel === FreezeWindowLevels.ORG) {
+    return {
+      [FIELD_KEYS.Proj]: Yup.string().required('Project is required')
+    }
+  }
+  return {}
+}
+
+export function getContentAndTitleStringKeys(isYamlError: boolean): {
+  navigationContentText: StringKeys
+  navigationTitleText: StringKeys
+} {
+  return {
+    navigationContentText: isYamlError ? 'navigationYamlError' : 'navigationCheckText',
+    navigationTitleText: isYamlError ? 'navigationYamlErrorTitle' : 'navigationCheckTitle'
+  }
+}
+
+export const PATH_PARAMS = {
+  [FreezeWindowLevels.ACCOUNT]: {
+    ...accountPathProps,
+    windowIdentifier: ':windowIdentifier'
+  },
+  [FreezeWindowLevels.ORG]: {
+    ...orgPathProps,
+    windowIdentifier: ':windowIdentifier'
+  },
+  [FreezeWindowLevels.PROJECT]: {
+    ...projectPathProps,
+    ...modulePathProps,
+    windowIdentifier: ':windowIdentifier'
   }
 }

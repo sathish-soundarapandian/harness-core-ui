@@ -215,7 +215,7 @@ export class MergePR extends PipelineStep<MergePRStepData> {
   protected stepName = 'Merge PR'
   protected stepIconColor = Color.GREY_700
   protected stepIcon: IconName = 'merge-pr'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.createPR'
+  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.mergePR'
 
   // istanbul ignore next
   validateInputSet({

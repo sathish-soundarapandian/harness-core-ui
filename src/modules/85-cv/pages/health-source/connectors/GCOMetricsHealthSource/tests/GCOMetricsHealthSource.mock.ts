@@ -331,6 +331,57 @@ export const sourceDataTemplate = {
   selectedDashboards: []
 }
 
+export const sourceDataWithMetricPacks = {
+  ...sourceDataUpdated,
+  healthSourceList: [
+    {
+      ...gcoHealthSource,
+      spec: {
+        ...gcoHealthSource.spec,
+        metricPacks: [
+          {
+            identifier: 'Custom',
+            metricThresholds: [
+              {
+                type: 'IgnoreThreshold',
+                spec: {
+                  action: 'Ignore'
+                },
+                criteria: {
+                  type: 'Absolute',
+                  spec: {
+                    greaterThan: 54
+                  }
+                },
+                metricType: 'Custom',
+                metricName: 'test1'
+              },
+              {
+                type: 'FailImmediately',
+                spec: {
+                  action: 'FailAfterOccurrence',
+                  spec: {
+                    count: 45
+                  }
+                },
+                criteria: {
+                  type: 'Percentage',
+                  spec: {
+                    greaterThan: 87
+                  },
+                  criteriaPercentageType: 'greaterThan'
+                },
+                metricType: 'Custom',
+                metricName: 'test1'
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
+
 export const MockValidationResponse = {
   metaData: {},
   data: [

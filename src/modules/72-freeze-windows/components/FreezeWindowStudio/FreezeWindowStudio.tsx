@@ -6,11 +6,18 @@
  */
 
 import React from 'react'
+import { matchPath, useHistory } from 'react-router-dom'
 import { Page, useToaster, VisualYamlSelectedView as SelectedView } from '@wings-software/uicore'
-import { useStrings } from 'framework/strings'
+import { NavigationCheck } from '@common/components'
+import routes from '@common/RouteDefinitions'
+import { useStrings, StringKeys } from 'framework/strings'
 import type { Error } from 'services/cd-ng'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
-import { isValidYaml } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
+import {
+  isValidYaml,
+  getContentAndTitleStringKeys,
+  PATH_PARAMS
+} from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowStudioUtil'
 import { useFreezeStudioData } from '@freeze-windows/components/FreezeWindowStudio/useFreezeStudioData'
 import { RightBar } from '@freeze-windows/components/RightBar/RightBar'
 import { FreezeWindowStudioHeader } from './FreezeWindowStudioHeader'
@@ -25,12 +32,17 @@ export const FreezeWindowStudio = () => {
     updateYamlView,
     updateFreeze,
     loadingFreezeObj,
+    isUpdatingFreeze,
     freezeObjError,
     refetchFreezeObj,
-    state: { isYamlEditable, yamlHandler }
+    freezeWindowLevel,
+    state: { isYamlEditable, yamlHandler, freezeObj, isUpdated }
   } = React.useContext(FreezeWindowContext)
+  const history = useHistory()
 
   const resources = useFreezeStudioData()
+
+  const { navigationContentText, navigationTitleText } = getContentAndTitleStringKeys(false)
 
   // isYamlError
   const [, setYamlError] = React.useState(false)
@@ -61,18 +73,40 @@ export const FreezeWindowStudio = () => {
     return true
   }
 
+  // console.log(loadingFreezeObj, isUpdatingFreeze, freezeObj?.entityConfigs?.[0]?.name)
+
   return (
-    <Page.Body
-      loading={loadingFreezeObj}
-      error={(freezeObjError?.data as Error)?.message || freezeObjError?.message}
-      retryOnError={refetchFreezeObj}
-    >
-      <div className={css.marginRight}>
-        <FreezeWindowStudioHeader />
-        <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
-        <FreezeWindowStudioBody resources={resources} />
-      </div>
-      <RightBar />
-    </Page.Body>
+    <>
+      <NavigationCheck
+        when={freezeObj.identifier !== ''}
+        shouldBlockNavigation={nextLocation => {
+          const matchDefault = matchPath(nextLocation.pathname, {
+            path: routes.toFreezeWindowStudio(PATH_PARAMS[freezeWindowLevel]),
+            exact: true
+          })
+
+          return (!matchDefault?.isExact && isUpdated) || false
+        }}
+        textProps={{
+          contentText: getString(navigationContentText as StringKeys),
+          titleText: getString(navigationTitleText as StringKeys)
+        }}
+        navigate={newPath => {
+          history.push(newPath)
+        }}
+      />
+      <Page.Body
+        loading={loadingFreezeObj || isUpdatingFreeze}
+        error={(freezeObjError?.data as Error)?.message || freezeObjError?.message}
+        retryOnError={refetchFreezeObj}
+      >
+        <div className={css.marginRight}>
+          <FreezeWindowStudioHeader />
+          <FreezeWindowStudioSubHeader onViewChange={onViewChange} />
+          {loadingFreezeObj || isUpdatingFreeze ? null : <FreezeWindowStudioBody resources={resources} />}
+        </div>
+        <RightBar />
+      </Page.Body>
+    </>
   )
 }

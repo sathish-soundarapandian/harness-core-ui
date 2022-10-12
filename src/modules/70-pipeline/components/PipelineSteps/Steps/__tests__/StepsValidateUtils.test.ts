@@ -46,6 +46,9 @@ const strings = {
         invalidLimitCPU: 'pipeline.stepCommonFields.validation.invalidLimitCPU',
         invalidLimitMemory: 'pipeline.stepCommonFields.validation.invalidLimitMemory'
       }
+    },
+    step: {
+      validation: { namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -' }
     }
   }
 }

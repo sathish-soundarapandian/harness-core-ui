@@ -331,15 +331,24 @@ export const getAllProjects = (orgScopes?: ScopeSelector[]): string[] => {
 export const cleanUpResourcesMap = (
   resourceTypes: ResourceType[],
   selectedResourcesMap: Map<ResourceType, ResourceSelectorValue>,
-  selectionType: SelectionType
+  selectionType: SelectionType,
+  selectedScope: SelectorScope
 ): Map<ResourceType, ResourceSelectorValue> => {
   const types = [...resourceTypes]
-  selectedResourcesMap.forEach((_value, key) => {
+  selectedResourcesMap.forEach((value, key) => {
     if (!types.includes(key)) {
       selectedResourcesMap.delete(key)
     } else {
       types.splice(types.indexOf(key), 1)
-      selectedResourcesMap.set(key, RbacResourceGroupTypes.DYNAMIC_RESOURCE_SELECTOR)
+      if (selectedScope === SelectorScope.CURRENT) {
+        selectedResourcesMap.set(key, value)
+      } else {
+        if (isAtrributeFilterSelector(value)) {
+          selectedResourcesMap.set(key, value)
+        } else {
+          selectedResourcesMap.set(key, RbacResourceGroupTypes.DYNAMIC_RESOURCE_SELECTOR)
+        }
+      }
     }
   })
   if (selectionType === SelectionType.ALL) {

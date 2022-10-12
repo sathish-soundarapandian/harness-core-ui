@@ -15,13 +15,12 @@ import { Intent } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useToaster } from '@common/exports'
-import type { DeploymentConfigStepTemplateRefDetails } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import css from './StepTemplateCard.module.scss'
 
 interface StepTemplateCardProps {
-  stepTemplateRefObj: DeploymentConfigStepTemplateRefDetails
+  templateRef: string
   className?: string
   stepTemplateIndex: number
 }
@@ -29,8 +28,7 @@ interface StepTemplateCardProps {
 export function StepTemplateCard(props: StepTemplateCardProps): React.ReactElement | null {
   const { templateDetailsByRef, stepsFactory, isReadOnly, deploymentConfig, updateDeploymentConfig, setDrawerData } =
     useDeploymentContext()
-  const { stepTemplateRefObj, className, stepTemplateIndex } = props
-  const { templateRef } = stepTemplateRefObj
+  const { templateRef, className, stepTemplateIndex } = props
   const templateDetails = get(templateDetailsByRef, templateRef) as TemplateSummaryResponse
   const { childType: templateType } = templateDetails || {}
   const step = stepsFactory.getStep(templateType)

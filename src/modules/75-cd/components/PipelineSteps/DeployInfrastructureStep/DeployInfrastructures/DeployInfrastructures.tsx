@@ -34,6 +34,7 @@ import {
   DeploymentStageConfig,
   InfrastructureResponse,
   InfrastructureResponseDTO,
+  ServiceDefinition,
   TemplateLinkConfig,
   useGetInfrastructureInputs,
   useGetInfrastructureList
@@ -66,6 +67,8 @@ interface DeployInfrastructuresProps {
   initialValues: DeployStageConfig
   environmentRef?: string
   path?: string
+  deploymentType?: ServiceDefinition['type']
+  customDeploymentData?: TemplateLinkConfig
 }
 
 function DeployInfrastructures({
@@ -74,7 +77,9 @@ function DeployInfrastructures({
   readonly,
   allowableTypes,
   environmentRef,
-  path
+  path,
+  customDeploymentData,
+  deploymentType
 }: DeployInfrastructuresProps): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
@@ -96,13 +101,16 @@ function DeployInfrastructures({
 
   const { stage } = getStageFromPipeline(selectedStageId || '')
   const { getTemplate } = useTemplateSelector()
-  const deploymentType = (stage?.stage?.spec as DeployStageConfig)?.deploymentType
+  const selectedDeploymentType = defaultTo((stage?.stage?.spec as DeployStageConfig)?.deploymentType, deploymentType)
 
-  const { templateRef: deploymentTemplateIdentifier, versionLabel } =
-    (get(stage, 'stage.spec.customDeploymentRef') as TemplateLinkConfig) || {}
+  const customDeploymentLinkConfig = defaultTo(
+    get(stage, 'stage.spec.customDeploymentRef'),
+    customDeploymentData
+  ) as TemplateLinkConfig
+  const { templateRef: deploymentTemplateIdentifier, versionLabel } = customDeploymentLinkConfig || {}
 
   const shouldAddCustomDeploymentData =
-    deploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier && versionLabel
+    selectedDeploymentType === ServiceDeploymentType.CustomDeployment && deploymentTemplateIdentifier
 
   const {
     data: infrastructuresResponse,
@@ -114,7 +122,7 @@ function DeployInfrastructures({
       orgIdentifier,
       projectIdentifier,
       environmentIdentifier,
-      deploymentType,
+      deploymentType: selectedDeploymentType,
       ...(shouldAddCustomDeploymentData ? { deploymentTemplateIdentifier, versionLabel } : {})
     },
     lazy: getMultiTypeFromValue(environmentIdentifier) === MultiTypeInputType.RUNTIME
@@ -145,7 +153,7 @@ function DeployInfrastructures({
             const infraDefinitionObject = formik?.values?.environment?.infrastructureDefinitions?.[0]
             formik?.setFieldValue(
               `environment.infrastructureDefinitions[0]`,
-              typeof infraDefinitionObject !== 'string'
+              infraDefinitionObject && typeof infraDefinitionObject !== 'string'
                 ? infraDefinitionObject
                 : clearRuntimeInput(parsedInfrastructureDefinitionYaml.infrastructureDefinitions[0])
             )
@@ -172,6 +180,10 @@ function DeployInfrastructures({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [infrastructureInputsLoading])
+
+  useEffect(() => {
+    setInfrastructures([])
+  }, [environmentIdentifier])
 
   useEffect(() => {
     // istanbul ignore else

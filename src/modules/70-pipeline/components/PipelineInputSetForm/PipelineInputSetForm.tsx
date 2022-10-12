@@ -34,7 +34,6 @@ import { useDeepCompareEffect } from '@common/hooks'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
-import { isMultiTypeRuntime } from '@common/utils/utils'
 import { StageInputSetForm } from './StageInputSetForm'
 import { StageAdvancedInputSetForm } from './StageAdvancedInputSetForm'
 import { CICodebaseInputSetForm } from './CICodebaseInputSetForm'
@@ -48,7 +47,7 @@ import type { AbstractStepFactory } from '../AbstractSteps/AbstractStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline, getTemplatePath } from '../PipelineStudio/StepUtil'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { StageSelectionData } from '../../utils/runPipelineUtils'
+import { getFilteredAllowableTypes, StageSelectionData } from '../../utils/runPipelineUtils'
 import css from './PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -111,11 +110,7 @@ export function StageFormInternal({
                 variables: (allValues?.stage?.variables || []) as AllNGVariables[],
                 canAddVariable: true
               }}
-              allowableTypes={
-                (allowableTypes as MultiTypeInputType[]).filter(
-                  allowedType => !isMultiTypeRuntime(allowedType)
-                ) as AllowedTypes
-              }
+              allowableTypes={getFilteredAllowableTypes(allowableTypes, viewType)}
               type={StepType.CustomVariable}
               readonly={readonly}
               stepViewType={viewType}
@@ -320,10 +315,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
               variables: (originalPipeline.variables || []) as AllNGVariables[],
               canAddVariable: true
             }}
-            // pipeline varibales do not support execution time inputs
-            allowableTypes={
-              (allowableTypes as MultiTypeInputType[]).filter(type => !isMultiTypeRuntime(type)) as AllowedTypes
-            }
+            allowableTypes={getFilteredAllowableTypes(allowableTypes, viewType)}
             readonly={readonly}
             type={StepType.CustomVariable}
             stepViewType={viewType}

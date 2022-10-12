@@ -25,6 +25,7 @@ import { getDurationValidationSchema } from '@common/components/MultiTypeDuratio
 
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import type { TemplateLinkConfig } from 'services/pipeline-ng'
 
 export interface DeployInfrastructureProps {
   initialValues: DeployStageConfig
@@ -48,6 +49,7 @@ export interface CustomStepProps extends DeployStageConfig {
   environmentRef?: string
   infrastructureRef?: string
   clusterRef?: string
+  customDeploymentData?: TemplateLinkConfig
 }
 
 export function isEditEnvironment(data?: EnvironmentResponseDTO): boolean {

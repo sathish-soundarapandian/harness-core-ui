@@ -93,6 +93,12 @@ steps:
       useAwsInstanceFilter: Use AWS Instance Filter
       hostName: Host Name Convention
       vpcs: VPCs
+  ecsRunTaskStep:
+    ecsRunTaskDefinition: ECS Run Task Definition
+    runTaskDefinition: Run Task Definition
+    ecsRunTaskRequestDefinition: ECS Run Task Request Definition
+    runTaskRequestDefinition: Run Task Request Definition
+    skipSteadyStateCheck: Skip Steady-State Check
   ecsBGCreateServiceStep:
     sectionHeaders:
       configureProductionService: Configure your Production Service
@@ -157,13 +163,17 @@ secretManagerRequired: 'Secret Manager is required.'
 pipelineSteps:
   environmentTab:
     specifyYourEnvironment: Specify Environment
+    specifyYourEnvironments: Specify Environments
     specifyYourEnvironmentGroup: Specify Environment Group
     specifyYourInfrastructure: Specify Infrastructure
+    specifyYourInfrastructures: Specify Infrastructures
     specifyEnvironmentOrGroup: Specify environment or environment group
     specifyGitOpsClusters: Specify GitOps Clusters
     selectEnvironment: '- Select Environment -'
+    selectEnvironments: '- Select Environments -'
     selectEnvironmentGroup: '- Select Environment Group -'
     selectInfrastructure: '- Select Infrastructure -'
+    selectInfrastructures: '- Select Infrastructures -'
     selectInfrastructureType: 'Select Infrastructure Type'
     plusNewEnvironment: '+ {{$.newEnvironment}}'
     newEnvironment: '{{$.newEnvironment}}'
@@ -171,11 +181,29 @@ pipelineSteps:
     environmentOrEnvGroupAsRuntime: Which of Environment or Environment Group should be marked as runtime?
     allClustersSelected: All Clusters in Environment
     environmentIsRequired: '{{ $.common.validation.environmentIsRequired }}'
+    environmentsAreRequired: Environments are required
     infrastructureIsRequired: 'Infrastructure is required'
+    infrastructuresAreRequired: 'Infrastructures are required'
     environmentOrEnvGroupIsRequired: 'Environment or Environment Group is required'
     environmentInEnvGroupIsRequired: 'Environment in Environment Group is required'
+    environmentGroupIsRequired: 'Environment Group is required'
     clusterIsRequired: 'Clusters are required'
     multiEnvInfraToggleText: 'Deploy to multiple Environments or Infrastructures'
+    viewEnvironmentInputs: View environment inputs
+    hideEnvironmentInputs: Hide environment inputs
+    viewInfrastructureInputs: View infrastructure inputs
+    hideInfrastructureInputs: Hide infrastructure inputs
+    multiEnvironmentsParallelDeployLabel: Deploy environments in parallel?
+    environmentGroupDialogTitleText: Deploy to environment group?
+    environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group?. If you choose to proceed, your existing environments will be lost.
+    multiEnvironmentsDialogTitleText: Deploy to multiple environments or infrastructures?
+    multiEnvironmentsConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures?. If you choose to proceed, your existing environment will be migrated automatically.
+    singleEnvironmentDialogTitleText: Deploy to single environment?
+    singleEnvironmentConfirmationText: Are you sure you want to switch to deploying to a single environment?. If you choose to proceed, your existing environments will be lost.
+    deleteEnvironmentFromListDialogTitleText: Remove environment from list?
+    deleteEnvironmentFromListConfirmationText: Are you sure you want to remove {{name}} environment from the list?
+    deleteInfrastructureFromListDialogTitleText: Remove infrastructure from list?
+    deleteInfrastructureFromListConfirmationText: Are you sure you want to remove {{name}} infrastructure from the list?
   serviceTab:
     stageOverrides: Stage Overrides
     overrideChanges: Override artifacts, manifests, service variables for this stage
@@ -241,7 +269,7 @@ serviceDashboard:
   headers:
     artifactVersion: Artifact Version
     environment: '{{$.environment}}'
-    infrastructures: Infrastructures
+    infrastructures: '{{$.common.infrastructures}}'
     infras: Infras
     clusters: '{{$.common.clusters}}'
     instances: '{{$.instanceFieldOptions.instances}}'
@@ -467,10 +495,13 @@ getStartedWithCD:
   infraName: Infrastructure Name
   setupDelegate: Setup Delegate
   delegateInfo: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
+  delegateRequiredWarning: The delegate is not successfully connected, you will not be able to deploy without a delegate. Are you sure you want to continue?
   setupaNewDelegate: + Setup a New Delegate
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
+ecsBGSwapTargetGroupsStep:
+  doNotDownsizeOldService: Do not downsize old service
 serviceName: '{{ $.common.serviceName }}'
 skipRendering: Skip K8s Manifest(s) Rendering
 credentialsRef: credentialsRef
@@ -538,7 +569,7 @@ miniKubeCmd2: sudo install minikube-linux-amd64 /usr/local/bin/minikube
 miniKubeCmd3: minikube start
 miniKubeCmd4: kubectl get pods -A
 deploymentSteps: Deployment Steps
-addStepTemplatesForYourDeploymentType: Add step templates for your deployment type here
+useStepTemplatesForYourDeploymentType: Use step templates for your deployment type here
 removeStepTemplate: Remove Step Template
 removeStepTemplateConfirmationLabel: 'Are you sure you want to remove linked step template ?'
 azureArm:
@@ -557,8 +588,7 @@ azureArm:
   tenant: Tenant
   required: '{{name}} is Required'
 removeStepTemplateSuccess: Step Template has been successfully removed
-addStepTemplate: Add step template
-useStepTemplate: Use step template
+createAndUseTemplate: Create and Use Template
 ignoreReleaseHistFailStatus: 'Ignore Release History Failed Status'
 artifactVersion: 'Version :'
 artifactPath: 'Path :'

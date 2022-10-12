@@ -46,8 +46,8 @@ jest.mock('@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesV
 
 const contextMock = produce(templateSelectorContextMock, draft => {
   set(draft, 'state.selectorData.templateType', 'Step')
-  set(draft, 'state.selectorData.allChildTypes', ['HarnessApproval', 'ShellScript'])
-  set(draft, 'state.selectorData.linkedTemplate.identifiers', ['manjutesttemplate'])
+  set(draft, 'state.selectorData.filterProperties.childTypes', ['HarnessApproval', 'ShellScript'])
+  set(draft, 'state.selectorData.filterProperties.templateIdentifiers', ['manjutesttemplate'])
 })
 
 const defaultQueryParams = {

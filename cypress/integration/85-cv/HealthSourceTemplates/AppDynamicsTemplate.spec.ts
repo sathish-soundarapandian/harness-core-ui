@@ -449,7 +449,7 @@ describe('Create empty monitored service', () => {
     cy.get('[data-testid="appdApplication"] input').click()
     cy.contains('p', 'cv-app').click({ force: true })
     cy.wait('@TierCall')
-    cy.get('[data-testid="appDTier"] span[data-icon="fixed-input"]').should('be.visible').click()
+    cy.get('[data-testid="appDTier"] span[data-icon="runtime-input"]').should('be.visible').click()
     cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
     cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
     cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')

@@ -86,9 +86,11 @@ exports[`K8sManifestSource tests Should match snapshot 1`] = `
                             >
                               <div
                                 class="Layout--vertical StyledProps--main"
+                                data-testid="file-store-select"
                               >
                                 <div
                                   class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                  data-testid="container-fs"
                                 >
                                   <p
                                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-left-xsmall"
@@ -98,7 +100,7 @@ exports[`K8sManifestSource tests Should match snapshot 1`] = `
                                      -
                                   </p>
                                   <div
-                                    class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+                                    class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
                                   >
                                     <span
                                       class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"
@@ -270,9 +272,11 @@ exports[`K8sManifestSource tests Should match snapshot 1`] = `
                             >
                               <div
                                 class="Layout--vertical StyledProps--main"
+                                data-testid="file-store-select"
                               >
                                 <div
                                   class="StyledProps--font StyledProps--main container StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between"
+                                  data-testid="container-fs"
                                 >
                                   <p
                                     class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-left-xsmall"
@@ -282,7 +286,7 @@ exports[`K8sManifestSource tests Should match snapshot 1`] = `
                                      -
                                   </p>
                                   <div
-                                    class="StyledProps--font StyledProps--main StyledProps--padding-right-small"
+                                    class="StyledProps--font StyledProps--main StyledProps--padding-right-medium"
                                   >
                                     <span
                                       class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--color StyledProps--color-grey300 StyledProps--margin-left-small"

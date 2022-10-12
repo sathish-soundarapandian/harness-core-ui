@@ -8,7 +8,13 @@
 import { isEmpty, isNil } from 'lodash-es'
 import * as Yup from 'yup'
 import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
-import type { ServiceYamlV2, ServicesMetadata, ServiceDefinition, NGServiceV2InfoConfig } from 'services/cd-ng'
+import type {
+  ServiceYamlV2,
+  ServicesMetadata,
+  ServiceDefinition,
+  NGServiceV2InfoConfig,
+  TemplateLinkConfig
+} from 'services/cd-ng'
 import type { UseStringsReturn } from 'framework/strings'
 
 export const ServiceRegex = /^.+stage\.spec\.service\.serviceRef$/
@@ -48,6 +54,7 @@ export interface DeployServiceEntityCustomProps {
   deploymentType?: ServiceDefinition['type']
   gitOpsEnabled?: boolean
   allValues?: DeployServiceEntityData
+  customDeploymentData?: TemplateLinkConfig
 }
 
 export function isEditService(data: DeployServiceEntityData): boolean {
@@ -84,12 +91,11 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
               return true
             }
           }
-
-          /* istanbul ignore else */
-          if (value.services) {
+          if (value.services && !Array.isArray(value.services)) {
             return true
           }
 
+          /* istanbul ignore else */
           return this.createError({ message, path: 'services' })
         }
 

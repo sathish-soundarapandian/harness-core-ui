@@ -10,7 +10,9 @@ import { render, act, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { fillAtForm, InputTypes } from '@common/utils/JestFormHelper'
+import { mockBranches } from '@gitsync/components/GitSyncForm/__tests__/mockdata'
 import { InfraProvisioningWizard } from '../InfraProvisioningWizard'
+import { InfraProvisiongWizardStepId } from '../Constants'
 import { repos } from '../mocks/repositories'
 
 jest.mock('services/pipeline-ng', () => ({
@@ -56,6 +58,7 @@ const createConnector = jest.fn(() =>
     }
   })
 )
+const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
 jest.mock('services/cd-ng', () => ({
   useCreateDefaultScmConnector: jest.fn().mockImplementation(() => {
     return {
@@ -80,7 +83,10 @@ jest.mock('services/cd-ng', () => ({
     }
   }),
   useUpdateConnector: jest.fn().mockImplementation(() => ({ mutate: updateConnector })),
-  useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector }))
+  useCreateConnector: jest.fn().mockImplementation(() => ({ mutate: createConnector })),
+  useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
+    return { data: mockBranches, refetch: fetchBranches }
+  })
 }))
 
 const pathParams = { accountId: 'accountId', orgIdentifier: 'orgId', projectIdentifier: 'projectId' }
@@ -127,10 +133,96 @@ describe('Render and test InfraProvisioningWizard', () => {
     })
 
     await act(async () => {
+      fireEvent.click(getByText('next: ci.getStartedWithCI.configurePipeline'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('ci.getStartedWithCI.starterPipeline'))
+    })
+
+    await act(async () => {
       fireEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
     })
 
     expect(routesToPipelineStudio).toHaveBeenCalled()
+  })
+
+  test('Test pipeline creation using existing YAML', async () => {
+    global.fetch = jest.fn()
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard enableFieldsForTesting={true} />
+      </TestWrapper>
+    )
+    await act(async () => {
+      fireEvent.click((Array.from(container.querySelectorAll('div[class*="bp3-card"]')) as HTMLElement[])[0])
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('common.getStarted.accessTokenLabel'))
+    })
+
+    await waitFor(() =>
+      fillAtForm([
+        {
+          container,
+          fieldId: 'accessToken',
+          type: InputTypes.TEXTFIELD,
+          value: 'sample-access-token'
+        }
+      ])
+    )
+
+    const testConnectionBtn = container.querySelector("button[id='test-connection-btn']") as Element
+    await act(async () => {
+      fireEvent.click(testConnectionBtn)
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('next: ci.getStartedWithCI.selectRepo'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('community/wings-software/wingsui'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('next: ci.getStartedWithCI.configurePipeline'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('ci.getStartedWithCI.chooseExistingYAML'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
+    })
+
+    const yamlPathValidationError = container.querySelector('div[class*="FormError--errorDiv"][data-name="yamlPath"]')
+    expect(yamlPathValidationError).toBeInTheDocument()
+  })
+
+  test('Ensure errors are shown for test pipeline creation using existing YAML', async () => {
+    global.fetch = jest.fn()
+    const { container, getByText } = render(
+      <TestWrapper path={routes.toGetStartedWithCI({ ...pathParams, module: 'ci' })} pathParams={pathParams}>
+        <InfraProvisioningWizard
+          enableFieldsForTesting={true}
+          lastConfiguredWizardStepId={InfraProvisiongWizardStepId.ConfigurePipeline}
+        />
+      </TestWrapper>
+    )
+
+    await act(async () => {
+      fireEvent.click(getByText('ci.getStartedWithCI.chooseExistingYAML'))
+    })
+
+    await act(async () => {
+      fireEvent.click(getByText('ci.getStartedWithCI.createPipeline'))
+    })
+
+    const yamlPathValidationError = container.querySelector('div[class*="FormError--errorDiv"][data-name="yamlPath"]')
+    expect(yamlPathValidationError).toBeInTheDocument()
   })
 
   // eslint-disable-next-line jest/no-disabled-tests

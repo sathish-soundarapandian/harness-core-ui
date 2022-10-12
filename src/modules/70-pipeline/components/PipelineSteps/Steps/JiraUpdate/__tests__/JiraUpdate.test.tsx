@@ -221,7 +221,7 @@ describe('Jira Update tests', () => {
     expect(queryByDisplayValue('<+issueKey>')).toBeTruthy()
 
     fireEvent.click(getByText('common.optionalConfig'))
-    expect(queryByDisplayValue('Done')).toBeTruthy()
+    expect(queryByNameAttribute('spec.transitionTo.status')).toBeTruthy()
     expect(queryByDisplayValue('value1')).toBeTruthy()
     expect(queryByDisplayValue('2233')).toBeTruthy()
     expect(queryByDisplayValue('23-march')).toBeTruthy()
@@ -333,7 +333,7 @@ describe('Jira Update process form data tests', () => {
         connectorRef: { label: 'conn', value: 'conn' },
         issueKey: 'id1',
         transitionTo: {
-          status: '' || { label: 'progress', value: 'progress' },
+          status: 'progress',
           transitionName: ''
         },
         fields: [

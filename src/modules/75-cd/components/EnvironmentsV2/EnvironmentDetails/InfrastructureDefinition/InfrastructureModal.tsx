@@ -7,7 +7,7 @@
 
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo, get, isEmpty, merge, noop, omit, set } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty, merge, noop, omit, set } from 'lodash-es'
 import type { FormikProps } from 'formik'
 import { parse } from 'yaml'
 import produce from 'immer'
@@ -408,7 +408,8 @@ function BootstrapDeployInfraDefinition({
       if (infrastructureDefinitionConfig.spec) {
         infraDefinition.infrastructureDefinition.spec = infrastructureDefinitionConfig.spec
       }
-      if (infrastructureDefinitionConfig.allowSimultaneousDeployments) {
+
+      if (isBoolean(infrastructureDefinitionConfig.allowSimultaneousDeployments)) {
         infraDefinition.allowSimultaneousDeployments = infrastructureDefinitionConfig.allowSimultaneousDeployments
       }
 
@@ -596,7 +597,7 @@ function BootstrapDeployInfraDefinition({
     [deployInfraRemountCount, stage, updateStage]
   )
 
-  const refreshYAMLBuilder = React.useMemo(() => JSON.stringify(pipeline.stages), [pipeline.stages])
+  const refreshYAMLBuilder = React.useMemo(() => JSON.stringify({ ...stage, isYamlEditable }), [stage, isYamlEditable])
 
   return (
     <>

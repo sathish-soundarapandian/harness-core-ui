@@ -173,7 +173,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
             : artifactPath,
           ''
-        )
+        ),
+        'tag'
       )
     },
     lazy: true

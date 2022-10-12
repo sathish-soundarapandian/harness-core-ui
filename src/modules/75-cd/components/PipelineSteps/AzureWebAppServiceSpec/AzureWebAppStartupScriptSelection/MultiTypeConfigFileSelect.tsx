@@ -54,6 +54,7 @@ export interface MultiTypeFieldSelectorProps extends Omit<IFormGroupProps, 'labe
   changed?: boolean
   values?: string | string[]
   isFieldInput?: boolean
+  formClass?: string
 }
 
 export interface ConnectedMultiTypeFieldSelectorProps extends MultiTypeFieldSelectorProps {
@@ -83,6 +84,7 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
     localId,
     values,
     isFieldInput = false,
+    formClass = '',
     ...restProps
   } = props
   const error = get(formik?.errors, name)
@@ -192,7 +194,7 @@ export function MultiTypeConfigFileSelect(props: ConnectedMultiTypeFieldSelector
       disabled={disabled}
       label={<Container flex>{labelContent}</Container>}
     >
-      <Container flex className={css.selectFieldContainer}>
+      <Container flex className={cx(css.selectFieldContainer, formClass)}>
         {conditionalRender()}
         {typeSelectorButton}
       </Container>

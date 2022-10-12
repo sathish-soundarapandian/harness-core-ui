@@ -403,8 +403,14 @@ export function getMetricTypeItems(
   groupedCreatedMetrics: GroupedCreatedMetrics,
   metricPacks?: MetricPackDTO[],
   metricData?: Record<string, boolean>,
-  isOnlyCustomMetricHealthSource?: boolean
+  isOnlyCustomMetricHealthSource?: boolean,
+  alwaysShowCustomMetricType?: boolean
 ): SelectItem[] {
+  // this scenario only for GCO, where GCO doesn't have metric group.
+  if (alwaysShowCustomMetricType) {
+    return [CustomMetricDropdownOption]
+  }
+
   if ((!metricPacks || !metricPacks.length) && !isOnlyCustomMetricHealthSource) return []
 
   const options: SelectItem[] = []

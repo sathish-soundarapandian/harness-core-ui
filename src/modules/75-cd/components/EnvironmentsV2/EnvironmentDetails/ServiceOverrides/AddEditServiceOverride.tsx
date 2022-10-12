@@ -30,7 +30,9 @@ import {
 } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import {
+  ApplicationSettingsConfiguration,
   ConfigFileWrapper,
+  ConnectionStringsConfiguration,
   ManifestConfigWrapper,
   NGServiceOverrideConfig,
   ServiceOverrideResponseDTO,
@@ -42,6 +44,11 @@ import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { EnvironmentPathProps, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import RbacButton from '@rbac/components/Button/Button'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { AzureWebAppSelectionTypes } from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfig.types'
+import ApplicationConfigSelection from '@cd/components/PipelineSteps/AzureWebAppServiceSpec/AzureWebAppServiceConfiguration/AzureWebAppServiceConfigSelection'
 import ServiceVariableOverride from './ServiceVariableOverride'
 import ServiceManifestOverride from './ServiceManifestOverride/ServiceManifestOverride'
 import { ServiceOverrideTab } from './ServiceOverridesUtils'
@@ -58,7 +65,12 @@ export interface AddEditServiceOverrideProps {
   isReadonly: boolean
   expressions: string[]
 }
-type OverrideTypes = VariableOverride | ManifestConfigWrapper | ConfigFileWrapper
+type OverrideTypes =
+  | VariableOverride
+  | ManifestConfigWrapper
+  | ConfigFileWrapper
+  | ApplicationSettingsConfiguration
+  | ConnectionStringsConfiguration
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   fileName: `serviceOverrides.yaml`,
@@ -104,6 +116,15 @@ export default function AddEditServiceOverride({
     svcOverride => svcOverride.serviceRef === defaultTo(selectedService, formikRef.current?.values.serviceRef)
   )
 
+  const getServiceType = (serviceRef: string | null): string | undefined => {
+    const service = services?.find(ser => ser?.service?.identifier === serviceRef)?.service
+    const parsedService = service?.yaml && parse(service?.yaml)
+
+    return parsedService?.service?.serviceDefinition?.type
+  }
+
+  const [serviceType, setServiceType] = useState<string | undefined>(getServiceType(selectedService))
+
   const servicesOptions = useMemo(() => {
     return services.map(item => ({
       label: defaultTo(item.service?.name, ''),
@@ -120,12 +141,23 @@ export default function AddEditServiceOverride({
   const handleServiceChange = (item: SelectOption): void => {
     const serviceOverride = serviceOverrides?.find(svcOverride => svcOverride.serviceRef === item.value)
 
+    setServiceType(getServiceType(item?.value as string))
+    setSelectedTab(defaultTo(defaultTab, ServiceOverrideTab.VARIABLE))
+
     const selectedSvcVariable = !isEmpty(serviceOverride) ? getOverrideObject('variables', serviceOverride) : []
     formikRef.current?.setFieldValue('variables', selectedSvcVariable)
     const selectedSvcManifest = !isEmpty(serviceOverride) ? getOverrideObject('manifests', serviceOverride) : []
     formikRef.current?.setFieldValue('manifests', selectedSvcManifest)
     const selectedSvcConfigFiles = !isEmpty(serviceOverride) ? getOverrideObject('configFiles', serviceOverride) : []
     formikRef.current?.setFieldValue('configFiles', selectedSvcConfigFiles)
+    const selectedSvcApplicationSettings = !isEmpty(serviceOverride)
+      ? getOverrideObject('applicationSettings', serviceOverride)
+      : undefined
+    formikRef.current?.setFieldValue('applicationSettings', selectedSvcApplicationSettings)
+    const selectedSvcConnectionStrings = !isEmpty(serviceOverride)
+      ? getOverrideObject('connectionStrings', serviceOverride)
+      : undefined
+    formikRef.current?.setFieldValue('connectionStrings', selectedSvcConnectionStrings)
   }
 
   const handleModeSwitch = useCallback(
@@ -140,20 +172,31 @@ export default function AddEditServiceOverride({
   )
 
   /**********************************************Service Override CRUD Operations ************************************************/
-  const getOverrideObject = (type: string, svcOverride?: ServiceOverrideResponseDTO): Array<any> => {
+  const getOverrideObject = (
+    type: string,
+    svcOverride?: ServiceOverrideResponseDTO
+  ): Array<any> | ApplicationSettingsConfiguration | ConnectionStringsConfiguration | undefined => {
     const serviceOverrideData = defaultTo(svcOverride, selectedServiceOverride)
     if (!isEmpty(serviceOverrideData)) {
       const parsedServiceOverride = yamlParse<NGServiceOverrideConfig>(
         defaultTo(serviceOverrideData?.yaml, '')
       ).serviceOverrides
-      return defaultTo(get(parsedServiceOverride, `${type}`), [])
+      return defaultTo(
+        get(parsedServiceOverride, `${type}`),
+        type === 'applicationSettings' || type === 'connectionStrings' ? undefined : []
+      )
     }
-    return []
+    return type === 'applicationSettings' || type === 'connectionStrings' ? undefined : []
   }
 
-  const getOverrideValues = (type: string): Array<OverrideTypes> => {
+  const getOverrideValues = (
+    type: string
+  ): Array<OverrideTypes> | ApplicationSettingsConfiguration | ConnectionStringsConfiguration | undefined => {
     const formikOverrideData = get(formikRef.current?.values, `${type}`)
-    if (formikOverrideData?.length) {
+    if (
+      (Array.isArray(formikOverrideData) && formikOverrideData?.length) ||
+      (!Array.isArray(formikOverrideData) && formikOverrideData)
+    ) {
       return formikOverrideData
     }
     return getOverrideObject(type)
@@ -170,19 +213,38 @@ export default function AddEditServiceOverride({
   }
 
   const handleOverrideSubmit = useCallback((overrideObj: OverrideTypes, index: number, type: string): void => {
-    const overrideDefaultValue = [...get(formikRef.current?.values, `${type}`)]
-    if (overrideDefaultValue?.length) {
-      overrideDefaultValue.splice(index, 1, overrideObj)
-    } else {
-      overrideDefaultValue.push(overrideObj)
+    switch (type) {
+      case 'applicationSettings':
+      case 'connectionStrings':
+        formikRef.current?.setFieldValue(`${type}`, overrideObj)
+        break
+      default: {
+        const overrideDefaultValue = [...get(formikRef.current?.values, `${type}`)]
+        if (overrideDefaultValue?.length) {
+          overrideDefaultValue.splice(index, 1, overrideObj)
+        } else {
+          overrideDefaultValue.push(overrideObj)
+        }
+        formikRef.current?.setFieldValue(`${type}`, overrideDefaultValue)
+        break
+      }
     }
-    formikRef.current?.setFieldValue(`${type}`, overrideDefaultValue)
   }, [])
 
   const onServiceOverrideDelete = useCallback((index: number, type: string): void => {
-    const overrideDefaultValue = [...get(formikRef.current?.values, `${type}`)]
-    overrideDefaultValue.splice(index, 1)
-    formikRef.current?.setFieldValue(`${type}`, overrideDefaultValue)
+    switch (type) {
+      case 'applicationSettings':
+      case 'connectionStrings':
+        formikRef.current?.setFieldValue(`${type}`, null)
+        break
+      default:
+        {
+          const overrideDefaultValue = [...get(formikRef.current?.values, `${type}`)]
+          overrideDefaultValue.splice(index, 1)
+          formikRef.current?.setFieldValue(`${type}`, overrideDefaultValue)
+        }
+        break
+    }
   }, [])
   /**********************************************Service Override CRUD Operations ************************************************/
 
@@ -199,7 +261,9 @@ export default function AddEditServiceOverride({
             serviceRef: values.serviceRef,
             variables: getOverrideFormdata(values, 'variables'),
             manifests: getOverrideFormdata(values, 'manifests'),
-            configFiles: getOverrideFormdata(values, 'configFiles')
+            configFiles: getOverrideFormdata(values, 'configFiles'),
+            applicationSettings: getOverrideFormdata(values, 'applicationSettings'),
+            connectionStrings: getOverrideFormdata(values, 'connectionStrings')
           }
         } as NGServiceOverrideConfig)
       })
@@ -221,7 +285,9 @@ export default function AddEditServiceOverride({
         serviceRef: formikRef.current?.values.serviceRef,
         variables: getOverrideValues('variables'),
         manifests: getOverrideValues('manifests'),
-        configFiles: getOverrideValues('configFiles')
+        configFiles: getOverrideValues('configFiles'),
+        applicationSettings: getOverrideValues('applicationSettings'),
+        connectionStrings: getOverrideValues('connectionStrings')
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -256,6 +322,10 @@ export default function AddEditServiceOverride({
           return !(
             Array.isArray(formikRef.current?.values.configFiles) && formikRef.current.values.configFiles.length > 0
           )
+        } else if (selectedTab === ServiceOverrideTab.APPLICATIONSETTING) {
+          return !formikRef.current?.values?.applicationSettings
+        } else if (selectedTab === ServiceOverrideTab.CONNECTIONSTRING) {
+          return !formikRef.current?.values?.connectionStrings
         }
       }
       return false
@@ -268,9 +338,11 @@ export default function AddEditServiceOverride({
       initialValues={{
         serviceRef: selectedService,
         environmentRef: environmentIdentifier,
-        variables: getOverrideObject('variables'),
-        manifests: getOverrideObject('manifests'),
-        configFiles: getOverrideObject('configFiles')
+        variables: getOverrideObject('variables') as VariableOverride[],
+        manifests: getOverrideObject('manifests') as ManifestConfigWrapper[],
+        configFiles: getOverrideObject('configFiles') as ConfigFileWrapper[],
+        applicationSettings: getOverrideObject('applicationSettings') as ApplicationSettingsConfiguration,
+        connectionStrings: getOverrideObject('connectionStrings') as ConnectionStringsConfiguration
       }}
       onSubmit={
         /* istanbul ignore next */ values => {
@@ -326,22 +398,27 @@ export default function AddEditServiceOverride({
                           />
                         }
                       />
-                      <Tab
-                        id={ServiceOverrideTab.MANIFEST}
-                        title={getString('manifestsText')}
-                        panel={
-                          <ServiceManifestOverride
-                            manifestOverrides={defaultTo(formikProps.values?.manifests, []) as ManifestConfigWrapper[]}
-                            handleManifestOverrideSubmit={(manifestObj, index) =>
-                              handleOverrideSubmit(manifestObj, index, 'manifests')
-                            }
-                            removeManifestConfig={index => onServiceOverrideDelete(index, 'manifests')}
-                            isReadonly={isReadonly}
-                            expressions={expressions}
-                            allowableTypes={allowableTypes}
-                          />
-                        }
-                      />
+                      {serviceType !== 'AzureWebApp' && (
+                        <Tab
+                          id={ServiceOverrideTab.MANIFEST}
+                          title={getString('manifestsText')}
+                          panel={
+                            <ServiceManifestOverride
+                              manifestOverrides={
+                                defaultTo(formikProps.values?.manifests, []) as ManifestConfigWrapper[]
+                              }
+                              handleManifestOverrideSubmit={(manifestObj, index) =>
+                                handleOverrideSubmit(manifestObj, index, 'manifests')
+                              }
+                              removeManifestConfig={index => onServiceOverrideDelete(index, 'manifests')}
+                              isReadonly={isReadonly}
+                              expressions={expressions}
+                              allowableTypes={allowableTypes}
+                            />
+                          }
+                        />
+                      )}
+
                       <Tab
                         id={ServiceOverrideTab.CONFIG}
                         title={getString('cd.configFileStoreTitle')}
@@ -360,6 +437,44 @@ export default function AddEditServiceOverride({
                           />
                         }
                       />
+                      {serviceType === 'AzureWebApp' && (
+                        <Tab
+                          id={ServiceOverrideTab.APPLICATIONSETTING}
+                          title={getString('pipeline.appServiceConfig.applicationSettings.name')}
+                          panel={
+                            <ApplicationConfigSelection
+                              environmentAllowableTypes={allowableTypes}
+                              readonly={isReadonly}
+                              showApplicationSettings={true}
+                              data={formikProps.values?.applicationSettings}
+                              selectionType={AzureWebAppSelectionTypes.SERVICE_OVERRIDE_WIDGET}
+                              handleSubmitConfig={(
+                                config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
+                              ) => handleOverrideSubmit(config, 0, 'applicationSettings')}
+                              handleDeleteConfig={index => onServiceOverrideDelete(index, 'applicationSettings')}
+                            />
+                          }
+                        />
+                      )}
+                      {serviceType === 'AzureWebApp' && (
+                        <Tab
+                          id={ServiceOverrideTab.CONNECTIONSTRING}
+                          title={getString('pipeline.appServiceConfig.connectionStrings.name')}
+                          panel={
+                            <ApplicationConfigSelection
+                              environmentAllowableTypes={allowableTypes}
+                              readonly={isReadonly}
+                              showConnectionStrings={true}
+                              data={formikProps.values?.connectionStrings}
+                              selectionType={AzureWebAppSelectionTypes.SERVICE_OVERRIDE_WIDGET}
+                              handleSubmitConfig={(
+                                config: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
+                              ) => handleOverrideSubmit(config, 0, 'connectionStrings')}
+                              handleDeleteConfig={index => onServiceOverrideDelete(index, 'connectionStrings')}
+                            />
+                          }
+                        />
+                      )}
                     </Tabs>
                   </>
                 )}
@@ -374,7 +489,7 @@ export default function AddEditServiceOverride({
               />
             )}
             <Layout.Horizontal spacing="medium" padding={{ top: 'xxlarge' }}>
-              <Button
+              <RbacButton
                 variation={ButtonVariation.PRIMARY}
                 text={getString('save')}
                 onClick={
@@ -389,6 +504,17 @@ export default function AddEditServiceOverride({
                 }
                 data-testid="addVariableSave"
                 disabled={isSubmitBtnDisabled()}
+                permission={
+                  formikRef.current.values.serviceRef
+                    ? {
+                        resource: {
+                          resourceType: ResourceType.SERVICE,
+                          resourceIdentifier: formikRef.current.values.serviceRef as string
+                        },
+                        permission: PermissionIdentifier.EDIT_SERVICE
+                      }
+                    : undefined
+                }
               />
               <Button
                 variation={ButtonVariation.TERTIARY}

@@ -285,6 +285,7 @@ exports[`Validate DynatraceHealthSource should render DynatraceMetricPacksToServ
                           >
                             <div
                               class="StyledProps--font StyledProps--main seletedAppContainer"
+                              data-testid="sideNav-Dynatrace metric"
                             >
                               <p
                                 class="StyledProps--font Text--lineclamp StyledProps--main selectedApp isSelected"

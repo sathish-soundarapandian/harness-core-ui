@@ -611,11 +611,11 @@ exports[`Test Wait Step renders deployment form 1`] = `
       >
         <label
           class="bp3-label"
-          for="duration"
+          for="spec.duration"
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="stepTestUtilForm_duration"
+            data-tooltip-id="stepTestUtilForm_spec.duration"
           >
             pipeline.duration
           </span>
@@ -636,7 +636,7 @@ exports[`Test Wait Step renders deployment form 1`] = `
             >
               <input
                 class="bp3-input"
-                name="duration"
+                name="spec.duration"
                 placeholder="Enter w/d/h/m/s/ms"
                 type="text"
                 value=""
@@ -736,11 +736,11 @@ exports[`Test Wait Step renders input sets 1`] = `
       >
         <label
           class="bp3-label"
-          for="duration"
+          for="spec.duration"
         >
           <span
             class="Tooltip--acenter"
-            data-tooltip-id="stepTestUtilForm_duration"
+            data-tooltip-id="stepTestUtilForm_spec.duration"
           >
             pipeline.duration
           </span>
@@ -761,7 +761,7 @@ exports[`Test Wait Step renders input sets 1`] = `
             >
               <input
                 class="bp3-input"
-                name="duration"
+                name="spec.duration"
                 placeholder="Enter w/d/h/m/s/ms"
                 type="text"
                 value=""
@@ -823,12 +823,10 @@ exports[`Test Wait Step renders input sets 1`] = `
 
 exports[`validate policy step input sets validates default inputs set correctly 1`] = `
 Object {
-  "duration": "validation.timeout10SecMinimum",
+  "spec": Object {
+    "duration": "Invalid syntax provided",
+  },
 }
 `;
 
-exports[`validate policy step input sets validates timeout is min 10s 1`] = `
-Object {
-  "duration": "duration is a required field",
-}
-`;
+exports[`validate policy step input sets validates timeout is min 10s 1`] = `Object {}`;

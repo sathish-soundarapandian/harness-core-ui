@@ -22,7 +22,9 @@ import {
   SelectOption,
   FixedTypeComponentProps,
   MultiSelectOption,
-  MultiTypeInputValue
+  MultiTypeInputValue,
+  Layout,
+  Container
 } from '@harness/uicore'
 import { get } from 'lodash-es'
 import cx from 'classnames'
@@ -121,30 +123,34 @@ export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelect
       intent={intent}
       disabled={disabled}
     >
-      <ExpressionAndRuntimeType<MultiSelectDropDownProps>
-        {...multiTypeProps}
-        name={name}
-        value={value}
-        onChange={handleChange}
-        multitypeInputValue={type}
-        className={cx(css.multitype, multiTypeProps?.className, { [css.hasError]: hasError })}
-        fixedTypeComponent={MultiSelectDropDownFixed}
-        fixedTypeComponentProps={{
-          usePortal: true,
-          ...dropdownProps,
-          value,
-          className: cx(css.dropdown, dropdownProps.className)
-        }}
-      />
-      {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME ? (
-        <ConfigureOptions
-          value={value}
-          variableName={name}
-          type={getString('service')}
-          onChange={handleConfigChange}
-          {...configureOptionsProps}
-        />
-      ) : null}
+      <Layout.Horizontal spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
+        <Container>
+          <ExpressionAndRuntimeType<MultiSelectDropDownProps>
+            {...multiTypeProps}
+            name={name}
+            value={value}
+            onChange={handleChange}
+            multitypeInputValue={type}
+            className={cx(css.multitype, multiTypeProps?.className, { [css.hasError]: hasError })}
+            fixedTypeComponent={MultiSelectDropDownFixed}
+            fixedTypeComponentProps={{
+              usePortal: true,
+              ...dropdownProps,
+              value,
+              className: cx(css.dropdown, dropdownProps.className)
+            }}
+          />
+        </Container>
+        {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME ? (
+          <ConfigureOptions
+            value={value}
+            variableName={name}
+            type={getString('service')}
+            onChange={handleConfigChange}
+            {...configureOptionsProps}
+          />
+        ) : null}
+      </Layout.Horizontal>
     </FormGroup>
   )
 }

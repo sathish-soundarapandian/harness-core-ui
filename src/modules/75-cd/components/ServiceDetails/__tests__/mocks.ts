@@ -273,3 +273,47 @@ export const mockServiceInstanceDetailsWithContainerList: UseGetMockDataWithMuta
       correlationId: 'a9d67688-9100-4e38-8da6-9852a62bc422'
     }
   }
+
+export const mockServiceInstanceDetailsForCustomDeployment: UseGetMockDataWithMutateAndRefetch<ResponseInstancesByBuildIdList> =
+  {
+    loading: false,
+    refetch: jest.fn(),
+    mutate: jest.fn(),
+    data: {
+      status: 'SUCCESS',
+      data: {
+        instancesByBuildIdList: [
+          {
+            buildId: 'stable-perl',
+            instances: [
+              {
+                podName: 'instance2',
+                artifactName: 'library/nginx:stable-perl',
+                connectorRef: null,
+                infrastructureDetails: {
+                  name: 'instance'
+                },
+                terraformInstance: null,
+                deployedAt: 1664471457943,
+                deployedById: 'AUTO_SCALED',
+                deployedByName: 'AUTO_SCALED',
+                pipelineExecutionName: 'P1',
+                instanceInfoDTO: {
+                  hostname: 'instance2',
+                  infrastructureKey: '581fd86828bf6b5cbfe732d156674b8e79338864',
+                  properties: {
+                    hostname: 'instance2',
+                    version: '2021.07.10_app_2.war'
+                  },
+                  podName: 'instance2',
+                  type: 'CustomDeployment'
+                }
+              }
+            ] as any
+          }
+        ]
+      },
+      metaData: null as unknown as undefined,
+      correlationId: 'a9d67688-9100-4e38-8da6-9852a62bc422'
+    }
+  }

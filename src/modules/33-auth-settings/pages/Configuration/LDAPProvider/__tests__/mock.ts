@@ -105,3 +105,9 @@ export const testQuerySuccessFailure = {
   resource: { status: 'FAILURE', message: 'Query failed.' },
   responseMessages: []
 }
+
+export const testCronIteration = {
+  metaData: {},
+  resource: [],
+  responseMessages: []
+}

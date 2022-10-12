@@ -36,3 +36,12 @@ export interface BaseHealthSourceMetricInfo {
   isNew?: boolean
   isManualQuery?: boolean
 }
+
+export interface CommonSetupHealthSourceListType {
+  identifier: string
+}
+
+export interface RiskThresholdTypes {
+  lowerBaselineDeviation?: boolean
+  higherBaselineDeviation?: boolean
+}

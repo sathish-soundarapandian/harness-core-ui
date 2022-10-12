@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Container, FormInput, MultiTypeInputType } from '@wings-software/uicore'
 
 import { useParams } from 'react-router-dom'
@@ -25,17 +25,19 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
     loading,
     serviceInstance,
     messageIdentifier,
+    identifyTimestamp,
     isConnectorRuntimeOrExpression,
     isTemplate,
     expressions,
-    connectorIdentifier
+    connectorIdentifier,
+    formikProps
   } = props
 
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const isAddingIdentifiersDisabled = !isQueryExecuted || loading
 
-  const { data: elkIndices } = useGetELKIndices({
+  const { data: elkIndices, loading: indicesLoading } = useGetELKIndices({
     queryParams: { projectIdentifier, orgIdentifier, accountId, connectorIdentifier, tracingId: '' }
   })
   const { data: elkTimeFormat } = useGetTimeFormat({})
@@ -58,6 +60,12 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
     [elkTimeFormat?.data]
   )
 
+  const handleSelectChange = useCallback(() => {
+    if (formikProps?.values?.logIndexes) {
+      onChange(MapElkToServiceFieldNames.IS_STALE_RECORD, true)
+    }
+  }, [formikProps?.values?.logIndexes, onChange])
+
   return (
     <Container className={css.main}>
       <FormInput.Text
@@ -68,9 +76,11 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
       <FormInput.Select
         label={getString('cv.monitoringSources.elk.logIndexesInputLabel')}
         name={MapElkToServiceFieldNames.LOG_INDEXES}
-        placeholder={getString('cv.monitoringSources.elk.selectLogIndex')}
-        items={getIndexItems}
         selectProps={{ allowCreatingNewItems: true }}
+        disabled={indicesLoading}
+        placeholder={indicesLoading ? getString('loading') : getString('cv.monitoringSources.elk.selectLogIndex')}
+        items={getIndexItems}
+        onChange={handleSelectChange}
       />
 
       <InputWithDynamicModalForJsonMultiType
@@ -96,7 +106,7 @@ export function ElkMetricNameAndHostIdentifier(props: MapElkQueriesToServiceProp
 
       <InputWithDynamicModalForJsonMultiType
         onChange={onChange}
-        fieldValue={messageIdentifier}
+        fieldValue={identifyTimestamp}
         isDisabled={isAddingIdentifiersDisabled}
         isQueryExecuted={isQueryExecuted}
         sampleRecord={sampleRecord}

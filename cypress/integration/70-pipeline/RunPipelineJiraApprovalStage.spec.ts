@@ -16,8 +16,11 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     '/ng/api/jira/projects?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud'
   const jiraIssueTypesCall =
     'ng/api/jira/createMetadata?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud&projectKey=ART'
+  const jiraIssueTypeMetadataCall =
+    'ng/api/jira/createMetadata?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud&projectKey=ART&issueType=Bug'
   const jiraStatusesCall =
     '/ng/api/jira/statuses?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud'
+
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -73,6 +76,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.intercept('GET', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
+      cy.intercept('GET', jiraIssueTypeMetadataCall, { fixture: 'ng/api/jiraIssueTypesFields' }).as('issueTypeFields')
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(4000)
@@ -87,6 +91,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(1000)
       cy.get('input[name="spec.issueType"]').click({ force: true })
       cy.contains('p', 'Bug').click({ force: true })
+      cy.wait('@issueTypeFields')
       cy.wait(1000)
       cy.contains('span', 'Apply Changes').click({ force: true })
       cy.contains('span', 'This is a required field').should('be.visible').should('have.class', 'FormError--error')
@@ -97,6 +102,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.intercept('GET', jiraConnectorsCall, { fixture: 'ng/api/jiraConnectors' })
       cy.intercept('GET', jiraProjectsCall, { fixture: 'ng/api/jiraProjects' })
       cy.intercept('GET', jiraIssueTypesCall, { fixture: 'ng/api/jiraIssueTypes' })
+      cy.intercept('GET', jiraIssueTypeMetadataCall, { fixture: 'ng/api/jiraIssueTypesFields' }).as('issueTypeFields')
       cy.wait(2000)
       cy.contains('span', 'Execution').click({ force: true })
       cy.wait(3000)
@@ -111,6 +117,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(1000)
       cy.get('input[name="spec.issueType"]').click({ force: true })
       cy.contains('p', 'Bug').click({ force: true })
+      cy.wait('@issueTypeFields')
       cy.wait(1000)
       cy.fillField('spec.selectedRequiredFields[0].value', 'Test_Description')
       cy.wait(1000)

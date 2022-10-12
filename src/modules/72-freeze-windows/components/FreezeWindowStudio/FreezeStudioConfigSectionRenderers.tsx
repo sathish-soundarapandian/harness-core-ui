@@ -6,12 +6,14 @@
  */
 
 import React from 'react'
+import classnames from 'classnames'
 import type { SelectOption } from '@wings-software/uicore'
 import { FormInput, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
-import { EntityType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface, EnvironmentType } from '@freeze-windows/types'
+import { EntityType, EnvironmentType, FIELD_KEYS, FreezeWindowLevels, ResourcesInterface } from '@freeze-windows/types'
 import { allProjectsObj, getEnvTypeMap, isAllOptionSelected } from './FreezeWindowStudioUtil'
+import css from './FreezeWindowStudio.module.scss'
 
 const All = 'All'
 const Equals = 'Equals'
@@ -58,15 +60,7 @@ export const ServiceFieldRenderer: React.FC<ServiceFieldRendererPropsInterface> 
       />
     )
   }
-  return (
-    <FormInput.MultiSelect
-      style={{ width: '400px' }}
-      name={name}
-      items={services}
-      label={getString('services')}
-      // onChange={(selected?: SelectOption[]) => {}}
-    />
-  )
+  return <FormInput.MultiSelect style={{ width: '400px' }} name={name} items={services} label={getString('services')} />
 }
 
 const getOrgNameKeys = (namePrefix: string) => {
@@ -171,10 +165,12 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   setFieldValue
 }) => {
   const { projects, freezeWindowLevel } = resources
+  const [excludeProjects, setExcludeProjects] = React.useState(projects)
+
   const orgValue = values[FIELD_KEYS.Org]
   const isAccLevel = freezeWindowLevel === FreezeWindowLevels.ACCOUNT
-  const isOrgValueMultiselected = isAccLevel ? orgValue?.length > 1 : false
   const isOrgValueAll = isAccLevel ? isAllOptionSelected(orgValue) : false
+  const isSingleOrgValue = isAccLevel ? orgValue?.length === 1 && !isOrgValueAll : true
   const projValue = values[FIELD_KEYS.Proj]
   const excludeProjValue = values[FIELD_KEYS.ExcludeProjCheckbox]
   const isCheckBoxEnabled = isAllOptionSelected(projValue) && projValue?.length === 1
@@ -182,20 +178,34 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   const [allProj, setAllProj] = React.useState<SelectOption[]>([])
 
   React.useEffect(() => {
-    if (isOrgValueAll || isOrgValueMultiselected || projects?.length === 0) {
-      setAllProj([allProjectsObj(getString)])
-    } else if (projects?.length) {
-      setAllProj([allProjectsObj(getString), ...projects])
+    if (isAccLevel) {
+      if (isSingleOrgValue) {
+        const orgId = orgValue[0].value
+        const _projects = resources.projectsByOrgId?.[orgId]?.projects || []
+        setAllProj([allProjectsObj(getString), ..._projects])
+        setExcludeProjects(_projects)
+      } else {
+        setAllProj([allProjectsObj(getString)])
+        setExcludeProjects([])
+      }
+    } else {
+      if (!isSingleOrgValue || projects?.length === 0) {
+        setAllProj([allProjectsObj(getString)])
+        setExcludeProjects([])
+      } else if (projects?.length) {
+        setAllProj([allProjectsObj(getString), ...projects])
+        setExcludeProjects(projects)
+      }
     }
-  }, [projects, isOrgValueAll])
+  }, [projects, isOrgValueAll, isSingleOrgValue])
   return (
     <>
       <FormInput.MultiSelect
         name={projFieldName}
         items={allProj}
         label={getString('projectsText')}
-        disabled={isOrgValueAll}
-        // placeholder="All Projects"
+        // enabled only if org value is single select, and not All Organizations
+        disabled={!isSingleOrgValue}
         onChange={(selected?: SelectOption[]) => {
           const isAllSelected = isAllOptionSelected(selected)
           const isMultiSelected = (selected || []).length > 1
@@ -209,7 +219,7 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
       <FormInput.CheckBox
         name={projCheckBoxName}
         label={getString('freezeWindows.freezeStudio.excludeProjects')}
-        disabled={!isCheckBoxEnabled || isOrgValueAll}
+        disabled={!isCheckBoxEnabled || !isSingleOrgValue}
         onChange={() => {
           setFieldValue(excludeProjName, undefined)
         }}
@@ -219,56 +229,12 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
         <FormInput.MultiSelect
           disabled={isOrgValueAll}
           name={excludeProjName}
-          items={projects}
+          items={excludeProjects}
           style={{ marginLeft: '24px' }}
         />
       ) : null}
     </>
   )
-}
-
-const renderKeyValue = (key: string, value?: string) => {
-  return (
-    <div>
-      <span>{key}</span>: <span>{value}</span>
-    </div>
-  )
-}
-
-interface OrgFieldViewModePropsInterface {
-  data?: EntityType
-  getString: UseStringsReturn['getString']
-}
-export const OrgFieldViewMode: React.FC<OrgFieldViewModePropsInterface> = ({ data, getString }) => {
-  if (!data) return null
-  const { filterType, entityRefs } = data
-  let value = 'All Organizations'
-  if (filterType === All) {
-    value = 'All Organizations'
-  } else if (filterType === Equals) {
-    value = (entityRefs as string[])?.join(', ')
-  } else if (filterType === NotEquals) {
-    value = `All Organizations except ${entityRefs?.join(', ')}`
-  }
-  return renderKeyValue(getString('orgLabel'), value)
-}
-
-interface ProjectFieldViewModePropsInterface {
-  data?: EntityType
-  getString: UseStringsReturn['getString']
-}
-export const ProjectFieldViewMode: React.FC<ProjectFieldViewModePropsInterface> = ({ data, getString }) => {
-  if (!data) return null
-  const { filterType, entityRefs } = data
-  let value = 'All Projects'
-  if (filterType === All) {
-    value = 'All Projects'
-  } else if (filterType === Equals) {
-    value = (entityRefs as string[])?.join(', ')
-  } else if (filterType === NotEquals) {
-    value = `All Projects except ${entityRefs?.join(', ')}`
-  }
-  return renderKeyValue(getString('projectsText'), value)
 }
 
 export const ServicesAndEnvRenderer: React.FC<{
@@ -279,12 +245,8 @@ export const ServicesAndEnvRenderer: React.FC<{
   const envTypeMap = getEnvTypeMap(getString)
 
   return (
-    <Heading
-      level={3}
-      style={{ fontWeight: 600, fontSize: '12px', lineHeight: '18px', marginTop: '12px' }}
-      color={Color.GREY_600}
-    >
-      {freezeWindowLevel === FreezeWindowLevels.PROJECT ? (
+    <Heading level={3} style={{ fontWeight: 600, fontSize: '12px', lineHeight: '18px' }} color={Color.GREY_600}>
+      {freezeWindowLevel !== FreezeWindowLevels.PROJECT ? (
         <span style={{ marginRight: '8px', paddingRight: '8px', borderRight: '0.5px solid' }}>
           {getString('common.allServices')}
         </span>
@@ -292,4 +254,226 @@ export const ServicesAndEnvRenderer: React.FC<{
       {`${getString('envType')}: ${envTypeMap[envType as EnvironmentType]}`}
     </Heading>
   )
+}
+
+interface OrgProjAndServiceRendererPropsInterface {
+  entitiesMap: Record<FIELD_KEYS, EntityType>
+  freezeWindowLevel: FreezeWindowLevels
+  resources: ResourcesInterface
+  getString: UseStringsReturn['getString']
+}
+
+const ProjectLevelRender: React.FC<OrgProjAndServiceRendererPropsInterface> = ({
+  entitiesMap,
+  resources,
+  getString
+}) => {
+  const serviceEntityMap = entitiesMap[FIELD_KEYS.Service]
+  const filterType = serviceEntityMap?.filterType || All
+  const serviceMap = resources.servicesMap
+  const selectedServiceIds = serviceEntityMap?.entityRefs || []
+  let serviceNodes = null
+  if (filterType === All || selectedServiceIds.length === 0) {
+    serviceNodes = <span className={css.badge}>{serviceMap[All]?.label}</span>
+  } else {
+    serviceNodes = selectedServiceIds.map(svcId => {
+      return (
+        <span key={svcId} className={css.badge}>
+          {serviceMap[svcId]?.label || svcId}
+        </span>
+      )
+    })
+  }
+
+  return (
+    <div className={css.viewRowNode}>
+      <span>{getString('services')}:</span> {serviceNodes}
+    </div>
+  )
+}
+
+const AccountLevelRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = ({
+  entitiesMap,
+  resources,
+  getString
+}) => {
+  const entityMap = entitiesMap[FIELD_KEYS.Org]
+  const filterType = entityMap?.filterType || All
+  const resourcesMap = resources.orgsMap
+  const projResourcesMap = resources.projectsMap
+  const selectedItemIds = entityMap?.entityRefs || []
+  if (filterType === All || selectedItemIds.length === 0) {
+    return (
+      <>
+        <div className={css.viewRowNode}>
+          <span>{getString('orgsText')}:</span> <span className={css.badge}>{resourcesMap[All]?.label}</span>
+        </div>
+        <div className={css.viewRowNode}>
+          <span>{getString('projectsText')}:</span> <span className={css.badge}>{projResourcesMap[All]?.label}</span>
+        </div>
+      </>
+    )
+  } else if (filterType === NotEquals) {
+    const nodes = selectedItemIds.map(itemId => {
+      return (
+        <span key={itemId} className={css.badge}>
+          {resourcesMap[itemId]?.label || itemId}
+        </span>
+      )
+    })
+    return (
+      <>
+        <div className={classnames(css.viewRowNode, css.marginSmaller)}>
+          <span>{getString('orgsText')}:</span> <span className={css.badge}>{resourcesMap[All]?.label}</span>
+        </div>
+        <div className={css.viewRowNode}>
+          <span>
+            {getString(
+              selectedItemIds.length === 1
+                ? 'freezeWindows.freezeStudio.excludeFollowingOrg'
+                : 'freezeWindows.freezeStudio.excludeFollowingOrgs'
+            )}
+            :
+          </span>{' '}
+          {nodes}
+        </div>
+        <div className={css.viewRowNode}>
+          <span>{getString('projectsText')}:</span> <span className={css.badge}>{projResourcesMap[All]?.label}</span>
+        </div>
+      </>
+    )
+  } else if (filterType === Equals) {
+    const isOrgMultiSelected = selectedItemIds.length > 1
+    const nodes = selectedItemIds.map(itemId => {
+      return (
+        <span key={itemId} className={css.badge}>
+          {resourcesMap[itemId]?.label || itemId}
+        </span>
+      )
+    })
+    // Render selected orgs and render "All Projects" test
+    if (isOrgMultiSelected) {
+      return (
+        <>
+          <div className={css.viewRowNode}>
+            <span>{getString('orgsText')}:</span> {nodes}
+          </div>
+          <div className={css.viewRowNode}>
+            <span>{getString('projectsText')}:</span> <span className={css.badge}>{projResourcesMap[All]?.label}</span>
+          </div>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <div className={css.viewRowNode}>
+            <span>{getString('orgsText')}:</span> {nodes}
+          </div>
+          <OrgLevelRenderer
+            entitiesMap={entitiesMap}
+            projectsMap={resources.projectsByOrgId[selectedItemIds[0]]?.projectsMap || {}}
+            getString={getString}
+          />
+        </>
+      )
+    }
+  }
+  return <div></div>
+}
+
+interface OrgRendererPropsInterface {
+  entitiesMap: Record<FIELD_KEYS, EntityType>
+  projectsMap: Record<string, SelectOption>
+  getString: UseStringsReturn['getString']
+}
+
+const OrgLevelRenderer: React.FC<OrgRendererPropsInterface> = ({ entitiesMap, projectsMap, getString }) => {
+  const entityMap = entitiesMap[FIELD_KEYS.Proj]
+  const filterType = entityMap?.filterType || All
+  const selectedItemIds = entityMap?.entityRefs || []
+  let nodesEl = null
+  if (filterType === All || selectedItemIds.length === 0) {
+    const nodes = <span className={css.badge}>{projectsMap[All]?.label}</span>
+    nodesEl = (
+      <>
+        <span>{getString('projectsText')}:</span> {nodes}
+      </>
+    )
+  } else if (filterType === NotEquals) {
+    const nodes = selectedItemIds.map(itemId => {
+      return (
+        <span key={itemId} className={css.badge}>
+          {projectsMap[itemId]?.label || itemId}
+        </span>
+      )
+    })
+
+    return (
+      <>
+        <div className={classnames(css.viewRowNode, css.marginSmaller)}>
+          <span>{getString('projectsText')}:</span> <span className={css.badge}>{projectsMap[All]?.label}</span>
+        </div>
+        <div className={css.viewRowNode}>
+          <span>
+            {getString(
+              selectedItemIds.length === 1
+                ? 'freezeWindows.freezeStudio.excludeFollowingProject'
+                : 'freezeWindows.freezeStudio.excludeFollowingProjects'
+            )}
+            :
+          </span>{' '}
+          {nodes}
+        </div>
+      </>
+    )
+  } else if (filterType === Equals) {
+    const nodes = selectedItemIds.map(itemId => {
+      return (
+        <span key={itemId} className={css.badge}>
+          {projectsMap[itemId]?.label || itemId}
+        </span>
+      )
+    })
+    nodesEl = (
+      <>
+        <span>{getString('projectsText')}:</span> {nodes}
+      </>
+    )
+  }
+
+  return <div className={css.viewRowNode}>{nodesEl}</div>
+}
+
+export const OrgProjAndServiceRenderer: React.FC<OrgProjAndServiceRendererPropsInterface> = ({
+  entitiesMap,
+  freezeWindowLevel,
+  resources,
+  getString
+}) => {
+  if (freezeWindowLevel === FreezeWindowLevels.PROJECT) {
+    return (
+      <ProjectLevelRender
+        entitiesMap={entitiesMap}
+        resources={resources}
+        getString={getString}
+        freezeWindowLevel={freezeWindowLevel}
+      />
+    )
+  }
+  if (freezeWindowLevel === FreezeWindowLevels.ORG) {
+    return (
+      <OrgLevelRenderer entitiesMap={entitiesMap} projectsMap={resources.projectsMap || {}} getString={getString} />
+    )
+  }
+  if (freezeWindowLevel === FreezeWindowLevels.ACCOUNT) {
+    return (
+      <AccountLevelRenderer
+        entitiesMap={entitiesMap}
+        resources={resources}
+        getString={getString}
+        freezeWindowLevel={freezeWindowLevel}
+      />
+    )
+  }
+  return <div></div>
 }

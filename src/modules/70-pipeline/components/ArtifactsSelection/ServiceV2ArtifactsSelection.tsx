@@ -76,7 +76,10 @@ import {
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { Nexus3Artifact } from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
 import Artifactory from './ArtifactRepository/ArtifactLastSteps/Artifactory/Artifactory'
-import { CustomArtifact } from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
+import {
+  CustomArtifact,
+  CustomArtifactOptionalConfiguration
+} from './ArtifactRepository/ArtifactLastSteps/CustomArtifact/CustomArtifact'
 import { showConnectorStep } from './ArtifactUtils'
 import { ACRArtifact } from './ArtifactRepository/ArtifactLastSteps/ACRArtifact/ACRArtifact'
 import { AmazonS3 } from './ArtifactRepository/ArtifactLastSteps/AmazonS3Artifact/AmazonS3'
@@ -114,7 +117,7 @@ export default function ServiceV2ArtifactsSelection({
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
 
-  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY, AZURE_WEBAPP_NG_S3_ARTIFACTS } = useFeatureFlags()
+  const { CUSTOM_ARTIFACT_NG, NG_GOOGLE_ARTIFACT_REGISTRY } = useFeatureFlags()
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const getServiceCacheId = `${pipeline.identifier}-${selectedStageId}-service`
   const { getCache } = useCache([getServiceCacheId])
@@ -133,13 +136,6 @@ export default function ServiceV2ArtifactsSelection({
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
-    }
-    if (
-      deploymentType === ServiceDeploymentType.AzureWebApp &&
-      AZURE_WEBAPP_NG_S3_ARTIFACTS &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonS3)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AmazonS3)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deploymentType])
@@ -545,6 +541,21 @@ export default function ServiceV2ArtifactsSelection({
     setIsEditMode(false)
   }, [])
 
+  const getOptionalConfigurationSteps = useCallback((): JSX.Element | null => {
+    switch (selectedArtifact) {
+      case ENABLED_ARTIFACT_TYPES.CustomArtifact:
+        return (
+          <CustomArtifactOptionalConfiguration
+            {...artifactLastStepProps}
+            name={'Optional Configuration'}
+            key={'Optional_Configuration'}
+          />
+        )
+      default:
+        return null
+    }
+  }, [artifactLastStepProps, selectedArtifact])
+
   const renderExistingArtifact = (): JSX.Element => {
     return (
       <ArtifactWizard
@@ -558,6 +569,7 @@ export default function ServiceV2ArtifactsSelection({
         isReadonly={readonly}
         selectedArtifact={selectedArtifact}
         changeArtifactType={changeArtifactType}
+        getOptionalConfigurationSteps={getOptionalConfigurationSteps()}
         newConnectorView={connectorView}
         newConnectorProps={{
           auth: authenticationStepProps,

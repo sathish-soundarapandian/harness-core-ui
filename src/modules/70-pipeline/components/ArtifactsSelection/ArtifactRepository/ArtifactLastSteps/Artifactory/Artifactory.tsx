@@ -22,7 +22,7 @@ import {
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Menu } from '@blueprintjs/core'
-import type { FormikValues } from 'formik'
+import type { FormikProps, FormikValues } from 'formik'
 import * as Yup from 'yup'
 import { defaultTo, memoize, merge } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -30,7 +30,14 @@ import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 
-import { ConnectorConfigDTO, DockerBuildDetailsDTO, useGetBuildDetailsForArtifactoryArtifact } from 'services/cd-ng'
+import {
+  ArtifactoryImagePath,
+  ConnectorConfigDTO,
+  DockerBuildDetailsDTO,
+  Failure,
+  useGetBuildDetailsForArtifactoryArtifact,
+  useGetImagePathsForArtifactory
+} from 'services/cd-ng'
 import {
   checkIfQueryParamsisNotEmpty,
   defaultArtifactInitialValues,
@@ -113,6 +120,7 @@ function Artifactory({
       : RepositoryFormatTypes.Docker
   )
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const showRepositoryFormatForAllowedTypes =
     isAzureWebAppDeploymentTypeSelected || isSSHWinRmDeploymentType || isCustomDeploymentTypeSelected
@@ -139,8 +147,16 @@ function Artifactory({
   }, [])
 
   const schemaObject = {
-    artifactPath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath')),
-    repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+    artifactPath: Yup.lazy(value =>
+      typeof value === 'object'
+        ? Yup.object().required(getString('pipeline.artifactsSelection.validation.artifactPath')) // typeError is necessary here, otherwise we get a bad-looking yup error
+        : Yup.string().required(getString('pipeline.artifactsSelection.validation.artifactPath'))
+    ),
+    repository: Yup.lazy(value =>
+      typeof value === 'object'
+        ? Yup.object().required(getString('common.git.validation.repoRequired')) // typeError is necessary here, otherwise we get a bad-looking yup error
+        : Yup.string().required(getString('common.git.validation.repoRequired'))
+    ),
     tagType: Yup.string().required(),
     tagRegex: Yup.string().when('tagType', {
       is: 'regex',
@@ -172,6 +188,8 @@ function Artifactory({
 
   const serverlessPrimarySchema = Yup.object().shape(serverlessArtifactorySchema)
 
+  const connectorRef = getConnectorIdValue(prevStepData)
+
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
@@ -189,6 +207,14 @@ function Artifactory({
       getString('pipeline.uniqueIdentifier')
     )
   })
+
+  const isArtifactDisabled = (formik: FormikProps<ImagePathTypes>) => {
+    if (getMultiTypeFromValue(formik?.values?.repository) === MultiTypeInputType.RUNTIME) return true
+    return !(
+      (formik.values?.repository as SelectOption)?.value?.toString()?.length ||
+      formik.values?.repository?.toString()?.length
+    )
+  }
 
   const getConnectorRefQueryData = (): string => {
     return prevStepData?.connectorId?.value || prevStepData?.connectorId?.connector?.value || prevStepData?.identifier
@@ -214,6 +240,49 @@ function Artifactory({
     lazy: true,
     debounce: 300
   })
+
+  const {
+    data: imagePathData,
+    loading: imagePathLoading,
+    refetch: refetchImagePathData,
+    error: imagePathError
+  } = useGetImagePathsForArtifactory({
+    queryParams: {
+      repository: lastQueryData.repository,
+      connectorRef: getConnectorRefQueryData(),
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    lazy: true,
+    debounce: 300
+  })
+
+  useEffect(() => {
+    if (imagePathLoading) {
+      setArtifactPaths([{ label: getString('loading'), value: getString('loading') }])
+    }
+    if ((imagePathError?.data as Failure)?.status === 'ERROR') {
+      const errorMessage = (imagePathError?.data as Failure)?.message as string
+      setArtifactPaths([{ label: errorMessage, value: errorMessage }])
+    } else if ((imagePathError?.data as Failure)?.status === 'FAILURE') {
+      const erroObj = (imagePathError?.data as Failure)?.errors?.[0]
+      const errorMessage =
+        erroObj?.fieldId && erroObj?.error ? `${erroObj?.fieldId} ${erroObj?.error}` : getString('somethingWentWrong')
+      setArtifactPaths([{ label: errorMessage, value: errorMessage }])
+    }
+  }, [imagePathLoading, imagePathError])
+
+  useEffect(() => {
+    if (imagePathData) {
+      setArtifactPaths(
+        imagePathData.data?.imagePaths?.map((imagePath: ArtifactoryImagePath) => ({
+          label: imagePath.imagePath || '',
+          value: imagePath.imagePath || ''
+        })) || []
+      )
+    }
+  }, [imagePathData, connectorRef])
 
   useEffect(() => {
     if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
@@ -255,12 +324,22 @@ function Artifactory({
   }, [])
 
   const getInitialValues = useCallback((): ImagePathTypes => {
-    return getArtifactFormData(
+    const artifactFormDataValues = getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed,
       isGenericArtifactory
     ) as ImagePathTypes
+    if (
+      getMultiTypeFromValue(artifactFormDataValues.artifactPath) === MultiTypeInputType.FIXED &&
+      (artifactFormDataValues.artifactPath as string)?.length
+    ) {
+      artifactFormDataValues.artifactPath = {
+        label: artifactFormDataValues?.artifactPath,
+        value: artifactFormDataValues?.artifactPath
+      } as SelectOption
+    }
+    return artifactFormDataValues
   }, [initialValues, selectedArtifact, isIdentifierAllowed, isGenericArtifactory])
 
   const submitFormData = (formData: ImagePathTypes & { connectorId?: string }): void => {
@@ -312,7 +391,7 @@ function Artifactory({
             <Text>{item.label}</Text>
           </Layout.Horizontal>
         }
-        disabled={artifactoryBuildDetailsLoading}
+        disabled={artifactoryBuildDetailsLoading || imagePathLoading}
         onClick={handleClick}
       />
     </div>
@@ -322,7 +401,11 @@ function Artifactory({
     if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
       return
     }
-    fetchTags(getArtifactPathToFetchTags(formik, true, isGenericArtifactory), formik.values?.repository)
+    const artifactPathValue: SelectOption | string = getArtifactPathToFetchTags(formik, true, isGenericArtifactory)
+    fetchTags(
+      defaultTo((artifactPathValue as SelectOption)?.value, artifactPathValue),
+      defaultTo(formik.values?.repository?.value, formik.values?.repository)
+    )
   }
 
   return (
@@ -338,6 +421,8 @@ function Artifactory({
           submitFormData({
             ...prevStepData,
             ...formData,
+            repository: defaultTo((formData?.repository as SelectOption)?.value, formData?.repository) as string,
+            artifactPath: defaultTo((formData?.artifactPath as SelectOption)?.value, formData?.artifactPath) as string,
             tag: defaultTo(formData?.tag?.value, formData?.tag),
             connectorId: getConnectorIdValue(prevStepData)
           })
@@ -373,50 +458,15 @@ function Artifactory({
                   </div>
                 )}
 
-                {isGenericArtifactory ? (
-                  <ServerlessArtifactoryRepository
-                    connectorRef={getConnectorIdValue(prevStepData)}
-                    isReadonly={isReadonly}
-                    expressions={expressions}
-                    allowableTypes={allowableTypes}
-                    formik={formik}
-                    fieldName={'repository'}
-                  />
-                ) : (
-                  <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
-                      label={getString('repository')}
-                      name="repository"
-                      placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-                      multiTextInputProps={{
-                        expressions,
-                        allowableTypes
-                      }}
-                      onChange={() => {
-                        tagList?.length && setTagList([])
-                        resetTag(formik)
-                      }}
-                    />
-
-                    {getMultiTypeFromValue(formik.values.repository) === MultiTypeInputType.RUNTIME && (
-                      <div className={css.configureOptions}>
-                        <ConfigureOptions
-                          style={{ alignSelf: 'center' }}
-                          value={formik.values?.repository as string}
-                          type={getString('string')}
-                          variableName="repository"
-                          showRequiredField={false}
-                          showDefaultField={false}
-                          showAdvanced={true}
-                          onChange={value => {
-                            formik.setFieldValue('repository', value)
-                          }}
-                          isReadonly={isReadonly}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
+                <ServerlessArtifactoryRepository
+                  connectorRef={getConnectorIdValue(prevStepData)}
+                  isReadonly={isReadonly}
+                  expressions={expressions}
+                  allowableTypes={allowableTypes}
+                  formik={formik}
+                  repoFormat={repositoryFormat}
+                  fieldName={'repository'}
+                />
 
                 {isGenericArtifactory && (
                   <div className={css.imagePathContainer}>
@@ -455,17 +505,56 @@ function Artifactory({
 
                 {isGenericArtifactory ? null : (
                   <div className={css.imagePathContainer}>
-                    <FormInput.MultiTextInput
+                    <FormInput.MultiTypeInput
+                      selectItems={artifactPaths}
+                      multiTypeInputProps={{
+                        onChange: () => {
+                          onChangeImageArtifactPath()
+                        },
+                        expressions,
+                        allowableTypes,
+                        selectProps: {
+                          noResults: (
+                            <NoTagResults
+                              tagError={imagePathError}
+                              isServerlessDeploymentTypeSelected={isGenericArtifactory}
+                            />
+                          ),
+                          items: artifactPaths,
+                          addClearBtn: true,
+                          itemRenderer: itemRenderer,
+                          allowCreatingNewItems: true,
+                          addTooltip: true
+                        },
+                        onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                          if (
+                            e?.target?.type !== 'text' ||
+                            (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                          ) {
+                            return
+                          }
+                          if (!isArtifactDisabled(formik)) {
+                            refetchImagePathData({
+                              queryParams: {
+                                repository: (formik.values?.repository as string) || '',
+                                connectorRef: getConnectorRefQueryData(),
+                                accountIdentifier: accountId,
+                                orgIdentifier,
+                                projectIdentifier
+                              }
+                            })
+                          }
+                        }
+                      }}
                       label={getString('pipeline.artifactImagePathLabel')}
                       name="artifactPath"
                       placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
-                      multiTextInputProps={{ expressions, allowableTypes }}
-                      onChange={onChangeImageArtifactPath}
+                      className={css.tagInputButton}
                     />
                     {getMultiTypeFromValue(formik.values?.artifactPath) === MultiTypeInputType.RUNTIME && (
                       <div className={css.configureOptions}>
                         <ConfigureOptions
-                          value={formik.values?.artifactPath || ''}
+                          value={formik.values?.artifactPath as string}
                           type="String"
                           variableName="artifactPath"
                           showRequiredField={false}

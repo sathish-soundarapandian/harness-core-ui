@@ -24,6 +24,7 @@ import {
 } from 'services/cd-ng'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { AzureArmProps, isFixed } from '../AzureArm.types'
+import { GetSubString } from '../Scopes'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const ScopeInputStep = (
@@ -80,7 +81,7 @@ export const ScopeInputStep = (
   useEffect(() => {
     if (subscriptionsData && isEmpty(subscriptions.length)) {
       const subs = map(get(subscriptionsData, 'data.subscriptions', []), sub => ({
-        label: sub.subscriptionName,
+        label: `${sub.subscriptionName} - ${GetSubString(sub.subscriptionId)}`,
         value: sub.subscriptionId
       }))
       setSubscriptions(subs)
@@ -180,7 +181,7 @@ export const ScopeInputStep = (
   useEffect(() => {
     if (!isEmpty(managementGroupData?.data?.managementGroups)) {
       const groups = map(get(managementGroupData, 'data.managementGroups', []), group => ({
-        label: group.displayName!,
+        label: `${group.displayName!} - ${GetSubString(group?.name)}`,
         value: group.name!
       }))
       setMgmtGroups(groups)

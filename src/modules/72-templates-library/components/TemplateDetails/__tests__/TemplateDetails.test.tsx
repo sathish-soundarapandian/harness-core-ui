@@ -16,6 +16,7 @@ import templateFactory from '@templates-library/components/Templates/TemplatesFa
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import { templatePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
+import { mockBranches } from '@gitsync/components/GitSyncForm/__tests__/mockdata'
 import { TemplateDetails, TemplateDetailsProps } from '../TemplateDetails'
 
 const gitAppStoreValues = {
@@ -58,6 +59,13 @@ jest.mock('services/template-ng', () => ({
   useGetTemplate: jest.fn().mockImplementation((...args) => {
     useGetTemplateMock(...args)
     return {}
+  })
+}))
+
+const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
+jest.mock('services/cd-ng', () => ({
+  useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
+    return { data: mockBranches, refetch: fetchBranches }
   })
 }))
 

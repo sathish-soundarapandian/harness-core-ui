@@ -111,7 +111,8 @@ export const Connectors: ConnectorType = {
   AWSSECRETMANAGER: 'AwsSecretManager',
   JENKINS: 'Jenkins',
   CUSTOM_SECRET_MANAGER: 'CustomSecretManager',
-  ELK: 'ELK'
+  ELK: 'ELK',
+  GcpSecretManager: 'GcpSecretManager'
 }
 
 export const ConnectorInfoText = {

@@ -36,7 +36,7 @@ exports[`AmazonS3 tests bucket name field is Runtime input when connectorId from
                     class="Tooltip--acenter"
                     data-tooltip-id="artifactoryArtifact_region"
                   >
-                    regionLabel
+                    optionalField
                   </span>
                    
                   <span
@@ -469,7 +469,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="artifactoryArtifact_region"
                   >
-                    regionLabel
+                    optionalField
                   </span>
                    
                   <span
@@ -891,7 +891,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
                     class="Tooltip--acenter"
                     data-tooltip-id="artifactoryArtifact_region"
                   >
-                    regionLabel
+                    optionalField
                   </span>
                    
                   <span
@@ -1367,7 +1367,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePath is 
                     class="Tooltip--acenter"
                     data-tooltip-id="artifactoryArtifact_region"
                   >
-                    regionLabel
+                    optionalField
                   </span>
                    
                   <span
@@ -1789,7 +1789,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePathRege
                     class="Tooltip--acenter"
                     data-tooltip-id="artifactoryArtifact_region"
                   >
-                    regionLabel
+                    optionalField
                   </span>
                    
                   <span

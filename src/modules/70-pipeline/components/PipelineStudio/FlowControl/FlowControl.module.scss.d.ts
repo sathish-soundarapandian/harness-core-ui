@@ -7,12 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly actionIcon: string
   readonly addLink: string
   readonly addbarrier: string
   readonly barrierAction: string
   readonly barrierList: string
   readonly container: string
-  readonly deleteIcon: string
   readonly description: string
   readonly disabledIcon: string
   readonly flowControlPanelHeader: string

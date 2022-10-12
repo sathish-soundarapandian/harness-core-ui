@@ -64,7 +64,7 @@ describe('Unit tests for createElkConnector', () => {
   })
 
   test('Ensure validation works', async () => {
-    const { container, getByText } = render(
+    const { container, getByText, getAllByText } = render(
       <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
         <CreateElkConnector
           accountId="dummyAccountId"
@@ -84,7 +84,7 @@ describe('Unit tests for createElkConnector', () => {
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() => expect(getByText('validation.username')).not.toBeNull())
     expect(getByText('validation.password')).not.toBeNull()
-    expect(getByText('connectors.appD.validation.controllerURL')).not.toBeNull()
+    expect(getAllByText('UrlLabel')).not.toBeNull()
 
     // switch auth type
     await updateApiClientAuthType(ElkAuthType.API_CLIENT_TOKEN)

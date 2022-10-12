@@ -5,18 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 //xx
+import type { FormikProps } from 'formik'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 
 export interface MapElkQueriesToServiceProps {
-  onChange: (name: string, value: string | SelectOption) => void
+  onChange: (name: string, value: string | boolean | SelectOption) => void
   sampleRecord: Record<string, any> | null
   isQueryExecuted: boolean
   loading: boolean
   serviceInstance: string
-  identifyTimeStamp: string
+  identifyTimestamp: string
   isTemplate?: boolean
   expressions?: string[]
   isConnectorRuntimeOrExpression?: boolean
   connectorIdentifier?: string
   messageIdentifier: string
+  formikProps: FormikProps<any>
 }

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Button, Layout, Text } from '@wings-software/uicore'
+import { Button, Layout, Text } from '@harness/uicore'
 import React, { useState } from 'react'
 import cx from 'classnames'
 import type { StringKeys } from 'framework/strings'

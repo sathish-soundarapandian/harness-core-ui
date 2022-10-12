@@ -113,6 +113,14 @@
   margin-left: -20px !important; // padding left of Add Button
 }
 
+.freezeToggler {
+  span {
+    width: 30px;
+    height: 16px;
+    outline: none !important;
+  }
+}
+
 .freezeNameContainer {
   .freezeName {
     font-size: 20px !important;
@@ -140,4 +148,72 @@
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
+}
+
+.badge {
+  background-color: var(--primary-2);
+  border-radius: 4px;
+  color: var(--grey-1000);
+  font-size: var(--font-size-small);
+  font-weight: 400;
+  height: 24px;
+  line-height: 20px;
+  padding: 2px var(--spacing-3);
+  margin-left: var(--spacing-3);
+}
+
+.viewRowNode {
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  line-height: 18px;
+  margin-bottom: var(--spacing-4);
+  &.marginSmaller {
+    margin-bottom: var(--spacing-2);
+  }
+}
+
+.unsavedChanges {
+  & > :global(.bp3-button-text) {
+    color: var(--orange-600) !important;
+    font-size: var(--font-size-small) !important;
+  }
+
+  cursor: default;
+  margin-right: var(--spacing-5) !important;
+  padding: 0 !important;
+
+  &::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background: var(--orange-600);
+    display: inline-block;
+    margin: 0 4px;
+  }
+}
+
+.discardBtn {
+  margin-left: var(--spacing-3) !important;
+}
+
+.headerSaveBtnWrapper {
+  width: 84px;
+}
+
+.readonlyAccessTag {
+  display: flex;
+  color: var(--orange-800);
+  margin-right: var(--spacing-xlarge);
+  font-size: var(--font-size-small);
+  line-height: 18px;
+  align-items: center;
+  span {
+    color: var(--orange-800) !important;
+  }
+  .readonlyAccessText {
+    margin-left: var(--spacing-small);
+  }
 }

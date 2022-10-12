@@ -57,7 +57,8 @@ import {
   ConnectorTypes,
   LastStepProps,
   ModalViewOption,
-  WizardStepNames
+  WizardStepNames,
+  AzureWebAppSelectionTypes
 } from '../AzureWebAppServiceConfig.types'
 import css from '../AzureWebAppServiceConfig.module.scss'
 
@@ -84,7 +85,13 @@ function AzureWebAppListView({
   isReadonly,
   allowableTypes,
   selectedOption,
-  setSelectedOption
+  setSelectedOption,
+  showApplicationSettings,
+  showConnectionStrings,
+  selectionType,
+  handleSubmitConfig,
+  handleDeleteConfig,
+  editServiceOverride
 }: AzureWebAppListViewProps): JSX.Element {
   const { getString } = useStrings()
 
@@ -92,6 +99,8 @@ function AzureWebAppListView({
   const [connectorType, setConnectorType] = useState('')
   const [isEditMode, setIsEditMode] = useState(false)
   const { trackEvent } = useTelemetry()
+
+  const pipelineView = selectionType === AzureWebAppSelectionTypes.PIPELINE
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -101,7 +110,7 @@ function AzureWebAppListView({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
 
-  const removeApplicationConfig = (type: ModalViewOption): void => {
+  const handleStageServiceConfigDelete = (type: ModalViewOption): void => {
     /* istanbul ignore else */
     if (stage) {
       const newStage = produce(stage, draft => {
@@ -123,6 +132,17 @@ function AzureWebAppListView({
       if (newStage) {
         updateStage?.(newStage)
       }
+    }
+  }
+
+  const removeApplicationConfig = (type: ModalViewOption): void => {
+    switch (selectionType) {
+      case AzureWebAppSelectionTypes.PIPELINE:
+        handleStageServiceConfigDelete(type)
+        break
+      default:
+        handleDeleteConfig?.(0)
+        break
     }
   }
   const editApplicationConfig = (store: ConnectorTypes, type: ModalViewOption): void => {
@@ -149,7 +169,7 @@ function AzureWebAppListView({
     }
   }
 
-  const handleSubmit = /* istanbul ignore next */ (
+  const handleStageServiceConfigSubmit = (
     item: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
   ): void => {
     let path = ''
@@ -171,6 +191,19 @@ function AzureWebAppListView({
         })
         break
     }
+  }
+
+  const handleSubmit = /* istanbul ignore next */ (
+    item: ApplicationSettingsConfiguration | ConnectionStringsConfiguration
+  ): void => {
+    switch (selectionType) {
+      case AzureWebAppSelectionTypes.PIPELINE:
+        handleStageServiceConfigSubmit(item)
+        break
+      default:
+        handleSubmitConfig?.(item)
+        break
+    }
 
     hideConnectorModal()
     setConnectorView(false)
@@ -189,6 +222,13 @@ function AzureWebAppListView({
   }
   const handleStoreChange = /* istanbul ignore next */ (type?: ConnectorTypes): void => {
     setConnectorType(type || '')
+  }
+
+  const shouldShowAddButton = (
+    item: ConnectionStringsConfiguration | ApplicationSettingsConfiguration | undefined,
+    showSpecificButton?: boolean
+  ): boolean | undefined => {
+    return !isReadonly && showSpecificButton && isEmpty(item)
   }
 
   const getLabels = React.useCallback((): WizardStepNames => {
@@ -387,7 +427,6 @@ function AzureWebAppListView({
         }
       case ModalViewOption.CONNECTIONSTRING:
         /* istanbul ignore else */
-
         if (connectionStrings) {
           const values = {
             ...connectionStrings,
@@ -421,14 +460,16 @@ function AzureWebAppListView({
 
       return (
         <div className={css.rowItem}>
-          <section className={css.serviceConfigList}>
-            <div className={css.columnId}>
-              <Text width={200}>
-                {option
-                  ? getString('pipeline.appServiceConfig.connectionStrings.name')
-                  : getString('pipeline.appServiceConfig.applicationSettings.name')}
-              </Text>
-            </div>
+          <section className={cx(css.serviceConfigList, pipelineView ? css.pipelineView : css.environmentView)}>
+            {pipelineView && (
+              <div className={css.columnId}>
+                <Text width={200}>
+                  {option
+                    ? getString('pipeline.appServiceConfig.connectionStrings.name')
+                    : getString('pipeline.appServiceConfig.applicationSettings.name')}
+                </Text>
+              </div>
+            )}
             <div className={css.columnId}>
               <Icon inline name={ConnectorIcons[currentOption?.store?.type as ConnectorTypes]} size={20} />
               {get(currentOption, 'store.type') === 'Harness'
@@ -460,18 +501,23 @@ function AzureWebAppListView({
                 </Text>
               </div>
             )}
-
             {!isReadonly && (
               <span>
                 <Layout.Horizontal className={css.serviceConfigListButton}>
                   <Button
                     icon="Edit"
-                    iconProps={{ size: 18 }}
-                    onClick={() => editApplicationConfig(selectedStore as ConnectorTypes, option)}
+                    iconProps={{ size: pipelineView ? 18 : 16 }}
                     minimal
+                    onClick={() => {
+                      if (selectionType === AzureWebAppSelectionTypes.SERVICE_OVERRIDE) {
+                        editServiceOverride?.()
+                      } else {
+                        editApplicationConfig(selectedStore as ConnectorTypes, option)
+                      }
+                    }}
                   />
                   <Button
-                    iconProps={{ size: 18 }}
+                    iconProps={{ size: pipelineView ? 18 : 16 }}
                     icon="main-trash"
                     onClick={() => removeApplicationConfig(option)}
                     minimal
@@ -535,8 +581,14 @@ function AzureWebAppListView({
     <Layout.Vertical style={{ width: '100%' }}>
       <Layout.Vertical spacing="small" style={{ flexShrink: 'initial' }}>
         {(!isEmpty(applicationSettings) || !isEmpty(connectionStrings)) && (
-          <div className={css.serviceConfigList}>
-            <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('typeLabel').toLocaleUpperCase()}</Text>
+          <div
+            className={cx(css.serviceConfigList, css.listHeader, pipelineView ? css.pipelineView : css.environmentView)}
+          >
+            {pipelineView && (
+              <Text font={{ variation: FontVariation.TABLE_HEADERS }}>
+                {getString('typeLabel').toLocaleUpperCase()}
+              </Text>
+            )}
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('store').toLocaleUpperCase()}</Text>
             <Text font={{ variation: FontVariation.TABLE_HEADERS }}>{getString('location').toLocaleUpperCase()}</Text>
             <span></span>
@@ -552,34 +604,56 @@ function AzureWebAppListView({
         </Layout.Vertical>
       </Layout.Vertical>
       <Layout.Vertical spacing={'medium'} flex={{ alignItems: 'flex-start' }}>
-        {!isReadonly && isEmpty(applicationSettings) && (
+        {shouldShowAddButton(applicationSettings, showApplicationSettings) && (
           <Button
             className={css.addServiceConfig}
             id="add-applicationSetting"
             size={ButtonSize.SMALL}
             variation={ButtonVariation.LINK}
             onClick={() => {
-              setSelectedOption(ModalViewOption.APPLICATIONSETTING)
-              showConnectorModal()
+              if (selectionType === AzureWebAppSelectionTypes.SERVICE_OVERRIDE) {
+                editServiceOverride?.()
+              } else {
+                setSelectedOption(ModalViewOption.APPLICATIONSETTING)
+                showConnectorModal()
+              }
             }}
-            text={getString('common.plusAddName', {
-              name: getString('pipeline.appServiceConfig.applicationSettings.name')
-            })}
+            icon="plus"
+            text={
+              pipelineView
+                ? getString('common.newName', {
+                    name: getString('pipeline.appServiceConfig.applicationSettings.name')
+                  })
+                : `${getString('common.newName', {
+                    name: getString('pipeline.appServiceConfig.applicationSettings.name')
+                  })} ${getString('common.override')}`
+            }
           />
         )}
-        {!isReadonly && isEmpty(connectionStrings) && (
+        {shouldShowAddButton(connectionStrings, showConnectionStrings) && (
           <Button
             className={css.addServiceConfig}
             id="add-connectionString"
             size={ButtonSize.SMALL}
             variation={ButtonVariation.LINK}
             onClick={() => {
-              setSelectedOption(ModalViewOption.CONNECTIONSTRING)
-              showConnectorModal()
+              if (selectionType === AzureWebAppSelectionTypes.SERVICE_OVERRIDE) {
+                editServiceOverride?.()
+              } else {
+                setSelectedOption(ModalViewOption.CONNECTIONSTRING)
+                showConnectorModal()
+              }
             }}
-            text={getString('common.plusAddName', {
-              name: getString('pipeline.appServiceConfig.connectionStrings.name')
-            })}
+            icon="plus"
+            text={
+              pipelineView
+                ? getString('common.newName', {
+                    name: getString('pipeline.appServiceConfig.connectionStrings.name')
+                  })
+                : `${getString('common.newName', {
+                    name: getString('pipeline.appServiceConfig.connectionStrings.name')
+                  })} ${getString('common.override')}`
+            }
           />
         )}
       </Layout.Vertical>

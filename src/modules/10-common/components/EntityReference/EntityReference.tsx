@@ -35,6 +35,7 @@ import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/Rout
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { CollapsableList } from '../CollapsableList/CollapsableList'
+import type { ScopeAndIdentifier } from '../MultiSelectEntityReference/MultiSelectEntityReference'
 import css from './EntityReference.module.scss'
 
 export interface ScopedObjectDTO {
@@ -127,7 +128,8 @@ export interface EntityReferenceProps<T> {
     scope: Scope,
     done: (records: EntityReferenceResponse<T>[]) => void,
     searchTerm: string,
-    page: number
+    page: number,
+    signal?: AbortSignal
   ) => void
   recordRender: (args: { item: EntityReferenceResponse<T>; selectedScope: Scope; selected?: boolean }) => JSX.Element
   collapsedRecordRender?: (args: {
@@ -148,6 +150,9 @@ export interface EntityReferenceProps<T> {
   pagination: PaginationProps
   disableCollapse?: boolean
   input?: any
+  isMultiSelect?: boolean
+  selectedRecords?: ScopeAndIdentifier[]
+  onMultiSelect?: (selected: ScopeAndIdentifier[]) => void
 }
 
 function getDefaultScope(orgIdentifier?: string, projectIdentifier?: string): Scope {
@@ -157,16 +162,6 @@ function getDefaultScope(orgIdentifier?: string, projectIdentifier?: string): Sc
     return Scope.ORG
   }
   return Scope.ACCOUNT
-}
-
-const enum TAB_ID {
-  PROJECT = 'project',
-  ORGANIZATION = 'organization',
-  ACCOUNT = 'account'
-}
-
-function getDefaultTab(projectIdentifier: string | undefined, orgIdentifier: string | undefined) {
-  return projectIdentifier ? TAB_ID.PROJECT : orgIdentifier ? TAB_ID.ORGANIZATION : TAB_ID.ACCOUNT
 }
 
 export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element {
@@ -183,7 +178,9 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
     noDataCard,
     renderTabSubHeading = false,
     disableCollapse,
-    input
+    input,
+    isMultiSelect,
+    selectedRecords: selectedRecordsFromProps
   } = props
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [selectedScope, setSelectedScope] = useState<Scope>(
@@ -201,19 +198,31 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
   const [error, setError] = useState<string | null>()
   const [selectedRecord, setSelectedRecord] = useState<T>()
 
-  React.useEffect(() => {
-    setSelectedScope(getDefaultScope(orgIdentifier, projectIdentifier))
-  }, [projectIdentifier, orgIdentifier])
+  // used for multiselect
+  const [selectedRecords, setSelectedRecords] = useState<ScopeAndIdentifier[]>(selectedRecordsFromProps ?? [])
 
   const delayedFetchRecords = useRef(debounce((fn: () => void) => fn(), 300)).current
 
   const inputRef = useRef()
   const firstUpdate = useRef(true)
+  const controllerRef = useRef<AbortController>()
 
-  const fetchData = (resetPageIndex: boolean, inputChange = false) => {
+  const fetchData = (resetPageIndex: boolean, inputChange = false): void => {
     try {
+      if (controllerRef.current) controllerRef.current.abort()
+      controllerRef.current = new AbortController()
+
       setError(null)
+
+      if (resetPageIndex && props.pagination.pageIndex !== 0) {
+        props.pagination.gotoPage?.(0)
+      }
+      const pageNo = resetPageIndex ? 0 : props.pagination.pageIndex
+
       if (!searchTerm && !inputChange) {
+        // cancel pending debounced requests to prevent rendering stale data
+        delayedFetchRecords.cancel()
+
         setLoading(true)
         fetchRecords(
           selectedScope,
@@ -222,13 +231,10 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
             setLoading(false)
           },
           searchTerm,
-          props.pagination.pageIndex as number
+          pageNo as number,
+          controllerRef.current?.signal
         )
       } else {
-        if (resetPageIndex && props.pagination.pageIndex !== 0) {
-          props.pagination.gotoPage?.(0)
-        }
-        const pageNo = resetPageIndex ? 0 : props.pagination.pageIndex
         delayedFetchRecords(() => {
           setLoading(true)
           setSelectedRecord(undefined)
@@ -239,7 +245,8 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
               setLoading(false)
             },
             searchTerm,
-            pageNo as number
+            pageNo as number,
+            controllerRef.current?.signal
           )
         })
       }
@@ -274,8 +281,6 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
     size: 14
   }
 
-  const defaultTab = getDefaultTab(projectIdentifier, orgIdentifier)
-
   const RenderList = () => {
     return (
       <Layout.Vertical spacing="large">
@@ -302,12 +307,15 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
           <CollapsableList<T>
             selectedRecord={selectedRecord}
             setSelectedRecord={setSelectedRecord}
+            selectedRecords={selectedRecords}
+            setSelectedRecords={setSelectedRecords}
             data={data}
             recordRender={recordRender}
             collapsedRecordRender={collapsedRecordRender}
             selectedScope={selectedScope}
             pagination={{ ...props.pagination, hidePageNumbers: true }}
             disableCollapse={disableCollapse}
+            isMultiSelect={isMultiSelect}
           />
         ) : (
           <Container padding={{ top: 'xlarge' }} flex={{ align: 'center-center' }} className={css.noDataContainer}>
@@ -321,7 +329,6 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
   const renderTab = (
     show: boolean,
     id: string,
-    scope: Scope,
     icon: IconName,
     title: StringKeys,
     tabDesc = ''
@@ -332,7 +339,6 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
         id={id}
         title={
           <Layout.Horizontal
-            onClick={() => onScopeChange(scope)}
             flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
             padding={{ left: 'xsmall', right: 'xsmall' }}
           >
@@ -369,17 +375,16 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
   return (
     <Container className={cx(css.container, className)}>
       <div className={css.tabsContainer}>
-        <Tabs id={'selectScope'} defaultSelectedTabId={defaultTab}>
-          {renderTab(
-            !!projectIdentifier,
-            TAB_ID.PROJECT,
-            Scope.PROJECT,
-            'projects-wizard',
-            'projectLabel',
-            selectedProject?.name
-          )}
-          {renderTab(!!orgIdentifier, TAB_ID.ORGANIZATION, Scope.ORG, 'diagram-tree', 'orgLabel', selectedOrg?.name)}
-          {renderTab(true, TAB_ID.ACCOUNT, Scope.ACCOUNT, 'layers', 'account', selectedAccount?.accountName)}
+        <Tabs
+          id="selectScope"
+          selectedTabId={selectedScope}
+          onChange={newTabId => {
+            onScopeChange(newTabId as Scope)
+          }}
+        >
+          {renderTab(!!projectIdentifier, Scope.PROJECT, 'projects-wizard', 'projectLabel', selectedProject?.name)}
+          {renderTab(!!orgIdentifier, Scope.ORG, 'diagram-tree', 'orgLabel', selectedOrg?.name)}
+          {renderTab(true, Scope.ACCOUNT, 'layers', 'account', selectedAccount?.accountName)}
         </Tabs>
       </div>
 
@@ -388,14 +393,18 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
           variation={ButtonVariation.PRIMARY}
           text={getString('entityReference.apply')}
           onClick={() => {
-            props.onSelect(selectedRecord as T, selectedScope)
-            trackEvent(StageActions.ApplySelectedConnector, {
-              category: Category.STAGE,
-              selectedRecord,
-              selectedScope
-            })
+            if (isMultiSelect) {
+              props.onMultiSelect?.(selectedRecords)
+            } else {
+              props.onSelect(selectedRecord as T, selectedScope)
+              trackEvent(StageActions.ApplySelectedConnector, {
+                category: Category.STAGE,
+                selectedRecord,
+                selectedScope
+              })
+            }
           }}
-          disabled={!selectedRecord}
+          disabled={isMultiSelect ? !selectedRecords.length : !selectedRecord}
           className={cx(Classes.POPOVER_DISMISS)}
         />
         {props.onCancel && (
@@ -404,11 +413,13 @@ export function EntityReference<T>(props: EntityReferenceProps<T>): JSX.Element 
             text={getString('cancel')}
             onClick={() => {
               props.onCancel?.()
-              trackEvent(StageActions.CancelSelectConnector, {
-                category: Category.STAGE,
-                selectedRecord,
-                selectedScope
-              })
+              if (!isMultiSelect) {
+                trackEvent(StageActions.CancelSelectConnector, {
+                  category: Category.STAGE,
+                  selectedRecord,
+                  selectedScope
+                })
+              }
             }}
           />
         )}

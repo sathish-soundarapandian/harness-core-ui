@@ -301,6 +301,9 @@ export default function AppDMonitoredSource({
     [isMetricThresholdEnabled, nonCustomFeilds]
   )
 
+  const [tierMultiType, setTierMultiType] = useState(() => getMultiTypeFromValue(initPayload?.appDTier))
+  const [appdMultiType, setAppdMultiType] = useState(() => getMultiTypeFromValue(initPayload?.appdApplication))
+
   useEffect(() => {
     if (!appDynamicsData.isEdit) {
       setAppAndTierAsInputIfConnectorIsInput(isConnectorRuntimeOrExpression, nonCustomFeilds, setNonCustomFeilds)
@@ -350,7 +353,7 @@ export default function AppDMonitoredSource({
         return (
           <FormikForm className={css.formFullheight}>
             <CardWithOuterTitle title={getString('cv.healthSource.connectors.AppDynamics.applicationsAndTiers')}>
-              <Layout.Horizontal spacing={'large'}>
+              <Layout.Horizontal spacing={'large'} flex={{ alignItems: 'center', justifyContent: 'start' }}>
                 <Container margin={{ bottom: 'small' }} width={'300px'} color={Color.BLACK}>
                   <AppDApplications
                     allowedTypes={getAllowedTypes(isConnectorRuntimeOrExpression)}
@@ -360,6 +363,8 @@ export default function AppDMonitoredSource({
                     connectorIdentifier={connectorIdentifier}
                     formikAppDynamicsValue={formik?.values?.appdApplication}
                     refetchTier={refetchTier}
+                    appdMultiType={appdMultiType}
+                    setAppdMultiType={setAppdMultiType}
                     setCustomFieldAndValidation={(value: string, validate = false) =>
                       setCustomFieldAndValidation(
                         value,
@@ -378,12 +383,15 @@ export default function AppDMonitoredSource({
                     <AppDynamicsTier
                       isTemplate={isTemplate}
                       expressions={expressions}
-                      tierOptions={tierOptions}
+                      tierOptions={appdMultiType !== MultiTypeInputType.FIXED ? [] : tierOptions}
                       tierLoading={tierLoading}
                       formikValues={formik?.values}
                       onValidate={onValidate}
+                      appdMultiType={appdMultiType}
                       tierError={formik.touched.appDTier ? formik?.errors?.appDTier : ''}
                       setAppDTierCustomField={setAppDTierCustomField}
+                      tierMultiType={tierMultiType}
+                      setTierMultiType={setTierMultiType}
                     />
                   </Container>
                 )}
@@ -466,6 +474,7 @@ export default function AppDMonitoredSource({
                     connectorIdentifier={connectorIdentifier}
                     isTemplate={isTemplate}
                     expressions={expressions}
+                    appdMultiType={appdMultiType}
                   />
                 </CustomMetric>
               </>

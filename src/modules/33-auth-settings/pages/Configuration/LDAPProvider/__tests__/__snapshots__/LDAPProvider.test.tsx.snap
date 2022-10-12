@@ -660,6 +660,21 @@ exports[`LDAP setup Wizard Connection Settings step renders in LDAP wizard ADD m
             titleOptional
           </p>
         </div>
+        <div
+          class="StepWizard--navStep"
+        >
+          <span
+            class="StepWizard--number"
+          >
+            5
+          </span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            authSettings.ldap.userSyncSchedule
+          </p>
+        </div>
       </div>
       <div
         class="StepWizard--stepDetails"
@@ -1593,6 +1608,21 @@ exports[`LDAP setup Wizard Connection Settings step works in LDAP wizard ADD mod
             titleOptional
           </p>
         </div>
+        <div
+          class="StepWizard--navStep"
+        >
+          <span
+            class="StepWizard--number"
+          >
+            5
+          </span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            authSettings.ldap.userSyncSchedule
+          </p>
+        </div>
       </div>
       <div
         class="StepWizard--stepDetails"
@@ -1979,6 +2009,21 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  1`
             titleOptional
           </p>
         </div>
+        <div
+          class="StepWizard--navStep"
+        >
+          <span
+            class="StepWizard--number"
+          >
+            5
+          </span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            authSettings.ldap.userSyncSchedule
+          </p>
+        </div>
       </div>
       <div
         class="StepWizard--stepDetails"
@@ -2344,6 +2389,1161 @@ exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  1`
 </div>
 `;
 
+exports[`LDAP setup Wizard Group Settings step works in LDAP wizard ADD mode  2`] = `
+<div
+  class="bp3-dialog Dialog--dialog dialog"
+>
+  <span
+    class="bp3-icon StyledProps--main Dialog--close"
+    data-icon="Stroke"
+  >
+    <svg
+      fill="none"
+      height="15"
+      width="15"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 .8l6 6 6-6-12 12 6-6 6 6"
+        stroke="#8F90A6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  <div
+    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+  >
+    <div
+      class="StepWizard--main wizardContainer StepWizard--navBar"
+    >
+      <div
+        class="StepWizard--navBarList"
+      >
+        <span
+          class="StepWizard--header"
+        >
+          <span
+            class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey0"
+            data-icon="user-groups"
+          >
+            <svg
+              height="56"
+              viewBox="0 0 32 33"
+              width="56"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clip-rule="evenodd"
+                d="M12.988 12.173a3.12 3.12 0 116.24 0 3.12 3.12 0 01-6.24 0zm3.12-4.72a4.72 4.72 0 00-2.883 8.458l-2.611 4.967-1.365-3.468a3.291 3.291 0 10-3.707-.05l-2.277 5.968a.8.8 0 00.748 1.085h4.742l-.772 1.467a.8.8 0 00.708 1.173h14.834a.8.8 0 00.702-1.184l-.796-1.456h4.729a.8.8 0 00.744-1.095l-2.344-5.91a3.291 3.291 0 10-3.704-.046l-1.325 3.578-2.689-4.918a4.72 4.72 0 00-2.734-8.569zm1.29 9.262a4.724 4.724 0 01-2.759-.054l-4.623 8.792h12.16l-4.778-8.738zm5.652-2.05a1.691 1.691 0 113.382 0 1.691 1.691 0 01-3.382 0zm-.501 8.135l.007.013h4.426l-1.932-4.871a3.352 3.352 0 01-.7-.009l-1.8 4.867zm-14.81-4.858l1.891 4.806-.034.065H5.174l1.862-4.88a3.322 3.322 0 00.703.01zm-1.998-3.277a1.691 1.691 0 113.382 0 1.691 1.691 0 01-3.382 0z"
+                fill="currentColor"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+        </span>
+        <span
+          class="StepWizard--title StepWizard--header"
+        >
+          authSettings.ldap.addLdap
+        </span>
+        <div
+          class="StepWizard--navStep StepWizard--completedStep"
+        >
+          <span
+            class="StepWizard--completedIcon"
+          >
+            <span
+              class="bp3-icon bp3-icon-small-tick StyledProps--main StyledProps--color StyledProps--color-primary7"
+              icon="small-tick"
+            >
+              <svg
+                data-icon="small-tick"
+                height="20"
+                viewBox="0 0 20 20"
+                width="20"
+              >
+                <desc>
+                  small-tick
+                </desc>
+                <path
+                  d="M15 5c-.28 0-.53.11-.71.29L8 11.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l7-7A1.003 1.003 0 0015 5z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            overview
+          </p>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            
+          </p>
+        </div>
+        <div
+          class="StepWizard--navStep StepWizard--completedStep"
+        >
+          <span
+            class="StepWizard--completedIcon"
+          >
+            <span
+              class="bp3-icon bp3-icon-small-tick StyledProps--main StyledProps--color StyledProps--color-primary7"
+              icon="small-tick"
+            >
+              <svg
+                data-icon="small-tick"
+                height="20"
+                viewBox="0 0 20 20"
+                width="20"
+              >
+                <desc>
+                  small-tick
+                </desc>
+                <path
+                  d="M15 5c-.28 0-.53.11-.71.29L8 11.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l7-7A1.003 1.003 0 0015 5z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            authSettings.ldap.connectionSettings
+          </p>
+        </div>
+        <div
+          class="StepWizard--navStep StepWizard--completedStep"
+        >
+          <span
+            class="StepWizard--completedIcon"
+          >
+            <span
+              class="bp3-icon bp3-icon-small-tick StyledProps--main StyledProps--color StyledProps--color-primary7"
+              icon="small-tick"
+            >
+              <svg
+                data-icon="small-tick"
+                height="20"
+                viewBox="0 0 20 20"
+                width="20"
+              >
+                <desc>
+                  small-tick
+                </desc>
+                <path
+                  d="M15 5c-.28 0-.53.11-.71.29L8 11.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l7-7A1.003 1.003 0 0015 5z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            authSettings.ldap.userQueries
+          </p>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName StepWizard--stepSubTitleString"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            titleOptional
+          </p>
+        </div>
+        <div
+          class="StepWizard--navStep StepWizard--completedStep"
+        >
+          <span
+            class="StepWizard--completedIcon"
+          >
+            <span
+              class="bp3-icon bp3-icon-small-tick StyledProps--main StyledProps--color StyledProps--color-primary7"
+              icon="small-tick"
+            >
+              <svg
+                data-icon="small-tick"
+                height="20"
+                viewBox="0 0 20 20"
+                width="20"
+              >
+                <desc>
+                  small-tick
+                </desc>
+                <path
+                  d="M15 5c-.28 0-.53.11-.71.29L8 11.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l7-7A1.003 1.003 0 0015 5z"
+                  fill-rule="evenodd"
+                />
+              </svg>
+            </span>
+          </span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            authSettings.ldap.groupQueries
+          </p>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName StepWizard--stepSubTitleString"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            titleOptional
+          </p>
+        </div>
+        <div
+          class="StepWizard--navStep StepWizard--activeStep"
+        >
+          <span
+            class="StepWizard--number"
+          >
+            5
+          </span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            authSettings.ldap.userSyncSchedule
+          </p>
+        </div>
+      </div>
+      <div
+        class="StepWizard--stepDetails"
+      >
+         
+        <div
+          class="Layout--vertical StyledProps--main stepContainer stepScheduleContainer"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-large"
+            style="align-items: center;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-h4 StyledProps--margin-right-small"
+            >
+              authSettings.ldap.userSyncSchedule
+            </p>
+          </div>
+          <div
+            class="OverlaySpinner--overlaySpinner"
+          >
+            <form
+              action="#"
+              class="FormikForm--main"
+            >
+              <div>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-large StyledProps--main schedulePanelContainer"
+                >
+                  <div
+                    class="Layout--vertical StyledProps--main formContent"
+                  >
+                    <div
+                      class="bp3-tabs Tabs--main Tabs--horizontal"
+                    >
+                      <div
+                        class="bp3-tab-list"
+                        role="tablist"
+                      >
+                        <div
+                          class="bp3-tab-indicator-wrapper"
+                          style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
+                        >
+                          <div
+                            class="bp3-tab-indicator"
+                          />
+                        </div>
+                        <div
+                          aria-controls="bp3-tab-panel_Wizard_Minutes"
+                          aria-disabled="false"
+                          aria-expanded="false"
+                          aria-selected="false"
+                          class="bp3-tab"
+                          data-tab-id="Minutes"
+                          id="bp3-tab-title_Wizard_Minutes"
+                          role="tab"
+                          tabindex="0"
+                        >
+                          common.schedulePanel.minutesLabel
+                        </div>
+                        <div
+                          aria-controls="bp3-tab-panel_Wizard_Hourly"
+                          aria-disabled="false"
+                          aria-expanded="false"
+                          aria-selected="false"
+                          class="bp3-tab"
+                          data-tab-id="Hourly"
+                          id="bp3-tab-title_Wizard_Hourly"
+                          role="tab"
+                          tabindex="0"
+                        >
+                          common.schedulePanel.hourlyTabTitle
+                        </div>
+                        <div
+                          aria-controls="bp3-tab-panel_Wizard_Daily"
+                          aria-disabled="false"
+                          aria-expanded="false"
+                          aria-selected="false"
+                          class="bp3-tab"
+                          data-tab-id="Daily"
+                          id="bp3-tab-title_Wizard_Daily"
+                          role="tab"
+                          tabindex="0"
+                        >
+                          common.schedulePanel.dailyTabTitle
+                        </div>
+                        <div
+                          aria-controls="bp3-tab-panel_Wizard_Weekly"
+                          aria-disabled="false"
+                          aria-expanded="true"
+                          aria-selected="true"
+                          class="bp3-tab"
+                          data-tab-id="Weekly"
+                          id="bp3-tab-title_Wizard_Weekly"
+                          role="tab"
+                          tabindex="0"
+                        >
+                          common.schedulePanel.weeklyTabTitle
+                        </div>
+                        <div
+                          aria-controls="bp3-tab-panel_Wizard_Monthly"
+                          aria-disabled="false"
+                          aria-expanded="false"
+                          aria-selected="false"
+                          class="bp3-tab"
+                          data-tab-id="Monthly"
+                          id="bp3-tab-title_Wizard_Monthly"
+                          role="tab"
+                          tabindex="0"
+                        >
+                          common.schedulePanel.monthlyTabTitle
+                        </div>
+                        <div
+                          aria-controls="bp3-tab-panel_Wizard_Yearly"
+                          aria-disabled="false"
+                          aria-expanded="false"
+                          aria-selected="false"
+                          class="bp3-tab"
+                          data-tab-id="Yearly"
+                          id="bp3-tab-title_Wizard_Yearly"
+                          role="tab"
+                          tabindex="0"
+                        >
+                          common.schedulePanel.yearlyTabTitle
+                        </div>
+                        <div
+                          aria-controls="bp3-tab-panel_Wizard_Custom"
+                          aria-disabled="false"
+                          aria-expanded="false"
+                          aria-selected="false"
+                          class="bp3-tab"
+                          data-tab-id="Custom"
+                          id="bp3-tab-title_Wizard_Custom"
+                          role="tab"
+                          tabindex="0"
+                        >
+                          common.repo_provider.customLabel
+                        </div>
+                      </div>
+                      <div
+                        aria-hidden="false"
+                        aria-labelledby="bp3-tab-title_Wizard_Weekly"
+                        class="bp3-tab-panel"
+                        id="bp3-tab-panel_Wizard_Weekly"
+                        role="tabpanel"
+                      >
+                        <div
+                          class="weeklyTab"
+                        >
+                          <div
+                            class="Layout--vertical StyledProps--main"
+                            style="align-items: flex-start;"
+                          >
+                            <div
+                              class="StyledProps--font StyledProps--main"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main label"
+                              >
+                                 
+                                common.schedulePanel.runOn
+                              </p>
+                              <button
+                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday activeDay Button--with-current-color Button--iconOnly"
+                                data-testid="day-MON"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  <div
+                                    class="Layout--horizontal StyledProps--main weekdayText"
+                                  >
+                                    <span
+                                      class="bp3-icon StyledProps--main checked"
+                                      data-icon="execution-success"
+                                      style="visibility: visible;"
+                                    >
+                                      <svg
+                                        height="16"
+                                        viewBox="0 0 17 17"
+                                        width="16"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <circle
+                                          color="var(--white)"
+                                          cx="8.5"
+                                          cy="8.5"
+                                          r="8.5"
+                                        />
+                                        <path
+                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
+                                        />
+                                      </svg>
+                                    </span>
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      triggers.schedulePanel.MON
+                                    </p>
+                                  </div>
+                                </span>
+                              </button>
+                              <button
+                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
+                                data-testid="day-TUE"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  <div
+                                    class="Layout--horizontal StyledProps--main weekdayText"
+                                  >
+                                    <span
+                                      class="bp3-icon StyledProps--main checked"
+                                      data-icon="execution-success"
+                                      style="visibility: hidden;"
+                                    >
+                                      <svg
+                                        height="16"
+                                        viewBox="0 0 17 17"
+                                        width="16"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <circle
+                                          color="var(--white)"
+                                          cx="8.5"
+                                          cy="8.5"
+                                          r="8.5"
+                                        />
+                                        <path
+                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
+                                        />
+                                      </svg>
+                                    </span>
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      triggers.schedulePanel.TUE
+                                    </p>
+                                  </div>
+                                </span>
+                              </button>
+                              <button
+                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
+                                data-testid="day-WED"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  <div
+                                    class="Layout--horizontal StyledProps--main weekdayText"
+                                  >
+                                    <span
+                                      class="bp3-icon StyledProps--main checked"
+                                      data-icon="execution-success"
+                                      style="visibility: hidden;"
+                                    >
+                                      <svg
+                                        height="16"
+                                        viewBox="0 0 17 17"
+                                        width="16"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <circle
+                                          color="var(--white)"
+                                          cx="8.5"
+                                          cy="8.5"
+                                          r="8.5"
+                                        />
+                                        <path
+                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
+                                        />
+                                      </svg>
+                                    </span>
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      triggers.schedulePanel.WED
+                                    </p>
+                                  </div>
+                                </span>
+                              </button>
+                              <button
+                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
+                                data-testid="day-THU"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  <div
+                                    class="Layout--horizontal StyledProps--main weekdayText"
+                                  >
+                                    <span
+                                      class="bp3-icon StyledProps--main checked"
+                                      data-icon="execution-success"
+                                      style="visibility: hidden;"
+                                    >
+                                      <svg
+                                        height="16"
+                                        viewBox="0 0 17 17"
+                                        width="16"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <circle
+                                          color="var(--white)"
+                                          cx="8.5"
+                                          cy="8.5"
+                                          r="8.5"
+                                        />
+                                        <path
+                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
+                                        />
+                                      </svg>
+                                    </span>
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      triggers.schedulePanel.THU
+                                    </p>
+                                  </div>
+                                </span>
+                              </button>
+                              <button
+                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
+                                data-testid="day-FRI"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  <div
+                                    class="Layout--horizontal StyledProps--main weekdayText"
+                                  >
+                                    <span
+                                      class="bp3-icon StyledProps--main checked"
+                                      data-icon="execution-success"
+                                      style="visibility: hidden;"
+                                    >
+                                      <svg
+                                        height="16"
+                                        viewBox="0 0 17 17"
+                                        width="16"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <circle
+                                          color="var(--white)"
+                                          cx="8.5"
+                                          cy="8.5"
+                                          r="8.5"
+                                        />
+                                        <path
+                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
+                                        />
+                                      </svg>
+                                    </span>
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      triggers.schedulePanel.FRI
+                                    </p>
+                                  </div>
+                                </span>
+                              </button>
+                              <button
+                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
+                                data-testid="day-SAT"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  <div
+                                    class="Layout--horizontal StyledProps--main weekdayText"
+                                  >
+                                    <span
+                                      class="bp3-icon StyledProps--main checked"
+                                      data-icon="execution-success"
+                                      style="visibility: hidden;"
+                                    >
+                                      <svg
+                                        height="16"
+                                        viewBox="0 0 17 17"
+                                        width="16"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <circle
+                                          color="var(--white)"
+                                          cx="8.5"
+                                          cy="8.5"
+                                          r="8.5"
+                                        />
+                                        <path
+                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
+                                        />
+                                      </svg>
+                                    </span>
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      triggers.schedulePanel.SAT
+                                    </p>
+                                  </div>
+                                </span>
+                              </button>
+                              <button
+                                class="bp3-button Button--button StyledProps--font StyledProps--main weekday Button--with-current-color Button--iconOnly"
+                                data-testid="day-SUN"
+                                type="button"
+                              >
+                                <span
+                                  class="bp3-button-text"
+                                >
+                                  <div
+                                    class="Layout--horizontal StyledProps--main weekdayText"
+                                  >
+                                    <span
+                                      class="bp3-icon StyledProps--main checked"
+                                      data-icon="execution-success"
+                                      style="visibility: hidden;"
+                                    >
+                                      <svg
+                                        height="16"
+                                        viewBox="0 0 17 17"
+                                        width="16"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <circle
+                                          color="var(--white)"
+                                          cx="8.5"
+                                          cy="8.5"
+                                          r="8.5"
+                                        />
+                                        <path
+                                          d="M8.5 1C4.365 1 1 4.32 1 8.4s3.365 7.4 7.5 7.4c4.136 0 7.5-3.32 7.5-7.4S12.636 1 8.5 1zm4.157 5.892l-4.79 4.726a.795.795 0 01-.554.227v.32l-.007-.32a.792.792 0 01-.556-.236L4.333 9.137a.766.766 0 01.02-1.093.784.784 0 01.544-.216c.214 0 .414.084.563.236l1.863 1.905L11.55 5.8a.784.784 0 01.554-.226c.209 0 .405.08.553.226a.767.767 0 010 1.093z"
+                                        />
+                                      </svg>
+                                    </span>
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      triggers.schedulePanel.SUN
+                                    </p>
+                                  </div>
+                                </span>
+                              </button>
+                              <div
+                                class="StyledProps--font StyledProps--main"
+                                data-name="timeselect"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main label"
+                                >
+                                  common.schedulePanel.runAt
+                                </p>
+                                <div
+                                  class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
+                                >
+                                  <div
+                                    class="bp3-popover-wrapper selectStyle Select--main bp3-fill"
+                                  >
+                                    <div
+                                      class="bp3-popover-target"
+                                    >
+                                      <div
+                                        class="bp3-input-group"
+                                      >
+                                        <input
+                                          autocomplete="off"
+                                          class="bp3-input"
+                                          placeholder="- Select -"
+                                          style="padding-right: 0px;"
+                                          type="text"
+                                          value="01"
+                                        />
+                                        <span
+                                          class="bp3-input-action"
+                                        >
+                                          <span
+                                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                            icon="chevron-down"
+                                          >
+                                            <svg
+                                              data-icon="chevron-down"
+                                              height="14"
+                                              viewBox="0 0 16 16"
+                                              width="14"
+                                            >
+                                              <desc>
+                                                chevron-down
+                                              </desc>
+                                              <path
+                                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                                fill-rule="evenodd"
+                                              />
+                                            </svg>
+                                          </span>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div
+                                    class="bp3-popover-wrapper selectStyle Select--main bp3-fill"
+                                  >
+                                    <div
+                                      class="bp3-popover-target"
+                                    >
+                                      <div
+                                        class="bp3-input-group"
+                                      >
+                                        <input
+                                          autocomplete="off"
+                                          class="bp3-input"
+                                          placeholder="- Select -"
+                                          style="padding-right: 0px;"
+                                          type="text"
+                                          value="00"
+                                        />
+                                        <span
+                                          class="bp3-input-action"
+                                        >
+                                          <span
+                                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                            icon="chevron-down"
+                                          >
+                                            <svg
+                                              data-icon="chevron-down"
+                                              height="14"
+                                              viewBox="0 0 16 16"
+                                              width="14"
+                                            >
+                                              <desc>
+                                                chevron-down
+                                              </desc>
+                                              <path
+                                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                                fill-rule="evenodd"
+                                              />
+                                            </svg>
+                                          </span>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div
+                                    class="bp3-popover-wrapper selectStyle Select--main bp3-fill"
+                                  >
+                                    <div
+                                      class="bp3-popover-target"
+                                    >
+                                      <div
+                                        class="bp3-input-group"
+                                      >
+                                        <input
+                                          autocomplete="off"
+                                          class="bp3-input"
+                                          placeholder="- Select -"
+                                          style="padding-right: 0px;"
+                                          type="text"
+                                          value=""
+                                        />
+                                        <span
+                                          class="bp3-input-action"
+                                        >
+                                          <span
+                                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                            icon="chevron-down"
+                                          >
+                                            <svg
+                                              data-icon="chevron-down"
+                                              height="14"
+                                              viewBox="0 0 16 16"
+                                              width="14"
+                                            >
+                                              <desc>
+                                                chevron-down
+                                              </desc>
+                                              <path
+                                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                                fill-rule="evenodd"
+                                              />
+                                            </svg>
+                                          </span>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div
+                                    class="bp3-popover-wrapper selectStyle Select--main bp3-fill"
+                                  >
+                                    <div
+                                      class="bp3-popover-target"
+                                    >
+                                      <div
+                                        class="bp3-input-group"
+                                      >
+                                        <input
+                                          autocomplete="off"
+                                          class="bp3-input"
+                                          placeholder="- Select -"
+                                          style="padding-right: 0px;"
+                                          type="text"
+                                          value="AM"
+                                        />
+                                        <span
+                                          class="bp3-input-action"
+                                        >
+                                          <span
+                                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                            icon="chevron-down"
+                                          >
+                                            <svg
+                                              data-icon="chevron-down"
+                                              height="14"
+                                              viewBox="0 0 16 16"
+                                              width="14"
+                                            >
+                                              <desc>
+                                                chevron-down
+                                              </desc>
+                                              <path
+                                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                                fill-rule="evenodd"
+                                              />
+                                            </svg>
+                                          </span>
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              class="StyledProps--font StyledProps--main spacer"
+                              style="padding-bottom: 0px; margin-left: 0px; width: 100%;"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main"
+                              />
+                            </div>
+                            <div
+                              class="StyledProps--font StyledProps--main expressionBreakdown"
+                              data-name="expressionBreakdown"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main title"
+                                data-tooltip-id="expressionBreakdown"
+                              >
+                                common.schedulePanel.expressionBreakdown
+                              </p>
+                              <div
+                                class="Layout--horizontal StyledProps--main"
+                              >
+                                <div
+                                  class="Layout--vertical StyledProps--main column"
+                                  data-name="column"
+                                  style="width: 100px;"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main label"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      common.schedulePanel.minutesLabel
+                                    </p>
+                                  </div>
+                                  <div
+                                    class="StyledProps--font StyledProps--main value"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      0
+                                    </p>
+                                  </div>
+                                </div>
+                                <div
+                                  class="Layout--vertical StyledProps--main column"
+                                  data-name="column"
+                                  style="width: 100px;"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main label"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      common.schedulePanel.hoursLabel
+                                    </p>
+                                  </div>
+                                  <div
+                                    class="StyledProps--font StyledProps--main value"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      1
+                                    </p>
+                                  </div>
+                                </div>
+                                <div
+                                  class="Layout--vertical StyledProps--main column"
+                                  data-name="column"
+                                  style="width: 125px;"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main label"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      common.schedulePanel.dayOfMonthLabel
+                                    </p>
+                                  </div>
+                                  <div
+                                    class="StyledProps--font StyledProps--main value inactive"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      *
+                                    </p>
+                                  </div>
+                                </div>
+                                <div
+                                  class="Layout--vertical StyledProps--main column"
+                                  data-name="column"
+                                  style="width: 100px;"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main label"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      common.schedulePanel.monthLabel
+                                    </p>
+                                  </div>
+                                  <div
+                                    class="StyledProps--font StyledProps--main value inactive"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      *
+                                    </p>
+                                  </div>
+                                </div>
+                                <div
+                                  class="Layout--vertical StyledProps--main column"
+                                  data-name="column"
+                                  style="width: 250px;"
+                                >
+                                  <div
+                                    class="StyledProps--font StyledProps--main label"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      common.schedulePanel.dayOfWeekLabel
+                                    </p>
+                                  </div>
+                                  <div
+                                    class="StyledProps--font StyledProps--main value"
+                                  >
+                                    <p
+                                      class="StyledProps--font StyledProps--main"
+                                    >
+                                      MON
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              class="StyledProps--font StyledProps--main spacer"
+                              style="padding-top: 0px; padding-bottom: 0px; margin-left: 0px; width: 100%;"
+                            >
+                              <div
+                                class="StyledProps--font StyledProps--main"
+                              />
+                            </div>
+                            <div
+                              class="StyledProps--font StyledProps--main expression"
+                              data-name="expression"
+                            >
+                              <p
+                                class="StyledProps--font StyledProps--main label"
+                                data-tooltip-id="cronExpression"
+                              >
+                                common.schedulePanel.cronExpression
+                              </p>
+                              <div
+                                class="StyledProps--font StyledProps--main field"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                  data-testid="cron-expression"
+                                >
+                                  0 1 * * MON
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div
+            class="Layout--horizontal StyledProps--main stepCtaContainer"
+          >
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-small Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
+              data-testid="back-to-group-query-step"
+              type="button"
+            >
+              <span
+                class="bp3-icon bp3-icon-chevron-left StyledProps--main StyledProps--padding-right-xsmall"
+                icon="chevron-left"
+              >
+                <svg
+                  data-icon="chevron-left"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    chevron-left
+                  </desc>
+                  <path
+                    d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
+              >
+                back
+              </span>
+            </button>
+            <button
+              class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withRightIcon"
+              data-testid="submit-cron-expression-step"
+              type="submit"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                save
+              </span>
+              <span
+                class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                icon="chevron-right"
+              >
+                <svg
+                  data-icon="chevron-right"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    chevron-right
+                  </desc>
+                  <path
+                    d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <span
+        class="bp3-icon StyledProps--main StepWizard--harnessWatermark StyledProps--color StyledProps--color-grey50"
+        data-icon="harness-with-color"
+      >
+        <svg
+          height="346"
+          viewBox="0 0 25 25"
+          width="346"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M22.974 8.186L16.708 1.88a7.023 7.023 0 00-2.59-1.572C11.98-.409 9.858.154 8.135 1.88L1.868 8.186a7.081 7.081 0 00-1.562 2.606c-.713 2.153-.153 4.289 1.562 6.023l6.266 6.306a7.113 7.113 0 002.589 1.58 5.663 5.663 0 001.808.308c1.503 0 2.946-.64 4.177-1.88l6.266-6.305a7.08 7.08 0 001.562-2.606c.713-2.162.153-4.298-1.562-6.032zm-10.07-4.477c.706.213 1.232.7 1.274.735l1.851 1.862-3.608 3.631-3.608-3.63 1.859-1.872c.5-.496 1.197-1.034 2.233-.726zm-9.219 8.305c.212-.71.696-1.24.73-1.282l1.85-1.863 3.609 3.632-3.608 3.63-1.86-1.87c-.492-.504-1.027-1.214-.721-2.247zm8.252 9.279c-.705-.214-1.231-.701-1.273-.735l-1.851-1.863 3.608-3.631 3.608 3.631-1.86 1.871c-.5.496-1.205 1.034-2.232.726zm9.22-8.305c-.212.709-.696 1.239-.73 1.281l-1.851 1.863-3.608-3.631 3.608-3.632 1.86 1.872c.492.504 1.027 1.204.72 2.247z"
+            fill="currentColor"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </div>
+    <button
+      aria-label="close modal"
+      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main crossIcon Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+      data-testid="close-ldap-setup-wizard"
+      type="button"
+    >
+      <span
+        class="bp3-icon bp3-icon-cross StyledProps--main"
+        icon="cross"
+      >
+        <svg
+          data-icon="cross"
+          height="18"
+          viewBox="0 0 16 16"
+          width="18"
+        >
+          <desc>
+            cross
+          </desc>
+          <path
+            d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </button>
+  </div>
+  <footer />
+</div>
+`;
+
 exports[`LDAP setup Wizard Setup Wizard renders with Overview step in ADD mode 1`] = `
 <div
   class="bp3-dialog Dialog--dialog dialog"
@@ -2478,6 +3678,21 @@ exports[`LDAP setup Wizard Setup Wizard renders with Overview step in ADD mode 1
             style="--text-line-clamp: 2; width: 200px;"
           >
             titleOptional
+          </p>
+        </div>
+        <div
+          class="StepWizard--navStep"
+        >
+          <span
+            class="StepWizard--number"
+          >
+            5
+          </span>
+          <p
+            class="StyledProps--font Text--lineclamp StyledProps--main StepWizard--stepName"
+            style="--text-line-clamp: 2; width: 200px;"
+          >
+            authSettings.ldap.userSyncSchedule
           </p>
         </div>
       </div>
