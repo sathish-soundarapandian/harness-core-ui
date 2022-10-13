@@ -25,6 +25,15 @@ export enum CreateSLOTabs {
   SLO_TARGET_BUDGET_POLICY = 'SLO_TARGET_BUDGET_POLICY'
 }
 
+export enum CreateCompositeSLOSteps {
+  Define_SLO_Identification = 'Define_SLO_Identification',
+  Set_SLO_Time_Window = 'Set_SLO_Time_Window',
+  SLO_TARGET_BUDGET_POLICY = 'SLO_TARGET_BUDGET_POLICY',
+  Add_SLOs = 'Add_SLOs',
+  Set_SLO_Target = 'Set_SLO_Target',
+  Error_Budget_Policy = 'Error_Budget_Policy'
+}
+
 export enum SLITypes {
   AVAILABILITY = 'Availability',
   LATENCY = 'Latency'
@@ -144,12 +153,12 @@ export interface NavButtonsProps {
 }
 
 export interface SLONameProps {
-  children: JSX.Element
+  children?: JSX.Element
   formikProps: FormikProps<SLOForm>
   identifier?: string
-  monitoredServicesLoading: boolean
-  monitoredServicesOptions: SelectOption[]
-  fetchingMonitoredServices: () => void
+  monitoredServicesLoading?: boolean
+  monitoredServicesOptions?: SelectOption[]
+  fetchingMonitoredServices?: () => void
 }
 
 export interface SLIProps

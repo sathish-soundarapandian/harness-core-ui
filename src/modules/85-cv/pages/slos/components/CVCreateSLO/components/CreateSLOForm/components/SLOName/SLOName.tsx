@@ -19,7 +19,7 @@ import {
   Text
 } from '@wings-software/uicore'
 import { useParams } from 'react-router-dom'
-
+import { noop } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
 import { Classes } from '@blueprintjs/core'
@@ -45,8 +45,8 @@ const SLOName: React.FC<SLONameProps> = ({
   children,
   formikProps,
   identifier,
-  monitoredServicesLoading,
-  monitoredServicesOptions,
+  monitoredServicesLoading = false,
+  monitoredServicesOptions = [],
   fetchingMonitoredServices
 }) => {
   const { getString } = useStrings()
@@ -134,7 +134,7 @@ const SLOName: React.FC<SLONameProps> = ({
                 <CreateMonitoredServiceFromSLO
                   monitoredServiceFormikProps={monitoredServiceFormikProps}
                   setFieldForSLOForm={formikProps?.setFieldValue}
-                  fetchingMonitoredServices={fetchingMonitoredServices}
+                  fetchingMonitoredServices={fetchingMonitoredServices || noop}
                   hideModal={hideModal}
                 />
               </Form>
@@ -160,36 +160,38 @@ const SLOName: React.FC<SLONameProps> = ({
             }}
           />
         </Container>
-        <Container flex={{ justifyContent: 'flex-start' }}>
-          <Container width={350}>
-            <FormInput.Select
-              name={SLOFormFields.MONITORED_SERVICE_REF}
-              label={getString('connectors.cdng.monitoredService.label')}
-              placeholder={
-                monitoredServicesLoading ? getString('loading') : getString('cv.slos.selectMonitoredService')
-              }
-              items={monitoredServicesOptions}
-              onChange={() => {
-                formikProps.setFieldValue(SLOFormFields.HEALTH_SOURCE_REF, undefined)
-                formikProps.setFieldValue(SLOFormFields.VALID_REQUEST_METRIC, undefined)
-                formikProps.setFieldValue(SLOFormFields.GOOD_REQUEST_METRIC, undefined)
+        {fetchingMonitoredServices && (
+          <Container flex={{ justifyContent: 'flex-start' }}>
+            <Container width={350}>
+              <FormInput.Select
+                name={SLOFormFields.MONITORED_SERVICE_REF}
+                label={getString('connectors.cdng.monitoredService.label')}
+                placeholder={
+                  monitoredServicesLoading ? getString('loading') : getString('cv.slos.selectMonitoredService')
+                }
+                items={monitoredServicesOptions}
+                onChange={() => {
+                  formikProps.setFieldValue(SLOFormFields.HEALTH_SOURCE_REF, undefined)
+                  formikProps.setFieldValue(SLOFormFields.VALID_REQUEST_METRIC, undefined)
+                  formikProps.setFieldValue(SLOFormFields.GOOD_REQUEST_METRIC, undefined)
+                }}
+              />
+            </Container>
+            <RbacButton
+              icon="plus"
+              text={getString('cv.monitoredServices.newMonitoredServices')}
+              variation={ButtonVariation.LINK}
+              onClick={showModal}
+              permission={{
+                permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+                resource: {
+                  resourceType: ResourceType.MONITOREDSERVICE,
+                  resourceIdentifier: projectIdentifier
+                }
               }}
             />
           </Container>
-          <RbacButton
-            icon="plus"
-            text={getString('cv.monitoredServices.newMonitoredServices')}
-            variation={ButtonVariation.LINK}
-            onClick={showModal}
-            permission={{
-              permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-              resource: {
-                resourceType: ResourceType.MONITOREDSERVICE,
-                resourceIdentifier: projectIdentifier
-              }
-            }}
-          />
-        </Container>
+        )}
         <Container width={350}>
           <HarnessServiceAsFormField
             key={key}

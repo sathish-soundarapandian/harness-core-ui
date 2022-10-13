@@ -244,6 +244,14 @@ export default (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
+      path={routes.toCVCreateCompositeSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+    >
+      <CVCreateSLO isComposite />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
       path={routes.toCVSLODetailsPage({
         ...accountPathProps,
         ...projectPathProps,

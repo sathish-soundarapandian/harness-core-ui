@@ -730,6 +730,7 @@ slos:
   burnRate: BURN RATE/DAY
   deleteSLO: Delete SLO
   createSLO: Create SLO
+  createCompoisteSLO: Create Composite SLO
   healthSource: Health source
   sloCreated: SLO created successfully
   sloUpdated: SLO updated successfully

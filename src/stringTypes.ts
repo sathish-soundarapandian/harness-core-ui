@@ -7479,6 +7479,7 @@ export interface StringsMap {
   'cv.slos.contextualHelp.target.rollingWindowBased': string
   'cv.slos.contextualHelp.target.rollingWindowDefinition': string
   'cv.slos.contextualHelp.target.rollingWindowDefinition2': string
+  'cv.slos.createCompoisteSLO': string
   'cv.slos.createMonitoredService': string
   'cv.slos.createSLO': string
   'cv.slos.deleteSLO': string

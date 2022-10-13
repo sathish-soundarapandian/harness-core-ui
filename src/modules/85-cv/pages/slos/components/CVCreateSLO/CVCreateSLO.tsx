@@ -35,8 +35,9 @@ import CreateSLOForm from './components/CreateSLOForm/CreateSLOForm'
 import { getSLOInitialFormData, createSLORequestPayload, getIsUserUpdatedSLOData } from './CVCreateSLO.utils'
 import { getSLOFormValidationSchema } from './CVCreateSLO.constants'
 import type { SLOForm } from './CVCreateSLO.types'
+import { CompositeSLOForm } from './CompositeSLOForm'
 
-const CVCreateSLO: React.FC = () => {
+const CVCreateSLO = ({ isComposite }: { isComposite?: boolean }) => {
   const history = useHistory()
   const { getString } = useStrings()
 
@@ -202,6 +203,8 @@ const CVCreateSLO: React.FC = () => {
     }
   ]
 
+  const isCompositeSLo = isComposite || true
+
   return (
     <>
       {!identifier && (
@@ -227,16 +230,25 @@ const CVCreateSLO: React.FC = () => {
         validationSchema={getSLOFormValidationSchema(getString)}
         enableReinitialize
       >
-        {formik => (
-          <CreateSLOForm
-            formikProps={formik}
-            loading={SLODataLoading}
-            error={getErrorMessage(SLODataError)}
-            createOrUpdateLoading={createSLOLoading || updateSLOLoading}
-            retryOnError={refetchSLOData}
-            handleRedirect={handleRedirect}
-          />
-        )}
+        {formik =>
+          isCompositeSLo ? (
+            <CompositeSLOForm
+              formikProps={formik}
+              loading={SLODataLoading}
+              error={getErrorMessage(SLODataError)}
+              retryOnError={refetchSLOData}
+            />
+          ) : (
+            <CreateSLOForm
+              formikProps={formik}
+              loading={SLODataLoading}
+              error={getErrorMessage(SLODataError)}
+              createOrUpdateLoading={createSLOLoading || updateSLOLoading}
+              retryOnError={refetchSLOData}
+              handleRedirect={handleRedirect}
+            />
+          )
+        }
       </Formik>
     </>
   )
