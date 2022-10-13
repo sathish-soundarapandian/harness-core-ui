@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep } from 'lodash-es'
+import { isNull, isUndefined, omitBy, isEmpty, get, set, flatten, cloneDeep, omit } from 'lodash-es'
 import { string, array, object, ObjectSchema } from 'yup'
 import { parse } from 'yaml'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
@@ -1872,8 +1872,11 @@ export function updatePipelineManifest({
     (item: any) => item.manifest?.identifier === selectedArtifact?.identifier
   )
 
+  // Update the pipeline data without eventConditions
+  const newArtifactData = omit(newArtifact, 'spec.eventConditions')
+
   if (stageArtifactIdx >= 0) {
-    stageArtifacts[stageArtifactIdx].manifest = newArtifact
+    stageArtifacts[stageArtifactIdx].manifest = newArtifactData
   }
 
   return newPipeline
@@ -1906,20 +1909,23 @@ export function updatePipelineArtifact({
     (item: any) => item.sidecar?.identifier === selectedArtifact?.identifier
   )
 
+  // Update the pipeline data without eventConditions
+  const newArtifactData = omit(newArtifact, 'spec.eventConditions')
+
   if (selectedArtifact) {
     if (stageArtifacts?.sidecars || stageArtifacts?.primary) {
       if (stageArtifactIdx >= 0) {
         const { sidecars } = stageArtifacts
-        sidecars[stageArtifactIdx].sidecar = newArtifact
-      } else if (stageArtifacts?.primary && !newArtifact?.identifier) {
-        stageArtifacts['primary'] = newArtifact
+        sidecars[stageArtifactIdx].sidecar = newArtifactData
+      } else if (stageArtifacts?.primary && !newArtifactData?.identifier) {
+        stageArtifacts['primary'] = newArtifactData
       }
     } else if (stageOverrideArtifacts?.sidecars || stageOverrideArtifacts?.primary) {
       if (stageOverrideArtifactIdx >= 0) {
         const { sidecars } = stageOverrideArtifacts
-        sidecars[stageArtifactIdx].sidecar = newArtifact
-      } else if (stageOverrideArtifacts?.primary && !newArtifact?.identifier) {
-        stageOverrideArtifacts['primary'] = newArtifact
+        sidecars[stageArtifactIdx].sidecar = newArtifactData
+      } else if (stageOverrideArtifacts?.primary && !newArtifactData?.identifier) {
+        stageOverrideArtifacts['primary'] = newArtifactData
       }
     }
   }
