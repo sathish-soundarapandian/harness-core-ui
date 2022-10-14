@@ -5,8 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { CreateCompositeSLOSteps } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
-
 export interface StepInterface {
   id: string
   title: string
@@ -17,9 +15,10 @@ export interface StepInterface {
 export interface CVStepperInterface {
   id: string
   stepList: StepInterface[]
-  onChange?: (id: string) => void
+  onChange?: (id: string, skipValidation?: boolean) => void
   selectedStepId?: string
-  isStepValid?: (selectedTabId: CreateCompositeSLOSteps) => boolean
+  isStepValid?: (selectedTabId: string) => boolean
+  runValidationOnMount?: boolean
 }
 
 export interface StepTitleInterface {

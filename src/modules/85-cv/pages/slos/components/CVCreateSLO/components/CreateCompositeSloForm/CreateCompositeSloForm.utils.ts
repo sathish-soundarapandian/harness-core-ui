@@ -1,5 +1,6 @@
 import type { FormikProps } from 'formik'
-import { CreateCompositeSLOSteps, PeriodTypes, SLOForm } from '../../CVCreateSLO.types'
+import { PeriodTypes } from '../../CVCreateSLO.types'
+import { CompositeSLOFormInterface, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
 
 // const setAllTouched = async (formikProps: FormikProps<SLOForm>) => {
 //   const validationErrors = await formikProps.validateForm()
@@ -9,7 +10,10 @@ import { CreateCompositeSLOSteps, PeriodTypes, SLOForm } from '../../CVCreateSLO
 //   }
 // }
 
-export const isFormDataValid = (formikProps: FormikProps<SLOForm>, selectedTabId: CreateCompositeSLOSteps): boolean => {
+export const isFormDataValid = (
+  formikProps: FormikProps<CompositeSLOFormInterface>,
+  selectedTabId: CreateCompositeSLOSteps
+): boolean => {
   if (selectedTabId === CreateCompositeSLOSteps.Define_SLO_Identification) {
     const isNameValid = /^[0-9a-zA-Z-_\s]+$/.test(formikProps.values['name'])
     const { name, identifier, userJourneyRef } = formikProps.values
@@ -37,41 +41,39 @@ export const isFormDataValid = (formikProps: FormikProps<SLOForm>, selectedTabId
     return true
   }
 
+  if (selectedTabId === CreateCompositeSLOSteps.Error_Budget_Policy) {
+    return true
+  }
+
   return false
 }
 
 export const handleStepChange = (
   nextTabId: string,
-  formik: FormikProps<SLOForm>,
-  setStepId: (tabId: CreateCompositeSLOSteps) => void
+  formik: FormikProps<CompositeSLOFormInterface>,
+  setStepId: (tabId: CreateCompositeSLOSteps) => void,
+  skipValidation = false
 ): void => {
   switch (nextTabId) {
     case CreateCompositeSLOSteps.Set_SLO_Time_Window: {
-      isFormDataValid(formik, CreateCompositeSLOSteps.Define_SLO_Identification) &&
+      ;(skipValidation || isFormDataValid(formik, CreateCompositeSLOSteps.Define_SLO_Identification)) &&
         setStepId(CreateCompositeSLOSteps.Set_SLO_Time_Window)
       break
     }
     case CreateCompositeSLOSteps.Add_SLOs: {
-      if (
-        isFormDataValid(formik, CreateCompositeSLOSteps.Define_SLO_Identification) &&
-        isFormDataValid(formik, CreateCompositeSLOSteps.Set_SLO_Time_Window)
-      ) {
+      if (skipValidation || isFormDataValid(formik, CreateCompositeSLOSteps.Set_SLO_Time_Window)) {
         setStepId(CreateCompositeSLOSteps.Add_SLOs)
       }
       break
     }
     case CreateCompositeSLOSteps.Set_SLO_Target: {
-      if (
-        isFormDataValid(formik, CreateCompositeSLOSteps.Define_SLO_Identification) &&
-        isFormDataValid(formik, CreateCompositeSLOSteps.Set_SLO_Time_Window) &&
-        isFormDataValid(formik, CreateCompositeSLOSteps.Add_SLOs)
-      ) {
+      if (skipValidation || isFormDataValid(formik, CreateCompositeSLOSteps.Add_SLOs)) {
         setStepId(CreateCompositeSLOSteps.Set_SLO_Target)
       }
       break
     }
     default: {
-      if (isFormDataValid(formik, nextTabId as CreateCompositeSLOSteps)) {
+      if (skipValidation || isFormDataValid(formik, nextTabId as CreateCompositeSLOSteps)) {
         setStepId(nextTabId as CreateCompositeSLOSteps)
       }
     }

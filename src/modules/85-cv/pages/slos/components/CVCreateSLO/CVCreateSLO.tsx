@@ -35,7 +35,7 @@ import CreateSLOForm from './components/CreateSLOForm/CreateSLOForm'
 import { getSLOInitialFormData, createSLORequestPayload, getIsUserUpdatedSLOData } from './CVCreateSLO.utils'
 import { getSLOFormValidationSchema } from './CVCreateSLO.constants'
 import type { SLOForm } from './CVCreateSLO.types'
-import { CompositeSLOForm } from './components/CreateCompositeSloForm/CompositeSLOForm'
+import { CreateCompositeSloForm } from './components/CreateCompositeSloForm/CreateCompositeSloForm'
 
 const CVCreateSLO = ({ isComposite }: { isComposite?: boolean }) => {
   const history = useHistory()
@@ -232,11 +232,12 @@ const CVCreateSLO = ({ isComposite }: { isComposite?: boolean }) => {
       >
         {formik =>
           isCompositeSLo ? (
-            <CompositeSLOForm
+            <CreateCompositeSloForm
               loading={SLODataLoading}
               error={getErrorMessage(SLODataError)}
               retryOnError={refetchSLOData}
               handleRedirect={handleRedirect}
+              runValidationOnMount={Boolean(identifier)}
             />
           ) : (
             <CreateSLOForm

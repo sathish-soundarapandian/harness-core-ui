@@ -17,25 +17,41 @@ interface CVStepInterface {
   selectedStepId?: string
   step: StepInterface
   index: number
-  onStepChange?: (id: string) => void
+  onStepChange?: (id: string, skipValidation?: boolean) => void
   isStepValid?: (selectedTabId: string) => boolean
+  runValidationOnMount?: boolean
 }
-const CVStep = ({ stepList, selectedStepId, isStepValid, step, index, onStepChange }: CVStepInterface): JSX.Element => {
+const CVStep = ({
+  stepList,
+  selectedStepId,
+  isStepValid,
+  step,
+  index,
+  onStepChange,
+  runValidationOnMount
+}: CVStepInterface): JSX.Element => {
   const selectedStepIndex = stepList.map(item => item.id).indexOf(selectedStepId || '')
-
   const [isValid, setIsValid] = useState<boolean>()
-
-  // const isDisabled = isStepValid ? !isValid : selectedStepIndex < index
-  // const isCompleted = isStepValid ? !isValid : selectedStepIndex <= index
   const isLastStep = selectedStepIndex === stepList.length - 1
   const isCurrent = selectedStepIndex === index
   const onTitleClick = (titleIndex: number): void => {
-    onStepChange?.(stepList[titleIndex].id)
+    onStepChange?.(stepList[titleIndex].id, true)
   }
+
+  const isValidEditMode = runValidationOnMount ? !!isStepValid?.(step.id) : isValid
+
+  // useEffect(() => {
+  //   const ids = stepList.map(item => item.id)
+  //   ids.forEach(id => {
+  //     const validStatus = !!isStepValid?.(id)
+  //     setIsValid(validStatus)
+  //   })
+  // }, [])
+
   const onContinue = (selectedIndex: number, skipValidation = false): void => {
     const validStatus = !!isStepValid?.(step.id)
     if (validStatus || skipValidation) {
-      onStepChange?.(stepList[selectedIndex].id)
+      onStepChange?.(stepList[selectedIndex].id, skipValidation)
     }
     setIsValid(validStatus)
   }
@@ -43,7 +59,7 @@ const CVStep = ({ stepList, selectedStepId, isStepValid, step, index, onStepChan
   return (
     <>
       <Layout.Vertical key={`${step.id}_vertical`} spacing="medium">
-        <StepTitle step={step} index={index} isCurrent={isCurrent} isValid={isValid} onClick={onTitleClick} />
+        <StepTitle step={step} index={index} isCurrent={isCurrent} isValid={isValidEditMode} onClick={onTitleClick} />
         {selectedStepIndex > index && (
           <Container className={css.alignContainerRight}>
             {step.preview ? <>{step.preview}</> : <Text> Preview Text </Text>}
@@ -61,7 +77,7 @@ const CVStep = ({ stepList, selectedStepId, isStepValid, step, index, onStepChan
 }
 
 export const CVStepper = (props: React.PropsWithChildren<CVStepperInterface>): React.ReactElement => {
-  const { stepList, onChange: onStepChange, selectedStepId, isStepValid } = props
+  const { stepList, onChange: onStepChange, selectedStepId, isStepValid, runValidationOnMount } = props
 
   return (
     <Layout.Vertical margin="large">
@@ -69,12 +85,13 @@ export const CVStepper = (props: React.PropsWithChildren<CVStepperInterface>): R
         return (
           <CVStep
             key={step.id}
+            step={step}
+            index={index}
             stepList={stepList}
             selectedStepId={selectedStepId}
             isStepValid={isStepValid}
-            step={step}
-            index={index}
             onStepChange={onStepChange}
+            runValidationOnMount={runValidationOnMount}
           />
         )
       })}
