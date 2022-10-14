@@ -1491,7 +1491,7 @@ const routes = {
   ),
   toCVCreateCompositeSLOs: withAccountId(
     ({ orgIdentifier, projectIdentifier, module = 'cv' }: Partial<ProjectPathProps & { module?: string }>) => {
-      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/compositeslos/create`
+      return `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/createcomposite`
     }
   ),
   toCVAddMonitoringServicesSetup: withAccountId(

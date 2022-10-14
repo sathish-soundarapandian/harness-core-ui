@@ -14,12 +14,14 @@ export const StepNavButtons = ({ index, isLastStep, onContinue }: StepNavButtons
   const { getString } = useStrings()
   return (
     <Layout.Horizontal spacing="small" padding={{ top: 'xlarge' }}>
-      <Button variation={ButtonVariation.SECONDARY} onClick={() => onContinue(0)}>
-        Cancel
-      </Button>
+      {index > 0 && (
+        <Button variation={ButtonVariation.SECONDARY} onClick={() => onContinue(index - 1, true)}>
+          {getString('back')}
+        </Button>
+      )}
       <Button
         variation={ButtonVariation.PRIMARY}
-        text={isLastStep ? getString('save') : getString('continue')}
+        text={isLastStep ? getString('save') : getString('next')}
         onClick={() => onContinue(index + 1)}
       />
     </Layout.Horizontal>

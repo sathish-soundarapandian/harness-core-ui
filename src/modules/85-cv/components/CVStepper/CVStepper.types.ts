@@ -25,13 +25,13 @@ export interface CVStepperInterface {
 export interface StepTitleInterface {
   step: StepInterface
   index: number
-  isDisabled: boolean
-  isCompleted: boolean
+  isValid?: boolean
+  isCurrent: boolean
   onClick: (index: number) => void
 }
 
 export interface StepNavButtonsInterface {
   index: number
   isLastStep: boolean
-  onContinue: (index: number) => void
+  onContinue: (index: number, skipValidation?: boolean) => void
 }
