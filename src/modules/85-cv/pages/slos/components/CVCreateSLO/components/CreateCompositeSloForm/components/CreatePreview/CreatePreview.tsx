@@ -27,11 +27,7 @@ export const CreatePreview = ({
 }): JSX.Element => {
   switch (id) {
     case CreateCompositeSLOSteps.Define_SLO_Identification:
-      return (
-        <>
-          <LabelAndValue label={'SLO Name'} value={data.name} />
-        </>
-      )
+      return <LabelAndValue label={'SLO Name'} value={data.name} />
     default:
       break
   }
