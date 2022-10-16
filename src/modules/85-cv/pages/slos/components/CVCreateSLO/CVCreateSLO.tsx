@@ -203,7 +203,7 @@ const CVCreateSLO = ({ isComposite }: { isComposite?: boolean }) => {
     }
   ]
 
-  const isCompositeSLo = isComposite || true
+  const isCompositeSLo = isComposite
 
   return (
     <>

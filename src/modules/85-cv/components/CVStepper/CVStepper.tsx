@@ -61,13 +61,15 @@ const CVStep = ({
       <Layout.Vertical key={`${step.id}_vertical`} spacing="medium">
         <StepTitle step={step} index={index} isCurrent={isCurrent} isValid={isValidEditMode} onClick={onTitleClick} />
         {selectedStepIndex > index && (
-          <Container className={css.alignContainerRight}>
+          <Container data-testid={`preview_${step.id}`} className={css.alignContainerRight}>
             {step.preview ? <>{step.preview}</> : <Text> Preview Text </Text>}
           </Container>
         )}
         {selectedStepIndex === index && (
           <Container className={css.alignContainerRight}>
-            <Card className={css.card}>{step.panel}</Card>
+            <Card data-testid={`panel_${step.id}`} className={css.card}>
+              {step.panel}
+            </Card>
             <StepNavButtons index={index} onContinue={onContinue} isLastStep={isLastStep} />
           </Container>
         )}

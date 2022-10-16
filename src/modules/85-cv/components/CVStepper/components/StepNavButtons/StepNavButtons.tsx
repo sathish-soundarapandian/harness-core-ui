@@ -15,14 +15,19 @@ export const StepNavButtons = ({ index, isLastStep, onContinue }: StepNavButtons
   return (
     <Layout.Horizontal spacing="small" padding={{ top: 'xlarge' }}>
       {index > 0 && (
-        <Button variation={ButtonVariation.SECONDARY} onClick={() => onContinue(index - 1, true)}>
+        <Button
+          data-testid="backButton"
+          variation={ButtonVariation.SECONDARY}
+          onClick={() => onContinue(index - 1, true)}
+        >
           {getString('back')}
         </Button>
       )}
       <Button
+        data-testid="nextButton"
         variation={ButtonVariation.PRIMARY}
         text={isLastStep ? getString('save') : getString('next')}
-        onClick={() => onContinue(index + 1)}
+        onClick={() => onContinue(isLastStep ? index : index + 1)}
       />
     </Layout.Horizontal>
   )

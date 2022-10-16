@@ -10,23 +10,6 @@ import { noop } from 'lodash-es'
 import { Text, Layout, FontVariation, Color, Icon, IconName } from '@harness/uicore'
 import type { StepTitleInterface } from '../../CVStepper.types'
 
-const getState = (
-  isValid: boolean
-): {
-  icon: IconName
-  cursor: string
-  iconColor: string
-  labelColor: string
-} => {
-  const state = {
-    cursor: isValid ? 'pointer' : 'not-allowed',
-    icon: (isValid ? 'tick-circle' : 'error') as IconName,
-    iconColor: isValid ? 'primary7' : 'error',
-    labelColor: isValid ? Color.PRIMARY_7 : Color.ERROR
-  }
-  return state
-}
-
 const defaultState = {
   cursor: 'not-allowed',
   icon: 'ring' as IconName,
@@ -34,11 +17,30 @@ const defaultState = {
   labelColor: Color.PRIMARY_10
 }
 
+const getState = (
+  isValid?: boolean
+): {
+  icon: IconName
+  cursor: string
+  iconColor: string
+  labelColor: string
+} => {
+  return typeof isValid === 'boolean'
+    ? {
+        cursor: isValid ? 'pointer' : 'not-allowed',
+        icon: (isValid ? 'tick-circle' : 'error') as IconName,
+        iconColor: isValid ? 'primary7' : 'error',
+        labelColor: isValid ? Color.PRIMARY_7 : Color.ERROR
+      }
+    : defaultState
+}
+
 export const StepTitle = ({ step, index, isValid, isCurrent, onClick }: StepTitleInterface): JSX.Element => {
   const shouldShowErrorOrSuccess = typeof isValid === 'boolean'
-  const { icon, labelColor, iconColor, cursor } = shouldShowErrorOrSuccess ? getState(isValid) : defaultState
+  const { icon, labelColor, iconColor, cursor } = getState(isValid)
   return (
     <Layout.Horizontal
+      data-testid={`steptitle_${step.id}`}
       style={{ cursor: shouldShowErrorOrSuccess ? 'pointer' : cursor }}
       key={`${step.id}_horizontal`}
       onClick={() => (shouldShowErrorOrSuccess ? onClick(index) : noop)}

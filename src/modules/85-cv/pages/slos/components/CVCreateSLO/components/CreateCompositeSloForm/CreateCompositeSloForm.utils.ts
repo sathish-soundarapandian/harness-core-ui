@@ -1,4 +1,12 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import type { FormikProps } from 'formik'
+import type { MutableRefObject } from 'react'
 import { PeriodTypes } from '../../CVCreateSLO.types'
 import { CompositeSLOFormInterface, CreateCompositeSLOSteps } from './CreateCompositeSloForm.types'
 
@@ -52,29 +60,34 @@ export const handleStepChange = (
   nextTabId: string,
   formik: FormikProps<CompositeSLOFormInterface>,
   setStepId: (tabId: CreateCompositeSLOSteps) => void,
-  skipValidation = false
+  skipValidation = false,
+  compositeSloPayloadRef: MutableRefObject<CompositeSLOFormInterface | null>
 ): void => {
   switch (nextTabId) {
     case CreateCompositeSLOSteps.Set_SLO_Time_Window: {
       ;(skipValidation || isFormDataValid(formik, CreateCompositeSLOSteps.Define_SLO_Identification)) &&
         setStepId(CreateCompositeSLOSteps.Set_SLO_Time_Window)
+      compositeSloPayloadRef.current = formik.values
       break
     }
     case CreateCompositeSLOSteps.Add_SLOs: {
       if (skipValidation || isFormDataValid(formik, CreateCompositeSLOSteps.Set_SLO_Time_Window)) {
         setStepId(CreateCompositeSLOSteps.Add_SLOs)
+        compositeSloPayloadRef.current = formik.values
       }
       break
     }
     case CreateCompositeSLOSteps.Set_SLO_Target: {
       if (skipValidation || isFormDataValid(formik, CreateCompositeSLOSteps.Add_SLOs)) {
         setStepId(CreateCompositeSLOSteps.Set_SLO_Target)
+        compositeSloPayloadRef.current = formik.values
       }
       break
     }
     default: {
       if (skipValidation || isFormDataValid(formik, nextTabId as CreateCompositeSLOSteps)) {
         setStepId(nextTabId as CreateCompositeSLOSteps)
+        compositeSloPayloadRef.current = formik.values
       }
     }
   }
