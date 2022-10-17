@@ -11,7 +11,7 @@ import { FormikErrors, yupToFormErrors } from 'formik'
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import type { ContinousVerificationData, spec, VerifyStepMonitoredService } from './types'
+import type { ContinousVerificationData, spec, TemplateInputs, VerifyStepMonitoredService } from './types'
 import {
   VerificationSensitivityOptions,
   durationOptions,
@@ -24,6 +24,8 @@ import {
 } from './constants'
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import { validateTemplateInputs } from './components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
+import { getPopulateSource } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
+import type { MonitoredServiceInputSetInterface } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.types'
 
 /**
  * checks if a field is a runtime input.
@@ -161,6 +163,11 @@ export function getSpecYamlData(specInfo?: spec, type?: string): spec {
 export function getMonitoredServiceYamlData(spec: ContinousVerificationData['spec']): VerifyStepMonitoredService {
   let monitoredService: VerifyStepMonitoredService = defaultMonitoredServiceSpec
   const monitoredServiceTemplateSpec = omit(spec?.monitoredService?.spec, ['monitoredServiceRef'])
+  const updatedTemplateInputs = getPopulateSource(
+    monitoredServiceTemplateSpec?.templateInputs as MonitoredServiceInputSetInterface
+  )
+
+  const updatedSpec = { ...monitoredServiceTemplateSpec, templateInputs: updatedTemplateInputs }
 
   switch (spec?.monitoredService?.type) {
     case MONITORED_SERVICE_TYPE.DEFAULT:
@@ -177,7 +184,7 @@ export function getMonitoredServiceYamlData(spec: ContinousVerificationData['spe
     case MONITORED_SERVICE_TYPE.TEMPLATE:
       monitoredService = {
         type: MONITORED_SERVICE_TYPE.TEMPLATE,
-        spec: { ...monitoredServiceTemplateSpec }
+        spec: { ...updatedSpec }
       }
       break
     default:
