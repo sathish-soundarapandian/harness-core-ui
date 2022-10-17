@@ -69,7 +69,7 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
   useEffect(() => {
     if (error || riskProfileError) {
       clear()
-      showError(getErrorMessage(error), 7000)
+      showError(getErrorMessage(error || riskProfileError), 7000)
     }
   })
 

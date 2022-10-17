@@ -247,7 +247,7 @@ export const isRiskProfileAndCategoryPresent = (analysis: AnalysisDTO): boolean 
     (deploymentVerification?.enabled || liveMonitoring?.enabled) &&
       riskProfile &&
       !isEmpty(riskProfile) &&
-      riskProfile?.category
+      riskProfile?.riskCategory
   )
 }
 

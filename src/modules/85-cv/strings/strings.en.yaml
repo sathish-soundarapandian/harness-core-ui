@@ -653,6 +653,7 @@ healthSource:
     buildChart: Build Chart
     CloudWatch:
       awsSelectorPlaceholder: Select an AWS Region
+      addNewGroupTitle: New Cloud watch Group Name
       fetchDataButtonText: Fetch data
       validationMessage:
         expression: Expression is required
