@@ -168,7 +168,7 @@ describe('CloudWatch', () => {
 
     //expect modal to show and fill out new name
     await waitFor(() =>
-      expect(screen.getByText('cv.monitoringSources.prometheus.newPrometheusGroupName')).not.toBeNull()
+      expect(screen.getByText('cv.healthSource.connectors.CloudWatch.addNewGroupTitle')).not.toBeNull()
     )
     await setFieldValue({
       container: document.body,

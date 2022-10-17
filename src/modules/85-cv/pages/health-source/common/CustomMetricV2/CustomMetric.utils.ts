@@ -319,7 +319,7 @@ export const getAnalysisForFormik = (analysis?: AnalysisDTO): CommonCustomMetric
 
   return {
     ...analysis,
-    // riskProfile: getRiskProfileForFormik(analysis),
+    riskProfile: analysis?.riskProfile || {},
     lowerBaselineDeviation: analysis.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
     higherBaselineDeviation: analysis.riskProfile?.thresholdTypes?.includes('ACT_WHEN_HIGHER') || false
   }
