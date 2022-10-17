@@ -162,7 +162,7 @@ export const submitRequestFormikPayload = {
         riskProfile: {
           riskCategory: 'Infrastructure',
           thresholdTypes: ['ACT_WHEN_HIGHER']
-        }
+        },
         sli: { enabled: true }
       }
     ],
