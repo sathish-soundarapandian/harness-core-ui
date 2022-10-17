@@ -43,6 +43,7 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ChildAppMounter from '../../microfrontends/ChildAppMounter'
 import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
@@ -52,6 +53,7 @@ import CVCreateSLO from './pages/slos/components/CVCreateSLO/CVCreateSLO'
 import { MonitoredServiceProvider } from './pages/monitored-service/MonitoredServiceContext'
 import MonitoredServiceInputSetsTemplate from './pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
 import { CVCodeErrors } from './pages/code-errors/CVCodeErrors'
+import type { SRMUIAppCustomProps } from './interface/SRMUIApp.types'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -76,6 +78,7 @@ import { CVCodeErrors } from './pages/code-errors/CVCodeErrors'
 export const cvModuleParams: ModulePathParams = {
   module: ':module(cv)'
 }
+
 const RedirectToCVProject = (): React.ReactElement => {
   const params = useParams<ProjectPathProps>()
   const { selectedProject } = useAppStore()
@@ -166,6 +169,8 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SLO, {
   }
 })
 
+// eslint-disable-next-line import/no-unresolved
+const SrmMicroFrontendPath = React.lazy(() => import('srmui/MicroFrontendApp'))
 const CVSideNavProps: SidebarContext = {
   navComponent: SideNav,
   subtitle: 'Service',
@@ -173,191 +178,209 @@ const CVSideNavProps: SidebarContext = {
   icon: 'cv-main'
 }
 
-export default (
-  <>
-    <Route
-      path={[routes.toCV({ ...accountPathProps }), routes.toCVProject({ ...accountPathProps, ...projectPathProps })]}
-      exact
-    >
-      <RedirectToCVProject />
-    </Route>
-    <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routes.toCVHome({ ...accountPathProps })}>
-      <CVHomePage />
-    </RouteWithLayout>
+const SRMRoutes: React.FC = () => {
+  const { SRM_MICRO_FRONTEND } = useFeatureFlags()
+  const enableMicroFrontend = SRM_MICRO_FRONTEND
+  const mfePaths = enableMicroFrontend ? [routes.toCEDashboards({ ...accountPathProps })] : []
+  return (
+    <>
+      <Route
+        path={[routes.toCV({ ...accountPathProps }), routes.toCVProject({ ...accountPathProps, ...projectPathProps })]}
+        exact
+      >
+        <RedirectToCVProject />
+      </Route>
+      <RouteWithLayout exact sidebarProps={CVSideNavProps} path={routes.toCVHome({ ...accountPathProps })}>
+        <CVHomePage />
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      layout={MinimalLayout}
-      path={routes.toModuleTrialHome({ ...accountPathProps, module: 'cv' })}
-      exact
-    >
-      <CVTrialHomePage />
-    </RouteWithLayout>
+      <RouteWithLayout
+        layout={MinimalLayout}
+        path={routes.toModuleTrialHome({ ...accountPathProps, module: 'cv' })}
+        exact
+      >
+        <CVTrialHomePage />
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toCVMonitoringServices({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <MonitoredServiceProvider isTemplate={false}>
-        <CVMonitoredService />
-      </MonitoredServiceProvider>
-    </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        sidebarProps={CVSideNavProps}
+        path={routes.toCVMonitoringServices({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      >
+        <MonitoredServiceProvider isTemplate={false}>
+          <CVMonitoredService />
+        </MonitoredServiceProvider>
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toCVMonitoringServicesInputSets({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <MonitoredServiceInputSetsTemplate />
-    </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        sidebarProps={CVSideNavProps}
+        path={routes.toCVMonitoringServicesInputSets({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      >
+        <MonitoredServiceInputSetsTemplate />
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <CVChanges />
-    </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        sidebarProps={CVSideNavProps}
+        path={routes.toCVChanges({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      >
+        <CVChanges />
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toCVCodeErrors({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <CVCodeErrors />
-    </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        sidebarProps={CVSideNavProps}
+        path={routes.toCVCodeErrors({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      >
+        <CVCodeErrors />
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <CVSLOsListingPage />
-    </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        sidebarProps={CVSideNavProps}
+        path={routes.toCVSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      >
+        <CVSLOsListingPage />
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      sidebarProps={CVSideNavProps}
-      path={routes.toErrorTracking({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <ChildAppMounter ChildApp={ErrorTracking} />
-    </RouteWithLayout>
+      <RouteWithLayout
+        sidebarProps={CVSideNavProps}
+        path={routes.toErrorTracking({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      >
+        <ChildAppMounter ChildApp={ErrorTracking} />
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <CVCreateSLO />
-    </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        sidebarProps={CVSideNavProps}
+        path={routes.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      >
+        <CVCreateSLO />
+      </RouteWithLayout>
 
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toCVSLODetailsPage({
-        ...accountPathProps,
-        ...projectPathProps,
-        ...editParams,
-        ...cvModuleParams
-      })}
-    >
-      <CVSLODetailsPage />
-    </RouteWithLayout>
-
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={[
-        routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
-        routes.toCVAddMonitoringServicesEdit({
+      <RouteWithLayout
+        exact
+        sidebarProps={CVSideNavProps}
+        path={routes.toCVSLODetailsPage({
           ...accountPathProps,
           ...projectPathProps,
           ...editParams,
           ...cvModuleParams
-        })
-      ]}
-    >
-      <MonitoredServiceProvider isTemplate={false}>
-        <MonitoredServicePage />
-      </MonitoredServiceProvider>
-    </RouteWithLayout>
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toConnectors({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <ConnectorsPage />
-    </RouteWithLayout>
-    {/* uncomment once BE integration is complete  */}
-    <RouteWithLayout
-      exact
-      sidebarProps={CVSideNavProps}
-      path={routes.toTemplates({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
-    >
-      <TemplatesPage />
-    </RouteWithLayout>
+        })}
+      >
+        <CVSLODetailsPage />
+      </RouteWithLayout>
 
-    {/* Replace TemplateStudioWrapper route with following code once BE integration is complete: */}
-    {/*{*/}
-    {/*  TemplateRouteDestinations({*/}
-    {/*    moduleParams,*/}
-    {/*    sidebarProps: CVSideNavProps*/}
-    {/*  })?.props.children*/}
-    {/*}*/}
-    <RouteWithLayout
-      sidebarProps={CVSideNavProps}
-      exact
-      path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...cvModuleParams })}
-    >
-      <TemplateStudio />
-    </RouteWithLayout>
-    {/* Replace above route once BE integration is complete */}
+      <RouteWithLayout
+        exact
+        sidebarProps={CVSideNavProps}
+        path={[
+          routes.toCVAddMonitoringServicesSetup({ ...accountPathProps, ...projectPathProps }),
+          routes.toCVAddMonitoringServicesEdit({
+            ...accountPathProps,
+            ...projectPathProps,
+            ...editParams,
+            ...cvModuleParams
+          })
+        ]}
+      >
+        <MonitoredServiceProvider isTemplate={false}>
+          <MonitoredServicePage />
+        </MonitoredServiceProvider>
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        sidebarProps={CVSideNavProps}
+        path={routes.toConnectors({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      >
+        <ConnectorsPage />
+      </RouteWithLayout>
+      {/* uncomment once BE integration is complete  */}
+      <RouteWithLayout
+        exact
+        sidebarProps={CVSideNavProps}
+        path={routes.toTemplates({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
+      >
+        <TemplatesPage />
+      </RouteWithLayout>
 
-    {
-      SecretRouteDestinations({
-        moduleParams: cvModuleParams,
-        sidebarProps: CVSideNavProps
-      })?.props.children
-    }
+      {/* Replace TemplateStudioWrapper route with following code once BE integration is complete: */}
+      {/*{*/}
+      {/*  TemplateRouteDestinations({*/}
+      {/*    moduleParams,*/}
+      {/*    sidebarProps: CVSideNavProps*/}
+      {/*  })?.props.children*/}
+      {/*}*/}
+      <RouteWithLayout
+        sidebarProps={CVSideNavProps}
+        exact
+        path={routes.toTemplateStudio({ ...accountPathProps, ...templatePathProps, ...cvModuleParams })}
+      >
+        <TemplateStudio />
+      </RouteWithLayout>
+      {/* Replace above route once BE integration is complete */}
 
-    {
-      VariableRouteDestinations({
-        moduleParams: cvModuleParams,
-        sidebarProps: CVSideNavProps
-      })?.props.children
-    }
+      {enableMicroFrontend ? (
+        <RouteWithLayout path={[...mfePaths, routes.toSRMMFE({ ...accountPathProps })]} sidebarProps={CVSideNavProps}>
+          <ChildAppMounter<SRMUIAppCustomProps>
+            customComponents={{
+              CVSLOsListingPage
+            }}
+            ChildApp={SrmMicroFrontendPath}
+          />
+        </RouteWithLayout>
+      ) : null}
 
-    {
-      DelegateRouteDestinations({
-        moduleParams: cvModuleParams,
-        sidebarProps: CVSideNavProps
-      })?.props.children
-    }
+      {
+        SecretRouteDestinations({
+          moduleParams: cvModuleParams,
+          sidebarProps: CVSideNavProps
+        })?.props.children
+      }
 
-    {
-      ConnectorRouteDestinations({
-        moduleParams: cvModuleParams,
-        sidebarProps: CVSideNavProps
-      })?.props.children
-    }
-    {
-      DefaultSettingsRouteDestinations({
-        moduleParams: cvModuleParams,
-        sidebarProps: CVSideNavProps
-      })?.props.children
-    }
+      {
+        VariableRouteDestinations({
+          moduleParams: cvModuleParams,
+          sidebarProps: CVSideNavProps
+        })?.props.children
+      }
 
-    {
-      AccessControlRouteDestinations({
-        moduleParams: cvModuleParams,
-        sidebarProps: CVSideNavProps
-      })?.props.children
-    }
+      {
+        DelegateRouteDestinations({
+          moduleParams: cvModuleParams,
+          sidebarProps: CVSideNavProps
+        })?.props.children
+      }
 
-    {
-      GovernanceRouteDestinations({
-        sidebarProps: CVSideNavProps,
-        pathProps: { ...accountPathProps, ...projectPathProps, ...cvModuleParams }
-      })?.props.children
-    }
-  </>
-)
+      {
+        ConnectorRouteDestinations({
+          moduleParams: cvModuleParams,
+          sidebarProps: CVSideNavProps
+        })?.props.children
+      }
+      {
+        DefaultSettingsRouteDestinations({
+          moduleParams: cvModuleParams,
+          sidebarProps: CVSideNavProps
+        })?.props.children
+      }
+
+      {
+        AccessControlRouteDestinations({
+          moduleParams: cvModuleParams,
+          sidebarProps: CVSideNavProps
+        })?.props.children
+      }
+
+      {
+        GovernanceRouteDestinations({
+          sidebarProps: CVSideNavProps,
+          pathProps: { ...accountPathProps, ...projectPathProps, ...cvModuleParams }
+        })?.props.children
+      }
+    </>
+  )
+}
+
+export default SRMRoutes

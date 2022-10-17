@@ -25,7 +25,7 @@ import userProfileRoutes from '@user-profile/RouteDestinations'
 import '@pipeline/RouteDestinations'
 import CDRoutes from '@cd/RouteDestinations'
 import CIRoutes from '@ci/RouteDestinations'
-import CVRoutes from '@cv/RouteDestinations'
+import SRMRoutes from '@cv/RouteDestinations'
 import CFRoutes from '@cf/RouteDestinations'
 import CERoutes from '@ce/RouteDestinations'
 import STORoutes from '@sto/RouteDestinations'
@@ -77,7 +77,6 @@ export default function RouteDestinations(): React.ReactElement {
       {CHAOS_ENABLED ? ChaosRoutes().props.children : null}
       {CING_ENABLED ? CIRoutes.props.children : null}
       {CDNG_ENABLED ? CDRoutes.props.children : null}
-      {CVNG_ENABLED ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
       {SECURITY ? (
         <Route path="/account/:accountId/:module(sto)">
@@ -90,6 +89,11 @@ export default function RouteDestinations(): React.ReactElement {
       {CENG_ENABLED ? (
         <Route path="/account/:accountId/:module(ce)">
           <CERoutes />
+        </Route>
+      ) : null}
+      {CVNG_ENABLED ? (
+        <Route path="/account/:accountId/:module(cv)">
+          <SRMRoutes />
         </Route>
       ) : null}
       {CFNG_ENABLED ? CFRoutes({})?.props.children : null}

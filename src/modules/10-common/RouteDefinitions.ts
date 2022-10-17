@@ -1589,6 +1589,7 @@ const routes = {
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/admin/notifications`
   ),
+  toSRMMFE: withAccountId(() => `/srm/new`),
   /********************************************************************************************************************/
   toProjectDetails: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
