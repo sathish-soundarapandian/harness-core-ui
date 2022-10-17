@@ -1,12 +1,12 @@
 import { groupBy, isEmpty } from 'lodash-es'
 import type { IOptionProps } from '@blueprintjs/core'
 import type { SelectOption } from '@harness/uicore'
-import type { AnalysisDTO, MetricPackDTO, RiskProfile } from 'services/cv'
+import type { AnalysisDTO, MetricPackDTO } from 'services/cv'
 import { getIsValidPrimitive } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
 import type { CommonCustomMetricsType, GroupedCreatedMetrics, GroupedMetric } from './CustomMetric.types'
 import { DefaultCustomMetricGroupName, ExceptionGroupName } from './CustomMetricV2.constants'
-import { getCategoryAndMetricType, getThresholdTypes } from '../utils/HealthSource.utils'
+import { getThresholdTypes } from '../utils/HealthSource.utils'
 
 export function isAssignSectionValid(customMetric: CommonCustomMetricsType): boolean {
   if (!customMetric) {
@@ -275,12 +275,10 @@ const getRiskProfileForPayload = (analysis?: CommonCustomMetricsType['analysis']
 
   const { riskProfile, higherBaselineDeviation, lowerBaselineDeviation } = analysis
 
-  const categoryAndMetricValues = getCategoryAndMetricType(riskProfile?.category)
-
   const thresholdsValues = getThresholdTypes({ higherBaselineDeviation, lowerBaselineDeviation })
 
   return {
-    ...categoryAndMetricValues,
+    riskCategory: riskProfile?.riskCategory,
     thresholdTypes: thresholdsValues
   }
 }
@@ -314,18 +312,6 @@ export const updateFormikValuesForPayload = (customMetrics: CommonCustomMetricsT
 
 // ⭐️ Response to Formik ⭐️
 
-const getRiskProfileForFormik = (analysis: AnalysisDTO): AnalysisDTO['riskProfile'] => {
-  if (!isRiskProfileAndCategoryPresentForFormik(analysis)) {
-    return {}
-  }
-
-  const { riskProfile } = analysis
-
-  return {
-    category: `${riskProfile?.category}/${riskProfile?.metricType}` as RiskProfile['category']
-  }
-}
-
 export const getAnalysisForFormik = (analysis?: AnalysisDTO): CommonCustomMetricsType['analysis'] => {
   if (!analysis || isEmpty(analysis)) {
     return {}
@@ -333,7 +319,7 @@ export const getAnalysisForFormik = (analysis?: AnalysisDTO): CommonCustomMetric
 
   return {
     ...analysis,
-    riskProfile: getRiskProfileForFormik(analysis),
+    // riskProfile: getRiskProfileForFormik(analysis),
     lowerBaselineDeviation: analysis.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
     higherBaselineDeviation: analysis.riskProfile?.thresholdTypes?.includes('ACT_WHEN_HIGHER') || false
   }

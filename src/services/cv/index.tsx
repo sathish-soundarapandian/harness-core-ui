@@ -417,6 +417,26 @@ export type AwsSecretManagerDTO = ConnectorConfigDTO & {
   secretNamePrefix?: string
 }
 
+export interface AzureArtifactsAuthentication {
+  spec: AzureArtifactsHttpCredentials
+}
+
+export type AzureArtifactsConnector = ConnectorConfigDTO & {
+  auth: AzureArtifactsAuthentication
+  azureArtifactsUrl: string
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
+export interface AzureArtifactsHttpCredentials {
+  spec: AzureArtifactsUsernameToken
+  type: 'PersonalAccessToken'
+}
+
+export interface AzureArtifactsUsernameToken {
+  tokenRef: string
+}
+
 export interface AzureAuthCredentialDTO {
   [key: string]: any
 }
@@ -627,7 +647,6 @@ export interface CVConfig {
   deploymentVerificationEnabled?: boolean
   eligibleForDemo?: boolean
   enabled?: boolean
-  firstTimeDataCollectionStartTime?: number
   firstTimeDataCollectionTimeRange?: TimeRange
   fullyQualifiedIdentifier?: string
   identifier: string
@@ -830,10 +849,10 @@ export interface CloudWatchMetricDefinition {
 }
 
 export type CloudWatchMetricsHealthSourceSpec = HealthSourceSpec & {
-  feature: string
+  feature?: string
   metricDefinitions?: CloudWatchMetricDefinition[]
   metricThresholds?: TimeSeriesMetricPackDTO[]
-  region: string
+  region?: string
 }
 
 export interface Cluster {
@@ -908,6 +927,7 @@ export interface ConnectorInfoDTO {
     | 'Gcp'
     | 'Aws'
     | 'Azure'
+    | 'Spot'
     | 'Artifactory'
     | 'Jira'
     | 'Nexus'
@@ -934,6 +954,7 @@ export interface ConnectorInfoDTO {
     | 'CustomSecretManager'
     | 'ELK'
     | 'GcpSecretManager'
+    | 'AzureArtifacts'
 }
 
 export interface ControlClusterSummary {
@@ -1711,7 +1732,6 @@ export interface Error {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
-    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2125,7 +2145,6 @@ export interface Failure {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
-    | 'DELEGATE_TASK_EXPIRED'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4177,7 +4196,6 @@ export interface ResponseMessage {
     | 'AWS_ECS_CLIENT_ERROR'
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
-    | 'DELEGATE_TASK_EXPIRED'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4189,7 +4207,7 @@ export interface ResponseMessage {
     | 'AUTHORIZATION_ERROR'
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
-    | 'EXECUTION_INPUT_TIMEOUT_FAILURE'
+    | 'INPUT_TIMEOUT_FAILURE'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -4604,6 +4622,14 @@ export interface RestResponseListProgressLog {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseListRiskCategoryDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: RiskCategoryDTO[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseListSLOErrorBudgetResetDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4904,14 +4930,6 @@ export interface RestResponseUserJourneyResponse {
   responseMessages?: ResponseMessage[]
 }
 
-export interface RestResponseVerificationJobInstance {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: VerificationJobInstance
-  responseMessages?: ResponseMessage[]
-}
-
 export interface RestResponseVerifyStepDebugResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4937,6 +4955,13 @@ export interface ResultSummary {
   testClusterSummaries?: ClusterSummary[]
 }
 
+export interface RiskCategoryDTO {
+  cvMonitoringCategory?: 'Performance' | 'Errors' | 'Infrastructure'
+  displayName?: string
+  identifier?: 'Errors' | 'Infrastructure' | 'Performance_Throughput' | 'Performance_Other' | 'Performance_ResponseTime'
+  timeSeriesMetricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
+}
+
 export interface RiskCount {
   count?: number
   displayName?: string
@@ -4954,6 +4979,12 @@ export interface RiskData {
 export interface RiskProfile {
   category?: 'Performance' | 'Errors' | 'Infrastructure'
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
+  riskCategory?:
+    | 'Errors'
+    | 'Infrastructure'
+    | 'Performance_Throughput'
+    | 'Performance_Other'
+    | 'Performance_ResponseTime'
   thresholdTypes?: ('ACT_WHEN_LOWER' | 'ACT_WHEN_HIGHER')[]
 }
 
@@ -5327,6 +5358,27 @@ export type SplunkMetricHealthSourceSpec = HealthSourceSpec & {
 export interface SplunkSavedSearch {
   searchQuery?: string
   title?: string
+}
+
+export type SpotConnector = ConnectorConfigDTO & {
+  credential: SpotCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
+export interface SpotCredential {
+  spec?: SpotCredentialSpec
+  type: 'ManualConfig'
+}
+
+export interface SpotCredentialSpec {
+  [key: string]: any
+}
+
+export type SpotManualConfigSpec = SpotCredentialSpec & {
+  accountId?: string
+  accountIdRef?: string
+  apiTokenRef: string
 }
 
 export interface StackTraceElement {
@@ -5874,7 +5926,6 @@ export interface VerificationJobInstance {
     | 'ERROR'
     | 'ABORTED'
     | 'IN_PROGRESS'
-  verificationTasksCount?: number
 }
 
 export interface VerificationJobRuntimeDetails {
@@ -11448,6 +11499,50 @@ export const getSampleDataPromise = (
   getUsingFetch<ResponseListPrometheusSampleData, Failure | Error, GetSampleDataQueryParams, void>(
     getConfig('cv/api'),
     `/prometheus/sample-data`,
+    props,
+    signal
+  )
+
+export type GetRiskCategoryForCustomHealthMetricProps = Omit<
+  GetProps<RestResponseListRiskCategoryDTO, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * get risk category for a custom health metric
+ */
+export const GetRiskCategoryForCustomHealthMetric = (props: GetRiskCategoryForCustomHealthMetricProps) => (
+  <Get<RestResponseListRiskCategoryDTO, Failure | Error, void, void>
+    path={`/risk-category`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetRiskCategoryForCustomHealthMetricProps = Omit<
+  UseGetProps<RestResponseListRiskCategoryDTO, Failure | Error, void, void>,
+  'path'
+>
+
+/**
+ * get risk category for a custom health metric
+ */
+export const useGetRiskCategoryForCustomHealthMetric = (props: UseGetRiskCategoryForCustomHealthMetricProps) =>
+  useGet<RestResponseListRiskCategoryDTO, Failure | Error, void, void>(`/risk-category`, {
+    base: getConfig('cv/api'),
+    ...props
+  })
+
+/**
+ * get risk category for a custom health metric
+ */
+export const getRiskCategoryForCustomHealthMetricPromise = (
+  props: GetUsingFetchProps<RestResponseListRiskCategoryDTO, Failure | Error, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseListRiskCategoryDTO, Failure | Error, void, void>(
+    getConfig('cv/api'),
+    `/risk-category`,
     props,
     signal
   )

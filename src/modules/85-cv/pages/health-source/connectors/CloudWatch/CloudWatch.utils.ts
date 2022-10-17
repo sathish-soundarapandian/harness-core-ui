@@ -193,8 +193,8 @@ export const validateForm = (
             )
           }
 
-          if (!analysis.riskProfile?.category) {
-            errors[`customMetrics.${index}.analysis.riskProfile.category`] = getString(
+          if (!analysis.riskProfile?.riskCategory) {
+            errors[`customMetrics.${index}.analysis.riskProfile.riskCategory`] = getString(
               'cv.monitoringSources.gco.mapMetricsToServicesPage.validation.riskCategory'
             )
           }
