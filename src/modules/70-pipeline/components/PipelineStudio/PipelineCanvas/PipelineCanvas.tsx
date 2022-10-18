@@ -69,6 +69,8 @@ import {
   SavePipelineHandle,
   SavePipelinePopoverWithRef
 } from '@pipeline/components/PipelineStudio/SavePipelinePopover/SavePipelinePopover'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
@@ -244,6 +246,7 @@ export function PipelineCanvas({
 
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
+  const CI_ENABLE_YAML_SIMPLIFICATION = useFeatureFlag(FeatureFlag.CI_ENABLE_YAML_SIMPLIFICATION)
 
   React.useEffect(() => {
     if (isGitSyncEnabled || isPipelineRemote) {
@@ -408,12 +411,12 @@ export function PipelineCanvas({
   }, [pipelineIdentifier, entityValidityDetails?.valid])
 
   React.useEffect(() => {
-    if (entityValidityDetails?.valid === false) {
+    if (entityValidityDetails?.valid === false || CI_ENABLE_YAML_SIMPLIFICATION) {
       setDisableVisualView(true)
     } else {
       setDisableVisualView(false)
     }
-  }, [entityValidityDetails?.valid])
+  }, [entityValidityDetails?.valid, CI_ENABLE_YAML_SIMPLIFICATION])
 
   React.useEffect(() => {
     if (isInitialized) {
@@ -917,7 +920,7 @@ export function PipelineCanvas({
                     onChange={nextMode => {
                       handleViewChange(nextMode)
                     }}
-                    showDisableToggleReason={true}
+                    showDisableToggleReason={!CI_ENABLE_YAML_SIMPLIFICATION}
                   />
                   <div>
                     <div className={css.savePublishContainer}>
@@ -1018,7 +1021,13 @@ export function PipelineCanvas({
             )
           ) : (
             <Container className={css.builderContainer}>
-              {isYaml ? <PipelineYamlView /> : pipeline.template ? <TemplatePipelineBuilder /> : <StageBuilder />}
+              {isYaml || CI_ENABLE_YAML_SIMPLIFICATION ? (
+                <PipelineYamlView />
+              ) : pipeline.template ? (
+                <TemplatePipelineBuilder />
+              ) : (
+                <StageBuilder />
+              )}
             </Container>
           )}
         </Layout.Vertical>
