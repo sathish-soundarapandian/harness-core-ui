@@ -246,7 +246,7 @@ export function PipelineCanvas({
 
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
-  const CI_ENABLE_YAML_SIMPLIFICATION = useFeatureFlag(FeatureFlag.CI_ENABLE_YAML_SIMPLIFICATION)
+  const CI_YAML_VERSIONING = useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
 
   React.useEffect(() => {
     if (isGitSyncEnabled || isPipelineRemote) {
@@ -411,12 +411,12 @@ export function PipelineCanvas({
   }, [pipelineIdentifier, entityValidityDetails?.valid])
 
   React.useEffect(() => {
-    if (entityValidityDetails?.valid === false || CI_ENABLE_YAML_SIMPLIFICATION) {
+    if (entityValidityDetails?.valid === false || CI_YAML_VERSIONING) {
       setDisableVisualView(true)
     } else {
       setDisableVisualView(false)
     }
-  }, [entityValidityDetails?.valid, CI_ENABLE_YAML_SIMPLIFICATION])
+  }, [entityValidityDetails?.valid, CI_YAML_VERSIONING])
 
   React.useEffect(() => {
     if (isInitialized) {
@@ -920,7 +920,7 @@ export function PipelineCanvas({
                     onChange={nextMode => {
                       handleViewChange(nextMode)
                     }}
-                    showDisableToggleReason={!CI_ENABLE_YAML_SIMPLIFICATION}
+                    showDisableToggleReason={!CI_YAML_VERSIONING}
                   />
                   <div>
                     <div className={css.savePublishContainer}>
@@ -1021,7 +1021,7 @@ export function PipelineCanvas({
             )
           ) : (
             <Container className={css.builderContainer}>
-              {isYaml || CI_ENABLE_YAML_SIMPLIFICATION ? (
+              {isYaml || CI_YAML_VERSIONING ? (
                 <PipelineYamlView />
               ) : pipeline.template ? (
                 <TemplatePipelineBuilder />
