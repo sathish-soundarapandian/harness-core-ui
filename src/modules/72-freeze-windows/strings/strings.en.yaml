@@ -1,5 +1,5 @@
 freezeWindowsPage:
-  noFreezeWindows: No Freeze Windows in your {{scope}}
+  noFreezeWindows: No Freeze Windows in your <b>{{scope}}</b>
   aboutFeezeWindows: Freeze Window is a Harness Governance feature that stops deployment based on the configuration. This helps ensure stability during periods of low engineering and support activity, such as holidays, trade shows, or company events.
   newFreezeWindow: New Freeze Window
   createFreezeWindow: Create a Freeze Window
@@ -27,12 +27,12 @@ freezeStudio:
   freezeUpdatedSuccessfully: Freeze window updated successfully
 
 globalFreeze:
-  disabled: Freeze disabled on all deployments for this {{scope}}
+  disabled: Freeze disabled on all deployments for this
   disableFreezeTitle: Disable Freeze on all deployments for this {{scope}}
   disableFreezeText: For any deployments frozen, you will have to manually go back and resume them.
   disableFreezeSuccess: Freeze disabled on all deployments for this {{scope}}
   disableFreezeFailure: Failed to disable freeze
-  enabled: Freeze enabled on all deployments for this {{scope}} until {{endTime}} {{timeZone}}
+  enabled: Freeze enabled on all deployments for this
   enableFreezeTitle: Enable Freeze on all deployments for this {{scope}}
   enableFreezeSuccess: Freeze enabled on all deployments for this {{scope}}
   enableFreezeFailure: Failed to enable freeze

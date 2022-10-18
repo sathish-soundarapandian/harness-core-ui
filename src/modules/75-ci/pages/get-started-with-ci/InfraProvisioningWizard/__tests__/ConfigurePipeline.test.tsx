@@ -67,6 +67,7 @@ describe('Test ConfigurePipeline component', () => {
     expect(starterConfigCards[1]).toHaveClass('Card--selected')
   })
 
+  // eslint-disable-next-line jest/no-disabled-tests
   test('Select Starter configuration option should show expected validation error message', async () => {
     const props = {
       repoName: 'test-repo',

@@ -11,6 +11,7 @@ import { getErrorInfoFromErrorObject, useToaster } from '@wings-software/uicore'
 import { useCreateFreeze, useUpdateFreeze } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { useQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import { FreezeWindowContext } from '@freeze-windows/components/FreezeWindowStudio/FreezeWindowContext/FreezeWindowContext'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
@@ -33,6 +34,7 @@ export const useSaveFreeze = () => {
     windowIdentifier,
     module
   } = useParams<WindowPathProps & ModulePathParams>()
+  const { sectionId } = useQueryParams<{ sectionId?: string }>()
   const isCreateMode = windowIdentifier === DefaultFreezeId
   const {
     mutate: createFreeze,
@@ -87,7 +89,8 @@ export const useSaveFreeze = () => {
           orgIdentifier,
           accountId: accountIdentifier,
           module,
-          windowIdentifier: freezeObj.identifier as string
+          windowIdentifier: freezeObj.identifier as string,
+          sectionId
         })
       )
       if (!isCreateMode) {

@@ -15,7 +15,9 @@ import {
   ButtonVariation,
   Container,
   Formik,
+  FormikForm,
   FormInput,
+  HarnessDocTooltip,
   Layout,
   Text
 } from '@wings-software/uicore'
@@ -140,7 +142,7 @@ const ECSRunTaskStepEdit = (
         onSubmit={(values: ECSRunTaskStepInitialValues) => {
           onUpdate?.(values)
         }}
-        formName="ecsBlueGreenCreateServiceStepEdit"
+        formName="ecsRunTaskStepForm"
         initialValues={initialValues}
         validate={data => {
           onChange?.(data)
@@ -154,7 +156,7 @@ const ECSRunTaskStepEdit = (
           setFormikRef(formikRef, formik)
           const { values, setFieldValue } = formik
           return (
-            <>
+            <FormikForm>
               <NameTimeoutField
                 values={{ name: values.name, timeout: values.timeout }}
                 setFieldValue={setFieldValue}
@@ -163,8 +165,9 @@ const ECSRunTaskStepEdit = (
                 readonly={readonly}
                 stepViewType={stepViewType}
               />
-              <div className={css.ecsRunTaskDefinitionTitle}>
+              <div className={css.ecsRunTaskDefinitionTitle} data-tooltip-id={`ecsRunTaskDefinition`}>
                 {getString('cd.steps.ecsRunTaskStep.ecsRunTaskDefinition')}
+                <HarnessDocTooltip tooltipId={`ecsRunTaskDefinition`} useStandAlone={true} />
               </div>
               <Container>
                 {!!formik.values.spec?.taskDefinition?.type &&
@@ -182,8 +185,9 @@ const ECSRunTaskStepEdit = (
                   </Button>
                 )}
               </Container>
-              <div className={css.ecsRunTaskRequestDefinitionTitle}>
+              <div className={css.ecsRunTaskRequestDefinitionTitle} data-tooltip-id={`ecsRunTaskRequestDefinition`}>
                 {getString('cd.steps.ecsRunTaskStep.ecsRunTaskRequestDefinition')}
+                <HarnessDocTooltip tooltipId={`ecsRunTaskRequestDefinition`} useStandAlone={true} />
               </div>
               <Container>
                 {!!formik.values.spec?.runTaskRequestDefinition?.type &&
@@ -246,7 +250,7 @@ const ECSRunTaskStepEdit = (
                   }
                 />
               </Accordion>
-            </>
+            </FormikForm>
           )
         }}
       </Formik>

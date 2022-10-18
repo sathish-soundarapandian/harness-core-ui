@@ -254,7 +254,7 @@ export function DefaultNodeWidget(props: DefaultNodeProps): JSX.Element {
                 isDark: true
               }}
             >
-              <Icon size={26} name={'conditional-skip-new'} color="white" />
+              <Icon size={26} name={'conditional-skip-new'} />
             </Text>
           </div>
         )}
@@ -266,7 +266,7 @@ export function DefaultNodeWidget(props: DefaultNodeProps): JSX.Element {
                 isDark: true
               }}
             >
-              <Icon size={26} name={'conditional-skip-new'} color="white" />
+              <Icon size={26} name={'conditional-skip-new'} />
             </Text>
           </div>
         )}

@@ -39,6 +39,7 @@ const BranchSettingsButton = ({ isSettingsOpen, setIsSettingsOpen, isLoading }: 
       }}
       tooltip={<SettingsMenu />}
       onClick={e => e.preventDefault()}
+      aria-label={`${gitRepoDetails?.branch} settings`}
     >
       <Container className={css.branchActionButtonWrapper}>
         <Icon name="git-new-branch" size={15} />

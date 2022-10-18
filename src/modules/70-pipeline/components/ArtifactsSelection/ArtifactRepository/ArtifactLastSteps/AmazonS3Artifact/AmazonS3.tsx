@@ -153,7 +153,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const primarySchema = Yup.object().shape(schemaObject)
 
   const getValidationSchema = useCallback(() => {
-    if (context === ModalViewFor.SIDECAR) {
+    if (isIdentifierAllowed) {
       return sidecarSchema
     }
     return primarySchema

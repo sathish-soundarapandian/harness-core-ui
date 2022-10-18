@@ -173,4 +173,5 @@ export interface BaseReactComponentProps {
   height?: number
   data?: any
   showMarkers?: boolean
+  customNodeStyle?: CSSProperties
 }

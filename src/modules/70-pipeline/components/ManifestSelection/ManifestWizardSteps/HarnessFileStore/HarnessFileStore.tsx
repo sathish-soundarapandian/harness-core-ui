@@ -33,6 +33,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { FileUsage } from '@filestore/interfaces/FileStore'
 import { ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import type { HarnessFileStoreDataType, HarnessFileStoreFormData, ManifestTypes } from '../../ManifestInterface'
+import { shouldAllowOnlyOneFilePath } from '../CommonManifestDetails/utils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface HarnessFileStorePropType {
@@ -187,6 +188,7 @@ function HarnessFileStore({
                           </Text>
                         )
                       }}
+                      restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
                     />
                   </div>
                   {showValuesPaths(selectedManifest as ManifestTypes) && (
@@ -207,6 +209,7 @@ function HarnessFileStore({
                             </Text>
                           )
                         }}
+                        restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
                       />
                     </div>
                   )}
@@ -224,6 +227,7 @@ function HarnessFileStore({
                           disableTypeSelection: false,
                           label: <Text>{getString('pipeline.manifestType.paramsYamlPath')}</Text>
                         }}
+                        restrictToSingleEntry={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}
                       />
                     </div>
                   )}

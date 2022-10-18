@@ -102,7 +102,8 @@ function PrimaryArtifactRef({
     }
     const sourceIdentifierToSourceInputMap = get(
       artifactSourceResponse?.data?.sourceIdentifierToSourceInputMap,
-      `${value.value as string}`
+      value?.value as string,
+      ''
     )
 
     if (sourceIdentifierToSourceInputMap) {
@@ -116,6 +117,14 @@ function PrimaryArtifactRef({
           })
         )
       }
+    } else {
+      updateStageFormTemplate(undefined, `${path}.artifacts.primary.sources`)
+      formik?.setValues(
+        produce(formik?.values, (draft: any) => {
+          set(draft, `${path}.artifacts.primary.primaryArtifactRef`, value?.value)
+          set(draft, `${path}.artifacts.primary.sources`, undefined)
+        })
+      )
     }
   }
 

@@ -1976,6 +1976,8 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
 </div>
 `;
 
+exports[`Test Azure Infrastructure Spec behavior Validations Test: Required Fields check snap 1`] = `Object {}`;
+
 exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inputset view and fetch dropdowns on focus 1`] = `
 <div>
   <div

@@ -20,6 +20,7 @@ import css from './GitContextForm.module.scss'
 
 export interface IGitContextFormProps extends EntityGitDetails {
   getDefaultFromOtherRepo: boolean
+  remoteFetchFailed?: boolean
 }
 
 export interface GitContextFormProps<T> {

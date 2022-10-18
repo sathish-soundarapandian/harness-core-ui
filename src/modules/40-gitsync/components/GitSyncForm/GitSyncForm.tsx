@@ -170,6 +170,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
             setErrorResponse={setErrorResponse}
           />
           <RepoBranchSelectV2
+            key={formikProps?.values?.repo}
             connectorIdentifierRef={formikConnectorRef || connectorRef}
             repoName={formikProps?.values?.repo}
             onChange={(selected: SelectOption) => {

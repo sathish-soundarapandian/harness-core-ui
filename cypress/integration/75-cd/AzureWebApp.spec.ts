@@ -1,19 +1,35 @@
 import {
   gitSyncEnabledCall,
   newPipelineRoute,
-  servicesV2,
   postServiceCall,
   cdFailureStrategiesYaml,
-  azureStrategiesYamlSnippets
+  azureStrategiesYamlSnippets,
+  featureFlagsCall
 } from '../../support/70-pipeline/constants'
 import { environmentFetchCall, environmentSaveCall } from '../../support/75-cd/constants'
 
 describe('Azure web app end to end test', () => {
+  const serviceV2AzureWebApp = `/ng/api/servicesV2/list/access?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&type=AzureWebApp&gitOpsEnabled=false`
+  const environmentCall = `/ng/api/environmentsV2/upsert?routingId=accountId&accountIdentifier=accountId`
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
       // failing the test
       return false
+    })
+    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
+      cy.intercept('GET', featureFlagsCall, {
+        ...featureFlagsData,
+        resource: [
+          ...featureFlagsData.resource,
+          {
+            uuid: null,
+            name: 'NG_SVC_ENV_REDESIGN',
+            enabled: true,
+            lastUpdatedAt: 0
+          }
+        ]
+      })
     })
     cy.initializeRoute()
     cy.intercept('GET', gitSyncEnabledCall, {
@@ -24,7 +40,10 @@ describe('Azure web app end to end test', () => {
     cy.intercept('GET', cdFailureStrategiesYaml, {
       fixture: 'pipeline/api/pipelines/failureStrategiesYaml'
     }).as('cdFailureStrategiesYaml')
-    cy.intercept('GET', servicesV2, { fixture: 'pipeline/api/services/serviceV2' }).as('servicesListCall')
+    cy.intercept('GET', serviceV2AzureWebApp, { fixture: 'pipeline/api/services/serviceV2' }).as('servicesV2Call')
+    cy.intercept('PUT', environmentCall, {
+      fixture: 'ng/api/SshWinRM/envUpsertCall.json'
+    }).as('envUpsertCall')
     cy.intercept('POST', postServiceCall, { fixture: 'pipeline/api/services/createService' }).as('serviceCreationCall')
     cy.intercept('GET', environmentFetchCall, {
       fixture: 'ng/api/environmentsV2.json'
@@ -56,17 +75,12 @@ describe('Azure web app end to end test', () => {
     cy.get('span[icon="plus"]').click({ force: true })
     cy.get('[data-testid="stage-Deployment"]').should('be.visible').click()
     cy.get('input[name="name"]').should('be.visible').type('deploy').should('have.value', 'deploy')
+    cy.contains('p', 'Azure Web Apps').click()
     cy.contains('span', 'Set Up Stage').click()
     // adding a new service
-    cy.visitPageAssertion('#aboutService')
-    cy.wait('@servicesListCall')
+    cy.wait('@servicesV2Call')
     cy.contains('span', 'New Service').should('be.visible').click()
     cy.get('input[name="name"]').should('be.visible').type('testService').should('have.value', 'testService')
-    cy.get('button[data-id="service-save"]').click()
-    cy.wait(2000)
-    cy.get('span[data-icon="azurewebapp"]').click()
-    cy.findByDisplayValue('AzureWebApp').should('be.checked')
-    cy.wait('@azureYamlSnippet')
 
     // adding a startup command
     cy.contains('span', 'Add Startup Command').should('be.visible').click()
@@ -94,34 +108,27 @@ describe('Azure web app end to end test', () => {
     })
     cy.get('span[data-icon="service-github"]').should('be.visible')
     cy.wait(2000)
-    cy.contains('span', 'Continue').click({ force: true })
-    cy.wait(1000)
-    // creating a new environment
-    cy.wait('@environmentListCall')
+    //save services
+    cy.get('[class*="Dialog--children"] > div:nth-child(2) > button:nth-child(1)').contains('Save').click()
 
-    cy.contains('span', 'Environment').should('be.visible')
-    cy.contains('span', 'New Environment').should('be.visible').click()
-    cy.get('input[name="name"]')
-      .should('be.visible', { timeout: 2000 })
-      .type('testEnvConfig')
-      .should('have.value', 'testEnvConfig')
-    cy.contains('p', 'Production').click()
-    cy.get('[class*=bp3-dialog]').within(() => {
-      cy.contains('span', 'Save').click()
-    })
-    cy.wait('@environmentCreationCall')
+    cy.wait(1000)
+    //Add Environment
+    cy.contains('Continue').click()
+    cy.get('#add-new-environment').click()
+
+    cy.contains('New Environment').should('be.visible')
+    cy.get('[placeholder="Enter Name"]').fillName('testCypress_Env')
+    cy.contains('Pre-Production').click()
+    cy.clickSubmit()
+    cy.wait('@envUpsertCall')
+    cy.wait(1000)
+
     // creating a new infrastructure
     cy.wait(500)
-    cy.get('span[data-icon="fixed-input"]').should('have.length', 4).as('multiSelectButtons')
-    cy.get('@multiSelectButtons').each(multiSelectButton => {
-      cy.wrap(multiSelectButton).click()
-      cy.get('a.bp3-menu-item').should('have.length', 3).as('valueList')
-      cy.get('@valueList').eq(0).should('contain.text', 'Fixed value').as('fixedValue')
-      cy.get('@valueList').eq(1).should('contain.text', 'Runtime input').as('runtimeValue')
-      cy.get('@valueList').eq(2).should('contain.text', 'Expression').as('expressionValue')
-      cy.get('@runtimeValue').click()
-      cy.wait(500)
-    })
+    cy.get('label[for="infrastructureRef"] + div[class="bp3-form-content"] span[data-icon="fixed-input"]')
+      .should('be.visible')
+      .click()
+    cy.get('span[class="MultiTypeInput--menuItemLabel"]').contains('Runtime input').click()
 
     cy.wait(1000)
     // yaml validations

@@ -92,6 +92,7 @@ export class ECSBlueGreenRollbackStep extends PipelineStep<StepElementConfig> {
         stepViewType={stepViewType}
         ref={formikRef}
         readonly={readonly}
+        formikFormName={'ecsBlueGreenRollbackStepForm'}
       />
     )
   }

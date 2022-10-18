@@ -242,6 +242,7 @@ export default function CreatePipelines({
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
                 text={isEdit ? getString('continue') : getString('start')}
+                disabled={gitDetails?.remoteFetchFailed}
               />
               &nbsp; &nbsp;
               <Button

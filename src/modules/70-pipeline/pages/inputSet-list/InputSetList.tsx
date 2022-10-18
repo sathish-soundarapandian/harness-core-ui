@@ -18,6 +18,7 @@ import {
   InputSetSummaryResponse,
   useDeleteInputSetForPipeline,
   useGetInputSetsListForPipeline,
+  useGetPipeline,
   useGetPipelineSummary,
   useGetTemplateFromPipeline
 } from 'services/pipeline-ng'
@@ -31,7 +32,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
-
+import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import useImportResource from '@pipeline/components/ImportResource/useImportResource'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
@@ -101,7 +102,22 @@ function InputSetList(): React.ReactElement {
     }
   })
 
-  const { data: pipeline } = useGetPipelineSummary({
+  const { data: pipelineMetadata } = useGetPipelineSummary({
+    pipelineIdentifier,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      repoIdentifier,
+      getMetadataOnly: true
+    }
+  })
+
+  const {
+    data: pipeline,
+    loading: loadingPipeline,
+    error: pipelineFetchError
+  } = useGetPipeline({
     pipelineIdentifier,
     queryParams: {
       accountIdentifier: accountId,
@@ -112,7 +128,7 @@ function InputSetList(): React.ReactElement {
     }
   })
 
-  const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid === false
+  const isPipelineInvalid = pipeline?.data?.entityValidityDetails?.valid !== true
 
   const { mutate: deleteInputSet } = useDeleteInputSetForPipeline({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier, pipelineIdentifier }
@@ -135,7 +151,11 @@ function InputSetList(): React.ReactElement {
   }>()
   const history = useHistory()
 
-  useDocumentTitle([pipeline?.data?.name || getString('pipelines'), getString('inputSetsText')])
+  // Using Identifier if pipeline is not found in any branch
+  useDocumentTitle([
+    pipelineMetadata?.data?.name || pipelineIdentifier || getString('pipelines'),
+    getString('inputSetsText')
+  ])
 
   const goToInputSetForm = React.useCallback(
     (inputSetTemp?: InputSetSummaryResponse) => {
@@ -257,13 +277,13 @@ function InputSetList(): React.ReactElement {
             />
           )}
 
-          {pipeline?.data?.storeType === StoreType.REMOTE && (
+          {storeType === StoreType.REMOTE && (
             <MenuItem text={getString('common.importFromGit')} onClick={showImportResourceModal} />
           )}
         </Menu>
       }
       position={Position.BOTTOM}
-      disabled={!canUpdateInputSet || !pipelineHasRuntimeInputs || isPipelineInvalid}
+      disabled={!canUpdateInputSet || !pipelineHasRuntimeInputs || isPipelineInvalid || Boolean(pipelineFetchError)}
     >
       <RbacButton
         text={getString('inputSets.newInputSet')}
@@ -303,7 +323,7 @@ function InputSetList(): React.ReactElement {
       </Page.SubHeader>
 
       <Page.Body
-        loading={loading || isLoading}
+        loading={loading || isLoading || loadingPipeline}
         error={error?.message}
         retryOnError={/* istanbul ignore next */ () => refetch()}
         noData={{
@@ -319,31 +339,39 @@ function InputSetList(): React.ReactElement {
             : undefined
         }}
       >
-        <InputSetListView
-          data={inputSet?.data}
-          gotoPage={setPage}
-          pipelineHasRuntimeInputs={pipelineHasRuntimeInputs}
-          isPipelineInvalid={isPipelineInvalid}
-          goToInputSetDetail={inputSetTemp => {
-            setSelectedInputSet({
-              identifier: inputSetTemp?.identifier,
-              repoIdentifier: inputSetTemp?.gitDetails?.repoIdentifier,
-              branch: inputSetTemp?.gitDetails?.branch
-            })
-            if (inputSetTemp?.inputSetType === 'INPUT_SET') {
-              goToInputSetForm(inputSetTemp)
-            } else {
-              showOverlayInputSetForm()
-            }
-          }}
-          refetchInputSet={refetch}
-          template={template}
-          canUpdate={canUpdateInputSet}
-          onDeleteInputSet={onDeleteInputSet}
-          onDelete={(inputSetSelected: InputSetSummaryResponse) => {
-            setInputSetToDelete(inputSetSelected)
-          }}
-        />
+        {pipelineFetchError ? (
+          <NoEntityFound
+            identifier={pipelineIdentifier}
+            entityType={'inputSet'}
+            errorObj={pipelineFetchError?.data as unknown as Error}
+          />
+        ) : (
+          <InputSetListView
+            data={inputSet?.data}
+            gotoPage={setPage}
+            pipelineHasRuntimeInputs={pipelineHasRuntimeInputs}
+            isPipelineInvalid={isPipelineInvalid}
+            goToInputSetDetail={inputSetTemp => {
+              setSelectedInputSet({
+                identifier: inputSetTemp?.identifier,
+                repoIdentifier: inputSetTemp?.gitDetails?.repoIdentifier,
+                branch: inputSetTemp?.gitDetails?.branch
+              })
+              if (inputSetTemp?.inputSetType === 'INPUT_SET') {
+                goToInputSetForm(inputSetTemp)
+              } else {
+                showOverlayInputSetForm()
+              }
+            }}
+            refetchInputSet={refetch}
+            template={template}
+            canUpdate={canUpdateInputSet}
+            onDeleteInputSet={onDeleteInputSet}
+            onDelete={(inputSetSelected: InputSetSummaryResponse) => {
+              setInputSetToDelete(inputSetSelected)
+            }}
+          />
+        )}
       </Page.Body>
     </>
   )

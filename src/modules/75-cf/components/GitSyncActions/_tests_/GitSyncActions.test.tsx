@@ -52,7 +52,7 @@ const renderComponent = (props?: Partial<UseGitSync>): void => {
           saveWithGit: () => Promise.resolve(undefined),
           isAutoCommitEnabled: false,
           isGitSyncActionsEnabled: false,
-          isGitSyncEnabled: false,
+          isGitSyncEnabled: true,
           isGitSyncPaused: false,
           ...props
         }}
@@ -71,7 +71,7 @@ describe('GitSyncActions', () => {
   test('it should render correctly when auto commit = FALSE', async () => {
     renderComponent()
 
-    expect(screen.getByText('test branch')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'test branch settings' })).toBeVisible()
     expect(screen.getByText('test repository')).toBeInTheDocument()
 
     expect(screen.getByTestId('auto-commit-status-icon')).toHaveClass('autoCommitDisabled')
@@ -86,7 +86,7 @@ describe('GitSyncActions', () => {
   test('it should render correctly when auto commit = TRUE', async () => {
     renderComponent({ isAutoCommitEnabled: true })
 
-    expect(screen.getByText('test branch')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'test branch settings' })).toBeVisible()
     expect(screen.getByText('test repository')).toBeInTheDocument()
 
     expect(screen.getByTestId('auto-commit-status-icon')).toHaveClass('autoCommitEnabled')
@@ -101,7 +101,7 @@ describe('GitSyncActions', () => {
   test('it should render correctly when gitSyncPaused = FALSE', async () => {
     renderComponent({ isGitSyncPaused: false })
 
-    expect(screen.getByText('test branch')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'test branch settings' })).toBeVisible()
     expect(screen.getByText('test repository')).toBeInTheDocument()
     expect(screen.queryByTestId('git-paused-icon')).not.toBeInTheDocument()
 
@@ -115,7 +115,7 @@ describe('GitSyncActions', () => {
   test('it should render correctly when gitSyncPaused = TRUE', async () => {
     renderComponent({ isGitSyncPaused: true })
 
-    expect(screen.getByText('test branch')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'test branch settings' })).toBeVisible()
     expect(screen.getByText('test repository')).toBeInTheDocument()
     expect(screen.queryByTestId('git-paused-icon')).toBeInTheDocument()
 
@@ -176,5 +176,12 @@ describe('GitSyncActions', () => {
     renderComponent({ gitSyncLoading: true })
 
     expect(screen.getByTestId('git-sync-spinner')).toBeInTheDocument()
+  })
+
+  test('it should render the button to Setup Git Sync when isGitSyncEnabled is FALSE', async () => {
+    renderComponent({ isGitSyncEnabled: false })
+
+    expect(screen.getByRole('button', { name: 'cf.featureFlags.setupGitSync' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'test branch settings' })).not.toBeInTheDocument()
   })
 })

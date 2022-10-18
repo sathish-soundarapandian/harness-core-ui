@@ -23,3 +23,9 @@ environments:
 noEnvironment:
   title: There are no environments in this project
   message: Environments are the different places you run your application where you can configure chaos infrastrutures
+pipelineStep:
+  experimentRefLabel: Experiment Reference
+  expectedResiliencyScoreLabel: Expected Resiliency Score
+  description: Chaos Experiment Step Description Placeholder
+viewDetailedExecution: View Detailed Execution
+selectChaosExperiment: Select Chaos Experiment

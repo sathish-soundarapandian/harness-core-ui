@@ -31,13 +31,13 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import { isNewServiceEntity } from '../../ManifestSource/ManifestSourceUtils'
 import {
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
   getYamlData,
-  isFieldfromTriggerTabDisabled
+  isFieldfromTriggerTabDisabled,
+  isNewServiceEnvEntity
 } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
@@ -123,7 +123,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
     connectorRef: fixedConnectorValue,
     region: getFinalQueryParamValue(fixedRegionValue),
     pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-    serviceId: isNewServiceEntity(path as string) ? serviceIdentifier : undefined,
+    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
     fqnPath: getFqnPath(
       path as string,
       !!isPropagatedStage,
@@ -309,7 +309,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                 },
                 onFocus: () => {
                   if (!loading) {
-                    if (isNewServiceEntity(path as string)) {
+                    if (isNewServiceEnvEntity(path as string)) {
                       if (
                         isFieldRuntime(`artifacts.${artifactPath}.spec.connectorRef`, template) &&
                         !isEmpty(fixedConnectorValue)
@@ -318,7 +318,7 @@ const Content = (props: AmazonS3ContentProps): JSX.Element => {
                       } else if (!isFieldRuntime(`artifacts.${artifactPath}.spec.connectorRef`, template)) {
                         fetchBuckets()
                       }
-                    } else if (!isNewServiceEntity(path as string) && !isEmpty(fixedConnectorValue)) {
+                    } else if (!isNewServiceEnvEntity(path as string) && !isEmpty(fixedConnectorValue)) {
                       fetchBuckets()
                     }
                   }

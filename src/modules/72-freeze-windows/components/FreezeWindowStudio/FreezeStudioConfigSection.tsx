@@ -56,6 +56,8 @@ interface ConfigViewModeRendererProps {
   deleteConfig: () => void
   fieldsVisibility: FieldVisibility
   resources: ResourcesInterface
+  isReadOnly: boolean
+  index: number
 }
 
 const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
@@ -64,7 +66,9 @@ const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
   setEditView,
   deleteConfig,
   fieldsVisibility,
-  resources
+  resources,
+  isReadOnly,
+  index
 }) => {
   const { name, entities } = config || {}
   const entitiesMap: Record<FIELD_KEYS, EntityType> =
@@ -75,7 +79,10 @@ const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
       return accum
     }, {}) || {}
   return (
-    <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
+    <Layout.Horizontal
+      flex={{ justifyContent: 'space-between', alignItems: 'start' }}
+      data-testid={`config-view-mode_${index}`}
+    >
       <Layout.Vertical>
         <Heading
           color={Color.GREY_800}
@@ -97,8 +104,8 @@ const ConfigViewModeRenderer: React.FC<ConfigViewModeRendererProps> = ({
         />
       </Layout.Vertical>
       <Layout.Horizontal>
-        <Button icon="edit" minimal withoutCurrentColor onClick={setEditView} />
-        <Button icon="trash" minimal withoutCurrentColor onClick={deleteConfig} />
+        <Button disabled={isReadOnly} icon="edit" minimal withoutCurrentColor onClick={setEditView} />
+        <Button disabled={isReadOnly} icon="trash" minimal withoutCurrentColor onClick={deleteConfig} />
       </Layout.Horizontal>
     </Layout.Horizontal>
   )
@@ -125,7 +132,7 @@ const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
 }) => {
   return (
     <FormikForm>
-      <Layout.Vertical>
+      <Layout.Vertical data-testid={`config-edit-mode_${index}`}>
         <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'start' }}>
           <Layout.Vertical width={'400px'}>
             <FormInput.Text name={`entity[${index}].name`} label={getString('name')} inputGroup={{ autoFocus: true }} />
@@ -136,6 +143,7 @@ const ConfigEditModeRenderer: React.FC<ConfigEditModeRendererProps> = ({
                 values={formikProps.values?.entity?.[index] || {}}
                 setFieldValue={formikProps.setFieldValue}
                 organizations={resources.orgs || []}
+                fetchProjectsForOrgId={resources.fetchProjectsForOrgId}
               />
             ) : null}
             {fieldsVisibility.showProjectField ? (
@@ -182,6 +190,7 @@ interface ConfigRendererProps {
   resources: ResourcesInterface
   fieldsVisibility: FieldVisibility
   onDeleteRule: (index: number) => void
+  isReadOnly: boolean
 }
 
 const ConfigRenderer = ({
@@ -195,7 +204,8 @@ const ConfigRenderer = ({
   entityConfigs,
   resources,
   fieldsVisibility,
-  onDeleteRule
+  onDeleteRule,
+  isReadOnly
 }: ConfigRendererProps) => {
   const saveEntity = async () => {
     const formErrors = await formikProps.validateForm()
@@ -247,12 +257,14 @@ const ConfigRenderer = ({
         />
       ) : (
         <ConfigViewModeRenderer
+          index={index}
           config={config}
           getString={getString}
           setEditView={setEditViewMode}
           deleteConfig={deleteConfig}
           fieldsVisibility={fieldsVisibility}
           resources={resources}
+          isReadOnly={isReadOnly}
         />
       )}
     </Container>
@@ -265,13 +277,15 @@ interface ConfigsSectionProps {
   updateFreeze: (freeze: any) => void
   resources: ResourcesInterface
   fieldsVisibility: FieldVisibility
+  isReadOnly: boolean
 }
 const ConfigsSection = ({
   entityConfigs,
   getString,
   updateFreeze,
   resources,
-  fieldsVisibility
+  fieldsVisibility,
+  isReadOnly
 }: ConfigsSectionProps) => {
   const formikRef = React.useRef()
   const [editViews, setEditViews] = React.useState<boolean[]>(Array(entityConfigs?.length).fill(false))
@@ -364,6 +378,7 @@ const ConfigsSection = ({
               resources={resources}
               fieldsVisibility={fieldsVisibility}
               onDeleteRule={onDeleteRule}
+              isReadOnly={isReadOnly}
             />
           ))
         }}
@@ -375,6 +390,7 @@ const ConfigsSection = ({
         text="Add rule"
         icon="plus"
         onClick={onAddRule}
+        disabled={isReadOnly}
         className={css.addNewRuleButton}
       />
     </>
@@ -392,7 +408,8 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
   const {
     state: { freezeObj },
     updateFreeze,
-    freezeWindowLevel
+    freezeWindowLevel,
+    isReadOnly
   } = React.useContext(FreezeWindowContext)
 
   const fieldsVisibility: FieldVisibility = React.useMemo(() => {
@@ -416,6 +433,7 @@ export const FreezeStudioConfigSection: React.FC<FreezeStudioConfigSectionProps>
           updateFreeze={updateFreeze}
           resources={resources}
           fieldsVisibility={fieldsVisibility}
+          isReadOnly={isReadOnly}
         />
       </Card>
       <Layout.Horizontal spacing="small" margin={{ top: 'xxlarge' }}>

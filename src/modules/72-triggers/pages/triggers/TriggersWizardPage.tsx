@@ -72,9 +72,9 @@ import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useConfirmAction, useMutateAsGet, useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import useGitAwareForTriggerEnabled from '@triggers/components/Triggers/useGitAwareForTriggerEnabled'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -194,14 +194,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     }
   })
 
-  const isGitSyncEnabled = useMemo(() => !!pipelineResponse?.data?.gitDetails?.branch, [pipelineResponse])
-  const { supportingGitSimplification } = useAppStore()
   const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.GIT_WEBHOOK_POLLING)
 
-  const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled && supportingGitSimplification,
-    [isGitSyncEnabled, supportingGitSimplification]
-  )
+  const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
 
   const [connectorScopeParams, setConnectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
   const [ignoreError, setIgnoreError] = useState<boolean>(false)

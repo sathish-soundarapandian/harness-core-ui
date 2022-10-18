@@ -65,6 +65,8 @@ export const serviceStepAPI = `/pipeline/api/pipelines/execution/v2/${executionI
 export const serviceStepStageID = `/pipeline/api/pipelines/execution/v2/${executionId}?routingId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&accountIdentifier=${accountId}&stageNodeId=${stageNodeId}`
 export const routingDataAPI = `ng/api/projects/${projectId}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}`
 export const pipelineSummaryCallAPI = `/pipeline/api/pipelines/summary/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
+export const pipelineYAMLAPI = `/pipeline/api/pipelines/testPipeline_Cypress?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
+export const pipelineSummaryCallAPIWIthMetadataOnly = `/pipeline/api/pipelines/summary/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&getMetadataOnly=true`
 export const triggersAPI = `pipeline/api/triggers?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&targetIdentifier=${pipelineIdentifier}&searchTerm=`
 export const triggerPiplelineDetails = `pipeline/api/pipelines/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&getTemplatesResolvedPipeline=true`
 export const inputSetListAPI = `pipeline/api/inputSets?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}&pipelineIdentifier=${pipelineIdentifier}`
@@ -100,7 +102,10 @@ export const getArtifactPaths = `/ng/api/artifacts/jenkins/job/AutomationQA/path
 export const azureSubscriptions = `/ng/api/azure/subscriptions?routingId=${accountId}&connectorRef=${connectorRef}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const azureResourceGroups = `/ng/api/azure/subscriptions/1111-1111-1111-1111-1111/resourceGroups?routingId=${accountId}&connectorRef=${connectorRef}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const stepTemplateSchemaEndpoint = `/template/api/templates/schema/templateSchema?routingId=${accountId}&templateEntityType=Step&entityType=ShellScript&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&accountIdentifier=${accountId}&scope=project`
-
+export const canvasExecutionPipelineCall =
+  '/pipeline/api/pipelines/execution/v2/testParallelNodesPipeline?routingId=accountId&orgIdentifier=default&projectIdentifier=project1&accountIdentifier=accountId'
+export const canvasExecutionStageNodeCall =
+  '/pipeline/api/pipelines/execution/v2/testParallelNodesPipeline?routingId=accountId&orgIdentifier=default&projectIdentifier=project1&accountIdentifier=accountId&stageNodeId=irowXCLESvK1hLHWKeobEw'
 // Routes
 
 export const updatedPipelineExecutionEndpoint = `/pipeline/api/pipeline/execute/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&moduleType=cd&notifyOnlyUser=false`
@@ -115,7 +120,7 @@ export const servicesRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/pr
 export const pipelinesRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines`
 export const triggersRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
 export const templatesListRoute = `#/account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/setup/resources/templates`
-
+export const testParallelNodesPipelineRoute = `#/account/accountId/cd/orgs/default/projects/project1/pipelines/sad/executions/testParallelNodesPipeline/pipeline`
 export interface ValidObject {
   resourceName: StepResourceObject[]
   warningCheck?: boolean

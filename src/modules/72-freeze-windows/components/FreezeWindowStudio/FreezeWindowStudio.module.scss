@@ -202,3 +202,18 @@
 .headerSaveBtnWrapper {
   width: 84px;
 }
+
+.readonlyAccessTag {
+  display: flex;
+  color: var(--orange-800);
+  margin-right: var(--spacing-xlarge);
+  font-size: var(--font-size-small);
+  line-height: 18px;
+  align-items: center;
+  span {
+    color: var(--orange-800) !important;
+  }
+  .readonlyAccessText {
+    margin-left: var(--spacing-small);
+  }
+}

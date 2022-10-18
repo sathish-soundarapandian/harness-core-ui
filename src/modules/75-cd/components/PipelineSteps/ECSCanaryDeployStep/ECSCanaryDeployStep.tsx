@@ -92,6 +92,7 @@ export class ECSCanaryDeployStep extends PipelineStep<StepElementConfig> {
         stepViewType={stepViewType}
         ref={formikRef}
         readonly={readonly}
+        formikFormName={'ecsCanaryDeployStepForm'}
       />
     )
   }

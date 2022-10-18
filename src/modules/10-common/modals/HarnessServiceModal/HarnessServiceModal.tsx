@@ -157,7 +157,6 @@ export const useHarnessServicetModal = (
     isService,
     isEdit,
     formik,
-    onClose,
     onCreateOrUpdate,
     className,
     modalTitle,
@@ -180,7 +179,7 @@ export const useHarnessServicetModal = (
           formik={formik}
           isService={isService}
           onCreateOrUpdate={onCreateOrUpdate}
-          closeModal={onClose ? onClose : hideModal}
+          closeModal={hideModal}
           name={name}
           skipServiceCreateOrUpdate={skipServiceCreateOrUpdate}
           customLoading={customLoading}

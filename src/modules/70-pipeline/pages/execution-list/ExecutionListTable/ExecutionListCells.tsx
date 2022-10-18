@@ -290,7 +290,7 @@ export const MenuCell: CellType = ({ row, column }) => {
 
 export const TriggerInfoCell: CellType = ({ row }) => {
   const data = row.original
-  const triggers = ['SCHEDULER_CRON', 'WEBHOOK_CUSTOM', 'MANUAL'] as const
+  const triggers = ['SCHEDULER_CRON', 'WEBHOOK_CUSTOM'] as const
 
   const triggerType = data.executionTriggerInfo?.triggerType
 
@@ -303,10 +303,6 @@ export const TriggerInfoCell: CellType = ({ row }) => {
     WEBHOOK_CUSTOM: {
       icon: 'trigger-execution',
       getText: () => `Triggered by a third party system`
-    },
-    MANUAL: {
-      icon: 'person',
-      getText: () => `This execution was triggered manually`
     }
   }
 

@@ -39,7 +39,12 @@ import {
   Nexus2InitialValuesType,
   RepositoryPortOrServer
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { k8sRepositoryFormatTypes, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
+import {
+  isSSHWinRMDeploymentType,
+  k8sRepositoryFormatTypes,
+  nexus2RepositoryFormatTypes,
+  RepositoryFormatTypes
+} from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor, repositoryPortOrServer } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -74,6 +79,7 @@ export function Nexus3Artifact({
   artifactIdentifiers,
   isReadonly = false,
   selectedArtifact,
+  selectedDeploymentType,
   isMultiArtifactSource
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<Nexus2InitialValuesType>): React.ReactElement {
   const { getString } = useStrings()
@@ -361,7 +367,11 @@ export function Nexus3Artifact({
                 <FormInput.Select
                   name="repositoryFormat"
                   label={getString('common.repositoryFormat')}
-                  items={k8sRepositoryFormatTypes}
+                  items={
+                    isSSHWinRMDeploymentType(selectedDeploymentType)
+                      ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
+                      : k8sRepositoryFormatTypes
+                  }
                   onChange={value => {
                     if (value.value === RepositoryFormatTypes.Maven) {
                       const optionalValues: { extension?: string; classifier?: string } = {}

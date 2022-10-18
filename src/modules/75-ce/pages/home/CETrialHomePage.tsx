@@ -33,6 +33,7 @@ const CETrialHomePage: React.FC = () => {
   const isFreeEnabled = useFeatureFlag(FeatureFlag.FREE_PLAN_ENABLED)
   const module = 'ce'
   const moduleType = 'CE'
+  const microfrontendEnabled = useFeatureFlag(FeatureFlag.CCM_MICRO_FRONTEND)
 
   const { openModal } = useCreateConnector({
     onSuccess: () => {
@@ -95,7 +96,7 @@ const CETrialHomePage: React.FC = () => {
       }
 
       handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module as Module, updatedLicenseInfo)
-      showModal()
+      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId })) : showModal()
     } catch (error) {
       showError(error.data?.message)
     }

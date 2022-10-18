@@ -41,7 +41,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import LandingDashboardWelcomeView from './LandingDashboardWelcomeView'
 import css from './LandingDashboardPage.module.scss'
 
-const modules: Array<ModuleName> = [ModuleName.CD]
+export const DASHBOARD_MODULES: Array<ModuleName> = [ModuleName.CD]
 
 const LandingDashboardPage: React.FC = () => {
   const { accountId } = useParams<AccountPathProps>()
@@ -108,7 +108,7 @@ const LandingDashboardPage: React.FC = () => {
             <LandingDashboardSummaryWidget glanceCardData={data} />
 
             <Layout.Vertical spacing="large">
-              {modules.map(moduleName => {
+              {DASHBOARD_MODULES.map(moduleName => {
                 const moduleHandler = LandingDashboardFactory.getModuleDashboardHandler(moduleName)
                 return moduleHandler ? (
                   <LandingDashboardWidgetWrapper

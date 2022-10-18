@@ -11,6 +11,8 @@ import { useHistory, useParams } from 'react-router-dom'
 import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import orImg from '@cf/images/orImg.svg'
+import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+import { useTelemetry } from '@common/hooks/useTelemetry'
 
 export interface GetStartedWithFFProps {
   hidden?: boolean
@@ -21,6 +23,7 @@ export const GetStartedWithFF: React.FC<GetStartedWithFFProps> = ({ hidden }) =>
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const history = useHistory()
+  const { trackEvent } = useTelemetry()
 
   return (
     <Container hidden={hidden}>
@@ -31,13 +34,10 @@ export const GetStartedWithFF: React.FC<GetStartedWithFFProps> = ({ hidden }) =>
           size={ButtonSize.LARGE}
           text={getString('cf.featureFlags.getStartedWithFF')}
           onClick={() => {
-            history.push(
-              routes.toCFOnboarding({
-                projectIdentifier,
-                orgIdentifier,
-                accountId
-              })
-            )
+            trackEvent(FeatureActions.GetStartedClick, {
+              category: Category.FEATUREFLAG
+            })
+            history.push(routes.toCFOnboardingDetail({ accountId, orgIdentifier, projectIdentifier }))
           }}
         />
         <img src={orImg} width={270} height={24} alt="" data-testid="or-image" />

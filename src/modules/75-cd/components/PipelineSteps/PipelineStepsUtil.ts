@@ -185,47 +185,49 @@ export function getEnvironmentTabSchema(getString: UseStringsReturn['getString']
     })
 }
 
-export function getEnvironmentTabV2Schema(getString: UseStringsReturn['getString']): Yup.MixedSchema {
+export function getEnvironmentTabV2Schema(_getString: UseStringsReturn['getString']): Yup.MixedSchema {
   return Yup.mixed()
     .required()
     .test({
-      test(valueObj: DeployEnvironmentEntityFormState): boolean | Yup.ValidationError {
+      test(_valueObj: DeployEnvironmentEntityFormState): boolean | Yup.ValidationError {
         // if it's single environment. Array check is because this can be empty in case of multi environments/env groups
-        if (
-          !valueObj.environment &&
-          !Array.isArray(valueObj.environments) &&
-          valueObj.environments !== RUNTIME_INPUT_VALUE
-        ) {
-          return this.createError({
-            path: 'environment',
-            message: getString('cd.pipelineSteps.environmentTab.environmentIsRequired')
-          })
-        }
 
-        // if it's fixed single environment, single infrastructure should not be empty
-        if (
-          valueObj.environment &&
-          getMultiTypeFromValue(valueObj.environment) === MultiTypeInputType.FIXED &&
-          !valueObj.infrastructure
-        ) {
-          return this.createError({
-            path: 'infrastructure',
-            message: getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired')
-          })
-        }
+        // TODO: Add this back after deciding on how to handle unique path change
+        // if (
+        //   !valueObj.environment &&
+        //   !Array.isArray(valueObj.environments) &&
+        //   valueObj.environments !== RUNTIME_INPUT_VALUE
+        // ) {
+        //   return this.createError({
+        //     path: 'environment',
+        //     message: getString('cd.pipelineSteps.environmentTab.environmentIsRequired')
+        //   })
+        // }
 
-        // if the list is empty when it's not single env or env group or if environments is runtime values
-        if (
-          isEmpty(valueObj.environments) &&
-          !valueObj.environment &&
-          !valueObj.environmentGroup
-          //  && (valueObj.environments as unknown as string) !== RUNTIME_INPUT_VALUE
-        ) {
-          return this.createError({
-            path: 'environments',
-            message: getString('cd.pipelineSteps.environmentTab.environmentsAreRequired')
-          })
-        }
+        // // if it's fixed single environment, single infrastructure should not be empty
+        // if (
+        //   valueObj.environment &&
+        //   getMultiTypeFromValue(valueObj.environment) === MultiTypeInputType.FIXED &&
+        //   !valueObj.infrastructure
+        // ) {
+        //   return this.createError({
+        //     path: 'infrastructure',
+        //     message: getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired')
+        //   })
+        // }
+
+        // // if the list is empty when it's not single env or env group or if environments is runtime values
+        // if (
+        //   isEmpty(valueObj.environments) &&
+        //   !valueObj.environment &&
+        //   !valueObj.environmentGroup
+        //   //  && (valueObj.environments as unknown as string) !== RUNTIME_INPUT_VALUE
+        // ) {
+        //   return this.createError({
+        //     path: 'environments',
+        //     message: getString('cd.pipelineSteps.environmentTab.environmentsAreRequired')
+        //   })
+        // }
 
         return true
       }

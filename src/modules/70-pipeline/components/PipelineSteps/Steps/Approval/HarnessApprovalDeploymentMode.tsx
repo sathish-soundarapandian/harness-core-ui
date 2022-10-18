@@ -8,12 +8,13 @@
 import React from 'react'
 import cx from 'classnames'
 import { isEmpty } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@wings-software/uicore'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { FormMultiTypeUserGroupInput } from '@common/components/UserGroupsInput/FormMultitypeUserGroupInput'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { HarnessApprovalDeploymentModeProps } from './types'
 import css from './HarnessApproval.module.scss'
@@ -85,7 +86,7 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
 
       {typeof template?.spec?.approvers?.minimumCount === 'string' &&
       getMultiTypeFromValue(template?.spec?.approvers?.minimumCount) === MultiTypeInputType.RUNTIME ? (
-        <FormInput.MultiTextInput
+        <TextFieldInputSetView
           label={getString('pipeline.approvalStep.minimumCount')}
           name={`${prefix}spec.approvers.minimumCount`}
           multiTextInputProps={{
@@ -95,6 +96,8 @@ export default function HarnessApprovalDeploymentMode(props: HarnessApprovalDepl
             textProps: { type: 'number' }
           }}
           className={css.deploymentViewMedium}
+          fieldPath="spec.approvers.minimumCount"
+          template={template}
         />
       ) : null}
     </React.Fragment>

@@ -8,7 +8,7 @@ export default function ServiceInstance<T extends CommonCustomMetricPropertyType
   const { values: formValues } = useFormikContext<T>()
 
   return (
-    <Layout.Vertical margin={{ top: 'medium' }} spacing="medium">
+    <Layout.Vertical margin={{ top: 'medium' }} spacing="normal">
       <ServiceInstanceLabel />
       <FormInput.Text
         name={`customMetrics.${formValues.selectedCustomMetricIndex}.responseMapping.serviceInstanceJsonPath`}

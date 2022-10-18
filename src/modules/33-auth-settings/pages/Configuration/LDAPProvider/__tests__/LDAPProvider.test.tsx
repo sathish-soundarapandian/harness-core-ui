@@ -685,33 +685,6 @@ describe('LDAP setup Wizard', () => {
     await act(async () => {
       fireEvent.click(getByTestId('submit-group-query-step'))
     })
-    waitFor(() => expect(getByTestId('submit-cron-expression-step')).toBeVisible())
-    expect(getByText('common.schedulePanel.weeklyTabTitle')).toBeVisible()
-
-    await act(async () => {
-      fireEvent.click(getByText('common.schedulePanel.dailyTabTitle'))
-    })
-    expect(getByTestId('cron-expression')).not.toBeNull()
-    await act(async () => {
-      fireEvent.click(getByTestId('submit-cron-expression-step'))
-    })
-    await act(async () => {
-      fireEvent.click(getByText('common.schedulePanel.monthlyTabTitle'))
-    })
-    expect(getByTestId('cron-expression')).not.toBeNull()
-    await act(async () => {
-      fireEvent.click(getByTestId('submit-cron-expression-step'))
-    })
-    await act(async () => {
-      fireEvent.click(getByText('common.schedulePanel.yearlyTabTitle'))
-    })
-    expect(getByTestId('cron-expression')).not.toBeNull()
-    await act(async () => {
-      fireEvent.click(getByTestId('submit-cron-expression-step'))
-    })
-    await act(async () => {
-      fireEvent.click(getByText('common.schedulePanel.weeklyTabTitle'))
-    })
 
     expect(getByTestId('cron-expression')).not.toBeNull()
     await act(async () => {

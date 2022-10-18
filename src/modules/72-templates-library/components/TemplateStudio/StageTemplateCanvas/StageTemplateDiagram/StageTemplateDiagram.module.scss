@@ -7,19 +7,19 @@
 
 .container {
   border-bottom: 1px solid var(--primary-6);
-  :global(.default-node),
-  :global(.create-node) {
-    height: auto;
+  :global {
+    .create-node,
+    .default-node,
+    .diamond-node {
+      height: auto;
+      margin-right: var(--spacing-medium);
+      margin-bottom: 0 !important;
+    }
   }
   .createNewModal {
     margin-top: 0px !important;
   }
-  .approvalLayout {
-    transform: translate(-24px, 12px);
-    .stageType {
-      margin-top: 18px;
-    }
-  }
+
   .normalLayout {
     align-items: center;
   }

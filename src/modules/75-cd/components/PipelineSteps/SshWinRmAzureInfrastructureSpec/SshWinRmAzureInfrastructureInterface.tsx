@@ -35,8 +35,8 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
       }
       return Yup.object().test({
         test(valueObj: SelectOption): boolean | Yup.ValidationError {
-          if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
-            /* istanbul ignore next */ return this.createError({
+          /* istanbul ignore next */ if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
+            return this.createError({
               message: getString('common.validation.fieldIsRequired', { name: getString(subscriptionLabel) })
             })
           }
@@ -52,8 +52,8 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
       }
       return Yup.object().test({
         test(valueObj: SelectOption): boolean | Yup.ValidationError {
-          if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
-            /* istanbul ignore next */ return this.createError({
+          /* istanbul ignore next */ if (isEmpty(valueObj) || isEmpty(valueObj.value)) {
+            return this.createError({
               message: getString('common.validation.fieldIsRequired', { name: getString(resourceGroupLabel) })
             })
           }

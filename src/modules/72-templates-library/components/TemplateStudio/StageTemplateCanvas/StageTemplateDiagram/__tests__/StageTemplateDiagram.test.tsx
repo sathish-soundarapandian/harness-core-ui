@@ -66,7 +66,6 @@ describe('<StageTemplateDiagram /> tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
     const node = container.querySelector('[data-nodeid="create-node"] .defaultNode') as HTMLElement
     expect(node).toBeDefined()
     let dynamicPopover = document.querySelector('[class*="dynamicPopover"]')
@@ -98,10 +97,11 @@ describe('<StageTemplateDiagram /> tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    const node = container.querySelector('[data-nodeid="create-node"] .default-node') as HTMLElement
+    expect(node).toBeDefined()
   })
 
-  test.only('should render stage button when approval  is selected', async () => {
+  test('should render stage button when approval is selected', async () => {
     const context = produce(contextMock, draft => {
       draft.getStageFromPipeline = jest.fn().mockReturnValue({
         stage: {
@@ -121,6 +121,7 @@ describe('<StageTemplateDiagram /> tests', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
-    expect(container).toMatchSnapshot()
+    const node = container.querySelector('[data-nodeid="create-node"] .diamond-node') as HTMLElement
+    expect(node).toBeDefined()
   })
 })

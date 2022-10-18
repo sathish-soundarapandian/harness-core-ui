@@ -156,107 +156,109 @@ const PickMetric: React.FC<PickMetricProps> = props => {
                 items={radioItems}
               />
             </Layout.Vertical>
-            {isRatioBasedMetric && (
-              <Layout.Horizontal>
-                <FormInput.Select
-                  name={SLOFormFields.EVENT_TYPE}
-                  label={getString('cv.slos.slis.ratioMetricType.eventType')}
-                  items={getEventTypeOptions(getString)}
-                  className={css.eventType}
-                />
-                <Layout.Horizontal padding={{ left: 'xlarge' }} flex={{ justifyContent: FLEX_START }}>
+            <Layout.Vertical spacing="medium">
+              {isRatioBasedMetric && (
+                <Layout.Horizontal>
                   <FormInput.Select
-                    name={SLOFormFields.GOOD_REQUEST_METRIC}
-                    label={goodOrBadRequestMetricLabel}
-                    placeholder={SLOMetricsLoading ? getString('loading') : undefined}
-                    disabled={!healthSourceRef}
-                    items={SLOMetricOptions}
-                    className={css.metricSelect}
-                    value={activeGoodMetric}
-                    onChange={metric => formikProps.setFieldValue(SLOFormFields.GOOD_REQUEST_METRIC, metric.value)}
+                    name={SLOFormFields.EVENT_TYPE}
+                    label={getString('cv.slos.slis.ratioMetricType.eventType')}
+                    items={getEventTypeOptions(getString)}
+                    className={css.eventType}
                   />
-                  <RbacButton
-                    icon="plus"
-                    text={getString('cv.newMetric')}
-                    variation={ButtonVariation.LINK}
-                    disabled={!healthSourceRef}
-                    onClick={onAddNewMetric}
-                    permission={{
-                      permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-                      resource: {
-                        resourceType: ResourceType.MONITOREDSERVICE,
-                        resourceIdentifier: projectIdentifier
-                      }
-                    }}
-                  />
+                  <Layout.Horizontal padding={{ left: 'xlarge' }} flex={{ justifyContent: FLEX_START }}>
+                    <FormInput.Select
+                      name={SLOFormFields.GOOD_REQUEST_METRIC}
+                      label={goodOrBadRequestMetricLabel}
+                      placeholder={SLOMetricsLoading ? getString('loading') : undefined}
+                      disabled={!healthSourceRef}
+                      items={SLOMetricOptions}
+                      className={css.metricSelect}
+                      value={activeGoodMetric}
+                      onChange={metric => formikProps.setFieldValue(SLOFormFields.GOOD_REQUEST_METRIC, metric.value)}
+                    />
+                    <RbacButton
+                      icon="plus"
+                      text={getString('cv.newMetric')}
+                      variation={ButtonVariation.LINK}
+                      disabled={!healthSourceRef}
+                      onClick={onAddNewMetric}
+                      permission={{
+                        permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+                        resource: {
+                          resourceType: ResourceType.MONITOREDSERVICE,
+                          resourceIdentifier: projectIdentifier
+                        }
+                      }}
+                    />
+                  </Layout.Horizontal>
                 </Layout.Horizontal>
+              )}
+              <Layout.Horizontal flex={{ justifyContent: FLEX_START }}>
+                <FormInput.Select
+                  name={SLOFormFields.VALID_REQUEST_METRIC}
+                  label={getString('cv.slos.slis.ratioMetricType.validRequestsMetrics')}
+                  placeholder={SLOMetricsLoading ? getString('loading') : undefined}
+                  disabled={!healthSourceRef}
+                  items={SLOMetricOptions}
+                  className={css.metricSelect}
+                  value={activeValidMetric}
+                  onChange={metric => formikProps.setFieldValue(SLOFormFields.VALID_REQUEST_METRIC, metric.value)}
+                />
+                <RbacButton
+                  icon="plus"
+                  text={getString('cv.newMetric')}
+                  variation={ButtonVariation.LINK}
+                  disabled={!healthSourceRef}
+                  onClick={onAddNewMetric}
+                  permission={{
+                    permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+                    resource: {
+                      resourceType: ResourceType.MONITOREDSERVICE,
+                      resourceIdentifier: projectIdentifier
+                    }
+                  }}
+                />
               </Layout.Horizontal>
-            )}
-            <Layout.Horizontal flex={{ justifyContent: FLEX_START }}>
+              <FormInput.Text
+                name={SLOFormFields.OBJECTIVE_VALUE}
+                label={getString('cv.objectiveValue')}
+                inputGroup={{
+                  type: 'number',
+                  min: 0,
+                  max: SLIMetricType === SLIMetricTypes.RATIO ? 100 : undefined,
+                  step: 'any',
+                  rightElement:
+                    SLIMetricType === SLIMetricTypes.RATIO ? <Icon name="percentage" padding="small" /> : undefined
+                }}
+                className={css.objectiveValue}
+              />
+              <Layout.Horizontal
+                flex={{ justifyContent: FLEX_START, alignItems: 'baseline' }}
+                spacing="small"
+                width={320}
+              >
+                <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
+                  {getString('cv.SLIValueIsGoodIf')}
+                </Text>
+                <FormInput.Select
+                  name={SLOFormFields.OBJECTIVE_COMPARATOR}
+                  items={comparatorOptions}
+                  onChange={option => {
+                    formikProps.setFieldValue(SLOFormFields.OBJECTIVE_COMPARATOR, option.value)
+                  }}
+                  className={css.comparatorOptions}
+                />
+                <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
+                  {getString(getComparatorSuffixLabelId(objectiveComparator))}
+                </Text>
+              </Layout.Horizontal>
               <FormInput.Select
-                name={SLOFormFields.VALID_REQUEST_METRIC}
-                label={getString('cv.slos.slis.ratioMetricType.validRequestsMetrics')}
-                placeholder={SLOMetricsLoading ? getString('loading') : undefined}
-                disabled={!healthSourceRef}
-                items={SLOMetricOptions}
+                name={SLOFormFields.SLI_MISSING_DATA_TYPE}
+                label={getString('cv.considerMissingMetricDataAs')}
+                items={getMissingDataTypeOptions(getString)}
                 className={css.metricSelect}
-                value={activeValidMetric}
-                onChange={metric => formikProps.setFieldValue(SLOFormFields.VALID_REQUEST_METRIC, metric.value)}
               />
-              <RbacButton
-                icon="plus"
-                text={getString('cv.newMetric')}
-                variation={ButtonVariation.LINK}
-                disabled={!healthSourceRef}
-                onClick={onAddNewMetric}
-                permission={{
-                  permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-                  resource: {
-                    resourceType: ResourceType.MONITOREDSERVICE,
-                    resourceIdentifier: projectIdentifier
-                  }
-                }}
-              />
-            </Layout.Horizontal>
-            <FormInput.Text
-              name={SLOFormFields.OBJECTIVE_VALUE}
-              label={getString('cv.objectiveValue')}
-              inputGroup={{
-                type: 'number',
-                min: 0,
-                max: SLIMetricType === SLIMetricTypes.RATIO ? 100 : undefined,
-                step: 'any',
-                rightElement:
-                  SLIMetricType === SLIMetricTypes.RATIO ? <Icon name="percentage" padding="small" /> : undefined
-              }}
-              className={css.objectiveValue}
-            />
-            <Layout.Horizontal
-              flex={{ justifyContent: FLEX_START, alignItems: 'baseline' }}
-              spacing="small"
-              width={320}
-            >
-              <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-                {getString('cv.SLIValueIsGoodIf')}
-              </Text>
-              <FormInput.Select
-                name={SLOFormFields.OBJECTIVE_COMPARATOR}
-                items={comparatorOptions}
-                onChange={option => {
-                  formikProps.setFieldValue(SLOFormFields.OBJECTIVE_COMPARATOR, option.value)
-                }}
-                className={css.comparatorOptions}
-              />
-              <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-                {getString(getComparatorSuffixLabelId(objectiveComparator))}
-              </Text>
-            </Layout.Horizontal>
-            <FormInput.Select
-              name={SLOFormFields.SLI_MISSING_DATA_TYPE}
-              label={getString('cv.considerMissingMetricDataAs')}
-              items={getMissingDataTypeOptions(getString)}
-              className={css.metricSelect}
-            />
+            </Layout.Vertical>
           </Container>
 
           <Container height="inherit" width="50%" className={css.graphContainer} padding={{ left: 'xxlarge' }}>

@@ -6,7 +6,6 @@
  */
 
 import React, { useState, useMemo, useEffect, useContext, useCallback } from 'react'
-
 import {
   Container,
   Accordion,
@@ -19,7 +18,7 @@ import {
   getMultiTypeFromValue,
   RUNTIME_INPUT_VALUE
 } from '@wings-software/uicore'
-import { debounce, defaultTo } from 'lodash-es'
+import { debounce, defaultTo, isEmpty } from 'lodash-es'
 import { FontVariation, Color } from '@harness/design-system'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
@@ -109,8 +108,13 @@ export default function AppDCustomMetricForm(props: AppDCustomMetricFormInterfac
       })
     }
 
-    if (getMultiTypeFromValue(formikValues.serviceInstanceMetricPath) === MultiTypeInputType.FIXED) {
+    if (
+      formikValues?.continuousVerification &&
+      getMultiTypeFromValue(formikValues.serviceInstanceMetricPath) === MultiTypeInputType.FIXED
+    ) {
       formikSetField('serviceInstanceMetricPath', RUNTIME_INPUT_VALUE)
+    } else if (!formikValues?.continuousVerification && !isEmpty(formikValues?.serviceInstanceMetricPath)) {
+      formikSetField('serviceInstanceMetricPath', '')
     }
   }, [
     appdMultiType,

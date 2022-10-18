@@ -70,6 +70,7 @@ export interface ResourcesInterface {
   servicesMap: Record<string, SelectOption>
   freezeWindowLevel: FreezeWindowLevels
   projectsByOrgId: Record<string, ProjctsByOrgId>
+  fetchProjectsForOrgId: (orgId: string) => void
 }
 
 type OptionalFreezeListUrlQueryParams = Pick<GetFreezeListQueryParams, 'page' | 'size'> &

@@ -125,7 +125,10 @@ export function ServicePipelineProvider({
   )
 
   const updatePipeline = React.useCallback(
-    async (pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig)): Promise<void> => {
+    async (
+      pipelineArg: PipelineInfoConfig | ((p: PipelineInfoConfig) => PipelineInfoConfig),
+      viewType?: SelectedView
+    ): Promise<void> => {
       let pipeline = pipelineArg
       if (typeof pipelineArg === 'function') {
         if (state.pipeline) {
@@ -137,7 +140,7 @@ export function ServicePipelineProvider({
       const isUpdated = !isEqual(state.originalPipeline, pipeline)
       await dispatch(PipelineContextActions.success({ error: '', pipeline: pipeline as PipelineInfoConfig, isUpdated }))
 
-      if (view === SelectedView.VISUAL) {
+      if (view === SelectedView.VISUAL || viewType === SelectedView.VISUAL) {
         onUpdatePipeline?.(pipeline as ServicePipelineConfig)
       }
     },

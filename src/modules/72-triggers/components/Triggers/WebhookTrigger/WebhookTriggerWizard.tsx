@@ -38,7 +38,6 @@ import {
   useUpdateTrigger
 } from 'services/pipeline-ng'
 import { Failure, getConnectorListV2Promise, GetConnectorQueryParams, useGetConnector } from 'services/cd-ng'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 
 import type {
@@ -116,6 +115,7 @@ import type {
   FlatValidWebhookFormikValuesInterface,
   TriggerConfigDTO
 } from '../TriggerWizardInterface'
+import useGitAwareForTriggerEnabled from '../useGitAwareForTriggerEnabled'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 
@@ -207,12 +207,7 @@ export default function WebhookTriggerWizard(
       })
     )
 
-  const { isGitSimplificationEnabled, isGitSyncEnabled } = useAppStore()
-
-  const gitAwareForTriggerEnabled = useMemo(
-    () => isGitSyncEnabled && isGitSimplificationEnabled,
-    [isGitSyncEnabled, isGitSimplificationEnabled]
-  )
+  const gitAwareForTriggerEnabled = useGitAwareForTriggerEnabled()
 
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
 

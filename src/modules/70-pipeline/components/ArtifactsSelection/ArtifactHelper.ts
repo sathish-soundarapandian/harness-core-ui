@@ -154,14 +154,16 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Jenkins,
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-    ENABLED_ARTIFACT_TYPES.AmazonS3
+    ENABLED_ARTIFACT_TYPES.AmazonS3,
+    ENABLED_ARTIFACT_TYPES.Nexus2Registry
   ],
   WinRm: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Jenkins,
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-    ENABLED_ARTIFACT_TYPES.AmazonS3
+    ENABLED_ARTIFACT_TYPES.AmazonS3,
+    ENABLED_ARTIFACT_TYPES.Nexus2Registry
   ],
   AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,

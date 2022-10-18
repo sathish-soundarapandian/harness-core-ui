@@ -24,7 +24,7 @@ export const CITriggerInfo: FC<CITriggerInfoProps> = props => {
 
   return repoName || branch ? (
     <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'start' }}>
-      {ciExecutionInfoDTO.pullRequest ? (
+      {ciExecutionInfoDTO?.pullRequest ? (
         <>
           <Element value={ciExecutionInfoDTO.pullRequest.sourceBranch} icon="git-branch" />
           <Icon name="arrow-right" size={12} color={Color.GREY_400} />
@@ -43,22 +43,23 @@ export const CITriggerInfo: FC<CITriggerInfoProps> = props => {
         branch && (
           <>
             <Element value={branch} icon="git-branch" />
-            <div className={css.separator} />
-            <ElementWithLink
-              value={ciExecutionInfoDTO.branch?.commits[0]?.id?.slice(0, 7)}
-              link={ciExecutionInfoDTO.branch?.commits?.[0]?.link}
-              icon="git-commit"
-            />
+            {ciExecutionInfoDTO?.branch?.commits?.[0] ? (
+              <>
+                <div className={css.separator} />
+                <ElementWithLink
+                  value={ciExecutionInfoDTO.branch.commits[0]?.id?.slice(0, 7)}
+                  link={ciExecutionInfoDTO.branch.commits[0]?.link}
+                  icon="git-commit"
+                />
+              </>
+            ) : (
+              <></>
+            )}
           </>
         )
       )}
 
-      {tag && (
-        <>
-          <div className={css.separator} />
-          <Element value={tag} icon="tag" />
-        </>
-      )}
+      {tag && <Element value={tag} icon="tag" />}
     </Layout.Horizontal>
   ) : null
 }

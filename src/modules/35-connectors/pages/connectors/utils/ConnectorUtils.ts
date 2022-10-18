@@ -2197,6 +2197,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Custom Secrets Manager'
     case Connectors.GcpSecretManager:
       return 'GCP Secrets Manager'
+    case Connectors.SPOT:
+      return 'Spot'
     default:
       return ''
   }

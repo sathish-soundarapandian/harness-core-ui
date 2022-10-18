@@ -23,7 +23,7 @@ exports[`Project Page List Create Project and Close 1`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/home"
+                href="/account/testAcc/main-dashboard"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -3316,7 +3316,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/home"
+                href="/account/testAcc/main-dashboard"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -6609,7 +6609,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/home"
+                href="/account/testAcc/main-dashboard"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -9902,7 +9902,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/testAcc/home"
+                href="/account/testAcc/main-dashboard"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"

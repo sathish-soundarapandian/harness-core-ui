@@ -7,10 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly approvalLayout: string
   readonly container: string
   readonly createNewModal: string
   readonly normalLayout: string
-  readonly stageType: string
 }
 export default styles

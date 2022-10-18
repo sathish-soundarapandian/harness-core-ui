@@ -7,11 +7,13 @@
 
 import React, { ReactElement } from 'react'
 import { connect, FormikContextType } from 'formik'
-import { get } from 'lodash-es'
+import { get, isEmpty } from 'lodash-es'
 import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
 import { DataTooltipInterface, DateInput, errorCheck, FormError, getFormFieldLabel } from '@harness/uicore'
 import type { DateInputProps } from '@harness/uicore/dist/components/DateInput/DateInput'
+import moment from 'moment'
 
+export const DATE_PARSE_FORMAT = 'YYYY-MM-DD hh:mm A'
 export interface FormikExtended<T> extends FormikContextType<T> {
   disabled?: boolean
   formName: string
@@ -28,6 +30,7 @@ interface FormikDateTimePickerProps extends IFormGroupProps {
   placeholder?: string
   disabled?: boolean
   dateInputProps?: DateInputProps
+  defaultToCurrentTime?: boolean
 }
 
 function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<any>): ReactElement {
@@ -42,8 +45,11 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
     placeholder,
     onChange,
     dateInputProps,
+    defaultToCurrentTime,
     ...rest
   } = restProps
+
+  const formValue = get(formik?.values, name)
 
   return (
     <FormGroup
@@ -55,9 +61,12 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
       {...rest}
     >
       <DateInput
-        value={formik?.values[name]}
+        value={formValue ? moment(formValue).valueOf().toString() : ''}
         onChange={value => {
-          formik?.setFieldValue(name, value)
+          formik?.setFieldValue(
+            name,
+            value && !isEmpty(value) ? moment(parseInt(value)).format(DATE_PARSE_FORMAT) : null
+          )
           onChange?.(value)
         }}
         name={name}
@@ -66,16 +75,17 @@ function _DateTimePicker(props: FormikDateTimePickerProps & FormikContextProps<a
         dateProps={{
           timePickerProps: { useAmPm: true },
           highlightCurrentDay: true,
-          minDate: new Date()
+          maxDate: moment().add(5, 'year').toDate()
         }}
         popoverProps={{
           disabled,
           usePortal: true
         }}
-        dateTimeFormat={'YYYY-MM-DD hh:mm a'}
+        dateTimeFormat="LLLL"
         autoComplete="off"
         disabled={disabled}
         {...dateInputProps}
+        readOnly
       />
     </FormGroup>
   )

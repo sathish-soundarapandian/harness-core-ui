@@ -13,6 +13,7 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps, withAccountId } from '@common/utils/routeUtils'
 
 import SessionToken from 'framework/utils/SessionToken'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { SidebarContext } from './navigation/SidebarProvider'
 import type { AccountPathProps } from './interfaces/RouteInterfaces'
 import GenericErrorPage from './pages/GenericError/GenericErrorPage'
@@ -21,14 +22,41 @@ import HomeSideNav from './components/HomeSideNav/HomeSideNav'
 import AccountSideNav from './components/AccountSideNav/AccountSideNav'
 import AccountResources from './pages/AccountResources/AccountResources'
 import SmtpDetails from './components/Smtp/SmtpDetails'
+import { useFeatureFlags } from './hooks/useFeatureFlag'
+import MainDashboardSideNav from './components/HomeSideNav/MainDashboardSideNav'
 
 const RedirectToHome = (): React.ReactElement => {
+  const { selectedProject } = useAppStore()
+  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
   const { accountId } = useParams<AccountPathProps>()
-  return <Redirect to={routes.toLandingDashboard({ accountId })} />
+
+  if (!NEW_LEFT_NAVBAR_SETTINGS) {
+    return <Redirect to={routes.toLandingDashboard({ accountId })} />
+  }
+
+  return (
+    <Redirect
+      to={
+        selectedProject
+          ? routes.toProjectDetails({
+              accountId,
+              projectIdentifier: selectedProject.identifier,
+              orgIdentifier: selectedProject.orgIdentifier || ''
+            })
+          : routes.toAllProjects({ accountId })
+      }
+    />
+  )
 }
 
 export const HomeSideNavProps: SidebarContext = {
   navComponent: HomeSideNav,
+  icon: 'harness',
+  title: 'Home'
+}
+
+export const MainDashboardSideNavProps: SidebarContext = {
+  navComponent: MainDashboardSideNav,
   icon: 'harness',
   title: 'Home'
 }
@@ -50,7 +78,11 @@ export default (
         <Redirect to={routes.toHome({ accountId: SessionToken.accountId() })} />
       </Route>
     )}
-    <Route exact path={[justAccountPath({ ...accountPathProps }), routes.toHome({ ...accountPathProps })]}>
+    <Route exact path={justAccountPath({ ...accountPathProps })}>
+      <Redirect to={routes.toMainDashboard({ accountId: SessionToken.accountId() })} />
+    </Route>
+
+    <Route exact path={routes.toHome({ ...accountPathProps })}>
       <RedirectToHome />
     </Route>
 

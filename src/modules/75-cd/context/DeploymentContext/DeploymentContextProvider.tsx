@@ -17,6 +17,16 @@ import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/PipelineVariables/types'
 
+export const FETCH_INSTANCE_SCRIPT_DEFAULT_TEXT = `#
+# Fetch instances Script is used to query the Target infrastructure and provide the instance information in
+# environment variable $INSTANCE_OUTPUT_PATH . Instance information enables tracking in Service Dashboard
+#
+# It is expected to initialize \${INSTANCE_OUTPUT_PATH}
+# environment variable and assign the script execution result with instance information
+#
+# Sample
+# INSTANCE_OUTPUT_PATH=$(echo ‘{“data”: [{“functionName”: “\${serviceVariable.functionName}“}]}’)
+#`
 export interface DrawerData {
   type: DrawerTypes
   data?: {
@@ -56,10 +66,12 @@ const initialValues = {
     fetchInstancesScript: {
       store: {
         type: 'Inline',
-        spec: {}
+        spec: {
+          content: FETCH_INSTANCE_SCRIPT_DEFAULT_TEXT
+        }
       }
     },
-    instanceAttributes: [{ name: 'hostname', jsonPath: '', description: '' }]
+    instanceAttributes: [{ name: 'instancename', jsonPath: '', description: '' }]
   },
   execution: {
     stepTemplateRefs: []

@@ -47,6 +47,7 @@ export interface StringsMap {
   'common.advanced': string
   'common.agent': string
   'common.agents': string
+  'common.allClusters': string
   'common.allEnvironments': string
   'common.allErrors': string
   'common.allServices': string
@@ -2151,6 +2152,7 @@ export interface StringsMap {
   'connectors.ceAzure.billing.subscriptionId': string
   'connectors.ceAzure.billing.tooltipBtn': string
   'connectors.ceAzure.billing.tooltipInstruction': string
+  'connectors.ceAzure.chooseRequirements.atleastOneError': string
   'connectors.ceAzure.chooseRequirements.billing.feat1': string
   'connectors.ceAzure.chooseRequirements.billing.feat2': string
   'connectors.ceAzure.chooseRequirements.billing.feat3': string
@@ -3744,6 +3746,7 @@ export interface StringsMap {
   'pipeline.noRegions': string
   'pipeline.nodes': string
   'pipeline.nodesLabel': string
+  'pipeline.numOfServicesAndEnv': string
   'pipeline.numOfStage': string
   'pipeline.numOfStages': string
   'pipeline.onlyPositiveInteger': string
@@ -4677,9 +4680,14 @@ export interface StringsMap {
   'cd.pathCannotBeEmpty': string
   'cd.pipelineCreation': string
   'cd.pipelineSteps.environmentTab.allClustersSelected': string
+  'cd.pipelineSteps.environmentTab.allInfrastructures': string
   'cd.pipelineSteps.environmentTab.clusterIsRequired': string
+  'cd.pipelineSteps.environmentTab.deleteClusterFromListConfirmationText': string
+  'cd.pipelineSteps.environmentTab.deleteClusterFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deleteEnvironmentFromListConfirmationText': string
   'cd.pipelineSteps.environmentTab.deleteEnvironmentFromListDialogTitleText': string
+  'cd.pipelineSteps.environmentTab.deleteEnvironmentGroupFromListConfirmationText': string
+  'cd.pipelineSteps.environmentTab.deleteEnvironmentGroupFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListConfirmationText': string
   'cd.pipelineSteps.environmentTab.deleteInfrastructureFromListDialogTitleText': string
   'cd.pipelineSteps.environmentTab.deployToAll': string
@@ -4695,7 +4703,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.hideInfrastructureInputs': string
   'cd.pipelineSteps.environmentTab.infrastructureIsRequired': string
   'cd.pipelineSteps.environmentTab.infrastructuresAreRequired': string
-  'cd.pipelineSteps.environmentTab.multiEnvInfraToggleText': string
+  'cd.pipelineSteps.environmentTab.multiEnvToggleText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsConfirmationText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsDialogTitleText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel': string
@@ -4710,6 +4718,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.singleEnvironmentConfirmationText': string
   'cd.pipelineSteps.environmentTab.singleEnvironmentDialogTitleText': string
   'cd.pipelineSteps.environmentTab.specifyEnvironmentOrGroup': string
+  'cd.pipelineSteps.environmentTab.specifyGitOpsCluster': string
   'cd.pipelineSteps.environmentTab.specifyGitOpsClusters': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironment': string
   'cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup': string
@@ -4948,7 +4957,6 @@ export interface StringsMap {
   'cd.whatIsHarnessAdapter': string
   'cd.whatIsHarnessManagedGitOpsServer': string
   'cd.workloadRequired': string
-  'ce.allClusters': string
   'ce.allRegions': string
   'ce.anomalyDetection.addAnoamlyAlertDesc': string
   'ce.anomalyDetection.addNewAnomalyAlert': string
@@ -6298,6 +6306,7 @@ export interface StringsMap {
   'cf.featureFlags.servePercentageRollout': string
   'cf.featureFlags.serveVariationToTarget': string
   'cf.featureFlags.serveVariationToTargetLabel': string
+  'cf.featureFlags.setupGitSync': string
   'cf.featureFlags.startVariation': string
   'cf.featureFlags.targetUsers': string
   'cf.featureFlags.targeting': string
@@ -6587,6 +6596,11 @@ export interface StringsMap {
   'chaos.navLabels.chaosHubs': string
   'chaos.noEnvironment.message': string
   'chaos.noEnvironment.title': string
+  'chaos.pipelineStep.description': string
+  'chaos.pipelineStep.expectedResiliencyScoreLabel': string
+  'chaos.pipelineStep.experimentRefLabel': string
+  'chaos.selectChaosExperiment': string
+  'chaos.viewDetailedExecution': string
   'ci.advancedLabel': string
   'ci.annotations': string
   'ci.artifactoryConnectorLabel': string

@@ -143,8 +143,8 @@ const RenderColumnAction: Renderer<CellProps<SecretResponseWrapper>> = ({ row, c
     requestOptions: { headers: { 'content-type': 'application/json' } }
   })
 
-  const { openCreateSSHCredModal } = useCreateSSHCredModal({ onSuccess: (column as any).refreshSecrets })
-  const { openCreateWinRmCredModal } = useCreateWinRmCredModal({ onSuccess: (column as any).refreshSecrets })
+  const { openCreateSSHCredModal } = useCreateSSHCredModal({ onClose: (column as any).refreshSecrets })
+  const { openCreateWinRmCredModal } = useCreateWinRmCredModal({ onClose: (column as any).refreshSecrets })
   const { openCreateSecretModal } = useCreateUpdateSecretModal({ onSuccess: (column as any).refreshSecrets })
 
   const permissionRequest = {

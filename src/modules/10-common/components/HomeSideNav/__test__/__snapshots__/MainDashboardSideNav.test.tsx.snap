@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Main dashboard side nav render 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--margin-top-xxxlarge"
+  >
+    <a
+      class="link"
+      href="/account/dummy/main-dashboard"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        common.welcome
+      </p>
+    </a>
+  </div>
+</div>
+`;

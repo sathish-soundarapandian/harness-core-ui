@@ -22,7 +22,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for new template with gi
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/home"
+                href="/account/dummy/main-dashboard"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -119,7 +119,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for new template with gi
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody rightMargin"
+    class="StyledProps--font StyledProps--main PageBody--pageBody rightMargin studioWrapper"
     data-name="page-body"
   >
     <div
@@ -404,7 +404,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for new template without
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/home"
+                href="/account/dummy/main-dashboard"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -501,7 +501,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for new template without
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody rightMargin"
+    class="StyledProps--font StyledProps--main PageBody--pageBody rightMargin studioWrapper"
     data-name="page-body"
   >
     <div
@@ -786,7 +786,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for template studio in v
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/home"
+                href="/account/dummy/main-dashboard"
               >
                 <span
                   class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
@@ -883,7 +883,7 @@ exports[`<TemplateStudioInternal /> tests snapshot test for template studio in v
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody rightMargin"
+    class="StyledProps--font StyledProps--main PageBody--pageBody rightMargin studioWrapper"
     data-name="page-body"
   >
     <div

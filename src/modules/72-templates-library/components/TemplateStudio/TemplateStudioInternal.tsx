@@ -17,6 +17,7 @@ import {
   VisualYamlSelectedView as SelectedView
 } from '@wings-software/uicore'
 import type { FormikProps } from 'formik'
+import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
 import { NavigationCheck, Page } from '@common/exports'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -338,7 +339,7 @@ export function TemplateStudioInternal(): React.ReactElement {
         size={'small'}
         title={<TemplateStudioHeader templateType={templateType as TemplateType} />}
       />
-      <Page.Body className={css.rightMargin}>
+      <Page.Body className={classNames(css.rightMargin, css.studioWrapper)}>
         {isLoading ? (
           <PageSpinner />
         ) : (

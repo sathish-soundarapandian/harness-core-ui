@@ -603,7 +603,7 @@ const FeatureFlagsPage: React.FC = () => {
           <>
             <div className={css.leftToolbar}>
               <FlagDialog environment={environmentIdentifier} />
-              {gitSync?.isGitSyncActionsEnabled && <GitSyncActions isLoading={gitSync.gitSyncLoading || gitSyncing} />}
+              <GitSyncActions isLoading={gitSync.isGitSyncActionsEnabled && (gitSync.gitSyncLoading || gitSyncing)} />
             </div>
             <ExpandingSearchInput
               ref={searchRef}

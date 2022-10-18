@@ -61,6 +61,10 @@ interface CreateUpdateSettingsActionProps {
    * Triggers the back end API call to save data populated in wizard; concludes the wizard flow
    * */
   triggerSaveData: () => void
+  /**
+   * Needed as few components which are returned from utils don't have router context
+   */
+  accountId: string
 }
 
 export interface LdapWizardStepProps<T> {
@@ -200,7 +204,8 @@ const CreateUpdateLdapWizard: React.FC<CreateUpdateLdapWizardProps> = props => {
         createUpdateActionProps={{
           isUpdateInProgress,
           createUpdateError: wiardUpdateError,
-          triggerSaveData: () => setTriggerSaveData(true)
+          triggerSaveData: () => setTriggerSaveData(true),
+          accountId
         }}
       />
     </StepWizard>

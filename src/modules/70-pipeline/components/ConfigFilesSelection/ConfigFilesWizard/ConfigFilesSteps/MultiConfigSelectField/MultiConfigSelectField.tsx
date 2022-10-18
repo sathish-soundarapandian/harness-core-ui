@@ -167,10 +167,12 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                     {...providedDrag.dragHandleProps}
                                   >
                                     <Layout.Horizontal spacing="medium" style={{ alignItems: 'center' }}>
-                                      <>
-                                        <Icon name="drag-handle-vertical" />
-                                        <Text className={css.text}>{`${index + 1}.`}</Text>
-                                      </>
+                                      {!restrictToSingleEntry && (
+                                        <>
+                                          <Icon name="drag-handle-vertical" />
+                                          <Text className={css.text}>{`${index + 1}.`}</Text>
+                                        </>
+                                      )}
 
                                       <div className={css.multiSelectField}>
                                         <div className={cx(css.group)}>

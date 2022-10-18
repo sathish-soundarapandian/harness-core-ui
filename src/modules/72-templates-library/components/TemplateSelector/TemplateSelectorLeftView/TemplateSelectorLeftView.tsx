@@ -94,7 +94,16 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
       filterType: 'Template',
       templateEntityTypes: [templateType],
       childTypes: selectedChildType ? [selectedChildType] : childTypes,
-      templateIdentifiers: selectedTemplateRefs
+      templateIdentifiers: selectedTemplateRefs,
+      ...(!supportingTemplatesGitx
+        ? {
+            listingScope: {
+              accountIdentifier: accountId,
+              orgIdentifier,
+              projectIdentifier
+            }
+          }
+        : {})
     }
   }, [templateType, selectedChildType, childTypes, selectedTemplateRefs])
 

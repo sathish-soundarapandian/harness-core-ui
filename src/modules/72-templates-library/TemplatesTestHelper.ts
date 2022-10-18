@@ -88,16 +88,19 @@ export const stageTemplateVersion1: ResponseTemplateResponse = {
 export const stageMockTemplateVersion1InputYaml: ResponseString = {
   status: 'SUCCESS',
   data:
-    'type: "Deployment"' +
-    '\nspec:' +
-    '\n  serviceConfig:' +
-    '\n    serviceRef: "<+input>"' +
-    '\n  infrastructure:' +
-    '\n    infrastructureDefinition:' +
-    '\n      type: "KubernetesDirect"' +
-    '\n      spec:' +
-    '\n        namespace: "<+input>"' +
-    '\n'
+    'type: "Deployment"\n' +
+    'spec:\n' +
+    '  serviceConfig:\n' +
+    '    serviceRef: "<+input>"\n' +
+    '  infrastructure:\n' +
+    '    infrastructureDefinition:\n' +
+    '      type: "KubernetesDirect"\n' +
+    '      spec:\n' +
+    '        namespace: "<+input>"\n' +
+    'variables:\n' +
+    '- name: "var1"\n' +
+    '  type: "String"\n' +
+    '  value: "<+input>"\n'
 }
 
 export const stageTemplateVersion2: ResponseTemplateResponse = {
@@ -153,10 +156,6 @@ export const stageTemplateVersion2: ResponseTemplateResponse = {
       '\n            serviceDependencies: []' +
       '\n'
   }
-}
-
-export const stageMockTemplateVersion2InputYaml: ResponseString = {
-  status: 'SUCCESS'
 }
 
 export const pipelineTemplate: ResponseTemplateResponse = {

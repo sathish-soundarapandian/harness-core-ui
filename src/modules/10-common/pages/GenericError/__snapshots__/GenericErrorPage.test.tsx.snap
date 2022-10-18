@@ -112,7 +112,7 @@ exports[`Generic Error Page valid error code 1`] = `
         common.genericErrors.inviteExpired
       </p>
       <a
-        href="/account/dummy/home"
+        href="/account/dummy/main-dashboard"
       >
         goToHome
       </a>

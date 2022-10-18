@@ -56,6 +56,7 @@ import type {
 const CV_HOME = `/cv/home`
 
 const routes = {
+  toMainDashboard: withAccountId(() => '/main-dashboard'),
   toHome: withAccountId(() => '/home'),
   toGenericError: withAccountId(() => '/error'),
   toSetup: withAccountId(
@@ -106,7 +107,7 @@ const routes = {
       accountId: _accountId,
       windowIdentifier,
       ...rest
-    }: Partial<{ windowIdentifier: string } & ProjectPathProps & ModulePathParams>) => {
+    }: Partial<{ windowIdentifier: string; sectionId?: string } & ProjectPathProps & ModulePathParams>) => {
       // TemplateStudioPathProps
       const queryString = qs.stringify(rest, { skipNulls: true })
       let path
@@ -1596,6 +1597,7 @@ const routes = {
       `/home/orgs/${orgIdentifier}/projects/${projectIdentifier}/details`
   ),
   toProjects: withAccountId(() => '/home/projects'),
+  toAllProjects: withAccountId(() => '/home/projects/all'),
   toLandingDashboard: withAccountId(() => '/home/get-started'),
   /********************************************************************************************************************/
   toCE: withAccountId(() => `/ce`),
@@ -1790,6 +1792,19 @@ const routes = {
   toChaosExperiment: withAccountId(
     ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps> & { identifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${identifier}`
+  ),
+  toNewChaosExperiment: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/new`
+  ),
+  toChaosExperimentRun: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      expIdentifier,
+      expRunIdentifier
+    }: Partial<ProjectPathProps> & { expIdentifier: string; expRunIdentifier: string }) =>
+      `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/experiments/${expIdentifier}/runs/${expRunIdentifier}`
   ),
   toChaosHubs: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>

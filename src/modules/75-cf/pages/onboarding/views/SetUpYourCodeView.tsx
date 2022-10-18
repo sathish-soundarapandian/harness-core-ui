@@ -15,13 +15,18 @@ const keyMask = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 export interface SetUpYourCodeViewProps {
   language: PlatformEntry
   apiKey: ApiKey | undefined
+  flagName: string
 }
 
 export const SetUpYourCodeView: React.FC<SetUpYourCodeViewProps> = props => {
   return (
     <MarkdownViewer
       stringId={props.language.readmeStringId}
-      vars={{ ...props.apiKey, apiKey: props.apiKey?.apiKey || keyMask }}
+      vars={{
+        ...props.apiKey,
+        apiKey: props.apiKey?.apiKey || keyMask,
+        flagName: props.flagName
+      }}
     />
   )
 }

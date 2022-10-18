@@ -80,7 +80,6 @@ export function HarnessConfigStep({
               secretFiles
             }
           }
-          // configOverridePath: formData.configOverridePath
         }
       }
     }
@@ -155,7 +154,6 @@ export function HarnessConfigStep({
                         className={css.selectFileType}
                         radioGroup={{ inline: true }}
                         disabled={isEditState}
-                        label={getString('pipeline.configFiles.selectFileType')}
                         onChange={() => {
                           formikProps.setFieldValue('files', [''])
                         }}

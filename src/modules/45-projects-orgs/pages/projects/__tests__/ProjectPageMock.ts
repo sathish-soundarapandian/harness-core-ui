@@ -11,6 +11,7 @@ import type {
   ResponsePageUserMetadataDTO,
   ResponseProjectAggregateDTO
 } from 'services/cd-ng'
+import type { ResponseExecutionResponseCountOverview } from 'services/dashboard-service'
 import type { ResponsePageRoleResponse } from 'services/rbac'
 
 export const projectPageMock = {
@@ -455,6 +456,16 @@ export const roleMockData: ResponsePageRoleResponse = {
     ],
     pageIndex: 0,
     empty: false
+  },
+  metaData: undefined,
+  correlationId: 'f78f3b2d-b4f0-483e-a064-2aca8984ec9f'
+}
+
+export const getCountMockData: ResponseExecutionResponseCountOverview = {
+  status: 'SUCCESS',
+  data: {
+    executionMessage: 'dummy execution message',
+    executionStatus: 'SUCCESS'
   },
   metaData: undefined,
   correlationId: 'f78f3b2d-b4f0-483e-a064-2aca8984ec9f'

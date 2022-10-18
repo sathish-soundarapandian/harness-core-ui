@@ -88,7 +88,7 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
             <Layout.Vertical spacing="xsmall">
               <Text className={css.setUpYourCode}>{getString('cf.onboarding.setUpYourCode')}</Text>
               <Container className={css.setUpYourCodeContainer}>
-                <SetUpYourCodeView apiKey={apiKey} language={language} />
+                <SetUpYourCodeView apiKey={apiKey} language={language} flagName={flagInfo.name} />
               </Container>
             </Layout.Vertical>
           </Container>

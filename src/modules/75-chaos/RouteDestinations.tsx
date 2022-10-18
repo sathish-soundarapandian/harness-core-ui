@@ -65,17 +65,26 @@ import CreateSecretFromYamlPage from '@secrets/pages/createSecretFromYaml/Create
 import { validateYAMLWithSchema } from '@common/utils/YamlUtils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import PipelineStudioFactory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
+import ExecFactory from '@pipeline/factories/ExecutionFactory'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import SettingsList from '@default-settings/pages/SettingsList'
 import ChaosEnvironments from '@chaos/pages/environments/EnvironmentsPage'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
+import { ChaosExperimentStep } from './components/PipelineSteps/ChaosExperimentStep/ChaosExperimentStep'
+import { ChaosExperimentExecView } from './components/PipelineSteps/ChaosExperimentStep/ChaosExperimentExecutionView/ChaosExperimentExecView'
 
 // eslint-disable-next-line import/no-unresolved
 const ChaosMicroFrontend = React.lazy(() => import('chaos/MicroFrontendApp'))
+
+ExecFactory.registerStepDetails(StepType.ChaosExperiment, {
+  component: React.memo(ChaosExperimentExecView)
+})
 
 const ChaosSideNavProps: SidebarContext = {
   navComponent: ChaosSideNav,
@@ -183,6 +192,8 @@ export default function ChaosRoutes(): React.ReactElement {
 
   // Register Chaos into RBAC Factory and AuditTrail only when Feature Flag is enabled
   if (isChaosEnabled) {
+    // Pipeline registrations
+    PipelineStudioFactory.registerStep(new ChaosExperimentStep())
     // RBAC registrations
     RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
       icon: 'chaos-main',

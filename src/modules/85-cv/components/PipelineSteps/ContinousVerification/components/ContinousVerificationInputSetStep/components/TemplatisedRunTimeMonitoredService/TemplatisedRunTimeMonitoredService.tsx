@@ -29,6 +29,8 @@ import {
   getMetricDefinitions,
   setCommaSeperatedList
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
+import type { ConnectorInfoDTO } from 'services/cv'
+import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
 import { INDEXES } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
@@ -107,7 +109,7 @@ export default function TemplatisedRunTimeMonitoredService(
                       disabled={!healthSource?.type}
                       setRefValue
                       multiTypeProps={{ allowableTypes, expressions }}
-                      type={healthSource?.type}
+                      type={healthSourceTypeMapping(healthSource?.type as ConnectorInfoDTO['type'])}
                       enableConfigureOptions={false}
                     />
                   )

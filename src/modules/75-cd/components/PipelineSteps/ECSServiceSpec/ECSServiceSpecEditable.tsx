@@ -263,10 +263,13 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
           >
             <div
               className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+              data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}
             >
               {getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')}
-              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+              <HarnessDocTooltip
+                tooltipId={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}
+                useStandAlone={true}
+              />
             </div>
             <ManifestSelection
               isPropagating={isPropagating}
@@ -292,10 +295,13 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
           >
             <div
               className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+              data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_serviceDefinition`}
             >
               {getString('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')}
-              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+              <HarnessDocTooltip
+                tooltipId={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_serviceDefinition`}
+                useStandAlone={true}
+              />
             </div>
             <ManifestSelection
               isPropagating={isPropagating}
@@ -321,12 +327,15 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
           >
             <div
               className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+              data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_scalableTarget`}
             >
               {getString('common.headerWithOptionalText', {
                 header: getString('cd.pipelineSteps.serviceTab.manifest.scalableTarget')
               })}
-              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+              <HarnessDocTooltip
+                tooltipId={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_scalableTarget`}
+                useStandAlone={true}
+              />
             </div>
             <ManifestSelection
               isPropagating={isPropagating}
@@ -351,12 +360,15 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
           >
             <div
               className={cx(css.tabSubHeading, 'ng-tooltip-native')}
-              data-tooltip-id={getManifestsHeaderTooltipId(selectedDeploymentType)}
+              data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_scalingPolicy`}
             >
               {getString('common.headerWithOptionalText', {
                 header: getString('cd.pipelineSteps.serviceTab.manifest.scalingPolicy')
               })}
-              <HarnessDocTooltip tooltipId={getManifestsHeaderTooltipId(selectedDeploymentType)} useStandAlone={true} />
+              <HarnessDocTooltip
+                tooltipId={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_scalingPolicy`}
+                useStandAlone={true}
+              />
             </div>
             <ManifestSelection
               isPropagating={isPropagating}

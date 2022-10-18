@@ -15,7 +15,10 @@ export function ServiceInstanceLabel(): JSX.Element {
   return (
     <Container className={css.main}>
       <Text className={css.primaryLabel}>{`${getString('cv.monitoringSources.serviceInstanceIdentifier')}`}</Text>
-      <Text className={css.secondaryLabel}>{`${getString('cv.monitoringSources.optionalServiceInstanceLabel')}`}</Text>
+      <Text
+        className={css.secondaryLabel}
+        tooltipProps={{ dataTooltipId: 'healthSourceMetricsServiceInstanceId' }}
+      >{`${getString('cv.monitoringSources.optionalServiceInstanceLabel')}`}</Text>
     </Container>
   )
 }

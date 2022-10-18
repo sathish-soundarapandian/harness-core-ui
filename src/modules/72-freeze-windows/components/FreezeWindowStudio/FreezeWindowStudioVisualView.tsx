@@ -89,7 +89,7 @@ export const FreezeWindowStudioVisualView = ({ resources }: { resources: Resourc
           }
           title={
             <span>
-              <Icon name="waiting" height={20} size={20} className={css.tabIcon} />
+              <Icon name="waiting" height={16} size={16} className={css.tabIcon} />
               {getString('common.schedule')}
             </span>
           }

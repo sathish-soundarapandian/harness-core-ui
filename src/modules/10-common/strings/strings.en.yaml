@@ -1077,3 +1077,4 @@ schedulePanel:
   expressionBreakdown: 'Expression Breakdown'
   cronExpression: 'Cron Expression'
   cronExpressionRequired: 'Cron Expression required'
+allClusters: 'All Clusters'

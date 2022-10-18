@@ -10,6 +10,7 @@ import { Position } from '@blueprintjs/core'
 import { Button, ButtonVariation } from '@wings-software/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { merge, noop } from 'lodash-es'
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import { getAllowedTemplateTypes, TemplateType } from '@templates-library/utils/templatesUtils'
 import routes from '@common/RouteDefinitions'
@@ -29,6 +30,7 @@ import { FeatureWarningTooltip } from '@common/components/FeatureWarning/Feature
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import css from './NewTemplatePopover.module.scss'
 
 export interface NewTemplatePopoverWrapperProps {
   onImportTemplateClick?: () => void
@@ -39,11 +41,11 @@ function NewTemplatePopoverWrapper({ onImportTemplateClick }: NewTemplatePopover
   const history = useHistory()
   const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = params
-  const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE, NG_DEPLOYMENT_TEMPLATE } = useFeatureFlags()
+  const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
   const allowedTemplateTypes = getAllowedTemplateTypes(getScopeFromDTO(params), {
     [TemplateType.SecretManager]: !!CUSTOM_SECRET_MANAGER_NG,
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE,
-    [TemplateType.CustomDeployment]: !!NG_DEPLOYMENT_TEMPLATE
+    [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN
   })
   const { supportingTemplatesGitx } = useAppStore()
   const [menuOpen, setMenuOpen] = React.useState(false)
@@ -111,6 +113,7 @@ function NewTemplatePopoverWrapper({ onImportTemplateClick }: NewTemplatePopover
       disabled={!canEdit || !templatesEnabled}
       setMenuOpen={setMenuOpen}
       usePortal={false}
+      className={cx({ [css.supportTemplateImport]: supportingTemplatesGitx })}
     >
       <Button
         variation={ButtonVariation.PRIMARY}

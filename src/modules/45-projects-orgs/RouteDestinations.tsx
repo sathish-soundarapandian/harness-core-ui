@@ -63,7 +63,7 @@ import UserDetails from '@rbac/pages/UserDetails/UserDetails'
 import DelegateProfileDetails from '@delegates/pages/delegates/DelegateConfigurationDetailPage'
 import CreateSecretFromYamlPage from '@secrets/pages/createSecretFromYaml/CreateSecretFromYamlPage'
 import CreateConnectorFromYamlPage from '@connectors/pages/createConnectorFromYaml/CreateConnectorFromYamlPage'
-import { HomeSideNavProps, AccountSideNavProps } from '@common/RouteDestinations'
+import { HomeSideNavProps, AccountSideNavProps, MainDashboardSideNavProps } from '@common/RouteDestinations'
 import GitSyncEntityTab from '@gitsync/pages/entities/GitSyncEntityTab'
 import GitSyncPage from '@gitsync/pages/GitSyncPage'
 import GitSyncRepoTab from '@gitsync/pages/repos/GitSyncRepoTab'
@@ -76,12 +76,13 @@ import GitSyncConfigTab from '@gitsync/pages/config/GitSyncConfigTab'
 import VariablesPage from '@variables/pages/variables/VariablesPage'
 import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import SettingsList from '@default-settings/pages/SettingsList'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import LandingDashboardPage from './pages/LandingDashboardPage/LandingDashboardPage'
 
 const ProjectDetailsSideNavProps: SidebarContext = {
   navComponent: ProjectDetailsSideNav,
-  icon: 'harness',
-  title: 'Project Details'
+  icon: 'nav-project',
+  title: 'Projects'
 }
 
 RbacFactory.registerResourceTypeHandler(ResourceType.PROJECT, {
@@ -158,15 +159,66 @@ const RedirectToDelegatesHome = (): React.ReactElement => {
   return <Redirect to={routes.toDelegateList({ accountId, projectIdentifier, orgIdentifier })} />
 }
 
+const ProjectsRedirect = (): React.ReactElement => {
+  const { accountId } = useParams<ProjectPathProps>()
+  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+
+  if (NEW_LEFT_NAVBAR_SETTINGS) {
+    return (
+      <Redirect
+        to={routes.toAllProjects({
+          accountId
+        })}
+      />
+    )
+  }
+
+  return <ProjectsPage />
+}
+
+const MainDashboardRedirect = (): React.ReactElement => {
+  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+  const { accountId } = useParams<ProjectPathProps>()
+
+  if (!NEW_LEFT_NAVBAR_SETTINGS) {
+    return (
+      <Redirect
+        to={routes.toHome({
+          accountId
+        })}
+      />
+    )
+  }
+
+  return <LandingDashboardPage />
+}
+
 export default (
   <>
-    <RouteWithLayout sidebarProps={HomeSideNavProps} path={routes.toProjects({ ...accountPathProps })} exact>
+    <RouteWithLayout
+      sidebarProps={ProjectDetailsSideNavProps}
+      path={routes.toAllProjects({ ...accountPathProps })}
+      exact
+    >
       <ProjectsPage />
+    </RouteWithLayout>
+
+    <RouteWithLayout sidebarProps={HomeSideNavProps} path={routes.toProjects({ ...accountPathProps })} exact>
+      <ProjectsRedirect />
     </RouteWithLayout>
 
     <RouteWithLayout sidebarProps={HomeSideNavProps} path={routes.toLandingDashboard({ ...accountPathProps })} exact>
       <LandingDashboardPage />
     </RouteWithLayout>
+
+    <RouteWithLayout
+      sidebarProps={MainDashboardSideNavProps}
+      path={routes.toMainDashboard({ ...accountPathProps })}
+      exact
+    >
+      <MainDashboardRedirect />
+    </RouteWithLayout>
+
     <RouteWithLayout
       sidebarProps={ProjectDetailsSideNavProps}
       path={routes.toProjectDetails({ ...accountPathProps, ...projectPathProps })}

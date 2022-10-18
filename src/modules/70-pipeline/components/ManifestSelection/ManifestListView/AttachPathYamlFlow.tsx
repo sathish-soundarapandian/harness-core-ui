@@ -120,6 +120,14 @@ function AttachPathYamlFlow({
           {formik => (
             <Form>
               <Layout.Vertical>
+                <Heading
+                  margin={{ bottom: 'xlarge' }}
+                  level={3}
+                  font={{ size: 'medium', weight: 'bold' }}
+                  color={Color.GREY_900}
+                >
+                  {getString('pipeline.manifestType.addValuesYamlPath')}
+                </Heading>
                 {ManifestToPathMap[manifestType] && manifestStore !== ManifestStoreMap.Harness ? (
                   <DragnDropPaths
                     formik={formik}
@@ -133,12 +141,6 @@ function AttachPathYamlFlow({
                   />
                 ) : (
                   <>
-                    <Heading
-                      margin={{ bottom: 'xlarge' }}
-                      level={3}
-                      font={{ size: 'medium', weight: 'bold' }}
-                      color={Color.GREY_900}
-                    />
                     <MultiConfigSelectField
                       isAttachment
                       name="valuesPaths"

@@ -101,7 +101,7 @@ describe('Deployment Template - Infrastructures Page', () => {
     cy.contains('p', 'testReconcileInfra').click()
 
     cy.get('span[icon="warning-sign"]').should('be.visible')
-    cy.contains('p', 'Some template(s) referenced in this infrastructure have been updated.').should('be.visible')
+    cy.contains('p', 'Some of the entities referenced in this infrastructure have been updated.').should('be.visible')
 
     cy.get('[value="stringUpdated"]').should('not.exist')
     cy.get('[value="Hi, I am Updated"]').should('not.exist')

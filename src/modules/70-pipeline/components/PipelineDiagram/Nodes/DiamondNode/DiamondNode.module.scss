@@ -78,17 +78,6 @@
     top: -17px;
     left: 13px;
     color: var(--white) !important;
-
-    svg {
-      path,
-      circle {
-        fill: currentColor !important;
-      }
-      rect {
-        // TODO: Replace color once it is available in UIKit
-        stroke: #f79400 !important;
-      }
-    }
   }
 
   .inComplete {

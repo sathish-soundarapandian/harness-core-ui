@@ -134,8 +134,8 @@ jenkinsStep:
     jobName: Jobname is a required field
   jobNamePlaceholder: Select Job Name
   jobParameter: Job Parameters
-  unstableStatusAsSuccess: Treat unstable Jenkins status as success
-  useConnectorUrlForJobExecution: Use this URL for job execution
+  unstableStatusAsSuccess: Treat unstable Job status as success
+  useConnectorUrlForJobExecution: Use Connector URL for job execution
   captureEnvironmentVariable: Capture environment variables from Jenkins build
 jiraApprovalStep:
   connectToJira: Connect to Jira
@@ -1160,6 +1160,7 @@ runstageError: '{{count}} Error(s): Unable to run stages.'
 stageDependencyError: 'Stage {{stageId}} has a ‘useFromStage’ dependency on Stage {{dependentStage}}. Please select Stage {{dependentStage}} to run Stage {{stageId}}.'
 noApprovalInstanceCreated: Approval instance not created, no details to display
 approvalTypeRequired: Approval type is required
+numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironment}} Environment(s)'
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   servicesDeployed: 'Services deployed'
@@ -1268,13 +1269,13 @@ cannotEditTriggerInvalidPipeline: Cannot edit the trigger because pipeline is in
 parentStageDeleteWarning: "Warning: this Stage's settings are propagated to another Stage(s) in this Pipeline ({{propagatingStages}}). If you delete this Stage, you must update the other Stages' settings or the Pipeline will fail."
 outOfSyncErrorStrip:
   reconcile: Reconcile
-  unsyncedTemplateInfo: Some template(s) referenced in this {{entity}} have gone out of sync.
-  updatedTemplateInfo: Some template(s) referenced in this {{entity}} have been updated.
+  unsyncedTemplateInfo: Some of the entities referenced in this {{entity}} have gone out of sync.
+  updatedTemplateInfo: Some of the entities referenced in this {{entity}} have been updated.
 reconcileDialog:
   title: Template Error Inspection
   subtitle: Error Trace
-  unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced templates.
-  updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated templates.
+  unsyncedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from unsynced entities.
+  updatedTemplateInfo: The error detected in <b>{{name}}</b> is parsed from updated entities.
   originalYamlLabel: Original
   refreshedYamlLabel: Refreshed
   updateAllLabel: Update all unsynced entities

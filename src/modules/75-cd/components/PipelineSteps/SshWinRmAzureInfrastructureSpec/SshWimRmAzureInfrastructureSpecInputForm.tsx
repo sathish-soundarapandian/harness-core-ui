@@ -99,7 +99,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
     )
 
     React.useEffect(() => {
-      if (renderCount) {
+      /* istanbul ignore next */ if (renderCount) {
         set(initialValues, 'subscriptionId', '')
         set(initialValues, 'resourceGroup', '')
         set(initialValues, 'tags', {})
@@ -108,7 +108,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
     }, [connectorRef])
 
     React.useEffect(() => {
-      if (renderCount) {
+      /* istanbul ignore next */ if (renderCount) {
         set(initialValues, 'resourceGroup', '')
         set(initialValues, 'tags', {})
         onUpdate?.(initialValues)
@@ -116,7 +116,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
     }, [subscriptionIdRef])
 
     React.useEffect(() => {
-      if (typeof initialValues?.tags !== 'string') {
+      /* istanbul ignore else */ if (typeof initialValues?.tags !== 'string') {
         const selTags = [] as SelectedTagsType[]
         const tagKeys = initialValues?.tags ? Object.keys(initialValues?.tags as any) : []
         tagKeys.map(tagKey => {
@@ -126,13 +126,13 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
       }
     }, [initialValues?.tags])
     const queryParams = {
-      connectorRef: initialValues?.connectorRef as string,
+      connectorRef: get(initialValues, 'connectorRef', '') as string,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
       envId: environmentRef,
       infraDefinitionId: infrastructureRef,
-      subscriptionId: initialValues?.subscriptionId
+      subscriptionId: get(initialValues, 'subscriptionId', '')
     }
 
     const {
@@ -167,7 +167,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
       error: resourceGroupsError
     } = useGetAzureResourceGroupsBySubscription({
       queryParams,
-      subscriptionId: initialValues?.subscriptionId as string,
+      subscriptionId: get(initialValues, 'subscriptionId', '') as string,
       lazy: true
     })
     const {
@@ -186,7 +186,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
       error: subscriptionTagsError
     } = useGetSubscriptionTags({
       queryParams,
-      subscriptionId: initialValues?.subscriptionId as string,
+      subscriptionId: get(initialValues, 'subscriptionId', '') as string,
       lazy: true
     })
 
@@ -248,16 +248,15 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
 
     useEffect(() => {
       setRenderCount(renderCount + 1)
-      if (
+      /* istanbul ignore else */ if (
         initialValues?.subscriptionId &&
         getMultiTypeFromValue(initialValues?.subscriptionId) !== MultiTypeInputType.RUNTIME
       ) {
         refetchSubscriptions({
           queryParams
         })
-        /* istanbul ignore else */
       }
-      if (
+      /* istanbul ignore else */ if (
         initialValues?.connectorRef &&
         getMultiTypeFromValue(initialValues?.connectorRef) === MultiTypeInputType.FIXED &&
         initialValues.subscriptionId &&
@@ -275,10 +274,9 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
             subscriptionId: initialValues?.subscriptionId
           }
         })
-        /* istanbul ignore else */
       }
 
-      if (fetchResourceUsingEnvId()) {
+      /* istanbul ignore else */ if (fetchResourceUsingEnvId()) {
         refetchResourceGroupsV2({
           queryParams
         })
@@ -356,7 +354,9 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
                   setSelectedTags([])
                 },
                 onFocus: () => {
-                  if (getMultiTypeFromValue(initialValues?.connectorRef) !== MultiTypeInputType.RUNTIME) {
+                  /* istanbul ignore else */ if (
+                    getMultiTypeFromValue(initialValues?.connectorRef) !== MultiTypeInputType.RUNTIME
+                  ) {
                     refetchSubscriptions({
                       queryParams
                     })
@@ -403,7 +403,7 @@ const SshWinRmAzureInfrastructureSpecInputFormNew: React.FC<AzureInfrastructureS
               label={getString(resourceGroupLabel)}
               multiTypeInputProps={{
                 onFocus: () => {
-                  if (connectorRef && subscriptionIdRef) {
+                  /* istanbul ignore else */ if (connectorRef && subscriptionIdRef) {
                     refetchResourceGroups({
                       queryParams: {
                         accountIdentifier: accountId,

@@ -13,8 +13,7 @@ import {
   waitFor,
   findByText,
   findByTestId,
-  getByText,
-  getByTestId
+  getByText
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MultiTypeInputType } from '@harness/uicore'
@@ -49,6 +48,8 @@ export const testTaskDefinitionSecondStep = async (portal: HTMLElement): Promise
   expect(GitLab).not.toBeNull()
   const Bitbucket = queryByValueAttribute('Bitbucket')
   expect(Bitbucket).not.toBeNull()
+  const Harness = queryByValueAttribute('Harness')
+  expect(Harness).not.toBeNull()
 
   userEvent.click(Git!)
   const connnectorRefInput = await findByTestId(portal, /connectorRef/)
@@ -224,6 +225,72 @@ describe('TaskDefinitionModal tests', () => {
     )
   })
 
+  // Specificlly written after UI crashed while changing from Harness to other file store
+  test(`Edit view - renders fine for existing values when store type is Harness and store is changed to Github`, async () => {
+    const updateManifestList2 = jest.fn()
+    const existingInitialValuesHarnessStore: StoreConfigWrapper = {
+      type: 'Harness',
+      spec: {
+        files: ['file1']
+      }
+    }
+
+    render(
+      <TestWrapper>
+        <TaskDefinitionModal
+          initialValues={existingInitialValuesHarnessStore}
+          allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+          readonly={false}
+          onTaskDefinitionModalClose={onTaskDefinitionModalClose}
+          connectorView={false}
+          updateManifestList={updateManifestList2}
+          setConnectorView={setConnectorView}
+          isOpen={true}
+          selectedManifest={ManifestDataType.EcsTaskDefinition}
+          availableManifestTypes={[ManifestDataType.EcsTaskDefinition]}
+        />
+      </TestWrapper>
+    )
+
+    const portal = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+
+    const queryByValueAttribute = (value: string): HTMLElement | null => queryByAttribute('value', portal, value)
+
+    // Store step
+    const Harness = queryByValueAttribute('Harness')
+    await waitFor(() => expect(Harness).not.toBeNull())
+    expect(Harness).toBeChecked()
+    const changeButton = await waitFor(() => findByText(portal, 'Change'))
+    expect(changeButton).toBeInTheDocument()
+    userEvent.click(changeButton)
+
+    // Test manifest store tiles, choose Git and fill in Connector field
+    await testTaskDefinitionSecondStep(portal)
+
+    // Fill in required field and submit manifest
+    await testTaskDefinitionLastStep(portal)
+
+    await waitFor(() =>
+      expect(updateManifestList2).toHaveBeenCalledWith({
+        manifest: {
+          identifier: '',
+          type: ManifestDataType.EcsTaskDefinition,
+          spec: {
+            store: {
+              spec: {
+                branch: 'testBranch',
+                connectorRef: 'account.Git_CTR',
+                gitFetchType: 'Branch',
+                paths: ['test-path']
+              },
+              type: 'Git'
+            }
+          }
+        }
+      })
+    )
+  })
+
   test(`Harness as ECS Task Definition Store`, async () => {
     render(
       <TestWrapper>
@@ -261,8 +328,6 @@ describe('TaskDefinitionModal tests', () => {
 
     // Check if last step is rendered file with + Add adding file select field properly
     await waitFor(() => expect(getByText(portal, 'fileFolderPathText')).toBeInTheDocument())
-    const addFilesBtn = getByTestId(portal, 'add-files').parentElement
-    userEvent.click(addFilesBtn!)
-    await waitFor(() => expect(portal.querySelector('[data-icon="chevron-down"]')).toBeInTheDocument())
+    expect(portal.querySelector('[data-icon="chevron-down"]')).toBeInTheDocument()
   })
 })

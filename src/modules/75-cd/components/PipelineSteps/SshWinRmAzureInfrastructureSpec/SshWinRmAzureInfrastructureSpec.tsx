@@ -50,9 +50,9 @@ const AzureInfrastructureSpecVariablesForm: React.FC<AzureInfrastructureSpecEdit
   variablesData,
   initialValues
 }) => {
-  const infraVariables = variablesData?.infrastructureDefinition?.spec
-  return infraVariables ? (
-    /* istanbul ignore next */ <VariablesListTable
+  const infraVariables = get(variablesData, 'infrastructureDefinition.spec', undefined)
+  return /* istanbul ignore next */ infraVariables ? (
+    <VariablesListTable
       data={infraVariables}
       originalData={initialValues?.infrastructureDefinition?.spec || initialValues}
       metadataMap={metadataMap}
@@ -202,8 +202,7 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
       orgIdentifier: string
       projectIdentifier: string
     }
-    // /* istanbul ignore else */
-    if (pipelineObj) {
+    /* istanbul ignore else */ if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.resourceGroup', ''))
       if (
         get(obj, 'type', '') === SshWinRmAzureType &&
@@ -247,8 +246,7 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
       orgIdentifier: string
       projectIdentifier: string
     }
-    // /* istanbul ignore else */
-    if (pipelineObj) {
+    /* istanbul ignore else */ if (pipelineObj) {
       const obj = get(pipelineObj, path.replace('.spec.tags', ''))
       if (
         get(obj, 'type', '') === SshWinRmAzureType &&
@@ -284,40 +282,45 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
     template
   }: ValidateInputSetProps<SshWinRmAzureInfrastructure>): FormikErrors<SshWinRmAzureInfrastructure> {
     const errors: Partial<SshWinRmAzureInfrastructureTemplate> = {}
-    const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
-    if (
+    /* istanbul ignore else */ const isRequired =
+      viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+    /* istanbul ignore next */ if (
       isEmpty(data.credentialsRef) &&
       isRequired &&
-      getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME
+      getString &&
+      getMultiTypeFromValue(get(template, 'credentialsRef', undefined)) === MultiTypeInputType.RUNTIME
     ) {
-      /* istanbul ignore next */ errors.credentialsRef = getString?.('common.validation.fieldIsRequired', {
+      errors.credentialsRef = getString('common.validation.fieldIsRequired', {
         name: getString('credentials')
       })
     }
-    if (
+    /* istanbul ignore next */ if (
       isEmpty(data.connectorRef) &&
       isRequired &&
-      getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME
+      getString &&
+      getMultiTypeFromValue(get(template, 'connectorRef', undefined)) === MultiTypeInputType.RUNTIME
     ) {
-      /* istanbul ignore next */ errors.connectorRef = getString?.('common.validation.fieldIsRequired', {
+      errors.connectorRef = getString('common.validation.fieldIsRequired', {
         name: getString('connector')
       })
     }
-    if (
+    /* istanbul ignore next */ if (
       isEmpty(data.subscriptionId) &&
       isRequired &&
-      getMultiTypeFromValue(template?.subscriptionId) === MultiTypeInputType.RUNTIME
+      getString &&
+      getMultiTypeFromValue(get(template, 'subscriptionId', undefined)) === MultiTypeInputType.RUNTIME
     ) {
-      /* istanbul ignore next */ errors.subscriptionId = getString?.('common.validation.fieldIsRequired', {
+      errors.subscriptionId = getString('common.validation.fieldIsRequired', {
         name: getString(subscriptionLabel)
       })
     }
-    if (
+    /* istanbul ignore next */ if (
       isEmpty(data.resourceGroup) &&
       isRequired &&
-      getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME
+      getString &&
+      getMultiTypeFromValue(get(template, 'resourceGroup', undefined)) === MultiTypeInputType.RUNTIME
     ) {
-      /* istanbul ignore next */ errors.resourceGroup = getString?.('common.validation.fieldIsRequired', {
+      errors.resourceGroup = getString('common.validation.fieldIsRequired', {
         name: getString(resourceGroupLabel)
       })
     }
@@ -334,10 +337,10 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
           initialValues={initialValues}
           onUpdate={onUpdate}
           stepViewType={stepViewType}
-          readonly={inputSetData?.readonly}
-          template={inputSetData?.template as SshWinRmAzureInfrastructureTemplate}
-          allValues={inputSetData?.allValues}
-          path={inputSetData?.path || ''}
+          readonly={get(inputSetData, 'readonly', undefined)}
+          template={get(inputSetData, 'template', undefined) as SshWinRmAzureInfrastructureTemplate}
+          allValues={get(inputSetData, 'allValues', undefined)}
+          path={get(inputSetData, 'path', '')}
           allowableTypes={allowableTypes}
         />
       )
@@ -346,7 +349,7 @@ export class SshWinRmAzureInfrastructureSpec extends PipelineStep<AzureInfrastru
         <AzureInfrastructureSpecVariablesForm
           onUpdate={onUpdate}
           stepViewType={stepViewType}
-          template={inputSetData?.template as SshWinRmAzureInfrastructureTemplate}
+          template={get(inputSetData, 'template', undefined) as SshWinRmAzureInfrastructureTemplate}
           {...(customStepProps as AzureInfrastructureSpecEditableProps)}
           initialValues={initialValues}
         />

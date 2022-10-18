@@ -35,14 +35,13 @@ import {
   getFinalQueryParamData,
   getFqnPath,
   isFieldfromTriggerTabDisabled,
-  isNewServiceEntity,
   shouldDisplayRepositoryName
 } from '../ManifestSourceUtils'
 import { isFieldFixedType, isFieldRuntime } from '../../K8sServiceSpecHelper'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/CustomRemoteManifestRuntimeFields'
 import ManifestCommonRuntimeFields from '../ManifestSourceRuntimeFields/ManifestCommonRuntimeFields'
-import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
+import { isExecutionTimeFieldDisabled, isNewServiceEnvEntity } from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
@@ -86,8 +85,8 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
         get(initialValues, `${manifestPath}.spec.store.spec.connectorRef`, '')
       )
     ),
-    serviceId: isNewServiceEntity(path as string) ? serviceIdentifier : undefined,
-    fqnPath: isNewServiceEntity(path as string) ? getFqnPath(stageIdentifier, manifestPath as string) : undefined
+    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
+    fqnPath: isNewServiceEnvEntity(path as string) ? getFqnPath(stageIdentifier, manifestPath as string) : undefined
   }
 
   const {

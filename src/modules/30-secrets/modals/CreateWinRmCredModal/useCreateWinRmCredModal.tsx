@@ -28,6 +28,7 @@ import css from './useCreateWinRmCredModal.module.scss'
 
 export interface UseCreateWinRmCredModalProps {
   onSuccess?: (secret: SecretDTOV2) => void
+  onClose?: () => void
 }
 
 export interface UseCreateWinRmCredModalReturn {
@@ -57,14 +58,23 @@ export const useCreateWinRmCredModal = (props: UseCreateWinRmCredModalProps): Us
         }}
       >
         {view === Views.CREATE ? (
-          <CreateWinRmCredWizard {...props} hideModal={hideModal} />
+          <CreateWinRmCredWizard
+            {...props}
+            hideModal={() => {
+              props.onClose?.()
+              hideModal()
+            }}
+          />
         ) : (
           <CreateWinRmCredWizard
             {...props}
             isEdit={true}
             detailsData={winrmData?.detailsData}
             authData={winrmData?.authData}
-            hideModal={hideModal}
+            hideModal={() => {
+              props.onClose?.()
+              hideModal()
+            }}
           />
         )}
         <Button minimal icon="cross" iconProps={{ size: 18 }} onClick={hideModal} className={css.crossIcon} />

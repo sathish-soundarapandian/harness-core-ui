@@ -155,6 +155,7 @@ featureFlags:
   changeOrReset: Change your filter criteria or reset
   resetFilters: Reset Filters
   clearSearch: Clear Search
+  setupGitSync: Set Up Git Sync
   rules:
     whenFlagEnabled: When the Flag is Enabled
     whenFlagDisabled: When the Flag is Disabled
@@ -1319,186 +1320,86 @@ onboarding:
 
       Otherwise, the default metrics endpoint URL will be used.
     nodejs: |
-      # Setup
+      # Requirements
 
-      You can use npm or yarn to install <a href="https://www.npmjs.com/package/@harnessio/ff-nodejs-server-sdk">ff-nodejs-server-sdk</a> into your project:
+      To use this SDK, make sure you've: 
+        - Node.js v12 or newer 
+
+      # Install the SDK
+
+      Install the SDK as a dependency in your application:
+
+      Install with npm
 
       ```
       npm install @harnessio/ff-nodejs-server-sdk
       ```
 
-      # Import the package (CommonJS)
-
+      Install with yarn
       ```
-      const { Client } = require('@harnessio/ff-nodejs-server-sdk');
-      ```
-
-      # Initialize
-
-      This is the most simple way to initialize SDK using only a server type key
-
-      ```
-      const client = new Client('your server type SDK key');
+      yarn add @harnessio/ff-nodejs-server-sdk
       ```
 
-      Advanced initialization can be done using options
+      # Copy the sample
+
+      When you run the following sample, it will:
+        1. Connect to the Feature Flag service
+        2. Report the value of the {{flagName}} flag every 10 seconds until the connection is closed.
+        3. Listen for when the flag is enabled or disabled and return the new value
 
       ```
-      const client = new Client('your server type SDK key', {
-      enableStream: false,
-      });
-      ```
+      const { Client, Event } = require('@harnessio/ff-nodejs-server-sdk');
 
-      # Define a target
+      (async () => {
+        // set apiKey to your SDK API Key
+        const apiKey = '{{apiKey}}';
 
-      ```
-      const target = {
-      identifier: 'harness',
-      name: 'Harness',
-      attributes: {}
-      };
-      ```
+        // set flagName to your flag identifier from the UI
+        const flagName = '{{flagName}}'; 
 
-      # Evaluate the flag with default value set to false
+        console.log('Harness SDK Getting Started');
 
-      ```
-      const value = await client.boolVariation('test', target, false);
-      ```
+        // Create Client
+        const client = new Client(apiKey);
 
-      # Shutting down SDK
+        // Create a target (different targets can receive different results based on rules.
+        // Here we are including "location" as a custom attribute)
+        const target = {
+          identifier: 'nodeserversdk',
+          name: 'NodeServerSDK',
+          attributes: {
+            location: 'emea',
+          },
+        };
 
-      ```
-      client.close();
-      ```
+        await client.waitForInitialization();
 
-      # Available public methods
-
-      ```
-      function boolVariation(
-      identifier: string,
-      target: Target,
-      defaultValue: boolean = true,
-      ): Promise<boolean>;
-
-      function stringVariation(
-      identifier: string,
-      target: Target,
-      defaultValue: boolean = '',
-      ): Promise<string>;
-
-      function numberVariation(
-        identifier: string,
-        target: Target,
-        defaultValue: boolean = 1.0,
-      ): Promise<number>;
-
-      function jsonVariation(
-        identifier: string,
-        target: Target,
-        defaultValue: boolean = {},
-      ): Promise<Record<string, unknown>>;
-
-      function close(): void;
-      ```
-
-      # Available options
-
-      ```
-      baseUrl: string;             // baseUrl is where the flag configurations are located
-      eventsUrl: string;           // eventsUrl is where we send summarized target events
-      pollInterval: number;        // pollInterval (default 60s)
-      eventsSyncInterval: number;  // Metrics push event (default 60s)
-      enableStream: boolean;       // enable server sent events
-      enableAnalytics: boolean;    // enable analytics
-      cache: KeyValueStore;        // set custom cache (default lru cache)
-      store: AsyncKeyValueStore;   // set custom persistent store (default file store)
-      logger: Logger;              // set logger (default console)
-      ```
-
-      # Singleton example
-
-      ```
-      import CfClient from '@harnessio/ff-nodejs-server-sdk';
-
-      CfClient.init('your server type SDK key');
-
-      const FLAG_KEY = 'test_bool';
-      const target = {
-        identifier: 'harness',
-        name: 'Harness',
-        attributes: {}
-      };
-      const defaultValue = false;
-
-      setInterval(async() => {
-          const value = await CfClient.boolVariation(FLAG_KEY, target, defaultValue);
-          console.log("Evaluation for flag test and target none: ", value);
-      }, 10000);
-      ```
-
-      # Wait for initialization example
-
-      ```
-      const { Client } = require('@harnessio/ff-nodejs-server-sdk');
-
-      console.log('Starting application');
-      const client = new Client('1c100d25-4c3f-487b-b198-3b3d01df5794');
-      client
-        .waitForInitialization()
-        .then(() => {
+        try {
+          // Log the state of the flag every 10 seconds
           setInterval(async () => {
-            const target = {
-              identifier: 'harness',
-            };
-            const value = await client.boolVariation('test', target, false);
-            console.log('Evaluation for flag test and target: ', value, target);
+            const value = await client.boolVariation(flagName, target, false);
+            console.log('Flag variation:', value);
           }, 10000);
 
-          console.log('Application started');
-        })
-        .catch((error) => {
-          console.log('Error', error);
-        });
+          // We can also watch for the event when a flag changes
+          client.on(Event.CHANGED, async (flagIdentifier) => {
+            const value = await client.boolVariation(flagIdentifier, target, false);
+            console.log(`${flagIdentifier} changed: ${value}`);
+          });
+        } catch (e) {
+          console.error('Error:', e);
+        }
+      })();
       ```
 
-      # Listening on events
+      # Run the code sample
 
-      You can listen on these events:
-
-      Event.READY - SDK successfully initialized
-      Event.FAILED - SDK throws an error
-      Event.CHANGED - any new version of flag or segment triggers this event, if segment is changed then it will find all flags with segment match operator
-
-      Methods:
+      Run the sample using the following command:
 
       ```
-      on(Event.READY, () => {
-        console.log('READY');
-      });
-
-      on(Event.FAILED, () => {
-        console.log('FAILED');
-      });
-
-      on(Event.CHANGED, (identifier) => {
-        console.log('Changed', identifier);
-      });
+      node example.js
       ```
 
-      and if you want to remove the functionReference listener for Event.READY:
-
-      ```
-      off(Event.READY, functionReference);
-      ```
-
-      or if you want to remove all listeners on Event.READY:
-
-      ```
-      off(Event.READY);
-      ```
-
-      or if you call off() without params it will close the client.
-      All events are applicable to off() function.
     python: |
       # Setup
 

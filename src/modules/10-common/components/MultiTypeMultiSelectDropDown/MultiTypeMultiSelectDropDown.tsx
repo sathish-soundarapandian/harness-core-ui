@@ -5,11 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
+import React, { useEffect, useMemo, useState } from 'react'
+import { FormGroup, Intent } from '@blueprintjs/core'
 import { useFormikContext } from 'formik'
 import {
-  DataTooltipInterface,
   errorCheck,
   ExpressionAndRuntimeType,
   ExpressionAndRuntimeTypeProps,
@@ -20,24 +19,29 @@ import {
   MultiSelectDropDownProps,
   getFormFieldLabel,
   SelectOption,
-  FixedTypeComponentProps,
   MultiSelectOption,
   MultiTypeInputValue,
   Layout,
   Container
 } from '@harness/uicore'
-import { get } from 'lodash-es'
+import { get, isEqual } from 'lodash-es'
 import cx from 'classnames'
 
-import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useStrings } from 'framework/strings'
+
+import {
+  FormMultiTypeMultiSelectDropDownProps,
+  getLocalValueFromSelectedOptions,
+  MultiSelectDropDownFixedProps,
+  SELECT_ALL_OPTION
+} from './MultiTypeMultiSelectDropDownUtils'
 
 import css from './MultiTypeMultiSelectDropDown.module.scss'
 
-export type MultiSelectDropDownFixedProps = FixedTypeComponentProps & MultiSelectDropDownProps
-
 export function MultiSelectDropDownFixed(props: MultiSelectDropDownFixedProps): React.ReactElement {
-  const { onChange, value, disabled, ...rest } = props
+  const { onChange, value, disabled, items, isAllSelectionSupported, selectAllOptionIfAllItemsAreSelected, ...rest } =
+    props
   const [localValue, setLocalValue] = useState<MultiSelectOption[]>([])
 
   useEffect(() => {
@@ -47,34 +51,32 @@ export function MultiSelectDropDownFixed(props: MultiSelectDropDownFixedProps): 
   }, [value])
 
   function handleChangeNoop(opts: MultiSelectOption[]): void {
-    setLocalValue(opts)
+    setLocalValue(getLocalValueFromSelectedOptions(opts, items.length, selectAllOptionIfAllItemsAreSelected))
   }
 
   function handleChange(opts: MultiSelectOption[]): void {
-    onChange?.(opts as SelectOption[], MultiTypeInputValue.MULTI_SELECT_OPTION, MultiTypeInputType.FIXED)
+    // only call the onChange function if the selected options have changed
+    if (!isEqual(opts, value)) {
+      onChange?.(opts as SelectOption[], MultiTypeInputValue.MULTI_SELECT_OPTION, MultiTypeInputType.FIXED)
+    }
     rest.onPopoverClose?.(opts)
   }
+
+  const multiSelectDropDownItems = useMemo(() => {
+    return [...(isAllSelectionSupported ? [SELECT_ALL_OPTION] : []), ...(items as MultiSelectOption[])]
+  }, [items, isAllSelectionSupported])
 
   return (
     <MultiSelectDropDown
       {...rest}
+      hideItemCount={localValue.at(0)?.value === SELECT_ALL_OPTION.value}
       value={localValue}
+      items={multiSelectDropDownItems}
       disabled={disabled}
       onChange={handleChangeNoop}
       onPopoverClose={handleChange}
     />
   )
-}
-
-export interface FormMultiTypeMultiSelectDropDownProps extends Omit<IFormGroupProps, 'label'> {
-  label: string
-  name: string
-  dropdownProps: Omit<MultiSelectDropDownProps, 'onChange' | 'value'>
-  multiTypeProps?: Omit<ExpressionAndRuntimeTypeProps, 'fixedTypeComponent' | 'fixedTypeComponentProps' | 'name'>
-  tooltipProps?: DataTooltipInterface
-  enableConfigureOptions?: boolean
-  configureOptionsProps?: Omit<ConfigureOptionsProps, 'name' | 'type' | 'value' | 'onChange'>
-  onChange?: (value: SelectOption[]) => void
 }
 
 export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelectDropDownProps): React.ReactElement {
@@ -96,6 +98,10 @@ export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelect
   const value = get(formik.values, name)
   const [type, setType] = React.useState(getMultiTypeFromValue(value))
 
+  useEffect(() => {
+    setType(getMultiTypeFromValue(value))
+  }, [value])
+
   const {
     intent = hasError ? Intent.DANGER : Intent.NONE,
     helperText = hasError ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null,
@@ -106,7 +112,6 @@ export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelect
   const handleChange: ExpressionAndRuntimeTypeProps['onChange'] = (val, _mutliType, valueType) => {
     formik.setFieldValue(name, valueType === MultiTypeInputType.EXPRESSION ? '' : val)
     onChange?.(val as SelectOption[])
-    setType(valueType)
   }
 
   function handleConfigChange(cvalue: string): void {
@@ -130,6 +135,7 @@ export function FormMultiTypeMultiSelectDropDown(props: FormMultiTypeMultiSelect
             name={name}
             value={value}
             onChange={handleChange}
+            disabled={disabled}
             multitypeInputValue={type}
             className={cx(css.multitype, multiTypeProps?.className, { [css.hasError]: hasError })}
             fixedTypeComponent={MultiSelectDropDownFixed}

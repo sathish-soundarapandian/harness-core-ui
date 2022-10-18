@@ -42,12 +42,11 @@ export interface DeploymentTypeItem {
 
 export interface GetNgSupportedDeploymentTypesProps {
   SSH_NG?: boolean
-  ECS_NG?: boolean
-  NG_DEPLOYMENT_TEMPLATE?: boolean
+  NG_SVC_ENV_REDESIGN?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { SSH_NG, ECS_NG, NG_DEPLOYMENT_TEMPLATE } = props
+  const { SSH_NG, NG_SVC_ENV_REDESIGN } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -64,11 +63,6 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       label: 'pipeline.serviceDeploymentTypes.serverlessAwsLambda',
       icon: deploymentIconMap[ServiceDeploymentType.ServerlessAwsLambda],
       value: ServiceDeploymentType.ServerlessAwsLambda
-    },
-    {
-      label: 'pipeline.serviceDeploymentTypes.azureWebApp',
-      icon: deploymentIconMap[ServiceDeploymentType.AzureWebApp],
-      value: ServiceDeploymentType.AzureWebApp
     }
   ]
 
@@ -84,18 +78,23 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       value: ServiceDeploymentType.WinRm
     })
   }
-  if (ECS_NG) {
+  if (NG_SVC_ENV_REDESIGN) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.amazonEcs',
       icon: deploymentIconMap[ServiceDeploymentType.ECS],
       value: ServiceDeploymentType.ECS
     })
   }
-  if (NG_DEPLOYMENT_TEMPLATE) {
+  if (NG_SVC_ENV_REDESIGN) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.customDeployment',
       icon: deploymentIconMap[ServiceDeploymentType.CustomDeployment],
       value: ServiceDeploymentType.CustomDeployment
+    })
+    baseTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.azureWebApp',
+      icon: deploymentIconMap[ServiceDeploymentType.AzureWebApp],
+      value: ServiceDeploymentType.AzureWebApp
     })
   }
 
@@ -104,11 +103,11 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
 
 export interface GetCgSupportedDeploymentTypesProps {
   SSH_NG?: boolean
-  ECS_NG?: boolean
+  NG_SVC_ENV_REDESIGN?: boolean
 }
 
 export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { ECS_NG, SSH_NG } = props
+  const { SSH_NG, NG_SVC_ENV_REDESIGN } = props
 
   const types: DeploymentTypeItem[] = [
     {
@@ -133,7 +132,7 @@ export function getCgSupportedDeploymentTypes(props: GetCgSupportedDeploymentTyp
     }
   ]
 
-  if (!ECS_NG) {
+  if (!NG_SVC_ENV_REDESIGN) {
     types.unshift({
       label: 'pipeline.serviceDeploymentTypes.amazonEcs',
       icon: deploymentIconMap[ServiceDeploymentType.ECS],

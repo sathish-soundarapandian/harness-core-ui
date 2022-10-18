@@ -26,7 +26,7 @@ import { v4 as uuid } from 'uuid'
 import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { String as StringGlobal, useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -37,7 +37,10 @@ import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/Conf
 import type { AllNGVariables } from '@pipeline/utils/types'
 import type { JsonNode } from 'services/pipeline-ng'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
-import { useDeploymentContext } from '@cd/context/DeploymentContext/DeploymentContextProvider'
+import {
+  FETCH_INSTANCE_SCRIPT_DEFAULT_TEXT,
+  useDeploymentContext
+} from '@cd/context/DeploymentContext/DeploymentContextProvider'
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
 import { getDTInfraVariablesValidationField, InstanceScriptTypes } from '../DeploymentInfraUtils'
 import css from './DeploymentInfraSpecifications.module.scss'
@@ -66,11 +69,21 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
     [getString]
   )
   const fetchInstanceScriptType = formValues?.fetchInstancesScript?.store?.type
+
   const onSelectChange = (item: SelectOption): void => {
     const fieldName = 'fetchInstancesScript.store'
     setFieldValue(fieldName, {
       type: item.value,
-      spec: item.value === InstanceScriptTypes.Inline ? {} : { files: [''] }
+      spec:
+        item.value === InstanceScriptTypes.Inline
+          ? {
+              content: formValues?.fetchInstancesScript?.store?.spec?.content || FETCH_INSTANCE_SCRIPT_DEFAULT_TEXT
+            }
+          : {
+              files: !isEmpty(formValues?.fetchInstancesScript?.store?.spec?.files)
+                ? formValues?.fetchInstancesScript?.store?.spec?.files
+                : ['']
+            }
     })
   }
 
@@ -224,7 +237,7 @@ export default function DeploymentInfraSpecifications(props: { formik: FormikPro
         <MultiTypeFieldSelector
           name="instanceAttributes"
           label=""
-          defaultValueToReset={[{ name: 'hostname', jsonPath: '', description: '', id: uuid() }]}
+          defaultValueToReset={[{ name: 'instancename', jsonPath: '', description: '', id: uuid() }]}
           disableTypeSelection
         >
           <FieldArray

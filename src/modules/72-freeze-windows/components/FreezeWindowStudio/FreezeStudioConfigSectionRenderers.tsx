@@ -83,6 +83,7 @@ interface OrganizationfieldPropsInterface {
   organizations: SelectOption[]
   values: any
   setFieldValue: any
+  fetchProjectsForOrgId: (orgId: string) => void
 }
 
 export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
@@ -90,7 +91,8 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
   namePrefix,
   organizations,
   values,
-  setFieldValue
+  setFieldValue,
+  fetchProjectsForOrgId
 }) => {
   const orgValue = values[FIELD_KEYS.Org]
   const excludeOrgCheckboxValue = values[FIELD_KEYS.ExcludeOrgCheckbox]
@@ -104,6 +106,14 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
       setAllOrgs([{ label: 'All Organizations', value: All }, ...organizations])
     }
   }, [organizations])
+
+  React.useEffect(() => {
+    const isAllOrgSelected = isAllOptionSelected(orgValue)
+    if (!isAllOrgSelected && orgValue?.length === 1) {
+      fetchProjectsForOrgId(orgValue[0]?.value as string)
+    }
+  }, [])
+
   return (
     <>
       <FormInput.MultiSelect
@@ -112,10 +122,13 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
         label={getString('orgLabel')}
         onChange={(selected?: SelectOption[]) => {
           const isAllSelected = isAllOptionSelected(selected)
-          const isMultiSelected = (selected || []).length > 1
+          const selectedLen = (selected || []).length
+          const isMultiSelected = selectedLen > 1
+          const isSingleSelected = selectedLen === 1
+          const isEmptyOrg = selectedLen === 0
 
           // Only All Orgs is selected
-          if (isAllSelected && !isMultiSelected) {
+          if ((isAllSelected && !isMultiSelected) || isEmptyOrg) {
             // set projects fields
             setFieldValue(projFieldName, [allProjectsObj(getString)])
             setFieldValue(projCheckBoxName, false)
@@ -130,6 +143,10 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
             setFieldValue(projFieldName, [allProjectsObj(getString)])
             setFieldValue(projCheckBoxName, false)
             setFieldValue(excludeProjName, undefined)
+          }
+
+          if (!isAllSelected && isSingleSelected) {
+            fetchProjectsForOrgId(selected?.[0]?.value as string)
           }
         }}
       />
@@ -197,7 +214,7 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
         setExcludeProjects(projects)
       }
     }
-  }, [projects, isOrgValueAll, isSingleOrgValue])
+  }, [projects, isOrgValueAll, isSingleOrgValue, resources.projectsByOrgId])
   return (
     <>
       <FormInput.MultiSelect
@@ -393,7 +410,7 @@ const OrgLevelRenderer: React.FC<OrgRendererPropsInterface> = ({ entitiesMap, pr
   const selectedItemIds = entityMap?.entityRefs || []
   let nodesEl = null
   if (filterType === All || selectedItemIds.length === 0) {
-    const nodes = <span className={css.badge}>{projectsMap[All]?.label}</span>
+    const nodes = <span className={css.badge}>{allProjectsObj(getString).label}</span>
     nodesEl = (
       <>
         <span>{getString('projectsText')}:</span> {nodes}
@@ -411,7 +428,8 @@ const OrgLevelRenderer: React.FC<OrgRendererPropsInterface> = ({ entitiesMap, pr
     return (
       <>
         <div className={classnames(css.viewRowNode, css.marginSmaller)}>
-          <span>{getString('projectsText')}:</span> <span className={css.badge}>{projectsMap[All]?.label}</span>
+          <span>{getString('projectsText')}:</span>{' '}
+          <span className={css.badge}>{allProjectsObj(getString)?.label}</span>
         </div>
         <div className={css.viewRowNode}>
           <span>

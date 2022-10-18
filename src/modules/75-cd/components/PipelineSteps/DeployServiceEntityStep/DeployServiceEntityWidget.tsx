@@ -383,7 +383,8 @@ export default function DeployServiceEntityWidget({
           formikRef.current = formik
           const { values } = formik
 
-          const isMultiSvc = !isNil(values.services)
+          // Multi Service is disabled for gitops enabled temporarily
+          const isMultiSvc = !isNil(values.services) && !gitOpsEnabled
           const isFixed = isMultiSvc ? Array.isArray(values.services) : serviceInputType === MultiTypeInputType.FIXED
           let placeHolderForServices =
             Array.isArray(values.services) && values.services
@@ -462,7 +463,7 @@ export default function DeployServiceEntityWidget({
                       />
                     ) : null}
                   </Layout.Horizontal>
-                  {MULTI_SERVICE_INFRA ? (
+                  {MULTI_SERVICE_INFRA && !gitOpsEnabled ? (
                     <Toggle
                       className={css.serviceActionWrapper}
                       checked={isMultiSvc}

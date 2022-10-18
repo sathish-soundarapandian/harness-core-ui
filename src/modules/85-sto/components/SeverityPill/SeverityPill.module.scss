@@ -9,22 +9,24 @@
 
 .main {
   @include severityColors();
+  display: flex;
 }
 
 .label {
-  display: inline-block;
-  height: 18px;
-  padding: 0.2em calc(var(--spacing-3) - 2px) 0 var(--spacing-3);
+  height: 20px;
+  padding: 0.2em calc(var(--spacing-3) - 1px) 0.2em calc(var(--spacing-3) + 1px);
   font-size: var(--font-size-small);
+  font-weight: bolder;
   background-color: var(--grey-100);
   border-top-left-radius: 0.7em;
   border-bottom-left-radius: 0.7em;
 }
 
 .value {
-  display: inline-block;
-  height: 18px;
-  padding: 0 var(--spacing-3) 0 calc(var(--spacing-3) - 2px);
+  height: 20px;
+  padding: 0.2em calc(var(--spacing-3) + 2px) 0.2em calc(var(--spacing-3) - 1px);
+  font-size: var(--font-size-small);
+  font-weight: bolder;
   background-color: var(--grey-200);
   color: var(--grey-900);
   border-top-right-radius: 0.7em;

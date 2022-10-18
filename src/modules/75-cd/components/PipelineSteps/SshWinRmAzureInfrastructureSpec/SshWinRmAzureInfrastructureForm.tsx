@@ -96,7 +96,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
   const formikRef = useRef<FormikProps<AzureInfrastructureUI> | null>(null)
 
   const queryParams = {
-    connectorRef: initialValues?.connectorRef,
+    connectorRef: get(initialValues, 'connectorRef', ''),
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier
@@ -123,7 +123,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
   const getSubscription = (values: AzureInfrastructureUI): SelectOption | undefined => {
     const value = values.subscriptionId ? values.subscriptionId : formikRef?.current?.values?.subscriptionId?.value
 
-    if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
+    /* istanbul ignore else */ if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
       return (
         subscriptions.find(subscription => subscription.value === value) || {
           label: value,
@@ -132,12 +132,12 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
       )
     }
 
-    return values?.subscriptionId
+    return get(values, 'subcriptionId', undefined)
   }
   React.useEffect(() => {
     if (getMultiTypeFromValue(formikRef?.current?.values.subscriptionId) === MultiTypeInputType.FIXED) {
       if (initialValues?.subscriptionId) {
-        if (renderCount) {
+        /* istanbul ignore else */ if (renderCount) {
           formikRef?.current?.setFieldValue('subscriptionId', getSubscription(initialValues))
           subscriptions?.length && setRenderCount(false)
         }
@@ -155,7 +155,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
     error: resourceGroupsError
   } = useGetAzureResourceGroupsBySubscription({
     queryParams,
-    subscriptionId: initialValues?.subscriptionId,
+    subscriptionId: get(initialValues, 'subscriptionId', ''),
     lazy: true
   })
   const {
@@ -165,7 +165,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
     error: subscriptionTagsError
   } = useGetSubscriptionTags({
     queryParams,
-    subscriptionId: initialValues?.subscriptionId,
+    subscriptionId: get(initialValues, 'subscriptionId', ''),
     lazy: true
   })
 
@@ -284,7 +284,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
             hostConnectionType: value.hostConnectionType,
             allowSimultaneousDeployments: value.allowSimultaneousDeployments
           }
-          if (value.connectorRef) {
+          /* istanbul ignore else */ if (value.connectorRef) {
             data.connectorRef = value.connectorRef?.value || /* istanbul ignore next */ value.connectorRef
           }
           delayedOnUpdate(data)
