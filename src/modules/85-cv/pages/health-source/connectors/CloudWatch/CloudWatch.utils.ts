@@ -96,7 +96,7 @@ const getCloudWatchSpec = (params: CreatePayloadUtilParams): CloudWatchMetricsHe
     region,
     connectorRef: setupSourceData.connectorRef,
     feature: CloudWatchProductNames.METRICS,
-    metricDefinitions: updateFormikValuesForPayload(customMetrics)
+    metricDefinitions: updateFormikValuesForPayload(customMetrics) as CloudWatchMetricDefinition[]
   }
 }
 
