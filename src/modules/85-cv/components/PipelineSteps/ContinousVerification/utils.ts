@@ -24,6 +24,8 @@ import {
 } from './constants'
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import { validateTemplateInputs } from './components/ContinousVerificationWidget/ContinousVerificationWidget.utils'
+import { getPopulateSource } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
+import type { MonitoredServiceInputSetInterface } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.types'
 
 /**
  * checks if a field is a runtime input.
@@ -162,6 +164,11 @@ export function getMonitoredServiceYamlData(spec: ContinousVerificationData['spe
   let monitoredService: VerifyStepMonitoredService = defaultMonitoredServiceSpec
   const monitoredServiceTemplateSpec = omit(spec?.monitoredService?.spec, ['monitoredServiceRef'])
 
+  // const updatedTemplateInputs = getPopulateSource(
+  //   monitoredServiceTemplateSpec?.templateInputs as MonitoredServiceInputSetInterface
+  // )
+  // const updatedSpec = { ...monitoredServiceTemplateSpec, templateInputs: updatedTemplateInputs }
+
   switch (spec?.monitoredService?.type) {
     case MONITORED_SERVICE_TYPE.DEFAULT:
       monitoredService = defaultMonitoredServiceSpec
@@ -290,4 +297,35 @@ export const setCommaSeperatedList = (
     actualValue = value?.toString()?.split(',')
   }
   onChange?.(path, actualValue)
+}
+
+export function updateInitialValues(initialValues: ContinousVerificationData) {
+  let healthSources = initialValues?.spec?.monitoredService?.spec?.templateInputs?.sources?.healthSources || []
+  if (healthSources.length) {
+    healthSources = healthSources.map((healthSource: { spec: { metricDefinitions: any[] } }) => {
+      let metricDefinitions = healthSource?.spec?.metricDefinitions || []
+      if (metricDefinitions.length) {
+        metricDefinitions = metricDefinitions.map((metricDefinition: any) => {
+          const jsonMetricDefinition = metricDefinition?.jsonMetricDefinition
+          if (jsonMetricDefinition && typeof jsonMetricDefinition === 'object') {
+            return {
+              ...metricDefinition,
+              jsonMetricDefinition: JSON.stringify(jsonMetricDefinition)
+            }
+          } else {
+            return metricDefinition
+          }
+        })
+      }
+      return {
+        ...healthSource,
+        spec: {
+          ...healthSource?.spec,
+          metricDefinitions
+        }
+      }
+    })
+  }
+
+  set(initialValues, 'spec.monitoredService.spec.templateInputs.sources.healthSources', healthSources)
 }

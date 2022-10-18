@@ -23,6 +23,7 @@ import {
   getMonitoredServiceYamlData,
   getSpecFormData,
   getSpecYamlData,
+  updateInitialValues,
   validateField,
   validateMonitoredService,
   validateMonitoredServiceTemplateInputs,
@@ -113,6 +114,7 @@ export class ContinousVerificationStep extends PipelineStep<ContinousVerificatio
   }
 
   private getInitialValues(initialValues: ContinousVerificationData): ContinousVerificationData {
+    // updateInitialValues(initialValues)
     return {
       ...initialValues,
       spec: {

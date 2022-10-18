@@ -9,7 +9,11 @@ import { AllowedTypes, Card, Color, FormInput, Layout, Text } from '@harness/uic
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
-import type { VerifyStepMonitoredService } from '@cv/components/PipelineSteps/ContinousVerification/types'
+import { v4 as uuid } from 'uuid'
+import type {
+  ContinousVerificationData,
+  VerifyStepMonitoredService
+} from '@cv/components/PipelineSteps/ContinousVerification/types'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import {
@@ -33,7 +37,10 @@ import type { ConnectorInfoDTO } from 'services/cv'
 import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
-import { INDEXES } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
+import {
+  INDEXES,
+  JSON_METRIC_DEFINITION
+} from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
 import css from './TemplatisedRunTimeMonitoredService.module.scss'
 
 export interface TemplatisedRunTimeMonitoredServiceProps {
@@ -55,30 +62,33 @@ export default function TemplatisedRunTimeMonitoredService(
   const healthSourcesVariables = monitoredService?.spec?.templateInputs?.variables || []
   const { serviceRef, environmentRef } = monitoredService?.spec?.templateInputs || {}
   const areRunTimeVariablesPresent = healthSourcesVariables?.some(variable => checkIfRunTimeInput(variable?.value))
+  const uniquePath = React.useRef(`_pseudo_field_${uuid()}`)
   const { setFieldValue: onChange } = useFormikContext()
 
   return (
     <Layout.Vertical>
-      <Card className={css.card}>
-        {checkIfRunTimeInput(serviceRef) ? (
-          <FormInput.MultiTypeInput
-            name={`${prefix}spec.monitoredService.spec.templateInputs.serviceRef`}
-            label={getString('service')}
-            selectItems={serviceOptions}
-            multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
-            useValue
-          />
-        ) : null}
-        {checkIfRunTimeInput(environmentRef) ? (
-          <FormInput.MultiTypeInput
-            name={`${prefix}spec.monitoredService.spec.templateInputs.environmentRef`}
-            label={getString('environment')}
-            selectItems={environmentOptions}
-            multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
-            useValue
-          />
-        ) : null}
-      </Card>
+      {checkIfRunTimeInput(serviceRef) || checkIfRunTimeInput(environmentRef) ? (
+        <Card className={css.card}>
+          {checkIfRunTimeInput(serviceRef) ? (
+            <FormInput.MultiTypeInput
+              name={`${prefix}spec.monitoredService.spec.templateInputs.serviceRef`}
+              label={getString('service')}
+              selectItems={serviceOptions}
+              multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+              useValue
+            />
+          ) : null}
+          {checkIfRunTimeInput(environmentRef) ? (
+            <FormInput.MultiTypeInput
+              name={`${prefix}spec.monitoredService.spec.templateInputs.environmentRef`}
+              label={getString('environment')}
+              selectItems={environmentOptions}
+              multiTypeInputProps={getMultiTypeInputProps(expressions, allowableTypes)}
+              useValue
+            />
+          ) : null}
+        </Card>
+      ) : null}
       {healthSources?.map((healthSource: any, index: number) => {
         const spec = healthSource?.spec || {}
         const hasQueries = doesHealthSourceHasQueries(healthSource)
@@ -139,7 +149,8 @@ export default function TemplatisedRunTimeMonitoredService(
                 return (
                   <>
                     <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: 'medium' }}>
-                      {getString('cv.monitoringSources.metricLabel')}: {item?.metricName}
+                      {hasQueries ? getString('cv.queries') : getString('cv.monitoringSources.metricLabel')}:{' '}
+                      {item?.metricName}
                     </Text>
                     {runtimeItems.map(input => {
                       if (input.name === INDEXES) {

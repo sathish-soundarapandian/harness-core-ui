@@ -99,6 +99,7 @@ export const getFieldLabelForVerifyTemplate = (name: string, getString: UseStrin
       return getString('cv.monitoringSources.datadogLogs.logIndexesLabel')
     case 'connectorRef':
       return getString('connector')
+    case 'jsonMetricDefinition':
     case 'query':
       return getString('cv.query')
     case 'category':
