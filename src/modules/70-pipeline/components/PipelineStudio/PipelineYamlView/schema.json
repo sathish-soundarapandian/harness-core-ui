@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "object"
+    },
+    "stages": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "spec": {
+              "type": "object",
+              "properties": {
+                "steps": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "spec": {
+                          "type": "object",
+                          "properties": {
+                            "exec": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["exec"]
+                        }
+                      },
+                      "required": ["name", "type", "spec"]
+                    }
+                  ]
+                }
+              },
+              "required": ["steps"]
+            }
+          },
+          "required": ["name", "type", "spec"]
+        }
+      ]
+    }
+  },
+  "required": ["version", "name", "tags", "stages"]
+}

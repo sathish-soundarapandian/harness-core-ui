@@ -26,7 +26,8 @@ import type { Pipeline } from '@pipeline/utils/types'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { useVariablesExpression } from '../PiplineHooks/useVariablesExpression'
-import { usePipelineSchema } from '../PipelineSchema/PipelineSchemaContext'
+
+import schema from './schema.json'
 
 import css from './PipelineYamlView.module.scss'
 
@@ -63,7 +64,6 @@ function PipelineYamlView(): React.ReactElement {
     'YamlAlwaysEditMode'
   )
   const userPreferenceEditMode = React.useMemo(() => defaultTo(Boolean(preference === 'true'), false), [preference])
-  const { pipelineSchema } = usePipelineSchema()
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
     gitSyncEnabledOnlyForFF,
@@ -144,10 +144,10 @@ function PipelineYamlView(): React.ReactElement {
     setYamlAlwaysEditMode(String(isAlwaysEditMode))
   }
 
-  const yamlOrJsonProp =
-    entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
-      ? { existingYaml: entityValidityDetails?.invalidYaml }
-      : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } }
+  // const yamlOrJsonProp =
+  //   entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
+  //     ? { existingYaml: entityValidityDetails?.invalidYaml }
+  //     : { existingJSON: { pipeline: omit(pipeline, 'repo', 'branch') } }
 
   React.useEffect(() => {
     !isYamlEditable && updatePipelineView({ ...pipelineView, isYamlEditable: userPreferenceEditMode })
@@ -208,11 +208,11 @@ function PipelineYamlView(): React.ReactElement {
             height={'calc(100vh - 200px)'}
             width="calc(100vw - 400px)"
             invocationMap={stepsFactory.getInvocationMap()}
-            schema={pipelineSchema?.data}
+            schema={schema}
             onEnableEditMode={onEnableEditMode}
             isEditModeSupported={!isReadonly}
             openDialogProp={openDialog}
-            {...yamlOrJsonProp}
+            existingJSON={{}}
           />
         )}
       </>

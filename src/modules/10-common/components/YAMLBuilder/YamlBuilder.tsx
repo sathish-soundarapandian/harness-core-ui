@@ -11,7 +11,7 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 import ReactMonacoEditor from 'react-monaco-editor'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
-import { IKeyboardEvent, languages } from 'monaco-editor/esm/vs/editor/editor.api'
+import { IKeyboardEvent, languages, Range } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil } from 'lodash-es'
 import { useToaster } from '@common/exports'
@@ -139,6 +139,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const yamlValidationErrorsRef = useRef<Map<number, string>>()
   yamlValidationErrorsRef.current = yamlValidationErrors
   const editorVersionRef = useRef<number>()
+  const [shouldAutoComplete, setShouldAutoComplete] = useState<boolean>(true)
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -251,16 +252,46 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     debounce((updatedYaml: string): void => {
       setCurrentYaml(updatedYaml)
       yamlRef.current = updatedYaml
-      verifyYAML({
-        updatedYaml,
-        setYamlValidationErrors,
-        showError,
-        schema,
-        errorMessage: yamlError
-      })
-      onChange?.(!(updatedYaml === ''))
+      // verifyYAML({
+      //   updatedYaml,
+      //   setYamlValidationErrors,
+      //   showError,
+      //   schema,
+      //   errorMessage: yamlError
+      // })
+      // onChange?.(!(updatedYaml === ''))
+      const editor = editorRef.current?.editor
+      if (editor) {
+        const currentCursorPosition = editor.getPosition()
+        const { lineNumber, column } = currentCursorPosition || {}
+        if (lineNumber && column) {
+          const editorContent = editor.getModel()?.getValue()
+          const [key, value] = editor.getModel()?.getLineContent(lineNumber)?.split(':') || []
+          if (
+            shouldAutoComplete &&
+            key === 'name' &&
+            value.trim() === 'Java with Maven' &&
+            editorContent?.trim() === 'name: Java with Maven'
+          ) {
+            const yamlBlob =
+              '\nversion: 1\ntags: {}\nstages:\n  - name: Build and test Java app\n    type: ci\n    spec:\n        steps:\n          - name: Build_test\n            type: exec\n            spec:\n              exec: |\n                echo "Welcome to Harness CI"\n                mvn -B package --file pom.xml'
+            editor.executeEdits('', [
+              {
+                range: {
+                  startLineNumber: lineNumber,
+                  startColumn: column,
+                  endLineNumber: lineNumber,
+                  endColumn: column
+                } as Range,
+                text: yamlBlob
+              }
+            ])
+            setShouldAutoComplete(false)
+          }
+        }
+      }
     }, 500),
-    [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
+    [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange, shouldAutoComplete]
   )
 
   const showNoPermissionError = useCallback(
