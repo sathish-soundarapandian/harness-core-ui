@@ -604,6 +604,24 @@ const CENonMFERoutes = (
     >
       <BIDashboard />
     </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCommitmentOrchestration({ ...accountPathProps })}
+      exact
+      pageName={PAGE_NAME.CECommitmentOrchestrationPage}
+    >
+      <CommitmentOrchestration />
+    </RouteWithLayout>
+    <RouteWithLayout
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CESideNavProps}
+      path={routes.toCommitmentOrchestrationSetup({ ...accountPathProps })}
+      exact
+      pageName={PAGE_NAME.CECommitmentOrchestrationPage}
+    >
+      <CommitmentOrchestrationSetup />
+    </RouteWithLayout>
   </>
 )
 
@@ -693,6 +711,8 @@ const CERoutes: React.FC = () => {
           clusterName: ':clusterName',
           nodeId: ':nodeId'
         }),
+        routes.toCommitmentOrchestration({ ...accountPathProps }),
+        routes.toCommitmentOrchestrationSetup({ ...accountPathProps }),
         routes.toCEDashboards({ ...accountPathProps })
       ]
     : []
@@ -814,25 +834,6 @@ const CERoutes: React.FC = () => {
             />
           </RouteWithLayout>
         ) : null}
-
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCommitmentOrchestration({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CECommitmentOrchestrationPage}
-        >
-          <CommitmentOrchestration />
-        </RouteWithLayout>
-        <RouteWithLayout
-          licenseRedirectData={licenseRedirectData}
-          sidebarProps={CESideNavProps}
-          path={routes.toCommitmentOrchestrationSetup({ ...accountPathProps })}
-          exact
-          pageName={PAGE_NAME.CECommitmentOrchestrationPage}
-        >
-          <CommitmentOrchestrationSetup />
-        </RouteWithLayout>
 
         <Route path="*">
           <NotFoundPage />
