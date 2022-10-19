@@ -11,8 +11,10 @@ import {
   validations,
   countOfServiceAPI,
   monitoredServiceListCall,
-  monitoredServiceListResponse
+  monitoredServiceListResponse,
+  riskCategoryMock
 } from '../../../support/85-cv/monitoredService/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   connectorIdentifier,
   dataLogsIndexes,
@@ -81,13 +83,14 @@ describe('Configure Datadog health source', () => {
 
     //intercepting calls
     cy.intercept('GET', metrics.getMetricsCall, metrics.getMetricsResponse).as('getMetrics')
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
     cy.intercept('GET', metricTags.getMetricsTags, metricTags.getMetricsTagsResponse).as('getMetricsTags')
     cy.intercept('GET', activeMetrics.getActiveMetrics, activeMetrics.getActiveMetricsResponse).as('getActiveMetrics')
 
     cy.findByRole('button', { name: /Submit/i }).click()
     cy.contains('h3', 'Query Specifications').should('be.visible')
 
-    cy.wait('@getMetrics')
+    cy.wait('@riskCategoryCall')
     cy.wait('@getActiveMetrics')
 
     // Triggering validations.

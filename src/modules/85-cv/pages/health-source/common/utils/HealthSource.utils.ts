@@ -206,8 +206,7 @@ export function mapCommonMetricInfoToCommonMetricDefinition(
     healthScore,
     isManualQuery
   } = baseMetricInfo
-  const [category, metricType] = riskCategory?.split('/') || []
-  const categoryData = category ? { category } : {}
+
   const thresholdTypes: RiskProfile['thresholdTypes'] = []
 
   if (lowerBaselineDeviation) {
@@ -220,8 +219,7 @@ export function mapCommonMetricInfoToCommonMetricDefinition(
   const ifOnlySliIsSelected = Boolean(sli) && !(Boolean(healthScore) || Boolean(continuousVerification))
 
   const riskProfile: any = {
-    ...categoryData,
-    metricType: metricType,
+    riskCategory,
     thresholdTypes
   }
 
@@ -245,10 +243,7 @@ export function mapCommonMetricDefinitionToCommonMetricInfo(
   return {
     identifier: metricDefinition.identifier,
     metricName: metricDefinition.metricName,
-    riskCategory:
-      metricDefinition.analysis?.riskProfile?.category && metricDefinition.analysis?.riskProfile?.metricType
-        ? `${metricDefinition.analysis?.riskProfile?.category}/${metricDefinition.analysis?.riskProfile?.metricType}`
-        : '',
+    riskCategory: metricDefinition.analysis?.riskProfile?.riskCategory,
     lowerBaselineDeviation: metricDefinition.analysis?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
     higherBaselineDeviation:
       metricDefinition.analysis?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_HIGHER') || false,

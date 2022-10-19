@@ -490,8 +490,7 @@ export const monitoredServiceWithCustomHealthSource = {
                   identifier: 'CustomHealth_Metric_101',
                   metricName: 'CustomHealth Metric 101',
                   riskProfile: {
-                    category: 'Errors',
-                    metricType: 'ERROR',
+                    riskCategory: 'Errors',
                     thresholdTypes: ['ACT_WHEN_HIGHER', 'ACT_WHEN_LOWER']
                   },
                   analysis: {
@@ -504,8 +503,7 @@ export const monitoredServiceWithCustomHealthSource = {
                       serviceInstanceMetricPath: null
                     },
                     riskProfile: {
-                      category: 'Errors',
-                      metricType: 'ERROR',
+                      riskCategory: 'Errors',
                       thresholdTypes: ['ACT_WHEN_HIGHER', 'ACT_WHEN_LOWER']
                     }
                   },

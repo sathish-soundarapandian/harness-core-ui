@@ -14,6 +14,7 @@ import * as cvServices from 'services/cv'
 import * as cdServices from 'services/cd-ng'
 import CustomHealthSourceForm from '../CustomHealthSourceForm'
 import { formikValue, sourceData, mappedMetricWithValue, recordsData, chartData } from './CustomHealthSource.mock'
+import { riskCategoryMock } from '../../__tests__/HealthSources.mock'
 
 jest.mock('@common/components/NameIdDescriptionTags/NameIdDescriptionTags', () => ({
   ...(jest.requireActual('@common/components/NameIdDescriptionTags/NameIdDescriptionTags') as any),
@@ -40,6 +41,11 @@ describe('Verify CustomHealthSourceForm', () => {
     jest
       .spyOn(cvServices, 'useGetMetricPacks')
       .mockImplementation(() => ({ loading: false, error: null, data: {}, refetch: getMetricPacks } as any))
+    jest
+      .spyOn(cvServices, 'useGetRiskCategoryForCustomHealthMetric')
+      .mockImplementation(
+        () => ({ loading: false, error: null, data: riskCategoryMock, refetch: getMetricPacks } as any)
+      )
   })
 
   test('should render CustomHealthSourceForm with data', async () => {
@@ -120,7 +126,7 @@ describe('Verify CustomHealthSourceForm', () => {
     await waitFor(() => expect(container.querySelector('input[name="healthScore"]')).toBeChecked())
     await waitFor(() => expect(container.querySelector('input[name="sli"]')).toBeChecked())
 
-    userEvent.click(container.querySelector('input[value="Errors/ERROR"]')!)
+    userEvent.click(container.querySelector('input[value="Errors"]')!)
     userEvent.click(container.querySelector('input[name="higherBaselineDeviation"]')!)
   })
 
@@ -187,7 +193,7 @@ describe('Verify CustomHealthSourceForm', () => {
     await waitFor(() => expect(container.querySelector('input[name="healthScore"]')).toBeChecked())
     await waitFor(() => expect(container.querySelector('input[name="sli"]')).not.toBeChecked())
 
-    userEvent.click(container.querySelector('input[value="Errors/ERROR"]')!)
+    userEvent.click(container.querySelector('input[value="Errors"]')!)
     userEvent.click(container.querySelector('input[name="higherBaselineDeviation"]')!)
 
     await waitFor(() => expect(container.querySelector('input[name="continuousVerification"]')).not.toBeInTheDocument())

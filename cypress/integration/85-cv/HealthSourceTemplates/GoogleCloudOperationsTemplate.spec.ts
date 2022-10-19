@@ -4,9 +4,11 @@ import {
   countOfServiceAPI,
   monitoredServiceListCall,
   monitoredServiceListResponse,
+  riskCategoryMock,
   validations
 } from '../../../support/85-cv/monitoredService/constants'
 import { metricPackResponse } from '../../../support/85-cv/monitoredService/health-sources/AppDynamics/constants'
+import { riskCategoryCall } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 import {
   dashboardsAPI,
   dashboardsResponse,
@@ -72,6 +74,7 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.contains('p', '+ Manually input query').click()
 
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.contains('h4', 'Add your Google Cloud Operations query').should('be.visible')
     cy.fillField('metricName', 'GCO Metric')
@@ -151,6 +154,7 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.contains('p', '+ Manually input query').click()
 
     cy.intercept('GET', metricPackAPI, metricPackResponse)
+    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
 
     cy.contains('h4', 'Add your Google Cloud Operations query').should('be.visible')
     cy.fillField('metricName', 'GCO Metric')

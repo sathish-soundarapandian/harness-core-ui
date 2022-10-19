@@ -346,8 +346,7 @@ export const mockedHealthSourcePayload = {
             enabled: true
           },
           riskProfile: {
-            category: 'Errors',
-            metricType: 'ERROR',
+            riskCategory: 'Errors/ERROR',
             thresholdTypes: ['ACT_WHEN_HIGHER']
           }
         },

@@ -103,6 +103,9 @@ describe('Validate DynatraceHealthSource', () => {
     jest.clearAllMocks()
     jest.spyOn(cvService, 'useGetDynatraceServices').mockReturnValue(mockUseGetDynatraceServices as any)
     jest.spyOn(cvService, 'useGetMetricPacks').mockReturnValue({ data: { data: [] }, refetch: jest.fn() } as any)
+    jest
+      .spyOn(cvService, 'useGetRiskCategoryForCustomHealthMetric')
+      .mockReturnValue({ data: { data: [] }, refetch: jest.fn() } as any)
   })
 
   test('should render DynatraceMetricPacksToService', async () => {
