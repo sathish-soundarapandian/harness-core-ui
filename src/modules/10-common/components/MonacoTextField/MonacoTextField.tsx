@@ -61,47 +61,10 @@ export const getDefaultMonacoConfig = (disabled: boolean): MonacoEditorProps['op
 })
 
 export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactElement {
-  const { formik, name, disabled, expressions, height = 70, fullScreenAllowed, fullScreenTitle } = props
+  const { formik, name, disabled, height = 70, fullScreenAllowed, fullScreenTitle } = props
   const [isFullScreen, setFullScreen] = React.useState(false)
   const { getString } = useStrings()
   const value = get(formik.values, name) || ''
-
-  useDeepCompareEffect(() => {
-    let disposable: IDisposable | null = null
-
-    if (Array.isArray(expressions) && expressions.length > 0) {
-      const suggestions: Array<Partial<languages.CompletionItem>> = expressions
-        .filter(label => label)
-        .map(label => ({
-          label,
-          insertText: label + '>',
-          kind: 13
-        }))
-
-      disposable = (monaco?.languages as Languages)?.registerCompletionItemProvider(LANG_ID, {
-        triggerCharacters: ['+', '.'],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        provideCompletionItems(model, position): any {
-          const prevText = model.getValueInRange({
-            startLineNumber: position.lineNumber,
-            startColumn: 0,
-            endLineNumber: position.lineNumber,
-            endColumn: position.column
-          })
-
-          if (VAR_REGEX.test(prevText)) {
-            return { suggestions }
-          }
-
-          return { suggestions: [] }
-        }
-      })
-    }
-
-    return () => {
-      disposable?.dispose()
-    }
-  }, [expressions])
 
   const editor = (
     <div className={cx(css.main, { [css.disabled]: disabled })}>

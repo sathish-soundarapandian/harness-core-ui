@@ -43,21 +43,9 @@ const MonacoDiffEditor = (props: ExtendedMonacoDiffEditorProps, ref: ReactMonaco
     }
   }, [])
 
-  const editorWillMount: DiffEditorWillMount = monaco => {
-    monacoRef.current = monaco
-    monaco?.editor?.defineTheme('disable-theme', {
-      base: 'vs',
-      inherit: true,
-      rules: [],
-      colors: {
-        'editor.background': '#f3f3fa'
-      }
-    })
-  }
-
   const theme = props.options?.readOnly ? 'disable-theme' : 'vs'
 
-  return <ReactMonacoDiffEditor {...props} ref={ref} theme={theme} editorWillMount={editorWillMount} />
+  return <ReactMonacoDiffEditor {...props} ref={ref} theme={theme} />
 }
 
 export default React.forwardRef(MonacoDiffEditor)

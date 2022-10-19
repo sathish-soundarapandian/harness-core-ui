@@ -19,18 +19,6 @@ interface YamlDiffButtonProps {
   accountIdentifier: string
 }
 
-const DIFF_VIEWER_OPTIONS = {
-  ignoreTrimWhitespace: true,
-  minimap: { enabled: false },
-  codeLens: false,
-  readOnly: true,
-  renderSideBySide: false,
-  lineNumbers: 'off' as const,
-  inDiffEditor: true,
-  scrollBeyondLastLine: false,
-  smartSelect: false
-}
-
 const YamlDiffButton: React.FC<YamlDiffButtonProps> = ({ auditId, accountIdentifier }) => {
   const [showDiff, setShowDiff] = useState<boolean>(false)
   const [buttonClientY, setButtonClientY] = useState(0)
@@ -71,7 +59,6 @@ const YamlDiffButton: React.FC<YamlDiffButtonProps> = ({ auditId, accountIdentif
           language="yaml"
           original={data?.data?.oldYaml}
           value={data?.data?.newYaml}
-          options={DIFF_VIEWER_OPTIONS}
         />
       </Container>
     )

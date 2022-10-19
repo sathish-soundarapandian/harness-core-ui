@@ -10,7 +10,6 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 //@ts-ignore
 import ReactMonacoEditor from 'react-monaco-editor'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
-import '@harness/monaco-yaml/lib/esm/monaco.contribution'
 import { IKeyboardEvent, languages } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import { debounce, isEmpty, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil, get } from 'lodash-es'
@@ -24,8 +23,7 @@ import { Tag, Icon, Container, useConfirmationDialog } from '@harness/uicore'
 import type {
   YamlBuilderProps,
   YamlBuilderHandlerBinding,
-  CompletionItemInterface,
-  Theme
+  CompletionItemInterface
 } from '@common/interfaces/YAMLBuilderProps'
 import { getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
@@ -35,14 +33,6 @@ import css from './YamlBuilder.module.scss'
 import './resizer.scss'
 import {
   DEFAULT_EDITOR_HEIGHT,
-  EditorTheme,
-  EDITOR_BASE_DARK_THEME,
-  EDITOR_BASE_LIGHT_THEME,
-  EDITOR_DARK_BG,
-  EDITOR_DARK_FG,
-  EDITOR_DARK_SELECTION,
-  EDITOR_LIGHT_BG,
-  EDITOR_WHITESPACE,
   MIN_SNIPPET_SECTION_WIDTH,
   TRIGGER_CHARS_FOR_NEW_EXPR,
   TRIGGER_CHAR_FOR_PARTIAL_EXPR,
@@ -70,31 +60,6 @@ import { CompletionItemKind } from 'vscode-languageserver-types'
 scalarOptions.str.fold.lineWidth = 100000
 defaultOptions.indent = 4
 
-const getTheme = (theme: Theme) => (theme === 'DARK' ? EDITOR_BASE_DARK_THEME : EDITOR_BASE_LIGHT_THEME)
-
-const setUpEditor = (theme: Theme): void => {
-  //@ts-ignore
-  monaco.editor.defineTheme(getTheme(theme), {
-    base: getTheme(theme),
-    inherit: theme === 'DARK',
-    rules: theme === 'DARK' ? EditorTheme.DARK : EditorTheme.LIGHT,
-    colors:
-      theme === 'DARK'
-        ? {
-            'editor.background': `#${EDITOR_DARK_BG}`,
-            'editor.foreground': `#${EDITOR_DARK_FG}`,
-            'editor.selectionBackground': `#${EDITOR_DARK_SELECTION}`,
-
-            'editor.lineHighlightBackground': `#${EDITOR_DARK_SELECTION}`,
-            'editorCursor.foreground': `#${EDITOR_DARK_FG}`,
-            'editorWhitespace.foreground': `#${EDITOR_WHITESPACE}`
-          }
-        : { 'editor.background': `#${EDITOR_LIGHT_BG}` }
-  })
-  //@ts-ignore
-  monaco.editor.setTheme(getTheme(theme))
-}
-
 const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.Element => {
   const {
     height,
@@ -121,9 +86,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     showCopyIcon = true,
     comparableYaml
   } = props
+<<<<<<< HEAD
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
   setUpEditor(theme)
+=======
+>>>>>>> 4a5b4b77ea62 (chore: [PL-28682]: Monaco editor upgrade)
   const params = useParams()
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
   const [currentJSON, setCurrentJSON] = useState<object>()
@@ -361,6 +329,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }
 
+<<<<<<< HEAD
   /** Run-time Inputs support */
   function registerCompletionItemProviderForRTInputs(
     editor: editor.IStandaloneCodeEditor,
@@ -430,6 +399,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     }
   }
 
+=======
+>>>>>>> 4a5b4b77ea62 (chore: [PL-28682]: Monaco editor upgrade)
   const shouldInvokeExpressions = (editor: editor.IStandaloneCodeEditor, event: IKeyboardEvent): boolean => {
     const lastKeyStrokeCharacter = getEditorContentInCurrentLine(editor)?.substr(-1)
     const { shiftKey, code } = event
@@ -544,6 +515,18 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           disposePreviousSuggestions()
           registerCompletionItemProviderForExpressions(editor, TRIGGER_CHARS_FOR_NEW_EXPR, yamlPath)
         }
+<<<<<<< HEAD
+=======
+        // this is to invoke run-time inputs as suggestions
+        else if (code === KEY_CODE_FOR_SEMI_COLON && invocationMap && invocationMap.size > 0) {
+          const yamlPath = getMetaDataForKeyboardEventProcessing({
+            editor,
+            onErrorCallback,
+            shouldAddPlaceholder: true
+          })?.parentToCurrentPropertyPath
+          disposePreviousSuggestions()
+        }
+>>>>>>> 4a5b4b77ea62 (chore: [PL-28682]: Monaco editor upgrade)
       }
       // this is to invoke partial expressions callback e.g. invoke expressions callback on hitting a period(.) after an expression: expr1.expr2. <-
       if (code === KEY_CODE_FOR_PERIOD) {
@@ -611,14 +594,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     ),
     [yamlValidationErrors, fileName, entityType, theme]
   )
-
-  // used to remove initial selection that appears when yaml builder is loaded with an initial value
-  useEffect(() => {
-    if (every([!initialSelectionRemoved, editorRef.current?.editor?.getValue()])) {
-      editorRef.current?.editor?.setSelection(new monaco.Range(0, 0, 0, 0))
-      setInitialSelectionRemoved(true)
-    }
-  }, [currentYaml])
 
   const renderEditor = useCallback(
     (): JSX.Element => (

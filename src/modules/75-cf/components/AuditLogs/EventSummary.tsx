@@ -43,18 +43,6 @@ const drawerStates: IDrawerProps = {
   className: css.container
 }
 
-const DIFF_VIEWER_OPTIONS = {
-  ignoreTrimWhitespace: true,
-  minimap: { enabled: false },
-  codeLens: false,
-  readOnly: true,
-  renderSideBySide: false,
-  lineNumbers: 'off' as const,
-  inDiffEditor: true,
-  scrollBeyondLastLine: false,
-  smartSelect: false
-}
-
 export interface EventSummaryProps {
   flagData: Feature
   data: AuditTrail
@@ -176,7 +164,6 @@ export const EventSummary: React.FC<EventSummaryProps> = ({ data, flagData, onCl
                     language="javascript"
                     original={valueBefore}
                     value={valueAfter}
-                    options={DIFF_VIEWER_OPTIONS}
                     editorDidMount={editor => {
                       setTimeout(() => {
                         ;(

@@ -43,53 +43,11 @@ export interface ConnectedShellScriptMonacoProps extends ShellScriptMonacoProps 
 const VAR_REGEX = /.*<\+.*?/
 
 export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React.ReactElement {
-  const { scriptType, formik, name, disabled, expressions, title, className, editorOptions } = props
+  const { scriptType, formik, name, disabled, title, className, editorOptions } = props
   const [isFullScreen, setFullScreen] = useState(false)
   const [lineCount, setLineCount] = useState(0)
   const { getString } = useStrings()
   const value = get(formik.values, name) || ''
-
-  useDeepCompareEffect(() => {
-    const disposables: IDisposable[] = []
-
-    if (Array.isArray(expressions) && expressions.length > 0) {
-      const suggestions: Array<Partial<languages.CompletionItem>> = expressions
-        .filter(label => label)
-        .map(label => ({
-          label,
-          insertText: label + '>',
-          documentation: `<+${label}}>`,
-          kind: 13
-        }))
-
-      Object.values(langMap).forEach(lang => {
-        const disposable = (monaco?.languages as Languages)?.registerCompletionItemProvider(lang, {
-          triggerCharacters: ['+', '.'],
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          provideCompletionItems(model, position): any {
-            const prevText = model.getValueInRange({
-              startLineNumber: position.lineNumber,
-              startColumn: 0,
-              endLineNumber: position.lineNumber,
-              endColumn: position.column
-            })
-
-            if (VAR_REGEX.test(prevText)) {
-              return { suggestions }
-            }
-
-            return { suggestions: [] }
-          }
-        })
-
-        disposables.push(disposable)
-      })
-    }
-
-    return () => {
-      disposables.forEach(disposable => disposable.dispose())
-    }
-  }, [expressions])
 
   const getHeight = (): number => {
     if (lineCount <= 5) {
